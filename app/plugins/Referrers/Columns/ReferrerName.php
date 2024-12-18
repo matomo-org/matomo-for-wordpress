@@ -39,7 +39,7 @@ class ReferrerName extends \Piwik\Plugins\Referrers\Columns\Base
         if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $information['referer_name'];
         }
-        return false;
+        return \false;
     }
     /**
      * @param Request $request

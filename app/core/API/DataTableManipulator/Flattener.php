@@ -20,7 +20,7 @@ use Piwik\Plugin\ReportsProvider;
  */
 class Flattener extends DataTableManipulator
 {
-    private $includeAggregateRows = false;
+    private $includeAggregateRows = \false;
     /**
      * If the flattener is used after calling this method, aggregate rows will
      * be included in the result. This can be useful when they contain data that
@@ -28,7 +28,7 @@ class Flattener extends DataTableManipulator
      */
     public function includeAggregateRows()
     {
-        $this->includeAggregateRows = true;
+        $this->includeAggregateRows = \true;
     }
     /**
      * Separator for building recursive labels (or paths)
@@ -54,7 +54,7 @@ class Flattener extends DataTableManipulator
      */
     protected function manipulateDataTable($dataTable)
     {
-        $newDataTable = $dataTable->getEmptyClone($keepFilters = true);
+        $newDataTable = $dataTable->getEmptyClone($keepFilters = \true);
         if ($dataTable->getTotalsRow()) {
             $newDataTable->setTotalsRow($dataTable->getTotalsRow());
         }
@@ -74,7 +74,7 @@ class Flattener extends DataTableManipulator
      * @param $newDataTable
      * @param $dimensionName
      */
-    protected function flattenDataTableInto($dataTable, $newDataTable, $level, $dimensionName, $prefix = '', $logo = false)
+    protected function flattenDataTableInto($dataTable, $newDataTable, $level, $dimensionName, $prefix = '', $logo = \false)
     {
         foreach ($dataTable->getRows() as $rowId => $row) {
             $this->flattenRow($row, $rowId, $newDataTable, $level, $dimensionName, $prefix, $logo);
@@ -87,7 +87,7 @@ class Flattener extends DataTableManipulator
      * @param string $dimensionName
      * @param bool $parentLogo
      */
-    private function flattenRow(Row $row, $rowId, DataTable $dataTable, $level, $dimensionName, $labelPrefix = '', $parentLogo = false)
+    private function flattenRow(Row $row, $rowId, DataTable $dataTable, $level, $dimensionName, $labelPrefix = '', $parentLogo = \false)
     {
         $dimensions = $dataTable->getMetadata('dimensions');
         if (empty($dimensions)) {
@@ -98,7 +98,7 @@ class Flattener extends DataTableManipulator
         }
         $dataTable->setMetadata('dimensions', $dimensions);
         $origLabel = $label = $row->getColumn('label');
-        if ($label !== false) {
+        if ($label !== \false) {
             $origLabel = $label = trim($label);
             if ($this->recursiveLabelSeparator == '/') {
                 if (substr($label, 0, 1) == '/' && substr($labelPrefix, -1) == '/') {
@@ -112,7 +112,7 @@ class Flattener extends DataTableManipulator
                     // remove url metadata for flattened summary rows
                     $row->deleteMetadata('url');
                 }
-                $row->setMetadata('is_summary', true);
+                $row->setMetadata('is_summary', \true);
             }
             $label = $labelPrefix . $label;
             $row->setColumn('label', $label);
@@ -126,7 +126,7 @@ class Flattener extends DataTableManipulator
             $row->setMetadata($dimensionName, $origLabel);
         }
         $logo = $row->getMetadata('logo');
-        if ($logo === false && $parentLogo !== false) {
+        if ($logo === \false && $parentLogo !== \false) {
             $logo = $parentLogo;
             $row->setMetadata('logo', $logo);
         }
@@ -162,15 +162,15 @@ class Flattener extends DataTableManipulator
                 $subDimension = $report->getDimension();
             }
             $subDimensionName = $subDimension ? str_replace('.', '_', $subDimension->getId()) : 'label' . (substr_count($prefix, $this->recursiveLabelSeparator) + 1);
-            if ($origLabel !== false) {
+            if ($origLabel !== \false) {
                 foreach ($subTable->getRows() as $subRow) {
                     foreach ($row->getMetadata() as $name => $value) {
                         // do not set 'segment' parameter if there is a segmentValue on the row, since that will prevent the segmentValue
                         // from being used in DataTablePostProcessor
-                        if ($name == 'segment' && $subRow->getMetadata('segmentValue') !== false) {
+                        if ($name == 'segment' && $subRow->getMetadata('segmentValue') !== \false) {
                             continue;
                         }
-                        if ($subRow->getMetadata($name) === false) {
+                        if ($subRow->getMetadata($name) === \false) {
                             $subRow->setMetadata($name, $value);
                         }
                     }

@@ -27,8 +27,8 @@ class StackedBarEvolution extends Evolution
     {
         parent::beforeRender();
         $this->checkRequestIsOnlyForMultiplePeriods();
-        $this->config->show_flatten_table = false;
-        $this->config->show_limit_control = false;
+        $this->config->show_flatten_table = \false;
+        $this->config->show_limit_control = \false;
         $this->config->datatable_js_type = 'JqplotStackedBarEvolutionGraphDataTable';
     }
     public function beforeLoadDataTable()
@@ -38,7 +38,7 @@ class StackedBarEvolution extends Evolution
         // period will be overridden when 'range' is requested in the UI
         // but the graph will display for each day of the range.
         // Default 'range' behavior is to return the 'sum' for the range
-        if (Common::getRequestVar('period', false) == 'range') {
+        if (Common::getRequestVar('period', \false) == 'range') {
             $this->requestConfig->request_parameters_to_modify['period'] = 'day';
         }
         $this->config->custom_parameters['columns'] = $this->config->columns_to_display;
@@ -78,6 +78,6 @@ class StackedBarEvolution extends Evolution
     }
     public function supportsComparison()
     {
-        return false;
+        return \false;
     }
 }

@@ -73,7 +73,7 @@ if (!function_exists('Matomo\\Dependencies\\DI\\decorate')) {
      */
     function decorate($callable) : FactoryDefinitionHelper
     {
-        return new FactoryDefinitionHelper($callable, true);
+        return new FactoryDefinitionHelper($callable, \true);
     }
 }
 if (!function_exists('Matomo\\Dependencies\\DI\\get')) {

@@ -26,7 +26,7 @@ class RouteProcessor implements EventSubscriberInterface, ResetInterface
 {
     private $routeData;
     private $includeParams;
-    public function __construct(bool $includeParams = true)
+    public function __construct(bool $includeParams = \true)
     {
         $this->includeParams = $includeParams;
         $this->reset();

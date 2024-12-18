@@ -36,7 +36,7 @@ class ApplicationDescription
      * @var array<string, Command>
      */
     private $aliases;
-    public function __construct(Application $application, ?string $namespace = null, bool $showHidden = false)
+    public function __construct(Application $application, ?string $namespace = null, bool $showHidden = \false)
     {
         $this->application = $application;
         $this->namespace = $namespace;
@@ -98,7 +98,7 @@ class ApplicationDescription
         $sortedCommands = [];
         foreach ($commands as $name => $command) {
             $key = $this->application->extractNamespace($name, 1);
-            if (\in_array($key, ['', self::GLOBAL_NAMESPACE], true)) {
+            if (\in_array($key, ['', self::GLOBAL_NAMESPACE], \true)) {
                 $globalCommands[$name] = $command;
             } else {
                 $namespacedCommands[$key][$name] = $command;

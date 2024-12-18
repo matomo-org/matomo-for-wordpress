@@ -37,7 +37,7 @@ class Deactivate extends Migration
     }
     public function shouldIgnoreError($exception)
     {
-        return true;
+        return \true;
     }
     public function exec()
     {

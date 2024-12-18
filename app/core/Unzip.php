@@ -28,7 +28,7 @@ class Unzip
     {
         switch ($name) {
             case 'ZipArchive':
-                if (class_exists('ZipArchive', false)) {
+                if (class_exists('ZipArchive', \false)) {
                     return new ZipArchive($filename);
                 }
                 break;

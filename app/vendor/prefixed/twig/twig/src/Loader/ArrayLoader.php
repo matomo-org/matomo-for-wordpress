@@ -61,6 +61,6 @@ final class ArrayLoader implements LoaderInterface
         if (!isset($this->templates[$name])) {
             throw new LoaderError(\sprintf('Template "%s" is not defined.', $name));
         }
-        return true;
+        return \true;
     }
 }

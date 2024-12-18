@@ -42,7 +42,7 @@ class ContainerReleaseDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implemen
     {
         $table = $this->tablePrefixed;
         $containerTable = Common::prefixTable('tagmanager_container');
-        $sql = "SELECT crd.idcontainer, crd.idsite \n                FROM {$table} crd \n                LEFT JOIN {$containerTable} conr ON crd.idcontainer = conr.idcontainer \n                WHERE conr.`status` = ? and crd.`status` = ? group by crd.idsite, crd.idcontainer";
+        $sql = "SELECT crd.idcontainer, crd.idsite \n                FROM {$table} crd \n                LEFT JOIN {$containerTable} conr ON crd.idcontainer = conr.idcontainer \n                WHERE conr.`status` = ? and crd.`status` = ? group by crd.idsite, crd.idcontainer\n                                                             order by crd.idsite, crd.idcontainer";
         $containers = Db::fetchAll($sql, array(self::STATUS_ACTIVE, self::STATUS_ACTIVE));
         return $containers;
     }
@@ -118,6 +118,11 @@ class ContainerReleaseDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implemen
         }
         $query = Db::query($query, $bind);
         return $query->rowCount();
+    }
+    protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
+    {
+        // This is hard coded since releases don't have a name and therefore don't use this method
+        return \true;
     }
     private function enrichReleases($releases)
     {

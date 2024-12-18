@@ -66,8 +66,8 @@ class Chunk
     public function isRecordNameAChunk($recordName)
     {
         $posAppendix = $this->getEndPosOfChunkAppendix($recordName);
-        if (false === $posAppendix) {
-            return false;
+        if (\false === $posAppendix) {
+            return \false;
         }
         // will contain "0_99" of "chunk_0_99"
         $blobId = substr($recordName, $posAppendix);
@@ -90,7 +90,7 @@ class Chunk
             return $recordName;
         }
         $posAppendix = $this->getStartPosOfChunkAppendix($recordName);
-        if (false === $posAppendix) {
+        if (\false === $posAppendix) {
             return $recordName;
         }
         return substr($recordName, 0, $posAppendix);
@@ -111,8 +111,8 @@ class Chunk
     private function getEndPosOfChunkAppendix($recordName)
     {
         $pos = strpos($recordName, $this->getAppendix());
-        if ($pos === false) {
-            return false;
+        if ($pos === \false) {
+            return \false;
         }
         return $pos + strlen($this->getAppendix());
     }

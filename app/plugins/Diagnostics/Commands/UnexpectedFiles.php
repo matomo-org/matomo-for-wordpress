@@ -55,9 +55,9 @@ class UnexpectedFiles extends ConsoleCommand
                 $output->writeln("Aborted - no files were deleted");
                 return 1;
             }
-            return $this->runUnexpectedFiles(true);
+            return $this->runUnexpectedFiles(\true);
         }
-        return $this->runUnexpectedFiles(false);
+        return $this->runUnexpectedFiles(\false);
     }
     /**
      * Handle unexpected files command options
@@ -66,7 +66,7 @@ class UnexpectedFiles extends ConsoleCommand
      *
      * @return int
      */
-    private function runUnexpectedFiles(bool $delete = false) : int
+    private function runUnexpectedFiles(bool $delete = \false) : int
     {
         $output = $this->getOutput();
         // A list of files that should never be deleted under any circumstances, this acts as a backup safety check
@@ -116,8 +116,8 @@ class UnexpectedFiles extends ConsoleCommand
     private function askForDeleteConfirmation() : bool
     {
         if (!$this->getInput()->isInteractive()) {
-            return true;
+            return \true;
         }
-        return $this->askForConfirmation('<comment>You are about to delete files. This action cannot be undone, are you sure you want to continue? (Y/N)</comment>', false);
+        return $this->askForConfirmation('<comment>You are about to delete files. This action cannot be undone, are you sure you want to continue? (Y/N)</comment>', \false);
     }
 }

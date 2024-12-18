@@ -138,7 +138,7 @@ abstract class AbstractUnicodeString extends AbstractString
     public function camel() : parent
     {
         $str = clone $this;
-        $str->string = str_replace(' ', '', preg_replace_callback('/\\b.(?![A-Z]{2,})/u', static function ($m) use(&$i) {
+        $str->string = str_replace(' ', '', preg_replace_callback('/\\b.(?!\\p{Lu})/u', static function ($m) use(&$i) {
             return 1 === ++$i ? 'İ' === $m[0] ? 'i̇' : mb_strtolower($m[0], 'UTF-8') : mb_convert_case($m[0], \MB_CASE_TITLE, 'UTF-8');
         }, preg_replace('/[^\\pL0-9]++/u', ' ', $this->string)));
         return $str;
@@ -158,12 +158,12 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         return $codePoints;
     }
-    public function folded(bool $compat = true) : parent
+    public function folded(bool $compat = \true) : parent
     {
         $str = clone $this;
         if (!$compat || \PHP_VERSION_ID < 70300 || !\defined('Normalizer::NFKC_CF')) {
             $str->string = normalizer_normalize($str->string, $compat ? \Normalizer::NFKC : \Normalizer::NFC);
-            $str->string = mb_strtolower(str_replace(self::FOLD_FROM, self::FOLD_TO, $this->string), 'UTF-8');
+            $str->string = mb_strtolower(str_replace(self::FOLD_FROM, self::FOLD_TO, $str->string), 'UTF-8');
         } else {
             $str->string = normalizer_normalize($str->string, \Normalizer::NFKC_CF);
         }
@@ -195,9 +195,9 @@ abstract class AbstractUnicodeString extends AbstractString
             throw new InvalidArgumentException($m);
         });
         try {
-            if (false === $match($regexp . 'u', $this->string, $matches, $flags | \PREG_UNMATCHED_AS_NULL, $offset)) {
+            if (\false === $match($regexp . 'u', $this->string, $matches, $flags | \PREG_UNMATCHED_AS_NULL, $offset)) {
                 $lastError = preg_last_error();
-                foreach (get_defined_constants(true)['pcre'] as $k => $v) {
+                foreach (get_defined_constants(\true)['pcre'] as $k => $v) {
                     if ($lastError === $v && '_ERROR' === substr($k, -6)) {
                         throw new RuntimeException('Matching failed with ' . $k . '.');
                     }
@@ -276,7 +276,7 @@ abstract class AbstractUnicodeString extends AbstractString
         try {
             if (null === ($string = $replace($fromRegexp . 'u', $to, $this->string))) {
                 $lastError = preg_last_error();
-                foreach (get_defined_constants(true)['pcre'] as $k => $v) {
+                foreach (get_defined_constants(\true)['pcre'] as $k => $v) {
                     if ($lastError === $v && '_ERROR' === substr($k, -6)) {
                         throw new RuntimeException('Matching failed with ' . $k . '.');
                     }
@@ -302,7 +302,7 @@ abstract class AbstractUnicodeString extends AbstractString
         $str->string = mb_strtolower(preg_replace(['/(\\p{Lu}+)(\\p{Lu}\\p{Ll})/u', '/([\\p{Ll}0-9])(\\p{Lu})/u'], '\\1_\\2', $str->string), 'UTF-8');
         return $str;
     }
-    public function title(bool $allWords = false) : parent
+    public function title(bool $allWords = \false) : parent
     {
         $str = clone $this;
         $limit = $allWords ? -1 : 1;
@@ -338,7 +338,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $str = clone $this;
         if ($prefix instanceof \Traversable) {
-            $prefix = iterator_to_array($prefix, false);
+            $prefix = iterator_to_array($prefix, \false);
         } elseif ($prefix instanceof parent) {
             $prefix = $prefix->string;
         }
@@ -363,7 +363,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $str = clone $this;
         if ($suffix instanceof \Traversable) {
-            $suffix = iterator_to_array($suffix, false);
+            $suffix = iterator_to_array($suffix, \false);
         } elseif ($suffix instanceof parent) {
             $suffix = $suffix->string;
         }
@@ -380,11 +380,11 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         return $str;
     }
-    public function width(bool $ignoreAnsiDecoration = true) : int
+    public function width(bool $ignoreAnsiDecoration = \true) : int
     {
         $width = 0;
         $s = str_replace(["\x00", "\x05", "\x07"], '', $this->string);
-        if (false !== strpos($s, "\r")) {
+        if (\false !== strpos($s, "\r")) {
             $s = str_replace(["\r\n", "\r"], "\n", $s);
         }
         if (!$ignoreAnsiDecoration) {

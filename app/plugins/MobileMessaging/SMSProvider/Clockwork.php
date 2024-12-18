@@ -47,7 +47,7 @@ class Clockwork extends SMSProvider
     public function verifyCredential($credentials)
     {
         $this->getCreditLeft($credentials);
-        return true;
+        return \true;
     }
     public function sendSMS($credentials, $smsText, $phoneNumber, $from)
     {
@@ -67,7 +67,7 @@ class Clockwork extends SMSProvider
         } catch (Exception $e) {
             $result = self::ERROR_STRING . " " . $e->getMessage();
         }
-        if (strpos($result, self::ERROR_STRING) !== false) {
+        if (strpos($result, self::ERROR_STRING) !== \false) {
             throw new APIException('Clockwork API returned the following error message : ' . $result);
         }
         return $result;

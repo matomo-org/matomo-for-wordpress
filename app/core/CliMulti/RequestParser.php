@@ -41,9 +41,9 @@ class RequestParser
     {
         $result = array_filter($commands, function ($command) {
             if (empty($command['trigger']) || $command['trigger'] != 'archivephp') {
-                return false;
+                return \false;
             }
-            return true;
+            return \true;
         });
         $result = array_values($result);
         return $result;
@@ -54,10 +54,10 @@ class RequestParser
         $lines = explode("\n", $psOutput);
         $lines = array_map('trim', $lines);
         $lines = array_filter($lines, function ($line) use($instanceId) {
-            if (!empty($instanceId) && strpos($line, 'matomo-domain=' . $instanceId) === false) {
-                return false;
+            if (!empty($instanceId) && strpos($line, 'matomo-domain=' . $instanceId) === \false) {
+                return \false;
             }
-            return strpos($line, 'climulti:request') !== false && (strpos($line, 'console') !== false || strpos($line, 'php') !== false);
+            return strpos($line, 'climulti:request') !== \false && (strpos($line, 'console') !== \false || strpos($line, 'php') !== \false);
         });
         return $lines;
     }
@@ -84,6 +84,6 @@ class RequestParser
             return '';
             // skip check in tests as it might result in random failures
         }
-        return `ps aux`;
+        return `ps wwaux`;
     }
 }

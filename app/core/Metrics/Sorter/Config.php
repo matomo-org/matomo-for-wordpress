@@ -10,12 +10,12 @@ namespace Piwik\Metrics\Sorter;
 
 class Config
 {
-    public $naturalSort = false;
+    public $naturalSort = \false;
     public $primaryColumnToSort;
     public $primarySortFlags;
     public $primarySortOrder;
     public $secondaryColumnToSort;
     public $secondarySortOrder;
     public $secondarySortFlags;
-    public $isSecondaryColumnSortEnabled = true;
+    public $isSecondaryColumnSortEnabled = \true;
 }

@@ -75,7 +75,7 @@ class ApcCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doGetStats()
     {
-        $info = apc_cache_info('', true);
+        $info = apc_cache_info('', \true);
         $sma = apc_sma_info();
         // @TODO - Temporary fix @see https://github.com/krakjoe/apcu/pull/42
         if (PHP_VERSION_ID >= 50500) {

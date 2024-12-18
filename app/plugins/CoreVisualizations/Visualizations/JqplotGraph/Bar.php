@@ -43,6 +43,6 @@ class Bar extends JqplotGraph
     }
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
 }

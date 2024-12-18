@@ -20,7 +20,7 @@ class Config extends VisualizationConfig
      *
      * Default value: false
      */
-    public $display_logo_instead_of_label = false;
+    public $display_logo_instead_of_label = \false;
     public function __construct()
     {
         parent::__construct();

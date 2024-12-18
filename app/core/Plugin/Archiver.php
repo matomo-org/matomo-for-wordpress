@@ -14,6 +14,7 @@ use Piwik\CacheId;
 use Piwik\Config as PiwikConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\ErrorHandler;
+use Piwik\Log;
 use Piwik\Piwik;
 /**
  * The base class that should be extended by plugins that compute their own
@@ -57,7 +58,7 @@ use Piwik\Piwik;
  */
 class Archiver
 {
-    public static $ARCHIVE_DEPENDENT = true;
+    public static $ARCHIVE_DEPENDENT = \true;
     /**
      * @var \Piwik\ArchiveProcessor
      */
@@ -86,7 +87,7 @@ class Archiver
     {
         $this->maximumRows = PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_standard'];
         $this->processor = $processor;
-        $this->enabled = true;
+        $this->enabled = \true;
         $this->pluginName = $pluginName;
     }
     private function getPluginName() : string
@@ -103,7 +104,7 @@ class Archiver
         $transientCache = Cache::getTransientCache();
         $cacheKey = CacheId::siteAware('Archiver.RecordBuilders') . '.' . $pluginName;
         $recordBuilders = $transientCache->fetch($cacheKey);
-        if ($recordBuilders === false) {
+        if ($recordBuilders === \false) {
             $recordBuilderClasses = $this->getAllRecordBuilderClasses();
             // only select RecordBuilders for the selected plugin
             $recordBuilderClasses = array_filter($recordBuilderClasses, function ($className) use($pluginName) {
@@ -127,7 +128,7 @@ class Archiver
              * @param ArchiveProcessor\RecordBuilder[] $recordBuilders An array of RecordBuilder instances
              * @api
              */
-            Piwik::postEvent('Archiver.addRecordBuilders', [&$recordBuilders], false, [$pluginName]);
+            Piwik::postEvent('Archiver.addRecordBuilders', [&$recordBuilders], \false, [$pluginName]);
             $transientCache->save($cacheKey, $recordBuilders);
         }
         /**
@@ -148,11 +149,21 @@ class Archiver
          * @api
          */
         Piwik::postEvent('Archiver.filterRecordBuilders', [&$recordBuilders]);
-        $requestedReports = $this->processor->getParams()->getArchiveOnlyReportAsArray();
+        return $recordBuilders;
+    }
+    private function filterRecordBuildersByRequestedRecords(array $recordBuilders, array $requestedReports) : array
+    {
+        // No record builders might be provided if the plugin does not (yet) provide any
+        if (empty($recordBuilders)) {
+            return $recordBuilders;
+        }
         if (!empty($requestedReports)) {
             $recordBuilders = array_filter($recordBuilders, function (ArchiveProcessor\RecordBuilder $builder) use($requestedReports) {
                 return $builder->isBuilderForAtLeastOneOf($this->processor, $requestedReports);
             });
+        }
+        if (0 === count($recordBuilders)) {
+            Log::debug('Archiver: No record builders found for requested records %s', implode(',', $this->processor->getParams()->getArchiveOnlyReportAsArray()));
         }
         return $recordBuilders;
     }
@@ -165,16 +176,15 @@ class Archiver
             ErrorHandler::pushFatalErrorBreadcrumb(static::class);
             $pluginName = $this->getPluginName();
             if (\Piwik\Plugin\Manager::getInstance()->isPluginLoaded($pluginName)) {
-                $recordBuilders = $this->getRecordBuilders($pluginName);
+                $allRecordBuilders = $this->getRecordBuilders($pluginName);
+                $recordBuilders = $this->filterRecordBuildersByRequestedRecords($allRecordBuilders, $this->processor->getParams()->getArchiveOnlyReportAsArray());
+                // If the plugin provides record builders and only a specific record was requested, we mark the archive as partial
+                if (count($allRecordBuilders) > 0 && $this->processor->getParams()->getArchiveOnlyReport()) {
+                    $this->processor->getParams()->setIsPartialArchive(\true);
+                }
                 foreach ($recordBuilders as $recordBuilder) {
                     if (!$recordBuilder->isEnabled($this->getProcessor())) {
                         continue;
-                    }
-                    // if automatically handling "archive only report" in RecordBuilders, make sure the archive
-                    // will be marked as partial
-                    if ($this->processor->getParams()->getArchiveOnlyReport()) {
-                        $this->processor->getParams()->setIsPartialArchive(true);
-                        // make sure archive will be marked as partial
                     }
                     $originalQueryHint = $this->getProcessor()->getLogAggregator()->getQueryOriginHint();
                     $newQueryHint = $originalQueryHint . ' ' . $recordBuilder->getQueryOriginHint();
@@ -201,16 +211,15 @@ class Archiver
             ErrorHandler::pushFatalErrorBreadcrumb(static::class);
             $pluginName = $this->getPluginName();
             if (\Piwik\Plugin\Manager::getInstance()->isPluginLoaded($pluginName)) {
-                $recordBuilders = $this->getRecordBuilders($pluginName);
+                $allRecordBuilders = $this->getRecordBuilders($pluginName);
+                $recordBuilders = $this->filterRecordBuildersByRequestedRecords($allRecordBuilders, $this->processor->getParams()->getArchiveOnlyReportAsArray());
+                // If the plugin provides record builders and only a specific record was requested, we mark the archive as partial
+                if (count($allRecordBuilders) > 0 && $this->processor->getParams()->getArchiveOnlyReport()) {
+                    $this->processor->getParams()->setIsPartialArchive(\true);
+                }
                 foreach ($recordBuilders as $recordBuilder) {
                     if (!$recordBuilder->isEnabled($this->getProcessor())) {
                         continue;
-                    }
-                    // if automatically handling "archive only report" in RecordBuilders, make sure the archive
-                    // will be marked as partial
-                    if ($this->processor->getParams()->getArchiveOnlyReport()) {
-                        $this->processor->getParams()->setIsPartialArchive(true);
-                        // make sure archive will be marked as partial
                     }
                     $originalQueryHint = $this->getProcessor()->getLogAggregator()->getQueryOriginHint();
                     $newQueryHint = $originalQueryHint . ' ' . $recordBuilder->getQueryOriginHint();
@@ -282,7 +291,7 @@ class Archiver
     }
     public function disable()
     {
-        $this->enabled = false;
+        $this->enabled = \false;
     }
     /**
      * Whether this Archiver should be used or not.
@@ -302,7 +311,7 @@ class Archiver
      */
     public static function shouldRunEvenWhenNoVisits()
     {
-        return false;
+        return \false;
     }
     /**
      * Returns a list of segments that should be pre-archived along with the segment currently being archived.
@@ -360,7 +369,7 @@ class Archiver
         $transientCache = Cache::getTransientCache();
         $cacheKey = CacheId::siteAware('RecordBuilders.allRecordBuilders');
         $recordBuilderClasses = $transientCache->fetch($cacheKey);
-        if ($recordBuilderClasses === false) {
+        if ($recordBuilderClasses === \false) {
             $recordBuilderClasses = \Piwik\Plugin\Manager::getInstance()->findMultipleComponents('RecordBuilders', ArchiveProcessor\RecordBuilder::class);
             $recordBuilderClasses = self::getDefaultConstructibleClasses($recordBuilderClasses);
             $transientCache->save($cacheKey, $recordBuilderClasses);
@@ -372,9 +381,9 @@ class Archiver
         $recordBuilders = self::getAllRecordBuilderClasses();
         foreach ($recordBuilders as $builder) {
             if ($pluginName === Piwik::getPluginNameOfMatomoClass($builder)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

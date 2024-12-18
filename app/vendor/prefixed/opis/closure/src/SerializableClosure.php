@@ -160,7 +160,7 @@ class SerializableClosure implements Serializable
             }
             if ($data[1] !== '{') {
                 $separator = strpos($data, '.');
-                if ($separator === false) {
+                if ($separator === \false) {
                     throw new SecurityException('Invalid signed closure');
                 }
                 $hash = substr($data, 1, $separator - 1);
@@ -168,7 +168,7 @@ class SerializableClosure implements Serializable
                 $data = ['hash' => $hash, 'closure' => $closure];
                 unset($hash, $closure);
             } else {
-                $data = json_decode(substr($data, 1), true);
+                $data = json_decode(substr($data, 1), \true);
             }
             if (!is_array($data) || !static::$securityProvider->verify($data)) {
                 throw new SecurityException("Your serialized closure might have been modified and it's unsafe to be unserialized. " . "Make sure you use the same security provider, with the same settings, " . "both for serialization and unserialization.");
@@ -177,7 +177,7 @@ class SerializableClosure implements Serializable
         } elseif ($data[0] === '@') {
             if ($data[1] !== '{') {
                 $separator = strpos($data, '.');
-                if ($separator === false) {
+                if ($separator === \false) {
                     throw new SecurityException('Invalid signed closure');
                 }
                 $hash = substr($data, 1, $separator - 1);
@@ -185,7 +185,7 @@ class SerializableClosure implements Serializable
                 $data = ['hash' => $hash, 'closure' => $closure];
                 unset($hash, $closure);
             } else {
-                $data = json_decode(substr($data, 1), true);
+                $data = json_decode(substr($data, 1), \true);
             }
             if (!is_array($data) || !isset($data['closure']) || !isset($data['hash'])) {
                 throw new SecurityException('Invalid signed closure');
@@ -200,7 +200,7 @@ class SerializableClosure implements Serializable
             $this->scope = new ClosureScope();
             $this->code['use'] = $this->resolveUseVariables($this->code['use']);
             $this->mapPointers($this->code['use']);
-            extract($this->code['use'], EXTR_OVERWRITE | EXTR_REFS);
+            extract($this->code['use'], \EXTR_OVERWRITE | \EXTR_REFS);
             $this->scope = null;
         }
         $this->closure = (include ClosureStream::STREAM_PROTO . '://' . $this->code['function']);
@@ -311,7 +311,7 @@ class SerializableClosure implements Serializable
             if (isset($data[self::ARRAY_RECURSIVE_KEY])) {
                 return;
             }
-            $data[self::ARRAY_RECURSIVE_KEY] = true;
+            $data[self::ARRAY_RECURSIVE_KEY] = \true;
             foreach ($data as $key => &$value) {
                 if ($key === self::ARRAY_RECURSIVE_KEY) {
                     continue;
@@ -350,8 +350,8 @@ class SerializableClosure implements Serializable
                     if ($property->isStatic() || !$property->getDeclaringClass()->isUserDefined()) {
                         continue;
                     }
-                    $property->setAccessible(true);
-                    if (PHP_VERSION >= 7.4 && !$property->isInitialized($instance)) {
+                    $property->setAccessible(\true);
+                    if (\PHP_VERSION >= 7.4 && !$property->isInitialized($instance)) {
                         continue;
                     }
                     $value = $property->getValue($instance);
@@ -381,7 +381,7 @@ class SerializableClosure implements Serializable
             if (isset($data[self::ARRAY_RECURSIVE_KEY])) {
                 return;
             }
-            $data[self::ARRAY_RECURSIVE_KEY] = true;
+            $data[self::ARRAY_RECURSIVE_KEY] = \true;
             foreach ($data as $key => &$value) {
                 if ($key === self::ARRAY_RECURSIVE_KEY) {
                     continue;
@@ -393,7 +393,7 @@ class SerializableClosure implements Serializable
             if (isset($storage[$data])) {
                 return;
             }
-            $storage[$data] = true;
+            $storage[$data] = \true;
             foreach ($data as &$property) {
                 static::unwrapClosures($property, $storage);
             }
@@ -401,7 +401,7 @@ class SerializableClosure implements Serializable
             if (isset($storage[$data])) {
                 return;
             }
-            $storage[$data] = true;
+            $storage[$data] = \true;
             $reflection = new ReflectionObject($data);
             do {
                 if (!$reflection->isUserDefined()) {
@@ -411,8 +411,8 @@ class SerializableClosure implements Serializable
                     if ($property->isStatic() || !$property->getDeclaringClass()->isUserDefined()) {
                         continue;
                     }
-                    $property->setAccessible(true);
-                    if (PHP_VERSION >= 7.4 && !$property->isInitialized($data)) {
+                    $property->setAccessible(\true);
+                    if (\PHP_VERSION >= 7.4 && !$property->isInitialized($data)) {
                         continue;
                     }
                     $value = $property->getValue($data);
@@ -451,7 +451,7 @@ class SerializableClosure implements Serializable
             if (isset($data[self::ARRAY_RECURSIVE_KEY])) {
                 return;
             }
-            $data[self::ARRAY_RECURSIVE_KEY] = true;
+            $data[self::ARRAY_RECURSIVE_KEY] = \true;
             foreach ($data as $key => &$value) {
                 if ($key === self::ARRAY_RECURSIVE_KEY) {
                     continue;
@@ -469,7 +469,7 @@ class SerializableClosure implements Serializable
             if (isset($scope[$data])) {
                 return;
             }
-            $scope[$data] = true;
+            $scope[$data] = \true;
             foreach ($data as $key => &$value) {
                 if ($value instanceof SelfReference && $value->hash === $this->code['self']) {
                     $data->{$key} =& $this->closure;
@@ -482,7 +482,7 @@ class SerializableClosure implements Serializable
             if (isset($scope[$data])) {
                 return;
             }
-            $scope[$data] = true;
+            $scope[$data] = \true;
             $reflection = new ReflectionObject($data);
             do {
                 if (!$reflection->isUserDefined()) {
@@ -492,8 +492,8 @@ class SerializableClosure implements Serializable
                     if ($property->isStatic() || !$property->getDeclaringClass()->isUserDefined()) {
                         continue;
                     }
-                    $property->setAccessible(true);
-                    if (PHP_VERSION >= 7.4 && !$property->isInitialized($data)) {
+                    $property->setAccessible(\true);
+                    if (\PHP_VERSION >= 7.4 && !$property->isInitialized($data)) {
                         continue;
                     }
                     $item = $property->getValue($data);
@@ -535,7 +535,7 @@ class SerializableClosure implements Serializable
             if (isset($data[self::ARRAY_RECURSIVE_KEY])) {
                 return;
             }
-            $data[self::ARRAY_RECURSIVE_KEY] = true;
+            $data[self::ARRAY_RECURSIVE_KEY] = \true;
             foreach ($data as $key => &$value) {
                 if ($key === self::ARRAY_RECURSIVE_KEY) {
                     continue;
@@ -575,8 +575,8 @@ class SerializableClosure implements Serializable
                     if ($property->isStatic() || !$property->getDeclaringClass()->isUserDefined()) {
                         continue;
                     }
-                    $property->setAccessible(true);
-                    if (PHP_VERSION >= 7.4 && !$property->isInitialized($instance)) {
+                    $property->setAccessible(\true);
+                    if (\PHP_VERSION >= 7.4 && !$property->isInitialized($instance)) {
                         continue;
                     }
                     $value = $property->getValue($instance);

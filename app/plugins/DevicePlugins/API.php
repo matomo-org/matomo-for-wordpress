@@ -34,7 +34,7 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         return $dataTable;
     }
-    public function getPlugin($idSite, $period, $date, $segment = false)
+    public function getPlugin($idSite, $period, $date, $segment = \false)
     {
         // fetch all archive data required
         $dataTable = $this->getDataTable(\Piwik\Plugins\DevicePlugins\Archiver::PLUGIN_RECORD_NAME, $idSite, $period, $date, $segment);
@@ -58,7 +58,7 @@ class API extends \Piwik\Plugin\API
             $browserVersionsToExclude = array('IE;10.0', 'IE;9.0', 'IE;8.0', 'IE;7.0', 'IE;6.0');
             foreach ($browserVersionsToExclude as $browserVersionToExclude) {
                 $ieStats = $browserVersionsArray[$key]->getRowFromLabel($browserVersionToExclude);
-                if ($ieStats !== false) {
+                if ($ieStats !== \false) {
                     $ieVisits += $ieStats->getColumn(Metrics::INDEX_NB_VISITS);
                 }
             }

@@ -199,7 +199,7 @@ class Request
      */
     public function process()
     {
-        $shouldReloadAuth = false;
+        $shouldReloadAuth = \false;
         try {
             ++self::$nestedApiInvocationCount;
             // read the format requested for the output data
@@ -247,7 +247,7 @@ class Request
                 return $response->getResponse($returnedValue, $module, $method);
             });
         } catch (Exception $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => true]);
+            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
             if (empty($response)) {
                 $response = new \Piwik\API\ResponseBuilder('console', $this->request);
             }
@@ -264,13 +264,13 @@ class Request
     {
         // if we would not make sure to unset super user access, the tokenAuth would be not authenticated and any
         // token would just keep super user access (eg if the token that was reloaded before had super user access)
-        Access::getInstance()->setSuperUserAccess(false);
+        Access::getInstance()->setSuperUserAccess(\false);
         // we need to restore by reloading the tokenAuth as some permissions could have been removed in the API
         // request etc. Otherwise we could just store a clone of Access::getInstance() and restore here
         self::forceReloadAuthUsingTokenAuth($tokenToRestore);
         if ($hadSuperUserAccess && !Access::getInstance()->hasSuperUserAccess()) {
             // we are in context of `doAsSuperUser()` and need to restore this behaviour
-            Access::getInstance()->setSuperUserAccess(true);
+            Access::getInstance()->setSuperUserAccess(\true);
         }
     }
     /**
@@ -450,7 +450,7 @@ class Request
         }
         if (!isset($request['token_auth'])) {
             // no token is given so we just keep the current loaded user
-            return false;
+            return \false;
         }
         // a token is specified, we need to reload auth in case it is different than the current one, even if it is empty
         $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $request);
@@ -572,14 +572,14 @@ class Request
     {
         // if filter_column_recursive & filter_pattern_recursive are supplied, and flat isn't supplied
         // we have to load all the child subtables.
-        return Common::getRequestVar('filter_column_recursive', false) !== false && Common::getRequestVar('filter_pattern_recursive', false) !== false && !self::shouldLoadFlatten();
+        return Common::getRequestVar('filter_column_recursive', \false) !== \false && Common::getRequestVar('filter_pattern_recursive', \false) !== \false && !self::shouldLoadFlatten();
     }
     /**
      * @return bool
      */
     public static function shouldLoadFlatten()
     {
-        return Common::getRequestVar('flat', false) == 1;
+        return Common::getRequestVar('flat', \false) == 1;
     }
     /**
      * Returns the segment query parameter from the original request, without modifications.
@@ -589,7 +589,7 @@ class Request
     public static function getRawSegmentFromRequest()
     {
         // we need the URL encoded segment parameter, we fetch it from _SERVER['QUERY_STRING'] instead of default URL decoded _GET
-        $segmentRaw = false;
+        $segmentRaw = \false;
         $segment = Common::getRequestVar('segment', '', 'string');
         if (!empty($segment)) {
             $request = \Piwik\API\Request::getRequestParametersGET();
@@ -618,7 +618,7 @@ class Request
     }
     private function shouldDisablePostProcessing()
     {
-        $shouldDisable = false;
+        $shouldDisable = \false;
         /**
          * After an API method returns a value, the value is post processed (eg, rows are sorted
          * based on the `filter_sort_column` query parameter, rows are truncated based on the

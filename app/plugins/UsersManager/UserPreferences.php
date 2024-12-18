@@ -41,7 +41,7 @@ class UserPreferences
         if (!empty($sitesId)) {
             return $sitesId[0];
         }
-        return false;
+        return \false;
     }
     /**
      * Returns default site ID that Piwik should load.
@@ -61,7 +61,7 @@ class UserPreferences
         if ($defaultReport && Piwik::isUserHasViewAccess($defaultReport)) {
             return $defaultReport;
         }
-        return false;
+        return \false;
     }
     /**
      * Returns default date for Piwik reports.

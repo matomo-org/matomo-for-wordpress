@@ -146,7 +146,7 @@ class MySQLMetadataProvider
      *                         cache the result.
      * @return DataTable
      */
-    public function getRowCountsAndSizeByBlobName($forceCache = false)
+    public function getRowCountsAndSizeByBlobName($forceCache = \false)
     {
         $extraSelects = array("SUM(OCTET_LENGTH(value)) AS 'blob_size'", "SUM(LENGTH(name)) AS 'name_size'");
         $extraCols = array('blob_size', 'name_size');
@@ -162,7 +162,7 @@ class MySQLMetadataProvider
      *                         cache the result.
      * @return DataTable
      */
-    public function getRowCountsAndSizeByMetricName($forceCache = false)
+    public function getRowCountsAndSizeByMetricName($forceCache = \false)
     {
         return $this->getRowCountsByArchiveName($this->getAllNumericArchiveStatus(), 'getEstimatedRowsSize', $forceCache);
     }
@@ -170,7 +170,7 @@ class MySQLMetadataProvider
      * Utility function. Gets row count of a set of tables grouped by the 'name' column.
      * This is the implementation of the getRowCountsAndSizeBy... functions.
      */
-    private function getRowCountsByArchiveName($statuses, $getRowSizeMethod, $forceCache = false, $otherSelects = array(), $otherDataTableColumns = array())
+    private function getRowCountsByArchiveName($statuses, $getRowSizeMethod, $forceCache = \false, $otherSelects = array(), $otherDataTableColumns = array())
     {
         $extraCols = '';
         if (!empty($otherSelects)) {
@@ -182,7 +182,7 @@ class MySQLMetadataProvider
             $dataTableOptionName = $this->getCachedOptionName($status['Name'], 'byArchiveName');
             // if option exists && !$forceCache, use the cached data, otherwise create the
             $cachedData = Option::get($dataTableOptionName);
-            if ($cachedData !== false && !$forceCache) {
+            if ($cachedData !== \false && !$forceCache) {
                 $table = DataTable::fromSerializedArray($cachedData);
             } else {
                 $table = new DataTable();
@@ -224,7 +224,7 @@ class MySQLMetadataProvider
             $fixedSizeColumnLength = 0;
             foreach ($this->dataAccess->getColumnsFromTable($status['Name']) as $column) {
                 $columnType = $column['Type'];
-                if (($paren = strpos($columnType, '(')) !== false) {
+                if (($paren = strpos($columnType, '(')) !== \false) {
                     $columnType = substr($columnType, 0, $paren);
                 }
                 $fixedSizeColumnLength += $this->getSizeOfDatabaseType($columnType);

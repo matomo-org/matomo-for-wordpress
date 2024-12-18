@@ -43,7 +43,7 @@ class ContentName extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionContent) {
-            return false;
+            return \false;
         }
         $contentName = $request->getParam('c_n');
         $contentName = trim($contentName);

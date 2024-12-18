@@ -36,12 +36,16 @@ class SitesManager extends \Piwik\Plugin
     public const KEEP_URL_FRAGMENT_USE_DEFAULT = 0;
     public const KEEP_URL_FRAGMENT_YES = 1;
     public const KEEP_URL_FRAGMENT_NO = 2;
+    public const URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS = 'common_session_parameters';
+    public const URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII = 'matomo_recommended_pii';
+    public const URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM = 'custom';
+    public const URL_PARAM_EXCLUSION_TYPES = [self::URL_PARAM_EXCLUSION_TYPE_NAME_COMMON_SESSION_PARAMETERS, self::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII, self::URL_PARAM_EXCLUSION_TYPE_NAME_CUSTOM];
     /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
     {
-        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => ['function' => 'recordWebsiteDataInCache', 'before' => true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'SitesManager.deleteSite.end' => 'onSiteDeleted', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Request.dispatch' => 'redirectDashboardToWelcomePage'];
+        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => ['function' => 'recordWebsiteDataInCache', 'before' => \true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'SitesManager.deleteSite.end' => 'onSiteDeleted', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Request.dispatch' => 'redirectDashboardToWelcomePage'];
     }
     public static function isSitesAdminEnabled()
     {
@@ -67,7 +71,7 @@ class SitesManager extends \Piwik\Plugin
         if ($module !== 'CoreHome' || $action !== 'index') {
             return;
         }
-        $siteId = Common::getRequestVar('idSite', false, 'int');
+        $siteId = Common::getRequestVar('idSite', \false, 'int');
         if (!$siteId) {
             return;
         }
@@ -102,7 +106,7 @@ class SitesManager extends \Piwik\Plugin
     }
     public static function shouldPerformEmptySiteCheck($siteId)
     {
-        $shouldPerformEmptySiteCheck = true;
+        $shouldPerformEmptySiteCheck = \true;
         /**
          * Posted before checking to display the "No data has been recorded yet" message.
          * If your Measurable should never have visits, you can use this event to make
@@ -196,9 +200,9 @@ class SitesManager extends \Piwik\Plugin
     private static function shouldKeepURLFragmentsFor($site)
     {
         if ($site['keep_url_fragment'] == self::KEEP_URL_FRAGMENT_YES) {
-            return true;
+            return \true;
         } elseif ($site['keep_url_fragment'] == self::KEEP_URL_FRAGMENT_NO) {
-            return false;
+            return \false;
         }
         return \Piwik\Plugins\SitesManager\API::getInstance()->getKeepURLFragmentsGlobal();
     }
@@ -232,7 +236,7 @@ class SitesManager extends \Piwik\Plugin
         $ipRanges = [];
         foreach (explode(',', $excludedIps) as $ip) {
             $ipRange = \Piwik\Plugins\SitesManager\API::getInstance()->getIpsForRange($ip);
-            if ($ipRange !== false) {
+            if ($ipRange !== \false) {
                 $ipRanges[] = $ipRange;
             }
         }
@@ -422,6 +426,15 @@ class SitesManager extends \Piwik\Plugin
         $translationKeys[] = 'SitesManager_SiteWithoutDataOtherInstallMethods';
         $translationKeys[] = 'Mobile_NavigationBack';
         $translationKeys[] = 'SitesManager_SiteWithoutDataInstallWithX';
+        $translationKeys[] = 'SitesManager_ExclusionTypeOptionCommonSessionParameters';
+        $translationKeys[] = 'SitesManager_ExclusionTypeOptionMatomoRecommendedPII';
+        $translationKeys[] = 'SitesManager_ExclusionTypeOptionCustom';
+        $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCommonSessionParameters';
+        $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionMatomoRecommendedPII';
+        $translationKeys[] = 'SitesManager_ExclusionTypeDescriptionCustom';
+        $translationKeys[] = 'SitesManager_ExclusionViewListLink';
+        $translationKeys[] = 'SitesManager_AddSensibleExclusionsToMyCustomListButtonText';
+        $translationKeys[] = 'SitesManager_MatomoWillAutomaticallyExcludeCommonSessionParametersInAddition';
     }
     public static function renderTrackingCodeEmail(int $idSite)
     {
@@ -431,14 +444,14 @@ class SitesManager extends \Piwik\Plugin
         $jsTag = Request::processRequest('SitesManager.getJavascriptTag', ['idSite' => $idSite, 'piwikUrl' => $matomoUrl]);
         // Strip off open and close <script> tag and comments so that JS will be displayed in ALL mail clients
         $rawJsTag = TrackerCodeGenerator::stripTags($jsTag);
-        $showMatomoLinks = true;
+        $showMatomoLinks = \true;
         /**
          * @ignore
          */
         Piwik::postEvent('SitesManager.showMatomoLinksInTrackingCodeEmail', [&$showMatomoLinks]);
         $trackerCodeGenerator = new TrackerCodeGenerator();
         $trackingUrl = trim(SettingsPiwik::getPiwikUrl(), '/') . '/' . $trackerCodeGenerator->getPhpTrackerEndpoint();
-        $emailTemplateData = ['jsTag' => $rawJsTag, 'showMatomoLinks' => $showMatomoLinks, 'trackingUrl' => $trackingUrl, 'idSite' => $idSite, 'consentManagerName' => false];
+        $emailTemplateData = ['jsTag' => $rawJsTag, 'showMatomoLinks' => $showMatomoLinks, 'trackingUrl' => $trackingUrl, 'idSite' => $idSite, 'consentManagerName' => \false];
         $siteContentDetector = StaticContainer::get(SiteContentDetector::class);
         $siteContentDetector->detectContent([], $idSite);
         $detectedConsentManagers = $siteContentDetector->getDetectsByType(SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER);

@@ -31,7 +31,7 @@ abstract class BaseFilter
     /**
      * @var bool
      */
-    protected $enableRecursive = false;
+    protected $enableRecursive = \false;
     /**
      * Constructor.
      *

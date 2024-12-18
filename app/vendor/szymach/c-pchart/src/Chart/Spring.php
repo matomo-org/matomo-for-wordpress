@@ -61,7 +61,7 @@ class Spring
     /**
      * @var boolean
      */
-    public $AutoComputeFreeZone = false;
+    public $AutoComputeFreeZone = \false;
     /**
      * @var int|float
      */
@@ -408,7 +408,7 @@ class Spring
         if (isset($this->Data[$SourceID]["Connections"])) {
             foreach ($this->Data[$SourceID]["Connections"] as $ConnectionID) {
                 if ($TargetID == $ConnectionID) {
-                    return true;
+                    return \true;
                 }
             }
         }
@@ -529,14 +529,14 @@ class Spring
                                 $Ring = $this->Data[$BiggestPartner]["FreeZone"];
                                 $Weight = $this->Data[$BiggestPartner]["Weight"];
                                 $AngleDivision = 360 / $this->Data[$BiggestPartner]["Weight"];
-                                $Done = false;
+                                $Done = \false;
                                 $Tries = 0;
                                 while (!$Done && $Tries <= $Weight * 2) {
                                     $Tries++;
                                     $Angle = floor(rand(0, $Weight) * $AngleDivision);
                                     if (!isset($this->Data[$BiggestPartner]["Angular"][$Angle]) || !isset($this->Data[$BiggestPartner]["Angular"])) {
                                         $this->Data[$BiggestPartner]["Angular"][$Angle] = $Angle;
-                                        $Done = true;
+                                        $Done = \true;
                                     }
                                 }
                                 if (!$Done) {
@@ -782,9 +782,9 @@ class Spring
         $this->MagneticForceA = isset($Settings["MagneticForceA"]) ? $Settings["MagneticForceA"] : 1.5;
         $this->MagneticForceR = isset($Settings["MagneticForceR"]) ? $Settings["MagneticForceR"] : 2;
         $this->RingSize = isset($Settings["RingSize"]) ? $Settings["RingSize"] : 40;
-        $DrawVectors = isset($Settings["DrawVectors"]) ? $Settings["DrawVectors"] : false;
-        $DrawQuietZone = isset($Settings["DrawQuietZone"]) ? $Settings["DrawQuietZone"] : false;
-        $CenterGraph = isset($Settings["CenterGraph"]) ? $Settings["CenterGraph"] : true;
+        $DrawVectors = isset($Settings["DrawVectors"]) ? $Settings["DrawVectors"] : \false;
+        $DrawQuietZone = isset($Settings["DrawQuietZone"]) ? $Settings["DrawQuietZone"] : \false;
+        $CenterGraph = isset($Settings["CenterGraph"]) ? $Settings["CenterGraph"] : \true;
         $TextPadding = isset($Settings["TextPadding"]) ? $Settings["TextPadding"] : 4;
         $Algorithm = isset($Settings["Algorithm"]) ? $Settings["Algorithm"] : ALGORITHM_WEIGHTED;
         $this->X1 = $Object->GraphAreaX1;
@@ -841,7 +841,7 @@ class Spring
                         $X2 = $this->Data[$NodeID]["X"];
                         $Y2 = $this->Data[$NodeID]["Y"];
                         $this->pChartObject->drawLine($X, $Y, $X2, $Y2, $Color);
-                        $Drawn[$Key][$NodeID] = true;
+                        $Drawn[$Key][$NodeID] = \true;
                         if (isset($this->Links) && count($this->Links)) {
                             if (isset($this->Links[$Key][$NodeID]["Name"]) || isset($this->Links[$NodeID][$Key]["Name"])) {
                                 $Name = isset($this->Links[$Key][$NodeID]["Name"]) ? $this->Links[$Key][$NodeID]["Name"] : $this->Links[$NodeID][$Key]["Name"];
@@ -903,12 +903,12 @@ class Spring
                     $this->pChartObject->drawText($X, $Y, $Name, $LabelOptions);
                 } elseif ($this->Labels["Type"] == LABEL_CLASSIC) {
                     $LabelOptions["Align"] = TEXT_ALIGN_TOPMIDDLE;
-                    $LabelOptions["DrawBox"] = true;
+                    $LabelOptions["DrawBox"] = \true;
                     $LabelOptions["BoxAlpha"] = 50;
                     $LabelOptions["BorderOffset"] = 4;
                     $LabelOptions["RoundedRadius"] = 3;
-                    $LabelOptions["BoxRounded"] = true;
-                    $LabelOptions["NoShadow"] = true;
+                    $LabelOptions["BoxRounded"] = \true;
+                    $LabelOptions["NoShadow"] = \true;
                     $this->pChartObject->drawText($X, $Y + $Size + $TextPadding, $Name, $LabelOptions);
                 }
             }
@@ -977,17 +977,17 @@ class Spring
         $A = ($X3 * $Y4 - $X4 * $Y3) * ($X1 - $X2) - ($X1 * $Y2 - $X2 * $Y1) * ($X3 - $X4);
         $B = ($Y1 - $Y2) * ($X3 - $X4) - ($Y3 - $Y4) * ($X1 - $X2);
         if ($B == 0) {
-            return false;
+            return \false;
         }
         $Xi = $A / $B;
         $C = $X1 - $X2;
         if ($C == 0) {
-            return false;
+            return \false;
         }
         $Yi = $Xi * (($Y1 - $Y2) / $C) + ($X1 * $Y2 - $X2 * $Y1) / $C;
         if ($Xi >= min($X1, $X2) && $Xi >= min($X3, $X4) && $Xi <= max($X1, $X2) && $Xi <= max($X3, $X4) && $Yi >= min($Y1, $Y2) && $Yi >= min($Y3, $Y4) && $Yi <= max($Y1, $Y2) && $Yi <= max($Y3, $Y4)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

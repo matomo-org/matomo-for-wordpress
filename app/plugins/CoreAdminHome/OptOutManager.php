@@ -56,7 +56,7 @@ class OptOutManager
     /**
      * @param DoNotTrackHeaderChecker|null $doNotTrackHeaderChecker
      */
-    public function __construct(DoNotTrackHeaderChecker $doNotTrackHeaderChecker = null)
+    public function __construct(?DoNotTrackHeaderChecker $doNotTrackHeaderChecker = null)
     {
         $this->doNotTrackHeaderChecker = $doNotTrackHeaderChecker ?: new DoNotTrackHeaderChecker();
         $this->javascripts = array('inline' => array(), 'external' => array());
@@ -69,7 +69,7 @@ class OptOutManager
      * @param string $javascript
      * @param bool $inline
      */
-    public function addJavaScript($javascript, $inline = true)
+    public function addJavaScript($javascript, $inline = \true)
     {
         $type = $inline ? 'inline' : 'external';
         $this->javascripts[$type][] = $javascript;
@@ -88,7 +88,7 @@ class OptOutManager
      * @param string $stylesheet Escaped stylesheet
      * @param bool $inline
      */
-    public function addStylesheet($stylesheet, $inline = true)
+    public function addStylesheet($stylesheet, $inline = \true)
     {
         $type = $inline ? 'inline' : 'external';
         $this->stylesheets[$type][] = $stylesheet;
@@ -121,19 +121,19 @@ class OptOutManager
      *
      * @return bool
      */
-    public function addQueryParameter($key, $value, $override = true)
+    public function addQueryParameter($key, $value, $override = \true)
     {
-        if (!isset($this->queryParameters[$key]) || true === $override) {
+        if (!isset($this->queryParameters[$key]) || \true === $override) {
             $this->queryParameters[$key] = $value;
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * @param array $items
      * @param bool|true $override
      */
-    public function addQueryParameters(array $items, $override = true)
+    public function addQueryParameters(array $items, $override = \true)
     {
         foreach ($items as $key => $value) {
             $this->addQueryParameter($key, $value, $override);
@@ -188,11 +188,11 @@ class OptOutManager
     {
         $cookiePath = Common::getRequestVar('cookiePath', '', 'string');
         $cookieDomain = Common::getRequestVar('cookieDomain', '', 'string');
-        $settings = ['showIntro' => $showIntro, 'divId' => 'matomo-opt-out', 'useSecureCookies' => true, 'cookiePath' => $cookiePath !== '' ? $cookiePath : null, 'cookieDomain' => $cookieDomain !== '' ? $cookieDomain : null, 'cookieSameSite' => Common::getRequestVar('cookieSameSite', 'Lax', 'string')];
+        $settings = ['showIntro' => $showIntro, 'divId' => 'matomo-opt-out', 'useSecureCookies' => \true, 'cookiePath' => $cookiePath !== '' ? $cookiePath : null, 'cookieDomain' => $cookieDomain !== '' ? $cookieDomain : null, 'cookieSameSite' => Common::getRequestVar('cookieSameSite', 'Lax', 'string')];
         // Self contained code translations are static and always use the language of the user who generated the embed code
         $settings = array_merge($settings, $this->getTranslations());
         $settingsString = 'var settings = ' . json_encode($settings) . ';';
-        $styleSheet = $this->optOutStyling($fontSize, $fontColor, $fontFamily, $backgroundColor, true);
+        $styleSheet = $this->optOutStyling($fontSize, $fontColor, $fontFamily, $backgroundColor, \true);
         $code = <<<HTML
 <div id="matomo-opt-out" style=""></div>
 <script>    
@@ -246,7 +246,7 @@ HTML;
         $translations['OptOutErrorNoTracker'] = Piwik::translate('CoreAdminHome_OptOutErrorNoTracker', [], $language);
         $settings = array_merge($settings, $translations);
         $settingsString = 'var settings = ' . json_encode($settings) . ';';
-        $styleSheet = $this->optOutStyling(null, null, null, null, true);
+        $styleSheet = $this->optOutStyling(null, null, null, null, \true);
         /** @lang JavaScript */
         $code = <<<JS
 
@@ -439,7 +439,7 @@ JS;
      *
      * @return array
      */
-    private function getTranslations(string $language = null) : array
+    private function getTranslations(?string $language = null) : array
     {
         return ['OptOutComplete' => Piwik::translate('CoreAdminHome_OptOutComplete', [], $language), 'OptOutCompleteBis' => Piwik::translate('CoreAdminHome_OptOutCompleteBis', [], $language), 'YouMayOptOut2' => Piwik::translate('CoreAdminHome_YouMayOptOut2', [], $language), 'YouMayOptOut3' => Piwik::translate('CoreAdminHome_YouMayOptOut3', [], $language), 'OptOutErrorNoCookies' => Piwik::translate('CoreAdminHome_OptOutErrorNoCookies', [], $language), 'OptOutErrorNotHttps' => Piwik::translate('CoreAdminHome_OptOutErrorNotHttps', [], $language), 'YouAreNotOptedOut' => Piwik::translate('CoreAdminHome_YouAreNotOptedOut', [], $language), 'UncheckToOptOut' => Piwik::translate('CoreAdminHome_UncheckToOptOut', [], $language), 'YouAreOptedOut' => Piwik::translate('CoreAdminHome_YouAreOptedOut', [], $language), 'CheckToOptIn' => Piwik::translate('CoreAdminHome_CheckToOptIn', [], $language)];
     }
@@ -456,18 +456,18 @@ JS;
         }
         $trackVisits = !IgnoreCookie::isIgnoreCookieFound();
         $dntFound = $this->getDoNotTrackHeaderChecker()->isDoNotTrackFound();
-        $setCookieInNewWindow = Common::getRequestVar('setCookieInNewWindow', false, 'int');
+        $setCookieInNewWindow = Common::getRequestVar('setCookieInNewWindow', \false, 'int');
         if ($setCookieInNewWindow) {
-            $nonce = Common::getRequestVar('nonce', false);
-            if ($nonce !== false && !Nonce::verifyNonce('Piwik_OptOut', $nonce)) {
+            $nonce = Common::getRequestVar('nonce', \false);
+            if ($nonce !== \false && !Nonce::verifyNonce('Piwik_OptOut', $nonce)) {
                 Nonce::discardNonce('Piwik_OptOut');
                 $nonce = '';
             }
             $reloadUrl = Url::getCurrentQueryStringWithParametersModified(array('showConfirmOnly' => 1, 'setCookieInNewWindow' => 0, 'nonce' => $nonce ?: ''));
         } else {
-            $reloadUrl = false;
-            $requestNonce = Common::getRequestVar('nonce', false);
-            if ($requestNonce !== false && Nonce::verifyNonce('Piwik_OptOut', $requestNonce)) {
+            $reloadUrl = \false;
+            $requestNonce = Common::getRequestVar('nonce', \false);
+            if ($requestNonce !== \false && Nonce::verifyNonce('Piwik_OptOut', $requestNonce)) {
                 Nonce::discardNonce('Piwik_OptOut');
                 IgnoreCookie::setIgnoreCookie();
                 $trackVisits = !$trackVisits;
@@ -476,19 +476,19 @@ JS;
         $language = Common::getRequestVar('language', '', 'string');
         $lang = APILanguagesManager::getInstance()->isLanguageAvailable($language) ? $language : LanguagesManager::getLanguageCodeForCurrentUser();
         $nonce = Nonce::getNonce('Piwik_OptOut', 3600);
-        $this->addQueryParameters(array('module' => 'CoreAdminHome', 'action' => 'optOut', 'language' => $lang, 'setCookieInNewWindow' => 1, 'nonce' => $nonce), false);
+        $this->addQueryParameters(array('module' => 'CoreAdminHome', 'action' => 'optOut', 'language' => $lang, 'setCookieInNewWindow' => 1, 'nonce' => $nonce), \false);
         if (Common::getRequestVar('applyStyling', 1, 'int')) {
             $this->addStylesheet($this->optOutStyling());
         }
         $this->view = new View("@CoreAdminHome/optOut");
-        $this->addJavaScript('plugins/CoreAdminHome/javascripts/optOut.js', false);
+        $this->addJavaScript('plugins/CoreAdminHome/javascripts/optOut.js', \false);
         $this->view->setXFrameOptions('allow');
         $this->view->dntFound = $dntFound;
         $this->view->trackVisits = $trackVisits;
         $this->view->nonce = $nonce;
         $this->view->language = $lang;
         $this->view->showIntro = Common::getRequestVar('showIntro', 1, 'int');
-        $this->view->showConfirmOnly = Common::getRequestVar('showConfirmOnly', false, 'int');
+        $this->view->showConfirmOnly = Common::getRequestVar('showConfirmOnly', \false, 'int');
         $this->view->reloadUrl = $reloadUrl;
         $this->view->javascripts = $this->getJavaScripts();
         $this->view->stylesheets = $this->getStylesheets();
@@ -508,7 +508,7 @@ JS;
      * @return string
      * @throws \Exception
      */
-    private function optOutStyling(?string $fontSize = null, ?string $fontColor = null, ?string $fontFamily = null, ?string $backgroundColor = null, bool $noBody = false) : string
+    private function optOutStyling(?string $fontSize = null, ?string $fontColor = null, ?string $fontFamily = null, ?string $backgroundColor = null, bool $noBody = \false) : string
     {
         $cssfontsize = $fontSize ?: Request::fromRequest()->getStringParameter('fontSize', '');
         $cssfontcolour = $fontColor ?: Request::fromRequest()->getStringParameter('fontColor', '');
@@ -521,7 +521,7 @@ JS;
         }
         $hexstrings = array('fontColor' => $cssfontcolour, 'backgroundColor' => $cssbackgroundcolor);
         foreach ($hexstrings as $key => $testcase) {
-            if ($testcase && !(ctype_xdigit($testcase) && in_array(strlen($testcase), array(3, 6), true))) {
+            if ($testcase && !(ctype_xdigit($testcase) && in_array(strlen($testcase), array(3, 6), \true))) {
                 throw new \Exception("The URL parameter {$key} value of '{$testcase}' is not valid. Expected value is for example 'ffffff' or 'fff'.\n");
             }
         }

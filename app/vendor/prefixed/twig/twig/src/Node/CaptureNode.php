@@ -22,7 +22,7 @@ class CaptureNode extends Node
 {
     public function __construct(Node $body, int $lineno, ?string $tag = null)
     {
-        parent::__construct(['body' => $body], ['raw' => false], $lineno, $tag);
+        parent::__construct(['body' => $body], ['raw' => \false], $lineno, $tag);
     }
     public function compile(Compiler $compiler) : void
     {

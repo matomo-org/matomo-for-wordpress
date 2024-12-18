@@ -25,6 +25,6 @@ class Stream extends File
     #[\ReturnTypeWillChange]
     public function getSize()
     {
-        return false;
+        return \false;
     }
 }

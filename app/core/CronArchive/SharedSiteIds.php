@@ -27,9 +27,9 @@ class SharedSiteIds
     private $optionName;
     private $siteIds = array();
     private $currentSiteId;
-    private $done = false;
+    private $done = \false;
     private $initialResetQueueTime = null;
-    private $isContinuingPreviousRun = false;
+    private $isContinuingPreviousRun = \false;
     public function __construct($websiteIds, $optionName = self::OPTION_DEFAULT)
     {
         $this->optionName = $optionName;
@@ -42,7 +42,7 @@ class SharedSiteIds
             // to finish this queue of sites instead of starting a new queue
             $existingWebsiteIds = $self->getAllSiteIdsToArchive();
             if (!empty($existingWebsiteIds)) {
-                $this->isContinuingPreviousRun = true;
+                $this->isContinuingPreviousRun = \true;
                 return $existingWebsiteIds;
             }
             $self->setQueueWasReset();
@@ -53,7 +53,7 @@ class SharedSiteIds
     }
     public function setQueueWasReset()
     {
-        Option::set($this->optionName . self::KEY_TIMESTAMP, floor(microtime(true) * 1000));
+        Option::set($this->optionName . self::KEY_TIMESTAMP, floor(microtime(\true) * 1000));
     }
     private function getResetQueueTime()
     {
@@ -87,7 +87,7 @@ class SharedSiteIds
             return 0;
         }
         $index = array_search($this->currentSiteId, $this->siteIds);
-        if (false === $index) {
+        if (\false === $index) {
             return 0;
         }
         return $index + 1;
@@ -151,7 +151,7 @@ class SharedSiteIds
         if ($this->initialResetQueueTime !== $this->getResetQueueTime()) {
             // queue was reset/finished by some other process
             $this->currentSiteId = null;
-            $this->done = true;
+            $this->done = \true;
             Log::debug('The shared site ID queue was reset, stopping.');
             return null;
         }
@@ -167,7 +167,7 @@ class SharedSiteIds
             return $nextSiteId;
         });
         if (is_null($this->currentSiteId)) {
-            $this->done = true;
+            $this->done = \true;
         }
         return $this->currentSiteId;
     }

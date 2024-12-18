@@ -82,9 +82,9 @@ class HipChatHandler extends SocketHandler
      * @param string $host    The HipChat server hostname.
      * @param string $version The HipChat API version (default HipChatHandler::API_V1)
      */
-    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com', $version = self::API_V1)
+    public function __construct($token, $room, $name = 'Monolog', $notify = \false, $level = Logger::CRITICAL, $bubble = \true, $useSSL = \true, $format = 'text', $host = 'api.hipchat.com', $version = self::API_V1)
     {
-        @trigger_error('The Monolog\\Handler\\HipChatHandler class is deprecated. You should migrate to Slack and the SlackWebhookHandler / SlackbotHandler, see https://www.atlassian.com/partnerships/slack', E_USER_DEPRECATED);
+        @trigger_error('The Monolog\\Handler\\HipChatHandler class is deprecated. You should migrate to Slack and the SlackWebhookHandler / SlackbotHandler, see https://www.atlassian.com/partnerships/slack', \E_USER_DEPRECATED);
         if ($version == self::API_V1 && !$this->validateStringLength($name, static::MAXIMUM_NAME_LENGTH)) {
             throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
         }
@@ -165,7 +165,7 @@ class HipChatHandler extends SocketHandler
      */
     protected function getAlertColor($level)
     {
-        switch (true) {
+        switch (\true) {
             case $level >= Logger::ERROR:
                 return 'red';
             case $level >= Logger::WARNING:
@@ -208,20 +208,20 @@ class HipChatHandler extends SocketHandler
     public function handleBatch(array $records)
     {
         if (count($records) == 0) {
-            return true;
+            return \true;
         }
         $batchRecords = $this->combineRecords($records);
-        $handled = false;
+        $handled = \false;
         foreach ($batchRecords as $batchRecord) {
             if ($this->isHandling($batchRecord)) {
                 $this->write($batchRecord);
-                $handled = true;
+                $handled = \true;
             }
         }
         if (!$handled) {
-            return false;
+            return \false;
         }
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * Combines multiple records into one. Error level of the combined record
@@ -250,7 +250,7 @@ class HipChatHandler extends SocketHandler
                 $datetime = $record['datetime'];
             }
             $messages[] = $record['message'];
-            $messageStr = implode(PHP_EOL, $messages);
+            $messageStr = implode(\PHP_EOL, $messages);
             $formattedMessages[] = $this->getFormatter()->format($record);
             $formattedMessageStr = implode('', $formattedMessages);
             $batchRecord = array('message' => $messageStr, 'formatted' => $formattedMessageStr, 'context' => array(), 'extra' => array());
@@ -258,7 +258,7 @@ class HipChatHandler extends SocketHandler
                 // Pop the last message and implode the remaining messages
                 $lastMessage = array_pop($messages);
                 $lastFormattedMessage = array_pop($formattedMessages);
-                $batchRecord['message'] = implode(PHP_EOL, $messages);
+                $batchRecord['message'] = implode(\PHP_EOL, $messages);
                 $batchRecord['formatted'] = implode('', $formattedMessages);
                 $batchRecords[] = $batchRecord;
                 $messages = array($lastMessage);

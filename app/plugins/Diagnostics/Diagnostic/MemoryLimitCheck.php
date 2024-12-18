@@ -34,7 +34,7 @@ class MemoryLimitCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
         SettingsServer::raiseMemoryLimitIfNecessary();
         $memoryLimit = SettingsServer::getMemoryLimitValue();
         $comment = $memoryLimit . 'M';
-        if (false === $memoryLimit) {
+        if (\false === $memoryLimit) {
             $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
             $comment = $this->translator->translate('Installation_SystemCheckMemoryNoMemoryLimitSet');
         } elseif ($memoryLimit >= $this->minimumMemoryLimit) {

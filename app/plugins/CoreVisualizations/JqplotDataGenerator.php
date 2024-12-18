@@ -92,7 +92,7 @@ class JqplotDataGenerator
     {
         $xLabels = $dataTable->getColumn('label');
         $columnsToDisplay = array_values($this->properties['columns_to_display']);
-        if (($labelColumnIndex = array_search('label', $columnsToDisplay)) !== false) {
+        if (($labelColumnIndex = array_search('label', $columnsToDisplay)) !== \false) {
             unset($columnsToDisplay[$labelColumnIndex]);
         }
         $seriesMetadata = null;
@@ -147,11 +147,11 @@ class JqplotDataGenerator
         }
         return [$seriesLabels, $serieses, $seriesMetadata];
     }
-    protected function getComparisonSeriesLabel(Row $compareRow, $columnName, $rowLabel = false)
+    protected function getComparisonSeriesLabel(Row $compareRow, $columnName, $rowLabel = \false)
     {
         return $this->getComparisonSeriesLabelFromCompareSeries($compareRow->getMetadata('compareSeriesPretty'), $columnName, $rowLabel);
     }
-    protected function getComparisonSeriesLabelFromCompareSeries($compareSeriesPretty, $columnName, $rowLabel = false)
+    protected function getComparisonSeriesLabelFromCompareSeries($compareSeriesPretty, $columnName, $rowLabel = \false)
     {
         $columnTranslation = @$this->properties['translations'][$columnName];
         if (empty($rowLabel)) {
@@ -179,7 +179,7 @@ class JqplotDataGenerator
             $parts = explode('|', $seriesId, 2);
             $columnName = $parts[0];
             $derivedUnit = Metrics::getUnit($columnName, $idSite);
-            $units[$seriesId] = empty($derivedUnit) ? false : $derivedUnit;
+            $units[$seriesId] = empty($derivedUnit) ? \false : $derivedUnit;
         }
         return $units;
     }

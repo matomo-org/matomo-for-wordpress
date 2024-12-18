@@ -17,16 +17,16 @@ class Website extends \Piwik\Plugins\Referrers\Columns\Base
 {
     protected $type = self::TYPE_TEXT;
     protected $nameSingular = 'General_Website';
-    public function shouldForceNewVisit(Request $request, Visitor $visitor, Action $action = null)
+    public function shouldForceNewVisit(Request $request, Visitor $visitor, ?Action $action = null)
     {
         if (TrackerConfig::getConfigValue('create_new_visit_when_website_referrer_changes', $request->getIdSiteIfExists()) != 1) {
-            return false;
+            return \false;
         }
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
         if ($information['referer_type'] == Common::REFERRER_TYPE_WEBSITE && $this->isReferrerInformationNew($visitor, $information)) {
             Common::printDebug("Existing visit detected, but creating new visit because website referrer information is different than last action.");
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

@@ -143,7 +143,7 @@ class Controller extends Plugin\ControllerAdmin
         } else {
             $tagManagerTeaser->disableForUser();
         }
-        $date = Common::getRequestVar('date', false);
+        $date = Common::getRequestVar('date', \false);
         $this->redirectToIndex('CoreHome', 'index', $websiteId = null, $defaultPeriod = null, $date);
     }
     private function dieIfPluginsAdminIsDisabled()
@@ -192,12 +192,12 @@ class Controller extends Plugin\ControllerAdmin
     }
     public function plugins()
     {
-        $view = $this->createPluginsOrThemesView('plugins', $themesOnly = false);
+        $view = $this->createPluginsOrThemesView('plugins', $themesOnly = \false);
         return $view->render();
     }
     public function themes()
     {
-        $view = $this->createPluginsOrThemesView('themes', $themesOnly = true);
+        $view = $this->createPluginsOrThemesView('themes', $themesOnly = \true);
         return $view->render();
     }
     protected function configureView($template)
@@ -212,16 +212,16 @@ class Controller extends Plugin\ControllerAdmin
         $view->errorMessage = '';
         return $view;
     }
-    protected function getPluginsInfo($themesOnly = false)
+    protected function getPluginsInfo($themesOnly = \false)
     {
         $plugins = $this->pluginManager->loadAllPluginsAndGetTheirInfo();
         foreach ($plugins as $pluginName => &$plugin) {
             $plugin['isCorePlugin'] = $this->pluginManager->isPluginBundledWithCore($pluginName);
-            $plugin['isOfficialPlugin'] = false;
+            $plugin['isOfficialPlugin'] = \false;
             if (isset($plugin['info']) && isset($plugin['info']['authors'])) {
                 foreach ($plugin['info']['authors'] as $author) {
                     if (in_array(strtolower($author['name']), array('piwik', 'innocraft', 'matomo', 'matomo-org'))) {
-                        $plugin['isOfficialPlugin'] = true;
+                        $plugin['isOfficialPlugin'] = \true;
                         break;
                     }
                 }
@@ -241,7 +241,7 @@ class Controller extends Plugin\ControllerAdmin
                 } else {
                     $description = $this->translator->translate('CorePluginsAdmin_PluginNotFound', array($pluginName)) . "\n" . $this->translator->translate('CorePluginsAdmin_PluginNotFoundAlternative');
                 }
-                $plugin['info'] = array('description' => $description, 'version' => $this->translator->translate('General_Unknown'), 'theme' => false);
+                $plugin['info'] = array('description' => $description, 'version' => $this->translator->translate('General_Unknown'), 'theme' => \false);
             }
         }
         $pluginsFiltered = $this->keepPluginsOrThemes($themesOnly, $plugins);
@@ -251,7 +251,7 @@ class Controller extends Plugin\ControllerAdmin
     {
         $pluginsFiltered = array();
         foreach ($plugins as $name => $thisPlugin) {
-            $isTheme = false;
+            $isTheme = \false;
             if (!empty($thisPlugin['info']['theme'])) {
                 $isTheme = (bool) $thisPlugin['info']['theme'];
             }
@@ -282,13 +282,13 @@ class Controller extends Plugin\ControllerAdmin
             if (Piwik::isUserIsAnonymous()) {
                 $errorMessage = 'A fatal error occurred.';
             }
-            $response = new \Piwik\API\ResponseBuilder($outputFormat, [], false);
+            $response = new \Piwik\API\ResponseBuilder($outputFormat, [], \false);
             // don't print the exception backtrace since it will be useless
             $message = $response->getResponseException(new Exception($errorMessage));
             return $message;
         }
         if (Common::isPhpCliMode()) {
-            throw new Exception("Error: " . var_export($lastError, true));
+            throw new Exception("Error: " . var_export($lastError, \true));
         }
         if (!\Piwik_ShouldPrintBackTraceWithMessage()) {
             unset($lastError['backtrace']);
@@ -317,7 +317,7 @@ class Controller extends Plugin\ControllerAdmin
         }
         return $view->render();
     }
-    public function activate($redirectAfter = true)
+    public function activate($redirectAfter = \true)
     {
         $this->dieIfPluginsAdminIsDisabled();
         $params = ['module' => 'CorePluginsAdmin', 'action' => 'activate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo', '', 'string'), 'referrer' => urlencode(Url::getReferrer())];
@@ -333,7 +333,7 @@ class Controller extends Plugin\ControllerAdmin
                 $message .= ' ' . $this->translator->translate('CorePluginsAdmin_ChangeSettingsPossible', array($target, '</a>'));
             }
             $notification = new Notification($message);
-            $notification->raw = true;
+            $notification->raw = \true;
             $notification->title = $this->translator->translate('General_WellDone');
             $notification->context = Notification::CONTEXT_SUCCESS;
             Notification\Manager::notify('CorePluginsAdmin_PluginActivated', $notification);
@@ -341,7 +341,7 @@ class Controller extends Plugin\ControllerAdmin
             if (!empty($redirectTo) && $redirectTo === 'marketplace') {
                 $this->redirectToIndex('Marketplace', 'overview');
             } elseif (!empty($redirectTo) && $redirectTo === 'tagmanager') {
-                $this->redirectToIndex('TagManager', 'gettingStarted');
+                $this->redirectToIndex('TagManager', 'manageContainers');
             } elseif (!empty($redirectTo) && $redirectTo === 'referrer') {
                 $this->redirectAfterModification($redirectAfter);
             } else {
@@ -354,7 +354,7 @@ class Controller extends Plugin\ControllerAdmin
             }
         }
     }
-    public function deactivate($redirectAfter = true)
+    public function deactivate($redirectAfter = \true)
     {
         $params = ['module' => 'CorePluginsAdmin', 'action' => 'deactivate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo'), 'referrer' => urlencode(Url::getReferrer())];
         if (!$this->passwordVerify->requirePasswordVerifiedRecently($params)) {
@@ -368,7 +368,7 @@ class Controller extends Plugin\ControllerAdmin
             $this->doDeactivatePlugin($redirectAfter);
         }
     }
-    public function uninstall($redirectAfter = true)
+    public function uninstall($redirectAfter = \true)
     {
         $this->dieIfPluginsAdminIsDisabled();
         $params = ['module' => 'CorePluginsAdmin', 'action' => 'uninstall', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'referrer' => urlencode(Url::getReferrer())];
@@ -427,7 +427,7 @@ class Controller extends Plugin\ControllerAdmin
         if (!$redirectAfter) {
             return;
         }
-        $referrer = Common::getRequestVar('referrer', false);
+        $referrer = Common::getRequestVar('referrer', \false);
         $referrer = Common::unsanitizeInputValue($referrer);
         if (!empty($referrer) && Url::isLocalUrl($referrer)) {
             Url::redirectToUrl($referrer);
@@ -452,7 +452,7 @@ class Controller extends Plugin\ControllerAdmin
      */
     protected function isAllowedToTroubleshootAsSuperUser()
     {
-        $isAllowedToTroubleshootAsSuperUser = false;
+        $isAllowedToTroubleshootAsSuperUser = \false;
         $salt = SettingsPiwik::getSalt();
         if (!empty($salt)) {
             $saltFromRequest = Common::getRequestVar('i_am_super_user', '', 'string');

@@ -38,8 +38,8 @@ class SecurityPolicy
         $this->policies['default-src'] = self::RULE_DEFAULT;
         $this->policies['img-src'] = self::RULE_IMG_DEFAULT;
         $generalConfig = $config->General;
-        $this->cspEnabled = $generalConfig['csp_enabled'] ?? true;
-        $this->reportOnly = $generalConfig['csp_report_only'] ?? false;
+        $this->cspEnabled = $generalConfig['csp_enabled'] ?? \true;
+        $this->reportOnly = $generalConfig['csp_report_only'] ?? \false;
     }
     /**
      * Appends a policy to a directive.
@@ -81,7 +81,7 @@ class SecurityPolicy
      */
     public function disable()
     {
-        $this->cspEnabled = false;
+        $this->cspEnabled = \false;
     }
     /**
      * Creates the Header String that can be inserted in the Content-Security-Policy header.

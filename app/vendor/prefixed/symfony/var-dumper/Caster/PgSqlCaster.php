@@ -47,7 +47,7 @@ class PgSqlCaster
         $a['options'] = pg_options($link);
         $a['version'] = pg_version($link);
         foreach (self::PARAM_CODES as $v) {
-            if (false !== ($s = pg_parameter_status($link, $v))) {
+            if (\false !== ($s = pg_parameter_status($link, $v))) {
                 $a['param'][$v] = $s;
             }
         }
@@ -72,7 +72,7 @@ class PgSqlCaster
         $a['last OID'] = pg_last_oid($result);
         $fields = pg_num_fields($result);
         for ($i = 0; $i < $fields; ++$i) {
-            $field = ['name' => pg_field_name($result, $i), 'table' => sprintf('%s (OID: %s)', pg_field_table($result, $i), pg_field_table($result, $i, true)), 'type' => sprintf('%s (OID: %s)', pg_field_type($result, $i), pg_field_type_oid($result, $i)), 'nullable' => (bool) pg_field_is_null($result, $i), 'storage' => pg_field_size($result, $i) . ' bytes', 'display' => pg_field_prtlen($result, $i) . ' chars'];
+            $field = ['name' => pg_field_name($result, $i), 'table' => sprintf('%s (OID: %s)', pg_field_table($result, $i), pg_field_table($result, $i, \true)), 'type' => sprintf('%s (OID: %s)', pg_field_type($result, $i), pg_field_type_oid($result, $i)), 'nullable' => (bool) pg_field_is_null($result, $i), 'storage' => pg_field_size($result, $i) . ' bytes', 'display' => pg_field_prtlen($result, $i) . ' chars'];
             if (' (OID: )' === $field['table']) {
                 $field['table'] = null;
             }

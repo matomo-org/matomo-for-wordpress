@@ -50,7 +50,7 @@ final class ResponseCookieValueSame extends Constraint
     {
         $cookie = $this->getCookie($response);
         if (!$cookie) {
-            return false;
+            return \false;
         }
         return $this->value === (string) $cookie->getValue();
     }

@@ -22,7 +22,7 @@ class Week extends Period
      */
     public function getLocalizedShortString()
     {
-        return $this->getTranslatedRange($this->getRangeFormat(true));
+        return $this->getTranslatedRange($this->getRangeFormat(\true));
     }
     /**
      * Returns the current period as a localized long string

@@ -49,7 +49,7 @@ class Failures
             } catch (InvalidRequestParameterException $e) {
                 // we ignore this error and assume visit is not excluded... happens eg when using `cip` and request was
                 // not authenticated...
-                $isVisitExcluded = false;
+                $isVisitExcluded = \false;
             }
         }
         if ($isVisitExcluded) {

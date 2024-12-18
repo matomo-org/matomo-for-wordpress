@@ -27,7 +27,7 @@ class GetConfiguration extends \Piwik\Plugins\Resolution\Reports\Base
     {
         $this->getBasicResolutionDisplayProperties($view);
         $view->requestConfig->filter_limit = 3;
-        $view->config->show_search = true;
+        $view->config->show_search = \true;
     }
     public function getRelatedReports()
     {

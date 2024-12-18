@@ -27,17 +27,17 @@ class ArgsStub extends EnumStub
             $values[$k] = !\is_scalar($v) && !$v instanceof Stub ? new CutStub($v) : $v;
         }
         if (null === $params) {
-            parent::__construct($values, false);
+            parent::__construct($values, \false);
             return;
         }
         if (\count($values) < \count($params)) {
             $params = \array_slice($params, 0, \count($values));
         } elseif (\count($values) > \count($params)) {
-            $values[] = new EnumStub(array_splice($values, \count($params)), false);
+            $values[] = new EnumStub(array_splice($values, \count($params)), \false);
             $params[] = $variadic;
         }
         if (['...'] === $params) {
-            $this->dumpKeys = false;
+            $this->dumpKeys = \false;
             $this->value = $values[0]->value;
         } else {
             $this->value = array_combine($params, $values);

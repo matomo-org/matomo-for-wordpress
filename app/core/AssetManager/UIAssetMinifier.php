@@ -35,7 +35,7 @@ class UIAssetMinifier extends Singleton
     {
         $lineCount = substr_count($content, "\n");
         if ($lineCount == 0) {
-            return true;
+            return \true;
         }
         $contentSize = strlen($content);
         $ratio = $contentSize / $lineCount;

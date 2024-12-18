@@ -74,7 +74,7 @@ class Controller extends \Piwik\Plugins\Goals\Controller
         $return = parent::getMetricsForGoal($idGoal, $dataRow);
         // Previous period data for evolution
         list($lastPeriodDate, $ignore) = Range::getLastDate();
-        if ($lastPeriodDate !== false) {
+        if ($lastPeriodDate !== \false) {
             $date = Common::getRequestVar('date');
             /** @var DataTable $previousData */
             $previousData = Request::processRequest('Goals.get', ['date' => $lastPeriodDate, 'format_metrics' => 0]);
@@ -161,7 +161,7 @@ class Controller extends \Piwik\Plugins\Goals\Controller
         }
         return $view->render();
     }
-    public function getEcommerceLog($fetch = false)
+    public function getEcommerceLog($fetch = \false)
     {
         $saveGET = $_GET;
         $originalQuery = $_SERVER['QUERY_STRING'];

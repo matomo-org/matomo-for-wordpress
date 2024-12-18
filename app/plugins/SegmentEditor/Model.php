@@ -41,7 +41,7 @@ class Model
      *                         for all sites. If supplied, must be a valid site ID.
      * @return array
      */
-    public function getSegmentsToAutoArchive($idSite = false)
+    public function getSegmentsToAutoArchive($idSite = \false)
     {
         $bind = array();
         $whereIdSite = '';
@@ -87,7 +87,7 @@ class Model
      * @param $idSite
      * @return array
      */
-    public function getAllSegmentsForAllUsers($idSite = false)
+    public function getAllSegmentsForAllUsers($idSite = \false)
     {
         $bind = array();
         $sqlWhereCondition = '';
@@ -183,7 +183,7 @@ class Model
         }
         $db = $this->getDb();
         $db->update($this->getTable(), $segment, "idsegment = {$idSegment}");
-        return true;
+        return \true;
     }
     public function createSegment($segment)
     {

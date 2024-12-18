@@ -21,6 +21,6 @@ class RaygunCrashReporting extends \Piwik\Plugins\SitesManager\SiteContentDetect
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return false !== stripos($data, 'raygun.min.js') && 1 === preg_match('/enableCrashReporting["\', ]+true/i', $data);
+        return \false !== stripos($data, 'raygun.min.js') && 1 === preg_match('/enableCrashReporting["\', ]+true/i', $data);
     }
 }

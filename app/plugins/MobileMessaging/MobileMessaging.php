@@ -25,14 +25,13 @@ class MobileMessaging extends \Piwik\Plugin
     public const PROVIDER_OPTION = 'Provider';
     public const API_KEY_OPTION = 'APIKey';
     public const PHONE_NUMBERS_OPTION = 'PhoneNumbers';
-    public const PHONE_NUMBER_VALIDATION_REQUEST_COUNT_OPTION = 'PhoneNumberValidationRequestCount';
     public const SMS_SENT_COUNT_OPTION = 'SMSSentCount';
     public const DELEGATED_MANAGEMENT_OPTION_DEFAULT = 'false';
     public const USER_SETTINGS_POSTFIX_OPTION = '_MobileMessagingSettings';
     public const PHONE_NUMBERS_PARAMETER = 'phoneNumbers';
     public const MOBILE_TYPE = 'mobile';
     public const SMS_FORMAT = 'sms';
-    private static $availableParameters = array(self::PHONE_NUMBERS_PARAMETER => true);
+    private static $availableParameters = array(self::PHONE_NUMBERS_PARAMETER => \true);
     private static $managedReportTypes = array(self::MOBILE_TYPE => 'plugins/MobileMessaging/images/phone.png');
     private static $managedReportFormats = array(self::SMS_FORMAT => 'plugins/MobileMessaging/images/phone.png');
     private static $availableReports = array(array('module' => 'MultiSites', 'action' => 'getAll'), array('module' => 'MultiSites', 'action' => 'getOne'));
@@ -45,7 +44,7 @@ class MobileMessaging extends \Piwik\Plugin
     }
     public function requiresInternetConnection()
     {
-        return true;
+        return \true;
     }
     public function getStylesheetFiles(&$stylesheets)
     {
@@ -87,6 +86,11 @@ class MobileMessaging extends \Piwik\Plugin
         $translationKeys[] = 'MobileMessaging_Settings_DeleteAccountConfirm';
         $translationKeys[] = 'MobileMessaging_Settings_SuspiciousPhoneNumber';
         $translationKeys[] = 'MobileMessaging_SettingsMenu';
+        $translationKeys[] = 'MobileMessaging_ConfirmRemovePhoneNumber';
+        $translationKeys[] = 'MobileMessaging_Settings_ResendVerification';
+        $translationKeys[] = 'MobileMessaging_Settings_NewVerificationCodeSent';
+        $translationKeys[] = 'General_Yes';
+        $translationKeys[] = 'General_No';
     }
     public function validateReportParameters(&$parameters, $reportType)
     {
@@ -145,7 +149,7 @@ class MobileMessaging extends \Piwik\Plugin
     public function allowMultipleReports(&$allowMultipleReports, $reportType)
     {
         if (self::manageEvent($reportType)) {
-            $allowMultipleReports = false;
+            $allowMultipleReports = \false;
         }
     }
     public function getReportRecipients(&$recipients, $reportType, $report)

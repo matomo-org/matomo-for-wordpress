@@ -32,7 +32,7 @@ final class TwigFunction
     {
         $this->name = $name;
         $this->callable = $callable;
-        $this->options = array_merge(['needs_environment' => false, 'needs_context' => false, 'needs_charset' => false, 'is_variadic' => false, 'is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'deprecated' => false, 'deprecating_package' => '', 'alternative' => null], $options);
+        $this->options = array_merge(['needs_environment' => \false, 'needs_context' => \false, 'needs_charset' => \false, 'is_variadic' => \false, 'is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'deprecated' => \false, 'deprecating_package' => '', 'alternative' => null], $options);
     }
     public function getName() : string
     {

@@ -26,7 +26,7 @@ class BlockReferenceExpression extends AbstractExpression
         if (null !== $template) {
             $nodes['template'] = $template;
         }
-        parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
+        parent::__construct($nodes, ['is_defined_test' => \false, 'output' => \false], $lineno, $tag);
     }
     public function compile(Compiler $compiler) : void
     {

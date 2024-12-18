@@ -36,14 +36,14 @@ final class NullOutputFormatter implements OutputFormatterInterface
      */
     public function hasStyle(string $name) : bool
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
      */
     public function isDecorated() : bool
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}

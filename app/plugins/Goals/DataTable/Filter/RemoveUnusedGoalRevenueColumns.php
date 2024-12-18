@@ -26,14 +26,14 @@ class RemoveUnusedGoalRevenueColumns extends BaseFilter
         $columnsToCheck = [];
         foreach ($goals as $goalId) {
             foreach ($columnNames as $columnName) {
-                $columnsToCheck['goal_' . $goalId . '_' . $columnName] = true;
+                $columnsToCheck['goal_' . $goalId . '_' . $columnName] = \true;
             }
         }
         // Check if there are any values in each column
         foreach ($table->getRowsWithoutSummaryRow() as $row) {
             foreach ($columnsToCheck as $colName => $shouldRemove) {
                 if (isset($row[$colName]) && $row[$colName] > 0) {
-                    $columnsToCheck[$colName] = false;
+                    $columnsToCheck[$colName] = \false;
                 }
             }
         }

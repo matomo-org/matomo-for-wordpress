@@ -34,7 +34,7 @@ class Updates_4_0_0_rc4 extends PiwikUpdates
         $migrations = [];
         $migrations[] = $this->migration->plugin->deactivate('ExampleTheme');
         $channel = StaticContainer::get(ReleaseChannels::class)->getActiveReleaseChannel()->getId();
-        $isBeta = stripos($channel, 'beta') !== false;
+        $isBeta = stripos($channel, 'beta') !== \false;
         if ($isBeta) {
             $dates = ['2020-01-01', '2020-11-01', '2020-10-01'];
             foreach ($dates as $date) {

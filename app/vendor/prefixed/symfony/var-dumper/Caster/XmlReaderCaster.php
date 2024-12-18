@@ -26,7 +26,7 @@ class XmlReaderCaster
         try {
             $properties = ['LOADDTD' => @$reader->getParserProperty(\XMLReader::LOADDTD), 'DEFAULTATTRS' => @$reader->getParserProperty(\XMLReader::DEFAULTATTRS), 'VALIDATE' => @$reader->getParserProperty(\XMLReader::VALIDATE), 'SUBST_ENTITIES' => @$reader->getParserProperty(\XMLReader::SUBST_ENTITIES)];
         } catch (\Error $e) {
-            $properties = ['LOADDTD' => false, 'DEFAULTATTRS' => false, 'VALIDATE' => false, 'SUBST_ENTITIES' => false];
+            $properties = ['LOADDTD' => \false, 'DEFAULTATTRS' => \false, 'VALIDATE' => \false, 'SUBST_ENTITIES' => \false];
         }
         $props = Caster::PREFIX_VIRTUAL . 'parserProperties';
         $info = ['localName' => $reader->localName, 'prefix' => $reader->prefix, 'nodeType' => new ConstStub(self::NODE_TYPES[$reader->nodeType], $reader->nodeType), 'depth' => $reader->depth, 'isDefault' => $reader->isDefault, 'isEmptyElement' => \XMLReader::NONE === $reader->nodeType ? null : $reader->isEmptyElement, 'xmlLang' => $reader->xmlLang, 'attributeCount' => $reader->attributeCount, 'value' => $reader->value, 'namespaceURI' => $reader->namespaceURI, 'baseURI' => $reader->baseURI ? new LinkStub($reader->baseURI) : $reader->baseURI, $props => $properties];

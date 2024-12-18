@@ -136,32 +136,32 @@ class RequestMatcher implements RequestMatcherInterface
      */
     public function matches(Request $request)
     {
-        if ($this->schemes && !\in_array($request->getScheme(), $this->schemes, true)) {
-            return false;
+        if ($this->schemes && !\in_array($request->getScheme(), $this->schemes, \true)) {
+            return \false;
         }
-        if ($this->methods && !\in_array($request->getMethod(), $this->methods, true)) {
-            return false;
+        if ($this->methods && !\in_array($request->getMethod(), $this->methods, \true)) {
+            return \false;
         }
         foreach ($this->attributes as $key => $pattern) {
             $requestAttribute = $request->attributes->get($key);
             if (!\is_string($requestAttribute)) {
-                return false;
+                return \false;
             }
             if (!preg_match('{' . $pattern . '}', $requestAttribute)) {
-                return false;
+                return \false;
             }
         }
         if (null !== $this->path && !preg_match('{' . $this->path . '}', rawurldecode($request->getPathInfo()))) {
-            return false;
+            return \false;
         }
         if (null !== $this->host && !preg_match('{' . $this->host . '}i', $request->getHost())) {
-            return false;
+            return \false;
         }
         if (null !== $this->port && 0 < $this->port && $request->getPort() !== $this->port) {
-            return false;
+            return \false;
         }
         if (IpUtils::checkIp($request->getClientIp() ?? '', $this->ips)) {
-            return true;
+            return \true;
         }
         // Note to future implementors: add additional checks above the
         // foreach above or else your check might not be run!

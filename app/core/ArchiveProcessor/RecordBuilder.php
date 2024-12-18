@@ -53,7 +53,7 @@ abstract class RecordBuilder
     }
     public function isEnabled(ArchiveProcessor $archiveProcessor) : bool
     {
-        return true;
+        return \true;
     }
     /**
      * Uses the protected `aggregate()` function to build records by aggregating log table data directly, then
@@ -135,7 +135,7 @@ abstract class RecordBuilder
             // we need to aggregate the blob record to get the count, so even if it's found, we must re-aggregate it
             // TODO: this could potentially be optimized away, but it would be non-trivial given the current ArchiveProcessor API
             $indexInFoundRecords = array_search($dependentRecordName, $foundRequestedReports);
-            if ($indexInFoundRecords !== false) {
+            if ($indexInFoundRecords !== \false) {
                 unset($foundRequestedReports[$indexInFoundRecords]);
             }
         }
@@ -149,10 +149,10 @@ abstract class RecordBuilder
             $columnToRenameAfterAggregation = $record->getColumnToRenameAfterAggregation() ?? $this->columnToRenameAfterAggregation;
             $columnAggregationOps = $record->getBlobColumnAggregationOps() ?? $this->columnAggregationOps;
             // only do recursive row count if there is a numeric record that depends on it
-            $countRecursiveRows = false;
+            $countRecursiveRows = \false;
             foreach ($numericRecords as $numeric) {
                 if ($numeric->getCountOfRecordName() == $record->getName() && $numeric->getCountOfRecordNameIsRecursive()) {
-                    $countRecursiveRows = true;
+                    $countRecursiveRows = \true;
                     break;
                 }
             }
@@ -265,9 +265,9 @@ abstract class RecordBuilder
         $recordMetadata = $this->getRecordMetadata($archiveProcessor);
         foreach ($recordMetadata as $record) {
             if (in_array($record->getName(), $requestedReports)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

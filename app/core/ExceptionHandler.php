@@ -45,7 +45,7 @@ class ExceptionHandler
         self::logException($exception);
         $message = $exception->getMessage();
         if (!method_exists($exception, 'isHtmlMessage') || !$exception->isHtmlMessage()) {
-            $message = strip_tags(str_replace('<br />', PHP_EOL, $message));
+            $message = strip_tags(str_replace('<br />', \PHP_EOL, $message));
         }
         $message = sprintf("Uncaught exception in %s line %d:\n%s\n", $exception->getFile(), $exception->getLine(), ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception));
         echo $message;
@@ -57,7 +57,7 @@ class ExceptionHandler
     public static function dieWithHtmlErrorPage($exception)
     {
         // Set an appropriate HTTP response code.
-        switch (true) {
+        switch (\true) {
             case ($exception instanceof \Piwik\Http\HttpCodeException || $exception instanceof \Piwik\Exception\NotSupportedBrowserException) && $exception->getCode() > 0:
                 // For these exception types, use the exception-provided error code.
                 http_response_code($exception->getCode());
@@ -69,7 +69,7 @@ class ExceptionHandler
                 http_response_code(500);
         }
         // Log the error with an appropriate loglevel.
-        switch (true) {
+        switch (\true) {
             case $exception instanceof \Piwik\Exception\NotSupportedBrowserException:
                 // These unsupported browsers are really a client-side problem, so log only at DEBUG level.
                 self::logException($exception, \Piwik\Log::DEBUG);
@@ -130,7 +130,7 @@ class ExceptionHandler
         }
         $hostname = \Piwik\Url::getRFCValidHostname();
         $hostStr = $hostname ? "[{$hostname}] " : '- ';
-        $result = Piwik_GetErrorMessagePage($message, $debugTrace, true, true, $logoHeaderUrl, $logoFaviconUrl, null, $hostStr, $writeErrorLog, $redirectUrl, $countdownToRedirect);
+        $result = Piwik_GetErrorMessagePage($message, $debugTrace, \true, \true, $logoHeaderUrl, $logoFaviconUrl, null, $hostStr, $writeErrorLog, $redirectUrl, $countdownToRedirect);
         try {
             /**
              * Triggered before a Piwik error page is displayed to the user.
@@ -152,11 +152,11 @@ class ExceptionHandler
         try {
             switch ($loglevel) {
                 case \Piwik\Log::DEBUG:
-                    StaticContainer::get(LoggerInterface::class)->debug('Uncaught exception: {exception}', ['exception' => $exception, 'ignoreInScreenWriter' => true]);
+                    StaticContainer::get(LoggerInterface::class)->debug('Uncaught exception: {exception}', ['exception' => $exception, 'ignoreInScreenWriter' => \true]);
                     break;
                 case \Piwik\Log::ERROR:
                 default:
-                    StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $exception, 'ignoreInScreenWriter' => true]);
+                    StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $exception, 'ignoreInScreenWriter' => \true]);
             }
         } catch (DependencyException $ex) {
             // ignore (occurs if exception is thrown when resolving DI entries)

@@ -28,12 +28,12 @@ class SetNode extends Node implements NodeCaptureInterface
          *
          * {% set foo %}foo{% endset %} is compiled to $context['foo'] = new Twig\Markup("foo");
          */
-        $safe = false;
+        $safe = \false;
         if ($capture) {
-            $safe = true;
+            $safe = \true;
             if ($values instanceof TextNode) {
                 $values = new ConstantExpression($values->getAttribute('data'), $values->getTemplateLine());
-                $capture = false;
+                $capture = \false;
             } else {
                 $values = new CaptureNode($values, $values->getTemplateLine());
             }
@@ -53,7 +53,7 @@ class SetNode extends Node implements NodeCaptureInterface
             }
             $compiler->raw(']');
         } else {
-            $compiler->subcompile($this->getNode('names'), false);
+            $compiler->subcompile($this->getNode('names'), \false);
         }
         $compiler->raw(' = ');
         if ($this->getAttribute('capture')) {

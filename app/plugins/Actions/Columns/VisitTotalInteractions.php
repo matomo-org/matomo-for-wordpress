@@ -52,7 +52,7 @@ class VisitTotalInteractions extends VisitDimension
         if (self::shouldCountInteraction($action)) {
             return $this->columnName . ' + 1';
         }
-        return false;
+        return \false;
     }
     /**
      * @param Request $request
@@ -79,17 +79,17 @@ class VisitTotalInteractions extends VisitDimension
     public static function shouldCountInteraction($action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
-        if ($idActionUrl !== false) {
-            return true;
+        if ($idActionUrl !== \false) {
+            return \true;
         }
         $actionType = $action->getActionType();
         $types = array(Action::TYPE_SITE_SEARCH);
         if (in_array($actionType, $types)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

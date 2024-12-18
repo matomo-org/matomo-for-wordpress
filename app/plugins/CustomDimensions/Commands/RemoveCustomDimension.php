@@ -65,7 +65,7 @@ class RemoveCustomDimension extends ConsoleCommand
         }
         Cache::clearCacheGeneral();
         $numDimensionsAvailable = $tracking->getNumInstalledIndexes();
-        $this->writeSuccessMessage([sprintf('Your Matomo is now configured for up to %d Custom Dimensions in scope %s.', $numDimensionsAvailable, $scope)]);
+        $this->writeSuccessMessage(sprintf('Your Matomo is now configured for up to %d Custom Dimensions in scope %s.', $numDimensionsAvailable, $scope));
         return self::SUCCESS;
     }
     private function getScope()
@@ -96,6 +96,6 @@ class RemoveCustomDimension extends ConsoleCommand
     private function confirmChange()
     {
         $this->getOutput()->writeln('');
-        return $this->askForConfirmation('<question>Are you sure you want to perform this action? (y/N)</question>', false);
+        return $this->askForConfirmation('<question>Are you sure you want to perform this action? (y/N)</question>', \false);
     }
 }

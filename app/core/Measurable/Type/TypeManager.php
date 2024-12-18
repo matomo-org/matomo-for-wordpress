@@ -29,10 +29,10 @@ class TypeManager
     {
         foreach ($this->getAllTypes() as $type) {
             if ($type->getId() === $typeId) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @param string $typeId

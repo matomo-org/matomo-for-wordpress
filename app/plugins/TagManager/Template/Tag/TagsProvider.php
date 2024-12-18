@@ -87,7 +87,7 @@ class TagsProvider
                 if ($disableCustomTemplates && $tagInstance->isCustomTemplate()) {
                     continue;
                 }
-                if (in_array(strtolower($tagInstance->getId()), $blockedTags, true)) {
+                if (in_array(strtolower($tagInstance->getId()), $blockedTags, \true)) {
                     continue;
                 }
                 $tags[] = $tagInstance;
@@ -117,9 +117,9 @@ class TagsProvider
     {
         foreach ($this->getAllTags() as $tag) {
             if ($tag->isCustomTemplate() && $tag->getId() === $id) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

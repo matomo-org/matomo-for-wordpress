@@ -50,7 +50,7 @@ class SplCaster
         unset($a["\x00SplFileInfo\x00fileName"]);
         unset($a["\x00SplFileInfo\x00pathName"]);
         if (\PHP_VERSION_ID < 80000) {
-            if (false === $c->getPathname()) {
+            if (\false === $c->getPathname()) {
                 $a[$prefix . '⚠'] = 'The parent constructor was not called: the object is in an invalid state';
                 return $a;
             }
@@ -77,7 +77,7 @@ class SplCaster
             } catch (\Exception $e) {
             }
         }
-        if ($a[$prefix . 'realPath'] ?? false) {
+        if ($a[$prefix . 'realPath'] ?? \false) {
             $a[$prefix . 'realPath'] = new LinkStub($a[$prefix . 'realPath']);
         }
         if (isset($a[$prefix . 'perms'])) {

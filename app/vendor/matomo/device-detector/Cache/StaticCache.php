@@ -28,7 +28,7 @@ class StaticCache implements \DeviceDetector\Cache\CacheInterface
      */
     public function fetch(string $id)
     {
-        return $this->contains($id) ? self::$staticCache[$id] : false;
+        return $this->contains($id) ? self::$staticCache[$id] : \false;
     }
     /**
      * @inheritdoc
@@ -43,7 +43,7 @@ class StaticCache implements \DeviceDetector\Cache\CacheInterface
     public function save(string $id, $data, int $lifeTime = 0) : bool
     {
         self::$staticCache[$id] = $data;
-        return true;
+        return \true;
     }
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ class StaticCache implements \DeviceDetector\Cache\CacheInterface
     public function delete(string $id) : bool
     {
         unset(self::$staticCache[$id]);
-        return true;
+        return \true;
     }
     /**
      * @inheritdoc
@@ -59,6 +59,6 @@ class StaticCache implements \DeviceDetector\Cache\CacheInterface
     public function flushAll() : bool
     {
         self::$staticCache = [];
-        return true;
+        return \true;
     }
 }

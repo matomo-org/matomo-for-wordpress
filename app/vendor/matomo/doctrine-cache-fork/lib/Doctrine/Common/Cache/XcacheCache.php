@@ -27,7 +27,7 @@ class XcacheCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->doContains($id) ? unserialize(xcache_get($id)) : false;
+        return $this->doContains($id) ? unserialize(xcache_get($id)) : \false;
     }
     /**
      * {@inheritdoc}
@@ -57,7 +57,7 @@ class XcacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $this->checkAuthorization();
         xcache_clear_cache(XC_TYPE_VAR);
-        return true;
+        return \true;
     }
     /**
      * Checks that xcache.admin.enable_auth is Off.

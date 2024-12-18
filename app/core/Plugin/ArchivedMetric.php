@@ -47,9 +47,9 @@ class ArchivedMetric extends \Piwik\Plugin\Metric
      * @var Dimension
      */
     private $dimension;
-    public function __construct(Dimension $dimension, $aggregation = false)
+    public function __construct(Dimension $dimension, $aggregation = \false)
     {
-        if (!empty($aggregation) && strpos($aggregation, '%s') === false) {
+        if (!empty($aggregation) && strpos($aggregation, '%s') === \false) {
             throw new \Exception(sprintf('The given aggregation for %s.%s needs to include a %%s for the column name', $dimension->getDbTableName(), $dimension->getColumnName()));
         }
         $this->setDimension($dimension);
@@ -126,10 +126,10 @@ class ArchivedMetric extends \Piwik\Plugin\Metric
             case Dimension::TYPE_NUMBER:
                 return $formatter->getPrettyNumber($value);
             case Dimension::TYPE_DURATION_S:
-                return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
+                return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = \true);
             case Dimension::TYPE_DURATION_MS:
                 $val = round($value / 1000, $value / 1000 > 60 ? 0 : 2);
-                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = true);
+                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = \true);
             case Dimension::TYPE_PERCENT:
                 return $formatter->getPrettyPercentFromQuotient($value);
             case Dimension::TYPE_BYTE:

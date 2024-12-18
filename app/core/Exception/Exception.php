@@ -15,10 +15,10 @@ use Exception as PhpException;
  */
 class Exception extends PhpException
 {
-    private $isHtmlMessage = false;
+    private $isHtmlMessage = \false;
     public function setIsHtmlMessage()
     {
-        $this->isHtmlMessage = true;
+        $this->isHtmlMessage = \true;
     }
     public function isHtmlMessage()
     {

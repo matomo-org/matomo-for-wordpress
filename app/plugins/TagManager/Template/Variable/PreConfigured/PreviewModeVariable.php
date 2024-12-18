@@ -15,7 +15,7 @@ class PreviewModeVariable extends \Piwik\Plugins\TagManager\Template\Variable\Pr
     {
         return self::CATEGORY_CONTAINER_INFO;
     }
-    public function loadTemplate($context, $entity, $skipTemplate = false)
+    public function loadTemplate($context, $entity, $skipTemplate = \false)
     {
         switch ($context) {
             case WebContext::ID:

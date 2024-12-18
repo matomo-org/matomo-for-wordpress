@@ -36,18 +36,18 @@ class DefinedTest extends TestExpression
     public function __construct(Node $node, string $name, ?Node $arguments, int $lineno)
     {
         if ($node instanceof NameExpression) {
-            $node->setAttribute('is_defined_test', true);
+            $node->setAttribute('is_defined_test', \true);
         } elseif ($node instanceof GetAttrExpression) {
-            $node->setAttribute('is_defined_test', true);
+            $node->setAttribute('is_defined_test', \true);
             $this->changeIgnoreStrictCheck($node);
         } elseif ($node instanceof BlockReferenceExpression) {
-            $node->setAttribute('is_defined_test', true);
+            $node->setAttribute('is_defined_test', \true);
         } elseif ($node instanceof FunctionExpression && 'constant' === $node->getAttribute('name')) {
-            $node->setAttribute('is_defined_test', true);
+            $node->setAttribute('is_defined_test', \true);
         } elseif ($node instanceof ConstantExpression || $node instanceof ArrayExpression) {
-            $node = new ConstantExpression(true, $node->getTemplateLine());
+            $node = new ConstantExpression(\true, $node->getTemplateLine());
         } elseif ($node instanceof MethodCallExpression) {
-            $node->setAttribute('is_defined_test', true);
+            $node->setAttribute('is_defined_test', \true);
         } else {
             throw new SyntaxError('The "defined" test only works with simple variables.', $lineno);
         }
@@ -55,8 +55,8 @@ class DefinedTest extends TestExpression
     }
     private function changeIgnoreStrictCheck(GetAttrExpression $node)
     {
-        $node->setAttribute('optimizable', false);
-        $node->setAttribute('ignore_strict_check', true);
+        $node->setAttribute('optimizable', \false);
+        $node->setAttribute('ignore_strict_check', \true);
         if ($node->getNode('node') instanceof GetAttrExpression) {
             $this->changeIgnoreStrictCheck($node->getNode('node'));
         }

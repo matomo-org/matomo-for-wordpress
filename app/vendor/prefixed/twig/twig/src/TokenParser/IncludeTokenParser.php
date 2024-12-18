@@ -34,7 +34,7 @@ class IncludeTokenParser extends AbstractTokenParser
     protected function parseArguments()
     {
         $stream = $this->parser->getStream();
-        $ignoreMissing = false;
+        $ignoreMissing = \false;
         if ($stream->nextIf(
             /* Token::NAME_TYPE */
             5,
@@ -45,7 +45,7 @@ class IncludeTokenParser extends AbstractTokenParser
                 5,
                 'missing'
             );
-            $ignoreMissing = true;
+            $ignoreMissing = \true;
         }
         $variables = null;
         if ($stream->nextIf(
@@ -55,13 +55,13 @@ class IncludeTokenParser extends AbstractTokenParser
         )) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
-        $only = false;
+        $only = \false;
         if ($stream->nextIf(
             /* Token::NAME_TYPE */
             5,
             'only'
         )) {
-            $only = true;
+            $only = \true;
         }
         $stream->expect(
             /* Token::BLOCK_END_TYPE */

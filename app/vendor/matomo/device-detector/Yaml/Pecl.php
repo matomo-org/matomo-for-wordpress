@@ -29,7 +29,7 @@ class Pecl implements \DeviceDetector\Yaml\ParserInterface
      */
     public function parseFile(string $file)
     {
-        if (false === \function_exists('yaml_parse_file')) {
+        if (\false === \function_exists('yaml_parse_file')) {
             throw new Exception('Pecl YAML extension is not installed');
         }
         return \yaml_parse_file($file);

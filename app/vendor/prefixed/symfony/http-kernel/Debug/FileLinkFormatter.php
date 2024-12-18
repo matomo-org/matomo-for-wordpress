@@ -53,7 +53,7 @@ class FileLinkFormatter
             }
             return strtr($fmt[0], ['%f' => $file, '%l' => $line]);
         }
-        return false;
+        return \false;
     }
     /**
      * @internal

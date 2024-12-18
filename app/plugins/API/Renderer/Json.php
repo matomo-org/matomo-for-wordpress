@@ -34,7 +34,7 @@ class Json extends ApiRenderer
         $exceptionMessage = str_replace(array("\r\n", "\n"), " ", $message);
         $data = array('result' => 'error', 'message' => $exceptionMessage);
         if ($this->shouldSendBacktrace()) {
-            $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, true);
+            $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, \true);
         }
         $result = json_encode($data);
         return $this->applyJsonpIfNeeded($result);
@@ -71,16 +71,16 @@ class Json extends ApiRenderer
     private function isJsonp()
     {
         $callback = $this->getJsonpCallback();
-        if (false === $callback) {
-            return false;
+        if (\false === $callback) {
+            return \false;
         }
         return preg_match('/^[0-9a-zA-Z_.]*$/D', $callback) > 0;
     }
     private function getJsonpCallback()
     {
-        $jsonCallback = Common::getRequestVar('callback', false, null, $this->request);
-        if ($jsonCallback === false) {
-            $jsonCallback = Common::getRequestVar('jsoncallback', false, null, $this->request);
+        $jsonCallback = Common::getRequestVar('callback', \false, null, $this->request);
+        if ($jsonCallback === \false) {
+            $jsonCallback = Common::getRequestVar('jsoncallback', \false, null, $this->request);
         }
         return $jsonCallback;
     }

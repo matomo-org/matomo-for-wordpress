@@ -58,7 +58,7 @@ abstract class GeoIp2 extends LocationProvider
                 $bind = array($testIp);
                 return Piwik::translate('UserCountry_TestIPLocatorFailed', $bind);
             }
-            return true;
+            return \true;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -77,7 +77,7 @@ abstract class GeoIp2 extends LocationProvider
                 return $path;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns full path for a GeoIP 2 database managed by Piwik.
@@ -87,7 +87,7 @@ abstract class GeoIp2 extends LocationProvider
      */
     public static function getPathForGeoIpDatabase($filename)
     {
-        if (strpos($filename, '/') !== false && file_exists($filename)) {
+        if (strpos($filename, '/') !== \false && file_exists($filename)) {
             return $filename;
         }
         return StaticContainer::get('path.geoip2') . $filename;
@@ -124,7 +124,7 @@ abstract class GeoIp2 extends LocationProvider
                 }
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns a region name for a country code + region code.
@@ -179,7 +179,7 @@ abstract class GeoIp2 extends LocationProvider
      * @param bool $returnOriginalIfNotFound  return given region code if no mapping was found
      * @return array
      */
-    public static function convertRegionCodeToIso($countryCode, $fipsRegionCode, $returnOriginalIfNotFound = false)
+    public static function convertRegionCodeToIso($countryCode, $fipsRegionCode, $returnOriginalIfNotFound = \false)
     {
         static $mapping;
         if (empty($mapping)) {
@@ -214,5 +214,14 @@ abstract class GeoIp2 extends LocationProvider
     {
         $ip = \Matomo\Network\IP::fromStringIP($info['ip']);
         return $ip->toString();
+    }
+    /**
+     * GeoIP2 providers can be used for location-based security checks
+     *
+     * @return bool
+     */
+    public function canBeUsedForLocationBasedSecurityChecks() : bool
+    {
+        return \true;
     }
 }

@@ -47,7 +47,7 @@ class PclZip implements \Matomo\Decompress\DecompressInterface
         foreach ($list as $entry) {
             $filename = str_replace('\\', '/', $entry['stored_filename']);
             $parts = explode('/', $filename);
-            if (!strncmp($filename, '/', 1) || array_search('..', $parts) !== false || strpos($filename, ':') !== false) {
+            if (!strncmp($filename, '/', 1) || array_search('..', $parts) !== \false || strpos($filename, ':') !== \false) {
                 return 0;
             }
         }
@@ -63,6 +63,6 @@ class PclZip implements \Matomo\Decompress\DecompressInterface
      */
     public function errorInfo()
     {
-        return $this->pclzip->errorInfo(true);
+        return $this->pclzip->errorInfo(\true);
     }
 }

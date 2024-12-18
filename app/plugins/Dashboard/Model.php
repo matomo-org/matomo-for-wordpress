@@ -185,15 +185,15 @@ class Model
     protected static function layoutContainsWidget($dashboardLayout, $widgetId)
     {
         if (!isset($dashboardLayout->columns)) {
-            return false;
+            return \false;
         }
         foreach ($dashboardLayout->columns as $id => $column) {
             foreach ($column as $widget) {
                 if ($widget->uniqueId == $widgetId) {
-                    return true;
+                    return \true;
                 }
             }
         }
-        return false;
+        return \false;
     }
 }

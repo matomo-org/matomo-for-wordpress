@@ -21,7 +21,7 @@ class PromoWidgetDismissal
     {
         $isAnonUser = Piwik::isUserIsAnonymous();
         if ($isAnonUser) {
-            return false;
+            return \false;
         }
         return $this->isPromoWidgetDismissed($widgetName);
     }

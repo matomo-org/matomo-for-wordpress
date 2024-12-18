@@ -31,7 +31,7 @@ class DeleteLogsData extends ConsoleCommand
      * @var LogDeleter
      */
     private $logDeleter;
-    public function __construct(LogDeleter $logDeleter = null, RawLogDao $rawLogDao = null)
+    public function __construct(?LogDeleter $logDeleter = null, ?RawLogDao $rawLogDao = null)
     {
         parent::__construct();
         $this->logDeleter = $logDeleter ?: StaticContainer::get('Piwik\\LogDeleter');
@@ -67,7 +67,7 @@ class DeleteLogsData extends ConsoleCommand
             $output->writeln('');
             throw $ex;
         }
-        $this->writeSuccessMessage(array("Successfully deleted {$logsDeleted} visits. <comment>" . $timer . "</comment>"));
+        $this->writeSuccessMessage("Successfully deleted {$logsDeleted} visits. <comment>{$timer}</comment>");
         if ($input->getOption('optimize-tables')) {
             $this->optimizeTables();
         }
@@ -125,9 +125,9 @@ class DeleteLogsData extends ConsoleCommand
     private function askForDeleteConfirmation()
     {
         if (!$this->getInput()->isInteractive()) {
-            return true;
+            return \true;
         }
-        return $this->askForConfirmation('<comment>You are about to delete log data. This action cannot be undone, are you sure you want to continue? (Y/N)</comment> ', false);
+        return $this->askForConfirmation('<comment>You are about to delete log data. This action cannot be undone, are you sure you want to continue? (Y/N)</comment> ', \false);
     }
     private function optimizeTables()
     {
@@ -135,13 +135,13 @@ class DeleteLogsData extends ConsoleCommand
             $this->getOutput()->write("Optimizing table {$table}... ");
             $timer = new Timer();
             $prefixedTable = Common::prefixTable($table);
-            $done = Db::optimizeTables($prefixedTable);
+            $done = Db\Schema::getInstance()->optimizeTables([$prefixedTable]);
             if ($done) {
                 $this->getOutput()->writeln("done. <comment>" . $timer . "</comment>");
             } else {
                 $this->getOutput()->writeln("skipped! <comment>" . $timer . "</comment>");
             }
         }
-        $this->writeSuccessMessage(['Table optimization finished.']);
+        $this->writeSuccessMessage('Table optimization finished.');
     }
 }

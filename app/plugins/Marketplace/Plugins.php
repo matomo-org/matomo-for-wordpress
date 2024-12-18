@@ -10,6 +10,7 @@ namespace Piwik\Plugins\Marketplace;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
+use Piwik\NumberFormatter;
 use Piwik\ProfessionalServices\Advertising;
 use Piwik\Plugin\Dependency as PluginDependency;
 use Piwik\Plugin;
@@ -37,6 +38,10 @@ class Plugins
      */
     private $pluginManager;
     /**
+     * @var NumberFormatter
+     */
+    private $numberFormatter;
+    /**
      * @internal for tests only
      * @var array
      */
@@ -48,6 +53,7 @@ class Plugins
         $this->consumer = $consumer;
         $this->advertising = $advertising;
         $this->pluginManager = Plugin\Manager::getInstance();
+        $this->numberFormatter = NumberFormatter::getInstance();
     }
     public function getPluginInfo($pluginName)
     {
@@ -78,7 +84,7 @@ class Plugins
     }
     public function getAllAvailablePluginNames()
     {
-        return array_merge($this->getAvailablePluginNames(true), $this->getAvailablePluginNames(false));
+        return array_merge($this->getAvailablePluginNames(\true), $this->getAvailablePluginNames(\false));
     }
     public function searchPlugins($query, $sort, $themesOnly, $purchaseType = '')
     {
@@ -94,19 +100,19 @@ class Plugins
     }
     public function getAllPaidPlugins()
     {
-        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = false, PurchaseType::TYPE_PAID);
+        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = \false, PurchaseType::TYPE_PAID);
     }
     public function getAllFreePlugins()
     {
-        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = false, PurchaseType::TYPE_FREE);
+        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = \false, PurchaseType::TYPE_FREE);
     }
     public function getAllThemes()
     {
-        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = true, PurchaseType::TYPE_ALL);
+        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = \true, PurchaseType::TYPE_ALL);
     }
     public function getAllPlugins()
     {
-        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = false, PurchaseType::TYPE_ALL);
+        return $this->searchPlugins($query = '', Sort::DEFAULT_SORT, $themes = \false, PurchaseType::TYPE_ALL);
     }
     private function getPluginUpdateInformation($plugin)
     {
@@ -142,9 +148,9 @@ class Plugins
      */
     public function getPluginsHavingUpdate() : array
     {
-        $skipPluginUpdateCheck = StaticContainer::get('dev.disable_plugin_update_checks');
-        if ($skipPluginUpdateCheck) {
-            return [];
+        $forcedResult = StaticContainer::get('dev.forced_plugin_update_result');
+        if ($forcedResult !== null) {
+            return $forcedResult;
         }
         $this->pluginManager->loadAllPluginsAndGetTheirInfo();
         $loadedPlugins = $this->pluginManager->getLoadedPlugins();
@@ -184,16 +190,16 @@ class Plugins
     private function isPluginActivated($pluginName)
     {
         if (in_array($pluginName, $this->activatedPluginNames)) {
-            return true;
+            return \true;
         }
         return $this->pluginManager->isPluginActivated($pluginName);
     }
     private function isPluginInstalled($pluginName)
     {
         if (in_array($pluginName, $this->activatedPluginNames)) {
-            return true;
+            return \true;
         }
-        return $this->pluginManager->isPluginInstalled($pluginName, true);
+        return $this->pluginManager->isPluginInstalled($pluginName, \true);
     }
     private function enrichPluginInformation($plugin)
     {
@@ -209,10 +215,10 @@ class Plugins
         if ($plugin['isInstalled']) {
             $plugin = $this->enrichLicenseInformation($plugin);
         } else {
-            $plugin['hasExceededLicense'] = false;
-            $plugin['isMissingLicense'] = false;
+            $plugin['hasExceededLicense'] = \false;
+            $plugin['isMissingLicense'] = \false;
         }
-        if (!empty($plugin['owner']) && strtolower($plugin['owner']) === 'piwikpro' && !empty($plugin['homepage']) && strpos($plugin['homepage'], 'pk_campaign') === false) {
+        if (!empty($plugin['owner']) && strtolower($plugin['owner']) === 'piwikpro' && !empty($plugin['homepage']) && strpos($plugin['homepage'], 'pk_campaign') === \false) {
             $plugin['homepage'] = $this->advertising->addPromoCampaignParametersToUrl($plugin['homepage'], Advertising::CAMPAIGN_NAME_PROFESSIONAL_SERVICES, 'Marketplace', $plugin['name']);
         }
         if ($plugin['canBeUpdated']) {
@@ -220,7 +226,7 @@ class Plugins
             $plugin['repositoryChangelogUrl'] = $pluginUpdate['repositoryChangelogUrl'];
             $plugin['currentVersion'] = $pluginUpdate['currentVersion'];
         }
-        if (!empty($plugin['activity']['lastCommitDate']) && false === strpos($plugin['activity']['lastCommitDate'], '0000') && false === strpos($plugin['activity']['lastCommitDate'], '1970')) {
+        if (!empty($plugin['activity']['lastCommitDate']) && \false === strpos($plugin['activity']['lastCommitDate'], '0000') && \false === strpos($plugin['activity']['lastCommitDate'], '1970')) {
             $plugin['activity']['lastCommitDate'] = $this->toLongDate($plugin['activity']['lastCommitDate']);
         } else {
             $plugin['activity']['lastCommitDate'] = null;
@@ -230,7 +236,14 @@ class Plugins
                 $plugin['versions'][$index]['release'] = $this->toLongDate($version['release']);
             }
         }
+        $haDownloadLink = \false;
+        if (!empty($plugin['versions'])) {
+            $latestVersion = end($plugin['versions']);
+            $hasDownloadLink = !empty($latestVersion['download']);
+        }
+        $plugin['hasDownloadLink'] = $hasDownloadLink;
         $plugin = $this->addMissingRequirements($plugin);
+        $plugin = $this->addConsumerLicenseStatus($plugin);
         $plugin['isEligibleForFreeTrial'] = $plugin['canBePurchased'] && empty($plugin['missingRequirements']) && empty($plugin['consumer']['license']);
         $this->addPriceFrom($plugin);
         $this->addPluginCoverImage($plugin);
@@ -298,7 +311,7 @@ class Plugins
         $plugin['priceFrom'] = array_shift($variations);
         // use first as the default
         foreach ($variations as $variation) {
-            if ($variation['cheapest'] ?? false) {
+            if ($variation['cheapest'] ?? \false) {
                 $plugin['priceFrom'] = $variation;
                 return;
             }
@@ -334,14 +347,13 @@ class Plugins
      */
     private function prettifyNumberOfDownloads(&$plugin) : void
     {
-        $num = $nice = $plugin['numDownloads'] ?? 0;
-        if ($num >= 1000 && $num < 100000) {
-            $nice = round($num / 1000, 1, PHP_ROUND_HALF_DOWN) . 'k';
-        } elseif ($num >= 100000 && $num < 1000000) {
-            $nice = floor($num / 1000) . 'k';
-        } elseif ($num >= 1000000) {
-            $nice = floor($num / 1000000) . 'm';
-        }
-        $plugin['numDownloadsPretty'] = $nice;
+        $num = $plugin['numDownloads'] ?? 0;
+        $plugin['numDownloadsPretty'] = $this->numberFormatter->formatNumberCompact($num);
+    }
+    private function addConsumerLicenseStatus($plugin) : array
+    {
+        $consumerPluginLicenseInfo = $this->consumer->getConsumerPluginLicenseStatus();
+        $plugin['licenseStatus'] = $consumerPluginLicenseInfo[$plugin['name']] ?? '';
+        return $plugin;
     }
 }

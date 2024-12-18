@@ -139,7 +139,7 @@ class Cache
         /* Single file removal */
         if ($ID != null) {
             /* Retrieve object informations */
-            $Object = $this->isInCache($ID, true);
+            $Object = $this->isInCache($ID, \true);
             /* If it's not in the cache DB, go away */
             if (!$Object) {
                 return 0;
@@ -198,7 +198,7 @@ class Cache
      * @param boolean $UpdateHitsCount
      * @return boolean
      */
-    public function isInCache($ID, $Verbose = false, $UpdateHitsCount = false)
+    public function isInCache($ID, $Verbose = \false, $UpdateHitsCount = \false)
     {
         /* Compute the paths */
         $Index = $this->CacheFolder . "/" . $this->CacheIndex;
@@ -229,14 +229,14 @@ class Cache
                     if ($Verbose) {
                         return ["DBPos" => $DBPos, "PicSize" => $PicSize, "GeneratedTS" => $GeneratedTS, "Hits" => $Hits];
                     } else {
-                        return true;
+                        return \true;
                     }
                 }
             }
         }
         fclose($Handle);
         /* Picture isn't in the cache */
-        return false;
+        return \false;
     }
     /**
      * Automatic output method based on the calling interface
@@ -262,11 +262,11 @@ class Cache
         $Picture = $this->getFromCache($ID);
         /* Do we have a hit? */
         if ($Picture == null) {
-            return false;
+            return \false;
         }
         header('Content-type: image/png');
         echo $Picture;
-        return true;
+        return \true;
     }
     /**
      * Save file from cache.
@@ -280,14 +280,14 @@ class Cache
         $Picture = $this->getFromCache($ID);
         /* Do we have a hit? */
         if ($Picture == null) {
-            return false;
+            return \false;
         }
         /* Flush the picture to a file */
         $Handle = fopen($Destination, "w");
         fwrite($Handle, $Picture);
         fclose($Handle);
         /* All went fine */
-        return true;
+        return \true;
     }
     /**
      * Get file from cache
@@ -299,7 +299,7 @@ class Cache
         /* Compute the path */
         $Database = $this->CacheFolder . "/" . $this->CacheDB;
         /* Lookup for the picture in the cache */
-        $CacheInfo = $this->isInCache($ID, true, true);
+        $CacheInfo = $this->isInCache($ID, \true, \true);
         /* Not in the cache */
         if (!$CacheInfo) {
             return null;

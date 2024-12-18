@@ -14,7 +14,7 @@ class TagUpdated extends \Piwik\Plugins\TagManager\Activity\TagBaseActivity
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('updateContainerTag')) {
-            return false;
+            return \false;
         }
         list($return, $finalAPIParameters) = $eventData;
         $idEntity = $finalAPIParameters['parameters']['idTag'];

@@ -100,7 +100,7 @@ class VariablesProvider
                 if ($disableCustomTemplates && $variableInstance->isCustomTemplate()) {
                     continue;
                 }
-                if (in_array(strtolower($variableInstance->getId()), $blockedVariables, true)) {
+                if (in_array(strtolower($variableInstance->getId()), $blockedVariables, \true)) {
                     continue;
                 }
                 $variables[] = $variableInstance;
@@ -155,9 +155,9 @@ class VariablesProvider
     {
         foreach ($this->getAllVariables() as $variable) {
             if ($variable->isCustomTemplate() && $variable->getId() === $id) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

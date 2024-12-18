@@ -21,13 +21,13 @@ class ContainerDashboardPage extends TagManagerPage {
     await this.normalizeContainerSelector();
 
     await browser.waitUntil(() => {
-      return browser.execute(() => /"Web"/.test($('p.dashboardCreationDate').text()));
+      return browser.execute(() => /Container ID/.test($('p.dashboardCreationDate').text()));
     });
 
     await browser.execute(() => {
       $('p.dashboardCreationDate').html(
         $('p.dashboardCreationDate').html()
-          .replace(/ID "[a-zA-Z0-9]+"/g, 'ID "REMOVED"')
+          .replace(/ID: "[a-zA-Z0-9]+"/g, 'ID: "REMOVED"')
           .replace(/created\s+on\s+.*?\./g, 'created on REMOVED.')
       );
     });

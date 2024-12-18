@@ -60,7 +60,7 @@ class Loader
      * @var bool
      */
     private $invalidateBeforeArchiving;
-    public function __construct(\Piwik\ArchiveProcessor\Parameters $params, $invalidateBeforeArchiving = false)
+    public function __construct(\Piwik\ArchiveProcessor\Parameters $params, $invalidateBeforeArchiving = \false)
     {
         $this->params = $params;
         $this->invalidateBeforeArchiving = $invalidateBeforeArchiving;
@@ -82,7 +82,7 @@ class Loader
      */
     protected function mustProcessVisitCount($visits)
     {
-        return $visits === false;
+        return $visits === \false;
     }
     public function prepareArchive($pluginName)
     {
@@ -161,7 +161,7 @@ class Loader
             }
             return [$idArchivesToQuery, $visits];
         }
-        return [false, false];
+        return [\false, \false];
     }
     /**
      * @return string
@@ -204,7 +204,7 @@ class Loader
             if (!empty($idArchives)) {
                 return [$idArchives, $visits];
             } else {
-                return [false, 0];
+                return [\false, 0];
             }
         }
         return [$idArchives, $visits, $visitsConverted, $existingArchives];
@@ -224,7 +224,7 @@ class Loader
             $isPartialArchive = $this->params->isPartialArchive();
             $this->params->setRequestedPlugin('VisitsSummary');
             $this->params->setArchiveOnlyReport(null);
-            $this->params->setIsPartialArchive(false);
+            $this->params->setIsPartialArchive(\false);
             $metrics = Context::executeWithQueryParameters(['requestedReport' => ''], function () {
                 $pluginsArchiver = new \Piwik\ArchiveProcessor\PluginsArchiver($this->params);
                 $metrics = $pluginsArchiver->callAggregateCoreMetrics();
@@ -284,7 +284,7 @@ class Loader
             $this->logger->debug("Archiving forced to trigger for {$this->params}.");
             // return no usable archive found, and no existing archive. this will skip invalidation, which should
             // be fine since we just force archiving.
-            return ['idArchives' => false, 'visits' => false, 'visitsConverted' => false, 'archiveExists' => false, 'tsArchived' => false, 'doneFlagValue' => false, 'existingRecords' => null];
+            return ['idArchives' => \false, 'visits' => \false, 'visitsConverted' => \false, 'archiveExists' => \false, 'tsArchived' => \false, 'doneFlagValue' => \false, 'existingRecords' => null];
         }
         $minDatetimeArchiveProcessedUTC = $this->getMinTimeArchiveProcessed();
         $result = ArchiveSelector::getArchiveIdAndVisits($this->params, $minDatetimeArchiveProcessedUTC);
@@ -322,7 +322,7 @@ class Loader
             //   is greater than the last day of the archive
             return $endTimestampUTC;
         }
-        return false;
+        return \false;
     }
     private function shouldArchiveForSiteEvenWhenNoVisits()
     {
@@ -365,7 +365,7 @@ class Loader
         }
         foreach ($sitesPerDays as $date => $siteIds) {
             try {
-                $this->invalidator->markArchivesAsInvalidated([$this->params->getSite()->getId()], array(Date::factory($date)), false, $this->params->getSegment());
+                $this->invalidator->markArchivesAsInvalidated([$this->params->getSite()->getId()], array(Date::factory($date)), \false, $this->params->getSegment());
             } catch (\Exception $e) {
                 Site::clearCache();
                 throw $e;
@@ -382,7 +382,7 @@ class Loader
         $hasSiteVisitsBetweenTimeframe = $this->hasSiteVisitsBetweenTimeframe($idSite, $params->getPeriod());
         $hasChildArchivesInPeriod = $this->dataAccessModel->hasChildArchivesInPeriod($idSite, $params->getPeriod());
         if ($this->canSkipArchiveForSegment()) {
-            return true;
+            return \true;
         }
         return $isWebsiteUsingTracker && !$isArchivingForcedWhenNoVisits && !$hasSiteVisitsBetweenTimeframe && !$hasChildArchivesInPeriod;
     }
@@ -390,16 +390,16 @@ class Loader
     {
         $params = $this->params;
         if ($params->getSegment()->isEmpty()) {
-            return false;
+            return \false;
         }
         if (!empty($params->getRequestedPlugin()) && \Piwik\ArchiveProcessor\Rules::isSegmentPluginArchivingDisabled($params->getRequestedPlugin(), $params->getSite()->getId())) {
-            return true;
+            return \true;
         }
         /** @var SegmentArchiving */
         $segmentArchiving = StaticContainer::get(SegmentArchiving::class);
         $segmentInfo = $segmentArchiving->findSegmentForHash($params->getSegment()->getHash(), $params->getSite()->getId());
         if (!$segmentInfo) {
-            return false;
+            return \false;
         }
         $segmentArchiveStartDate = $segmentArchiving->getReArchiveSegmentStartDate($segmentInfo);
         if ($segmentArchiveStartDate !== null && $segmentArchiveStartDate->isLater($params->getPeriod()->getDateEnd()->getEndOfDay())) {
@@ -410,7 +410,7 @@ class Loader
             // if we don't find invalidation for that report, we can skip
             return !$this->dataAccessModel->hasInvalidationForPeriodAndName($params->getSite()->getId(), $params->getPeriod(), $doneFlag, $params->getArchiveOnlyReport());
         }
-        return false;
+        return \false;
     }
     private function isWebsiteUsingTheTracker($idSite)
     {
@@ -423,7 +423,7 @@ class Loader
         $cache = Cache::getTransientCache();
         $cacheKey = 'Archiving.isWebsiteUsingTheTracker';
         $idSitesNotUsingTracker = $cache->fetch($cacheKey);
-        if ($idSitesNotUsingTracker === false || !isset($idSitesNotUsingTracker)) {
+        if ($idSitesNotUsingTracker === \false || !isset($idSitesNotUsingTracker)) {
             // we want to trigger event only once
             $idSitesNotUsingTracker = array();
             /**
@@ -460,20 +460,20 @@ class Loader
             // if coming from core:archive, force rearchiving, since if we don't the entry will be removed from archive_invalidations
             // w/o being rearchived
             if (SettingsServer::isArchivePhpTriggered()) {
-                return true;
+                return \true;
             }
             // if coming from a browser request, and period does not contain today, force rearchiving
             $timezone = $params->getSite()->getTimezone();
             if (!$params->getPeriod()->isDateInPeriod(Date::factoryInTimezone('today', $timezone))) {
-                return true;
+                return \true;
             }
             // if coming from a browser request, and period does contain today, check the ttl for the period (done just below this)
             $minDatetimeArchiveProcessedUTC = \Piwik\ArchiveProcessor\Rules::getMinTimeProcessedForInProgressArchive($params->getDateStart(), $params->getPeriod(), $params->getSegment(), $params->getSite());
             $minDatetimeArchiveProcessedUTC = Date::factory($minDatetimeArchiveProcessedUTC);
             if ($minDatetimeArchiveProcessedUTC && Date::factory($tsArchived)->isEarlier($minDatetimeArchiveProcessedUTC)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

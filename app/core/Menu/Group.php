@@ -14,7 +14,7 @@ namespace Piwik\Menu;
 class Group
 {
     private $items;
-    public function add($subTitleMenu, $url, $tooltip = false)
+    public function add($subTitleMenu, $url, $tooltip = \false)
     {
         $this->items[] = array('name' => $subTitleMenu, 'url' => $url, 'tooltip' => $tooltip);
     }

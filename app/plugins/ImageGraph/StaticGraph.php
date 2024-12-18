@@ -51,7 +51,7 @@ abstract class StaticGraph extends BaseFactory
     protected $legendFontSize;
     protected $width;
     protected $height;
-    protected $forceSkippedLabels = false;
+    protected $forceSkippedLabels = \false;
     protected abstract function getDefaultColors();
     public abstract function renderGraph();
     protected static function getClassNameFromClassId($graphType)
@@ -216,7 +216,7 @@ abstract class StaticGraph extends BaseFactory
         // Fix whitespace if not using unifont
         $abscissaSeries = $this->abscissaSeries;
         $formatMethodName = 'formatYAxis';
-        if (false === strpos($this->font, \Piwik\Plugins\ImageGraph\API::UNICODE_FONT)) {
+        if (\false === strpos($this->font, \Piwik\Plugins\ImageGraph\API::UNICODE_FONT)) {
             $abscissaSeries = array_map([$this, 'fixWhitespaceNonUnifont'], $abscissaSeries);
             $formatMethodName = 'formatYAxisNonUnifont';
         }
@@ -242,7 +242,7 @@ abstract class StaticGraph extends BaseFactory
         $newImage = self::getOutputPath(md5($image) . '.png');
         $src = imagecreatefromstring(file_get_contents($image));
         $dst = imagecreatetruecolor($width, $height);
-        imagesavealpha($dst, true);
+        imagesavealpha($dst, \true);
         $color = imagecolorallocatealpha($dst, 0, 0, 0, 127);
         imagefill($dst, 0, 0, $color);
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
@@ -257,7 +257,7 @@ abstract class StaticGraph extends BaseFactory
         $this->pImage->Antialias = $this->aliasedGraph;
         $this->pImage->setFontProperties(array_merge(array('FontName' => $this->font, 'FontSize' => $this->fontSize), $this->textColor));
     }
-    protected function getTextWidthHeight($text, $fontSize = false)
+    protected function getTextWidthHeight($text, $fontSize = \false)
     {
         if (!$fontSize) {
             $fontSize = $this->fontSize;

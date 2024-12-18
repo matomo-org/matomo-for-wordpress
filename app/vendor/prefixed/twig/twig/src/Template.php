@@ -77,7 +77,7 @@ abstract class Template
         }
         try {
             if (!($parent = $this->doGetParent($context))) {
-                return false;
+                return \false;
             }
             if ($parent instanceof self || $parent instanceof TemplateWrapper) {
                 return $this->parents[$parent->getSourceContext()->getName()] = $parent;
@@ -94,11 +94,11 @@ abstract class Template
     }
     protected function doGetParent(array $context)
     {
-        return false;
+        return \false;
     }
     public function isTraitable()
     {
-        return true;
+        return \true;
     }
     /**
      * Displays a parent block.
@@ -127,7 +127,7 @@ abstract class Template
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
      */
-    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null)
+    public function displayBlock($name, array $context, array $blocks = [], $useBlocks = \true, ?self $templateContext = null)
     {
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks, $templateContext) as $data) {
             echo $data;
@@ -166,7 +166,7 @@ abstract class Template
      *
      * @return string The rendered block
      */
-    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
+    public function renderBlock($name, array $context, array $blocks = [], $useBlocks = \true)
     {
         $content = '';
         foreach ($this->yieldBlock($name, $context, $blocks, $useBlocks) as $data) {
@@ -192,12 +192,12 @@ abstract class Template
             return $blocks[$name][0] instanceof self;
         }
         if (isset($this->blocks[$name])) {
-            return true;
+            return \true;
         }
         if ($parent = $this->getParent($context)) {
             return $parent->hasBlock($name, $context);
         }
-        return false;
+        return \false;
     }
     /**
      * Returns all block names in the current context of the template.
@@ -238,7 +238,7 @@ abstract class Template
             }
             if ($template === $this->getTemplateName()) {
                 $class = static::class;
-                if (false !== ($pos = strrpos($class, '___', -1))) {
+                if (\false !== ($pos = strrpos($class, '___', -1))) {
                     $class = substr($class, 0, $pos);
                 }
             } else {
@@ -344,7 +344,7 @@ abstract class Template
     /**
      * @return iterable<string>
      */
-    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = true, ?self $templateContext = null)
+    public function yieldBlock($name, array $context, array $blocks = [], $useBlocks = \true, ?self $templateContext = null)
     {
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
@@ -400,7 +400,7 @@ abstract class Template
                 }
             }
         } elseif ($parent = $this->getParent($context)) {
-            yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
+            yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), \false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
             throw new RuntimeError(\sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {
@@ -422,9 +422,9 @@ abstract class Template
     public function yieldParentBlock($name, array $context, array $blocks = [])
     {
         if (isset($this->traits[$name])) {
-            yield from $this->traits[$name][0]->yieldBlock($name, $context, $blocks, false);
+            yield from $this->traits[$name][0]->yieldBlock($name, $context, $blocks, \false);
         } elseif ($parent = $this->getParent($context)) {
-            yield from $parent->unwrap()->yieldBlock($name, $context, $blocks, false);
+            yield from $parent->unwrap()->yieldBlock($name, $context, $blocks, \false);
         } else {
             throw new RuntimeError(\sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }

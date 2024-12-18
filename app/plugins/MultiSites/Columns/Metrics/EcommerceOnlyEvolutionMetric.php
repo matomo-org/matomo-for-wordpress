@@ -20,7 +20,7 @@ use Piwik\Site;
 class EcommerceOnlyEvolutionMetric extends EvolutionMetric
 {
     private $isRevenueEvolution;
-    public function __construct($wrapped, DataTable $pastData, $evolutionMetricName = false, $quotientPrecision = 0, ?DataTable $currentData = null)
+    public function __construct($wrapped, DataTable $pastData, $evolutionMetricName = \false, $quotientPrecision = 0, ?DataTable $currentData = null)
     {
         parent::__construct($wrapped, $pastData, $evolutionMetricName, $quotientPrecision, $currentData);
         $this->isRevenueEvolution = $this->getName() == 'revenue_evolution';
@@ -31,11 +31,11 @@ class EcommerceOnlyEvolutionMetric extends EvolutionMetric
         $currentValue = $this->getMetric($row, $columnName);
         // if the site this is for doesn't support ecommerce & this is for the revenue_evolution column,
         // we don't add the new column
-        if ($currentValue === false || !$this->isRevenueEvolution) {
+        if ($currentValue === \false || !$this->isRevenueEvolution) {
             $idSite = $row->getMetadata('idsite');
             if (!$idSite || !Site::isEcommerceEnabledFor($idSite)) {
                 $row->deleteColumn($columnName);
-                return false;
+                return \false;
             }
         }
         return parent::compute($row);

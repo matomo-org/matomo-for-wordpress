@@ -54,7 +54,7 @@ class VisitTotalTime extends VisitDimension
     public function onConvertedVisit(Request $request, Visitor $visitor, $action)
     {
         if (!$visitor->isVisitorKnown()) {
-            return false;
+            return \false;
         }
         $totalTime = $visitor->getVisitorColumn('visit_total_time');
         // If a pageview and goal conversion in the same second, with previously a goal conversion recorded

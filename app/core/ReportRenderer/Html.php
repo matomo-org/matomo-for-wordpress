@@ -21,7 +21,7 @@ class Html extends ReportRenderer
     public const HTML_CONTENT_TYPE = 'text/html';
     public const HTML_FILE_EXTENSION = 'html';
     public const UNSUBSCRIBE_LINK_PLACEHOLDER = '__unsubscribeLink__';
-    protected $renderImageInline = false;
+    protected $renderImageInline = \false;
     private $rendering = "";
     public function setLocale($locale)
     {

@@ -47,7 +47,7 @@ class HtmlTable extends Visualization
                 $this->requestConfig->request_parameters_to_modify['invert_compare_change_compute'] = 1;
             }
             // forward the comparisonIdSubtables var if present so it will be used when next/prev links are clicked
-            $comparisonIdSubtables = Common::getRequestVar('comparisonIdSubtables', false, 'string');
+            $comparisonIdSubtables = Common::getRequestVar('comparisonIdSubtables', \false, 'string');
             if (!empty($comparisonIdSubtables)) {
                 $comparisonIdSubtables = Common::unsanitizeInputValue($comparisonIdSubtables);
                 $this->config->custom_parameters['comparisonIdSubtables'] = $comparisonIdSubtables;
@@ -57,10 +57,10 @@ class HtmlTable extends Visualization
     public function beforeRender()
     {
         if ($this->requestConfig->idSubtable && $this->config->show_embedded_subtable) {
-            $this->config->show_visualization_only = true;
+            $this->config->show_visualization_only = \true;
         }
         if ($this->requestConfig->idSubtable) {
-            $this->config->show_totals_row = false;
+            $this->config->show_totals_row = \false;
         }
         foreach (Metrics::getMetricIdsToProcessReportTotal() as $metricId) {
             $this->config->report_ratio_columns[] = Metrics::getReadableColumnName($metricId);
@@ -109,7 +109,7 @@ class HtmlTable extends Visualization
                         $properties->setDefaultColumnsToDisplay($columns, $hasNbVisits, $hasNbUniqVisitors);
                     }
                     $label = array_search('label', $properties->columns_to_display);
-                    if ($label !== false) {
+                    if ($label !== \false) {
                         unset($properties->columns_to_display[$label]);
                     }
                     foreach (array_reverse($dimensions) as $dimension) {
@@ -221,7 +221,7 @@ class HtmlTable extends Visualization
     }
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
     protected function isFlattened()
     {

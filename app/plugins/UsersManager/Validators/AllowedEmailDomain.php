@@ -25,7 +25,7 @@ class AllowedEmailDomain extends BaseValidator
     }
     public function getDomainFromEmail($email) : string
     {
-        if (!is_string($email) || mb_strpos($email, '@') === false) {
+        if (!is_string($email) || mb_strpos($email, '@') === \false) {
             return '';
         }
         return mb_strtolower(trim(mb_substr($email, mb_strrpos($email, '@') + 1)));
@@ -34,7 +34,7 @@ class AllowedEmailDomain extends BaseValidator
     {
         $domains = array_map('mb_strtolower', array_filter($domains));
         $domain = $this->getDomainFromEmail($email);
-        return in_array($domain, $domains, true);
+        return in_array($domain, $domains, \true);
     }
     public function getEmailDomainsInUse() : array
     {

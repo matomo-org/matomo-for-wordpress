@@ -16,7 +16,7 @@ use Piwik\Plugins\TagManager\Input\Description;
 use Piwik\Plugins\TagManager\Input\Name;
 class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Plugins\TagManager\Dao\TagManagerDao
 {
-    const REVISION_DRAFT = 0;
+    public const REVISION_DRAFT = 0;
     protected $table = 'tagmanager_container_version';
     public function install()
     {
@@ -142,6 +142,17 @@ class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao impleme
         $query = "UPDATE {$table} SET status = ?, deleted_date = ? WHERE idsite = ? and idcontainerversion = ? and status != ?";
         $bind = array(self::STATUS_DELETED, $deletedDate, $idSite, $idContainerVersion, self::STATUS_DELETED);
         Db::query($query, $bind);
+    }
+    protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
+    {
+        // Look up the container ID using the version ID
+        $bind = array(self::STATUS_ACTIVE, $idSite, $idContainerVersion);
+        $table = $this->tablePrefixed;
+        $version = Db::fetchRow("SELECT idcontainer FROM {$table} WHERE status = ? AND idsite = ? AND idcontainerversion = ? LIMIT 1", $bind);
+        if (empty($version['idcontainer'])) {
+            return \false;
+        }
+        return $this->isNameInUse($idSite, $version['idcontainer'], $name);
     }
     private function enrichVersions($containers)
     {

@@ -114,11 +114,11 @@ class Client
     }
     public function download($pluginOrThemeName)
     {
-        @ignore_user_abort(true);
+        @ignore_user_abort(\true);
         SettingsServer::setMaxExecutionTime(0);
         $downloadUrl = $this->getDownloadUrl($pluginOrThemeName);
         if (empty($downloadUrl)) {
-            return false;
+            return \false;
         }
         // in the beginning we allowed to specify a download path but this way we make sure security is always taken
         // care of and we always generate a random download filename.Marketplace/Api/Client.php
@@ -128,7 +128,7 @@ class Client
         if ($success) {
             return $target;
         }
-        return false;
+        return \false;
     }
     /**
      * @param \Piwik\Plugin[] $plugins
@@ -227,7 +227,7 @@ class Client
         $query = Http::buildQuery($params);
         $cacheId = $this->getCacheKey($action, $query);
         $result = $this->cache->fetch($cacheId);
-        if ($result !== false) {
+        if ($result !== \false) {
             return $result;
         }
         try {
@@ -255,6 +255,9 @@ class Client
     public function getDownloadUrl($pluginOrThemeName)
     {
         $plugin = $this->getPluginInfo($pluginOrThemeName);
+        if (empty($plugin['isDownloadable'])) {
+            throw new \Piwik\Plugins\Marketplace\Api\Exception('Plugin is not downloadable. License may be missing or expired.');
+        }
         if (empty($plugin['versions'])) {
             throw new \Piwik\Plugins\Marketplace\Api\Exception('Plugin has no versions.');
         }

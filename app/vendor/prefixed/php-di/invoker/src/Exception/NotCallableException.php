@@ -14,7 +14,7 @@ class NotCallableException extends InvocationException
      * @param bool $containerEntry
      * @return self
      */
-    public static function fromInvalidCallable($value, $containerEntry = false)
+    public static function fromInvalidCallable($value, $containerEntry = \false)
     {
         if (is_object($value)) {
             $message = sprintf('Instance of %s is not a callable', get_class($value));
@@ -24,9 +24,9 @@ class NotCallableException extends InvocationException
             $message = sprintf('%s::%s() is not a callable.%s', $class, $value[1], $extra);
         } else {
             if ($containerEntry) {
-                $message = var_export($value, true) . ' is neither a callable nor a valid container entry';
+                $message = var_export($value, \true) . ' is neither a callable nor a valid container entry';
             } else {
-                $message = var_export($value, true) . ' is not a callable';
+                $message = var_export($value, \true) . ' is not a callable';
             }
         }
         return new self($message);

@@ -18,7 +18,7 @@ class CaseSensitive
     }
     public function check()
     {
-        if (!is_bool($this->caseSensitive) && !in_array($this->caseSensitive, array('0', '1', 0, 1), true)) {
+        if (!is_bool($this->caseSensitive) && !in_array($this->caseSensitive, array('0', '1', 0, 1), \true)) {
             $caseSensitive = $this->caseSensitive;
             throw new Exception("Invalid value '{$caseSensitive}' for 'caseSensitive' specified. Allowed values: '0' or '1'");
         }

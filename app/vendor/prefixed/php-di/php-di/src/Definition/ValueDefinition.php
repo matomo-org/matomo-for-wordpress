@@ -48,7 +48,7 @@ class ValueDefinition implements Definition, SelfResolvingDefinition
     }
     public function isResolvable(ContainerInterface $container) : bool
     {
-        return true;
+        return \true;
     }
     public function replaceNestedDefinitions(callable $replacer)
     {
@@ -56,6 +56,6 @@ class ValueDefinition implements Definition, SelfResolvingDefinition
     }
     public function __toString()
     {
-        return sprintf('Value (%s)', var_export($this->value, true));
+        return sprintf('Value (%s)', var_export($this->value, \true));
     }
 }

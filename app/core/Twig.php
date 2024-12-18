@@ -39,7 +39,7 @@ function piwik_format_number($string, $minFractionDigits, $maxFractionDigits)
     $formatter = \Piwik\NumberFormatter::getInstance();
     return $formatter->format($string, $minFractionDigits, $maxFractionDigits);
 }
-function piwik_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
+function piwik_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = \false)
 {
     $string = \Matomo\Dependencies\twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
     switch ($strategy) {
@@ -92,9 +92,9 @@ class Twig
         // Create new Twig Environment and set cache dir
         $cache = StaticContainer::get('twig.cache');
         $this->twig = new Environment($chainLoader, array(
-            'debug' => true,
+            'debug' => \true,
             // to use {{ dump(var) }} in twig templates
-            'strict_variables' => true,
+            'strict_variables' => \true,
             // throw an exception if variables are invalid
             'cache' => $cache,
         ));
@@ -143,14 +143,14 @@ class Twig
     private function addTestFalse()
     {
         $test = new TwigTest('false', function ($value) {
-            return false === $value;
+            return \false === $value;
         });
         $this->twig->addTest($test);
     }
     private function addTestTrue()
     {
         $test = new TwigTest('true', function ($value) {
-            return true === $value;
+            return \true === $value;
         });
         $this->twig->addTest($test);
     }
@@ -180,7 +180,7 @@ class Twig
                 throw new Exception("The function includeAssets needs a 'type' parameter.");
             }
             $assetType = strtolower($params['type']);
-            $deferJs = boolval($params['defer'] ?? false);
+            $deferJs = boolval($params['defer'] ?? \false);
             switch ($assetType) {
                 case 'css':
                     return \Piwik\AssetManager::getInstance()->getCssInclusionDirective();
@@ -254,7 +254,7 @@ class Twig
     private function getDefaultThemeLoader()
     {
         $themeDir = Manager::getPluginDirectory(\Piwik\Plugin\Manager::DEFAULT_THEME) . '/templates/';
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
         return $themeLoader;
     }
     /**
@@ -267,9 +267,9 @@ class Twig
         $pluginsDir = Manager::getPluginDirectory($theme->getPluginName());
         $themeDir = $pluginsDir . '/templates/';
         if (!file_exists($themeDir)) {
-            return false;
+            return \false;
         }
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
         return $themeLoader;
     }
     public function getTwigEnvironment()
@@ -304,7 +304,7 @@ class Twig
                 return '';
             }
             $string = str_replace('+', '%2B', $string);
-            $string = str_replace('&nbsp;', html_entity_decode('&nbsp;', ENT_COMPAT | ENT_HTML401, 'UTF-8'), $string);
+            $string = str_replace('&nbsp;', html_entity_decode('&nbsp;', \ENT_COMPAT | \ENT_HTML401, 'UTF-8'), $string);
             $string = SafeDecodeLabel::decodeLabelSafe($string);
             return $string;
         }, array('is_safe' => array('all')));
@@ -358,7 +358,7 @@ class Twig
             if ($string === null) {
                 return '';
             }
-            if ($string === false || $string === true) {
+            if ($string === \false || $string === \true) {
                 return (int) $string;
             }
             $string = str_replace([PIWIK_DOCUMENT_ROOT, str_replace('/', '\\/', PIWIK_DOCUMENT_ROOT)], '$DOC_ROOT', $string);
@@ -418,7 +418,7 @@ class Twig
     {
         $formatter = $this->formatter;
         $sumtimeFilter = new TwigFilter('sumtime', function ($numberOfSeconds) use($formatter) {
-            return $formatter->getPrettyTimeFromSeconds($numberOfSeconds, true);
+            return $formatter->getPrettyTimeFromSeconds($numberOfSeconds, \true);
         });
         $this->twig->addFilter($sumtimeFilter);
     }
@@ -506,7 +506,7 @@ class Twig
      */
     public static function addPiwikPath(&$value, $key, $path)
     {
-        if ($value[0] != '/' && $value[0] != DIRECTORY_SEPARATOR) {
+        if ($value[0] != '/' && $value[0] != \DIRECTORY_SEPARATOR) {
             $value = $path . "/{$value}";
         }
     }

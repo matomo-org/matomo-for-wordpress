@@ -117,7 +117,7 @@ class Date
             $date = self::lastMonth();
         } elseif (is_string($dateString) && preg_match('/last[ -]?year/i', urldecode($dateString))) {
             $date = self::lastYear();
-        } elseif (!is_int($dateString) && (!is_string($dateString) || strpos($dateString, ',') !== false || ($dateString = strtotime($dateString)) === false)) {
+        } elseif (!is_int($dateString) && (!is_string($dateString) || strpos($dateString, ',') !== \false || ($dateString = strtotime($dateString)) === \false)) {
             throw self::getInvalidDateFormatException($dateString);
         } else {
             $date = new \Piwik\Date($dateString);
@@ -292,7 +292,7 @@ class Date
         }
         $start = substr($timezone, 0, 4);
         if ($start !== 'UTC-' && $start !== 'UTC+') {
-            return false;
+            return \false;
         }
         $offset = (float) substr($timezone, 4);
         if ($start === 'UTC-') {
@@ -314,7 +314,7 @@ class Date
         }
         // manually adjust for UTC timezones
         $utcOffset = self::extractUtcOffset($timezone);
-        if ($utcOffset !== false) {
+        if ($utcOffset !== \false) {
             return self::addHourTo($timestamp, $utcOffset);
         }
         date_default_timezone_set($timezone);
@@ -353,7 +353,7 @@ class Date
             $this->timezone = 'UTC';
         }
         $utcOffset = self::extractUtcOffset($this->timezone);
-        if ($utcOffset !== false) {
+        if ($utcOffset !== \false) {
             return (int) ($this->timestamp - $utcOffset * 3600);
         }
         // The following code seems clunky - I thought the DateTime php class would allow to return timestamps
@@ -675,7 +675,7 @@ class Date
      * @param bool   $ucfirst  whether the first letter should be upper-cased
      * @return string eg. `"Aug 2009"`
      */
-    public function getLocalized($template, $ucfirst = true)
+    public function getLocalized($template, $ucfirst = \true)
     {
         $dateTimeFormatProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\DateTimeFormatProvider');
         $template = $dateTimeFormatProvider->getFormatPattern($template);
@@ -823,7 +823,7 @@ class Date
         }
         $tokens = array();
         $n = strlen($pattern);
-        $isLiteral = false;
+        $isLiteral = \false;
         $literal = '';
         for ($i = 0; $i < $n; ++$i) {
             $c = $pattern[$i];
@@ -834,9 +834,9 @@ class Date
                 } elseif ($isLiteral) {
                     $tokens[] = $literal;
                     $literal = '';
-                    $isLiteral = false;
+                    $isLiteral = \false;
                 } else {
-                    $isLiteral = true;
+                    $isLiteral = \true;
                     $literal = '';
                 }
             } elseif ($isLiteral) {
@@ -1003,7 +1003,7 @@ class Date
     private static function getInvalidDateFormatException($dateString)
     {
         $message = \Piwik\Piwik::translate('General_ExceptionInvalidDateFormat', array("YYYY-MM-DD, or 'today' or 'yesterday'", "strtotime", "http://php.net/strtotime"));
-        return new Exception($message . ": " . var_export($dateString, true));
+        return new Exception($message . ": " . var_export($dateString, \true));
     }
     /**
      * For tests.

@@ -38,7 +38,7 @@ class Pattern extends BaseFilter
      * @param bool $invertedMatch Whether to invert the pattern or not. If true, will remove
      *                            rows if they match the pattern.
      */
-    public function __construct($table, $columnToFilter, $patternToSearch, $invertedMatch = false)
+    public function __construct($table, $columnToFilter, $patternToSearch, $invertedMatch = \false)
     {
         parent::__construct($table);
         $this->patternToSearch = $patternToSearch;
@@ -66,7 +66,7 @@ class Pattern extends BaseFilter
      * @return int
      * @ignore
      */
-    public static function match($patternQuoted, $string, $invertedMatch = false)
+    public static function match($patternQuoted, $string, $invertedMatch = \false)
     {
         return preg_match($patternQuoted . "i", $string) == 1 ^ $invertedMatch;
     }
@@ -83,7 +83,7 @@ class Pattern extends BaseFilter
             // - exact match with ""
             // see (?!pattern)     A subexpression that performs a negative lookahead search, which matches the search string at any point where a string not matching pattern begins.
             $value = $row->getColumn($this->columnToFilter);
-            if ($value === false) {
+            if ($value === \false) {
                 $value = $row->getMetadata($this->columnToFilter);
             }
             if (!self::match($this->patternToSearchQuoted, $value, $this->invertedMatch)) {

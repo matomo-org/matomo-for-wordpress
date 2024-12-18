@@ -48,6 +48,6 @@ class ChallengeCustomLogo extends \Piwik\Plugins\Tour\Engagement\Challenge
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreAdminHome', 'action' => 'generalSettings', 'widget' => false)) . '#/#useCustomLogo';
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreAdminHome', 'action' => 'generalSettings', 'widget' => \false)) . '#/#useCustomLogo';
     }
 }

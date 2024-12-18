@@ -81,7 +81,7 @@ class VisitGoalBuyer extends VisitDimension
         if ($visitEcommerceStatus != self::TYPE_BUYER_NONE && $visitEcommerceStatus != $goalBuyer) {
             return $visitEcommerceStatus;
         }
-        return false;
+        return \false;
     }
     /**
      * @ignore

@@ -53,15 +53,15 @@ class PhpToken implements \Stringable
     public function is($kind) : bool
     {
         foreach ((array) $kind as $value) {
-            if (\in_array($value, [$this->id, $this->text], true)) {
-                return true;
+            if (\in_array($value, [$this->id, $this->text], \true)) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function isIgnorable() : bool
     {
-        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], true);
+        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], \true);
     }
     public function __toString() : string
     {

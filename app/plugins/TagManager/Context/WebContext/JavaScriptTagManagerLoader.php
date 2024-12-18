@@ -44,15 +44,15 @@ class JavaScriptTagManagerLoader
     }
     public function getPreviewJsContent()
     {
-        $unsetGet = false;
-        $unsetPost = false;
+        $unsetGet = \false;
+        $unsetPost = \false;
         if (!isset($_GET)) {
             $_GET = array();
-            $unsetGet = true;
+            $unsetGet = \true;
         }
         if (!isset($_POST)) {
             $_POST = array();
-            $unsetPost = true;
+            $unsetPost = \true;
         }
         $path = PIWIK_DOCUMENT_ROOT . '/plugins/TagManager/javascripts/previewmode.js';
         $previewJs = file_get_contents($path);

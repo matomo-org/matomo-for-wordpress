@@ -43,7 +43,7 @@ class Record
     /**
      * @var bool
      */
-    private $countOfRecordNameIsRecursive = false;
+    private $countOfRecordNameIsRecursive = \false;
     /**
      * @var array|null
      */
@@ -162,7 +162,7 @@ class Record
     {
         return $this->type;
     }
-    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = false) : \Piwik\ArchiveProcessor\Record
+    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = \false) : \Piwik\ArchiveProcessor\Record
     {
         $this->countOfRecordName = $dependentRecordName;
         $this->countOfRecordNameIsRecursive = $isRecursive;

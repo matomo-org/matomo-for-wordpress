@@ -38,7 +38,7 @@ class ErrorListener implements EventSubscriberInterface
     /**
      * @param array<class-string, array{log_level: string|null, status_code: int<100,599>|null}> $exceptionsMapping
      */
-    public function __construct($controller, ?LoggerInterface $logger = null, bool $debug = false, array $exceptionsMapping = [])
+    public function __construct($controller, ?LoggerInterface $logger = null, bool $debug = \false, array $exceptionsMapping = [])
     {
         $this->controller = $controller;
         $this->logger = $logger;
@@ -77,7 +77,7 @@ class ErrorListener implements EventSubscriberInterface
         $throwable = $event->getThrowable();
         $request = $this->duplicateRequest($throwable, $event->getRequest());
         try {
-            $response = $event->getKernel()->handle($request, HttpKernelInterface::SUB_REQUEST, false);
+            $response = $event->getKernel()->handle($request, HttpKernelInterface::SUB_REQUEST, \false);
         } catch (\Exception $e) {
             $f = FlattenException::createFromThrowable($e);
             $this->logException($e, sprintf('Exception thrown when handling an exception (%s: %s at %s line %s)', $f->getClass(), $f->getMessage(), $e->getFile(), $e->getLine()));
@@ -88,30 +88,30 @@ class ErrorListener implements EventSubscriberInterface
                 }
             } while ($prev = $wrapper->getPrevious());
             $prev = new \ReflectionProperty($wrapper instanceof \Exception ? \Exception::class : \Error::class, 'previous');
-            $prev->setAccessible(true);
+            $prev->setAccessible(\true);
             $prev->setValue($wrapper, $throwable);
             throw $e;
         }
         $event->setResponse($response);
         if ($this->debug) {
-            $event->getRequest()->attributes->set('_remove_csp_headers', true);
+            $event->getRequest()->attributes->set('_remove_csp_headers', \true);
         }
     }
     public function removeCspHeader(ResponseEvent $event) : void
     {
-        if ($this->debug && $event->getRequest()->attributes->get('_remove_csp_headers', false)) {
+        if ($this->debug && $event->getRequest()->attributes->get('_remove_csp_headers', \false)) {
             $event->getResponse()->headers->remove('Content-Security-Policy');
         }
     }
     public function onControllerArguments(ControllerArgumentsEvent $event)
     {
         $e = $event->getRequest()->attributes->get('exception');
-        if (!$e instanceof \Throwable || false === ($k = array_search($e, $event->getArguments(), true))) {
+        if (!$e instanceof \Throwable || \false === ($k = array_search($e, $event->getArguments(), \true))) {
             return;
         }
         $r = new \ReflectionFunction(\Closure::fromCallable($event->getController()));
         $r = $r->getParameters()[$k] ?? null;
-        if ($r && (!($r = $r->getType()) instanceof \ReflectionNamedType || \in_array($r->getName(), [FlattenException::class, LegacyFlattenException::class], true))) {
+        if ($r && (!($r = $r->getType()) instanceof \ReflectionNamedType || \in_array($r->getName(), [FlattenException::class, LegacyFlattenException::class], \true))) {
             $arguments = $event->getArguments();
             $arguments[$k] = FlattenException::createFromThrowable($e);
             $event->setArguments($arguments);

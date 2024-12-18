@@ -45,7 +45,7 @@ class Goals extends HtmlTable
             }
         }
         parent::beforeLoadDataTable();
-        $this->config->show_totals_row = false;
+        $this->config->show_totals_row = \false;
         if ($this->config->disable_subtable_when_show_goals) {
             $this->config->subtable_controller_action = null;
         }
@@ -53,11 +53,11 @@ class Goals extends HtmlTable
     }
     public function beforeRender()
     {
-        $this->config->show_totals_row = false;
-        $this->config->show_goals = true;
-        $this->config->show_goals_columns = true;
+        $this->config->show_totals_row = \false;
+        $this->config->show_goals = \true;
+        $this->config->show_goals_columns = \true;
         $this->config->datatable_css_class = 'dataTableVizGoals';
-        $this->config->show_exclude_low_population = true;
+        $this->config->show_exclude_low_population = \true;
         if (1 == Common::getRequestVar('documentationForGoalsPage', 0, 'int')) {
             // TODO: should not use query parameter
             $this->config->documentation = Piwik::translate('Goals_ConversionByTypeReportDocumentation', ['<br />', '<br />', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/tracking-goals-web-analytics/') . '" rel="noreferrer noopener" target="_blank">', '</a>']);
@@ -83,7 +83,7 @@ class Goals extends HtmlTable
     {
         if ($this->dataTable instanceof DataTable\DataTableInterface) {
             foreach ($this->config->columns_to_display as $key => $column) {
-                if (false === strpos($column, 'revenue')) {
+                if (\false === strpos($column, 'revenue')) {
                     continue;
                 }
                 $columnValues = $this->dataTable->getColumn($column);
@@ -229,11 +229,11 @@ class Goals extends HtmlTable
             $allGoals = [];
             // add the ecommerce goal if ecommerce is enabled for the site
             if (Site::isEcommerceEnabledFor($idSite)) {
-                $ecommerceGoal = ['idgoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER, 'name' => Piwik::translate('Goals_EcommerceOrder'), 'quoted_name' => false];
+                $ecommerceGoal = ['idgoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER, 'name' => Piwik::translate('Goals_EcommerceOrder'), 'quoted_name' => \false];
                 $allGoals[$ecommerceGoal['idgoal']] = $ecommerceGoal;
             }
             // add the site's goals (and escape all goal names)
-            $siteGoals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1'], $default = []);
+            $siteGoals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1', 'orderByName' => \true], $default = []);
             foreach ($siteGoals as &$goal) {
                 $goal['quoted_name'] = '"' . $goal['name'] . '"';
                 $allGoals[$goal['idgoal']] = $goal;

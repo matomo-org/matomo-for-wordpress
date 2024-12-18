@@ -23,7 +23,7 @@ class VisitIp extends VisitDimension
 {
     protected $columnName = 'location_ip';
     protected $type = self::TYPE_BINARY;
-    protected $allowAnonymous = false;
+    protected $allowAnonymous = \false;
     protected $segmentName = 'visitIp';
     protected $nameSingular = 'General_VisitorIP';
     protected $namePlural = 'General_VisitorIPs';

@@ -49,7 +49,7 @@ class IntrospectionProcessor implements ProcessorInterface
          * As of 5.3.6, DEBUG_BACKTRACE_IGNORE_ARGS option was added.
          * Any version less than 5.3.6 must use the DEBUG_BACKTRACE_IGNORE_ARGS constant value '2'.
          */
-        $trace = debug_backtrace(PHP_VERSION_ID < 50306 ? 2 : DEBUG_BACKTRACE_IGNORE_ARGS);
+        $trace = debug_backtrace(\PHP_VERSION_ID < 50306 ? 2 : \DEBUG_BACKTRACE_IGNORE_ARGS);
         // skip first since it's always the current method
         array_shift($trace);
         // the call_user_func call is also skipped
@@ -58,7 +58,7 @@ class IntrospectionProcessor implements ProcessorInterface
         while ($this->isTraceClassOrSkippedFunction($trace, $i)) {
             if (isset($trace[$i]['class'])) {
                 foreach ($this->skipClassesPartials as $part) {
-                    if (strpos($trace[$i]['class'], $part) !== false) {
+                    if (strpos($trace[$i]['class'], $part) !== \false) {
                         $i++;
                         continue 2;
                     }
@@ -77,7 +77,7 @@ class IntrospectionProcessor implements ProcessorInterface
     private function isTraceClassOrSkippedFunction(array $trace, $index)
     {
         if (!isset($trace[$index])) {
-            return false;
+            return \false;
         }
         return isset($trace[$index]['class']) || in_array($trace[$index]['function'], $this->skipFunctions);
     }

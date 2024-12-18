@@ -58,11 +58,11 @@ class ReflectionCaster
         // Cannot create ReflectionGenerator based on a terminated Generator
         try {
             $reflectionGenerator = new \ReflectionGenerator($c);
+            return self::castReflectionGenerator($reflectionGenerator, $a, $stub, $isNested);
         } catch (\Exception $e) {
-            $a[Caster::PREFIX_VIRTUAL . 'closed'] = true;
+            $a[Caster::PREFIX_VIRTUAL . 'closed'] = \true;
             return $a;
         }
-        return self::castReflectionGenerator($reflectionGenerator, $a, $stub, $isNested);
     }
     public static function castType(\ReflectionType $c, array $a, Stub $stub, bool $isNested)
     {
@@ -98,13 +98,13 @@ class ReflectionCaster
             $function = new \ReflectionGenerator($c->getExecutingGenerator());
             array_unshift($trace, ['function' => 'yield', 'file' => $function->getExecutingFile(), 'line' => $function->getExecutingLine() - (int) (\PHP_VERSION_ID < 80100)]);
             $trace[] = $frame;
-            $a[$prefix . 'trace'] = new TraceStub($trace, false, 0, -1, -1);
+            $a[$prefix . 'trace'] = new TraceStub($trace, \false, 0, -1, -1);
         } else {
-            $function = new FrameStub($frame, false, true);
-            $function = ExceptionCaster::castFrameStub($function, [], $function, true);
+            $function = new FrameStub($frame, \false, \true);
+            $function = ExceptionCaster::castFrameStub($function, [], $function, \true);
             $a[$prefix . 'executing'] = $function[$prefix . 'src'];
         }
-        $a[Caster::PREFIX_VIRTUAL . 'closed'] = false;
+        $a[Caster::PREFIX_VIRTUAL . 'closed'] = \false;
         return $a;
     }
     public static function castClass(\ReflectionClass $c, array $a, Stub $stub, bool $isNested, int $filter = 0)
@@ -133,7 +133,7 @@ class ReflectionCaster
         if (isset($a[$prefix . 'returnType'])) {
             $v = $a[$prefix . 'returnType'];
             $v = $v instanceof \ReflectionNamedType ? $v->getName() : (string) $v;
-            $a[$prefix . 'returnType'] = new ClassStub($a[$prefix . 'returnType'] instanceof \ReflectionNamedType && $a[$prefix . 'returnType']->allowsNull() && 'mixed' !== $v ? '?' . $v : $v, [class_exists($v, false) || interface_exists($v, false) || trait_exists($v, false) ? $v : '', '']);
+            $a[$prefix . 'returnType'] = new ClassStub($a[$prefix . 'returnType'] instanceof \ReflectionNamedType && $a[$prefix . 'returnType']->allowsNull() && 'mixed' !== $v ? '?' . $v : $v, [class_exists($v, \false) || interface_exists($v, \false) || trait_exists($v, \false) ? $v : '', '']);
         }
         if (isset($a[$prefix . 'class'])) {
             $a[$prefix . 'class'] = new ClassStub($a[$prefix . 'class']);
@@ -193,7 +193,7 @@ class ReflectionCaster
         }
         if (isset($a[$prefix . 'typeHint'])) {
             $v = $a[$prefix . 'typeHint'];
-            $a[$prefix . 'typeHint'] = new ClassStub($v, [class_exists($v, false) || interface_exists($v, false) || trait_exists($v, false) ? $v : '', '']);
+            $a[$prefix . 'typeHint'] = new ClassStub($v, [class_exists($v, \false) || interface_exists($v, \false) || trait_exists($v, \false) ? $v : '', '']);
         } else {
             unset($a[$prefix . 'allowsNull']);
         }
@@ -297,7 +297,7 @@ class ReflectionCaster
             if (\PHP_VERSION_ID >= 80000 && 'isDisabled' === $k) {
                 continue;
             }
-            if (method_exists($c, $m) && false !== ($m = $c->{$m}()) && null !== $m) {
+            if (method_exists($c, $m) && \false !== ($m = $c->{$m}()) && null !== $m) {
                 $a[$prefix . $k] = $m instanceof \Reflector ? $m->name : $m;
             }
         }

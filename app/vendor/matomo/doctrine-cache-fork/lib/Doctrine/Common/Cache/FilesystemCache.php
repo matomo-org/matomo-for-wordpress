@@ -32,22 +32,22 @@ class FilesystemCache extends \Doctrine\Common\Cache\FileCache
         $lifetime = -1;
         $filename = $this->getFilename($id);
         if (!is_file($filename)) {
-            return false;
+            return \false;
         }
         $resource = fopen($filename, 'r');
         $line = fgets($resource);
-        if ($line !== false) {
+        if ($line !== \false) {
             $lifetime = (int) $line;
         }
         if ($lifetime !== 0 && $lifetime < time()) {
             fclose($resource);
-            return false;
+            return \false;
         }
-        while (($line = fgets($resource)) !== false) {
+        while (($line = fgets($resource)) !== \false) {
             $data .= $line;
         }
         fclose($resource);
-        $allowedClasses = false;
+        $allowedClasses = \false;
         if (!empty($GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE']) && is_array($GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE'])) {
             $allowedClasses = $GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE'];
         }
@@ -61,11 +61,11 @@ class FilesystemCache extends \Doctrine\Common\Cache\FileCache
         $lifetime = -1;
         $filename = $this->getFilename($id);
         if (!is_file($filename)) {
-            return false;
+            return \false;
         }
         $resource = fopen($filename, 'r');
         $line = fgets($resource);
-        if ($line !== false) {
+        if ($line !== \false) {
             $lifetime = (int) $line;
         }
         fclose($resource);

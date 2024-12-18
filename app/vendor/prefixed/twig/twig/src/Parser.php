@@ -51,7 +51,7 @@ class Parser
     {
         return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
-    public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false) : ModuleNode
+    public function parse(TokenStream $stream, $test = null, bool $dropNeedle = \false) : ModuleNode
     {
         $vars = get_object_vars($this);
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames'], $vars['varNameSalt']);
@@ -97,7 +97,7 @@ class Parser
         }
         return $node;
     }
-    public function subparse($test, bool $dropNeedle = false) : Node
+    public function subparse($test, bool $dropNeedle = \false) : Node
     {
         $lineno = $this->getCurrentToken()->getLine();
         $rv = [];
@@ -250,7 +250,7 @@ class Parser
     {
         return $this->stream->getCurrent();
     }
-    private function filterBodyNodes(Node $node, bool $nested = false) : ?Node
+    private function filterBodyNodes(Node $node, bool $nested = \false) : ?Node
     {
         // check that the body does not contain non-empty output nodes
         if ($node instanceof TextNode && !ctype_space($node->getAttribute('data')) || !$node instanceof TextNode && !$node instanceof BlockReferenceNode && $node instanceof NodeOutputInterface) {

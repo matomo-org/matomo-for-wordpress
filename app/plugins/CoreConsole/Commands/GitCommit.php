@@ -33,7 +33,7 @@ class GitCommit extends ConsoleCommand
                 continue;
             }
             $status = $this->getStatusOfSubmodule($submodule);
-            if (false !== strpos($status, '?? ')) {
+            if (\false !== strpos($status, '?? ')) {
                 $output->writeln(sprintf('<error>%s has untracked files or folders. Delete or add them and try again.</error>', $submodule));
                 $output->writeln('<error>Status:</error>');
                 $output->writeln(sprintf('<comment>%s</comment>', $status));
@@ -47,7 +47,7 @@ class GitCommit extends ConsoleCommand
         }
         if (!$this->hasChangesToBeCommitted()) {
             $question = '<question>There are no changes to be committed in the super repo, do you just want to commit and converge submodules?</question>';
-            if (!$this->askForConfirmation($question, false)) {
+            if (!$this->askForConfirmation($question, \false)) {
                 $output->writeln('<info>Cool, nothing done. Stage files using "git add" and try again.</info>');
                 return self::SUCCESS;
             }
@@ -91,15 +91,15 @@ class GitCommit extends ConsoleCommand
         $cmd = sprintf('cd %s && git status --porcelain', PIWIK_DOCUMENT_ROOT);
         $result = shell_exec($cmd);
         $result = trim($result);
-        if (false !== strpos($result, 'M  ')) {
+        if (\false !== strpos($result, 'M  ')) {
             // stages
-            return true;
+            return \true;
         }
-        if (false !== strpos($result, 'MM ')) {
+        if (\false !== strpos($result, 'MM ')) {
             // staged and modified
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * @return array

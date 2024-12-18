@@ -23,7 +23,7 @@ class Terminal
     public function getWidth()
     {
         $width = getenv('COLUMNS');
-        if (false !== $width) {
+        if (\false !== $width) {
             return (int) trim($width);
         }
         if (null === self::$width) {
@@ -39,7 +39,7 @@ class Terminal
     public function getHeight()
     {
         $height = getenv('LINES');
-        if (false !== $height) {
+        if (\false !== $height) {
             return (int) trim($height);
         }
         if (null === self::$height) {
@@ -57,7 +57,7 @@ class Terminal
         }
         // skip check if shell_exec function is disabled
         if (!\function_exists('shell_exec')) {
-            return false;
+            return \false;
         }
         return self::$stty = (bool) shell_exec('stty 2> ' . ('\\' === \DIRECTORY_SEPARATOR ? 'NUL' : '/dev/null'));
     }
@@ -65,7 +65,7 @@ class Terminal
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $ansicon = getenv('ANSICON');
-            if (false !== $ansicon && preg_match('/^(\\d+)x(\\d+)(?: \\((\\d+)x(\\d+)\\))?$/', trim($ansicon), $matches)) {
+            if (\false !== $ansicon && preg_match('/^(\\d+)x(\\d+)(?: \\((\\d+)x(\\d+)\\))?$/', trim($ansicon), $matches)) {
                 // extract [w, H] from "wxh (WxH)"
                 // or [w, h] from "wxh"
                 self::$width = (int) $matches[1];
@@ -134,8 +134,7 @@ class Terminal
         }
         $descriptorspec = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
         $cp = \function_exists('sapi_windows_cp_set') ? sapi_windows_cp_get() : 0;
-        $process = proc_open($command, $descriptorspec, $pipes, null, null, ['suppress_errors' => true]);
-        if (!\is_resource($process)) {
+        if (!($process = @proc_open($command, $descriptorspec, $pipes, null, null, ['suppress_errors' => \true]))) {
             return null;
         }
         $info = stream_get_contents($pipes[1]);

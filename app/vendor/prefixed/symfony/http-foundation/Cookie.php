@@ -29,7 +29,7 @@ class Cookie
     protected $httpOnly;
     private $raw;
     private $sameSite;
-    private $secureDefault = false;
+    private $secureDefault = \false;
     private const RESERVED_CHARS_LIST = "=,; \t\r\n\v\f";
     private const RESERVED_CHARS_FROM = ['=', ',', ';', ' ', "\t", "\r", "\n", "\v", "\f"];
     private const RESERVED_CHARS_TO = ['%3D', '%2C', '%3B', '%20', '%09', '%0D', '%0A', '%0B', '%0C'];
@@ -38,9 +38,9 @@ class Cookie
      *
      * @return static
      */
-    public static function fromString(string $cookie, bool $decode = false)
+    public static function fromString(string $cookie, bool $decode = \false)
     {
-        $data = ['expires' => 0, 'path' => '/', 'domain' => null, 'secure' => false, 'httponly' => false, 'raw' => !$decode, 'samesite' => null];
+        $data = ['expires' => 0, 'path' => '/', 'domain' => null, 'secure' => \false, 'httponly' => \false, 'raw' => !$decode, 'samesite' => null];
         $parts = HeaderUtils::split($cookie, ';=');
         $part = array_shift($parts);
         $name = $decode ? urldecode($part[0]) : $part[0];
@@ -52,7 +52,7 @@ class Cookie
         }
         return new static($name, $value, $data['expires'], $data['path'], $data['domain'], $data['secure'], $data['httponly'], $data['raw'], $data['samesite']);
     }
-    public static function create(string $name, ?string $value = null, $expire = 0, ?string $path = '/', ?string $domain = null, ?bool $secure = null, bool $httpOnly = true, bool $raw = false, ?string $sameSite = self::SAMESITE_LAX) : self
+    public static function create(string $name, ?string $value = null, $expire = 0, ?string $path = '/', ?string $domain = null, ?bool $secure = null, bool $httpOnly = \true, bool $raw = \false, ?string $sameSite = self::SAMESITE_LAX) : self
     {
         return new self($name, $value, $expire, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
     }
@@ -69,10 +69,10 @@ class Cookie
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $name, ?string $value = null, $expire = 0, ?string $path = '/', ?string $domain = null, ?bool $secure = null, bool $httpOnly = true, bool $raw = false, ?string $sameSite = 'lax')
+    public function __construct(string $name, ?string $value = null, $expire = 0, ?string $path = '/', ?string $domain = null, ?bool $secure = null, bool $httpOnly = \true, bool $raw = \false, ?string $sameSite = 'lax')
     {
         // from PHP source code
-        if ($raw && false !== strpbrk($name, self::RESERVED_CHARS_LIST)) {
+        if ($raw && \false !== strpbrk($name, self::RESERVED_CHARS_LIST)) {
             throw new \InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
         }
         if (empty($name)) {
@@ -135,7 +135,7 @@ class Cookie
             $expire = $expire->format('U');
         } elseif (!is_numeric($expire)) {
             $expire = strtotime($expire);
-            if (false === $expire) {
+            if (\false === $expire) {
                 throw new \InvalidArgumentException('The cookie expiration time is not valid.');
             }
         }
@@ -157,7 +157,7 @@ class Cookie
      *
      * @return static
      */
-    public function withSecure(bool $secure = true) : self
+    public function withSecure(bool $secure = \true) : self
     {
         $cookie = clone $this;
         $cookie->secure = $secure;
@@ -168,7 +168,7 @@ class Cookie
      *
      * @return static
      */
-    public function withHttpOnly(bool $httpOnly = true) : self
+    public function withHttpOnly(bool $httpOnly = \true) : self
     {
         $cookie = clone $this;
         $cookie->httpOnly = $httpOnly;
@@ -179,9 +179,9 @@ class Cookie
      *
      * @return static
      */
-    public function withRaw(bool $raw = true) : self
+    public function withRaw(bool $raw = \true) : self
     {
-        if ($raw && false !== strpbrk($this->name, self::RESERVED_CHARS_LIST)) {
+        if ($raw && \false !== strpbrk($this->name, self::RESERVED_CHARS_LIST)) {
             throw new \InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $this->name));
         }
         $cookie = clone $this;
@@ -200,7 +200,7 @@ class Cookie
         } elseif (null !== $sameSite) {
             $sameSite = strtolower($sameSite);
         }
-        if (!\in_array($sameSite, [self::SAMESITE_LAX, self::SAMESITE_STRICT, self::SAMESITE_NONE, null], true)) {
+        if (!\in_array($sameSite, [self::SAMESITE_LAX, self::SAMESITE_STRICT, self::SAMESITE_NONE, null], \true)) {
             throw new \InvalidArgumentException('The "sameSite" parameter value is not valid.');
         }
         $cookie = clone $this;
@@ -234,10 +234,10 @@ class Cookie
         if ($this->getDomain()) {
             $str .= '; domain=' . $this->getDomain();
         }
-        if (true === $this->isSecure()) {
+        if (\true === $this->isSecure()) {
             $str .= '; secure';
         }
-        if (true === $this->isHttpOnly()) {
+        if (\true === $this->isHttpOnly()) {
             $str .= '; httponly';
         }
         if (null !== $this->getSameSite()) {

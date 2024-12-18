@@ -72,7 +72,7 @@ class SessionFingerprint
     {
         $_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED] = 1;
     }
-    public function initialize($userName, $tokenAuth, $isRemembered = false, $time = null)
+    public function initialize($userName, $tokenAuth, $isRemembered = \false, $time = null)
     {
         $time = $time ?: Date::now()->getTimestampUTC();
         $_SESSION[self::USER_NAME_SESSION_VAR_NAME] = $userName;

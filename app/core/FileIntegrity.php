@@ -24,7 +24,7 @@ class FileIntegrity
         self::loadManifest();
         if (!class_exists('Piwik\\Manifest')) {
             $messages[] = \Piwik\Piwik::translate('General_WarningFileIntegrityNoManifest') . '<br/>' . \Piwik\Piwik::translate('General_WarningFileIntegrityNoManifestDeployingFromGit');
-            return array($success = false, $messages);
+            return array($success = \false, $messages);
         }
         $messages = self::getMessagesDirectoriesFoundButNotExpected($messages);
         $messages = self::getMessagesFilesFoundButNotExpected($messages);
@@ -186,10 +186,10 @@ class FileIntegrity
         $directoriesWillBeDeleted = self::getDirectoriesFoundButNotExpected();
         foreach ($directoriesWillBeDeleted as $directoryWillBeDeleted) {
             if (strpos($file, $directoryWillBeDeleted) === 0) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     protected static function getDirectoriesFoundInManifest()
     {
@@ -228,34 +228,33 @@ class FileIntegrity
     protected static function isFileFromPluginNotInManifest($file, $pluginsInManifest)
     {
         if (strpos($file, 'plugins/') !== 0) {
-            return false;
+            return \false;
         }
         if (substr_count($file, '/') < 2) {
             // must be a file plugins/abc.xyz and not a plugin directory
-            return false;
+            return \false;
         }
         $pluginName = self::getPluginNameFromFilepath($file);
         if (in_array($pluginName, $pluginsInManifest)) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     protected static function isFileNotInManifestButExpectedAnyway($file)
     {
         $expected = self::getFilesNotInManifestButExpectedAnyway();
         foreach ($expected as $expectedPattern) {
-            if (fnmatch($expectedPattern, $file, defined('FNM_CASEFOLD') ? FNM_CASEFOLD : 0)) {
-                return true;
+            if (fnmatch($expectedPattern, $file, defined('FNM_CASEFOLD') ? \FNM_CASEFOLD : 0)) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     protected static function getMessagesFilesMismatch($messages)
     {
         $messagesMismatch = array();
-        $hasMd5file = function_exists('md5_file');
+        $hasHashFile = function_exists('hash_file');
         $files = \Piwik\Manifest::$files;
-        $hasMd5 = function_exists('md5');
         foreach ($files as $path => $props) {
             $file = PIWIK_INCLUDE_PATH . '/' . $path;
             if (!file_exists($file) || !is_readable($file)) {
@@ -264,26 +263,26 @@ class FileIntegrity
                 if (self::isModifiedPathValid($path)) {
                     continue;
                 }
-                if (!$hasMd5 || in_array(substr($path, -4), array('.gif', '.ico', '.jpg', '.png', '.swf'))) {
+                if (in_array(substr($path, -4), array('.gif', '.ico', '.jpg', '.png', '.swf'))) {
                     // files that contain binary data (e.g., images) must match the file size
                     $messagesMismatch[] = \Piwik\Piwik::translate('General_ExceptionFilesizeMismatch', array($file, $props[0], filesize($file)));
                 } else {
                     // convert end-of-line characters and re-test text files
                     $content = @file_get_contents($file);
                     $content = str_replace("\r\n", "\n", $content);
-                    if (strlen($content) != $props[0] || @md5($content) !== $props[1]) {
+                    if (strlen($content) != $props[0] || @hash('sha256', $content) !== $props[1]) {
                         $messagesMismatch[] = \Piwik\Piwik::translate('General_ExceptionFilesizeMismatch', array($file, $props[0], filesize($file)));
                     }
                 }
-            } elseif ($hasMd5file && @md5_file($file) !== $props[1]) {
+            } elseif ($hasHashFile && @hash_file('sha256', $file) !== $props[1]) {
                 if (self::isModifiedPathValid($path)) {
                     continue;
                 }
                 $messagesMismatch[] = \Piwik\Piwik::translate('General_ExceptionFileIntegrity', $file);
             }
         }
-        if (!$hasMd5file) {
-            $messages[] = \Piwik\Piwik::translate('General_WarningFileIntegrityNoMd5file');
+        if (!$hasHashFile) {
+            $messages[] = \Piwik\Piwik::translate('General_WarningFileIntegrityNoHashFile');
         }
         if (!empty($messagesMismatch)) {
             $messages[] = \Piwik\Piwik::translate('General_FileIntegrityWarningReupload');
@@ -304,7 +303,7 @@ class FileIntegrity
                 if ($trackerUpdater->getCurrentTrackerFileContent() === $trackerUpdater->getUpdatedTrackerFileContent()) {
                     // file was already updated, eg manually or via custom piwik.js, this is a valid piwik.js file as
                     // it was enriched by tracker plugins
-                    return true;
+                    return \true;
                 }
                 try {
                     // the piwik.js tracker file was not updated yet, but may be updated just after the update by
@@ -312,13 +311,13 @@ class FileIntegrity
                     // In this case, we check whether such an update will succeed later and if it will, the file is
                     // valid as well as it will be updated on the next request
                     $trackerUpdater->checkWillSucceed();
-                    return true;
+                    return \true;
                 } catch (AccessDeniedException $e) {
-                    return false;
+                    return \false;
                 }
             }
         }
-        return false;
+        return \false;
     }
     protected static function getPluginNameFromFilepath($file)
     {

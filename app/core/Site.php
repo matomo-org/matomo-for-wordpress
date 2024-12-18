@@ -365,7 +365,7 @@ class Site
      * @param bool|string $_restrictSitesToLogin Implementation detail. Used only when running as a scheduled task.
      * @return array An array of valid, unique integers.
      */
-    public static function getIdSitesFromIdSitesString($ids, $_restrictSitesToLogin = false)
+    public static function getIdSitesFromIdSitesString($ids, $_restrictSitesToLogin = \false)
     {
         if (empty($ids)) {
             return [];

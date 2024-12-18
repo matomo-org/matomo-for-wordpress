@@ -27,6 +27,6 @@ class ChallengeInvitedUser extends \Piwik\Plugins\Tour\Engagement\Challenge
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'UsersManager', 'action' => 'index', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'UsersManager', 'action' => 'index', 'widget' => \false));
     }
 }

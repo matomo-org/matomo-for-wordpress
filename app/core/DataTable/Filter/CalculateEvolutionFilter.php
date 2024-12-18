@@ -53,7 +53,7 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
      */
     public function __construct($table, $pastDataTable, $columnToAdd, $columnToRead, $quotientPrecision = 0)
     {
-        parent::__construct($table, $columnToAdd, $columnToRead, $columnToRead, $quotientPrecision, $shouldSkipRows = true);
+        parent::__construct($table, $columnToAdd, $columnToRead, $columnToRead, $quotientPrecision, $shouldSkipRows = \true);
         $this->pastDataTable = $pastDataTable;
         $this->isRevenueEvolution = $columnToAdd === 'revenue_evolution';
     }
@@ -69,8 +69,8 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
         $currentValue = $row->getColumn($this->columnValueToRead);
         // if the site this is for doesn't support ecommerce & this is for the revenue_evolution column,
         // we don't add the new column
-        if ($currentValue === false && $this->isRevenueEvolution && !Site::isEcommerceEnabledFor($row->getColumn('label'))) {
-            return false;
+        if ($currentValue === \false && $this->isRevenueEvolution && !Site::isEcommerceEnabledFor($row->getColumn('label'))) {
+            return \false;
         }
         $pastRow = $this->getPastRowFromCurrent($row);
         if ($pastRow) {
@@ -136,7 +136,7 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
      *
      * @return string The evolution percent, eg `'15%'`.
      */
-    public static function calculate($currentValue, $pastValue, $quotientPrecision = 0, $appendPercentSign = true, $prependPlusSignWhenPositive = false)
+    public static function calculate($currentValue, $pastValue, $quotientPrecision = 0, $appendPercentSign = \true, $prependPlusSignWhenPositive = \false)
     {
         $number = self::getPercentageValue($currentValue - $pastValue, $pastValue, $quotientPrecision);
         if ($appendPercentSign) {

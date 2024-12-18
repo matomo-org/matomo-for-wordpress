@@ -40,11 +40,11 @@ class CoreHome extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.filterMergedJavaScripts' => 'filterMergedJavaScripts', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metric.addComputedMetrics' => 'addComputedMetrics', 'Request.initAuthenticationObject' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true], 'AssetManager.addStylesheets' => 'addStylesheets', 'Request.dispatchCoreAndPluginUpdatesScreen' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral');
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.filterMergedJavaScripts' => 'filterMergedJavaScripts', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metric.addComputedMetrics' => 'addComputedMetrics', 'Request.initAuthenticationObject' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => \true], 'AssetManager.addStylesheets' => 'addStylesheets', 'Request.dispatchCoreAndPluginUpdatesScreen' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => \true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral');
     }
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     public function setTrackerCacheGeneral(&$cacheGeneral)
     {
@@ -155,7 +155,6 @@ class CoreHome extends \Piwik\Plugin
         $jsFiles[] = "libs/jqplot/jqplot-custom.min.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/color_manager.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/notification.js";
-        $jsFiles[] = "plugins/CoreHome/javascripts/numberFormatter.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/listingFormatter.js";
         // we have to load these CorePluginsAdmin files here. If we loaded them in CorePluginsAdmin,
         // there would be JS errors as CorePluginsAdmin is loaded first. Meaning it is loaded before
@@ -373,7 +372,7 @@ class CoreHome extends \Piwik\Plugin
                 foreach ($menu as $level1 => $level2) {
                     $translationKeys[] = $level1;
                     foreach ($level2 as $name => $params) {
-                        if (strpos($name, '_') !== false) {
+                        if (strpos($name, '_') !== \false) {
                             $translationKeys[] = $name;
                         }
                     }

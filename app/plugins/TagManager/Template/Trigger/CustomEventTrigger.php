@@ -14,7 +14,7 @@ use Piwik\Validators\CharacterLength;
 use Piwik\Validators\NotEmpty;
 class CustomEventTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
-    const ID = 'CustomEvent';
+    public const ID = 'CustomEvent';
     public function getId()
     {
         return self::ID;

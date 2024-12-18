@@ -38,7 +38,7 @@ class ResettableServicePass implements CompilerPassInterface
             return;
         }
         $services = $methods = [];
-        foreach ($container->findTaggedServiceIds($this->tagName, true) as $id => $tags) {
+        foreach ($container->findTaggedServiceIds($this->tagName, \true) as $id => $tags) {
             $services[$id] = new Reference($id, ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE);
             foreach ($tags as $attributes) {
                 if (!isset($attributes['method'])) {

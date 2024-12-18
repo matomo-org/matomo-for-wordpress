@@ -25,11 +25,11 @@ class TarteAuCitron extends \Piwik\Plugins\SitesManager\SiteContentDetection\Con
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'tarteaucitron.js';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
     public function checkIsConnected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'tarteaucitron.user.matomoHost';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

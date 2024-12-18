@@ -38,7 +38,7 @@ class FlowdockHandler extends SocketHandler
      *
      * @throws MissingExtensionException if OpenSSL is missing
      */
-    public function __construct($apiToken, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($apiToken, $level = Logger::DEBUG, $bubble = \true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');

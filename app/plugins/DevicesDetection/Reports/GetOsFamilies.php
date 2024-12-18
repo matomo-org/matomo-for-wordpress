@@ -26,8 +26,8 @@ class GetOsFamilies extends \Piwik\Plugins\DevicesDetection\Reports\Base
     public function configureView(ViewDataTable $view)
     {
         $view->config->title = $this->name;
-        $view->config->show_search = false;
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_search = \false;
+        $view->config->show_exclude_low_population = \false;
     }
     public function getRelatedReports()
     {

@@ -10,7 +10,7 @@ namespace Piwik\Plugins\TagManager\Template\Trigger;
 
 class WindowLoadedTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
-    const ID = 'WindowLoaded';
+    public const ID = 'WindowLoaded';
     public function getId()
     {
         return self::ID;

@@ -45,7 +45,7 @@ class TagManagerTeaser
     public function disableGlobally()
     {
         $this->reset();
-        Option::set(self::DISABLE_GLOBALLY_KEY, 1, true);
+        Option::set(self::DISABLE_GLOBALLY_KEY, 1, \true);
     }
     public function reset()
     {

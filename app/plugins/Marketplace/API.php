@@ -90,7 +90,7 @@ class API extends \Piwik\Plugin\API
         $allowedDomainsValidator = new AllowedEmailDomain($systemSettings);
         $allowedDomainsValidator->validate($email);
         try {
-            $result = $this->marketplaceService->fetch('createAccount', [], ['email' => $email], true, false);
+            $result = $this->marketplaceService->fetch('createAccount', [], ['email' => $email], \true, \false);
         } catch (Service\Exception $e) {
             // not translated to allow special handling in frontend
             throw new Exception('Marketplace_CreateAccountErrorAPI');
@@ -114,7 +114,7 @@ class API extends \Piwik\Plugin\API
             throw new Exception($message);
         }
         $this->setLicenseKey($licenseKey);
-        return true;
+        return \true;
     }
     /**
      * Deletes an existing license key if one is set.
@@ -125,7 +125,7 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->setLicenseKey(null);
-        return true;
+        return \true;
     }
     /**
      * @param string $pluginName
@@ -135,14 +135,21 @@ class API extends \Piwik\Plugin\API
      * @unsanitized
      * @internal
      */
-    public function requestTrial(string $pluginName, string $pluginDisplayName = '') : bool
+    public function requestTrial(string $pluginName) : bool
     {
         Piwik::checkUserIsNotAnonymous();
         if (Piwik::hasUserSuperUserAccess()) {
             throw new Exception('Cannot request trial as a super user');
         }
-        $this->pluginTrialService->request($pluginName, $pluginDisplayName);
-        return true;
+        if (!$this->pluginManager->isValidPluginName($pluginName)) {
+            throw new Exception('Invalid plugin name given ' . $pluginName);
+        }
+        $pluginInfo = $this->marketplaceClient->getPluginInfo($pluginName);
+        if (empty($pluginInfo['name'])) {
+            throw new Exception('Unable to find plugin with given name: ' . $pluginName);
+        }
+        $this->pluginTrialService->request($pluginInfo['name'], $pluginInfo['displayName'] ?: $pluginInfo['name']);
+        return \true;
     }
     /**
      * @param string $pluginName
@@ -160,14 +167,14 @@ class API extends \Piwik\Plugin\API
         }
         $licenseKey = (new \Piwik\Plugins\Marketplace\LicenseKey())->get();
         $this->marketplaceService->authenticate($licenseKey);
-        $result = $this->marketplaceService->fetch('plugins/' . $pluginName . '/freeTrial', ['num_users' => $this->environment->getNumUsers(), 'num_websites' => $this->environment->getNumWebsites()], [], true, false);
+        $result = $this->marketplaceService->fetch('plugins/' . $pluginName . '/freeTrial', ['num_users' => $this->environment->getNumUsers(), 'num_websites' => $this->environment->getNumWebsites()], [], \true, \false);
         $this->marketplaceClient->clearAllCacheEntries();
         if (201 !== $result['status'] || !is_string($result['data']) || '' !== trim($result['data'])) {
             // We expect an exact empty 201 response from this API
             // Anything different should be an error
             throw new Exception(Piwik::translate('Marketplace_TrialStartErrorAPI'));
         }
-        return true;
+        return \true;
     }
     /**
      * Saves the given license key in case the key is actually valid (exists on the Matomo Marketplace and is not
@@ -197,7 +204,7 @@ class API extends \Piwik\Plugin\API
             throw new Exception(Piwik::translate('Marketplace_ExceptionLinceseKeyIsNotValid'));
         }
         $this->setLicenseKey($licenseKey);
-        return true;
+        return \true;
     }
     private function setLicenseKey($licenseKey)
     {

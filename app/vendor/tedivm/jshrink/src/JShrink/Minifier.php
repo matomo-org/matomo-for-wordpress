@@ -76,7 +76,7 @@ class Minifier
     /**
      * These characters are used to define strings.
      */
-    protected $stringDelimiters = ['\'' => true, '"' => true, '`' => true];
+    protected $stringDelimiters = ['\'' => \true, '"' => \true, '`' => \true];
     /**
      * Contains the default options for minification. This array is merged with
      * the one passed in by the user to create the request specific set of
@@ -84,7 +84,7 @@ class Minifier
      *
      * @var array
      */
-    protected static $defaultOptions = ['flaggedComments' => true];
+    protected static $defaultOptions = ['flaggedComments' => \true];
     /**
      * Contains lock ids which are used to replace certain code patterns and
      * prevent them from being minified
@@ -151,7 +151,7 @@ class Minifier
         // We add a newline to the end of the script to make it easier to deal
         // with comments at the bottom of the script- this prevents the unclosed
         // comment error that can otherwise occur.
-        $this->input .= PHP_EOL;
+        $this->input .= \PHP_EOL;
         // save input length to skip calculation every time
         $this->len = strlen($this->input);
         // Populate "a" with a new line, "b" with the first character, before
@@ -164,19 +164,19 @@ class Minifier
      *
      * @var array
      */
-    protected $noNewLineCharacters = ['(' => true, '-' => true, '+' => true, '[' => true, '@' => true];
+    protected $noNewLineCharacters = ['(' => \true, '-' => \true, '+' => \true, '[' => \true, '@' => \true];
     /**
      * The primary action occurs here. This function loops through the input string,
      * outputting anything that's relevant and discarding anything that is not.
      */
     protected function loop()
     {
-        while ($this->a !== false && !is_null($this->a) && $this->a !== '') {
+        while ($this->a !== \false && !is_null($this->a) && $this->a !== '') {
             switch ($this->a) {
                 // new lines
                 case "\n":
                     // if the next line is something that can't stand alone preserve the newline
-                    if ($this->b !== false && isset($this->noNewLineCharacters[$this->b])) {
+                    if ($this->b !== \false && isset($this->noNewLineCharacters[$this->b])) {
                         echo $this->a;
                         $this->saveString();
                         break;
@@ -197,7 +197,7 @@ class Minifier
                 default:
                     switch ($this->b) {
                         case "\n":
-                            if (strpos('}])+-"\'', $this->a) !== false) {
+                            if (strpos('}])+-"\'', $this->a) !== \false) {
                                 echo $this->a;
                                 $this->saveString();
                                 break;
@@ -226,7 +226,7 @@ class Minifier
             }
             // do reg check of doom
             $this->b = $this->getReal();
-            if ($this->b == '/' && strpos('(,=:[!&|?', $this->a) !== false) {
+            if ($this->b == '/' && strpos('(,=:[!&|?', $this->a) !== \false) {
                 $this->saveRegex();
             }
         }
@@ -258,10 +258,10 @@ class Minifier
             unset($this->c);
         } else {
             // Otherwise we start pulling from the input.
-            $char = $this->index < $this->len ? $this->input[$this->index] : false;
+            $char = $this->index < $this->len ? $this->input[$this->index] : \false;
             // If the next character doesn't exist return false.
-            if (isset($char) && $char === false) {
-                return false;
+            if (isset($char) && $char === \false) {
+                return \false;
             }
             // Otherwise increment the pointer and use this char.
             $this->index++;
@@ -310,7 +310,7 @@ class Minifier
      */
     protected function processOneLineComments($startIndex)
     {
-        $thirdCommentString = $this->index < $this->len ? $this->input[$this->index] : false;
+        $thirdCommentString = $this->index < $this->len ? $this->input[$this->index] : \false;
         // kill rest of line
         $this->getNext("\n");
         unset($this->c);
@@ -358,9 +358,9 @@ class Minifier
                 return;
             }
         } else {
-            $char = false;
+            $char = \false;
         }
-        if ($char === false) {
+        if ($char === \false) {
             throw new \RuntimeException('Unclosed multiline comment at position: ' . ($this->index - 2));
         }
         // if we're here c is part of the comment and therefore tossed
@@ -379,13 +379,13 @@ class Minifier
         // Find the next occurrence of "string" after the current position.
         $pos = strpos($this->input, $string, $this->index);
         // If it's not there return false.
-        if ($pos === false) {
-            return false;
+        if ($pos === \false) {
+            return \false;
         }
         // Adjust position of index to jump ahead to the asked for string
         $this->index = $pos;
         // Return the first character of that string.
-        return $this->index < $this->len ? $this->input[$this->index] : false;
+        return $this->index < $this->len ? $this->input[$this->index] : \false;
     }
     /**
      * When a javascript string is detected this function crawls for the end of
@@ -409,7 +409,7 @@ class Minifier
         echo $this->a;
         // Loop until the string is done
         // Grab the very next character and load it into a
-        while (($this->a = $this->getChar()) !== false) {
+        while (($this->a = $this->getChar()) !== \false) {
             switch ($this->a) {
                 // If the string opener (single or double quote) is used
                 // output it and break out of the while loop-
@@ -456,7 +456,7 @@ class Minifier
     protected function saveRegex()
     {
         echo $this->a . $this->b;
-        while (($this->a = $this->getChar()) !== false) {
+        while (($this->a = $this->getChar()) !== \false) {
             if ($this->a === '/') {
                 break;
             }

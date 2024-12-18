@@ -22,7 +22,7 @@ class View extends \Piwik\View
         $this->steps = array_keys($installationSteps);
         $this->allStepsTitle = array_values($installationSteps);
         $this->currentStepName = $currentStepName;
-        $this->showNextStep = false;
+        $this->showNextStep = \false;
     }
     public function render()
     {

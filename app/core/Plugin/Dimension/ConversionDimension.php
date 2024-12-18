@@ -85,7 +85,7 @@ abstract class ConversionDimension extends Dimension
      */
     public function onEcommerceOrderConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
     /**
      * This event is triggered when an ecommerce cart update is converted. Any returned value will be persist in the
@@ -101,7 +101,7 @@ abstract class ConversionDimension extends Dimension
      */
     public function onEcommerceCartUpdateConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
     /**
      * This event is triggered when an any custom goal is converted. Any returned value will be persist in the
@@ -117,6 +117,6 @@ abstract class ConversionDimension extends Dimension
      */
     public function onGoalConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
 }

@@ -46,6 +46,6 @@ class ChallengeTrackingCode extends \Piwik\Plugins\Tour\Engagement\Challenge
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreAdminHome', 'action' => 'trackingCodeGenerator', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreAdminHome', 'action' => 'trackingCodeGenerator', 'widget' => \false));
     }
 }

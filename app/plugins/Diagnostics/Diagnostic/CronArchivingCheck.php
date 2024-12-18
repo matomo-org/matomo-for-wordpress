@@ -43,7 +43,7 @@ class CronArchivingCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
                     // auto archive was used recently... if they maybe only once ran core:archive then eventually it will correct
                     // itself and no longer show this
                     $formatter = new Formatter();
-                    $lastStarted = $formatter->getPrettyTimeFromSeconds(time() - $archiveLastStarted, true);
+                    $lastStarted = $formatter->getPrettyTimeFromSeconds(time() - $archiveLastStarted, \true);
                     $label = $this->translator->translate('Diagnostics_BrowserAndAutoArchivingEnabledLabel');
                     $comment = $this->translator->translate('Diagnostics_BrowserAndAutoArchivingEnabledComment', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/') . '" target="_blank" rel="noreferrer noopener">', '</a>', $lastStarted]);
                     $result[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment);

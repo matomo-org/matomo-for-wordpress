@@ -30,37 +30,37 @@ abstract class Base extends \Piwik\Plugin\Report
         $view->requestConfig->filter_sort_column = 'label';
         $view->requestConfig->filter_sort_order = 'desc';
         $view->requestConfig->filter_limit = 25;
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_table_all_columns = false;
-        $view->config->show_tag_cloud = false;
-        $view->config->show_search = false;
+        $view->config->show_exclude_low_population = \false;
+        $view->config->show_table_all_columns = \false;
+        $view->config->show_tag_cloud = \false;
+        $view->config->show_search = \false;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->keep_summary_row = true;
-            $view->config->disable_row_evolution = true;
-            $view->config->highlight_summary_row = true;
+            $view->config->keep_summary_row = \true;
+            $view->config->disable_row_evolution = \true;
+            $view->config->highlight_summary_row = \true;
         }
         if ($view->isViewDataTableId(Graph::ID)) {
-            $view->config->show_series_picker = false;
+            $view->config->show_series_picker = \false;
         }
         $view->config->addTranslations(array('label' => Piwik::translate('DBStats_Table'), 'year' => Piwik::translate('Intl_PeriodYear'), 'data_size' => Piwik::translate('DBStats_DataSize'), 'index_size' => Piwik::translate('DBStats_IndexSize'), 'total_size' => Piwik::translate('DBStats_TotalSize'), 'row_count' => Piwik::translate('DBStats_RowCount'), 'percent_total' => '%&nbsp;' . Piwik::translate('DBStats_DBSize'), 'estimated_size' => Piwik::translate('DBStats_EstimatedSize')));
     }
-    protected function addPresentationFilters(ViewDataTable $view, $addTotalSizeColumn = true, $addPercentColumn = false, $sizeColumns = array('data_size', 'index_size'))
+    protected function addPresentationFilters(ViewDataTable $view, $addTotalSizeColumn = \true, $addPercentColumn = \false, $sizeColumns = array('data_size', 'index_size'))
     {
         // add total_size column
         if ($addTotalSizeColumn) {
             $getTotalTableSize = function ($dataSize, $indexSize) {
                 return $dataSize + $indexSize;
             };
-            $view->config->filters[] = array('ColumnCallbackAddColumn', array(array('data_size', 'index_size'), 'total_size', $getTotalTableSize), $isPriority = true);
+            $view->config->filters[] = array('ColumnCallbackAddColumn', array(array('data_size', 'index_size'), 'total_size', $getTotalTableSize), $isPriority = \true);
             $sizeColumns[] = 'total_size';
         }
-        $runPrettySizeFilterBeforeGeneric = false;
+        $runPrettySizeFilterBeforeGeneric = \false;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
             // add summary row only if displaying a table
             $view->config->filters[] = array('AddSummaryRow', Piwik::translate('General_Total'));
             // add percentage column if desired
             if ($addPercentColumn && $addTotalSizeColumn) {
-                $view->config->filters[] = array('ColumnCallbackAddColumnPercentage', array('percent_total', 'total_size', 'total_size', $quotientPrecision = 0, $shouldSkipRows = false, $getDivisorFromSummaryRow = true), $isPriority = false);
+                $view->config->filters[] = array('ColumnCallbackAddColumnPercentage', array('percent_total', 'total_size', 'total_size', $quotientPrecision = 0, $shouldSkipRows = \false, $getDivisorFromSummaryRow = \true), $isPriority = \false);
                 $view->requestConfig->filter_sort_column = 'percent_total';
             }
         } elseif ($view->isViewDataTableId(Graph::ID)) {
@@ -104,7 +104,7 @@ abstract class Base extends \Piwik\Plugin\Report
     protected function setIndividualSummaryFooterMessage(ViewDataTable $view)
     {
         $lastGenerated = self::getDateOfLastCachingRun();
-        if ($lastGenerated !== false) {
+        if ($lastGenerated !== \false) {
             $view->config->show_footer_message = Piwik::translate('Mobile_LastUpdated', $lastGenerated);
         }
     }

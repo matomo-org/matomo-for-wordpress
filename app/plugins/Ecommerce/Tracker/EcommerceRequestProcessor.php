@@ -49,7 +49,7 @@ class EcommerceRequestProcessor extends RequestProcessor
             $idGoal = GoalManager::IDGOAL_CART;
             if ($isGoalAnOrder) {
                 $idGoal = GoalManager::IDGOAL_ORDER;
-                $request->setMetadata('Goals', 'visitIsConverted', true);
+                $request->setMetadata('Goals', 'visitIsConverted', \true);
             }
             $request->setMetadata('Goals', 'goalsConverted', array(array('idgoal' => $idGoal)));
             $request->setMetadata('Actions', 'action', null);

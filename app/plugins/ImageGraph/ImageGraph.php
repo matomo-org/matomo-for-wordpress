@@ -28,7 +28,7 @@ class ImageGraph extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        $hooks = array('API.getReportMetadata.end' => array('function' => 'getReportMetadata', 'after' => true));
+        $hooks = array('API.getReportMetadata.end' => array('function' => 'getReportMetadata', 'after' => \true));
         return $hooks;
     }
     // Number of periods to plot on an evolution graph
@@ -81,13 +81,13 @@ class ImageGraph extends \Piwik\Plugin
                 $dateForMultiplePeriodGraph = $start . ',' . $end;
             }
         }
-        $token_auth = Common::getRequestVar('token_auth', false);
+        $token_auth = Common::getRequestVar('token_auth', \false);
         $segment = Request::getRawSegmentFromRequest();
         /** @var Scheduler $scheduler */
         $scheduler = StaticContainer::getContainer()->get('Piwik\\Scheduler\\Scheduler');
         $isRunningTask = $scheduler->isRunningTask();
         // add the idSubtable if it exists
-        $idSubtable = Common::getRequestVar('idSubtable', false);
+        $idSubtable = Common::getRequestVar('idSubtable', \false);
         $urlPrefix = "index.php?";
         foreach ($reports as &$report) {
             $reportModule = $report['module'];
@@ -113,7 +113,7 @@ class ImageGraph extends \Piwik\Plugin
                 $parameters['period'] = $periodForSinglePeriodGraph;
                 $parameters['date'] = $dateForSinglePeriodGraph;
             }
-            if ($idSubtable !== false) {
+            if ($idSubtable !== \false) {
                 $parameters['idSubtable'] = $idSubtable;
             }
             if (!empty($_GET['_restrictSitesToLogin']) && $isRunningTask) {

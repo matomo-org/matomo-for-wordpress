@@ -61,7 +61,7 @@ class ChallengeSetupConsentManager extends \Piwik\Plugins\Tour\Engagement\Challe
     public function isCompleted(string $login)
     {
         if (empty($this->detectedContentManager)) {
-            return true;
+            return \true;
         }
         return in_array($this->detectedContentManager::getId(), $this->siteContentDetector->connectedConsentManagers);
     }

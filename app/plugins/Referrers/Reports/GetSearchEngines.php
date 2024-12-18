@@ -22,17 +22,17 @@ class GetSearchEngines extends \Piwik\Plugins\Referrers\Reports\Base
         $this->name = Piwik::translate('Referrers_SearchEngines');
         $this->documentation = Piwik::translate('Referrers_SearchEnginesReportDocumentation', '<br />');
         $this->actionToLoadSubTables = 'getKeywordsFromSearchEngineId';
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
         $this->order = 7;
         $this->subcategoryId = 'Referrers_SubmenuSearchEngines';
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_search = false;
+        $view->config->show_exclude_low_population = \false;
+        $view->config->show_search = \false;
         $view->requestConfig->filter_limit = 25;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_subtable_when_show_goals = true;
+            $view->config->disable_subtable_when_show_goals = \true;
         }
         $this->configureFooterMessage($view);
     }

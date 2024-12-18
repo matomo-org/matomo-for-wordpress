@@ -17,7 +17,7 @@ class SprintfProcessor
     {
         $message = $record['message'];
         $parameters = $record['context'];
-        if (is_string($message) && !empty($parameters) && strpos($message, '%') !== false) {
+        if (is_string($message) && !empty($parameters) && strpos($message, '%') !== \false) {
             $parameters = $this->ensureParametersAreStrings($parameters);
             $record['message'] = vsprintf($message, $parameters);
         }

@@ -34,7 +34,7 @@ class AddSegmentByLabelInUTC extends DataTable\Filter\AddSegmentValue
         $this->date = Period\Factory::build($period, $date)->getDateEnd();
         $self = $this;
         parent::__construct($table, function ($label) use($self) {
-            $hour = str_pad($label, 2, 0, STR_PAD_LEFT);
+            $hour = str_pad($label, 2, 0, \STR_PAD_LEFT);
             return $self->convertHourToUtc($hour);
         });
     }

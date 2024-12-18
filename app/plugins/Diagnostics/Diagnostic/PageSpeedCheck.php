@@ -49,7 +49,7 @@ class PageSpeedCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
         }
         if (empty($matomoUrl)) {
             // skip this check if we can't determine the matomo url (e.g. on command line)
-            return false;
+            return \false;
         }
         $url = $matomoUrl . '?module=Installation&action=getEmptyPageForSystemCheck';
         try {
@@ -59,15 +59,15 @@ class PageSpeedCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
                 $userAgent = null,
                 $destinationPath = null,
                 $followDepth = 0,
-                $acceptLanguage = false,
-                $byteRange = false,
+                $acceptLanguage = \false,
+                $byteRange = \false,
                 // Return headers
-                $getExtendedInfo = true
+                $getExtendedInfo = \true
             );
         } catch (\Exception $e) {
             $this->logger->info('Unable to test if mod_pagespeed is enabled: the request to {url} failed', ['url' => $url]);
             // If the test failed, we assume Page speed is not enabled
-            return false;
+            return \false;
         }
         return isset($page['headers']['X-Mod-Pagespeed']) || isset($page['headers']['X-Page-Speed']);
     }

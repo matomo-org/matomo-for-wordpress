@@ -28,7 +28,7 @@ class GetLastVisitsDetails extends \Piwik\Plugins\Live\Reports\Base
     }
     public function alwaysUseDefaultViewDataTable()
     {
-        return true;
+        return \true;
     }
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {

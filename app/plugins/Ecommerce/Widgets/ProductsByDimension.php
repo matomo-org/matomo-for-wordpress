@@ -20,9 +20,9 @@ class ProductsByDimension extends WidgetContainerConfig
     protected $subcategoryId = 'Goals_Products';
     public function isEnabled()
     {
-        $idSite = Common::getRequestVar('idSite', false, 'int');
+        $idSite = Common::getRequestVar('idSite', \false, 'int');
         if (empty($idSite)) {
-            return false;
+            return \false;
         }
         $site = new Site($idSite);
         return $site->isEcommerceEnabled();

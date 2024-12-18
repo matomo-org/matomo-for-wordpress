@@ -13,7 +13,7 @@ use Piwik\Plugins\TagManager\Context\BaseContext;
 // we only want to use it to detect whether a variable references itself or if there is any recursion
 class SimulatorContext extends BaseContext
 {
-    const ID = 'simulator';
+    public const ID = 'simulator';
     public function getId()
     {
         return self::ID;

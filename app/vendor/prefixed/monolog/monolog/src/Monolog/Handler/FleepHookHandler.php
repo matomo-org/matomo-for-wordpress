@@ -39,7 +39,7 @@ class FleepHookHandler extends SocketHandler
      * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws MissingExtensionException
      */
-    public function __construct($token, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($token, $level = Logger::DEBUG, $bubble = \true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
@@ -57,7 +57,7 @@ class FleepHookHandler extends SocketHandler
      */
     protected function getDefaultFormatter()
     {
-        return new LineFormatter(null, null, true, true);
+        return new LineFormatter(null, null, \true, \true);
     }
     /**
      * Handles a log record

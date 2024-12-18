@@ -14,35 +14,35 @@ class VoidCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doFetch($id)
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritDoc}
      */
     protected function doContains($id)
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritDoc}
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritDoc}
      */
     protected function doDelete($id)
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritDoc}
      */
     protected function doFlush()
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritDoc}

@@ -22,17 +22,17 @@ class GetKeywords extends \Piwik\Plugins\Referrers\Reports\Base
         $this->name = Piwik::translate('Referrers_Keywords');
         $this->documentation = Piwik::translate('Referrers_KeywordsReportDocumentation', '<br /><br />') . '<br /><br />' . Piwik::translate('Referrers_KeywordsReportDocumentationNote');
         $this->actionToLoadSubTables = 'getSearchEnginesFromKeywordId';
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
         $this->order = 3;
         $this->subcategoryId = 'Referrers_SubmenuSearchEngines';
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_exclude_low_population = \false;
         $view->config->addTranslation('label', Piwik::translate('General_ColumnKeyword'));
         $view->requestConfig->filter_limit = 25;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_subtable_when_show_goals = true;
+            $view->config->disable_subtable_when_show_goals = \true;
         }
         $this->configureFooterMessage($view);
     }

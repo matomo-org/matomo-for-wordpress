@@ -38,11 +38,11 @@ class GetAll extends \Piwik\Plugins\Referrers\Reports\Base
     {
         $referrers = new Referrers();
         $setGetAllHtmlPrefix = array($referrers, 'setGetAllHtmlPrefix');
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_goals = true;
+        $view->config->show_exclude_low_population = \false;
+        $view->config->show_goals = \true;
         $view->requestConfig->filter_limit = 20;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_row_actions = true;
+            $view->config->disable_row_evolution = \true;
         }
         $view->config->filters[] = array('MetadataCallbackAddMetadata', array('referer_type', 'html_label_prefix', $setGetAllHtmlPrefix));
     }

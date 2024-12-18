@@ -33,7 +33,7 @@ final class SetTokenParser extends AbstractTokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $names = $this->parser->getExpressionParser()->parseAssignmentExpression();
-        $capture = false;
+        $capture = \false;
         if ($stream->nextIf(
             /* Token::OPERATOR_TYPE */
             8,
@@ -48,7 +48,7 @@ final class SetTokenParser extends AbstractTokenParser
                 throw new SyntaxError('When using set, you must have the same number of variables and assignments.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
         } else {
-            $capture = true;
+            $capture = \true;
             if (\count($names) > 1) {
                 throw new SyntaxError('When using set with a block, you cannot have a multi-target.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
@@ -56,7 +56,7 @@ final class SetTokenParser extends AbstractTokenParser
                 /* Token::BLOCK_END_TYPE */
                 3
             );
-            $values = $this->parser->subparse([$this, 'decideBlockEnd'], true);
+            $values = $this->parser->subparse([$this, 'decideBlockEnd'], \true);
             $stream->expect(
                 /* Token::BLOCK_END_TYPE */
                 3

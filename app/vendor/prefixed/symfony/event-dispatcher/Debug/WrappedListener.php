@@ -36,8 +36,8 @@ final class WrappedListener
         $this->optimizedListener = $listener instanceof \Closure ? $listener : (\is_callable($listener) ? \Closure::fromCallable($listener) : null);
         $this->stopwatch = $stopwatch;
         $this->dispatcher = $dispatcher;
-        $this->called = false;
-        $this->stoppedPropagation = false;
+        $this->called = \false;
+        $this->stoppedPropagation = \false;
         if (\is_array($listener)) {
             $this->name = \is_object($listener[0]) ? get_debug_type($listener[0]) : $listener[0];
             $this->pretty = $this->name . '::' . $listener[1];
@@ -90,7 +90,7 @@ final class WrappedListener
     public function __invoke(object $event, string $eventName, EventDispatcherInterface $dispatcher) : void
     {
         $dispatcher = $this->dispatcher ?: $dispatcher;
-        $this->called = true;
+        $this->called = \true;
         $this->priority = $dispatcher->getListenerPriority($eventName, $this->listener);
         $e = $this->stopwatch->start($this->name, 'event_listener');
         try {
@@ -101,7 +101,7 @@ final class WrappedListener
             }
         }
         if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
-            $this->stoppedPropagation = true;
+            $this->stoppedPropagation = \true;
         }
     }
 }

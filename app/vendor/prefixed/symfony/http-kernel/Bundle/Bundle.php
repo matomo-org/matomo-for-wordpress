@@ -71,7 +71,7 @@ abstract class Bundle implements BundleInterface
                 }
                 $this->extension = $extension;
             } else {
-                $this->extension = false;
+                $this->extension = \false;
             }
         }
         return $this->extension ?: null;
@@ -132,9 +132,9 @@ abstract class Bundle implements BundleInterface
     private function parseClassName()
     {
         $pos = strrpos(static::class, '\\');
-        $this->namespace = false === $pos ? '' : substr(static::class, 0, $pos);
+        $this->namespace = \false === $pos ? '' : substr(static::class, 0, $pos);
         if (null === $this->name) {
-            $this->name = false === $pos ? static::class : substr(static::class, $pos + 1);
+            $this->name = \false === $pos ? static::class : substr(static::class, $pos + 1);
         }
     }
 }

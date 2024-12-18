@@ -119,13 +119,28 @@ $.extend(DataTable.prototype, UIControl.prototype, {
     },
 
     enableStickHead: function (domElem) {
-      // Bind to the resize event of the window object
-      $(window).on('resize', function () {
-        var tableScrollerWidth = $(domElem).find('.dataTableScroller').width();
+      var resizeTimeout = null;
+      var resize = function(domElem) {
+        var tableScroller = $(domElem).find('.dataTableScroller');
+        var tableScrollerWidth = tableScroller.width();
         var tableWidth = $(domElem).find('table').width();
         if (tableScrollerWidth < tableWidth) {
-          $('.dataTableScroller').css('overflow-x', 'scroll');
+          tableScroller.css('overflow-x', 'scroll');
+        } else {
+          tableScroller.css('overflow-x', '');
         }
+      };
+      // Bind to the resize event of the window object
+      $(window).on('resize', function () {
+        resize(domElem);
+        // trigger another check after a certain delay as during fast resizing
+        // the width is sometimes reported incorrectly
+        if (resizeTimeout) {
+          window.clearTimeout(resizeTimeout);
+        }
+        resizeTimeout = window.setTimeout(function(){
+          resize(domElem);
+        }, 500);
         // Invoke the resize event immediately
       }).resize();
     },

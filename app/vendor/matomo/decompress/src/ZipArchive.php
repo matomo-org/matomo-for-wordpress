@@ -32,7 +32,7 @@ class ZipArchive implements \Matomo\Decompress\DecompressInterface
     {
         $this->filename = $filename;
         $this->ziparchive = new \ZipArchive();
-        if ($this->ziparchive->open($filename) !== true) {
+        if ($this->ziparchive->open($filename) !== \true) {
             throw new Exception('Error opening ' . $filename);
         }
     }
@@ -57,14 +57,14 @@ class ZipArchive implements \Matomo\Decompress\DecompressInterface
             $entry = $this->ziparchive->statIndex($i);
             $filename = str_replace('\\', '/', $entry['name']);
             $parts = explode('/', $filename);
-            if (!strncmp($filename, '/', 1) || array_search('..', $parts) !== false || strpos($filename, ':') !== false) {
+            if (!strncmp($filename, '/', 1) || array_search('..', $parts) !== \false || strpos($filename, ':') !== \false) {
                 return 0;
             }
             $fileselector[] = $entry['name'];
             $list[] = array('filename' => $pathExtracted . $entry['name'], 'stored_filename' => $entry['name'], 'size' => $entry['size'], 'compressed_size' => $entry['comp_size'], 'mtime' => $entry['mtime'], 'index' => $i, 'crc' => $entry['crc']);
         }
         $res = $this->ziparchive->extractTo($pathExtracted, $fileselector);
-        if ($res === false) {
+        if ($res === \false) {
             return 0;
         }
         return $list;

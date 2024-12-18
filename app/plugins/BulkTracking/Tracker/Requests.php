@@ -51,15 +51,15 @@ class Requests
         if (!empty($rawData)) {
             return strpos($rawData, '"requests"') || strpos($rawData, "'requests'");
         }
-        return false;
+        return \false;
     }
     public function getRequestsArrayFromBulkRequest($rawData)
     {
         $rawData = trim($rawData);
         $rawData = Common::sanitizeLineBreaks($rawData);
         // POST data can be array of string URLs or array of arrays w/ visit info
-        $jsonData = json_decode($rawData, $assoc = true);
-        $tokenAuth = Common::getRequestVar('token_auth', false, 'string', $jsonData);
+        $jsonData = json_decode($rawData, $assoc = \true);
+        $tokenAuth = Common::getRequestVar('token_auth', \false, 'string', $jsonData);
         $requests = array();
         if (isset($jsonData['requests'])) {
             $requests = $jsonData['requests'];
@@ -71,8 +71,8 @@ class Requests
         $rawData = trim($rawData);
         $rawData = Common::sanitizeLineBreaks($rawData);
         // POST data can be array of string URLs or array of arrays w/ visit info
-        $jsonData = json_decode($rawData, $assoc = true);
-        return !!Common::getRequestVar('send_image', true, 'string', $jsonData);
+        $jsonData = json_decode($rawData, $assoc = \true);
+        return !!Common::getRequestVar('send_image', \true, 'string', $jsonData);
     }
     public function initRequestsAndTokenAuth($rawData)
     {

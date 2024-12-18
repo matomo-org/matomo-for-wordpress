@@ -29,7 +29,7 @@ abstract class ApiRenderer
     }
     protected function init()
     {
-        $this->hideIdSubDataTable = Common::getRequestVar('hideIdSubDatable', false, 'int', $this->request);
+        $this->hideIdSubDataTable = Common::getRequestVar('hideIdSubDatable', \false, 'int', $this->request);
     }
     protected function shouldSendBacktrace()
     {
@@ -89,7 +89,7 @@ abstract class ApiRenderer
         $renderer = Renderer::factory($format);
         $renderer->setTable($dataTable);
         $renderer->setIdSite($idSite);
-        $renderer->setRenderSubTables(Common::getRequestVar('expanded', false, 'int', $this->request));
+        $renderer->setRenderSubTables(Common::getRequestVar('expanded', \false, 'int', $this->request));
         $renderer->setHideIdSubDatableFromResponse($this->hideIdSubDataTable);
         return $renderer;
     }

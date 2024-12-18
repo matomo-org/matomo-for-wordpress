@@ -13,6 +13,7 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Development;
+use Piwik\Exception\MissingFilePermissionException;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Menu\MenuTop;
 use Piwik\Notification;
@@ -60,7 +61,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $messageLicenseMissing = $expired->getMessageNoLicense();
         if (!empty($messageLicenseMissing)) {
             $notification = new Notification($messageLicenseMissing);
-            $notification->raw = true;
+            $notification->raw = \true;
             $notification->context = Notification::CONTEXT_ERROR;
             $notification->title = Piwik::translate('Marketplace_LicenseMissing');
             Notification\Manager::notify('ControllerAdmin_LicenseMissingWarning', $notification);
@@ -68,7 +69,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $messageExceeded = $expired->getMessageExceededLicenses();
         if (!empty($messageExceeded)) {
             $notification = new Notification($messageExceeded);
-            $notification->raw = true;
+            $notification->raw = \true;
             $notification->context = Notification::CONTEXT_WARNING;
             $notification->title = Piwik::translate('Marketplace_LicenseExceeded');
             Notification\Manager::notify('ControllerAdmin_LicenseExceededWarning', $notification);
@@ -76,7 +77,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $messageExpired = $expired->getMessageExpiredLicenses();
         if (!empty($messageExpired)) {
             $notification = new Notification($messageExpired);
-            $notification->raw = true;
+            $notification->raw = \true;
             $notification->context = Notification::CONTEXT_WARNING;
             $notification->title = Piwik::translate('Marketplace_LicenseExpired');
             Notification\Manager::notify('ControllerAdmin_LicenseExpiredWarning', $notification);
@@ -94,7 +95,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $pluginsLink = Url::getCurrentQueryStringWithParametersModified(['module' => 'CorePluginsAdmin', 'action' => 'plugins']);
         $invalidPluginsWarning = Piwik::translate('CoreAdminHome_InvalidPluginsWarning', [self::getPiwikVersion(), '<strong>' . implode('</strong>,&nbsp;<wbr><strong>', $missingPlugins) . '</strong>']) . "<br/>" . Piwik::translate('CoreAdminHome_InvalidPluginsYouCanUninstall', ['<a href="' . $pluginsLink . '"/>', '</a>']);
         $notification = new Notification($invalidPluginsWarning);
-        $notification->raw = true;
+        $notification->raw = \true;
         $notification->context = Notification::CONTEXT_WARNING;
         $notification->title = Piwik::translate('General_Warning');
         Notification\Manager::notify('ControllerAdmin_InvalidPluginsWarning', $notification);
@@ -130,10 +131,10 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         }
         $message = Piwik::translate('General_CurrentlyUsingUnsecureHttp');
         $message .= " ";
-        $message .= Piwik::translate('General_ReadThisToLearnMore', ['<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_91/">'), '</a>']);
+        $message .= Piwik::translate('General_ReadThisToLearnMore', ['<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_91/') . '">', '</a>']);
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = true;
+        $notification->raw = \true;
         Notification\Manager::notify('ControllerAdmin_HttpIsUsed', $notification);
     }
     private static function notifyIfDevelopmentModeOnButNotInstalledThroughGit()
@@ -150,7 +151,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $message = Piwik::translate('General_WarningDevelopmentModeOnButNotGitInstalled');
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = true;
+        $notification->raw = \true;
         $notification->flags = Notification::FLAG_CLEAR;
         Notification\Manager::notify('ControllerAdmin_DevelopmentModeOn', $notification);
     }
@@ -159,12 +160,11 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
      */
     public static function displayWarningIfConfigFileNotWritable()
     {
-        $isConfigFileWritable = PiwikConfig::getInstance()->isFileWritable();
-        if (!$isConfigFileWritable) {
-            $exception = PiwikConfig::getInstance()->getConfigNotWritableException();
-            $message = $exception->getMessage();
-            $notification = new Notification($message);
-            $notification->raw = true;
+        try {
+            PiwikConfig::getInstance()->checkConfigIsWritable();
+        } catch (MissingFilePermissionException $exception) {
+            $notification = new Notification($exception->getMessage());
+            $notification->raw = \true;
             $notification->context = Notification::CONTEXT_WARNING;
             Notification\Manager::notify('ControllerAdmin_ConfigNotWriteable', $notification);
         }
@@ -178,7 +178,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $message = sprintf("You are using the PHP accelerator & optimizer eAccelerator which is known to be not compatible with Matomo.\n            We have disabled eAccelerator, which might affect the performance of Matomo.\n            Read the %srelated ticket%s for more information and how to fix this problem.", '<a rel="noreferrer noopener" target="_blank" href="https://github.com/matomo-org/matomo/issues/4439">', '</a>');
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = true;
+        $notification->raw = \true;
         Notification\Manager::notify('ControllerAdmin_EacceleratorIsUsed', $notification);
     }
     /**
@@ -191,7 +191,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
     }
     private static function isUsingPhpVersionCompatibleWithNextPiwik()
     {
-        return version_compare(PHP_VERSION, self::getNextRequiredMinimumPHP(), '>=');
+        return version_compare(\PHP_VERSION, self::getNextRequiredMinimumPHP(), '>=');
     }
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
@@ -218,14 +218,14 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         if (!$notifyPhpIsEOL) {
             return;
         }
-        $deprecatedMajorPhpVersion = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+        $deprecatedMajorPhpVersion = \PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION;
         $message = '';
-        if (version_compare(PHP_VERSION, self::getNextRequiredMinimumPHP(), '<')) {
+        if (version_compare(\PHP_VERSION, self::getNextRequiredMinimumPHP(), '<')) {
             $message = Piwik::translate('General_WarningPiwikWillStopSupportingPHPVersion', [$deprecatedMajorPhpVersion, self::getNextRequiredMinimumPHP()]) . '<br/>';
         }
         $message .= Piwik::translate('General_WarningPhpVersionXIsTooOld', $deprecatedMajorPhpVersion);
         $notification = new Notification($message);
-        $notification->raw = true;
+        $notification->raw = \true;
         $notification->title = Piwik::translate('General_Warning');
         $notification->priority = Notification::PRIORITY_LOW;
         $notification->context = Notification::CONTEXT_WARNING;
@@ -325,17 +325,20 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
     }
     private static function isPhpVersionEOL()
     {
-        $phpEOL = '7.3';
-        // End of security update for certain PHP versions as of https://www.php.net/supported-versions.php
-        if (Date::today()->isLater(Date::factory('2022-11-28'))) {
-            $phpEOL = '7.4';
-        }
-        if (Date::today()->isLater(Date::factory('2023-11-26'))) {
-            $phpEOL = '8.0';
-        }
-        if (Date::today()->isLater(Date::factory('2024-11-25'))) {
+        $phpEOL = '8.0';
+        // End of security update for certain PHP versions as of https://www.php.net/supported-versions
+        if (Date::today()->isLater(Date::factory('2025-12-31'))) {
             $phpEOL = '8.1';
         }
-        return version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, $phpEOL, '<=');
+        if (Date::today()->isLater(Date::factory('2026-12-31'))) {
+            $phpEOL = '8.2';
+        }
+        if (Date::today()->isLater(Date::factory('2027-12-31'))) {
+            $phpEOL = '8.3';
+        }
+        if (Date::today()->isLater(Date::factory('2028-12-31'))) {
+            $phpEOL = '8.4';
+        }
+        return version_compare(\PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION, $phpEOL, '<=');
     }
 }

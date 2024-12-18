@@ -56,10 +56,10 @@ class HtmlReportEmailHeaderView extends View
         $view->styleParagraph = $view->styleParagraphText . 'margin:0 0 16px;';
         $customLogo = new CustomLogo();
         $view->isCustomLogo = $customLogo->isEnabled() && CustomLogo::hasUserLogo();
-        $view->logoHeader = $customLogo->getHeaderLogoUrl($pathOnly = false);
+        $view->logoHeader = $customLogo->getHeaderLogoUrl($pathOnly = \false);
         $pluginManager = Manager::getInstance();
         $view->hasWhiteLabel = $pluginManager->isPluginLoaded('WhiteLabel') && $pluginManager->isPluginActivated('WhiteLabel') && $pluginManager->isPluginInFilesystem('WhiteLabel');
-        $view->idSite = Common::getRequestVar('idSite', false);
+        $view->idSite = Common::getRequestVar('idSite', \false);
     }
     private static function getPeriodToFrequencyAsAdjective()
     {

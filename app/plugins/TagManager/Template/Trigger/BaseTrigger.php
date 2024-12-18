@@ -15,10 +15,10 @@ use Piwik\Plugins\TagManager\Template\BaseTemplate;
  */
 abstract class BaseTrigger extends BaseTemplate
 {
-    const CATEGORY_PAGE_VIEW = 'TagManager_CategoryPageview';
-    const CATEGORY_CLICK = 'TagManager_CategoryClick';
-    const CATEGORY_USER_ENGAGEMENT = 'TagManager_CategoryUserEngagement';
-    const CATEGORY_OTHERS = 'General_Others';
+    public const CATEGORY_PAGE_VIEW = 'TagManager_CategoryPageview';
+    public const CATEGORY_CLICK = 'TagManager_CategoryClick';
+    public const CATEGORY_USER_ENGAGEMENT = 'TagManager_CategoryUserEngagement';
+    public const CATEGORY_OTHERS = 'General_Others';
     protected $templateType = 'Trigger';
     /**
      * @inheritdoc

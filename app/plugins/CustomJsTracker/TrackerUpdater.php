@@ -129,7 +129,7 @@ class TrackerUpdater
     private function updateAlternative($fromFile, $toFile, $newContent)
     {
         if (Common::stringEndsWith($this->toFile->getName(), $fromFile)) {
-            $alternativeFilename = dirname($this->toFile->getPath()) . DIRECTORY_SEPARATOR . $toFile;
+            $alternativeFilename = dirname($this->toFile->getPath()) . \DIRECTORY_SEPARATOR . $toFile;
             $file = $this->toFile->setFile($alternativeFilename);
             if ($file->hasWriteAccess() && !$file->isFileContentSame($newContent)) {
                 $savedFiles = $file->save($newContent);

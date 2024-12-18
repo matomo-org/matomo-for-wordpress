@@ -10,6 +10,7 @@ namespace Piwik\Plugins\TagManager\API;
 
 use Piwik\API\Request;
 use Piwik\Piwik;
+use Piwik\Plugins\TagManager\Access\Capability\PublishLiveContainer;
 use Piwik\Plugins\TagManager\Exception\EntityRecursionException;
 use Piwik\Plugins\TagManager\Input\AccessValidator;
 use Piwik\Plugins\TagManager\Model\Container;
@@ -77,19 +78,19 @@ class Import
         }
         foreach ($exportedContainerVersion['tags'] as $tag) {
             $this->tagsProvider->checkIsValidTag($tag['type']);
-            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }
         foreach ($exportedContainerVersion['triggers'] as $trigger) {
             $this->triggersProvider->checkIsValidTrigger($trigger['type']);
-            if ($this->triggersProvider->isCustomTemplate($trigger['type'])) {
+            if ($this->triggersProvider->isCustomTemplate($trigger['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }
         foreach ($exportedContainerVersion['variables'] as $variable) {
             $this->variablesProvider->checkIsValidVariable($variable['type']);
-            if ($this->variablesProvider->isCustomTemplate($variable['type'])) {
+            if ($this->variablesProvider->isCustomTemplate($variable['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }
@@ -136,7 +137,7 @@ class Import
                     }
                 }
             }
-            Request::processRequest('TagManager.addContainerTag', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'type' => $tag['type'], 'name' => $tag['name'], 'description' => $tag['description'], 'parameters' => $tag['parameters'], 'fireTriggerIds' => $fireTriggerIds, 'blockTriggerIds' => $blockTriggerIds, 'fireLimit' => $tag['fire_limit'], 'fireDelay' => $tag['fire_delay'], 'priority' => $tag['priority'], 'startDate' => $tag['start_date'], 'endDate' => $tag['end_date']));
+            Request::processRequest('TagManager.addContainerTag', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'type' => $tag['type'], 'name' => $tag['name'], 'description' => $tag['description'], 'parameters' => $tag['parameters'], 'fireTriggerIds' => $fireTriggerIds, 'blockTriggerIds' => $blockTriggerIds, 'fireLimit' => $tag['fire_limit'], 'fireDelay' => $tag['fire_delay'], 'priority' => $tag['priority'], 'startDate' => $tag['start_date'], 'status' => $tag['status'] ?? '', 'endDate' => $tag['end_date']));
         }
     }
 }

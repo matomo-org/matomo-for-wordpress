@@ -42,7 +42,7 @@ class RenderTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         $viewTemplateExpr = new \Piwik\View\MethodCallExpression($view, 'getTemplateFile', new ArrayExpression(array(), $token->getLine()), $token->getLine());
         $variablesExpr = new \Piwik\View\MethodCallExpression($view, 'getTemplateVars', $variablesOverride, $token->getLine());
-        return new IncludeNode($viewTemplateExpr, $variablesExpr, $only = false, $ignoreMissing = false, $token->getLine());
+        return new IncludeNode($viewTemplateExpr, $variablesExpr, $only = \false, $ignoreMissing = \false, $token->getLine());
     }
     /**
      * Returns the tag identifier.

@@ -19,19 +19,19 @@ class Config extends VisualizationConfig
      *
      * Default value: true
      */
-    public $allow_multi_select_series_picker = true;
+    public $allow_multi_select_series_picker = \true;
     /**
      * The maximum number of rows to render. All other rows will be aggregated in an 'Others' row.
      *
      * Default value: false (no limit)
      */
-    public $max_graph_elements = false;
+    public $max_graph_elements = \false;
     /**
      * Array property that contains the names of columns that can be selected in the Series Picker.
      *
      * Default value: false
      */
-    public $selectable_columns = false;
+    public $selectable_columns = \false;
     /**
      * Contains the column or metadata (if any) of the values used in the Row Picker.
      * The defined column or metadata will be used as identifier for the row, the label column will always be used as value
@@ -40,7 +40,7 @@ class Config extends VisualizationConfig
      *
      * Default value: false
      */
-    public $row_picker_match_rows_by = false;
+    public $row_picker_match_rows_by = \false;
     /**
      * Contains the list of values identifying rows that should be displayed as separate series.
      * The values are of a specific column determined by the row_picker_match_rows_by column.
@@ -49,7 +49,7 @@ class Config extends VisualizationConfig
      *
      * Default value: false
      */
-    public $rows_to_display = false;
+    public $rows_to_display = \false;
     /**
      * Contains the list of values available for the Row Picker. Currently set to be all visible
      * rows, if the row_picker_match_rows_by property is set.
@@ -62,20 +62,20 @@ class Config extends VisualizationConfig
      *
      * Default value: false
      */
-    public $show_all_ticks = false;
+    public $show_all_ticks = \false;
     /**
      * If true, a row with totals of each DataTable column is added.
      *
      * Default value: false
      */
-    public $add_total_row = false;
+    public $add_total_row = \false;
     /**
      * Controls whether the Series Picker is shown or not. The Series Picker allows users to
      * choose between displaying data of different columns.
      *
      * Default value: true
      */
-    public $show_series_picker = true;
+    public $show_series_picker = \true;
     /**
      * Controls whether the percentage of the total is displayed as a tooltip when hovering over
      * data points.
@@ -86,11 +86,11 @@ class Config extends VisualizationConfig
      *
      * Default value: true
      */
-    public $display_percentage_in_tooltip = true;
+    public $display_percentage_in_tooltip = \true;
     public function __construct()
     {
         parent::__construct();
-        $this->show_limit_control = false;
+        $this->show_limit_control = \false;
         $this->addPropertiesThatShouldBeAvailableClientSide(array('show_series_picker', 'allow_multi_select_series_picker', 'selectable_columns', 'selectable_rows', 'display_percentage_in_tooltip'));
         $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('show_all_ticks', 'show_series_picker'));
     }

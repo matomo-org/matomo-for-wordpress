@@ -61,7 +61,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = \true)
     {
         $request->headers->set('X-Php-Ob-Level', (string) ob_get_level());
         $this->requestStack->push($request);
@@ -71,7 +71,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             if ($e instanceof RequestExceptionInterface) {
                 $e = new BadRequestHttpException($e->getMessage(), $e);
             }
-            if (false === $catch) {
+            if (\false === $catch) {
                 $this->finishRequest($request, $type);
                 throw $e;
             }
@@ -126,7 +126,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             return $this->filterResponse($event->getResponse(), $request, $type);
         }
         // load controller
-        if (false === ($controller = $this->resolver->getController($request))) {
+        if (\false === ($controller = $this->resolver->getController($request))) {
             throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
         }
         $event = new ControllerEvent($this, $controller, $request, $type);
@@ -234,10 +234,10 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         if (null === $var) {
             return 'null';
         }
-        if (false === $var) {
+        if (\false === $var) {
             return 'a boolean value (false)';
         }
-        if (true === $var) {
+        if (\true === $var) {
             return 'a boolean value (true)';
         }
         if (\is_string($var)) {

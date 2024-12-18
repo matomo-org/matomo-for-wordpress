@@ -77,7 +77,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function close()
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -85,7 +85,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     protected function doDestroy(string $sessionId)
     {
         $this->getCollection()->deleteOne([$this->options['id_field'] => $sessionId]);
-        return true;
+        return \true;
     }
     /**
      * @return int|false
@@ -102,8 +102,8 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     {
         $expiry = new UTCDateTime((time() + (int) \ini_get('session.gc_maxlifetime')) * 1000);
         $fields = [$this->options['time_field'] => new UTCDateTime(), $this->options['expiry_field'] => $expiry, $this->options['data_field'] => new Binary($data, Binary::TYPE_OLD_BINARY)];
-        $this->getCollection()->updateOne([$this->options['id_field'] => $sessionId], ['$set' => $fields], ['upsert' => true]);
-        return true;
+        $this->getCollection()->updateOne([$this->options['id_field'] => $sessionId], ['$set' => $fields], ['upsert' => \true]);
+        return \true;
     }
     /**
      * @return bool
@@ -113,7 +113,7 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     {
         $expiry = new UTCDateTime((time() + (int) \ini_get('session.gc_maxlifetime')) * 1000);
         $this->getCollection()->updateOne([$this->options['id_field'] => $sessionId], ['$set' => [$this->options['time_field'] => new UTCDateTime(), $this->options['expiry_field'] => $expiry]]);
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}

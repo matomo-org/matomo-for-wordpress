@@ -41,14 +41,14 @@ class AddColumnsProcessedMetrics extends BaseFilter
 {
     protected $invalidDivision = 0;
     protected $roundPrecision = 2;
-    protected $deleteRowsWithNoVisit = true;
+    protected $deleteRowsWithNoVisit = \true;
     /**
      * Constructor.
      *
      * @param DataTable $table The table to eventually filter.
      * @param bool $deleteRowsWithNoVisit Whether to delete rows with no visits or not.
      */
-    public function __construct($table, $deleteRowsWithNoVisit = true)
+    public function __construct($table, $deleteRowsWithNoVisit = \true)
     {
         $this->deleteRowsWithNoVisit = $deleteRowsWithNoVisit;
         parent::__construct($table);

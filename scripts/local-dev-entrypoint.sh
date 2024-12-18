@@ -268,14 +268,14 @@ fi
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo install
 
-# update site created date for e2e tests
-php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-\$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
-
 # extra actions required during tests
 if [ "$WORDPRESS_FOLDER" = "test" ]; then
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo sync sites
+
+  # update site created date for e2e tests
+  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+  \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
 fi
 
 # add index.php file listing available installs to root /var/www/html

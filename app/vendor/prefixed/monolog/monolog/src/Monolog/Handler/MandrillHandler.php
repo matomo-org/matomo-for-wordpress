@@ -26,7 +26,7 @@ class MandrillHandler extends MailHandler
      * @param int                     $level   The minimum logging level at which this handler will be triggered
      * @param bool                    $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true)
+    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = \true)
     {
         parent::__construct($level, $bubble);
         if (!$message instanceof \Matomo\Dependencies\Swift_Message && is_callable($message)) {
@@ -51,10 +51,10 @@ class MandrillHandler extends MailHandler
             $message->setDate(time());
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://mandrillapp.com/api/1.0/messages/send-raw.json');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('key' => $this->apiKey, 'raw_message' => (string) $message, 'async' => false)));
+        curl_setopt($ch, \CURLOPT_URL, 'https://mandrillapp.com/api/1.0/messages/send-raw.json');
+        curl_setopt($ch, \CURLOPT_POST, 1);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, http_build_query(array('key' => $this->apiKey, 'raw_message' => (string) $message, 'async' => \false)));
         Curl\Util::execute($ch);
     }
 }

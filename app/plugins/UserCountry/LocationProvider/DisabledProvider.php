@@ -27,7 +27,7 @@ class DisabledProvider extends LocationProvider
      */
     public function getLocation($info)
     {
-        return false;
+        return \false;
     }
     /**
      * Returns whether this location provider is available.
@@ -38,7 +38,7 @@ class DisabledProvider extends LocationProvider
      */
     public function isAvailable()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns whether this location provider is working correctly.
@@ -49,7 +49,7 @@ class DisabledProvider extends LocationProvider
      */
     public function isWorking()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns an array describing the types of location information this provider will

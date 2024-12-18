@@ -43,7 +43,7 @@ class AnnotationBasedAutowiring implements DefinitionSource, Autowiring
      * @var bool
      */
     private $ignorePhpDocErrors;
-    public function __construct($ignorePhpDocErrors = false)
+    public function __construct($ignorePhpDocErrors = \false)
     {
         $this->ignorePhpDocErrors = (bool) $ignorePhpDocErrors;
     }

@@ -27,11 +27,11 @@ final class SessionValueResolver implements ArgumentValueResolverInterface
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
         if (!$request->hasSession()) {
-            return false;
+            return \false;
         }
         $type = $argument->getType();
         if (SessionInterface::class !== $type && !is_subclass_of($type, SessionInterface::class)) {
-            return false;
+            return \false;
         }
         return $request->getSession() instanceof $type;
     }

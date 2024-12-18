@@ -47,9 +47,9 @@ final class ArgumentResolver implements ArgumentResolverInterface
                     continue;
                 }
                 $resolved = $resolver->resolve($request, $metadata);
-                $atLeastOne = false;
+                $atLeastOne = \false;
                 foreach ($resolved as $append) {
-                    $atLeastOne = true;
+                    $atLeastOne = \true;
                     $arguments[] = $append;
                 }
                 if (!$atLeastOne) {

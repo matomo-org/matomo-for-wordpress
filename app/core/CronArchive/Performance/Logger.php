@@ -28,13 +28,13 @@ class Logger
      * @var int
      */
     private $archivingRunId;
-    public function __construct(Config $config, LoggerInterface $logger = null)
+    public function __construct(Config $config, ?LoggerInterface $logger = null)
     {
         $this->isEnabled = $config->Debug['archiving_profile'] == 1;
         $this->logger = $logger;
         $this->archivingRunId = $this->getArchivingRunId();
         if (empty($this->archivingRunId)) {
-            $this->isEnabled = false;
+            $this->isEnabled = \false;
         }
     }
     public function logMeasurement($category, $name, ArchiveProcessor\Parameters $activeArchivingParams, Timer $timer)
@@ -46,7 +46,7 @@ class Logger
         $params = array_merge($_GET);
         unset($params['pid']);
         unset($params['runid']);
-        $this->logger->info("[runid={runid},pid={pid}] {request}: {measurement}", ['pid' => Common::getRequestVar('pid', false), 'runid' => $this->getArchivingRunId(), 'request' => Url::getQueryStringFromParameters($params), 'measurement' => $measurement]);
+        $this->logger->info("[runid={runid},pid={pid}] {request}: {measurement}", ['pid' => Common::getRequestVar('pid', \false), 'runid' => $this->getArchivingRunId(), 'request' => Url::getQueryStringFromParameters($params), 'measurement' => $measurement]);
     }
     public static function getMeasurementsFor($runId, $childPid)
     {
@@ -61,7 +61,7 @@ class Logger
         $lines = explode("\n", $lines);
         $lines = array_map(function ($line) use($lineIdentifier) {
             $index = strpos($line, $lineIdentifier);
-            if ($index === false) {
+            if ($index === \false) {
                 return null;
             }
             $line = substr($line, $index + strlen($lineIdentifier));
@@ -85,7 +85,7 @@ class Logger
     }
     private function getArchivingRunId()
     {
-        return Common::getRequestVar('runid', false);
+        return Common::getRequestVar('runid', \false);
     }
     private static function cleanId($id)
     {

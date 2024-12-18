@@ -46,7 +46,7 @@ class API extends \Piwik\Plugin\API
      * Note: if you use this method via the regular API, the number of results will be limited.
      * Make sure, you set filter_limit=-1 in the request.
      */
-    public function getFollowingPages($url, $idSite, $period, $date, $segment = false)
+    public function getFollowingPages($url, $idSite, $period, $date, $segment = \false)
     {
         $url = PageUrl::excludeQueryParametersFromUrl($url, $idSite);
         // we don't unsanitize $url here. it will be done in the Transitions plugin.

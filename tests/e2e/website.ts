@@ -11,6 +11,8 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
 
+const SKIP_SETUP_LINK_SELECTOR = '.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link,.woocommerce-profiler-setup-store__button.is-tertiary';
+
 let latestWordpressVersion: string|undefined;
 
 async function getLatestWordpressVersion() {
@@ -92,8 +94,7 @@ class Website {
     const baseUrl = await this.baseUrl();
 
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
-
-    const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link');
+    const skipSetupLink = $(SKIP_SETUP_LINK_SELECTOR);
     try {
       await skipSetupLink.waitForDisplayed();
     } catch (e) {
@@ -102,21 +103,16 @@ class Website {
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
+      console.log('cannot find skip setup link');
       return;
     }
 
     // get through guided config
-    await browser.execute(() => {
-      window.jQuery('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link')[0].click();
-    })
+    await browser.execute((s) => { window.jQuery(s)[0].click(); }, SKIP_SETUP_LINK_SELECTOR);
     await browser.pause(500);
-
-    let isWooCommerce7 = false;
 
     const possibleModalButton = $('.woocommerce-usage-modal__actions .is-secondary');
     if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
-      isWooCommerce7 = true;
-
       await possibleModalButton.click();
     } else { // latest woocommerce
       await $('#woocommerce-select-control-0__help').click();
@@ -148,6 +144,7 @@ class Website {
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
+    console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
 
     if (!isPaymentsSetup) {
       if (await $('#woocommerce_cod_enabled').isExisting()) {

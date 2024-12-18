@@ -45,10 +45,10 @@ class ScheduledReports extends \Piwik\Plugin
     public const EVOLUTION_GRAPH_PARAMETER = 'evolutionGraph';
     public const ADDITIONAL_EMAILS_PARAMETER = 'additionalEmails';
     public const DISPLAY_FORMAT_PARAMETER = 'displayFormat';
-    public const EMAIL_ME_PARAMETER_DEFAULT_VALUE = true;
-    public const EVOLUTION_GRAPH_PARAMETER_DEFAULT_VALUE = false;
+    public const EMAIL_ME_PARAMETER_DEFAULT_VALUE = \true;
+    public const EVOLUTION_GRAPH_PARAMETER_DEFAULT_VALUE = \false;
     public const EMAIL_TYPE = 'email';
-    private static $availableParameters = array(self::EMAIL_ME_PARAMETER => false, self::EVOLUTION_GRAPH_PARAMETER => false, self::ADDITIONAL_EMAILS_PARAMETER => false, self::DISPLAY_FORMAT_PARAMETER => true);
+    private static $availableParameters = array(self::EMAIL_ME_PARAMETER => \false, self::EVOLUTION_GRAPH_PARAMETER => \false, self::ADDITIONAL_EMAILS_PARAMETER => \false, self::DISPLAY_FORMAT_PARAMETER => \true);
     private static $managedReportTypes = array(self::EMAIL_TYPE => 'plugins/Morpheus/images/email.png');
     private static $managedReportFormats = array(ReportRenderer::HTML_FORMAT => 'plugins/Morpheus/images/html_icon.png', ReportRenderer::PDF_FORMAT => 'plugins/Morpheus/icons/dist/plugins/pdf.png', ReportRenderer::CSV_FORMAT => 'plugins/Morpheus/images/export.png', ReportRenderer::TSV_FORMAT => 'plugins/Morpheus/images/export.png');
     public const OPTION_KEY_LAST_SENT_DATERANGE = 'report_last_sent_daterange_';
@@ -164,7 +164,7 @@ class ScheduledReports extends \Piwik\Plugin
     // based on http://www.php.net/manual/en/filter.filters.validate.php -> FILTER_VALIDATE_BOOLEAN
     private static function valueIsTrue($value)
     {
-        return $value == 'true' || $value == 1 || $value == '1' || $value === true;
+        return $value == 'true' || $value == 1 || $value == '1' || $value === \true;
     }
     public function getReportMetadata(&$reportMetadata, $reportType, $idSite)
     {
@@ -214,7 +214,7 @@ class ScheduledReports extends \Piwik\Plugin
             // remove evolution metrics from MultiSites.getAll
             if ($metadata['module'] == 'MultiSites') {
                 $columns = $processedReport['columns'];
-                foreach (\Piwik\Plugins\MultiSites\API::getApiMetrics($enhanced = true) as $metricSettings) {
+                foreach (\Piwik\Plugins\MultiSites\API::getApiMetrics($enhanced = \true) as $metricSettings) {
                     unset($columns[$metricSettings[\Piwik\Plugins\MultiSites\API::METRIC_EVOLUTION_COL_NAME_KEY]]);
                 }
                 $processedReport['metadata'] = $metadata;
@@ -236,7 +236,7 @@ class ScheduledReports extends \Piwik\Plugin
     public function allowMultipleReports(&$allowMultipleReports, $reportType)
     {
         if (self::manageEvent($reportType)) {
-            $allowMultipleReports = true;
+            $allowMultipleReports = \true;
         }
     }
     /**
@@ -331,7 +331,7 @@ class ScheduledReports extends \Piwik\Plugin
     public function deletePhoneNumber($phoneNumber)
     {
         $api = \Piwik\Plugins\ScheduledReports\API::getInstance();
-        $reports = $api->getReports($idSite = false, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = false);
+        $reports = $api->getReports($idSite = \false, $period = \false, $idReport = \false, $ifSuperUserReturnOnlySuperUserReports = \false);
         foreach ($reports as $report) {
             if ($report['type'] == MobileMessaging::MOBILE_TYPE) {
                 $reportParameters = $report['parameters'];
@@ -382,7 +382,7 @@ class ScheduledReports extends \Piwik\Plugin
     }
     public function segmentUpdated($idSegment, $updatedSegment)
     {
-        $reportsUsingSegment = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports(false, false, false, false, $idSegment);
+        $reportsUsingSegment = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports(\false, \false, \false, \false, $idSegment);
         $reportsNeedSegment = array();
         if (!$updatedSegment['enable_all_users']) {
             // which reports would become invisible to other users?
@@ -409,7 +409,7 @@ class ScheduledReports extends \Piwik\Plugin
     }
     public function segmentDeactivation($idSegment)
     {
-        $reportsUsingSegment = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports(false, false, false, false, $idSegment);
+        $reportsUsingSegment = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports(\false, \false, \false, \false, $idSegment);
         if (empty($reportsUsingSegment)) {
             return;
         }
@@ -458,7 +458,7 @@ class ScheduledReports extends \Piwik\Plugin
         foreach ($additionalEmails as &$email) {
             $email = trim($email);
             if (empty($email)) {
-                $email = false;
+                $email = \false;
             } elseif (!Piwik::isValidEmailString($email)) {
                 throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidEmail') . ' (' . $email . ')');
             }

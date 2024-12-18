@@ -25,8 +25,8 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
     }
     private function isNameInUse($idSite, $idContainerVersion, $name, $exceptIdTag = null)
     {
-        $sql = sprintf("SELECT idtag FROM %s WHERE idsite = ? AND idcontainerversion = ? AND `name` = ? AND status = ?", $this->tablePrefixed);
-        $bind = array($idSite, $idContainerVersion, $name, self::STATUS_ACTIVE);
+        $sql = sprintf("SELECT idtag FROM %s WHERE idsite = ? AND idcontainerversion = ? AND `name` = ? AND status != ?", $this->tablePrefixed);
+        $bind = array($idSite, $idContainerVersion, $name, self::STATUS_DELETED);
         if (!empty($exceptIdTag)) {
             $sql .= ' AND idtag != ?';
             $bind[] = $exceptIdTag;
@@ -34,12 +34,19 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
         $idSite = Db::fetchOne($sql, $bind);
         return !empty($idSite);
     }
-    public function createTag($idSite, $idContainerVersion, $type, $name, $parameters, $fireTriggerIds, $blockTriggerIds, $fireLimit, $fireDelay, $priority, $startDate, $endDate, $createdDate, $description = '')
+    protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
+    {
+        return $this->isNameInUse($idSite, $idContainerVersion, $name);
+    }
+    public function createTag($idSite, $idContainerVersion, $type, $name, $parameters, $fireTriggerIds, $blockTriggerIds, $fireLimit, $fireDelay, $priority, $startDate, $endDate, $createdDate, $description = '', $status = '')
     {
         if ($this->isNameInUse($idSite, $idContainerVersion, $name)) {
             throw new Exception(Piwik::translate('TagManager_ErrorNameDuplicate'));
         }
-        $values = array('idsite' => $idSite, 'idcontainerversion' => $idContainerVersion, 'status' => self::STATUS_ACTIVE, 'type' => $type, 'name' => $name, 'description' => $description, 'parameters' => $parameters, 'fire_trigger_ids' => $fireTriggerIds, 'block_trigger_ids' => $blockTriggerIds, 'fire_limit' => $fireLimit, 'fire_delay' => $fireDelay, 'priority' => $priority, 'start_date' => empty($startDate) ? null : $startDate, 'end_date' => empty($endDate) ? null : $endDate, 'created_date' => $createdDate, 'updated_date' => $createdDate);
+        if (!in_array($status, [self::STATUS_ACTIVE, self::STATUS_PAUSED, self::STATUS_DELETED])) {
+            $status = self::STATUS_ACTIVE;
+        }
+        $values = array('idsite' => $idSite, 'idcontainerversion' => $idContainerVersion, 'status' => $status, 'type' => $type, 'name' => $name, 'description' => $description, 'parameters' => $parameters, 'fire_trigger_ids' => $fireTriggerIds, 'block_trigger_ids' => $blockTriggerIds, 'fire_limit' => $fireLimit, 'fire_delay' => $fireDelay, 'priority' => $priority, 'start_date' => empty($startDate) ? null : $startDate, 'end_date' => empty($endDate) ? null : $endDate, 'created_date' => $createdDate, 'updated_date' => $createdDate);
         $values = $this->encodeFieldsWhereNeeded($values);
         return $this->insertRecord($values);
     }
@@ -84,9 +91,9 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
      */
     public function getContainerTags($idSite, $idContainerVersion)
     {
-        $bind = [self::STATUS_ACTIVE, $idSite, $idContainerVersion];
+        $bind = [self::STATUS_DELETED, $idSite, $idContainerVersion];
         $table = $this->tablePrefixed;
-        $tags = Db::fetchAll("SELECT * FROM {$table} WHERE status = ? AND idsite = ? and idcontainerversion = ? ORDER BY priority, created_date ASC", $bind);
+        $tags = Db::fetchAll("SELECT * FROM {$table} WHERE status != ? AND idsite = ? and idcontainerversion = ? ORDER BY priority, created_date ASC", $bind);
         return $this->enrichTags($tags);
     }
     /**
@@ -97,9 +104,9 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
      */
     public function getContainerTagIdsByType($idSite, $idContainerVersion, $tagType)
     {
-        $bind = [self::STATUS_ACTIVE, $idSite, $idContainerVersion, $tagType];
+        $bind = [self::STATUS_DELETED, $idSite, $idContainerVersion, $tagType];
         $table = $this->tablePrefixed;
-        $tags = Db::fetchAll("SELECT idtag FROM {$table} WHERE status = ? AND idsite = ? and idcontainerversion = ? and type = ? ORDER BY priority, created_date ASC", $bind);
+        $tags = Db::fetchAll("SELECT idtag FROM {$table} WHERE status != ? AND idsite = ? and idcontainerversion = ? and type = ? ORDER BY priority, created_date ASC", $bind);
         return is_array($tags) && count($tags) ? array_column($tags, 'idtag') : [];
     }
     /**
@@ -112,8 +119,8 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
     public function getContainerTag($idSite, $idContainerVersion, $idTag)
     {
         $table = $this->tablePrefixed;
-        $bind = array(self::STATUS_ACTIVE, $idTag, $idContainerVersion, $idSite);
-        $tag = Db::fetchRow("SELECT * FROM {$table} WHERE status = ? and idtag = ? and idcontainerversion = ? and idsite = ?", $bind);
+        $bind = array(self::STATUS_DELETED, $idTag, $idContainerVersion, $idSite);
+        $tag = Db::fetchRow("SELECT * FROM {$table} WHERE status != ? and idtag = ? and idcontainerversion = ? and idsite = ?", $bind);
         return $this->enrichTag($tag);
     }
     /**
@@ -154,6 +161,30 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
         $bind = array(self::STATUS_DELETED, $deletedDate, $idSite, $idContainerVersion, $idTag, self::STATUS_DELETED);
         Db::query($query, $bind);
     }
+    /**
+     * @param int $idSite
+     * @param int $idContainerVersion
+     * @param int $idTag
+     */
+    public function pauseContainerTag($idSite, $idContainerVersion, $idTag)
+    {
+        $table = $this->tablePrefixed;
+        $query = "UPDATE {$table} SET status = ? WHERE idsite = ? and idcontainerversion = ? and idtag = ? and status != ?";
+        $bind = array(self::STATUS_PAUSED, $idSite, $idContainerVersion, $idTag, self::STATUS_PAUSED);
+        Db::query($query, $bind);
+    }
+    /**
+     * @param int $idSite
+     * @param int $idContainerVersion
+     * @param int $idTag
+     */
+    public function resumeContainerTag($idSite, $idContainerVersion, $idTag)
+    {
+        $table = $this->tablePrefixed;
+        $query = "UPDATE {$table} SET status = ? WHERE idsite = ? and idcontainerversion = ? and idtag = ? and status = ?";
+        $bind = array(self::STATUS_ACTIVE, $idSite, $idContainerVersion, $idTag, self::STATUS_PAUSED);
+        Db::query($query, $bind);
+    }
     private function enrichTags($tags)
     {
         if (empty($tags)) {
@@ -184,13 +215,13 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
             $tag['end_date'] = null;
         }
         if (!empty($tag['parameters'])) {
-            $tag['parameters'] = json_decode($tag['parameters'], true);
+            $tag['parameters'] = json_decode($tag['parameters'], \true);
         }
         if (empty($tag['parameters'])) {
             $tag['parameters'] = [];
         }
         if (!empty($tag['fire_trigger_ids'])) {
-            $tag['fire_trigger_ids'] = json_decode($tag['fire_trigger_ids'], true);
+            $tag['fire_trigger_ids'] = json_decode($tag['fire_trigger_ids'], \true);
         }
         if (empty($tag['fire_trigger_ids'])) {
             $tag['fire_trigger_ids'] = [];
@@ -198,7 +229,7 @@ class TagsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Pl
             $tag['fire_trigger_ids'] = array_map('intval', $tag['fire_trigger_ids']);
         }
         if (!empty($tag['block_trigger_ids'])) {
-            $tag['block_trigger_ids'] = json_decode($tag['block_trigger_ids'], true);
+            $tag['block_trigger_ids'] = json_decode($tag['block_trigger_ids'], \true);
         }
         if (empty($tag['block_trigger_ids'])) {
             $tag['block_trigger_ids'] = [];

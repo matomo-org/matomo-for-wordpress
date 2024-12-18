@@ -34,7 +34,7 @@ class Referrers extends RecordBuilder
     }
     public function getRecordMetadata(ArchiveProcessor $archiveProcessor) : array
     {
-        return [Record::make(Record::TYPE_BLOB, Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::REFERRER_TYPE_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_URLS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME, true)->setMultiplePeriodTransform(function (float $value, array $counts) {
+        return [Record::make(Record::TYPE_BLOB, Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::REFERRER_TYPE_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_URLS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME, \true)->setMultiplePeriodTransform(function (float $value, array $counts) {
             return $value - $counts['level0'];
         })];
     }
@@ -97,7 +97,7 @@ class Referrers extends RecordBuilder
                 $topLevelRow->sumRowWithLabelToSubtable($row['referer_url'], $columns);
                 $urlHash = substr(md5($row['referer_url']), 0, 10);
                 if (!isset($distinctUrls[$urlHash])) {
-                    $distinctUrls[$urlHash] = true;
+                    $distinctUrls[$urlHash] = \true;
                 }
                 break;
             case Common::REFERRER_TYPE_CAMPAIGN:
@@ -138,7 +138,7 @@ class Referrers extends RecordBuilder
      */
     protected function aggregateConversionRow(array $row, array $reports, array $columns) : bool
     {
-        $skipAggregateByType = false;
+        $skipAggregateByType = \false;
         switch ($row['referer_type']) {
             case Common::REFERRER_TYPE_SEARCH_ENGINE:
                 if (empty($row['referer_keyword'])) {
@@ -165,7 +165,7 @@ class Referrers extends RecordBuilder
             default:
                 // The referer type is user submitted for goal conversions, we ignore any malformed value
                 // Continue to the next while iteration
-                $skipAggregateByType = true;
+                $skipAggregateByType = \true;
                 break;
         }
         return $skipAggregateByType;

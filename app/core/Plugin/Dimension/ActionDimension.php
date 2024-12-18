@@ -52,7 +52,7 @@ abstract class ActionDimension extends Dimension
      */
     public function onLookupAction(Request $request, Action $action)
     {
-        return false;
+        return \false;
     }
     /**
      * An action id. The value returned by the lookup action will be associated with this id in the log_action table.
@@ -77,7 +77,7 @@ abstract class ActionDimension extends Dimension
      */
     public function onNewAction(Request $request, Visitor $visitor, Action $action)
     {
-        return false;
+        return \false;
     }
     /**
      * Get all action dimensions that are defined by all activated plugins.

@@ -289,7 +289,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @param array $columns The columns to delete.
      * @param bool $deleteRecursiveInSubtables This param is currently not used.
      */
-    public function deleteColumns($columns, $deleteRecursiveInSubtables = false)
+    public function deleteColumns($columns, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteColumns($columns);
@@ -494,7 +494,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @param       $name
      * @param bool $deleteRecursiveInSubtables
      */
-    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = false)
+    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteRowsMetadata($name, $deleteRecursiveInSubtables);

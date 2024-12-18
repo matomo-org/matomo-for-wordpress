@@ -13,7 +13,7 @@ class Model
 {
     public function getPluginsFromDirectoy($directoryToLook)
     {
-        $directories = _glob($directoryToLook . '/plugins/' . '*', GLOB_ONLYDIR);
+        $directories = _glob($directoryToLook . '/plugins/' . '*', \GLOB_ONLYDIR);
         $directories = array_map(function ($directory) use($directoryToLook) {
             return str_replace($directoryToLook, '', $directory);
         }, $directories);

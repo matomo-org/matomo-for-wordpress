@@ -62,7 +62,7 @@ class ServerModule extends GeoIp2
                 }
             }
             Common::printDebug("FAILED to lookup the geo location of this IP address, as no fallback location providers is configured.");
-            return false;
+            return \false;
         }
         $result = array();
         foreach (self::getGeoIpServerVars() as $resultKey => $geoipVarName) {
@@ -87,10 +87,10 @@ class ServerModule extends GeoIp2
     {
         $result = array();
         // assume country info is always available. it's an error if it's not.
-        $result[self::CONTINENT_CODE_KEY] = true;
-        $result[self::CONTINENT_NAME_KEY] = true;
-        $result[self::COUNTRY_CODE_KEY] = true;
-        $result[self::COUNTRY_NAME_KEY] = true;
+        $result[self::CONTINENT_CODE_KEY] = \true;
+        $result[self::CONTINENT_NAME_KEY] = \true;
+        $result[self::COUNTRY_CODE_KEY] = \true;
+        $result[self::COUNTRY_NAME_KEY] = \true;
         $result[self::REGION_CODE_KEY] = array_key_exists(self::getGeoIpServerVars(self::REGION_CODE_KEY), $_SERVER);
         $result[self::REGION_NAME_KEY] = array_key_exists(self::getGeoIpServerVars(self::REGION_NAME_KEY), $_SERVER);
         $result[self::LATITUDE_KEY] = array_key_exists(self::getGeoIpServerVars(self::LATITUDE_KEY), $_SERVER);
@@ -113,15 +113,15 @@ class ServerModule extends GeoIp2
     {
         if (function_exists('apache_get_modules')) {
             foreach (apache_get_modules() as $name) {
-                if (strpos($name, 'maxminddb') !== false) {
-                    return true;
+                if (strpos($name, 'maxminddb') !== \false) {
+                    return \true;
                 }
             }
         }
         $settings = self::getGeoIpServerVars();
         $available = array_key_exists($settings[self::CONTINENT_CODE_KEY], $_SERVER) || array_key_exists($settings[self::COUNTRY_CODE_KEY], $_SERVER) || array_key_exists($settings[self::REGION_CODE_KEY], $_SERVER) || array_key_exists($settings[self::CITY_NAME_KEY], $_SERVER);
         if ($available) {
-            return true;
+            return \true;
         }
         // if not available return message w/ extra info
         if (!function_exists('apache_get_modules')) {
@@ -146,7 +146,7 @@ class ServerModule extends GeoIp2
         if (!$available) {
             return Piwik::translate('GeoIp2_CannotFindGeoIPServerVar', $settings[self::COUNTRY_CODE_KEY] . ' $_SERVER');
         }
-        return true;
+        return \true;
     }
     /**
      * Returns information about this location provider. Contains an id, title & description:
@@ -206,7 +206,7 @@ class ServerModule extends GeoIp2
         $ip = array_reverse(explode('.', $ip));
         $currentIp = array_reverse(explode('.', $currentIp));
         if (count($ip) != count($currentIp)) {
-            return false;
+            return \false;
         }
         foreach ($ip as $i => $byte) {
             if ($byte == 0) {
@@ -217,10 +217,10 @@ class ServerModule extends GeoIp2
         }
         foreach ($ip as $i => $byte) {
             if ($byte != $currentIp[$i]) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Returns currently configured server variable name for given type

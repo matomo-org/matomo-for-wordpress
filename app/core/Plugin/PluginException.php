@@ -19,6 +19,6 @@ class PluginException extends \Exception
     }
     public function isHtmlMessage()
     {
-        return true;
+        return \true;
     }
 }

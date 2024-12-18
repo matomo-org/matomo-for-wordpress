@@ -22,7 +22,7 @@ class Config extends GraphConfig
      *
      * Default value: false
      */
-    public $external_series_toggle = false;
+    public $external_series_toggle = \false;
     /**
      * Whether the graph should show all loaded series upon initial display.
      *
@@ -30,7 +30,7 @@ class Config extends GraphConfig
      *
      * Default value: false
      */
-    public $external_series_toggle_show_all = false;
+    public $external_series_toggle_show_all = \false;
     /**
      * The number of x-axis ticks for each x-axis label.
      *
@@ -40,12 +40,12 @@ class Config extends GraphConfig
     public function __construct()
     {
         parent::__construct();
-        $this->show_exclude_low_population = false;
-        $this->show_offset_information = false;
-        $this->show_pagination_control = false;
-        $this->show_exclude_low_population = false;
-        $this->show_search = false;
-        $this->show_export_as_image_icon = true;
+        $this->show_exclude_low_population = \false;
+        $this->show_offset_information = \false;
+        $this->show_pagination_control = \false;
+        $this->show_exclude_low_population = \false;
+        $this->show_search = \false;
+        $this->show_export_as_image_icon = \true;
         $this->y_axis_unit = '';
         $this->addPropertiesThatShouldBeAvailableClientSide(array('external_series_toggle', 'external_series_toggle_show_all'));
         $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('x_axis_step_size'));

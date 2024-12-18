@@ -24,7 +24,7 @@ class OptimizeArchiveTables extends ConsoleCommand
     {
         $this->setName('database:optimize-archive-tables');
         $this->setDescription("Runs an OPTIMIZE TABLE query on the specified archive tables.");
-        $this->addRequiredArgument("dates", "The months of the archive tables to optimize. Use '" . self::ALL_TABLES_STRING . "' for all dates or '" . self::CURRENT_MONTH_STRING . "' to optimize the current month only.", null, true);
+        $this->addRequiredArgument("dates", "The months of the archive tables to optimize. Use '" . self::ALL_TABLES_STRING . "' for all dates or '" . self::CURRENT_MONTH_STRING . "' to optimize the current month only.", null, \true);
         $this->addNoValueOption('dry-run', null, 'For testing purposes.');
         $this->setHelp("This command can be used to ease or automate maintenance. Instead of manually running " . "OPTIMIZE TABLE queries, the command can be used.\n\nYou should run the command if you find your " . "archive tables grow and do not shrink after purging. Optimizing them will reclaim some space.");
     }
@@ -46,7 +46,7 @@ class OptimizeArchiveTables extends ConsoleCommand
         if ($dryRun) {
             $output->write("[dry-run, not optimising table]");
         } else {
-            Db::optimizeTables(Common::prefixTable($table), $force = true);
+            Db\Schema::getInstance()->optimizeTables([Common::prefixTable($table)], $force = \true);
         }
         $output->writeln("Done.");
     }

@@ -45,7 +45,7 @@ class ArrayInput extends Input
     /**
      * {@inheritdoc}
      */
-    public function hasParameterOption($values, bool $onlyParams = false)
+    public function hasParameterOption($values, bool $onlyParams = \false)
     {
         $values = (array) $values;
         foreach ($this->parameters as $k => $v) {
@@ -53,18 +53,18 @@ class ArrayInput extends Input
                 $v = $k;
             }
             if ($onlyParams && '--' === $v) {
-                return false;
+                return \false;
             }
             if (\in_array($v, $values)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false)
+    public function getParameterOption($values, $default = \false, bool $onlyParams = \false)
     {
         $values = (array) $values;
         foreach ($this->parameters as $k => $v) {
@@ -73,7 +73,7 @@ class ArrayInput extends Input
             }
             if (\is_int($k)) {
                 if (\in_array($v, $values)) {
-                    return true;
+                    return \true;
                 }
             } elseif (\in_array($k, $values)) {
                 return $v;
@@ -148,7 +148,7 @@ class ArrayInput extends Input
                 throw new InvalidOptionException(sprintf('The "--%s" option does not exist.', $name));
             }
             $optionName = $this->definition->negationToName($name);
-            $this->options[$optionName] = false;
+            $this->options[$optionName] = \false;
             return;
         }
         $option = $this->definition->getOption($name);
@@ -157,7 +157,7 @@ class ArrayInput extends Input
                 throw new InvalidOptionException(sprintf('The "--%s" option requires a value.', $name));
             }
             if (!$option->isValueOptional()) {
-                $value = true;
+                $value = \true;
             }
         }
         $this->options[$name] = $value;

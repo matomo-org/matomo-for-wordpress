@@ -45,7 +45,7 @@ class ProfilerListener implements EventSubscriberInterface
      * @param bool $onlyException    True if the profiler only collects data when an exception occurs, false otherwise
      * @param bool $onlyMainRequests True if the profiler only collects data when the request is the main request, false otherwise
      */
-    public function __construct(Profiler $profiler, RequestStack $requestStack, ?RequestMatcherInterface $matcher = null, bool $onlyException = false, bool $onlyMainRequests = false, ?string $collectParameter = null)
+    public function __construct(Profiler $profiler, RequestStack $requestStack, ?RequestMatcherInterface $matcher = null, bool $onlyException = \false, bool $onlyMainRequests = \false, ?string $collectParameter = null)
     {
         $this->profiler = $profiler;
         $this->matcher = $matcher;
@@ -79,14 +79,14 @@ class ProfilerListener implements EventSubscriberInterface
         }
         $request = $event->getRequest();
         if (null !== $this->collectParameter && null !== ($collectParameterValue = $request->get($this->collectParameter))) {
-            true === $collectParameterValue || filter_var($collectParameterValue, \FILTER_VALIDATE_BOOLEAN) ? $this->profiler->enable() : $this->profiler->disable();
+            \true === $collectParameterValue || filter_var($collectParameterValue, \FILTER_VALIDATE_BOOLEAN) ? $this->profiler->enable() : $this->profiler->disable();
         }
         $exception = $this->exception;
         $this->exception = null;
         if (null !== $this->matcher && !$this->matcher->matches($request)) {
             return;
         }
-        $session = $request->hasPreviousSession() && $request->hasSession() ? $request->getSession() : null;
+        $session = !$request->attributes->getBoolean('_stateless') && $request->hasPreviousSession() && $request->hasSession() ? $request->getSession() : null;
         if ($session instanceof Session) {
             $usageIndexValue = $usageIndexReference =& $session->getUsageIndex();
             $usageIndexReference = \PHP_INT_MIN;

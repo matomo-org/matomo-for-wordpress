@@ -48,16 +48,16 @@ class Formatter
      * @return string
      * @api
      */
-    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = false, $round = false)
+    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = \false, $round = \false)
     {
         $numberOfSeconds = $round ? (int) $numberOfSeconds : (float) $numberOfSeconds;
-        $isNegative = false;
+        $isNegative = \false;
         if ($numberOfSeconds < 0) {
             $numberOfSeconds = -1 * $numberOfSeconds;
-            $isNegative = true;
+            $isNegative = \true;
         }
         // Display 01:45:17 time format
-        if ($displayTimeAsSentence === false) {
+        if ($displayTimeAsSentence === \false) {
             $days = floor($numberOfSeconds / 86400);
             $hours = floor(($reminder = $numberOfSeconds - $days * 86400) / 3600);
             $minutes = floor(($reminder = $reminder - $hours * 3600) / 60);
@@ -156,13 +156,13 @@ class Formatter
      *                           This parameter is not currently supported and subject to change.
      * @api
      */
-    public function formatMetrics(DataTable $dataTable, Report $report = null, $metricsToFormat = null, $formatAll = false)
+    public function formatMetrics(DataTable $dataTable, ?Report $report = null, $metricsToFormat = null, $formatAll = \false)
     {
         $metrics = $this->getMetricsToFormat($dataTable, $report);
         if (empty($metrics) || $dataTable->getMetadata(self::PROCESSED_METRICS_FORMATTED_FLAG)) {
             return;
         }
-        $dataTable->setMetadata(self::PROCESSED_METRICS_FORMATTED_FLAG, true);
+        $dataTable->setMetadata(self::PROCESSED_METRICS_FORMATTED_FLAG, \true);
         if ($metricsToFormat !== null) {
             $metricMatchRegex = $this->makeRegexToMatchMetrics($metricsToFormat);
             $metrics = array_filter($metrics, function ($metric) use($metricMatchRegex) {
@@ -176,7 +176,7 @@ class Formatter
             }
             foreach ($dataTable->getRows() as $row) {
                 $columnValue = $row->getColumn($name);
-                if ($columnValue !== false) {
+                if ($columnValue !== \false) {
                     $row->setColumn($name, $metric->format($columnValue, $this));
                 }
             }
@@ -201,10 +201,10 @@ class Formatter
         if ($formatAll) {
             foreach ($dataTable->getRows() as $row) {
                 foreach ($row->getColumns() as $column => $columnValue) {
-                    if (strpos($column, 'revenue') === false || !is_numeric($columnValue)) {
+                    if (strpos($column, 'revenue') === \false || !is_numeric($columnValue)) {
                         continue;
                     }
-                    if ($columnValue !== false) {
+                    if ($columnValue !== \false) {
                         $row->setColumn($column, $this->getPrettyMoney($columnValue, $idSite));
                     }
                 }
@@ -247,7 +247,7 @@ class Formatter
      * @param Report $report
      * @return Metric[]
      */
-    private function getMetricsToFormat(DataTable $dataTable, Report $report = null)
+    private function getMetricsToFormat(DataTable $dataTable, ?Report $report = null)
     {
         return Report::getMetricsForTable($dataTable, $report, $baseType = 'Piwik\\Plugin\\Metric');
     }

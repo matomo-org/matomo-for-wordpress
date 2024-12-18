@@ -36,7 +36,7 @@ class Transient implements \Matomo\Cache\Cache
         if ($this->contains($id)) {
             return $this->data[$id];
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -56,7 +56,7 @@ class Transient implements \Matomo\Cache\Cache
     public function save($id, $content, $lifeTime = 0)
     {
         $this->data[$id] = $content;
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -64,10 +64,10 @@ class Transient implements \Matomo\Cache\Cache
     public function delete($id)
     {
         if (!$this->contains($id)) {
-            return false;
+            return \false;
         }
         unset($this->data[$id]);
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -75,6 +75,6 @@ class Transient implements \Matomo\Cache\Cache
     public function flushAll()
     {
         $this->data = array();
-        return true;
+        return \true;
     }
 }

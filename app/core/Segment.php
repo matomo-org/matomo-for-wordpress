@@ -111,7 +111,7 @@ class Segment
      * @param Date|null $endDate end date used to limit subqueries
      * @throws
      */
-    public function __construct($segmentCondition, $idSites, \Piwik\Date $startDate = null, \Piwik\Date $endDate = null)
+    public function __construct($segmentCondition, $idSites, ?\Piwik\Date $startDate = null, ?\Piwik\Date $endDate = null)
     {
         $this->segmentQueryBuilder = StaticContainer::get('Piwik\\DataAccess\\LogQueryBuilder');
         $segmentCondition = trim($segmentCondition ?: '');
@@ -146,10 +146,10 @@ class Segment
         }
         if ($subexpressionsRaw > $subexpressionsDecoded) {
             // segment initialized above
-            $this->isSegmentEncoded = false;
+            $this->isSegmentEncoded = \false;
         } else {
             $this->initializeSegment(urldecode($segmentCondition), $idSites);
-            $this->isSegmentEncoded = true;
+            $this->isSegmentEncoded = \true;
         }
     }
     /**
@@ -258,13 +258,13 @@ class Segment
             foreach ($availableSegment['unionOfSegments'] as $segmentNameOfUnion) {
                 $unionSegment = $this->getSegmentByName($segmentNameOfUnion);
                 if (strpos($unionSegment['sqlSegment'], 'log_visit.') === 0) {
-                    return true;
+                    return \true;
                 }
             }
         } elseif (strpos($availableSegment['sqlSegment'], 'log_visit.') === 0) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function doesSegmentNeedSubquery($operator, $segmentName)
     {
@@ -274,7 +274,7 @@ class Segment
                 $e = new Exception();
                 \Piwik\Log::warning("Avoiding segment subquery due to missing start date and/or an end date. Please ensure a start date and/or end date is set when initializing a segment if it's used to build a query. Stacktrace:\n" . $e->getTraceAsString());
             }
-            return false;
+            return \false;
         }
         return $requiresSubQuery;
     }
@@ -307,7 +307,7 @@ class Segment
     public function willBeArchived()
     {
         if ($this->isEmpty()) {
-            return true;
+            return \true;
         }
         $idSites = $this->idSites;
         return Rules::isRequestAuthorizedToArchive() || Rules::isBrowserArchivingAvailableForSegments() || Rules::isSegmentPreProcessed($idSites, $this);
@@ -442,7 +442,7 @@ class Segment
             $cacheKeyTemp = self::CACHE_KEY . md5(urlencode($segment['definition']));
             $cache->save($cacheKeyTemp, $segment['hash']);
         }
-        $cache->save(self::SEGMENT_HAS_BUILT_CACHE_KEY, true);
+        $cache->save(self::SEGMENT_HAS_BUILT_CACHE_KEY, \true);
         // if we found the segment, return it's hash, but maybe this
         // segment is not stored in the db, return the default
         if ($cache->contains($cacheKey)) {
@@ -468,7 +468,7 @@ class Segment
      *              Use only when you're not aggregating or it will sample the data.
      * @return array The entire select query.
      */
-    public function getSelectQuery($select, $from, $where = false, $bind = array(), $orderBy = false, $groupBy = false, $limit = 0, $offset = 0, $forceGroupBy = false)
+    public function getSelectQuery($select, $from, $where = \false, $bind = array(), $orderBy = \false, $groupBy = \false, $limit = 0, $offset = 0, $forceGroupBy = \false)
     {
         $segmentExpression = $this->segmentExpression;
         $limitAndOffset = null;
@@ -526,7 +526,7 @@ class Segment
     private static function containsCondition($segment, $operator, $segmentCondition)
     {
         // check when segment/condition are of same encoding
-        return strpos($segment, $operator . $segmentCondition) !== false || strpos($segment, $segmentCondition . $operator) !== false || strpos($segment, urlencode($operator . $segmentCondition)) !== false || strpos($segment, urlencode($segmentCondition . $operator)) !== false || strpos($segment, $operator . urlencode($segmentCondition)) !== false || strpos($segment, urlencode($segmentCondition) . $operator) !== false || strpos($segment, $operator . urldecode($segmentCondition)) !== false || strpos($segment, urldecode($segmentCondition) . $operator) !== false || $segment === $segmentCondition || $segment === urlencode($segmentCondition) || $segment === urldecode($segmentCondition);
+        return strpos($segment, $operator . $segmentCondition) !== \false || strpos($segment, $segmentCondition . $operator) !== \false || strpos($segment, urlencode($operator . $segmentCondition)) !== \false || strpos($segment, urlencode($segmentCondition . $operator)) !== \false || strpos($segment, $operator . urlencode($segmentCondition)) !== \false || strpos($segment, urlencode($segmentCondition) . $operator) !== \false || strpos($segment, $operator . urldecode($segmentCondition)) !== \false || strpos($segment, urldecode($segmentCondition) . $operator) !== \false || $segment === $segmentCondition || $segment === urlencode($segmentCondition) || $segment === urldecode($segmentCondition);
     }
     public function getStoredSegmentName($idSite)
     {
@@ -567,9 +567,9 @@ class Segment
     private function mergeSubqueryExpressionsInTree(array $tree) : array
     {
         $andExpressions = array_map(function ($orExpressions) {
-            return $this->mergeSubqueryExpressionsInExpr($orExpressions, false);
+            return $this->mergeSubqueryExpressionsInExpr($orExpressions, \false);
         }, $tree);
-        $mappedAndExpressions = $this->mergeSubqueryExpressionsInExpr($andExpressions, true);
+        $mappedAndExpressions = $this->mergeSubqueryExpressionsInExpr($andExpressions, \true);
         return $mappedAndExpressions;
     }
     private function mergeSubqueryExpressionsInExpr(array $expressions, bool $isAndChain) : array

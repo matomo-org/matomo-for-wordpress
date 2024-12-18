@@ -46,8 +46,8 @@ class VisitorLog extends Visualization
         }
         $this->requestConfig->request_parameters_to_modify['filter_limit'] = $this->requestConfig->filter_limit + 1;
         // request one more record, to check if a next page is available
-        $this->requestConfig->disable_generic_filters = true;
-        $this->requestConfig->filter_sort_column = false;
+        $this->requestConfig->disable_generic_filters = \true;
+        $this->requestConfig->filter_sort_column = \false;
         $view = $this;
         $this->config->filters[] = function (DataTable $table) use($view) {
             if (Plugin\Manager::getInstance()->isPluginActivated('PrivacyManager') && PrivacyManager::haveLogsBeenPurged($table)) {
@@ -64,7 +64,7 @@ class VisitorLog extends Visualization
     }
     public function afterGenericFiltersAreAppliedToLoadedDataTable()
     {
-        $this->requestConfig->filter_sort_column = false;
+        $this->requestConfig->filter_sort_column = \false;
     }
     private function isInPopover()
     {
@@ -75,18 +75,18 @@ class VisitorLog extends Visualization
      */
     public function beforeRender()
     {
-        $this->config->show_as_content_block = false;
+        $this->config->show_as_content_block = \false;
         $this->config->title = Piwik::translate('Live_VisitorLog');
-        $this->config->disable_row_actions = true;
+        $this->config->disable_row_actions = \true;
         $this->config->datatable_js_type = 'VisitorLog';
-        $this->config->enable_sort = false;
-        $this->config->show_search = false;
-        $this->config->show_exclude_low_population = false;
-        $this->config->show_offset_information = false;
-        $this->config->show_all_views_icons = false;
-        $this->config->show_table_all_columns = false;
-        $this->config->show_export_as_rss_feed = false;
-        $this->config->disable_all_rows_filter_limit = true;
+        $this->config->enable_sort = \false;
+        $this->config->show_search = \false;
+        $this->config->show_exclude_low_population = \false;
+        $this->config->show_offset_information = \false;
+        $this->config->show_all_views_icons = \false;
+        $this->config->show_table_all_columns = \false;
+        $this->config->show_export_as_rss_feed = \false;
+        $this->config->disable_all_rows_filter_limit = \true;
         $this->config->documentation = Piwik::translate('Live_VisitorLogDocumentation', array('<br />', '<br />'));
         if (!is_array($this->config->custom_parameters)) {
             $this->config->custom_parameters = array();
@@ -107,12 +107,12 @@ class VisitorLog extends Visualization
         } else {
             // It's opening in a popover, just show a few records and don't give the user any actions to play with
             $this->config->footer_icons = array();
-            $this->config->show_export = false;
-            $this->config->show_pagination_control = false;
-            $this->config->show_limit_control = false;
+            $this->config->show_export = \false;
+            $this->config->show_pagination_control = \false;
+            $this->config->show_limit_control = \false;
         }
         $this->assignTemplateVar('actionsToDisplayCollapsed', StaticContainer::get('Live.pageViewActionsToDisplayCollapsed'));
-        $enableAddNewSegment = Common::getRequestVar('enableAddNewSegment', false);
+        $enableAddNewSegment = Common::getRequestVar('enableAddNewSegment', \false);
         if ($enableAddNewSegment) {
             $this->config->datatable_actions[] = ['id' => 'addSegmentToMatomo', 'title' => Piwik::translate('SegmentEditor_AddThisToMatomo'), 'icon' => 'icon-segment'];
         }

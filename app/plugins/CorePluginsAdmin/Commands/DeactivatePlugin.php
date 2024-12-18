@@ -19,7 +19,7 @@ class DeactivatePlugin extends ConsoleCommand
     {
         $this->setName('plugin:deactivate');
         $this->setDescription('Deactivate a plugin.');
-        $this->addOptionalArgument('plugin', 'The plugin name you want to deactivate. Multiple plugin names can be specified separated by a space.', null, true);
+        $this->addOptionalArgument('plugin', 'The plugin name you want to deactivate. Multiple plugin names can be specified separated by a space.', null, \true);
     }
     protected function doExecute() : int
     {

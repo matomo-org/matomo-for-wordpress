@@ -91,7 +91,7 @@ class VisitLastActionTime extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if ($request->getParam('ping') == 1) {
-            return false;
+            return \false;
         }
         $originalVisitLastActionTime = $visitor->getPreviousVisitColumn('visit_last_action_time');
         if (!empty($originalVisitLastActionTime) && Date::factory($originalVisitLastActionTime)->getTimestamp() > $request->getCurrentTimestamp()) {

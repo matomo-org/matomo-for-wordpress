@@ -23,7 +23,7 @@ class NullSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function close()
     {
-        return true;
+        return \true;
     }
     /**
      * @return bool
@@ -31,7 +31,7 @@ class NullSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function validateId($sessionId)
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -46,21 +46,21 @@ class NullSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function updateTimestamp($sessionId, $data)
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
      */
     protected function doWrite(string $sessionId, string $data)
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
      */
     protected function doDestroy(string $sessionId)
     {
-        return true;
+        return \true;
     }
     /**
      * @return int|false

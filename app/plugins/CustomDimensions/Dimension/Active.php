@@ -18,7 +18,7 @@ class Active
     }
     public function check()
     {
-        if (!is_bool($this->active) && !in_array($this->active, array('0', '1', 0, 1), true)) {
+        if (!is_bool($this->active) && !in_array($this->active, array('0', '1', 0, 1), \true)) {
             $active = $this->active;
             throw new Exception("Invalid value '{$active}' for 'active' specified. Allowed values: '0' or '1'");
         }

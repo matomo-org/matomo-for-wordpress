@@ -26,6 +26,6 @@ class Wix extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDe
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'X-Wix-Published-Version';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

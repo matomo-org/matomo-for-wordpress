@@ -76,7 +76,7 @@ class LogDataAnonymizer
                         $update['location_ip'] = $ipAnonymized->toBinary();
                     }
                 }
-                if ($anonymizeUserId && isset($row['user_id']) && $row['user_id'] !== false && $row['user_id'] !== '') {
+                if ($anonymizeUserId && isset($row['user_id']) && $row['user_id'] !== \false && $row['user_id'] !== '') {
                     $update['user_id'] = RequestProcessor::anonymizeUserId($row['user_id']);
                 }
                 if ($anonimizeLocation) {
@@ -84,7 +84,7 @@ class LogDataAnonymizer
                     $keys = array('location_longitude' => LocationProvider::LONGITUDE_KEY, 'location_latitude' => LocationProvider::LATITUDE_KEY, 'location_city' => LocationProvider::CITY_NAME_KEY, 'location_region' => LocationProvider::REGION_CODE_KEY, 'location_country' => LocationProvider::COUNTRY_CODE_KEY);
                     foreach ($keys as $name => $val) {
                         $newLocationData = null;
-                        if (isset($location[$val]) && $location[$val] !== false) {
+                        if (isset($location[$val]) && $location[$val] !== \false) {
                             $newLocationData = $location[$val];
                         }
                         if ($newLocationData !== $row[$name]) {
@@ -198,7 +198,7 @@ class LogDataAnonymizer
         $values = array();
         foreach ($columns as $column => $config) {
             $hasDefaultKey = array_key_exists('Default', $config);
-            if (in_array($column, $this->COLUMNS_BLACKLISTED, true)) {
+            if (in_array($column, $this->COLUMNS_BLACKLISTED, \true)) {
                 continue;
             } elseif (strtoupper($config['Null']) === 'NO' && $hasDefaultKey && $config['Default'] === null) {
                 // we cannot unset this column as it may result in an error or random data

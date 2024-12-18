@@ -23,7 +23,7 @@ class GetWebsites extends \Piwik\Plugins\Referrers\Reports\Base
         $this->documentation = Piwik::translate('Referrers_WebsitesReportDocumentation', '<br />');
         $this->recursiveLabelSeparator = '/';
         $this->actionToLoadSubTables = 'getUrlsFromWebsiteId';
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
         $this->order = 5;
         $this->subcategoryId = 'Referrers_SubmenuWebsitesOnly';
     }
@@ -36,11 +36,11 @@ class GetWebsites extends \Piwik\Plugins\Referrers\Reports\Base
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_exclude_low_population = \false;
         $view->requestConfig->filter_limit = 25;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_subtable_when_show_goals = true;
+            $view->config->disable_subtable_when_show_goals = \true;
         }
-        $view->config->show_pivot_by_subtable = false;
+        $view->config->show_pivot_by_subtable = \false;
     }
 }

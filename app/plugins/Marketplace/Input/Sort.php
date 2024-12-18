@@ -27,6 +27,6 @@ class Sort
     private function isValidSortMethod(string $sortMethod) : bool
     {
         $valid = array(self::METHOD_POPULAR, self::METHOD_NEWEST, self::METHOD_ALPHA);
-        return in_array($sortMethod, $valid, $strict = true);
+        return in_array($sortMethod, $valid, $strict = \true);
     }
 }

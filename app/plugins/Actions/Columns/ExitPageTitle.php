@@ -42,7 +42,7 @@ class ExitPageTitle extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionName = false;
+        $idActionName = \false;
         if (!empty($action)) {
             $idActionName = $action->getIdActionNameForEntryAndExitIds();
         }
@@ -57,7 +57,7 @@ class ExitPageTitle extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         return $action->getIdActionNameForEntryAndExitIds();
     }

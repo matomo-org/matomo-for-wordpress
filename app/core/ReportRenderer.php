@@ -156,7 +156,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
         $filename = self::makeFilenameWithExtension($filename, $extension);
         $outputFilename = self::getOutputPath($filename);
         $bytesWritten = file_put_contents($outputFilename, $content);
-        if ($bytesWritten === false) {
+        if ($bytesWritten === \false) {
             throw new Exception("ReportRenderer: Could not write to file '" . $outputFilename . "'.");
         }
         return $outputFilename;

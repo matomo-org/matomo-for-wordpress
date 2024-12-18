@@ -37,7 +37,7 @@ namespace {
     {
         protected $code = '00000';
         protected $message = 'unknown exception';
-        function __construct($message = 'unknown exception', $code = '00000', \Exception $e = null)
+        function __construct($message = 'unknown exception', $code = '00000', ?\Exception $e = null)
         {
             parent::__construct($message, $code, $e);
         }

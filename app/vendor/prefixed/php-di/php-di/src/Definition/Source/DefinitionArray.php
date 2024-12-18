@@ -74,7 +74,7 @@ class DefinitionArray implements DefinitionSource, MutableDefinitionSource
         if ($this->wildcardDefinitions === null) {
             $this->wildcardDefinitions = [];
             foreach ($this->definitions as $key => $definition) {
-                if (strpos($key, self::WILDCARD) !== false) {
+                if (strpos($key, self::WILDCARD) !== \false) {
                     $this->wildcardDefinitions[$key] = $definition;
                 }
             }
@@ -97,7 +97,7 @@ class DefinitionArray implements DefinitionSource, MutableDefinitionSource
         // Return all definitions except wildcard definitions
         $definitions = [];
         foreach ($this->definitions as $key => $definition) {
-            if (strpos($key, self::WILDCARD) === false) {
+            if (strpos($key, self::WILDCARD) === \false) {
                 $definitions[$key] = $definition;
             }
         }

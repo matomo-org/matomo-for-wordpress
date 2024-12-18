@@ -12,7 +12,7 @@ use Piwik\Common;
 use Piwik\SettingsPiwik;
 class iOSContext extends \Piwik\Plugins\TagManager\Context\BaseContext
 {
-    const ID = 'ios';
+    public const ID = 'ios';
     public function getId()
     {
         return self::ID;

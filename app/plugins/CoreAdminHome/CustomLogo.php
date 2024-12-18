@@ -21,21 +21,21 @@ class CustomLogo
     public const LOGO_HEIGHT = 300;
     public const LOGO_SMALL_HEIGHT = 100;
     public const FAVICON_HEIGHT = 32;
-    public function getLogoUrl($pathOnly = false)
+    public function getLogoUrl($pathOnly = \false)
     {
         $defaultLogo = 'plugins/Morpheus/images/logo.png';
         $themeLogo = 'plugins/%s/images/logo.png';
         $userLogo = static::getPathUserLogo();
         return $this->getPathToLogo($pathOnly, $defaultLogo, $themeLogo, $userLogo);
     }
-    public function getHeaderLogoUrl($pathOnly = false)
+    public function getHeaderLogoUrl($pathOnly = \false)
     {
         $defaultLogo = 'plugins/Morpheus/images/logo.svg';
         $themeLogo = 'plugins/%s/images/logo-header.png';
         $customLogo = static::getPathUserLogoSmall();
         return $this->getPathToLogo($pathOnly, $defaultLogo, $themeLogo, $customLogo);
     }
-    public function getSVGLogoUrl($pathOnly = false)
+    public function getSVGLogoUrl($pathOnly = \false)
     {
         $defaultLogo = 'plugins/Morpheus/images/logo.svg';
         $themeLogo = 'plugins/%s/images/logo.svg';
@@ -49,22 +49,22 @@ class CustomLogo
     }
     public function enable()
     {
-        Option::set('branding_use_custom_logo', '1', true);
+        Option::set('branding_use_custom_logo', '1', \true);
     }
     public function disable()
     {
-        Option::set('branding_use_custom_logo', '0', true);
+        Option::set('branding_use_custom_logo', '0', \true);
     }
     public function hasSVGLogo()
     {
         if (!$this->isEnabled()) {
             /* We always have our application logo */
-            return true;
+            return \true;
         }
         if ($this->isEnabled() && static::logoExists(static::getPathUserSvgLogo())) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * @return bool
@@ -83,7 +83,7 @@ class CustomLogo
     public function isCustomLogoWritable()
     {
         if (Config::getInstance()->General['enable_custom_logo_check'] == 0) {
-            return true;
+            return \true;
         }
         $pathUserLogo = $this->getPathUserLogo();
         $directoryWritingTo = PIWIK_DOCUMENT_ROOT . '/' . dirname($pathUserLogo);
@@ -170,15 +170,15 @@ class CustomLogo
         $logoUserPath = $this->getPathUserLogo();
         $success = $this->uploadImage($uploadFieldName, self::LOGO_SMALL_HEIGHT, $smallLogoUserPath);
         if (!$success) {
-            return false;
+            return \false;
         }
         $this->postLogoChangeEvent($smallLogoUserPath);
         $success = $this->uploadImage($uploadFieldName, self::LOGO_HEIGHT, $logoUserPath);
         if (!$success) {
-            return false;
+            return \false;
         }
         $this->postLogoChangeEvent($logoUserPath);
-        return true;
+        return \true;
     }
     private function postLogoChangeEvent($imagePath)
     {
@@ -198,19 +198,19 @@ class CustomLogo
         $faviconUserPath = $this->getPathUserFavicon();
         $success = $this->uploadImage($uploadFieldName, self::FAVICON_HEIGHT, $faviconUserPath);
         if (!$success) {
-            return false;
+            return \false;
         }
         $this->postLogoChangeEvent($faviconUserPath);
-        return true;
+        return \true;
     }
     private function uploadImage($uploadFieldName, $targetHeight, $userPath)
     {
         if (empty($_FILES[$uploadFieldName]) || !empty($_FILES[$uploadFieldName]['error'])) {
-            return false;
+            return \false;
         }
         $file = $_FILES[$uploadFieldName]['tmp_name'];
         if (!file_exists($file)) {
-            return false;
+            return \false;
         }
         list($width, $height) = getimagesize($file);
         switch ($_FILES[$uploadFieldName]['type']) {
@@ -224,22 +224,22 @@ class CustomLogo
                 $image = @imagecreatefromgif($file);
                 break;
             default:
-                return false;
+                return \false;
         }
         if (!is_resource($image) && !$image instanceof \GdImage) {
-            return false;
+            return \false;
         }
         $targetWidth = round($width * $targetHeight / $height);
         $newImage = imagecreatetruecolor($targetWidth, $targetHeight);
         if ($_FILES[$uploadFieldName]['type'] == 'image/png') {
-            imagealphablending($newImage, false);
-            imagesavealpha($newImage, true);
+            imagealphablending($newImage, \false);
+            imagesavealpha($newImage, \true);
         }
         $backgroundColor = imagecolorallocate($newImage, 0, 0, 0);
         imagecolortransparent($newImage, $backgroundColor);
         imagecopyresampled($newImage, $image, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
         imagepng($newImage, PIWIK_DOCUMENT_ROOT . '/' . $userPath, 3);
-        return true;
+        return \true;
     }
     /**
      * @return bool
