@@ -66,7 +66,7 @@ class MetadataLoader
     private function getDefaultPluginInformation()
     {
         $descriptionKey = $this->pluginName . '_PluginDescription';
-        return ['description' => $descriptionKey, 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/'), 'authors' => [['name' => 'Matomo', 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/')]], 'license' => 'GPL v3+', 'version' => Version::VERSION, 'theme' => false, 'require' => []];
+        return ['description' => $descriptionKey, 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/'), 'authors' => [['name' => 'Matomo', 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/')]], 'license' => 'GPL v3+', 'version' => Version::VERSION, 'theme' => \false, 'require' => []];
     }
     /**
      * It is important that this method works without using anything from DI
@@ -91,7 +91,7 @@ class MetadataLoader
         if (!$json) {
             return array();
         }
-        $info = json_decode($json, $assoc = true);
+        $info = json_decode($json, $assoc = \true);
         if (!is_array($info) || empty($info)) {
             throw new Exception("Invalid JSON file: {$path}");
         }

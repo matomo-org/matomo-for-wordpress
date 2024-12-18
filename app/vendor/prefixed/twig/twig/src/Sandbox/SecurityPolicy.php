@@ -80,11 +80,11 @@ final class SecurityPolicy implements SecurityPolicyInterface
         if ($obj instanceof Template || $obj instanceof Markup) {
             return;
         }
-        $allowed = false;
+        $allowed = \false;
         $method = strtr($method, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
         foreach ($this->allowedMethods as $class => $methods) {
             if ($obj instanceof $class && \in_array($method, $methods)) {
-                $allowed = true;
+                $allowed = \true;
                 break;
             }
         }
@@ -95,10 +95,10 @@ final class SecurityPolicy implements SecurityPolicyInterface
     }
     public function checkPropertyAllowed($obj, $property) : void
     {
-        $allowed = false;
+        $allowed = \false;
         foreach ($this->allowedProperties as $class => $properties) {
             if ($obj instanceof $class && \in_array($property, \is_array($properties) ? $properties : [$properties])) {
-                $allowed = true;
+                $allowed = \true;
                 break;
             }
         }

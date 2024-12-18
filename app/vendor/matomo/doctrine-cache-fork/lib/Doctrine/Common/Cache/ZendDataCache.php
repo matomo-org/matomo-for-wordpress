@@ -25,7 +25,7 @@ class ZendDataCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doContains($id)
     {
-        return zend_shm_cache_fetch($id) !== false;
+        return zend_shm_cache_fetch($id) !== \false;
     }
     /**
      * {@inheritdoc}

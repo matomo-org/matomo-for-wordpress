@@ -39,6 +39,6 @@ class CliErrorRenderer implements ErrorRendererInterface
                 }
             }
         };
-        return FlattenException::createFromThrowable($exception)->setAsString($dumper->dump($cloner->cloneVar($exception), true));
+        return FlattenException::createFromThrowable($exception)->setAsString($dumper->dump($cloner->cloneVar($exception), \true));
     }
 }

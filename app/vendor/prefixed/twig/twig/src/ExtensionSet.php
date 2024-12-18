@@ -27,8 +27,8 @@ use Matomo\Dependencies\Twig\TokenParser\TokenParserInterface;
 final class ExtensionSet
 {
     private $extensions;
-    private $initialized = false;
-    private $runtimeInitialized = false;
+    private $initialized = \false;
+    private $runtimeInitialized = \false;
     private $staging;
     private $parsers;
     private $visitors;
@@ -54,7 +54,7 @@ final class ExtensionSet
     }
     public function initRuntime()
     {
-        $this->runtimeInitialized = true;
+        $this->runtimeInitialized = \true;
     }
     public function hasExtension(string $class) : bool
     {
@@ -150,7 +150,7 @@ final class ExtensionSet
             }
         }
         foreach ($this->functionCallbacks as $callback) {
-            if (false !== ($function = $callback($name))) {
+            if (\false !== ($function = $callback($name))) {
                 return $function;
             }
         }
@@ -194,7 +194,7 @@ final class ExtensionSet
             }
         }
         foreach ($this->filterCallbacks as $callback) {
-            if (false !== ($filter = $callback($name))) {
+            if (\false !== ($filter = $callback($name))) {
                 return $filter;
             }
         }
@@ -247,7 +247,7 @@ final class ExtensionSet
             return $this->parsers[$name];
         }
         foreach ($this->parserCallbacks as $callback) {
-            if (false !== ($parser = $callback($name))) {
+            if (\false !== ($parser = $callback($name))) {
                 return $parser;
             }
         }
@@ -352,7 +352,7 @@ final class ExtensionSet
         }
         $this->initExtension($this->staging);
         // Done at the end only, so that an exception during initialization does not mark the environment as initialized when catching the exception
-        $this->initialized = true;
+        $this->initialized = \true;
     }
     private function initExtension(ExtensionInterface $extension) : void
     {

@@ -70,10 +70,10 @@ composer install --no-dev -o -q --ignore-platform-reqs
 find . -name .git -exec rm -rf {} +
 cd ..
 
-rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
+rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".[!.]*
 rm -r matomo/vendor/phpmailer # removing before scoping so it won't be included in the autoloader files
 cp -R matomo/* $MATOMO_ROOT
-cp -R matomo/.* $MATOMO_ROOT
+cp -R matomo/.[!.]* $MATOMO_ROOT
 rm -r matomo/
 
 echo "Running matomo-scoper..."
@@ -213,6 +213,7 @@ sed -i -e 's/!\/node_modules\/@materializecss\/materialize/!\/node_modules\/@mat
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
 
+npm run matomo:console development:disable || echo -e "${RED}Failed to unset development mode prior to asset preparation.${NO_COLOR}"
 npm run matomo:console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
 npm run matomo:console wordpress:generate-core-assets || echo -e "${RED}Failed to regenerate core assets.${NO_COLOR}"
 

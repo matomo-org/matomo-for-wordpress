@@ -42,11 +42,11 @@ abstract class Base extends ActionDimension
     public function onNewAction(Request $request, Visitor $visitor, Action $action)
     {
         if (!$action instanceof ActionPageview) {
-            return false;
+            return \false;
         }
         $time = $request->getParam($this->getRequestParam());
         if ($time === -1) {
-            return false;
+            return \false;
         }
         if ($time < 0) {
             throw new InvalidRequestParameterException(sprintf('Value for %1$s can\'t be negative.', $this->getRequestParam()));
@@ -54,7 +54,7 @@ abstract class Base extends ActionDimension
         // ignore values that are too high to be stored in column (unsigned mediumint)
         // refs https://github.com/matomo-org/matomo/issues/17035
         if ($time > 16777215) {
-            return false;
+            return \false;
         }
         return $time;
     }

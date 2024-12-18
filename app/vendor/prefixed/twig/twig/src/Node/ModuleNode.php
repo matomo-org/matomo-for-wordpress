@@ -196,7 +196,7 @@ final class ModuleNode extends Node
                 if ($node instanceof BlockReferenceNode) {
                     continue;
                 }
-                $traitable = false;
+                $traitable = \false;
                 break;
             }
         }
@@ -207,7 +207,7 @@ final class ModuleNode extends Node
     }
     protected function compileDebugInfo(Compiler $compiler)
     {
-        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo()\n", "{\n")->indent()->write(\sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))->outdent()->write("}\n\n");
+        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo()\n", "{\n")->indent()->write(\sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), \true), \true))))->outdent()->write("}\n\n");
     }
     protected function compileGetSourceContext(Compiler $compiler)
     {
@@ -224,13 +224,13 @@ final class ModuleNode extends Node
     private function hasNodeOutputNodes(Node $node) : bool
     {
         if ($node instanceof NodeOutputInterface) {
-            return true;
+            return \true;
         }
         foreach ($node as $child) {
             if ($this->hasNodeOutputNodes($child)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

@@ -23,13 +23,13 @@ class NoScripts extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Valida
         $this->message = null;
         // check if any translation contains restricted script tags
         $serializedStrings = serialize($translations);
-        $invalids = ['/<script/i', '/javascript:[^"]/i', '/src=/i', '/background=/i', '/onload=/i'];
+        $invalids = ['/<script/i', '/javascript:[^"]/i', '/<.*src=/i', '/<.*background=/i', '/<.*onload=/i'];
         foreach ($invalids as $invalid) {
             if (preg_match($invalid, $serializedStrings) > 0) {
                 $this->message = 'script tags restricted for language files';
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
 }

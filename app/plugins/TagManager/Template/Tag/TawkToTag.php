@@ -32,6 +32,7 @@ class TawkToTag extends BaseTag
         return array($this->makeSetting('tawkToId', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_TawkToTagIdTitle');
             $field->description = Piwik::translate('TagManager_TawkToTagIdDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_TawkToTagIdPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validate = function ($value) {
                 $value = trim($value);
@@ -45,6 +46,7 @@ class TawkToTag extends BaseTag
         }), $this->makeSetting('tawkToWidgetId', 'default', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_TawkToTagWidgetIdTitle');
             $field->description = Piwik::translate('TagManager_TawkToTagWidgetIdDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_TawkToTagWidgetIdPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validate = function ($value) {
                 $value = trim($value);

@@ -38,7 +38,7 @@ class Request
     protected $params;
     protected $rawParams;
     protected $isAuthenticated = null;
-    private $isEmptyRequest = false;
+    private $isEmptyRequest = \false;
     protected $tokenAuth;
     protected $timestamp;
     /**
@@ -55,7 +55,7 @@ class Request
      * @param $params
      * @param bool|string $tokenAuth
      */
-    public function __construct($params, $tokenAuth = false)
+    public function __construct($params, $tokenAuth = \false)
     {
         if (!is_array($params)) {
             $params = array();
@@ -78,7 +78,7 @@ class Request
         $this->params = $this->replaceUnsupportedUtf8Chars($this->params);
         $this->customTimestampDoesNotRequireTokenauthWhenNewerThan = (int) \Piwik\Tracker\TrackerConfig::getConfigValue('tracking_requests_require_authentication_when_custom_timestamp_newer_than', $this->getIdSiteIfExists());
     }
-    protected function replaceUnsupportedUtf8Chars($value, $key = false)
+    protected function replaceUnsupportedUtf8Chars($value, $key = \false)
     {
         $dbSettings = new \Piwik\Db\Settings();
         $charset = $dbSettings->getUsedCharset();
@@ -132,11 +132,11 @@ class Request
                 $idSite = $this->getIdSite();
             } catch (Exception $e) {
                 Common::printDebug("failed to authenticate: invalid idSite");
-                $this->isAuthenticated = false;
+                $this->isAuthenticated = \false;
                 return;
             }
             if (empty($tokenAuth)) {
-                $tokenAuth = Common::getRequestVar('token_auth', false, 'string', $this->params);
+                $tokenAuth = Common::getRequestVar('token_auth', \false, 'string', $this->params);
             }
             $cache = PiwikCache::getTransientCache();
             $cacheKey = 'tracker_request_authentication_' . $idSite . '_' . $tokenAuth;
@@ -150,7 +150,7 @@ class Request
                 $cache->save($cacheKey, $this->isAuthenticated);
             } catch (Exception $e) {
                 Common::printDebug("could not authenticate, caught exception: " . $e->getMessage());
-                $this->isAuthenticated = false;
+                $this->isAuthenticated = \false;
             }
             if ($this->isAuthenticated) {
                 Common::printDebug("token_auth is authenticated!");
@@ -158,14 +158,14 @@ class Request
                 StaticContainer::get('Piwik\\Tracker\\Failures')->logFailure(\Piwik\Tracker\Failures::FAILURE_ID_NOT_AUTHENTICATED, $this);
             }
         } else {
-            $this->isAuthenticated = true;
+            $this->isAuthenticated = \true;
             Common::printDebug("token_auth authentication not required");
         }
     }
     public static function authenticateSuperUserOrAdminOrWrite($tokenAuth, $idSite)
     {
         if (empty($tokenAuth)) {
-            return false;
+            return \false;
         }
         // Now checking the list of admin token_auth cached in the Tracker config file
         if (!empty($idSite) && $idSite > 0) {
@@ -173,8 +173,8 @@ class Request
             $userModel = new \Piwik\Plugins\UsersManager\Model();
             $tokenAuthHashed = $userModel->hashTokenAuth($tokenAuth);
             $hashedToken = UsersManager::hashTrackingToken((string) $tokenAuthHashed, $idSite);
-            if (array_key_exists('tracking_token_auth', $website) && in_array($hashedToken, $website['tracking_token_auth'], true)) {
-                return true;
+            if (array_key_exists('tracking_token_auth', $website) && in_array($hashedToken, $website['tracking_token_auth'], \true)) {
+                return \true;
             }
         }
         Piwik::postEvent('Request.initAuthenticationObject');
@@ -186,7 +186,7 @@ class Request
         $auth->setPasswordHash(null);
         $access = $auth->authenticate();
         if (!empty($access) && $access->hasSuperUserAccess()) {
-            return true;
+            return \true;
         }
         Common::printDebug("WARNING! token_auth = {$tokenAuth} is not valid, Super User / Admin / Write was NOT authenticated");
         /**
@@ -194,7 +194,7 @@ class Request
          * @internal
          */
         Piwik::postEvent('Tracker.Request.authenticate.failed');
-        return false;
+        return \false;
     }
     public function isRequestExcluded()
     {
@@ -218,39 +218,39 @@ class Request
                     switch ($operation) {
                         case SegmentExpression::MATCH_EQUAL:
                             if ($actual === $valueRightMember) {
-                                return true;
+                                return \true;
                             }
                             break;
                         case SegmentExpression::MATCH_NOT_EQUAL:
                             if ($actual !== $valueRightMember) {
-                                return true;
+                                return \true;
                             }
                             break;
                         case SegmentExpression::MATCH_CONTAINS:
-                            if (stripos($actual, $valueRightMember) !== false) {
-                                return true;
+                            if (stripos($actual, $valueRightMember) !== \false) {
+                                return \true;
                             }
                             break;
                         case SegmentExpression::MATCH_DOES_NOT_CONTAIN:
-                            if (stripos($actual, $valueRightMember) === false) {
-                                return true;
+                            if (stripos($actual, $valueRightMember) === \false) {
+                                return \true;
                             }
                             break;
                         case SegmentExpression::MATCH_STARTS_WITH:
                             if (stripos($actual, $valueRightMember) === 0) {
-                                return true;
+                                return \true;
                             }
                             break;
                         case SegmentExpression::MATCH_ENDS_WITH:
                             if (Common::stringEndsWith($actual, $valueRightMember)) {
-                                return true;
+                                return \true;
                             }
                             break;
                     }
                 }
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns the language the visitor is viewing.
@@ -319,21 +319,21 @@ class Request
             'new_visit' => array(0, 'int'),
             // Ecommerce
             'ec_id' => array('', 'string'),
-            'ec_st' => array(false, 'float'),
-            'ec_tx' => array(false, 'float'),
-            'ec_sh' => array(false, 'float'),
-            'ec_dt' => array(false, 'float'),
+            'ec_st' => array(\false, 'float'),
+            'ec_tx' => array(\false, 'float'),
+            'ec_sh' => array(\false, 'float'),
+            'ec_dt' => array(\false, 'float'),
             'ec_items' => array('', 'json'),
             // ecommerce product/category view
             '_pkc' => array('', 'string'),
             '_pks' => array('', 'string'),
             '_pkn' => array('', 'string'),
-            '_pkp' => array(false, 'float'),
+            '_pkp' => array(\false, 'float'),
             // Events
             'e_c' => array('', 'string'),
             'e_a' => array('', 'string'),
             'e_n' => array('', 'string'),
-            'e_v' => array(false, 'float'),
+            'e_v' => array(\false, 'float'),
             // some visitor attributes can be overwritten
             'cip' => array('', 'string'),
             'cdt' => array('', 'string'),
@@ -412,7 +412,7 @@ class Request
     protected function getCustomTimestamp()
     {
         if (!$this->hasParam('cdt') && !$this->hasParam('cdo')) {
-            return false;
+            return \false;
         }
         $cdt = $this->getParam('cdt');
         $cdo = $this->getParam('cdo');
@@ -420,17 +420,17 @@ class Request
             $cdt = $this->timestamp;
         }
         if (empty($cdt)) {
-            return false;
+            return \false;
         }
         if (!is_numeric($cdt)) {
-            $cdt = strtotime($cdt);
+            $cdt = strtotime($cdt, $this->timestamp);
         }
         if (!empty($cdo)) {
             $cdt = $cdt - abs($cdo);
         }
         if (!$this->isTimestampValid($cdt, $this->timestamp)) {
             Common::printDebug(sprintf("Datetime %s is not valid", date("Y-m-d H:i:m", $cdt)));
-            return false;
+            return \false;
         }
         // If timestamp in the past, token_auth is required
         $timeFromNow = $this->timestamp - $cdt;
@@ -520,7 +520,7 @@ class Request
     }
     public function getUserAgent()
     {
-        $default = false;
+        $default = \false;
         if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
             $default = $_SERVER['HTTP_USER_AGENT'];
         }
@@ -541,7 +541,7 @@ class Request
     {
         $cookie = $this->makeThirdPartyCookieUID();
         $idVisitor = $cookie->get(0);
-        if ($idVisitor !== false && strlen($idVisitor) == Tracker::LENGTH_HEX_ID_STRING) {
+        if ($idVisitor !== \false && strlen($idVisitor) == Tracker::LENGTH_HEX_ID_STRING) {
             return $idVisitor;
         }
         return null;
@@ -561,7 +561,7 @@ class Request
         $idVisitor = bin2hex($idVisitor);
         $cookie->set(0, $idVisitor);
         if (ProxyHttp::isHttps()) {
-            $cookie->setSecure(true);
+            $cookie->setSecure(\true);
             $cookie->save('None');
         } else {
             $cookie->save('Lax');
@@ -605,7 +605,7 @@ class Request
      */
     public function getVisitorId()
     {
-        $found = false;
+        $found = \false;
         if (\Piwik\Tracker\TrackerConfig::getConfigValue('enable_userid_overwrites_visitorid', $this->getIdSiteIfExists())) {
             // If User ID is set it takes precedence
             $userId = $this->getForcedUserId();
@@ -613,7 +613,7 @@ class Request
                 $userIdHashed = $this->getUserIdHashed($userId);
                 $idVisitor = $this->truncateIdAsVisitorId($userIdHashed);
                 Common::printDebug("Request will be recorded for this user_id = " . $userId . " (idvisitor = {$idVisitor})");
-                $found = true;
+                $found = \true;
             }
         }
         // Was a Visitor ID "forced" (@see Tracking API setVisitorId()) for this request?
@@ -624,7 +624,7 @@ class Request
                     throw new InvalidRequestParameterException("Visitor ID (cid) {$idVisitor} must be " . Tracker::LENGTH_HEX_ID_STRING . " characters long");
                 }
                 Common::printDebug("Request will be recorded for this idvisitor = " . $idVisitor);
-                $found = true;
+                $found = \true;
             }
         }
         $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
@@ -636,7 +636,7 @@ class Request
                 if ($useThirdPartyCookie) {
                     $idVisitor = $this->getThirdPartyCookieVisitorId();
                     if (!empty($idVisitor)) {
-                        $found = true;
+                        $found = \true;
                     }
                 }
             }
@@ -649,7 +649,7 @@ class Request
         if ($found) {
             return $this->getVisitorIdAsBinary($idVisitor);
         }
-        return false;
+        return \false;
     }
     /**
      * When creating a third party cookie, we want to ensure that the original value set in this 3rd party cookie
@@ -657,14 +657,14 @@ class Request
      */
     public function getVisitorIdForThirdPartyCookie()
     {
-        $found = false;
+        $found = \false;
         // For 3rd party cookies, priority is on re-using the existing 3rd party cookie value
         if (!$found) {
             $useThirdPartyCookie = $this->shouldUseThirdPartyCookie();
             if ($useThirdPartyCookie) {
                 $idVisitor = $this->getThirdPartyCookieVisitorId();
                 if (!empty($idVisitor)) {
-                    $found = true;
+                    $found = \true;
                 }
             }
         }
@@ -676,7 +676,7 @@ class Request
         if ($found) {
             return $this->getVisitorIdAsBinary($idVisitor);
         }
-        return false;
+        return \false;
     }
     public function getIp()
     {
@@ -688,7 +688,7 @@ class Request
         if (strlen($userId) > 0) {
             return $userId;
         }
-        return false;
+        return \false;
     }
     public function getForcedVisitorId()
     {
@@ -774,6 +774,6 @@ class Request
         if (!empty($binVisitorId)) {
             return $binVisitorId;
         }
-        return false;
+        return \false;
     }
 }

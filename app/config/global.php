@@ -86,7 +86,7 @@ namespace {
         // allow users to override plugin hardcoded value and avoid loading on demand
         'plugins.shouldNotLoadOnDemand' => [],
         'observers.global' => [],
-        'dev.disable_plugin_update_checks' => \false,
+        'dev.forced_plugin_update_result' => null,
         /**
          * By setting this option to false, the check that the DB schema version matches the version of the source code will
          * be no longer performed. Thus it allows you to execute for example a newer version of Matomo with an older Matomo

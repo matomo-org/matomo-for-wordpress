@@ -162,9 +162,9 @@ class Response
         if ($img && $size && isset($size['mime']) && in_array($size['mime'], $supportedMimeTypes)) {
             Common::sendHeader('Content-Type: ' . $size['mime']);
             echo $img;
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Gets the error message to output when a tracking request fails.

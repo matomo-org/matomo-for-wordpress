@@ -38,14 +38,14 @@ class Caster
      *
      * @param bool $hasDebugInfo Whether the __debugInfo method exists on $obj or not
      */
-    public static function castObject(object $obj, string $class, bool $hasDebugInfo = false, ?string $debugClass = null) : array
+    public static function castObject(object $obj, string $class, bool $hasDebugInfo = \false, ?string $debugClass = null) : array
     {
         if ($hasDebugInfo) {
             try {
                 $debugInfo = $obj->__debugInfo();
             } catch (\Throwable $e) {
                 // ignore failing __debugInfo()
-                $hasDebugInfo = false;
+                $hasDebugInfo = \false;
             }
         }
         $a = $obj instanceof \Closure ? [] : (array) $obj;
@@ -61,7 +61,7 @@ class Caster
                 if ("\x00" !== ($k[0] ?? '')) {
                     if (!isset($publicProperties[$class])) {
                         foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_PUBLIC) as $prop) {
-                            $publicProperties[$class][$prop->name] = true;
+                            $publicProperties[$class][$prop->name] = \true;
                         }
                     }
                     if (!isset($publicProperties[$class][$k])) {
@@ -113,13 +113,13 @@ class Caster
             if (null === $v) {
                 $type |= self::EXCLUDE_NULL & $filter;
                 $type |= self::EXCLUDE_EMPTY & $filter;
-            } elseif (false === $v || '' === $v || '0' === $v || 0 === $v || 0.0 === $v || [] === $v) {
+            } elseif (\false === $v || '' === $v || '0' === $v || 0 === $v || 0.0 === $v || [] === $v) {
                 $type |= self::EXCLUDE_EMPTY & $filter;
             }
-            if (self::EXCLUDE_NOT_IMPORTANT & $filter && !\in_array($k, $listedProperties, true)) {
+            if (self::EXCLUDE_NOT_IMPORTANT & $filter && !\in_array($k, $listedProperties, \true)) {
                 $type |= self::EXCLUDE_NOT_IMPORTANT;
             }
-            if (self::EXCLUDE_VERBOSE & $filter && \in_array($k, $listedProperties, true)) {
+            if (self::EXCLUDE_VERBOSE & $filter && \in_array($k, $listedProperties, \true)) {
                 $type |= self::EXCLUDE_VERBOSE;
             }
             if (!isset($k[1]) || "\x00" !== $k[0]) {

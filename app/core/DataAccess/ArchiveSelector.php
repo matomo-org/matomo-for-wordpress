@@ -55,7 +55,7 @@ class ArchiveSelector
      *               - the ts_archived for the latest usable archive
      * @throws Exception
      */
-    public static function getArchiveIdAndVisits(ArchiveProcessor\Parameters $params, $minDatetimeArchiveProcessedUTC = false, $includeInvalidated = null)
+    public static function getArchiveIdAndVisits(ArchiveProcessor\Parameters $params, $minDatetimeArchiveProcessedUTC = \false, $includeInvalidated = null)
     {
         $idSite = $params->getSite()->getId();
         $period = $params->getPeriod()->getId();
@@ -71,17 +71,17 @@ class ArchiveSelector
         $doneFlags = Rules::getDoneFlags($plugins, $segment);
         $requestedPluginDoneFlags = empty($requestedPlugin) ? [] : Rules::getDoneFlags([$requestedPlugin], $segment);
         $allPluginsDoneFlag = Rules::getDoneFlagArchiveContainsAllPlugins($segment);
-        $doneFlagValues = Rules::getSelectableDoneFlagValues($includeInvalidated === null ? true : $includeInvalidated, $params, $includeInvalidated === null);
+        $doneFlagValues = Rules::getSelectableDoneFlagValues($includeInvalidated === null ? \true : $includeInvalidated, $params, $includeInvalidated === null);
         $results = self::getModel()->getArchiveIdAndVisits($numericTable, $idSite, $period, $dateStartIso, $dateEndIso, null, $doneFlags);
         if (empty($results)) {
             // no archive found
-            return self::archiveInfoBcResult(['idArchives' => false, 'visits' => false, 'visitsConverted' => false, 'archiveExists' => false, 'tsArchived' => false, 'doneFlagValue' => false, 'existingRecords' => null]);
+            return self::archiveInfoBcResult(['idArchives' => \false, 'visits' => \false, 'visitsConverted' => \false, 'archiveExists' => \false, 'tsArchived' => \false, 'doneFlagValue' => \false, 'existingRecords' => null]);
         }
         $result = self::findArchiveDataWithLatestTsArchived($results, $requestedPluginDoneFlags, $allPluginsDoneFlag);
-        $tsArchived = isset($result['ts_archived']) ? $result['ts_archived'] : false;
-        $visits = isset($result['nb_visits']) ? $result['nb_visits'] : false;
-        $visitsConverted = isset($result['nb_visits_converted']) ? $result['nb_visits_converted'] : false;
-        $value = isset($result['value']) ? $result['value'] : false;
+        $tsArchived = isset($result['ts_archived']) ? $result['ts_archived'] : \false;
+        $visits = isset($result['nb_visits']) ? $result['nb_visits'] : \false;
+        $visitsConverted = isset($result['nb_visits_converted']) ? $result['nb_visits_converted'] : \false;
+        $value = isset($result['value']) ? $result['value'] : \false;
         $existingRecords = null;
         $result['idarchive'] = empty($result['idarchive']) ? [] : [$result['idarchive']];
         if (!empty($result['partial'])) {
@@ -104,17 +104,17 @@ class ArchiveSelector
         }
         if (empty($result['idarchive']) || isset($result['value']) && !in_array($result['value'], $doneFlagValues)) {
             // the archive cannot be considered valid for this request (has wrong done flag value)
-            return self::archiveInfoBcResult(['idArchives' => false, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => null]);
+            return self::archiveInfoBcResult(['idArchives' => \false, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => \true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => null]);
         }
         if (!empty($minDatetimeArchiveProcessedUTC) && !is_object($minDatetimeArchiveProcessedUTC)) {
             $minDatetimeArchiveProcessedUTC = Date::factory($minDatetimeArchiveProcessedUTC);
         }
         // the archive is too old
         if ($minDatetimeArchiveProcessedUTC && !empty($result['idarchive']) && Date::factory($tsArchived)->isEarlier($minDatetimeArchiveProcessedUTC)) {
-            return self::archiveInfoBcResult(['idArchives' => false, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => null]);
+            return self::archiveInfoBcResult(['idArchives' => \false, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => \true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => null]);
         }
-        $idArchives = !empty($result['idarchive']) ? $result['idarchive'] : false;
-        return self::archiveInfoBcResult(['idArchives' => $idArchives, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => $existingRecords]);
+        $idArchives = !empty($result['idarchive']) ? $result['idarchive'] : \false;
+        return self::archiveInfoBcResult(['idArchives' => $idArchives, 'visits' => $visits, 'visitsConverted' => $visitsConverted, 'archiveExists' => \true, 'tsArchived' => $tsArchived, 'doneFlagValue' => $value, 'existingRecords' => $existingRecords]);
     }
     /**
      * Queries and returns archive IDs for a set of sites, periods, and a segment.
@@ -133,7 +133,7 @@ class ArchiveSelector
      *               )
      * @throws
      */
-    public static function getArchiveIds($siteIds, $periods, $segment, $plugins, $includeInvalidated = true, $_skipSetGroupConcatMaxLen = false)
+    public static function getArchiveIds($siteIds, $periods, $segment, $plugins, $includeInvalidated = \true, $_skipSetGroupConcatMaxLen = \false)
     {
         return self::getArchiveIdsAndStates($siteIds, $periods, $segment, $plugins, $includeInvalidated, $_skipSetGroupConcatMaxLen)[0];
     }
@@ -169,7 +169,7 @@ class ArchiveSelector
      *               )
      * @throws
      */
-    public static function getArchiveIdsAndStates($siteIds, $periods, $segment, $plugins, $includeInvalidated = true, $_skipSetGroupConcatMaxLen = false) : array
+    public static function getArchiveIdsAndStates($siteIds, $periods, $segment, $plugins, $includeInvalidated = \true, $_skipSetGroupConcatMaxLen = \false) : array
     {
         $logger = StaticContainer::get(LoggerInterface::class);
         if (!$_skipSetGroupConcatMaxLen) {
@@ -242,7 +242,7 @@ class ArchiveSelector
                     [$idarchive, $doneFlag, $value] = $parts;
                     $idarchives[$doneFlag][$dateStr][] = $idarchive;
                     $idarchiveStates[$idSite][$doneFlag][$dateStr][$idarchive] = (int) $value;
-                    if (strpos($doneFlag, '.') === false && $value != \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL) {
+                    if (strpos($doneFlag, '.') === \false && $value != \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL) {
                         break;
                         // found the all plugins archive, don't need to look in older archives since we have everything here
                     }
@@ -340,13 +340,13 @@ class ArchiveSelector
      * @param bool $includeInvalidated
      * @return string
      */
-    private static function getNameCondition(array $plugins, Segment $segment, $includeInvalidated = true)
+    private static function getNameCondition(array $plugins, Segment $segment, $includeInvalidated = \true)
     {
         // the flags used to tell how the archiving process for a specific archive was completed,
         // if it was completed
         $doneFlags = Rules::getDoneFlags($plugins, $segment);
         $allDoneFlags = "'" . implode("','", $doneFlags) . "'";
-        $possibleValues = Rules::getSelectableDoneFlagValues($includeInvalidated, null, $checkAuthorizedToArchive = false);
+        $possibleValues = Rules::getSelectableDoneFlagValues($includeInvalidated, null, $checkAuthorizedToArchive = \false);
         // create the SQL to find archives that are DONE
         return "((name IN ({$allDoneFlags})) AND (value IN (" . implode(',', $possibleValues) . ")))";
     }
@@ -379,7 +379,7 @@ class ArchiveSelector
                 $tsArchiveds[$doneFlag] = $row['ts_archived'];
             }
         }
-        $archiveData = [self::NB_VISITS_RECORD_LOOKED_UP => false, self::NB_VISITS_CONVERTED_RECORD_LOOKED_UP => false];
+        $archiveData = [self::NB_VISITS_RECORD_LOOKED_UP => \false, self::NB_VISITS_CONVERTED_RECORD_LOOKED_UP => \false];
         foreach ($results as $result) {
             if (in_array($result['name'], $doneFlags) && in_array($result['idarchive'], $idArchives) && $result['value'] != \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL) {
                 $archiveData = $result;
@@ -438,7 +438,7 @@ class ArchiveSelector
     public static function querySingleBlob(array $archiveIds, string $recordName)
     {
         $chunk = new Chunk();
-        [$getValuesSql, $bind] = self::getSqlTemplateToFetchArchiveData([$recordName], Archive::ID_SUBTABLE_LOAD_ALL_SUBTABLES, true);
+        [$getValuesSql, $bind] = self::getSqlTemplateToFetchArchiveData([$recordName], Archive::ID_SUBTABLE_LOAD_ALL_SUBTABLES, \true);
         $archiveIdsPerMonth = self::getArchiveIdsByYearMonth($archiveIds);
         $periodsSeen = [];
         // $yearMonth = "2022-11",
@@ -466,7 +466,7 @@ class ArchiveSelector
                 if (!empty($periodsSeen[$period][$recordName])) {
                     continue;
                 }
-                $periodsSeen[$period][$recordName] = true;
+                $periodsSeen[$period][$recordName] = \true;
                 $row['value'] = \Piwik\DataAccess\ArchiveSelector::uncompress($row['value']);
                 if ($chunk->isRecordNameAChunk($row['name'])) {
                     // $blobs = array([subtableID] = [blob of subtableId])
@@ -500,7 +500,7 @@ class ArchiveSelector
      *                                   without loading entire datatable trees in memory.
      * @return array The sql and bind values.
      */
-    private static function getSqlTemplateToFetchArchiveData(array $recordNames, $idSubtable, $orderBySubtableId = false)
+    private static function getSqlTemplateToFetchArchiveData(array $recordNames, $idSubtable, $orderBySubtableId = \false)
     {
         $chunk = new Chunk();
         $orderBy = 'ORDER BY ts_archived ASC';

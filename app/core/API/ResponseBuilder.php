@@ -24,11 +24,11 @@ class ResponseBuilder
     private $outputFormat = null;
     private $apiRenderer = null;
     private $request = null;
-    private $sendHeader = true;
-    private $postProcessDataTable = true;
-    private $apiModule = false;
-    private $apiMethod = false;
-    private $shouldPrintBacktrace = false;
+    private $sendHeader = \true;
+    private $postProcessDataTable = \true;
+    private $apiModule = \false;
+    private $apiMethod = \false;
+    private $shouldPrintBacktrace = \false;
     /**
      * @param string $outputFormat
      * @param array $request
@@ -42,11 +42,11 @@ class ResponseBuilder
     }
     public function disableSendHeader()
     {
-        $this->sendHeader = false;
+        $this->sendHeader = \false;
     }
     public function disableDataTablePostProcessor()
     {
-        $this->postProcessDataTable = false;
+        $this->postProcessDataTable = \false;
     }
     /**
      * This method processes the data resulting from the API call.
@@ -75,7 +75,7 @@ class ResponseBuilder
      * @param bool|string $apiMethod The API method that was called
      * @return mixed  Usually a string, but can still be a PHP data structure if the format requested is 'original'
      */
-    public function getResponse($value = null, $apiModule = false, $apiMethod = false)
+    public function getResponse($value = null, $apiModule = \false, $apiMethod = \false)
     {
         $this->apiModule = $apiModule;
         $this->apiMethod = $apiMethod;
@@ -151,7 +151,7 @@ class ResponseBuilder
     {
         $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, $this->shouldPrintBacktrace);
         if ($exception instanceof \Piwik\Exception\Exception && $exception->isHtmlMessage() && \Piwik\API\Request::isRootRequestApiRequest()) {
-            $message = strip_tags(str_replace('<br />', PHP_EOL, $message));
+            $message = strip_tags(str_replace('<br />', \PHP_EOL, $message));
         }
         return Renderer::formatValueXml($message);
     }
@@ -173,9 +173,9 @@ class ResponseBuilder
         }
         $isAssoc = !empty($firstArray) && is_numeric($firstKey) && is_array($firstArray) && count(array_filter(array_keys($firstArray), 'is_string'));
         if (is_numeric($firstKey)) {
-            $columns = Common::getRequestVar('filter_column', false, 'array', $this->request);
+            $columns = Common::getRequestVar('filter_column', \false, 'array', $this->request);
             $pattern = Common::getRequestVar('filter_pattern', '', 'string', $this->request);
-            if ($columns != array(false) && $pattern !== '') {
+            if ($columns != array(\false) && $pattern !== '') {
                 $pattern = new Pattern(new DataTable(), $columns, $pattern);
                 $array = $pattern->filterArray($array);
             }
@@ -186,7 +186,7 @@ class ResponseBuilder
                     $limit = null;
                     // make sure to return all results from offset
                 }
-                $array = array_slice($array, $offset, $limit, $preserveKeys = false);
+                $array = array_slice($array, $offset, $limit, $preserveKeys = \false);
             }
         }
         if ($isAssoc) {

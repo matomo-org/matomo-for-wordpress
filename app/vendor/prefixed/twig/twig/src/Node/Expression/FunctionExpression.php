@@ -17,7 +17,7 @@ class FunctionExpression extends CallExpression
 {
     public function __construct(string $name, Node $arguments, int $lineno)
     {
-        parent::__construct(['arguments' => $arguments], ['name' => $name, 'type' => 'function', 'is_defined_test' => false], $lineno);
+        parent::__construct(['arguments' => $arguments], ['name' => $name, 'type' => 'function', 'is_defined_test' => \false], $lineno);
     }
     public function compile(Compiler $compiler)
     {

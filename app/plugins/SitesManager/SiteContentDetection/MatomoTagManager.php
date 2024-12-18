@@ -34,10 +34,10 @@ class MatomoTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\
         $tests = ['/matomo ?tag ?manager/i', '/_mtm\\.push/'];
         foreach ($tests as $test) {
             if (preg_match($test, $data) === 1) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {

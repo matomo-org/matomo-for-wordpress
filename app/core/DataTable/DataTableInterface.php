@@ -23,10 +23,10 @@ interface DataTableInterface
     public function __toString();
     public function enableRecursiveSort();
     public function renameColumn($oldName, $newName);
-    public function deleteColumns($columns, $deleteRecursiveInSubtables = false);
+    public function deleteColumns($columns, $deleteRecursiveInSubtables = \false);
     public function deleteRow($id);
     public function deleteColumn($name);
     public function getColumn($name);
     public function getColumns();
-    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = false);
+    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = \false);
 }

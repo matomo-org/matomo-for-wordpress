@@ -56,6 +56,8 @@ use Matomo\Dependencies\Twig\Node\Expression\Unary\NegUnary;
 use Matomo\Dependencies\Twig\Node\Expression\Unary\NotUnary;
 use Matomo\Dependencies\Twig\Node\Expression\Unary\PosUnary;
 use Matomo\Dependencies\Twig\NodeVisitor\MacroAutoImportNodeVisitor;
+use Matomo\Dependencies\Twig\Sandbox\SecurityNotAllowedMethodError;
+use Matomo\Dependencies\Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Matomo\Dependencies\Twig\Source;
 use Matomo\Dependencies\Twig\Template;
 use Matomo\Dependencies\Twig\TemplateWrapper;
@@ -80,6 +82,7 @@ use Matomo\Dependencies\Twig\TwigFunction;
 use Matomo\Dependencies\Twig\TwigTest;
 final class CoreExtension extends AbstractExtension
 {
+    public const ARRAY_LIKE_CLASSES = ['ArrayIterator', 'ArrayObject', 'CachingIterator', 'RecursiveArrayIterator', 'RecursiveCachingIterator', 'SplDoublyLinkedList', 'SplFixedArray', 'SplObjectStorage', 'SplQueue', 'SplStack', 'WeakMap'];
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
     private $timezone = null;
@@ -168,32 +171,32 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('json_encode', 'json_encode'),
             new TwigFilter('convert_encoding', [self::class, 'convertEncoding']),
             // string filters
-            new TwigFilter('title', [self::class, 'titleCase'], ['needs_charset' => true]),
-            new TwigFilter('capitalize', [self::class, 'capitalize'], ['needs_charset' => true]),
-            new TwigFilter('upper', [self::class, 'upper'], ['needs_charset' => true]),
-            new TwigFilter('lower', [self::class, 'lower'], ['needs_charset' => true]),
+            new TwigFilter('title', [self::class, 'titleCase'], ['needs_charset' => \true]),
+            new TwigFilter('capitalize', [self::class, 'capitalize'], ['needs_charset' => \true]),
+            new TwigFilter('upper', [self::class, 'upper'], ['needs_charset' => \true]),
+            new TwigFilter('lower', [self::class, 'lower'], ['needs_charset' => \true]),
             new TwigFilter('striptags', [self::class, 'striptags']),
             new TwigFilter('trim', [self::class, 'trim']),
             new TwigFilter('nl2br', [self::class, 'nl2br'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFilter('spaceless', [self::class, 'spaceless'], ['is_safe' => ['html']]),
             // array helpers
             new TwigFilter('join', [self::class, 'join']),
-            new TwigFilter('split', [self::class, 'split'], ['needs_charset' => true]),
-            new TwigFilter('sort', [self::class, 'sort'], ['needs_environment' => true]),
+            new TwigFilter('split', [self::class, 'split'], ['needs_charset' => \true]),
+            new TwigFilter('sort', [self::class, 'sort'], ['needs_environment' => \true]),
             new TwigFilter('merge', [self::class, 'merge']),
             new TwigFilter('batch', [self::class, 'batch']),
             new TwigFilter('column', [self::class, 'column']),
-            new TwigFilter('filter', [self::class, 'filter'], ['needs_environment' => true]),
-            new TwigFilter('map', [self::class, 'map'], ['needs_environment' => true]),
-            new TwigFilter('reduce', [self::class, 'reduce'], ['needs_environment' => true]),
-            new TwigFilter('find', [self::class, 'find'], ['needs_environment' => true]),
+            new TwigFilter('filter', [self::class, 'filter'], ['needs_environment' => \true]),
+            new TwigFilter('map', [self::class, 'map'], ['needs_environment' => \true]),
+            new TwigFilter('reduce', [self::class, 'reduce'], ['needs_environment' => \true]),
+            new TwigFilter('find', [self::class, 'find'], ['needs_environment' => \true]),
             // string/array filters
-            new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => true]),
-            new TwigFilter('shuffle', [self::class, 'shuffle'], ['needs_charset' => true]),
-            new TwigFilter('length', [self::class, 'length'], ['needs_charset' => true]),
-            new TwigFilter('slice', [self::class, 'slice'], ['needs_charset' => true]),
-            new TwigFilter('first', [self::class, 'first'], ['needs_charset' => true]),
-            new TwigFilter('last', [self::class, 'last'], ['needs_charset' => true]),
+            new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => \true]),
+            new TwigFilter('shuffle', [self::class, 'shuffle'], ['needs_charset' => \true]),
+            new TwigFilter('length', [self::class, 'length'], ['needs_charset' => \true]),
+            new TwigFilter('slice', [self::class, 'slice'], ['needs_charset' => \true]),
+            new TwigFilter('first', [self::class, 'first'], ['needs_charset' => \true]),
+            new TwigFilter('last', [self::class, 'last'], ['needs_charset' => \true]),
             // iteration and runtime
             new TwigFilter('default', [self::class, 'default'], ['node_class' => DefaultFilter::class]),
             new TwigFilter('keys', [self::class, 'keys']),
@@ -201,11 +204,11 @@ final class CoreExtension extends AbstractExtension
     }
     public function getFunctions() : array
     {
-        return [new TwigFunction('max', 'max'), new TwigFunction('min', 'min'), new TwigFunction('range', 'range'), new TwigFunction('constant', [self::class, 'constant']), new TwigFunction('cycle', [self::class, 'cycle']), new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]), new TwigFunction('date', [$this, 'convertDate']), new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]), new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']])];
+        return [new TwigFunction('max', 'max'), new TwigFunction('min', 'min'), new TwigFunction('range', 'range'), new TwigFunction('constant', [self::class, 'constant']), new TwigFunction('cycle', [self::class, 'cycle']), new TwigFunction('random', [self::class, 'random'], ['needs_charset' => \true]), new TwigFunction('date', [$this, 'convertDate']), new TwigFunction('include', [self::class, 'include'], ['needs_environment' => \true, 'needs_context' => \true, 'is_safe' => ['all']]), new TwigFunction('source', [self::class, 'source'], ['needs_environment' => \true, 'is_safe' => ['all']])];
     }
     public function getTests() : array
     {
-        return [new TwigTest('even', null, ['node_class' => EvenTest::class]), new TwigTest('odd', null, ['node_class' => OddTest::class]), new TwigTest('defined', null, ['node_class' => DefinedTest::class]), new TwigTest('same as', null, ['node_class' => SameasTest::class, 'one_mandatory_argument' => true]), new TwigTest('none', null, ['node_class' => NullTest::class]), new TwigTest('null', null, ['node_class' => NullTest::class]), new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true]), new TwigTest('constant', null, ['node_class' => ConstantTest::class]), new TwigTest('empty', [self::class, 'testEmpty']), new TwigTest('iterable', 'is_iterable'), new TwigTest('sequence', [self::class, 'testSequence']), new TwigTest('mapping', [self::class, 'testMapping'])];
+        return [new TwigTest('even', null, ['node_class' => EvenTest::class]), new TwigTest('odd', null, ['node_class' => OddTest::class]), new TwigTest('defined', null, ['node_class' => DefinedTest::class]), new TwigTest('same as', null, ['node_class' => SameasTest::class, 'one_mandatory_argument' => \true]), new TwigTest('none', null, ['node_class' => NullTest::class]), new TwigTest('null', null, ['node_class' => NullTest::class]), new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => \true]), new TwigTest('constant', null, ['node_class' => ConstantTest::class]), new TwigTest('empty', [self::class, 'testEmpty']), new TwigTest('iterable', 'is_iterable'), new TwigTest('sequence', [self::class, 'testSequence']), new TwigTest('mapping', [self::class, 'testMapping'])];
     }
     public function getNodeVisitors() : array
     {
@@ -328,7 +331,7 @@ final class CoreExtension extends AbstractExtension
      */
     public function modifyDate($date, $modifier)
     {
-        return $this->convertDate($date, false)->modify($modifier);
+        return $this->convertDate($date, \false)->modify($modifier);
     }
     /**
      * Returns a formatted string.
@@ -364,7 +367,7 @@ final class CoreExtension extends AbstractExtension
     public function convertDate($date = null, $timezone = null)
     {
         // determine the timezone
-        if (false !== $timezone) {
+        if (\false !== $timezone) {
             if (null === $timezone) {
                 $timezone = $this->getTimezone();
             } elseif (!$timezone instanceof \DateTimeZone) {
@@ -373,11 +376,11 @@ final class CoreExtension extends AbstractExtension
         }
         // immutable dates
         if ($date instanceof \DateTimeImmutable) {
-            return false !== $timezone ? $date->setTimezone($timezone) : $date;
+            return \false !== $timezone ? $date->setTimezone($timezone) : $date;
         }
         if ($date instanceof \DateTime) {
             $date = clone $date;
-            if (false !== $timezone) {
+            if (\false !== $timezone) {
                 $date->setTimezone($timezone);
             }
             return $date;
@@ -386,7 +389,7 @@ final class CoreExtension extends AbstractExtension
             if (null === $date) {
                 $date = 'now';
             }
-            return new \DateTime($date, false !== $timezone ? $timezone : $this->getTimezone());
+            return new \DateTime($date, \false !== $timezone ? $timezone : $this->getTimezone());
         }
         $asString = (string) $date;
         if (ctype_digit($asString) || !empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1))) {
@@ -394,7 +397,7 @@ final class CoreExtension extends AbstractExtension
         } else {
             $date = new \DateTime($date, $this->getTimezone());
         }
-        if (false !== $timezone) {
+        if (\false !== $timezone) {
             $date->setTimezone($timezone);
         }
         return $date;
@@ -512,7 +515,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function slice(string $charset, $item, $start, $length = null, $preserveKeys = false)
+    public static function slice(string $charset, $item, $start, $length = null, $preserveKeys = \false)
     {
         if ($item instanceof \Traversable) {
             while ($item instanceof \IteratorAggregate) {
@@ -543,7 +546,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function first(string $charset, $item)
     {
-        $elements = self::slice($charset, $item, 0, 1, false);
+        $elements = self::slice($charset, $item, 0, 1, \false);
         return \is_string($elements) ? $elements : current($elements);
     }
     /**
@@ -557,7 +560,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function last(string $charset, $item)
     {
-        $elements = self::slice($charset, $item, -1, 1, false);
+        $elements = self::slice($charset, $item, -1, 1, \false);
         return \is_string($elements) ? $elements : current($elements);
     }
     /**
@@ -585,7 +588,7 @@ final class CoreExtension extends AbstractExtension
         if (!is_iterable($value)) {
             $value = (array) $value;
         }
-        $value = self::toArray($value, false);
+        $value = self::toArray($value, \false);
         if (0 === \count($value)) {
             return '';
         }
@@ -696,7 +699,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function reverse(string $charset, $item, $preserveKeys = false)
+    public static function reverse(string $charset, $item, $preserveKeys = \false)
     {
         if ($item instanceof \Traversable) {
             return array_reverse(iterator_to_array($item), $preserveKeys);
@@ -740,7 +743,7 @@ final class CoreExtension extends AbstractExtension
             return $item;
         }
         if (is_iterable($item)) {
-            $item = self::toArray($item, false);
+            $item = self::toArray($item, \false);
             shuffle($item);
         }
         return $item;
@@ -782,28 +785,28 @@ final class CoreExtension extends AbstractExtension
             if (\is_string($value) || \is_int($value) || \is_float($value)) {
                 return '' === $value || str_contains($compare, (string) $value);
             }
-            return false;
+            return \false;
         }
         if (!is_iterable($compare)) {
-            return false;
+            return \false;
         }
         if (\is_object($value) || \is_resource($value)) {
             if (!\is_array($compare)) {
                 foreach ($compare as $item) {
                     if ($item === $value) {
-                        return true;
+                        return \true;
                     }
                 }
-                return false;
+                return \false;
             }
-            return \in_array($value, $compare, true);
+            return \in_array($value, $compare, \true);
         }
         foreach ($compare as $item) {
             if (0 === self::compare($value, $item)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Compares two values using a more strict version of the PHP non-strict comparison operator.
@@ -1052,7 +1055,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public static function toArray($seq, $preserveKeys = true)
+    public static function toArray($seq, $preserveKeys = \true)
     {
         if ($seq instanceof \Traversable) {
             return iterator_to_array($seq, $preserveKeys);
@@ -1085,7 +1088,7 @@ final class CoreExtension extends AbstractExtension
         if (\is_object($value) && method_exists($value, '__toString')) {
             return '' === (string) $value;
         }
-        return '' === $value || false === $value || null === $value || [] === $value;
+        return '' === $value || \false === $value || null === $value || [] === $value;
     }
     /**
      * Checks if a variable is a sequence.
@@ -1143,9 +1146,9 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) : string
+    public static function include(Environment $env, $context, $template, $variables = [], $withContext = \true, $ignoreMissing = \false, $sandboxed = \false) : string
     {
-        $alreadySandboxed = false;
+        $alreadySandboxed = \false;
         $sandbox = null;
         if ($withContext) {
             $variables = array_merge($context, $variables);
@@ -1183,7 +1186,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function source(Environment $env, $name, $ignoreMissing = false) : string
+    public static function source(Environment $env, $name, $ignoreMissing = \false) : string
     {
         $loader = $env->getLoader();
         try {
@@ -1234,7 +1237,7 @@ final class CoreExtension extends AbstractExtension
     {
         if (null !== $object) {
             if ('class' === $constant) {
-                return true;
+                return \true;
             }
             $constant = \get_class($object) . '::' . $constant;
         }
@@ -1249,7 +1252,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function batch($items, $size, $fill = null, $preserveKeys = true) : array
+    public static function batch($items, $size, $fill = null, $preserveKeys = \true) : array
     {
         if (!is_iterable($items)) {
             throw new RuntimeError(\sprintf('The "batch" filter expects a sequence/mapping or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
@@ -1283,20 +1286,28 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = 'any', $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
+    public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = 'any', $isDefinedTest = \false, $ignoreStrictCheck = \false, $sandboxed = \false, int $lineno = -1)
     {
+        $propertyNotAllowedError = null;
         // array
         if ('method' !== $type) {
             $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
+            if ($sandboxed && $object instanceof \ArrayAccess && !\in_array(get_class($object), self::ARRAY_LIKE_CLASSES, \true)) {
+                try {
+                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $arrayItem, $lineno, $source);
+                } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
+                    goto methodCheck;
+                }
+            }
             if ((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, (array) $object)) || $object instanceof \ArrayAccess && isset($object[$arrayItem])) {
                 if ($isDefinedTest) {
-                    return true;
+                    return \true;
                 }
                 return $object[$arrayItem];
             }
             if ('array' === $type || !\is_object($object)) {
                 if ($isDefinedTest) {
-                    return false;
+                    return \false;
                 }
                 if ($ignoreStrictCheck || !$env->isStrictVariables()) {
                     return;
@@ -1327,7 +1338,7 @@ final class CoreExtension extends AbstractExtension
         }
         if (!\is_object($object)) {
             if ($isDefinedTest) {
-                return false;
+                return \false;
             }
             if ($ignoreStrictCheck || !$env->isStrictVariables()) {
                 return;
@@ -1346,16 +1357,21 @@ final class CoreExtension extends AbstractExtension
         }
         // object property
         if ('method' !== $type) {
+            if ($sandboxed) {
+                try {
+                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
+                } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
+                    goto methodCheck;
+                }
+            }
             if (isset($object->{$item}) || \array_key_exists((string) $item, (array) $object)) {
                 if ($isDefinedTest) {
-                    return true;
-                }
-                if ($sandboxed) {
-                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
+                    return \true;
                 }
                 return $object->{$item};
             }
         }
+        methodCheck:
         static $cache = [];
         $class = \get_class($object);
         // object method
@@ -1397,28 +1413,41 @@ final class CoreExtension extends AbstractExtension
             }
             $cache[$class] = $classCache;
         }
-        $call = false;
+        $call = \false;
         if (isset($cache[$class][$item])) {
             $method = $cache[$class][$item];
         } elseif (isset($cache[$class][$lcItem = strtr($item, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')])) {
             $method = $cache[$class][$lcItem];
         } elseif (isset($cache[$class]['__call'])) {
             $method = $item;
-            $call = true;
+            $call = \true;
         } else {
             if ($isDefinedTest) {
-                return false;
+                return \false;
+            }
+            if ($propertyNotAllowedError) {
+                throw $propertyNotAllowedError;
             }
             if ($ignoreStrictCheck || !$env->isStrictVariables()) {
                 return;
             }
             throw new RuntimeError(\sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()"/"has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), $lineno, $source);
         }
-        if ($isDefinedTest) {
-            return true;
-        }
         if ($sandboxed) {
-            $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
+            try {
+                $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
+            } catch (SecurityNotAllowedMethodError $e) {
+                if ($isDefinedTest) {
+                    return \false;
+                }
+                if ($propertyNotAllowedError) {
+                    throw $propertyNotAllowedError;
+                }
+                throw $e;
+            }
+        }
+        if ($isDefinedTest) {
+            return \true;
         }
         // Some objects throw exceptions when they have __call, and the method we try
         // to call is not supported. If ignoreStrictCheck is true, we should return null.
@@ -1523,10 +1552,10 @@ final class CoreExtension extends AbstractExtension
         self::checkArrowInSandbox($env, $arrow, 'has some', 'operator');
         foreach ($array as $k => $v) {
             if ($arrow($v, $k)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @internal
@@ -1536,10 +1565,10 @@ final class CoreExtension extends AbstractExtension
         self::checkArrowInSandbox($env, $arrow, 'has every', 'operator');
         foreach ($array as $k => $v) {
             if (!$arrow($v, $k)) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * @internal

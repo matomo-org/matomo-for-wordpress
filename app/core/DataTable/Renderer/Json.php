@@ -37,7 +37,7 @@ class Json extends Renderer
     {
         if (is_array($table)) {
             $array = $table;
-            if (self::shouldWrapArrayBeforeRendering($array, $wrapSingleValues = true)) {
+            if (self::shouldWrapArrayBeforeRendering($array, $wrapSingleValues = \true)) {
                 $array = array($array);
             }
             foreach ($array as $key => $tab) {
@@ -59,13 +59,13 @@ class Json extends Renderer
         // decode all entities
         $callback = function (&$value, $key) {
             if (is_string($value)) {
-                $value = html_entity_decode($value, ENT_QUOTES, "UTF-8");
+                $value = html_entity_decode($value, \ENT_QUOTES, "UTF-8");
             }
         };
         array_walk_recursive($array, $callback);
         // silence "Warning: json_encode(): Invalid UTF-8 sequence in argument"
         $str = @json_encode($array);
-        if ($str === false && json_last_error() === JSON_ERROR_UTF8 && $this->canMakeArrayUtf8()) {
+        if ($str === \false && json_last_error() === \JSON_ERROR_UTF8 && $this->canMakeArrayUtf8()) {
             $array = $this->makeArrayUtf8($array);
             $str = json_encode($array);
         }

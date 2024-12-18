@@ -48,7 +48,7 @@ class Barcode39
      * @param boolean $EnableMOD43
      * @throws Exception
      */
-    public function __construct($filePath = "", $EnableMOD43 = false)
+    public function __construct($filePath = "", $EnableMOD43 = \false)
     {
         $this->MOD43 = (bool) $EnableMOD43;
         $this->Codes = [];
@@ -79,9 +79,9 @@ class Barcode39
     public function getSize($TextString, $Format = "")
     {
         $Angle = isset($Format["Angle"]) ? $Format["Angle"] : 0;
-        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
+        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : \false;
         $LegendOffset = isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
+        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : \false;
         $FontSize = isset($Format["FontSize"]) ? $Format["FontSize"] : 12;
         $Height = isset($Format["Height"]) ? $Format["Height"] : 30;
         $TextString = $this->encode39($TextString);
@@ -141,9 +141,9 @@ class Barcode39
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Height = isset($Format["Height"]) ? $Format["Height"] : 30;
         $Angle = isset($Format["Angle"]) ? $Format["Angle"] : 0;
-        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
+        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : \false;
         $LegendOffset = isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
+        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : \false;
         $AreaR = isset($Format["AreaR"]) ? $Format["AreaR"] : 255;
         $AreaG = isset($Format["AreaG"]) ? $Format["AreaG"] : 255;
         $AreaB = isset($Format["AreaB"]) ? $Format["AreaB"] : 255;

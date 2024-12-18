@@ -33,7 +33,7 @@ final class FromTokenParser extends AbstractTokenParser
             'import'
         );
         $targets = [];
-        while (true) {
+        while (\true) {
             $name = $stream->expect(
                 /* Token::NAME_TYPE */
                 5

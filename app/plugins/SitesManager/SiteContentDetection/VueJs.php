@@ -42,7 +42,7 @@ class VueJs extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteContent
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
         $view = new View("@SitesManager/_vueTabInstructions");
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->wasDetected = $detector->wasDetected(self::getId());
         $view->SiteWithoutDataVueFollowStepNote2Key = StaticContainer::get('SitesManager.SiteWithoutDataVueFollowStepNote2');
         $view->vue3Code = $this->getVueInitializeCode(3);

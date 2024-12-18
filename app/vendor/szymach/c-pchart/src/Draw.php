@@ -29,8 +29,8 @@ abstract class Draw extends \CpChart\BaseDraw
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
-        $NoFill = isset($Format["NoFill"]) ? $Format["NoFill"] : false;
-        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : false;
+        $NoFill = isset($Format["NoFill"]) ? $Format["NoFill"] : \false;
+        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : \false;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : $R;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : $G;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : $B;
@@ -54,12 +54,12 @@ abstract class Draw extends \CpChart\BaseDraw
         $RestoreShadow = $this->Shadow;
         if (!$NoFill) {
             if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-                $this->Shadow = false;
+                $this->Shadow = \false;
                 for ($i = 0; $i <= count($Points) - 1; $i = $i + 2) {
                     $Shadow[] = $Points[$i] + $this->ShadowX;
                     $Shadow[] = $Points[$i + 1] + $this->ShadowY;
                 }
-                $this->drawPolygon($Shadow, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa, "NoBorder" => true]);
+                $this->drawPolygon($Shadow, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa, "NoBorder" => \true]);
             }
             $FillColor = $this->allocateColor($this->Picture, $R, $G, $B, $Alpha);
             if (count($Points) >= 6) {
@@ -106,7 +106,7 @@ abstract class Draw extends \CpChart\BaseDraw
         if ($Y2 - $Y1 < $Radius) {
             $Radius = floor(($Y2 - $Y1) / 2);
         }
-        $Color = ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "NoBorder" => true];
+        $Color = ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "NoBorder" => \true];
         if ($Radius <= 0) {
             $this->drawRectangle($X1, $Y1, $X2, $Y2, $Color);
             return 0;
@@ -183,10 +183,10 @@ abstract class Draw extends \CpChart\BaseDraw
         }
         $RestoreShadow = $this->Shadow;
         if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
             $this->drawRoundedFilledRectangle($X1 + $this->ShadowX, $Y1 + $this->ShadowY, $X2 + $this->ShadowX, $Y2 + $this->ShadowY, $Radius, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa]);
         }
-        $Color = ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "NoBorder" => true];
+        $Color = ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "NoBorder" => \true];
         if ($Radius <= 0) {
             $this->drawFilledRectangle($X1, $Y1, $X2, $Y2, $Color);
             return 0;
@@ -274,7 +274,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : null;
-        $NoAngle = isset($Format["NoAngle"]) ? $Format["NoAngle"] : false;
+        $NoAngle = isset($Format["NoAngle"]) ? $Format["NoAngle"] : \false;
         if ($X1 > $X2) {
             list($X1, $X2) = [$X2, $X1];
         }
@@ -319,12 +319,12 @@ abstract class Draw extends \CpChart\BaseDraw
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : null;
         $NoAngle = isset($Format["NoAngle"]) ? $Format["NoAngle"] : null;
-        $Dash = isset($Format["Dash"]) ? $Format["Dash"] : false;
+        $Dash = isset($Format["Dash"]) ? $Format["Dash"] : \false;
         $DashStep = isset($Format["DashStep"]) ? $Format["DashStep"] : 4;
         $DashR = isset($Format["DashR"]) ? $Format["DashR"] : 0;
         $DashG = isset($Format["DashG"]) ? $Format["DashG"] : 0;
         $DashB = isset($Format["DashB"]) ? $Format["DashB"] : 0;
-        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : false;
+        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : \false;
         if ($Surrounding != null) {
             $BorderR = $R + $Surrounding;
             $BorderG = $G + $Surrounding;
@@ -338,7 +338,7 @@ abstract class Draw extends \CpChart\BaseDraw
         }
         $RestoreShadow = $this->Shadow;
         if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
             $this->drawFilledRectangle($X1 + $this->ShadowX, $Y1 + $this->ShadowY, $X2 + $this->ShadowX, $Y2 + $this->ShadowY, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa, "Ticks" => $Ticks, "NoAngle" => $NoAngle]);
         }
         $Color = $this->allocateColor($this->Picture, $R, $G, $B, $Alpha);
@@ -435,9 +435,9 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Force = isset($Format["Force"]) ? $Format["Force"] : 30;
         $Forces = isset($Format["Forces"]) ? $Format["Forces"] : null;
-        $ShowC = isset($Format["ShowControl"]) ? $Format["ShowControl"] : false;
+        $ShowC = isset($Format["ShowControl"]) ? $Format["ShowControl"] : \false;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : null;
-        $PathOnly = isset($Format["PathOnly"]) ? $Format["PathOnly"] : false;
+        $PathOnly = isset($Format["PathOnly"]) ? $Format["PathOnly"] : \false;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
         $Cpt = null;
         $Mode = null;
@@ -502,16 +502,16 @@ abstract class Draw extends \CpChart\BaseDraw
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
-        $ShowC = isset($Format["ShowControl"]) ? $Format["ShowControl"] : false;
+        $ShowC = isset($Format["ShowControl"]) ? $Format["ShowControl"] : \false;
         $Segments = isset($Format["Segments"]) ? $Format["Segments"] : null;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : null;
-        $NoDraw = isset($Format["NoDraw"]) ? $Format["NoDraw"] : false;
-        $PathOnly = isset($Format["PathOnly"]) ? $Format["PathOnly"] : false;
+        $NoDraw = isset($Format["NoDraw"]) ? $Format["NoDraw"] : \false;
+        $PathOnly = isset($Format["PathOnly"]) ? $Format["PathOnly"] : \false;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
-        $DrawArrow = isset($Format["DrawArrow"]) ? $Format["DrawArrow"] : false;
+        $DrawArrow = isset($Format["DrawArrow"]) ? $Format["DrawArrow"] : \false;
         $ArrowSize = isset($Format["ArrowSize"]) ? $Format["ArrowSize"] : 10;
         $ArrowRatio = isset($Format["ArrowRatio"]) ? $Format["ArrowRatio"] : 0.5;
-        $ArrowTwoHeads = isset($Format["ArrowTwoHeads"]) ? $Format["ArrowTwoHeads"] : false;
+        $ArrowTwoHeads = isset($Format["ArrowTwoHeads"]) ? $Format["ArrowTwoHeads"] : \false;
         if ($Segments == null) {
             $Length = $this->getLength($X1, $Y1, $X2, $Y2);
             $Precision = $Length * 125 / 1000;
@@ -625,7 +625,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Mode = isset($Format["Mode"]) ? $Format["Mode"] : 1;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
         $Threshold = isset($Format["Threshold"]) ? $Format["Threshold"] : null;
-        if ($this->Antialias == false && $Ticks == null) {
+        if ($this->Antialias == \false && $Ticks == null) {
             if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
                 $ShadowColor = $this->allocateColor($this->Picture, $this->ShadowR, $this->ShadowG, $this->ShadowB, $this->Shadowa);
                 imageline($this->Picture, intval($X1 + $this->ShadowX), intval($Y1 + $this->ShadowY), intval($X2 + $this->ShadowX), intval($Y2 + $this->ShadowY), $ShadowColor);
@@ -752,7 +752,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Yc = floor($Yc);
         $RestoreShadow = $this->Shadow;
         if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
             $this->drawCircle($Xc + $this->ShadowX, $Yc + $this->ShadowY, $Height, $Width, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa, "Ticks" => $Ticks]);
         }
         if ($Width == 0) {
@@ -833,7 +833,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Radius = abs($Radius);
         $RestoreShadow = $this->Shadow;
         if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
             $this->drawFilledCircle($X + $this->ShadowX, $Y + $this->ShadowY, $Radius, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa, "Ticks" => $Ticks]);
         }
         $this->Mask = [];
@@ -842,8 +842,8 @@ abstract class Draw extends \CpChart\BaseDraw
             $Slice = sqrt($Radius * $Radius - ($Radius - $i) * ($Radius - $i));
             $XPos = (int) floor($Slice);
             $YPos = (int) ($Y + $i - $Radius);
-            $this->Mask[$X - $XPos][$YPos] = true;
-            $this->Mask[$X + $XPos][$YPos] = true;
+            $this->Mask[$X - $XPos][$YPos] = \true;
+            $this->Mask[$X + $XPos][$YPos] = \true;
             imageline($this->Picture, $X - $XPos, $YPos, $X + $XPos, $YPos, $Color);
         }
         if ($this->Antialias) {
@@ -873,11 +873,11 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : $this->FontColorA;
         $FontName = isset($Format["FontName"]) ? $this->loadFont($Format["FontName"], 'fonts') : $this->FontName;
         $FontSize = isset($Format["FontSize"]) ? $Format["FontSize"] : $this->FontSize;
-        $ShowOrigine = isset($Format["ShowOrigine"]) ? $Format["ShowOrigine"] : false;
+        $ShowOrigine = isset($Format["ShowOrigine"]) ? $Format["ShowOrigine"] : \false;
         $TOffset = isset($Format["TOffset"]) ? $Format["TOffset"] : 2;
-        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : false;
+        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : \false;
         $BorderOffset = isset($Format["BorderOffset"]) ? $Format["BorderOffset"] : 6;
-        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : false;
+        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : \false;
         $RoundedRadius = isset($Format["RoundedRadius"]) ? $Format["RoundedRadius"] : 6;
         $BoxR = isset($Format["BoxR"]) ? $Format["BoxR"] : 255;
         $BoxG = isset($Format["BoxG"]) ? $Format["BoxG"] : 255;
@@ -888,10 +888,10 @@ abstract class Draw extends \CpChart\BaseDraw
         $BoxBorderG = isset($Format["BoxG"]) ? $Format["BoxG"] : 0;
         $BoxBorderB = isset($Format["BoxB"]) ? $Format["BoxB"] : 0;
         $BoxBorderAlpha = isset($Format["BoxAlpha"]) ? $Format["BoxAlpha"] : 50;
-        $NoShadow = isset($Format["NoShadow"]) ? $Format["NoShadow"] : false;
+        $NoShadow = isset($Format["NoShadow"]) ? $Format["NoShadow"] : \false;
         $Shadow = $this->Shadow;
         if ($NoShadow) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
         }
         if ($BoxSurrounding != "") {
             $BoxBorderR = $BoxR - $BoxSurrounding;
@@ -970,7 +970,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Levels = isset($Format["Levels"]) ? $Format["Levels"] : null;
         $Shadow = $this->Shadow;
-        $this->Shadow = false;
+        $this->Shadow = \false;
         if ($StartR == $EndR && $StartG == $EndG && $StartB == $EndB) {
             $this->drawFilledRectangle($X1, $Y1, $X2, $Y2, ["R" => $StartR, "G" => $StartG, "B" => $StartB, "Alpha" => $Alpha]);
             return 0;
@@ -1219,7 +1219,7 @@ abstract class Draw extends \CpChart\BaseDraw
             }
             $RestoreShadow = $this->Shadow;
             if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-                $this->Shadow = false;
+                $this->Shadow = \false;
                 if ($PicType == 3) {
                     $this->drawFilledRectangle($X + $this->ShadowX, $Y + $this->ShadowY, $X + $Width + $this->ShadowX, $Y + $Height + $this->ShadowY, ["R" => $this->ShadowR, "G" => $this->ShadowG, "B" => $this->ShadowB, "Alpha" => $this->Shadowa]);
                 } else {
@@ -1260,14 +1260,14 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Size = isset($Format["Size"]) ? $Format["Size"] : 10;
         $Ratio = isset($Format["Ratio"]) ? $Format["Ratio"] : 0.5;
-        $TwoHeads = isset($Format["TwoHeads"]) ? $Format["TwoHeads"] : false;
-        $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : false;
+        $TwoHeads = isset($Format["TwoHeads"]) ? $Format["TwoHeads"] : \false;
+        $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : \false;
         /* Calculate the line angle */
         $Angle = $this->getAngle($X1, $Y1, $X2, $Y2);
         /* Override Shadow support, this will be managed internally */
         $RestoreShadow = $this->Shadow;
         if ($this->Shadow && $this->ShadowX != 0 && $this->ShadowY != 0) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
             $this->drawArrow($X1 + $this->ShadowX, $Y1 + $this->ShadowY, $X2 + $this->ShadowX, $Y2 + $this->ShadowY, ["FillR" => $this->ShadowR, "FillG" => $this->ShadowG, "FillB" => $this->ShadowB, "Alpha" => $this->Shadowa, "Size" => $Size, "Ratio" => $Ratio, "TwoHeads" => $TwoHeads, "Ticks" => $Ticks]);
         }
         /* Draw the 1st Head */
@@ -1349,7 +1349,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Angle = isset($Format["Angle"]) ? (int) $Format["Angle"] : 315;
         $Size = isset($Format["Size"]) ? $Format["Size"] : 10;
         $Position = isset($Format["Position"]) ? $Format["Position"] : POSITION_TOP;
-        $RoundPos = isset($Format["RoundPos"]) ? $Format["RoundPos"] : false;
+        $RoundPos = isset($Format["RoundPos"]) ? $Format["RoundPos"] : \false;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : null;
         $Angle = $Angle % 360;
         $X2 = sin(($Angle + 180) * PI / 180) * $Length + $X1;
@@ -1397,7 +1397,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Width = isset($Format["Width"]) ? $Format["Width"] : 200;
         $Height = isset($Format["Height"]) ? $Format["Height"] : 20;
         $Orientation = isset($Format["Orientation"]) ? $Format["Orientation"] : ORIENTATION_HORIZONTAL;
-        $ShowLabel = isset($Format["ShowLabel"]) ? $Format["ShowLabel"] : false;
+        $ShowLabel = isset($Format["ShowLabel"]) ? $Format["ShowLabel"] : \false;
         $LabelPos = isset($Format["LabelPos"]) ? $Format["LabelPos"] : LABEL_POS_INSIDE;
         $Margin = isset($Format["Margin"]) ? $Format["Margin"] : 10;
         $R = isset($Format["R"]) ? $Format["R"] : 130;
@@ -1417,7 +1417,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $BoxBackB = isset($Format["BoxBackB"]) ? $Format["BoxBackB"] : 255;
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
         $BoxSurrounding = isset($Format["BoxSurrounding"]) ? $Format["BoxSurrounding"] : null;
-        $NoAngle = isset($Format["NoAngle"]) ? $Format["NoAngle"] : false;
+        $NoAngle = isset($Format["NoAngle"]) ? $Format["NoAngle"] : \false;
         if ($RFade != -1 && $GFade != -1 && $BFade != -1) {
             $RFade = ($RFade - $R) / 100 * $Percent + $R;
             $GFade = ($GFade - $G) / 100 * $Percent + $G;
@@ -1437,7 +1437,7 @@ abstract class Draw extends \CpChart\BaseDraw
             $InnerHeight = ($Height - 2) / 100 * $Percent;
             $this->drawFilledRectangle($X, $Y, $X + $Width, $Y - $Height, ["R" => $BoxBackR, "G" => $BoxBackG, "B" => $BoxBackB, "BorderR" => $BoxBorderR, "BorderG" => $BoxBorderG, "BorderB" => $BoxBorderB, "NoAngle" => $NoAngle]);
             $RestoreShadow = $this->Shadow;
-            $this->Shadow = false;
+            $this->Shadow = \false;
             if ($RFade != -1 && $GFade != -1 && $BFade != -1) {
                 $GradientOptions = ["StartR" => $RFade, "StartG" => $GFade, "StartB" => $BFade, "EndR" => $R, "EndG" => $G, "EndB" => $B];
                 $this->drawGradientArea($X + 1, $Y - 1, $X + $Width - 1, $Y - $InnerHeight, DIRECTION_VERTICAL, $GradientOptions);
@@ -1468,7 +1468,7 @@ abstract class Draw extends \CpChart\BaseDraw
             }
             $this->drawFilledRectangle($X, $Y, $X + $Width, $Y + $Height, ["R" => $BoxBackR, "G" => $BoxBackG, "B" => $BoxBackB, "BorderR" => $BoxBorderR, "BorderG" => $BoxBorderG, "BorderB" => $BoxBorderB, "NoAngle" => $NoAngle]);
             $RestoreShadow = $this->Shadow;
-            $this->Shadow = false;
+            $this->Shadow = \false;
             if ($RFade != -1 && $GFade != -1 && $BFade != -1) {
                 $GradientOptions = ["StartR" => $R, "StartG" => $G, "StartB" => $B, "EndR" => $RFade, "EndG" => $GFade, "EndB" => $BFade];
                 $this->drawGradientArea($X + 1, $Y + 1, $X + $InnerWidth, $Y + $Height - 1, DIRECTION_HORIZONTAL, $GradientOptions);
@@ -1530,7 +1530,7 @@ abstract class Draw extends \CpChart\BaseDraw
         }
         $Data = $this->DataSet->getData();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"] && isset($Serie["Picture"])) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"] && isset($Serie["Picture"])) {
                 list($PicWidth, $PicHeight) = $this->getPicInfo($Serie["Picture"]);
                 if ($IconAreaWidth < $PicWidth) {
                     $IconAreaWidth = $PicWidth;
@@ -1551,7 +1551,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $vY = $Y;
         $vX = $X;
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 if ($Mode == LEGEND_VERTICAL) {
                     $BoxArray = $this->getTextBox($vX + $IconAreaWidth + 4, $vY + $IconAreaHeight / 2, $FontName, $FontSize, 0, $Serie["Description"]);
                     if ($Boundaries["T"] > $BoxArray[2]["Y"] + $IconAreaHeight / 2) {
@@ -1597,9 +1597,9 @@ abstract class Draw extends \CpChart\BaseDraw
             $this->drawFilledRectangle($Boundaries["L"] - $Margin, $Boundaries["T"] - $Margin, $Boundaries["R"] + $Margin, $Boundaries["B"] + $Margin, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB]);
         }
         $RestoreShadow = $this->Shadow;
-        $this->Shadow = false;
+        $this->Shadow = \false;
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -1658,11 +1658,11 @@ abstract class Draw extends \CpChart\BaseDraw
     {
         $FloatingOffset = 0;
         $Pos = isset($Format["Pos"]) ? $Format["Pos"] : SCALE_POS_LEFTRIGHT;
-        $Floating = isset($Format["Floating"]) ? $Format["Floating"] : false;
+        $Floating = isset($Format["Floating"]) ? $Format["Floating"] : \false;
         $Mode = isset($Format["Mode"]) ? $Format["Mode"] : SCALE_MODE_FLOATING;
-        $RemoveXAxis = isset($Format["RemoveXAxis"]) ? $Format["RemoveXAxis"] : false;
-        $RemoveYAxis = isset($Format["RemoveYAxis"]) ? $Format["RemoveYAxis"] : false;
-        $RemoveYAxiValues = isset($Format["RemoveYAxisValues"]) ? $Format["RemoveYAxisValues"] : false;
+        $RemoveXAxis = isset($Format["RemoveXAxis"]) ? $Format["RemoveXAxis"] : \false;
+        $RemoveYAxis = isset($Format["RemoveYAxis"]) ? $Format["RemoveYAxis"] : \false;
+        $RemoveYAxiValues = isset($Format["RemoveYAxisValues"]) ? $Format["RemoveYAxisValues"] : \false;
         $MinDivHeight = isset($Format["MinDivHeight"]) ? $Format["MinDivHeight"] : 20;
         $Factors = isset($Format["Factors"]) ? $Format["Factors"] : [1, 2, 5];
         $ManualScale = isset($Format["ManualScale"]) ? $Format["ManualScale"] : ["0" => ["Min" => -100, "Max" => 100]];
@@ -1671,7 +1671,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $ScaleSpacing = isset($Format["ScaleSpacing"]) ? $Format["ScaleSpacing"] : 15;
         $InnerTickWidth = isset($Format["InnerTickWidth"]) ? $Format["InnerTickWidth"] : 2;
         $OuterTickWidth = isset($Format["OuterTickWidth"]) ? $Format["OuterTickWidth"] : 2;
-        $DrawXLines = isset($Format["DrawXLines"]) ? $Format["DrawXLines"] : true;
+        $DrawXLines = isset($Format["DrawXLines"]) ? $Format["DrawXLines"] : \true;
         $DrawYLines = isset($Format["DrawYLines"]) ? $Format["DrawYLines"] : ALL;
         $GridTicks = isset($Format["GridTicks"]) ? $Format["GridTicks"] : 4;
         $GridR = isset($Format["GridR"]) ? $Format["GridR"] : 255;
@@ -1686,18 +1686,18 @@ abstract class Draw extends \CpChart\BaseDraw
         $TickGo = isset($Format["TickG"]) ? $Format["TickG"] : 0;
         $TickBo = isset($Format["TickB"]) ? $Format["TickB"] : 0;
         $TickAlpha = isset($Format["TickAlpha"]) ? $Format["TickAlpha"] : 100;
-        $DrawSubTicks = isset($Format["DrawSubTicks"]) ? $Format["DrawSubTicks"] : false;
+        $DrawSubTicks = isset($Format["DrawSubTicks"]) ? $Format["DrawSubTicks"] : \false;
         $InnerSubTickWidth = isset($Format["InnerSubTickWidth"]) ? $Format["InnerSubTickWidth"] : 0;
         $OuterSubTickWidth = isset($Format["OuterSubTickWidth"]) ? $Format["OuterSubTickWidth"] : 2;
         $SubTickR = isset($Format["SubTickR"]) ? $Format["SubTickR"] : 255;
         $SubTickG = isset($Format["SubTickG"]) ? $Format["SubTickG"] : 0;
         $SubTickB = isset($Format["SubTickB"]) ? $Format["SubTickB"] : 0;
         $SubTickAlpha = isset($Format["SubTickAlpha"]) ? $Format["SubTickAlpha"] : 100;
-        $AutoAxisLabels = isset($Format["AutoAxisLabels"]) ? $Format["AutoAxisLabels"] : true;
+        $AutoAxisLabels = isset($Format["AutoAxisLabels"]) ? $Format["AutoAxisLabels"] : \true;
         $XReleasePercent = isset($Format["XReleasePercent"]) ? $Format["XReleasePercent"] : 1;
-        $DrawArrows = isset($Format["DrawArrows"]) ? $Format["DrawArrows"] : false;
+        $DrawArrows = isset($Format["DrawArrows"]) ? $Format["DrawArrows"] : \false;
         $ArrowSize = isset($Format["ArrowSize"]) ? $Format["ArrowSize"] : 8;
-        $CycleBackground = isset($Format["CycleBackground"]) ? $Format["CycleBackground"] : false;
+        $CycleBackground = isset($Format["CycleBackground"]) ? $Format["CycleBackground"] : \false;
         $BackgroundR1 = isset($Format["BackgroundR1"]) ? $Format["BackgroundR1"] : 255;
         $BackgroundG1 = isset($Format["BackgroundG1"]) ? $Format["BackgroundG1"] : 255;
         $BackgroundB1 = isset($Format["BackgroundB1"]) ? $Format["BackgroundB1"] : 255;
@@ -1709,7 +1709,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $LabelingMethod = isset($Format["LabelingMethod"]) ? $Format["LabelingMethod"] : LABELING_ALL;
         $LabelSkip = isset($Format["LabelSkip"]) ? $Format["LabelSkip"] : 0;
         $LabelRotation = isset($Format["LabelRotation"]) ? $Format["LabelRotation"] : 0;
-        $RemoveSkippedAxis = isset($Format["RemoveSkippedAxis"]) ? $Format["RemoveSkippedAxis"] : false;
+        $RemoveSkippedAxis = isset($Format["RemoveSkippedAxis"]) ? $Format["RemoveSkippedAxis"] : \false;
         $SkippedAxisTicks = isset($Format["SkippedAxisTicks"]) ? $Format["SkippedAxisTicks"] : $GridTicks + 2;
         $SkippedAxisR = isset($Format["SkippedAxisR"]) ? $Format["SkippedAxisR"] : $GridR;
         $SkippedAxisG = isset($Format["SkippedAxisG"]) ? $Format["SkippedAxisG"] : $GridG;
@@ -1723,10 +1723,10 @@ abstract class Draw extends \CpChart\BaseDraw
         $SkippedOuterTickWidth = isset($Format["SkippedOuterTickWidth"]) ? $Format["SkippedOuterTickWidth"] : 2;
         /* Floating scale require X & Y margins to be set manually */
         if ($Floating && ($XMargin == AUTO || $YMargin == 0)) {
-            $Floating = false;
+            $Floating = \false;
         }
         /* Skip a NOTICE event in case of an empty array */
-        if ($DrawYLines == NONE || $DrawYLines == false) {
+        if ($DrawYLines == NONE || $DrawYLines == \false) {
             $DrawYLines = ["zarma" => "31"];
         }
         /* Define the color for the skipped elements */
@@ -1746,10 +1746,10 @@ abstract class Draw extends \CpChart\BaseDraw
             }
         }
         /* Build the scale settings */
-        $GotXAxis = false;
+        $GotXAxis = \false;
         foreach ($Data["Axis"] as $AxisID => $AxisParameter) {
             if ($AxisParameter["Identity"] == AXIS_X) {
-                $GotXAxis = true;
+                $GotXAxis = \true;
             }
             if ($Pos == SCALE_POS_LEFTRIGHT && $AxisParameter["Identity"] == AXIS_Y) {
                 $Height = $this->GraphAreaY2 - $this->GraphAreaY1 - $YMargin * 2;
@@ -1833,7 +1833,7 @@ abstract class Draw extends \CpChart\BaseDraw
             }
         }
         /* Still no X axis */
-        if ($GotXAxis == false) {
+        if ($GotXAxis == \false) {
             if ($Abscissa != null) {
                 $Points = count($Data["Series"][$Abscissa]["Data"]);
                 $AxisName = null;
@@ -1975,16 +1975,16 @@ abstract class Draw extends \CpChart\BaseDraw
                                 }
                             }
                             $ID++;
-                            $Skipped = true;
+                            $Skipped = \true;
                             if ($this->isValidLabel($Value, $LastValue, $LabelingMethod, $ID, $LabelSkip) && !$RemoveXAxis) {
                                 $Bounds = $this->drawText($XPos, $YPos + $OuterTickWidth + $YLabelOffset, $Value, ["Angle" => $LabelRotation, "Align" => $LabelAlign]);
                                 $TxtBottom = $YPos + $OuterTickWidth + 2 + ($Bounds[0]["Y"] - $Bounds[2]["Y"]);
                                 $MaxBottom = max($MaxBottom, $TxtBottom);
                                 $LastValue = $Value;
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($RemoveXAxis) {
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($Skipped) {
                                 if ($DrawXLines && !$RemoveSkippedAxis) {
@@ -2061,16 +2061,16 @@ abstract class Draw extends \CpChart\BaseDraw
                                 }
                             }
                             $ID++;
-                            $Skipped = true;
+                            $Skipped = \true;
                             if ($this->isValidLabel($Value, $LastValue, $LabelingMethod, $ID, $LabelSkip) && !$RemoveXAxis) {
                                 $Bounds = $this->drawText($XPos, $YPos - $OuterTickWidth - $YLabelOffset, $Value, ["Angle" => $LabelRotation, "Align" => $LabelAlign]);
                                 $TxtBox = $YPos - $OuterTickWidth - 2 - ($Bounds[0]["Y"] - $Bounds[2]["Y"]);
                                 $MinTop = min($MinTop, $TxtBox);
                                 $LastValue = $Value;
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($RemoveXAxis) {
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($Skipped) {
                                 if ($DrawXLines && !$RemoveSkippedAxis) {
@@ -2149,16 +2149,16 @@ abstract class Draw extends \CpChart\BaseDraw
                                 }
                             }
                             $ID++;
-                            $Skipped = true;
+                            $Skipped = \true;
                             if ($this->isValidLabel($Value, $LastValue, $LabelingMethod, $ID, $LabelSkip) && !$RemoveXAxis) {
                                 $Bounds = $this->drawText($XPos - $OuterTickWidth + $XLabelOffset, $YPos, $Value, ["Angle" => $LabelRotation, "Align" => $LabelAlign]);
                                 $TxtBox = $XPos - $OuterTickWidth - 2 - ($Bounds[1]["X"] - $Bounds[0]["X"]);
                                 $MinLeft = min($MinLeft, $TxtBox);
                                 $LastValue = $Value;
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($RemoveXAxis) {
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($Skipped) {
                                 if ($DrawXLines && !$RemoveSkippedAxis) {
@@ -2235,16 +2235,16 @@ abstract class Draw extends \CpChart\BaseDraw
                                 }
                             }
                             $ID++;
-                            $Skipped = true;
+                            $Skipped = \true;
                             if ($this->isValidLabel($Value, $LastValue, $LabelingMethod, $ID, $LabelSkip) && !$RemoveXAxis) {
                                 $Bounds = $this->drawText($XPos + $OuterTickWidth + $XLabelOffset, $YPos, $Value, ["Angle" => $LabelRotation, "Align" => $LabelAlign]);
                                 $TxtBox = $XPos + $OuterTickWidth + 2 + ($Bounds[1]["X"] - $Bounds[0]["X"]);
                                 $MaxRight = max($MaxRight, $TxtBox);
                                 $LastValue = $Value;
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($RemoveXAxis) {
-                                $Skipped = false;
+                                $Skipped = \false;
                             }
                             if ($Skipped) {
                                 if ($DrawXLines && !$RemoveSkippedAxis) {
@@ -2490,9 +2490,9 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 50;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : 6;
-        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : false;
+        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : \false;
         $WideFactor = isset($Format["WideFactor"]) ? $Format["WideFactor"] : 5;
-        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : false;
+        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : \false;
         $Caption = isset($Format["Caption"]) ? $Format["Caption"] : null;
         $CaptionAlign = isset($Format["CaptionAlign"]) ? $Format["CaptionAlign"] : CAPTION_LEFT_TOP;
         $CaptionOffset = isset($Format["CaptionOffset"]) ? $Format["CaptionOffset"] : 5;
@@ -2500,10 +2500,10 @@ abstract class Draw extends \CpChart\BaseDraw
         $CaptionG = isset($Format["CaptionG"]) ? $Format["CaptionG"] : 255;
         $CaptionB = isset($Format["CaptionB"]) ? $Format["CaptionB"] : 255;
         $CaptionAlpha = isset($Format["CaptionAlpha"]) ? $Format["CaptionAlpha"] : 100;
-        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : true;
-        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : false;
+        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : \true;
+        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : \false;
         $BorderOffset = isset($Format["BorderOffset"]) ? $Format["BorderOffset"] : 3;
-        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : true;
+        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : \true;
         $RoundedRadius = isset($Format["RoundedRadius"]) ? $Format["RoundedRadius"] : 3;
         $BoxR = isset($Format["BoxR"]) ? $Format["BoxR"] : 0;
         $BoxG = isset($Format["BoxG"]) ? $Format["BoxG"] : 0;
@@ -2514,7 +2514,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $BoxBorderG = isset($Format["BoxBorderG"]) ? $Format["BoxBorderG"] : 255;
         $BoxBorderB = isset($Format["BoxBorderB"]) ? $Format["BoxBorderB"] : 255;
         $BoxBorderAlpha = isset($Format["BoxBorderAlpha"]) ? $Format["BoxBorderAlpha"] : 100;
-        $ValueIsLabel = isset($Format["ValueIsLabel"]) ? $Format["ValueIsLabel"] : false;
+        $ValueIsLabel = isset($Format["ValueIsLabel"]) ? $Format["ValueIsLabel"] : \false;
         $Data = $this->DataSet->getData();
         $AbscissaMargin = $this->getAbscissaMargin($Data);
         $XScale = $this->scaleGetXSettings();
@@ -2525,7 +2525,7 @@ abstract class Draw extends \CpChart\BaseDraw
             return 0;
         }
         if ($ValueIsLabel) {
-            $Format["ValueIsLabel"] = false;
+            $Format["ValueIsLabel"] = \false;
             foreach ($Data["Series"][$Data["Abscissa"]]["Data"] as $Key => $SerieValue) {
                 if ($SerieValue == $Value) {
                     $this->drawXThreshold($Key, $Format);
@@ -2601,7 +2601,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 20;
-        $Border = isset($Format["Border"]) ? $Format["Border"] : true;
+        $Border = isset($Format["Border"]) ? $Format["Border"] : \true;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : $R;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : $G;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : $B;
@@ -2613,10 +2613,10 @@ abstract class Draw extends \CpChart\BaseDraw
         $NameG = isset($Format["NameG"]) ? $Format["NameG"] : 255;
         $NameB = isset($Format["NameB"]) ? $Format["NameB"] : 255;
         $NameAlpha = isset($Format["NameAlpha"]) ? $Format["NameAlpha"] : 100;
-        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : true;
+        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : \true;
         $RestoreShadow = $this->Shadow;
         if ($DisableShadowOnArea && $this->Shadow) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
         }
         if ($BorderAlpha > 100) {
             $BorderAlpha = 100;
@@ -2660,7 +2660,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 $this->Shadow = $RestoreShadow;
                 $this->drawText($XPos, $YPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => $NameAngle, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 }
             }
             $this->Shadow = $RestoreShadow;
@@ -2694,7 +2694,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 $this->Shadow = $RestoreShadow;
                 $this->drawText($YPos, $XPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => 0, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 }
             }
             $this->Shadow = $RestoreShadow;
@@ -2716,9 +2716,9 @@ abstract class Draw extends \CpChart\BaseDraw
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 50;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : 6;
-        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : false;
+        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : \false;
         $WideFactor = isset($Format["WideFactor"]) ? $Format["WideFactor"] : 5;
-        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : false;
+        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : \false;
         $Caption = isset($Format["Caption"]) ? $Format["Caption"] : null;
         $CaptionAlign = isset($Format["CaptionAlign"]) ? $Format["CaptionAlign"] : CAPTION_LEFT_TOP;
         $CaptionOffset = isset($Format["CaptionOffset"]) ? $Format["CaptionOffset"] : 10;
@@ -2726,10 +2726,10 @@ abstract class Draw extends \CpChart\BaseDraw
         $CaptionG = isset($Format["CaptionG"]) ? $Format["CaptionG"] : 255;
         $CaptionB = isset($Format["CaptionB"]) ? $Format["CaptionB"] : 255;
         $CaptionAlpha = isset($Format["CaptionAlpha"]) ? $Format["CaptionAlpha"] : 100;
-        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : true;
-        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : false;
+        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : \true;
+        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : \false;
         $BorderOffset = isset($Format["BorderOffset"]) ? $Format["BorderOffset"] : 5;
-        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : true;
+        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : \true;
         $RoundedRadius = isset($Format["RoundedRadius"]) ? $Format["RoundedRadius"] : 3;
         $BoxR = isset($Format["BoxR"]) ? $Format["BoxR"] : 0;
         $BoxG = isset($Format["BoxG"]) ? $Format["BoxG"] : 0;
@@ -2740,7 +2740,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $BoxBorderG = isset($Format["BoxBorderG"]) ? $Format["BoxBorderG"] : 255;
         $BoxBorderB = isset($Format["BoxBorderB"]) ? $Format["BoxBorderB"] : 255;
         $BoxBorderAlpha = isset($Format["BoxBorderAlpha"]) ? $Format["BoxBorderAlpha"] : 100;
-        $NoMargin = isset($Format["NoMargin"]) ? $Format["NoMargin"] : false;
+        $NoMargin = isset($Format["NoMargin"]) ? $Format["NoMargin"] : \false;
         if (is_array($Value)) {
             foreach ($Value as $Key => $ID) {
                 $this->drawThreshold($ID, $Format);
@@ -2821,7 +2821,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 20;
-        $Border = isset($Format["Border"]) ? $Format["Border"] : true;
+        $Border = isset($Format["Border"]) ? $Format["Border"] : \true;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : $R;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : $G;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : $B;
@@ -2833,14 +2833,14 @@ abstract class Draw extends \CpChart\BaseDraw
         $NameG = isset($Format["NameG"]) ? $Format["NameG"] : 255;
         $NameB = isset($Format["NameB"]) ? $Format["NameB"] : 255;
         $NameAlpha = isset($Format["NameAlpha"]) ? $Format["NameAlpha"] : 100;
-        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : true;
-        $NoMargin = isset($Format["NoMargin"]) ? $Format["NoMargin"] : false;
+        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : \true;
+        $NoMargin = isset($Format["NoMargin"]) ? $Format["NoMargin"] : \false;
         if ($Value1 > $Value2) {
             list($Value1, $Value2) = [$Value2, $Value1];
         }
         $RestoreShadow = $this->Shadow;
         if ($DisableShadowOnArea && $this->Shadow) {
-            $this->Shadow = false;
+            $this->Shadow = \false;
         }
         if ($BorderAlpha > 100) {
             $BorderAlpha = 100;
@@ -2881,7 +2881,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 $this->Shadow = $RestoreShadow;
                 $this->drawText($XPos, $YPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => 0, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 }
             }
             $this->Shadow = $RestoreShadow;
@@ -2922,7 +2922,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 $this->Shadow = $RestoreShadow;
                 $this->drawText($YPos, $XPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => $NameAngle, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 }
             }
             $this->Shadow = $RestoreShadow;
@@ -2936,25 +2936,25 @@ abstract class Draw extends \CpChart\BaseDraw
     public function drawPlotChart(array $Format = [])
     {
         $PlotSize = isset($Format["PlotSize"]) ? $Format["PlotSize"] : null;
-        $PlotBorder = isset($Format["PlotBorder"]) ? $Format["PlotBorder"] : false;
+        $PlotBorder = isset($Format["PlotBorder"]) ? $Format["PlotBorder"] : \false;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : 50;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : 50;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : 50;
         $BorderAlpha = isset($Format["BorderAlpha"]) ? $Format["BorderAlpha"] : 30;
         $BorderSize = isset($Format["BorderSize"]) ? $Format["BorderSize"] : 2;
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 4;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 if (isset($Serie["Weight"])) {
                     $SerieWeight = $Serie["Weight"] + 2;
                 } else {
@@ -3071,7 +3071,7 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawSplineChart(array $Format = [])
     {
-        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : true;
+        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : \true;
         $VoidTicks = isset($Format["VoidTicks"]) ? $Format["VoidTicks"] : 4;
         $BreakR = isset($Format["BreakR"]) ? $Format["BreakR"] : null;
         // 234
@@ -3079,19 +3079,19 @@ abstract class Draw extends \CpChart\BaseDraw
         // 55
         $BreakB = isset($Format["BreakB"]) ? $Format["BreakB"] : null;
         // 26
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapPlotSize = isset($Format["ImageMapPlotSize"]) ? $Format["ImageMapPlotSize"] : 5;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -3223,19 +3223,19 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawFilledSplineChart(array $Format = [])
     {
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : true;
+        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : \true;
         $Threshold = isset($Format["Threshold"]) ? $Format["Threshold"] : null;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -3289,7 +3289,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             $this->drawText($X, $Y - $DisplayOffset, $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit), ["R" => $DisplayR, "G" => $DisplayG, "B" => $DisplayB, "Align" => TEXT_ALIGN_BOTTOMMIDDLE]);
                         }
                         if ($Y == VOID) {
-                            $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => true]);
+                            $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => \true]);
                             if (count($Area)) {
                                 foreach ($Area as $key => $Points) {
                                     $Corners = [];
@@ -3305,7 +3305,7 @@ abstract class Draw extends \CpChart\BaseDraw
                                     }
                                     $Corners[] = $Points[$subKey]["X"] - 1;
                                     $Corners[] = $YZero;
-                                    $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => true, "Threshold" => $Threshold]);
+                                    $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => \true, "Threshold" => $Threshold]);
                                 }
                                 $this->drawSpline($WayPoints, ["Force" => $Force, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "Ticks" => $Ticks]);
                             }
@@ -3316,7 +3316,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         }
                         $X = $X + $XStep;
                     }
-                    $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => true]);
+                    $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => \true]);
                     if (count($Area)) {
                         foreach ($Area as $key => $Points) {
                             $Corners = [];
@@ -3332,7 +3332,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             }
                             $Corners[] = $Points[$subKey]["X"] - 1;
                             $Corners[] = $YZero;
-                            $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => true, "Threshold" => $Threshold]);
+                            $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => \true, "Threshold" => $Threshold]);
                         }
                         $this->drawSpline($WayPoints, ["Force" => $Force, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "Ticks" => $Ticks]);
                     }
@@ -3364,7 +3364,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             $this->drawText($X + $DisplayOffset, $Y, $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit), ["Angle" => 270, "R" => $DisplayR, "G" => $DisplayG, "B" => $DisplayB, "Align" => TEXT_ALIGN_BOTTOMMIDDLE]);
                         }
                         if ($X == VOID) {
-                            $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => true]);
+                            $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => \true]);
                             if (count($Area)) {
                                 foreach ($Area as $key => $Points) {
                                     $Corners = [];
@@ -3380,7 +3380,7 @@ abstract class Draw extends \CpChart\BaseDraw
                                     }
                                     $Corners[] = $YZero;
                                     $Corners[] = $Points[$subKey]["Y"] - 1;
-                                    $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => true, "Threshold" => $Threshold]);
+                                    $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => \true, "Threshold" => $Threshold]);
                                 }
                                 $this->drawSpline($WayPoints, ["Force" => $Force, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "Ticks" => $Ticks]);
                             }
@@ -3390,7 +3390,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         }
                         $Y = $Y + $YStep;
                     }
-                    $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => true]);
+                    $Area = $this->drawSpline($WayPoints, ["Force" => $Force, "PathOnly" => \true]);
                     if (count($Area)) {
                         foreach ($Area as $key => $Points) {
                             $Corners = [];
@@ -3406,7 +3406,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             }
                             $Corners[] = $YZero;
                             $Corners[] = $Points[$subKey]["Y"] - 1;
-                            $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => true, "Threshold" => $Threshold]);
+                            $this->drawPolygonChart($Corners, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha / 2, "NoBorder" => \true, "Threshold" => $Threshold]);
                         }
                         $this->drawSpline($WayPoints, ["Force" => $Force, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "Ticks" => $Ticks]);
                     }
@@ -3420,20 +3420,20 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawLineChart(array $Format = [])
     {
-        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : true;
+        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : \true;
         $VoidTicks = isset($Format["VoidTicks"]) ? $Format["VoidTicks"] : 4;
         $BreakR = isset($Format["BreakR"]) ? $Format["BreakR"] : null;
         $BreakG = isset($Format["BreakG"]) ? $Format["BreakG"] : null;
         $BreakB = isset($Format["BreakB"]) ? $Format["BreakB"] : null;
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapPlotSize = isset($Format["ImageMapPlotSize"]) ? $Format["ImageMapPlotSize"] : 5;
-        $ForceColor = isset($Format["ForceColor"]) ? $Format["ForceColor"] : false;
+        $ForceColor = isset($Format["ForceColor"]) ? $Format["ForceColor"] : \false;
         $ForceR = isset($Format["ForceR"]) ? $Format["ForceR"] : 0;
         $ForceG = isset($Format["ForceG"]) ? $Format["ForceG"] : 0;
         $ForceB = isset($Format["ForceB"]) ? $Format["ForceB"] : 0;
@@ -3442,7 +3442,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -3672,25 +3672,25 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawStepChart(array $Format = [])
     {
-        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : false;
-        $ReCenter = isset($Format["ReCenter"]) ? $Format["ReCenter"] : true;
+        $BreakVoid = isset($Format["BreakVoid"]) ? $Format["BreakVoid"] : \false;
+        $ReCenter = isset($Format["ReCenter"]) ? $Format["ReCenter"] : \true;
         $VoidTicks = isset($Format["VoidTicks"]) ? $Format["VoidTicks"] : 4;
         $BreakR = isset($Format["BreakR"]) ? $Format["BreakR"] : null;
         $BreakG = isset($Format["BreakG"]) ? $Format["BreakG"] : null;
         $BreakB = isset($Format["BreakB"]) ? $Format["BreakB"] : null;
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapPlotSize = isset($Format["ImageMapPlotSize"]) ? $Format["ImageMapPlotSize"] : 5;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -3735,7 +3735,7 @@ abstract class Draw extends \CpChart\BaseDraw
                     }
                     $LastGoodY = null;
                     $LastGoodX = null;
-                    $Init = false;
+                    $Init = \false;
                     foreach ($PosArray as $Key => $Y) {
                         if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
                             if ($Y <= $LastY) {
@@ -3790,7 +3790,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         }
                         if (!$Init && $ReCenter) {
                             $X = $X - $XStep / 2;
-                            $Init = true;
+                            $Init = \true;
                         }
                         $LastX = $X;
                         $LastY = $Y;
@@ -3821,7 +3821,7 @@ abstract class Draw extends \CpChart\BaseDraw
                     }
                     $LastGoodY = null;
                     $LastGoodX = null;
-                    $Init = false;
+                    $Init = \false;
                     foreach ($PosArray as $Key => $X) {
                         if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
                             if ($X >= $LastX) {
@@ -3866,7 +3866,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         }
                         if (!$Init && $ReCenter) {
                             $Y = $Y - $YStep / 2;
-                            $Init = true;
+                            $Init = \true;
                         }
                         $LastX = $X;
                         $LastY = $Y;
@@ -3891,20 +3891,20 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawFilledStepChart(array $Format = [])
     {
-        $ReCenter = isset($Format["ReCenter"]) ? $Format["ReCenter"] : true;
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $ReCenter = isset($Format["ReCenter"]) ? $Format["ReCenter"] : \true;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $ForceTransparency = isset($Format["ForceTransparency"]) ? $Format["ForceTransparency"] : null;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : true;
+        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : \true;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -3951,7 +3951,7 @@ abstract class Draw extends \CpChart\BaseDraw
                     $LastGoodY = null;
                     $LastGoodX = null;
                     $Points = [];
-                    $Init = false;
+                    $Init = \false;
                     foreach ($PosArray as $Key => $Y) {
                         if ($Y == VOID && $LastX != null && $LastY != null && count($Points)) {
                             $Points[] = $LastX;
@@ -3984,7 +3984,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         }
                         if (!$Init && $ReCenter) {
                             $X = $X - $XStep / 2;
-                            $Init = true;
+                            $Init = \true;
                         }
                         $LastX = $X;
                         $LastY = $Y;
@@ -4086,20 +4086,20 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawAreaChart(array $Format = [])
     {
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
         $ForceTransparency = isset($Format["ForceTransparency"]) ? $Format["ForceTransparency"] : 25;
-        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : true;
+        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : \true;
         $Threshold = isset($Format["Threshold"]) ? $Format["Threshold"] : null;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -4321,26 +4321,26 @@ abstract class Draw extends \CpChart\BaseDraw
     {
         $Floating0Serie = isset($Format["Floating0Serie"]) ? $Format["Floating0Serie"] : null;
         $Floating0Value = isset($Format["Floating0Value"]) ? $Format["Floating0Value"] : null;
-        $Draw0Line = isset($Format["Draw0Line"]) ? $Format["Draw0Line"] : false;
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $Draw0Line = isset($Format["Draw0Line"]) ? $Format["Draw0Line"] : \false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayFont = isset($Format["DisplayFont"]) ? $Format["DisplayFont"] : $this->FontName;
         $DisplaySize = isset($Format["DisplaySize"]) ? $Format["DisplaySize"] : $this->FontSize;
         $DisplayPos = isset($Format["DisplayPos"]) ? $Format["DisplayPos"] : LABEL_POS_OUTSIDE;
-        $DisplayShadow = isset($Format["DisplayShadow"]) ? $Format["DisplayShadow"] : true;
+        $DisplayShadow = isset($Format["DisplayShadow"]) ? $Format["DisplayShadow"] : \true;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
-        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : true;
+        $AroundZero = isset($Format["AroundZero"]) ? $Format["AroundZero"] : \true;
         $Interleave = isset($Format["Interleave"]) ? $Format["Interleave"] : 0.5;
-        $Rounded = isset($Format["Rounded"]) ? $Format["Rounded"] : false;
+        $Rounded = isset($Format["Rounded"]) ? $Format["Rounded"] : \false;
         $RoundRadius = isset($Format["RoundRadius"]) ? $Format["RoundRadius"] : 4;
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : -1;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : -1;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : -1;
-        $Gradient = isset($Format["Gradient"]) ? $Format["Gradient"] : false;
+        $Gradient = isset($Format["Gradient"]) ? $Format["Gradient"] : \false;
         $GradientMode = isset($Format["GradientMode"]) ? $Format["GradientMode"] : GRADIENT_SIMPLE;
         $GradientAlpha = isset($Format["GradientAlpha"]) ? $Format["GradientAlpha"] : 20;
         $GradientStartR = isset($Format["GradientStartR"]) ? $Format["GradientStartR"] : 255;
@@ -4356,7 +4356,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $InnerBorderR = isset($Format["InnerBorderR"]) ? $Format["InnerBorderR"] : -1;
         $InnerBorderG = isset($Format["InnerBorderG"]) ? $Format["InnerBorderG"] : -1;
         $InnerBorderB = isset($Format["InnerBorderB"]) ? $Format["InnerBorderB"] : -1;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
@@ -4368,7 +4368,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $SeriesCount = $this->countDrawableSeries();
         $CurrentSerie = 0;
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -4495,7 +4495,7 @@ abstract class Draw extends \CpChart\BaseDraw
                                         $this->drawRectangle($X + $XOffset + $XSpace + 1, min($Y1, $Y2) + 1, $X + $XOffset + $XSize - $XSpace - 1, max($Y1, $Y2) - 1, $InnerColor);
                                     }
                                     if ($Gradient) {
-                                        $this->Shadow = false;
+                                        $this->Shadow = \false;
                                         if ($GradientMode == GRADIENT_SIMPLE) {
                                             if ($Serie["Data"][$Key] >= 0) {
                                                 $GradienColor = ["StartR" => $GradientStartR, "StartG" => $GradientStartG, "StartB" => $GradientStartB, "EndR" => $GradientEndR, "EndG" => $GradientEndG, "EndB" => $GradientEndB, "Alpha" => $GradientAlpha];
@@ -4529,7 +4529,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             }
                             if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
                                 if ($DisplayShadow) {
-                                    $this->Shadow = true;
+                                    $this->Shadow = \true;
                                 }
                                 $Caption = $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit);
                                 $TxtPos = $this->getTextBox(0, 0, $DisplayFont, $DisplaySize, 90, $Caption);
@@ -4639,7 +4639,7 @@ abstract class Draw extends \CpChart\BaseDraw
                                         $this->drawRectangle(min($X1, $X2) + 1, $Y + $YOffset + $YSpace + 1, max($X1, $X2) - 1, $Y + $YOffset + $YSize - $YSpace - 1, $InnerColor);
                                     }
                                     if ($Gradient) {
-                                        $this->Shadow = false;
+                                        $this->Shadow = \false;
                                         if ($GradientMode == GRADIENT_SIMPLE) {
                                             if ($Serie["Data"][$Key] >= 0) {
                                                 $GradienColor = ["StartR" => $GradientStartR, "StartG" => $GradientStartG, "StartB" => $GradientStartB, "EndR" => $GradientEndR, "EndG" => $GradientEndG, "EndB" => $GradientEndB, "Alpha" => $GradientAlpha];
@@ -4673,7 +4673,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             }
                             if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
                                 if ($DisplayShadow) {
-                                    $this->Shadow = true;
+                                    $this->Shadow = \true;
                                 }
                                 $Caption = $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit);
                                 $TxtPos = $this->getTextBox(0, 0, $DisplayFont, $DisplaySize, 0, $Caption);
@@ -4709,7 +4709,7 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawStackedBarChart(array $Format = [])
     {
-        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
+        $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : \false;
         $DisplayOrientation = isset($Format["DisplayOrientation"]) ? $Format["DisplayOrientation"] : ORIENTATION_AUTO;
         $DisplayRound = isset($Format["DisplayRound"]) ? $Format["DisplayRound"] : 0;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
@@ -4719,13 +4719,13 @@ abstract class Draw extends \CpChart\BaseDraw
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
         $DisplayB = isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
         $Interleave = isset($Format["Interleave"]) ? $Format["Interleave"] : 0.5;
-        $Rounded = isset($Format["Rounded"]) ? $Format["Rounded"] : false;
+        $Rounded = isset($Format["Rounded"]) ? $Format["Rounded"] : \false;
         $RoundRadius = isset($Format["RoundRadius"]) ? $Format["RoundRadius"] : 4;
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : -1;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : -1;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : -1;
-        $Gradient = isset($Format["Gradient"]) ? $Format["Gradient"] : false;
+        $Gradient = isset($Format["Gradient"]) ? $Format["Gradient"] : \false;
         $GradientMode = isset($Format["GradientMode"]) ? $Format["GradientMode"] : GRADIENT_SIMPLE;
         $GradientAlpha = isset($Format["GradientAlpha"]) ? $Format["GradientAlpha"] : 20;
         $GradientStartR = isset($Format["GradientStartR"]) ? $Format["GradientStartR"] : 255;
@@ -4738,7 +4738,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $InnerBorderR = isset($Format["InnerBorderR"]) ? $Format["InnerBorderR"] : -1;
         $InnerBorderG = isset($Format["InnerBorderG"]) ? $Format["InnerBorderG"] : -1;
         $InnerBorderB = isset($Format["InnerBorderB"]) ? $Format["InnerBorderB"] : -1;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $FontFactor = isset($Format["FontFactor"]) ? $Format["FontFactor"] : 8;
         $this->LastChartLayout = CHART_LAST_LAYOUT_STACKED;
         $Data = $this->DataSet->getData();
@@ -4747,7 +4747,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $LastX = [];
         $LastY = [];
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -4782,10 +4782,10 @@ abstract class Draw extends \CpChart\BaseDraw
                 } else {
                     $SerieDescription = $SerieName;
                 }
-                $PosArray = $this->scaleComputeY($Serie["Data"], ["AxisID" => $Serie["Axis"]], true);
+                $PosArray = $this->scaleComputeY($Serie["Data"], ["AxisID" => $Serie["Axis"]], \true);
                 $YZero = $this->scaleComputeY(0, ["AxisID" => $Serie["Axis"]]);
                 $this->DataSet->Data["Series"][$SerieName]["XOffset"] = 0;
-                $Color = ["TransCorner" => true, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB];
+                $Color = ["TransCorner" => \true, "R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB];
                 if ($Data["Orientation"] == SCALE_POS_LEFTRIGHT) {
                     if ($YZero > $this->GraphAreaY2 - 1) {
                         $YZero = $this->GraphAreaY2 - 1;
@@ -4840,12 +4840,12 @@ abstract class Draw extends \CpChart\BaseDraw
                                 $this->drawFilledRectangle($X + $XOffset, $Y1 - $YSpaceUp + $YSpaceDown, $X + $XOffset + $XSize, $Y2, $Color);
                                 if ($InnerColor != null) {
                                     $RestoreShadow = $this->Shadow;
-                                    $this->Shadow = false;
+                                    $this->Shadow = \false;
                                     $this->drawRectangle(min($X + $XOffset + 1, $X + $XOffset + $XSize), min($Y1 - $YSpaceUp + $YSpaceDown, $Y2) + 1, max($X + $XOffset + 1, $X + $XOffset + $XSize) - 1, max($Y1 - $YSpaceUp + $YSpaceDown, $Y2) - 1, $InnerColor);
                                     $this->Shadow = $RestoreShadow;
                                 }
                                 if ($Gradient) {
-                                    $this->Shadow = false;
+                                    $this->Shadow = \false;
                                     if ($GradientMode == GRADIENT_SIMPLE) {
                                         $GradientColor = ["StartR" => $GradientStartR, "StartG" => $GradientStartG, "StartB" => $GradientStartB, "EndR" => $GradientEndR, "EndG" => $GradientEndG, "EndB" => $GradientEndB, "Alpha" => $GradientAlpha];
                                         $this->drawGradientArea($X + $XOffset, $Y1 - 1 - $YSpaceUp + $YSpaceDown, $X + $XOffset + $XSize, $Y2 + 1, DIRECTION_VERTICAL, $GradientColor);
@@ -4868,11 +4868,11 @@ abstract class Draw extends \CpChart\BaseDraw
                                 $TxtWidth = abs($TxtPos[1]["X"] - $TxtPos[0]["X"]);
                                 $XCenter = ($X + $XOffset + $XSize - ($X + $XOffset)) / 2 + $X + $XOffset;
                                 $YCenter = ($Y2 - ($Y1 - $YSpaceUp + $YSpaceDown)) / 2 + $Y1 - $YSpaceUp + $YSpaceDown;
-                                $Done = false;
+                                $Done = \false;
                                 if ($DisplayOrientation == ORIENTATION_HORIZONTAL || $DisplayOrientation == ORIENTATION_AUTO) {
                                     if ($TxtHeight < $BarHeight && $TxtWidth < $BarWidth) {
                                         $this->drawText($XCenter, $YCenter, $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit), ["R" => $DisplayR, "G" => $DisplayG, "B" => $DisplayB, "Align" => TEXT_ALIGN_MIDDLEMIDDLE, "FontSize" => $DisplaySize, "FontName" => $DisplayFont]);
-                                        $Done = true;
+                                        $Done = \true;
                                     }
                                 }
                                 if ($DisplayOrientation == ORIENTATION_VERTICAL || $DisplayOrientation == ORIENTATION_AUTO && !$Done) {
@@ -4939,12 +4939,12 @@ abstract class Draw extends \CpChart\BaseDraw
                                 $this->drawFilledRectangle($X1 + $XSpaceLeft, $Y + $YOffset, $X2 - $XSpaceRight, $Y + $YOffset + $YSize, $Color);
                                 if ($InnerColor != null) {
                                     $RestoreShadow = $this->Shadow;
-                                    $this->Shadow = false;
+                                    $this->Shadow = \false;
                                     $this->drawRectangle(min($X1 + $XSpaceLeft, $X2 - $XSpaceRight) + 1, min($Y + $YOffset, $Y + $YOffset + $YSize) + 1, max($X1 + $XSpaceLeft, $X2 - $XSpaceRight) - 1, max($Y + $YOffset, $Y + $YOffset + $YSize) - 1, $InnerColor);
                                     $this->Shadow = $RestoreShadow;
                                 }
                                 if ($Gradient) {
-                                    $this->Shadow = false;
+                                    $this->Shadow = \false;
                                     if ($GradientMode == GRADIENT_SIMPLE) {
                                         $GradientColor = ["StartR" => $GradientStartR, "StartG" => $GradientStartG, "StartB" => $GradientStartB, "EndR" => $GradientEndR, "EndG" => $GradientEndG, "EndB" => $GradientEndB, "Alpha" => $GradientAlpha];
                                         $this->drawGradientArea($X1 + $XSpaceLeft, $Y + $YOffset, $X2 - $XSpaceRight, $Y + $YOffset + $YSize, DIRECTION_HORIZONTAL, $GradientColor);
@@ -4967,11 +4967,11 @@ abstract class Draw extends \CpChart\BaseDraw
                                 $TxtWidth = abs($TxtPos[1]["X"] - $TxtPos[0]["X"]);
                                 $XCenter = ($X2 - $X1) / 2 + $X1;
                                 $YCenter = ($Y + $YOffset + $YSize - ($Y + $YOffset)) / 2 + $Y + $YOffset;
-                                $Done = false;
+                                $Done = \false;
                                 if ($DisplayOrientation == ORIENTATION_HORIZONTAL || $DisplayOrientation == ORIENTATION_AUTO) {
                                     if ($TxtHeight < $BarHeight && $TxtWidth < $BarWidth) {
                                         $this->drawText($XCenter, $YCenter, $this->scaleFormat($Serie["Data"][$Key], $Mode, $Format, $Unit), ["R" => $DisplayR, "G" => $DisplayG, "B" => $DisplayB, "Align" => TEXT_ALIGN_MIDDLEMIDDLE, "FontSize" => $DisplaySize, "FontName" => $DisplayFont]);
-                                        $Done = true;
+                                        $Done = \true;
                                     }
                                 }
                                 if ($DisplayOrientation == ORIENTATION_VERTICAL || $DisplayOrientation == ORIENTATION_AUTO && !$Done) {
@@ -4994,13 +4994,13 @@ abstract class Draw extends \CpChart\BaseDraw
      */
     public function drawStackedAreaChart(array $Format = [])
     {
-        $DrawLine = isset($Format["DrawLine"]) ? $Format["DrawLine"] : false;
+        $DrawLine = isset($Format["DrawLine"]) ? $Format["DrawLine"] : \false;
         $LineSurrounding = isset($Format["LineSurrounding"]) ? $Format["LineSurrounding"] : null;
         $LineR = isset($Format["LineR"]) ? $Format["LineR"] : VOID;
         $LineG = isset($Format["LineG"]) ? $Format["LineG"] : VOID;
         $LineB = isset($Format["LineB"]) ? $Format["LineB"] : VOID;
         $LineAlpha = isset($Format["LineAlpha"]) ? $Format["LineAlpha"] : 100;
-        $DrawPlot = isset($Format["DrawPlot"]) ? $Format["DrawPlot"] : false;
+        $DrawPlot = isset($Format["DrawPlot"]) ? $Format["DrawPlot"] : \false;
         $PlotRadius = isset($Format["PlotRadius"]) ? $Format["PlotRadius"] : 2;
         $PlotBorder = isset($Format["PlotBorder"]) ? $Format["PlotBorder"] : 1;
         $PlotBorderSurrounding = isset($Format["PlotBorderSurrounding"]) ? $Format["PlotBorderSurrounding"] : null;
@@ -5013,12 +5013,12 @@ abstract class Draw extends \CpChart\BaseDraw
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         $RestoreShadow = $this->Shadow;
-        $this->Shadow = false;
+        $this->Shadow = \false;
         /* Build the offset data series */
         $OverallOffset = [];
         $SerieOrder = [];
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $SerieOrder[] = $SerieName;
                 foreach ($Serie["Data"] as $Key => $Value) {
                     if ($Value == VOID) {
@@ -5044,7 +5044,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $SerieOrder = array_reverse($SerieOrder);
         foreach ($SerieOrder as $Key => $SerieName) {
             $Serie = $Data["Series"][$SerieName];
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -5068,7 +5068,7 @@ abstract class Draw extends \CpChart\BaseDraw
                 }
                 $AxisID = $Serie["Axis"];
                 $Format = $Data["Axis"][$AxisID]["Format"];
-                $PosArray = $this->scaleComputeY($Serie["Data"], ["AxisID" => $Serie["Axis"]], true);
+                $PosArray = $this->scaleComputeY($Serie["Data"], ["AxisID" => $Serie["Axis"]], \true);
                 $YZero = $this->scaleComputeY(0, ["AxisID" => $Serie["Axis"]]);
                 $this->DataSet->Data["Series"][$SerieName]["XOffset"] = 0;
                 if ($Data["Orientation"] == SCALE_POS_LEFTRIGHT) {
@@ -5116,7 +5116,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             $this->drawFilledCircle($Plots[$i], $Plots[$i + 1], $PlotRadius, $Color);
                         }
                     }
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 } elseif ($Data["Orientation"] == SCALE_POS_TOPBOTTOM) {
                     if ($YZero < $this->GraphAreaX1 + 1) {
                         $YZero = $this->GraphAreaX1 + 1;
@@ -5162,7 +5162,7 @@ abstract class Draw extends \CpChart\BaseDraw
                             $this->drawFilledCircle($Plots[$i], $Plots[$i + 1], $PlotRadius, $Color);
                         }
                     }
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                 }
             }
         }
@@ -5177,23 +5177,23 @@ abstract class Draw extends \CpChart\BaseDraw
         $Offset = isset($Format["Offset"]) ? $Format["Offset"] : 10;
         $SerieSpacing = isset($Format["SerieSpacing"]) ? $Format["SerieSpacing"] : 3;
         $DerivativeHeight = isset($Format["DerivativeHeight"]) ? $Format["DerivativeHeight"] : 4;
-        $ShadedSlopeBox = isset($Format["ShadedSlopeBox"]) ? $Format["ShadedSlopeBox"] : false;
-        $DrawBackground = isset($Format["DrawBackground"]) ? $Format["DrawBackground"] : true;
+        $ShadedSlopeBox = isset($Format["ShadedSlopeBox"]) ? $Format["ShadedSlopeBox"] : \false;
+        $DrawBackground = isset($Format["DrawBackground"]) ? $Format["DrawBackground"] : \true;
         $BackgroundR = isset($Format["BackgroundR"]) ? $Format["BackgroundR"] : 255;
         $BackgroundG = isset($Format["BackgroundG"]) ? $Format["BackgroundG"] : 255;
         $BackgroundB = isset($Format["BackgroundB"]) ? $Format["BackgroundB"] : 255;
         $BackgroundAlpha = isset($Format["BackgroundAlpha"]) ? $Format["BackgroundAlpha"] : 20;
-        $DrawBorder = isset($Format["DrawBorder"]) ? $Format["DrawBorder"] : true;
+        $DrawBorder = isset($Format["DrawBorder"]) ? $Format["DrawBorder"] : \true;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : 0;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : 0;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : 0;
         $BorderAlpha = isset($Format["BorderAlpha"]) ? $Format["BorderAlpha"] : 100;
-        $Caption = isset($Format["Caption"]) ? $Format["Caption"] : true;
+        $Caption = isset($Format["Caption"]) ? $Format["Caption"] : \true;
         $CaptionHeight = isset($Format["CaptionHeight"]) ? $Format["CaptionHeight"] : 10;
         $CaptionWidth = isset($Format["CaptionWidth"]) ? $Format["CaptionWidth"] : 20;
         $CaptionMargin = isset($Format["CaptionMargin"]) ? $Format["CaptionMargin"] : 4;
-        $CaptionLine = isset($Format["CaptionLine"]) ? $Format["CaptionLine"] : false;
-        $CaptionBox = isset($Format["CaptionBox"]) ? $Format["CaptionBox"] : false;
+        $CaptionLine = isset($Format["CaptionLine"]) ? $Format["CaptionLine"] : \false;
+        $CaptionBox = isset($Format["CaptionBox"]) ? $Format["CaptionBox"] : \false;
         $CaptionBorderR = isset($Format["CaptionBorderR"]) ? $Format["CaptionBorderR"] : 0;
         $CaptionBorderG = isset($Format["CaptionBorderG"]) ? $Format["CaptionBorderG"] : 0;
         $CaptionBorderB = isset($Format["CaptionBorderB"]) ? $Format["CaptionBorderB"] : 0;
@@ -5221,7 +5221,7 @@ abstract class Draw extends \CpChart\BaseDraw
             $XPos = $this->DataSet->Data["GraphArea"]["X2"] + $Offset;
         }
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -5266,7 +5266,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         $PosArray[0] = $Value;
                     }
                     $RestoreShadow = $this->Shadow;
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                     /* Determine the Max slope index */
                     $LastX = null;
                     $LastY = null;
@@ -5363,7 +5363,7 @@ abstract class Draw extends \CpChart\BaseDraw
                         $PosArray[0] = $Value;
                     }
                     $RestoreShadow = $this->Shadow;
-                    $this->Shadow = false;
+                    $this->Shadow = \false;
                     /* Determine the Max slope index */
                     $LastX = null;
                     $LastY = null;
@@ -5439,7 +5439,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Data = $this->DataSet->getData();
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 if ($OverrideR != VOID && $OverrideG != VOID && $OverrideB != VOID) {
                     $R = $OverrideR;
                     $G = $OverrideG;
@@ -5577,7 +5577,7 @@ abstract class Draw extends \CpChart\BaseDraw
     {
         $NoTitle = isset($Format["NoTitle"]) ? $Format["NoTitle"] : null;
         $BoxWidth = isset($Format["BoxWidth"]) ? $Format["BoxWidth"] : 50;
-        $DrawSerieColor = isset($Format["DrawSerieColor"]) ? $Format["DrawSerieColor"] : true;
+        $DrawSerieColor = isset($Format["DrawSerieColor"]) ? $Format["DrawSerieColor"] : \true;
         $SerieBoxSize = isset($Format["SerieBoxSize"]) ? $Format["SerieBoxSize"] : 6;
         $SerieBoxSpacing = isset($Format["SerieBoxSpacing"]) ? $Format["SerieBoxSpacing"] : 4;
         $VerticalMargin = isset($Format["VerticalMargin"]) ? $Format["VerticalMargin"] : 10;
@@ -5629,8 +5629,8 @@ abstract class Draw extends \CpChart\BaseDraw
         $XMin = $X - 5 - floor(($BoxWidth - 10) / 2);
         $XMax = $X + 5 + floor(($BoxWidth - 10) / 2);
         $RestoreShadow = $this->Shadow;
-        if ($this->Shadow == true) {
-            $this->Shadow = false;
+        if ($this->Shadow == \true) {
+            $this->Shadow = \false;
             $Poly = [];
             $Poly[] = $X + $this->ShadowX;
             $Poly[] = $Y + $this->ShadowX;
@@ -5669,7 +5669,7 @@ abstract class Draw extends \CpChart\BaseDraw
         $Poly[] = $Y - 5;
         $Poly[] = $X + 5;
         $Poly[] = $Y - 5;
-        $this->drawPolygon($Poly, ["R" => $GradientEndR, "G" => $GradientEndG, "B" => $GradientEndB, "Alpha" => $BoxAlpha, "NoBorder" => true]);
+        $this->drawPolygon($Poly, ["R" => $GradientEndR, "G" => $GradientEndG, "B" => $GradientEndB, "Alpha" => $BoxAlpha, "NoBorder" => \true]);
         /* Outer border */
         $OuterBorderColor = $this->allocateColor($this->Picture, 100, 100, 100, $BoxAlpha);
         imageline($this->Picture, $XMin, $Y - 5, $X - 5, $Y - 5, $OuterBorderColor);
@@ -5797,7 +5797,7 @@ abstract class Draw extends \CpChart\BaseDraw
             $Pos[] = $Y;
             $Pos[] = $X;
             $Pos[] = $Y + $PlotSize;
-            $this->drawPolygon($Pos, ["NoFill" => true, "BorderR" => $R, "BorderG" => $G, "BorderB" => $B, "BorderAlpha" => $Alpha]);
+            $this->drawPolygon($Pos, ["NoFill" => \true, "BorderR" => $R, "BorderG" => $G, "BorderB" => $B, "BorderAlpha" => $Alpha]);
         } elseif ($Shape == SERIE_SHAPE_FILLEDDIAMOND) {
             if ($PlotBorder) {
                 $Pos = [];
@@ -5835,8 +5835,8 @@ abstract class Draw extends \CpChart\BaseDraw
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
-        $NoFill = isset($Format["NoFill"]) ? $Format["NoFill"] : false;
-        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : false;
+        $NoFill = isset($Format["NoFill"]) ? $Format["NoFill"] : \false;
+        $NoBorder = isset($Format["NoBorder"]) ? $Format["NoBorder"] : \false;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : $R;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : $G;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : $B;
@@ -5849,11 +5849,11 @@ abstract class Draw extends \CpChart\BaseDraw
             $BorderB = $B + $Surrounding;
         }
         $RestoreShadow = $this->Shadow;
-        $this->Shadow = false;
-        $AllIntegers = true;
+        $this->Shadow = \false;
+        $AllIntegers = \true;
         for ($i = 0; $i <= count($Points) - 2; $i = $i + 2) {
             if ($this->getFirstDecimal($Points[$i + 1]) != 0) {
-                $AllIntegers = false;
+                $AllIntegers = \false;
             }
         }
         /* Convert polygon to segments */
@@ -5864,18 +5864,18 @@ abstract class Draw extends \CpChart\BaseDraw
         $Segments[] = ["X1" => $Points[$i - 2], "Y1" => $Points[$i - 1], "X2" => $Points[0], "Y2" => $Points[1]];
         /* Simplify straight lines */
         $Result = [];
-        $inHorizon = false;
+        $inHorizon = \false;
         $LastX = VOID;
         foreach ($Segments as $Key => $Pos) {
             if ($Pos["Y1"] != $Pos["Y2"]) {
                 if ($inHorizon) {
-                    $inHorizon = false;
+                    $inHorizon = \false;
                     $Result[] = ["X1" => $LastX, "Y1" => $Pos["Y1"], "X2" => $Pos["X1"], "Y2" => $Pos["Y1"]];
                 }
                 $Result[] = ["X1" => $Pos["X1"], "Y1" => $Pos["Y1"], "X2" => $Pos["X2"], "Y2" => $Pos["Y2"]];
             } else {
                 if (!$inHorizon) {
-                    $inHorizon = true;
+                    $inHorizon = \true;
                     $LastX = $Pos["X1"];
                 }
             }

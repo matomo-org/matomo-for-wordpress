@@ -28,13 +28,13 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         return $dataTable;
     }
-    public function getResolution($idSite, $period, $date, $segment = false)
+    public function getResolution($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\Resolution\Archiver::RESOLUTION_RECORD_NAME, $idSite, $period, $date, $segment);
         $dataTable->filter('AddSegmentValue');
         return $dataTable;
     }
-    public function getConfiguration($idSite, $period, $date, $segment = false)
+    public function getConfiguration($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\Resolution\Archiver::CONFIGURATION_RECORD_NAME, $idSite, $period, $date, $segment);
         // use GroupBy filter to avoid duplicate rows if old reports are displayed

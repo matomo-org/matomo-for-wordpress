@@ -52,7 +52,7 @@ class EventDispatcher
      */
     private $pluginManager;
     private $pluginHooks = array();
-    public static $_SKIP_EVENTS_IN_TESTS = false;
+    public static $_SKIP_EVENTS_IN_TESTS = \false;
     // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * Constructor.
@@ -77,7 +77,7 @@ class EventDispatcher
      *                            can be either the Plugin objects themselves
      *                            or their string names.
      */
-    public function postEvent($eventName, $params, $pending = false, $plugins = null)
+    public function postEvent($eventName, $params, $pending = \false, $plugins = null)
     {
         if (self::$_SKIP_EVENTS_IN_TESTS) {
             return;
@@ -158,7 +158,7 @@ class EventDispatcher
     {
         foreach ($this->pendingEvents as $eventInfo) {
             [$eventName, $eventParams] = $eventInfo;
-            $this->postEvent($eventName, $eventParams, $pending = false, array($plugin));
+            $this->postEvent($eventName, $eventParams, $pending = \false, array($plugin));
         }
     }
     /**

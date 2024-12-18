@@ -83,7 +83,7 @@ class JsTrackerInstallCheckOption
         if (empty($nonceOptionString)) {
             return [];
         }
-        $nonceOptionArray = json_decode($nonceOptionString, true);
+        $nonceOptionArray = json_decode($nonceOptionString, \true);
         // If the option couldn't be decoded or is in the old format, let's ignore it
         if (empty($nonceOptionArray) || key_exists('nonce', $nonceOptionArray)) {
             return [];
@@ -101,11 +101,11 @@ class JsTrackerInstallCheckOption
     {
         $nonceMap = $this->getCurrentNonceMap($idSite);
         if (empty($nonceMap[$nonce])) {
-            return false;
+            return \false;
         }
-        $nonceMap[$nonce][self::NONCE_DATA_IS_SUCCESS] = true;
+        $nonceMap[$nonce][self::NONCE_DATA_IS_SUCCESS] = \true;
         $this->setNonceOption($idSite, $nonceMap);
-        return true;
+        return \true;
     }
     /**
      * Create a new nonce for the site/URL combination. This checks if a
@@ -126,7 +126,7 @@ class JsTrackerInstallCheckOption
             return $existingNonce;
         }
         $nonceString = md5(SettingsPiwik::getSalt() . time() . Common::generateUniqId() . $url);
-        $nonceMap[$nonceString] = ['time' => Date::getNowTimestamp(), 'url' => $url, 'isSuccessful' => false];
+        $nonceMap[$nonceString] = ['time' => Date::getNowTimestamp(), 'url' => $url, 'isSuccessful' => \false];
         $this->setNonceOption($idSite, $nonceMap);
         return $nonceString;
     }
@@ -164,11 +164,11 @@ class JsTrackerInstallCheckOption
     {
         $nonceMap = $this->getCurrentNonceMap($idSite);
         if (empty($nonceMap[$nonce])) {
-            return false;
+            return \false;
         }
         $nonceMap[$nonce][self::NONCE_DATA_TIME] = $time;
         $this->setNonceOption($idSite, $nonceMap);
-        return true;
+        return \true;
     }
     /**
      * @param array $nonceMap

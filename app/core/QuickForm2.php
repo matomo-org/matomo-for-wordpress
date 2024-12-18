@@ -24,7 +24,7 @@ use HTML_QuickForm2_Renderer;
 abstract class QuickForm2 extends HTML_QuickForm2
 {
     protected $a_formElements = array();
-    public function __construct($id, $method = 'post', $attributes = null, $trackSubmit = false)
+    public function __construct($id, $method = 'post', $attributes = null, $trackSubmit = \false)
     {
         if (!isset($attributes['action'])) {
             $attributes['action'] = \Piwik\Url::getCurrentQueryString();
@@ -102,18 +102,18 @@ abstract class QuickForm2 extends HTML_QuickForm2
         }
         return array_filter($messages);
     }
-    protected static $registered = false;
+    protected static $registered = \false;
     /**
      * Returns the rendered form as an array.
      *
      * @param bool $groupErrors Whether to group errors together or not.
      * @return array
      */
-    public function getFormData($groupErrors = true)
+    public function getFormData($groupErrors = \true)
     {
         if (!self::$registered) {
             HTML_QuickForm2_Renderer::register('smarty', 'HTML_QuickForm2_Renderer_Smarty');
-            self::$registered = true;
+            self::$registered = \true;
         }
         // Create the renderer object
         $renderer = HTML_QuickForm2_Renderer::factory('smarty');

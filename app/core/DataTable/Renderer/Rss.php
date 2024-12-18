@@ -48,7 +48,7 @@ class Rss extends Renderer
         $period = Common::getRequestVar('period');
         $piwikUrl = SettingsPiwik::getPiwikUrl() . "?module=CoreHome&action=index&idSite=" . $idSite . "&period=" . $period;
         $out = "";
-        $moreRecentFirst = array_reverse($table->getDataTables(), true);
+        $moreRecentFirst = array_reverse($table->getDataTables(), \true);
         foreach ($moreRecentFirst as $date => $subtable) {
             /** @var DataTable $subtable */
             $timestamp = $subtable->getMetadata(Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX)->getDateStart()->getTimestamp();
@@ -116,7 +116,7 @@ class Rss extends Renderer
                 if (is_array($value) || is_object($value)) {
                     continue;
                 }
-                $allColumns[$column] = true;
+                $allColumns[$column] = \true;
                 $tableStructure[$i][$column] = $value;
             }
             $i++;
@@ -125,7 +125,7 @@ class Rss extends Renderer
         $html .= "<table border=1 width=70%>";
         $html .= "\n<tr>";
         foreach ($allColumns as $name => $toDisplay) {
-            if ($toDisplay !== false) {
+            if ($toDisplay !== \false) {
                 if ($this->translateColumnNames) {
                     $name = $this->translateColumnName($name);
                 }
@@ -136,7 +136,7 @@ class Rss extends Renderer
         foreach ($tableStructure as $row) {
             $html .= "\n\n<tr>";
             foreach ($allColumns as $columnName => $toDisplay) {
-                if ($toDisplay !== false) {
+                if ($toDisplay !== \false) {
                     $value = "-";
                     if (isset($row[$columnName])) {
                         $value = urldecode($row[$columnName]);

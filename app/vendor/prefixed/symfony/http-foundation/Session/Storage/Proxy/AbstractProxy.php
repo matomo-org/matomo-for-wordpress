@@ -20,7 +20,7 @@ abstract class AbstractProxy
      *
      * @var bool
      */
-    protected $wrapper = false;
+    protected $wrapper = \false;
     /**
      * @var string
      */

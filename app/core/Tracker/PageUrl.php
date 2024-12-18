@@ -119,11 +119,11 @@ class PageUrl
      *
      * @return string The processed URL fragment.
      */
-    public static function processUrlFragment($urlFragment, $idSite = false)
+    public static function processUrlFragment($urlFragment, $idSite = \false)
     {
         // if we should discard the url fragment for this site, return an empty string as
         // the processed url fragment
-        if ($idSite !== false && \Piwik\Tracker\PageUrl::shouldRemoveURLFragmentFor($idSite)) {
+        if ($idSite !== \false && \Piwik\Tracker\PageUrl::shouldRemoveURLFragmentFor($idSite)) {
             return '';
         } else {
             // Remove trailing Hash tag in ?query#hash#
@@ -143,7 +143,7 @@ class PageUrl
      *                          the URL fragment for this site.
      * @return array
      */
-    protected static function cleanupHostAndHashTag($parsedUrl, $idSite = false)
+    protected static function cleanupHostAndHashTag($parsedUrl, $idSite = \false)
     {
         if (empty($parsedUrl)) {
             return $parsedUrl;
@@ -167,14 +167,14 @@ class PageUrl
     public static function convertMatrixUrl($originalUrl)
     {
         $posFirstSemiColon = strpos($originalUrl, ";");
-        if (false === $posFirstSemiColon) {
+        if (\false === $posFirstSemiColon) {
             return $originalUrl;
         }
         $posQuestionMark = strpos($originalUrl, "?");
-        $replace = false === $posQuestionMark;
+        $replace = \false === $posQuestionMark;
         if ($posQuestionMark > $posFirstSemiColon) {
             $originalUrl = substr_replace($originalUrl, ";", $posQuestionMark, 1);
-            $replace = true;
+            $replace = \true;
         }
         if ($replace) {
             $originalUrl = substr_replace($originalUrl, "?", strpos($originalUrl, ";"), 1);
@@ -236,7 +236,7 @@ class PageUrl
      *
      * @return array
      */
-    public static function reencodeParameters(&$queryParameters, $encoding = false)
+    public static function reencodeParameters(&$queryParameters, $encoding = \false)
     {
         if (function_exists('mb_check_encoding')) {
             // if query params are encoded w/ non-utf8 characters (due to browser bug or whatever),
@@ -300,10 +300,10 @@ class PageUrl
             $cache->save($cacheKeySiteUrls, $siteUrlCache);
         }
         if (!$cache->contains($cacheKeyHttpsForHost)) {
-            $hostSiteCache = false;
+            $hostSiteCache = \false;
             foreach ($siteUrlCache as $siteUrl) {
                 if (strpos(mb_strtolower($siteUrl), mb_strtolower('https://' . $host)) === 0) {
-                    $hostSiteCache = true;
+                    $hostSiteCache = \true;
                     break;
                 }
             }
@@ -332,7 +332,7 @@ class PageUrl
         $url = \Piwik\Tracker\PageUrl::cleanupString($url);
         if (!UrlHelper::isLookLikeUrl($url)) {
             Common::printDebug("WARNING: URL looks invalid and is discarded");
-            return false;
+            return \false;
         }
         return $url;
     }

@@ -18,20 +18,20 @@ class MethodCallExpression extends AbstractExpression
 {
     public function __construct(AbstractExpression $node, $method, ArrayExpression $arguments, $lineno)
     {
-        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false], $lineno);
+        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => \false], $lineno);
         if ($node instanceof NameExpression) {
-            $node->setAttribute('always_defined', true);
+            $node->setAttribute('always_defined', \true);
         }
     }
     public function compile(Compiler $compiler)
     {
         $compiler->subcompile($this->getNode('node'))->raw('->')->raw($this->getAttribute('method'))->raw('(');
-        $first = true;
+        $first = \true;
         foreach ($this->getNode('arguments')->getKeyValuePairs() as $pair) {
             if (!$first) {
                 $compiler->raw(', ');
             }
-            $first = false;
+            $first = \false;
             $compiler->subcompile($pair['value']);
         }
         $compiler->raw(')');

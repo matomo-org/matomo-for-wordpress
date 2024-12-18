@@ -14,7 +14,7 @@ class TagAdded extends \Piwik\Plugins\TagManager\Activity\TagBaseActivity
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('addContainerTag')) {
-            return false;
+            return \false;
         }
         list($idEntity, $finalAPIParameters) = $eventData;
         $idSite = $finalAPIParameters['parameters']['idSite'];

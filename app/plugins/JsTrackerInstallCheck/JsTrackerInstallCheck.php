@@ -22,7 +22,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
-        $translationKeys[] = 'JsTrackerInstallCheck_TestInstallationDescription';
+        $translationKeys[] = 'JsTrackerInstallCheck_OptionalTestInstallationDescription';
         $translationKeys[] = 'JsTrackerInstallCheck_TestInstallationBtnText';
         $translationKeys[] = 'JsTrackerInstallCheck_JsTrackingCodeInstallCheckSuccessMessage';
         $translationKeys[] = 'JsTrackerInstallCheck_JsTrackingCodeInstallCheckFailureMessage';
@@ -45,7 +45,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
             return;
         }
         // Make sure that the request is marked as excluded if it isn't already
-        $excluded = true;
+        $excluded = \true;
         StaticContainer::get(LoggerInterface::class)->debug('Excluding visit as JS tracker install test.');
         // If the nonce exists and isn't expired, update it to indicate success
         StaticContainer::get(JsTrackerInstallCheckOption::class)->markNonceAsSuccessFul($request->getIdSite(), $trackerInstallCheckParam);
@@ -69,7 +69,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
             return !empty($nonceMap[$nonce]['isSuccessful']);
         }
         if (empty($nonceMap)) {
-            return false;
+            return \false;
         }
         // If there's only one nonce for the site, just use that result
         if (count($nonceMap) === 1) {
@@ -82,7 +82,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
                 return !empty($nonceData['isSuccessful']);
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Initiate a test whether the JS tracking code has been successfully installed for a site. It generates a nonce and
@@ -98,11 +98,11 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
     public function initiateJsTrackerInstallTest(int $idSite, string $url = '') : array
     {
         // If the URL wasn't provided or isn't a valid URL, use the main URL configured for the site
-        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+        if (empty($url) || !filter_var($url, \FILTER_VALIDATE_URL)) {
             $url = Site::getMainUrlFor($idSite);
         }
         $nonceString = StaticContainer::get(JsTrackerInstallCheckOption::class)->createNewNonce($idSite, $url);
-        $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . self::QUERY_PARAM_NAME . '=' . $nonceString;
+        $url .= (parse_url($url, \PHP_URL_QUERY) ? '&' : '?') . self::QUERY_PARAM_NAME . '=' . $nonceString;
         return ['url' => $url, 'nonce' => $nonceString];
     }
 }

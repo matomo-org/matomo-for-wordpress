@@ -77,20 +77,20 @@ class PrivacyManager extends Plugin
      */
     public static function hasReportBeenPurged($dataTable)
     {
-        $strPeriod = Common::getRequestVar('period', false);
-        $strDate = Common::getRequestVar('date', false);
-        if (false !== $strPeriod && false !== $strDate && (is_null($dataTable) || !empty($dataTable) && $dataTable->getRowsCount() == 0)) {
+        $strPeriod = Common::getRequestVar('period', \false);
+        $strDate = Common::getRequestVar('date', \false);
+        if (\false !== $strPeriod && \false !== $strDate && (is_null($dataTable) || !empty($dataTable) && $dataTable->getRowsCount() == 0)) {
             $reportDate = self::getReportDate($strPeriod, $strDate);
             if (empty($reportDate)) {
-                return false;
+                return \false;
             }
             $reportYear = $reportDate->toString('Y');
             $reportMonth = $reportDate->toString('m');
             if (static::shouldReportBePurged($reportYear, $reportMonth)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @param DataTable $dataTable
@@ -100,25 +100,25 @@ class PrivacyManager extends Plugin
     public static function haveLogsBeenPurged($dataTable, $logsOlderThan = null)
     {
         if (!empty($dataTable) && $dataTable->getRowsCount() != 0) {
-            return false;
+            return \false;
         }
         if ($logsOlderThan === null) {
             $settings = \Piwik\Plugins\PrivacyManager\PrivacyManager::getPurgeDataSettings();
             if ($settings['delete_logs_enable'] == 0) {
-                return false;
+                return \false;
             }
             $logsOlderThan = $settings['delete_logs_older_than'];
         }
         $logsOlderThan = (int) $logsOlderThan;
-        $strPeriod = Common::getRequestVar('period', false);
-        $strDate = Common::getRequestVar('date', false);
-        if (false === $strPeriod || false === $strDate) {
-            return false;
+        $strPeriod = Common::getRequestVar('period', \false);
+        $strDate = Common::getRequestVar('date', \false);
+        if (\false === $strPeriod || \false === $strDate) {
+            return \false;
         }
         $logsOlderThan = Date::now()->subDay(1 + $logsOlderThan);
         $reportDate = self::getReportDate($strPeriod, $strDate);
         if (empty($reportDate)) {
-            return false;
+            return \false;
         }
         return $reportDate->isEarlier($logsOlderThan);
     }
@@ -135,7 +135,7 @@ class PrivacyManager extends Plugin
         // `Live.getLastVisitsDetails`, which is already post processed.
         // Otherwise, the PostProcessor would trigger warning when trying to calculate a totals row.
         if (isset($request['method']) && $request['method'] === 'PrivacyManager.findDataSubjects') {
-            $shouldDisable = true;
+            $shouldDisable = \true;
         }
     }
     public function onConfigureVisualisation(Plugin\Visualization $view)
@@ -166,7 +166,7 @@ class PrivacyManager extends Plugin
     }
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
@@ -451,7 +451,7 @@ class PrivacyManager extends Plugin
         // load the settings for the data purging settings
         foreach (self::$purgeDataOptions as $configName => $configSection) {
             $value = Option::get($configName);
-            if ($value !== false) {
+            if ($value !== \false) {
                 $settings[$configName] = (int) $value;
             }
         }
@@ -495,16 +495,16 @@ class PrivacyManager extends Plugin
         $settings = self::getPurgeDataSettings();
         // Make sure, data deletion is enabled
         if ($settings['delete_reports_enable'] == 0) {
-            return false;
+            return \false;
         }
         // make sure purging should run at this time (unless this is a forced purge)
         if (!$this->shouldPurgeData($settings, self::OPTION_LAST_DELETE_PIWIK_REPORTS, 'delete_logs_schedule_lowest_interval')) {
-            return false;
+            return \false;
         }
         // set last run time
         Option::set(self::OPTION_LAST_DELETE_PIWIK_REPORTS, Date::factory('today')->getTimestamp());
         \Piwik\Plugins\PrivacyManager\ReportsPurger::make($settings, self::getAllMetricsToKeep())->purgeData();
-        return true;
+        return \true;
     }
     /**
      * Deletes old raw data based on the options set in the Deletelogs config
@@ -524,11 +524,11 @@ class PrivacyManager extends Plugin
         $settings = self::getPurgeDataSettings();
         // Make sure, data deletion is enabled
         if ($settings['delete_logs_enable'] == 0) {
-            return false;
+            return \false;
         }
         // make sure purging should run at this time
         if (!$this->shouldPurgeData($settings, self::OPTION_LAST_DELETE_PIWIK_LOGS, 'delete_logs_schedule_lowest_interval')) {
-            return false;
+            return \false;
         }
         /*
          * Tell the DB that log deletion has run BEFORE deletion is executed;
@@ -545,7 +545,7 @@ class PrivacyManager extends Plugin
         /** @var LogDataPurger $logDataPurger */
         $logDataPurger = StaticContainer::get('Piwik\\Plugins\\PrivacyManager\\LogDataPurger');
         $logDataPurger->purgeData($settings['delete_logs_older_than'], $shouldDeleteUnusedLogActions);
-        return true;
+        return \true;
     }
     /**
      * Returns an array describing what data would be purged if both raw data & report
@@ -590,7 +590,7 @@ class PrivacyManager extends Plugin
             $reportDate = $period->getDateStart();
         } elseif (Period::isMultiplePeriod($strDate, $strPeriod)) {
             // if a multiple period, this function is irrelevant
-            return false;
+            return \false;
         } else {
             // otherwise, use the date as given
             $reportDate = Date::factory($strDate);
@@ -618,7 +618,7 @@ class PrivacyManager extends Plugin
             // if report deletion is not enabled, the report shouldn't be purged
             $settings = self::getPurgeDataSettings();
             if ($settings['delete_reports_enable'] == 0) {
-                return false;
+                return \false;
             }
             $reportsOlderThan = $settings['delete_reports_older_than'];
         }
@@ -680,17 +680,17 @@ class PrivacyManager extends Plugin
         $initialDelete = Option::get(self::OPTION_LAST_DELETE_PIWIK_LOGS_INITIAL);
         if (empty($initialDelete)) {
             Option::set(self::OPTION_LAST_DELETE_PIWIK_LOGS_INITIAL, 1);
-            return false;
+            return \false;
         }
         // Make sure, log purging is allowed to run now
         $lastDelete = Option::get($lastRanOption);
         $deleteIntervalDays = $settings[$setting];
         $deleteIntervalSeconds = $this->getDeleteIntervalInSeconds($deleteIntervalDays);
-        if ($lastDelete === false || $lastDelete === '' || (int) $lastDelete + $deleteIntervalSeconds <= time()) {
-            return true;
+        if ($lastDelete === \false || $lastDelete === '' || (int) $lastDelete + $deleteIntervalSeconds <= time()) {
+            return \true;
         } else {
             // not time to run data purge
-            return false;
+            return \false;
         }
     }
     private function getDeleteIntervalInSeconds($deleteInterval)
@@ -736,13 +736,13 @@ class PrivacyManager extends Plugin
     private function shouldRenderFooterLinks(\Piwik\Plugins\PrivacyManager\SystemSettings $settings)
     {
         if (Piwik::isUserIsAnonymous()) {
-            return true;
+            return \true;
         }
-        $module = Common::getRequestVar('module', false);
+        $module = Common::getRequestVar('module', \false);
         if ($module == 'Widgetize') {
             return (bool) $settings->showInEmbeddedWidgets->getValue();
         }
-        return false;
+        return \false;
     }
     public function shouldAddTrackerFile(&$shouldAdd, $pluginName)
     {

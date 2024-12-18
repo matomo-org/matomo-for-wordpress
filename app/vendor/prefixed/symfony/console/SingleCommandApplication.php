@@ -19,8 +19,8 @@ use Matomo\Dependencies\Symfony\Component\Console\Output\OutputInterface;
 class SingleCommandApplication extends Command
 {
     private $version = 'UNKNOWN';
-    private $autoExit = true;
-    private $running = false;
+    private $autoExit = \true;
+    private $running = \false;
     /**
      * @return $this
      */
@@ -50,12 +50,12 @@ class SingleCommandApplication extends Command
         // Fix the usage of the command displayed with "--help"
         $this->setName($_SERVER['argv'][0]);
         $application->add($this);
-        $application->setDefaultCommand($this->getName(), true);
-        $this->running = true;
+        $application->setDefaultCommand($this->getName(), \true);
+        $this->running = \true;
         try {
             $ret = $application->run($input, $output);
         } finally {
-            $this->running = false;
+            $this->running = \false;
         }
         return $ret ?? 1;
     }

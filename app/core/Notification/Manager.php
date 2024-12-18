@@ -102,12 +102,12 @@ class Manager
     {
         self::saveNotificationAcrossUiRequestsIfNeeded($id, $notification);
         if (count(self::$notifications) >= self::MAX_NOTIFICATIONS_IN_SESSION) {
-            return false;
+            return \false;
         }
         // we store all kinda notifications here so in case the session is not enabled or disabled later there is still
         // a chance it gets delivered to the UI during the same request.
         self::$notifications[$id] = $notification;
-        return true;
+        return \true;
     }
     private static function saveNotificationAcrossUiRequestsIfNeeded($id, Notification $notification)
     {

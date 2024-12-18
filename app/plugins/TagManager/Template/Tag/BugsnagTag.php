@@ -14,7 +14,7 @@ use Piwik\Plugins\TagManager\Template\Tag\BaseTag;
 use Piwik\Validators\NotEmpty;
 class BugsnagTag extends BaseTag
 {
-    const ID = 'Bugsnag';
+    public const ID = 'Bugsnag';
     public function getId()
     {
         return self::ID;
@@ -29,11 +29,12 @@ class BugsnagTag extends BaseTag
             $field->title = Piwik::translate('TagManager_BugsnagTagApiKeyTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_TEXT;
             $field->description = Piwik::translate('TagManager_BugsnagTagApiKeyDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_BingUETTagIdPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->transform = function ($value) {
                 return trim($value);
             };
-        }), $this->makeSetting('collectUserIp', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('collectUserIp', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_BugsnagTagCollectUserIpTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
             $field->description = Piwik::translate('TagManager_BugsnagTagCollectUserIpDescription');

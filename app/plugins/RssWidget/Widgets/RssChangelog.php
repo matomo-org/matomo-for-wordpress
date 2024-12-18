@@ -30,8 +30,8 @@ class RssChangelog extends \Piwik\Widget\Widget
     {
         $rss = new RssRenderer($URL);
         $rss->setCountPosts(1);
-        $rss->showDescription(true);
-        $rss->showContent(false);
+        $rss->showDescription(\true);
+        $rss->showContent(\false);
         return $rss->get();
     }
     public function render()

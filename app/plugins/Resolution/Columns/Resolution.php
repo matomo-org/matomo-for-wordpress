@@ -47,7 +47,7 @@ class Resolution extends VisitDimension
         if ($visitor->getVisitorColumn($this->columnName) === Request::UNKNOWN_RESOLUTION) {
             return $this->onNewVisit($request, $visitor, $action);
         } else {
-            return false;
+            return \false;
         }
     }
 }

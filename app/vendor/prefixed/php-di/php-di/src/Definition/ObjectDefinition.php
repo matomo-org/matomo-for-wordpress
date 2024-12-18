@@ -165,7 +165,7 @@ class ObjectDefinition implements Definition
             return $this->lazy;
         }
         // Default value
-        return false;
+        return \false;
     }
     public function classExists() : bool
     {
@@ -199,7 +199,7 @@ class ObjectDefinition implements Definition
         $className = $this->getClassName();
         foreach ($replacements as $replacement) {
             $pos = strpos($className, DefinitionArray::WILDCARD);
-            if ($pos !== false) {
+            if ($pos !== \false) {
                 $className = substr_replace($className, $replacement, $pos, 1);
             }
         }
@@ -214,7 +214,7 @@ class ObjectDefinition implements Definition
         $className = $this->getClassName();
         $this->classExists = class_exists($className) || interface_exists($className);
         if (!$this->classExists) {
-            $this->isInstantiable = false;
+            $this->isInstantiable = \false;
             return;
         }
         $class = new ReflectionClass($className);

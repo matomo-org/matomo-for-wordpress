@@ -181,7 +181,7 @@ class CustomDimensions extends Plugin
     }
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     private function getCustomDimensions($idSite)
     {

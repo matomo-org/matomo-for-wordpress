@@ -94,6 +94,6 @@ class RequestProcessor extends Tracker\RequestProcessor
     }
     private function isValueSet($value)
     {
-        return $value !== '' && $value !== false && $value !== null;
+        return $value !== '' && $value !== \false && $value !== null;
     }
 }

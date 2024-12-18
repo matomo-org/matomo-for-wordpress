@@ -39,44 +39,44 @@ class Normalizer
     public static function isNormalized(string $s, int $form = self::FORM_C)
     {
         if (!\in_array($form, [self::NFD, self::NFKD, self::NFC, self::NFKC])) {
-            return false;
+            return \false;
         }
         if (!isset($s[strspn($s, self::$ASCII)])) {
-            return true;
+            return \true;
         }
         if (self::NFC == $form && preg_match('//u', $s) && !preg_match('/[^\\x00-\\x{2FF}]/u', $s)) {
-            return true;
+            return \true;
         }
         return self::normalize($s, $form) === $s;
     }
     public static function normalize(string $s, int $form = self::FORM_C)
     {
         if (!preg_match('//u', $s)) {
-            return false;
+            return \false;
         }
         switch ($form) {
             case self::NFC:
-                $C = true;
-                $K = false;
+                $C = \true;
+                $K = \false;
                 break;
             case self::NFD:
-                $C = false;
-                $K = false;
+                $C = \false;
+                $K = \false;
                 break;
             case self::NFKC:
-                $C = true;
-                $K = true;
+                $C = \true;
+                $K = \true;
                 break;
             case self::NFKD:
-                $C = false;
-                $K = true;
+                $C = \false;
+                $K = \true;
                 break;
             default:
                 if (\defined('Normalizer::NONE') && \Normalizer::NONE == $form) {
                     return $s;
                 }
                 if (80000 > \PHP_VERSION_ID) {
-                    return false;
+                    return \false;
                 }
                 throw new \ValueError('normalizer_normalize(): Argument #2 ($form) must be a a valid normalization form');
         }
@@ -253,6 +253,6 @@ class Normalizer
         if (file_exists($file = __DIR__ . '/Resources/unidata/' . $file . '.php')) {
             return require $file;
         }
-        return false;
+        return \false;
     }
 }

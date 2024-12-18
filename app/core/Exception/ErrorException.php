@@ -16,6 +16,6 @@ class ErrorException extends \ErrorException
 {
     public function isHtmlMessage()
     {
-        return true;
+        return \true;
     }
 }

@@ -49,7 +49,7 @@ class Goals extends \Piwik\Plugin
             return (int) $column;
         }
     }
-    public static function makeGoalColumn($idGoal, $column, $forceInt = true)
+    public static function makeGoalColumn($idGoal, $column, $forceInt = \true)
     {
         if ($forceInt) {
             // in non-archiver code idGoal can be, eg, ecommerceOrder
@@ -60,7 +60,7 @@ class Goals extends \Piwik\Plugin
     public static function getGoalColumns($idGoal)
     {
         $columns = array('nb_conversions', 'nb_visits_converted', 'revenue');
-        if ($idGoal === false) {
+        if ($idGoal === \false) {
             return $columns;
         }
         // Orders
@@ -157,7 +157,7 @@ class Goals extends \Piwik\Plugin
                 return;
             }
         }
-        $goals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1'], $default = []);
+        $goals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1', 'orderByName' => \true], $default = []);
         $order = 900;
         foreach ($goals as $goal) {
             $category = new Subcategory();

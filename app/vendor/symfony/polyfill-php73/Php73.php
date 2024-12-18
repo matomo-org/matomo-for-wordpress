@@ -24,9 +24,9 @@ final class Php73
      *
      * @return array|float|int
      */
-    public static function hrtime($asNum = false)
+    public static function hrtime($asNum = \false)
     {
-        $ns = microtime(false);
+        $ns = microtime(\false);
         $s = substr($ns, 11) - self::$startAt;
         $ns = 1000000000.0 * (float) $ns;
         if ($asNum) {

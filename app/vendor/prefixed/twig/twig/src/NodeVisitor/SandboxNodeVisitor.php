@@ -14,12 +14,14 @@ use Matomo\Dependencies\Twig\Environment;
 use Matomo\Dependencies\Twig\Node\CheckSecurityCallNode;
 use Matomo\Dependencies\Twig\Node\CheckSecurityNode;
 use Matomo\Dependencies\Twig\Node\CheckToStringNode;
+use Matomo\Dependencies\Twig\Node\Expression\ArrayExpression;
 use Matomo\Dependencies\Twig\Node\Expression\Binary\ConcatBinary;
 use Matomo\Dependencies\Twig\Node\Expression\Binary\RangeBinary;
 use Matomo\Dependencies\Twig\Node\Expression\FilterExpression;
 use Matomo\Dependencies\Twig\Node\Expression\FunctionExpression;
 use Matomo\Dependencies\Twig\Node\Expression\GetAttrExpression;
 use Matomo\Dependencies\Twig\Node\Expression\NameExpression;
+use Matomo\Dependencies\Twig\Node\Expression\Unary\SpreadUnary;
 use Matomo\Dependencies\Twig\Node\ModuleNode;
 use Matomo\Dependencies\Twig\Node\Node;
 use Matomo\Dependencies\Twig\Node\PrintNode;
@@ -31,18 +33,18 @@ use Matomo\Dependencies\Twig\Node\SetNode;
  */
 final class SandboxNodeVisitor implements NodeVisitorInterface
 {
-    private $inAModule = false;
+    private $inAModule = \false;
     /** @var array<string, int> */
     private $tags;
     /** @var array<string, int> */
     private $filters;
     /** @var array<string, int> */
     private $functions;
-    private $needsToStringWrap = false;
+    private $needsToStringWrap = \false;
     public function enterNode(Node $node, Environment $env) : Node
     {
         if ($node instanceof ModuleNode) {
-            $this->inAModule = true;
+            $this->inAModule = \true;
             $this->tags = [];
             $this->filters = [];
             $this->functions = [];
@@ -65,11 +67,11 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
                 $this->functions['range'] = $node->getTemplateLine();
             }
             if ($node instanceof PrintNode) {
-                $this->needsToStringWrap = true;
+                $this->needsToStringWrap = \true;
                 $this->wrapNode($node, 'expr');
             }
             if ($node instanceof SetNode && !$node->getAttribute('capture')) {
-                $this->needsToStringWrap = true;
+                $this->needsToStringWrap = \true;
             }
             // wrap outer nodes that can implicitly call __toString()
             if ($this->needsToStringWrap) {
@@ -91,12 +93,12 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     public function leaveNode(Node $node, Environment $env) : ?Node
     {
         if ($node instanceof ModuleNode) {
-            $this->inAModule = false;
+            $this->inAModule = \false;
             $node->setNode('constructor_end', new Node([new CheckSecurityCallNode(), $node->getNode('constructor_end')]));
             $node->setNode('class_end', new Node([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('class_end')]));
         } elseif ($this->inAModule) {
             if ($node instanceof PrintNode || $node instanceof SetNode) {
-                $this->needsToStringWrap = false;
+                $this->needsToStringWrap = \false;
             }
         }
         return $node;
@@ -105,7 +107,18 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     {
         $expr = $node->getNode($name);
         if (($expr instanceof NameExpression || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
-            $node->setNode($name, new CheckToStringNode($expr));
+            // Simplify in 4.0 as the spread attribute has been removed there
+            $new = new CheckToStringNode($expr);
+            if ($expr->hasAttribute('spread')) {
+                $new->setAttribute('spread', $expr->getAttribute('spread'));
+            }
+            $node->setNode($name, $new);
+        } elseif ($expr instanceof SpreadUnary) {
+            $this->wrapNode($expr, 'node');
+        } elseif ($expr instanceof ArrayExpression) {
+            foreach ($expr as $name => $_) {
+                $this->wrapNode($expr, $name);
+            }
         }
     }
     private function wrapArrayNode(Node $node, string $name) : void

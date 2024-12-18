@@ -40,7 +40,7 @@ class RolesProvider
     public function isValidRole(string $roleId) : bool
     {
         $roles = $this->getAllRoleIds();
-        return \in_array($roleId, $roles, true);
+        return \in_array($roleId, $roles, \true);
     }
     /**
      * @param $roleId

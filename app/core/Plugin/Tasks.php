@@ -58,7 +58,7 @@ class Tasks
      * @return Schedule
      * @api
      */
-    protected function hourly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function hourly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'hourly', $priority, $ttlInSeconds);
     }
@@ -68,7 +68,7 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function daily($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function daily($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'daily', $priority, $ttlInSeconds);
     }
@@ -78,7 +78,7 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function weekly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function weekly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'weekly', $priority, $ttlInSeconds);
     }
@@ -88,7 +88,7 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function monthly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function monthly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'monthly', $priority, $ttlInSeconds);
     }
@@ -110,7 +110,7 @@ class Tasks
      *
      * @api
      */
-    protected function custom($objectOrClassName, $methodName, $methodParameter, $time, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function custom($objectOrClassName, $methodName, $methodParameter, $time, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         $this->checkIsValidTask($objectOrClassName, $methodName);
         if (is_string($time)) {

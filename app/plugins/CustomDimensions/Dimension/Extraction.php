@@ -18,7 +18,7 @@ class Extraction
 {
     private $dimension = '';
     private $pattern = '';
-    private $caseSensitive = true;
+    private $caseSensitive = \true;
     public function __construct($dimension, $pattern)
     {
         $this->dimension = $dimension;

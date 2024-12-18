@@ -53,7 +53,7 @@ class NullOutput implements OutputInterface
      */
     public function isDecorated()
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -74,28 +74,28 @@ class NullOutput implements OutputInterface
      */
     public function isQuiet()
     {
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
      */
     public function isVerbose()
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
      */
     public function isVeryVerbose()
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
      */
     public function isDebug()
     {
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -107,7 +107,7 @@ class NullOutput implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function write($messages, bool $newline = false, int $options = self::OUTPUT_NORMAL)
+    public function write($messages, bool $newline = \false, int $options = self::OUTPUT_NORMAL)
     {
         // do nothing
     }

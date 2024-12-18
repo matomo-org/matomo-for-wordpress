@@ -28,7 +28,7 @@ class ServerInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
     {
         $results = [];
         if (!empty($_SERVER['SERVER_SOFTWARE'])) {
-            $isGlobalConfigIniAccessible = true;
+            $isGlobalConfigIniAccessible = \true;
             // Assume true if not installed yet
             // Only attempt to check file accessibility if the config setting allows it
             $disableFileAccessCheck = GeneralConfig::getConfigValue('enable_required_directories_diagnostic') == 0;
@@ -38,7 +38,7 @@ class ServerInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
                     $isGlobalConfigIniAccessible = $rpd->isGlobalConfigIniAccessible();
                 }
             }
-            if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== false && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
+            if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== \false && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
                 $comment = $_SERVER['SERVER_SOFTWARE'] . "<br><br>";
                 $comment .= $this->translator->translate('Diagnostics_HtaccessWarningNginx', ['<a href="https://github.com/matomo-org/matomo-nginx#readme" target="_blank">', '</a>']);
                 $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult('Server Info', \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment);

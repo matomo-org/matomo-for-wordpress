@@ -122,7 +122,7 @@ class AddColumnsProcessedMetricsGoal extends \Piwik\DataTable\Filter\AddColumnsP
         $this->isEcommerce = $this->processOnlyIdGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER || $this->processOnlyIdGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART;
         parent::__construct($table);
         // Ensure that all rows with no visit but conversions will be displayed
-        $this->deleteRowsWithNoVisit = false;
+        $this->deleteRowsWithNoVisit = \false;
         $this->goalsToProcess = $goalsToProcess;
     }
     /**

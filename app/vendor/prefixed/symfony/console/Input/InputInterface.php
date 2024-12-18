@@ -38,7 +38,7 @@ interface InputInterface
      *
      * @return bool
      */
-    public function hasParameterOption($values, bool $onlyParams = false);
+    public function hasParameterOption($values, bool $onlyParams = \false);
     /**
      * Returns the value of a raw option (not parsed).
      *
@@ -53,7 +53,7 @@ interface InputInterface
      *
      * @return mixed
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false);
+    public function getParameterOption($values, $default = \false, bool $onlyParams = \false);
     /**
      * Binds the current Input instance with the given arguments and options.
      *

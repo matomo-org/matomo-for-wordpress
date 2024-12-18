@@ -37,7 +37,7 @@ class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
                 return '';
             }
             $index = array_search(trim(urldecode($brand)), $brands);
-            if ($index === false) {
+            if ($index === \false) {
                 throw new \Exception("deviceBrand segment must be one of: {$brandList}");
             }
             return $index;

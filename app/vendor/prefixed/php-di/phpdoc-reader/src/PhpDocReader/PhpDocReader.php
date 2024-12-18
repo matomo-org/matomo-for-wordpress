@@ -22,7 +22,7 @@ class PhpDocReader
     /**
      * @param bool $ignorePhpDocErrors Enable or disable throwing errors when PhpDoc errors occur (when parsing annotations).
      */
-    public function __construct(bool $ignorePhpDocErrors = false)
+    public function __construct(bool $ignorePhpDocErrors = \false)
     {
         $this->parser = new UseStatementParser();
         $this->ignorePhpDocErrors = $ignorePhpDocErrors;
@@ -35,7 +35,7 @@ class PhpDocReader
      */
     public function getPropertyType(ReflectionProperty $property) : ?string
     {
-        return $this->readPropertyType($property, true);
+        return $this->readPropertyType($property, \true);
     }
     /**
      * Parse the docblock of the property to get the class of the var annotation.
@@ -45,7 +45,7 @@ class PhpDocReader
      */
     public function getPropertyClass(ReflectionProperty $property) : ?string
     {
-        return $this->readPropertyType($property, false);
+        return $this->readPropertyType($property, \false);
     }
     private function readPropertyType(ReflectionProperty $property, bool $allowPrimitiveTypes) : ?string
     {
@@ -95,7 +95,7 @@ class PhpDocReader
      */
     public function getParameterType(ReflectionParameter $parameter) : ?string
     {
-        return $this->readParameterClass($parameter, true);
+        return $this->readParameterClass($parameter, \true);
     }
     /**
      * Parse the docblock of the property to get the class of the param annotation.
@@ -105,7 +105,7 @@ class PhpDocReader
      */
     public function getParameterClass(ReflectionParameter $parameter) : ?string
     {
-        return $this->readParameterClass($parameter, false);
+        return $this->readParameterClass($parameter, \false);
     }
     private function readParameterClass(ReflectionParameter $parameter, bool $allowPrimitiveTypes) : ?string
     {
@@ -161,13 +161,13 @@ class PhpDocReader
      */
     private function tryResolveFqn(string $type, ReflectionClass $class, Reflector $member) : ?string
     {
-        $alias = ($pos = strpos($type, '\\')) === false ? $type : substr($type, 0, $pos);
+        $alias = ($pos = strpos($type, '\\')) === \false ? $type : substr($type, 0, $pos);
         $loweredAlias = strtolower($alias);
         // Retrieve "use" statements
         $uses = $this->parser->parseUseStatements($class);
         if (isset($uses[$loweredAlias])) {
             // Imported classes
-            if ($pos !== false) {
+            if ($pos !== \false) {
                 return $uses[$loweredAlias] . substr($type, $pos);
             }
             return $uses[$loweredAlias];

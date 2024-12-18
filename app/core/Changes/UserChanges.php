@@ -64,7 +64,7 @@ class UserChanges
     {
         $lastShown = isset($this->user['ts_changes_shown']) ? $this->user['ts_changes_shown'] : null;
         if (!$lastShown) {
-            return false;
+            return \false;
             // Never shown
         }
         // Less than 24hrs since last shown

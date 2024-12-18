@@ -38,7 +38,7 @@ class ColumnCallbackAddMetadata extends BaseFilter
      *                                  instead.
      * @param bool $applyToSummaryRow Whether the callback should be applied to the summary row or not.
      */
-    public function __construct($table, $columnsToRead, $metadataToAdd, $functionToApply = null, $functionParameters = null, $applyToSummaryRow = true)
+    public function __construct($table, $columnsToRead, $metadataToAdd, $functionToApply = null, $functionParameters = null, $applyToSummaryRow = \true)
     {
         parent::__construct($table);
         if (!is_array($columnsToRead)) {
@@ -75,7 +75,7 @@ class ColumnCallbackAddMetadata extends BaseFilter
             } else {
                 $newValue = $parameters[0];
             }
-            if ($newValue !== false) {
+            if ($newValue !== \false) {
                 $row->addMetadata($this->metadataToAdd, $newValue);
             }
         }

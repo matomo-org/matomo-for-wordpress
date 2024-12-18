@@ -35,7 +35,7 @@ class InMemoryUIAsset extends UIAsset
     }
     public function exists()
     {
-        return false;
+        return \false;
     }
     public function writeContent($content)
     {

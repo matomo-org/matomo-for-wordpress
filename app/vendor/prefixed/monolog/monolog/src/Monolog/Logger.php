@@ -107,7 +107,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * @var bool
      */
-    protected $microsecondTimestamps = true;
+    protected $microsecondTimestamps = \true;
     /**
      * @var callable
      */
@@ -196,7 +196,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function pushProcessor($callback)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export($callback, true) . ' given');
+            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export($callback, \true) . ' given');
         }
         array_unshift($this->processors, $callback);
         return $this;
@@ -262,14 +262,14 @@ class Logger implements LoggerInterface, ResettableInterface
             next($this->handlers);
         }
         if (null === $handlerKey) {
-            return false;
+            return \false;
         }
         if (!static::$timezone) {
             static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
         }
         // php7.1+ always has microseconds enabled, so we do not need this hack
-        if ($this->microsecondTimestamps && PHP_VERSION_ID < 70100) {
-            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
+        if ($this->microsecondTimestamps && \PHP_VERSION_ID < 70100) {
+            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(\true)), static::$timezone);
         } else {
             $ts = new \DateTime('now', static::$timezone);
         }
@@ -280,7 +280,7 @@ class Logger implements LoggerInterface, ResettableInterface
                 $record = call_user_func($processor, $record);
             }
             while ($handler = current($this->handlers)) {
-                if (true === $handler->handle($record)) {
+                if (\true === $handler->handle($record)) {
                     break;
                 }
                 next($this->handlers);
@@ -288,7 +288,7 @@ class Logger implements LoggerInterface, ResettableInterface
         } catch (Exception $e) {
             $this->handleException($e, $record);
         }
-        return true;
+        return \true;
     }
     /**
      * Ends a log cycle and frees all resources used by handlers.
@@ -470,10 +470,10 @@ class Logger implements LoggerInterface, ResettableInterface
         $record = array('level' => $level);
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Set a custom exception handler
@@ -484,7 +484,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function setExceptionHandler($callback)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Exception handler must be valid callable (callback or object with an __invoke method), ' . var_export($callback, true) . ' given');
+            throw new \InvalidArgumentException('Exception handler must be valid callable (callback or object with an __invoke method), ' . var_export($callback, \true) . ' given');
         }
         $this->exceptionHandler = $callback;
         return $this;

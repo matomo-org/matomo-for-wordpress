@@ -42,7 +42,7 @@ final class Token
     }
     public function __toString()
     {
-        return \sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
+        return \sprintf('%s(%s)', self::typeToString($this->type, \true), $this->value);
     }
     /**
      * Tests the current token for a type and/or a value.
@@ -75,7 +75,7 @@ final class Token
     {
         return $this->value;
     }
-    public static function typeToString(int $type, bool $short = false) : string
+    public static function typeToString(int $type, bool $short = \false) : string
     {
         switch ($type) {
             case self::EOF_TYPE:

@@ -27,7 +27,7 @@ class ArchivingDbAdapter
      * @var int
      */
     private $maxExecutionTime;
-    public function __construct($wrapped, LoggerInterface $logger = null)
+    public function __construct($wrapped, ?LoggerInterface $logger = null)
     {
         $this->wrapped = $wrapped;
         $this->logger = $logger;
@@ -97,7 +97,7 @@ class ArchivingDbAdapter
             return call_user_func_array([$this->wrapped, $function], $args);
         } catch (\Exception $e) {
             if ($this->isErrNo($e, \Piwik\Updater\Migration\Db::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_QUERY_INTERRUPTED) || $this->isErrNo($e, \Piwik\Updater\Migration\Db::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_SORT_ABORTED)) {
-                $this->logger->warning('Archiver query exceeded maximum execution time: {details}', ['details' => json_encode($args, true)]);
+                $this->logger->warning('Archiver query exceeded maximum execution time: {details}', ['details' => json_encode($args, \true)]);
             }
             throw $e;
         }

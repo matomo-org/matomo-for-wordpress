@@ -31,7 +31,7 @@ class PromoCrashAnalytics extends \Piwik\Plugins\ProfessionalServices\Widgets\Di
         $view = new View('@ProfessionalServices/pluginAdvertising');
         $view->plugin = $pluginInfo;
         $view->widgetName = self::getDismissibleWidgetName();
-        $view->userCanDismiss = Piwik::isUserIsAnonymous() === false;
+        $view->userCanDismiss = Piwik::isUserIsAnonymous() === \false;
         $view->title = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', $pluginInfo['displayName']);
         $view->listOfFeatures = [Piwik::translate('ProfessionalServices_CrashAnalyticsFeature01'), Piwik::translate('ProfessionalServices_CrashAnalyticsFeature02'), Piwik::translate('ProfessionalServices_CrashAnalyticsFeature03')];
         return $view->render();

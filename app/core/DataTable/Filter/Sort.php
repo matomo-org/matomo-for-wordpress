@@ -41,7 +41,7 @@ class Sort extends BaseFilter
      *                                               If callback given it will sort by the column returned by the callback (if any)
      *                                               callback will be called with 2 parameters: primaryColumnToSort and table
      */
-    public function __construct($table, $columnToSort, $order = 'desc', $naturalSort = true, $recursiveSort = true, $doSortBySecondaryColumn = false)
+    public function __construct($table, $columnToSort, $order = 'desc', $naturalSort = \true, $recursiveSort = \true, $doSortBySecondaryColumn = \false)
     {
         parent::__construct($table);
         if ($recursiveSort) {
@@ -71,7 +71,7 @@ class Sort extends BaseFilter
             return;
         }
         $row = $table->getFirstRow();
-        if ($row === false) {
+        if ($row === \false) {
             return;
         }
         $config = new Sorter\Config();
@@ -88,7 +88,7 @@ class Sort extends BaseFilter
         $config->secondarySortOrder = $sorter->getSecondarySortOrder($this->order, $config->secondaryColumnToSort);
         $config->secondarySortFlags = $sorter->getBestSortFlags($table, $config->secondaryColumnToSort);
         // secondary sort should not be needed for all other sort flags (eg string/natural sort) as label is unique and would make it slower
-        $isSecondaryColumnSortNeeded = $config->primarySortFlags === SORT_NUMERIC;
+        $isSecondaryColumnSortNeeded = $config->primarySortFlags === \SORT_NUMERIC;
         $config->isSecondaryColumnSortEnabled = $this->isSecondaryColumnSortEnabled && $isSecondaryColumnSortNeeded;
         $this->sort($sorter, $table);
     }

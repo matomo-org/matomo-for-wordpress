@@ -171,7 +171,7 @@ class API extends \Piwik\Plugin\API
      *                         cache the result.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualReportsSummary($forceCache = false)
+    public function getIndividualReportsSummary($forceCache = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByBlobName($forceCache);
@@ -186,7 +186,7 @@ class API extends \Piwik\Plugin\API
      *                         cache the result.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualMetricsSummary($forceCache = false)
+    public function getIndividualMetricsSummary($forceCache = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByMetricName($forceCache);

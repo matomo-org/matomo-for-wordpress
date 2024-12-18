@@ -55,7 +55,7 @@ namespace {
          * Current TCPDF version.
          * @private static
          */
-        private static $tcpdf_version = '6.7.5';
+        private static $tcpdf_version = '6.7.7';
         /**
          * String alias for total number of pages.
          * @public static
@@ -366,7 +366,9 @@ namespace {
             if (\function_exists('posix_getpid')) {
                 $rnd .= \posix_getpid();
             }
-            if (\function_exists('openssl_random_pseudo_bytes') and \strtoupper(\substr(\PHP_OS, 0, 3)) !== 'WIN') {
+            if (\function_exists('random_bytes')) {
+                $rnd .= \random_bytes(512);
+            } elseif (\function_exists('openssl_random_pseudo_bytes') and \strtoupper(\substr(\PHP_OS, 0, 3)) !== 'WIN') {
                 // this is not used on windows systems because it is very slow for a know bug
                 $rnd .= \openssl_random_pseudo_bytes(512);
             } else {
@@ -374,7 +376,7 @@ namespace {
                     $rnd .= \uniqid('', \true);
                 }
             }
-            return $rnd . $seed . __FILE__ . \serialize($_SERVER) . \microtime(\true);
+            return $rnd . $seed . __FILE__ . \microtime(\true);
         }
         /**
          * Encrypts a string using MD5 and returns it's value as a binary string.
@@ -1887,7 +1889,6 @@ namespace {
                     // try to get remote file data using cURL
                     $crs = \curl_init();
                     \curl_setopt($crs, \CURLOPT_URL, $path);
-                    \curl_setopt($crs, \CURLOPT_BINARYTRANSFER, \true);
                     \curl_setopt($crs, \CURLOPT_FAILONERROR, \true);
                     \curl_setopt($crs, \CURLOPT_RETURNTRANSFER, \true);
                     if (\ini_get('open_basedir') == '' && !\ini_get('safe_mode')) {

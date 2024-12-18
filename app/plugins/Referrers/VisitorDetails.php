@@ -30,8 +30,19 @@ class VisitorDetails extends VisitorDetailsAbstract
     public function renderVisitorDetails($visitorDetails)
     {
         $view = new View('@Referrers/_visitorDetails.twig');
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->visitInfo = $visitorDetails;
+        return [[10, $view->render()]];
+    }
+    public function renderActionTooltip($action, $visitInfo)
+    {
+        if ($action['type'] !== 'goal' && $action['type'] !== 'ecommerceOrder' || empty($action['referrerType'])) {
+            return [];
+        }
+        // Attribution information for goals
+        $view = new View('@Referrers/_actionTooltip');
+        $view->sendHeadersWhenRendering = \false;
+        $view->action = $action;
         return [[10, $view->render()]];
     }
     protected function getReferrerType()
@@ -64,7 +75,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     protected function getKeywordPosition()
     {
-        if ($this->getReferrerType() == 'search' && strpos($this->getReferrerName(), 'Google') !== false) {
+        if ($this->getReferrerType() == 'search' && strpos($this->getReferrerName(), 'Google') !== \false) {
             $url = @parse_url($this->details['referer_url']);
             if (empty($url['query'])) {
                 return null;
@@ -78,7 +89,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     protected function getReferrerName() : string
     {
-        return html_entity_decode($this->details['referer_name'] ?? '', ENT_QUOTES, "UTF-8");
+        return html_entity_decode($this->details['referer_name'] ?? '', \ENT_QUOTES, "UTF-8");
     }
     protected function getSearchEngineUrl()
     {

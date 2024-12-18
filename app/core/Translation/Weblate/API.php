@@ -60,10 +60,10 @@ class API
         $resources = $this->getAvailableResources();
         foreach ($resources as $res) {
             if ($res->slug == $resource) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns all language codes the Weblate project is available for
@@ -96,7 +96,7 @@ class API
      * @throws AuthenticationFailedException
      * @throws Exception
      */
-    public function getTranslations($resource, $language, $raw = false)
+    public function getTranslations($resource, $language, $raw = \false)
     {
         if ($this->resourceExists($resource)) {
             $apiPath = 'translations/' . $this->projectSlug . '/' . $resource . '/' . $language . '/file/';
@@ -113,10 +113,10 @@ class API
      * @throws AuthenticationFailedException
      * @throws Exception
      */
-    protected function getApiResults($apiPath, $raw = false)
+    protected function getApiResults($apiPath, $raw = \false)
     {
         $apiUrl = $this->apiUrl . $apiPath;
-        $response = Http::sendHttpRequestBy(Http::getTransportMethod(), $apiUrl, 60, null, null, null, 5, false, false, false, true, 'GET', null, null, null, ['Authorization: Token ' . $this->apiToken]);
+        $response = Http::sendHttpRequestBy(Http::getTransportMethod(), $apiUrl, 60, null, null, null, 5, \false, \false, \false, \true, 'GET', null, null, null, ['Authorization: Token ' . $this->apiToken]);
         $httpStatus = $response['status'];
         $response = $response['data'];
         if ($httpStatus == 401) {

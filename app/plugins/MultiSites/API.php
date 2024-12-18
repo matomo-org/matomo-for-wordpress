@@ -36,13 +36,15 @@ class API extends \Piwik\Plugin\API
     public const METRIC_IS_ECOMMERCE_KEY = 'is_ecommerce';
     public const NB_VISITS_METRIC = 'nb_visits';
     public const NB_ACTIONS_METRIC = 'nb_actions';
+    public const NB_HITS_LABEL = 'hits';
+    public const NB_HITS_METRIC = 'Actions_hits';
     public const NB_PAGEVIEWS_LABEL = 'nb_pageviews';
     public const NB_PAGEVIEWS_METRIC = 'Actions_nb_pageviews';
     public const GOAL_REVENUE_METRIC = 'revenue';
     public const GOAL_CONVERSION_METRIC = 'nb_conversions';
     public const ECOMMERCE_ORDERS_METRIC = 'orders';
     public const ECOMMERCE_REVENUE_METRIC = 'ecommerce_revenue';
-    private static $baseMetrics = array(self::NB_VISITS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbVisits', self::METRIC_EVOLUTION_COL_NAME_KEY => 'visits_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false), self::NB_ACTIONS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbActions', self::METRIC_EVOLUTION_COL_NAME_KEY => 'actions_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false));
+    private static $baseMetrics = array(self::NB_VISITS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbVisits', self::METRIC_EVOLUTION_COL_NAME_KEY => 'visits_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \false), self::NB_ACTIONS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbActions', self::METRIC_EVOLUTION_COL_NAME_KEY => 'actions_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \false));
     /**
      * Returns a report displaying the total visits, actions and revenue, as
      * well as the evolution of these values, of all existing sites over a
@@ -67,17 +69,31 @@ class API extends \Piwik\Plugin\API
      * @param array $showColumns If specified, only the requested columns will be fetched
      * @return DataTable
      */
-    public function getAll($period, $date, $segment = false, $_restrictSitesToLogin = false, $enhanced = false, $pattern = false, $showColumns = array())
+    public function getAll($period, $date, $segment = \false, $_restrictSitesToLogin = \false, $enhanced = \false, $pattern = \false, $showColumns = array())
     {
         Piwik::checkUserHasSomeViewAccess();
-        $sites = $this->getSitesIdFromPattern($pattern, $_restrictSitesToLogin);
+        $idSites = $this->getSitesIdFromPattern($pattern, $_restrictSitesToLogin);
+        /**
+         * This event can be used to manipulate the sites being displayed on all websites dashboard.
+         *
+         * **Example**
+         *
+         *     Piwik::addAction('MultiSites.filterSites', function (&$idSites) {
+         *         $idSites = array_filter($idSites, function($idSite) {
+         *             return $idSite !== 1
+         *         });
+         *     });
+         *
+         * @param array &$idSites List of idSites that the current user would be allowed to see in all websites dashboard.
+         */
+        Piwik::postEvent('MultiSites.filterSites', [&$idSites]);
         if (!empty($showColumns) && !is_array($showColumns)) {
             $showColumns = explode(',', $showColumns);
         }
-        if (empty($sites)) {
+        if (empty($idSites)) {
             return new DataTable();
         }
-        return $this->buildDataTable($sites, $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested = true, $showColumns);
+        return $this->buildDataTable($idSites, $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested = \true, $showColumns);
     }
     /**
      * Fetches the list of sites which names match the string pattern
@@ -97,7 +113,7 @@ class API extends \Piwik\Plugin\API
             if (Piwik::hasUserSuperUserAccess() && !$scheduler->isRunningTask()) {
                 APISitesManager::getInstance()->getAllSites();
             } else {
-                APISitesManager::getInstance()->getSitesWithAtLeastViewAccess($limit = false, $_restrictSitesToLogin);
+                APISitesManager::getInstance()->getSitesWithAtLeastViewAccess($limit = \false, $_restrictSitesToLogin);
             }
         } else {
             $sites = Request::processRequest('SitesManager.getPatternMatchSites', array(
@@ -114,7 +130,11 @@ class API extends \Piwik\Plugin\API
         }
         // Both calls above have called Site::setSitesFromArray. We now get these sites:
         $sitesToProblablyAdd = Site::getSites();
-        return $sitesToProblablyAdd;
+        $idSites = [];
+        foreach ($sitesToProblablyAdd as $site) {
+            $idSites[] = $site['idsite'];
+        }
+        return $idSites;
     }
     /**
      * Same as getAll but for a unique Matomo site
@@ -129,11 +149,14 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $enhanced When true, return additional goal & ecommerce metrics
      * @return DataTable
      */
-    public function getOne($idSite, $period, $date, $segment = false, $_restrictSitesToLogin = false, $enhanced = false)
+    public function getOne($idSite, $period, $date, $segment = \false, $_restrictSitesToLogin = \false, $enhanced = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $sites = $this->getSiteFromId($idSite);
-        return $this->buildDataTable($sites, $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested = false, $showColumns = array());
+        $site = $this->getSiteFromId($idSite);
+        if (empty($site)) {
+            return new DataTable();
+        }
+        return $this->buildDataTable([$idSite], $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested = \false, $showColumns = array());
     }
     /**
      * @param null|string  $period
@@ -144,13 +167,13 @@ class API extends \Piwik\Plugin\API
      * @return array
      * @throws Exception
      */
-    public function getAllWithGroups($period = null, $date = null, $segment = false, $pattern = '', $filter_limit = 0)
+    public function getAllWithGroups($period = null, $date = null, $segment = \false, $pattern = '', $filter_limit = 0)
     {
         Piwik::checkUserHasSomeViewAccess();
         if (Period::isMultiplePeriod($date, $period)) {
             throw new Exception('Multiple periods are not supported');
         }
-        $segment = $segment ?: false;
+        $segment = $segment ?: \false;
         $request = $_GET + $_POST;
         $dashboard = new \Piwik\Plugins\MultiSites\Dashboard($period, $date, $segment);
         if ($pattern !== '') {
@@ -162,17 +185,10 @@ class API extends \Piwik\Plugin\API
     private function getSiteFromId($idSite)
     {
         $idSite = (int) $idSite;
-        $sites = array(APISitesManager::getInstance()->getSiteFromId($idSite));
-        return $sites;
+        return APISitesManager::getInstance()->getSiteFromId($idSite);
     }
-    private function buildDataTable($sitesToProblablyAdd, $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested, $showColumns)
+    private function buildDataTable($idSites, $period, $date, $segment, $_restrictSitesToLogin, $enhanced, $multipleWebsitesRequested, $showColumns)
     {
-        $idSites = array();
-        if (!empty($sitesToProblablyAdd)) {
-            foreach ($sitesToProblablyAdd as $site) {
-                $idSites[] = $site['idsite'];
-            }
-        }
         // build the archive type used to query archive data
         $archive = Archive::build($idSites, $period, $date, $segment, $_restrictSitesToLogin);
         // determine what data will be displayed
@@ -193,13 +209,15 @@ class API extends \Piwik\Plugin\API
         }
         $dataTable = $archive->getDataTableFromNumericAndMergeChildren($fieldsToGet);
         $this->populateLabel($dataTable);
+        // replace record names with user friendly metric names
+        $dataTable->filter('ReplaceColumnNames', array($columnNameRewrites));
         $totalMetrics = $this->preformatApiMetricsForTotalsCalculation($apiMetrics);
         $this->setMetricsTotalsMetadata($dataTable, $totalMetrics);
         // if the period isn't a range & a lastN/previousN date isn't used, we get the same
         // data for the last period to show the evolution of visits/actions/revenue
         [$strLastDate, $lastPeriod] = Range::getLastDate($date, $period);
-        if ($strLastDate !== false) {
-            if ($lastPeriod !== false) {
+        if ($strLastDate !== \false) {
+            if ($lastPeriod !== \false) {
                 // NOTE: no easy way to set last period date metadata when range of dates is requested.
                 //       will be easier if DataTable\Map::metadata is removed, and metadata that is
                 //       put there is put directly in DataTable::metadata.
@@ -207,10 +225,11 @@ class API extends \Piwik\Plugin\API
             }
             $pastArchive = Archive::build($idSites, $period, $strLastDate, $segment, $_restrictSitesToLogin);
             $pastData = $pastArchive->getDataTableFromNumericAndMergeChildren($fieldsToGet);
+            $pastData->filter('ReplaceColumnNames', array($columnNameRewrites));
             $this->populateLabel($pastData);
             // labels are needed to calculate evolution
             $this->calculateEvolutionPercentages($dataTable, $pastData, $apiMetrics);
-            $this->setPastTotalVisitsMetadata($dataTable, $pastData);
+            $this->setPreviousMetricsTotalsMetadata($dataTable, $pastData, $totalMetrics);
             if ($dataTable instanceof DataTable) {
                 // needed for MultiSites\Dashboard
                 $dataTable->setMetadata('pastData', $pastData);
@@ -243,8 +262,6 @@ class API extends \Piwik\Plugin\API
         } else {
             $dataTable->queueFilter('ColumnDelete', array('label'));
         }
-        // replace record names with user friendly metric names
-        $dataTable->queueFilter('ReplaceColumnNames', array($columnNameRewrites));
         // filter rows without visits
         // note: if only one website is queried and there are no visits, we can not remove the row otherwise
         // ResponseBuilder throws 'Call to a member function getColumns() on a non-object'
@@ -294,7 +311,7 @@ class API extends \Piwik\Plugin\API
             foreach ($apiMetrics as $metricSettings) {
                 $evolutionMetricClass = $this->isEcommerceEvolutionMetric($metricSettings) ? "Piwik\\Plugins\\MultiSites\\Columns\\Metrics\\EcommerceOnlyEvolutionMetric" : "Piwik\\Plugins\\CoreHome\\Columns\\Metrics\\EvolutionMetric";
                 $extraProcessedMetrics = is_array($extraProcessedMetrics) ? $extraProcessedMetrics : [];
-                $extraProcessedMetrics[] = new $evolutionMetricClass($metricSettings[self::METRIC_RECORD_NAME_KEY], $pastData, $metricSettings[self::METRIC_EVOLUTION_COL_NAME_KEY], $quotientPrecision = 1, $currentData);
+                $extraProcessedMetrics[] = new $evolutionMetricClass($metricSettings[self::METRIC_COL_NAME_KEY], $pastData, $metricSettings[self::METRIC_EVOLUTION_COL_NAME_KEY], $quotientPrecision = 1, $currentData);
             }
             $currentData->setMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME, $extraProcessedMetrics);
         }
@@ -306,18 +323,19 @@ class API extends \Piwik\Plugin\API
     {
         $metrics = self::$baseMetrics;
         if (Common::isActionsPluginEnabled()) {
-            $metrics[self::NB_PAGEVIEWS_LABEL] = array(self::METRIC_TRANSLATION_KEY => 'General_ColumnPageviews', self::METRIC_EVOLUTION_COL_NAME_KEY => 'pageviews_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_PAGEVIEWS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_PAGEVIEWS_LABEL, self::METRIC_IS_ECOMMERCE_KEY => false);
+            $metrics[self::NB_PAGEVIEWS_LABEL] = array(self::METRIC_TRANSLATION_KEY => 'General_ColumnPageviews', self::METRIC_EVOLUTION_COL_NAME_KEY => 'pageviews_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_PAGEVIEWS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_PAGEVIEWS_LABEL, self::METRIC_IS_ECOMMERCE_KEY => \false);
+            $metrics[self::NB_HITS_LABEL] = array(self::METRIC_TRANSLATION_KEY => 'General_ColumnHits', self::METRIC_EVOLUTION_COL_NAME_KEY => 'hits_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_HITS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_HITS_LABEL, self::METRIC_IS_ECOMMERCE_KEY => \false);
         }
         if (Common::isGoalPluginEnabled()) {
             // goal revenue metric
-            $metrics[self::GOAL_REVENUE_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_ColumnRevenue', self::METRIC_EVOLUTION_COL_NAME_KEY => self::GOAL_REVENUE_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_REVENUE_METRIC), self::METRIC_COL_NAME_KEY => self::GOAL_REVENUE_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false);
+            $metrics[self::GOAL_REVENUE_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_ColumnRevenue', self::METRIC_EVOLUTION_COL_NAME_KEY => self::GOAL_REVENUE_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_REVENUE_METRIC), self::METRIC_COL_NAME_KEY => self::GOAL_REVENUE_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \false);
             if ($enhanced) {
                 // number of goal conversions metric
-                $metrics[self::GOAL_CONVERSION_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'Goals_ColumnConversions', self::METRIC_EVOLUTION_COL_NAME_KEY => self::GOAL_CONVERSION_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_CONVERSION_METRIC), self::METRIC_COL_NAME_KEY => self::GOAL_CONVERSION_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false);
+                $metrics[self::GOAL_CONVERSION_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'Goals_ColumnConversions', self::METRIC_EVOLUTION_COL_NAME_KEY => self::GOAL_CONVERSION_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_CONVERSION_METRIC), self::METRIC_COL_NAME_KEY => self::GOAL_CONVERSION_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \false);
                 // number of orders
-                $metrics[self::ECOMMERCE_ORDERS_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_EcommerceOrders', self::METRIC_EVOLUTION_COL_NAME_KEY => self::ECOMMERCE_ORDERS_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_CONVERSION_METRIC, 0), self::METRIC_COL_NAME_KEY => self::ECOMMERCE_ORDERS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => true);
+                $metrics[self::ECOMMERCE_ORDERS_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_EcommerceOrders', self::METRIC_EVOLUTION_COL_NAME_KEY => self::ECOMMERCE_ORDERS_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_CONVERSION_METRIC, 0), self::METRIC_COL_NAME_KEY => self::ECOMMERCE_ORDERS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \true);
                 // eCommerce revenue
-                $metrics[self::ECOMMERCE_REVENUE_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_ProductRevenue', self::METRIC_EVOLUTION_COL_NAME_KEY => self::ECOMMERCE_REVENUE_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_REVENUE_METRIC, 0), self::METRIC_COL_NAME_KEY => self::ECOMMERCE_REVENUE_METRIC, self::METRIC_IS_ECOMMERCE_KEY => true);
+                $metrics[self::ECOMMERCE_REVENUE_METRIC] = array(self::METRIC_TRANSLATION_KEY => 'General_ProductRevenue', self::METRIC_EVOLUTION_COL_NAME_KEY => self::ECOMMERCE_REVENUE_METRIC . '_evolution', self::METRIC_RECORD_NAME_KEY => Archiver::getRecordName(self::GOAL_REVENUE_METRIC, 0), self::METRIC_COL_NAME_KEY => self::ECOMMERCE_REVENUE_METRIC, self::METRIC_IS_ECOMMERCE_KEY => \true);
             }
         }
         return $metrics;
@@ -327,7 +345,7 @@ class API extends \Piwik\Plugin\API
         $metrics = array();
         foreach ($apiMetrics as $label => $metricsInfo) {
             $totalMetadataName = self::getTotalMetadataName($label);
-            $metrics[$totalMetadataName] = $metricsInfo[self::METRIC_RECORD_NAME_KEY];
+            $metrics[$totalMetadataName] = $metricsInfo[self::METRIC_COL_NAME_KEY];
         }
         return $metrics;
     }
@@ -361,22 +379,38 @@ class API extends \Piwik\Plugin\API
         }
     }
     /**
-     * Sets the number of total visits in the pastTable on the dataTable as metadata.
+     * Sets the previous total visits, actions & revenue for a DataTable returned by
+     * $this->buildDataTable.
      *
      * @param DataTable $dataTable
-     * @param DataTable $pastTable
+     * @param array $apiMetrics Metrics info.
+     * @return array Array of three values: total visits, total actions, total revenue
      */
-    private function setPastTotalVisitsMetadata($dataTable, $pastTable)
+    private function setPreviousMetricsTotalsMetadata($dataTable, $pastData, $apiMetrics)
     {
-        if ($pastTable instanceof DataTable) {
-            $total = 0;
-            $metric = 'nb_visits';
-            $rows = $pastTable->getRows();
+        if ($dataTable instanceof DataTable\Map) {
+            $currentDataTables = $dataTable->getDataTables();
+            $pastDataTables = $pastData->getDataTables();
+            $currentLabels = array_keys($currentDataTables);
+            $pastLabels = array_keys($pastDataTables);
+            foreach ($currentLabels as $index => $label) {
+                $this->setPreviousMetricsTotalsMetadata($currentDataTables[$label], $pastDataTables[$pastLabels[$index]], $apiMetrics);
+            }
+        } else {
+            $totals = array();
+            foreach ($apiMetrics as $label => $recordName) {
+                $label = 'previous_' . $label;
+                $totals[$label] = 0;
+            }
+            $rows = $pastData->getRows();
             $rows = $this->filterRowsForTotalsCalculation($rows);
             foreach ($rows as $row) {
-                $total += $row->getColumn($metric);
+                foreach ($apiMetrics as $totalMetadataName => $recordName) {
+                    $totalMetadataName = 'previous_' . $totalMetadataName;
+                    $totals[$totalMetadataName] += $row->getColumn($recordName);
+                }
             }
-            $dataTable->setMetadata(self::getTotalMetadataName($metric . '_lastdate'), $total);
+            $dataTable->setMetadataValues($totals);
         }
     }
     /**

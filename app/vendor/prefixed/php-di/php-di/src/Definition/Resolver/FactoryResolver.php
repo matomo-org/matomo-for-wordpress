@@ -75,7 +75,7 @@ class FactoryResolver implements DefinitionResolver
     }
     public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
-        return true;
+        return \true;
     }
     private function resolveExtraParams(array $params) : array
     {

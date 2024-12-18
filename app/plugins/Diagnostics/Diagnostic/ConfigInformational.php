@@ -15,7 +15,7 @@ use Piwik\Plugin\Manager;
 use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 /**
- * Informatation about the Matomo configuration
+ * Informational about the Matomo configuration
  */
 class ConfigInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {

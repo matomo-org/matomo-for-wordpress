@@ -31,17 +31,17 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
     }
     public function getRecordMetadata(ArchiveProcessor $archiveProcessor) : array
     {
-        return [Record::make(Record::TYPE_BLOB, Archiver::SITE_SEARCH_RECORD_NAME)->setMaxRowsInTable(ArchivingHelper::$maximumRowsInDataTableSiteSearch), Record::make(Record::TYPE_BLOB, Archiver::PAGE_URLS_RECORD_NAME)->setBlobColumnAggregationOps(Metrics::$columnsAggregationOperation), Record::make(Record::TYPE_BLOB, Archiver::PAGE_TITLES_RECORD_NAME)->setBlobColumnAggregationOps(Metrics::$columnsAggregationOperation), Record::make(Record::TYPE_BLOB, Archiver::DOWNLOADS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_SEARCHES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_KEYWORDS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SITE_SEARCH_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_PAGEVIEWS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_PAGEVIEWS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_SUM_TIME_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_HITS_TIMED_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DOWNLOADS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_DOWNLOADS_RECORD_NAME)];
+        return [Record::make(Record::TYPE_BLOB, Archiver::SITE_SEARCH_RECORD_NAME)->setMaxRowsInTable(ArchivingHelper::$maximumRowsInDataTableSiteSearch), Record::make(Record::TYPE_BLOB, Archiver::PAGE_URLS_RECORD_NAME)->setBlobColumnAggregationOps(Metrics::getColumnsAggregationOperation()), Record::make(Record::TYPE_BLOB, Archiver::PAGE_TITLES_RECORD_NAME)->setBlobColumnAggregationOps(Metrics::getColumnsAggregationOperation()), Record::make(Record::TYPE_BLOB, Archiver::DOWNLOADS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_SEARCHES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_KEYWORDS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SITE_SEARCH_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_OUTLINKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_PAGEVIEWS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_PAGEVIEWS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_SUM_TIME_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_HITS_TIMED_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DOWNLOADS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_UNIQ_DOWNLOADS_RECORD_NAME)];
     }
     protected function aggregate(ArchiveProcessor $archiveProcessor) : array
     {
         $rankingQueryLimit = ArchivingHelper::getRankingQueryLimit();
         ArchivingHelper::reloadConfig();
         $tablesByType = $this->makeReportTables();
-        $this->archiveDayActions($archiveProcessor, $rankingQueryLimit, $tablesByType, array_diff(array_keys($tablesByType), [Action::TYPE_SITE_SEARCH]), true);
+        $this->archiveDayActions($archiveProcessor, $rankingQueryLimit, $tablesByType, array_diff(array_keys($tablesByType), [Action::TYPE_SITE_SEARCH]), \true);
         if ($archiveProcessor->getParams()->getSite()->isSiteSearchEnabled()) {
             $rankingQueryLimitSiteSearch = max($rankingQueryLimit, ArchivingHelper::$maximumRowsInDataTableSiteSearch);
-            $this->archiveDayActions($archiveProcessor, $rankingQueryLimitSiteSearch, $tablesByType, [Action::TYPE_SITE_SEARCH], false);
+            $this->archiveDayActions($archiveProcessor, $rankingQueryLimitSiteSearch, $tablesByType, [Action::TYPE_SITE_SEARCH], \false);
         }
         $this->archiveDayEntryActions($archiveProcessor->getLogAggregator(), $tablesByType, $rankingQueryLimit);
         $this->archiveDayExitActions($archiveProcessor->getLogAggregator(), $tablesByType, $rankingQueryLimit);
@@ -50,8 +50,8 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
         ArchivingHelper::clearActionsCache();
         $prefix = $archiveProcessor->getParams()->getSite()->getMainUrl();
         $prefix = rtrim($prefix, '/') . '/';
-        ArchivingHelper::setFolderPathMetadata($tablesByType[Action::TYPE_PAGE_URL], $isUrl = true, $prefix);
-        ArchivingHelper::setFolderPathMetadata($tablesByType[Action::TYPE_PAGE_TITLE], $isUrl = false);
+        ArchivingHelper::setFolderPathMetadata($tablesByType[Action::TYPE_PAGE_URL], $isUrl = \true, $prefix);
+        ArchivingHelper::setFolderPathMetadata($tablesByType[Action::TYPE_PAGE_TITLE], $isUrl = \false);
         $dataTable = $tablesByType[Action::TYPE_SITE_SEARCH];
         $this->deleteUnusedColumnsFromKeywordsDataTable($dataTable);
         foreach ($tablesByType as $dataTable) {
@@ -108,7 +108,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
             $dataTable->setMaximumAllowedRows($maxRows);
             if ($type == Action::TYPE_PAGE_URL || $type == Action::TYPE_PAGE_TITLE) {
                 // for page urls and page titles, performance metrics exist and have to be aggregated correctly
-                $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, Metrics::$columnsAggregationOperation);
+                $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, Metrics::getColumnsAggregationOperation());
             }
             $result[$type] = $dataTable;
         }
@@ -131,7 +131,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
         $groupBy = "log_link_visit_action.%s";
         $orderBy = "`" . PiwikMetrics::INDEX_PAGE_NB_HITS . "` DESC, name ASC";
         $siteSearchEnabled = $archiveProcessor->getParams()->getSite()->isSiteSearchEnabled();
-        $rankingQuery = false;
+        $rankingQuery = \false;
         if ($rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($rankingQueryLimit);
             $rankingQuery->addLabelColumn(array('idaction', 'name'));
@@ -157,7 +157,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
      */
     protected function archiveDayEntryActions(LogAggregator $logAggregator, array $actionsTablesByType, int $rankingQueryLimit)
     {
-        $rankingQuery = false;
+        $rankingQuery = \false;
         if ($rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($rankingQueryLimit);
             $rankingQuery->addLabelColumn('idaction');
@@ -168,9 +168,9 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
             $from = array("log_visit", array("table" => "log_action", "joinOn" => "log_visit.%s = log_action.idaction"));
             $orderBy = "`" . PiwikMetrics::INDEX_PAGE_ENTRY_NB_ACTIONS . "` DESC, log_action.name ASC";
         } else {
-            $extraSelects = false;
+            $extraSelects = \false;
             $from = "log_visit";
-            $orderBy = false;
+            $orderBy = \false;
         }
         $select = "log_visit.%s as idaction, {$extraSelects}\n                count(distinct log_visit.idvisitor) as `" . PiwikMetrics::INDEX_PAGE_ENTRY_NB_UNIQ_VISITORS . "`,\n                count(*) as `" . PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS . "`,\n                sum(log_visit.visit_total_actions) as `" . PiwikMetrics::INDEX_PAGE_ENTRY_NB_ACTIONS . "`,\n                sum(log_visit.visit_total_time) as `" . PiwikMetrics::INDEX_PAGE_ENTRY_SUM_VISIT_LENGTH . "`,\n                sum(case log_visit.visit_total_actions when 1 then 1 when 0 then 1 else 0 end) as `" . PiwikMetrics::INDEX_PAGE_ENTRY_BOUNCE_COUNT . "`";
         $where = $logAggregator->getWhereStatement('log_visit', 'visit_last_action_time');
@@ -184,7 +184,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
      */
     protected function archiveDayExitActions(LogAggregator $logAggregator, array $actionsTablesByType, int $rankingQueryLimit)
     {
-        $rankingQuery = false;
+        $rankingQuery = \false;
         if ($rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($rankingQueryLimit);
             $rankingQuery->addLabelColumn('idaction');
@@ -195,9 +195,9 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
             $from = array("log_visit", array("table" => "log_action", "joinOn" => "log_visit.%s = log_action.idaction"));
             $orderBy = "`" . PiwikMetrics::INDEX_PAGE_EXIT_NB_VISITS . "` DESC, log_action.name ASC";
         } else {
-            $extraSelects = false;
+            $extraSelects = \false;
             $from = "log_visit";
-            $orderBy = false;
+            $orderBy = \false;
         }
         $select = "log_visit.%s as idaction, {$extraSelects}\n                count(distinct log_visit.idvisitor) as `" . PiwikMetrics::INDEX_PAGE_EXIT_NB_UNIQ_VISITORS . "`,\n                count(*) as `" . PiwikMetrics::INDEX_PAGE_EXIT_NB_VISITS . "`";
         $where = $logAggregator->getWhereStatement('log_visit', 'visit_last_action_time');
@@ -212,7 +212,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
      */
     protected function archiveDayActionsTime(LogAggregator $logAggregator, array $actionsTablesByType, int $rankingQueryLimit)
     {
-        $rankingQuery = false;
+        $rankingQuery = \false;
         if ($rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($rankingQueryLimit);
             $rankingQuery->addLabelColumn('idaction');
@@ -222,9 +222,9 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
             $from = array("log_link_visit_action", array("table" => "log_action", "joinOn" => "log_link_visit_action.%s = log_action.idaction"));
             $orderBy = "`" . PiwikMetrics::INDEX_PAGE_NB_HITS . "` DESC, log_action.name ASC";
         } else {
-            $extraSelects = false;
+            $extraSelects = \false;
             $from = "log_link_visit_action";
-            $orderBy = false;
+            $orderBy = \false;
         }
         $select = "log_link_visit_action.%s as idaction, {$extraSelects}\n                sum(log_link_visit_action.time_spent_ref_action) as `" . PiwikMetrics::INDEX_PAGE_SUM_TIME_SPENT . "`";
         $where = $logAggregator->getWhereStatement('log_link_visit_action', 'server_time');
@@ -233,7 +233,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
         $this->archiveDayQueryProcess($logAggregator, $actionsTablesByType, $select, $from, $where, $groupBy, $orderBy, "idaction_url_ref", $rankingQuery);
         $this->archiveDayQueryProcess($logAggregator, $actionsTablesByType, $select, $from, $where, $groupBy, $orderBy, "idaction_name_ref", $rankingQuery);
     }
-    protected function archiveDayQueryProcess(LogAggregator $logAggregator, array $actionsTablesByType, string $select, $from, string $where, string $groupBy, $orderBy, string $sprintfField, RankingQuery $rankingQuery = null, array $metricsConfig = array()) : void
+    protected function archiveDayQueryProcess(LogAggregator $logAggregator, array $actionsTablesByType, string $select, $from, string $where, string $groupBy, $orderBy, string $sprintfField, ?RankingQuery $rankingQuery = null, array $metricsConfig = array()) : void
     {
         $select = sprintf($select, $sprintfField);
         // get query with segmentation
@@ -299,11 +299,11 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
             $goals[] = GoalManager::IDGOAL_ORDER;
         }
         foreach ($goals as $idGoal) {
-            $this->archiveDayActionsGoalsPages($archiveProcessor->getLogAggregator(), true, $idGoal);
-            $this->archiveDayActionsGoalsPages($archiveProcessor->getLogAggregator(), false, $idGoal);
+            $this->archiveDayActionsGoalsPages($archiveProcessor->getLogAggregator(), \true, $idGoal);
+            $this->archiveDayActionsGoalsPages($archiveProcessor->getLogAggregator(), \false, $idGoal);
         }
-        $this->archiveDayActionsGoalsPagesEntry($archiveProcessor, $rankingQueryLimit, true);
-        $this->archiveDayActionsGoalsPagesEntry($archiveProcessor, $rankingQueryLimit, false);
+        $this->archiveDayActionsGoalsPagesEntry($archiveProcessor, $rankingQueryLimit, \true);
+        $this->archiveDayActionsGoalsPagesEntry($archiveProcessor, $rankingQueryLimit, \false);
     }
     /**
      * Query goal page view data and update actions data table
@@ -321,7 +321,7 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
         if (!$resultSet) {
             return null;
         }
-        return ArchivingHelper::updateActionsTableWithGoals($resultSet, true);
+        return ArchivingHelper::updateActionsTableWithGoals($resultSet, \true);
     }
     /**
      * Get a list of goal ids for a site
@@ -361,6 +361,6 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
         if (!$resultSet) {
             return null;
         }
-        return ArchivingHelper::updateActionsTableWithGoals($resultSet, false);
+        return ArchivingHelper::updateActionsTableWithGoals($resultSet, \false);
     }
 }

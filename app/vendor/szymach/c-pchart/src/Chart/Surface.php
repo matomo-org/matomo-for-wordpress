@@ -64,7 +64,7 @@ class Surface
      * @param boolean $Force
      * @return null
      */
-    public function addPoint($X, $Y, $Value, $Force = true)
+    public function addPoint($X, $Y, $Value, $Force = \true)
     {
         if ($X < 0 || $X > $this->GridSizeX) {
             return 0;
@@ -231,7 +231,7 @@ class Surface
         $ShadeG2 = isset($Format["ShadeG2"]) ? $Format["ShadeG2"] : 135;
         $ShadeB2 = isset($Format["ShadeB2"]) ? $Format["ShadeB2"] : 61;
         $ShadeA2 = isset($Format["ShadeA2"]) ? $Format["ShadeA2"] : 100;
-        $Border = isset($Format["Border"]) ? $Format["Border"] : false;
+        $Border = isset($Format["Border"]) ? $Format["Border"] : \false;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : 0;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : 0;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : 0;

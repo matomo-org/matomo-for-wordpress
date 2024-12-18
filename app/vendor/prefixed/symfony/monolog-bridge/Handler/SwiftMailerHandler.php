@@ -26,7 +26,7 @@ trigger_deprecation('symfony/monolog-bridge', '5.4', '"%s" is deprecated and wil
 class SwiftMailerHandler extends BaseSwiftMailerHandler
 {
     protected $transport;
-    protected $instantFlush = false;
+    protected $instantFlush = \false;
     public function setTransport(\Matomo\Dependencies\Swift_Transport $transport)
     {
         $this->transport = $transport;
@@ -36,14 +36,14 @@ class SwiftMailerHandler extends BaseSwiftMailerHandler
      */
     public function onKernelTerminate(TerminateEvent $event)
     {
-        $this->instantFlush = true;
+        $this->instantFlush = \true;
     }
     /**
      * After the CLI application has been terminated we will always flush messages.
      */
     public function onCliTerminate(ConsoleTerminateEvent $event)
     {
-        $this->instantFlush = true;
+        $this->instantFlush = \true;
     }
     /**
      * {@inheritdoc}

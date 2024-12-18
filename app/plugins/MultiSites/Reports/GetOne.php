@@ -18,7 +18,7 @@ class GetOne extends \Piwik\Plugins\MultiSites\Reports\Base
         $this->dimension = new Website();
         $this->name = Piwik::translate('General_SingleWebsitesDashboard');
         $this->documentation = Piwik::translate('MultiSites_SingleWebsitesDashboardDocumentation');
-        $this->constantRowsCount = false;
+        $this->constantRowsCount = \false;
         $this->order = 5;
     }
 }

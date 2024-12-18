@@ -75,7 +75,7 @@ class Service
      * @return bool|string Returns the downloaded data or true if a destination path was given.
      * @throws \Exception
      */
-    public function download($url, $destinationPath = null, $timeout = null, ?array $postData = null, bool $getExtendedInfo = false)
+    public function download($url, $destinationPath = null, $timeout = null, ?array $postData = null, bool $getExtendedInfo = \false)
     {
         $method = Http::getTransportMethod();
         if (!isset($timeout)) {
@@ -88,7 +88,7 @@ class Service
             $postData['access_token'] = $this->accessToken;
         }
         $file = Http::ensureDestinationDirectoryExists($destinationPath);
-        return Http::sendHttpRequestBy($method, $url, $timeout, $userAgent = null, $destinationPath, $file, $followDepth = 0, $acceptLanguage = false, $acceptInvalidSslCertificate = false, $byteRange = false, $getExtendedInfo, $httpMethod = 'POST', $httpUsername = null, $httpPassword = null, $postData);
+        return Http::sendHttpRequestBy($method, $url, $timeout, $userAgent = null, $destinationPath, $file, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo, $httpMethod = 'POST', $httpUsername = null, $httpPassword = null, $postData);
     }
     /**
      * Executes the given API action on the Marketplace using the given params and returns the result.
@@ -104,18 +104,18 @@ class Service
      * @return mixed
      * @throws Service\Exception
      */
-    public function fetch($action, $params, ?array $postData = null, bool $getExtendedInfo = false, bool $throwOnApiError = true)
+    public function fetch($action, $params, ?array $postData = null, bool $getExtendedInfo = \false, bool $throwOnApiError = \true)
     {
         $endpoint = sprintf('%s/api/%s/', $this->domain, $this->version);
         $query = Http::buildQuery($params);
         $url = sprintf('%s%s?%s', $endpoint, $action, $query);
-        $response = $this->download($url, null, null, $postData, true);
+        $response = $this->download($url, null, null, $postData, \true);
         $result = $response['data'] ?? null;
         if (null === $result) {
             throw new \Piwik\Plugins\Marketplace\Api\Service\Exception('There was an error reading the response from the Marketplace. Please try again later.', \Piwik\Plugins\Marketplace\Api\Service\Exception::HTTP_ERROR);
         }
         if ('' !== $result) {
-            $result = json_decode($result, true);
+            $result = json_decode($result, \true);
             if (null === $result) {
                 throw new \Piwik\Plugins\Marketplace\Api\Service\Exception('There was an error reading the response from the Marketplace. Please try again later.', \Piwik\Plugins\Marketplace\Api\Service\Exception::HTTP_ERROR);
             }

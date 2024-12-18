@@ -27,7 +27,7 @@ class SubscriptionModel
     {
         $details = $this->getSubscription($token);
         if (empty($details)) {
-            return false;
+            return \false;
         }
         $email = $details['email'];
         $report = Access::doAsSuperUser(function () use($details) {
@@ -37,16 +37,16 @@ class SubscriptionModel
         if (empty($report)) {
             // if the report isn't found, remove subscription as it isn't active anymore
             $this->removeSubscription($token);
-            return false;
+            return \false;
         }
         $reportParameters = $report['parameters'];
-        $emailFound = false;
+        $emailFound = \false;
         if (!empty($reportParameters['additionalEmails'])) {
             $additionalEmails = $reportParameters['additionalEmails'];
             $filteredEmails = [];
             foreach ($additionalEmails as $additionalEmail) {
                 if ($additionalEmail == $email) {
-                    $emailFound = true;
+                    $emailFound = \true;
                     continue;
                 }
                 $filteredEmails[] = $additionalEmail;
@@ -60,8 +60,8 @@ class SubscriptionModel
             $userModel = new \Piwik\Plugins\UsersManager\Model();
             $userData = $userModel->getUser($login);
             if ($userData['email'] == $email) {
-                $emailFound = true;
-                $report['parameters']['emailMe'] = false;
+                $emailFound = \true;
+                $report['parameters']['emailMe'] = \false;
             }
         }
         if ($emailFound) {
@@ -74,7 +74,7 @@ class SubscriptionModel
         }
         return $emailFound;
     }
-    public function getReportSubscriptions($idReport, $includeUnsubscribed = false)
+    public function getReportSubscriptions($idReport, $includeUnsubscribed = \false)
     {
         $query = 'SELECT * FROM ' . $this->table . ' WHERE idreport = ?';
         if (!$includeUnsubscribed) {

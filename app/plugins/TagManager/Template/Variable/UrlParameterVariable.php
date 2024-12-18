@@ -22,6 +22,7 @@ class UrlParameterVariable extends \Piwik\Plugins\TagManager\Template\Variable\B
         return array($this->makeSetting('parameterName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_UrlParameterVariableNameTitle');
             $field->description = Piwik::translate('TagManager_UrlParameterVariableNameDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_UrlParameterVariableNamePlaceholder')];
             $field->validators[] = new CharacterLength(1, 300);
             $field->transform = function ($value) {
                 return trim($value);

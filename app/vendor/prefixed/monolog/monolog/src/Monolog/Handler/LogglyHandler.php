@@ -26,7 +26,7 @@ class LogglyHandler extends AbstractProcessingHandler
     const ENDPOINT_BATCH = 'bulk';
     protected $token;
     protected $tag = array();
-    public function __construct($token, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($token, $level = Logger::DEBUG, $bubble = \true)
     {
         if (!extension_loaded('curl')) {
             throw new \LogicException('The curl extension is needed to use the LogglyHandler');
@@ -68,11 +68,11 @@ class LogglyHandler extends AbstractProcessingHandler
             $headers[] = 'X-LOGGLY-TAG: ' . implode(',', $this->tag);
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, \CURLOPT_URL, $url);
+        curl_setopt($ch, \CURLOPT_POST, \true);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, \CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, \true);
         Curl\Util::execute($ch);
     }
     protected function getDefaultFormatter()

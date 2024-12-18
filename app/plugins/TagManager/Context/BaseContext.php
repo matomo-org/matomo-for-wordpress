@@ -11,6 +11,7 @@ namespace Piwik\Plugins\TagManager\Context;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\TagManager\Context\Storage\StorageInterface;
+use Piwik\Plugins\TagManager\Dao\TagsDao;
 use Piwik\Plugins\TagManager\Exception\EntityRecursionException;
 use Piwik\Plugins\TagManager\Model\Container;
 use Piwik\Plugins\TagManager\Model\Environment;
@@ -72,13 +73,17 @@ abstract class BaseContext
         $this->nestedVariableCals = [];
         $idSite = $container['idsite'];
         $idContainer = $container['idcontainer'];
+        $isTagFireLimitAllowedInPreviewMode = $container['isTagFireLimitAllowedInPreviewMode'] ? 1 : 0;
         $idContainerVersion = $release['idcontainerversion'];
         $container['idcontainerversion'] = $idContainerVersion;
         $environment = $release['environment'];
         $this->variables = [];
         $version = $this->containerModel->getContainerVersion($idSite, $idContainer, $idContainerVersion);
-        $containerJs = ['id' => $idContainer, 'idsite' => $idSite, 'versionName' => $version['name'], 'revision' => $version['revision'], 'environment' => $environment, 'tags' => [], 'triggers' => [], 'variables' => []];
+        $containerJs = ['id' => $idContainer, 'isTagFireLimitAllowedInPreviewMode' => $isTagFireLimitAllowedInPreviewMode, 'idsite' => $idSite, 'versionName' => $version['name'], 'revision' => $version['revision'], 'environment' => $environment, 'tags' => [], 'triggers' => [], 'variables' => []];
         foreach ($this->tagModel->getContainerTags($idSite, $idContainerVersion) as $tag) {
+            if ($tag['status'] !== TagsDao::STATUS_ACTIVE) {
+                continue;
+            }
             $containerJs['tags'][] = ['id' => $tag['idtag'], 'type' => $tag['type'], 'name' => $tag['name'], 'parameters' => $this->parametersToVariableJs($container, $tag), 'blockTriggerIds' => $tag['block_trigger_ids'], 'fireTriggerIds' => $tag['fire_trigger_ids'], 'fireLimit' => $tag['fire_limit'], 'fireDelay' => $tag['fire_delay'], 'startDate' => $tag['start_date'], 'endDate' => $tag['end_date']];
         }
         foreach ($this->triggerModel->getContainerTriggers($idSite, $idContainerVersion) as $trigger) {
@@ -115,11 +120,9 @@ abstract class BaseContext
             if (method_exists($variable, 'getDataLayerVariableJs')) {
                 $response['keys'][] = '{{' . $variable->getId() . '}}';
                 $response['values'][] = $variable->getDataLayerVariableJs();
-            } else {
-                if (method_exists($variable, 'loadTemplate')) {
-                    $response['keys'][] = '{{' . $variable->getId() . '}}';
-                    $response['values'][] = '(function(){' . $variable->loadTemplate($context, $variable, true) . '})()';
-                }
+            } elseif (method_exists($variable, 'loadTemplate')) {
+                $response['keys'][] = '{{' . $variable->getId() . '}}';
+                $response['values'][] = '(function(){' . $variable->loadTemplate($context, $variable, \true) . '})()';
             }
         }
         return $response;
@@ -158,11 +161,11 @@ abstract class BaseContext
         $vars = [];
         foreach ($parameters as $name => $value) {
             if (is_array($value)) {
-                if (in_array($name, $parameterTemplateTypes, true)) {
+                if (in_array($name, $parameterTemplateTypes, \true)) {
                     foreach ($value as $key => $subValue) {
                         if (is_array($subValue)) {
                             foreach ($subValue as $subKey => $subSubValue) {
-                                if (in_array($name . $keyTemplateTypeSeparator . $subKey, $parameterTemplateTypes, true)) {
+                                if (in_array($name . $keyTemplateTypeSeparator . $subKey, $parameterTemplateTypes, \true)) {
                                     $value[$key][$subKey] = $this->parameterToVariableJs($subSubValue, $container);
                                 }
                             }
@@ -173,7 +176,7 @@ abstract class BaseContext
                 }
                 $vars[$name] = $value;
             } else {
-                if (in_array($name, $parameterTemplateTypes, true)) {
+                if (in_array($name, $parameterTemplateTypes, \true)) {
                     $vars[$name] = $this->parameterToVariableJs($value, $container);
                 } else {
                     $vars[$name] = $value;
@@ -206,19 +209,19 @@ abstract class BaseContext
             $pos = 0;
             do {
                 $start = $this->mb_strpos($value, '{{', $pos);
-                $end = false;
-                if ($start !== false) {
+                $end = \false;
+                if ($start !== \false) {
                     // only if string contains a {{ we need to look to see if we find a matching end string
                     $end = $this->mb_strpos($value, '}}', $start);
                 }
-                if ($end !== false) {
+                if ($end !== \false) {
                     // now this might seem random, but it is basically to detect if there are the brackets two times there
                     // like "foo{{notExisting{{PageUrl}}"  then we still detect "{{PageUrl}}"
                     $start = $this->mb_strrpos(Common::mb_substr($value, 0, $end), '{{', $pos);
                 }
-                if ($start === false || $end === false) {
+                if ($start === \false || $end === \false) {
                     $val = $this->substr($value, $pos);
-                    if ($val !== '' && $val !== false && $val !== null) {
+                    if ($val !== '' && $val !== \false && $val !== null) {
                         $multiVars[] = $val;
                     }
                     break;
@@ -227,7 +230,7 @@ abstract class BaseContext
                     // only if string does not start with "{{..."
                     $val = str_replace(array('\\{', '\\}'), array('{', '}'), $this->substr($value, $pos, $start - $pos));
                     // regular text
-                    if ($val !== '' && $val !== false && $val !== null) {
+                    if ($val !== '' && $val !== \false && $val !== null) {
                         $multiVars[] = $val;
                     }
                 }
@@ -248,11 +251,11 @@ abstract class BaseContext
                     $multiVars[] = '{{' . $variableName . '}}';
                 }
                 $pos = $end + $ignoreLengthOpeningBrackets;
-            } while ($end !== false);
-            $allStrings = true;
+            } while ($end !== \false);
+            $allStrings = \true;
             foreach ($multiVars as $var) {
                 if (!is_string($var)) {
-                    $allStrings = false;
+                    $allStrings = \false;
                 }
             }
             if ($allStrings) {
@@ -279,12 +282,10 @@ abstract class BaseContext
     {
         if (is_array($variableNameOrVariable)) {
             $variable = $variableNameOrVariable;
+        } elseif (isset($this->variables[$variableNameOrVariable])) {
+            return $this->variables[$variableNameOrVariable];
         } else {
-            if (isset($this->variables[$variableNameOrVariable])) {
-                return $this->variables[$variableNameOrVariable];
-            } else {
-                $variable = $this->variableModel->findVariableByName($container['idsite'], $container['idcontainerversion'], $variableNameOrVariable);
-            }
+            $variable = $this->variableModel->findVariableByName($container['idsite'], $container['idcontainerversion'], $variableNameOrVariable);
         }
         if ($variable) {
             $lookUpTable = [];

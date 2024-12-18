@@ -115,7 +115,7 @@ class DataComparisonFilter
      * @var bool
      */
     private $invertCompareChangeCompute;
-    public function __construct($request, Report $report = null)
+    public function __construct($request, ?Report $report = null)
     {
         $this->request = new \Piwik\Request($request);
         $generalConfig = Config::getInstance()->General;
@@ -244,7 +244,7 @@ class DataComparisonFilter
         }
         $idSubtable = $this->request->getIntegerParameter('idSubtable', 0);
         if ($idSubtable > 0) {
-            $comparisonIdSubtables = $this->request->getJsonParameter('comparisonIdSubtables', false);
+            $comparisonIdSubtables = $this->request->getJsonParameter('comparisonIdSubtables', \false);
             if (empty($comparisonIdSubtables)) {
                 throw new \Exception("Comparing segments/periods with subtables only works when the comparison idSubtables are supplied as well.");
             }
@@ -318,7 +318,7 @@ class DataComparisonFilter
         $comparisonLabels = array_filter($comparisonLabels);
         return '(' . implode(') (', $comparisonLabels) . ')';
     }
-    private function getSegmentNameFromReport(Report $report = null)
+    private function getSegmentNameFromReport(?Report $report = null)
     {
         if (empty($report)) {
             return null;
@@ -416,7 +416,7 @@ class DataComparisonFilter
         $value = $value ?: 0;
         $valueToCompare = $fromRow ? $fromRow->getColumn($columnName) : 0;
         $valueToCompare = $valueToCompare ?: 0;
-        $change = DataTable\Filter\CalculateEvolutionFilter::calculate($value, $valueToCompare, $precision = 1, true, true);
+        $change = DataTable\Filter\CalculateEvolutionFilter::calculate($value, $valueToCompare, $precision = 1, \true, \true);
         $trend = $value - $valueToCompare < 0 ? -1 : ($value - $valueToCompare > 0 ? 1 : 0);
         return [$change, $trend];
     }
@@ -479,7 +479,7 @@ class DataComparisonFilter
      */
     private function shouldIncludeTrendValues() : bool
     {
-        return $this->request->getBoolParameter('include_trends', false);
+        return $this->request->getBoolParameter('include_trends', \false);
     }
     /**
      * Returns the pretty series label for a specific comparison based on the currently set comparison query parameters.

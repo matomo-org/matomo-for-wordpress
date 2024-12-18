@@ -40,7 +40,7 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->couchbase->get($id) ?: false;
+        return $this->couchbase->get($id) ?: \false;
     }
     /**
      * {@inheritdoc}

@@ -26,7 +26,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $writingTimeout = 10;
     private $lastSentBytes = null;
     private $chunkSize = null;
-    private $persistent = false;
+    private $persistent = \false;
     private $errno;
     private $errstr;
     private $lastWritingAt;
@@ -35,7 +35,7 @@ class SocketHandler extends AbstractProcessingHandler
      * @param int    $level            The minimum logging level at which this handler will be triggered
      * @param bool   $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
@@ -242,8 +242,8 @@ class SocketHandler extends AbstractProcessingHandler
     }
     private function validateTimeout($value)
     {
-        $ok = filter_var($value, FILTER_VALIDATE_FLOAT);
-        if ($ok === false || $value < 0) {
+        $ok = filter_var($value, \FILTER_VALIDATE_FLOAT);
+        if ($ok === \false || $value < 0) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got {$value})");
         }
     }
@@ -306,7 +306,7 @@ class SocketHandler extends AbstractProcessingHandler
             } else {
                 $chunk = $this->fwrite(substr($data, $sent));
             }
-            if ($chunk === false) {
+            if ($chunk === \false) {
                 throw new \RuntimeException("Could not write to socket");
             }
             $sent += $chunk;
@@ -326,19 +326,19 @@ class SocketHandler extends AbstractProcessingHandler
     {
         $writingTimeout = (int) floor($this->writingTimeout);
         if (0 === $writingTimeout) {
-            return false;
+            return \false;
         }
         if ($sent !== $this->lastSentBytes) {
             $this->lastWritingAt = time();
             $this->lastSentBytes = $sent;
-            return false;
+            return \false;
         } else {
             usleep(100);
         }
         if (time() - $this->lastWritingAt >= $writingTimeout) {
             $this->closeSocket();
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

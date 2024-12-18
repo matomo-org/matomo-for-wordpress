@@ -72,7 +72,7 @@ abstract class LogTable
      */
     public function shouldJoinWithSubSelect()
     {
-        return false;
+        return \false;
     }
     /**
      * Defines a column that stores the date/time at which time an entry was written or updated. Setting this

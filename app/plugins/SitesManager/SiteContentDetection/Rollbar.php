@@ -21,6 +21,6 @@ class Rollbar extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConte
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return false !== stripos($data, 'rollbar.min.js');
+        return \false !== stripos($data, 'rollbar.min.js');
     }
 }

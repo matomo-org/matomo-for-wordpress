@@ -21,7 +21,7 @@ class LatestPreview extends ReleaseChannel
     }
     public function doesPreferStable()
     {
-        return false;
+        return \false;
     }
     public function getOrder()
     {
@@ -29,6 +29,6 @@ class LatestPreview extends ReleaseChannel
     }
     public function isSelectableInSettings() : bool
     {
-        return false;
+        return \false;
     }
 }

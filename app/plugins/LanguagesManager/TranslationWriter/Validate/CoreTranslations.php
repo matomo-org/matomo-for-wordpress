@@ -46,11 +46,11 @@ class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter
         $this->message = null;
         if (empty($translations['General']['Locale'])) {
             $this->message = self::ERRORSTATE_LOCALEREQUIRED;
-            return false;
+            return \false;
         }
         if (empty($translations['General']['TranslatorName'])) {
             $this->message = self::ERRORSTATE_TRANSLATORINFOREQUIRED;
-            return false;
+            return \false;
         }
         /** @var LanguageDataProvider $languageDataProvider */
         $languageDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\LanguageDataProvider');
@@ -59,18 +59,18 @@ class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter
         $allLanguages = $languageDataProvider->getLanguageList();
         $allCountries = $regionDataProvider->getCountryList();
         if ('eo.UTF-8' === $translations['General']['Locale']) {
-            return true;
+            return \true;
         }
         if (!preg_match('/^([a-z]{2})_([A-Z]{2})\\.UTF-8$/', $translations['General']['Locale'], $matches)) {
             $this->message = self::ERRORSTATE_LOCALEINVALID;
-            return false;
+            return \false;
         } elseif (!array_key_exists($matches[1], $allLanguages)) {
             $this->message = self::ERRORSTATE_LOCALEINVALIDLANGUAGE;
-            return false;
+            return \false;
         } elseif (!array_key_exists(strtolower($matches[2]), $allCountries)) {
             $this->message = self::ERRORSTATE_LOCALEINVALIDCOUNTRY;
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
 }

@@ -193,14 +193,14 @@ class Request
     public function getBoolParameter(string $name, ?bool $default = null) : bool
     {
         $parameter = $this->getParameter($name, $default);
-        if ($parameter === false || $parameter === true) {
+        if ($parameter === \false || $parameter === \true) {
             return $parameter;
         }
         if (\is_string($parameter) && \strtolower($parameter) === 'false' || $parameter === '0' || $parameter === 0) {
-            return false;
+            return \false;
         }
         if (\is_string($parameter) && \strtolower($parameter) === 'true' || $parameter === '1' || $parameter === 1) {
-            return true;
+            return \true;
         }
         if (null !== $default) {
             return $default;
@@ -251,7 +251,7 @@ class Request
             }
         }
         if (is_string($parameter)) {
-            $decodedValue = \json_decode($parameter, true);
+            $decodedValue = \json_decode($parameter, \true);
             if ($decodedValue !== null && $decodedValue !== '') {
                 return $this->filterNullBytes($decodedValue);
             }

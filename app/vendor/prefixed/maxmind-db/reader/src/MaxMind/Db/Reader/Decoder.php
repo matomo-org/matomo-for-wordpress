@@ -43,13 +43,16 @@ class Decoder
     /**
      * @param resource $fileStream
      */
-    public function __construct($fileStream, int $pointerBase = 0, bool $pointerTestHack = false)
+    public function __construct($fileStream, int $pointerBase = 0, bool $pointerTestHack = \false)
     {
         $this->fileStream = $fileStream;
         $this->pointerBase = $pointerBase;
         $this->pointerTestHack = $pointerTestHack;
         $this->switchByteOrder = $this->isPlatformLittleEndian();
     }
+    /**
+     * @return array<mixed>
+     */
     public function decode(int $offset) : array
     {
         $ctrlByte = \ord(Util::read($this->fileStream, $offset, 1));
@@ -80,6 +83,8 @@ class Decoder
     }
     /**
      * @param int<0, max> $size
+     *
+     * @return array{0:mixed, 1:int}
      */
     private function decodeByType(int $type, int $offset, int $size) : array
     {
@@ -120,6 +125,9 @@ class Decoder
             throw new InvalidDatabaseException("The MaxMind DB file's data section contains bad data (unknown data type or corrupt data)");
         }
     }
+    /**
+     * @return array{0:array<mixed>, 1:int}
+     */
     private function decodeArray(int $size, int $offset) : array
     {
         $array = [];
@@ -138,7 +146,7 @@ class Decoder
         // This assumes IEEE 754 doubles, but most (all?) modern platforms
         // use them.
         $rc = unpack('E', $bytes);
-        if ($rc === false) {
+        if ($rc === \false) {
             throw new InvalidDatabaseException('Could not unpack a double value from the given bytes.');
         }
         [, $double] = $rc;
@@ -149,7 +157,7 @@ class Decoder
         // This assumes IEEE 754 floats, but most (all?) modern platforms
         // use them.
         $rc = unpack('G', $bytes);
-        if ($rc === false) {
+        if ($rc === \false) {
             throw new InvalidDatabaseException('Could not unpack a float value from the given bytes.');
         }
         [, $float] = $rc;
@@ -171,12 +179,15 @@ class Decoder
                 throw new InvalidDatabaseException("The MaxMind DB file's data section contains bad data (unknown data type or corrupt data)");
         }
         $rc = unpack('l', $this->maybeSwitchByteOrder($bytes));
-        if ($rc === false) {
+        if ($rc === \false) {
             throw new InvalidDatabaseException('Could not unpack a 32bit integer value from the given bytes.');
         }
         [, $int] = $rc;
         return $int;
     }
+    /**
+     * @return array{0:array<string, mixed>, 1:int}
+     */
     private function decodeMap(int $size, int $offset) : array
     {
         $map = [];
@@ -187,6 +198,9 @@ class Decoder
         }
         return [$map, $offset];
     }
+    /**
+     * @return array{0:int, 1:int}
+     */
     private function decodePointer(int $ctrlByte, int $offset) : array
     {
         $pointerSize = ($ctrlByte >> 3 & 0x3) + 1;
@@ -196,7 +210,7 @@ class Decoder
             case 1:
                 $packed = \chr($ctrlByte & 0x7) . $buffer;
                 $rc = unpack('n', $packed);
-                if ($rc === false) {
+                if ($rc === \false) {
                     throw new InvalidDatabaseException('Could not unpack an unsigned short value from the given bytes (pointerSize is 1).');
                 }
                 [, $pointer] = $rc;
@@ -205,7 +219,7 @@ class Decoder
             case 2:
                 $packed = "\x00" . \chr($ctrlByte & 0x7) . $buffer;
                 $rc = unpack('N', $packed);
-                if ($rc === false) {
+                if ($rc === \false) {
                     throw new InvalidDatabaseException('Could not unpack an unsigned long value from the given bytes (pointerSize is 2).');
                 }
                 [, $pointer] = $rc;
@@ -216,7 +230,7 @@ class Decoder
                 // It is safe to use 'N' here, even on 32 bit machines as the
                 // first bit is 0.
                 $rc = unpack('N', $packed);
-                if ($rc === false) {
+                if ($rc === \false) {
                     throw new InvalidDatabaseException('Could not unpack an unsigned long value from the given bytes (pointerSize is 3).');
                 }
                 [, $pointer] = $rc;
@@ -270,6 +284,9 @@ class Decoder
         }
         return $integerAsString;
     }
+    /**
+     * @return array{0:int, 1:int}
+     */
     private function sizeFromCtrlByte(int $ctrlByte, int $offset) : array
     {
         $size = $ctrlByte & 0x1f;
@@ -282,14 +299,14 @@ class Decoder
             $size = 29 + \ord($bytes);
         } elseif ($size === 30) {
             $rc = unpack('n', $bytes);
-            if ($rc === false) {
+            if ($rc === \false) {
                 throw new InvalidDatabaseException('Could not unpack an unsigned short value from the given bytes.');
             }
             [, $adjust] = $rc;
             $size = 285 + $adjust;
         } else {
             $rc = unpack('N', "\x00" . $bytes);
-            if ($rc === false) {
+            if ($rc === \false) {
                 throw new InvalidDatabaseException('Could not unpack an unsigned long value from the given bytes.');
             }
             [, $adjust] = $rc;
@@ -306,7 +323,7 @@ class Decoder
         $testint = 0xff;
         $packed = pack('S', $testint);
         $rc = unpack('v', $packed);
-        if ($rc === false) {
+        if ($rc === \false) {
             throw new InvalidDatabaseException('Could not unpack an unsigned short value from the given bytes.');
         }
         return $testint === current($rc);

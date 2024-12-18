@@ -35,7 +35,7 @@ class Utils
             $prefix = 'file://';
         }
         // other type of stream, not supported
-        if (false !== strpos($streamUrl, '://')) {
+        if (\false !== strpos($streamUrl, '://')) {
             return $streamUrl;
         }
         // already absolute
@@ -54,20 +54,20 @@ class Utils
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
-    public static function jsonEncode($data, $encodeFlags = null, $ignoreErrors = false)
+    public static function jsonEncode($data, $encodeFlags = null, $ignoreErrors = \false)
     {
-        if (null === $encodeFlags && version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $encodeFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (null === $encodeFlags && version_compare(\PHP_VERSION, '5.4.0', '>=')) {
+            $encodeFlags = \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE;
         }
         if ($ignoreErrors) {
             $json = @json_encode($data, $encodeFlags);
-            if (false === $json) {
+            if (\false === $json) {
                 return 'null';
             }
             return $json;
         }
         $json = json_encode($data, $encodeFlags);
-        if (false === $json) {
+        if (\false === $json) {
             $json = self::handleJsonError(json_last_error(), $data);
         }
         return $json;
@@ -88,7 +88,7 @@ class Utils
      */
     public static function handleJsonError($code, $data, $encodeFlags = null)
     {
-        if ($code !== JSON_ERROR_UTF8) {
+        if ($code !== \JSON_ERROR_UTF8) {
             self::throwEncodeError($code, $data);
         }
         if (is_string($data)) {
@@ -98,11 +98,11 @@ class Utils
         } else {
             self::throwEncodeError($code, $data);
         }
-        if (null === $encodeFlags && version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $encodeFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (null === $encodeFlags && version_compare(\PHP_VERSION, '5.4.0', '>=')) {
+            $encodeFlags = \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE;
         }
         $json = json_encode($data, $encodeFlags);
-        if ($json === false) {
+        if ($json === \false) {
             self::throwEncodeError(json_last_error(), $data);
         }
         return $json;
@@ -117,22 +117,22 @@ class Utils
     private static function throwEncodeError($code, $data)
     {
         switch ($code) {
-            case JSON_ERROR_DEPTH:
+            case \JSON_ERROR_DEPTH:
                 $msg = 'Maximum stack depth exceeded';
                 break;
-            case JSON_ERROR_STATE_MISMATCH:
+            case \JSON_ERROR_STATE_MISMATCH:
                 $msg = 'Underflow or the modes mismatch';
                 break;
-            case JSON_ERROR_CTRL_CHAR:
+            case \JSON_ERROR_CTRL_CHAR:
                 $msg = 'Unexpected control character found';
                 break;
-            case JSON_ERROR_UTF8:
+            case \JSON_ERROR_UTF8:
                 $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
                 break;
             default:
                 $msg = 'Unknown error';
         }
-        throw new \RuntimeException('JSON encoding failed: ' . $msg . '. Encoding: ' . var_export($data, true));
+        throw new \RuntimeException('JSON encoding failed: ' . $msg . '. Encoding: ' . var_export($data, \true));
     }
     /**
      * Detect invalid UTF-8 string characters and convert to valid UTF-8.

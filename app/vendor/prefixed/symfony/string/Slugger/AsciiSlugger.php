@@ -119,7 +119,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         if (!$locale) {
             return null;
         }
-        if (false === ($str = strrchr($locale, '_'))) {
+        if (\false === ($str = strrchr($locale, '_'))) {
             // no parent locale
             return null;
         }

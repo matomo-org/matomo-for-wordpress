@@ -49,7 +49,7 @@ class Config
     /**
      * @var boolean
      */
-    protected $doNotWriteConfigInTests = false;
+    protected $doNotWriteConfigInTests = \false;
     /**
      * @var GlobalSettingsProvider
      */
@@ -151,8 +151,8 @@ class Config
     }
     public function getConfigHostnameIfSet()
     {
-        if ($this->getByDomainConfigPath() === false) {
-            return false;
+        if ($this->getByDomainConfigPath() === \false) {
+            return \false;
         }
         return $this->getHostname();
     }
@@ -181,7 +181,7 @@ class Config
                 return $hostConfig['path'];
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns the hostname of the current request (without port number)
@@ -190,7 +190,7 @@ class Config
      *
      * @return string
      */
-    public static function getHostname($checkIfTrusted = false)
+    public static function getHostname($checkIfTrusted = \false)
     {
         $host = \Piwik\Url::getHost($checkIfTrusted);
         // Remove any port number to get actual hostname
@@ -217,7 +217,7 @@ class Config
         $hostConfigs = self::getLocalConfigInfoForHostname($hostname);
         $fileNames = '';
         foreach ($hostConfigs as $hostConfig) {
-            if (count($hostConfigs) > 1 && $preferredPath && strpos($hostConfig['path'], $preferredPath) === false) {
+            if (count($hostConfigs) > 1 && $preferredPath && strpos($hostConfig['path'], $preferredPath) === \false) {
                 continue;
             }
             $filename = $hostConfig['file'];
@@ -331,20 +331,20 @@ class Config
     protected function writeConfig()
     {
         $output = $this->dumpConfig();
-        if ($output !== null && $output !== false) {
+        if ($output !== null && $output !== \false) {
             $localPath = $this->getLocalPath();
             if ($this->doNotWriteConfigInTests) {
                 // simulate whether it would be successful
                 $success = is_writable($localPath);
             } else {
-                $success = @file_put_contents($localPath, $output, LOCK_EX);
+                $success = @file_put_contents($localPath, $output, \LOCK_EX);
             }
-            if ($success === false) {
+            if ($success === \false) {
                 throw $this->getConfigNotWritableException();
             }
             if (!$this->sanityCheck($localPath, $output)) {
                 // If sanity check fails, try to write the contents once more before logging the issue.
-                if (@file_put_contents($localPath, $output, LOCK_EX) === false || !$this->sanityCheck($localPath, $output, true)) {
+                if (@file_put_contents($localPath, $output, \LOCK_EX) === \false || !$this->sanityCheck($localPath, $output, \true)) {
                     StaticContainer::get(LoggerInterface::class)->info("The configuration file {$localPath} did not write correctly.");
                 }
             }
@@ -376,6 +376,15 @@ class Config
         return new MissingFilePermissionException(\Piwik\Piwik::translate('General_ConfigFileIsNotWritable', array("(" . $path . ")", "")));
     }
     /**
+     * @throws MissingFilePermissionException If config file is not writable.
+     */
+    public function checkConfigIsWritable()
+    {
+        if (!$this->isFileWritable()) {
+            throw $this->getConfigNotWritableException();
+        }
+    }
+    /**
      * Convenience method for setting settings in a single section. Will set them in a new array first
      * to be compatible with certain PHP versions.
      *
@@ -397,11 +406,11 @@ class Config
      * @param bool $notify
      * @return bool
      */
-    public function sanityCheck(string $localPath, string $expectedContent, bool $notify = false) : bool
+    public function sanityCheck(string $localPath, string $expectedContent, bool $notify = \false) : bool
     {
-        clearstatcache(true, $localPath);
+        clearstatcache(\true, $localPath);
         if (function_exists('opcache_invalidate')) {
-            @opcache_invalidate($localPath, $force = true);
+            @opcache_invalidate($localPath, $force = \true);
         }
         $content = @file_get_contents($localPath);
         if (trim($content) !== trim($expectedContent)) {
@@ -413,8 +422,8 @@ class Config
                  */
                 \Piwik\Piwik::postEvent('Core.configFileSanityCheckFailed', [$localPath]);
             }
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
 }

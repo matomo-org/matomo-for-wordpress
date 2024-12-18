@@ -29,7 +29,7 @@ class RevenuePerEntry extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'revenue_per_entry', false);
+        return Goals::makeGoalColumn($this->idGoal, 'revenue_per_entry', \false);
     }
     public function getTranslatedName()
     {

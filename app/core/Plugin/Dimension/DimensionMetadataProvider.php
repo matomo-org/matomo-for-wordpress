@@ -85,9 +85,9 @@ class DimensionMetadataProvider
     {
         try {
             $dimension->getActionId();
-            return true;
+            return \true;
         } catch (\Exception $ex) {
-            return false;
+            return \false;
         }
     }
 }

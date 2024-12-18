@@ -11,7 +11,7 @@ namespace Piwik\Db;
 use Exception;
 /**
  */
-interface AdapterInterface
+interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
 {
     /**
      * Reset the configuration variables in this adapter.

@@ -34,27 +34,29 @@ class ArchiveTableDao
      */
     public function getArchiveTableAnalysis($tableDate)
     {
-        $numericQueryEmptyRow = array('count_archives' => '-', 'count_invalidated_archives' => '-', 'count_temporary_archives' => '-', 'count_error_archives' => '-', 'count_segment_archives' => '-', 'count_numeric_rows' => '-');
+        $numericQueryEmptyRow = ['count_archives' => '-', 'count_invalidated_archives' => '-', 'count_temporary_archives' => '-', 'count_error_archives' => '-', 'count_segment_archives' => '-', 'count_numeric_rows' => '-'];
         $tableDate = str_replace("`", "", $tableDate);
         // for sanity
         $numericTable = Common::prefixTable("archive_numeric_{$tableDate}");
         $blobTable = Common::prefixTable("archive_blob_{$tableDate}");
         // query numeric table
-        $sql = "SELECT CONCAT_WS('.', idsite, date1, date2, period) AS label,\n                       SUM(CASE WHEN name LIKE 'done%' THEN 1 ELSE 0 END) AS count_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value = ? THEN 1 ELSE 0 END) AS count_invalidated_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value = ? THEN 1 ELSE 0 END) AS count_temporary_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value = ? THEN 1 ELSE 0 END) AS count_error_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND CHAR_LENGTH(name) > 32 THEN 1 ELSE 0 END) AS count_segment_archives,\n                       SUM(CASE WHEN name NOT LIKE 'done%' THEN 1 ELSE 0 END) AS count_numeric_rows,\n                       0 AS count_blob_rows\n                  FROM `{$numericTable}`\n              GROUP BY idsite, date1, date2, period";
-        $rows = Db::fetchAll($sql, array(\Piwik\DataAccess\ArchiveWriter::DONE_INVALIDATED, \Piwik\DataAccess\ArchiveWriter::DONE_OK_TEMPORARY, \Piwik\DataAccess\ArchiveWriter::DONE_ERROR));
+        $sql = "SELECT CONCAT_WS('.', idsite, date1, date2, period) AS label,\n                       SUM(CASE WHEN name LIKE 'done%' THEN 1 ELSE 0 END) AS count_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value = ? THEN 1 ELSE 0 END) AS count_invalidated_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value = ? THEN 1 ELSE 0 END) AS count_temporary_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND value IN (?, ?) THEN 1 ELSE 0 END) AS count_error_archives,\n                       SUM(CASE WHEN name LIKE 'done%' AND CHAR_LENGTH(name) > 32 THEN 1 ELSE 0 END) AS count_segment_archives,\n                       SUM(CASE WHEN name NOT LIKE 'done%' THEN 1 ELSE 0 END) AS count_numeric_rows,\n                       0 AS count_blob_rows\n                  FROM `{$numericTable}`\n              GROUP BY idsite, date1, date2, period ORDER BY idsite, period, date1, date2";
+        $rows = Db::fetchAll($sql, array(\Piwik\DataAccess\ArchiveWriter::DONE_INVALIDATED, \Piwik\DataAccess\ArchiveWriter::DONE_OK_TEMPORARY, \Piwik\DataAccess\ArchiveWriter::DONE_ERROR, \Piwik\DataAccess\ArchiveWriter::DONE_ERROR_INVALIDATED));
         // index result
         $result = array();
         foreach ($rows as $row) {
             $result[$row['label']] = $row;
         }
         // query blob table & manually merge results (no FULL OUTER JOIN in mysql)
-        $sql = "SELECT CONCAT_WS('.', idsite, date1, date2, period) AS label,\n                       COUNT(*) AS count_blob_rows,\n                       SUM(OCTET_LENGTH(value)) AS sum_blob_length\n                  FROM `{$blobTable}`\n              GROUP BY idsite, date1, date1, period";
+        $sql = "SELECT CONCAT_WS('.', idsite, date1, date2, period) AS label,\n                       COUNT(*) AS count_blob_rows,\n                       SUM(OCTET_LENGTH(value)) AS sum_blob_length\n                  FROM `{$blobTable}`\n              GROUP BY idsite, date1, date2, period ORDER BY idsite, period, date1, date2";
         foreach (Db::fetchAll($sql) as $blobStatsRow) {
             $label = $blobStatsRow['label'];
             if (isset($result[$label])) {
                 $result[$label] = array_merge($result[$label], $blobStatsRow);
             } else {
-                $result[$label] = $blobStatsRow + $numericQueryEmptyRow;
+                // ensure rows without numeric entries have the
+                // same internal result array key order
+                $result[$label] = array_merge(['label' => $label], $numericQueryEmptyRow, $blobStatsRow);
             }
         }
         return $result;
@@ -67,7 +69,7 @@ class ArchiveTableDao
      * @return array
      * @throws \Exception
      */
-    public function getInvalidationQueueData(bool $prettyTime = false) : array
+    public function getInvalidationQueueData(bool $prettyTime = \false) : array
     {
         $invalidationsTable = Common::prefixTable("archive_invalidations");
         $segmentsTable = Common::prefixTable("segment");
@@ -79,9 +81,9 @@ class ArchiveTableDao
             $waiting = (int) Date::now()->getTimestampUTC() - Date::factory($i['ts_invalidated'])->getTimestampUTC();
             $processing = (int) $i['ts_started'] ? Date::now()->getTimestampUTC() - (int) $i['ts_started'] : '';
             if ($prettyTime) {
-                $waiting = $metricsFormatter->getPrettyTimeFromSeconds($waiting, true);
+                $waiting = $metricsFormatter->getPrettyTimeFromSeconds($waiting, \true);
                 if ($processing != '') {
-                    $processing = $metricsFormatter->getPrettyTimeFromSeconds($processing, true);
+                    $processing = $metricsFormatter->getPrettyTimeFromSeconds($processing, \true);
                 }
             }
             $d = [];

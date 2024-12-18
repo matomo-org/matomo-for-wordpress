@@ -55,7 +55,7 @@ class RedisCache extends \Doctrine\Common\Cache\CacheProvider
         $fetchedItems = array_combine($keys, $this->redis->mget($keys));
         // Redis mget returns false for keys that do not exist. So we need to filter those out unless it's the real data.
         $keysToFilter = array_keys(array_filter($fetchedItems, static function ($item) : bool {
-            return $item === false;
+            return $item === \false;
         }));
         if ($keysToFilter) {
             $multi = $this->redis->multi(Redis::PIPELINE);
@@ -64,7 +64,7 @@ class RedisCache extends \Doctrine\Common\Cache\CacheProvider
             }
             $existItems = array_filter($multi->exec());
             $missedItemKeys = array_diff_key($keysToFilter, $existItems);
-            $fetchedItems = array_diff_key($fetchedItems, array_fill_keys($missedItemKeys, true));
+            $fetchedItems = array_diff_key($fetchedItems, array_fill_keys($missedItemKeys, \true));
         }
         return $fetchedItems;
     }
@@ -133,7 +133,7 @@ class RedisCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doGetStats()
     {
         $info = $this->redis->info();
-        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['keyspace_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['keyspace_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['uptime_in_seconds'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['used_memory'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => false];
+        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['keyspace_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['keyspace_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['uptime_in_seconds'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['used_memory'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => \false];
     }
     /**
      * Returns the serializer constant to use. If Redis is compiled with

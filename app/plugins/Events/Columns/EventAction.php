@@ -42,7 +42,7 @@ class EventAction extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionEvent) {
-            return false;
+            return \false;
         }
         $eventAction = $action->getEventAction();
         $eventAction = trim($eventAction);

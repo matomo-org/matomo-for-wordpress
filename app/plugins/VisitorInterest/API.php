@@ -28,18 +28,18 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceColumnNames');
         return $dataTable;
     }
-    public function getNumberOfVisitsPerVisitDuration($idSite, $period, $date, $segment = false)
+    public function getNumberOfVisitsPerVisitDuration($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::TIME_SPENT_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->queueFilter('Sort', array('label', 'asc', true, false));
+        $dataTable->queueFilter('Sort', array('label', 'asc', \true, \false));
         $dataTable->queueFilter('AddSegmentByRangeLabel', array('visitDuration'));
         $dataTable->queueFilter('BeautifyTimeRangeLabels', array(Piwik::translate('VisitorInterest_BetweenXYSeconds'), Piwik::translate('Intl_OneMinuteShort'), Piwik::translate('Intl_NMinutesShort')));
         return $dataTable;
     }
-    public function getNumberOfVisitsPerPage($idSite, $period, $date, $segment = false)
+    public function getNumberOfVisitsPerPage($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::PAGES_VIEWED_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->queueFilter('Sort', array('label', 'asc', true, false));
+        $dataTable->queueFilter('Sort', array('label', 'asc', \true, \false));
         $dataTable->queueFilter('AddSegmentByRangeLabel', array('actions'));
         $dataTable->queueFilter('BeautifyRangeLabels', array(Piwik::translate('VisitorInterest_OnePage'), Piwik::translate('VisitorInterest_NPages')));
         return $dataTable;
@@ -54,7 +54,7 @@ class API extends \Piwik\Plugin\API
      * @param string|bool $segment The segment.
      * @return DataTable the archived report data.
      */
-    public function getNumberOfVisitsByDaysSinceLast($idSite, $period, $date, $segment = false)
+    public function getNumberOfVisitsByDaysSinceLast($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::DAYS_SINCE_LAST_RECORD_NAME, $idSite, $period, $date, $segment, Metrics::INDEX_NB_VISITS);
         $dataTable->queueFilter('AddSegmentByRangeLabel', array('daysSinceLastVisit'));
@@ -71,7 +71,7 @@ class API extends \Piwik\Plugin\API
      * @param string|bool $segment The segment.
      * @return DataTable the archived report data.
      */
-    public function getNumberOfVisitsByVisitCount($idSite, $period, $date, $segment = false)
+    public function getNumberOfVisitsByVisitCount($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::VISITS_COUNT_RECORD_NAME, $idSite, $period, $date, $segment, Metrics::INDEX_NB_VISITS);
         $dataTable->queueFilter('AddSegmentByRangeLabel', array('visitCount'));

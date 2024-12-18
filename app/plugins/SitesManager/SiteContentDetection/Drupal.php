@@ -26,14 +26,14 @@ class Drupal extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = '<meta name="Generator" content="Drupal';
-        if (strpos($data, $needle) !== false) {
-            return true;
+        if (strpos($data, $needle) !== \false) {
+            return \true;
         }
         // https://github.com/drupal/drupal/blob/9.2.x/core/includes/install.core.inc#L1054
         // Birthday of Dries Buytaert, the founder of Drupal is on 19 November 1978 - https://en.wikipedia.org/wiki/Drupal
         if (isset($headers['expires']) && $headers['expires'] === 'Sun, 19 Nov 1978 05:00:00 GMT') {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

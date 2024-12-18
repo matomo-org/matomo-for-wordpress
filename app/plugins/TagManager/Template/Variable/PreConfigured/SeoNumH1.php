@@ -15,7 +15,7 @@ class SeoNumH1 extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured
     {
         return self::CATEGORY_SEO;
     }
-    public function loadTemplate($context, $entity, $skipTemplate = false)
+    public function loadTemplate($context, $entity, $skipTemplate = \false)
     {
         switch ($context) {
             case WebContext::ID:

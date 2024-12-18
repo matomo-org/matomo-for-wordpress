@@ -15,10 +15,10 @@ use Exception;
 use Piwik\Plugins\TagManager\SystemSettings;
 class Environment
 {
-    const ENVIRONMENT_LIVE = 'live';
-    const ENVIRONMENT_PREVIEW = 'preview';
-    const MAX_LENGTH = 40;
-    const MIN_LENGTH = 2;
+    public const ENVIRONMENT_LIVE = 'live';
+    public const ENVIRONMENT_PREVIEW = 'preview';
+    public const MAX_LENGTH = 40;
+    public const MIN_LENGTH = 2;
     /**
      * @var Configuration
      */
@@ -39,7 +39,7 @@ class Environment
     public function checkIsValidEnvironment($environmentId)
     {
         $environments = $this->settings->getEnvironments();
-        if (in_array($environmentId, $environments, true)) {
+        if (in_array($environmentId, $environments, \true)) {
             return;
         }
         throw new Exception(Piwik::translate('TagManager_ErrorEnvironmentDoesNotExist', $environmentId));

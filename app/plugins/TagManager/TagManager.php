@@ -36,13 +36,14 @@ use Piwik\Plugins\TagManager\Model\Container\ContainerIdGenerator;
 use Piwik\Plugins\TagManager\Model\Salt;
 use Piwik\Site;
 use Piwik\SiteContentDetector;
+use Piwik\Url;
 use Piwik\View;
 use Piwik\Context;
 use Piwik\Log\LoggerInterface;
 use Piwik\SettingsPiwik;
 class TagManager extends \Piwik\Plugin
 {
-    public static $enableAutoContainerCreation = true;
+    public static $enableAutoContainerCreation = \true;
     public function registerEvents()
     {
         return array(
@@ -73,6 +74,7 @@ class TagManager extends \Piwik\Plugin
             'TwoFactorAuth.requiresTwoFactorAuthentication' => 'requiresTwoFactorAuthentication',
             'Db.getTablesInstalled' => 'getTablesInstalled',
             'Template.siteWithoutDataTab.ReactJs.content' => 'embedReactTagManagerTrackingCode',
+            'SitesManager.getMessagesToWarnOnSiteRemoval' => 'getMessagesToWarnOnSiteRemoval',
         );
     }
     /**
@@ -92,7 +94,7 @@ class TagManager extends \Piwik\Plugin
     public function requiresTwoFactorAuthentication(&$requiresAuth, $module, $action, $parameters)
     {
         if ($module == 'TagManager' && $action === 'debug') {
-            $requiresAuth = false;
+            $requiresAuth = \false;
         }
     }
     public function addBodyClass(&$out, $type)
@@ -219,11 +221,19 @@ class TagManager extends \Piwik\Plugin
     }
     public function endTrackingCodePageTableOfContents(&$out)
     {
+        // Check whether to show the MTM code. If not, simply return early
+        if ($this->isAccessRestrictedForUser()) {
+            return;
+        }
         $out .= '<a href="#/tagmanager">' . Piwik::translate('TagManager_TagManager') . '</a>';
     }
     public function addTagManagerCode(&$out)
     {
         Piwik::checkUserHasSomeViewAccess();
+        // Check whether to show the MTM code. If not, simply return early
+        if ($this->isAccessRestrictedForUser()) {
+            return;
+        }
         $model = $this->getContainerModel();
         $view = new View("@TagManager/trackingCode");
         $view->action = Piwik::getAction();
@@ -233,6 +243,10 @@ class TagManager extends \Piwik\Plugin
     }
     public function setTagManagerCode(&$out)
     {
+        // Check whether to show the MTM code. If not, simply return early
+        if ($this->isAccessRestrictedForUser()) {
+            return;
+        }
         $newContent = '<h2>' . Piwik::translate('SitesManager_StepByStepGuide') . '</h2>';
         $this->addTagManagerCode($newContent);
         $out = $newContent;
@@ -240,6 +254,10 @@ class TagManager extends \Piwik\Plugin
     public function embedReactTagManagerTrackingCode(&$out, SiteContentDetector $detector)
     {
         Piwik::checkUserHasSomeViewAccess();
+        // Check whether to show the MTM code. If not, simply return early
+        if ($this->isAccessRestrictedForUser()) {
+            return;
+        }
         $model = $this->getContainerModel();
         $view = new View("@TagManager/trackingCodeReact");
         $view->action = Piwik::getAction();
@@ -268,7 +286,7 @@ class TagManager extends \Piwik\Plugin
     /**
      * @param bool $onlyWithPreviewRelease if true only regenerates containers if there is a preview release.
      */
-    public function regenerateReleasedContainers($onlyWithPreviewRelease = false)
+    public function regenerateReleasedContainers($onlyWithPreviewRelease = \false)
     {
         $pluginManager = Plugin\Manager::getInstance();
         if (!$pluginManager->isPluginInstalled('TagManager')) {
@@ -380,7 +398,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_CreateNewX';
         $result[] = 'TagManager_EditX';
         $result[] = 'TagManager_Context';
-        $result[] = 'TagManager_ContainerUsageBenefits';
+        $result[] = 'TagManager_ManageContainersIntro';
         $result[] = 'TagManager_ContainerNameHelp';
         $result[] = 'TagManager_ContainerContextHelp';
         $result[] = 'TagManager_ContainerDescriptionHelp';
@@ -388,7 +406,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_TagEndDateHelp';
         $result[] = 'TagManager_CurrentTimeInLocalTimezone';
         $result[] = 'TagManager_TagUsageBenefits';
-        $result[] = 'TagManager_TagNameHelp';
+        $result[] = 'TagManager_TagNameHelpV2';
         $result[] = 'TagManager_NoTagsFound';
         $result[] = 'TagManager_DeleteTagConfirm';
         $result[] = 'TagManager_DeleteVersionConfirm';
@@ -546,34 +564,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_ReleasesOverview';
         $result[] = 'TagManager_InstallCode';
         $result[] = 'TagManager_InstallCodePublishEnvironmentNote';
-        $result[] = 'TagManager_GettingStartedNotice';
-        $result[] = 'TagManager_GettingStarted';
         $result[] = 'CorePluginsAdmin_WhatIsTagManager';
-        $result[] = 'TagManager_GettingStartedWhatIsIntro';
-        $result[] = 'TagManager_GettingStartedAnalyticsTracking';
-        $result[] = 'TagManager_GettingStartedConversionTracking';
-        $result[] = 'TagManager_GettingStartedNewsletterSignups';
-        $result[] = 'TagManager_GettingStartedExitActions';
-        $result[] = 'TagManager_GettingStartedRemarketing';
-        $result[] = 'TagManager_GettingStartedSocialWidgets';
-        $result[] = 'TagManager_GettingStartedAffiliates';
-        $result[] = 'TagManager_GettingStartedAds';
-        $result[] = 'TagManager_GettingStartedAndMore';
-        $result[] = 'TagManager_GettingStartedMainComponents';
-        $result[] = 'TagManager_GettingStartedTagComponent';
-        $result[] = 'TagManager_GettingStartedTriggerComponent';
-        $result[] = 'TagManager_GettingStartedVariableComponent';
-        $result[] = 'TagManager_GettingStartedWhyDoINeed';
-        $result[] = 'TagManager_GettingStartedWhyMakesLifeEasier';
-        $result[] = 'TagManager_GettingStartedWhyThirdPartySnippets';
-        $result[] = 'TagManager_GettingStartedWhyAccuracyPerformance';
-        $result[] = 'TagManager_GettingStartedHowDoI';
-        $result[] = 'TagManager_GettingStartedHowCreateContainer';
-        $result[] = 'TagManager_GettingStartedHowCopyCode';
-        $result[] = 'TagManager_GettingStartedHowAddTagsToContainer';
-        $result[] = 'TagManager_GettingStartedWhatIfUnsupported';
-        $result[] = 'TagManager_GettingStartedCustomTags';
-        $result[] = 'TagManager_GettingStartedContributeTags';
         $result[] = 'TagManager_CreateNewVersionNow';
         $result[] = 'TagManager_TagManager';
         $result[] = 'TagManager_MatomoTagManager';
@@ -632,11 +623,11 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_DriftTagDriftIdDescription';
         $result[] = 'TagManager_EmarsysTagMerchantIdTitle';
         $result[] = 'TagManager_EmarsysTagMerchantIdDescription';
-        $result[] = 'TagManager_EmarsysTagCommandCategoryTitle';
+        $result[] = 'TagManager_EmarsysTagCommandCategoryTitleOptional';
         $result[] = 'TagManager_EmarsysTagCommandCategoryDescription';
-        $result[] = 'TagManager_EmarsysTagCommandViewTitle';
+        $result[] = 'TagManager_EmarsysTagCommandViewTitleOptional';
         $result[] = 'TagManager_EmarsysTagCommandViewDescription';
-        $result[] = 'TagManager_EmarsysTagCommandTagTitle';
+        $result[] = 'TagManager_EmarsysTagCommandTagTitleOptional';
         $result[] = 'TagManager_EmarsysTagCommandTagDescription';
         $result[] = 'TagManager_EmarsysTagCommandGoTitle';
         $result[] = 'TagManager_EmarsysTagCommandGoDescription';
@@ -800,12 +791,106 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_IgnoreGtmDataLaterDescription';
         $result[] = 'TagManager_IgnoreGtmDataLaterTitle';
         $result[] = 'TagManager_VersionEditWithNoAccessMessage';
+        $result[] = 'TagManager_MtmTrackingCodeIntro';
+        $result[] = 'TagManager_OptionallyCustomiseContainer';
+        $result[] = 'TagManager_CopyCodePasteInHeader';
+        $result[] = 'TagManager_SelectContainerForWebsite';
+        $result[] = 'TagManager_NoteAboutContainers';
+        $result[] = 'TagManager_CustomiseContainer';
+        $result[] = 'TagManager_ManageContainersLink';
+        $result[] = 'TagManager_Description';
+        $result[] = 'TagManager_TagDescriptionPlaceholder';
+        $result[] = 'TagManager_TriggerDescriptionPlaceholder';
+        $result[] = 'TagManager_VariableDescriptionPlaceholder';
+        $result[] = 'TagManager_VersionDescriptionPlaceholder';
+        $result[] = 'TagManager_ContainerDescriptionPlaceholder';
+        $result[] = 'TagManager_TagNamePlaceholder';
+        $result[] = 'TagManager_TriggerNamePlaceholder';
+        $result[] = 'TagManager_VariableNamePlaceholder';
+        $result[] = 'TagManager_VersionNamePlaceholder';
+        $result[] = 'TagManager_ContainerNamePlaceholder';
+        $result[] = 'TagManager_PlaceholderZero';
+        $result[] = 'TagManager_PriorityPlaceholder';
+        $result[] = 'TagManager_VersionDescriptionOptional';
+        $result[] = 'TagManager_BingUETTagIdPlaceholder';
+        $result[] = 'TagManager_DriftTagDriftIdPlaceholder';
+        $result[] = 'TagManager_EmarsysTagMerchantIdPlaceholder';
+        $result[] = 'TagManager_EmarsysTagCommandCategoryPlaceholder';
+        $result[] = 'TagManager_EmarsysTagCommandViewPlaceholder';
+        $result[] = 'TagManager_EmarsysTagCommandTagPlaceholder';
+        $result[] = 'TagManager_FacebookPixelTagPixelIdPlaceholder';
+        $result[] = 'TagManager_LinkedinInsightTagPartnerIdPlaceholder';
+        $result[] = 'TagManager_LivezillaDynamicTagIdPlaceholder';
+        $result[] = 'TagManager_LivezillaDynamicTagDomainPlaceholder';
+        $result[] = 'TagManager_RaygunTagApiKeyPlaceholder';
+        $result[] = 'TagManager_SentryRavenTagDSNPlaceholder';
+        $result[] = 'TagManager_TawkToTagIdPlaceholder';
+        $result[] = 'TagManager_TawkToTagWidgetIdPlaceholder';
+        $result[] = 'TagManager_ThemeColorPlaceholder';
+        $result[] = 'TagManager_VisualWebsiteOptimizerTagAccountIdPlaceholder';
+        $result[] = 'TagManager_ZendeskChatTagChatIdPlaceholder';
+        $result[] = 'TagManager_AllDownloadsClickTriggerDownloadExtensionsPlaceholder';
+        $result[] = 'TagManager_ElementVisibilityTriggerCssSelectorPlaceholder';
+        $result[] = 'TagManager_ElementVisibilityTriggerElementIdPlaceholder';
+        $result[] = 'TagManager_ElementVisibilityTriggerMinPercentVisiblePlaceholder';
+        $result[] = 'TagManager_TimerTriggerTriggerIntervalPlaceholder';
+        $result[] = 'TagManager_WindowLeaveTriggerTriggerLimitPlaceholder';
+        $result[] = 'TagManager_ClickDataAttributeDataAttributePlaceholder';
+        $result[] = 'TagManager_ConstantValuePlaceholder';
+        $result[] = 'TagManager_CookieVariableCookieNamePlaceholder';
+        $result[] = 'TagManager_CustomJsFunctionVariableJsFunctionPlaceholder';
+        $result[] = 'TagManager_DataLayerVariableNamePlaceholder';
+        $result[] = 'TagManager_DomElementVariableAttributeNamePlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoCrossDomainLinkingTimeoutPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoHeartBeatTimePlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoVisitorCookieTimeOutPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoReferralCookieTimeOutPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoSessionCookieTimeOutPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoCookieNamePrefixPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoCookiePathPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoJsEndpointCustomPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoTrackingEndpointCustomPlaceholder';
+        $result[] = 'TagManager_MatomoConfigurationMatomoRequestContentTypePlaceholder';
+        $result[] = 'TagManager_UrlParameterVariableNamePlaceholder';
+        $result[] = 'TagManager_JavaScriptVariableNamePlaceholder';
+        $result[] = 'TagManager_DefaultValuePlaceholder';
+        $result[] = 'TagManager_PauseX';
+        $result[] = 'TagManager_PauseTagConfirm';
+        $result[] = 'TagManager_ResumeX';
+        $result[] = 'TagManager_ResumeTagConfirm';
+        $result[] = 'TagManager_DiffPaused';
+        $result[] = 'TagManager_DiffAddedPaused';
+        $result[] = 'TagManager_TagFireLimitAllowedInPreviewModeTitle';
+        $result[] = 'TagManager_TagFireLimitAllowedInPreviewModeDescription';
+        $result[] = 'TagManager_DisablePreview';
+        $result[] = 'TagManager_MatomoConfigurationMatomoTrackBotsTitle';
+        $result[] = 'TagManager_MatomoConfigurationMatomoTrackBotsDescription';
+        $result[] = 'TagManager_PausedTag';
+        $result[] = 'TagManager_ResumedTag';
+        $result[] = 'TagManager_ActivelySyncGtmDataLayerTitle';
+        $result[] = 'TagManager_ActivelySyncGtmDataLayerDescription';
+        $result[] = 'TagManager_ContainerIdInformation';
+        $result[] = 'TagManager_ContainerDashboardDescription';
+        $result[] = 'TagManager_CopyX';
+        $result[] = 'TagManager_CopyXDescription';
+        $result[] = 'TagManager_CopyContainerDescription';
+        $result[] = 'TagManager_ContainerLowercase';
+        $result[] = 'TagManager_TagLowercase';
+        $result[] = 'TagManager_TriggerLowercase';
+        $result[] = 'TagManager_VariableLowercase';
+        $result[] = 'TagManager_ChooseWebsite';
+        $result[] = 'TagManager_CopyContainerNote';
+        $result[] = 'TagManager_CopyXSuccess';
+        $result[] = 'TagManager_ContainerLowercase';
+        $result[] = 'TagManager_TagLowercase';
+        $result[] = 'TagManager_TriggerLowercase';
+        $result[] = 'TagManager_VariableLowercase';
+        $result[] = 'TagManager_LearnMoreFullStop';
     }
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/TagManager/stylesheets/manageList.less";
         $stylesheets[] = "plugins/TagManager/stylesheets/manageEdit.less";
-        $stylesheets[] = "plugins/TagManager/stylesheets/gettingStarted.less";
         $stylesheets[] = "plugins/TagManager/vue/src/Tag/TagEdit.less";
         $stylesheets[] = "plugins/TagManager/vue/src/VariableSelectType/VariableSelectType.less";
         $stylesheets[] = "plugins/TagManager/vue/src/Field/FieldVariableTemplate.less";
@@ -813,6 +898,7 @@ class TagManager extends \Piwik\Plugin
         $stylesheets[] = "plugins/TagManager/vue/src/ContainerDashboard/ContainerDashboard.less";
         $stylesheets[] = "plugins/TagManager/vue/src/Version/VersionEdit.less";
         $stylesheets[] = "plugins/TagManager/vue/src/TagmanagerTrackingCode/TagManagerTrackingCode.less";
+        $stylesheets[] = "plugins/TagManager/vue/src/CopyDialog/CopyDialog.less";
     }
     public function getJsFiles(&$jsFiles)
     {
@@ -824,7 +910,7 @@ class TagManager extends \Piwik\Plugin
         try {
             $type = Site::getTypeFor($idSite);
         } catch (UnexpectedWebsiteFoundException $e) {
-            return false;
+            return \false;
             // no longer exists
         }
         return $type === 'website';
@@ -853,5 +939,22 @@ class TagManager extends \Piwik\Plugin
             BaseContext::removeAllContainerFiles($container['idcontainer']);
         }
         $dao->deleteContainersForSite($idSite, $deletedDate);
+    }
+    public function getMessagesToWarnOnSiteRemoval(&$messages, $idSite)
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $dao = new ContainersDao();
+        $containers = $dao->getContainersForSite($idSite);
+        if (!empty($containers)) {
+            $view = new View('@TagManager/deleteWebsite');
+            $view->containers = $containers;
+            $view->link = Url::getCurrentUrlWithoutFileName() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'module' => 'TagManager', 'action' => 'manageVersions']);
+            $messages[] = $view->render();
+        }
+    }
+    private function isAccessRestrictedForUser() : bool
+    {
+        $idSite = \Piwik\Request::fromRequest()->getIntegerParameter('idSite', 0);
+        return !StaticContainer::get(\Piwik\Plugins\TagManager\SystemSettings::class)->doesCurrentUserHaveTagManagerAccess($idSite);
     }
 }

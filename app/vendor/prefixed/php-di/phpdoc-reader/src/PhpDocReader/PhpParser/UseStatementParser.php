@@ -19,7 +19,7 @@ class UseStatementParser
     public function parseUseStatements(\ReflectionClass $class) : array
     {
         $filename = $class->getFilename();
-        if ($filename === false) {
+        if ($filename === \false) {
             return [];
         }
         $content = $this->getFileContent($filename, $class->getStartLine());

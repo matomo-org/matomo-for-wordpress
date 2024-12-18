@@ -76,9 +76,9 @@ class Barcode128
     public function getSize($TextString, $Format = "")
     {
         $Angle = isset($Format["Angle"]) ? $Format["Angle"] : 0;
-        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
+        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : \false;
         $LegendOffset = isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
+        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : \false;
         $FontSize = isset($Format["FontSize"]) ? $Format["FontSize"] : 12;
         $Height = isset($Format["Height"]) ? $Format["Height"] : 30;
         $TextString = $this->encode128($TextString);
@@ -134,9 +134,9 @@ class Barcode128
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
         $Height = isset($Format["Height"]) ? $Format["Height"] : 30;
         $Angle = isset($Format["Angle"]) ? $Format["Angle"] : 0;
-        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
+        $ShowLegend = isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : \false;
         $LegendOffset = isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
+        $DrawArea = isset($Format["DrawArea"]) ? $Format["DrawArea"] : \false;
         $AreaR = isset($Format["AreaR"]) ? $Format["AreaR"] : 255;
         $AreaG = isset($Format["AreaG"]) ? $Format["AreaG"] : 255;
         $AreaB = isset($Format["AreaB"]) ? $Format["AreaB"] : 255;

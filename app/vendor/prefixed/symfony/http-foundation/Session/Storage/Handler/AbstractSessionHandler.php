@@ -35,7 +35,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
         if (!headers_sent() && !\ini_get('session.cache_limiter') && '0' !== \ini_get('session.cache_limiter')) {
             header(sprintf('Cache-Control: max-age=%d, private, must-revalidate', 60 * (int) \ini_get('session.cache_expire')));
         }
-        return true;
+        return \true;
     }
     /**
      * @return string
@@ -60,7 +60,7 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
         if (\PHP_VERSION_ID < 70317 || 70400 <= \PHP_VERSION_ID && \PHP_VERSION_ID < 70405) {
             // work around https://bugs.php.net/79413
             foreach (debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS) as $frame) {
-                if (!isset($frame['class']) && isset($frame['function']) && \in_array($frame['function'], ['session_regenerate_id', 'session_create_id'], true)) {
+                if (!isset($frame['class']) && isset($frame['function']) && \in_array($frame['function'], ['session_regenerate_id', 'session_create_id'], \true)) {
                     return '' === $this->prefetchData;
                 }
             }

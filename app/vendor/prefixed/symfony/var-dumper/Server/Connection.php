@@ -45,9 +45,9 @@ class Connection
     {
         $socketIsFresh = !$this->socket;
         if (!($this->socket = $this->socket ?: $this->createSocket())) {
-            return false;
+            return \false;
         }
-        $context = ['timestamp' => microtime(true)];
+        $context = ['timestamp' => microtime(\true)];
         foreach ($this->contextProviders as $name => $provider) {
             $context[$name] = $provider->getContext();
         }
@@ -56,7 +56,7 @@ class Connection
         set_error_handler([self::class, 'nullErrorHandler']);
         try {
             if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
-                return true;
+                return \true;
             }
             if (!$socketIsFresh) {
                 stream_socket_shutdown($this->socket, \STREAM_SHUT_RDWR);
@@ -64,12 +64,12 @@ class Connection
                 $this->socket = $this->createSocket();
             }
             if (-1 !== stream_socket_sendto($this->socket, $encodedPayload)) {
-                return true;
+                return \true;
             }
         } finally {
             restore_error_handler();
         }
-        return false;
+        return \false;
     }
     private static function nullErrorHandler(int $t, string $m)
     {

@@ -45,19 +45,19 @@ class Csv extends Renderer
      *
      * @var bool
      */
-    public $exportMetadata = true;
+    public $exportMetadata = \true;
     /**
      * Converts the content to unicode so that UTF8 characters (eg. chinese) can be imported in Excel
      *
      * @var bool
      */
-    public $convertToUnicode = true;
+    public $convertToUnicode = \true;
     /**
      * idSubtable will be exported in a column called 'idsubdatatable'
      *
      * @var bool
      */
-    public $exportIdSubtable = true;
+    public $exportIdSubtable = \true;
     /**
      * This string is also hardcoded in archive,sh
      */
@@ -140,7 +140,7 @@ class Csv extends Renderer
             }
         }
         // prepend table key to column list
-        $allColumns = array_merge(array($table->getKeyName() => true), $allColumns);
+        $allColumns = array_merge(array($table->getKeyName() => \true), $allColumns);
         // add header to output string
         $str = $this->getHeaderLine(array_keys($allColumns)) . $str;
         return $str;
@@ -156,11 +156,11 @@ class Csv extends Renderer
     {
         if ($table instanceof Simple) {
             $row = $table->getFirstRow();
-            if ($row !== false) {
+            if ($row !== \false) {
                 $columnNameToValue = $row->getColumns();
                 if (count($columnNameToValue) === 1) {
                     // simple tables should only have one column, the value
-                    $allColumns['value'] = true;
+                    $allColumns['value'] = \true;
                     $value = array_values($columnNameToValue);
                     $str = 'value' . $this->lineEnd . $this->formatValue($value[0]);
                     return $str;
@@ -201,15 +201,15 @@ class Csv extends Renderer
     public function formatValue($value)
     {
         if (is_string($value) && !is_numeric($value)) {
-            $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-        } elseif ($value === false) {
+            $value = html_entity_decode($value, \ENT_QUOTES, 'UTF-8');
+        } elseif ($value === \false) {
             $value = 0;
         }
         $value = $this->formatFormulas($value);
         if (is_string($value)) {
             $value = str_replace(["\t"], ' ', $value);
             // surround value with double quotes if it contains a double quote or a commonly used separator
-            if (strpos($value, '"') !== false || strpos($value, $this->separator) !== false || strpos($value, ',') !== false || strpos($value, ';') !== false) {
+            if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
             }
         }
@@ -243,13 +243,13 @@ class Csv extends Renderer
     protected function renderHeader()
     {
         $fileName = Piwik::translate('General_Export');
-        $period = Common::getRequestVar('period', false);
-        $date = Common::getRequestVar('date', false);
+        $period = Common::getRequestVar('period', \false);
+        $date = Common::getRequestVar('date', \false);
         if ($period || $date) {
             // in test cases, there are no request params set
             if ($period === 'range') {
                 $period = new Range($period, $date);
-            } elseif (strpos($date, ',') !== false) {
+            } elseif (strpos($date, ',') !== \false) {
                 $period = new Range('range', $date);
             } else {
                 $period = Period\Factory::build($period, $date);
@@ -260,7 +260,7 @@ class Csv extends Renderer
             $fileName .= ' _ ' . $name . ' _ ' . $prettyDate . '.csv';
         }
         // silent fail otherwise unit tests fail
-        Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), true);
+        Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), \true);
         ProxyHttp::overrideCacheControlHeaders();
     }
     /**
@@ -363,12 +363,12 @@ class Csv extends Renderer
                 if (in_array($name, $this->unsupportedColumns)) {
                     unset($allColumns[$name]);
                 } else {
-                    $allColumns[$name] = true;
+                    $allColumns[$name] = \true;
                 }
             }
             if ($this->exportIdSubtable) {
                 $idsubdatatable = $row->getIdSubDataTable();
-                if ($idsubdatatable !== false && $this->hideIdSubDatatable === false) {
+                if ($idsubdatatable !== \false && $this->hideIdSubDatatable === \false) {
                     $csvRow['idsubdatatable'] = $idsubdatatable;
                 }
             }
@@ -400,10 +400,14 @@ class Csv extends Renderer
      */
     protected function removeFirstPercentSign($value)
     {
-        $needle = '%';
-        $posPercent = strpos($value ?? '', $needle);
-        if ($posPercent !== false) {
-            return substr_replace($value, '', $posPercent, strlen($needle));
+        // remove all null byte chars from the beginning
+        $value = ltrim($value, "\x00");
+        while (0 === strpos($value, '%00')) {
+            $value = ltrim(substr($value, 3), "\x00");
+        }
+        $posPercent = strpos($value ?? '', '%');
+        if ($posPercent !== \false) {
+            return substr_replace($value, '', $posPercent, 1);
         }
         return $value;
     }

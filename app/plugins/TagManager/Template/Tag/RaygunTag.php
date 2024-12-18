@@ -24,11 +24,12 @@ class RaygunTag extends BaseTag
             $field->title = Piwik::translate('TagManager_RaygunTagApiKeyTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_TEXT;
             $field->description = Piwik::translate('TagManager_RaygunTagApiKeyDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_RaygunTagApiKeyPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->transform = function ($value) {
                 return trim($value);
             };
-        }), $this->makeSetting('raygunEnablePulse', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('raygunEnablePulse', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_RaygunTagEnablePulseTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
             $field->description = Piwik::translate('TagManager_RaygunTagEnablePulseDescription');

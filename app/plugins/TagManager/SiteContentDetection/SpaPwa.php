@@ -34,7 +34,7 @@ class SpaPwa extends SiteContentDetectionAbstract
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {

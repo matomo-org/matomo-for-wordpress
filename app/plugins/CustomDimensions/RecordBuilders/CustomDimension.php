@@ -71,7 +71,7 @@ class CustomDimension extends RecordBuilder
         if ($this->rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($this->rankingQueryLimit);
             $rankingQuery->addLabelColumn($dimensions[0]);
-            $query = $logAggregator->queryVisitsByDimension($dimensions, $where, [], false, $rankingQuery, false, -1, $rankingQueryGenerate = true);
+            $query = $logAggregator->queryVisitsByDimension($dimensions, $where, [], \false, $rankingQuery, \false, -1, $rankingQueryGenerate = \true);
         } else {
             $query = $logAggregator->queryVisitsByDimension($dimensions, $where);
         }
@@ -91,7 +91,7 @@ class CustomDimension extends RecordBuilder
         if ($this->rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($this->rankingQueryLimit);
             $rankingQuery->addLabelColumn([$dimensions[0], 'idgoal']);
-            $query = $logAggregator->queryConversionsByDimension($dimensions, $where, false, [], $rankingQuery, $rankingQueryGenerate = true);
+            $query = $logAggregator->queryConversionsByDimension($dimensions, $where, \false, [], $rankingQuery, $rankingQueryGenerate = \true);
         } else {
             $query = $logAggregator->queryConversionsByDimension($dimensions, $where);
         }

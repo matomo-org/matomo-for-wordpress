@@ -13,6 +13,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Period\Factory;
 use Piwik\Period\Factory as PeriodFactory;
+use Piwik\Period\Range;
 use Piwik\Piwik;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
 use Piwik\Segment;
@@ -21,14 +22,14 @@ use Piwik\Log\LoggerInterface;
 class ArchiveFilter
 {
     private $segmentsToForce = null;
-    private $disableSegmentsArchiving = false;
+    private $disableSegmentsArchiving = \false;
     /**
      * If supplied, archiving will be launched only for periods that fall within this date range. For example,
      * `"2012-01-01,2012-03-15"` would result in January 2012, February 2012 being archived but not April 2012.
      *
      * @var Date[]
      */
-    private $restrictToDateRange = false;
+    private $restrictToDateRange = \false;
     /**
      * A list of periods to launch archiving for. By default, day, week, month and year periods
      * are considered. This variable can limit the periods to, for example, week & month only.
@@ -45,7 +46,7 @@ class ArchiveFilter
      * then it will still be archived for today and the setting will be ignored for this segment.
      * @var bool
      */
-    private $skipSegmentsForToday = false;
+    private $skipSegmentsForToday = \false;
     /**
      * If enabled, the only invalidations that will be processed are for the specific plugin and report specified
      * here. Must be in the format "MyPlugin.myReport".
@@ -74,7 +75,11 @@ class ArchiveFilter
         }
         if (!empty($this->skipSegmentsForToday)) {
             $site = new Site($archive['idsite']);
-            $period = Factory::build($this->periodIdsToLabels[$archive['period']], $archive['date1']);
+            if ((int) $archive['period'] === Range::PERIOD_ID) {
+                $period = Factory::build($this->periodIdsToLabels[$archive['period']], "{$archive['date1']},{$archive['date2']}");
+            } else {
+                $period = Factory::build($this->periodIdsToLabels[$archive['period']], $archive['date1']);
+            }
             $segment = new Segment($segment, [$archive['idsite']]);
             if (Archive::shouldSkipArchiveIfSkippingSegmentArchiveForToday($site, $period, $segment)) {
                 return "skipping segment archives for today";
@@ -90,7 +95,7 @@ class ArchiveFilter
         if (!empty($this->forceReport) && (empty($archive['plugin']) || empty($archive['report']) || $archive['plugin'] . '.' . $archive['report'] != $this->forceReport)) {
             return "report is not the same as value specified in --force-report";
         }
-        return false;
+        return \false;
     }
     public function logFilterInfo(LoggerInterface $logger)
     {

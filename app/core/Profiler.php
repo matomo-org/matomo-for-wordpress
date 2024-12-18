@@ -28,7 +28,7 @@ class Profiler
      *
      * @var bool
      */
-    private static $isXhprofSetup = false;
+    private static $isXhprofSetup = \false;
     /**
      * Returns memory usage
      *
@@ -36,13 +36,13 @@ class Profiler
      */
     public static function getMemoryUsage()
     {
-        $memory = false;
+        $memory = \false;
         if (function_exists('xdebug_memory_usage')) {
             $memory = xdebug_memory_usage();
         } elseif (function_exists('memory_get_usage')) {
             $memory = memory_get_usage();
         }
-        if ($memory === false) {
+        if ($memory === \false) {
             return "Memory usage function not found.";
         }
         $usage = number_format(round($memory / 1024 / 1024, 2), 2);
@@ -115,7 +115,7 @@ class Profiler
         }
         $tableName = \Piwik\Common::prefixTable('log_profiling');
         $all = $db->fetchAll('SELECT * FROM ' . $tableName);
-        if ($all === false) {
+        if ($all === \false) {
             return;
         }
         uasort($all, 'self::maxSumMsFirst');
@@ -184,7 +184,7 @@ class Profiler
      * Initializes Profiling via XHProf.
      * See: https://github.com/piwik/piwik/blob/master/tests/README.xhprof.md
      */
-    public static function setupProfilerXHProf($mainRun = false, $setupDuringTracking = false)
+    public static function setupProfilerXHProf($mainRun = \false, $setupDuringTracking = \false)
     {
         if (!$setupDuringTracking && \Piwik\SettingsServer::isTrackerApiRequest()) {
             // do not profile Tracker
@@ -224,11 +224,11 @@ class Profiler
             self::setProfilingRunIds(array());
         }
         if (function_exists('xhprof_enable')) {
-            xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+            xhprof_enable(\XHPROF_FLAGS_CPU + \XHPROF_FLAGS_MEMORY);
         } elseif (function_exists('tideways_enable')) {
             tideways_enable(TIDEWAYS_FLAGS_MEMORY | TIDEWAYS_FLAGS_CPU);
         } elseif (function_exists('tideways_xhprof_enable')) {
-            tideways_xhprof_enable(TIDEWAYS_XHPROF_FLAGS_MEMORY | TIDEWAYS_XHPROF_FLAGS_CPU);
+            tideways_xhprof_enable(\TIDEWAYS_XHPROF_FLAGS_MEMORY | \TIDEWAYS_XHPROF_FLAGS_CPU);
         }
         register_shutdown_function(function () use($profilerNamespace, $mainRun, $outputDir) {
             if (function_exists('xhprof_disable')) {
@@ -242,7 +242,7 @@ class Profiler
                     $xhprofData = tideways_disable();
                 }
                 $runId = uniqid();
-                file_put_contents($outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof', serialize($xhprofData));
+                file_put_contents($outputDir . \DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof', serialize($xhprofData));
                 $meta = array('time' => time(), 'instance' => \Piwik\SettingsPiwik::getPiwikInstanceId());
                 if (!empty($_GET)) {
                     $meta['get'] = $_GET;
@@ -250,7 +250,7 @@ class Profiler
                 if (!empty($_POST)) {
                     $meta['post'] = $_POST;
                 }
-                file_put_contents($outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta', serialize($meta));
+                file_put_contents($outputDir . \DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta', serialize($meta));
             }
             if (empty($runId)) {
                 die('could not write profiler run');
@@ -281,7 +281,7 @@ class Profiler
                 \Piwik\Profiler::setProfilingRunIds($runs);
             }
         });
-        self::$isXhprofSetup = true;
+        self::$isXhprofSetup = \true;
     }
     /**
      * Aggregates xhprof runs w/o normalizing (xhprof_aggregate_runs will always average data which
@@ -324,7 +324,7 @@ class Profiler
     public static function getProfilingRunIds()
     {
         $runIds = file_get_contents(self::getPathToXHProfRunIds());
-        $array = json_decode($runIds, $assoc = true);
+        $array = json_decode($runIds, $assoc = \true);
         if (!is_array($array)) {
             $array = array();
         }

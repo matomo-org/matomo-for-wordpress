@@ -23,5 +23,5 @@
 {% endblock %}
 
 {% block content %}
-    <div vue-entry="TagManager.ContainerManage"></div>
+    <div vue-entry="TagManager.ContainerManage" is-super-user="{{ isSuperUser|default(false)|json_encode }}"></div>
 {% endblock %}

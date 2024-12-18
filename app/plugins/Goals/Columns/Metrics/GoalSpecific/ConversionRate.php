@@ -28,7 +28,7 @@ class ConversionRate extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'conversion_rate', false);
+        return Goals::makeGoalColumn($this->idGoal, 'conversion_rate', \false);
     }
     public function getTranslatedName()
     {

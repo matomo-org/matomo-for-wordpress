@@ -64,7 +64,7 @@ class API extends \Piwik\Plugin\API
             if ($challenge->getId() === $id) {
                 if (!$challenge->isCompleted($login)) {
                     $challenge->skipChallenge($login);
-                    return true;
+                    return \true;
                 }
                 throw new \Exception('Challenge already completed');
             }

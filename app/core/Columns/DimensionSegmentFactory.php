@@ -35,7 +35,7 @@ class DimensionSegmentFactory
      * @return Segment
      * @throws \Exception
      */
-    public function createSegment(Segment $segment = null)
+    public function createSegment(?Segment $segment = null)
     {
         $dimension = $this->dimension;
         if (!$segment instanceof Segment) {
@@ -47,7 +47,7 @@ class DimensionSegmentFactory
         }
         if (!$segment->getType()) {
             $metricTypes = array(\Piwik\Columns\Dimension::TYPE_NUMBER, \Piwik\Columns\Dimension::TYPE_FLOAT, \Piwik\Columns\Dimension::TYPE_MONEY, \Piwik\Columns\Dimension::TYPE_DURATION_S, \Piwik\Columns\Dimension::TYPE_DURATION_MS);
-            if (in_array($dimension->getType(), $metricTypes, $strict = true)) {
+            if (in_array($dimension->getType(), $metricTypes, $strict = \true)) {
                 $segment->setType(Segment::TYPE_METRIC);
             } else {
                 $segment->setType(Segment::TYPE_DIMENSION);
@@ -91,7 +91,7 @@ class DimensionSegmentFactory
             $segment->setSqlFilter($sqlFilter);
         }
         if (!$dimension->isAnonymousAllowed()) {
-            $segment->setRequiresRegisteredUser(true);
+            $segment->setRequiresRegisteredUser(\true);
         }
         return $segment;
     }
@@ -105,9 +105,9 @@ class DimensionSegmentFactory
                     return $value;
                 }
                 $id = array_search($value, $enum);
-                if ($id === false) {
+                if ($id === \false) {
                     $id = array_search(strtolower(trim(urldecode($value))), $enum);
-                    if ($id === false) {
+                    if ($id === \false) {
                         throw new \Exception("Invalid '{$sqlSegmentName}' segment value {$value}");
                     }
                 }

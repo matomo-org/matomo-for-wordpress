@@ -73,11 +73,11 @@ class FrontController extends \Piwik\Singleton
      *
      * @var bool
      */
-    public static $enableDispatch = true;
+    public static $enableDispatch = \true;
     /**
      * @var bool
      */
-    private $initialized = false;
+    private $initialized = \false;
     /**
      * @param $lastError
      * @return string
@@ -103,7 +103,7 @@ class FrontController extends \Piwik\Singleton
      */
     public static function generateSafeModeOutputFromException($e)
     {
-        StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => true]);
+        StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
         $error = array('message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine());
         if (isset(self::$requestId)) {
             $error['request_id'] = self::$requestId;
@@ -132,7 +132,7 @@ class FrontController extends \Piwik\Singleton
      */
     public function dispatch($module = null, $action = null, $parameters = null)
     {
-        if (self::$enableDispatch === false) {
+        if (self::$enableDispatch === \false) {
             return;
         }
         $filter = new Router();
@@ -154,7 +154,7 @@ class FrontController extends \Piwik\Singleton
              *
              * @param \Piwik\NoAccessException $exception The exception that was caught.
              */
-            \Piwik\Piwik::postEvent('User.isNotAuthorized', array($exception), $pending = true);
+            \Piwik\Piwik::postEvent('User.isNotAuthorized', array($exception), $pending = \true);
         } catch (\Matomo\Dependencies\Twig\Error\RuntimeError $e) {
             if ($e->getPrevious() && !$e->getPrevious() instanceof \Matomo\Dependencies\Twig\Error\RuntimeError) {
                 // a regular exception unrelated to twig was triggered while rendering an a view, for example as part of a triggered event
@@ -232,9 +232,9 @@ class FrontController extends \Piwik\Singleton
         if (!empty($lastError) && isset(self::$requestId)) {
             $lastError['request_id'] = self::$requestId;
         }
-        if (!empty($lastError) && $lastError['type'] == E_ERROR) {
+        if (!empty($lastError) && $lastError['type'] == \E_ERROR) {
             $lastError['backtrace'] = ' on ' . $lastError['file'] . '(' . $lastError['line'] . ")\n" . \Piwik\ErrorHandler::getFatalErrorPartialBacktrace();
-            StaticContainer::get(LoggerInterface::class)->error('Fatal error encountered: {exception}', ['exception' => $lastError, 'ignoreInScreenWriter' => true]);
+            StaticContainer::get(LoggerInterface::class)->error('Fatal error encountered: {exception}', ['exception' => $lastError, 'ignoreInScreenWriter' => \true]);
             $message = self::generateSafeModeOutputFromError($lastError);
             echo $message;
         }
@@ -256,7 +256,7 @@ class FrontController extends \Piwik\Singleton
             return;
         }
         self::setRequestIdHeader();
-        $this->initialized = true;
+        $this->initialized = \true;
         $tmpPath = StaticContainer::get('path.tmp');
         $directoriesToCheck = array($tmpPath, $tmpPath . '/assets/', $tmpPath . '/cache/', $tmpPath . '/logs/', $tmpPath . '/tcpdf/', StaticContainer::get('path.tmp.templates'));
         \Piwik\Filechecks::dieIfDirectoriesNotWritable($directoriesToCheck);
@@ -283,7 +283,7 @@ class FrontController extends \Piwik\Singleton
              * @param Exception $exception The exception thrown from creating and testing the database
              *                             connection.
              */
-            \Piwik\Piwik::postEvent('Db.cannotConnectToDb', array($exception), $pending = true);
+            \Piwik\Piwik::postEvent('Db.cannotConnectToDb', array($exception), $pending = \true);
             throw $exception;
         }
         // try to get an option (to check if data can be queried)
@@ -302,7 +302,7 @@ class FrontController extends \Piwik\Singleton
              *
              * @param Exception $exception The exception thrown from trying to get an option value.
              */
-            \Piwik\Piwik::postEvent('Config.badConfigurationFile', array($exception), $pending = true);
+            \Piwik\Piwik::postEvent('Config.badConfigurationFile', array($exception), $pending = \true);
             throw $exception;
         }
         // Init the Access object, so that eg. core/Updates/* can enforce Super User and use some APIs
@@ -325,7 +325,7 @@ class FrontController extends \Piwik\Singleton
         if (method_exists('Piwik\\SettingsPiwik', 'getPiwikUrl')) {
             \Piwik\SettingsPiwik::getPiwikUrl();
         }
-        $loggedIn = false;
+        $loggedIn = \false;
         //move this up unsupported Browser do not create session
         if ($this->isSupportedBrowserCheckNeeded()) {
             SupportedBrowser::checkIfBrowserSupported();
@@ -372,8 +372,8 @@ class FrontController extends \Piwik\Singleton
             $module = \Piwik\Common::getRequestVar('module', self::DEFAULT_MODULE, 'string');
         }
         if (is_null($action)) {
-            $action = \Piwik\Common::getRequestVar('action', false);
-            if ($action !== false) {
+            $action = \Piwik\Common::getRequestVar('action', \false);
+            if ($action !== \false) {
                 // If a value was provided, check it has the correct type.
                 $action = \Piwik\Common::getRequestVar('action', null, 'string');
             }
@@ -453,8 +453,8 @@ class FrontController extends \Piwik\Singleton
     }
     private function closeSessionEarlyForFasterUI()
     {
-        $isDashboardReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=CoreHome&action=index') !== false;
-        $isAllWebsitesReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=MultiSites&action=index') !== false;
+        $isDashboardReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=CoreHome&action=index') !== \false;
+        $isAllWebsitesReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=MultiSites&action=index') !== \false;
         if ($isDashboardReferrer && !empty($_POST['token_auth']) && \Piwik\Common::getRequestVar('widget', 0, 'int') === 1) {
             \Piwik\Session::close();
         }
@@ -570,7 +570,7 @@ class FrontController extends \Piwik\Singleton
             return null;
         }
         $module = \Piwik\Common::getRequestVar('module', self::DEFAULT_MODULE, 'string');
-        $action = \Piwik\Common::getRequestVar('action', false);
+        $action = \Piwik\Common::getRequestVar('action', \false);
         // the session must be started before using the session authenticator,
         // so we do it here, if this is not an API request.
         if (\Piwik\SettingsPiwik::isMatomoInstalled() && ($module !== 'API' || $action && $action !== 'index') && !($module === 'CoreAdminHome' && $action === 'optOutJS')) {
@@ -631,32 +631,32 @@ class FrontController extends \Piwik\Singleton
     private function isSupportedBrowserCheckNeeded()
     {
         if (defined('PIWIK_ENABLE_DISPATCH') && !PIWIK_ENABLE_DISPATCH) {
-            return false;
+            return \false;
         }
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         if ($userAgent === '') {
-            return false;
+            return \false;
         }
         $isTestMode = defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE;
-        if (!$isTestMode && \Piwik\Common::isPhpCliMode() === true) {
-            return false;
+        if (!$isTestMode && \Piwik\Common::isPhpCliMode() === \true) {
+            return \false;
         }
         if (\Piwik\Piwik::getModule() === 'API' && (empty(\Piwik\Piwik::getAction()) || \Piwik\Piwik::getAction() === 'index' || \Piwik\Piwik::getAction() === 'glossary')) {
-            return false;
+            return \false;
         }
         if (\Piwik\Piwik::getModule() === 'Widgetize') {
-            return true;
+            return \true;
         }
         $generalConfig = \Piwik\Config::getInstance()->General;
         if ($generalConfig['enable_framed_pages'] == '1' || $generalConfig['enable_framed_settings'] == '1') {
-            return true;
+            return \true;
         }
         if (\Piwik\Common::getRequestVar('token_auth', '', 'string') !== '') {
-            return true;
+            return \true;
         }
         if (\Piwik\Piwik::isUserIsAnonymous()) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

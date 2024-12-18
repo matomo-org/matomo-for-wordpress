@@ -33,7 +33,7 @@ class SymfonyQuestionHelper extends QuestionHelper
         if ($question->isMultiline()) {
             $text .= sprintf(' (press %s to continue)', $this->getEofShortcut());
         }
-        switch (true) {
+        switch (\true) {
             case null === $default:
                 $text = sprintf(' <info>%s</info>:', $text);
                 break;

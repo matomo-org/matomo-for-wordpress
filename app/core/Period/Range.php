@@ -49,13 +49,13 @@ class Range extends Period
      * @param bool|Date $today The date to use as _today_. Defaults to `Date::factory('today', $timzeone)`.
      * @api
      */
-    public function __construct($strPeriod, $strDate, $timezone = 'UTC', $today = false)
+    public function __construct($strPeriod, $strDate, $timezone = 'UTC', $today = \false)
     {
         $this->strPeriod = $strPeriod;
         $this->strDate = $strDate;
         $this->timezone = $timezone;
         $this->defaultEndDate = null;
-        if ($today === false) {
+        if ($today === \false) {
             $today = Date::factory('now', $this->timezone);
         }
         $this->today = $today;
@@ -103,7 +103,7 @@ class Range extends Period
      */
     public function getLocalizedShortString()
     {
-        return $this->getTranslatedRange($this->getRangeFormat(true));
+        return $this->getTranslatedRange($this->getRangeFormat(\true));
     }
     /**
      * Returns the current period as a localized long string.
@@ -214,7 +214,7 @@ class Range extends Period
             $startDate = Date::factory($strDateStart);
             // we set the timezone in the Date object only if the date is relative eg. 'today', 'yesterday', 'now'
             $timezone = null;
-            if (strpos($strDateEnd, '-') === false) {
+            if (strpos($strDateEnd, '-') === \false) {
                 $timezone = $this->timezone;
             }
             $endDate = Date::factory($strDateEnd, $timezone)->setTime("00:00:00");
@@ -247,7 +247,7 @@ class Range extends Period
     {
         $matched = preg_match('/^((?:[0-9]{4}-[0-9]{1,2}-[0-9]{1,2})|last[ -]?(?:week|month|year)),((?:[0-9]{4}-[0-9]{1,2}-[0-9]{1,2})|today|now|yesterday|last[ -]?(?:week|month|year))$/Di', trim($dateString), $regs);
         if (empty($matched)) {
-            return false;
+            return \false;
         }
         return $regs;
     }
@@ -347,7 +347,7 @@ class Range extends Period
      *               a Period instance for the period before $date.
      * @api
      */
-    public static function getLastDate($date = false, $period = false)
+    public static function getLastDate($date = \false, $period = \false)
     {
         return self::getDateXPeriodsAgo(1, $date, $period);
     }
@@ -364,12 +364,12 @@ class Range extends Period
      *               a Period instance for the period before $date.
      * @api
      */
-    public static function getDateXPeriodsAgo($subXPeriods, $date = false, $period = false)
+    public static function getDateXPeriodsAgo($subXPeriods, $date = \false, $period = \false)
     {
-        if ($date === false) {
+        if ($date === \false) {
             $date = Common::getRequestVar('date');
         }
-        if ($period === false) {
+        if ($period === \false) {
             $period = Common::getRequestVar('period');
         }
         if (365 == $subXPeriods && 'day' == $period && Date::factory($date)->isLeapYear()) {
@@ -380,11 +380,11 @@ class Range extends Period
             $daysDifference = self::getNumDaysDifference($rangePeriod->getDateStart(), $rangePeriod->getDateEnd());
             $end = $rangePeriod->getDateStart()->subDay(1);
             $from = $end->subDay($daysDifference);
-            return array("{$from},{$end}", false);
+            return array("{$from},{$end}", \false);
         }
         // can't get the last date for range periods & dates that use lastN/previousN
-        $strLastDate = false;
-        $lastPeriod = false;
+        $strLastDate = \false;
+        $lastPeriod = \false;
         if (!preg_match('/(last|previous)([0-9]*)/', $date, $regs)) {
             if (strpos($date, ',')) {
                 // date in the form of 2011-01-01,2011-02-02
@@ -430,7 +430,7 @@ class Range extends Period
     {
         $timezone = $site->getTimezone();
         $last30Relative = new \Piwik\Period\Range($period, $lastN, $timezone);
-        if (strpos($endDate, '-') === false) {
+        if (strpos($endDate, '-') === \false) {
             // eg today, yesterday, ... needs the timezone
             $endDate = Date::factoryInTimezone($endDate, $timezone);
         } else {

@@ -40,7 +40,7 @@ class SessionAuth implements Auth
      */
     private $user;
     private $tokenAuth;
-    public function __construct(UsersModel $userModel = null, $shouldDestroySession = true)
+    public function __construct(?UsersModel $userModel = null, $shouldDestroySession = \true)
     {
         $this->userModel = $userModel ?: new UsersModel();
         $this->shouldDestroySession = $shouldDestroySession;
@@ -98,7 +98,7 @@ class SessionAuth implements Auth
             return $this->makeAuthFailure();
         }
         $this->updateSessionExpireTime($sessionFingerprint);
-        if ($this->tokenAuth !== null && $this->tokenAuth !== false && $this->tokenAuth !== $sessionFingerprint->getSessionTokenAuth()) {
+        if ($this->tokenAuth !== null && $this->tokenAuth !== \false && $this->tokenAuth !== $sessionFingerprint->getSessionTokenAuth()) {
             return $this->makeAuthFailure();
         }
         if ($sessionFingerprint->getSessionTokenAuth()) {
@@ -112,12 +112,12 @@ class SessionAuth implements Auth
     {
         // sanity check, make sure users can still login if the ts_password_modified column does not exist
         if ($tsPasswordModified === null) {
-            return false;
+            return \false;
         }
         // if the session start time doesn't exist for some reason, log the user out
         $sessionStartTime = $sessionFingerprint->getSessionStartTime();
         if (empty($sessionStartTime)) {
-            return true;
+            return \true;
         }
         return $sessionStartTime < Date::factory($tsPasswordModified)->getTimestampUTC();
     }
@@ -176,7 +176,7 @@ class SessionAuth implements Auth
     {
         $expirationTime = $sessionFingerprint->getExpirationTime();
         if (empty($expirationTime)) {
-            return true;
+            return \true;
         }
         $isExpired = Date::now()->getTimestampUTC() > $expirationTime;
         return $isExpired;

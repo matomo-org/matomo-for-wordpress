@@ -50,7 +50,7 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
      * @var int
      */
     private $processedPercent = 0;
-    public function __construct(RawLogDao $dao = null)
+    public function __construct(?RawLogDao $dao = null)
     {
         parent::__construct();
         $this->dao = $dao ?: new RawLogDao();
@@ -137,7 +137,7 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
             throw new \InvalidArgumentException("The provider '{$providerId}' is not currently available, please make sure it is configured correctly.");
         }
         $isWorkingOrErrorMessage = $usedProvider->isWorking();
-        if ($isWorkingOrErrorMessage !== true) {
+        if ($isWorkingOrErrorMessage !== \true) {
             $errorMessage = "The provider '{$providerId}' does not appear to be working correctly. Details: {$isWorkingOrErrorMessage}";
             $forceGeolocation = $input->getOption(self::FORCE_OPTION);
             if ($forceGeolocation) {

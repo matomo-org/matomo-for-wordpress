@@ -31,7 +31,7 @@ class FingersCrossedHandler extends AbstractHandler
 {
     protected $handler;
     protected $activationStrategy;
-    protected $buffering = true;
+    protected $buffering = \true;
     protected $bufferSize;
     protected $buffer = array();
     protected $stopBuffering;
@@ -44,7 +44,7 @@ class FingersCrossedHandler extends AbstractHandler
      * @param bool                            $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
      * @param int                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
      */
-    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true, $passthruLevel = null)
+    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = \true, $stopBuffering = \true, $passthruLevel = null)
     {
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
@@ -70,7 +70,7 @@ class FingersCrossedHandler extends AbstractHandler
      */
     public function isHandling(array $record)
     {
-        return true;
+        return \true;
     }
     /**
      * Manually activate this logger regardless of the activation strategy
@@ -78,7 +78,7 @@ class FingersCrossedHandler extends AbstractHandler
     public function activate()
     {
         if ($this->stopBuffering) {
-            $this->buffering = false;
+            $this->buffering = \false;
         }
         $this->getHandler(end($this->buffer) ?: null)->handleBatch($this->buffer);
         $this->buffer = array();
@@ -104,7 +104,7 @@ class FingersCrossedHandler extends AbstractHandler
         } else {
             $this->getHandler($record)->handle($record);
         }
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * {@inheritdoc}
@@ -146,7 +146,7 @@ class FingersCrossedHandler extends AbstractHandler
             }
         }
         $this->buffer = array();
-        $this->buffering = true;
+        $this->buffering = \true;
     }
     /**
      * Return the nested handler

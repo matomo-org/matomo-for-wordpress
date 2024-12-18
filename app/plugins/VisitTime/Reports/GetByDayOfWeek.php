@@ -25,7 +25,7 @@ class GetByDayOfWeek extends \Piwik\Plugins\VisitTime\Reports\Base
         $this->dimension = new DayOfTheWeek();
         $this->name = Piwik::translate('VisitTime_VisitsByDayOfWeek');
         $this->documentation = Piwik::translate('VisitTime_WidgetByDayOfWeekDocumentation');
-        $this->constantRowsCount = true;
+        $this->constantRowsCount = \true;
         $this->order = 25;
         $this->subcategoryId = 'VisitTime_SubmenuTimes';
     }
@@ -33,22 +33,22 @@ class GetByDayOfWeek extends \Piwik\Plugins\VisitTime\Reports\Base
     {
         $this->setBasicConfigViewProperties($view);
         $view->requestConfig->filter_limit = 7;
-        $view->config->enable_sort = false;
+        $view->config->enable_sort = \false;
         $view->config->show_footer_message = Piwik::translate('General_ReportGeneratedFrom', $this->getDateRangeForFooterMessage());
         if (property_exists($view->config, 'disable_row_evolution')) {
-            $view->config->disable_row_evolution = true;
+            $view->config->disable_row_evolution = \true;
         }
         if ($view->isViewDataTableId(Graph::ID)) {
-            $view->config->max_graph_elements = false;
-            $view->config->show_all_ticks = true;
+            $view->config->max_graph_elements = \false;
+            $view->config->show_all_ticks = \true;
         }
     }
     private function getDateRangeForFooterMessage()
     {
         // get query params
-        $idSite = Common::getRequestVar('idSite', false);
-        $date = Common::getRequestVar('date', false);
-        $period = Common::getRequestVar('period', false);
+        $idSite = Common::getRequestVar('idSite', \false);
+        $date = Common::getRequestVar('date', \false);
+        $period = Common::getRequestVar('period', \false);
         // create a period instance
         try {
             $oPeriod = Period\Factory::makePeriodFromQueryParams(Site::getTimezoneFor($idSite), $period, $date);

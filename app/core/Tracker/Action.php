@@ -110,14 +110,14 @@ abstract class Action
     private static function getPriority(\Piwik\Tracker\Action $actionType)
     {
         $key = array_search($actionType->getActionType(), self::$factoryPriority);
-        if (false === $key) {
+        if (\false === $key) {
             return -1;
         }
         return $key;
     }
     public static function shouldHandle(\Piwik\Tracker\Request $request)
     {
-        return false;
+        return \false;
     }
     private static function getAllActions(\Piwik\Tracker\Request $request)
     {
@@ -167,7 +167,7 @@ abstract class Action
     // custom_float column
     public function getCustomFloatValue()
     {
-        return false;
+        return \false;
     }
     protected function setActionName($name)
     {
@@ -198,7 +198,7 @@ abstract class Action
             $url = \Piwik\Tracker\PageUrl::normalizeUrl($url);
             return array($url['url'], self::TYPE_PAGE_URL, $url['prefixId']);
         }
-        return false;
+        return \false;
     }
     public function setCustomField($field, $value)
     {
@@ -222,16 +222,16 @@ abstract class Action
     }
     public function getIdActionUrlForEntryAndExitIds()
     {
-        return false;
+        return \false;
     }
     public function getIdActionNameForEntryAndExitIds()
     {
-        return false;
+        return \false;
     }
     public function getIdActionName()
     {
         if (!isset($this->actionIdsCached['idaction_name'])) {
-            return false;
+            return \false;
         }
         return $this->actionIdsCached['idaction_name'];
     }
@@ -249,7 +249,7 @@ abstract class Action
         $class = new \ReflectionClass("\\Piwik\\Tracker\\Action");
         $constants = $class->getConstants();
         $typeId = array_search($type, $constants);
-        if (false === $typeId) {
+        if (\false === $typeId) {
             return $type;
         }
         return str_replace('TYPE_', '', $typeId);
@@ -273,7 +273,7 @@ abstract class Action
         $actions = $this->getActionsToLookup();
         foreach ($dimensions as $dimension) {
             $value = $dimension->onLookupAction($this->request, $this);
-            if (false !== $value) {
+            if (\false !== $value) {
                 if (is_float($value)) {
                     $value = Common::forceDotAsSeparatorForDecimalPoint($value);
                 }
@@ -310,7 +310,7 @@ abstract class Action
         $dimensions = ActionDimension::getAllDimensions();
         foreach ($dimensions as $dimension) {
             $value = $dimension->onNewAction($this->request, $visitor, $this);
-            if ($value !== false) {
+            if ($value !== \false) {
                 if (is_float($value)) {
                     $value = Common::forceDotAsSeparatorForDecimalPoint($value);
                 }
@@ -322,10 +322,10 @@ abstract class Action
             $visitAction['idaction_name'] = (int) $this->getIdActionName();
         }
         foreach ($this->actionIdsCached as $field => $idAction) {
-            $visitAction[$field] = $idAction === false ? 0 : $idAction;
+            $visitAction[$field] = $idAction === \false ? 0 : $idAction;
         }
         $customValue = $this->getCustomFloatValue();
-        if ($customValue !== false && $customValue !== null && $customValue !== '') {
+        if ($customValue !== \false && $customValue !== null && $customValue !== '') {
             $visitAction[self::DB_COLUMN_CUSTOM_FLOAT] = Common::forceDotAsSeparatorForDecimalPoint($customValue);
         }
         $visitAction = array_merge($visitAction, $this->customFields);
@@ -333,7 +333,7 @@ abstract class Action
         $visitAction['idlink_va'] = $this->idLinkVisitAction;
         $visitActionDebug = $visitAction;
         $visitActionDebug['idvisitor'] = bin2hex($visitActionDebug['idvisitor']);
-        $this->logger->debug("Inserted new action: {action}", ['action' => var_export($visitActionDebug, true)]);
+        $this->logger->debug("Inserted new action: {action}", ['action' => var_export($visitActionDebug, \true)]);
     }
     public function writeDebugInfo()
     {
@@ -341,7 +341,7 @@ abstract class Action
         $name = $this->getActionName();
         $url = $this->getActionUrl();
         $this->logger->debug('Action is a {type}, Action name = {name}, Action URL = {url}', ['type' => $type, 'name' => $name, 'url' => $url]);
-        return true;
+        return \true;
     }
     private function getModel()
     {

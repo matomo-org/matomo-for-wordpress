@@ -13,6 +13,6 @@ class Heartbeat extends Plugin
 {
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
 }

@@ -35,7 +35,7 @@ class QuestionHelper extends Helper
      * @var resource|null
      */
     private $inputStream;
-    private static $stty = true;
+    private static $stty = \true;
     private static $stdinIsInteractive;
     /**
      * Asks a question to the user.
@@ -64,7 +64,7 @@ class QuestionHelper extends Helper
             };
             return $this->validateAttempts($interviewer, $output, $question);
         } catch (MissingInputException $exception) {
-            $input->setInteractive(false);
+            $input->setInteractive(\false);
             if (null === ($fallbackOutput = $this->getDefaultAnswer($question))) {
                 throw $exception;
             }
@@ -83,7 +83,7 @@ class QuestionHelper extends Helper
      */
     public static function disableStty()
     {
-        self::$stty = false;
+        self::$stty = \false;
     }
     /**
      * Asks the question to the user.
@@ -98,7 +98,7 @@ class QuestionHelper extends Helper
         $inputStream = $this->inputStream ?: \STDIN;
         $autocomplete = $question->getAutocompleterCallback();
         if (null === $autocomplete || !self::$stty || !Terminal::hasSttyAvailable()) {
-            $ret = false;
+            $ret = \false;
             if ($question->isHidden()) {
                 try {
                     $hiddenResponse = $this->getHiddenResponse($output, $inputStream, $question->isTrimmable());
@@ -109,16 +109,16 @@ class QuestionHelper extends Helper
                     }
                 }
             }
-            if (false === $ret) {
-                $isBlocked = stream_get_meta_data($inputStream)['blocked'] ?? true;
+            if (\false === $ret) {
+                $isBlocked = stream_get_meta_data($inputStream)['blocked'] ?? \true;
                 if (!$isBlocked) {
-                    stream_set_blocking($inputStream, true);
+                    stream_set_blocking($inputStream, \true);
                 }
                 $ret = $this->readInput($inputStream, $question);
                 if (!$isBlocked) {
-                    stream_set_blocking($inputStream, false);
+                    stream_set_blocking($inputStream, \false);
                 }
-                if (false === $ret) {
+                if (\false === $ret) {
                     throw new MissingInputException('Aborted.');
                 }
                 if ($question->isTrimmable()) {
@@ -229,14 +229,14 @@ class QuestionHelper extends Helper
             }
             $c = fread($inputStream, 1);
             // as opposed to fgets(), fread() returns an empty string when the stream content is empty, not false.
-            if (false === $c || '' === $ret && '' === $c && null === $question->getDefault()) {
+            if (\false === $c || '' === $ret && '' === $c && null === $question->getDefault()) {
                 shell_exec('stty ' . $sttyMode);
                 throw new MissingInputException('Aborted.');
             } elseif ("" === $c) {
                 // Backspace Character
                 if (0 === $numMatches && 0 !== $i) {
                     --$i;
-                    $cursor->moveLeft(s($fullChoice)->slice(-1)->width(false));
+                    $cursor->moveLeft(s($fullChoice)->slice(-1)->width(\false));
                     $fullChoice = self::substr($fullChoice, 0, $i);
                 }
                 if (0 === $i) {
@@ -270,7 +270,7 @@ class QuestionHelper extends Helper
                         $remainingCharacters = substr($ret, \strlen(trim($this->mostRecentlyEnteredValue($fullChoice))));
                         $output->write($remainingCharacters);
                         $fullChoice .= $remainingCharacters;
-                        $i = false === ($encoding = mb_detect_encoding($fullChoice, null, true)) ? \strlen($fullChoice) : mb_strlen($fullChoice, $encoding);
+                        $i = \false === ($encoding = mb_detect_encoding($fullChoice, null, \true)) ? \strlen($fullChoice) : mb_strlen($fullChoice, $encoding);
                         $matches = array_filter($autocomplete($ret), function ($match) use($ret) {
                             return '' === $ret || str_starts_with($match, $ret);
                         });
@@ -338,7 +338,7 @@ class QuestionHelper extends Helper
      *
      * @throws RuntimeException In case the fallback is deactivated and the response cannot be hidden
      */
-    private function getHiddenResponse(OutputInterface $output, $inputStream, bool $trimmable = true) : string
+    private function getHiddenResponse(OutputInterface $output, $inputStream, bool $trimmable = \true) : string
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $exe = __DIR__ . '/../Resources/bin/hiddeninput.exe';
@@ -366,7 +366,7 @@ class QuestionHelper extends Helper
         if (self::$stty && Terminal::hasSttyAvailable()) {
             shell_exec('stty ' . $sttyMode);
         }
-        if (false === $value) {
+        if (\false === $value) {
             throw new MissingInputException('Aborted.');
         }
         if ($trimmable) {
@@ -404,7 +404,7 @@ class QuestionHelper extends Helper
     private function isInteractiveInput($inputStream) : bool
     {
         if ('php://stdin' !== (stream_get_meta_data($inputStream)['uri'] ?? null)) {
-            return false;
+            return \false;
         }
         if (null !== self::$stdinIsInteractive) {
             return self::$stdinIsInteractive;
@@ -428,11 +428,11 @@ class QuestionHelper extends Helper
         }
         $multiLineStreamReader = $this->cloneInputStream($inputStream);
         if (null === $multiLineStreamReader) {
-            return false;
+            return \false;
         }
         $ret = '';
         $cp = $this->setIOCodepage();
-        while (false !== ($char = fgetc($multiLineStreamReader))) {
+        while (\false !== ($char = fgetc($multiLineStreamReader))) {
             if (\PHP_EOL === "{$ret}{$char}") {
                 break;
             }
@@ -465,7 +465,7 @@ class QuestionHelper extends Helper
     {
         if (0 !== $cp) {
             sapi_windows_cp_set($cp);
-            if (false !== $input && '' !== $input) {
+            if (\false !== $input && '' !== $input) {
                 $input = sapi_windows_cp_conv(sapi_windows_cp_get('oem'), $cp, $input);
             }
         }
@@ -482,7 +482,7 @@ class QuestionHelper extends Helper
     private function cloneInputStream($inputStream)
     {
         $streamMetaData = stream_get_meta_data($inputStream);
-        $seekable = $streamMetaData['seekable'] ?? false;
+        $seekable = $streamMetaData['seekable'] ?? \false;
         $mode = $streamMetaData['mode'] ?? 'rb';
         $uri = $streamMetaData['uri'] ?? null;
         if (null === $uri) {
@@ -491,7 +491,7 @@ class QuestionHelper extends Helper
         $cloneStream = fopen($uri, $mode);
         // For seekable and writable streams, add all the same data to the
         // cloned stream and then seek to the same offset.
-        if (true === $seekable && !\in_array($mode, ['r', 'rb', 'rt'])) {
+        if (\true === $seekable && !\in_array($mode, ['r', 'rb', 'rt'])) {
             $offset = ftell($inputStream);
             rewind($inputStream);
             stream_copy_to_stream($inputStream, $cloneStream);

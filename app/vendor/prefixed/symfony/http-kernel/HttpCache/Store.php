@@ -41,7 +41,7 @@ class Store implements StoreInterface
     public function __construct(string $root, array $options = [])
     {
         $this->root = $root;
-        if (!is_dir($this->root) && !@mkdir($this->root, 0777, true) && !is_dir($this->root)) {
+        if (!is_dir($this->root) && !@mkdir($this->root, 0777, \true) && !is_dir($this->root)) {
             throw new \RuntimeException(sprintf('Unable to create the store directory (%s).', $this->root));
         }
         $this->keyCache = new \SplObjectStorage();
@@ -69,7 +69,7 @@ class Store implements StoreInterface
         $key = $this->getCacheKey($request);
         if (!isset($this->locks[$key])) {
             $path = $this->getPath($key);
-            if (!is_dir(\dirname($path)) && false === @mkdir(\dirname($path), 0777, true) && !is_dir(\dirname($path))) {
+            if (!is_dir(\dirname($path)) && \false === @mkdir(\dirname($path), 0777, \true) && !is_dir(\dirname($path))) {
                 return $path;
             }
             $h = fopen($path, 'c');
@@ -79,7 +79,7 @@ class Store implements StoreInterface
             }
             $this->locks[$key] = $h;
         }
-        return true;
+        return \true;
     }
     /**
      * Releases the lock for the given Request.
@@ -93,19 +93,19 @@ class Store implements StoreInterface
             flock($this->locks[$key], \LOCK_UN);
             fclose($this->locks[$key]);
             unset($this->locks[$key]);
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     public function isLocked(Request $request)
     {
         $key = $this->getCacheKey($request);
         if (isset($this->locks[$key])) {
-            return true;
+            return \true;
             // shortcut if lock held by this process
         }
         if (!is_file($path = $this->getPath($key))) {
-            return false;
+            return \false;
         }
         $h = fopen($path, 'r');
         flock($h, \LOCK_EX | \LOCK_NB, $wouldBlock);
@@ -172,7 +172,7 @@ class Store implements StoreInterface
         } else {
             $digest = $this->generateContentDigest($response);
             $response->headers->set('X-Content-Digest', $digest);
-            if (!$this->save($digest, $response->getContent(), false)) {
+            if (!$this->save($digest, $response->getContent(), \false)) {
                 throw new \RuntimeException('Unable to store the entity.');
             }
             if (!$response->headers->has('Transfer-Encoding')) {
@@ -217,14 +217,14 @@ class Store implements StoreInterface
      */
     public function invalidate(Request $request)
     {
-        $modified = false;
+        $modified = \false;
         $key = $this->getCacheKey($request);
         $entries = [];
         foreach ($this->getMetadata($key) as $entry) {
             $response = $this->restoreResponse($entry[1]);
             if ($response->isFresh()) {
                 $response->expire();
-                $modified = true;
+                $modified = \true;
                 $entries[] = [$entry[0], $this->persistResponse($response)];
             } else {
                 $entries[] = $entry;
@@ -245,17 +245,17 @@ class Store implements StoreInterface
     private function requestsMatch(?string $vary, array $env1, array $env2) : bool
     {
         if (empty($vary)) {
-            return true;
+            return \true;
         }
         foreach (preg_split('/[\\s,]+/', $vary) as $header) {
             $key = str_replace('_', '-', strtolower($header));
             $v1 = $env1[$key] ?? null;
             $v2 = $env2[$key] ?? null;
             if ($v1 !== $v2) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Gets all data associated with the given key.
@@ -297,9 +297,9 @@ class Store implements StoreInterface
         }
         if (is_file($path = $this->getPath($key))) {
             unlink($path);
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Loads data for the given key.
@@ -307,16 +307,16 @@ class Store implements StoreInterface
     private function load(string $key) : ?string
     {
         $path = $this->getPath($key);
-        return is_file($path) && false !== ($contents = @file_get_contents($path)) ? $contents : null;
+        return is_file($path) && \false !== ($contents = @file_get_contents($path)) ? $contents : null;
     }
     /**
      * Save data for the given key.
      */
-    private function save(string $key, string $data, bool $overwrite = true) : bool
+    private function save(string $key, string $data, bool $overwrite = \true) : bool
     {
         $path = $this->getPath($key);
         if (!$overwrite && file_exists($path)) {
-            return true;
+            return \true;
         }
         if (isset($this->locks[$key])) {
             $fp = $this->locks[$key];
@@ -325,30 +325,30 @@ class Store implements StoreInterface
             $len = @fwrite($fp, $data);
             if (\strlen($data) !== $len) {
                 @ftruncate($fp, 0);
-                return false;
+                return \false;
             }
         } else {
-            if (!is_dir(\dirname($path)) && false === @mkdir(\dirname($path), 0777, true) && !is_dir(\dirname($path))) {
-                return false;
+            if (!is_dir(\dirname($path)) && \false === @mkdir(\dirname($path), 0777, \true) && !is_dir(\dirname($path))) {
+                return \false;
             }
             $tmpFile = tempnam(\dirname($path), basename($path));
-            if (false === ($fp = @fopen($tmpFile, 'w'))) {
+            if (\false === ($fp = @fopen($tmpFile, 'w'))) {
                 @unlink($tmpFile);
-                return false;
+                return \false;
             }
             @fwrite($fp, $data);
             @fclose($fp);
             if ($data != file_get_contents($tmpFile)) {
                 @unlink($tmpFile);
-                return false;
+                return \false;
             }
-            if (false === @rename($tmpFile, $path)) {
+            if (\false === @rename($tmpFile, $path)) {
                 @unlink($tmpFile);
-                return false;
+                return \false;
             }
         }
         @chmod($path, 0666 & ~umask());
-        return true;
+        return \true;
     }
     public function getPath(string $key)
     {
@@ -407,7 +407,7 @@ class Store implements StoreInterface
         if (null !== $path) {
             $headers['X-Body-File'] = [$path];
             unset($headers['x-body-file']);
-            if ($headers['X-Body-Eval'] ?? $headers['x-body-eval'] ?? false) {
+            if ($headers['X-Body-Eval'] ?? $headers['x-body-eval'] ?? \false) {
                 $content = file_get_contents($path);
                 \assert(HttpCache::BODY_EVAL_BOUNDARY_LENGTH === 24);
                 if (48 > \strlen($content) || substr($content, -24) !== substr($content, 0, 24)) {

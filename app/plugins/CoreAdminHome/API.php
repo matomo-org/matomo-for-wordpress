@@ -80,7 +80,7 @@ class API extends \Piwik\Plugin\API
         }
         Rules::setBrowserTriggerArchiving((bool) $enableBrowserTriggerArchiving);
         Rules::setTodayArchiveTimeToLive($todayArchiveTimeToLive);
-        return true;
+        return \true;
     }
     /**
      * @internal
@@ -95,7 +95,7 @@ class API extends \Piwik\Plugin\API
             Url::saveTrustedHostnameInConfig($trustedHosts);
             Config::getInstance()->forceSave();
         }
-        return true;
+        return \true;
     }
     /**
      * @internal
@@ -111,7 +111,7 @@ class API extends \Piwik\Plugin\API
                 $customLogo->disable();
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Invalidates report data, forcing it to be recomputed during the next archiving run.
@@ -133,7 +133,7 @@ class API extends \Piwik\Plugin\API
      * @return array
      * @hideExceptForSuperUser
      */
-    public function invalidateArchivedReports($idSites, $dates, $period = false, $segment = false, $cascadeDown = false, $_forceInvalidateNonexistent = false)
+    public function invalidateArchivedReports($idSites, $dates, $period = \false, $segment = \false, $cascadeDown = \false, $_forceInvalidateNonexistent = \false)
     {
         $idSites = Site::getIdSitesFromIdSitesString($idSites);
         if (empty($idSites)) {
@@ -225,7 +225,7 @@ class API extends \Piwik\Plugin\API
      * @throws \Piwik\Exception\UnexpectedWebsiteFoundException
      * @internal
      */
-    public function archiveReports($idSite, $period, $date, $segment = false, $plugin = false, $report = false)
+    public function archiveReports($idSite, $period, $date, $segment = \false, $plugin = \false, $report = \false)
     {
         if (\Piwik\API\Request::getRootApiRequestMethod() === 'CoreAdminHome.archiveReports') {
             Piwik::checkUserHasSuperUserAccess();
@@ -334,7 +334,7 @@ class API extends \Piwik\Plugin\API
      *
      * @internal
      */
-    public function getOptOutSelfContainedEmbedCode(string $backgroundColor, string $fontColor, string $fontSize, string $fontFamily, bool $applyStyling = false, bool $showIntro = true) : string
+    public function getOptOutSelfContainedEmbedCode(string $backgroundColor, string $fontColor, string $fontSize, string $fontFamily, bool $applyStyling = \false, bool $showIntro = \true) : string
     {
         return $this->optOutManager->getOptOutSelfContainedEmbedCode($backgroundColor, $fontColor, $fontSize, $fontFamily, $applyStyling, $showIntro);
     }
@@ -352,8 +352,8 @@ class API extends \Piwik\Plugin\API
         if (is_array($user)) {
             $userChanges = new UserChanges($user);
             $userChanges->markChangesAsRead();
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

@@ -39,22 +39,13 @@
           <div>
             <Field
               uicontrol="text"
-              name="type"
-              :model-value="tag.typeMetadata?.name"
-              :disabled="true"
-              :inline-help="tag.typeMetadata?.description + ' ' + tag.typeMetadata?.help"
-              :title="translate('TagManager_Type')"
-            />
-          </div>
-          <div>
-            <Field
-              uicontrol="text"
               name="name"
               :model-value="tag.name"
               @update:model-value="tag.name = $event; setValueHasChanged()"
-              :maxlength="50"
+              :maxlength="255"
               :title="translate('General_Name')"
-              :inline-help="translate('TagManager_TagNameHelp')"
+              :inline-help="translate('TagManager_TagNameHelpV2')"
+              :placeholder="translate('TagManager_TagNamePlaceholder')"
             />
           </div>
           <div>
@@ -64,8 +55,8 @@
               :model-value="tag.description"
               @update:model-value="tag.description = $event; setValueHasChanged()"
               :maxlength="1000"
-              :title="translate('General_Description')"
-              :inline-help="translate('TagManager_TagDescriptionHelp')"
+              :title="translate('TagManager_Description')"
+              :placeholder="translate('TagManager_TagDescriptionPlaceholder')"
             />
           </div>
           <div
@@ -158,6 +149,7 @@
                 :maxlength="8"
                 :title="translate('TagManager_FireDelay')"
                 :inline-help="translate('TagManager_FireDelayHelp')"
+                :placeholder="translate('TagManager_PlaceholderZero')"
               />
             </div>
             <div>
@@ -169,6 +161,7 @@
                 :maxlength="4"
                 :title="translate('TagManager_Priority')"
                 :inline-help="translate('TagManager_PriorityHelp')"
+                :placeholder="translate('TagManager_PriorityPlaceholder')"
               />
             </div>
             <div class="form-group row tagStartDate">
@@ -535,6 +528,10 @@ export default defineComponent({
             this.onBlockTriggerChange();
 
             this.isDirty = false;
+            this.editTitle = translate('TagManager_EditTag');
+            if (this.tag.typeMetadata?.name) {
+              this.editTitle += `: ${this.tag.typeMetadata.name}`;
+            }
           });
 
           return;
@@ -636,17 +633,21 @@ export default defineComponent({
       }
 
       this.chooseTagType = false;
-      this.editTitle = translate('TagManager_CreateNewTag');
 
       this.tag = {
         idsite: parseInt(`${Matomo.idSite}`, 10),
         name: TagsStore.suggestNameForType(tagTemplate.name) || '',
         type: tagTemplate.id,
         fire_limit: 'unlimited',
-        priority: 999,
+        priority: ((tagTemplate.id === 'GoogleTag' || tagTemplate.id === 'GoogleAnalytics4') ? 1 : 999), // if both linking and conversion for Google Ads Conversion or pageview and events for GA4 fires on same trigger, this should get the highest priority else the conversion will throw error
         fire_delay: 0,
         typeMetadata: tagTemplate,
       } as unknown as Tag;
+
+      this.editTitle = translate('TagManager_CreateNewTag');
+      if (this.tag.typeMetadata?.name) {
+        this.editTitle += `: ${this.tag.typeMetadata.name}`;
+      }
 
       this.blockTriggers = [null];
       this.fireTriggers = [null];
@@ -696,13 +697,9 @@ export default defineComponent({
 
         this.isDirty = false;
 
-        const idTag = response.value;
-
         TagsStore.reload(this.idContainer, this.idContainerVersion).then(() => {
-          MatomoUrl.updateHash({
-            ...MatomoUrl.hashParsed.value,
-            idTag,
-          });
+          // Go back to the list of tags
+          this.cancel();
 
           setTimeout(() => {
             const createdX = translate('TagManager_CreatedX', translate('TagManager_Tag'));
@@ -751,6 +748,9 @@ export default defineComponent({
         TagsStore.reload(this.idContainer, this.idContainerVersion).then(() => {
           this.initIdTag();
         });
+
+        // Go back to the list of tags
+        this.cancel();
 
         const updatedAt = translate('TagManager_UpdatedX', translate('TagManager_Tag'));
         let wantToDeploy = '';

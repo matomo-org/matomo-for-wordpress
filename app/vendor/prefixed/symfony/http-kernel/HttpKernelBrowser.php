@@ -29,7 +29,7 @@ use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 class HttpKernelBrowser extends AbstractBrowser
 {
     protected $kernel;
-    private $catchExceptions = true;
+    private $catchExceptions = \true;
     /**
      * @param array $server The server parameters (equivalent of $_SERVER)
      */
@@ -37,7 +37,7 @@ class HttpKernelBrowser extends AbstractBrowser
     {
         // These class properties must be set before calling the parent constructor, as it may depend on it.
         $this->kernel = $kernel;
-        $this->followRedirects = false;
+        $this->followRedirects = \false;
         parent::__construct($server, $history, $cookieJar);
     }
     /**
@@ -71,8 +71,8 @@ class HttpKernelBrowser extends AbstractBrowser
      */
     protected function getScript(object $request)
     {
-        $kernel = var_export(serialize($this->kernel), true);
-        $request = var_export(serialize($request), true);
+        $kernel = var_export(serialize($this->kernel), \true);
+        $request = var_export(serialize($request), \true);
         $errorReporting = error_reporting();
         $requires = '';
         foreach (get_declared_classes() as $class) {
@@ -80,7 +80,7 @@ class HttpKernelBrowser extends AbstractBrowser
                 $r = new \ReflectionClass($class);
                 $file = \dirname($r->getFileName(), 2) . '/autoload.php';
                 if (file_exists($file)) {
-                    $requires .= 'require_once ' . var_export($file, true) . ";\n";
+                    $requires .= 'require_once ' . var_export($file, \true) . ";\n";
                 }
             }
         }
@@ -148,9 +148,9 @@ EOF;
                 $filtered[$key] = $this->filterFiles($value);
             } elseif ($value instanceof UploadedFile) {
                 if ($value->isValid() && $value->getSize() > UploadedFile::getMaxFilesize()) {
-                    $filtered[$key] = new UploadedFile('', $value->getClientOriginalName(), $value->getClientMimeType(), \UPLOAD_ERR_INI_SIZE, true);
+                    $filtered[$key] = new UploadedFile('', $value->getClientOriginalName(), $value->getClientMimeType(), \UPLOAD_ERR_INI_SIZE, \true);
                 } else {
-                    $filtered[$key] = new UploadedFile($value->getPathname(), $value->getClientOriginalName(), $value->getClientMimeType(), $value->getError(), true);
+                    $filtered[$key] = new UploadedFile($value->getPathname(), $value->getClientOriginalName(), $value->getClientMimeType(), $value->getError(), \true);
                 }
             }
         }

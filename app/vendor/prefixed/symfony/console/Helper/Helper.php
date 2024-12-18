@@ -54,9 +54,9 @@ abstract class Helper implements HelperInterface
     {
         $string ?? ($string = '');
         if (preg_match('//u', $string)) {
-            return (new UnicodeString($string))->width(false);
+            return (new UnicodeString($string))->width(\false);
         }
-        if (false === ($encoding = mb_detect_encoding($string, null, true))) {
+        if (\false === ($encoding = mb_detect_encoding($string, null, \true))) {
             return \strlen($string);
         }
         return mb_strwidth($string, $encoding);
@@ -71,7 +71,7 @@ abstract class Helper implements HelperInterface
         if (preg_match('//u', $string)) {
             return (new UnicodeString($string))->length();
         }
-        if (false === ($encoding = mb_detect_encoding($string, null, true))) {
+        if (\false === ($encoding = mb_detect_encoding($string, null, \true))) {
             return \strlen($string);
         }
         return mb_strlen($string, $encoding);
@@ -84,7 +84,7 @@ abstract class Helper implements HelperInterface
     public static function substr(?string $string, int $from, ?int $length = null)
     {
         $string ?? ($string = '');
-        if (false === ($encoding = mb_detect_encoding($string, null, true))) {
+        if (\false === ($encoding = mb_detect_encoding($string, null, \true))) {
             return substr($string, $from, $length);
         }
         return mb_substr($string, $from, $length, $encoding);
@@ -127,7 +127,7 @@ abstract class Helper implements HelperInterface
     public static function removeDecoration(OutputFormatterInterface $formatter, ?string $string)
     {
         $isDecorated = $formatter->isDecorated();
-        $formatter->setDecorated(false);
+        $formatter->setDecorated(\false);
         // remove <...> formatting
         $string = $formatter->format($string ?? '');
         // remove already formatted characters

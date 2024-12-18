@@ -32,7 +32,7 @@ class Mail
     protected $replyTos = [];
     protected $bccs = [];
     protected $attachments = [];
-    protected $smtpDebug = false;
+    protected $smtpDebug = \false;
     public function __construct()
     {
     }
@@ -247,7 +247,7 @@ class Mail
     public function send()
     {
         if (!$this->shouldSendMail()) {
-            return false;
+            return \false;
         }
         $mail = $this;
         /**
@@ -280,7 +280,7 @@ class Mail
      *
      * @param bool $smtpDebug
      */
-    public function setSmtpDebug($smtpDebug = true)
+    public function setSmtpDebug($smtpDebug = \true)
     {
         $this->smtpDebug = $smtpDebug;
     }
@@ -345,9 +345,9 @@ class Mail
         $config = \Piwik\Config::getInstance();
         $general = $config->General;
         if (empty($general['emails_enabled'])) {
-            return false;
+            return \false;
         }
-        $shouldSendMail = true;
+        $shouldSendMail = \true;
         $mail = $this;
         /**
          * This event is posted before sending an email. You can use it to abort sending a specific email, if you want.

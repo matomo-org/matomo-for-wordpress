@@ -21,6 +21,6 @@ abstract class Capability
     }
     public function hasRoleCapability(string $idRole) : bool
     {
-        return \in_array($idRole, $this->getIncludedInRoles(), true);
+        return \in_array($idRole, $this->getIncludedInRoles(), \true);
     }
 }

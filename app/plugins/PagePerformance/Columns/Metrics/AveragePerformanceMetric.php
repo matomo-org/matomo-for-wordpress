@@ -48,7 +48,7 @@ abstract class AveragePerformanceMetric extends ProcessedMetric
         if ($formatter instanceof Formatter\Html && !$value) {
             return '-';
         } else {
-            return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
+            return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = \true);
         }
     }
     public function beforeCompute($report, DataTable $table)
@@ -74,7 +74,7 @@ abstract class AveragePerformanceMetric extends ProcessedMetric
     }
     private function hasAverageMetric(DataTable $table)
     {
-        return $table->getFirstRow()->getColumn($this->getName()) !== false;
+        return $table->getFirstRow()->getColumn($this->getName()) !== \false;
     }
     public function getSemanticType() : ?string
     {

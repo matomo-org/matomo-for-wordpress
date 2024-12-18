@@ -34,7 +34,7 @@ class Controller extends \Piwik\Plugin\Controller
         $this->translator = $translator;
         parent::__construct();
     }
-    public function visitorMap($fetch = false, $segmentOverride = false)
+    public function visitorMap($fetch = \false, $segmentOverride = \false)
     {
         $this->checkUserCountryPluginEnabled();
         $this->checkSitePermission();
@@ -54,17 +54,17 @@ class Controller extends \Piwik\Plugin\Controller
         // request visits summary
         $request = new Request('method=VisitsSummary.get&format=json' . '&idSite=' . $this->idSite . '&period=' . $period . '&date=' . $date . '&segment=' . $segment . '&token_auth=' . $token_auth . '&filter_limit=-1');
         $config = [];
-        $config['visitsSummary'] = json_decode($request->process(), true);
-        $config['countryDataUrl'] = $this->report('UserCountry', 'getCountry', $this->idSite, $period, $date, $token_auth, false, $segment);
-        $config['regionDataUrl'] = $this->report('UserCountry', 'getRegion', $this->idSite, $period, $date, $token_auth, true, $segment);
-        $config['cityDataUrl'] = $this->report('UserCountry', 'getCity', $this->idSite, $period, $date, $token_auth, true, $segment);
-        $config['countrySummaryUrl'] = $this->getApiRequestUrl('VisitsSummary', 'get', $this->idSite, $period, $date, $token_auth, true, $segment);
+        $config['visitsSummary'] = json_decode($request->process(), \true);
+        $config['countryDataUrl'] = $this->report('UserCountry', 'getCountry', $this->idSite, $period, $date, $token_auth, \false, $segment);
+        $config['regionDataUrl'] = $this->report('UserCountry', 'getRegion', $this->idSite, $period, $date, $token_auth, \true, $segment);
+        $config['cityDataUrl'] = $this->report('UserCountry', 'getCity', $this->idSite, $period, $date, $token_auth, \true, $segment);
+        $config['countrySummaryUrl'] = $this->getApiRequestUrl('VisitsSummary', 'get', $this->idSite, $period, $date, $token_auth, \true, $segment);
         $view->defaultMetric = array_key_exists('nb_uniq_visitors', $config['visitsSummary']) ? 'nb_uniq_visitors' : 'nb_visits';
         $noVisitTranslation = $this->translator->translate('UserCountryMap_NoVisit');
         // some translations containing metric number
         $translations = ['nb_visits' => $this->translator->translate('General_NVisits'), 'no_visit' => $noVisitTranslation, 'nb_actions' => $this->translator->translate('VisitsSummary_NbActionsDescription'), 'nb_actions_per_visit' => $this->translator->translate('VisitsSummary_NbActionsPerVisit'), 'bounce_rate' => $this->translator->translate('VisitsSummary_NbVisitsBounced'), 'avg_time_on_site' => $this->translator->translate('VisitsSummary_AverageVisitDuration'), 'and_n_others' => $this->translator->translate('UserCountryMap_AndNOthers'), 'nb_uniq_visitors' => $this->translator->translate('General_NUniqueVisitors'), 'nb_users' => $this->translator->translate('VisitsSummary_NbUsers')];
         foreach ($translations as &$translation) {
-            if (false === strpos($translation, '%s') && $translation !== $noVisitTranslation) {
+            if (\false === strpos($translation, '%s') && $translation !== $noVisitTranslation) {
                 $translation = '%s ' . $translation;
             }
         }
@@ -92,7 +92,7 @@ class Controller extends \Piwik\Plugin\Controller
      */
     public function realtimeWorldMap()
     {
-        return $this->realtimeMap($standalone = true);
+        return $this->realtimeMap($standalone = \true);
     }
     /**
      * @param bool $standalone When set to true, the Top controls will be hidden to provide better full screen view
@@ -101,7 +101,7 @@ class Controller extends \Piwik\Plugin\Controller
      *
      * @return string
      */
-    public function realtimeMap($standalone = false, $fetch = false, $segmentOverride = false)
+    public function realtimeMap($standalone = \false, $fetch = \false, $segmentOverride = \false)
     {
         $this->checkUserCountryPluginEnabled();
         $this->checkSitePermission();
@@ -126,11 +126,11 @@ class Controller extends \Piwik\Plugin\Controller
             // handle special value
             $params['date'] = $realtimeWindow;
         }
-        $reqParams = $this->getEnrichedRequest($params, $encode = false);
-        $view->config = ['metrics' => [], 'svgBasePath' => 'plugins/UserCountryMap/svg/', 'liveRefreshAfterMs' => $liveRefreshAfterMs, '_' => $locale, 'reqParams' => $reqParams, 'siteHasGoals' => $hasGoals, 'maxVisits' => $maxVisits, 'changeVisitAlpha' => Common::getRequestVar('changeVisitAlpha', true, 'int'), 'removeOldVisits' => Common::getRequestVar('removeOldVisits', true, 'int'), 'showFooterMessage' => Common::getRequestVar('showFooterMessage', true, 'int'), 'showDateTime' => Common::getRequestVar('showDateTime', true, 'int'), 'doNotRefreshVisits' => Common::getRequestVar('doNotRefreshVisits', false, 'int'), 'enableAnimation' => Common::getRequestVar('enableAnimation', true, 'int'), 'forceNowValue' => Common::getRequestVar('forceNowValue', false, 'int')];
+        $reqParams = $this->getEnrichedRequest($params, $encode = \false);
+        $view->config = ['metrics' => [], 'svgBasePath' => 'plugins/UserCountryMap/svg/', 'liveRefreshAfterMs' => $liveRefreshAfterMs, '_' => $locale, 'reqParams' => $reqParams, 'siteHasGoals' => $hasGoals, 'maxVisits' => $maxVisits, 'changeVisitAlpha' => Common::getRequestVar('changeVisitAlpha', \true, 'int'), 'removeOldVisits' => Common::getRequestVar('removeOldVisits', \true, 'int'), 'showFooterMessage' => Common::getRequestVar('showFooterMessage', \true, 'int'), 'showDateTime' => Common::getRequestVar('showDateTime', \true, 'int'), 'doNotRefreshVisits' => Common::getRequestVar('doNotRefreshVisits', \false, 'int'), 'enableAnimation' => Common::getRequestVar('enableAnimation', \true, 'int'), 'forceNowValue' => Common::getRequestVar('forceNowValue', \false, 'int')];
         return $view->render();
     }
-    private function getEnrichedRequest($params, $encode = true)
+    private function getEnrichedRequest($params, $encode = \true)
     {
         $params['format'] = 'json';
         $params['showRawMetrics'] = 1;
@@ -157,7 +157,7 @@ class Controller extends \Piwik\Plugin\Controller
     private function getMetrics($idSite, $period, $date, $token_auth)
     {
         $request = new Request('method=API.getMetadata&format=json' . '&apiModule=UserCountry&apiAction=getCountry' . '&idSite=' . $idSite . '&period=' . $period . '&date=' . $date . '&token_auth=' . $token_auth . '&filter_limit=-1');
-        $metaData = json_decode($request->process(), true);
+        $metaData = json_decode($request->process(), \true);
         $metrics = [];
         if (!empty($metaData[0]['metrics']) && is_array($metaData[0]['metrics'])) {
             foreach ($metaData[0]['metrics'] as $id => $val) {
@@ -171,7 +171,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $metrics;
     }
-    private function getApiRequestUrl($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = false, $segmentOverride = false)
+    private function getApiRequestUrl($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         // use processed reports
         $url = "?module=" . $module . "&method=" . $module . "." . $action . "&format=JSON" . "&idSite=" . $idSite . "&period=" . $period . "&date=" . $date . "&token_auth=" . $token_auth . "&segment=" . ($segmentOverride ?: Request::getRawSegmentFromRequest()) . "&enable_filter_excludelowpop=1" . "&showRawMetrics=1";
@@ -182,7 +182,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $url;
     }
-    private function report($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = false, $segmentOverride = false)
+    private function report($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         return $this->getApiRequestUrl('API', 'getProcessedReport&apiModule=' . $module . '&apiAction=' . $action, $idSite, $period, $date, $token_auth, $filter_by_country, $segmentOverride);
     }

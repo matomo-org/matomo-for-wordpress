@@ -194,14 +194,14 @@ class SegmentExpression
                 }
                 return array($sqlExpression, $value = null);
             }
-            $alsoMatchNULLValues = false;
+            $alsoMatchNULLValues = \false;
             switch ($matchType) {
                 case self::MATCH_EQUAL:
                     $sqlMatch = '%s =';
                     break;
                 case self::MATCH_NOT_EQUAL:
                     $sqlMatch = '%s <>';
-                    $alsoMatchNULLValues = true;
+                    $alsoMatchNULLValues = \true;
                     break;
                 case self::MATCH_GREATER:
                     $sqlMatch = '%s >';
@@ -222,7 +222,7 @@ class SegmentExpression
                 case self::MATCH_DOES_NOT_CONTAIN:
                     $sqlMatch = '%s NOT LIKE';
                     $value = '%' . $this->escapeLikeString($value) . '%';
-                    $alsoMatchNULLValues = true;
+                    $alsoMatchNULLValues = \true;
                     break;
                 case self::MATCH_STARTS_WITH:
                     $sqlMatch = '%s LIKE';
@@ -310,7 +310,7 @@ class SegmentExpression
         $result = isset($matches[1]) ? $matches[1] : [];
         // remove uses of session vars
         $result = array_filter($result, function ($value) {
-            return strpos($value, '@') === false;
+            return strpos($value, '@') === \false;
         });
         $result = array_map(function ($item) {
             return str_replace('`', '', $item);
@@ -329,7 +329,7 @@ class SegmentExpression
     private function checkFieldIsAvailable($field, &$availableTables, $join)
     {
         $fieldParts = explode('.', $field);
-        $table = count($fieldParts) == 2 ? $fieldParts[0] : false;
+        $table = count($fieldParts) == 2 ? $fieldParts[0] : \false;
         // remove sql functions from field name
         // example: `HOUR(log_visit.visit_last_action_time)` gets `HOUR(log_visit` => remove `HOUR(`
         $table = preg_replace('/^[A-Z_]+\\(/', '', $table);
@@ -361,10 +361,10 @@ class SegmentExpression
      */
     private function escapeLikeString($str)
     {
-        if (false !== strpos($str, '%')) {
+        if (\false !== strpos($str, '%')) {
             $str = str_replace("%", "\\%", $str);
         }
-        if (false !== strpos($str, '_')) {
+        if (\false !== strpos($str, '_')) {
             $str = str_replace("_", "\\_", $str);
         }
         return $str;

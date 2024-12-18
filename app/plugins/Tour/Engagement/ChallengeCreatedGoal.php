@@ -26,6 +26,6 @@ class ChallengeCreatedGoal extends \Piwik\Plugins\Tour\Engagement\Challenge
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'Goals', 'action' => 'manage', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'Goals', 'action' => 'manage', 'widget' => \false));
     }
 }

@@ -56,7 +56,7 @@ class OutputFormatterStyleStack implements ResetInterface
         if (null === $style) {
             return array_pop($this->styles);
         }
-        foreach (array_reverse($this->styles, true) as $index => $stackedStyle) {
+        foreach (array_reverse($this->styles, \true) as $index => $stackedStyle) {
             if ($style->apply('') === $stackedStyle->apply('')) {
                 $this->styles = \array_slice($this->styles, 0, $index);
                 return $stackedStyle;

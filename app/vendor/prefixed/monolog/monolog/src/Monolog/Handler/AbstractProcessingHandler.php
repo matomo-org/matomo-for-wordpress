@@ -27,12 +27,12 @@ abstract class AbstractProcessingHandler extends AbstractHandler
     public function handle(array $record)
     {
         if (!$this->isHandling($record)) {
-            return false;
+            return \false;
         }
         $record = $this->processRecord($record);
         $record['formatted'] = $this->getFormatter()->format($record);
         $this->write($record);
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * Writes the record down to the log of the implementing handler

@@ -43,7 +43,7 @@ class Metadata
      * in that language as a UTF-8 string. May be undefined for some
      * databases.
      *
-     * @var array
+     * @var array<string, string>
      */
     public $description;
     /**
@@ -58,7 +58,7 @@ class Metadata
      * may contain data items that have been localized to some or all of
      * these languages. This may be undefined.
      *
-     * @var array
+     * @var array<string>
      */
     public $languages;
     /**
@@ -83,10 +83,13 @@ class Metadata
      * @var int
      */
     public $searchTreeSize;
+    /**
+     * @param array<string, mixed> $metadata
+     */
     public function __construct(array $metadata)
     {
         if (\func_num_args() !== 1) {
-            throw new \ArgumentCountError(sprintf('%s() expects exactly 1 parameter, %d given', __METHOD__, \func_num_args()));
+            throw new \ArgumentCountError(\sprintf('%s() expects exactly 1 parameter, %d given', __METHOD__, \func_num_args()));
         }
         $this->binaryFormatMajorVersion = $metadata['binary_format_major_version'];
         $this->binaryFormatMinorVersion = $metadata['binary_format_minor_version'];

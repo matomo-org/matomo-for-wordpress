@@ -25,8 +25,8 @@ class GetNumberOfVisitsPerPage extends \Piwik\Plugins\VisitorInterest\Reports\Ba
         $this->name = Piwik::translate('VisitorInterest_WidgetPages');
         $this->documentation = Piwik::translate('VisitorInterest_WidgetPagesDocumentation') . '<br />' . Piwik::translate('General_ChangeTagCloudView');
         $this->metrics = array('nb_visits');
-        $this->processedMetrics = false;
-        $this->constantRowsCount = true;
+        $this->processedMetrics = \false;
+        $this->constantRowsCount = \true;
         $this->order = 20;
     }
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
@@ -42,16 +42,16 @@ class GetNumberOfVisitsPerPage extends \Piwik\Plugins\VisitorInterest\Reports\Ba
         $view->requestConfig->filter_sort_column = 'label';
         $view->requestConfig->filter_sort_order = 'asc';
         $view->config->addTranslation('label', Piwik::translate('VisitorInterest_ColumnVisitDuration'));
-        $view->config->enable_sort = false;
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_offset_information = false;
-        $view->config->show_pagination_control = false;
-        $view->config->show_limit_control = false;
-        $view->config->show_search = false;
-        $view->config->show_table_all_columns = false;
+        $view->config->enable_sort = \false;
+        $view->config->show_exclude_low_population = \false;
+        $view->config->show_offset_information = \false;
+        $view->config->show_pagination_control = \false;
+        $view->config->show_limit_control = \false;
+        $view->config->show_search = \false;
+        $view->config->show_table_all_columns = \false;
         $view->config->columns_to_display = array('label', 'nb_visits');
         if ($view->isViewDataTableId(Graph::ID)) {
-            $view->config->show_series_picker = false;
+            $view->config->show_series_picker = \false;
             $view->config->selectable_columns = array();
             $view->config->max_graph_elements = 10;
         }

@@ -31,7 +31,7 @@ class PSR6Bridge implements \DeviceDetector\Cache\CacheInterface
     public function fetch(string $id)
     {
         $item = $this->pool->getItem($id);
-        return $item->isHit() ? $item->get() : false;
+        return $item->isHit() ? $item->get() : \false;
     }
     /**
      * @inheritDoc

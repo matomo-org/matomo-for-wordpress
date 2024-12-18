@@ -19,7 +19,7 @@ class AnonymizeRawData extends ConsoleCommand
         // by default we want to anonymize as many (if not all) logs as possible.
         $defaultDate = '1996-01-01,' . Date::now()->toString();
         $this->setName('privacymanager:anonymize-some-raw-data');
-        $this->setDescription('Anonymize some of the stored raw data (logs). The reason it only anonymizes "some" data is that personal data can be present in many various data collection points, for example some of your page URLs or page titles may include personal data and these will not be anonymized by this command as it is not possible to detect personal data for example in a URL automatically.');
+        $this->setDescription('Anonymize some of the stored raw data (logs). The reason it only anonymizes "some" data is that ' . 'personal data can be present in many various data collection points, for example some of your page URLs ' . 'or page titles may include personal data and these will not be anonymized by this command as it is not ' . 'possible to detect personal data for example in a URL automatically.');
         $this->addRequiredValueOption('date', null, 'Date or date range to invalidate raw data for (UTC). Either a date like "2015-01-03" or a range like "2015-01-05,2015-02-12". By default, all data including today will be anonymized.', $defaultDate);
         $this->addRequiredValueOption('unset-visit-columns', null, 'Comma separated list of log_visit columns that you want to unset. Each value for that column will be set to its default value. If the same column exists in "log_conversion" table as well, the column will be unset there as well. This action cannot be undone.', '');
         $this->addRequiredValueOption('unset-link-visit-action-columns', null, 'Comma separated list of log_link_visit_action columns that you want to unset. Each value for that column will be set to its default value. This action cannot be undone.', '');
@@ -54,29 +54,29 @@ class AnonymizeRawData extends ConsoleCommand
         [$startDate, $endDate] = $logDataAnonymizations->getStartAndEndDate($date);
         $output->writeln(sprintf('Start date is "%s", end date is "%s"', $startDate, $endDate));
         if ($anonymizeIp && !$this->confirmAnonymize($startDate, $endDate, 'anonymize visit IP')) {
-            $anonymizeIp = false;
+            $anonymizeIp = \false;
             $output->writeln('<info>SKIPPING anonymizing IP.</info>');
         }
         if ($anonymizeLocation && !$this->confirmAnonymize($startDate, $endDate, 'anonymize visit location')) {
-            $anonymizeLocation = false;
+            $anonymizeLocation = \false;
             $output->writeln('<info>SKIPPING anonymizing location.</info>');
         }
         if ($anonymizeUserId && !$this->confirmAnonymize($startDate, $endDate, 'anonymize user id')) {
-            $anonymizeUserId = false;
+            $anonymizeUserId = \false;
             $output->writeln('<info>SKIPPING anonymizing user id.</info>');
         }
         if (!empty($visitColumnsToUnset) && !$this->confirmAnonymize($startDate, $endDate, 'unset the log_visit columns "' . implode(', ', $visitColumnsToUnset) . '"')) {
-            $visitColumnsToUnset = false;
+            $visitColumnsToUnset = \false;
             $output->writeln('<info>SKIPPING unset log_visit columns.</info>');
         }
         if (!empty($linkVisitActionColumns) && !$this->confirmAnonymize($startDate, $endDate, 'unset the log_link_visit_action columns "' . implode(', ', $linkVisitActionColumns) . '"')) {
-            $linkVisitActionColumns = false;
+            $linkVisitActionColumns = \false;
             $output->writeln('<info>SKIPPING unset log_link_visit_action columns.</info>');
         }
         $logDataAnonymizations->setCallbackOnOutput(function ($message) use($output) {
             $output->writeln($message);
         });
-        $idLogData = $logDataAnonymizations->scheduleEntry('Command line', $idSites, $date, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $visitColumnsToUnset, $linkVisitActionColumns, $isStarted = true);
+        $idLogData = $logDataAnonymizations->scheduleEntry('Command line', $idSites, $date, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $visitColumnsToUnset, $linkVisitActionColumns, $isStarted = \true);
         $logDataAnonymizations->executeScheduledEntry($idLogData);
         $output->writeln('Done');
         return self::SUCCESS;
@@ -85,12 +85,12 @@ class AnonymizeRawData extends ConsoleCommand
     {
         $noInteraction = $this->getInput()->getOption('no-interaction');
         if ($noInteraction) {
-            return true;
+            return \true;
         }
-        $value = $this->ask(sprintf('<question>Are you sure you want to %s for all visits between "%s" to "%s"? This action cannot be undone. Type "OK" to confirm this section.</question>', $action, $startDate, $endDate), false);
+        $value = $this->ask(sprintf('<question>Are you sure you want to %s for all visits between "%s" to "%s"? This action cannot be undone. Type "OK" to confirm this section.</question>', $action, $startDate, $endDate), \false);
         if ($value !== 'OK') {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
 }

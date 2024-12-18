@@ -29,17 +29,17 @@ class UrlHelper
     protected static function inArrayMatchesRegex($test, $patterns) : bool
     {
         foreach ($patterns as $val) {
-            if (@preg_match($val, '') === false) {
+            if (@preg_match($val, '') === \false) {
                 if (strcasecmp($val, $test) === 0) {
-                    return true;
+                    return \true;
                 }
             } else {
                 if (preg_match($val, $test) === 1) {
-                    return true;
+                    return \true;
                 }
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Converts an array of query parameter name/value mappings into a query string.
@@ -62,13 +62,13 @@ class UrlHelper
             if (!self::inArrayMatchesRegex(strtolower($name), $parametersToExclude)) {
                 if (is_array($value)) {
                     foreach ($value as $param) {
-                        if ($param === false) {
+                        if ($param === \false) {
                             $validQuery .= $name . '[]' . $separator;
                         } else {
                             $validQuery .= $name . '[]=' . $param . $separator;
                         }
                     }
-                } elseif ($value === false) {
+                } elseif ($value === \false) {
                     $validQuery .= $name . $separator;
                 } else {
                     $validQuery .= $name . '=' . $value . $separator;
@@ -99,7 +99,7 @@ class UrlHelper
         if (!isset($countries)) {
             /** @var RegionDataProvider $regionDataProvider */
             $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
-            $countries = implode('|', array_keys($regionDataProvider->getCountryList(true)));
+            $countries = implode('|', array_keys($regionDataProvider->getCountryList(\true)));
         }
         return preg_replace(array('/^(w+[0-9]*|search)\\./', '/(^|\\.)m\\./', '/(\\.(com|org|net|co|it|edu))?\\.(' . $countries . ')(\\/|$)/', '/(^|\\.)(' . $countries . ')\\./'), array('', '$1', '.{}$4', '$1{}.'), $url);
     }
@@ -119,10 +119,10 @@ class UrlHelper
     public static function isLookLikeSafeUrl($url)
     {
         if (preg_match('/[\\x00-\\x1F\\x7F]/', $url)) {
-            return false;
+            return \false;
         }
-        if (strpos($url, ':') === false) {
-            return true;
+        if (strpos($url, ':') === \false) {
+            return \true;
         }
         $protocol = explode(':', $url, 2)[0];
         return preg_match('/^(' . implode('|', self::$validLinkProtocols) . ')$/i', $protocol);
@@ -140,7 +140,7 @@ class UrlHelper
     public static function getParseUrlReverse($parsed)
     {
         if (!is_array($parsed)) {
-            return false;
+            return \false;
         }
         // According to RFC 1738, the chars ':', '@' and '/' need to be encoded in username or password part of an url
         // We also encode '\' as a username or password containing that char, might be handled incorrectly by browsers
@@ -189,15 +189,15 @@ class UrlHelper
         $nameToValue = array();
         foreach ($values as $value) {
             $pos = strpos($value, '=');
-            if ($pos !== false) {
+            if ($pos !== \false) {
                 $name = substr($value, 0, $pos);
                 $value = substr($value, $pos + 1);
-                if ($value === false) {
+                if ($value === \false) {
                     $value = '';
                 }
             } else {
                 $name = $value;
-                $value = false;
+                $value = \false;
             }
             if (!empty($name)) {
                 $name = \Piwik\Common::sanitizeInputValue($name);
@@ -210,7 +210,7 @@ class UrlHelper
             $tmp = preg_replace('/(\\[|%5b)(]|%5d)$/i', '', $name, -1, $count);
             if (!empty($tmp) && $count) {
                 $name = $tmp;
-                if (isset($nameToValue[$name]) == false || is_array($nameToValue[$name]) == false) {
+                if (isset($nameToValue[$name]) == \false || is_array($nameToValue[$name]) == \false) {
                     $nameToValue[$name] = array();
                 }
                 array_push($nameToValue[$name], $value);
@@ -246,11 +246,11 @@ class UrlHelper
      * @return string eg, `/test/index.php?module=CoreHome` if `$url` is `http://piwik.org/test/index.php?module=CoreHome`.
      * @api
      */
-    public static function getPathAndQueryFromUrl($url, array $additionalParamsToAdd = [], bool $preserveAnchor = false)
+    public static function getPathAndQueryFromUrl($url, array $additionalParamsToAdd = [], bool $preserveAnchor = \false)
     {
         $parsedUrl = parse_url($url);
         // If an anchor is included in the URL parse_url() will not split the anchor and query, so we do that there
-        if (isset($parsedUrl['fragment']) && strpos($parsedUrl['fragment'], '?') !== false) {
+        if (isset($parsedUrl['fragment']) && strpos($parsedUrl['fragment'], '?') !== \false) {
             $parsedUrl['query'] = substr($parsedUrl['fragment'], strpos($parsedUrl['fragment'], '?') + 1);
             $parsedUrl['fragment'] = substr($parsedUrl['fragment'], 0, strpos($parsedUrl['fragment'], '?'));
         }
@@ -313,6 +313,6 @@ class UrlHelper
         if (!\Piwik\UrlHelper::isLookLikeUrl($url)) {
             $url = "http://" . $url;
         }
-        return parse_url($url, PHP_URL_HOST);
+        return parse_url($url, \PHP_URL_HOST);
     }
 }

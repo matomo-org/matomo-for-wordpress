@@ -139,7 +139,7 @@ class API extends \Piwik\Plugin\API
     public function isUserCanAddNewSegment($idSite)
     {
         if (Piwik::isUserIsAnonymous()) {
-            return false;
+            return \false;
         }
         $requiredAccess = Config::getInstance()->General['adding_segment_requires_access'];
         $authorized = $requiredAccess == 'view' && Piwik::isUserHasViewAccess($idSite) || $requiredAccess == 'admin' && Piwik::isUserHasAdminAccess($idSite) || $requiredAccess == 'write' && Piwik::isUserHasWriteAccess($idSite) || $requiredAccess == 'superuser' && Piwik::hasUserSuperUserAccess();
@@ -176,7 +176,7 @@ class API extends \Piwik\Plugin\API
         Piwik::postEvent('SegmentEditor.deactivate', array($idSegment));
         $this->getModel()->deleteSegment($idSegment);
         Cache::getEagerCache()->flushAll();
-        return true;
+        return \true;
     }
     private function getModel()
     {
@@ -194,7 +194,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return bool
      */
-    public function update($idSegment, $name, $definition, $idSite = false, $autoArchive = false, $enabledAllUsers = false)
+    public function update($idSegment, $name, $definition, $idSite = \false, $autoArchive = \false, $enabledAllUsers = \false)
     {
         $segment = $this->getSegmentOrFail($idSegment);
         $this->checkUserCanEditOrDeleteSegment($segment);
@@ -220,7 +220,7 @@ class API extends \Piwik\Plugin\API
             $this->segmentArchiving->reArchiveSegment($updatedSegment);
         }
         Cache::getEagerCache()->flushAll();
-        return true;
+        return \true;
     }
     /**
      * Adds a new stored segment.
@@ -233,7 +233,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return int The newly created segment Id
      */
-    public function add($name, $definition, $idSite = false, $autoArchive = false, $enabledAllUsers = false)
+    public function add($name, $definition, $idSite = \false, $autoArchive = \false, $enabledAllUsers = \false)
     {
         $this->checkUserCanAddNewSegment($idSite);
         $idSite = $this->checkIdSite($idSite);
@@ -265,7 +265,7 @@ class API extends \Piwik\Plugin\API
         }
         $segment = $this->getModel()->getSegment($idSegment);
         if (empty($segment)) {
-            return false;
+            return \false;
         }
         try {
             if (!$segment['enable_all_users']) {
@@ -285,7 +285,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|int $idSite Whether to return stored segments for a specific idSite, or all of them. If supplied, must be a valid site ID.
      * @return array
      */
-    public function getAll($idSite = false)
+    public function getAll($idSite = \false)
     {
         if (!empty($idSite)) {
             Piwik::checkUserHasViewAccess($idSite);
@@ -315,9 +315,9 @@ class API extends \Piwik\Plugin\API
      *
      * @return array
      */
-    private function filterSegmentsWithDisabledElements(array $segments, $idSite = false) : array
+    private function filterSegmentsWithDisabledElements(array $segments, $idSite = \false) : array
     {
-        $idSites = false === $idSite ? [] : [$idSite];
+        $idSites = \false === $idSite ? [] : [$idSite];
         foreach ($segments as $k => $segment) {
             try {
                 new Segment($segment['definition'], $idSites);

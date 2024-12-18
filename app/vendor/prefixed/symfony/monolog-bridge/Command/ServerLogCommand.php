@@ -34,11 +34,11 @@ class ServerLogCommand extends Command
     public function isEnabled()
     {
         if (!class_exists(ConsoleFormatter::class)) {
-            return false;
+            return \false;
         }
         // based on a symfony/symfony package, it crashes due a missing FormatterInterface from monolog/monolog
         if (!interface_exists(FormatterInterface::class)) {
-            return false;
+            return \false;
         }
         return parent::isEnabled();
     }
@@ -68,7 +68,7 @@ EOF
             }
             $this->el = new ExpressionLanguage();
         }
-        $this->handler = new ConsoleHandler($output, true, [OutputInterface::VERBOSITY_NORMAL => Logger::DEBUG]);
+        $this->handler = new ConsoleHandler($output, \true, [OutputInterface::VERBOSITY_NORMAL => Logger::DEBUG]);
         $this->handler->setFormatter(new ConsoleFormatter(['format' => str_replace('\\n', "\n", $input->getOption('format')), 'date_format' => $input->getOption('date-format'), 'colors' => $output->isDecorated(), 'multiline' => OutputInterface::VERBOSITY_DEBUG <= $output->getVerbosity()]));
         if (!str_contains($host = $input->getOption('host'), '://')) {
             $host = 'tcp://' . $host;
@@ -79,7 +79,7 @@ EOF
         foreach ($this->getLogs($socket) as $clientId => $message) {
             $record = unserialize(base64_decode($message));
             // Impossible to decode the message, give up.
-            if (false === $record) {
+            if (\false === $record) {
                 continue;
             }
             if ($filter && !$this->el->evaluate($filter, $record)) {
@@ -93,7 +93,7 @@ EOF
     {
         $sockets = [(int) $socket => $socket];
         $write = [];
-        while (true) {
+        while (\true) {
             $read = $sockets;
             stream_select($read, $write, $write, null);
             foreach ($read as $stream) {

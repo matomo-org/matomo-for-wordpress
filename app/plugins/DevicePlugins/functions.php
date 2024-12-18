@@ -12,7 +12,7 @@ use Piwik\Piwik;
 function getPluginsLogo($label)
 {
     if ($label == Piwik::translate('General_Others')) {
-        return false;
+        return \false;
     }
     $icon = 'plugins/Morpheus/icons/dist/plugins/' . $label . '.png';
     if (file_exists(PIWIK_INCLUDE_PATH . '/' . $icon)) {
@@ -25,5 +25,5 @@ function getPluginsLogo($label)
             return $column->columnIcon;
         }
     }
-    return false;
+    return \false;
 }

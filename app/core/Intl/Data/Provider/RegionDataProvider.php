@@ -36,7 +36,7 @@ class RegionDataProvider
      * @return string[] Array of 2 letter country ISO codes => 3 letter continent code
      * @api
      */
-    public function getCountryList($includeInternalCodes = false)
+    public function getCountryList($includeInternalCodes = \false)
     {
         if ($this->countryList === null) {
             $this->countryList = (require __DIR__ . '/../Resources/countries.php');

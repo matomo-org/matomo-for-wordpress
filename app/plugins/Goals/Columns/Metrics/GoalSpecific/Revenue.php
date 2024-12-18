@@ -24,7 +24,7 @@ class Revenue extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'revenue', false);
+        return Goals::makeGoalColumn($this->idGoal, 'revenue', \false);
     }
     public function getTranslatedName()
     {

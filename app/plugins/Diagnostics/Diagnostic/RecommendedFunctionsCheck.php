@@ -44,7 +44,7 @@ class RecommendedFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic
      */
     private function getRecommendedFunctions()
     {
-        return array('shell_exec', 'set_time_limit', 'mail', 'parse_ini_file', 'glob', 'gzopen', 'md5_file');
+        return array('shell_exec', 'set_time_limit', 'mail', 'parse_ini_file', 'glob', 'gzopen', 'md5_file', 'hash_file');
     }
     private function getHelpMessage($function)
     {

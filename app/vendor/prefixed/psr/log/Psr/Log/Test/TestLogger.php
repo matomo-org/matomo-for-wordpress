@@ -80,18 +80,18 @@ class TestLogger extends AbstractLogger
         }
         return $this->hasRecordThatPasses(function ($rec) use($record) {
             if ($rec['message'] !== $record['message']) {
-                return false;
+                return \false;
             }
             if (isset($record['context']) && $rec['context'] !== $record['context']) {
-                return false;
+                return \false;
             }
-            return true;
+            return \true;
         }, $level);
     }
     public function hasRecordThatContains($message, $level)
     {
         return $this->hasRecordThatPasses(function ($rec) use($message) {
-            return strpos($rec['message'], $message) !== false;
+            return strpos($rec['message'], $message) !== \false;
         }, $level);
     }
     public function hasRecordThatMatches($regex, $level)
@@ -103,14 +103,14 @@ class TestLogger extends AbstractLogger
     public function hasRecordThatPasses(callable $predicate, $level)
     {
         if (!isset($this->recordsByLevel[$level])) {
-            return false;
+            return \false;
         }
         foreach ($this->recordsByLevel[$level] as $i => $rec) {
             if (call_user_func($predicate, $rec, $i)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function __call($method, $args)
     {

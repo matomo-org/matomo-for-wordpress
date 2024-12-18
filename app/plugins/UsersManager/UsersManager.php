@@ -115,7 +115,7 @@ class UsersManager extends \Piwik\Plugin
     public static function isValidPasswordString($input)
     {
         if (!SettingsPiwik::isUserCredentialsSanityCheckEnabled() && !empty($input)) {
-            return true;
+            return \true;
         }
         $l = strlen($input);
         return $l >= self::PASSWORD_MIN_LENGTH;
@@ -369,5 +369,6 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'UsersManager_YourUsernameCannotBeChanged';
         $translationKeys[] = 'UsersManager_YourVisitsAreIgnoredOnDomain';
         $translationKeys[] = 'UsersManager_YourVisitsAreNotIgnored';
+        $translationKeys[] = 'UsersManager_InviteEmailChange';
     }
 }

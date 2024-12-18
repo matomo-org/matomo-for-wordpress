@@ -60,7 +60,7 @@ class DateTimeFormatProvider
      */
     public function uses12HourClock()
     {
-        return false;
+        return \false;
     }
     /**
      * Returns interval format pattern for the given format type
@@ -70,7 +70,7 @@ class DateTimeFormatProvider
      *
      * @return string
      */
-    public function getRangeFormatPattern($short = false, $maxDifference = 'Y')
+    public function getRangeFormatPattern($short = \false, $maxDifference = 'Y')
     {
         if ($short) {
             return 'MMM d, y – MMM d, y';

@@ -35,7 +35,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|array $columns
      * @return mixed
      */
-    public function get($idSite, $period, $date, $segment = false, $columns = false)
+    public function get($idSite, $period, $date, $segment = \false, $columns = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $visitTypes = array(self::NEW_COLUMN_SUFFIX => self::NEW_VISITOR_SEGMENT, self::RETURNING_COLUMN_SUFFIX => self::RETURNING_VISITOR_SEGMENT);
@@ -75,7 +75,7 @@ class API extends \Piwik\Plugin\API
     {
         $result = array();
         foreach ($requestedColumns as $column) {
-            if (strpos($column, $suffix) !== false) {
+            if (strpos($column, $suffix) !== \false) {
                 $result[] = str_replace($suffix, '', $column);
             }
         }

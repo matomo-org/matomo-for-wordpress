@@ -16,7 +16,7 @@ class Menu extends \Piwik\Plugin\Menu
     public function configureTopMenu(MenuTop $menu)
     {
         $idSite = Common::getRequestVar('idSite', 0, 'int');
-        $urlParams = $this->urlForActionWithDefaultUserParams('index', ['segment' => false, 'idSite' => $idSite ?: false]);
+        $urlParams = $this->urlForActionWithDefaultUserParams('index', ['segment' => \false, 'idSite' => $idSite ?: \false]);
         $tooltip = Piwik::translate('MultiSites_TopLinkTooltip');
         $menu->addItem('General_MultiSitesSummary', null, $urlParams, 3, $tooltip);
     }

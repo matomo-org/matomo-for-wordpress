@@ -29,7 +29,7 @@ class ClientHints
      *
      * @var bool
      */
-    protected $mobile = false;
+    protected $mobile = \false;
     /**
      * Represents `Sec-CH-UA-Model` header field: the user agent's underlying device model
      *
@@ -66,6 +66,12 @@ class ClientHints
      */
     protected $app = '';
     /**
+     * Represents `Sec-CH-UA-Form-Factors` header field: form factor device type name
+     *
+     * @var array
+     */
+    protected $formFactors = [];
+    /**
      * Constructor
      *
      * @param string $model           `Sec-CH-UA-Model` header field
@@ -77,8 +83,9 @@ class ClientHints
      * @param string $architecture    `Sec-CH-UA-Arch` header field
      * @param string $bitness         `Sec-CH-UA-Bitness`
      * @param string $app             `HTTP_X-REQUESTED-WITH`
+     * @param array  $formFactors     `Sec-CH-UA-Form-Factors` header field
      */
-    public function __construct(string $model = '', string $platform = '', string $platformVersion = '', string $uaFullVersion = '', array $fullVersionList = [], bool $mobile = false, string $architecture = '', string $bitness = '', string $app = '')
+    public function __construct(string $model = '', string $platform = '', string $platformVersion = '', string $uaFullVersion = '', array $fullVersionList = [], bool $mobile = \false, string $architecture = '', string $bitness = '', string $app = '', array $formFactors = [])
     {
         $this->model = $model;
         $this->platform = $platform;
@@ -89,6 +96,7 @@ class ClientHints
         $this->architecture = $architecture;
         $this->bitness = $bitness;
         $this->app = $app;
+        $this->formFactors = $formFactors;
     }
     /**
      * Magic method to directly allow accessing the protected properties
@@ -199,6 +207,15 @@ class ClientHints
         return $this->app;
     }
     /**
+     * Returns the formFactor device type name
+     *
+     * @return array
+     */
+    public function getFormFactors() : array
+    {
+        return $this->formFactors;
+    }
+    /**
      * Factory method to easily instantiate this class using an array containing all available (client hint) headers
      *
      * @param array $headers
@@ -209,8 +226,9 @@ class ClientHints
     {
         $model = $platform = $platformVersion = $uaFullVersion = $architecture = $bitness = '';
         $app = '';
-        $mobile = false;
+        $mobile = \false;
         $fullVersionList = [];
+        $formFactors = [];
         foreach ($headers as $name => $value) {
             switch (\str_replace('_', '-', \strtolower((string) $name))) {
                 case 'http-sec-ch-ua-arch':
@@ -227,7 +245,7 @@ class ClientHints
                 case 'http-sec-ch-ua-mobile':
                 case 'sec-ch-ua-mobile':
                 case 'mobile':
-                    $mobile = true === $value || '1' === $value || '?1' === $value;
+                    $mobile = \true === $value || '1' === $value || '?1' === $value;
                     break;
                 case 'http-sec-ch-ua-model':
                 case 'sec-ch-ua-model':
@@ -281,8 +299,17 @@ class ClientHints
                         $app = $value;
                     }
                     break;
+                case 'formfactors':
+                case 'http-sec-ch-ua-form-factors':
+                case 'sec-ch-ua-form-factors':
+                    if (\is_array($value)) {
+                        $formFactors = \array_map('\\strtolower', $value);
+                    } elseif (\preg_match_all('~"([a-z]+)"~i', \strtolower($value), $matches)) {
+                        $formFactors = $matches[1];
+                    }
+                    break;
             }
         }
-        return new self($model, $platform, $platformVersion, $uaFullVersion, $fullVersionList, $mobile, $architecture, $bitness, $app);
+        return new self($model, $platform, $platformVersion, $uaFullVersion, $fullVersionList, $mobile, $architecture, $bitness, $app, $formFactors);
     }
 }

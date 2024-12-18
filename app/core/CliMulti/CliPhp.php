@@ -19,11 +19,11 @@ class CliPhp
             return $general['php_binary_path'];
         }
         if (defined('PHP_BINARY')) {
-            if ($this->isHhvmBinary(PHP_BINARY)) {
-                return PHP_BINARY . ' --php';
+            if ($this->isHhvmBinary(\PHP_BINARY)) {
+                return \PHP_BINARY . ' --php';
             }
-            if ($this->isValidPhpType(PHP_BINARY)) {
-                return PHP_BINARY . ' -q';
+            if ($this->isValidPhpType(\PHP_BINARY)) {
+                return \PHP_BINARY . ' -q';
             }
         }
         $bin = '';
@@ -34,25 +34,25 @@ class CliPhp
             $bin = $this->getPhpCommandIfValid($_SERVER['argv'][0]);
         }
         if (empty($bin)) {
-            $possiblePhpPath = PHP_BINDIR . ('\\' === \DIRECTORY_SEPARATOR ? '\\php.exe' : '/php');
+            $possiblePhpPath = \PHP_BINDIR . ('\\' === \DIRECTORY_SEPARATOR ? '\\php.exe' : '/php');
             $bin = $this->getPhpCommandIfValid($possiblePhpPath);
         }
         if (!$this->isValidPhpType($bin) && function_exists('shell_exec')) {
             $bin = @shell_exec('which php');
         }
         if (!$this->isValidPhpType($bin)) {
-            return false;
+            return \false;
         }
         $bin = trim($bin);
         if (!$this->isValidPhpVersion($bin)) {
-            return false;
+            return \false;
         }
         $bin .= ' -q';
         return $bin;
     }
     private function isHhvmBinary($bin)
     {
-        return false !== strpos($bin, 'hhvm');
+        return \false !== strpos($bin, 'hhvm');
     }
     private function isValidPhpVersion($bin)
     {
@@ -64,15 +64,15 @@ class CliPhp
     private function isValidPhpType($path)
     {
         if (empty($path)) {
-            return false;
+            return \false;
         }
         $path = basename($path);
-        return false === strpos($path, 'fpm') && false === strpos($path, 'cgi') && false === strpos($path, 'phpunit') && false === strpos($path, 'lsphp');
+        return \false === strpos($path, 'fpm') && \false === strpos($path, 'cgi') && \false === strpos($path, 'phpunit') && \false === strpos($path, 'lsphp');
     }
     private function getPhpCommandIfValid($path)
     {
         if (!empty($path) && @is_executable($path)) {
-            if (0 === strpos($path, PHP_BINDIR) && $this->isValidPhpType($path)) {
+            if (0 === strpos($path, \PHP_BINDIR) && $this->isValidPhpType($path)) {
                 return $path;
             }
         }

@@ -35,7 +35,7 @@ abstract class ReleaseChannel
      */
     public function doesPreferStable()
     {
-        return true;
+        return \true;
     }
     /**
      * Get the latest available version number for this release channel. Eg '2.15.0-b4' or '2.15.0'. Should be
@@ -77,6 +77,6 @@ abstract class ReleaseChannel
      */
     public function isSelectableInSettings() : bool
     {
-        return true;
+        return \true;
     }
 }

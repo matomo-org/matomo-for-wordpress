@@ -72,7 +72,7 @@ class ColumnDelete extends BaseFilter
      * @param bool $deleteIfZeroOnly If true, columns will be removed only if their value is 0.
      * @param bool $deleteRecursive If true, columns will be removed in nested arrays.
      */
-    public function __construct($table, $columnsToRemove, $columnsToKeep = array(), $deleteIfZeroOnly = false, $deleteRecursive = false)
+    public function __construct($table, $columnsToRemove, $columnsToKeep = array(), $deleteIfZeroOnly = \false, $deleteRecursive = \false)
     {
         parent::__construct($table);
         if (is_string($columnsToRemove)) {
@@ -96,24 +96,24 @@ class ColumnDelete extends BaseFilter
     public function filter($table)
     {
         // always do recursive filter
-        $this->enableRecursive(true);
-        $recurse = false;
+        $this->enableRecursive(\true);
+        $recurse = \false;
         // only recurse if there are columns to remove/keep
         // remove columns specified in $this->columnsToRemove
         if (!empty($this->columnsToRemove)) {
             $this->removeColumnsFromTable($table);
-            $recurse = true;
+            $recurse = \true;
         }
         // remove columns not specified in $columnsToKeep
         if (!empty($this->columnsToKeep)) {
             foreach ($table as $index => $row) {
                 $columnsToDelete = array();
                 foreach ($row as $name => $value) {
-                    $keep = false;
+                    $keep = \false;
                     // @see self::APPEND_TO_COLUMN_NAME_TO_KEEP
                     foreach ($this->columnsToKeep as $nameKeep => $true) {
                         if (strpos($name, $nameKeep . self::APPEND_TO_COLUMN_NAME_TO_KEEP) === 0) {
-                            $keep = true;
+                            $keep = \true;
                         }
                     }
                     if (!$keep && $name !== 'label' && !isset($this->columnsToKeep[$name])) {
@@ -126,7 +126,7 @@ class ColumnDelete extends BaseFilter
                     unset($table[$index][$columnToDelete]);
                 }
             }
-            $recurse = true;
+            $recurse = \true;
         }
         // recurse
         if ($recurse && !is_array($table)) {
@@ -160,7 +160,7 @@ class ColumnDelete extends BaseFilter
                 }
                 if ($this->deleteIfZeroOnly) {
                     $value = $row[$column];
-                    if ($value === false || !empty($value)) {
+                    if ($value === \false || !empty($value)) {
                         continue;
                     }
                 }

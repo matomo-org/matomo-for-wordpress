@@ -31,10 +31,10 @@ class UpdateCommunication
     public function isEnabled()
     {
         $isEnabled = (bool) Config::getInstance()->General['enable_update_communication'];
-        if ($isEnabled === true && SettingsPiwik::isInternetEnabled() === true) {
-            return true;
+        if ($isEnabled === \true && SettingsPiwik::isInternetEnabled() === \true) {
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Sends a notification email to all super users if there is a core update available but only if we haven't notfied
@@ -95,12 +95,12 @@ class UpdateCommunication
         UpdateCheck::check();
         $hasUpdate = UpdateCheck::isNewestVersionAvailable();
         if (!$hasUpdate) {
-            return false;
+            return \false;
         }
         $latestVersion = self::getLatestVersion();
         $version = new Version();
         if (!$version->isVersionNumber($latestVersion)) {
-            return false;
+            return \false;
         }
         return $hasUpdate;
     }
@@ -109,9 +109,9 @@ class UpdateCommunication
         $latestVersion = $this->getLatestVersion();
         $lastVersionSent = $this->getLatestVersionSent();
         if (!empty($lastVersionSent) && ($latestVersion == $lastVersionSent || version_compare($latestVersion, $lastVersionSent) == -1)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function getLatestVersion()
     {

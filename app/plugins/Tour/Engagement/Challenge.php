@@ -60,7 +60,7 @@ abstract class Challenge
      */
     public function isDisabled()
     {
-        return false;
+        return \false;
     }
     /**
      * A detailed description that describes the value of the action the user needs to complete, or some tips on how
@@ -126,9 +126,9 @@ abstract class Challenge
     {
         $settings = $this->getSettings($login);
         if (!empty($settings[$this->getId() . $appendix])) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function storeAttribute(string $login, $appendix)
     {

@@ -145,10 +145,10 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
         }
         foreach ($this->data as &$data) {
             if (!empty($data)) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -156,12 +156,12 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     public function invalidate(?int $lifetime = null)
     {
         $this->storage->clear();
-        return $this->migrate(true, $lifetime);
+        return $this->migrate(\true, $lifetime);
     }
     /**
      * {@inheritdoc}
      */
-    public function migrate(bool $destroy = false, ?int $lifetime = null)
+    public function migrate(bool $destroy = \false, ?int $lifetime = null)
     {
         return $this->storage->regenerate($destroy, $lifetime);
     }

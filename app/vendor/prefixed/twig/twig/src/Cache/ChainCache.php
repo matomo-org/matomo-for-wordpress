@@ -44,7 +44,7 @@ final class ChainCache implements CacheInterface
         [$name, $className] = $this->splitKey($key);
         foreach ($this->caches as $cache) {
             $cache->load($cache->generateKey($name, $className));
-            if (class_exists($className, false)) {
+            if (class_exists($className, \false)) {
                 break;
             }
         }

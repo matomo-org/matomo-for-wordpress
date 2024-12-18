@@ -29,7 +29,7 @@ class LatestCurrentBeta extends ReleaseChannel
     }
     public function doesPreferStable()
     {
-        return false;
+        return \false;
     }
     public function getOrder()
     {

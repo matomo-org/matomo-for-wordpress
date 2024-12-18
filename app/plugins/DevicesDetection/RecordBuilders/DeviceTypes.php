@@ -13,6 +13,6 @@ class DeviceTypes extends \Piwik\Plugins\DevicesDetection\RecordBuilders\Base
 {
     public function __construct()
     {
-        parent::__construct(Archiver::DEVICE_TYPE_RECORD_NAME, Archiver::DEVICE_TYPE_FIELD, true);
+        parent::__construct(Archiver::DEVICE_TYPE_RECORD_NAME, Archiver::DEVICE_TYPE_FIELD, \true);
     }
 }

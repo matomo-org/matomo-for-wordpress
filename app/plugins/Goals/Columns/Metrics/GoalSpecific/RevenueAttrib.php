@@ -24,7 +24,7 @@ class RevenueAttrib extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'revenue_attrib', false);
+        return Goals::makeGoalColumn($this->idGoal, 'revenue_attrib', \false);
     }
     public function getTranslatedName()
     {

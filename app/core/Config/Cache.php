@@ -37,18 +37,18 @@ class Cache extends File
     public function isValidHost($mergedConfigSettings)
     {
         if (!self::hasHostConfig($mergedConfigSettings)) {
-            return false;
+            return \false;
         }
         // note: we do not support "enable_trusted_host_check" to keep things secure
-        return in_array($this->host, $mergedConfigSettings['General']['trusted_hosts'], true);
+        return in_array($this->host, $mergedConfigSettings['General']['trusted_hosts'], \true);
     }
     private function getHost()
     {
-        $host = Url::getHost($checkIfTrusted = false);
+        $host = Url::getHost($checkIfTrusted = \false);
         $host = Url::getHostSanitized($host);
         // Remove any port number to get actual hostname
         $host = Common::sanitizeInputValue($host);
-        if (empty($host) || strpos($host, '..') !== false || strpos($host, '\\') !== false || strpos($host, '/') !== false) {
+        if (empty($host) || strpos($host, '..') !== \false || strpos($host, '\\') !== \false || strpos($host, '/') !== \false) {
             throw new \Exception('Unsupported host');
         }
         $this->host = $host;

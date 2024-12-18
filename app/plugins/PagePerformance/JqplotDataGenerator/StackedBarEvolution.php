@@ -73,7 +73,7 @@ class StackedBarEvolution extends JqplotDataGenerator\Evolution
         foreach ($dataTable->getDataTables() as $childTable) {
             $row = $childTable->getFirstRow();
             // get series data point. defaults to 0 if no row or no column value.
-            if ($row === false) {
+            if ($row === \false) {
                 $seriesData[] = 0;
             } else {
                 $seriesData[] = $row->getColumn($column) ?: 0;

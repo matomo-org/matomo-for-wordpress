@@ -212,7 +212,7 @@ abstract class AbstractParser
                 $this->regexList = $cacheContent;
             }
             if (empty($this->regexList)) {
-                $parsedContent = $this->getYamlParser()->parseFile($this->getRegexesDirectory() . DIRECTORY_SEPARATOR . $this->fixtureFile);
+                $parsedContent = $this->getYamlParser()->parseFile($this->getRegexesDirectory() . \DIRECTORY_SEPARATOR . $this->fixtureFile);
                 if (!\is_array($parsedContent)) {
                     $parsedContent = [];
                 }

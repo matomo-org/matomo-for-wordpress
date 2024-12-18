@@ -36,7 +36,7 @@ final class SandboxTokenParser extends AbstractTokenParser
             /* Token::BLOCK_END_TYPE */
             3
         );
-        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], \true);
         $stream->expect(
             /* Token::BLOCK_END_TYPE */
             3

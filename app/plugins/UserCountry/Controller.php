@@ -34,7 +34,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@UserCountry/adminIndex');
-        $allProviderInfo = \Piwik\Plugins\UserCountry\LocationProvider::getAllProviderInfo($newline = '<br/>', $includeExtra = true);
+        $allProviderInfo = \Piwik\Plugins\UserCountry\LocationProvider::getAllProviderInfo($newline = '<br/>', $includeExtra = \true);
         $view->locationProviders = $allProviderInfo;
         $view->currentProviderId = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProviderId();
         $view->thisIP = IP::getIpFromHeader();
@@ -48,26 +48,26 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             }
             $notification = new Notification($message);
             $notification->context = Notification::CONTEXT_ERROR;
-            $notification->raw = true;
+            $notification->raw = \true;
             Notification\Manager::notify('UserCountry_GeoLocationProviderBroken', $notification);
         } else {
             $isWorking = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider()->isWorking();
-            if (true !== $isWorking) {
+            if (\true !== $isWorking) {
                 $message = Piwik::translate('UserCountry_GeolocationProviderBroken', '<strong>' . \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider()->getInfo()['title'] . '</strong>');
                 if ($isWorking) {
                     $message .= '<br /><br />' . $isWorking;
                 }
                 $notification = new Notification($message);
                 $notification->context = Notification::CONTEXT_ERROR;
-                $notification->raw = true;
+                $notification->raw = \true;
                 Notification\Manager::notify('UserCountry_GeoLocationProviderBroken', $notification);
             }
         }
         // check if there is a working provider (that isn't the default one)
-        $isThereWorkingProvider = false;
+        $isThereWorkingProvider = \false;
         foreach ($allProviderInfo as $id => $provider) {
             if ($id != DefaultProvider::ID && $id != DisabledProvider::ID && $provider['status'] == \Piwik\Plugins\UserCountry\LocationProvider::INSTALLED) {
-                $isThereWorkingProvider = true;
+                $isThereWorkingProvider = \true;
                 break;
             }
         }
@@ -101,8 +101,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if (empty($provider)) {
             throw new Exception("Invalid provider ID: '{$providerId}'.");
         }
-        $location = $provider->getLocation(array('ip' => IP::getIpFromHeader(), 'lang' => Common::getBrowserLanguage(), 'disable_fallbacks' => true));
-        $location = \Piwik\Plugins\UserCountry\LocationProvider::prettyFormatLocation($location, $newline = '<br/>', $includeExtra = true);
+        $location = $provider->getLocation(array('ip' => IP::getIpFromHeader(), 'lang' => Common::getBrowserLanguage(), 'disable_fallbacks' => \true));
+        $location = \Piwik\Plugins\UserCountry\LocationProvider::prettyFormatLocation($location, $newline = '<br/>', $includeExtra = \true);
         return $location;
     }
     public function getNumberOfDistinctCountries()

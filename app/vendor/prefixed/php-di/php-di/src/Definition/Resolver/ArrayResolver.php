@@ -46,7 +46,7 @@ class ArrayResolver implements DefinitionResolver
     }
     public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
-        return true;
+        return \true;
     }
     private function resolveDefinition(Definition $value, ArrayDefinition $definition, $key)
     {

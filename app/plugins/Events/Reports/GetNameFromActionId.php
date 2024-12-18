@@ -20,6 +20,6 @@ class GetNameFromActionId extends \Piwik\Plugins\Events\Reports\Base
         parent::init();
         $this->dimension = new EventName();
         $this->name = Piwik::translate('Events_Names');
-        $this->isSubtableReport = true;
+        $this->isSubtableReport = \true;
     }
 }

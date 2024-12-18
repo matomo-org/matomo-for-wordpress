@@ -19,24 +19,24 @@ class UserUpdater
      * @param bool $_isPasswordHashed
      * @throws \Exception
      */
-    public function updateUserWithoutCurrentPassword($userLogin, $password = false, $email = false, $_isPasswordHashed = false)
+    public function updateUserWithoutCurrentPassword($userLogin, $password = \false, $email = \false, $_isPasswordHashed = \false)
     {
-        \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = false;
+        \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \false;
         try {
             Request::processRequest('UsersManager.updateUser', ['userLogin' => $userLogin, 'password' => $password, 'email' => $email, '_isPasswordHashed' => $_isPasswordHashed], $default = []);
-            \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = true;
+            \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \true;
         } catch (\Exception $e) {
-            \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = true;
+            \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \true;
             throw $e;
         }
     }
     public function setSuperUserAccessWithoutCurrentPassword($userLogin, $hasSuperUserAccess)
     {
-        \Piwik\Plugins\UsersManager\API::$SET_SUPERUSER_ACCESS_REQUIRE_PASSWORD_CONFIRMATION = false;
+        \Piwik\Plugins\UsersManager\API::$SET_SUPERUSER_ACCESS_REQUIRE_PASSWORD_CONFIRMATION = \false;
         try {
             Request::processRequest('UsersManager.setSuperUserAccess', ['userLogin' => $userLogin, 'hasSuperUserAccess' => $hasSuperUserAccess], $default = []);
         } finally {
-            \Piwik\Plugins\UsersManager\API::$SET_SUPERUSER_ACCESS_REQUIRE_PASSWORD_CONFIRMATION = true;
+            \Piwik\Plugins\UsersManager\API::$SET_SUPERUSER_ACCESS_REQUIRE_PASSWORD_CONFIRMATION = \true;
         }
     }
 }

@@ -82,7 +82,7 @@ class API extends \Piwik\Plugin\API
         // Note: Datatable PostProcessor is disabled for this method in PrivacyManager::shouldDisablePostProcessing
         return $result;
     }
-    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = false, $anonymizeLocation = false, $anonymizeUserId = false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [], $passwordConfirmation = '')
+    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [], $passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -119,7 +119,7 @@ class API extends \Piwik\Plugin\API
     /**
      * @internal
      */
-    public function setAnonymizeIpSettings($anonymizeIPEnable, $maskLength, $useAnonymizedIpForVisitEnrichment, $anonymizeUserId = false, $anonymizeOrderId = false, $anonymizeReferrer = '', $forceCookielessTracking = false)
+    public function setAnonymizeIpSettings($anonymizeIPEnable, $maskLength, $useAnonymizedIpForVisitEnrichment, $anonymizeUserId = \false, $anonymizeOrderId = \false, $anonymizeReferrer = '', $forceCookielessTracking = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         if ($anonymizeIPEnable == '1') {
@@ -136,18 +136,18 @@ class API extends \Piwik\Plugin\API
         $privacyConfig->ipAddressMaskLength = (int) $maskLength;
         $privacyConfig->useAnonymizedIpForVisitEnrichment = (bool) $useAnonymizedIpForVisitEnrichment;
         $privacyConfig->anonymizeReferrer = $anonymizeReferrer;
-        if (false !== $anonymizeUserId) {
+        if (\false !== $anonymizeUserId) {
             $privacyConfig->anonymizeUserId = (bool) $anonymizeUserId;
         }
-        if (false !== $anonymizeOrderId) {
+        if (\false !== $anonymizeOrderId) {
             $privacyConfig->anonymizeOrderId = (bool) $anonymizeOrderId;
         }
-        if (false !== $forceCookielessTracking) {
+        if (\false !== $forceCookielessTracking) {
             $privacyConfig->forceCookielessTracking = (bool) $forceCookielessTracking;
             // update tracker files
             Piwik::postEvent('CustomJsTracker.updateTracker');
         }
-        return true;
+        return \true;
     }
     /**
      * @internal
@@ -157,7 +157,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         $dntChecker = new \Piwik\Plugins\PrivacyManager\DoNotTrackHeaderChecker();
         $dntChecker->deactivate();
-        return true;
+        return \true;
     }
     /**
      * @internal
@@ -167,7 +167,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         $dntChecker = new \Piwik\Plugins\PrivacyManager\DoNotTrackHeaderChecker();
         $dntChecker->activate();
-        return true;
+        return \true;
     }
     /**
      * @internal
@@ -231,11 +231,11 @@ class API extends \Piwik\Plugin\API
         if ($settings['delete_logs_enable']) {
             /** @var LogDataPurger $logDataPurger */
             $logDataPurger = StaticContainer::get('Piwik\\Plugins\\PrivacyManager\\LogDataPurger');
-            $logDataPurger->purgeData($settings['delete_logs_older_than'], true);
+            $logDataPurger->purgeData($settings['delete_logs_older_than'], \true);
         }
         if ($settings['delete_reports_enable']) {
             $reportsPurger = \Piwik\Plugins\PrivacyManager\ReportsPurger::make($settings, \Piwik\Plugins\PrivacyManager\PrivacyManager::getAllMetricsToKeep());
-            $reportsPurger->purgeData(true);
+            $reportsPurger->purgeData(\true);
         }
     }
     private function savePurgeDataSettings($settings)
@@ -243,7 +243,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         $this->checkDataPurgeAdminSettingsIsEnabled();
         \Piwik\Plugins\PrivacyManager\PrivacyManager::savePurgeDataSettings($settings);
-        return true;
+        return \true;
     }
     private function checkDataPurgeAdminSettingsIsEnabled()
     {

@@ -24,6 +24,6 @@ class Cloudflare extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCo
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return !empty($headers['server']) && stripos($headers['server'], 'cloudflare') !== false || !empty($headers['Server']) && stripos($headers['Server'], 'cloudflare') !== false || !empty($headers['SERVER']) && stripos($headers['SERVER'], 'cloudflare') !== false || !empty($headers['cf-ray']) || !empty($headers['Cf-Ray']) || !empty($headers['CF-RAY']);
+        return !empty($headers['server']) && stripos($headers['server'], 'cloudflare') !== \false || !empty($headers['Server']) && stripos($headers['Server'], 'cloudflare') !== \false || !empty($headers['SERVER']) && stripos($headers['SERVER'], 'cloudflare') !== \false || !empty($headers['cf-ray']) || !empty($headers['Cf-Ray']) || !empty($headers['CF-RAY']);
     }
 }

@@ -51,7 +51,7 @@ class ObjectCreationCompiler
                     $code[] = sprintf('$object->%s = %s;', $propertyInjection->getPropertyName(), $value);
                 } else {
                     // Private/protected property
-                    $code[] = sprintf('\\DI\\Definition\\Resolver\\ObjectCreator::setPrivatePropertyValue(%s, $object, \'%s\', %s);', var_export($propertyInjection->getClassName(), true), $propertyInjection->getPropertyName(), $value);
+                    $code[] = sprintf('\\DI\\Definition\\Resolver\\ObjectCreator::setPrivatePropertyValue(%s, $object, \'%s\', %s);', var_export($propertyInjection->getClassName(), \true), $propertyInjection->getPropertyName(), $value);
                 }
             }
             // Method injections
@@ -93,7 +93,7 @@ class ObjectCreationCompiler
     private function compileLazyDefinition(ObjectDefinition $definition) : string
     {
         $subDefinition = clone $definition;
-        $subDefinition->setLazy(false);
+        $subDefinition->setLazy(\false);
         $subDefinition = $this->compiler->compileValue($subDefinition);
         $this->compiler->getProxyFactory()->generateProxyClass($definition->getClassName());
         return <<<PHP
@@ -127,7 +127,7 @@ PHP;
     }
     private function assertClassIsNotAnonymous(ObjectDefinition $definition)
     {
-        if (strpos($definition->getClassName(), '@') !== false) {
+        if (strpos($definition->getClassName(), '@') !== \false) {
             throw InvalidDefinition::create($definition, sprintf('Entry "%s" cannot be compiled: anonymous classes cannot be compiled', $definition->getName()));
         }
     }

@@ -15,7 +15,7 @@ use Piwik\Metrics\Formatter;
  */
 class Html extends Formatter
 {
-    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = true, $round = false)
+    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = \true, $round = \false)
     {
         $result = parent::getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence, $round);
         $result = $this->replaceSpaceWithNonBreakingSpace($result);

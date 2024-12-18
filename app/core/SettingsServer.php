@@ -41,14 +41,14 @@ class SettingsServer
      */
     public static function setIsTrackerApiRequest()
     {
-        $GLOBALS['PIWIK_TRACKER_MODE'] = true;
+        $GLOBALS['PIWIK_TRACKER_MODE'] = \true;
     }
     /**
      * Set the current request is not a tracker API request
      */
     public static function setIsNotTrackerApiRequest()
     {
-        $GLOBALS['PIWIK_TRACKER_MODE'] = false;
+        $GLOBALS['PIWIK_TRACKER_MODE'] = \false;
     }
     /**
      * Returns true if Matomo is running within Matomo for WordPress.
@@ -80,10 +80,10 @@ class SettingsServer
      */
     public static function isWindows()
     {
-        if (PHP_OS_FAMILY == "Unknown") {
-            return DIRECTORY_SEPARATOR === '\\';
+        if (\PHP_OS_FAMILY == "Unknown") {
+            return \DIRECTORY_SEPARATOR === '\\';
         }
-        return PHP_OS_FAMILY === "Windows";
+        return \PHP_OS_FAMILY === "Windows";
     }
     /**
      * Returns `true` if this PHP version/build supports timezone manipulation
@@ -109,7 +109,7 @@ class SettingsServer
     {
         static $gd = null;
         if (is_null($gd)) {
-            $gd = false;
+            $gd = \false;
             $extensions = @get_loaded_extensions();
             if (is_array($extensions)) {
                 $gd = in_array('gd', $extensions) && function_exists('imageftbbox');
@@ -129,8 +129,8 @@ class SettingsServer
             self::setMaxExecutionTime(0);
         }
         $memoryLimit = self::getMemoryLimitValue();
-        if ($memoryLimit === false) {
-            return false;
+        if ($memoryLimit === \false) {
+            return \false;
         }
         $minimumMemoryLimit = \Piwik\Config::getInstance()->General['minimum_memory_limit'];
         if (self::isArchivePhpTriggered()) {
@@ -139,12 +139,12 @@ class SettingsServer
             if ($memoryLimit < $minimumMemoryLimitWhenArchiving) {
                 return self::setMemoryLimit($minimumMemoryLimitWhenArchiving);
             }
-            return false;
+            return \false;
         }
         if ($memoryLimit < $minimumMemoryLimit) {
             return self::setMemoryLimit($minimumMemoryLimit);
         }
-        return false;
+        return \false;
     }
     /**
      * Set PHP memory limit
@@ -158,10 +158,10 @@ class SettingsServer
     {
         // in Megabytes
         $currentValue = self::getMemoryLimitValue();
-        if ($currentValue === false || $currentValue < $minimumMemoryLimit && @ini_set('memory_limit', $minimumMemoryLimit . 'M')) {
-            return true;
+        if ($currentValue === \false || $currentValue < $minimumMemoryLimit && @ini_set('memory_limit', $minimumMemoryLimit . 'M')) {
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Get php memory_limit (in Megabytes)
@@ -177,7 +177,7 @@ class SettingsServer
             return self::getMegaBytesFromShorthandByte($memory);
         }
         // no memory limit
-        return false;
+        return \false;
     }
     /**
      * Get php post_max_size (in Megabytes)
@@ -190,7 +190,7 @@ class SettingsServer
             return self::getMegaBytesFromShorthandByte($maxPostSize);
         }
         // no max upload size
-        return false;
+        return \false;
     }
     /**
      * @see http://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
@@ -215,7 +215,7 @@ class SettingsServer
         if (is_numeric($value)) {
             return (int) $value / 1048576;
         }
-        return false;
+        return \false;
     }
     /**
      * Set maximum script execution time.
@@ -232,6 +232,6 @@ class SettingsServer
     }
     public static function isMac()
     {
-        return defined('PHP_OS') && PHP_OS === 'Darwin';
+        return defined('PHP_OS') && \PHP_OS === 'Darwin';
     }
 }

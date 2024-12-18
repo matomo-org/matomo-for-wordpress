@@ -25,7 +25,7 @@ class DevelopmentEnable extends ConsoleCommand
     protected function doExecute() : int
     {
         $commandName = $this->getInput()->getFirstArgument();
-        $enable = false !== strpos($commandName, 'enable');
+        $enable = \false !== strpos($commandName, 'enable');
         $config = Config::getInstance();
         $development = $config->Development;
         if ($enable) {
@@ -40,7 +40,7 @@ class DevelopmentEnable extends ConsoleCommand
         $config->Development = $development;
         $config->forceSave();
         Filesystem::deleteAllCacheOnUpdate();
-        $this->writeSuccessMessage(array($message));
+        $this->writeSuccessMessage($message);
         if ($enable && !SettingsPiwik::isGitDeployment()) {
             $comment = 'Development mode should be only enabled when installed through git. Not every development feature will be available.';
             $this->writeComment([$comment]);

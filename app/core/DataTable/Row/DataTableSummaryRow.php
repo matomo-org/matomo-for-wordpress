@@ -55,7 +55,7 @@ class DataTableSummaryRow extends Row
     private function sumTable($table)
     {
         $metadata = $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
-        $enableCopyMetadata = false;
+        $enableCopyMetadata = \false;
         foreach ($table->getRowsWithoutSummaryRow() as $row) {
             $this->sumRow($row, $enableCopyMetadata, $metadata);
         }

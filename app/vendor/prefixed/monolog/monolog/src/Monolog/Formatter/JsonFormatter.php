@@ -29,13 +29,13 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * @var bool
      */
-    protected $includeStacktraces = false;
+    protected $includeStacktraces = \false;
     /**
      * @param int $batchMode
      * @param bool $appendNewline
      * @param int $maxDepth
      */
-    public function __construct($batchMode = self::BATCH_MODE_JSON, $appendNewline = true, $maxDepth = 9)
+    public function __construct($batchMode = self::BATCH_MODE_JSON, $appendNewline = \true, $maxDepth = 9)
     {
         parent::__construct(null, $maxDepth);
         $this->batchMode = $batchMode;
@@ -68,7 +68,7 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(array $record)
     {
-        return $this->toJson($this->normalize($record), true) . ($this->appendNewline ? "\n" : '');
+        return $this->toJson($this->normalize($record), \true) . ($this->appendNewline ? "\n" : '');
     }
     /**
      * {@inheritdoc}
@@ -86,7 +86,7 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * @param bool $include
      */
-    public function includeStacktraces($include = true)
+    public function includeStacktraces($include = \true)
     {
         $this->includeStacktraces = $include;
     }
@@ -98,7 +98,7 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function formatBatchJson(array $records)
     {
-        return $this->toJson($this->normalize($records), true);
+        return $this->toJson($this->normalize($records), \true);
     }
     /**
      * Use new lines to separate records instead of a
@@ -111,7 +111,7 @@ class JsonFormatter extends NormalizerFormatter
     {
         $instance = $this;
         $oldNewline = $this->appendNewline;
-        $this->appendNewline = false;
+        $this->appendNewline = \false;
         array_walk($records, function (&$value, $key) use($instance) {
             $value = $instance->format($value);
         });

@@ -32,14 +32,14 @@ class MarkdownDescriptor extends Descriptor
     public function describe(OutputInterface $output, object $object, array $options = [])
     {
         $decorated = $output->isDecorated();
-        $output->setDecorated(false);
+        $output->setDecorated(\false);
         parent::describe($output, $object, $options);
         $output->setDecorated($decorated);
     }
     /**
      * {@inheritdoc}
      */
-    protected function write(string $content, bool $decorated = true)
+    protected function write(string $content, bool $decorated = \true)
     {
         parent::write($content, $decorated);
     }
@@ -48,7 +48,7 @@ class MarkdownDescriptor extends Descriptor
      */
     protected function describeInputArgument(InputArgument $argument, array $options = [])
     {
-        $this->write('#### `' . ($argument->getName() ?: '<none>') . "`\n\n" . ($argument->getDescription() ? preg_replace('/\\s*[\\r\\n]\\s*/', "\n", $argument->getDescription()) . "\n\n" : '') . '* Is required: ' . ($argument->isRequired() ? 'yes' : 'no') . "\n" . '* Is array: ' . ($argument->isArray() ? 'yes' : 'no') . "\n" . '* Default: `' . str_replace("\n", '', var_export($argument->getDefault(), true)) . '`');
+        $this->write('#### `' . ($argument->getName() ?: '<none>') . "`\n\n" . ($argument->getDescription() ? preg_replace('/\\s*[\\r\\n]\\s*/', "\n", $argument->getDescription()) . "\n\n" : '') . '* Is required: ' . ($argument->isRequired() ? 'yes' : 'no') . "\n" . '* Is array: ' . ($argument->isArray() ? 'yes' : 'no') . "\n" . '* Default: `' . str_replace("\n", '', var_export($argument->getDefault(), \true)) . '`');
     }
     /**
      * {@inheritdoc}
@@ -62,7 +62,7 @@ class MarkdownDescriptor extends Descriptor
         if ($option->getShortcut()) {
             $name .= '|-' . str_replace('|', '|-', $option->getShortcut()) . '';
         }
-        $this->write('#### `' . $name . '`' . "\n\n" . ($option->getDescription() ? preg_replace('/\\s*[\\r\\n]\\s*/', "\n", $option->getDescription()) . "\n\n" : '') . '* Accept value: ' . ($option->acceptValue() ? 'yes' : 'no') . "\n" . '* Is value required: ' . ($option->isValueRequired() ? 'yes' : 'no') . "\n" . '* Is multiple: ' . ($option->isArray() ? 'yes' : 'no') . "\n" . '* Is negatable: ' . ($option->isNegatable() ? 'yes' : 'no') . "\n" . '* Default: `' . str_replace("\n", '', var_export($option->getDefault(), true)) . '`');
+        $this->write('#### `' . $name . '`' . "\n\n" . ($option->getDescription() ? preg_replace('/\\s*[\\r\\n]\\s*/', "\n", $option->getDescription()) . "\n\n" : '') . '* Accept value: ' . ($option->acceptValue() ? 'yes' : 'no') . "\n" . '* Is value required: ' . ($option->isValueRequired() ? 'yes' : 'no') . "\n" . '* Is multiple: ' . ($option->isArray() ? 'yes' : 'no') . "\n" . '* Is negatable: ' . ($option->isNegatable() ? 'yes' : 'no') . "\n" . '* Default: `' . str_replace("\n", '', var_export($option->getDefault(), \true)) . '`');
     }
     /**
      * {@inheritdoc}
@@ -96,13 +96,13 @@ class MarkdownDescriptor extends Descriptor
      */
     protected function describeCommand(Command $command, array $options = [])
     {
-        if ($options['short'] ?? false) {
+        if ($options['short'] ?? \false) {
             $this->write('`' . $command->getName() . "`\n" . str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . array_reduce($command->getAliases(), function ($carry, $usage) {
                 return $carry . '* `' . $usage . '`' . "\n";
             }));
             return;
         }
-        $command->mergeApplicationDefinition(false);
+        $command->mergeApplicationDefinition(\false);
         $this->write('`' . $command->getName() . "`\n" . str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . array_reduce(array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()), function ($carry, $usage) {
             return $carry . '* `' . $usage . '`' . "\n";
         }));

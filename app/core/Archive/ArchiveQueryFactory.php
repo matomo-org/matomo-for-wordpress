@@ -22,7 +22,7 @@ class ArchiveQueryFactory
     /**
      * @see \Piwik\Archive::build()
      */
-    public function build($idSites, $strPeriod, $strDate, $strSegment = false, $_restrictSitesToLogin = false)
+    public function build($idSites, $strPeriod, $strDate, $strSegment = \false, $_restrictSitesToLogin = \false)
     {
         list($websiteIds, $timezone, $idSiteIsAll) = $this->getSiteInfoFromQueryParam($idSites, $_restrictSitesToLogin);
         list($allPeriods, $isMultipleDate) = $this->getPeriodInfoFromQueryParam($strDate, $strPeriod, $timezone);
@@ -32,15 +32,15 @@ class ArchiveQueryFactory
     /**
      * @see \Piwik\Archive::factory()
      */
-    public function factory(Segment $segment, array $periods, array $idSites, $idSiteIsAll = false, $isMultipleDate = false)
+    public function factory(Segment $segment, array $periods, array $idSites, $idSiteIsAll = \false, $isMultipleDate = \false)
     {
-        $forceIndexedBySite = false;
-        $forceIndexedByDate = false;
+        $forceIndexedBySite = \false;
+        $forceIndexedByDate = \false;
         if ($idSiteIsAll || count($idSites) > 1) {
-            $forceIndexedBySite = true;
+            $forceIndexedBySite = \true;
         }
         if (count($periods) > 1 || $isMultipleDate) {
-            $forceIndexedByDate = true;
+            $forceIndexedByDate = \true;
         }
         $params = new \Piwik\Archive\Parameters($idSites, $periods, $segment);
         return $this->newInstance($params, $forceIndexedBySite, $forceIndexedByDate);
@@ -64,7 +64,7 @@ class ArchiveQueryFactory
     protected function getSiteInfoFromQueryParam($idSites, $_restrictSitesToLogin)
     {
         $websiteIds = Site::getIdSitesFromIdSitesString($idSites, $_restrictSitesToLogin);
-        $timezone = false;
+        $timezone = \false;
         if (count($websiteIds) === 1) {
             $timezone = Site::getTimezoneFor($websiteIds[0]);
         }

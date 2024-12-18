@@ -15,20 +15,20 @@ use Piwik\Plugins\TagManager\Template\BaseTemplate;
  */
 abstract class BaseVariable extends BaseTemplate
 {
-    const CATEGORY_PAGE_VARIABLES = 'TagManager_CategoryPageVariables';
-    const CATEGORY_VISIBILITY = 'TagManager_CategoryVisibility';
-    const CATEGORY_CLICKS = 'TagManager_CategoryClicks';
-    const CATEGORY_CONTAINER_INFO = 'TagManager_CategoryContainerInfo';
-    const CATEGORY_HISTORY = 'TagManager_CategoryHistory';
-    const CATEGORY_ERRORS = 'TagManager_CategoryErrors';
-    const CATEGORY_SCROLLS = 'TagManager_CategoryScrolls';
-    const CATEGORY_FORMS = 'TagManager_CategoryForms';
-    const CATEGORY_DATE = 'TagManager_CategoryDate';
-    const CATEGORY_PERFORMANCE = 'TagManager_CategoryPerformance';
-    const CATEGORY_UTILITIES = 'TagManager_CategoryUtilities';
-    const CATEGORY_DEVICE = 'TagManager_CategoryDevice';
-    const CATEGORY_SEO = 'TagManager_CategorySEO';
-    const CATEGORY_OTHERS = 'General_Others';
+    public const CATEGORY_PAGE_VARIABLES = 'TagManager_CategoryPageVariables';
+    public const CATEGORY_VISIBILITY = 'TagManager_CategoryVisibility';
+    public const CATEGORY_CLICKS = 'TagManager_CategoryClicks';
+    public const CATEGORY_CONTAINER_INFO = 'TagManager_CategoryContainerInfo';
+    public const CATEGORY_HISTORY = 'TagManager_CategoryHistory';
+    public const CATEGORY_ERRORS = 'TagManager_CategoryErrors';
+    public const CATEGORY_SCROLLS = 'TagManager_CategoryScrolls';
+    public const CATEGORY_FORMS = 'TagManager_CategoryForms';
+    public const CATEGORY_DATE = 'TagManager_CategoryDate';
+    public const CATEGORY_PERFORMANCE = 'TagManager_CategoryPerformance';
+    public const CATEGORY_UTILITIES = 'TagManager_CategoryUtilities';
+    public const CATEGORY_DEVICE = 'TagManager_CategoryDevice';
+    public const CATEGORY_SEO = 'TagManager_CategorySEO';
+    public const CATEGORY_OTHERS = 'General_Others';
     protected $templateType = 'Variable';
     /**
      * @inheritdoc
@@ -50,6 +50,6 @@ abstract class BaseVariable extends BaseTemplate
      */
     public function isPreConfigured()
     {
-        return false;
+        return \false;
     }
 }

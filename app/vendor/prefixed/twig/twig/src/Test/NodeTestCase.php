@@ -25,11 +25,11 @@ abstract class NodeTestCase extends TestCase
     /**
      * @dataProvider getTests
      */
-    public function testCompile($node, $source, $environment = null, $isPattern = false)
+    public function testCompile($node, $source, $environment = null, $isPattern = \false)
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
-    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = \false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -50,7 +50,7 @@ abstract class NodeTestCase extends TestCase
         }
         return $this->currentEnv;
     }
-    protected function getVariableGetter($name, $line = false)
+    protected function getVariableGetter($name, $line = \false)
     {
         $line = $line > 0 ? "// line {$line}\n" : '';
         return \sprintf('%s($context["%s"] ?? null)', $line, $name);

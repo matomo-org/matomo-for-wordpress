@@ -52,7 +52,7 @@ class ApcuCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doDeleteMultiple(array $keys)
     {
         $result = apcu_delete($keys);
-        return $result !== false && count($result) !== count($keys);
+        return $result !== \false && count($result) !== count($keys);
     }
     /**
      * {@inheritdoc}
@@ -81,7 +81,7 @@ class ApcuCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doGetStats()
     {
-        $info = apcu_cache_info(true);
+        $info = apcu_cache_info(\true);
         $sma = apcu_sma_info();
         return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['num_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['num_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['start_time'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['mem_size'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => $sma['avail_mem']];
     }

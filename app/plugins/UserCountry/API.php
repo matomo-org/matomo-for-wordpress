@@ -30,7 +30,7 @@ require_once PIWIK_INCLUDE_PATH . '/plugins/UserCountry/functions.php';
  */
 class API extends \Piwik\Plugin\API
 {
-    public function getCountry($idSite, $period, $date, $segment = false)
+    public function getCountry($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\UserCountry\Archiver::COUNTRY_RECORD_NAME, $idSite, $period, $date, $segment);
         $dataTable->filter(function (DataTable $dt) {
@@ -53,7 +53,7 @@ class API extends \Piwik\Plugin\API
         }));
         return $dataTable;
     }
-    public function getContinent($idSite, $period, $date, $segment = false)
+    public function getContinent($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\UserCountry\Archiver::COUNTRY_RECORD_NAME, $idSite, $period, $date, $segment);
         $getContinent = array('Piwik\\Common', 'getContinent');
@@ -71,7 +71,7 @@ class API extends \Piwik\Plugin\API
      * @param string|bool $segment
      * @return DataTable
      */
-    public function getRegion($idSite, $period, $date, $segment = false)
+    public function getRegion($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\UserCountry\Archiver::REGION_RECORD_NAME, $idSite, $period, $date, $segment);
         $separator = \Piwik\Plugins\UserCountry\Archiver::LOCATION_SEPARATOR;
@@ -83,7 +83,7 @@ class API extends \Piwik\Plugin\API
                 $dt->filter('GroupBy', array('label', function ($label) use($separator, $unk) {
                     $regionCode = getElementFromStringArray($label, $separator, 0, '');
                     $countryCode = getElementFromStringArray($label, $separator, 1, '');
-                    list($countryCode, $regionCode) = GeoIp2::convertRegionCodeToIso($countryCode, $regionCode, true);
+                    list($countryCode, $regionCode) = GeoIp2::convertRegionCodeToIso($countryCode, $regionCode, \true);
                     $splitLabel = explode($separator, $label);
                     if (isset($splitLabel[0])) {
                         $splitLabel[0] = $regionCode;
@@ -108,9 +108,9 @@ class API extends \Piwik\Plugin\API
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'region', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 0, $unk)));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'country', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 1, $unk)));
         // add country name metadata
-        $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'country_name', __NAMESPACE__ . '\\CountryTranslate', $applyToSummaryRow = false));
+        $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'country_name', __NAMESPACE__ . '\\CountryTranslate', $applyToSummaryRow = \false));
         // get the region name of each row and put it into the 'region_name' metadata
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'region_name', __NAMESPACE__ . '\\getRegionName', $params = null, $applyToSummaryRow = false));
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'region_name', __NAMESPACE__ . '\\getRegionName', $params = null, $applyToSummaryRow = \false));
         // add the country flag as a url to the 'logo' metadata field
         $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'logo', __NAMESPACE__ . '\\getFlagFromCode'));
         // prettify the region label
@@ -127,7 +127,7 @@ class API extends \Piwik\Plugin\API
      * @param string|bool $segment
      * @return DataTable
      */
-    public function getCity($idSite, $period, $date, $segment = false)
+    public function getCity($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable(\Piwik\Plugins\UserCountry\Archiver::CITY_RECORD_NAME, $idSite, $period, $date, $segment);
         $separator = \Piwik\Plugins\UserCountry\Archiver::LOCATION_SEPARATOR;
@@ -139,7 +139,7 @@ class API extends \Piwik\Plugin\API
                 $dt->filter('GroupBy', array('label', function ($label) use($separator, $unk) {
                     $regionCode = getElementFromStringArray($label, $separator, 1, '');
                     $countryCode = getElementFromStringArray($label, $separator, 2, '');
-                    list($countryCode, $regionCode) = GeoIp2::convertRegionCodeToIso($countryCode, $regionCode, true);
+                    list($countryCode, $regionCode) = GeoIp2::convertRegionCodeToIso($countryCode, $regionCode, \true);
                     $splitLabel = explode($separator, $label);
                     if (isset($splitLabel[1])) {
                         $splitLabel[1] = $regionCode;
@@ -168,18 +168,18 @@ class API extends \Piwik\Plugin\API
             if ($city == $strUnknown) {
                 return "xx";
             } else {
-                return false;
+                return \false;
             }
         }));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'region', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 1, $unk)));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'country', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 2, $unk)));
         // backwards compatibility: for reports that have lat|long in label
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'lat', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 3, false)));
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'long', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 4, false)));
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'lat', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 3, \false)));
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'long', __NAMESPACE__ . '\\getElementFromStringArray', array($separator, 4, \false)));
         // add country name & region name metadata
-        $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'country_name', __NAMESPACE__ . '\\countryTranslate', $applyToSummaryRow = false));
+        $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'country_name', __NAMESPACE__ . '\\countryTranslate', $applyToSummaryRow = \false));
         $getRegionName = '\\Piwik\\Plugins\\UserCountry\\getRegionNameFromCodes';
-        $dataTable->filter('MetadataCallbackAddMetadata', array(array('country', 'region'), 'region_name', $getRegionName, $applyToSummaryRow = false));
+        $dataTable->filter('MetadataCallbackAddMetadata', array(array('country', 'region'), 'region_name', $getRegionName, $applyToSummaryRow = \false));
         // add the country flag as a url to the 'logo' metadata field
         $dataTable->filter('MetadataCallbackAddMetadata', array('country', 'logo', __NAMESPACE__ . '\\getFlagFromCode'));
         // prettify the label
@@ -201,7 +201,7 @@ class API extends \Piwik\Plugin\API
     {
         $timeOfSwitch = Option::get(GeoIp2::SWITCH_TO_ISO_REGIONS_OPTION_NAME);
         if (empty($timeOfSwitch)) {
-            return false;
+            return \false;
             // if option was not set, all codes are fips codes, so leave them
         }
         try {
@@ -209,7 +209,7 @@ class API extends \Piwik\Plugin\API
             $period = Period\Factory::build($period, $date);
             $periodStart = $period->getDateStart();
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
         // if all region codes in log tables have been converted, check if archiving date was after the date of switch to iso
         // this check might not be fully correct in cases were only periods > day get recreated, but it should avoid some
@@ -219,15 +219,15 @@ class API extends \Piwik\Plugin\API
             try {
                 $dateOfArchive = Date::factory($archiveDate);
                 if ($dateOfArchive->isLater($dateOfSwitch)) {
-                    return false;
+                    return \false;
                 }
             } catch (Exception $e) {
             }
         }
         if ($dateOfSwitch->isEarlier($periodStart)) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Returns a simple mapping from country code to country name
@@ -255,7 +255,7 @@ class API extends \Piwik\Plugin\API
      * @throws Exception
      * @return array|false
      */
-    public function getLocationFromIP($ip = false, $provider = false)
+    public function getLocationFromIP($ip = \false, $provider = \false)
     {
         Piwik::checkUserHasSomeViewAccess();
         if (empty($ip)) {
@@ -288,7 +288,7 @@ class API extends \Piwik\Plugin\API
             throw new \Exception('Setting geo location has been disabled in config.');
         }
         $provider = \Piwik\Plugins\UserCountry\LocationProvider::setCurrentProvider($providerId);
-        if ($provider === false) {
+        if ($provider === \false) {
             throw new Exception("Invalid provider ID: '{$providerId}'.");
         }
     }
@@ -300,7 +300,7 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceColumnNames');
         return $dataTable;
     }
-    public function getNumberOfDistinctCountries($idSite, $period, $date, $segment = false)
+    public function getNumberOfDistinctCountries($idSite, $period, $date, $segment = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);

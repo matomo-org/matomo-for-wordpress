@@ -35,7 +35,7 @@ use Piwik\Url;
 class RowEvolution
 {
     private static $actionsUrlReports = ['getPageUrls', 'getPageUrlsFollowingSiteSearch', 'getEntryPageUrls', 'getExitPageUrls', 'getPageUrl'];
-    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = false, $segment = false, $column = false, $language = false, $apiParameters = [], $legendAppendMetric = true, $labelUseAbsoluteUrl = true, $labelSeries = '', $showGoalMetricsForGoal = false)
+    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = \false, $segment = \false, $column = \false, $language = \false, $apiParameters = [], $legendAppendMetric = \true, $labelUseAbsoluteUrl = \true, $labelSeries = '', $showGoalMetricsForGoal = \false)
     {
         // validation of requested $period & $date
         if ($period == 'range') {
@@ -49,7 +49,7 @@ class RowEvolution
         $labels = Piwik::getArrayFromApiParameter($label, $onlyUnique = empty($labelSeries));
         $metadata = $this->getRowEvolutionMetaData($idSite, $period, $date, $apiModule, $apiAction, $language, $apiParameters);
         // if goal metrics should be shown, we replace the metrics
-        if ($showGoalMetricsForGoal !== false) {
+        if ($showGoalMetricsForGoal !== \false) {
             if (array_key_exists('nb_visits', $metadata['metrics'])) {
                 $metadata['metrics'] = ['nb_visits' => $metadata['metrics']['nb_visits']];
             } else {
@@ -171,8 +171,8 @@ class RowEvolution
         $labels = array_values(array_unique($labels));
         // if the filter_limit query param is set, treat it as a request to limit
         // the number of labels used
-        $limit = Common::getRequestVar('filter_limit', false);
-        if ($limit != false && $limit >= 0) {
+        $limit = Common::getRequestVar('filter_limit', \false);
+        if ($limit != \false && $limit >= 0) {
             $labels = array_slice($labels, 0, $limit);
         }
         return $labels;
@@ -187,11 +187,11 @@ class RowEvolution
      * @param bool $labelUseAbsoluteUrl
      * @return array containing  report data, metadata, label, logo
      */
-    private function getSingleRowEvolution($idSite, $dataTable, $metadata, $apiModule, $apiAction, $label, $labelUseAbsoluteUrl = true)
+    private function getSingleRowEvolution($idSite, $dataTable, $metadata, $apiModule, $apiAction, $label, $labelUseAbsoluteUrl = \true)
     {
         $metricNames = array_keys($metadata['metrics']);
-        $logo = $actualLabel = false;
-        $urlFound = false;
+        $logo = $actualLabel = \false;
+        $urlFound = \false;
         foreach ($dataTable->getDataTables() as $subTable) {
             /** @var $subTable DataTable */
             $subTable->applyQueuedFilters();
@@ -201,7 +201,7 @@ class RowEvolution
                 if (!$actualLabel) {
                     $logo = $row->getMetadata('logo');
                     $actualLabel = $this->getRowUrlForEvolutionLabel($row, $apiModule, $apiAction, $labelUseAbsoluteUrl);
-                    $urlFound = $actualLabel !== false;
+                    $urlFound = $actualLabel !== \false;
                     if (empty($actualLabel)) {
                         $actualLabel = $row->getColumn('label');
                     }
@@ -235,7 +235,7 @@ class RowEvolution
         // evolution popovers look like URLs.
         if ($apiModule == 'Actions' && in_array($apiAction, self::$actionsUrlReports)) {
             $mainUrl = Site::getMainUrlFor($idSite);
-            $mainUrlHost = @parse_url($mainUrl, PHP_URL_HOST);
+            $mainUrlHost = @parse_url($mainUrl, \PHP_URL_HOST);
             $replaceRegex = "/\\s*" . preg_quote(LabelFilter::SEPARATOR_RECURSIVE_LABEL) . "\\s*/";
             $cleanLabel = preg_replace($replaceRegex, '/', $label);
             $result = $mainUrlHost . '/' . $cleanLabel . '/';
@@ -259,7 +259,7 @@ class RowEvolution
             $actualLabel = preg_replace(';^http(s)?://(www.)?;i', '', $url);
             return $actualLabel;
         }
-        return false;
+        return \false;
     }
     /**
      * @param array $metadata see getRowEvolutionMetaData()
@@ -296,7 +296,7 @@ class RowEvolution
             // can be sorted in a different order)
             'labelFilterAddLabelIndex' => count($label) > 1 ? 1 : 0,
         ];
-        if ($showGoalMetricsForGoal !== false) {
+        if ($showGoalMetricsForGoal !== \false) {
             $parameters['filter_show_goal_columns_process_goals'] = implode(',', $this->getGoalsToProcess($showGoalMetricsForGoal, $idSite));
             $parameters['filter_update_columns_when_show_all_goals'] = 1;
             $parameters['idGoal'] = $showGoalMetricsForGoal;
@@ -337,7 +337,7 @@ class RowEvolution
      */
     private function getRowEvolutionMetaData($idSite, $period, $date, $apiModule, $apiAction, $language, $apiParameters)
     {
-        $reportMetadata = \Piwik\Plugins\API\API::getInstance()->getMetadata($idSite, $apiModule, $apiAction, $apiParameters, $language, $period, $date, $hideMetricsDoc = false, $showSubtableReports = true);
+        $reportMetadata = \Piwik\Plugins\API\API::getInstance()->getMetadata($idSite, $apiModule, $apiAction, $apiParameters, $language, $period, $date, $hideMetricsDoc = \false, $showSubtableReports = \true);
         if (empty($reportMetadata)) {
             throw new Exception("Requested report {$apiModule}.{$apiAction} for Website id={$idSite} " . "not found in the list of available reports. \n");
         }
@@ -387,7 +387,7 @@ class RowEvolution
             foreach ($metadata['metrics'] as $metric => $label) {
                 $value = $firstRow ? floatval($firstRow->getColumn($metric)) : 0;
                 if ($value > 0) {
-                    $firstNonZeroFound[$metric] = true;
+                    $firstNonZeroFound[$metric] = \true;
                 } elseif (!isset($firstNonZeroFound[$metric])) {
                     continue;
                 }
@@ -407,13 +407,13 @@ class RowEvolution
             if ($first == 0) {
                 continue;
             }
-            $change = CalculateEvolutionFilter::calculate($last, $first, $quotientPrecision = 0, true, true);
+            $change = CalculateEvolutionFilter::calculate($last, $first, $quotientPrecision = 0, \true, \true);
             $metricsResult[$metric]['change'] = $change;
         }
         $metadata['metrics'] = $metricsResult;
     }
     /** Get row evolution for a multiple labels */
-    private function getMultiRowEvolution(DataTable\Map $dataTable, $metadata, $apiModule, $apiAction, $labels, $column, $legendAppendMetric = true, $labelUseAbsoluteUrl = true, $labelSeries = '')
+    private function getMultiRowEvolution(DataTable\Map $dataTable, $metadata, $apiModule, $apiAction, $labels, $column, $legendAppendMetric = \true, $labelUseAbsoluteUrl = \true, $labelSeries = '')
     {
         $labelSeries = explode(',', $labelSeries);
         $labelSeries = array_filter($labelSeries, 'strlen');
@@ -433,7 +433,7 @@ class RowEvolution
                 if ($labelRow) {
                     $actualLabels[$labelIdx] = $this->getRowUrlForEvolutionLabel($labelRow, $apiModule, $apiAction, $labelUseAbsoluteUrl);
                     $prettyLabel = $labelRow->getColumn('label_html');
-                    if ($prettyLabel !== false) {
+                    if ($prettyLabel !== \false) {
                         $actualLabels[$labelIdx] = $prettyLabel;
                     } elseif (!empty($labelPretty[$labelIdx])) {
                         $actualLabels[$labelIdx] = $labelPretty[$labelIdx];
@@ -513,7 +513,7 @@ class RowEvolution
                 return $row;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns a prettier, more comprehensible version of a row evolution label for display.

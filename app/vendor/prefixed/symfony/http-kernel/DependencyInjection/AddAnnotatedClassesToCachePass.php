@@ -110,9 +110,9 @@ class AddAnnotatedClassesToCachePass implements CompilerPassInterface
                 continue;
             }
             if (preg_match($regex, '\\' . $class)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

@@ -29,7 +29,7 @@ abstract class BaseDraw
      * Turn antialias on or off
      * @var boolean
      */
-    public $Antialias = true;
+    public $Antialias = \true;
     /**
      * Quality of the antialiasing implementation (0-1)
      * @var int
@@ -44,7 +44,7 @@ abstract class BaseDraw
      * Just to know if we need to flush the alpha channels when rendering
      * @var boolean
      */
-    public $TransparentBackground = false;
+    public $TransparentBackground = \false;
     /**
      * Graph area X origin
      * @var int
@@ -103,7 +103,7 @@ abstract class BaseDraw
      * Turn shadows on or off
      * @var boolean
      */
-    public $Shadow = false;
+    public $Shadow = \false;
     /**
      * X Offset of the shadow
      * @var int
@@ -153,7 +153,7 @@ abstract class BaseDraw
      * Automatic deletion of the image map temp files
      * @var boolean
      */
-    public $ImageMapAutoDelete = true;
+    public $ImageMapAutoDelete = \true;
     /**
      * Attached dataset
      * @var Data
@@ -336,8 +336,8 @@ abstract class BaseDraw
         }
         $Scale = [];
         if ($XMin != $XMax) {
-            $Found = false;
-            $Rescaled = false;
+            $Found = \false;
+            $Rescaled = \false;
             $Scaled10Factor = 0.0001;
             $Result = 0;
             while (!$Found) {
@@ -353,8 +353,8 @@ abstract class BaseDraw
                         }
                         $ScaleHeightRescaled = abs($XMaxRescaled - $XMinRescaled);
                         if (!$Found && floor($ScaleHeightRescaled / ($Factor * $Scaled10Factor)) <= $MaxDivs) {
-                            $Found = true;
-                            $Rescaled = true;
+                            $Found = \true;
+                            $Rescaled = \true;
                             $Result = $Factor * $Scaled10Factor;
                         }
                     }
@@ -380,22 +380,22 @@ abstract class BaseDraw
             $Scale["XMax"] = $XMax;
             /* Compute the needed decimals for the metric view to avoid repetition of the same X Axis labels */
             if ($Mode == AXIS_FORMAT_METRIC && $Format == null) {
-                $Done = false;
+                $Done = \false;
                 $GoodDecimals = 0;
                 for ($Decimals = 0; $Decimals <= 10; $Decimals++) {
                     if (!$Done) {
                         $LastLabel = "zob";
-                        $ScaleOK = true;
+                        $ScaleOK = \true;
                         for ($i = 0; $i <= $Rows; $i++) {
                             $Value = $XMin + $i * $RowHeight;
                             $Label = $this->scaleFormat($Value, AXIS_FORMAT_METRIC, $Decimals);
                             if ($LastLabel == $Label) {
-                                $ScaleOK = false;
+                                $ScaleOK = \false;
                             }
                             $LastLabel = $Label;
                         }
                         if ($ScaleOK) {
-                            $Done = true;
+                            $Done = \true;
                             $GoodDecimals = $Decimals;
                         }
                     }
@@ -448,18 +448,18 @@ abstract class BaseDraw
     public function isValidLabel($Value, $LastValue, $LabelingMethod, $ID, $LabelSkip)
     {
         if ($LabelingMethod == LABELING_DIFFERENT && $Value != $LastValue) {
-            return true;
+            return \true;
         }
         if ($LabelingMethod == LABELING_DIFFERENT && $Value == $LastValue) {
-            return false;
+            return \false;
         }
         if ($LabelingMethod == LABELING_ALL && $LabelSkip == 0) {
-            return true;
+            return \true;
         }
         if ($LabelingMethod == LABELING_ALL && ($ID + $LabelSkip) % ($LabelSkip + 1) != 1) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Returns the number of drawable series
@@ -470,7 +470,7 @@ abstract class BaseDraw
         $count = 0;
         $Data = $this->DataSet->getData();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 $count++;
             }
         }
@@ -608,7 +608,7 @@ abstract class BaseDraw
         $XSpacing = isset($Format["XSpacing"]) ? $Format["XSpacing"] : 5;
         $Data = $this->DataSet->getData();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"] && isset($Serie["Picture"])) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"] && isset($Serie["Picture"])) {
                 list($PicWidth, $PicHeight) = $this->getPicInfo($Serie["Picture"]);
                 if ($IconAreaWidth < $PicWidth) {
                     $IconAreaWidth = $PicWidth;
@@ -631,7 +631,7 @@ abstract class BaseDraw
         $vY = $Y;
         $vX = $X;
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"]) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"]) {
                 if ($Mode == LEGEND_VERTICAL) {
                     $BoxArray = $this->getTextBox($vX + $IconAreaWidth + 4, $vY + $IconAreaHeight / 2, $FontName, $FontSize, 0, $Serie["Description"]);
                     if ($Boundaries["T"] > $BoxArray[2]["Y"] + $IconAreaHeight / 2) {
@@ -766,7 +766,7 @@ abstract class BaseDraw
      * @param boolean $ReturnOnly0Height
      * @return int|float|array
      */
-    public function scaleComputeY($Values, array $Option = [], $ReturnOnly0Height = false)
+    public function scaleComputeY($Values, array $Option = [], $ReturnOnly0Height = \false)
     {
         $AxisID = isset($Option["AxisID"]) ? $Option["AxisID"] : 0;
         $SerieName = isset($Option["SerieName"]) ? $Option["SerieName"] : null;
@@ -921,10 +921,10 @@ abstract class BaseDraw
         $MinDisplayB = isset($Format["MinDisplayB"]) ? $Format["MinDisplayB"] : 255;
         $MinLabelPos = isset($Format["MinLabelPos"]) ? $Format["MinLabelPos"] : BOUND_LABEL_POS_AUTO;
         $MaxLabelPos = isset($Format["MaxLabelPos"]) ? $Format["MaxLabelPos"] : BOUND_LABEL_POS_AUTO;
-        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : true;
-        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : false;
+        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : \true;
+        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : \false;
         $BorderOffset = isset($Format["BorderOffset"]) ? $Format["BorderOffset"] : 5;
-        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : true;
+        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : \true;
         $RoundedRadius = isset($Format["RoundedRadius"]) ? $Format["RoundedRadius"] : 3;
         $BoxR = isset($Format["BoxR"]) ? $Format["BoxR"] : 0;
         $BoxG = isset($Format["BoxG"]) ? $Format["BoxG"] : 0;
@@ -939,7 +939,7 @@ abstract class BaseDraw
         list($XMargin, $XDivs) = $this->scaleGetXSettings();
         $Data = $this->DataSet->getData();
         foreach ($Data["Series"] as $SerieName => $Serie) {
-            if ($Serie["isDrawable"] == true && $SerieName != $Data["Abscissa"] && !isset($ExcludedSeries[$SerieName])) {
+            if ($Serie["isDrawable"] == \true && $SerieName != $Data["Abscissa"] && !isset($ExcludedSeries[$SerieName])) {
                 $R = $Serie["Color"]["R"];
                 $G = $Serie["Color"]["G"];
                 $B = $Serie["Color"]["B"];
@@ -1111,7 +1111,7 @@ abstract class BaseDraw
         $OverrideTitle = isset($Format["OverrideTitle"]) ? $Format["OverrideTitle"] : null;
         $ForceLabels = isset($Format["ForceLabels"]) ? $Format["ForceLabels"] : null;
         $DrawPoint = isset($Format["DrawPoint"]) ? $Format["DrawPoint"] : LABEL_POINT_BOX;
-        $DrawVerticalLine = isset($Format["DrawVerticalLine"]) ? $Format["DrawVerticalLine"] : false;
+        $DrawVerticalLine = isset($Format["DrawVerticalLine"]) ? $Format["DrawVerticalLine"] : \false;
         $VerticalLineR = isset($Format["VerticalLineR"]) ? $Format["VerticalLineR"] : 0;
         $VerticalLineG = isset($Format["VerticalLineG"]) ? $Format["VerticalLineG"] : 0;
         $VerticalLineB = isset($Format["VerticalLineB"]) ? $Format["VerticalLineB"] : 0;
@@ -1189,9 +1189,9 @@ abstract class BaseDraw
                                 $LookFor = "-";
                             }
                             $Value = 0;
-                            $Done = false;
+                            $Done = \false;
                             foreach ($Data["Series"] as $Name => $SerieLookup) {
-                                if ($SerieLookup["isDrawable"] == true && $Name != $Data["Abscissa"] && !$Done) {
+                                if ($SerieLookup["isDrawable"] == \true && $Name != $Data["Abscissa"] && !$Done) {
                                     if (isset($Data["Series"][$Name]["Data"][$Index]) && $Data["Series"][$Name]["Data"][$Index] != VOID) {
                                         if ($Data["Series"][$Name]["Data"][$Index] >= 0 && $LookFor == "+") {
                                             $Value = $Value + $Data["Series"][$Name]["Data"][$Index];
@@ -1200,7 +1200,7 @@ abstract class BaseDraw
                                             $Value = $Value - $Data["Series"][$Name]["Data"][$Index];
                                         }
                                         if ($Name == $SerieName) {
-                                            $Done = true;
+                                            $Done = \true;
                                         }
                                     }
                                 }
@@ -1286,9 +1286,9 @@ abstract class BaseDraw
                                 $LookFor = "-";
                             }
                             $Value = 0;
-                            $Done = false;
+                            $Done = \false;
                             foreach ($Data["Series"] as $Name => $SerieLookup) {
-                                if ($SerieLookup["isDrawable"] == true && $Name != $Data["Abscissa"] && !$Done) {
+                                if ($SerieLookup["isDrawable"] == \true && $Name != $Data["Abscissa"] && !$Done) {
                                     if (isset($Data["Series"][$Name]["Data"][$Index]) && $Data["Series"][$Name]["Data"][$Index] != VOID) {
                                         if ($Data["Series"][$Name]["Data"][$Index] >= 0 && $LookFor == "+") {
                                             $Value = $Value + $Data["Series"][$Name]["Data"][$Index];
@@ -1297,7 +1297,7 @@ abstract class BaseDraw
                                             $Value = $Value - $Data["Series"][$Name]["Data"][$Index];
                                         }
                                         if ($Name == $SerieName) {
-                                            $Done = true;
+                                            $Done = \true;
                                         }
                                     }
                                 }
@@ -1329,7 +1329,7 @@ abstract class BaseDraw
      */
     protected function imageFilledPolygonWrapper($image, array $points, $numPoints, $color)
     {
-        if (version_compare(PHP_VERSION, '8.1.0') === -1) {
+        if (version_compare(\PHP_VERSION, '8.1.0') === -1) {
             imagefilledpolygon($image, $points, $numPoints, $color);
         } else {
             imagefilledpolygon($image, $points, $color);

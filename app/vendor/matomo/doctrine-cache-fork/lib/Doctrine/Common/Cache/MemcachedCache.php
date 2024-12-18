@@ -130,7 +130,7 @@ class MemcachedCache extends \Doctrine\Common\Cache\CacheProvider
         if (strlen($id) > self::CACHE_ID_MAX_LENGTH) {
             throw \Doctrine\Common\Cache\InvalidCacheId::exceedsMaxLength($id, self::CACHE_ID_MAX_LENGTH);
         }
-        if (strpos($id, ' ') !== false) {
+        if (strpos($id, ' ') !== \false) {
             throw \Doctrine\Common\Cache\InvalidCacheId::containsUnauthorizedCharacter($id, ' ');
         }
         if (preg_match('/[\\t\\r\\n]/', $id) === 1) {

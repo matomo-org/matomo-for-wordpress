@@ -54,7 +54,7 @@ class EvolutionMetric extends ProcessedMetric
      * @var DataTable
      */
     private $currentData;
-    private $isLowerBetter = false;
+    private $isLowerBetter = \false;
     /**
      * The list of labels leading to the current subtable being processed. Used to get the proper subtable in
      * $pastData.
@@ -73,7 +73,7 @@ class EvolutionMetric extends ProcessedMetric
      * @param DataTable|null $currentData The current datatable, optional but required to calculate the proportionate
      *                                    evolution values
      */
-    public function __construct($wrapped, ?DataTable $pastData = null, $evolutionMetricName = false, $quotientPrecision = 0, ?DataTable $currentData = null)
+    public function __construct($wrapped, ?DataTable $pastData = null, $evolutionMetricName = \false, $quotientPrecision = 0, ?DataTable $currentData = null)
     {
         $this->wrapped = $wrapped;
         $this->isLowerBetter = Metrics::isLowerValueBetter($this->wrapped);

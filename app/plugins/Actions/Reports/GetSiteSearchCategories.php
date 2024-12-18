@@ -39,10 +39,10 @@ class GetSiteSearchCategories extends \Piwik\Plugins\Actions\Reports\SiteSearchB
     public function configureView(ViewDataTable $view)
     {
         $view->config->columns_to_display = array('label', 'nb_visits', 'nb_pages_per_search');
-        $view->config->show_table_all_columns = false;
-        $view->config->show_bar_chart = false;
+        $view->config->show_table_all_columns = \false;
+        $view->config->show_bar_chart = \false;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_row_evolution = false;
+            $view->config->disable_row_evolution = \false;
         }
     }
 }

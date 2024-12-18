@@ -18,7 +18,7 @@ class GetVisitsUntilConversionEcommerceOrder extends \Piwik\Plugins\Ecommerce\Re
         $this->action = 'getVisitsUntilConversion';
         $this->name = Piwik::translate('General_EcommerceOrders') . ' - ' . Piwik::translate('Goals_VisitsUntilConv');
         $this->dimension = new VisitsUntilConversion();
-        $this->constantRowsCount = true;
+        $this->constantRowsCount = \true;
         $this->processedMetrics = array();
         $this->metrics = array('nb_conversions');
         $this->order = 11;

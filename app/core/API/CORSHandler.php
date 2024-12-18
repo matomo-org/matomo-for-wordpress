@@ -39,7 +39,7 @@ class CORSHandler
         // specifically allow if it is one of the allowlisted CORS domains
         if (!empty($_SERVER['HTTP_ORIGIN'])) {
             $origin = $_SERVER['HTTP_ORIGIN'];
-            if (in_array($origin, $this->domains, true)) {
+            if (in_array($origin, $this->domains, \true)) {
                 Common::sendHeader('Access-Control-Allow-Credentials: true');
                 Common::sendHeader('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
             }

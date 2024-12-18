@@ -38,7 +38,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
     private function createEnableBruteForceDetection()
     {
-        return $this->makeSetting('enableBruteForceDetection', $default = true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        return $this->makeSetting('enableBruteForceDetection', $default = \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('Login_SettingBruteForceEnable');
             $field->description = Piwik::translate('Login_SettingBruteForceEnableHelp');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
@@ -107,11 +107,11 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     private function isIpInList($ipAddress, $ips)
     {
         if (empty($ipAddress)) {
-            return false;
+            return \false;
         }
         $ip = IP::fromStringIP($ipAddress);
         if (empty($ips)) {
-            return false;
+            return \false;
         }
         return $ip->isInRanges($ips);
     }

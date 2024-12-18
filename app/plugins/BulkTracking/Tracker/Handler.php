@@ -100,7 +100,7 @@ class Handler extends Tracker\Handler
     {
         $tokenAuth = $requestSet->getTokenAuth();
         if (empty($tokenAuth)) {
-            return false;
+            return \false;
         }
         Piwik::postEvent('Request.initAuthenticationObject');
         /** @var \Piwik\Auth $auth */

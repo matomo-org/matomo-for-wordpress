@@ -75,7 +75,7 @@ class ArchivingHelper
                 // in some unknown case, the type field is NULL, as reported in #1082 - we ignore this page view
                 if (empty($actionType)) {
                     if ($idaction != DataTable::LABEL_SUMMARY_ROW) {
-                        self::setCachedActionRow($idaction, $actionType, false);
+                        self::setCachedActionRow($idaction, $actionType, \false);
                     }
                     continue;
                 }
@@ -84,7 +84,7 @@ class ArchivingHelper
             } else {
                 $actionRow = self::getCachedActionRow($row['idaction'], $row['type']);
                 // Action processed as "to skip" for some reasons
-                if ($actionRow === false) {
+                if ($actionRow === \false) {
                     continue;
                 }
             }
@@ -97,7 +97,7 @@ class ArchivingHelper
             // But, we must make sure http://piwik.org is used to link & for transitions
             // Note: this code is partly duplicated from Row->sumRowMetadata()
             if (!is_null($url) && !$actionRow->isSummaryRow()) {
-                if (($existingUrl = $actionRow->getMetadata('url')) !== false) {
+                if (($existingUrl = $actionRow->getMetadata('url')) !== \false) {
                     if (!empty($row[PiwikMetrics::INDEX_PAGE_NB_HITS]) && $row[PiwikMetrics::INDEX_PAGE_NB_HITS] > $actionRow->maxVisitsSummed) {
                         $actionRow->setMetadata('url', $url);
                         $actionRow->maxVisitsSummed = $row[PiwikMetrics::INDEX_PAGE_NB_HITS];
@@ -133,7 +133,7 @@ class ArchivingHelper
                 // in some edge cases, we have twice the same action name with 2 different idaction
                 // - this happens when 2 visitors visit the same new page at the same time, and 2 actions get recorded for the same name
                 // - this could also happen when 2 URLs end up having the same label (eg. 2 subdomains get aggregated to the "/index" page name)
-                if (($alreadyValue = $actionRow->getColumn($name)) !== false) {
+                if (($alreadyValue = $actionRow->getColumn($name)) !== \false) {
                     $newValue = self::getColumnValuesMerged($name, $alreadyValue, $value, $metricsConfig);
                     $actionRow->setColumn($name, $newValue);
                 } else {
@@ -143,7 +143,7 @@ class ArchivingHelper
             // if the exit_action was not recorded properly in the log_link_visit_action
             // there would be an error message when getting the nb_hits column
             // we must fake the record and add the columns
-            if ($actionRow->getColumn(PiwikMetrics::INDEX_PAGE_NB_HITS) === false) {
+            if ($actionRow->getColumn(PiwikMetrics::INDEX_PAGE_NB_HITS) === \false) {
                 // to test this code: delete the entries in log_link_action_visit for
                 //  a given exit_idaction_url
                 foreach (self::getDefaultRow()->getColumns() as $name => $value) {
@@ -187,12 +187,12 @@ class ArchivingHelper
     private static function updateActionsTableRowWithGoals(array $row, bool $isPages) : bool
     {
         if (!isset($row['idaction']) || !isset($row['type'])) {
-            return false;
+            return \false;
         }
         // Match the existing action row in the datatable
         $actionRow = self::getCachedActionRow($row['idaction'], $row['type']);
-        if ($actionRow === false || is_null($actionRow)) {
-            return false;
+        if ($actionRow === \false || is_null($actionRow)) {
+            return \false;
         }
         // Define the possible goal metrics available in the goals data resultset
         if ($isPages) {
@@ -227,7 +227,7 @@ class ArchivingHelper
         unset($row['type']);
         unset($row['idaction']);
         if (!isset($row['idgoal'])) {
-            return false;
+            return \false;
         }
         if ($isPages && isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB]) && isset($row[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE])) {
             /**
@@ -245,7 +245,7 @@ class ArchivingHelper
         if (!$isPages) {
             $nbEntrances = $actionRow->getColumn(PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS);
             $conversions = $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY];
-            if ($nbEntrances !== false && is_numeric($nbEntrances) && $nbEntrances > 0) {
+            if ($nbEntrances !== \false && is_numeric($nbEntrances) && $nbEntrances > 0) {
                 // Calculate conversion entry rate
                 if (isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY])) {
                     $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE] = Piwik::getQuotientSafe($conversions, $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
@@ -259,7 +259,7 @@ class ArchivingHelper
         }
         // Get goals column
         $goalsColumn = $actionRow->getColumn(PiwikMetrics::INDEX_GOALS);
-        if ($goalsColumn === false) {
+        if ($goalsColumn === \false) {
             $goalsColumn = [];
         }
         // Create goal subarray if not exists
@@ -285,12 +285,12 @@ class ArchivingHelper
                 $actionRow->setColumn(PiwikMetrics::INDEX_GOALS, $goalsColumn);
             }
         }
-        return true;
+        return \true;
     }
     public static function removeEmptyColumns($dataTable)
     {
         // Delete all columns that have a value of zero
-        $dataTable->filter('ColumnDelete', array($columnsToRemove = array(PiwikMetrics::INDEX_PAGE_IS_FOLLOWING_SITE_SEARCH_NB_HITS), $columnsToKeep = array(), $deleteIfZeroOnly = true));
+        $dataTable->filter('ColumnDelete', array($columnsToRemove = array(PiwikMetrics::INDEX_PAGE_IS_FOLLOWING_SITE_SEARCH_NB_HITS), $columnsToKeep = array(), $deleteIfZeroOnly = \true));
     }
     /**
      * For rows which have subtables (eg. directories with sub pages),
@@ -419,8 +419,8 @@ class ArchivingHelper
      */
     private static function getDefaultRow()
     {
-        static $row = false;
-        if ($row === false) {
+        static $row = \false;
+        if ($row === \false) {
             // This row is used in the case where an action is know as an exit_action
             // but this action was not properly recorded when it was hit in the first place
             // so we add this fake row information to make sure there is a nb_hits, etc. column for every action
@@ -449,7 +449,7 @@ class ArchivingHelper
         // check for ranking query cut-off
         if ($actionName == RankingQuery::LABEL_SUMMARY_ROW) {
             $summaryRow = $currentTable->getRowFromId(DataTable::ID_SUMMARY_ROW);
-            if ($summaryRow === false) {
+            if ($summaryRow === \false) {
                 $summaryRow = $currentTable->addSummaryRow(self::createSummaryRow());
             }
             return $summaryRow;
@@ -515,7 +515,7 @@ class ArchivingHelper
         }
         $name = str_replace("\n", "", $name);
         if ($type == Action::TYPE_PAGE_TITLE && self::$actionTitleCategoryDelimiter === '') {
-            if ($name === '' || $name === false || $name === null || trim($name) === '') {
+            if ($name === '' || $name === \false || $name === null || trim($name) === '') {
                 $name = self::getUnknownActionName($type);
             }
             return array(' ' . trim($name));
@@ -576,7 +576,7 @@ class ArchivingHelper
             // This can happen when
             // - We select an entry page ID that was only seen yesterday, so wasn't selected in the first query
             // - We count time spent on a page, when this page was only seen yesterday
-            return false;
+            return \false;
         }
         return self::$cacheParsedAction[$cacheLabel];
     }

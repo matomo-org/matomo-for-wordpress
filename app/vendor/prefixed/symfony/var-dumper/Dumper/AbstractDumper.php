@@ -108,7 +108,7 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
         if ($locale = $this->flags & (self::DUMP_COMMA_SEPARATOR | self::DUMP_TRAILING_COMMA) ? setlocale(\LC_NUMERIC, 0) : null) {
             setlocale(\LC_NUMERIC, 'C');
         }
-        if ($returnDump = true === $output) {
+        if ($returnDump = \true === $output) {
             $output = fopen('php://memory', 'r+');
         }
         if ($output) {
@@ -165,10 +165,10 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
         if (!\function_exists('iconv')) {
             throw new \RuntimeException('Unable to convert a non-UTF-8 string to UTF-8: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
         }
-        if (false !== ($c = @iconv($this->charset, 'UTF-8', $s))) {
+        if (\false !== ($c = @iconv($this->charset, 'UTF-8', $s))) {
             return $c;
         }
-        if ('CP1252' !== $this->charset && false !== ($c = @iconv('CP1252', 'UTF-8', $s))) {
+        if ('CP1252' !== $this->charset && \false !== ($c = @iconv('CP1252', 'UTF-8', $s))) {
             return $c;
         }
         return iconv('CP850', 'UTF-8', $s);

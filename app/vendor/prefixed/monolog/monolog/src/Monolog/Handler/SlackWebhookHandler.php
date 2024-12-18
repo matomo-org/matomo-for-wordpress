@@ -44,7 +44,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param  array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array())
+    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = \true, $iconEmoji = null, $useShortAttachment = \false, $includeContextAndExtra = \false, $level = Logger::CRITICAL, $bubble = \true, array $excludeFields = array())
     {
         parent::__construct($level, $bubble);
         $this->webhookUrl = $webhookUrl;
@@ -68,9 +68,9 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $postData = $this->slackRecord->getSlackData($record);
         $postString = Utils::jsonEncode($postData);
         $ch = curl_init();
-        $options = array(CURLOPT_URL => $this->webhookUrl, CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => array('Content-type: application/json'), CURLOPT_POSTFIELDS => $postString);
+        $options = array(\CURLOPT_URL => $this->webhookUrl, \CURLOPT_POST => \true, \CURLOPT_RETURNTRANSFER => \true, \CURLOPT_HTTPHEADER => array('Content-type: application/json'), \CURLOPT_POSTFIELDS => $postString);
         if (defined('CURLOPT_SAFE_UPLOAD')) {
-            $options[CURLOPT_SAFE_UPLOAD] = true;
+            $options[\CURLOPT_SAFE_UPLOAD] = \true;
         }
         curl_setopt_array($ch, $options);
         Curl\Util::execute($ch);

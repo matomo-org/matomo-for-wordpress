@@ -35,7 +35,7 @@ class ArchivesToPurgeDistributedList extends DistributedList
      */
     public function setAll($yearMonths)
     {
-        $yearMonths = array_unique($yearMonths, SORT_REGULAR);
+        $yearMonths = array_unique($yearMonths, \SORT_REGULAR);
         parent::setAll($yearMonths);
     }
     protected function getListOptionValue()

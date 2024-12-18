@@ -49,7 +49,7 @@ final class EscaperExtension extends AbstractExtension
     /**
      * @deprecated since Twig 3.10
      */
-    public function setEnvironment(Environment $environment, bool $triggerDeprecation = true) : void
+    public function setEnvironment(Environment $environment, bool $triggerDeprecation = \true) : void
     {
         if ($triggerDeprecation) {
             trigger_deprecation('twig/twig', '3.10', 'The "%s()" method is deprecated and not needed if you are using methods from "Twig\\Runtime\\EscaperRuntime".', __METHOD__);
@@ -91,7 +91,7 @@ final class EscaperExtension extends AbstractExtension
     {
         // disable string callables to avoid calling a function named html or js,
         // or any other upcoming escaping strategy
-        if (!\is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
+        if (!\is_string($this->defaultStrategy) && \false !== $this->defaultStrategy) {
             return \call_user_func($this->defaultStrategy, $name);
         }
         return $this->defaultStrategy;

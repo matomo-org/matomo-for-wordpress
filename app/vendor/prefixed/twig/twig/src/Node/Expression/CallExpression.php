@@ -50,30 +50,30 @@ abstract class CallExpression extends AbstractExpression
         }
         $this->compileArguments($compiler);
     }
-    protected function compileArguments(Compiler $compiler, $isArray = false) : void
+    protected function compileArguments(Compiler $compiler, $isArray = \false) : void
     {
         if (\func_num_args() >= 2) {
             trigger_deprecation('twig/twig', '3.11', 'Passing a second argument to "%s()" is deprecated.', __METHOD__);
         }
         $compiler->raw($isArray ? '[' : '(');
-        $first = true;
+        $first = \true;
         if ($this->hasAttribute('needs_charset') && $this->getAttribute('needs_charset')) {
             $compiler->raw('$this->env->getCharset()');
-            $first = false;
+            $first = \false;
         }
         if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
             if (!$first) {
                 $compiler->raw(', ');
             }
             $compiler->raw('$this->env');
-            $first = false;
+            $first = \false;
         }
         if ($this->hasAttribute('needs_context') && $this->getAttribute('needs_context')) {
             if (!$first) {
                 $compiler->raw(', ');
             }
             $compiler->raw('$context');
-            $first = false;
+            $first = \false;
         }
         if ($this->hasAttribute('arguments')) {
             foreach ($this->getAttribute('arguments') as $argument) {
@@ -81,7 +81,7 @@ abstract class CallExpression extends AbstractExpression
                     $compiler->raw(', ');
                 }
                 $compiler->string($argument);
-                $first = false;
+                $first = \false;
             }
         }
         if ($this->hasNode('node')) {
@@ -89,7 +89,7 @@ abstract class CallExpression extends AbstractExpression
                 $compiler->raw(', ');
             }
             $compiler->subcompile($this->getNode('node'));
-            $first = false;
+            $first = \false;
         }
         if ($this->hasNode('arguments')) {
             $callable = $this->getAttribute('callable');
@@ -99,7 +99,7 @@ abstract class CallExpression extends AbstractExpression
                     $compiler->raw(', ');
                 }
                 $compiler->subcompile($node);
-                $first = false;
+                $first = \false;
             }
         }
         $compiler->raw($isArray ? ']' : ')');
@@ -109,10 +109,10 @@ abstract class CallExpression extends AbstractExpression
         $callType = $this->getAttribute('type');
         $callName = $this->getAttribute('name');
         $parameters = [];
-        $named = false;
+        $named = \false;
         foreach ($arguments as $name => $node) {
             if (!\is_int($name)) {
-                $named = true;
+                $named = \true;
                 $name = $this->normalizeName($name);
             } elseif ($named) {
                 throw new SyntaxError(\sprintf('Positional arguments cannot be used after named arguments for %s "%s".', $callType, $callName), $this->getTemplateLine(), $this->getSourceContext());
@@ -230,7 +230,7 @@ abstract class CallExpression extends AbstractExpression
                 array_shift($parameters);
             }
         }
-        $isPhpVariadic = false;
+        $isPhpVariadic = \false;
         if ($isVariadic) {
             $argument = end($parameters);
             $isArray = $argument && $argument->hasType() && $argument->getType() instanceof \ReflectionNamedType && 'array' === $argument->getType()->getName();
@@ -238,7 +238,7 @@ abstract class CallExpression extends AbstractExpression
                 array_pop($parameters);
             } elseif ($argument && $argument->isVariadic()) {
                 array_pop($parameters);
-                $isPhpVariadic = true;
+                $isPhpVariadic = \true;
             } else {
                 throw new \LogicException(\sprintf('The last parameter of "%s" for %s "%s" must be an array with default value, eg. "array $arg = []".', $callableName, $this->getAttribute('type'), $this->getAttribute('name')));
             }

@@ -20,6 +20,6 @@ class GetActionFromCategoryId extends \Piwik\Plugins\Events\Reports\Base
         parent::init();
         $this->dimension = new EventAction();
         $this->name = Piwik::translate('Events_EventActions');
-        $this->isSubtableReport = true;
+        $this->isSubtableReport = \true;
     }
 }

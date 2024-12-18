@@ -61,14 +61,14 @@ class CustomDimensionsRequestProcessor extends RequestProcessor
     {
         $dimensions = self::getCachedCustomDimensions($request);
         if (empty($dimensions)) {
-            return false;
+            return \false;
         }
         foreach ($dimensions as $dimension) {
             if ($dimension['scope'] == CustomDimensions::SCOPE_ACTION) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function onNewVisit(VisitProperties $visitProperties, Request $request)
     {
