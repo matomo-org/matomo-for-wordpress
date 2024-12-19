@@ -80,7 +80,10 @@ class ScheduledTasks {
 
 				/** @var \WP_Error $error */
 				$error = wp_schedule_event( time(), $event_config['interval'], $event_name, [], true );
-				if ( is_wp_error( $error ) ) {
+				if (
+					is_wp_error( $error )
+					&& 'could_not_set' !== $error->get_error_code()
+				) {
 					$this->logger->log_exception( 'scheduled_tasks', new \Exception( "scheduling $event_name failed: " . $error->get_error_message() ) );
 				}
 			}
