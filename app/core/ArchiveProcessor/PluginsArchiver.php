@@ -230,6 +230,9 @@ class PluginsArchiver
     {
         $query = $this->archiveProcessor->getLogAggregator()->queryVisitsByDimension();
         $data = $query->fetch();
+		if (!is_array($data)) {
+			\Piwik\Container\StaticContainer::get(Log\LoggerInterface::class)->warning("Strange data returned from queryVisitsByDimension: " . var_export($data, true) . ". query class: " . get_class( $query ));
+		}
         $metrics = $this->convertMetricsIdToName($data);
         $this->archiveProcessor->insertNumericRecords($metrics);
         return $metrics;
