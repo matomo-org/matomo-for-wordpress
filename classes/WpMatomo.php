@@ -120,6 +120,17 @@ class WpMatomo {
 			$plugin_admin_overrides->register_hooks();
 		}
 
+		add_action(
+			'init',
+			function () {
+				$whats_new_notifications = new \WpMatomo\Admin\WhatsNewNotifications( self::$settings );
+				if ( $whats_new_notifications->is_active() ) {
+					$whats_new_notifications->register_hooks();
+				}
+				$whats_new_notifications->register_ajax();
+			}
+		);
+
 		$tracking_code = new TrackingCode( self::$settings );
 		$tracking_code->register_hooks();
 		$annotations = new Annotations( self::$settings );

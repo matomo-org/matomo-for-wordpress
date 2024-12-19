@@ -13,6 +13,11 @@ import GlobalSetup from '../global-setup.js';
 export default class Page {
   async open(path: string) {
     const baseUrl = await Website.baseUrl();
+
+    if (!/^\//.test(path)) {
+      path = `/${path}`;
+    }
+
     const result = await browser.url(`${baseUrl}${path}`);
 
     await this.addStylesToPage(`

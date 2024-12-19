@@ -28,8 +28,11 @@ class Admin {
 	}
 
 	public static function is_matomo_admin() {
-		return isset( $_GET['page'] )
-			&& substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-';
+		return substr( self::get_current_page(), 0, 7 ) === 'matomo-';
+	}
+
+	public static function get_current_page() {
+		return isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	}
 
 	public function load_scripts() {
