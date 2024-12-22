@@ -78,6 +78,7 @@ function install_wordpress() {
   MULTISITE="$1"
 
   export_install_dependent $MULTISITE
+  init_wpload_dir_file
 
   # install wp-cli.phar
   if [ ! -f "/var/www/html/wp-cli.phar" ]; then
@@ -544,7 +545,7 @@ if [[ "$EXECUTE_CLI" = "1" ]]; then
 fi
 
 # install normal wordpress + multisite wordpress
-install_wordpress
+install_wordpress 0
 install_wordpress 1
 
 start_webserver "$@"
