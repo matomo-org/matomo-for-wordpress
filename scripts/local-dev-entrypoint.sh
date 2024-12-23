@@ -24,12 +24,13 @@ function export_global() {
   fi
 
   export WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
+  export WORDPRESS_FOLDER_BASE=$WORDPRESS_FOLDER
 }
 
 function export_install_dependent() {
   ARG_MULTISITE="$1"
   if [[ "$ARG_MULTISITE" = "1" ]]; then
-    export WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
+    export WORDPRESS_FOLDER="$WORDPRESS_FOLDER_BASE-multi"
   fi
 
   export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
@@ -555,7 +556,7 @@ wait_for_database
 install_wordpress 0
 install_wordpress 1
 
-touch /var/www/html/$WORDPRESS_FOLDER/setup_finished || true
-touch /var/www/html/$WORDPRESS_FOLDER-multi/setup_finished || true
+touch /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
+touch /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
 
 start_webserver "$@"
