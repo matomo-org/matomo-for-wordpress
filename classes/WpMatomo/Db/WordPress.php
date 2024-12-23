@@ -279,8 +279,11 @@ class WordPress extends Mysqli {
 			$test_sql = trim( $test_sql );
 		}
 
-		if ( preg_match( '/^\s*(select)\s/i', $test_sql ) ) {
-			// WordPress does not fetch any result when doing a select... it's only supposed to be used for things like
+		if (
+			preg_match( '/^\s*(select)\s/i', $test_sql )
+			|| preg_match( '/\sfor select\s/i', $test_sql )
+		) {
+			// WordPress does not fetch any result when doing a query w/ a select... it's only supposed to be used for things like
 			// insert / update / drop ...
 			$result = $this->fetchAll( $sql, $bind );
 		} else {
