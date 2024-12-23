@@ -107,10 +107,6 @@ function install_wordpress() {
     echo "wordpress $WORDPRESS_VERSION already installed at /var/www/html/$WORDPRESS_FOLDER/."
   fi
 
-  echo "waiting for database..."
-  sleep 5 # wait for database
-  echo "done."
-
   # if requested, drop the database for a clean install (used mainly for automated tests)
   if [[ ! -z "$RESET_DATABASE" ]]; then
     echo "dropping existing database..."
@@ -511,6 +507,8 @@ EOF
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
   chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
+
+  echo "finish wordpress install (multisite = $MULTISITE)"
 }
 
 function start_webserver() {
@@ -536,11 +534,17 @@ function start_webserver() {
   fi
 }
 
+echo "local-dev-entrypoint" "$@"
+
 export_global
 
 if [[ "$EXECUTE_CLI" = "1" ]]; then
   handle_cli_command "$@"
 fi
+
+echo "waiting for database..."
+sleep 5 # wait for database
+echo "done."
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
