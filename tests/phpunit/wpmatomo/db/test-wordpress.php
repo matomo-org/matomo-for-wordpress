@@ -271,6 +271,10 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( $row['message'] );
 	}
 
+	public function test_query_recognizes_mariadb_set_for_queries() {
+		throw new \Exception( 'unimplemented' );
+	}
+
 	private function insert_many_values() {
 		$this->insert_access( 'foo', 'view' );
 		$this->insert_access( 'bar', 'write' );
