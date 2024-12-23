@@ -94,7 +94,7 @@ function install_wordpress() {
       WORDPRESS_URL="https://wordpress.org/nightly-builds/wordpress-latest.zip"
     fi
 
-    echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to /var/www/html/$WORDPRESS_FOLDER/..."
+    echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to /var/www/html/$WORDPRESS_FOLDER/... (multisite = $MULTISITE)"
 
     curl "$WORDPRESS_URL" > "wordpress-$WORDPRESS_VERSION.zip"
 
@@ -511,8 +511,6 @@ EOF
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
   chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
-
-  touch /var/www/html/$WORDPRESS_FOLDER/setup_finished
 }
 
 function start_webserver() {
@@ -547,5 +545,8 @@ fi
 # install normal wordpress + multisite wordpress
 install_wordpress 0
 install_wordpress 1
+
+touch /var/www/html/$WORDPRESS_FOLDER/setup_finished || true
+touch /var/www/html/$WORDPRESS_FOLDER-multi/setup_finished || true
 
 start_webserver "$@"
