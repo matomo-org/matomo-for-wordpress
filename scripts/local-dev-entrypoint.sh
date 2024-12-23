@@ -534,6 +534,15 @@ function start_webserver() {
   fi
 }
 
+function wait_for_database() {
+  echo "waiting for database..."
+  while ! php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');\$pdo->exec('SELECT VERSION()');" > /dev/null
+  do
+    sleep 2
+  done
+  echo "database running."
+}
+
 echo "local-dev-entrypoint" "$@"
 
 export_global
@@ -542,9 +551,7 @@ if [[ "$EXECUTE_CLI" = "1" ]]; then
   handle_cli_command "$@"
 fi
 
-echo "waiting for database..."
-sleep 5 # wait for database
-echo "done."
+wait_for_database
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
