@@ -24,4 +24,9 @@ $query = $pdo->prepare( 'SHOW TABLES' );
 $query->execute();
 
 $tables = $query->fetchAll( \PDO::FETCH_COLUMN );
-echo json_encode( $tables );
+echo json_encode(
+	[
+		'dbname' => $dbname,
+		'tables' => $tables,
+	]
+);
