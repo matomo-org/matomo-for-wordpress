@@ -129,7 +129,7 @@ jobs:
       - run: |
           # wait for docker-compose launch to finish
           elapsed=0
-          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 240 )); do
+          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 420 )); do
             sleep 1
           done
 

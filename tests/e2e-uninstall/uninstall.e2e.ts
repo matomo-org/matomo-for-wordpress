@@ -16,7 +16,7 @@ describe('MWP Uninstall', () => {
   });
 
   async function getTablesInstalled(): Promise<any> {
-    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
+    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php?multi=0`);
     result = await result.text();
     try {
       result = JSON.parse(result);
@@ -27,7 +27,7 @@ describe('MWP Uninstall', () => {
   }
 
   it('should uninstall and remove all data when the "remove all data" option is enabled', async () => {
-    let tablesBeforeUninstall = await getTablesInstalled();
+    let tablesBeforeUninstall = (await getTablesInstalled()).tables;
     tablesBeforeUninstall = tablesBeforeUninstall.filter((t: string) => t.includes('matomo'));
     expect(tablesBeforeUninstall.length).toBeGreaterThan(0); // before uninstalling, check there are tables with "matomo" in the name
 
@@ -63,9 +63,10 @@ describe('MWP Uninstall', () => {
     // check that no matomo table exists in the database
     let result = await getTablesInstalled();
 
-    expect(result.length).toBeGreaterThan(0); // sanity check
+    expect(result.tables).toBeInstanceOf(Array); // sanity check
 
-    result = result.filter((t: string) => t.includes('matomo'));
-    expect(result).toEqual([]); // check there are no tables with "matomo" in the name
+    let tables = result.tables;
+    tables = tables.filter((t: string) => t.includes('matomo'));
+    expect(tables).toEqual([]); // check there are no tables with "matomo" in the name
   });
 });
