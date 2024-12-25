@@ -19,9 +19,21 @@ if ( empty( $dbname ) ) {
 	exit;
 }
 
+$multi = isset( $_GET['multi'] ) ? ( (int) $_GET['multi'] ) : 0;
+
+$dbname = preg_replace( '/_multi$/', '', $dbname );
+if ( $multi ) {
+	$dbname .= '_multi';
+}
+
 $pdo   = new \PDO( "mysql:host=$host;dbname={$dbname}", 'root', 'pass' );
 $query = $pdo->prepare( 'SHOW TABLES' );
 $query->execute();
 
 $tables = $query->fetchAll( \PDO::FETCH_COLUMN );
-echo json_encode( $tables );
+echo json_encode(
+	[
+		'dbname' => $dbname,
+		'tables' => $tables,
+	]
+);
