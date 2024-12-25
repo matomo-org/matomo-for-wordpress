@@ -16,8 +16,7 @@ describe('MWP Uninstall', () => {
   });
 
   async function getTablesInstalled(): Promise<any> {
-    console.log('root url: ' + `${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
-    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
+    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php?multi=0`);
     result = await result.text();
     try {
       result = JSON.parse(result);
@@ -65,8 +64,6 @@ describe('MWP Uninstall', () => {
     let result = await getTablesInstalled();
 
     expect(result.tables).toBeInstanceOf(Array); // sanity check
-
-    console.log(`result.dbname is: ${result.dbname}`);
 
     let tables = result.tables;
     tables = tables.filter((t: string) => t.includes('matomo'));
