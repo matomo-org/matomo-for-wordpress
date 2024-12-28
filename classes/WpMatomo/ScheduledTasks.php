@@ -204,7 +204,9 @@ class ScheduledTasks {
 	private function check_try_update() {
 		try {
 			$installer = new Installer( $this->settings );
-			if ( $installer->looks_like_it_is_installed() ) {
+			if ( ! $installer->looks_like_it_is_installed() ) {
+				$installer->install();
+			} else {
 				$updater = new Updater( $this->settings );
 				$updater->update_if_needed();
 			}
