@@ -63,7 +63,15 @@ class Installer {
 			wp_mkdir_p( $config_dir );
 		}
 
-		return file_exists( $config_file );
+		if ( ! file_exists( $config_file ) ) {
+			return false;
+		}
+
+		if ( ! $this->is_tables_installed() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static function is_intalled() {
@@ -113,6 +121,7 @@ class Installer {
 			$this->create_config( $db_info );
 
 			// unload plugins since plugin instances may be holding out of date information
+			Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 			Manager::getInstance()->unloadPlugins();
 			Manager::getInstance()->loadActivatedPlugins();
 			Manager::getInstance()->installLoadedPlugins();
@@ -391,5 +400,16 @@ class Installer {
 		Updater::unlock(); // make sure the update can be executed
 		$updater = new Updater( $this->settings );
 		$updater->update();
+	}
+
+	private function is_tables_installed() {
+		global $wpdb;
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results( 'SHOW TABLES LIKE `' . $wpdb->prefix . MATOMO_DATABASE_PREFIX . 'option`' );
+
+		return ! empty( $results );
 	}
 }
