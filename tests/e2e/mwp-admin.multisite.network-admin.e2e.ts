@@ -9,6 +9,11 @@
 import { expect, browser } from '@wdio/globals'
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
+import NetworkMultiSitePage from './pageobjects/mwp-network-admin/multisite.page.js';
+import NetworkSettingsPage from './pageobjects/mwp-network-admin/settings.page.js';
+import NetworkDiagnosticsPage from './pageobjects/mwp-network-admin/diagnostics.page.js';
+import NetworkHelpPage from './pageobjects/mwp-network-admin/help.page.js';
+import NetworkMarketplacePage from './pageobjects/mwp-network-admin/marketplace.page.js';
 
 describe('Network Admin', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -22,24 +27,52 @@ describe('Network Admin', function() {
     await Website.login();
   });
 
-  it('should display the multisite get started page correctly', async () => {
-    // TODO
+  after(async () => {
+    Website.unsetSite();
   });
 
-  // settings, diagnostics, help, marketplace
+  it('should display the multisite get started page correctly', async () => {
+    await NetworkMultiSitePage.open();
+
+    await NetworkMultiSitePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.network.multisite.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
+  });
+
   it('should display the multisite settings page correctly', async () => {
-    // TODO
+    await NetworkSettingsPage.open();
+
+    await NetworkSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.network.settings.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 
   it('should display the multisite diagnostics page correctly', async () => {
-    // TODO
+    await NetworkDiagnosticsPage.open();
+
+    await NetworkDiagnosticsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.network.diagnostics.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 
   it('should display the multisite help page correctly', async () => {
-    // TODO
+    await NetworkHelpPage.open();
+
+    await NetworkHelpPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.network.help.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 
   it('should display the multisite marketplace page correctly', async () => {
-    // TODO
+    await NetworkMarketplacePage.open();
+
+    await NetworkMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.network.marketplace.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 });

@@ -6,9 +6,11 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals'
+import { expect, browser } from '@wdio/globals';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
+import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
+import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 
 describe('MultiSite General', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -22,16 +24,39 @@ describe('MultiSite General', function() {
     await Website.login();
   });
 
-  it('should display the MWP admin pages for a single site correctly', async () => {
-    // TODO
+  after(async () => {
+    Website.unsetSite();
   });
 
-  it('should display the MWP settings page for a single site correctly', async () => {
-    // TODO
+  it('should display the MWP admin pages for a single site correctly', async () => {
+    Website.switchSite('test2');
+
+    await GetStartedPage.open();
+
+    await GetStartedPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.multisite.summary.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
+  });
+
+  it('should display the MWP settings page for a single site correctly when MWP is network enabled', async () => {
+    await SettingsPage.open();
+
+    await SettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.multisite.settings.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 
   it('should display the Matomo reporting pages for a single site correctly', async () => {
-    // TODO
+    await browser.refresh();
+
+    await browser.execute(() => {
+      window.jQuery('.wp-submenu a').filter(function () { $(this).attr('href').includes('page=matomo-reporting'); })[0].click();
+    });
+
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toBeLessThan(0.01);
   });
 });
-

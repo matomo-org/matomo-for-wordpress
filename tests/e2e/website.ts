@@ -29,6 +29,7 @@ class Website {
   private wpNonce: string|undefined;
   private loggedIn: boolean = false;
   private isWooCommerceSetup: boolean = false;
+  private site: string|null = null;
 
   rootUrl() {
     let defaultHostname = 'localhost';
@@ -44,7 +45,20 @@ class Website {
     const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
     const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
 
-    return `${this.rootUrl()}${wordpressVersionUrlPart}`;
+    let path = wordpressVersionUrlPart;
+    if (this.site) {
+      path = `${wordpressVersionUrlPart}/${this.site}`;
+    }
+
+    return `${this.rootUrl()}${path}`;
+  }
+
+  unsetSite() {
+    this.site = null;
+  }
+
+  switchSite(siteSlug: string) {
+    this.site = siteSlug;
   }
 
   async login() {
