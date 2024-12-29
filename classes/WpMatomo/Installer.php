@@ -67,7 +67,7 @@ class Installer {
 			return false;
 		}
 
-		if ( ! $this->is_tables_installed() ) {
+		if ( ! $this->is_current_instance_installed() ) {
 			return false;
 		}
 
@@ -198,6 +198,9 @@ class Installer {
 			Cache::flushAll();
 
 			$this->logger->log( 'Matomo install finished' );
+
+			$this->settings->set_option( Settings::INSTANCE_INSTALLED_MARKER, 1 );
+			$this->settings->save();
 		}
 
 		return true;
@@ -402,14 +405,8 @@ class Installer {
 		$updater->update();
 	}
 
-	private function is_tables_installed() {
-		global $wpdb;
-
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		$results = $wpdb->get_results( 'SHOW TABLES LIKE `' . $wpdb->prefix . MATOMO_DATABASE_PREFIX . 'option`' );
-
-		return ! empty( $results );
+	private function is_current_instance_installed() {
+		$is_installed = $this->settings->get_option( Settings::INSTANCE_INSTALLED_MARKER );
+		return ! empty( $is_installed );
 	}
 }
