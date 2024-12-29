@@ -8,7 +8,6 @@
 
 import { expect, browser } from '@wdio/globals';
 import Website from './website.js';
-import GlobalSetup from './global-setup.js';
 import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 
@@ -20,12 +19,13 @@ describe('MultiSite General', function() {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
     }
 
-    await GlobalSetup.setUp();
+    Website.overrideWordPressFolder(`${await Website.getWpFolder()}-multi`);
     await Website.login();
   });
 
   after(async () => {
     Website.unsetSite();
+    Website.removeWordPressFolderOverride();
   });
 
   it('should display the MWP admin pages for a single site correctly', async () => {

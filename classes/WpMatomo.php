@@ -237,11 +237,7 @@ class WpMatomo {
 			if ( $installer->looks_like_it_is_installed() ) {
 				if ( is_admin() && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
 					$updater = new Updater( self::$settings );
-					try {
-						$updater->update_if_needed();
-					} catch (\Exception $ex) {
-						print "install failed: " . print_r(\Piwik\Config::getInstance()->PluginsInstalled, true);@ob_flush();exit;
-					}
+					$updater->update_if_needed();
 				}
 			} else {
 				if ( matomo_is_app_request() ) {

@@ -8,7 +8,6 @@
 
 import { expect, browser } from '@wdio/globals'
 import Website from './website.js';
-import GlobalSetup from './global-setup.js';
 import NetworkMultiSitePage from './pageobjects/mwp-network-admin/multisite.page.js';
 import NetworkSettingsPage from './pageobjects/mwp-network-admin/settings.page.js';
 import NetworkDiagnosticsPage from './pageobjects/mwp-network-admin/diagnostics.page.js';
@@ -23,12 +22,13 @@ describe('Network Admin', function() {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
     }
 
-    await GlobalSetup.setUp();
+    Website.overrideWordPressFolder(`${await Website.getWpFolder()}-multi`);
     await Website.login();
   });
 
   after(async () => {
     Website.unsetSite();
+    Website.removeWordPressFolderOverride();
   });
 
   it('should display the multisite get started page correctly', async () => {
