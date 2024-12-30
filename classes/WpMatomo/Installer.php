@@ -206,7 +206,7 @@ class Installer {
 				$installed[ $plugin_name ] = 1;
 			}
 
-			$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, $installed );
+			$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
 			$this->settings->save();
 		}
 
@@ -415,6 +415,10 @@ class Installer {
 	private function is_current_instance_installed() {
 		// TODO: unit tests
 		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( empty( $installed_components ) ) {
+			$installed_components = '[]';
+		}
+		$installed_components = json_decode( $installed_components, true );
 
 		if ( empty( $installed_components['core'] ) ) {
 			return false;
