@@ -35,7 +35,7 @@ describe('MultiSite General', function() {
 
     await GetStartedPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.multisite.summary.${process.env.PHP_VERSION}${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.multisite.get-started.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 
