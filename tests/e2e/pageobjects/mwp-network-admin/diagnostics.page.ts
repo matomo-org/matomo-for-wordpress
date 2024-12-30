@@ -6,9 +6,9 @@
  *
  */
 
-import MwpPage from '../mwp-admin/page.js';
+import { MwpDiagnosticsPageType } from '../mwp-admin/diagnostics.page.js';
 
-class NetworkDiagnosticsPage extends MwpPage {
+class NetworkDiagnosticsPage extends MwpDiagnosticsPageType {
   async open() {
     return super.open('/wp-admin/network/admin.php?page=matomo-systemreport');
   }

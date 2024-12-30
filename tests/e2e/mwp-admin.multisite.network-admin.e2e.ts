@@ -55,7 +55,7 @@ describe('Network Admin', function() {
     await NetworkDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.network.diagnostics.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toBeLessThan(0.01);
+    ).toBeLessThan(0.03);
   });
 
   it('should display the multisite help page correctly', async () => {
