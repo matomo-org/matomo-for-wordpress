@@ -25,7 +25,7 @@ class DashboardPage extends MatomoReportingPage {
       return loadedWidgetCount >= widgetsCount;
     }, { timeout: 30000 });
     await browser.waitUntil(async () => {
-      return await $('.UserCountryMap_map.kartograph').isDisplayed();
+      return await $('.UserCountryMap_map.kartograph,.mapWidgetStatus .pk-emptyDataTable').isDisplayed();
     }, { timeout: 30000 });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
