@@ -52,7 +52,10 @@ describe('MultiSite General', function() {
     await browser.refresh();
 
     await browser.execute(() => {
-      window.jQuery('.wp-submenu a').filter(function () { $(this).attr('href').includes('page=matomo-reporting'); })[0].click();
+      window
+        .jQuery('.wp-submenu a')
+        .filter(function () { window.jQuery(this).attr('href').includes('page=matomo-reporting'); })[0]
+        .click();
     });
 
     await expect(

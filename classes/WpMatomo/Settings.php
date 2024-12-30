@@ -35,7 +35,7 @@ class Settings {
 	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
-	const INSTANCE_INSTALLED_MARKER            = 'instance-installed';
+	const INSTANCE_COMPONENTS_INSTALLED        = 'instance-components-installed';
 
 	public static $is_doing_action_tracking_related = false;
 	/**

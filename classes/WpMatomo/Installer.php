@@ -199,7 +199,14 @@ class Installer {
 
 			$this->logger->log( 'Matomo install finished' );
 
-			$this->settings->set_option( Settings::INSTANCE_INSTALLED_MARKER, 1 );
+			$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+
+			$installed['core'] = 1;
+			foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
+				$installed[ $plugin_name ] = 1;
+			}
+
+			$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, $installed );
 			$this->settings->save();
 		}
 
@@ -406,7 +413,25 @@ class Installer {
 	}
 
 	private function is_current_instance_installed() {
-		$is_installed = $this->settings->get_option( Settings::INSTANCE_INSTALLED_MARKER );
-		return ! empty( $is_installed );
+		// TODO: unit tests
+		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+
+		if ( empty( $installed_components['core'] ) ) {
+			return false;
+		}
+
+		// NOTE: this doesn't handle core plugins, but since they are always present during an install, we
+		// shouldn't need to
+		$plugin_files = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
+		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
+
+		foreach ( $plugin_files as $file ) {
+			$plugin_name = basename( dirname( $file ) );
+			if ( empty( $installed_components[ $plugin_name ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
