@@ -12,7 +12,11 @@ import MatomoReportingPage from '../matomo-reporting.page.js';
 class DashboardPage extends MatomoReportingPage {
   async open() {
     const result = await super.open('Dashboard_Dashboard.1');
+    await this.waitForDashboard();
+    return result;
+  }
 
+  async waitForDashboard() {
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
@@ -28,8 +32,6 @@ class DashboardPage extends MatomoReportingPage {
     });
     await this.addStylesToPage('#visitsLive .realTimeWidget_datetime { display: none !important; }');
     await this.waitForImages();
-
-    return result;
   }
 }
 
