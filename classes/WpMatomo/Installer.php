@@ -199,15 +199,7 @@ class Installer {
 
 			$this->logger->log( 'Matomo install finished' );
 
-			$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
-
-			$installed['core'] = 1;
-			foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
-				$installed[ $plugin_name ] = 1;
-			}
-
-			$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
-			$this->settings->save();
+			$this->mark_matomo_installed();
 		}
 
 		return true;
@@ -437,5 +429,20 @@ class Installer {
 		}
 
 		return true;
+	}
+
+	private function mark_matomo_installed() {
+		$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( ! is_array( $installed ) ) {
+			$installed = [];
+		}
+
+		$installed['core'] = 1;
+		foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
+			$installed[ $plugin_name ] = 1;
+		}
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
+		$this->settings->save();
 	}
 }
