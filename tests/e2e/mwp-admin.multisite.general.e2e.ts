@@ -51,6 +51,8 @@ describe('MultiSite General', function() {
   it('should display the Matomo reporting pages for a single site correctly', async () => {
     await browser.refresh();
 
+    await $('#toplevel_page_matomo a').waitForExist();
+
     await browser.execute(() => {
       window.jQuery('#toplevel_page_matomo a[href*="matomo-reporting"]')[0].click();
     });
