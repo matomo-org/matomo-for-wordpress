@@ -15,6 +15,10 @@ use WpMatomo\Uninstaller;
 class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
+	 * @var Settings
+	 */
+	private $settings;
+	/**
 	 * @var Installer
 	 */
 	private $installer;
@@ -26,15 +30,19 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->settings    = new Settings();
 		$this->installer   = $this->make_installer();
 		$this->uninstaller = new Uninstaller();
 	}
 
 	private function make_installer() {
-		return new Installer( new Settings() );
+		return new Installer( $this->settings );
 	}
 
 	public function test_looks_like_it_is_installed_is_intalled_when_installed() {
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'core' => 1 ] ) );
+		$this->settings->save();
+
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 		$this->assertTrue( Installer::is_intalled() );
 	}
