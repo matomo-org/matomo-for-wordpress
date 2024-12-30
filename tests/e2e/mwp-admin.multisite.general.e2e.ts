@@ -10,6 +10,7 @@ import { expect, browser } from '@wdio/globals';
 import Website from './website.js';
 import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
+import VisitorsOverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
 
 describe('MultiSite General', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -56,6 +57,12 @@ describe('MultiSite General', function() {
     await browser.execute(() => {
       window.jQuery('#toplevel_page_matomo a[href*="matomo-reporting"]')[0].click();
     });
+
+    await VisitorsOverviewPage.waitForPageWidgets();
+    await browser.pause(500);
+    await VisitorsOverviewPage.waitForImages();
+
+    await VisitorsOverviewPage.unfocus();
 
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting.${process.env.PHP_VERSION}${trunkSuffix}`)
