@@ -124,7 +124,7 @@ class Installer {
 			Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 			Manager::getInstance()->unloadPlugins();
 			Manager::getInstance()->loadActivatedPlugins();
-			error_log('activated plugins: '. print_r(Manager::getInstance()->getLoadedPluginsName(), true));
+			error_log('plugins installed: '. print_r(Config::getInstance()->PluginsInstalled, true));
 			Manager::getInstance()->installLoadedPlugins();
 
 

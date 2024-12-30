@@ -1184,6 +1184,7 @@ class Manager
         // is the plugin already installed or is it the first time we activate it?
         $pluginsInstalled = $this->getInstalledPluginsName();
         if (!$this->isPluginInstalled($pluginName)) {
+			error_log("installing plugin: $pluginName");
             $this->executePluginInstall($plugin);
             $pluginsInstalled[] = $pluginName;
             $this->updatePluginsInstalledConfig($pluginsInstalled);
@@ -1198,7 +1199,9 @@ class Manager
              * @param string $pluginName The plugin that has been installed.
              */
             Piwik::postEvent('PluginManager.pluginInstalled', array($pluginName));
-        }
+        } else {
+			error_log("skipping installing plugin: $pluginName");
+		}
         if ($saveConfig) {
             PiwikConfig::getInstance()->forceSave();
             $this->clearCache($pluginName);
