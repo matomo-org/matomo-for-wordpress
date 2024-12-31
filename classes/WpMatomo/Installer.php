@@ -120,13 +120,7 @@ class Installer {
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
 
-			// unload plugins since plugin instances may be holding out of date information
-			Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
-			Manager::getInstance()->unloadPlugins();
-			Manager::getInstance()->loadActivatedPlugins();
-			error_log('plugins installed: '. print_r(Config::getInstance()->PluginsInstalled, true));
-			Manager::getInstance()->installLoadedPlugins();
-
+			$this->install_plugins_one_at_a_time();
 
 			$this->update_components();
 
@@ -450,5 +444,48 @@ class Installer {
 
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
 		$this->settings->save();
+	}
+
+	private function install_plugins_one_at_a_time() {
+		// TODO: docs on why this is needed
+		// TODO: core bug report
+
+		// unload plugins since plugin instances may be holding out of date information
+		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
+
+		$non_core_plugins = array_map(
+			function ( $path ) {
+				return basename( dirname( $path ) );
+			},
+			$GLOBALS['MATOMO_PLUGIN_FILES']
+		);
+		$non_core_plugins = array_filter(
+			$non_core_plugins,
+			function ( $name ) {
+				return 'matomo' !== $name;
+			}
+		);
+
+		// first, install core plugins
+		$plugin_manager = Manager::getInstance();
+		$plugin_manager->unloadPlugins();
+		$plugin_manager->loadActivatedPlugins();
+
+		foreach ( $non_core_plugins as $plugin ) {
+			$plugin_manager->unloadPlugin( $plugin );
+		}
+
+		$plugin_manager->installLoadedPlugins();
+
+		// then for every non-core plugin, install one at a time
+		foreach ( $non_core_plugins as $plugin ) {
+			$plugin_manager->loadPlugin( $plugin );
+			$plugin_manager->installLoadedPlugins();
+		}
+
+		$plugin_manager->installLoadedPlugins();
+
+		// reload activated plugins just in case something isn't right above
+		$plugin_manager->loadActivatedPlugins();
 	}
 }
