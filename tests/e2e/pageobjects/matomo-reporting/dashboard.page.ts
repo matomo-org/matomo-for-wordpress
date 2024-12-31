@@ -33,6 +33,13 @@ class DashboardPage extends MatomoReportingPage {
     await this.addStylesToPage('#visitsLive .realTimeWidget_datetime { display: none !important; }');
     await this.waitForImages();
   }
+
+  async normalizeDates() {
+    await browser.execute(() => {
+      $('#periodString a#date').text('REMOVED');
+      $('#widgetVisitsSummarygetEvolutionGraphforceView1viewDataTablegraphEvolution .jqplot-xaxis').hide();
+    });
+  }
 }
 
 export default new DashboardPage();

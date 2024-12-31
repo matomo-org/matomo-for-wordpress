@@ -62,6 +62,7 @@ describe('MultiSite General', function() {
     await browser.pause(500);
     await DashboardPage.waitForImages();
     await DashboardPage.waitForDashboard();
+    await DashboardPage.normalizeDates();
 
     await DashboardPage.unfocus();
 
