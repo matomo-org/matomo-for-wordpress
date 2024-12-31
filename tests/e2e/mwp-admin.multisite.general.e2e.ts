@@ -67,7 +67,7 @@ describe('MultiSite General', function() {
     await DashboardPage.unfocus();
 
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting.${process.env.PHP_VERSION}${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting`)
     ).toBeLessThan(0.01);
   });
 });
