@@ -3,10 +3,7 @@ namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use Piwik\Common;
 use Piwik\Plugins\VisitTime\Archiver;
-use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
-use WP_Statistics\Models\VisitorsModel;
-use WpMatomo\WpStatistics\Config;
 use WpMatomo\WpStatistics\DataConverters\VisitsTimeConverter;
 /**
  * @package WpMatomo
