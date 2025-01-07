@@ -14,6 +14,13 @@ use Piwik\Tracker\Action;
 class PagesTitleConverter extends NumberConverter implements DataConverterInterface {
 
 	public static function convert( array $wp_statistics_data ) {
+		// the title property is not set in newer versions of wp-statistics
+		foreach ( $wp_statistics_data as $key => $row ) {
+			if ( ! isset( $row['title'] ) ) {
+				$wp_statistics_data[ $key ]['title'] = get_the_title( $row['page_id'] );
+			}
+		}
+
 		$rows = self::aggregate_by_key( $wp_statistics_data, 'title' );
 
 		$data_tables = [
