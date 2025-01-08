@@ -483,8 +483,6 @@ class Installer {
 			$plugin_manager->installLoadedPlugins();
 		}
 
-		$plugin_manager->installLoadedPlugins();
-
 		// reload activated plugins just in case something isn't right above
 		$plugin_manager->loadActivatedPlugins();
 	}
