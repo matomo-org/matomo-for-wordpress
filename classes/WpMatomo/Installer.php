@@ -450,7 +450,6 @@ class Installer {
 		// TODO: docs on why this is needed
 		// TODO: core bug report
 
-		// unload plugins since plugin instances may be holding out of date information
 		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 
 		$non_core_plugins = array_map(
@@ -466,11 +465,12 @@ class Installer {
 			}
 		);
 
-		// first, install core plugins
+		// unload plugins since plugin instances may be holding out of date information
 		$plugin_manager = Manager::getInstance();
 		$plugin_manager->unloadPlugins();
 		$plugin_manager->loadActivatedPlugins();
 
+		// first, install core plugins without non-core plugins loaded
 		foreach ( $non_core_plugins as $plugin ) {
 			$plugin_manager->unloadPlugin( $plugin );
 		}
@@ -483,7 +483,7 @@ class Installer {
 			$plugin_manager->installLoadedPlugins();
 		}
 
-		// reload activated plugins just in case something isn't right above
+		// reload activated plugins just in case something didn't go right above
 		$plugin_manager->loadActivatedPlugins();
 	}
 }
