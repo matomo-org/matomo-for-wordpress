@@ -12,6 +12,9 @@ use WpMatomo\Paths;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
+/**
+ * @group only
+ */
 class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
@@ -27,12 +30,25 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 */
 	private $uninstaller;
 
+	/**
+	 * @var array
+	 */
+	private $original_plugins;
+
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings    = new Settings();
 		$this->installer   = $this->make_installer();
 		$this->uninstaller = new Uninstaller();
+
+		$this->original_plugins = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
+	}
+
+	public function tearDown(): void {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = $this->original_plugins;
+
+		parent::tearDown();
 	}
 
 	private function make_installer() {
@@ -188,5 +204,89 @@ class InstallTest extends MatomoAnalytics_TestCase {
 
 		$this->assertEquals( 'dummycharset', $db_config['charset'] );
 		$this->assertEquals( 'dummycollate', $db_config['collation'] );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_core_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'SomePlugin' => 1 ] ) );
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_non_core_plugin_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'core' => 1 ] ) );
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_some_non_core_plugin_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'core'       => 1,
+					'SomePlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_defaults_installed_components_option_to_empty_array() {
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		// sanity check
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$this->assertEmpty( $existing );
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_true_if_core_and_plugins_marked_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'core'          => 1,
+					'SomePlugin'    => 1,
+					'AnotherPlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertTrue( $is_installed );
 	}
 }

@@ -400,8 +400,12 @@ class Installer {
 		$updater->update();
 	}
 
-	private function is_current_instance_installed() {
-		// TODO: unit tests
+	/**
+	 * public for tests
+	 *
+	 * @return bool
+	 */
+	public function is_current_instance_installed() {
 		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
 		if ( empty( $installed_components ) ) {
 			$installed_components = '[]';
@@ -413,7 +417,7 @@ class Installer {
 		}
 
 		// NOTE: this doesn't handle core plugins, but since they are always present during an install, we
-		// shouldn't need to
+		// shouldn't need tob
 		$plugin_files = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
 		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
 
@@ -446,10 +450,26 @@ class Installer {
 		$this->settings->save();
 	}
 
+	/**
+	 * Install all plugins including core and non-core plugins. Non-core plugins
+	 * are installed one at a time. Uninstalled plugins will not be loaded
+	 * when each non-core plugin is installed.
+	 *
+	 * This works around the core bug where exceptions can be thrown when an
+	 * uninstalled plugin, which is loaded while another plugin is being installed,
+	 * handles the "plugin installed" event.
+	 *
+	 * In a standalone Matomo, this likely won't be an issue, as multiple non-core
+	 * plugins are not usually installed at the same time. In Matomo for WordPress,
+	 * this can happen as a matter of course in Multi Site installs.
+	 *
+	 * If a user creates a new WordPress site with multiple non-core plugins installed,
+	 * by default the Matomo install process will try to install all of them at once,
+	 * causing an error.
+	 *
+	 * @return void
+	 */
 	private function install_plugins_one_at_a_time() {
-		// TODO: docs on why this is needed
-		// TODO: core bug report
-
 		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 
 		$non_core_plugins = array_map(

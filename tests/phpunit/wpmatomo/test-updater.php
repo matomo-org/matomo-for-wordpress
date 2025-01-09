@@ -7,6 +7,9 @@ use WpMatomo\Settings;
 use WpMatomo\Updater;
 use WpMatomo\User;
 
+/**
+ * @group only
+ */
 class UpdaterTest extends MatomoAnalytics_TestCase {
 
 
