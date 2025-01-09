@@ -12,9 +12,6 @@ use WpMatomo\Paths;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
-/**
- * @group only
- */
 class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
@@ -288,5 +285,64 @@ class InstallTest extends MatomoAnalytics_TestCase {
 
 		$is_installed = $this->installer->is_current_instance_installed();
 		$this->assertTrue( $is_installed );
+	}
+
+	public function test_mark_matomo_installed_adds_currently_installed_plugins_when_list_is_empty() {
+		\Piwik\Config::getInstance()->PluginsInstalled['PluginsInstalled'] = [
+			'SomePlugin',
+			'SomeOtherPlugin',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$this->installer->mark_matomo_installed();
+
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$existing = json_decode( $existing, true );
+
+		$this->assertEquals(
+			[
+				'core'            => 1,
+				'SomePlugin'      => 1,
+				'SomeOtherPlugin' => 1,
+			],
+			$existing
+		);
+	}
+
+	/**
+	 * @group only
+	 */
+	public function test_mark_matomo_installed_adds_currently_installed_plugins_when_list_is_not_empty() {
+		\Piwik\Config::getInstance()->PluginsInstalled['PluginsInstalled'] = [
+			'SomePlugin',
+			'SomeOtherPlugin',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'AnotherPlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$this->installer->mark_matomo_installed();
+
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$existing = json_decode( $existing, true );
+
+		$this->assertEquals(
+			[
+				'core'            => 1,
+				'SomePlugin'      => 1,
+				'SomeOtherPlugin' => 1,
+				'AnotherPlugin'   => 1,
+			],
+			$existing
+		);
 	}
 }

@@ -417,7 +417,7 @@ class Installer {
 		}
 
 		// NOTE: this doesn't handle core plugins, but since they are always present during an install, we
-		// shouldn't need tob
+		// shouldn't need to
 		$plugin_files = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
 		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
 
@@ -435,11 +435,17 @@ class Installer {
 		return true;
 	}
 
-	private function mark_matomo_installed() {
+	/**
+	 * public for tests
+	 *
+	 * @return void
+	 */
+	public function mark_matomo_installed() {
 		$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
-		if ( ! is_array( $installed ) ) {
-			$installed = [];
+		if ( empty( $installed ) ) {
+			$installed = '[]';
 		}
+		$installed = json_decode( $installed, true );
 
 		$installed['core'] = 1;
 		foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
