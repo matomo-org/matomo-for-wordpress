@@ -311,9 +311,6 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
-	/**
-	 * @group only
-	 */
 	public function test_mark_matomo_installed_adds_currently_installed_plugins_when_list_is_not_empty() {
 		\Piwik\Config::getInstance()->PluginsInstalled['PluginsInstalled'] = [
 			'SomePlugin',

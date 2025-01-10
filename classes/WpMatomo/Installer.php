@@ -478,14 +478,14 @@ class Installer {
 	private function install_plugins_one_at_a_time() {
 		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 
-		$non_core_plugins = array_map(
+		$plugin_names     = array_map(
 			function ( $path ) {
 				return basename( dirname( $path ) );
 			},
 			$GLOBALS['MATOMO_PLUGIN_FILES']
 		);
 		$non_core_plugins = array_filter(
-			$non_core_plugins,
+			$plugin_names,
 			function ( $name ) {
 				return 'matomo' !== $name;
 			}
