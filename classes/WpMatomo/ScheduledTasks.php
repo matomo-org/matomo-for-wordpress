@@ -204,10 +204,12 @@ class ScheduledTasks {
 	private function check_try_update() {
 		try {
 			$installer = new Installer( $this->settings );
-			if ( $installer->looks_like_it_is_installed() ) {
-				$updater = new Updater( $this->settings );
-				$updater->update_if_needed();
+			if ( ! $installer->looks_like_it_is_installed() ) {
+				$installer->install();
 			}
+
+			$updater = new Updater( $this->settings );
+			$updater->update_if_needed();
 		} catch ( Exception $e ) {
 			// we don't want to rethrow exception otherwise some other blogs might never sync
 			$this->logger->log_exception( 'check_try_update', $e );

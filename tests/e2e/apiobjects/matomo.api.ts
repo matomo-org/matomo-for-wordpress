@@ -53,16 +53,34 @@ class MatomoApi {
     }
 
     const userPass = `root:${nonce}`;
-    const response = await fetch(fullUrl, {
-      method: restMethod,
-      headers: {
-        'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
-      },
-    });
-
-    const text = await response.text();
 
     let result;
+    let response;
+
+    let attempts = 0;
+    while (attempts < 3) {
+      attempts += 1;
+
+      try {
+        response = await fetch(fullUrl, {
+          method: restMethod,
+          headers: {
+            'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
+          },
+        });
+
+        break;
+      } catch (e) {
+        console.log(`Failed to request ${fullUrl}: ${(e as Error).message}`);
+
+        if (attempts >= 3) {
+          throw e;
+        }
+      }
+    }
+
+    const text = await response!.text();
+
     try {
       result = JSON.parse(text);
     } catch (e) {
@@ -74,7 +92,7 @@ class MatomoApi {
     }
 
     if (result.code && result.message) {
-      throw new Error(`${result.code}: ${result.message}`);
+      throw new Error(`${result.code}: ${result.message} (attempts = ${attempts})`);
     }
 
     return result;

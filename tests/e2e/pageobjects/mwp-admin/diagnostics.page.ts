@@ -10,9 +10,17 @@ import { $, browser } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpDiagnosticsPage extends MwpPage {
-  async open() {
-    const result = await super.open('/wp-admin/admin.php?page=matomo-systemreport');
+  async open(overrideUrl?: string) {
+    const result = await super.open(overrideUrl || '/wp-admin/admin.php?page=matomo-systemreport');
+    await this.normalizePageContents();
+    return result;
+  }
 
+  async openTroubleshootingTab() {
+    await $('a.nav-tab=Troubleshooting').click();
+  }
+
+  private async normalizePageContents() {
     await browser.execute(() => {
       // remove dates from every table cell
       window.jQuery('.matomo-systemreport td').each((i, e) => {
@@ -43,13 +51,8 @@ class MwpDiagnosticsPage extends MwpPage {
         $activePluginsValue.html().replace(new RegExp('(' + matomoPlugins.join('|') + '):\\d+\\.\\d+\\.\\d+', 'gi'), '$1:')
       );
     });
-
-    return result;
-  }
-
-  async openTroubleshootingTab() {
-    await $('a.nav-tab=Troubleshooting').click();
   }
 }
 
 export default new MwpDiagnosticsPage();
+export { MwpDiagnosticsPage as MwpDiagnosticsPageType };

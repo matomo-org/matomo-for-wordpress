@@ -6,7 +6,6 @@
  *
  */
 
-import { $ } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpGetStartedPage extends MwpPage {

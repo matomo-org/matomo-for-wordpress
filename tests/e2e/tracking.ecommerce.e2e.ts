@@ -22,7 +22,7 @@ describe('Tracking (Ecommerce)', function() {
 
   it('should track ecommerce events and orders using the JS client', async () => {
     // TODO: these tests are not particularly great atm. there's no way to get the number of orders
-    // overall or number of conversions overall without
+    // overall or number of conversions overall without initiating archiving
     await Website.setUpWooCommerce();
 
     await BlogProductPage.open();

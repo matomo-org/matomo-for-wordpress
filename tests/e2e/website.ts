@@ -29,6 +29,8 @@ class Website {
   private wpNonce: string|undefined;
   private loggedIn: boolean = false;
   private isWooCommerceSetup: boolean = false;
+  private site: string|null = null;
+  private wordPressFolderOverride: string|null = null;
 
   rootUrl() {
     let defaultHostname = 'localhost';
@@ -39,12 +41,30 @@ class Website {
     return `${process.env.WORDPRESS_URL || `http://${defaultHostname}`}`;
   }
 
-  async baseUrl() {
+  async getWpFolder() {
     const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
-    const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
+    const wordpressFolder = this.wordPressFolderOverride || process.env.WORDPRESS_FOLDER || wordpressVersion;
+    return wordpressFolder;
+  }
+
+  async baseUrl() {
+    const wordpressFolder = await this.getWpFolder();
     const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
 
-    return `${this.rootUrl()}${wordpressVersionUrlPart}`;
+    let path = wordpressVersionUrlPart;
+    if (this.site) {
+      path = `${wordpressVersionUrlPart}/${this.site}`;
+    }
+
+    return `${this.rootUrl()}${path}`;
+  }
+
+  unsetSite() {
+    this.site = null;
+  }
+
+  switchSite(siteSlug: string) {
+    this.site = siteSlug;
   }
 
   async login() {
@@ -206,6 +226,14 @@ class Website {
     if (selectedLanguage !== locale) {
       throw new Error(`unable to set user profile language to ${locale}`);
     }
+  }
+
+  overrideWordPressFolder(folder: string) {
+    this.wordPressFolderOverride = folder;
+  }
+
+  removeWordPressFolderOverride() {
+    this.wordPressFolderOverride = null;
   }
 }
 

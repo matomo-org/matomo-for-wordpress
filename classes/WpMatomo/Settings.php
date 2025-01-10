@@ -36,6 +36,10 @@ class Settings {
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 
+	// NOTE: this is not a setting value, but is stored with setting values to avoid
+	// adding an extra get_option call to every WordPress backoffice request.
+	const INSTANCE_COMPONENTS_INSTALLED = 'instance-components-installed';
+
 	public static $is_doing_action_tracking_related = false;
 	/**
 	 * @internal tests only
