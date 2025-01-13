@@ -50,6 +50,8 @@ class MwpDiagnosticsPage extends MwpPage {
       $activePluginsValue.html(
         $activePluginsValue.html().replace(new RegExp('(' + matomoPlugins.join('|') + '):\\d+\\.\\d+\\.\\d+', 'gi'), '$1:')
       );
+
+      window.jQuery('tbody#logs_body > tr').remove();
     });
   }
 }
