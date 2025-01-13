@@ -73,6 +73,8 @@ class MatomoApi {
       } catch (e) {
         console.log(`Failed to request ${fullUrl}: ${(e as Error).message}`);
 
+        await new Promise((r) => setTimeout(r, 1000));
+
         if (attempts >= 3) {
           throw e;
         }
