@@ -26,10 +26,10 @@ class LoggerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->setAlias(LoggerInterface::class, 'logger')->setPublic(false);
+        $container->setAlias(LoggerInterface::class, 'logger')->setPublic(\false);
         if ($container->has('logger')) {
             return;
         }
-        $container->register('logger', Logger::class)->setPublic(false);
+        $container->register('logger', Logger::class)->setPublic(\false);
     }
 }

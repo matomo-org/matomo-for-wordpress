@@ -58,7 +58,7 @@ class Notification
         $message = '<b>' . Piwik::translate('Marketplace_TrialRequestedNotification1', [htmlentities($this->storage->getDisplayName()), $link, '</a>']) . '</b><br><br>';
         $message .= Piwik::translate('Marketplace_TrialRequestedNotification2', [htmlentities($this->storage->getDisplayName()), $link, '</a>']);
         $notification = new MatomoNotification($message);
-        $notification->raw = true;
+        $notification->raw = \true;
         $notification->context = MatomoNotification::CONTEXT_INFO;
         $notification->type = MatomoNotification::TYPE_PERSISTENT;
         MatomoNotification\Manager::cancel($this->getNotificationId());

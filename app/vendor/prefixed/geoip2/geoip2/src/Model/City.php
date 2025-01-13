@@ -94,7 +94,7 @@ class City extends Country
         if ($attr === 'mostSpecificSubdivision') {
             // We always return a mostSpecificSubdivision, even if it is the
             // empty subdivision
-            return true;
+            return \true;
         }
         return parent::__isset($attr);
     }

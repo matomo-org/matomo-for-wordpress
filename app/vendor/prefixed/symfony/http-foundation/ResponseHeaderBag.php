@@ -88,7 +88,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $values, bool $replace = true)
+    public function set(string $key, $values, bool $replace = \true)
     {
         $uniqueKey = strtr($key, self::UPPER, self::LOWER);
         if ('set-cookie' === $uniqueKey) {
@@ -104,7 +104,7 @@ class ResponseHeaderBag extends HeaderBag
         $this->headerNames[$uniqueKey] = $key;
         parent::set($key, $values, $replace);
         // ensure the cache-control header has sensible defaults
-        if (\in_array($uniqueKey, ['cache-control', 'etag', 'last-modified', 'expires'], true) && '' !== ($computed = $this->computeCacheControlValue())) {
+        if (\in_array($uniqueKey, ['cache-control', 'etag', 'last-modified', 'expires'], \true) && '' !== ($computed = $this->computeCacheControlValue())) {
             $this->headers['cache-control'] = [$computed];
             $this->headerNames['cache-control'] = 'Cache-Control';
             $this->computedCacheControl = $this->parseCacheControl($computed);
@@ -195,9 +195,9 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * Clears a cookie in the browser.
      */
-    public function clearCookie(string $name, ?string $path = '/', ?string $domain = null, bool $secure = false, bool $httpOnly = true, ?string $sameSite = null)
+    public function clearCookie(string $name, ?string $path = '/', ?string $domain = null, bool $secure = \false, bool $httpOnly = \true, ?string $sameSite = null)
     {
-        $this->setCookie(new Cookie($name, null, 1, $path, $domain, $secure, $httpOnly, false, $sameSite));
+        $this->setCookie(new Cookie($name, null, 1, $path, $domain, $secure, $httpOnly, \false, $sameSite));
     }
     /**
      * @see HeaderUtils::makeDisposition()

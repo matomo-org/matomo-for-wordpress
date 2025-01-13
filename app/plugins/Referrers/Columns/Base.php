@@ -92,7 +92,7 @@ abstract class Base extends VisitDimension
         $referrerDetected = $this->detectReferrerCampaign($request, $visitor);
         if (!$referrerDetected) {
             if ($this->detectReferrerDirectEntry($request) || $this->detectReferrerSearchEngine() || $this->detectReferrerSocialNetwork()) {
-                $referrerDetected = true;
+                $referrerDetected = \true;
             }
         }
         if (!$referrerDetected && !empty($this->referrerHost)) {
@@ -144,22 +144,22 @@ abstract class Base extends VisitDimension
         }
         $matchingSites = $excludedUrls->getIdSitesMatchingUrl($parsedReferrer, $urlsByHost);
         if (is_array($matchingSites) && in_array($this->idsite, $matchingSites)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     protected function excludeQueryParamsFromReferrerUrl()
     {
         $parametersToExclude = [];
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'instagram.com') !== false) {
+        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'instagram.com') !== \false) {
             $parametersToExclude[] = 'e';
             $parametersToExclude[] = 's';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'facebook.com') !== false) {
+        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'facebook.com') !== \false) {
             $parametersToExclude[] = 'h';
             $parametersToExclude[] = 'p';
         }
-        if (!empty($this->referrerHost) && (strpos($this->referrerHost, 'google.') !== false || strpos($this->referrerHost, 'googleusercontent.') !== false)) {
+        if (!empty($this->referrerHost) && (strpos($this->referrerHost, 'google.') !== \false || strpos($this->referrerHost, 'googleusercontent.') !== \false)) {
             $parametersToExclude[] = 'ust';
             $parametersToExclude[] = 'usg';
             $parametersToExclude[] = 'usd';
@@ -173,17 +173,17 @@ abstract class Base extends VisitDimension
             $parametersToExclude[] = 'client';
             $parametersToExclude[] = 'channel';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'main.exoclick.com') !== false) {
+        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'main.exoclick.com') !== \false) {
             $parametersToExclude[] = 'data';
             $parametersToExclude[] = 'wpn';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'youtube.com') !== false) {
+        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'youtube.com') !== \false) {
             $parametersToExclude[] = 'redir_token';
             $parametersToExclude[] = 'html_redirect';
             $parametersToExclude[] = 'continuation';
             $parametersToExclude[] = 'feature';
         }
-        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'bing.com') !== false) {
+        if (!empty($this->referrerHost) && strpos($this->referrerHost, 'bing.com') !== \false) {
             $parametersToExclude[] = 'cvid';
             $parametersToExclude[] = 'refig';
             $parametersToExclude[] = 'elv';
@@ -240,13 +240,13 @@ abstract class Base extends VisitDimension
             $cachedReferrerSearchEngine[$this->referrerUrl] = $searchEngineInformation;
             $cache->save($cacheKey, $cachedReferrerSearchEngine);
         }
-        if ($searchEngineInformation === false) {
-            return false;
+        if ($searchEngineInformation === \false) {
+            return \false;
         }
         $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_SEARCH_ENGINE;
         $this->nameReferrerAnalyzed = $searchEngineInformation['name'];
         $this->keywordReferrerAnalyzed = $searchEngineInformation['keywords'];
-        return true;
+        return \true;
     }
     /**
      * Social network detection
@@ -260,7 +260,7 @@ abstract class Base extends VisitDimension
         if ($cache->contains($cacheKey)) {
             $cachedReferrerSocialNetworks = $cache->fetch($cacheKey);
         }
-        $socialNetworkName = false;
+        $socialNetworkName = \false;
         if (isset($cachedReferrerSocialNetworks[$this->referrerUrl])) {
             $socialNetworkName = $cachedReferrerSocialNetworks[$this->referrerUrl];
         } else {
@@ -284,13 +284,13 @@ abstract class Base extends VisitDimension
             $cachedReferrerSocialNetworks[$this->referrerUrl] = $socialNetworkName;
             $cache->save($cacheKey, $cachedReferrerSocialNetworks);
         }
-        if ($socialNetworkName === false) {
-            return false;
+        if ($socialNetworkName === \false) {
+            return \false;
         }
         $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_SOCIAL_NETWORK;
         $this->nameReferrerAnalyzed = $socialNetworkName;
         $this->keywordReferrerAnalyzed = '';
-        return true;
+        return \true;
     }
     /**
      * @param string $string
@@ -310,7 +310,7 @@ abstract class Base extends VisitDimension
             }
         }
         if (empty($campaignName)) {
-            return false;
+            return \false;
         }
         $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_CAMPAIGN;
         $this->nameReferrerAnalyzed = $campaignName;
@@ -336,7 +336,7 @@ abstract class Base extends VisitDimension
         $campaignParameters = Common::getCampaignParameters();
         $this->campaignNames = $campaignParameters[0];
         $this->campaignKeywords = $campaignParameters[1];
-        $found = false;
+        $found = \false;
         // 1) Detect campaign from query string
         if (isset($this->currentUrlParse['query'])) {
             $found = $this->detectCampaignFromString($this->currentUrlParse['query']);
@@ -394,7 +394,7 @@ abstract class Base extends VisitDimension
     protected function detectReferrerDirectEntry(Request $request)
     {
         if (empty($this->referrerHost)) {
-            return false;
+            return \false;
         }
         $urlsByHost = $this->getCachedUrlsByHostAndIdSite();
         $directEntry = new SiteUrls();
@@ -402,9 +402,9 @@ abstract class Base extends VisitDimension
         $matchingSites = $directEntry->getIdSitesMatchingUrl($this->referrerUrlParse, $urlsByHost);
         if (isset($matchingSites) && is_array($matchingSites) && in_array($this->idsite, $matchingSites)) {
             $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_DIRECT_ENTRY;
-            return true;
+            return \true;
         } elseif (isset($matchingSites)) {
-            return false;
+            return \false;
         }
         $site = Cache::getCacheWebsiteAttributes($this->idsite);
         $excludeUnknowns = $site['exclude_unknown_urls'];
@@ -414,10 +414,10 @@ abstract class Base extends VisitDimension
             $currentHost = mb_strtolower($this->currentUrlParse['host']);
             if ($currentHost == mb_strtolower($this->referrerHost)) {
                 $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_DIRECT_ENTRY;
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     protected function detectCampaignKeywordFromReferrerUrl() : void
     {
@@ -433,7 +433,7 @@ abstract class Base extends VisitDimension
             }
         }
         // Set the keyword, to the hostname found, in a Adsense Referrer URL '&url=' parameter
-        if (empty($this->keywordReferrerAnalyzed) && !empty($this->referrerUrlParse['query']) && !empty($this->referrerHost) && (strpos($this->referrerHost, 'googleads') !== false || strpos($this->referrerHost, 'doubleclick') !== false)) {
+        if (empty($this->keywordReferrerAnalyzed) && !empty($this->referrerUrlParse['query']) && !empty($this->referrerHost) && (strpos($this->referrerHost, 'googleads') !== \false || strpos($this->referrerHost, 'doubleclick') !== \false)) {
             // This parameter sometimes is found & contains the page with the adsense ad bringing visitor to our site
             $value = $this->getParameterValueFromReferrerUrl('url');
             if (!empty($value)) {
@@ -489,11 +489,11 @@ abstract class Base extends VisitDimension
         if ($this->typeReferrerAnalyzed != Common::REFERRER_TYPE_CAMPAIGN) {
             $this->keywordReferrerAnalyzed = null;
             $this->nameReferrerAnalyzed = null;
-            return false;
+            return \false;
         }
         $this->keywordReferrerAnalyzed = mb_strtolower($this->keywordReferrerAnalyzed ?? '');
         $this->nameReferrerAnalyzed = mb_strtolower($this->nameReferrerAnalyzed);
-        return true;
+        return \true;
     }
     /**
      * @param Request $request
@@ -548,7 +548,7 @@ abstract class Base extends VisitDimension
         if (array_key_exists($this->columnName, $fields)) {
             return $fields[$this->columnName];
         }
-        return false;
+        return \false;
     }
     /**
      * @param $type
@@ -570,10 +570,10 @@ abstract class Base extends VisitDimension
     {
         foreach (['referer_keyword', 'referer_name', 'referer_type'] as $infoName) {
             if ($this->hasReferrerColumnChanged($visitor, $information, $infoName)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     protected function hasReferrerColumnChanged(Visitor $visitor, $information, $infoName)
     {

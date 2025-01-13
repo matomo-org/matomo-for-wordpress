@@ -24,7 +24,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
     private function makeVisitorLogSetting() : SystemSetting
     {
-        $defaultValue = false;
+        $defaultValue = \false;
         $type = FieldConfig::TYPE_BOOL;
         return $this->makeSetting('disable_visitor_log', $defaultValue, $type, function (FieldConfig $field) {
             $field->title = Piwik::translate('Live_DisableVisitsLogAndProfile');
@@ -34,7 +34,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
     private function makeVisitorProfileSetting() : SystemSetting
     {
-        $defaultValue = false;
+        $defaultValue = \false;
         $type = FieldConfig::TYPE_BOOL;
         return $this->makeSetting('disable_visitor_profile', $defaultValue, $type, function (FieldConfig $field) {
             $field->title = Piwik::translate('Live_DisableVisitorProfile');

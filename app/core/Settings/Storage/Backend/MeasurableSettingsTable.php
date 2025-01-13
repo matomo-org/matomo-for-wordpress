@@ -70,7 +70,7 @@ class MeasurableSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettin
             $this->delete();
             // No values = nothing to save
             if (!empty($valuesKeep)) {
-                Db\BatchInsert::tableInsertBatchSql($table, $columns, $valuesKeep, true);
+                Db\BatchInsert::tableInsertBatchSql($table, $columns, $valuesKeep, \true);
             }
         });
     }
@@ -83,7 +83,7 @@ class MeasurableSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettin
     }
     private function jsonEncodedMissingError(Exception $e)
     {
-        return strpos($e->getMessage(), 'json_encoded') !== false;
+        return strpos($e->getMessage(), 'json_encoded') !== \false;
     }
     public function load()
     {
@@ -107,7 +107,7 @@ class MeasurableSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettin
         foreach ($settings as $setting) {
             $name = $setting['setting_name'];
             if (!empty($setting['json_encoded'])) {
-                $flat[$name] = json_decode($setting['setting_value'], true);
+                $flat[$name] = json_decode($setting['setting_value'], \true);
             } elseif (array_key_exists($name, $flat)) {
                 if (!is_array($flat[$name])) {
                     $flat[$name] = array($flat[$name]);

@@ -25,11 +25,11 @@ class GetReferrerType extends \Piwik\Plugins\Referrers\Reports\Base
         $this->dimension = new ReferrerType();
         $this->name = Piwik::translate('Referrers_Type');
         $this->documentation = Piwik::translate('Referrers_TypeReportDocumentation') . '<br />' . '<b>' . Piwik::translate('Referrers_DirectEntry') . ':</b> ' . Piwik::translate('Referrers_DirectEntryDocumentation') . '<br />' . '<b>' . Piwik::translate('Referrers_SearchEngines') . ':</b> ' . Piwik::translate('Referrers_SearchEnginesDocumentation', array('<br />', '&quot;' . Piwik::translate('Referrers_SubmenuSearchEngines') . '&quot;')) . '<br />' . '<b>' . Piwik::translate('Referrers_Websites') . ':</b> ' . Piwik::translate('Referrers_WebsitesDocumentation', array('<br />', '&quot;' . Piwik::translate('Referrers_SubmenuWebsitesOnly') . '&quot;')) . '<br />' . '<b>' . Piwik::translate('Referrers_Campaigns') . ':</b> ' . Piwik::translate('Referrers_CampaignsDocumentation', array('<br />', '&quot;' . Piwik::translate('Referrers_Campaigns') . '&quot;'));
-        $this->constantRowsCount = true;
-        $this->hasGoalMetrics = true;
+        $this->constantRowsCount = \true;
+        $this->hasGoalMetrics = \true;
         $this->order = 1;
         $this->subcategoryId = 'Referrers_WidgetGetAll';
-        $this->supportsFlatten = false;
+        $this->supportsFlatten = \false;
     }
     public function getDefaultTypeViewDataTable()
     {
@@ -43,7 +43,7 @@ class GetReferrerType extends \Piwik\Plugins\Referrers\Reports\Base
     }
     public function configureView(ViewDataTable $view)
     {
-        $idSubtable = Common::getRequestVar('idSubtable', false);
+        $idSubtable = Common::getRequestVar('idSubtable', \false);
         $labelColumnTitle = $this->name;
         switch ($idSubtable) {
             case Common::REFERRER_TYPE_SEARCH_ENGINE:
@@ -61,14 +61,14 @@ class GetReferrerType extends \Piwik\Plugins\Referrers\Reports\Base
             default:
                 break;
         }
-        $view->config->show_search = false;
-        $view->config->show_offset_information = false;
-        $view->config->show_pagination_control = false;
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_search = \false;
+        $view->config->show_offset_information = \false;
+        $view->config->show_pagination_control = \false;
+        $view->config->show_exclude_low_population = \false;
         $view->config->addTranslation('label', $labelColumnTitle);
         $view->requestConfig->filter_limit = 10;
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->disable_subtable_when_show_goals = true;
+            $view->config->disable_subtable_when_show_goals = \true;
         }
         $this->configureFooterMessage($view);
     }

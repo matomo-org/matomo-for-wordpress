@@ -204,7 +204,7 @@ class Model
         $salt = SettingsPiwik::getSalt();
         return hash(self::TOKEN_HASH_ALGO, $tokenAuth . $salt);
     }
-    public function generateRandomInviteToken()
+    public function generateRandomInviteToken() : string
     {
         $count = 0;
         do {
@@ -234,7 +234,7 @@ class Model
     }
     private function generateTokenAuth()
     {
-        return md5(Common::getRandomString(32, 'abcdef1234567890') . microtime(true) . Common::generateUniqId() . SettingsPiwik::getSalt());
+        return md5(Common::getRandomString(32, 'abcdef1234567890') . microtime(\true) . Common::generateUniqId() . SettingsPiwik::getSalt());
     }
     /**
      * Add a new token auth record to the database
@@ -250,7 +250,7 @@ class Model
      * @return int                  Primary key of the new token auth
      * @throws \Piwik\Tracker\Db\DbException
      */
-    public function addTokenAuth($login, $tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = false, bool $secureOnly = false)
+    public function addTokenAuth($login, $tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = \false, bool $secureOnly = \false)
     {
         if (!$this->getUser($login)) {
             throw new \Exception('User ' . $login . ' does not exist');
@@ -263,7 +263,7 @@ class Model
         $insertSql = "INSERT INTO " . $this->tokenTable . ' (login, description, password, date_created, date_expired, system_token, hash_algo, secure_only) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
-        $db->query($insertSql, [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, $secureOnly]);
+        $db->query($insertSql, [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, (int) $secureOnly]);
         return $db->lastInsertId();
     }
     private function getTokenByTokenAuth($tokenAuth)
@@ -296,7 +296,7 @@ class Model
         // If the token wasn't provided via a secure mechanism and use of secure tokens is enforced globally
         // then don't attempt to find the token
         if (GeneralConfig::getConfigValue('only_allow_secure_auth_tokens') && !$isTokenSecured) {
-            return false;
+            return \false;
         }
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
@@ -429,11 +429,11 @@ class Model
         $db = $this->getDb();
         $db->insert($this->userTable, $user);
     }
-    public function attachInviteToken($userLogin, $token, $expiryInDays = 7)
+    public function attachInviteToken(string $userLogin, string $token, int $expiryInDays) : void
     {
         $this->updateUserFields($userLogin, ['invite_token' => $this->hashTokenAuth($token), 'invite_expired_at' => Date::now()->addDay($expiryInDays)->getDatetime()]);
     }
-    public function attachInviteLinkToken($userLogin, $token, $expiryInDays = 7)
+    public function attachInviteLinkToken(string $userLogin, string $token, int $expiryInDays) : void
     {
         $this->updateUserFields($userLogin, ['invite_link_token' => $this->hashTokenAuth($token), 'invite_expired_at' => Date::now()->addDay($expiryInDays)->getDatetime()]);
     }

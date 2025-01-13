@@ -56,7 +56,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $view->render();
     }
-    public function getDashboardLayout($checkToken = true)
+    public function getDashboardLayout($checkToken = \true)
     {
         if ($checkToken) {
             $this->checkTokenInUrl();

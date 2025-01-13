@@ -23,7 +23,7 @@ class LogglyFormatter extends JsonFormatter
      *
      * @param int $batchMode
      */
-    public function __construct($batchMode = self::BATCH_MODE_NEWLINES, $appendNewline = false)
+    public function __construct($batchMode = self::BATCH_MODE_NEWLINES, $appendNewline = \false)
     {
         parent::__construct($batchMode, $appendNewline);
     }

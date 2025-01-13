@@ -41,7 +41,7 @@ class Cookie
     /**
      * @var string
      */
-    protected $keyStore = false;
+    protected $keyStore = \false;
     /**
      * Restrict cookie to a domain (or subdomains)
      * @var string
@@ -51,13 +51,13 @@ class Cookie
      * If true, cookie should only be transmitted over secure HTTPS
      * @var bool
      */
-    protected $secure = false;
+    protected $secure = \false;
     /**
      * If true, cookie will only be made available via the HTTP protocol.
      * Note: not well supported by browsers.
      * @var bool
      */
-    protected $httponly = false;
+    protected $httponly = \false;
     /**
      * The content of the cookie
      * @var array
@@ -77,7 +77,7 @@ class Cookie
      * @param string $path The path on the server in which the cookie will be available on.
      * @param bool|string $keyStore Will be used to store several bits of data (eg. one array per website)
      */
-    public function __construct($cookieName, $expire = null, $path = null, $keyStore = false)
+    public function __construct($cookieName, $expire = null, $path = null, $keyStore = \false)
     {
         $this->name = $cookieName;
         $this->path = $path;
@@ -120,7 +120,7 @@ class Cookie
      * @param bool $HTTPOnly
      * @param string $sameSite
      */
-    protected function setCookie($Name, $Value, $Expires, $Path = '', $Domain = '', $Secure = false, $HTTPOnly = false, $sameSite = false)
+    protected function setCookie($Name, $Value, $Expires, $Path = '', $Domain = '', $Secure = \false, $HTTPOnly = \false, $sameSite = \false)
     {
         if (!empty($Domain)) {
             // Fix the domain to accept domains with and without 'www.'.
@@ -130,7 +130,7 @@ class Cookie
             $Domain = '.' . $Domain;
             // Remove port information.
             $Port = strpos($Domain, ':');
-            if ($Port !== false) {
+            if ($Port !== \false) {
                 $Domain = substr($Domain, 0, $Port);
             }
         }
@@ -139,7 +139,7 @@ class Cookie
             $Expires = $this->formatExpireTime($Expires);
         }
         $header = 'Set-Cookie: ' . rawurlencode($Name) . '=' . rawurlencode($Value) . (empty($Expires) ? '' : '; expires=' . $Expires) . (empty($Path) ? '' : '; path=' . $Path) . (empty($Domain) ? '' : '; domain=' . rawurlencode($Domain)) . (!$Secure ? '' : '; secure') . (!$HTTPOnly ? '' : '; HttpOnly') . (!$sameSite ? '' : '; SameSite=' . rawurlencode($sameSite));
-        \Piwik\Common::sendHeader($header, false);
+        \Piwik\Common::sendHeader($header, \false);
     }
     /**
      * We set the privacy policy header
@@ -155,7 +155,7 @@ class Cookie
     {
         $this->setP3PHeader();
         $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain);
-        $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain, TRUE, FALSE, 'None');
+        $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain, \true, \false, 'None');
         $this->clear();
     }
     /**
@@ -192,7 +192,7 @@ class Cookie
             // strip trailing: VALUE_SEPARATOR '_=' signature"
             return substr($content, 0, -43);
         }
-        return false;
+        return \false;
     }
     /**
      * Load the cookie content into a php array.
@@ -206,11 +206,11 @@ class Cookie
         // this value
         $cookieStr = $this->extractSignedContent($_COOKIE[$this->name]);
         $isSigned = !empty($cookieStr);
-        if ($cookieStr === false && !empty($_COOKIE[$this->name]) && strpos($_COOKIE[$this->name], '=') !== false) {
+        if ($cookieStr === \false && !empty($_COOKIE[$this->name]) && strpos($_COOKIE[$this->name], '=') !== \false) {
             // cookie was set since Matomo 4
             $cookieStr = $_COOKIE[$this->name];
         }
-        if ($cookieStr === false) {
+        if ($cookieStr === \false) {
             return;
         }
         $values = explode(self::VALUE_SEPARATOR, $cookieStr);
@@ -229,7 +229,7 @@ class Cookie
                 // discard entire cookie
                 // note: this assumes we never serialize a boolean
                 // can only happen when it was signed pre Matomo 4
-                if ($varValue === false && $tmpValue !== 'b:0;') {
+                if ($varValue === \false && $tmpValue !== 'b:0;') {
                     $this->value = array();
                     unset($_COOKIE[$this->name]);
                     break;
@@ -299,14 +299,14 @@ class Cookie
         $name = self::escapeValue($name);
         // Delete value if $value === null
         if (is_null($value)) {
-            if ($this->keyStore === false) {
+            if ($this->keyStore === \false) {
                 unset($this->value[$name]);
                 return;
             }
             unset($this->value[$this->keyStore][$name]);
             return;
         }
-        if ($this->keyStore === false) {
+        if ($this->keyStore === \false) {
             $this->value[$name] = $value;
             return;
         }
@@ -321,16 +321,16 @@ class Cookie
     public function get($name)
     {
         $name = self::escapeValue($name);
-        if (false === $this->keyStore) {
+        if (\false === $this->keyStore) {
             if (isset($this->value[$name])) {
                 return self::escapeValue($this->value[$name]);
             }
-            return false;
+            return \false;
         }
         if (isset($this->value[$this->keyStore][$name])) {
             return self::escapeValue($this->value[$this->keyStore][$name]);
         }
-        return false;
+        return \false;
     }
     /**
      * Removes all values from the cookie.
@@ -348,7 +348,7 @@ class Cookie
     {
         $str = 'COOKIE ' . $this->name . ', rows count: ' . count($this->value) . ', cookie size = ' . strlen($this->generateContentString()) . " bytes, ";
         $str .= 'path: ' . $this->path . ', expire: ' . $this->expire . "\n";
-        $str .= var_export($this->value, $return = true);
+        $str .= var_export($this->value, $return = \true);
         return $str;
     }
     /**

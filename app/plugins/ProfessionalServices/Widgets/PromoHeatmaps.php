@@ -31,7 +31,7 @@ class PromoHeatmaps extends \Piwik\Plugins\ProfessionalServices\Widgets\Dismissi
         $view = new View('@ProfessionalServices/pluginAdvertising');
         $view->plugin = $pluginInfo;
         $view->widgetName = self::getDismissibleWidgetName();
-        $view->userCanDismiss = Piwik::isUserIsAnonymous() === false;
+        $view->userCanDismiss = Piwik::isUserIsAnonymous() === \false;
         $view->title = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', 'Heatmaps');
         $view->imageName = 'ad-heatmaps.png';
         $view->listOfFeatures = [Piwik::translate('ProfessionalServices_HeatmapsFeature01'), Piwik::translate('ProfessionalServices_HeatmapsFeature02'), Piwik::translate('ProfessionalServices_HeatmapsFeature03')];

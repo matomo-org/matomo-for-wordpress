@@ -17,7 +17,7 @@ class NameExpression extends AbstractExpression
     private $specialVars = ['_self' => '$this->getTemplateName()', '_context' => '$context', '_charset' => '$this->env->getCharset()'];
     public function __construct(string $name, int $lineno)
     {
-        parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
+        parent::__construct([], ['name' => $name, 'is_defined_test' => \false, 'ignore_strict_check' => \false, 'always_defined' => \false], $lineno);
     }
     public function compile(Compiler $compiler) : void
     {
@@ -25,7 +25,7 @@ class NameExpression extends AbstractExpression
         $compiler->addDebugInfo($this);
         if ($this->getAttribute('is_defined_test')) {
             if (isset($this->specialVars[$name])) {
-                $compiler->repr(true);
+                $compiler->repr(\true);
             } elseif (\PHP_VERSION_ID >= 70400) {
                 $compiler->raw('array_key_exists(')->string($name)->raw(', $context)');
             } else {

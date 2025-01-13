@@ -26,6 +26,6 @@ class Shopify extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConte
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'Shopify.theme';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

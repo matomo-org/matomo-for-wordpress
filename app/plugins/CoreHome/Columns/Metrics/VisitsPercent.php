@@ -62,7 +62,7 @@ class VisitsPercent extends ProcessedMetric
         } else {
             $this->cachedTotalVisits = $this->forceTotalVisits;
         }
-        return true;
+        return \true;
         // always compute
     }
     public function getSemanticType() : ?string

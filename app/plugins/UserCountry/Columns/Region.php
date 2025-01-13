@@ -31,7 +31,7 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('region', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             $value = substr($value, 0, 3);
             return $value;
         }

@@ -31,7 +31,7 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param int                      $level
      * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
+    public function __construct($exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = \true)
     {
         if ($exchange instanceof AMQPExchange) {
             $exchange->setName($exchangeName);
@@ -104,6 +104,6 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        return new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, \false);
     }
 }

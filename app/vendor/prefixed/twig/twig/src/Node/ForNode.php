@@ -31,7 +31,7 @@ class ForNode extends Node
         if (null !== $else) {
             $nodes['else'] = $else;
         }
-        parent::__construct($nodes, ['with_loop' => true], $lineno, $tag);
+        parent::__construct($nodes, ['with_loop' => \true], $lineno, $tag);
     }
     public function compile(Compiler $compiler) : void
     {

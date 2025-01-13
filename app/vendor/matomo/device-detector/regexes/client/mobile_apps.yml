@@ -5,11 +5,6 @@
 # @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
 ###############
 
-# Report Runner (https://reportrunner.com/)
-- regex: 'Report Runner'
-  name: 'Report Runner'
-  version: ''
-
 # Ameba (https://ameblo.jp/ | https://play.google.com/store/apps/details?id=jp.ameba)
 - regex: 'jpameblo;(\d+\.[\.\d]+)'
   name: 'Ameba'
@@ -272,7 +267,7 @@
   version: '$1'
 - regex: 'BeyondPod'
   name: 'BeyondPod'
-  version:
+  version: ''
 
 - regex: '(?:^Overcast/([\d\.]+)|^Overcast.*Apple Watch)'
   name: 'Overcast'
@@ -297,7 +292,7 @@
   version: ''
 - regex: 'DoggCatcher'
   name: 'DoggCatcher'
-  version:
+  version: ''
 - regex: '(?:PodcastAddict/v([\d]+)|^Podcast Addict)'
   name: 'Podcast & Radio Addict'
   version: '$1'
@@ -558,7 +553,10 @@
   version: '$1'
 
 # TikTok (https://apps.apple.com/app/id835599320 | https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically)
-- regex: '(?:TikTok[/ ]|com\.zhiliaoapp\.musically|musical_ly_|AppName/musical_ly app_version/)(\d+\.(?:[\.\d]+))?'
+- regex: 'AppName/musical_ly app_version/(\d+\.(?:[\.\d]+))?'
+  name: 'TikTok'
+  version: '$1'
+- regex: '(?:TikTok[/ ]|com\.zhiliaoapp\.musically|musical_ly_|trill_)(\d+\.(?:[\.\d]+))?'
   name: 'TikTok'
   version: '$1'
 
@@ -706,7 +704,7 @@
   name: 'Evolve Podcast'
   version: '$1'
 
-- regex: ' Rocket\.Chat\+?/(\d+[\.\d]+)'
+- regex: 'Rocket\.Chat\+?/(\d+[\.\d]+)'
   name: 'Rocket Chat'
   version: '$1'
 
@@ -1089,6 +1087,21 @@
 # Blackboard (https://apps.apple.com/us/app/blackboard/id950424861)
 - regex: 'Blackboard/(\d+[\.\d]+)?'
   name: 'Blackboard'
+  version: '$1'
+
+# TIM (https://tim.qq.com/)
+- regex: 'TIM/(\d+[\.\d]+)'
+  name: 'TIM'
+  version: '$1'
+
+# Tencent Docs (https://docs.qq.com/)
+- regex: 'TencentDocs/(\d+[\.\d]+)'
+  name: 'Tencent Docs'
+  version: '$1'
+
+# QQ (https://apps.apple.com/us/app/qq/id444934666)
+- regex: 'QQ/(\d+[\.\d]+) V1_IPH_SQ_'
+  name: 'QQ'
   version: '$1'
 
 # QQMusic (https://apps.apple.com/cn/app/qq%E9%9F%B3%E4%B9%90-%E5%90%AC%E6%88%91%E6%83%B3%E5%90%AC/id414603431)
@@ -2137,7 +2150,7 @@
   name: 'Shadowrocket'
   version: '$1'
 
-- regex: '^SiriusXM/([\d\.]+)'
+- regex: '^(?:SiriusXM|sxm-android|sxm-apple)/([\d\.]+)'
   name: 'SiriusXM'
   version: '$1'
 
@@ -2482,8 +2495,58 @@
   name: 'SoFi'
   version: '$1'
 
+# WNYC (https://play.google.com/store/apps/details?id=org.wnyc.android)
+- regex: 'WNYC(?: App)?[/ ]?([\d\.]+)?'
+  name: 'WNYC'
+  version: '$1'
+
+# The Epoch Times (https://apps.apple.com/us/app/epoch-times-live-breaking/id670443321)
+- regex: 'com\.theepochtimes\.mobile/([\d\.]+)'
+  name: 'The Epoch Times'
+  version: '$1'
+
+# Reuters News (https://apps.apple.com/us/app/reuters-news/id602660809)
+- regex: 'ReutersNews(?: App)?[/ ]?([\d\.]+)?'
+  name: 'Reuters News'
+  version: '$1'
+
+# WatchFree+ (https://web.archive.org/web/20240514173717/https://www.vizio.com/en/watchfreeplus)
+- regex: 'WatchFree/([\d\.]+)'
+  name: 'WatchFree+'
+  version: '$1'
+
+# Obsidian (https://obsidian.md/)
+- regex: 'obsidian/([\d\.]+)'
+  name: 'Obsidian'
+  version: '$1'
+
+# Perplexity (https://apps.apple.com/us/app/perplexity-ask-anything/id1668000334)
+- regex: 'Perplexity'
+  name: 'Perplexity'
+  version: ''
+
+# XShare
+- regex: 'XShare'
+  name: 'XShare'
+  version: ''
+
+# Visha (https://play.google.com/store/apps/details?id=com.transsion.magicshow)
+- regex: 'VISHAAPP ([\d\.]+)'
+  name: 'Visha'
+  version: '$1'
+
+# The Crossword (https://play.google.com/store/apps/details?id=com.nytimes.crossword)
+- regex: 'nyt_android/([\d\.]+)'
+  name: 'The Crossword'
+  version: '$1'
+
+# Mojeek (https://play.google.com/store/apps/details?id=mojeek.app)
+- regex: 'mojeek-app'
+  name: 'Mojeek'
+  version: ''
+
 # Electron generic apps
-- regex:  ' (?!(?:AppleWebKit|brave|Franz|Mailspring|Notion|Basecamp|Evernote|catalyst|ramboxpro|BlueMail|BeakerBrowser|TweakStyle|Colibri|Polypane|VibeMate|(?:d|LT|Glass|Sushi|Flash|OhHai)Browser|Sizzy))([a-z0-9]*)(?:-desktop|-electron-app)?/(\d+\.[\d.]+).*Electron/'
+- regex: ' (?!(?:AppleWebKit|brave|Franz|Mailspring|Notion|Basecamp|Evernote|catalyst|ramboxpro|BlueMail|BeakerBrowser|Dezor|TweakStyle|Colibri|Polypane|VibeMate|(?:d|LT|Glass|Sushi|Flash|OhHai)Browser|Sizzy))([a-z0-9]*)(?:-desktop|-electron-app)?/(\d+\.[\d.]+).*Electron/'
   name: '$1'
   version: '$2'
 

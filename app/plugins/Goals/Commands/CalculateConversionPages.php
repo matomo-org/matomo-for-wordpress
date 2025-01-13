@@ -72,7 +72,7 @@ class CalculateConversionPages extends ConsoleCommand
             $totalCalculated += $calcCount;
             $output->write(".");
         }
-        $this->writeSuccessMessage(["Successfully calculated the pages before metric for {$totalCalculated} conversions. <comment>" . $timer . "</comment>"]);
+        $this->writeSuccessMessage("Successfully calculated the pages before metric for {$totalCalculated} conversions. <comment>{$timer}</comment>");
         return self::SUCCESS;
     }
     /**
@@ -153,7 +153,7 @@ class CalculateConversionPages extends ConsoleCommand
         }
         // Only allow the goals parameter to be used if a single site is specified
         $idSite = $this->getInput()->getOption('idsite');
-        if (!is_numeric($idSite) || strpos($idSite, ',') !== false) {
+        if (!is_numeric($idSite) || strpos($idSite, ',') !== \false) {
             throw new \InvalidArgumentException("The goals parameter can only be used when a single website is specified using the idsite parameter", $code = 0);
         }
         $goals = explode(',', $idGoal);
@@ -182,7 +182,7 @@ class CalculateConversionPages extends ConsoleCommand
      *
      * @return array An array of queries and bind arrays   [['sql' => QUERY1, 'bind' => [PARAM1 => VALUE], ...]
      */
-    private static function getQueries(?string $startDatetime, ?string $endDatetime, ?int $lastN = null, ?string $idSite = null, ?string $idGoal = null, ?bool $forceRecalc = false) : array
+    private static function getQueries(?string $startDatetime, ?string $endDatetime, ?int $lastN = null, ?string $idSite = null, ?string $idGoal = null, ?bool $forceRecalc = \false) : array
     {
         // Sites
         if ($idSite === null) {

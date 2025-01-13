@@ -31,7 +31,7 @@ class Evolution extends JqplotDataGenerator
         $units = [];
         foreach ($this->properties['columns_to_display'] as $columnName) {
             $derivedUnit = Metrics::getUnit($columnName, $idSite);
-            $units[$columnName] = empty($derivedUnit) ? false : $derivedUnit;
+            $units[$columnName] = empty($derivedUnit) ? \false : $derivedUnit;
         }
         return $units;
     }
@@ -55,7 +55,7 @@ class Evolution extends JqplotDataGenerator
         $this->addSelectedSeriesXLabels($xLabels, $dataTables);
         $units = $this->getUnitsForColumnsToDisplay();
         // if rows to display are not specified, default to all rows (TODO: perhaps this should be done elsewhere?)
-        $rowsToDisplay = ($this->properties['rows_to_display'] ?: array_unique($dataTable->getColumn('label'))) ?: [false];
+        $rowsToDisplay = ($this->properties['rows_to_display'] ?: array_unique($dataTable->getColumn('label'))) ?: [\false];
         $columnsToDisplay = array_values($this->properties['columns_to_display']);
         [$seriesMetadata, $seriesUnits, $seriesLabels, $seriesToXAxis] = $this->getSeriesMetadata($rowsToDisplay, $columnsToDisplay, $units, $dataTables);
         // collect series data to show. each row-to-display/column-to-display permutation creates a series.
@@ -114,13 +114,13 @@ class Evolution extends JqplotDataGenerator
         $seriesData = array();
         foreach ($dataTable->getDataTables() as $childTable) {
             // get the row for this label (use the first if $rowLabel is false)
-            if ($rowLabel === false) {
+            if ($rowLabel === \false) {
                 $row = $childTable->getFirstRow();
             } else {
                 $row = $childTable->getRowFromLabel($rowLabel);
             }
             // get series data point. defaults to 0 if no row or no column value.
-            if ($row === false) {
+            if ($row === \false) {
                 $seriesData[] = 0;
             } else {
                 $seriesData[] = $row->getColumn($columnName) ?: 0;
@@ -138,7 +138,7 @@ class Evolution extends JqplotDataGenerator
     private function getSeriesLabel($rowLabel, $columnName)
     {
         $metricLabel = @$this->properties['translations'][$columnName];
-        if ($rowLabel !== false) {
+        if ($rowLabel !== \false) {
             // eg. "Yahoo! (Visits)"
             $label = "{$rowLabel} ({$metricLabel})";
         } else {
@@ -207,7 +207,7 @@ class Evolution extends JqplotDataGenerator
     {
         foreach ($dataTable->getDataTables() as $label => $childTable) {
             // get the row for this label (use the first if $rowLabel is false)
-            if ($rowLabel === false) {
+            if ($rowLabel === \false) {
                 $row = $childTable->getFirstRow();
             } else {
                 $row = $childTable->getRowFromLabel($rowLabel);
@@ -281,7 +281,7 @@ class Evolution extends JqplotDataGenerator
             /** @var Period $period */
             $period = $dataTables[$dataTableDate]->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
             $state = $dataTables[$dataTableDate]->getMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
-            if (false === $state) {
+            if (\false === $state) {
                 // Missing archive state information should only occur if no
                 // usable archive was found in the database. Treat a missing archive
                 // (for example if there are legitimately zero visits to a site)

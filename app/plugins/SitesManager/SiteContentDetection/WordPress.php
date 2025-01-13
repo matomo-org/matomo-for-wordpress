@@ -39,7 +39,7 @@ class WordPress extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCon
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = '/wp-content';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
@@ -55,7 +55,7 @@ class WordPress extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCon
         }
         $view->authLink = $authLink;
         $view->faqLink = $faqLink;
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->site = ['id' => $idSite, 'name' => ''];
         $view->isJsTrackerInstallCheckAvailable = Manager::getInstance()->isPluginActivated('JsTrackerInstallCheck');
         return $view->render();

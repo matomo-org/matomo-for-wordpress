@@ -50,7 +50,7 @@ class NewRelicHandler extends AbstractProcessingHandler
      * @param bool   $explodeArrays
      * @param string $transactionName
      */
-    public function __construct($level = Logger::ERROR, $bubble = true, $appName = null, $explodeArrays = false, $transactionName = null)
+    public function __construct($level = Logger::ERROR, $bubble = \true, $appName = null, $explodeArrays = \false, $transactionName = null)
     {
         parent::__construct($level, $bubble);
         $this->appName = $appName;
@@ -72,7 +72,7 @@ class NewRelicHandler extends AbstractProcessingHandler
             $this->setNewRelicTransactionName($transactionName);
             unset($record['formatted']['context']['transaction_name']);
         }
-        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable)) {
+        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || \PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable)) {
             newrelic_notice_error($record['message'], $record['context']['exception']);
             unset($record['formatted']['context']['exception']);
         } else {
@@ -166,7 +166,7 @@ class NewRelicHandler extends AbstractProcessingHandler
         if (null === $value || is_scalar($value)) {
             newrelic_add_custom_parameter($key, $value);
         } else {
-            newrelic_add_custom_parameter($key, Utils::jsonEncode($value, null, true));
+            newrelic_add_custom_parameter($key, Utils::jsonEncode($value, null, \true));
         }
     }
     /**

@@ -35,7 +35,7 @@ class GetOutlinks extends \Piwik\Plugins\Actions\Reports\Base
     public function configureView(ViewDataTable $view)
     {
         $view->config->columns_to_display = array('label', 'nb_visits', 'nb_hits');
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_exclude_low_population = \false;
         $this->addBaseDisplayProperties($view);
     }
 }

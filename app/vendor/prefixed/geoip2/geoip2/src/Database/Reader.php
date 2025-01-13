@@ -206,7 +206,7 @@ class Reader implements ProviderInterface
     }
     private function getRecord(string $class, string $type, string $ipAddress) : array
     {
-        if (strpos($this->dbType, $type) === false) {
+        if (strpos($this->dbType, $type) === \false) {
             $method = lcfirst((new \ReflectionClass($class))->getShortName());
             throw new \BadMethodCallException("The {$method} method cannot be used to open a {$this->dbType} database");
         }

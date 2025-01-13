@@ -9,6 +9,8 @@
 namespace Piwik\Plugins\Events;
 
 use Piwik\Archive;
+use Piwik\DataTable;
+use Piwik\Metrics;
 use Piwik\Piwik;
 /**
  * The Events API lets you request reports about your users' Custom Events.
@@ -50,7 +52,7 @@ class API extends \Piwik\Plugin\API
     /**
      * @ignore
      */
-    public function getActionToLoadSubtables($apiMethod, $secondaryDimension = false)
+    public function getActionToLoadSubtables($apiMethod, $secondaryDimension = \false)
     {
         $recordName = $this->getRecordNameForAction($apiMethod, $secondaryDimension);
         $apiMethod = array_search($recordName, $this->mappingApiToRecord);
@@ -64,9 +66,9 @@ class API extends \Piwik\Plugin\API
         if (isset($this->defaultMappingApiToSecondaryDimension[$apiMethod])) {
             return $this->defaultMappingApiToSecondaryDimension[$apiMethod];
         }
-        return false;
+        return \false;
     }
-    protected function getRecordNameForAction($apiMethod, $secondaryDimension = false)
+    protected function getRecordNameForAction($apiMethod, $secondaryDimension = \false)
     {
         if (empty($secondaryDimension)) {
             $secondaryDimension = $this->getDefaultSecondaryDimension($apiMethod);
@@ -90,7 +92,7 @@ class API extends \Piwik\Plugin\API
     {
         $records = $this->mappingApiToRecord[$apiMethod];
         if (!is_array($records)) {
-            return false;
+            return \false;
         }
         return array_keys($records);
     }
@@ -104,18 +106,21 @@ class API extends \Piwik\Plugin\API
             throw new \Exception("Secondary dimension '{$secondaryDimension}' is not valid for the API {$apiMethod}. " . "Use one of: " . implode(", ", $this->getSecondaryDimensions($apiMethod)));
         }
     }
-    protected function getDataTable($name, $idSite, $period, $date, $segment, $expanded = false, $idSubtable = null, $secondaryDimension = false, $flat = false)
+    protected function getDataTable($name, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable = null, $secondaryDimension = \false, $flat = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $this->checkSecondaryDimension($name, $secondaryDimension);
         $recordName = $this->getRecordNameForAction($name, $secondaryDimension);
         $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $flat, $idSubtable);
+        $dataTable->filter(function ($dataTable) {
+            $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, [Metrics::INDEX_EVENT_MIN_EVENT_VALUE => 'min', Metrics::INDEX_EVENT_MAX_EVENT_VALUE => 'max']);
+        });
         if ($flat) {
             $dataTable->filterSubtables('Piwik\\Plugins\\Events\\DataTable\\Filter\\ReplaceEventNameNotSet');
         } else {
             $dataTable->filter('AddSegmentValue', array(function ($label) {
                 if ($label === \Piwik\Plugins\Events\Archiver::EVENT_NAME_NOT_SET) {
-                    return false;
+                    return \false;
                 }
                 return $label;
             }));
@@ -123,40 +128,40 @@ class API extends \Piwik\Plugin\API
         $dataTable->filter('Piwik\\Plugins\\Events\\DataTable\\Filter\\ReplaceEventNameNotSet');
         return $dataTable;
     }
-    public function getCategory($idSite, $period, $date, $segment = false, $expanded = false, $secondaryDimension = false, $flat = false)
+    public function getCategory($idSite, $period, $date, $segment = \false, $expanded = \false, $secondaryDimension = \false, $flat = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = \false, $secondaryDimension, $flat);
     }
-    public function getAction($idSite, $period, $date, $segment = false, $expanded = false, $secondaryDimension = false, $flat = false)
+    public function getAction($idSite, $period, $date, $segment = \false, $expanded = \false, $secondaryDimension = \false, $flat = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = \false, $secondaryDimension, $flat);
     }
-    public function getName($idSite, $period, $date, $segment = false, $expanded = false, $secondaryDimension = false, $flat = false)
+    public function getName($idSite, $period, $date, $segment = \false, $expanded = \false, $secondaryDimension = \false, $flat = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, $idSubtable = \false, $secondaryDimension, $flat);
     }
-    public function getActionFromCategoryId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getActionFromCategoryId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
-    public function getNameFromCategoryId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getNameFromCategoryId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
-    public function getCategoryFromActionId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getCategoryFromActionId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
-    public function getNameFromActionId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getNameFromActionId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
-    public function getActionFromNameId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getActionFromNameId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
-    public function getCategoryFromNameId($idSite, $period, $date, $idSubtable, $segment = false)
+    public function getCategoryFromNameId($idSite, $period, $date, $idSubtable, $segment = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded = \false, $idSubtable);
     }
 }

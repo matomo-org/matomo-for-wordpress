@@ -146,7 +146,7 @@ abstract class FileCache extends \Doctrine\Common\Cache\CacheProvider
                 @unlink($name);
             }
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -171,11 +171,11 @@ abstract class FileCache extends \Doctrine\Common\Cache\CacheProvider
     private function createPathIfNeeded(string $path) : bool
     {
         if (!is_dir($path)) {
-            if (@mkdir($path, 0777 & ~$this->umask, true) === false && !is_dir($path)) {
-                return false;
+            if (@mkdir($path, 0777 & ~$this->umask, \true) === \false && !is_dir($path)) {
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Writes a string content to file in an atomic way.
@@ -189,21 +189,21 @@ abstract class FileCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $filepath = pathinfo($filename, PATHINFO_DIRNAME);
         if (!$this->createPathIfNeeded($filepath)) {
-            return false;
+            return \false;
         }
         if (!is_writable($filepath)) {
-            return false;
+            return \false;
         }
         $tmpFile = tempnam($filepath, 'swap');
         @chmod($tmpFile, 0666 & ~$this->umask);
-        if (file_put_contents($tmpFile, $content) !== false) {
+        if (file_put_contents($tmpFile, $content) !== \false) {
             @chmod($tmpFile, 0666 & ~$this->umask);
             if (@rename($tmpFile, $filename)) {
-                return true;
+                return \true;
             }
             @unlink($tmpFile);
         }
-        return false;
+        return \false;
     }
     private function getIterator() : Iterator
     {

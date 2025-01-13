@@ -147,6 +147,10 @@ class VariablesDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piw
         $variables = Db::fetchAll("SELECT idvariable FROM {$table} WHERE status = ? AND idsite = ? and idcontainerversion = ? and type = ? ORDER BY created_date ASC", $bind);
         return is_array($variables) && count($variables) ? array_column($variables, 'idvariable') : [];
     }
+    protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
+    {
+        return $this->isNameInUse($idSite, $idContainerVersion, $name);
+    }
     private function enrichVariables($variables)
     {
         if (empty($variables)) {
@@ -166,13 +170,13 @@ class VariablesDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piw
         $variable['idsite'] = (int) $variable['idsite'];
         $variable['idcontainerversion'] = (int) $variable['idcontainerversion'];
         if (!empty($variable['parameters'])) {
-            $variable['parameters'] = json_decode($variable['parameters'], true);
+            $variable['parameters'] = json_decode($variable['parameters'], \true);
         }
         if (empty($variable['parameters'])) {
             $variable['parameters'] = [];
         }
         if (!empty($variable['lookup_table'])) {
-            $variable['lookup_table'] = json_decode($variable['lookup_table'], true);
+            $variable['lookup_table'] = json_decode($variable['lookup_table'], \true);
         }
         if (empty($variable['lookup_table'])) {
             $variable['lookup_table'] = [];

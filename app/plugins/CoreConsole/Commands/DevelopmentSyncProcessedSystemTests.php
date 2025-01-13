@@ -63,7 +63,7 @@ class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
         $httpPassword = $input->getOption('http-password');
         $filename = sprintf('system.%s.tar.bz2', $buildNumber);
         $urlBase = sprintf('https://builds-artifacts.matomo.org/%s/%s', $repository, $filename);
-        $tests = Http::sendHttpRequest($urlBase, $timeout = 120, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = false, $byteRange = false, $getExtendedInfo = false, $httpMethod = 'GET', $httpUser, $httpPassword);
+        $tests = Http::sendHttpRequest($urlBase, $timeout = 120, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUser, $httpPassword);
         $tarFile = $tmpDir . $filename;
         file_put_contents($tarFile, $tests);
         $tar = new Tar($tarFile, 'bz2');
@@ -110,7 +110,7 @@ class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
             Filesystem::mkdir($pluginTargetDir);
             Filesystem::copy($artifact, $pluginTargetDir . $file);
         }
-        Filesystem::unlinkRecursive($extractionTarget, true);
+        Filesystem::unlinkRecursive($extractionTarget, \true);
         $this->writeSuccessMessage(array('All processed plugin system test results were copied to <comment>' . $targetDir . '</comment>', 'Compare them with the expected test results and commit them if needed.'));
         unlink($tarFile);
     }

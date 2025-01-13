@@ -20,7 +20,7 @@ class DatabaseHandler extends AbstractProcessingHandler
     {
         $sql = sprintf('INSERT INTO %s (tag, timestamp, level, message) VALUES (?, ?, ?, ?)', Common::prefixTable('logger_message'));
         $queryLog = Db::isQueryLogEnabled();
-        Db::enableQueryLog(false);
+        Db::enableQueryLog(\false);
         Db::query($sql, array($record['extra']['class'], $record['datetime']->format('Y-m-d H:i:s'), $record['level_name'], trim($record['formatted'])));
         Db::enableQueryLog($queryLog);
     }

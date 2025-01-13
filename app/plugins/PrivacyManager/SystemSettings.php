@@ -57,7 +57,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
     private function createShowInEmbeddedWidgetsSetting() : SystemSetting
     {
-        return $this->makeSetting('showInEmbeddedWidgets', $default = false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        return $this->makeSetting('showInEmbeddedWidgets', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('PrivacyManager_ShowInEmbeddedWidgets');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
             $field->description = Piwik::translate('PrivacyManager_ShowInEmbeddedWidgetsDescription');

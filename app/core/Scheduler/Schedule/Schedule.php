@@ -164,7 +164,7 @@ abstract class Schedule
      * @throws Exception
      * @api
      */
-    public static function factory($periodType, $periodDay = false)
+    public static function factory($periodType, $periodDay = \false)
     {
         switch ($periodType) {
             case 'hourly':
@@ -173,13 +173,13 @@ abstract class Schedule
                 return new \Piwik\Scheduler\Schedule\Daily();
             case 'weekly':
                 $result = new \Piwik\Scheduler\Schedule\Weekly();
-                if ($periodDay !== false) {
+                if ($periodDay !== \false) {
                     $result->setDay($periodDay);
                 }
                 return $result;
             case 'monthly':
                 $result = new \Piwik\Scheduler\Schedule\Monthly($periodDay);
-                if ($periodDay !== false) {
+                if ($periodDay !== \false) {
                     if (is_int($periodDay)) {
                         $result->setDay($periodDay);
                     } else {

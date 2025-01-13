@@ -18,7 +18,7 @@ use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Translation\Translator;
 /**
- * Informatation about Matomo reports eg tracking or archiving related
+ * Informational about Matomo reports eg tracking or archiving related
  */
 class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {

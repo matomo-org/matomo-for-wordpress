@@ -62,14 +62,14 @@ class VarCloner extends AbstractCloner
         }
         $arrayStub = new Stub();
         $arrayStub->type = Stub::TYPE_ARRAY;
-        $fromObjCast = false;
+        $fromObjCast = \false;
         for ($i = 0; $i < $len; ++$i) {
             // Detect when we move on to the next tree depth
             if ($i > $currentDepthFinalIndex) {
                 ++$currentDepth;
                 $currentDepthFinalIndex = $len - 1;
                 if ($currentDepth >= $minDepth) {
-                    $minimumDepthReached = true;
+                    $minimumDepthReached = \true;
                 }
             }
             $refs = $vals = $queue[$i];
@@ -112,7 +112,7 @@ class VarCloner extends AbstractCloner
                 }
                 // Create $stub when the original value $v cannot be used directly
                 // If $v is a nested structure, put that structure in array $a
-                switch (true) {
+                switch (\true) {
                     case null === $v:
                     case \is_bool($v):
                     case \is_int($v):
@@ -159,7 +159,7 @@ class VarCloner extends AbstractCloner
                             if ($gk !== ++$j) {
                                 $stub->class = Stub::ARRAY_ASSOC;
                                 $a = $v;
-                                $a[$gid] = true;
+                                $a[$gid] = \true;
                                 break;
                             }
                         }
@@ -250,7 +250,7 @@ class VarCloner extends AbstractCloner
                         $stub->position = $len++;
                     } elseif ($pos < $maxItems) {
                         if ($maxItems < ($pos += \count($a))) {
-                            $a = \array_slice($a, 0, $maxItems - $pos, true);
+                            $a = \array_slice($a, 0, $maxItems - $pos, \true);
                             if ($stub->cut >= 0) {
                                 $stub->cut += $pos - $maxItems;
                             }
@@ -281,12 +281,12 @@ class VarCloner extends AbstractCloner
                 }
             }
             if ($fromObjCast) {
-                $fromObjCast = false;
+                $fromObjCast = \false;
                 $refs = $vals;
                 $vals = [];
                 $j = -1;
                 foreach ($queue[$i] as $k => $v) {
-                    foreach ([$k => true] as $gk => $gv) {
+                    foreach ([$k => \true] as $gk => $gv) {
                     }
                     if ($gk !== $k) {
                         $vals = (object) $vals;

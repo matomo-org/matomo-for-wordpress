@@ -61,10 +61,10 @@ class VisitExcluded
      */
     public function isExcluded()
     {
-        $excluded = false;
+        $excluded = \false;
         if ($this->isNonHumanBot()) {
             Common::printDebug('Search bot detected, visit excluded');
-            $excluded = true;
+            $excluded = \true;
         }
         /*
          * Requests built with piwik.js will contain a rec=1 parameter. This is used as
@@ -75,7 +75,7 @@ class VisitExcluded
             $toRecord = $this->request->getParam($parameterForceRecord = 'rec');
             if (!$toRecord) {
                 Common::printDebug(@$_SERVER['REQUEST_METHOD'] . ' parameter ' . $parameterForceRecord . ' not found in URL, request excluded');
-                $excluded = true;
+                $excluded = \true;
                 Common::printDebug("'{$parameterForceRecord}' parameter not found.");
             }
         }
@@ -144,15 +144,15 @@ class VisitExcluded
         }
         if (!$excluded) {
             if ($this->isPrefetchDetected()) {
-                $excluded = true;
+                $excluded = \true;
                 Common::printDebug("Prefetch request detected, not a real visit so we Ignore this visit/pageview");
             }
         }
         if ($excluded) {
             Common::printDebug("Visitor excluded.");
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     protected function isPrefetchDetected()
     {
@@ -182,7 +182,7 @@ class VisitExcluded
             $isInRanges = $cache->fetch($key);
         } else {
             if ($this->isChromeDataSaverUsed($ip)) {
-                $isInRanges = false;
+                $isInRanges = \false;
             } else {
                 $isInRanges = $ip->isInRanges($this->getBotIpRanges());
             }
@@ -193,7 +193,7 @@ class VisitExcluded
     public function isChromeDataSaverUsed(IP $ip)
     {
         // see https://github.com/piwik/piwik/issues/7733
-        return !empty($_SERVER['HTTP_VIA']) && false !== strpos(strtolower($_SERVER['HTTP_VIA']), 'chrome-compression-proxy') && $ip->isInRanges($this->getGoogleBotIpRanges());
+        return !empty($_SERVER['HTTP_VIA']) && \false !== strpos(strtolower($_SERVER['HTTP_VIA']), 'chrome-compression-proxy') && $ip->isInRanges($this->getGoogleBotIpRanges());
     }
     protected function getBotIpRanges()
     {
@@ -229,9 +229,9 @@ class VisitExcluded
     {
         if (\Piwik\Tracker\IgnoreCookie::isIgnoreCookieFound()) {
             Common::printDebug('Matomo ignore cookie was found, visit not tracked.');
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Checks if the visitor ip is in the excluded list
@@ -245,10 +245,10 @@ class VisitExcluded
             $ip = IP::fromBinaryIP($this->ip);
             if ($ip->isInRanges($excludedIps)) {
                 Common::printDebug('Visitor IP ' . $ip->toString() . ' is excluded from being tracked');
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     private function getAttributes($siteAttribute, $globalAttribute)
     {
@@ -286,7 +286,7 @@ class VisitExcluded
             $isUrlExcluded = !isset($idSites) || !in_array($this->idSite, $idSites);
             return $isUrlExcluded;
         }
-        return false;
+        return \false;
     }
     /**
      * Returns true if the specified user agent should be excluded for the current site or not.
@@ -304,16 +304,16 @@ class VisitExcluded
         if (!empty($excludedAgents)) {
             foreach ($excludedAgents as $excludedUserAgent) {
                 // if the excluded user agent string part is in this visit's user agent, this visit should be excluded
-                if (stripos($this->userAgent, $excludedUserAgent) !== false) {
-                    return true;
+                if (stripos($this->userAgent, $excludedUserAgent) !== \false) {
+                    return \true;
                 }
                 // if the string is a valid regex, and the user agent matches, this visit should be excluded
-                if (@preg_match($excludedUserAgent, '') !== false) {
-                    return preg_match($excludedUserAgent, $this->userAgent) ? true : false;
+                if (@preg_match($excludedUserAgent, '') !== \false) {
+                    return preg_match($excludedUserAgent, $this->userAgent) ? \true : \false;
                 }
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns true if the Referrer is a known spammer.

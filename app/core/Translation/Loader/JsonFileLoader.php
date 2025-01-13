@@ -35,7 +35,7 @@ class JsonFileLoader implements \Piwik\Translation\Loader\LoaderInterface
     private function loadFile($filename)
     {
         $data = file_get_contents($filename);
-        $translations = json_decode($data, true);
+        $translations = json_decode($data, \true);
         if (is_null($translations) && Common::hasJsonErrorOccurred()) {
             throw new \Exception(sprintf('Not able to load translation file %s: %s', $filename, Common::getLastJsonError()));
         }

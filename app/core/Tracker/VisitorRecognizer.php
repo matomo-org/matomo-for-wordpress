@@ -89,21 +89,21 @@ class VisitorRecognizer
         $maxActions = \Piwik\Tracker\TrackerConfig::getConfigValue('create_new_visit_after_x_actions', $request->getIdSiteIfExists());
         $visitRow = $this->model->findVisitor($idSite, $configId, $idVisitor, $userId, $persistedVisitAttributes, $shouldMatchOneFieldOnly, $isVisitorIdToLookup, $timeLookBack, $timeLookAhead);
         if (!empty($maxActions) && $maxActions > 0 && !empty($visitRow['visit_total_actions']) && $maxActions <= $visitRow['visit_total_actions']) {
-            $this->visitRow = false;
-            return false;
+            $this->visitRow = \false;
+            return \false;
         }
         $this->visitRow = $visitRow;
         if ($visitRow && count($visitRow) > 0) {
             $visitProperties->setProperty('idvisitor', $visitRow['idvisitor']);
             $visitProperties->setProperty('user_id', $visitRow['user_id']);
             Common::printDebug("The visitor is known (idvisitor = " . bin2hex($visitProperties->getProperty('idvisitor')) . ",\n                    config_id = " . bin2hex($configId) . ",\n                    last action = " . date("r", $visitProperties->getProperty('visit_last_action_time')) . ",\n                    first action = " . date("r", $visitProperties->getProperty('visit_first_action_time')) . ")");
-            return true;
+            return \true;
         } else {
             Common::printDebug("The visitor was not matched with an existing visitor...");
-            return false;
+            return \false;
         }
     }
-    public function removeUnchangedValues($visit, VisitProperties $originalVisit = null)
+    public function removeUnchangedValues($visit, ?VisitProperties $originalVisit = null)
     {
         if (empty($originalVisit)) {
             return $visit;
@@ -138,25 +138,25 @@ class VisitorRecognizer
     }
     protected function shouldLookupOneVisitorFieldOnly($isVisitorIdToLookup, \Piwik\Tracker\Request $request)
     {
-        $isForcedUserIdMustMatch = false !== $request->getForcedUserId();
+        $isForcedUserIdMustMatch = \false !== $request->getForcedUserId();
         // This setting would be enabled for Intranet websites, to ensure that visitors using all the same computer config, same IP
         // are not counted as 1 visitor. In this case, we want to enforce and trust the visitor ID from the cookie.
         if ($isVisitorIdToLookup && $this->trustCookiesOnly) {
-            return true;
+            return \true;
         }
         if ($isForcedUserIdMustMatch) {
             // if &iud was set, we must try and match both idvisitor and config_id
-            return false;
+            return \false;
         }
         // If a &cid= was set, we force to select this visitor (or create a new one)
         $isForcedVisitorIdMustMatch = $request->getForcedVisitorId() != null;
         if ($isForcedVisitorIdMustMatch) {
-            return true;
+            return \true;
         }
         if (!$isVisitorIdToLookup) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * By default, we look back 30 minutes to find a previous visitor (for performance reasons).

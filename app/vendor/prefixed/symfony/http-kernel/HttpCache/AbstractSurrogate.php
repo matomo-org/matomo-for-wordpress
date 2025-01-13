@@ -46,7 +46,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     public function hasSurrogateCapability(Request $request)
     {
         if (null === ($value = $request->headers->get('Surrogate-Capability'))) {
-            return false;
+            return \false;
         }
         return str_contains($value, sprintf('%s/1.0', strtoupper($this->getName())));
     }
@@ -65,7 +65,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     public function needsParsing(Response $response)
     {
         if (!($control = $response->headers->get('Surrogate-Control'))) {
-            return false;
+            return \false;
         }
         $pattern = sprintf('#content="[^"]*%s/1.0[^"]*"#', strtoupper($this->getName()));
         return (bool) preg_match($pattern, $control);
@@ -77,7 +77,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     {
         $subRequest = Request::create($uri, Request::METHOD_GET, [], $cache->getRequest()->cookies->all(), [], $cache->getRequest()->server->all());
         try {
-            $response = $cache->handle($subRequest, HttpKernelInterface::SUB_REQUEST, true);
+            $response = $cache->handle($subRequest, HttpKernelInterface::SUB_REQUEST, \true);
             if (!$response->isSuccessful() && Response::HTTP_NOT_MODIFIED !== $response->getStatusCode()) {
                 throw new \RuntimeException(sprintf('Error when rendering "%s" (Status code is %d).', $subRequest->getUri(), $response->getStatusCode()));
             }
@@ -113,7 +113,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     protected static function generateBodyEvalBoundary() : string
     {
         static $cookie;
-        $cookie = hash('md5', $cookie ?? ($cookie = random_bytes(16)), true);
+        $cookie = hash('md5', $cookie ?? ($cookie = random_bytes(16)), \true);
         $boundary = base64_encode($cookie);
         \assert(HttpCache::BODY_EVAL_BOUNDARY_LENGTH === \strlen($boundary));
         return $boundary;

@@ -30,7 +30,7 @@ abstract class AbstractModel implements \JsonSerializable
             return $this->raw[$field];
         }
         if (preg_match('/^is_/', $field)) {
-            return false;
+            return \false;
         }
         return null;
     }

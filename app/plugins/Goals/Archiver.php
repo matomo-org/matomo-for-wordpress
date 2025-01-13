@@ -50,10 +50,10 @@ class Archiver extends \Piwik\Plugin\Archiver
      * @param int|bool $idGoal idGoal to return the metrics for, or false to return overall
      * @return string Archive record name
      */
-    public static function getRecordName($recordName, $idGoal = false)
+    public static function getRecordName($recordName, $idGoal = \false)
     {
         $idGoalStr = '';
-        if ($idGoal !== false) {
+        if ($idGoal !== \false) {
             $idGoalStr = $idGoal . "_";
         }
         return 'Goal_' . $idGoalStr . $recordName;

@@ -57,14 +57,14 @@ class UserRepository
      * @param bool   $isPasswordHashed
      * @throws \Exception
      */
-    public function create(string $userLogin, string $email, ?int $initialIdSite = null, string $password = '', bool $isPasswordHashed = false) : void
+    public function create(string $userLogin, string $email, ?int $initialIdSite = null, string $password = '', bool $isPasswordHashed = \false) : void
     {
         if (!Piwik::hasUserSuperUserAccess()) {
             // check if the user has admin access to the site
             Piwik::checkUserHasAdminAccess($initialIdSite);
         }
-        BaseValidator::check(Piwik::translate('General_Username'), $userLogin, [new Login(true)]);
-        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(true), $this->allowedEmailDomain]);
+        BaseValidator::check(Piwik::translate('General_Username'), $userLogin, [new Login(\true)]);
+        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(\true), $this->allowedEmailDomain]);
         if (!empty($password)) {
             if (!$isPasswordHashed) {
                 $passwordTransformed = UsersManager::getPasswordHash($password);
@@ -88,14 +88,14 @@ class UserRepository
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-    public function reInviteUser(string $userLogin, $expiryInDays = null) : void
+    public function reInviteUser(string $userLogin, int $expiryInDays) : void
     {
         $user = $this->model->getUser($userLogin);
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-    public function generateInviteToken(string $userLogin, $expiryInDays = null) : string
+    public function generateInviteToken(string $userLogin, int $expiryInDays) : string
     {
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteLinkToken($userLogin, $generatedToken, $expiryInDays);

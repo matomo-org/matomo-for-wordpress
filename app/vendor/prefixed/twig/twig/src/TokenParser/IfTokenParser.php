@@ -42,7 +42,7 @@ final class IfTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse([$this, 'decideIfFork']);
         $tests = [$expr, $body];
         $else = null;
-        $end = false;
+        $end = \false;
         while (!$end) {
             switch ($stream->next()->getValue()) {
                 case 'else':
@@ -63,7 +63,7 @@ final class IfTokenParser extends AbstractTokenParser
                     $tests[] = $body;
                     break;
                 case 'endif':
-                    $end = true;
+                    $end = \true;
                     break;
                 default:
                     throw new SyntaxError(\sprintf('Unexpected end of template. Twig was looking for the following tags "else", "elseif", or "endif" to close the "if" block started at line %d).', $lineno), $stream->getCurrent()->getLine(), $stream->getSourceContext());

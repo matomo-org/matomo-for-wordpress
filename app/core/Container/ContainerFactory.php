@@ -56,7 +56,7 @@ class ContainerFactory
     public function create() : \Piwik\Container\Container
     {
         $builder = new ContainerBuilder(\Piwik\Container\Container::class);
-        $builder->useAnnotations(false);
+        $builder->useAnnotations(\false);
         // INI config
         $builder->addDefinitions(new \Piwik\Container\IniConfigDefinitionSource($this->settings));
         // Global config
@@ -72,7 +72,7 @@ class ContainerFactory
             $this->addEnvironmentConfig($builder, $environment);
         }
         // User config
-        if (file_exists(PIWIK_USER_PATH . '/config/config.php') && !in_array('test', $this->environments, true)) {
+        if (file_exists(PIWIK_USER_PATH . '/config/config.php') && !in_array('test', $this->environments, \true)) {
             $builder->addDefinitions(PIWIK_USER_PATH . '/config/config.php');
         }
         if (!empty($this->definitions)) {
@@ -95,8 +95,13 @@ class ContainerFactory
         if (file_exists($file)) {
             $builder->addDefinitions($file);
         }
+        $file = sprintf('%s/config/environment/%s-%s.php', PIWIK_USER_PATH, $environment, strtolower($this->getDatabaseSchema()));
+        if (file_exists($file)) {
+            $builder->addDefinitions($file);
+        }
         // add plugin environment configs
         $plugins = $this->pluginList->getActivatedPlugins();
+        $plugins = array_unique(array_merge($plugins, Manager::getAlwaysActivatedPlugins()));
         if ($this->shouldSortPlugins()) {
             $plugins = $this->sortPlugins($plugins);
         }
@@ -111,6 +116,7 @@ class ContainerFactory
     private function addPluginConfigs(ContainerBuilder $builder)
     {
         $plugins = $this->pluginList->getActivatedPlugins();
+        $plugins = array_unique(array_merge($plugins, Manager::getAlwaysActivatedPlugins()));
         if ($this->shouldSortPlugins()) {
             $plugins = $this->sortPlugins($plugins);
         }
@@ -144,5 +150,10 @@ class ContainerFactory
         $section = $this->settings->getSection('Development');
         return (bool) @$section['enabled'];
         // TODO: code redundancy w/ Development. hopefully ok for now.
+    }
+    private function getDatabaseSchema() : string
+    {
+        $section = $this->settings->getSection('database');
+        return $section['schema'] ?? 'Mysql';
     }
 }

@@ -35,7 +35,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      * @param string $ident    Program name or tag for each log message.
      * @param int    $rfc      RFC to format the message for.
      */
-    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $ident = 'php', $rfc = self::RFC5424)
+    public function __construct($host, $port = 514, $facility = \LOG_USER, $level = Logger::DEBUG, $bubble = \true, $ident = 'php', $rfc = self::RFC5424)
     {
         parent::__construct($facility, $level, $bubble);
         $this->ident = $ident;
@@ -59,7 +59,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         if (is_array($message)) {
             $message = implode("\n", $message);
         }
-        return preg_split('/$\\R?^/m', $message, -1, PREG_SPLIT_NO_EMPTY);
+        return preg_split('/$\\R?^/m', $message, -1, \PREG_SPLIT_NO_EMPTY);
     }
     /**
      * Make common syslog header (see rfc5424 or rfc3164)

@@ -27,7 +27,7 @@ class Numeric extends Formatter
     {
         return round($value, $precision);
     }
-    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = false, $round = false)
+    public function getPrettyTimeFromSeconds($numberOfSeconds, $displayTimeAsSentence = \false, $round = \false)
     {
         return $round ? (int) $numberOfSeconds : (float) Common::forceDotAsSeparatorForDecimalPoint($numberOfSeconds);
     }

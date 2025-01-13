@@ -10,6 +10,9 @@ namespace Piwik;
 
 use Exception;
 use Piwik\Db\Adapter;
+use Piwik\Db\Schema;
+use Piwik\Db\TransactionalDatabaseInterface;
+use Piwik\Db\TransactionalDatabaseStaticTrait;
 /**
  * Contains SQL related helper functions for Piwik's MySQL database.
  *
@@ -29,14 +32,13 @@ use Piwik\Db\Adapter;
  *
  * @api
  */
-class Db
+class Db implements TransactionalDatabaseInterface
 {
+    use TransactionalDatabaseStaticTrait;
     public const SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
     private static $connection = null;
     private static $readerConnection = null;
-    private static $logQueries = true;
-    // this is used for indicate TransactionLevel Cache
-    public $supportsUncommitted;
+    private static $logQueries = \true;
     /**
      * Returns the database connection and creates it if it hasn't been already.
      *
@@ -273,7 +275,7 @@ class Db
                 throw $ex;
             }
             // only attempt reconnection if we encounter a "server has gone away" error
-            if (!self::get()->isErrNo($ex, \Piwik\Updater\Migration\Db::ERROR_CODE_MYSQL_SERVER_HAS_GONE_AWAY) && false === stripos($ex->getMessage(), 'server has gone away')) {
+            if (!self::get()->isErrNo($ex, \Piwik\Updater\Migration\Db::ERROR_CODE_MYSQL_SERVER_HAS_GONE_AWAY) && \false === stripos($ex->getMessage(), 'server has gone away')) {
                 throw $ex;
             }
             // reconnect and retry query
@@ -406,45 +408,16 @@ class Db
      *                             Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
      * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
      * @return bool
+     * @deprecated  will be removed in Matomo 6
+     *              use Schema::getInstance()->optimizeTables() instead
      */
-    public static function optimizeTables($tables, $force = false)
+    public static function optimizeTables($tables, $force = \false)
     {
-        $optimize = \Piwik\Config::getInstance()->General['enable_sql_optimize_queries'];
-        if (empty($optimize) && !$force) {
-            return false;
-        }
         if (empty($tables)) {
-            return false;
+            return \false;
         }
-        if (!is_array($tables)) {
-            $tables = array($tables);
-        }
-        if (!self::isOptimizeInnoDBSupported() && !$force) {
-            // filter out all InnoDB tables
-            $myisamDbTables = array();
-            foreach (self::getTableStatus() as $row) {
-                if (strtolower($row['Engine']) == 'myisam' && in_array($row['Name'], $tables)) {
-                    $myisamDbTables[] = $row['Name'];
-                }
-            }
-            $tables = $myisamDbTables;
-        }
-        if (empty($tables)) {
-            return false;
-        }
-        // optimize the tables
-        $success = true;
-        foreach ($tables as &$t) {
-            $ok = self::query('OPTIMIZE TABLE ' . $t);
-            if (!$ok) {
-                $success = false;
-            }
-        }
-        return $success;
-    }
-    private static function getTableStatus()
-    {
-        return \Piwik\Db::fetchAll("SHOW TABLE STATUS");
+        $tables = !is_array($tables) ? [$tables] : $tables;
+        return Schema::getInstance()->optimizeTables($tables, (bool) $force);
     }
     /**
      * Drops the supplied table or tables.
@@ -549,13 +522,13 @@ class Db
      */
     public static function segmentedFetchFirst($sql, $first, $last, $step, $params = array())
     {
-        $result = false;
+        $result = \false;
         if ($step > 0) {
-            for ($i = $first; $result === false && $i <= $last; $i += $step) {
+            for ($i = $first; $result === \false && $i <= $last; $i += $step) {
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         } else {
-            for ($i = $first; $result === false && $i >= $last; $i += $step) {
+            for ($i = $first; $result === \false && $i >= $last; $i += $step) {
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         }
@@ -691,11 +664,11 @@ class Db
         while ($maxRetries > 0) {
             $result = $db->fetchOne($sql, array($lockName));
             if ($result == '1') {
-                return true;
+                return \true;
             }
             $maxRetries--;
         }
-        return false;
+        return \false;
     }
     /**
      * Releases a named lock.
@@ -729,9 +702,9 @@ class Db
             try {
                 \Piwik\Db::lockTables(\Piwik\Common::prefixTable('site_url'));
                 \Piwik\Db::unlockAllTables();
-                self::$lockPrivilegeGranted = true;
+                self::$lockPrivilegeGranted = \true;
             } catch (Exception $ex) {
-                self::$lockPrivilegeGranted = false;
+                self::$lockPrivilegeGranted = \false;
             }
         }
         return self::$lockPrivilegeGranted;
@@ -744,7 +717,7 @@ class Db
         try {
             $deadlockInfo = self::fetchAll("SHOW ENGINE INNODB STATUS");
             // log using exception so backtrace appears in log output
-            \Piwik\Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, true)));
+            \Piwik\Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, \true)));
         } catch (\Exception $e) {
             //  1227 Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
         }
@@ -752,7 +725,7 @@ class Db
     private static function logSql($functionName, $sql, $parameters = array())
     {
         self::checkBoundParametersIfInDevMode($sql, $parameters);
-        if (self::$logQueries === false || @\Piwik\Config::getInstance()->Debug['log_sql_queries'] != 1) {
+        if (self::$logQueries === \false || @\Piwik\Config::getInstance()->Debug['log_sql_queries'] != 1) {
             return;
         }
         // NOTE: at the moment we don't log parameters in order to avoid sensitive information leaks
@@ -786,16 +759,12 @@ class Db
     {
         return self::$logQueries;
     }
+    /**
+     * @deprecated will be removed with Matomo 6
+     *             use Schema::getInstance()->isOptimizeInnoDBSupported() instead
+     */
     public static function isOptimizeInnoDBSupported($version = null)
     {
-        if ($version === null) {
-            $version = \Piwik\Db::fetchOne("SELECT VERSION()");
-        }
-        $version = strtolower($version);
-        if (strpos($version, "mariadb") === false) {
-            return false;
-        }
-        $semanticVersion = strstr($version, '-', $beforeNeedle = true);
-        return version_compare($semanticVersion, '10.1.1', '>=');
+        return \Piwik\Db\Schema::getInstance()->isOptimizeInnoDBSupported();
     }
 }

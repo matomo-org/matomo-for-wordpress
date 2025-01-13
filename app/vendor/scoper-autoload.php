@@ -111,10 +111,13 @@ if (!function_exists('mb_http_input')) { function mb_http_input() { return \Mato
 if (!function_exists('mb_http_output')) { function mb_http_output() { return \Matomo\Dependencies\mb_http_output(...func_get_args()); } }
 if (!function_exists('mb_internal_encoding')) { function mb_internal_encoding() { return \Matomo\Dependencies\mb_internal_encoding(...func_get_args()); } }
 if (!function_exists('mb_language')) { function mb_language() { return \Matomo\Dependencies\mb_language(...func_get_args()); } }
+if (!function_exists('mb_lcfirst')) { function mb_lcfirst() { return \Matomo\Dependencies\mb_lcfirst(...func_get_args()); } }
 if (!function_exists('mb_list_encodings')) { function mb_list_encodings() { return \Matomo\Dependencies\mb_list_encodings(...func_get_args()); } }
+if (!function_exists('mb_ltrim')) { function mb_ltrim() { return \Matomo\Dependencies\mb_ltrim(...func_get_args()); } }
 if (!function_exists('mb_ord')) { function mb_ord() { return \Matomo\Dependencies\mb_ord(...func_get_args()); } }
 if (!function_exists('mb_output_handler')) { function mb_output_handler() { return \Matomo\Dependencies\mb_output_handler(...func_get_args()); } }
 if (!function_exists('mb_parse_str')) { function mb_parse_str() { return \Matomo\Dependencies\mb_parse_str(...func_get_args()); } }
+if (!function_exists('mb_rtrim')) { function mb_rtrim() { return \Matomo\Dependencies\mb_rtrim(...func_get_args()); } }
 if (!function_exists('mb_scrub')) { function mb_scrub() { return \Matomo\Dependencies\mb_scrub(...func_get_args()); } }
 if (!function_exists('mb_str_pad')) { function mb_str_pad() { return \Matomo\Dependencies\mb_str_pad(...func_get_args()); } }
 if (!function_exists('mb_str_split')) { function mb_str_split() { return \Matomo\Dependencies\mb_str_split(...func_get_args()); } }
@@ -133,6 +136,8 @@ if (!function_exists('mb_strwidth')) { function mb_strwidth() { return \Matomo\D
 if (!function_exists('mb_substitute_character')) { function mb_substitute_character() { return \Matomo\Dependencies\mb_substitute_character(...func_get_args()); } }
 if (!function_exists('mb_substr')) { function mb_substr() { return \Matomo\Dependencies\mb_substr(...func_get_args()); } }
 if (!function_exists('mb_substr_count')) { function mb_substr_count() { return \Matomo\Dependencies\mb_substr_count(...func_get_args()); } }
+if (!function_exists('mb_trim')) { function mb_trim() { return \Matomo\Dependencies\mb_trim(...func_get_args()); } }
+if (!function_exists('mb_ucfirst')) { function mb_ucfirst() { return \Matomo\Dependencies\mb_ucfirst(...func_get_args()); } }
 if (!function_exists('mysqli_set_charset')) { function mysqli_set_charset() { return \Matomo\Dependencies\mysqli_set_charset(...func_get_args()); } }
 if (!function_exists('normalizer_is_normalized')) { function normalizer_is_normalized() { return \Matomo\Dependencies\normalizer_is_normalized(...func_get_args()); } }
 if (!function_exists('normalizer_normalize')) { function normalizer_normalize() { return \Matomo\Dependencies\normalizer_normalize(...func_get_args()); } }

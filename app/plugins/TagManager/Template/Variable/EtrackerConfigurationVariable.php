@@ -13,7 +13,7 @@ use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 class EtrackerConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
-    const ID = 'EtrackerConfiguration';
+    public const ID = 'EtrackerConfiguration';
     public function getId()
     {
         return self::ID;
@@ -28,21 +28,21 @@ class EtrackerConfigurationVariable extends \Piwik\Plugins\TagManager\Template\V
     }
     public function hasAdvancedSettings()
     {
-        return false;
+        return \false;
     }
     public function getParameters()
     {
         return array($this->makeSetting('etrackerID', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_EtrackerConfigurationVariableIdTitle');
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
-            $field->description = Piwik::translate('TagManager_EtrackerConfigurationVariableIdDescription');
+            $field->description = Piwik::translate('TagManager_EtrackerConfigurationVariableIdDescriptionNew');
             $field->validators[] = new NotEmpty();
             $field->transform = function ($value) {
                 return trim($value);
             };
-        }), $this->makeSetting('etrackerBlockCookies', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('etrackerBlockCookies', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_EtrackerConfigurationVariableBlockCookiesTitle');
-        }), $this->makeSetting('etrackerDNT', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('etrackerDNT', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_EtrackerConfigurationVariableDNTTitle');
         }), $this->makeSetting('et_pagename', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_EtrackerConfigurationVariablePageNameTitle');

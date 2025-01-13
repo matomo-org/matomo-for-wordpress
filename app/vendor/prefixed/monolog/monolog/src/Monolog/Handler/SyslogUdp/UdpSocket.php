@@ -20,7 +20,7 @@ class UdpSocket
     {
         $this->ip = $ip;
         $this->port = $port;
-        $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        $this->socket = socket_create(\AF_INET, \SOCK_DGRAM, \SOL_UDP);
     }
     public function write($line, $header = "")
     {

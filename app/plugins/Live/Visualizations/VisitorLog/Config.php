@@ -19,7 +19,7 @@ class Config extends VisualizationConfig
      *
      * Default value: false
      */
-    public $disable_row_actions = false;
+    public $disable_row_actions = \false;
     public function __construct()
     {
         parent::__construct();

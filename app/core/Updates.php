@@ -64,7 +64,7 @@ abstract class Updates
      */
     public static function isMajorUpdate()
     {
-        return false;
+        return \false;
     }
     /**
      * Enables maintenance mode. Should be used for updates where Piwik will be unavailable
@@ -100,12 +100,12 @@ abstract class Updates
         $config = \Piwik\Config::getInstance();
         if (isset($config->Plugins['Plugins'])) {
             $plugins = $config->Plugins['Plugins'];
-            if (($key = array_search($pluginToDelete, $plugins)) !== false) {
+            if (($key = array_search($pluginToDelete, $plugins)) !== \false) {
                 unset($plugins[$key]);
             }
             $config->Plugins['Plugins'] = $plugins;
             $pluginsInstalled = $config->PluginsInstalled['PluginsInstalled'];
-            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== false) {
+            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== \false) {
                 unset($pluginsInstalled[$key]);
             }
             $config->PluginsInstalled = array('PluginsInstalled' => $pluginsInstalled);

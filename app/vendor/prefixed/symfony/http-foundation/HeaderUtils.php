@@ -82,7 +82,7 @@ class HeaderUtils
         $assoc = [];
         foreach ($parts as $part) {
             $name = strtolower($part[0]);
-            $value = $part[1] ?? true;
+            $value = $part[1] ?? \true;
             $assoc[$name] = $value;
         }
         return $assoc;
@@ -103,7 +103,7 @@ class HeaderUtils
     {
         $parts = [];
         foreach ($assoc as $name => $value) {
-            if (true === $value) {
+            if (\true === $value) {
                 $parts[] = $name;
             } else {
                 $parts[] = $name . '=' . self::quote($value);
@@ -177,21 +177,21 @@ class HeaderUtils
     /**
      * Like parse_str(), but preserves dots in variable names.
      */
-    public static function parseQuery(string $query, bool $ignoreBrackets = false, string $separator = '&') : array
+    public static function parseQuery(string $query, bool $ignoreBrackets = \false, string $separator = '&') : array
     {
         $q = [];
         foreach (explode($separator, $query) as $v) {
-            if (false !== ($i = strpos($v, "\x00"))) {
+            if (\false !== ($i = strpos($v, "\x00"))) {
                 $v = substr($v, 0, $i);
             }
-            if (false === ($i = strpos($v, '='))) {
+            if (\false === ($i = strpos($v, '='))) {
                 $k = urldecode($v);
                 $v = '';
             } else {
                 $k = urldecode(substr($v, 0, $i));
                 $v = substr($v, $i);
             }
-            if (false !== ($i = strpos($k, "\x00"))) {
+            if (\false !== ($i = strpos($k, "\x00"))) {
                 $k = substr($k, 0, $i);
             }
             $k = ltrim($k, ' ');
@@ -199,7 +199,7 @@ class HeaderUtils
                 $q[$k][] = urldecode(substr($v, 1));
                 continue;
             }
-            if (false === ($i = strpos($k, '['))) {
+            if (\false === ($i = strpos($k, '['))) {
                 $q[] = bin2hex($k) . $v;
             } else {
                 $q[] = bin2hex(substr($k, 0, $i)) . rawurlencode(substr($k, $i)) . $v;
@@ -211,7 +211,7 @@ class HeaderUtils
         parse_str(implode('&', $q), $q);
         $query = [];
         foreach ($q as $k => $v) {
-            if (false !== ($i = strpos($k, '_'))) {
+            if (\false !== ($i = strpos($k, '_'))) {
                 $query[substr_replace($k, hex2bin(substr($k, 0, $i)) . '[', 0, 1 + $i)] = $v;
             } else {
                 $query[hex2bin($k)] = $v;
@@ -219,7 +219,7 @@ class HeaderUtils
         }
         return $query;
     }
-    private static function groupParts(array $matches, string $separators, bool $first = true) : array
+    private static function groupParts(array $matches, string $separators, bool $first = \true) : array
     {
         $separator = $separators[0];
         $separators = substr($separators, 1) ?: '';
@@ -246,7 +246,11 @@ class HeaderUtils
             }
         }
         foreach ($partMatches as $matches) {
-            $parts[] = '' === $separators ? self::unquote($matches[0][0]) : self::groupParts($matches, $separators, false);
+            if ('' === $separators && '' !== ($unquoted = self::unquote($matches[0][0]))) {
+                $parts[] = $unquoted;
+            } elseif ($groupedParts = self::groupParts($matches, $separators, \false)) {
+                $parts[] = $groupedParts;
+            }
         }
         return $parts;
     }

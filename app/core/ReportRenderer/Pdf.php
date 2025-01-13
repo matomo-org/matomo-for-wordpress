@@ -156,14 +156,14 @@ class Pdf extends ReportRenderer
         $this->TCPDF->SetFooterFont(array($this->reportFont, $this->reportFontStyle, $this->reportSimpleFontSize));
         $this->TCPDF->SetFooterContent((strlen($reportTitle) > 64 ? substr($reportTitle, 0, 61) . "..." : $reportTitle) . " | " . $dateRange . " | ");
         // add first page
-        $this->TCPDF->setPrintHeader(false);
+        $this->TCPDF->setPrintHeader(\false);
         $this->TCPDF->AddPage(self::PORTRAIT);
-        $this->TCPDF->AddFont($this->reportFont, '', '', false);
+        $this->TCPDF->AddFont($this->reportFont, '', '', \false);
         $this->TCPDF->SetFont($this->reportFont, $this->reportFontStyle, $this->reportSimpleFontSize);
         $this->TCPDF->Bookmark(Piwik::translate('ScheduledReports_FrontPage'));
         // logo
         $customLogo = new CustomLogo();
-        $this->TCPDF->Image($customLogo->getLogoUrl(true), $this->logoImagePosition[0], $this->logoImagePosition[1], 180 / ($factor = 2), 0, $type = '', $link = '', $align = '', $resize = false, $dpi = 300);
+        $this->TCPDF->Image($customLogo->getLogoUrl(\true), $this->logoImagePosition[0], $this->logoImagePosition[1], 180 / ($factor = 2), 0, $type = '', $link = '', $align = '', $resize = \false, $dpi = 300);
         $this->TCPDF->Ln(8);
         // report title
         $this->TCPDF->SetFont($this->reportFont, '', $this->reportHeaderFontSize + 5);
@@ -279,8 +279,8 @@ class Pdf extends ReportRenderer
         $this->TCPDF->SetFillColor($this->tableBackgroundColor[0], $this->tableBackgroundColor[1], $this->tableBackgroundColor[2]);
         $this->TCPDF->SetTextColor($this->reportTextColor[0], $this->reportTextColor[1], $this->reportTextColor[2]);
         $this->TCPDF->SetFont('');
-        $fill = true;
-        $url = false;
+        $fill = \true;
+        $url = \false;
         $leftSpacesBeforeLogo = str_repeat(' ', $this->leftSpacesBeforeLogo);
         $logoWidth = $this->logoWidth;
         $logoHeight = $this->logoHeight;
@@ -350,7 +350,7 @@ class Pdf extends ReportRenderer
     private function paintGraph()
     {
         $imageGraph = parent::getStaticGraph($this->reportMetadata, $this->orientation == self::PORTRAIT ? self::IMAGE_GRAPH_WIDTH_PORTRAIT : self::IMAGE_GRAPH_WIDTH_LANDSCAPE, self::IMAGE_GRAPH_HEIGHT, $this->evolutionGraph, $this->segment);
-        $this->TCPDF->Image('@' . $imageGraph, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = 'N', $resize = false, $dpi = 72, $palign = '', $ismask = false, $imgmask = false, $order = 0, $fitbox = false, $hidden = false, $fitonpage = true, $alt = false, $altimgs = array());
+        $this->TCPDF->Image('@' . $imageGraph, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = 'N', $resize = \false, $dpi = 72, $palign = '', $ismask = \false, $imgmask = \false, $order = 0, $fitbox = \false, $hidden = \false, $fitonpage = \true, $alt = \false, $altimgs = array());
         unset($imageGraph);
     }
     /**
@@ -388,7 +388,7 @@ class Pdf extends ReportRenderer
         $this->TCPDF->SetTextColor($this->tableHeaderBackgroundColor[0], $this->tableHeaderBackgroundColor[1], $this->tableHeaderBackgroundColor[2]);
         $this->TCPDF->SetDrawColor(255);
         $posY = $this->TCPDF->GetY();
-        $this->TCPDF->MultiCell($this->cellWidth, $this->cellHeight, $longestColumnName, 1, 'C', true);
+        $this->TCPDF->MultiCell($this->cellWidth, $this->cellHeight, $longestColumnName, 1, 'C', \true);
         $maxCellHeight = $this->TCPDF->GetY() - $posY;
         $this->TCPDF->SetFillColor($this->tableHeaderBackgroundColor[0], $this->tableHeaderBackgroundColor[1], $this->tableHeaderBackgroundColor[2]);
         $this->TCPDF->SetTextColor($this->tableHeaderTextColor[0], $this->tableHeaderTextColor[1], $this->tableHeaderTextColor[2]);
@@ -400,10 +400,10 @@ class Pdf extends ReportRenderer
             $columnName = $this->formatText($columnName);
             //Label column
             if ($countColumns == 0) {
-                $this->TCPDF->MultiCell($this->labelCellWidth, $maxCellHeight, $columnName, $border = 0, $align = 'L', true);
+                $this->TCPDF->MultiCell($this->labelCellWidth, $maxCellHeight, $columnName, $border = 0, $align = 'L', \true);
                 $this->TCPDF->SetXY($posX + $this->labelCellWidth, $posY);
             } else {
-                $this->TCPDF->MultiCell($this->cellWidth, $maxCellHeight, $columnName, $border = 0, $align = 'L', true);
+                $this->TCPDF->MultiCell($this->cellWidth, $maxCellHeight, $columnName, $border = 0, $align = 'L', \true);
                 $this->TCPDF->SetXY($posX + $this->cellWidth, $posY);
             }
             $countColumns++;

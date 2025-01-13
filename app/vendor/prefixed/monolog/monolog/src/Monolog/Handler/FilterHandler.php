@@ -46,7 +46,7 @@ class FilterHandler extends AbstractHandler
      * @param int                       $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = true)
+    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = \true)
     {
         $this->handler = $handler;
         $this->bubble = $bubble;
@@ -92,7 +92,7 @@ class FilterHandler extends AbstractHandler
     public function handle(array $record)
     {
         if (!$this->isHandling($record)) {
-            return false;
+            return \false;
         }
         if ($this->processors) {
             foreach ($this->processors as $processor) {
@@ -100,7 +100,7 @@ class FilterHandler extends AbstractHandler
             }
         }
         $this->getHandler($record)->handle($record);
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * {@inheritdoc}

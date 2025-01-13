@@ -97,7 +97,7 @@ class CapabilitiesProvider
     public function isValidCapability($capabilityId) : bool
     {
         $capabilities = $this->getAllCapabilityIds();
-        return \in_array($capabilityId, $capabilities, true);
+        return \in_array($capabilityId, $capabilities, \true);
     }
     /**
      * @param $capabilityId

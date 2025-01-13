@@ -11,12 +11,18 @@ namespace Piwik\Plugins\CoreHome;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
+use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Date;
 use Piwik\FrontController;
+use Piwik\Log\LoggerInterface;
 use Piwik\Notification\Manager as NotificationManager;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Plugins\FeatureFlags\FeatureFlags\Example;
+use Piwik\Plugins\FeatureFlags\Storage\ConfigFeatureFlagStorage;
 use Piwik\Plugins\Marketplace\Marketplace;
 use Piwik\SettingsPiwik;
 use Piwik\Widget\Widget;
@@ -35,10 +41,15 @@ class Controller extends \Piwik\Plugin\Controller
      * @var Translator
      */
     private $translator;
+    /**
+     * @var FeatureFlagManager
+     */
+    private $featureFlagManager;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
         parent::__construct();
+        $this->featureFlagManager = new FeatureFlagManager([new ConfigFeatureFlagStorage(Config::getInstance())], StaticContainer::get(LoggerInterface::class));
     }
     public function getDefaultAction()
     {
@@ -78,11 +89,11 @@ class Controller extends \Piwik\Plugin\Controller
         $widget::configure($config);
         $content = $widget->render();
         if ($config->getName() && Common::getRequestVar('showtitle', '', 'string') === '1') {
-            if (strpos($content, '<h2') !== false || strpos($content, ' content-title=') !== false || strpos($content, 'CoreHome.EnrichedHeadline') !== false || strpos($content, '<h1') !== false) {
+            if (strpos($content, '<h2') !== \false || strpos($content, ' content-title=') !== \false || strpos($content, 'CoreHome.EnrichedHeadline') !== \false || strpos($content, '<h1') !== \false) {
                 // already includes title
                 return $content;
             }
-            if (strpos($content, '<!-- has-content-block -->') === false && strpos($content, 'class="card"') === false && strpos($content, "class='card'") === false && strpos($content, 'class="card-content"') === false && strpos($content, "class='card-content'") === false) {
+            if (strpos($content, '<!-- has-content-block -->') === \false && strpos($content, 'class="card"') === \false && strpos($content, "class='card'") === \false && strpos($content, 'class="card-content"') === \false && strpos($content, "class='card-content'") === \false) {
                 $view = new View('@CoreHome/_singleWidget');
                 $view->title = $config->getName();
                 $view->content = $content;
@@ -126,7 +137,7 @@ class Controller extends \Piwik\Plugin\Controller
         $notificationId = Common::getRequestVar('notificationId');
         NotificationManager::cancel($notificationId);
         Json::sendHeaderJSON();
-        return json_encode(true);
+        return json_encode(\true);
     }
     protected function getDefaultIndexView()
     {
@@ -136,14 +147,15 @@ class Controller extends \Piwik\Plugin\Controller
         }
         $view = new View('@CoreHome/getDefaultIndexView');
         $this->setGeneralVariablesView($view);
-        $view->showMenu = true;
+        $view->showMenu = \true;
         $view->content = '';
+        $view->exampleFeatureEnabled = $this->featureFlagManager->isFeatureActive(Example::class);
         return $view;
     }
     protected function setDateTodayIfWebsiteCreatedToday()
     {
-        $date = Common::getRequestVar('date', false);
-        if ($date == 'today' || Common::getRequestVar('period', false) == 'range') {
+        $date = Common::getRequestVar('date', \false);
+        if ($date == 'today' || Common::getRequestVar('period', \false) == 'range') {
             return;
         }
         if ($this->site) {
@@ -169,23 +181,23 @@ class Controller extends \Piwik\Plugin\Controller
     /** Render the entire row evolution popover for a single row */
     public function getRowEvolutionPopover()
     {
-        $rowEvolution = $this->makeRowEvolution($isMulti = false);
+        $rowEvolution = $this->makeRowEvolution($isMulti = \false);
         $view = new View('@CoreHome/getRowEvolutionPopover');
         return $rowEvolution->renderPopover($this, $view);
     }
     /** Render the entire row evolution popover for multiple rows */
     public function getMultiRowEvolutionPopover()
     {
-        $rowEvolution = $this->makeRowEvolution($isMulti = true);
+        $rowEvolution = $this->makeRowEvolution($isMulti = \true);
         $view = new View('@CoreHome/getMultiRowEvolutionPopover');
         return $rowEvolution->renderPopover($this, $view);
     }
     /** Generic method to get an evolution graph or a sparkline for the row evolution popover */
-    public function getRowEvolutionGraph($fetch = false, $rowEvolution = null)
+    public function getRowEvolutionGraph($fetch = \false, $rowEvolution = null)
     {
         if (empty($rowEvolution)) {
             $label = Common::getRequestVar('label', '', 'string');
-            $isMultiRowEvolution = strpos($label, ',') !== false;
+            $isMultiRowEvolution = strpos($label, ',') !== \false;
             $rowEvolution = $this->makeRowEvolution($isMultiRowEvolution, $graphType = 'graphEvolution');
             $rowEvolution->useAvailableMetrics();
         }
@@ -211,9 +223,9 @@ class Controller extends \Piwik\Plugin\Controller
         Piwik::checkUserHasSomeAdminAccess();
         $this->checkTokenInUrl();
         // perform check (but only once every 10s)
-        UpdateCheck::check($force = false, UpdateCheck::UI_CLICK_CHECK_INTERVAL);
+        UpdateCheck::check($force = \false, UpdateCheck::UI_CLICK_CHECK_INTERVAL);
         $view = new View('@CoreHome/checkForUpdates');
-        $view->isManualUpdateCheck = true;
+        $view->isManualUpdateCheck = \true;
         $view->lastUpdateCheckFailed = UpdateCheck::hasLastCheckFailed();
         $this->setGeneralVariablesView($view);
         return $view->render();

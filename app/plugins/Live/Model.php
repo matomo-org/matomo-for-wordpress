@@ -28,7 +28,7 @@ class Model
     /**
      * @internal for tests only
      */
-    public $queryAndWhereSleepTestsOnly = false;
+    public $queryAndWhereSleepTestsOnly = \false;
     /**
      * @param $idSite
      * @param $period
@@ -42,7 +42,7 @@ class Model
      * @return array
      * @throws Exception
      */
-    public function queryLogVisits($idSite, $period, $date, $segment, $offset, $limit, $visitorId, $minTimestamp, $filterSortOrder, $checkforMoreEntries = false)
+    public function queryLogVisits($idSite, $period, $date, $segment, $offset, $limit, $visitorId, $minTimestamp, $filterSortOrder, $checkforMoreEntries = \false)
     {
         // to check for more entries increase the limit by one, but cut off the last entry before returning the result
         if ((int) $limit > -1 && $checkforMoreEntries) {
@@ -92,9 +92,9 @@ class Model
         if ($checkforMoreEntries) {
             if (count($foundVisits) == $limit) {
                 array_pop($foundVisits);
-                return [$foundVisits, true];
+                return [$foundVisits, \true];
             }
-            return [$foundVisits, false];
+            return [$foundVisits, \false];
         }
         return $foundVisits;
     }
@@ -151,8 +151,8 @@ class Model
     {
         // we also need to check for the 'maximum statement execution time exceeded' text as the query might be
         // aborted at different stages and we can't really know all the possible codes at which it may be aborted etc
-        $isMaxExecutionTimeError = $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_QUERY_INTERRUPTED) || $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_SORT_ABORTED) || $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_STATEMENT_TIME_EXCEEDED_QUERY_INTERRUPTED) || strpos($e->getMessage(), 'maximum statement execution time exceeded') !== false || strpos($e->getMessage(), 'max_statement_time exceeded') !== false;
-        if (false === $isMaxExecutionTimeError) {
+        $isMaxExecutionTimeError = $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_QUERY_INTERRUPTED) || $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_EXECUTION_TIME_EXCEEDED_SORT_ABORTED) || $readerDb->isErrNo($e, DbMigration::ERROR_CODE_MAX_STATEMENT_TIME_EXCEEDED_QUERY_INTERRUPTED) || strpos($e->getMessage(), 'maximum statement execution time exceeded') !== \false || strpos($e->getMessage(), 'max_statement_time exceeded') !== \false;
+        if (\false === $isMaxExecutionTimeError) {
             return;
         }
         $message = '';
@@ -189,7 +189,7 @@ class Model
     {
         if (!$dateStart) {
             if (!$minTimestamp) {
-                return true;
+                return \true;
             } else {
                 $dateStart = Date::factory($minTimestamp);
             }
@@ -198,9 +198,9 @@ class Model
             $dateEnd = Date::now();
         }
         if ($dateEnd->subHour(36)->isEarlier($dateStart)) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     public function splitDatesIntoMultipleQueries($dateStart, $dateEnd, $limit, $offset, $filterSortOrder)
     {
@@ -466,14 +466,15 @@ class Model
             $orderBy = 'log_visit.idsite ' . $filterSortOrder . ', ';
         }
         $orderBy .= "log_visit.visit_last_action_time " . $filterSortOrder;
+        $orderBy .= ", log_visit.idvisit " . $filterSortOrder;
         if ($segment->isEmpty()) {
-            $groupBy = false;
+            $groupBy = \false;
         } else {
             // see https://github.com/matomo-org/matomo/issues/13861
             $groupBy = 'log_visit.idvisit';
         }
         $innerLimit = $limit;
-        $innerQuery = $segment->getSelectQuery($select, $from, $where, $whereBind, $orderBy, $groupBy, $innerLimit, $offset, $forceGroupBy = true);
+        $innerQuery = $segment->getSelectQuery($select, $from, $where, $whereBind, $orderBy, $groupBy, $innerLimit, $offset, $forceGroupBy = \true);
         $bind = $innerQuery['bind'];
         if (!$visitorId) {
             // for now let's not apply when looking for a specific visitor
@@ -527,7 +528,7 @@ class Model
             if ($dateStart->isLater($now)) {
                 $dateStart = $now;
             }
-            if (!in_array($date, array('now', 'today', 'yesterdaySameTime')) && strpos($date, 'last') === false && strpos($date, 'previous') === false && Date::factory($dateString)->toString('Y-m-d') != Date::factory('now', $currentTimezone)->toString()) {
+            if (!in_array($date, array('now', 'today', 'yesterdaySameTime')) && strpos($date, 'last') === \false && strpos($date, 'previous') === \false && Date::factory($dateString)->toString('Y-m-d') != Date::factory('now', $currentTimezone)->toString()) {
                 $dateEnd = $processedPeriod->getDateEnd()->setTimezone($currentTimezone);
                 $dateEnd = $dateEnd->addDay(1);
                 if ($dateEnd->isLater(Date::now())) {
@@ -575,7 +576,7 @@ class Model
         if (count($where) > 0) {
             $where = join("\n\t\t\t\tAND ", $where);
         } else {
-            $where = false;
+            $where = \false;
         }
         return array($whereBind, $where);
     }

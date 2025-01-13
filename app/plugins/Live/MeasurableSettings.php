@@ -27,7 +27,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     }
     private function makeVisitorLogSetting() : MeasurableSetting
     {
-        $defaultValue = false;
+        $defaultValue = \false;
         $type = FieldConfig::TYPE_BOOL;
         return $this->makeSetting('disable_visitor_log', $defaultValue, $type, function (FieldConfig $field) {
             $field->title = Piwik::translate('Live_DisableVisitsLogAndProfile');
@@ -37,7 +37,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     }
     private function makeVisitorProfileSetting() : MeasurableSetting
     {
-        $defaultValue = false;
+        $defaultValue = \false;
         $type = FieldConfig::TYPE_BOOL;
         return $this->makeSetting('disable_visitor_profile', $defaultValue, $type, function (FieldConfig $field) {
             $field->title = Piwik::translate('Live_DisableVisitorProfile');

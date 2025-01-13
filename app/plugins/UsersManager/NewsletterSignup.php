@@ -17,12 +17,12 @@ use Piwik\SettingsPiwik;
 class NewsletterSignup
 {
     public const NEWSLETTER_SIGNUP_OPTION = 'UsersManager.newsletterSignup.';
-    public static function signupForNewsletter($userLogin, $email, $matomoOrg = false, $professionalServices = false)
+    public static function signupForNewsletter($userLogin, $email, $matomoOrg = \false, $professionalServices = \false)
     {
         // Don't bother if they aren't signing up for at least one newsletter, or if we don't have internet access
         $doSignup = ($matomoOrg || $professionalServices) && SettingsPiwik::isInternetEnabled();
         if (!$doSignup) {
-            return false;
+            return \false;
         }
         $url = Client::getApiServiceUrl();
         $url .= '/1.0/subscribeNewsletter/';
@@ -32,9 +32,9 @@ class NewsletterSignup
             Http::sendHttpRequest($url, $timeout = 2);
             $optionKey = self::NEWSLETTER_SIGNUP_OPTION . $userLogin;
             Option::set($optionKey, 1);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
 }

@@ -22,7 +22,7 @@ class Adapter
      * @param bool $connect
      * @return AdapterInterface
      */
-    public static function factory($adapterName, &$dbInfos, $connect = true)
+    public static function factory($adapterName, &$dbInfos, $connect = \true)
     {
         if ($connect) {
             if (isset($dbInfos['port']) && is_string($dbInfos['port']) && $dbInfos['port'][0] === '/') {
@@ -131,7 +131,7 @@ class Adapter
             'Access denied' => Piwik::translate('General_ExceptionDatabaseAccess'),
         );
         foreach ($safeMessageMap as $search_term => $safeMessage) {
-            if (strpos($message, $search_term) !== false) {
+            if (strpos($message, $search_term) !== \false) {
                 return $safeMessage;
             }
         }

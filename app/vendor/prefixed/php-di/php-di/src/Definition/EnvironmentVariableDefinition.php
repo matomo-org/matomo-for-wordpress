@@ -40,7 +40,7 @@ class EnvironmentVariableDefinition implements Definition
      * @param bool $isOptional Whether or not the environment variable definition is optional
      * @param mixed $defaultValue The default value to use if the environment variable is optional and not provided
      */
-    public function __construct(string $variableName, bool $isOptional = false, $defaultValue = null)
+    public function __construct(string $variableName, bool $isOptional = \false, $defaultValue = null)
     {
         $this->variableName = $variableName;
         $this->isOptional = $isOptional;
@@ -87,7 +87,7 @@ class EnvironmentVariableDefinition implements Definition
                 $nestedDefinition = (string) $this->defaultValue;
                 $defaultValueStr = str_replace(\PHP_EOL, \PHP_EOL . '    ', $nestedDefinition);
             } else {
-                $defaultValueStr = var_export($this->defaultValue, true);
+                $defaultValueStr = var_export($this->defaultValue, \true);
             }
             $str .= \PHP_EOL . '    default = ' . $defaultValueStr;
         }

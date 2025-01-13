@@ -59,7 +59,7 @@ class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnos
             if (extension_loaded('suhosin')) {
                 return @ini_get("suhosin.executor.disable_eval") != "1";
             }
-            return true;
+            return \true;
         }
         $exists = function_exists($function);
         if (extension_loaded('suhosin')) {

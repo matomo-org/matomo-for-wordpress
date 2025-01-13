@@ -34,7 +34,7 @@ class Evolution extends JqplotGraph
     {
         parent::beforeRender();
         $this->checkRequestIsOnlyForMultiplePeriods();
-        $this->config->show_flatten_table = false;
+        $this->config->show_flatten_table = \false;
         $this->config->datatable_js_type = 'JqplotEvolutionGraphDataTable';
     }
     public function beforeLoadDataTable()
@@ -44,14 +44,14 @@ class Evolution extends JqplotGraph
         }
         parent::beforeLoadDataTable();
         // fetch archive states for incomplete data point visualization
-        $this->requestConfig->request_parameters_to_modify['fetch_archive_state'] = true;
+        $this->requestConfig->request_parameters_to_modify['fetch_archive_state'] = \true;
         // period will be overridden when 'range' is requested in the UI.
         // The graph will display the range in the most suitable period and
         // it won't show historical data before the range.
-        $period = Common::getRequestVar('period', false);
+        $period = Common::getRequestVar('period', \false);
         $selector = StaticContainer::get(EvolutionPeriodSelector::class);
         if ($period === 'range') {
-            $date = Common::getRequestVar('date', false);
+            $date = Common::getRequestVar('date', \false);
             $requestingPeriod = Factory::build($period, $date);
             // if a larger date range is selected, then for better performance and for seeing trends better we want to use
             // a suitable period (rather than always using for example the day range)
@@ -60,9 +60,9 @@ class Evolution extends JqplotGraph
         }
         $this->config->custom_parameters['columns'] = $this->config->columns_to_display;
         if ($this->isComparing()) {
-            $this->config->show_limit_control = false;
+            $this->config->show_limit_control = \false;
             // since we always show the evolution over the period, there's no point in changing the limit
-            $this->config->show_periods = false;
+            $this->config->show_periods = \false;
             // the periods can't be changed as they are always fixed when comparing
             $requestArray = $this->request->getRequestArray();
             $requestArray = ApiRequest::getRequestArrayFromString($requestArray);
@@ -71,13 +71,13 @@ class Evolution extends JqplotGraph
             if (!empty($requestArray['comparePeriods'])) {
                 $comparisonPeriods = $selector->getComparisonPeriodObjects($requestArray['comparePeriods'], $requestArray['compareDates']);
             }
-            $this->requestConfig->request_parameters_to_modify = $selector->setDatePeriods($this->requestConfig->request_parameters_to_modify, $requestingPeriod, $comparisonPeriods, true);
+            $this->requestConfig->request_parameters_to_modify = $selector->setDatePeriods($this->requestConfig->request_parameters_to_modify, $requestingPeriod, $comparisonPeriods, \true);
         }
     }
     public function afterAllFiltersAreApplied()
     {
         parent::afterAllFiltersAreApplied();
-        if (false === $this->config->x_axis_step_size) {
+        if (\false === $this->config->x_axis_step_size) {
             $rowCount = $this->dataTable->getRowsCount();
             $this->config->x_axis_step_size = $this->getDefaultXAxisStepSize($rowCount);
         }
@@ -199,7 +199,7 @@ class Evolution extends JqplotGraph
     }
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
     protected function ensureValidColumnsToDisplay()
     {

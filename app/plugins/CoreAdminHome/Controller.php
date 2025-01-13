@@ -185,7 +185,7 @@ class Controller extends ControllerAdmin
         }
         $view->defaultReportSiteAlias = $aliasUrl;
         $mainUrl = Site::getMainUrlFor($view->idSite);
-        $view->defaultReportSiteDomain = @parse_url($mainUrl, PHP_URL_HOST);
+        $view->defaultReportSiteDomain = @parse_url($mainUrl, \PHP_URL_HOST);
         $dntChecker = new DoNotTrackHeaderChecker();
         $view->serverSideDoNotTrackEnabled = $dntChecker->isActive();
         return $view->render();
@@ -239,9 +239,9 @@ class Controller extends ControllerAdmin
         }
         $enableBrowserTriggerArchiving = Rules::isBrowserTriggerEnabled();
         $todayArchiveTimeToLive = Rules::getTodayArchiveTimeToLive();
-        $showWarningCron = false;
+        $showWarningCron = \false;
         if (!$enableBrowserTriggerArchiving && $todayArchiveTimeToLive < 3600) {
-            $showWarningCron = true;
+            $showWarningCron = \true;
         }
         $view->showWarningCron = $showWarningCron;
         $view->todayArchiveTimeToLive = $todayArchiveTimeToLive;

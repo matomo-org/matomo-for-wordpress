@@ -26,7 +26,7 @@ use Matomo\Dependencies\Monolog\Formatter\NormalizerFormatter;
 class MongoDBHandler extends AbstractProcessingHandler
 {
     protected $mongoCollection;
-    public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = \true)
     {
         if (!($mongo instanceof \MongoClient || $mongo instanceof \Mongo || $mongo instanceof \MongoDB\Client)) {
             throw new \InvalidArgumentException('MongoClient, Mongo or MongoDB\\Client instance required');

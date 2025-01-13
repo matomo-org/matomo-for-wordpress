@@ -53,15 +53,15 @@ class Segment
     private $permission;
     private $suggestedValuesCallback;
     private $unionOfSegments;
-    private $isInternalSegment = false;
+    private $isInternalSegment = \false;
     private $suggestedValuesApi = '';
-    private $needsMostFrequentValues = true;
+    private $needsMostFrequentValues = \true;
     /**
      * If true, this segment will only be visible to a registered user (see API.getSegmentsMetadata).
      *
      * @var bool
      */
-    private $requiresRegisteredUser = false;
+    private $requiresRegisteredUser = \false;
     /**
      * @ignore
      */
@@ -293,7 +293,7 @@ class Segment
     public function setSuggestedValuesApi($suggestedValuesApi)
     {
         if (!empty($suggestedValuesApi) && is_string($suggestedValuesApi)) {
-            if (Development::isEnabled() && strpos($suggestedValuesApi, '.get') === false) {
+            if (Development::isEnabled() && strpos($suggestedValuesApi, '.get') === \false) {
                 throw new Exception('Invalid suggested values API defined, expecting ".get" to be present.');
             }
         } else {
@@ -396,7 +396,7 @@ class Segment
         if ($this->sqlSegment && $this->unionOfSegments) {
             throw new Exception(sprintf('Union of segments and SQL segment is set for segment "%s", use only one of them', $this->name));
         }
-        if ($this->segment && $this->unionOfSegments && in_array($this->segment, $this->unionOfSegments, true)) {
+        if ($this->segment && $this->unionOfSegments && in_array($this->segment, $this->unionOfSegments, \true)) {
             throw new Exception(sprintf('The segment %s contains a union segment to itself', $this->name));
         }
     }

@@ -58,7 +58,7 @@ class ApplicationTester
         } finally {
             // SHELL_VERBOSITY is set by Application::configureIO so we need to unset/reset it
             // to its previous value to avoid one test's verbosity to spread to the following tests
-            if (false === $prevShellVerbosity) {
+            if (\false === $prevShellVerbosity) {
                 if (\function_exists('putenv')) {
                     @putenv('SHELL_VERBOSITY');
                 }

@@ -22,7 +22,7 @@ class Theme
     /**
      * @var Plugin $plugin
      */
-    public function __construct($plugin = false)
+    public function __construct($plugin = \false)
     {
         $this->createThemeFromPlugin($plugin ? $plugin : Manager::getInstance()->getThemeEnabled());
     }
@@ -37,11 +37,11 @@ class Theme
     public function getStylesheet()
     {
         if ($this->themeName == \Piwik\Plugin\Manager::DEFAULT_THEME) {
-            return false;
+            return \false;
         }
         $info = $this->theme->getInformation();
         if (!isset($info['stylesheet'])) {
-            return false;
+            return \false;
         }
         $themeStylesheet = 'plugins/' . $this->theme->getPluginName() . '/' . $info['stylesheet'];
         return $themeStylesheet;
@@ -49,11 +49,11 @@ class Theme
     public function getJavaScriptFiles()
     {
         if ($this->themeName == \Piwik\Plugin\Manager::DEFAULT_THEME) {
-            return false;
+            return \false;
         }
         $info = $this->theme->getInformation();
         if (empty($info['javascript'])) {
-            return false;
+            return \false;
         }
         $jsFiles = $info['javascript'];
         if (!is_array($jsFiles)) {
@@ -95,12 +95,12 @@ class Theme
             return $source;
         }
         // or if it's already rewritten
-        if (strpos($pathAsset, $this->themeName) !== false) {
+        if (strpos($pathAsset, $this->themeName) !== \false) {
             return $source;
         }
         $pathPluginName = substr($pathAsset, strlen('plugins/'));
         $nextSlash = strpos($pathPluginName, '/');
-        if ($nextSlash === false) {
+        if ($nextSlash === \false) {
             return $source;
         }
         $pathPluginName = substr($pathPluginName, 0, $nextSlash);
@@ -113,7 +113,7 @@ class Theme
         // Strip trailing query string
         $fileToCheck = $overridingAsset;
         $queryStringPos = strpos($fileToCheck, '?');
-        if ($queryStringPos !== false) {
+        if ($queryStringPos !== \false) {
             $fileToCheck = substr($fileToCheck, 0, $queryStringPos);
         }
         if (file_exists($fileToCheck)) {

@@ -60,7 +60,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
         $sessionMetadata = [];
         $sessionAttributes = [];
         $flashes = [];
-        if ($request->hasSession()) {
+        if (!$request->attributes->getBoolean('_stateless') && $request->hasSession()) {
             $session = $request->getSession();
             if ($session->isStarted()) {
                 $sessionMetadata['Created'] = date(\DATE_RFC822, $session->getMetadataBag()->getCreated());
@@ -81,7 +81,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
                 $dotenvVars[$name] = $_ENV[$name];
             }
         }
-        $this->data = ['method' => $request->getMethod(), 'format' => $request->getRequestFormat(), 'content_type' => $response->headers->get('Content-Type', 'text/html'), 'status_text' => Response::$statusTexts[$statusCode] ?? '', 'status_code' => $statusCode, 'request_query' => $request->query->all(), 'request_request' => $request->request->all(), 'request_files' => $request->files->all(), 'request_headers' => $request->headers->all(), 'request_server' => $request->server->all(), 'request_cookies' => $request->cookies->all(), 'request_attributes' => $attributes, 'route' => $route, 'response_headers' => $response->headers->all(), 'response_cookies' => $responseCookies, 'session_metadata' => $sessionMetadata, 'session_attributes' => $sessionAttributes, 'session_usages' => array_values($this->sessionUsages), 'stateless_check' => $this->requestStack && ($mainRequest = $this->requestStack->getMainRequest()) && $mainRequest->attributes->get('_stateless', false), 'flashes' => $flashes, 'path_info' => $request->getPathInfo(), 'controller' => 'n/a', 'locale' => $request->getLocale(), 'dotenv_vars' => $dotenvVars];
+        $this->data = ['method' => $request->getMethod(), 'format' => $request->getRequestFormat(), 'content_type' => $response->headers->get('Content-Type', 'text/html'), 'status_text' => Response::$statusTexts[$statusCode] ?? '', 'status_code' => $statusCode, 'request_query' => $request->query->all(), 'request_request' => $request->request->all(), 'request_files' => $request->files->all(), 'request_headers' => $request->headers->all(), 'request_server' => $request->server->all(), 'request_cookies' => $request->cookies->all(), 'request_attributes' => $attributes, 'route' => $route, 'response_headers' => $response->headers->all(), 'response_cookies' => $responseCookies, 'session_metadata' => $sessionMetadata, 'session_attributes' => $sessionAttributes, 'session_usages' => array_values($this->sessionUsages), 'stateless_check' => $this->requestStack && ($mainRequest = $this->requestStack->getMainRequest()) && $mainRequest->attributes->get('_stateless', \false), 'flashes' => $flashes, 'path_info' => $request->getPathInfo(), 'controller' => 'n/a', 'locale' => $request->getLocale(), 'dotenv_vars' => $dotenvVars];
         if (isset($this->data['request_headers']['php-auth-pw'])) {
             $this->data['request_headers']['php-auth-pw'] = '******';
         }
@@ -109,11 +109,11 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             unset($this->controllers[$request]);
         }
         if ($request->attributes->has('_redirected') && ($redirectCookie = $request->cookies->get('sf_redirect'))) {
-            $this->data['redirect'] = json_decode($redirectCookie, true);
+            $this->data['redirect'] = json_decode($redirectCookie, \true);
             $response->headers->clearCookie('sf_redirect');
         }
         if ($response->isRedirect()) {
-            $response->headers->setCookie(new Cookie('sf_redirect', json_encode(['token' => $response->headers->get('x-debug-token'), 'route' => $request->attributes->get('_route', 'n/a'), 'method' => $request->getMethod(), 'controller' => $this->parseController($request->attributes->get('_controller')), 'status_code' => $statusCode, 'status_text' => Response::$statusTexts[$statusCode]]), 0, '/', null, $request->isSecure(), true, false, 'lax'));
+            $response->headers->setCookie(new Cookie('sf_redirect', json_encode(['token' => $response->headers->get('x-debug-token'), 'route' => $request->attributes->get('_route', 'n/a'), 'method' => $request->getMethod(), 'controller' => $this->parseController($request->attributes->get('_controller')), 'status_code' => $statusCode, 'status_text' => Response::$statusTexts[$statusCode]]), 0, '/', null, $request->isSecure(), \true, \false, 'lax'));
         }
         $this->data['identifier'] = $this->data['route'] ?: (\is_array($this->data['controller']) ? $this->data['controller']['class'] . '::' . $this->data['controller']['method'] . '()' : $this->data['controller']);
         if ($response->headers->has('x-previous-debug-token')) {
@@ -154,11 +154,11 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
     {
         return new ParameterBag($this->data['request_headers']->getValue());
     }
-    public function getRequestServer(bool $raw = false)
+    public function getRequestServer(bool $raw = \false)
     {
         return new ParameterBag($this->data['request_server']->getValue($raw));
     }
-    public function getRequestCookies(bool $raw = false)
+    public function getRequestCookies(bool $raw = \false)
     {
         return new ParameterBag($this->data['request_cookies']->getValue($raw));
     }
@@ -271,7 +271,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
      */
     public function getRedirect()
     {
-        return $this->data['redirect'] ?? false;
+        return $this->data['redirect'] ?? \false;
     }
     public function getForwardToken()
     {
@@ -287,7 +287,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             return;
         }
         if ($event->getRequest()->cookies->has('sf_redirect')) {
-            $event->getRequest()->attributes->set('_redirected', true);
+            $event->getRequest()->attributes->set('_redirected', \true);
         }
     }
     public static function getSubscribedEvents() : array

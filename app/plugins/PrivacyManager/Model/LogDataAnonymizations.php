@@ -80,7 +80,7 @@ class LogDataAnonymizations
         }
         $entry['sites'] = array();
         if (!empty($entry['idsites'])) {
-            $entry['idsites'] = json_decode($entry['idsites'], true);
+            $entry['idsites'] = json_decode($entry['idsites'], \true);
             foreach ($entry['idsites'] as $idSite) {
                 try {
                     $entry['sites'][] = Site::getNameFor($idSite);
@@ -94,12 +94,12 @@ class LogDataAnonymizations
             $entry['sites'][] = 'All Websites';
         }
         if (!empty($entry['unset_visit_columns'])) {
-            $entry['unset_visit_columns'] = json_decode($entry['unset_visit_columns'], true);
+            $entry['unset_visit_columns'] = json_decode($entry['unset_visit_columns'], \true);
         } else {
             $entry['unset_visit_columns'] = array();
         }
         if (!empty($entry['unset_link_visit_action_columns'])) {
-            $entry['unset_link_visit_action_columns'] = json_decode($entry['unset_link_visit_action_columns'], true);
+            $entry['unset_link_visit_action_columns'] = json_decode($entry['unset_link_visit_action_columns'], \true);
         } else {
             $entry['unset_link_visit_action_columns'] = array();
         }
@@ -109,7 +109,7 @@ class LogDataAnonymizations
         $entry['idlogdata_anonymization'] = (int) $entry['idlogdata_anonymization'];
         return $entry;
     }
-    public function scheduleEntry($requester, $idSites, $dateString, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $unsetVisitColumns, $unsetLinkVisitActionColumns, $willBeStartedNow = false)
+    public function scheduleEntry($requester, $idSites, $dateString, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $unsetVisitColumns, $unsetLinkVisitActionColumns, $willBeStartedNow = \false)
     {
         BaseValidator::check('date', $dateString, [new NotEmpty()]);
         list($startDate, $endDate) = $this->getStartAndEndDate($dateString);
@@ -176,7 +176,7 @@ class LogDataAnonymizations
     }
     public function getStartAndEndDate($date)
     {
-        if (strpos($date, ',') === false) {
+        if (strpos($date, ',') === \false) {
             $period = PeriodFactory::build('day', $date);
         } else {
             $period = PeriodFactory::build('range', $date);

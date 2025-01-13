@@ -43,7 +43,7 @@ class Factory
      */
     public function sql($sql, $errorCodesToIgnore = array())
     {
-        if ($errorCodesToIgnore === false) {
+        if ($errorCodesToIgnore === \false) {
             $errorCodesToIgnore = array();
         }
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\Sql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore));
@@ -66,7 +66,7 @@ class Factory
      */
     public function boundSql($sql, $bind, $errorCodesToIgnore = array())
     {
-        if ($errorCodesToIgnore === false) {
+        if ($errorCodesToIgnore === \false) {
             $errorCodesToIgnore = array();
         }
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\BoundSql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore, 'bind' => $bind));
@@ -323,7 +323,7 @@ class Factory
      * @param string $charset The charset to use, defaults to utf8
      * @return BatchInsert
      */
-    public function batchInsert($table, $columnNames, $values, $throwException = false, $charset = 'utf8')
+    public function batchInsert($table, $columnNames, $values, $throwException = \false, $charset = 'utf8')
     {
         $table = $this->prefixTable($table);
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\BatchInsert', array('table' => $table, 'columnNames' => $columnNames, 'values' => $values, 'throwException' => $throwException, 'charset' => $charset));

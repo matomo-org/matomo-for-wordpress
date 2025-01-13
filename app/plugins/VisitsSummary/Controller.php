@@ -52,8 +52,8 @@ class Controller extends \Piwik\Plugin\Controller
     public function getEvolutionGraph()
     {
         $this->checkSitePermission();
-        $columns = Common::getRequestVar('columns', false);
-        if (false !== $columns) {
+        $columns = Common::getRequestVar('columns', \false);
+        if (\false !== $columns) {
             $columns = Piwik::getArrayFromApiParameter($columns);
         }
         $documentation = $this->translator->translate('VisitsSummary_VisitsSummaryDocumentation') . '<br />' . $this->translator->translate('General_BrokenDownReportDocumentation') . '<br /><br />' . '<b>' . $this->translator->translate('General_ColumnNbVisits') . ':</b> ' . $this->translator->translate('General_ColumnNbVisitsDocumentation') . '<br />' . '<b>' . $this->translator->translate('General_ColumnNbUniqVisitors') . ':</b> ' . $this->translator->translate('General_ColumnNbUniqVisitorsDocumentation') . '<br />' . '<b>' . $this->translator->translate('General_ColumnNbActions') . ':</b> ' . $this->translator->translate('General_ColumnNbActionsDocumentation') . '<br />' . '<b>' . $this->translator->translate('General_ColumnNbUsers') . ':</b> ' . $this->translator->translate('General_ColumnNbUsersDocumentation') . ' (<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-id/') . '">User ID</a>)<br />' . '<b>' . $this->translator->translate('General_ColumnActionsPerVisit') . ':</b> ' . $this->translator->translate('General_ColumnActionsPerVisitDocumentation');
@@ -76,7 +76,7 @@ class Controller extends \Piwik\Plugin\Controller
             'nb_uniq_outlinks',
             'avg_time_generation',
         );
-        $currentPeriod = Common::getRequestVar('period', false);
+        $currentPeriod = Common::getRequestVar('period', \false);
         if (!SettingsPiwik::isUniqueVisitorsEnabled($currentPeriod)) {
             $selectableColumns = array_diff($selectableColumns, ['nb_uniq_visitors', 'nb_users']);
         }
@@ -99,7 +99,7 @@ class Controller extends \Piwik\Plugin\Controller
             // we disable filters for example "search for pattern", in the case this method is called
             // by a method that already calls the API with some generic filters applied
             'disable_generic_filters' => 1,
-            'columns' => false,
+            'columns' => \false,
         ));
         return empty($result) ? new DataTable() : $result;
     }

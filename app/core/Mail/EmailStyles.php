@@ -85,9 +85,9 @@ class EmailStyles
     public static function rgbToHex($rgbValues)
     {
         list($r, $g, $b) = explode(',', $rgbValues);
-        $r = str_pad(dechex($r), 2, "0", STR_PAD_LEFT);
-        $g = str_pad(dechex($g), 2, "0", STR_PAD_LEFT);
-        $b = str_pad(dechex($b), 2, "0", STR_PAD_LEFT);
+        $r = str_pad(dechex($r), 2, "0", \STR_PAD_LEFT);
+        $g = str_pad(dechex($g), 2, "0", \STR_PAD_LEFT);
+        $b = str_pad(dechex($b), 2, "0", \STR_PAD_LEFT);
         return '#' . $r . $g . $b;
     }
     public static function get()

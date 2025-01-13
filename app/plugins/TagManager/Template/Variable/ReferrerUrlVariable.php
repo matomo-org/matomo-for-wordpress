@@ -13,7 +13,7 @@ use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 class ReferrerUrlVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
-    const ID = 'ReferrerUrl';
+    public const ID = 'ReferrerUrl';
     public function getId()
     {
         return self::ID;

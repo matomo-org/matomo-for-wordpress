@@ -64,10 +64,10 @@ final class ChainLoader implements LoaderInterface
         }
         foreach ($this->loaders as $loader) {
             if ($loader->exists($name)) {
-                return $this->hasSourceCache[$name] = true;
+                return $this->hasSourceCache[$name] = \true;
             }
         }
-        return $this->hasSourceCache[$name] = false;
+        return $this->hasSourceCache[$name] = \false;
     }
     public function getCacheKey(string $name) : string
     {

@@ -16,7 +16,7 @@ class Regex extends \Piwik\Validators\BaseValidator
         if ($this->isValueBare($value)) {
             return;
         }
-        if (@preg_match($value, '') === false) {
+        if (@preg_match($value, '') === \false) {
             throw new \Piwik\Validators\Exception(Piwik::translate('General_ValidatorErrorNoValidRegex', array($value)));
         }
     }

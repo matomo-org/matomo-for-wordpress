@@ -21,11 +21,11 @@ class SessionNamespace extends Zend_Session_Namespace
      * @param string $namespace
      * @param bool $singleInstance
      */
-    public function __construct($namespace = 'Default', $singleInstance = false)
+    public function __construct($namespace = 'Default', $singleInstance = \false)
     {
         if (Common::isPhpCliMode()) {
-            self::$_readable = true;
-            self::$_writable = true;
+            self::$_readable = \true;
+            self::$_writable = \true;
             return;
         }
         Session::start();

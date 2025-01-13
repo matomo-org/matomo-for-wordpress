@@ -17,8 +17,12 @@ class Consumer
      * @var Api\Client
      */
     private $marketplaceClient;
-    private $consumer = false;
+    private $consumer = \false;
     private $isValid = null;
+    /**
+     * @var array
+     */
+    private $pluginLicenseStatus = null;
     public function __construct(\Piwik\Plugins\Marketplace\Api\Client $marketplaceClient)
     {
         $this->marketplaceClient = $marketplaceClient;
@@ -34,12 +38,12 @@ class Consumer
     }
     public function clearCache()
     {
-        $this->consumer = false;
+        $this->consumer = \false;
         $this->isValid = null;
     }
     public function getConsumer()
     {
-        if ($this->consumer === false) {
+        if ($this->consumer === \false) {
             $consumer = $this->marketplaceClient->getConsumer();
             if (!empty($consumer)) {
                 $this->consumer = $consumer;
@@ -55,5 +59,18 @@ class Consumer
             $this->isValid = $this->marketplaceClient->isValidConsumer();
         }
         return $this->isValid;
+    }
+    public function getConsumerPluginLicenseStatus() : array
+    {
+        if ($this->pluginLicenseStatus === null) {
+            $consumer = $this->getConsumer();
+            $this->pluginLicenseStatus = [];
+            if (!empty($consumer['licenses'])) {
+                foreach ($consumer['licenses'] as $license) {
+                    $this->pluginLicenseStatus[$license['plugin']['name']] = $license['status'];
+                }
+            }
+        }
+        return $this->pluginLicenseStatus;
     }
 }

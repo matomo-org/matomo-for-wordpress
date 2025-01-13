@@ -42,12 +42,12 @@ class EntryPageUrl extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionUrl = false;
+        $idActionUrl = \false;
         if (!empty($action)) {
             $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
         }
-        if ($idActionUrl === false) {
-            return false;
+        if ($idActionUrl === \false) {
+            return \false;
         }
         return (int) $idActionUrl;
     }
@@ -66,6 +66,6 @@ class EntryPageUrl extends VisitDimension
                 return $idAction;
             }
         }
-        return false;
+        return \false;
     }
 }

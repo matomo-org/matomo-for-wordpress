@@ -142,7 +142,7 @@ class Writer
             return array();
         }
         $data = file_get_contents($path);
-        $translations = json_decode($data, true);
+        $translations = json_decode($data, \true);
         return $translations;
     }
     /**
@@ -200,10 +200,10 @@ class Writer
          */
         $options = 0;
         if (defined('JSON_UNESCAPED_UNICODE')) {
-            $options |= JSON_UNESCAPED_UNICODE;
+            $options |= \JSON_UNESCAPED_UNICODE;
         }
         if (defined('JSON_PRETTY_PRINT')) {
-            $options |= JSON_PRETTY_PRINT;
+            $options |= \JSON_PRETTY_PRINT;
         }
         return json_encode($this->translations, $options);
     }
@@ -260,10 +260,10 @@ class Writer
         foreach ($this->validators as $validator) {
             if (!$validator->isValid($this->translations)) {
                 $this->validationMessage = $validator->getMessage();
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Returns last validation message
@@ -323,7 +323,7 @@ class Writer
         // skip if not translations available
         if (!$this->hasTranslations()) {
             $this->currentState = self::FILTERED;
-            return false;
+            return \false;
         }
         $cleanedTranslations = $this->translations;
         foreach ($this->filters as $filter) {

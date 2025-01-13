@@ -91,7 +91,7 @@ class LogDeleter
             if (!empty($afterChunkDeleted)) {
                 $afterChunkDeleted($logsDeleted);
             }
-        }, $willDelete = true);
+        }, $willDelete = \true);
         return $logsDeleted;
     }
 }

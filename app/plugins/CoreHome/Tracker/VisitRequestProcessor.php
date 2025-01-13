@@ -89,7 +89,7 @@ class VisitRequestProcessor extends RequestProcessor
         $isExcluded = $excluded->isExcluded();
         $request->setMetadata('CoreHome', 'isVisitExcluded', $isExcluded);
         if ($isExcluded) {
-            return true;
+            return \true;
         }
         $privacyConfig = new PrivacyManagerConfig();
         $ip = $request->getIpString();
@@ -108,7 +108,7 @@ class VisitRequestProcessor extends RequestProcessor
             // only copy over known visitor's information, if this is for an ongoing visit
             $this->visitorRecognizer->updateVisitPropertiesFromLastVisitRow($visitProperties);
         }
-        return false;
+        return \false;
     }
     public function afterRequestProcessed(VisitProperties $visitProperties, Request $request)
     {
@@ -138,34 +138,34 @@ class VisitRequestProcessor extends RequestProcessor
     {
         $isKnown = $request->getMetadata('CoreHome', 'isVisitorKnown');
         if (!$isKnown) {
-            return true;
+            return \true;
         }
         $isNewVisitForced = $request->getParam('new_visit');
         $isNewVisitForced = !empty($isNewVisitForced);
         if ($isNewVisitForced) {
             Common::printDebug("-> New visit forced: &new_visit=1 in request");
-            return true;
+            return \true;
         }
         if ($this->trackerAlwaysNewVisitor) {
             Common::printDebug("-> New visit forced: Debug.tracker_always_new_visitor = 1 in config.ini.php");
-            return true;
+            return \true;
         }
         $isLastActionInTheSameVisit = $this->isLastActionInTheSameVisit($visitProperties, $request, $lastKnownVisit);
         if (!$isLastActionInTheSameVisit) {
             Common::printDebug("Visitor detected, but last action was more than 30 minutes ago...");
-            return true;
+            return \true;
         }
         $wasLastActionYesterday = $this->wasLastActionNotToday($visitProperties, $request, $lastKnownVisit);
         $forceNewVisitAtMidnight = (bool) TrackerConfig::getConfigValue('create_new_visit_after_midnight', $request->getIdSiteIfExists());
         if ($wasLastActionYesterday && $forceNewVisitAtMidnight) {
             Common::printDebug("Visitor detected, but last action was yesterday...");
-            return true;
+            return \true;
         }
         if (!TrackerConfig::getConfigValue('enable_userid_overwrites_visitorid', $request->getIdSiteIfExists()) && !$this->lastUserIdWasSetAndDoesMatch($visitProperties, $request)) {
             Common::printDebug("Visitor detected, but last user_id does not match...");
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Returns true if the last action was done during the last 30 minutes
@@ -174,7 +174,7 @@ class VisitRequestProcessor extends RequestProcessor
     protected function isLastActionInTheSameVisit(VisitProperties $visitProperties, Request $request, $lastKnownVisit)
     {
         $lastActionTime = $this->getLastKnownActionTime($visitProperties, $lastKnownVisit);
-        return isset($lastActionTime) && false !== $lastActionTime && $lastActionTime > $request->getCurrentTimestamp() - $this->visitStandardLength;
+        return isset($lastActionTime) && \false !== $lastActionTime && $lastActionTime > $request->getCurrentTimestamp() - $this->visitStandardLength;
     }
     /**
      * Returns true if the last action was not today.
@@ -185,7 +185,7 @@ class VisitRequestProcessor extends RequestProcessor
     {
         $lastActionTime = $this->getLastKnownActionTime($visitProperties, $lastKnownVisit);
         if (empty($lastActionTime)) {
-            return false;
+            return \false;
         }
         $idSite = $request->getIdSite();
         $timezone = $this->getTimezoneForSite($idSite);
@@ -232,11 +232,11 @@ class VisitRequestProcessor extends RequestProcessor
     {
         $lastUserId = $visitProperties->getProperty('user_id');
         if (empty($lastUserId)) {
-            return true;
+            return \true;
         }
         $currentUserId = $request->getForcedUserId();
         if (empty($currentUserId)) {
-            return true;
+            return \true;
         }
         return $lastUserId === $currentUserId;
     }

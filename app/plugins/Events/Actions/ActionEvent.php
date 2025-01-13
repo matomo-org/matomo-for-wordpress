@@ -54,7 +54,7 @@ class ActionEvent extends Action
     }
     protected function getActionsToLookup()
     {
-        $actionUrl = false;
+        $actionUrl = \false;
         $url = $this->getActionUrl();
         if (!empty($url)) {
             // normalize urls by stripping protocol and www

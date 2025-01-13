@@ -44,9 +44,9 @@ class BuildPolyfill extends ConsoleCommand
     private function createDummyPackageJson()
     {
         $packageJson = file_get_contents(PIWIK_INCLUDE_PATH . '/package.json');
-        $packageJson = json_decode($packageJson, true);
+        $packageJson = json_decode($packageJson, \true);
         $dummyPackageJson = ['name' => '@matomo/polyfills', 'version' => '1.0.0', 'description' => 'dummy package.json required for vue compilation in subdirectory', 'devDependencies' => $packageJson['devDependencies']];
-        $dummyPackageJson = json_encode($dummyPackageJson, JSON_PRETTY_PRINT);
+        $dummyPackageJson = json_encode($dummyPackageJson, \JSON_PRETTY_PRINT);
         file_put_contents(PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills/package.json', $dummyPackageJson);
     }
     private function deleteExtraFiles()
@@ -56,6 +56,6 @@ class BuildPolyfill extends ConsoleCommand
     private function clearWebpackCache()
     {
         $path = PIWIK_INCLUDE_PATH . '/plugins/CoreVue/polyfills/node_modules/.cache';
-        Filesystem::unlinkRecursive($path, true);
+        Filesystem::unlinkRecursive($path, \true);
     }
 }

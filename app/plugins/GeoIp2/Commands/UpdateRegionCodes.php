@@ -54,7 +54,7 @@ class UpdateRegionCodes extends ConsoleCommand
         $output = $this->getOutput();
         $input = $this->getInput();
         $regionsFile = __DIR__ . '/../data/isoRegionNames.php';
-        $output->setDecorated(true);
+        $output->setDecorated(\true);
         $output->writeln('Starting region codes update');
         $output->write('Fetching region codes from ' . $this->source);
         try {
@@ -63,7 +63,7 @@ class UpdateRegionCodes extends ConsoleCommand
             $output->writeln(' <fg=red>X (Fetching content failed)</>');
             return self::FAILURE;
         }
-        $regionData = json_decode($newContent, true);
+        $regionData = json_decode($newContent, \true);
         if (empty($regionData)) {
             $output->writeln(' <fg=red>X (Content could not be parsed)</>');
             return self::FAILURE;
@@ -72,7 +72,7 @@ class UpdateRegionCodes extends ConsoleCommand
         $newRegions = [];
         foreach ($regionData['3166-2'] as $region) {
             list($countryCode, $regionCode) = explode('-', $region['code']);
-            $newRegions[$countryCode][$regionCode] = ['name' => $region['name'], 'altNames' => [], 'current' => true];
+            $newRegions[$countryCode][$regionCode] = ['name' => $region['name'], 'altNames' => [], 'current' => \true];
         }
         ksort($newRegions);
         $currentRegions = (include $regionsFile);
@@ -83,13 +83,13 @@ class UpdateRegionCodes extends ConsoleCommand
                     if ($newRegions[$countryCode][$regionCode]['name'] !== $regionData['name'] && !in_array($regionData['name'], $newRegions[$countryCode][$regionCode]['altNames'])) {
                         $newRegions[$countryCode][$regionCode]['altNames'][] = $regionData['name'];
                     }
-                    if (($key = array_search($newRegions[$countryCode][$regionCode]['name'], $newRegions[$countryCode][$regionCode]['altNames'])) !== false) {
+                    if (($key = array_search($newRegions[$countryCode][$regionCode]['name'], $newRegions[$countryCode][$regionCode]['altNames'])) !== \false) {
                         unset($newRegions[$countryCode][$regionCode]['altNames'][$key]);
                         $newRegions[$countryCode][$regionCode]['altNames'] = array_values($newRegions[$countryCode][$regionCode]['altNames']);
                     }
                 } else {
                     $newRegions[$countryCode][$regionCode] = $regionData;
-                    $newRegions[$countryCode][$regionCode]['current'] = false;
+                    $newRegions[$countryCode][$regionCode]['current'] = \false;
                 }
             }
         }
@@ -117,7 +117,7 @@ class UpdateRegionCodes extends ConsoleCommand
 // ]
 return 
 CONTENT;
-        $content .= var_export($newRegions, true) . ';';
+        $content .= var_export($newRegions, \true) . ';';
         file_put_contents($regionsFile, $content);
         $output->writeln('File successfully updated <fg=green>✓</>');
         return self::SUCCESS;
@@ -155,7 +155,7 @@ CONTENT;
             if (!array_key_exists($regionCode, $regions[$countryCode])) {
                 $output->writeln('');
                 $output->writeln("Adding missing region {$regionName} ({$regionCode}) for country {$countryCode} <fg=green>✓</>");
-                $regions[$countryCode][$regionCode] = ['name' => $regionName, 'altNames' => [], 'current' => false];
+                $regions[$countryCode][$regionCode] = ['name' => $regionName, 'altNames' => [], 'current' => \false];
             } else {
                 if ($regionName !== $regions[$countryCode][$regionCode]['name'] && !in_array($regionName, $regions[$countryCode][$regionCode]['altNames'])) {
                     $output->writeln('');

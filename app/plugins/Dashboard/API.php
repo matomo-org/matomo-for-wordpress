@@ -34,7 +34,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return array[]
      */
-    public function getDashboards($login = '', $returnDefaultIfEmpty = true)
+    public function getDashboards($login = '', $returnDefaultIfEmpty = \true)
     {
         $login = $login ? $login : Piwik::getCurrentUserLogin();
         $dashboards = [];
@@ -57,7 +57,7 @@ class API extends \Piwik\Plugin\API
      * @param bool $addDefaultWidgets  whether to add the current default widget collection or not
      * @return int|string
      */
-    public function createNewDashboardForUser($login, $dashboardName = '', $addDefaultWidgets = true)
+    public function createNewDashboardForUser($login, $dashboardName = '', $addDefaultWidgets = \true)
     {
         $this->checkLoginIsNotAnonymous($login);
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($login);
@@ -103,10 +103,10 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeAdminAccess();
         // get users only returns users of sites the current user has at least admin access to
         $users = Request::processRequest('UsersManager.getUsers', ['filter_limit' => -1]);
-        $userFound = false;
+        $userFound = \false;
         foreach ($users as $user) {
             if ($user['login'] === $copyToUser) {
-                $userFound = true;
+                $userFound = \true;
                 break;
             }
         }
@@ -115,7 +115,7 @@ class API extends \Piwik\Plugin\API
         }
         $login = Piwik::getCurrentUserLogin();
         $layout = $this->dashboard->getLayoutForUser($login, $idDashboard);
-        if ($layout !== false) {
+        if ($layout !== \false) {
             return $this->model->createNewDashboardForUser($copyToUser, $dashboardName, $layout);
         }
         throw new \Exception('Dashboard not found');

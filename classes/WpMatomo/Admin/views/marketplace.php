@@ -62,9 +62,11 @@ $matomo_extra_url_params = '&' . http_build_query(
 		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 			$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
 			$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
+			$matomo_feature_section_class       = isset( $matomo_feature_section['class'] ) ? $matomo_feature_section['class'] : '';
+			$matomo_extra_card_html             = isset( $matomo_feature_section['extra_card_html'] ) ? $matomo_feature_section['extra_card_html'] : '';
 
 			echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-			echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . '"><div id="the-list">';
+			echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . ' ' . esc_attr( $matomo_feature_section_class ) . '"><div id="the-list">';
 
 			foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
 				$matomo_style        = '';
@@ -173,6 +175,10 @@ $matomo_extra_url_params = '&' . http_build_query(
 							?>
 						</div>
 					</div>
+					<?php
+						// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $matomo_extra_card_html;
+					?>
 				</div>
 				<?php
 			}
@@ -186,6 +192,21 @@ $matomo_extra_url_params = '&' . http_build_query(
 	}
 
 	$matomo_feature_sections = [
+		[
+			'title'           => 'What\'s New',
+			'class'           => 'matomo-new-plugins',
+			'extra_card_html' => '<span class="matomo-new-marker">' . esc_html__( 'New!', 'matomo' ) . '</span>',
+			'features'        =>
+				[
+					[
+						'name'        => 'Crash Analytics',
+						'description' => 'Detect crashes to improve the user experience, increase conversions and recover revenue. Resolve them with insights to minimise developer hours.',
+						'price'       => '69EUR / 79USD',
+						'url'         => 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
+						'image'       => '',
+					],
+				],
+		],
 		[
 			'title'     => 'Top free plugins',
 			'more_url'  => 'https://plugins.matomo.org/free?wp=1&pk_campaign=WP&pk_source=Plugin',
@@ -213,7 +234,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	];
 
 	/** @var \WpMatomo\Settings $settings */
-	$matomo_version = (int) explode( '.', $settings->get_global_option( 'core_version' ) )[0];
+	$matomo_version = $settings->get_matomo_major_version();
 
 	matomo_show_tables( $matomo_feature_sections, $matomo_version );
 

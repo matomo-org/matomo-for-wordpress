@@ -191,7 +191,7 @@ abstract class Factory
                 break;
         }
         if ($parentPeriod === null) {
-            return false;
+            return \false;
         }
         return !self::isPeriodEnabledForAPI($parentPeriod) || self::isAnyLowerPeriodDisabledForAPI($parentPeriod);
     }

@@ -55,10 +55,10 @@ class Annotations extends \Piwik\Plugin
      *
      * @return Date[]   array of Date objects or array(false, false)
      */
-    public static function getDateRangeForPeriod($date, $period, $lastN = false)
+    public static function getDateRangeForPeriod($date, $period, $lastN = \false)
     {
-        if ($date === false) {
-            return array(false, false);
+        if ($date === \false) {
+            return array(\false, \false);
         }
         $isMultiplePeriod = Period\Range::isMultiplePeriod($date, $period);
         // if the range is just a normal period (or the period is a range in which case lastN is ignored)
@@ -66,7 +66,7 @@ class Annotations extends \Piwik\Plugin
             $oPeriod = new Period\Range('day', $date);
             $startDate = $oPeriod->getDateStart()->getStartOfDay();
             $endDate = $oPeriod->getDateEnd()->getStartOfDay();
-        } elseif ($lastN == false && !$isMultiplePeriod) {
+        } elseif ($lastN == \false && !$isMultiplePeriod) {
             $oPeriod = Period\Factory::build($period, Date::factory($date));
             $startDate = $oPeriod->getDateStart();
             $endDate = $oPeriod->getDateEnd();

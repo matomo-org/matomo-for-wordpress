@@ -117,7 +117,7 @@ abstract class Metric
      */
     public function beforeFormat($report, DataTable $table)
     {
-        return true;
+        return \true;
     }
     /**
      * Helper method that will access a metric in a {@link Piwik\DataTable\Row} or array either by
@@ -133,7 +133,7 @@ abstract class Metric
     {
         if ($row instanceof Row) {
             $value = $row->getColumn($columnName);
-            if ($value === false) {
+            if ($value === \false) {
                 if (empty($mappingNameToId)) {
                     $mappingNameToId = Metrics::getMappingFromNameToId();
                 }
@@ -189,7 +189,7 @@ abstract class Metric
     public static function getActualMetricColumn(DataTable $table, $columnName, $mappingNameToId = null)
     {
         $firstRow = $table->getFirstRow();
-        if (!empty($firstRow) && $firstRow->hasColumn($columnName) === false) {
+        if (!empty($firstRow) && $firstRow->hasColumn($columnName) === \false) {
             if (empty($mappingIdToName)) {
                 $mappingNameToId = Metrics::getMappingFromNameToId();
             }

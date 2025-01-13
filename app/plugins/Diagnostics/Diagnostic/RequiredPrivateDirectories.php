@@ -16,7 +16,7 @@ use Piwik\Url;
  */
 class RequiredPrivateDirectories extends \Piwik\Plugins\Diagnostics\Diagnostic\AbstractPrivateDirectories
 {
-    private $configIniAccessible = false;
+    private $configIniAccessible = \false;
     protected $privatePaths = ['tmp/cache/tracker/matomocache_general.php', '.git', '.git/config'];
     protected function addError(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult &$result)
     {

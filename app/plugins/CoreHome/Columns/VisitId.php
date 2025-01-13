@@ -27,7 +27,7 @@ class VisitId extends VisitDimension
     protected $nameSingular = 'General_Visit';
     protected $namePlural = 'General_ColumnNbVisits';
     protected $segmentName = 'visitId';
-    protected $allowAnonymous = false;
+    protected $allowAnonymous = \false;
     protected $metricId = 'visits';
     protected $type = self::TYPE_TEXT;
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)

@@ -53,7 +53,7 @@ class FingerprintSalt
     }
     private function decode($value)
     {
-        return @json_decode($value, true);
+        return @json_decode($value, \true);
     }
     public function getSalt($dateString, $idSite)
     {

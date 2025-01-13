@@ -121,7 +121,7 @@ class FieldConfig
      *
      * @var bool
      */
-    public $fullWidth = false;
+    public $fullWidth = \false;
     /**
      * The list of all available values for this setting. If null, the setting can have any value.
      *

@@ -33,7 +33,7 @@ class CubeHandler extends AbstractProcessingHandler
      *                                   A valid url must consist of three parts : protocol://host:port
      *                                   Only valid protocols used by Cube are http and udp
      */
-    public function __construct($url, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($url, $level = Logger::DEBUG, $bubble = \true)
     {
         $urlInfo = parse_url($url);
         if (!isset($urlInfo['scheme'], $urlInfo['host'], $urlInfo['port'])) {
@@ -58,7 +58,7 @@ class CubeHandler extends AbstractProcessingHandler
         if (!extension_loaded('sockets')) {
             throw new MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
         }
-        $this->udpConnection = socket_create(AF_INET, SOCK_DGRAM, 0);
+        $this->udpConnection = socket_create(\AF_INET, \SOCK_DGRAM, 0);
         if (!$this->udpConnection) {
             throw new \LogicException('Unable to create a socket');
         }
@@ -79,8 +79,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (!$this->httpConnection) {
             throw new \LogicException('Unable to connect to ' . $this->host . ':' . $this->port);
         }
-        curl_setopt($this->httpConnection, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($this->httpConnection, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->httpConnection, \CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($this->httpConnection, \CURLOPT_RETURNTRANSFER, \true);
     }
     /**
      * {@inheritdoc}
@@ -116,8 +116,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (!$this->httpConnection) {
             $this->connectHttp();
         }
-        curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '[' . $data . ']');
-        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen('[' . $data . ']')));
-        Curl\Util::execute($this->httpConnection, 5, false);
+        curl_setopt($this->httpConnection, \CURLOPT_POSTFIELDS, '[' . $data . ']');
+        curl_setopt($this->httpConnection, \CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen('[' . $data . ']')));
+        Curl\Util::execute($this->httpConnection, 5, \false);
     }
 }

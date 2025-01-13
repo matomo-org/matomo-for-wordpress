@@ -109,7 +109,7 @@ class RdKafkaCaster
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         try {
-            $m = $c->getMetadata(true, null, 500);
+            $m = $c->getMetadata(\true, null, 500);
         } catch (RdKafkaException $e) {
             return [];
         }

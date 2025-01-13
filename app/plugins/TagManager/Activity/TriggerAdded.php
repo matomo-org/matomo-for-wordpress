@@ -14,7 +14,7 @@ class TriggerAdded extends \Piwik\Plugins\TagManager\Activity\TriggerBaseActivit
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('addContainerTrigger')) {
-            return false;
+            return \false;
         }
         list($idEntity, $finalAPIParameters) = $eventData;
         $idSite = $finalAPIParameters['parameters']['idSite'];

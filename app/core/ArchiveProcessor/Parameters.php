@@ -36,8 +36,8 @@ class Parameters
     /**
      * @var string Plugin name which triggered this archive processor
      */
-    private $requestedPlugin = false;
-    private $onlyArchiveRequestedPlugin = false;
+    private $requestedPlugin = \false;
+    private $onlyArchiveRequestedPlugin = \false;
     /**
      * @var string
      */
@@ -94,7 +94,7 @@ class Parameters
      */
     public function onlyArchiveRequestedPlugin()
     {
-        $this->onlyArchiveRequestedPlugin = true;
+        $this->onlyArchiveRequestedPlugin = \true;
     }
     /**
      * @ignore
@@ -243,7 +243,7 @@ class Parameters
     {
         if (!$this->getRequestedPlugin()) {
             // sanity check, partial archives are only for single reports
-            return false;
+            return \false;
         }
         return $this->isArchiveOnlyReportHandled;
     }

@@ -45,7 +45,7 @@ class Model
     {
         $db = $this->getDb();
         $idReport = $db->fetchOne("SELECT max(idreport) + 1 FROM " . $this->table);
-        if ($idReport == false) {
+        if ($idReport == \false) {
             $idReport = 1;
         }
         return $idReport;

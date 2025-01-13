@@ -11,6 +11,7 @@ namespace Piwik\Db\Schema;
 use Exception;
 use Piwik\Common;
 use Piwik\Concurrency\Lock;
+use Piwik\Config;
 use Piwik\Date;
 use Piwik\Db\SchemaInterface;
 use Piwik\Db;
@@ -94,9 +95,9 @@ class Mysql implements SchemaInterface
      * @param bool $forceReload Invalidate cache
      * @return array  installed Tables
      */
-    public function getTablesInstalled($forceReload = true)
+    public function getTablesInstalled($forceReload = \true)
     {
-        if (is_null($this->tablesInstalled) || $forceReload === true) {
+        if (is_null($this->tablesInstalled) || $forceReload === \true) {
             $db = $this->getDb();
             $prefixTables = $this->getTablePrefixEscaped();
             $allTables = $this->getAllExistingTables($prefixTables);
@@ -258,8 +259,8 @@ class Mysql implements SchemaInterface
         }
         $sql = trim($sql);
         $pos = stripos($sql, 'SELECT');
-        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'MAX_EXECUTION_TIME(') !== false;
-        if ($pos !== false && !$isMaxExecutionTimeoutAlreadyPresent) {
+        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'MAX_EXECUTION_TIME(') !== \false;
+        if ($pos !== \false && !$isMaxExecutionTimeoutAlreadyPresent) {
             $timeInMs = $limit * 1000;
             $timeInMs = (int) $timeInMs;
             $maxExecutionTimeHint = ' /*+ MAX_EXECUTION_TIME(' . $timeInMs . ') */ ';
@@ -269,7 +270,7 @@ class Mysql implements SchemaInterface
     }
     public function supportsComplexColumnUpdates() : bool
     {
-        return true;
+        return \true;
     }
     /**
      * Returns the default collation for a charset.
@@ -306,6 +307,57 @@ class Mysql implements SchemaInterface
         }
         return $options;
     }
+    public function optimizeTables(array $tables, bool $force = \false) : bool
+    {
+        $optimize = Config::getInstance()->General['enable_sql_optimize_queries'];
+        if (empty($optimize) && !$force) {
+            return \false;
+        }
+        if (empty($tables)) {
+            return \false;
+        }
+        if (!$this->isOptimizeInnoDBSupported() && !$force) {
+            // filter out all InnoDB tables
+            $myisamDbTables = array();
+            foreach ($this->getTableStatus() as $row) {
+                if (strtolower($row['Engine']) == 'myisam' && in_array($row['Name'], $tables)) {
+                    $myisamDbTables[] = $row['Name'];
+                }
+            }
+            $tables = $myisamDbTables;
+        }
+        if (empty($tables)) {
+            return \false;
+        }
+        // optimize the tables
+        $success = \true;
+        foreach ($tables as &$t) {
+            $ok = Db::query('OPTIMIZE TABLE ' . $t);
+            if (!$ok) {
+                $success = \false;
+            }
+        }
+        return $success;
+    }
+    public function isOptimizeInnoDBSupported() : bool
+    {
+        $version = strtolower($this->getVersion());
+        // Note: This check for MariaDb is here on purpose, so it's working correctly for people
+        // having MySQL still configured, when using MariaDb
+        if (strpos($version, "mariadb") === \false) {
+            return \false;
+        }
+        $semanticVersion = strstr($version, '-', $beforeNeedle = \true);
+        return version_compare($semanticVersion, '10.1.1', '>=');
+    }
+    public function supportsSortingInSubquery() : bool
+    {
+        return \true;
+    }
+    public function getSupportedReadIsolationTransactionLevel() : string
+    {
+        return 'READ UNCOMMITTED';
+    }
     protected function getDatabaseCreateOptions() : string
     {
         $charset = DbHelper::getDefaultCharset();
@@ -336,6 +388,14 @@ class Mysql implements SchemaInterface
     {
         return $this->getDbSettings()->getTablePrefix();
     }
+    protected function getVersion() : string
+    {
+        return Db::fetchOne("SELECT VERSION()");
+    }
+    protected function getTableStatus()
+    {
+        return Db::fetchAll("SHOW TABLE STATUS");
+    }
     private function getDb()
     {
         return Db::get();
@@ -348,7 +408,7 @@ class Mysql implements SchemaInterface
     {
         return $this->getDbSettings()->getDbName();
     }
-    private function getAllExistingTables($prefixTables = false)
+    private function getAllExistingTables($prefixTables = \false)
     {
         if (empty($prefixTables)) {
             $prefixTables = $this->getTablePrefixEscaped();

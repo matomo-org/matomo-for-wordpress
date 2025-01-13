@@ -88,7 +88,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
     {
         $this->delegateContainer = $wrapperContainer ?: $this;
         $this->definitionSource = $definitionSource ?: $this->createDefaultDefinitionSource();
-        $this->proxyFactory = $proxyFactory ?: new ProxyFactory(false);
+        $this->proxyFactory = $proxyFactory ?: new ProxyFactory(\false);
         $this->definitionResolver = new ResolverDispatcher($this->delegateContainer, $this->proxyFactory);
         // Auto-register the container
         $this->resolvedEntries = [self::class => $this, ContainerInterface::class => $this->delegateContainer, FactoryInterface::class => $this, InvokerInterface::class => $this];
@@ -178,11 +178,11 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
             throw new InvalidArgumentException(sprintf('The name parameter must be of type string, %s given', is_object($name) ? get_class($name) : gettype($name)));
         }
         if (array_key_exists($name, $this->resolvedEntries)) {
-            return true;
+            return \true;
         }
         $definition = $this->getDefinition($name);
         if ($definition === null) {
-            return false;
+            return \false;
         }
         return $this->definitionResolver->isResolvable($definition);
     }
@@ -203,7 +203,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
         $className = get_class($instance);
         // If the class is anonymous, don't cache its definition
         // Checking for anonymous classes is cleaner via Reflection, but also slower
-        $objectDefinition = false !== strpos($className, '@anonymous') ? $this->definitionSource->getDefinition($className) : $this->getDefinition($className);
+        $objectDefinition = \false !== strpos($className, '@anonymous') ? $this->definitionSource->getDefinition($className) : $this->getDefinition($className);
         if (!$objectDefinition instanceof ObjectDefinition) {
             return $instance;
         }
@@ -290,13 +290,13 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
             return sprintf("Object (\n    class = %s\n)", get_class($entry));
         }
         if (is_array($entry)) {
-            return preg_replace(['/^array \\(/', '/\\)$/'], ['[', ']'], var_export($entry, true));
+            return preg_replace(['/^array \\(/', '/\\)$/'], ['[', ']'], var_export($entry, \true));
         }
         if (is_string($entry)) {
             return sprintf('Value (\'%s\')', $entry);
         }
         if (is_bool($entry)) {
-            return sprintf('Value (%s)', $entry === true ? 'true' : 'false');
+            return sprintf('Value (%s)', $entry === \true ? 'true' : 'false');
         }
         return sprintf('Value (%s)', is_scalar($entry) ? $entry : ucfirst(gettype($entry)));
     }
@@ -315,7 +315,7 @@ class Container implements ContainerInterface, FactoryInterface, InvokerInterfac
         if (isset($this->entriesBeingResolved[$entryName])) {
             throw new DependencyException("Circular dependency detected while trying to resolve entry '{$entryName}'");
         }
-        $this->entriesBeingResolved[$entryName] = true;
+        $this->entriesBeingResolved[$entryName] = \true;
         // Resolve the definition
         try {
             $value = $this->definitionResolver->resolve($definition, $parameters);

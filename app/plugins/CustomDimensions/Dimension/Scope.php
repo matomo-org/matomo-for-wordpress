@@ -19,7 +19,7 @@ class Scope
     public function check()
     {
         $scopes = CustomDimensions::getScopes();
-        if (empty($this->scope) || !in_array($this->scope, $scopes, true)) {
+        if (empty($this->scope) || !in_array($this->scope, $scopes, \true)) {
             $scopes = implode(', ', $scopes);
             $scope = $this->scope;
             throw new \Exception("Invalid value '{$scope}' for 'scope' specified. Available scopes are: {$scopes}");

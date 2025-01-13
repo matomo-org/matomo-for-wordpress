@@ -16,7 +16,7 @@ final class SignalRegistry
     public function __construct()
     {
         if (\function_exists('pcntl_async_signals')) {
-            pcntl_async_signals(true);
+            pcntl_async_signals(\true);
         }
     }
     public function register(int $signal, callable $signalHandler) : void
@@ -33,12 +33,12 @@ final class SignalRegistry
     public static function isSupported() : bool
     {
         if (!\function_exists('pcntl_signal')) {
-            return false;
+            return \false;
         }
         if (\in_array('pcntl_signal', explode(',', \ini_get('disable_functions')))) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * @internal

@@ -110,7 +110,7 @@ class Settings
         if (!$this->isSameFingerprintsAcrossWebsites) {
             $configString .= $request->getIdSite();
         }
-        $hash = md5($configString, $raw_output = true);
+        $hash = md5($configString, $raw_output = \true);
         return substr($hash, 0, Tracker::LENGTH_BINARY_ID);
     }
 }

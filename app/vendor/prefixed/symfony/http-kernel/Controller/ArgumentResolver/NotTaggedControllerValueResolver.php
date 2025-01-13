@@ -33,18 +33,18 @@ final class NotTaggedControllerValueResolver implements ArgumentValueResolverInt
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
         $controller = $request->attributes->get('_controller');
-        if (\is_array($controller) && \is_callable($controller, true) && \is_string($controller[0])) {
+        if (\is_array($controller) && \is_callable($controller, \true) && \is_string($controller[0])) {
             $controller = $controller[0] . '::' . $controller[1];
         } elseif (!\is_string($controller) || '' === $controller) {
-            return false;
+            return \false;
         }
         if ('\\' === $controller[0]) {
             $controller = ltrim($controller, '\\');
         }
-        if (!$this->container->has($controller) && false !== ($i = strrpos($controller, ':'))) {
+        if (!$this->container->has($controller) && \false !== ($i = strrpos($controller, ':'))) {
             $controller = substr($controller, 0, $i) . strtolower(substr($controller, $i));
         }
-        return false === $this->container->has($controller);
+        return \false === $this->container->has($controller);
     }
     /**
      * {@inheritdoc}
@@ -58,7 +58,7 @@ final class NotTaggedControllerValueResolver implements ArgumentValueResolverInt
             $controller = ltrim($controller, '\\');
         }
         if (!$this->container->has($controller)) {
-            $controller = false !== ($i = strrpos($controller, ':')) ? substr($controller, 0, $i) . strtolower(substr($controller, $i)) : $controller . '::__invoke';
+            $controller = \false !== ($i = strrpos($controller, ':')) ? substr($controller, 0, $i) . strtolower(substr($controller, $i)) : $controller . '::__invoke';
         }
         $what = sprintf('argument $%s of "%s()"', $argument->getName(), $controller);
         $message = sprintf('Could not resolve %s, maybe you forgot to register the controller as a service or missed tagging it with the "controller.service_arguments"?', $what);

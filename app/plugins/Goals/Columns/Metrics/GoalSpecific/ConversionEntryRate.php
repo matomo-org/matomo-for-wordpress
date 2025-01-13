@@ -26,7 +26,7 @@ class ConversionEntryRate extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions_entry_rate', false);
+        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions_entry_rate', \false);
     }
     public function getTranslatedName()
     {
@@ -46,7 +46,7 @@ class ConversionEntryRate extends GoalSpecificProcessedMetric
         $goalMetrics = $this->getGoalMetrics($row);
         $nbEntrances = $this->getMetric($row, 'entry_nb_visits');
         $conversions = $this->getMetric($goalMetrics, 'nb_conversions_entry', $mappingFromNameToIdGoal);
-        if ($nbEntrances !== false && is_numeric($nbEntrances) && $nbEntrances > 0) {
+        if ($nbEntrances !== \false && is_numeric($nbEntrances) && $nbEntrances > 0) {
             return Piwik::getQuotientSafe($conversions, $nbEntrances, 3);
         }
         return 0;

@@ -33,11 +33,11 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * @var bool
      */
-    protected $started = false;
+    protected $started = \false;
     /**
      * @var bool
      */
-    protected $closed = false;
+    protected $closed = \false;
     /**
      * @var AbstractProxy|\SessionHandlerInterface
      */
@@ -114,7 +114,7 @@ class NativeSessionStorage implements SessionStorageInterface
     public function start()
     {
         if ($this->started) {
-            return true;
+            return \true;
         }
         if (\PHP_SESSION_ACTIVE === session_status()) {
             throw new \RuntimeException('Failed to start the session: already started by PHP.');
@@ -164,11 +164,11 @@ class NativeSessionStorage implements SessionStorageInterface
         if (null !== $this->emulateSameSite) {
             $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
             if (null !== $originalCookie) {
-                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
+                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), \false);
             }
         }
         $this->loadSession();
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -201,14 +201,14 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, ?int $lifetime = null)
+    public function regenerate(bool $destroy = \false, ?int $lifetime = null)
     {
         // Cannot regenerate the session ID for non-active sessions.
         if (\PHP_SESSION_ACTIVE !== session_status()) {
-            return false;
+            return \false;
         }
         if (headers_sent()) {
-            return false;
+            return \false;
         }
         if (null !== $lifetime && $lifetime != \ini_get('session.cookie_lifetime')) {
             $this->save();
@@ -222,7 +222,7 @@ class NativeSessionStorage implements SessionStorageInterface
         if (null !== $this->emulateSameSite) {
             $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
             if (null !== $originalCookie) {
-                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
+                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), \false);
             }
         }
         return $isRegenerated;
@@ -248,7 +248,7 @@ class NativeSessionStorage implements SessionStorageInterface
                 $handler = $this->saveHandler instanceof SessionHandlerProxy ? $this->saveHandler->getHandler() : $this->saveHandler;
                 $msg = sprintf('session_write_close(): Failed to write session data with "%s" handler', \get_class($handler));
             }
-            return $previousHandler ? $previousHandler($type, $msg, $file, $line) : false;
+            return $previousHandler ? $previousHandler($type, $msg, $file, $line) : \false;
         });
         try {
             session_write_close();
@@ -259,8 +259,8 @@ class NativeSessionStorage implements SessionStorageInterface
                 $_SESSION = $session;
             }
         }
-        $this->closed = true;
-        $this->started = false;
+        $this->closed = \true;
+        $this->started = \false;
     }
     /**
      * {@inheritdoc}
@@ -398,7 +398,7 @@ class NativeSessionStorage implements SessionStorageInterface
             return;
         }
         if ($this->saveHandler instanceof SessionHandlerProxy) {
-            session_set_save_handler($this->saveHandler, false);
+            session_set_save_handler($this->saveHandler, \false);
         }
     }
     /**
@@ -420,7 +420,7 @@ class NativeSessionStorage implements SessionStorageInterface
             $session[$key] = isset($session[$key]) && \is_array($session[$key]) ? $session[$key] : [];
             $bag->initialize($session[$key]);
         }
-        $this->started = true;
-        $this->closed = false;
+        $this->started = \true;
+        $this->closed = \false;
     }
 }

@@ -37,7 +37,7 @@ class MySqlLockBackend implements LockBackend
         // rather try to get the lock with the insert only because only one job can succeed with this. If below flow with the
         // delete becomes to slow, we may be able to use the INSERT INTO ... ON DUPLICATE UPDATE again.
         if ($this->get($key)) {
-            return false;
+            return \false;
             // a value is set, won't be possible to insert
         }
         $tablePrefixed = self::getTableName();
@@ -55,8 +55,8 @@ class MySqlLockBackend implements LockBackend
         try {
             Db::query($query, array($key, $value, (int) $ttlInSeconds));
         } catch (\Exception $e) {
-            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'Duplicate entry') !== false || strpos($e->getMessage(), ' 1062 ') !== false) {
-                return false;
+            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'Duplicate entry') !== \false || strpos($e->getMessage(), ' 1062 ') !== \false) {
+                return \false;
             }
             throw $e;
         }
@@ -71,7 +71,7 @@ class MySqlLockBackend implements LockBackend
     public function deleteIfKeyHasValue($key, $value)
     {
         if (empty($value)) {
-            return false;
+            return \false;
         }
         $sql = sprintf('DELETE FROM %s WHERE `key` = ? and `value` = ?', self::getTableName());
         return $this->queryDidMakeChange($sql, array($key, $value));
@@ -79,7 +79,7 @@ class MySqlLockBackend implements LockBackend
     public function expireIfKeyHasValue($key, $value, $ttlInSeconds)
     {
         if (empty($value)) {
-            return false;
+            return \false;
         }
         // we need to use unix_timestamp in mysql and not time() in php since the local time might be different on each server
         // better to rely on one central DB server time only
@@ -90,7 +90,7 @@ class MySqlLockBackend implements LockBackend
             // again too fast within one second
             return $value === $this->get($key);
         }
-        return true;
+        return \true;
     }
     public function keyExists($key)
     {

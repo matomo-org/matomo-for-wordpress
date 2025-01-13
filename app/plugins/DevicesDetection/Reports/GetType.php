@@ -20,13 +20,13 @@ class GetType extends \Piwik\Plugins\DevicesDetection\Reports\Base
         $this->name = Piwik::translate('DevicesDetection_DeviceType');
         $this->documentation = Piwik::translate('DevicesDetection_DeviceTypeReportDocumentation');
         $this->order = 0;
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
         $this->subcategoryId = 'DevicesDetection_Devices';
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_search = true;
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_search = \true;
+        $view->config->show_exclude_low_population = \false;
         $view->config->addTranslation('label', Piwik::translate("DevicesDetection_dataTableLabelTypes"));
     }
 }

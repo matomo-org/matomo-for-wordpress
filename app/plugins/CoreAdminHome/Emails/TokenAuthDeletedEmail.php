@@ -20,7 +20,7 @@ class TokenAuthDeletedEmail extends SecurityNotificationEmail
      * @var bool
      */
     private $all;
-    public function __construct($login, $emailAddress, $tokenDescription, $all = false)
+    public function __construct($login, $emailAddress, $tokenDescription, $all = \false)
     {
         $this->tokenDescription = $tokenDescription;
         $this->all = $all;

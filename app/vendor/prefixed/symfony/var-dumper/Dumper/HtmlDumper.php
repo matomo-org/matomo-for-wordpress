@@ -25,8 +25,8 @@ class HtmlDumper extends CliDumper
     protected $dumpPrefix = '<pre class=sf-dump id=%s data-indent-pad="%s">';
     protected $dumpSuffix = '</pre><script>Sfdump(%s)</script>';
     protected $dumpId = 'sf-dump';
-    protected $colors = true;
-    protected $headerIsDumped = false;
+    protected $colors = \true;
+    protected $headerIsDumped = \false;
     protected $lastDepth = -1;
     protected $styles;
     private $displayOptions = ['maxDepth' => 1, 'maxStringLength' => 160, 'fileLinkFormat' => null];
@@ -46,7 +46,7 @@ class HtmlDumper extends CliDumper
      */
     public function setStyles(array $styles)
     {
-        $this->headerIsDumped = false;
+        $this->headerIsDumped = \false;
         $this->styles = $styles + $this->styles;
     }
     public function setTheme(string $themeName)
@@ -63,7 +63,7 @@ class HtmlDumper extends CliDumper
      */
     public function setDisplayOptions(array $displayOptions)
     {
-        $this->headerIsDumped = false;
+        $this->headerIsDumped = \false;
         $this->displayOptions = $displayOptions + $this->displayOptions;
     }
     /**
@@ -750,12 +750,12 @@ EOHTML
         if (Cursor::HASH_OBJECT === $type) {
             $cursor->attr['depth'] = $cursor->depth;
         }
-        parent::enterHash($cursor, $type, $class, false);
+        parent::enterHash($cursor, $type, $class, \false);
         if ($cursor->skipChildren || $cursor->depth >= $this->displayOptions['maxDepth']) {
-            $cursor->skipChildren = false;
+            $cursor->skipChildren = \false;
             $eol = ' class=sf-dump-compact>';
         } else {
-            $this->expandNextHash = false;
+            $this->expandNextHash = \false;
             $eol = ' class=sf-dump-expanded>';
         }
         if ($hasChild) {
@@ -802,7 +802,7 @@ EOHTML
             $style .= sprintf(' title="%s"', empty($attr['dynamic']) ? 'Public property' : 'Runtime added dynamic property');
         } elseif ('str' === $style && 1 < $attr['length']) {
             $style .= sprintf(' title="%d%s characters"', $attr['length'], $attr['binary'] ? ' binary or non-UTF-8' : '');
-        } elseif ('note' === $style && 0 < ($attr['depth'] ?? 0) && false !== ($c = strrpos($value, '\\'))) {
+        } elseif ('note' === $style && 0 < ($attr['depth'] ?? 0) && \false !== ($c = strrpos($value, '\\'))) {
             $style .= ' title=""';
             $attr += ['ellipsis' => \strlen($value) - $c, 'ellipsis-type' => 'note', 'ellipsis-tail' => 1];
         } elseif ('protected' === $style) {
@@ -862,7 +862,7 @@ EOHTML
     /**
      * {@inheritdoc}
      */
-    protected function dumpLine(int $depth, bool $endOfValue = false)
+    protected function dumpLine(int $depth, bool $endOfValue = \false)
     {
         if (-1 === $this->lastDepth) {
             $this->line = sprintf($this->dumpPrefix, $this->dumpId, $this->indentPad) . $this->line;
@@ -891,7 +891,7 @@ EOHTML
         if ($fmt = $options['fileLinkFormat']) {
             return \is_string($fmt) ? strtr($fmt, ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
         }
-        return false;
+        return \false;
     }
 }
 function esc(string $str)

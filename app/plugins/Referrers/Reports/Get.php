@@ -47,7 +47,7 @@ class Get extends \Piwik\Plugins\Referrers\Reports\Base
             $view->config->addTranslations($this->getSparklineTranslations());
             // add evolution values
             [$lastPeriodDate, $ignore] = Range::getLastDate();
-            if ($lastPeriodDate !== false) {
+            if ($lastPeriodDate !== \false) {
                 $date = Common::getRequestVar('date');
                 /** @var DataTable $previousData */
                 $previousData = Request::processRequest('Referrers.get', ['date' => $lastPeriodDate]);

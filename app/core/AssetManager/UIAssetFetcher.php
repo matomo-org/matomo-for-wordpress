@@ -84,7 +84,7 @@ abstract class UIAssetFetcher
                 $this->catalog->addUIAsset($newUIAsset);
                 continue;
             }
-            $found = false;
+            $found = \false;
             if (strpos($fileAbsolute, $pluginBaseDir) === 0) {
                 // we iterate over all custom plugin directories only for plugin files, not libs files (not needed there)
                 foreach ($pluginWebDirectories as $pluginDirectory => $relative) {
@@ -93,7 +93,7 @@ abstract class UIAssetFetcher
                     $testAsset = new OnDiskUIAsset($pluginDirectory, $newFileRelative, $relative);
                     if ($testAsset->exists()) {
                         $this->catalog->addUIAsset($testAsset);
-                        $found = true;
+                        $found = \true;
                         break;
                     }
                 }

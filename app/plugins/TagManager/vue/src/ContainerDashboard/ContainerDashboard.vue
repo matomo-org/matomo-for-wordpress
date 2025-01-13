@@ -24,6 +24,8 @@
             {{ translate('General_Description') }}: {{ containerVersion?.description }}
           </span>
         </p>
+        <p v-html="$sanitize(containerDashboardDescription)">
+        </p>
       </div>
       <div
         class="row"
@@ -214,6 +216,7 @@ import {
   EnrichedHeadline,
   ContentBlock,
   MatomoUrl,
+  externalLink,
 } from 'CoreHome';
 import AvailableContextsStore from '../AvailableContexts.store';
 import {
@@ -319,7 +322,7 @@ export default defineComponent({
   computed: {
     lastVersions(): Version[] {
       if (this.container?.versions?.length) {
-        return this.container.versions.slice(-5);
+        return this.container.versions.slice(0, 5);
       }
       return [];
     },
@@ -332,11 +335,13 @@ export default defineComponent({
     },
     containerMetaInformation() {
       return translate(
-        'TagManager_ContainerMetaInformation',
+        'TagManager_ContainerIdInformation',
         this.containerVersion?.idcontainer || '',
-        this.contexts[this.container?.context || ''] || '',
-        this.containerVersion?.created_date_pretty || '',
       );
+    },
+    containerDashboardDescription() {
+      const linkString = externalLink('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/');
+      return translate('TagManager_ContainerDashboardDescription', linkString, '</a>');
     },
     sortedContainerVersionTags() {
       const tags = (this.containerVersion?.tags || []);

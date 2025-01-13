@@ -61,24 +61,24 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     protected $container;
     protected $environment;
     protected $debug;
-    protected $booted = false;
+    protected $booted = \false;
     protected $startTime;
     private $projectDir;
     private $warmupDir;
     private $requestStackSize = 0;
-    private $resetServices = false;
+    private $resetServices = \false;
     /**
      * @var array<string, bool>
      */
     private static $freshCache = [];
-    public const VERSION = '5.4.39';
-    public const VERSION_ID = 50439;
+    public const VERSION = '5.4.48';
+    public const VERSION_ID = 50448;
     public const MAJOR_VERSION = 5;
     public const MINOR_VERSION = 4;
-    public const RELEASE_VERSION = 39;
+    public const RELEASE_VERSION = 48;
     public const EXTRA_VERSION = '';
     public const END_OF_MAINTENANCE = '11/2024';
-    public const END_OF_LIFE = '11/2025';
+    public const END_OF_LIFE = '02/2029';
     public function __construct(string $environment, bool $debug)
     {
         if (!($this->environment = $environment)) {
@@ -88,24 +88,24 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     }
     public function __clone()
     {
-        $this->booted = false;
+        $this->booted = \false;
         $this->container = null;
         $this->requestStackSize = 0;
-        $this->resetServices = false;
+        $this->resetServices = \false;
     }
     /**
      * {@inheritdoc}
      */
     public function boot()
     {
-        if (true === $this->booted) {
+        if (\true === $this->booted) {
             if (!$this->requestStackSize && $this->resetServices) {
                 if ($this->container->has('services_resetter')) {
                     $this->container->get('services_resetter')->reset();
                 }
-                $this->resetServices = false;
+                $this->resetServices = \false;
                 if ($this->debug) {
-                    $this->startTime = microtime(true);
+                    $this->startTime = microtime(\true);
                 }
             }
             return;
@@ -117,7 +117,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             $bundle->setContainer($this->container);
             $bundle->boot();
         }
-        $this->booted = true;
+        $this->booted = \true;
     }
     /**
      * {@inheritdoc}
@@ -133,7 +133,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     public function terminate(Request $request, Response $response)
     {
-        if (false === $this->booted) {
+        if (\false === $this->booted) {
             return;
         }
         if ($this->getHttpKernel() instanceof TerminableInterface) {
@@ -145,22 +145,22 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     public function shutdown()
     {
-        if (false === $this->booted) {
+        if (\false === $this->booted) {
             return;
         }
-        $this->booted = false;
+        $this->booted = \false;
         foreach ($this->getBundles() as $bundle) {
             $bundle->shutdown();
             $bundle->setContainer(null);
         }
         $this->container = null;
         $this->requestStackSize = 0;
-        $this->resetServices = false;
+        $this->resetServices = \false;
     }
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = \true)
     {
         if (!$this->booted) {
             $container = $this->container ?? $this->preBoot();
@@ -170,7 +170,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         }
         $this->boot();
         ++$this->requestStackSize;
-        $this->resetServices = true;
+        $this->resetServices = \true;
         try {
             return $this->getHttpKernel()->handle($request, $type, $catch);
         } finally {
@@ -277,7 +277,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     public function setAnnotatedClassCache(array $annotatedClasses)
     {
-        file_put_contents(($this->warmupDir ?: $this->getBuildDir()) . '/annotations.map', sprintf('<?php return %s;', var_export($annotatedClasses, true)));
+        file_put_contents(($this->warmupDir ?: $this->getBuildDir()) . '/annotations.map', sprintf('<?php return %s;', var_export($annotatedClasses, \true)));
     }
     /**
      * {@inheritdoc}
@@ -391,7 +391,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         $errorLevel = error_reporting(\E_ALL ^ \E_WARNING);
         try {
             if (is_file($cachePath) && \is_object($this->container = (include $cachePath)) && (!$this->debug || (self::$freshCache[$cachePath] ?? $cache->isFresh()))) {
-                self::$freshCache[$cachePath] = true;
+                self::$freshCache[$cachePath] = \true;
                 $this->container->set('kernel', $this);
                 error_reporting($errorLevel);
                 return;
@@ -400,7 +400,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         }
         $oldContainer = \is_object($this->container) ? new \ReflectionClass($this->container) : ($this->container = null);
         try {
-            is_dir($buildDir) ?: mkdir($buildDir, 0777, true);
+            is_dir($buildDir) ?: mkdir($buildDir, 0777, \true);
             if ($lock = fopen($cachePath . '.lock', 'w+')) {
                 if (!flock($lock, \LOCK_EX | \LOCK_NB, $wouldBlock) && !flock($lock, $wouldBlock ? \LOCK_SH : \LOCK_EX)) {
                     fclose($lock);
@@ -422,7 +422,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             $collectedLogs = [];
             $previousHandler = set_error_handler(function ($type, $message, $file, $line) use(&$collectedLogs, &$previousHandler) {
                 if (\E_USER_DEPRECATED !== $type && \E_DEPRECATED !== $type) {
-                    return $previousHandler ? $previousHandler($type, $message, $file, $line) : false;
+                    return $previousHandler ? $previousHandler($type, $message, $file, $line) : \false;
                 }
                 if (isset($collectedLogs[$message])) {
                     ++$collectedLogs[$message]['count'];
@@ -449,7 +449,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
                 }
                 // Remove frames added by DebugClassLoader.
                 for ($i = \count($backtrace) - 2; 0 < $i; --$i) {
-                    if (\in_array($backtrace[$i]['class'] ?? null, [DebugClassLoader::class, LegacyDebugClassLoader::class], true)) {
+                    if (\in_array($backtrace[$i]['class'] ?? null, [DebugClassLoader::class, LegacyDebugClassLoader::class], \true)) {
                         $backtrace = [$backtrace[$i + 1]];
                         break;
                     }
@@ -482,7 +482,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             // but on a next dump of the container.
             static $legacyContainers = [];
             $oldContainerDir = \dirname($oldContainer->getFileName());
-            $legacyContainers[$oldContainerDir . '.legacy'] = true;
+            $legacyContainers[$oldContainerDir . '.legacy'] = \true;
             foreach (glob(\dirname($oldContainerDir) . \DIRECTORY_SEPARATOR . '*.legacy', \GLOB_NOSORT) as $legacyContainer) {
                 if (!isset($legacyContainers[$legacyContainer]) && @unlink($legacyContainer)) {
                     (new Filesystem())->remove(substr($legacyContainer, 0, -7));
@@ -524,7 +524,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     {
         foreach (['cache' => $this->getCacheDir(), 'build' => $this->warmupDir ?: $this->getBuildDir(), 'logs' => $this->getLogDir()] as $name => $dir) {
             if (!is_dir($dir)) {
-                if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
+                if (\false === @mkdir($dir, 0777, \true) && !is_dir($dir)) {
                     throw new \RuntimeException(sprintf('Unable to create the "%s" directory (%s).', $name, $dir));
                 }
             } elseif (!is_writable($dir)) {
@@ -598,7 +598,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         if (class_exists(\ProxyManager\Configuration::class) && class_exists(ProxyDumper::class)) {
             $dumper->setProxyDumper(new ProxyDumper());
         }
-        $content = $dumper->dump(['class' => $class, 'base_class' => $baseClass, 'file' => $cache->getPath(), 'as_files' => true, 'debug' => $this->debug, 'build_time' => $container->hasParameter('kernel.container_build_time') ? $container->getParameter('kernel.container_build_time') : time(), 'preload_classes' => array_map('get_class', $this->bundles)]);
+        $content = $dumper->dump(['class' => $class, 'base_class' => $baseClass, 'file' => $cache->getPath(), 'as_files' => \true, 'debug' => $this->debug, 'build_time' => $container->hasParameter('kernel.container_build_time') ? $container->getParameter('kernel.container_build_time') : time(), 'preload_classes' => array_map('get_class', $this->bundles)]);
         $rootCode = array_pop($content);
         $dir = \dirname($cache->getPath()) . '/';
         $fs = new Filesystem();
@@ -627,7 +627,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     private function preBoot() : ContainerInterface
     {
         if ($this->debug) {
-            $this->startTime = microtime(true);
+            $this->startTime = microtime(\true);
         }
         if ($this->debug && !isset($_ENV['SHELL_VERBOSITY']) && !isset($_SERVER['SHELL_VERBOSITY'])) {
             if (\function_exists('putenv')) {
@@ -663,7 +663,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         $rawChunk = '';
         $output = '';
         $tokens = token_get_all($source);
-        $ignoreSpace = false;
+        $ignoreSpace = \false;
         for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
             if (!isset($token[1]) || 'b"' === $token) {
@@ -677,23 +677,23 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
                 $rawChunk = '';
             } elseif (\T_WHITESPACE === $token[0]) {
                 if ($ignoreSpace) {
-                    $ignoreSpace = false;
+                    $ignoreSpace = \false;
                     continue;
                 }
                 // replace multiple new lines with a single newline
                 $rawChunk .= preg_replace(['/\\n{2,}/S'], "\n", $token[1]);
             } elseif (\in_array($token[0], [\T_COMMENT, \T_DOC_COMMENT])) {
-                if (!\in_array($rawChunk[\strlen($rawChunk) - 1], [' ', "\n", "\r", "\t"], true)) {
+                if (!\in_array($rawChunk[\strlen($rawChunk) - 1], [' ', "\n", "\r", "\t"], \true)) {
                     $rawChunk .= ' ';
                 }
-                $ignoreSpace = true;
+                $ignoreSpace = \true;
             } else {
                 $rawChunk .= $token[1];
                 // The PHP-open tag already has a new-line
                 if (\T_OPEN_TAG === $token[0]) {
-                    $ignoreSpace = true;
+                    $ignoreSpace = \true;
                 } else {
-                    $ignoreSpace = false;
+                    $ignoreSpace = \false;
                 }
             }
         }

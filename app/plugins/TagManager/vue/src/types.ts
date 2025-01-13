@@ -255,6 +255,8 @@ export interface Container {
   created_date_pretty: string;
   description: string;
   ignoreGtmDataLayer: boolean;
+  activelySyncGtmDataLayer: boolean;
+  isTagFireLimitAllowedInPreviewMode: boolean;
   draft: Draft;
   idcontainer: string;
   idsite: string|number;

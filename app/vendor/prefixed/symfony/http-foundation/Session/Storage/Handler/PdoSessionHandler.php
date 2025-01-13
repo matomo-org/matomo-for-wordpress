@@ -71,7 +71,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * @var string|false|null
      */
-    private $dsn = false;
+    private $dsn = \false;
     /**
      * @var string|null
      */
@@ -131,19 +131,19 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * @var bool
      */
-    private $sessionExpired = false;
+    private $sessionExpired = \false;
     /**
      * Whether a transaction is active.
      *
      * @var bool
      */
-    private $inTransaction = false;
+    private $inTransaction = \false;
     /**
      * Whether gc() has been called.
      *
      * @var bool
      */
-    private $gcCalled = false;
+    private $gcCalled = \false;
     /**
      * You can either pass an existing database connection as PDO instance or
      * pass a DSN string that will be used to lazy-connect to the database
@@ -252,7 +252,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName)
     {
-        $this->sessionExpired = false;
+        $this->sessionExpired = \false;
         if (null === $this->pdo) {
             $this->connect($this->dsn ?: $savePath);
         }
@@ -279,7 +279,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     {
         // We delay gc() to close() so that it is executed outside the transactional and blocking read-write process.
         // This way, pruning expired sessions does not block them from being started while the current session is used.
-        $this->gcCalled = true;
+        $this->gcCalled = \true;
         return 0;
     }
     /**
@@ -297,7 +297,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $this->rollback();
             throw $e;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -310,7 +310,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $mergeStmt = $this->getMergeStatement($sessionId, $data, $maxlifetime);
             if (null !== $mergeStmt) {
                 $mergeStmt->execute();
-                return true;
+                return \true;
             }
             $updateStmt = $this->getUpdateStatement($sessionId, $data, $maxlifetime);
             $updateStmt->execute();
@@ -336,7 +336,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $this->rollback();
             throw $e;
         }
-        return true;
+        return \true;
     }
     /**
      * @return bool
@@ -355,7 +355,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $this->rollback();
             throw $e;
         }
-        return true;
+        return \true;
     }
     /**
      * @return bool
@@ -368,7 +368,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             $unlockStmt->execute();
         }
         if ($this->gcCalled) {
-            $this->gcCalled = false;
+            $this->gcCalled = \false;
             // delete the session records that have expired
             $sql = "DELETE FROM {$this->table} WHERE {$this->lifetimeCol} < :time AND {$this->lifetimeCol} > :min";
             $stmt = $this->pdo->prepare($sql);
@@ -386,12 +386,12 @@ class PdoSessionHandler extends AbstractSessionHandler
             $stmt->bindValue(':min', self::MAX_LIFETIME, \PDO::PARAM_INT);
             $stmt->execute();
         }
-        if (false !== $this->dsn) {
+        if (\false !== $this->dsn) {
             $this->pdo = null;
             // only close lazy-connection
             $this->driver = null;
         }
-        return true;
+        return \true;
     }
     /**
      * Lazy-connects to the database.
@@ -412,7 +412,7 @@ class PdoSessionHandler extends AbstractSessionHandler
         // (pdo_)?sqlite3?:///... => (pdo_)?sqlite3?://localhost/... or else the URL will be invalid
         $url = preg_replace('#^((?:pdo_)?sqlite3?):///#', '$1://localhost/', $dsnOrUrl);
         $params = parse_url($url);
-        if (false === $params) {
+        if (\false === $params) {
             return $dsnOrUrl;
             // If the URL is not valid, let's assume it might be a DSN already.
         }
@@ -519,7 +519,7 @@ class PdoSessionHandler extends AbstractSessionHandler
                 }
                 $this->pdo->beginTransaction();
             }
-            $this->inTransaction = true;
+            $this->inTransaction = \true;
         }
     }
     /**
@@ -535,7 +535,7 @@ class PdoSessionHandler extends AbstractSessionHandler
                 } else {
                     $this->pdo->commit();
                 }
-                $this->inTransaction = false;
+                $this->inTransaction = \false;
             } catch (\PDOException $e) {
                 $this->rollback();
                 throw $e;
@@ -557,7 +557,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             } else {
                 $this->pdo->rollBack();
             }
-            $this->inTransaction = false;
+            $this->inTransaction = \false;
         }
     }
     /**
@@ -577,7 +577,7 @@ class PdoSessionHandler extends AbstractSessionHandler
         $selectStmt = $this->pdo->prepare($selectSql);
         $selectStmt->bindParam(':id', $sessionId, \PDO::PARAM_STR);
         $insertStmt = null;
-        while (true) {
+        while (\true) {
             $selectStmt->execute();
             $sessionRows = $selectStmt->fetchAll(\PDO::FETCH_NUM);
             if ($sessionRows) {
@@ -586,7 +586,7 @@ class PdoSessionHandler extends AbstractSessionHandler
                     $expiry += $sessionRows[0][2];
                 }
                 if ($expiry < time()) {
-                    $this->sessionExpired = true;
+                    $this->sessionExpired = \true;
                     return '';
                 }
                 return \is_resource($sessionRows[0][0]) ? stream_get_contents($sessionRows[0][0]) : $sessionRows[0][0];
@@ -767,7 +767,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      */
     private function getMergeStatement(string $sessionId, string $data, int $maxlifetime) : ?\PDOStatement
     {
-        switch (true) {
+        switch (\true) {
             case 'mysql' === $this->driver:
                 $mergeSql = "INSERT INTO {$this->table} ({$this->idCol}, {$this->dataCol}, {$this->lifetimeCol}, {$this->timeCol}) VALUES (:id, :data, :expiry, :time) " . "ON DUPLICATE KEY UPDATE {$this->dataCol} = VALUES({$this->dataCol}), {$this->lifetimeCol} = VALUES({$this->lifetimeCol}), {$this->timeCol} = VALUES({$this->timeCol})";
                 break;

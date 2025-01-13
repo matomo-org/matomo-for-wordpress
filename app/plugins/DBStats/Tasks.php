@@ -23,8 +23,8 @@ class Tasks extends \Piwik\Plugin\Tasks
     public function cacheDataByArchiveNameReports()
     {
         $api = \Piwik\Plugins\DBStats\API::getInstance();
-        $api->getIndividualReportsSummary(true);
-        $api->getIndividualMetricsSummary(true);
+        $api->getIndividualReportsSummary(\true);
+        $api->getIndividualMetricsSummary(\true);
         $now = Date::now()->getLocalized(Date::DATE_FORMAT_SHORT);
         Option::set(\Piwik\Plugins\DBStats\DBStats::TIME_OF_LAST_TASK_RUN_OPTION, $now);
     }

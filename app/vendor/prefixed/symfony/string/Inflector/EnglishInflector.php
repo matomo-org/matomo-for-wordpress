@@ -23,93 +23,111 @@ final class EnglishInflector implements InflectorInterface
         // Third entry: Whether the suffix may succeed a vowel
         // Fourth entry: Whether the suffix may succeed a consonant
         // Fifth entry: singular suffix, normal
-        // bacteria (bacterium), criteria (criterion), phenomena (phenomenon)
-        ['a', 1, true, true, ['on', 'um']],
+        // bacteria (bacterium)
+        ['airetcab', 8, \true, \true, 'bacterium'],
+        // corpora (corpus)
+        ['aroproc', 7, \true, \true, 'corpus'],
+        // criteria (criterion)
+        ['airetirc', 8, \true, \true, 'criterion'],
+        // curricula (curriculum)
+        ['alucirruc', 9, \true, \true, 'curriculum'],
+        // genera (genus)
+        ['areneg', 6, \true, \true, 'genus'],
+        // media (medium)
+        ['aidem', 5, \true, \true, 'medium'],
+        // memoranda (memorandum)
+        ['adnaromem', 9, \true, \true, 'memorandum'],
+        // phenomena (phenomenon)
+        ['anemonehp', 9, \true, \true, 'phenomenon'],
+        // strata (stratum)
+        ['atarts', 6, \true, \true, 'stratum'],
         // nebulae (nebula)
-        ['ea', 2, true, true, 'a'],
+        ['ea', 2, \true, \true, 'a'],
         // services (service)
-        ['secivres', 8, true, true, 'service'],
+        ['secivres', 8, \true, \true, 'service'],
         // mice (mouse), lice (louse)
-        ['eci', 3, false, true, 'ouse'],
+        ['eci', 3, \false, \true, 'ouse'],
         // geese (goose)
-        ['esee', 4, false, true, 'oose'],
+        ['esee', 4, \false, \true, 'oose'],
         // fungi (fungus), alumni (alumnus), syllabi (syllabus), radii (radius)
-        ['i', 1, true, true, 'us'],
+        ['i', 1, \true, \true, 'us'],
         // men (man), women (woman)
-        ['nem', 3, true, true, 'man'],
+        ['nem', 3, \true, \true, 'man'],
         // children (child)
-        ['nerdlihc', 8, true, true, 'child'],
+        ['nerdlihc', 8, \true, \true, 'child'],
         // oxen (ox)
-        ['nexo', 4, false, false, 'ox'],
+        ['nexo', 4, \false, \false, 'ox'],
         // indices (index), appendices (appendix), prices (price)
-        ['seci', 4, false, true, ['ex', 'ix', 'ice']],
+        ['seci', 4, \false, \true, ['ex', 'ix', 'ice']],
         // codes (code)
-        ['sedoc', 5, false, true, 'code'],
+        ['sedoc', 5, \false, \true, 'code'],
         // selfies (selfie)
-        ['seifles', 7, true, true, 'selfie'],
+        ['seifles', 7, \true, \true, 'selfie'],
         // zombies (zombie)
-        ['seibmoz', 7, true, true, 'zombie'],
+        ['seibmoz', 7, \true, \true, 'zombie'],
         // movies (movie)
-        ['seivom', 6, true, true, 'movie'],
+        ['seivom', 6, \true, \true, 'movie'],
         // names (name)
-        ['seman', 5, true, false, 'name'],
+        ['seman', 5, \true, \false, 'name'],
         // conspectuses (conspectus), prospectuses (prospectus)
-        ['sesutcep', 8, true, true, 'pectus'],
+        ['sesutcep', 8, \true, \true, 'pectus'],
         // feet (foot)
-        ['teef', 4, true, true, 'foot'],
+        ['teef', 4, \true, \true, 'foot'],
         // geese (goose)
-        ['eseeg', 5, true, true, 'goose'],
+        ['eseeg', 5, \true, \true, 'goose'],
         // teeth (tooth)
-        ['hteet', 5, true, true, 'tooth'],
+        ['hteet', 5, \true, \true, 'tooth'],
         // news (news)
-        ['swen', 4, true, true, 'news'],
+        ['swen', 4, \true, \true, 'news'],
         // series (series)
-        ['seires', 6, true, true, 'series'],
+        ['seires', 6, \true, \true, 'series'],
         // babies (baby)
-        ['sei', 3, false, true, 'y'],
+        ['sei', 3, \false, \true, 'y'],
         // accesses (access), addresses (address), kisses (kiss)
-        ['sess', 4, true, false, 'ss'],
+        ['sess', 4, \true, \false, 'ss'],
         // statuses (status)
-        ['sesutats', 8, true, true, 'status'],
+        ['sesutats', 8, \true, \true, 'status'],
+        // article (articles), ancle (ancles)
+        ['sel', 3, \true, \true, 'le'],
         // analyses (analysis), ellipses (ellipsis), fungi (fungus),
         // neuroses (neurosis), theses (thesis), emphases (emphasis),
         // oases (oasis), crises (crisis), houses (house), bases (base),
         // atlases (atlas)
-        ['ses', 3, true, true, ['s', 'se', 'sis']],
+        ['ses', 3, \true, \true, ['s', 'se', 'sis']],
         // objectives (objective), alternative (alternatives)
-        ['sevit', 5, true, true, 'tive'],
+        ['sevit', 5, \true, \true, 'tive'],
         // drives (drive)
-        ['sevird', 6, false, true, 'drive'],
+        ['sevird', 6, \false, \true, 'drive'],
         // lives (life), wives (wife)
-        ['sevi', 4, false, true, 'ife'],
+        ['sevi', 4, \false, \true, 'ife'],
         // moves (move)
-        ['sevom', 5, true, true, 'move'],
+        ['sevom', 5, \true, \true, 'move'],
         // hooves (hoof), dwarves (dwarf), elves (elf), leaves (leaf), caves (cave), staves (staff)
-        ['sev', 3, true, true, ['f', 've', 'ff']],
+        ['sev', 3, \true, \true, ['f', 've', 'ff']],
         // axes (axis), axes (ax), axes (axe)
-        ['sexa', 4, false, false, ['ax', 'axe', 'axis']],
+        ['sexa', 4, \false, \false, ['ax', 'axe', 'axis']],
         // indexes (index), matrixes (matrix)
-        ['sex', 3, true, false, 'x'],
+        ['sex', 3, \true, \false, 'x'],
         // quizzes (quiz)
-        ['sezz', 4, true, false, 'z'],
+        ['sezz', 4, \true, \false, 'z'],
         // bureaus (bureau)
-        ['suae', 4, false, true, 'eau'],
+        ['suae', 4, \false, \true, 'eau'],
         // fees (fee), trees (tree), employees (employee)
-        ['see', 3, true, true, 'ee'],
+        ['see', 3, \true, \true, 'ee'],
         // edges (edge)
-        ['segd', 4, true, true, 'dge'],
+        ['segd', 4, \true, \true, 'dge'],
         // roses (rose), garages (garage), cassettes (cassette),
         // waltzes (waltz), heroes (hero), bushes (bush), arches (arch),
         // shoes (shoe)
-        ['se', 2, true, true, ['', 'e']],
+        ['se', 2, \true, \true, ['', 'e']],
         // status (status)
-        ['sutats', 6, true, true, 'status'],
+        ['sutats', 6, \true, \true, 'status'],
         // tags (tag)
-        ['s', 1, true, true, ''],
+        ['s', 1, \true, \true, ''],
         // chateaux (chateau)
-        ['xuae', 4, false, true, 'eau'],
+        ['xuae', 4, \false, \true, 'eau'],
         // people (person)
-        ['elpoep', 6, true, true, 'person'],
+        ['elpoep', 6, \true, \true, 'person'],
     ];
     /**
      * Map English singular to plural suffixes.
@@ -123,123 +141,121 @@ final class EnglishInflector implements InflectorInterface
         // Fourth entry: Whether the suffix may succeed a consonant
         // Fifth entry: plural suffix, normal
         // axes (axis)
-        ['sixa', 4, false, false, 'axes'],
+        ['sixa', 4, \false, \false, 'axes'],
         // criterion (criteria)
-        ['airetirc', 8, false, false, 'criterion'],
+        ['airetirc', 8, \false, \false, 'criterion'],
         // nebulae (nebula)
-        ['aluben', 6, false, false, 'nebulae'],
+        ['aluben', 6, \false, \false, 'nebulae'],
         // children (child)
-        ['dlihc', 5, true, true, 'children'],
+        ['dlihc', 5, \true, \true, 'children'],
         // prices (price)
-        ['eci', 3, false, true, 'ices'],
+        ['eci', 3, \false, \true, 'ices'],
         // services (service)
-        ['ecivres', 7, true, true, 'services'],
+        ['ecivres', 7, \true, \true, 'services'],
         // lives (life), wives (wife)
-        ['efi', 3, false, true, 'ives'],
+        ['efi', 3, \false, \true, 'ives'],
         // selfies (selfie)
-        ['eifles', 6, true, true, 'selfies'],
+        ['eifles', 6, \true, \true, 'selfies'],
         // movies (movie)
-        ['eivom', 5, true, true, 'movies'],
+        ['eivom', 5, \true, \true, 'movies'],
         // lice (louse)
-        ['esuol', 5, false, true, 'lice'],
+        ['esuol', 5, \false, \true, 'lice'],
         // mice (mouse)
-        ['esuom', 5, false, true, 'mice'],
+        ['esuom', 5, \false, \true, 'mice'],
         // geese (goose)
-        ['esoo', 4, false, true, 'eese'],
+        ['esoo', 4, \false, \true, 'eese'],
         // houses (house), bases (base)
-        ['es', 2, true, true, 'ses'],
+        ['es', 2, \true, \true, 'ses'],
         // geese (goose)
-        ['esoog', 5, true, true, 'geese'],
+        ['esoog', 5, \true, \true, 'geese'],
         // caves (cave)
-        ['ev', 2, true, true, 'ves'],
+        ['ev', 2, \true, \true, 'ves'],
         // drives (drive)
-        ['evird', 5, false, true, 'drives'],
+        ['evird', 5, \false, \true, 'drives'],
         // objectives (objective), alternative (alternatives)
-        ['evit', 4, true, true, 'tives'],
+        ['evit', 4, \true, \true, 'tives'],
         // moves (move)
-        ['evom', 4, true, true, 'moves'],
+        ['evom', 4, \true, \true, 'moves'],
         // staves (staff)
-        ['ffats', 5, true, true, 'staves'],
+        ['ffats', 5, \true, \true, 'staves'],
         // hooves (hoof), dwarves (dwarf), elves (elf), leaves (leaf)
-        ['ff', 2, true, true, 'ffs'],
+        ['ff', 2, \true, \true, 'ffs'],
         // hooves (hoof), dwarves (dwarf), elves (elf), leaves (leaf)
-        ['f', 1, true, true, ['fs', 'ves']],
+        ['f', 1, \true, \true, ['fs', 'ves']],
         // arches (arch)
-        ['hc', 2, true, true, 'ches'],
+        ['hc', 2, \true, \true, 'ches'],
         // bushes (bush)
-        ['hs', 2, true, true, 'shes'],
+        ['hs', 2, \true, \true, 'shes'],
         // teeth (tooth)
-        ['htoot', 5, true, true, 'teeth'],
-        // bacteria (bacterium), criteria (criterion), phenomena (phenomenon)
-        ['mu', 2, true, true, 'a'],
+        ['htoot', 5, \true, \true, 'teeth'],
+        // albums (album)
+        ['mubla', 5, \true, \true, 'albums'],
+        // bacteria (bacterium), curricula (curriculum), media (medium), memoranda (memorandum), phenomena (phenomenon), strata (stratum)
+        ['mu', 2, \true, \true, 'a'],
         // men (man), women (woman)
-        ['nam', 3, true, true, 'men'],
+        ['nam', 3, \true, \true, 'men'],
         // people (person)
-        ['nosrep', 6, true, true, ['persons', 'people']],
-        // bacteria (bacterium), criteria (criterion), phenomena (phenomenon)
-        ['noi', 3, true, true, 'ions'],
-        // coupon (coupons)
-        ['nop', 3, true, true, 'pons'],
-        // seasons (season), treasons (treason), poisons (poison), lessons (lesson)
-        ['nos', 3, true, true, 'sons'],
-        // icons (icon)
-        ['noc', 3, true, true, 'cons'],
-        // bacteria (bacterium), criteria (criterion), phenomena (phenomenon)
-        ['no', 2, true, true, 'a'],
+        ['nosrep', 6, \true, \true, ['persons', 'people']],
+        // criteria (criterion)
+        ['noiretirc', 9, \true, \true, 'criteria'],
+        // phenomena (phenomenon)
+        ['nonemonehp', 10, \true, \true, 'phenomena'],
         // echoes (echo)
-        ['ohce', 4, true, true, 'echoes'],
+        ['ohce', 4, \true, \true, 'echoes'],
         // heroes (hero)
-        ['oreh', 4, true, true, 'heroes'],
+        ['oreh', 4, \true, \true, 'heroes'],
         // atlases (atlas)
-        ['salta', 5, true, true, 'atlases'],
+        ['salta', 5, \true, \true, 'atlases'],
+        // aliases (alias)
+        ['saila', 5, \true, \true, 'aliases'],
         // irises (iris)
-        ['siri', 4, true, true, 'irises'],
+        ['siri', 4, \true, \true, 'irises'],
         // analyses (analysis), ellipses (ellipsis), neuroses (neurosis)
         // theses (thesis), emphases (emphasis), oases (oasis),
         // crises (crisis)
-        ['sis', 3, true, true, 'ses'],
+        ['sis', 3, \true, \true, 'ses'],
         // accesses (access), addresses (address), kisses (kiss)
-        ['ss', 2, true, false, 'sses'],
+        ['ss', 2, \true, \false, 'sses'],
         // syllabi (syllabus)
-        ['suballys', 8, true, true, 'syllabi'],
+        ['suballys', 8, \true, \true, 'syllabi'],
         // buses (bus)
-        ['sub', 3, true, true, 'buses'],
+        ['sub', 3, \true, \true, 'buses'],
         // circuses (circus)
-        ['suc', 3, true, true, 'cuses'],
+        ['suc', 3, \true, \true, 'cuses'],
         // hippocampi (hippocampus)
-        ['supmacoppih', 11, false, false, 'hippocampi'],
+        ['supmacoppih', 11, \false, \false, 'hippocampi'],
         // campuses (campus)
-        ['sup', 3, true, true, 'puses'],
+        ['sup', 3, \true, \true, 'puses'],
         // status (status)
-        ['sutats', 6, true, true, ['status', 'statuses']],
+        ['sutats', 6, \true, \true, ['status', 'statuses']],
         // conspectuses (conspectus), prospectuses (prospectus)
-        ['sutcep', 6, true, true, 'pectuses'],
+        ['sutcep', 6, \true, \true, 'pectuses'],
         // fungi (fungus), alumni (alumnus), syllabi (syllabus), radii (radius)
-        ['su', 2, true, true, 'i'],
+        ['su', 2, \true, \true, 'i'],
         // news (news)
-        ['swen', 4, true, true, 'news'],
+        ['swen', 4, \true, \true, 'news'],
         // feet (foot)
-        ['toof', 4, true, true, 'feet'],
+        ['toof', 4, \true, \true, 'feet'],
         // chateaux (chateau), bureaus (bureau)
-        ['uae', 3, false, true, ['eaus', 'eaux']],
+        ['uae', 3, \false, \true, ['eaus', 'eaux']],
         // oxen (ox)
-        ['xo', 2, false, false, 'oxen'],
+        ['xo', 2, \false, \false, 'oxen'],
         // hoaxes (hoax)
-        ['xaoh', 4, true, false, 'hoaxes'],
+        ['xaoh', 4, \true, \false, 'hoaxes'],
         // indices (index)
-        ['xedni', 5, false, true, ['indicies', 'indexes']],
+        ['xedni', 5, \false, \true, ['indicies', 'indexes']],
+        // fax (faxes, faxxes)
+        ['xaf', 3, \true, \true, ['faxes', 'faxxes']],
         // boxes (box)
-        ['xo', 2, false, true, 'oxes'],
-        // indexes (index), matrixes (matrix)
-        ['x', 1, true, false, ['cies', 'xes']],
-        // appendices (appendix)
-        ['xi', 2, false, true, 'ices'],
+        ['xo', 2, \false, \true, 'oxes'],
+        // indexes (index), matrixes (matrix), appendices (appendix)
+        ['x', 1, \true, \false, ['ces', 'xes']],
         // babies (baby)
-        ['y', 1, false, true, 'ies'],
+        ['y', 1, \false, \true, 'ies'],
         // quizzes (quiz)
-        ['ziuq', 4, true, false, 'quizzes'],
+        ['ziuq', 4, \true, \false, 'quizzes'],
         // waltzes (waltz)
-        ['z', 1, true, true, 'zes'],
+        ['z', 1, \true, \true, 'zes'],
     ];
     /**
      * A list of words which should not be inflected, reversed.
@@ -278,17 +294,16 @@ final class EnglishInflector implements InflectorInterface
         'ciffart',
         // aircraft
         'tfarcria',
+        // hardware
+        'erawdrah',
     ];
-    /**
-     * {@inheritdoc}
-     */
     public function singularize(string $plural) : array
     {
         $pluralRev = strrev($plural);
         $lowerPluralRev = strtolower($pluralRev);
         $pluralLength = \strlen($lowerPluralRev);
         // Check if the word is one which is not inflected, return early if so
-        if (\in_array($lowerPluralRev, self::UNINFLECTED, true)) {
+        if (\in_array($lowerPluralRev, self::UNINFLECTED, \true)) {
             return [$plural];
         }
         // The outer loop iterates over the entries of the plural table
@@ -309,7 +324,7 @@ final class EnglishInflector implements InflectorInterface
                 if ($j === $suffixLength) {
                     // Is there any character preceding the suffix in the plural string?
                     if ($j < $pluralLength) {
-                        $nextIsVowel = false !== strpos('aeiou', $lowerPluralRev[$j]);
+                        $nextIsVowel = str_contains('aeiou', $lowerPluralRev[$j]);
                         if (!$map[2] && $nextIsVowel) {
                             // suffix may not succeed a vowel but next char is one
                             break;
@@ -343,16 +358,13 @@ final class EnglishInflector implements InflectorInterface
         // Assume that plural and singular is identical
         return [$plural];
     }
-    /**
-     * {@inheritdoc}
-     */
     public function pluralize(string $singular) : array
     {
         $singularRev = strrev($singular);
         $lowerSingularRev = strtolower($singularRev);
         $singularLength = \strlen($lowerSingularRev);
         // Check if the word is one which is not inflected, return early if so
-        if (\in_array($lowerSingularRev, self::UNINFLECTED, true)) {
+        if (\in_array($lowerSingularRev, self::UNINFLECTED, \true)) {
             return [$singular];
         }
         // The outer loop iterates over the entries of the singular table
@@ -373,7 +385,7 @@ final class EnglishInflector implements InflectorInterface
                 if ($j === $suffixLength) {
                     // Is there any character preceding the suffix in the plural string?
                     if ($j < $singularLength) {
-                        $nextIsVowel = false !== strpos('aeiou', $lowerSingularRev[$j]);
+                        $nextIsVowel = str_contains('aeiou', $lowerSingularRev[$j]);
                         if (!$map[2] && $nextIsVowel) {
                             // suffix may not succeed a vowel but next char is one
                             break;

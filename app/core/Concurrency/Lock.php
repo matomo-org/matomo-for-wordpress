@@ -60,7 +60,7 @@ class Lock
         $timeBetweenReexpires = $this->defaultTtl - $this->defaultTtl / 4;
         $now = Date::getNowTimestamp();
         if (!empty($this->lastAcquireTime) && $now <= $this->lastAcquireTime + $timeBetweenReexpires) {
-            return false;
+            return \false;
         }
         return $this->expireLock($this->defaultTtl);
     }
@@ -136,7 +136,7 @@ class Lock
     public function isLocked() : bool
     {
         if (!$this->lockValue) {
-            return false;
+            return \false;
         }
         return $this->lockValue === $this->backend->get($this->lockKey);
     }
@@ -171,7 +171,7 @@ class Lock
                 if (!$success) {
                     $value = $this->backend->get($this->lockKey);
                     $message = sprintf('Failed to expire key %s (%s / %s).', $this->lockKey, $this->lockValue, (string) $value);
-                    if ($value === false) {
+                    if ($value === \false) {
                         Common::printDebug($message . ' It seems like the key already expired as it no longer exists.');
                     } elseif (!empty($value) && $value == $this->lockValue) {
                         Common::printDebug($message . ' We still have the lock but for some reason it did not expire.');
@@ -180,16 +180,16 @@ class Lock
                     } else {
                         Common::printDebug($message . ' Failed to expire key.');
                     }
-                    return false;
+                    return \false;
                 }
                 $this->lastAcquireTime = Date::getNowTimestamp();
-                return true;
+                return \true;
             } else {
                 Common::printDebug('Lock is not acquired, cannot update expiration.');
             }
         } else {
             Common::printDebug('Provided TTL ' . $ttlInSeconds . ' is in valid in Lock::expireLock().');
         }
-        return false;
+        return \false;
     }
 }

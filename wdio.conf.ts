@@ -46,7 +46,11 @@ function checkWpDebugLogsForError() {
       throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
     }
   } finally {
-    fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
+    try {
+      fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
+    } catch (e) {
+      // ignore
+    }
   }
 }
 

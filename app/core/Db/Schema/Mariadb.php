@@ -27,11 +27,17 @@ class Mariadb extends \Piwik\Db\Schema\Mysql
         }
         $sql = trim($sql);
         $pos = stripos($sql, 'SELECT');
-        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'max_statement_time=') !== false;
-        if ($pos !== false && !$isMaxExecutionTimeoutAlreadyPresent) {
+        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'max_statement_time=') !== \false;
+        if ($pos !== \false && !$isMaxExecutionTimeoutAlreadyPresent) {
             $maxExecutionTimeHint = 'SET STATEMENT max_statement_time=' . ceil($limit) . ' FOR ';
             $sql = substr_replace($sql, $maxExecutionTimeHint . 'SELECT', $pos, strlen('SELECT'));
         }
         return $sql;
+    }
+    public function isOptimizeInnoDBSupported() : bool
+    {
+        $version = strtolower($this->getVersion());
+        $semanticVersion = strstr($version, '-', $beforeNeedle = \true);
+        return version_compare($semanticVersion, '10.1.1', '>=');
     }
 }

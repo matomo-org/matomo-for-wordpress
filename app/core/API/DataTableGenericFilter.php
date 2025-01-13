@@ -71,7 +71,7 @@ class DataTableGenericFilter
      */
     public static function getGenericFiltersInformation()
     {
-        return array(array('Pattern', array('filter_column' => array('string', 'label'), 'filter_pattern' => array('string'))), array('PatternRecursive', array('filter_column_recursive' => array('string', 'label'), 'filter_pattern_recursive' => array('string'))), array('ExcludeLowPopulation', array('filter_excludelowpop' => array('string'), 'filter_excludelowpop_value' => array('float', '0'))), array('Sort', array('filter_sort_column' => array('string'), 'filter_sort_order' => array('string', 'desc'), $naturalSort = true, $recursiveSort = true, 'filter_sort_column_secondary' => true)), array('Truncate', array('filter_truncate' => array('integer'))), array('Limit', array('filter_offset' => array('integer', '0'), 'filter_limit' => array('integer'), 'keep_summary_row' => array('integer', '0'))));
+        return array(array('Pattern', array('filter_column' => array('string', 'label'), 'filter_pattern' => array('string'))), array('PatternRecursive', array('filter_column_recursive' => array('string', 'label'), 'filter_pattern_recursive' => array('string'))), array('ExcludeLowPopulation', array('filter_excludelowpop' => array('string'), 'filter_excludelowpop_value' => array('float', '0'))), array('Sort', array('filter_sort_column' => array('string'), 'filter_sort_order' => array('string', 'desc'), $naturalSort = \true, $recursiveSort = \true, 'filter_sort_column_secondary' => \true)), array('Truncate', array('filter_truncate' => array('integer'))), array('Limit', array('filter_offset' => array('integer', '0'), 'filter_limit' => array('integer'), 'keep_summary_row' => array('integer', '0'))));
     }
     private function getGenericFiltersHavingDefaultValues()
     {
@@ -108,12 +108,12 @@ class DataTableGenericFilter
         }
         $tableDisabledFilters = $datatable->getMetadata(DataTable::GENERIC_FILTERS_TO_DISABLE_METADATA_NAME) ?: [];
         $genericFilters = $this->getGenericFiltersHavingDefaultValues();
-        $filterApplied = false;
+        $filterApplied = \false;
         foreach ($genericFilters as $filterMeta) {
             $filterName = $filterMeta[0];
             $filterParams = $filterMeta[1];
             $filterParameters = array();
-            $exceptionRaised = false;
+            $exceptionRaised = \false;
             if (in_array($filterName, $this->disabledFilters) || in_array($filterName, $tableDisabledFilters)) {
                 continue;
             }
@@ -134,14 +134,14 @@ class DataTableGenericFilter
                         settype($value, $type);
                         $filterParameters[] = $value;
                     } catch (Exception $e) {
-                        $exceptionRaised = true;
+                        $exceptionRaised = \true;
                         break;
                     }
                 }
             }
             if (!$exceptionRaised) {
                 $datatable->filter($filterName, $filterParameters);
-                $filterApplied = true;
+                $filterApplied = \true;
             }
         }
         return $filterApplied;
@@ -150,12 +150,12 @@ class DataTableGenericFilter
     {
         $columnQueryParameters = array('filter_column', 'filter_column_recursive', 'filter_excludelowpop', 'filter_sort_column');
         foreach ($columnQueryParameters as $queryParamName) {
-            $queryParamValue = Common::getRequestVar($queryParamName, false, $type = null, $this->request);
+            $queryParamValue = Common::getRequestVar($queryParamName, \false, $type = null, $this->request);
             if (!empty($queryParamValue) && $this->containsProcessedMetric($metrics, $queryParamValue)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @param ProcessedMetric[] $metrics
@@ -166,9 +166,9 @@ class DataTableGenericFilter
     {
         foreach ($metrics as $metric) {
             if ($metric instanceof ProcessedMetric && $metric->getName() == $name) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

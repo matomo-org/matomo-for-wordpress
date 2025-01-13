@@ -40,13 +40,13 @@ class EventName extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionEvent) {
-            return false;
+            return \false;
         }
         $eventName = $action->getEventName();
         $eventName = trim($eventName);
         if (strlen($eventName) > 0) {
             return $eventName;
         }
-        return false;
+        return \false;
     }
 }

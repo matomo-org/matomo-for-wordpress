@@ -18,7 +18,7 @@ class GetAll extends \Piwik\Plugins\MultiSites\Reports\Base
         $this->dimension = new Website();
         $this->name = Piwik::translate('General_AllWebsitesDashboard');
         $this->documentation = Piwik::translate('MultiSites_AllWebsitesDashboardDocumentation');
-        $this->constantRowsCount = false;
+        $this->constantRowsCount = \false;
         $this->order = 4;
     }
 }

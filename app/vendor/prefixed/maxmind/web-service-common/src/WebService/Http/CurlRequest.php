@@ -35,14 +35,14 @@ class CurlRequest implements Request
     public function post(string $body) : array
     {
         $curl = $this->createCurl();
-        curl_setopt($curl, \CURLOPT_POST, true);
+        curl_setopt($curl, \CURLOPT_POST, \true);
         curl_setopt($curl, \CURLOPT_POSTFIELDS, $body);
         return $this->execute($curl);
     }
     public function get() : array
     {
         $curl = $this->createCurl();
-        curl_setopt($curl, \CURLOPT_HTTPGET, true);
+        curl_setopt($curl, \CURLOPT_HTTPGET, \true);
         return $this->execute($curl);
     }
     /**
@@ -58,9 +58,9 @@ class CurlRequest implements Request
         }
         $opts[\CURLOPT_ENCODING] = '';
         $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
-        $opts[\CURLOPT_FOLLOWLOCATION] = false;
-        $opts[\CURLOPT_SSL_VERIFYPEER] = true;
-        $opts[\CURLOPT_RETURNTRANSFER] = true;
+        $opts[\CURLOPT_FOLLOWLOCATION] = \false;
+        $opts[\CURLOPT_SSL_VERIFYPEER] = \true;
+        $opts[\CURLOPT_RETURNTRANSFER] = \true;
         $opts[\CURLOPT_HTTPHEADER] = $this->options['headers'];
         $opts[\CURLOPT_USERAGENT] = $this->options['userAgent'];
         $opts[\CURLOPT_PROXY] = $this->options['proxy'];
@@ -101,7 +101,7 @@ class CurlRequest implements Request
             // indicates server did not send valid Content-Type: header" for
             // CURLINFO_CONTENT_TYPE. However, it will return FALSE if no header
             // is set. To keep our types simple, we return null in this case.
-            $contentType === false ? null : $contentType,
+            $contentType === \false ? null : $contentType,
             $body,
         ];
     }

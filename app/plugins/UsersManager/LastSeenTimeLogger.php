@@ -31,7 +31,7 @@ class LastSeenTimeLogger
      */
     public function logCurrentUserLastSeenTime()
     {
-        $module = Common::getRequestVar('module', false);
+        $module = Common::getRequestVar('module', \false);
         $currentUserLogin = Piwik::getCurrentUserLogin();
         // only log time for non-anonymous visits to the reporting UI
         if ($module == 'API' || $module == 'Proxy' || Piwik::isUserIsAnonymous()) {

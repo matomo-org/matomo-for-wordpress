@@ -46,7 +46,7 @@ class Scatter
     public function drawScatterScale(array $Format = [])
     {
         $Mode = isset($Format["Mode"]) ? $Format["Mode"] : SCALE_MODE_FLOATING;
-        $Floating = isset($Format["Floating"]) ? $Format["Floating"] : false;
+        $Floating = isset($Format["Floating"]) ? $Format["Floating"] : \false;
         $XLabelsRotation = isset($Format["XLabelsRotation"]) ? $Format["XLabelsRotation"] : 90;
         $MinDivHeight = isset($Format["MinDivHeight"]) ? $Format["MinDivHeight"] : 20;
         $Factors = isset($Format["Factors"]) ? $Format["Factors"] : [1, 2, 5];
@@ -71,7 +71,7 @@ class Scatter
         $TickGo = isset($Format["TickG"]) ? $Format["TickG"] : 0;
         $TickBo = isset($Format["TickB"]) ? $Format["TickB"] : 0;
         $TickAlpha = isset($Format["TickAlpha"]) ? $Format["TickAlpha"] : 100;
-        $DrawSubTicks = isset($Format["DrawSubTicks"]) ? $Format["DrawSubTicks"] : false;
+        $DrawSubTicks = isset($Format["DrawSubTicks"]) ? $Format["DrawSubTicks"] : \false;
         $InnerSubTickWidth = isset($Format["InnerSubTickWidth"]) ? $Format["InnerSubTickWidth"] : 0;
         $OuterSubTickWidth = isset($Format["OuterSubTickWidth"]) ? $Format["OuterSubTickWidth"] : 2;
         $SubTickR = isset($Format["SubTickR"]) ? $Format["SubTickR"] : 255;
@@ -79,9 +79,9 @@ class Scatter
         $SubTickB = isset($Format["SubTickB"]) ? $Format["SubTickB"] : 0;
         $SubTickAlpha = isset($Format["SubTickAlpha"]) ? $Format["SubTickAlpha"] : 100;
         $XReleasePercent = isset($Format["XReleasePercent"]) ? $Format["XReleasePercent"] : 1;
-        $DrawArrows = isset($Format["DrawArrows"]) ? $Format["DrawArrows"] : false;
+        $DrawArrows = isset($Format["DrawArrows"]) ? $Format["DrawArrows"] : \false;
         $ArrowSize = isset($Format["ArrowSize"]) ? $Format["ArrowSize"] : 8;
-        $CycleBackground = isset($Format["CycleBackground"]) ? $Format["CycleBackground"] : false;
+        $CycleBackground = isset($Format["CycleBackground"]) ? $Format["CycleBackground"] : \false;
         $BackgroundR1 = isset($Format["BackgroundR1"]) ? $Format["BackgroundR1"] : 255;
         $BackgroundG1 = isset($Format["BackgroundG1"]) ? $Format["BackgroundG1"] : 255;
         $BackgroundB1 = isset($Format["BackgroundB1"]) ? $Format["BackgroundB1"] : 255;
@@ -91,14 +91,14 @@ class Scatter
         $BackgroundB2 = isset($Format["BackgroundB2"]) ? $Format["BackgroundB2"] : 230;
         $BackgroundAlpha2 = isset($Format["BackgroundAlpha2"]) ? $Format["BackgroundAlpha2"] : 10;
         /* Check if we have at least both one X and Y axis */
-        $GotXAxis = false;
-        $GotYAxis = false;
+        $GotXAxis = \false;
+        $GotYAxis = \false;
         foreach ($this->pDataObject->Data["Axis"] as $AxisID => $AxisSettings) {
             if ($AxisSettings["Identity"] == AXIS_X) {
-                $GotXAxis = true;
+                $GotXAxis = \true;
             }
             if ($AxisSettings["Identity"] == AXIS_Y) {
-                $GotYAxis = true;
+                $GotYAxis = \true;
             }
         }
         if (!$GotXAxis) {
@@ -429,18 +429,18 @@ class Scatter
     public function drawScatterPlotChart($Format = null)
     {
         $PlotSize = isset($Format["PlotSize"]) ? $Format["PlotSize"] : 3;
-        $PlotBorder = isset($Format["PlotBorder"]) ? $Format["PlotBorder"] : false;
+        $PlotBorder = isset($Format["PlotBorder"]) ? $Format["PlotBorder"] : \false;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : 250;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : 250;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : 250;
         $BorderAlpha = isset($Format["BorderAlpha"]) ? $Format["BorderAlpha"] : 30;
         $BorderSize = isset($Format["BorderSize"]) ? $Format["BorderSize"] : 1;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapTitle = isset($Format["ImageMapTitle"]) ? $Format["ImageMapTitle"] : null;
         $Data = $this->pDataObject->getData();
         $BorderColor = ["R" => $BorderR, "G" => $BorderG, "B" => $BorderB, "Alpha" => $BorderAlpha];
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 $SerieX = $Series["X"];
                 $SerieValuesX = $Data["Series"][$SerieX]["Data"];
                 $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
@@ -501,12 +501,12 @@ class Scatter
     public function drawScatterLineChart($Format = null)
     {
         $Data = $this->pDataObject->getData();
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapTitle = isset($Format["ImageMapTitle"]) ? $Format["ImageMapTitle"] : null;
         $ImageMapPlotSize = isset($Format["ImageMapPlotSize"]) ? $Format["ImageMapPlotSize"] : 10;
         /* Parse all the series to draw */
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 $SerieX = $Series["X"];
                 $SerieValuesX = $Data["Series"][$SerieX]["Data"];
                 $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
@@ -566,11 +566,11 @@ class Scatter
     public function drawScatterSplineChart(array $Format = [])
     {
         $Data = $this->pDataObject->getData();
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapTitle = isset($Format["ImageMapTitle"]) ? $Format["ImageMapTitle"] : null;
         $ImageMapPlotSize = isset($Format["ImageMapPlotSize"]) ? $Format["ImageMapPlotSize"] : 10;
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 $SerieX = $Series["X"];
                 $SerieValuesX = $Data["Series"][$SerieX]["Data"];
                 $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
@@ -711,7 +711,7 @@ class Scatter
         }
         $Data = $this->pDataObject->getData();
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true && isset($Series["Picture"])) {
+            if ($Series["isDrawable"] == \true && isset($Series["Picture"])) {
                 list($PicWidth, $PicHeight) = $this->pChartObject->getPicInfo($Series["Picture"]);
                 if ($IconAreaWidth < $PicWidth) {
                     $IconAreaWidth = $PicWidth;
@@ -731,7 +731,7 @@ class Scatter
         $vY = $Y;
         $vX = $X;
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 if ($Mode == LEGEND_VERTICAL) {
                     $BoxArray = $this->pChartObject->getTextBox($vX + $IconAreaWidth + 4, $vY + $IconAreaHeight / 2, $FontName, $FontSize, 0, $Series["Description"]);
                     if ($Boundaries["T"] > $BoxArray[2]["Y"] + $IconAreaHeight / 2) {
@@ -777,9 +777,9 @@ class Scatter
             $this->pChartObject->drawFilledRectangle($Boundaries["L"] - $Margin, $Boundaries["T"] - $Margin, $Boundaries["R"] + $Margin, $Boundaries["B"] + $Margin, ["R" => $R, "G" => $G, "B" => $B, "Alpha" => $Alpha, "BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB]);
         }
         $RestoreShadow = $this->pChartObject->Shadow;
-        $this->pChartObject->Shadow = false;
+        $this->pChartObject->Shadow = \false;
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 $R = $Series["Color"]["R"];
                 $G = $Series["Color"]["G"];
                 $B = $Series["Color"]["B"];
@@ -851,7 +851,7 @@ class Scatter
         $Y = 100;
         $Data = $this->pDataObject->getData();
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true && isset($Series["Picture"])) {
+            if ($Series["isDrawable"] == \true && isset($Series["Picture"])) {
                 list($PicWidth, $PicHeight) = $this->pChartObject->getPicInfo($Series["Picture"]);
                 if ($IconAreaWidth < $PicWidth) {
                     $IconAreaWidth = $PicWidth;
@@ -871,7 +871,7 @@ class Scatter
         $vY = $Y;
         $vX = $X;
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 if ($Mode == LEGEND_VERTICAL) {
                     $BoxArray = $this->pChartObject->getTextBox($vX + $IconAreaWidth + 4, $vY + $IconAreaHeight / 2, $FontName, $FontSize, 0, $Series["Description"]);
                     if ($Boundaries["T"] > $BoxArray[2]["Y"] + $IconAreaHeight / 2) {
@@ -924,7 +924,7 @@ class Scatter
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : 0;
         $Data = $this->pDataObject->getData();
         foreach ($Data["ScatterSeries"] as $Key => $Series) {
-            if ($Series["isDrawable"] == true) {
+            if ($Series["isDrawable"] == \true) {
                 $SerieX = $Series["X"];
                 $SerieXAxis = $Data["Series"][$SerieX]["Axis"];
                 $SerieY = $Series["Y"];
@@ -1075,9 +1075,9 @@ class Scatter
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 50;
         $Weight = isset($Format["Weight"]) ? $Format["Weight"] : null;
         $Ticks = isset($Format["Ticks"]) ? $Format["Ticks"] : 3;
-        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : false;
+        $Wide = isset($Format["Wide"]) ? $Format["Wide"] : \false;
         $WideFactor = isset($Format["WideFactor"]) ? $Format["WideFactor"] : 5;
-        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : false;
+        $WriteCaption = isset($Format["WriteCaption"]) ? $Format["WriteCaption"] : \false;
         $Caption = isset($Format["Caption"]) ? $Format["Caption"] : null;
         $CaptionAlign = isset($Format["CaptionAlign"]) ? $Format["CaptionAlign"] : CAPTION_LEFT_TOP;
         $CaptionOffset = isset($Format["CaptionOffset"]) ? $Format["CaptionOffset"] : 10;
@@ -1085,10 +1085,10 @@ class Scatter
         $CaptionG = isset($Format["CaptionG"]) ? $Format["CaptionG"] : 255;
         $CaptionB = isset($Format["CaptionB"]) ? $Format["CaptionB"] : 255;
         $CaptionAlpha = isset($Format["CaptionAlpha"]) ? $Format["CaptionAlpha"] : 100;
-        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : true;
-        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : false;
+        $DrawBox = isset($Format["DrawBox"]) ? $Format["DrawBox"] : \true;
+        $DrawBoxBorder = isset($Format["DrawBoxBorder"]) ? $Format["DrawBoxBorder"] : \false;
         $BorderOffset = isset($Format["BorderOffset"]) ? $Format["BorderOffset"] : 5;
-        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : true;
+        $BoxRounded = isset($Format["BoxRounded"]) ? $Format["BoxRounded"] : \true;
         $RoundedRadius = isset($Format["RoundedRadius"]) ? $Format["RoundedRadius"] : 3;
         $BoxR = isset($Format["BoxR"]) ? $Format["BoxR"] : 0;
         $BoxG = isset($Format["BoxG"]) ? $Format["BoxG"] : 0;
@@ -1164,7 +1164,7 @@ class Scatter
         $G = isset($Format["G"]) ? $Format["G"] : 0;
         $B = isset($Format["B"]) ? $Format["B"] : 0;
         $Alpha = isset($Format["Alpha"]) ? $Format["Alpha"] : 20;
-        $Border = isset($Format["Border"]) ? $Format["Border"] : true;
+        $Border = isset($Format["Border"]) ? $Format["Border"] : \true;
         $BorderR = isset($Format["BorderR"]) ? $Format["BorderR"] : $R;
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : $G;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : $B;
@@ -1177,13 +1177,13 @@ class Scatter
         $NameG = isset($Format["NameG"]) ? $Format["NameG"] : 255;
         $NameB = isset($Format["NameB"]) ? $Format["NameB"] : 255;
         $NameAlpha = isset($Format["NameAlpha"]) ? $Format["NameAlpha"] : 100;
-        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : true;
+        $DisableShadowOnArea = isset($Format["DisableShadowOnArea"]) ? $Format["DisableShadowOnArea"] : \true;
         if ($Value1 > $Value2) {
             list($Value1, $Value2) = [$Value2, $Value1];
         }
         $RestoreShadow = $this->pChartObject->Shadow;
         if ($DisableShadowOnArea && $this->pChartObject->Shadow) {
-            $this->pChartObject->Shadow = false;
+            $this->pChartObject->Shadow = \false;
         }
         if ($BorderAlpha > 100) {
             $BorderAlpha = 100;
@@ -1223,7 +1223,7 @@ class Scatter
                 $this->pChartObject->Shadow = $RestoreShadow;
                 $this->pChartObject->drawText($XPos, $YPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => $NameAngle, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    $this->pChartObject->Shadow = false;
+                    $this->pChartObject->Shadow = \false;
                 }
             }
             $this->pChartObject->Shadow = $RestoreShadow;
@@ -1250,7 +1250,7 @@ class Scatter
                 $this->pChartObject->Shadow = $RestoreShadow;
                 $this->pChartObject->drawText($YPos, $XPos, $AreaName, ["R" => $NameR, "G" => $NameG, "B" => $NameB, "Alpha" => $NameAlpha, "Angle" => 0, "Align" => TEXT_ALIGN_MIDDLEMIDDLE]);
                 if ($DisableShadowOnArea) {
-                    ${$this}->pChartObject->Shadow = false;
+                    ${$this}->pChartObject->Shadow = \false;
                 }
             }
             $this->pChartObject->Shadow = $RestoreShadow;

@@ -54,7 +54,7 @@ class ActionClickUrl extends Action
         $decodedActionUrl = $action->getActionUrl();
         $actionUrlParsed = @parse_url($decodedActionUrl);
         if (!isset($actionUrlParsed['host'])) {
-            return false;
+            return \false;
         }
         return Visit::isHostKnownAliasHost($actionUrlParsed['host'], $idSite);
     }

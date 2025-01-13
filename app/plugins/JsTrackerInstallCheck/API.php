@@ -21,7 +21,7 @@ class API extends \Piwik\Plugin\API
      */
     protected $jsTrackerInstallCheck;
     // disables automatic sanitizing for all public API methods in this class
-    protected $autoSanitizeInputParams = false;
+    protected $autoSanitizeInputParams = \false;
     public function __construct(\Piwik\Plugins\JsTrackerInstallCheck\JsTrackerInstallCheck $jsTrackerInstallCheck)
     {
         $this->jsTrackerInstallCheck = $jsTrackerInstallCheck;

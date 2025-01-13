@@ -25,7 +25,7 @@ class LazyLoadingFragmentHandler extends FragmentHandler
      * @var array<string, bool>
      */
     private $initialized = [];
-    public function __construct(ContainerInterface $container, RequestStack $requestStack, bool $debug = false)
+    public function __construct(ContainerInterface $container, RequestStack $requestStack, bool $debug = \false)
     {
         $this->container = $container;
         parent::__construct($requestStack, [], $debug);
@@ -37,7 +37,7 @@ class LazyLoadingFragmentHandler extends FragmentHandler
     {
         if (!isset($this->initialized[$renderer]) && $this->container->has($renderer)) {
             $this->addRenderer($this->container->get($renderer));
-            $this->initialized[$renderer] = true;
+            $this->initialized[$renderer] = \true;
         }
         return parent::render($uri, $renderer, $options);
     }

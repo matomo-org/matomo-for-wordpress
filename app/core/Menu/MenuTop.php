@@ -36,7 +36,7 @@ class MenuTop extends \Piwik\Menu\MenuAbstract
                 $this->menu[$menuName]['_order'] = $order;
                 $this->menu[$menuName]['_url'] = null;
                 $this->menu[$menuName]['_icon'] = '';
-                $this->menu[$menuName]['_hasSubmenu'] = false;
+                $this->menu[$menuName]['_hasSubmenu'] = \false;
                 $this->menu[$menuName]['_tooltip'] = $tooltip;
             }
         }

@@ -16,7 +16,7 @@ class MergeDataTables
      * @var bool
      */
     private $copyExtraProcessedMetrics;
-    public function __construct(bool $copyExtraProcessedMetrics = false)
+    public function __construct(bool $copyExtraProcessedMetrics = \false)
     {
         $this->copyExtraProcessedMetrics = $copyExtraProcessedMetrics;
     }

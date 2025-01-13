@@ -60,28 +60,28 @@ class Controller extends PluginController
             $dataTable = $this->getEvolutionTable();
         }
         // set up the view data table
-        $view = ViewDataTableFactory::build(StackedBarEvolution::ID, $apiMethod, 'PagePerformance.getRowEvolutionGraph', $forceDefault = true);
+        $view = ViewDataTableFactory::build(StackedBarEvolution::ID, $apiMethod, 'PagePerformance.getRowEvolutionGraph', $forceDefault = \true);
         $view->setDataTable($dataTable);
         $view->config->columns_to_display = array_keys(\Piwik\Plugins\PagePerformance\Metrics::getPagePerformanceMetrics());
         $view->requestConfig->request_parameters_to_modify['label'] = '';
-        $view->config->show_goals = false;
-        $view->config->show_search = false;
-        $view->config->show_all_views_icons = false;
-        $view->config->show_related_reports = false;
-        $view->config->show_series_picker = false;
-        $view->config->show_footer_message = false;
+        $view->config->show_goals = \false;
+        $view->config->show_search = \false;
+        $view->config->show_all_views_icons = \false;
+        $view->config->show_related_reports = \false;
+        $view->config->show_series_picker = \false;
+        $view->config->show_footer_message = \false;
         $view->config->selectable_columns = array_keys(\Piwik\Plugins\PagePerformance\Metrics::getPagePerformanceMetrics());
         return $this->renderView($view);
     }
     public function getEvolutionGraph()
     {
         $this->checkSitePermission();
-        $columns = Common::getRequestVar('columns', false);
-        if (false !== $columns) {
+        $columns = Common::getRequestVar('columns', \false);
+        if (\false !== $columns) {
             $columns = Piwik::getArrayFromApiParameter($columns);
         }
-        $view = ViewDataTableFactory::build(StackedBarEvolution::ID, 'PagePerformance.get', $this->pluginName . '.' . __FUNCTION__, $forceDefault = true);
-        $view->config->show_goals = false;
+        $view = ViewDataTableFactory::build(StackedBarEvolution::ID, 'PagePerformance.get', $this->pluginName . '.' . __FUNCTION__, $forceDefault = \true);
+        $view->config->show_goals = \false;
         $performanceMetrics = array_keys(\Piwik\Plugins\PagePerformance\Metrics::getPagePerformanceMetrics());
         if (!empty($columns)) {
             $view->config->columns_to_display = array_intersect($columns, $performanceMetrics);
@@ -103,7 +103,7 @@ class Controller extends PluginController
             if ($firstRow) {
                 foreach ($metrics as $metric => $name) {
                     $metricValue = $firstRow->getColumn($metric);
-                    if (false !== $metricValue) {
+                    if (\false !== $metricValue) {
                         $firstRow->setColumn($metric, $numberFormatter->getPrettyTimeFromSeconds($metricValue));
                     }
                 }

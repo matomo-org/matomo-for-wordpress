@@ -105,7 +105,7 @@ class Csv extends ReportRenderer
         $csvRenderer = new CsvDataTableRenderer();
         $csvRenderer->setIdSite($this->idSite);
         $csvRenderer->setTable($table);
-        $csvRenderer->setConvertToUnicode(false);
+        $csvRenderer->setConvertToUnicode(\false);
         $csvRenderer->setApiMethod($this->getApiMethodNameFromUniqueId($uniqueId));
         return $csvRenderer;
     }

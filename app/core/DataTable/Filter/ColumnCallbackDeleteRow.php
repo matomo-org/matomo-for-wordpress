@@ -64,7 +64,7 @@ class ColumnCallbackDeleteRow extends BaseFilter
                 $params[] = $row->getColumn($column);
             }
             $params = array_merge($params, $this->functionParams);
-            if (call_user_func_array($this->function, $params) === true) {
+            if (call_user_func_array($this->function, $params) === \true) {
                 $table->deleteRow($key);
             }
             $this->filterSubTable($row);

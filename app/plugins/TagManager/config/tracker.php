@@ -2,6 +2,4 @@
 
 namespace {
     return array();
-    ?> 
-<?php 
 }

@@ -35,7 +35,7 @@ class EventReports extends RecordBuilder
         /** @var Record[] $records */
         $records = [Record::make(Record::TYPE_BLOB, Archiver::EVENTS_CATEGORY_ACTION_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::EVENTS_CATEGORY_NAME_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::EVENTS_ACTION_CATEGORY_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::EVENTS_ACTION_NAME_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::EVENTS_NAME_ACTION_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::EVENTS_NAME_CATEGORY_RECORD_NAME)];
         foreach ($records as $record) {
-            $record->setMaxRowsInTable($maximumRowsInDataTable)->setMaxRowsInSubtable($maximumRowsInSubDataTable);
+            $record->setMaxRowsInTable($maximumRowsInDataTable)->setMaxRowsInSubtable($maximumRowsInSubDataTable)->setBlobColumnAggregationOps($this->columnAggregationOps);
         }
         return $records;
     }
@@ -67,7 +67,7 @@ class EventReports extends RecordBuilder
         $this->archiveDayQueryProcess($reports, $logAggregator, $select, $from, $where, $groupBy, $orderBy, $rankingQuery);
         return $reports;
     }
-    protected function archiveDayQueryProcess(array &$reports, LogAggregator $logAggregator, string $select, array $from, string $where, string $groupBy, string $orderBy, RankingQuery $rankingQuery = null) : void
+    protected function archiveDayQueryProcess(array &$reports, LogAggregator $logAggregator, string $select, array $from, string $where, string $groupBy, string $orderBy, ?RankingQuery $rankingQuery = null) : void
     {
         // get query with segmentation
         $query = $logAggregator->generateQuery($select, $from, $where, $groupBy, $orderBy);
@@ -77,7 +77,7 @@ class EventReports extends RecordBuilder
         }
         // get result
         $resultSet = $logAggregator->getDb()->query($query['sql'], $query['bind']);
-        if ($resultSet === false) {
+        if ($resultSet === \false) {
             return;
         }
         while ($row = $resultSet->fetch()) {
@@ -98,7 +98,7 @@ class EventReports extends RecordBuilder
             if ($mainDimension == 'eventName' && empty($mainLabel)) {
                 $mainLabel = Archiver::EVENT_NAME_NOT_SET;
             }
-            $columns = [Metrics::INDEX_NB_UNIQ_VISITORS => $row[Metrics::INDEX_NB_UNIQ_VISITORS] ?? 0, Metrics::INDEX_NB_VISITS => $row[Metrics::INDEX_NB_VISITS] ?? 0, Metrics::INDEX_EVENT_NB_HITS => $row[Metrics::INDEX_EVENT_NB_HITS] ?? 0, Metrics::INDEX_EVENT_NB_HITS_WITH_VALUE => $row[Metrics::INDEX_EVENT_NB_HITS_WITH_VALUE] ?? 0, Metrics::INDEX_EVENT_SUM_EVENT_VALUE => round($row[Metrics::INDEX_EVENT_SUM_EVENT_VALUE] ?? 0, 2), Metrics::INDEX_EVENT_MIN_EVENT_VALUE => round($row[Metrics::INDEX_EVENT_MIN_EVENT_VALUE] ?? false, 2), Metrics::INDEX_EVENT_MAX_EVENT_VALUE => round($row[Metrics::INDEX_EVENT_MAX_EVENT_VALUE] ?? 0, 2)];
+            $columns = [Metrics::INDEX_NB_UNIQ_VISITORS => $row[Metrics::INDEX_NB_UNIQ_VISITORS] ?? 0, Metrics::INDEX_NB_VISITS => $row[Metrics::INDEX_NB_VISITS] ?? 0, Metrics::INDEX_EVENT_NB_HITS => $row[Metrics::INDEX_EVENT_NB_HITS] ?? 0, Metrics::INDEX_EVENT_NB_HITS_WITH_VALUE => $row[Metrics::INDEX_EVENT_NB_HITS_WITH_VALUE] ?? 0, Metrics::INDEX_EVENT_SUM_EVENT_VALUE => round($row[Metrics::INDEX_EVENT_SUM_EVENT_VALUE] ?? 0, 2), Metrics::INDEX_EVENT_MIN_EVENT_VALUE => is_numeric($row[Metrics::INDEX_EVENT_MIN_EVENT_VALUE]) ? round($row[Metrics::INDEX_EVENT_MIN_EVENT_VALUE], 2) : null, Metrics::INDEX_EVENT_MAX_EVENT_VALUE => is_numeric($row[Metrics::INDEX_EVENT_MAX_EVENT_VALUE]) ? round($row[Metrics::INDEX_EVENT_MAX_EVENT_VALUE], 2) : null];
             $topLevelRow = $table->sumRowWithLabel($mainLabel, $columns, $this->columnAggregationOps);
             $subDimension = $dimensions[1];
             $subLabel = $row[$subDimension];

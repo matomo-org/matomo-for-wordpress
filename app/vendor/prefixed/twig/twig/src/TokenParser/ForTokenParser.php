@@ -49,7 +49,7 @@ final class ForTokenParser extends AbstractTokenParser
                 /* Token::BLOCK_END_TYPE */
                 3
             );
-            $else = $this->parser->subparse([$this, 'decideForEnd'], true);
+            $else = $this->parser->subparse([$this, 'decideForEnd'], \true);
         } else {
             $else = null;
         }

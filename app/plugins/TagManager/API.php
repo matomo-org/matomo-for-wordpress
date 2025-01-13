@@ -13,6 +13,7 @@ use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Piwik;
+use Piwik\Plugins\TagManager\Access\Capability\PublishLiveContainer;
 use Piwik\Plugins\TagManager\API\Export;
 use Piwik\Plugins\TagManager\API\Import;
 use Piwik\Plugins\TagManager\API\PreviewCookie;
@@ -38,6 +39,9 @@ use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\TagManager\Template\Variable\VariablesProvider;
 use Exception;
 use Piwik\UrlHelper;
+use Piwik\Validators\BaseValidator;
+use Piwik\Validators\CharacterLength;
+use Piwik\Validators\NotEmpty;
 /**
  * API for plugin Tag Manager.
  *
@@ -107,7 +111,7 @@ class API extends \Piwik\Plugin\API
      * @var VariablesDao
      */
     private $variablesDao;
-    private $enableGeneratePreview = true;
+    private $enableGeneratePreview = \true;
     public function __construct(Tag $tags, Trigger $triggers, Variable $variables, Container $containers, TagsProvider $tagsProvider, TriggersProvider $triggersProvider, VariablesProvider $variablesProvider, ContextProvider $contextProvider, AccessValidator $validator, Environment $environment, Comparison $comparisons, Export $export, Import $import, VariablesDao $variablesDao)
     {
         //Started updating xdebug.max_nesting_level as infinite loop is detected due to variable is doing a self referencing when xdebug is active and max_nesting_level is set to lower value
@@ -139,6 +143,7 @@ class API extends \Piwik\Plugin\API
     public function getAvailableContexts()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         $contexts = $this->contextProvider->getAllContexts();
         $return = array();
         foreach ($contexts as $context) {
@@ -156,6 +161,7 @@ class API extends \Piwik\Plugin\API
     public function getAvailableEnvironments()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         return $this->environment->getEnvironments();
     }
     /**
@@ -167,13 +173,14 @@ class API extends \Piwik\Plugin\API
     public function getAvailableEnvironmentsWithPublishCapability($idSite)
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess($idSite);
         $environments = $this->environment->getEnvironments();
         $hasCapability = $this->accessValidator->hasPublishLiveEnvironmentCapability($idSite);
         return array_filter($environments, function ($environment) use($idSite, $hasCapability) {
             if ($environment['id'] === 'live' && !$hasCapability) {
-                return false;
+                return \false;
             }
-            return true;
+            return \true;
         });
     }
     /**
@@ -183,6 +190,7 @@ class API extends \Piwik\Plugin\API
     public function getAvailableTagFireLimits()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         return $this->tags->getFireLimits();
     }
     /**
@@ -193,6 +201,7 @@ class API extends \Piwik\Plugin\API
     public function getAvailableComparisons()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         return $this->comparisons->getSupportedComparisons();
     }
     /**
@@ -203,11 +212,16 @@ class API extends \Piwik\Plugin\API
     public function getAvailableTagTypesInContext($idContext)
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         $this->contextProvider->checkIsValidContext($idContext);
         $tags = $this->tagsProvider->getAllTags();
         $tagsInContext = [];
         foreach ($tags as $tag) {
-            if (in_array($idContext, $tag->getSupportedContexts(), true)) {
+            // GA3 tag deprecated
+            if ($tag->getId() === 'GoogleAnalyticsUniversal') {
+                continue;
+            }
+            if (in_array($idContext, $tag->getSupportedContexts(), \true)) {
                 $tagsInContext[] = $tag;
             }
         }
@@ -222,11 +236,12 @@ class API extends \Piwik\Plugin\API
     public function getAvailableTriggerTypesInContext($idContext)
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         $this->contextProvider->checkIsValidContext($idContext);
         $triggers = $this->triggersProvider->getAllTriggers();
         $triggersInContext = [];
         foreach ($triggers as $trigger) {
-            if (in_array($idContext, $trigger->getSupportedContexts(), true)) {
+            if (in_array($idContext, $trigger->getSupportedContexts(), \true)) {
                 $triggersInContext[] = $trigger;
             }
         }
@@ -241,11 +256,12 @@ class API extends \Piwik\Plugin\API
     public function getAvailableVariableTypesInContext($idContext)
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->checkUserHasTagManagerAccess();
         $this->contextProvider->checkIsValidContext($idContext);
         $variables = $this->variablesProvider->getAllVariables();
         $variablesInContext = [];
         foreach ($variables as $variable) {
-            if (!$variable->isPreConfigured() && in_array($idContext, $variable->getSupportedContexts(), true)) {
+            if (!$variable->isPreConfigured() && in_array($idContext, $variable->getSupportedContexts(), \true)) {
                 $variablesInContext[] = $variable;
             }
         }
@@ -350,8 +366,8 @@ class API extends \Piwik\Plugin\API
         $draftVersion = $this->getContainerDraftVersion($idSite, $idContainer);
         $idVariable = Request::processRequest('TagManager.addContainerVariable', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $draftVersion, 'type' => MatomoConfigurationVariable::ID, 'name' => Piwik::translate('TagManager_MatomoConfigurationVariableName')), $default = []);
         $idTrigger = Request::processRequest('TagManager.addContainerTrigger', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $draftVersion, 'type' => PageViewTrigger::ID, 'name' => Piwik::translate('TagManager_PageViewTriggerName')), $default = []);
-        $idTag = Request::processRequest('TagManager.addContainerTag', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $draftVersion, 'type' => MatomoTag::ID, 'name' => Piwik::translate('TagManager_PageViewTriggerName'), 'fireTriggerIds' => array($idTrigger), 'parameters' => array(MatomoTag::PARAM_MATOMO_CONFIG => '{{' . Piwik::translate('TagManager_MatomoConfigurationVariableName') . '}}')), $default = []);
-        Request::processRequest('TagManager.createContainerVersion', array('idSite' => $idSite, 'idContainer' => $idContainer, 'name' => '0.1.0 - ' . Piwik::translate('TagManager_AutoGenerated')), $default = []);
+        $idTag = Request::processRequest('TagManager.addContainerTag', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $draftVersion, 'type' => MatomoTag::ID, 'name' => Piwik::translate('TagManager_MatomoTagName'), 'fireTriggerIds' => array($idTrigger), 'parameters' => array(MatomoTag::PARAM_MATOMO_CONFIG => '{{' . Piwik::translate('TagManager_MatomoConfigurationVariableName') . '}}')), $default = []);
+        Request::processRequest('TagManager.createContainerVersion', array('idSite' => $idSite, 'idContainer' => $idContainer, 'name' => substr('0.1.0 - ' . Piwik::translate('TagManager_AutoGenerated'), 0, 50)), $default = []);
         Request::processRequest('TagManager.publishContainerVersion', array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $draftVersion, 'environment' => Environment::ENVIRONMENT_LIVE), $default = []);
         return $idContainer;
     }
@@ -376,16 +392,16 @@ class API extends \Piwik\Plugin\API
      *
      * @return int The ID of the created tag.
      */
-    public function addContainerTag($idSite, $idContainer, $idContainerVersion, $type, $name, $parameters = [], $fireTriggerIds = [], $blockTriggerIds = [], $fireLimit = 'unlimited', $fireDelay = 0, $priority = 999, $startDate = null, $endDate = null, $description = '')
+    public function addContainerTag($idSite, $idContainer, $idContainerVersion, $type, $name, $parameters = [], $fireTriggerIds = [], $blockTriggerIds = [], $fireLimit = 'unlimited', $fireDelay = 0, $priority = 999, $startDate = null, $endDate = null, $description = '', $status = '')
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->tagsProvider->isCustomTemplate($type)) {
+        if ($this->tagsProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
         $parameters = $this->unsanitizeAssocArray($parameters);
-        $idTag = $this->tags->addContainerTag($idSite, $idContainerVersion, $type, $name, $parameters, $fireTriggerIds, $blockTriggerIds, $fireLimit, $fireDelay, $priority, $startDate, $endDate, $description);
+        $idTag = $this->tags->addContainerTag($idSite, $idContainerVersion, $type, $name, $parameters, $fireTriggerIds, $blockTriggerIds, $fireLimit, $fireDelay, $priority, $startDate, $endDate, $description, $status);
         $this->updateContainerPreviewRelease($idSite, $idContainer);
         return $idTag;
     }
@@ -442,6 +458,50 @@ class API extends \Piwik\Plugin\API
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.deleteContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
         }
+    }
+    /**
+     * Pause the given tag from the given container version.
+     *
+     * @param int $idSite The id of the site the given container belongs to
+     * @param string $idContainer The id of a container, for example "6OMh6taM"
+     * @param int $idContainerVersion The ID of the container version, a container may have multiple versions and
+     *                                the list of tags will be different per container. Therefore you need to provide
+     *                                the ID of the version.
+     * @param int $idTag The id of the tag you want to pause
+     */
+    public function pauseContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)
+    {
+        $this->accessValidator->checkWriteCapability($idSite);
+        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        if ($this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)) {
+            $this->tags->pauseContainerTag($idSite, $idContainerVersion, $idTag);
+            $this->updateContainerPreviewRelease($idSite, $idContainer);
+            Piwik::postEvent('TagManager.pauseContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
+            return \true;
+        }
+        return \false;
+    }
+    /**
+     * Re-acivate the given tag from the given container version.
+     *
+     * @param int $idSite The id of the site the given container belongs to
+     * @param string $idContainer The id of a container, for example "6OMh6taM"
+     * @param int $idContainerVersion The ID of the container version, a container may have multiple versions and
+     *                                the list of tags will be different per container. Therefore you need to provide
+     *                                the ID of the version.
+     * @param int $idTag The id of the tag you want to re-activate
+     */
+    public function resumeContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)
+    {
+        $this->accessValidator->checkWriteCapability($idSite);
+        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        if ($this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)) {
+            $this->tags->resumeContainerTag($idSite, $idContainerVersion, $idTag);
+            $this->updateContainerPreviewRelease($idSite, $idContainer);
+            Piwik::postEvent('TagManager.resumeContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
+            return \true;
+        }
+        return \false;
     }
     /**
      * Get a specific tag configuration.
@@ -518,7 +578,7 @@ class API extends \Piwik\Plugin\API
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->triggersProvider->isCustomTemplate($type)) {
+        if ($this->triggersProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
         $parameters = $this->unsanitizeAssocArray($parameters);
@@ -653,10 +713,10 @@ class API extends \Piwik\Plugin\API
         $variables = $this->getContainerVariables($idSite, $idContainer, $idContainerVersion);
         $containerVars = [];
         foreach ($variables as $index => $variable) {
-            $containerVars[] = ['id' => $variable['name'], 'idvariable' => $variable['idvariable'], 'type' => $variable['type'], 'name' => $variable['name'], 'category' => 'Custom', 'description' => '', 'order' => $index, 'is_pre_configured' => false];
+            $containerVars[] = ['id' => $variable['name'], 'idvariable' => $variable['idvariable'], 'type' => $variable['type'], 'name' => $variable['name'], 'category' => 'Custom', 'description' => '', 'order' => $index, 'is_pre_configured' => \false];
         }
         foreach ($this->variablesProvider->getPreConfiguredVariables() as $variable) {
-            $containerVars[] = ['id' => $variable->getId(), 'idvariable' => '', 'type' => $variable->getId(), 'name' => $variable->getName(), 'category' => Piwik::translate($variable->getCategory()), 'description' => $variable->getDescription(), 'order' => $variable->getOrder(), 'is_pre_configured' => true];
+            $containerVars[] = ['id' => $variable->getId(), 'idvariable' => '', 'type' => $variable->getId(), 'name' => $variable->getName(), 'category' => Piwik::translate($variable->getCategory()), 'description' => $variable->getDescription(), 'order' => $variable->getOrder(), 'is_pre_configured' => \true];
         }
         $metadata = new TemplateMetadata();
         return $metadata->formatTemplates($containerVars);
@@ -678,12 +738,12 @@ class API extends \Piwik\Plugin\API
      *
      * @return int The ID of the created variable
      */
-    public function addContainerVariable($idSite, $idContainer, $idContainerVersion, $type, $name, $parameters = [], $defaultValue = false, $lookupTable = [], $description = '')
+    public function addContainerVariable($idSite, $idContainer, $idContainerVersion, $type, $name, $parameters = [], $defaultValue = \false, $lookupTable = [], $description = '')
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->variablesProvider->isCustomTemplate($type)) {
+        if ($this->variablesProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
         $parameters = $this->unsanitizeAssocArray($parameters);
@@ -803,13 +863,15 @@ class API extends \Piwik\Plugin\API
      * @param string $name   The name this container should have.
      * @param string $description Optionally a description for this container
      * @param int $ignoreGtmDataLayer Optionally indicate that we should ignore GTM dataLayer values
+     * @param int $isTagFireLimitAllowedInPreviewMode Optionally indicate that we should respect fire tag limits when in preview mode
+     * @param int $activelySyncGtmDataLayer Optionally indicate that we should actively sync new events from the GTM dataLayer to MTM
      * @return string The ID of the created container.
      */
-    public function addContainer($idSite, $context, $name, $description = '', $ignoreGtmDataLayer = 0)
+    public function addContainer($idSite, $context, $name, $description = '', $ignoreGtmDataLayer = 0, $isTagFireLimitAllowedInPreviewMode = 0, $activelySyncGtmDataLayer = 0)
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
-        return $this->containers->addContainer($idSite, $context, $name, $description, $ignoreGtmDataLayer);
+        return $this->containers->addContainer($idSite, $context, $name, $description, $ignoreGtmDataLayer, $isTagFireLimitAllowedInPreviewMode, $activelySyncGtmDataLayer);
     }
     /**
      * Updates the name and description of the given container.
@@ -819,14 +881,18 @@ class API extends \Piwik\Plugin\API
      * @param string $name   The name this container should have.
      * @param string $description Optionally a description for this container.
      * @param int $ignoreGtmDataLayer Optionally indicate that we should ignore GTM dataLayer values
+     * @param int $isTagFireLimitAllowedInPreviewMode Optionally indicate that we should respect fire tag limits when in preview mode
+     * @param int $activelySyncGtmDataLayer Optionally indicate that we should actively sync new events from the GTM dataLayer to MTM
      * @return string The ID of the created container.
      */
-    public function updateContainer($idSite, $idContainer, $name, $description = '', $ignoreGtmDataLayer = 0)
+    public function updateContainer($idSite, $idContainer, $name, $description = '', $ignoreGtmDataLayer = 0, $isTagFireLimitAllowedInPreviewMode = 0, $activelySyncGtmDataLayer = 0)
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerExists($idSite, $idContainer);
-        return $this->containers->updateContainer($idSite, $idContainer, $name, $description, $ignoreGtmDataLayer);
+        $this->containers->updateContainer($idSite, $idContainer, $name, $description, $ignoreGtmDataLayer, $isTagFireLimitAllowedInPreviewMode, $activelySyncGtmDataLayer);
+        $this->updateContainerPreviewRelease($idSite, $idContainer);
+        return $idContainer;
     }
     /**
      * Creates a new version from either the current draft version or the given container version.
@@ -843,16 +909,19 @@ class API extends \Piwik\Plugin\API
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+        if (!Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+        }
         $this->containers->checkContainerExists($idSite, $idContainer);
+        BaseValidator::check(Piwik::translate('TagManager_VersionName'), $name, [new NotEmpty(), new CharacterLength(1, 50)]);
         if (empty($idContainerVersion)) {
             $idContainerVersion = $this->getContainerDraftVersion($idSite, $idContainer);
         }
-        $this->enableGeneratePreview = false;
+        $this->enableGeneratePreview = \false;
         $container = $this->containers->createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description);
         // not needed to create a preview release as no actual change to container was made. Make it faster as the createContainerVersion
         // uses "import" logic which would create a new preview release or check for recursions on every created tag/trigger/...
-        $this->enableGeneratePreview = true;
+        $this->enableGeneratePreview = \true;
         return $container;
     }
     /**
@@ -868,7 +937,10 @@ class API extends \Piwik\Plugin\API
     {
         $name = $this->decodeQuotes($name);
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+        if (!Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+        }
+        BaseValidator::check(Piwik::translate('TagManager_VersionName'), $name, [new NotEmpty(), new CharacterLength(1, 50)]);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
         return $this->containers->updateContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description);
     }
@@ -912,6 +984,7 @@ class API extends \Piwik\Plugin\API
     public function deleteContainerVersion($idSite, $idContainer, $idContainerVersion)
     {
         $this->accessValidator->checkWriteCapability($idSite);
+        $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
         if ($this->getContainerVersion($idSite, $idContainer, $idContainerVersion)) {
             $this->containers->deleteContainerVersion($idSite, $idContainer, $idContainerVersion);
@@ -934,6 +1007,8 @@ class API extends \Piwik\Plugin\API
         $this->accessValidator->checkWriteCapability($idSite);
         if ($environment === Environment::ENVIRONMENT_LIVE) {
             $this->accessValidator->checkPublishLiveEnvironmentCapability($idSite);
+        } elseif (!Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
         $this->environment->checkIsValidEnvironment($environment);
@@ -1026,7 +1101,7 @@ class API extends \Piwik\Plugin\API
     public function changeDebugUrl($idSite, $url)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        if (!filter_var($url, FILTER_VALIDATE_URL) || stripos($url, 'http') !== 0 || !UrlHelper::isLookLikeSafeUrl($url) || !UrlHelper::isLookLikeUrl($url)) {
+        if (!filter_var($url, \FILTER_VALIDATE_URL) || stripos($url, 'http') !== 0 || !UrlHelper::isLookLikeSafeUrl($url) || !UrlHelper::isLookLikeUrl($url)) {
             throw new Exception(Piwik::translate('TagManager_InvalidDebugUrl'));
         }
         $previewCookie = new PreviewCookie();
@@ -1073,13 +1148,16 @@ class API extends \Piwik\Plugin\API
     public function importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName = '')
     {
         $this->accessValidator->checkWriteCapability($idSite);
+        if (!Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+        }
         $this->containers->checkContainerExists($idSite, $idContainer);
         $idContainerVersion = $this->getContainerDraftVersion($idSite, $idContainer);
         if (empty($idContainerVersion)) {
             throw new Exception(Piwik::translate('TagManager_ErrorContainerVersionDoesNotExist'));
         }
         $exportedContainerVersion = Common::unsanitizeInputValue($exportedContainerVersion);
-        $exportedContainerVersion = @json_decode($exportedContainerVersion, true);
+        $exportedContainerVersion = @json_decode($exportedContainerVersion, \true);
         if (empty($exportedContainerVersion) || !is_array($exportedContainerVersion)) {
             throw new Exception(Piwik::translate('TagManager_ErrorInvalidContainerImportFormat'));
         }
@@ -1089,9 +1167,9 @@ class API extends \Piwik\Plugin\API
             $this->createContainerVersion($idSite, $idContainer, $backupName);
         }
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        $this->enableGeneratePreview = false;
+        $this->enableGeneratePreview = \false;
         $this->import->importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $idContainerVersion);
-        $this->enableGeneratePreview = true;
+        $this->enableGeneratePreview = \true;
         $this->updateContainerPreviewRelease($idSite, $idContainer);
     }
     private function updateContainerPreviewRelease($idSite, $idContainer)
@@ -1119,6 +1197,20 @@ class API extends \Piwik\Plugin\API
     }
     private function decodeQuotes($value)
     {
-        return htmlspecialchars_decode($value, ENT_QUOTES);
+        return htmlspecialchars_decode($value, \ENT_QUOTES);
+    }
+    /**
+     * Check whether the current user has MTM access. If the site ID isn't provided, try looking it up on the request
+     *
+     * @param $idSite
+     * @return void
+     * @throws \Piwik\NoAccessException
+     */
+    private function checkUserHasTagManagerAccess($idSite = null)
+    {
+        if (empty($idSite)) {
+            $idSite = \Piwik\Request::fromRequest()->getIntegerParameter('idSite', 0);
+        }
+        $this->accessValidator->checkUserHasTagManagerAccess($idSite);
     }
 }

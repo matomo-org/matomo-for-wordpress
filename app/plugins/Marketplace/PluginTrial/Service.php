@@ -41,7 +41,7 @@ final class Service
     public function wasRequested(string $pluginName) : bool
     {
         if (!$this->isEnabled()) {
-            return false;
+            return \false;
         }
         $request = new \Piwik\Plugins\Marketplace\PluginTrial\Request($pluginName, new \Piwik\Plugins\Marketplace\PluginTrial\Storage($pluginName));
         return $request->wasRequested();

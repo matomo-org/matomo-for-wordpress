@@ -53,7 +53,7 @@ class Node implements \Countable, \IteratorAggregate
     {
         $attributes = [];
         foreach ($this->attributes as $name => $value) {
-            $attributes[] = \sprintf('%s: %s', $name, \is_callable($value) ? '\\Closure' : str_replace("\n", '', var_export($value, true)));
+            $attributes[] = \sprintf('%s: %s', $name, \is_callable($value) ? '\\Closure' : str_replace("\n", '', var_export($value, \true)));
         }
         $repr = [static::class . '(' . implode(', ', $attributes)];
         if (\count($this->nodes)) {
@@ -97,7 +97,7 @@ class Node implements \Countable, \IteratorAggregate
         if (!\array_key_exists($name, $this->attributes)) {
             throw new \LogicException(\sprintf('Attribute "%s" does not exist for Node "%s".', $name, static::class));
         }
-        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : true;
+        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : \true;
         if ($triggerDeprecation && isset($this->attributeNameDeprecations[$name])) {
             $dep = $this->attributeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -110,7 +110,7 @@ class Node implements \Countable, \IteratorAggregate
     }
     public function setAttribute(string $name, $value) : void
     {
-        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : true;
+        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : \true;
         if ($triggerDeprecation && isset($this->attributeNameDeprecations[$name])) {
             $dep = $this->attributeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -138,7 +138,7 @@ class Node implements \Countable, \IteratorAggregate
         if (!isset($this->nodes[$name])) {
             throw new \LogicException(\sprintf('Node "%s" does not exist for Node "%s".', $name, static::class));
         }
-        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : true;
+        $triggerDeprecation = \func_num_args() > 1 ? func_get_arg(1) : \true;
         if ($triggerDeprecation && isset($this->nodeNameDeprecations[$name])) {
             $dep = $this->nodeNameDeprecations[$name];
             if ($dep->getNewName()) {
@@ -151,7 +151,7 @@ class Node implements \Countable, \IteratorAggregate
     }
     public function setNode(string $name, self $node) : void
     {
-        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : true;
+        $triggerDeprecation = \func_num_args() > 2 ? func_get_arg(2) : \true;
         if ($triggerDeprecation && isset($this->nodeNameDeprecations[$name])) {
             $dep = $this->nodeNameDeprecations[$name];
             if ($dep->getNewName()) {

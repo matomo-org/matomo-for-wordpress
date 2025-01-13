@@ -48,7 +48,7 @@ class VisitTotalActions extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $actionType = false;
+        $actionType = \false;
         if ($action) {
             $actionType = $action->getActionType();
         }
@@ -68,11 +68,11 @@ class VisitTotalActions extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (!$action) {
-            return false;
+            return \false;
         }
         $increment = 'visit_total_actions + 1';
         $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
-        if ($idActionUrl !== false) {
+        if ($idActionUrl !== \false) {
             return $increment;
         }
         $actionType = $action->getActionType();
@@ -80,6 +80,6 @@ class VisitTotalActions extends VisitDimension
         if (in_array($actionType, $types)) {
             return $increment;
         }
-        return false;
+        return \false;
     }
 }

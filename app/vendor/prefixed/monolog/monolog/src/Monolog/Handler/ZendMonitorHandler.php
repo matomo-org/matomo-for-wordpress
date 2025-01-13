@@ -33,7 +33,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      * @param  bool                      $bubble
      * @throws MissingExtensionException
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG, $bubble = \true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException('You must have Zend Server installed with Zend Monitor enabled in order to use this handler');

@@ -13,7 +13,7 @@ namespace Matomo\Dependencies\Opis\Closure;
 class ClosureStream
 {
     const STREAM_PROTO = 'closure';
-    protected static $isRegistered = false;
+    protected static $isRegistered = \false;
     protected $content;
     protected $length;
     protected $pointer = 0;
@@ -21,7 +21,7 @@ class ClosureStream
     {
         $this->content = "<?php\nreturn " . substr($path, strlen(static::STREAM_PROTO . '://')) . ";";
         $this->length = strlen($this->content);
-        return true;
+        return \true;
     }
     public function stream_read($count)
     {
@@ -35,7 +35,7 @@ class ClosureStream
     }
     public function stream_set_option($option, $arg1, $arg2)
     {
-        return false;
+        return \false;
     }
     public function stream_stat()
     {
@@ -49,25 +49,25 @@ class ClosureStream
         $stat[7] = $stat['size'] = $this->length;
         return $stat;
     }
-    public function stream_seek($offset, $whence = SEEK_SET)
+    public function stream_seek($offset, $whence = \SEEK_SET)
     {
         $crt = $this->pointer;
         switch ($whence) {
-            case SEEK_SET:
+            case \SEEK_SET:
                 $this->pointer = $offset;
                 break;
-            case SEEK_CUR:
+            case \SEEK_CUR:
                 $this->pointer += $offset;
                 break;
-            case SEEK_END:
+            case \SEEK_END:
                 $this->pointer = $this->length + $offset;
                 break;
         }
         if ($this->pointer < 0 || $this->pointer >= $this->length) {
             $this->pointer = $crt;
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     public function stream_tell()
     {

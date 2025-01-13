@@ -271,6 +271,29 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( $row['message'] );
 	}
 
+	public function test_query_recognizes_mariadb_set_for_queries() {
+		\Piwik\Config::getInstance()->database['schema'] = 'Mariadb';
+		\Piwik\Db\Schema::unsetInstance();
+
+		$params         = new \Piwik\ArchiveProcessor\Parameters(
+			new \Piwik\Site( 1 ),
+			\Piwik\Period\Factory::build( 'day', 'today' ),
+			new \Piwik\Segment( '', [ 1 ] )
+		);
+		$log_aggregator = new \Piwik\DataAccess\LogAggregator( $params );
+
+		$sql = $log_aggregator->getQueryByDimensionSql( [], false, [], false, false, false, 120, false );
+
+		// make sure SQL we're testing has MariaDB specific SQL
+		$this->assertStringContainsString( 'SET STATEMENT max_statement_time', $sql['sql'] );
+
+		// test that the query works in MWP
+		$statement = $log_aggregator->queryVisitsByDimension( [], false, [], false, false, false, 120, false );
+		$row       = $statement->fetch();
+
+		$this->assertIsArray( $row );
+	}
+
 	private function insert_many_values() {
 		$this->insert_access( 'foo', 'view' );
 		$this->insert_access( 'bar', 'write' );

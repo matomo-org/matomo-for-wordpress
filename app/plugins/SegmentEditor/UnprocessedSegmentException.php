@@ -27,7 +27,7 @@ class UnprocessedSegmentException extends \Exception
     /**
      * @param $segment
      */
-    public function __construct(Segment $segment, $isSegmentToPreprocess, array $storedSegment = null)
+    public function __construct(Segment $segment, $isSegmentToPreprocess, ?array $storedSegment = null)
     {
         parent::__construct(self::getErrorMessage($segment, $isSegmentToPreprocess, $storedSegment));
         $this->segment = $segment;
@@ -48,7 +48,7 @@ class UnprocessedSegmentException extends \Exception
     {
         return $this->storedSegment;
     }
-    private static function getErrorMessage(Segment $segment, $isSegmentToPreprocess, array $storedSegment = null)
+    private static function getErrorMessage(Segment $segment, $isSegmentToPreprocess, ?array $storedSegment = null)
     {
         if (empty($storedSegment)) {
             // the segment was not created through the segment editor

@@ -53,12 +53,12 @@ trait VarDumperTestTrait
         $cloner->addCasters($this->varDumperConfig['casters']);
         $cloner->setMaxItems(-1);
         $dumper = new CliDumper(null, null, $flags);
-        $dumper->setColors(false);
-        $data = $cloner->cloneVar($data, $filter)->withRefHandles(false);
+        $dumper->setColors(\false);
+        $data = $cloner->cloneVar($data, $filter)->withRefHandles(\false);
         if (null !== $key && null === ($data = $data->seek($key))) {
             return null;
         }
-        return rtrim($dumper->dump($data, true));
+        return rtrim($dumper->dump($data, \true));
     }
     private function prepareExpectation($expected, int $filter) : string
     {

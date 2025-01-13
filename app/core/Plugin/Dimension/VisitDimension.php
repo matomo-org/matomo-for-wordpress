@@ -85,7 +85,7 @@ abstract class VisitDimension extends Dimension
     private function isHandlingLogConversion()
     {
         if (empty($this->columnName) || empty($this->columnType)) {
-            return false;
+            return \false;
         }
         return $this->hasImplementedEvent('onAnyGoalConversion');
     }
@@ -147,7 +147,7 @@ abstract class VisitDimension extends Dimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        return false;
+        return \false;
     }
     /**
      * The `onExistingVisit` method is triggered when a visitor was recognized meaning it is not a new visitor.
@@ -162,7 +162,7 @@ abstract class VisitDimension extends Dimension
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
-        return false;
+        return \false;
     }
     /**
      * This event is executed shortly after `onNewVisit` or `onExistingVisit` in case the visitor converted a goal.
@@ -178,7 +178,7 @@ abstract class VisitDimension extends Dimension
      */
     public function onConvertedVisit(Request $request, Visitor $visitor, $action)
     {
-        return false;
+        return \false;
     }
     /**
      * By implementing this event you can persist a value to the `log_conversion` table in case a conversion happens.
@@ -195,7 +195,7 @@ abstract class VisitDimension extends Dimension
      */
     public function onAnyGoalConversion(Request $request, Visitor $visitor, $action)
     {
-        return false;
+        return \false;
     }
     /**
      * This hook is executed by the tracker when determining if an action is the start of a new visit
@@ -211,9 +211,9 @@ abstract class VisitDimension extends Dimension
      * @return bool Return true to force a visit, false if otherwise.
      * @api
      */
-    public function shouldForceNewVisit(Request $request, Visitor $visitor, Action $action = null)
+    public function shouldForceNewVisit(Request $request, Visitor $visitor, ?Action $action = null)
     {
-        return false;
+        return \false;
     }
     /**
      * Get all visit dimensions that are defined by all activated plugins.
@@ -335,7 +335,7 @@ abstract class VisitDimension extends Dimension
         uasort($array, function ($a, $b) {
             return $a <=> $b;
         });
-        $array = array_reverse($array, true);
+        $array = array_reverse($array, \true);
         // Flatten and limit the return array
         $flat = [];
         $i = 0;

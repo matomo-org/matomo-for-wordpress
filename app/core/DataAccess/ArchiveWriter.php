@@ -61,6 +61,10 @@ class ArchiveWriter
      * @var int
      */
     public const DONE_PARTIAL = 5;
+    /**
+     * Flag indicates an archive that is currently being processed, but has already been invalidated again
+     */
+    public const DONE_ERROR_INVALIDATED = 6;
     protected $fields = ['idarchive', 'idsite', 'date1', 'date2', 'period', 'ts_archived', 'name', 'value'];
     private $recordsToWriteSpool = ['numeric' => [], 'blob' => []];
     public const MAX_SPOOL_SIZE = 50;
@@ -104,7 +108,7 @@ class ArchiveWriter
      */
     public function __construct(ArchiveProcessor\Parameters $params)
     {
-        $this->idArchive = false;
+        $this->idArchive = \false;
         $this->idSite = $params->getSite()->getId();
         $this->segment = $params->getSegment();
         $this->period = $params->getPeriod();
@@ -144,7 +148,7 @@ class ArchiveWriter
     }
     public function getIdArchive()
     {
-        if ($this->idArchive === false) {
+        if ($this->idArchive === \false) {
             throw new Exception("Must call allocateNewArchiveId() first");
         }
         return $this->idArchive;
@@ -157,15 +161,26 @@ class ArchiveWriter
     }
     public function finalizeArchive()
     {
+        if (empty($this->recordsToWriteSpool['blob']) && count($this->recordsToWriteSpool['numeric']) === 1 && $this->recordsToWriteSpool['numeric'][0][0] === $this->doneFlag && $this->parameters->isPartialArchive()) {
+            // This part avoids writing done flags for empty partial archives:
+            // We skip writing the records to the database if there aren't any blob records to write,
+            // the only available numeric record to write would be the done flag and the archive would only be partial
+            return;
+        }
         $this->flushSpools();
         $numericTable = $this->getTableNumeric();
         $idArchive = $this->getIdArchive();
         $doneValue = $this->parameters->isPartialArchive() ? self::DONE_PARTIAL : self::DONE_OK;
         $this->checkDoneValueIsOnlyPartialForPluginArchives($doneValue);
         // check and log
+        $currentStatus = $this->getModel()->getArchiveStatus($numericTable, $idArchive, $this->doneFlag);
+        // If the current archive was already invalidated during runtime, directly update status to invalidated instead of done
+        if (self::DONE_ERROR_INVALIDATED === $currentStatus) {
+            $doneValue = self::DONE_INVALIDATED;
+        }
         $this->getModel()->updateArchiveStatus($numericTable, $idArchive, $this->doneFlag, $doneValue);
         if (!$this->parameters->isPartialArchive() && !empty($this->earliestNow)) {
-            $this->getModel()->deleteOlderArchives($this->parameters, $this->doneFlag, $this->earliestNow, $this->idArchive);
+            $this->getModel()->deleteOlderArchives($this->parameters, $this->doneFlag, $this->earliestNow, $idArchive);
         }
     }
     protected function compress($data)
@@ -194,7 +209,7 @@ class ArchiveWriter
         $records = $this->recordsToWriteSpool[$valueType];
         $bindSql = $this->getInsertRecordBind();
         $values = [];
-        $valueSeen = false;
+        $valueSeen = \false;
         foreach ($records as $record) {
             // don't record zero
             if (empty($record[1])) {
@@ -209,7 +224,7 @@ class ArchiveWriter
             $valueSeen = $record[1];
         }
         if (empty($values)) {
-            return true;
+            return \true;
         }
         $tableName = $this->getTableNameToInsert($valueSeen);
         $fields = $this->getInsertFields();
@@ -217,9 +232,9 @@ class ArchiveWriter
         if ($valueType === 'numeric') {
             BatchInsert::tableInsertBatchSql($tableName, $fields, $values);
         } else {
-            BatchInsert::tableInsertBatch($tableName, $fields, $values, $throwException = false, $charset = 'latin1');
+            BatchInsert::tableInsertBatch($tableName, $fields, $values, $throwException = \false, $charset = 'latin1');
         }
-        return true;
+        return \true;
     }
     /**
      * Inserts a record in the right table (either NUMERIC or BLOB)
@@ -232,14 +247,14 @@ class ArchiveWriter
     public function insertRecord($name, $value)
     {
         if ($this->isRecordZero($value)) {
-            return false;
+            return \false;
         }
         $valueType = $this->isRecordNumeric($value) ? 'numeric' : 'blob';
         $this->recordsToWriteSpool[$valueType][] = [0 => $name, 1 => $value];
         if (count($this->recordsToWriteSpool[$valueType]) >= self::MAX_SPOOL_SIZE) {
             $this->flushSpool($valueType);
         }
-        return true;
+        return \true;
     }
     public function flushSpools()
     {
@@ -292,7 +307,7 @@ class ArchiveWriter
     }
     protected function isRecordZero($value)
     {
-        return $value === '0' || $value === false || $value === 0 || $value === 0.0;
+        return $value === '0' || $value === \false || $value === 0 || $value === 0.0;
     }
     private function isRecordNumeric($value)
     {
@@ -302,7 +317,7 @@ class ArchiveWriter
     {
         // if the done flag is not like done%.PluginName, then it shouldn't be a partial archive.
         // log a warning.
-        if ($doneValue == self::DONE_PARTIAL && strpos($this->doneFlag, '.') == false) {
+        if ($doneValue == self::DONE_PARTIAL && strpos($this->doneFlag, '.') == \false) {
             $ex = new \Exception(sprintf("Trying to create a partial archive w/ an all plugins done flag (done flag = %s). This should not happen.", $this->doneFlag));
             StaticContainer::get(LoggerInterface::class)->warning('{exception}', ['exception' => $ex]);
         }

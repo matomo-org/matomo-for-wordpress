@@ -63,7 +63,7 @@ class LogDataPurger
     {
         $dateUpperLimit = Date::factory("today")->subDay($deleteLogsOlderThan);
         $transactionLevel = new TransactionLevel(Db::get());
-        $transactionLevel->setUncommitted();
+        $transactionLevel->setTransactionLevelForNonLockingReads();
         $this->logDeleter->deleteVisitsFor($start = null, $dateUpperLimit->getDatetime());
         $transactionLevel->restorePreviousStatus();
         $logTables = self::getDeleteTableLogTables();
@@ -92,7 +92,7 @@ class LogDataPurger
          */
         Piwik::postEvent('PrivacyManager.deleteLogsOlderThan', array($dateUpperLimit, $deleteLogsOlderThan));
         // optimize table overhead after deletion
-        Db::optimizeTables($logTables);
+        Db\Schema::getInstance()->optimizeTables($logTables);
     }
     /**
      * Returns an array describing what data would be purged if purging were invoked.
@@ -136,7 +136,7 @@ class LogDataPurger
         // get max idvisit
         $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM {$logVisit}");
         if (empty($maxIdVisit)) {
-            return false;
+            return \false;
         }
         // select highest idvisit to delete from
         $dateStart = Date::factory("today")->subDay($deleteLogsOlderThan);

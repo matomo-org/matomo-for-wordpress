@@ -25,7 +25,7 @@ class Compiler
     private $sourceOffset;
     private $sourceLine;
     private $varNameSalt = 0;
-    private $didUseEcho = false;
+    private $didUseEcho = \false;
     private $didUseEchoStack = [];
     public function __construct(Environment $env)
     {
@@ -62,7 +62,7 @@ class Compiler
         $this->reset($indentation);
         $this->didUseEchoStack[] = $this->didUseEcho;
         try {
-            $this->didUseEcho = false;
+            $this->didUseEcho = \false;
             $node->compile($this);
             if ($this->didUseEcho) {
                 trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[YieldReady].', $this->didUseEcho, \get_class($node));
@@ -75,14 +75,14 @@ class Compiler
     /**
      * @return $this
      */
-    public function subcompile(Node $node, bool $raw = true)
+    public function subcompile(Node $node, bool $raw = \true)
     {
         if (!$raw) {
             $this->source .= str_repeat(' ', $this->indentation * 4);
         }
         $this->didUseEchoStack[] = $this->didUseEcho;
         try {
-            $this->didUseEcho = false;
+            $this->didUseEcho = \false;
             $node->compile($this);
             if ($this->didUseEcho) {
                 trigger_deprecation('twig/twig', '3.9', 'Using "%s" is deprecated, use "yield" instead in "%s", then flag the class with #[YieldReady].', $this->didUseEcho, \get_class($node));
@@ -134,11 +134,11 @@ class Compiler
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (false !== ($locale = setlocale(\LC_NUMERIC, '0'))) {
+            if (\false !== ($locale = setlocale(\LC_NUMERIC, '0'))) {
                 setlocale(\LC_NUMERIC, 'C');
             }
-            $this->raw(var_export($value, true));
-            if (false !== $locale) {
+            $this->raw(var_export($value, \true));
+            if (\false !== $locale) {
                 setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
@@ -147,12 +147,12 @@ class Compiler
             $this->raw($value ? 'true' : 'false');
         } elseif (\is_array($value)) {
             $this->raw('array(');
-            $first = true;
+            $first = \true;
             foreach ($value as $key => $v) {
                 if (!$first) {
                     $this->raw(', ');
                 }
-                $first = false;
+                $first = \false;
                 $this->repr($key);
                 $this->raw(' => ');
                 $this->repr($v);
@@ -213,6 +213,6 @@ class Compiler
         if ($this->didUseEcho) {
             return;
         }
-        $this->didUseEcho = preg_match('/^\\s*+(echo|print)\\b/', $string, $m) ? $m[1] : false;
+        $this->didUseEcho = preg_match('/^\\s*+(echo|print)\\b/', $string, $m) ? $m[1] : \false;
     }
 }

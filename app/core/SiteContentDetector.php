@@ -129,7 +129,7 @@ class SiteContentDetector
         // Check and load previously cached site content detection data if it exists
         $cacheKey = 'SiteContentDetection_' . md5($url);
         $siteContentDetectionCache = $this->cache->fetch($cacheKey);
-        if ($siteContentDetectionCache !== false) {
+        if ($siteContentDetectionCache !== \false) {
             if ($this->checkCacheHasRequiredProperties($detectContent, $siteContentDetectionCache)) {
                 $this->detectedContent = $siteContentDetectionCache['detectedContent'];
                 $this->connectedConsentManagers = $siteContentDetectionCache['connectedConsentManagers'];
@@ -161,10 +161,10 @@ class SiteContentDetector
     {
         foreach ($this->detectedContent as $type => $detectedClassIds) {
             if (array_key_exists($detectionClassId, $detectedClassIds)) {
-                return $detectedClassIds[$detectionClassId] ?? false;
+                return $detectedClassIds[$detectionClassId] ?? \false;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns an array containing ids of all detected detections of the given type
@@ -176,7 +176,7 @@ class SiteContentDetector
     {
         $detected = [];
         foreach ($this->detectedContent[$type] as $objId => $wasDetected) {
-            if (true === $wasDetected) {
+            if (\true === $wasDetected) {
                 $detected[] = $objId;
             }
         }
@@ -196,19 +196,19 @@ class SiteContentDetector
             foreach (self::getSiteContentDetectionsByType() as $type => $entries) {
                 foreach ($entries as $entry) {
                     if (!isset($cache['detectedContent'][$type][$entry::getId()])) {
-                        return false;
+                        return \false;
                         // random detection missing
                     }
                 }
             }
-            return true;
+            return \true;
         }
         foreach ($detectContent as $requestedDetection) {
             if (is_string($requestedDetection)) {
                 // specific detection
                 $detectionObj = $this->getSiteContentDetectionById($requestedDetection);
                 if (null !== $detectionObj && !isset($cache['detectedContent'][$detectionObj::getContentType()][$detectionObj::getId()])) {
-                    return false;
+                    return \false;
                     // specific detection was run before
                 }
             } elseif (is_int($requestedDetection)) {
@@ -217,14 +217,14 @@ class SiteContentDetector
                 if (isset($detectionsByType[$requestedDetection])) {
                     foreach ($detectionsByType[$requestedDetection] as $detectionObj) {
                         if (!isset($cache['detectedContent'][$requestedDetection][$detectionObj::getId()])) {
-                            return false;
+                            return \false;
                             // random detection missing
                         }
                     }
                 }
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Save data to the cache
@@ -269,12 +269,12 @@ class SiteContentDetector
             foreach ($typeDetections as $typeDetection) {
                 $this->detectedContent[$type][$typeDetection::getId()] = null;
                 if (in_array($type, $detectContent) || in_array($typeDetection::getId(), $detectContent) || empty($detectContent)) {
-                    $this->detectedContent[$type][$typeDetection::getId()] = false;
+                    $this->detectedContent[$type][$typeDetection::getId()] = \false;
                     if ($typeDetection->isDetected($this->siteResponse['data'], $this->siteResponse['headers'])) {
                         if ($typeDetection instanceof ConsentManagerDetectionAbstract && $typeDetection->checkIsConnected($this->siteResponse['data'], $this->siteResponse['headers'])) {
                             $this->connectedConsentManagers[] = $typeDetection::getId();
                         }
-                        $this->detectedContent[$type][$typeDetection::getId()] = true;
+                        $this->detectedContent[$type][$typeDetection::getId()] = \true;
                     }
                 }
             }
@@ -299,7 +299,7 @@ class SiteContentDetector
         }
         $siteData = [];
         try {
-            $siteData = \Piwik\Http::sendHttpRequestBy(\Piwik\Http::getTransportMethod(), $url, $timeOut, null, null, null, 0, false, true, false, true);
+            $siteData = \Piwik\Http::sendHttpRequestBy(\Piwik\Http::getTransportMethod(), $url, $timeOut, null, null, null, 0, \false, \true, \false, \true);
         } catch (\Exception $e) {
         }
         return $siteData;

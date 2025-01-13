@@ -15,7 +15,10 @@ use Piwik\Tracker\PageUrl;
 class PagesUrlConverter extends NumberConverter implements DataConverterInterface {
 
 	public static function convert( array $wp_statistics_data ) {
-		$rows                   = self::aggregate_by_key( $wp_statistics_data, 'str_url' );
+		$first_page = reset( $wp_statistics_data );
+		$key        = isset( $first_page['uri'] ) ? 'uri' : 'str_url';
+
+		$rows                   = self::aggregate_by_key( $wp_statistics_data, $key );
 		$main_url_without_slash = site_url();
 		$main_url_without_slash = rtrim( $main_url_without_slash, '/' );
 		$data_tables            = [

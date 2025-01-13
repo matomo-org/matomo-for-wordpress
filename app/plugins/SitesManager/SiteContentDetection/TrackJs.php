@@ -21,6 +21,6 @@ class TrackJs extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConte
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return false !== stripos($data, 'cdn.trackjs.com');
+        return \false !== stripos($data, 'cdn.trackjs.com');
     }
 }

@@ -59,6 +59,6 @@ class DecoratorResolver implements DefinitionResolver
     }
     public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
-        return true;
+        return \true;
     }
 }

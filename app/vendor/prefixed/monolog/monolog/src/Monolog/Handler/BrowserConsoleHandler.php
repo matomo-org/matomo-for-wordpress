@@ -18,7 +18,7 @@ use Matomo\Dependencies\Monolog\Formatter\LineFormatter;
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
-    protected static $initialized = false;
+    protected static $initialized = \false;
     protected static $records = array();
     /**
      * {@inheritDoc}
@@ -42,7 +42,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         static::$records[] = $record;
         // Register shutdown handler if not already done
         if (!static::$initialized) {
-            static::$initialized = true;
+            static::$initialized = \true;
             $this->registerShutdownFunction();
         }
     }
@@ -85,7 +85,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      */
     protected function registerShutdownFunction()
     {
-        if (PHP_SAPI !== 'cli') {
+        if (\PHP_SAPI !== 'cli') {
             register_shutdown_function(array('Monolog\\Handler\\BrowserConsoleHandler', 'send'));
         }
     }
@@ -114,10 +114,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             if (stripos($header, 'content-type:') === 0) {
                 // This handler only works with HTML and javascript outputs
                 // text/javascript is obsolete in favour of application/javascript, but still used
-                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
+                if (stripos($header, 'application/javascript') !== \false || stripos($header, 'text/javascript') !== \false) {
                     return 'js';
                 }
-                if (stripos($header, 'text/html') === false) {
+                if (stripos($header, 'text/html') === \false) {
                     return 'unknown';
                 }
                 break;
@@ -143,7 +143,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         $args = array();
         $format = '%c' . $formatted;
-        preg_match_all('/\\[\\[(.*?)\\]\\]\\{([^}]*)\\}/s', $format, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        preg_match_all('/\\[\\[(.*?)\\]\\]\\{([^}]*)\\}/s', $format, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
         foreach (array_reverse($matches) as $match) {
             $args[] = '"font-weight: normal"';
             $args[] = static::quote(static::handleCustomStyles($match[2][0], $match[1][0]));

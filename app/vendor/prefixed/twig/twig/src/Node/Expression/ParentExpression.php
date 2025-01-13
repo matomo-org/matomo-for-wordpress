@@ -21,7 +21,7 @@ class ParentExpression extends AbstractExpression
 {
     public function __construct(string $name, int $lineno, ?string $tag = null)
     {
-        parent::__construct([], ['output' => false, 'name' => $name], $lineno, $tag);
+        parent::__construct([], ['output' => \false, 'name' => $name], $lineno, $tag);
     }
     public function compile(Compiler $compiler) : void
     {

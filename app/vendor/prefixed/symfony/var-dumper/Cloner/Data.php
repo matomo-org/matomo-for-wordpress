@@ -64,7 +64,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return string|int|float|bool|array|Data[]|null
      */
-    public function getValue($recursive = false)
+    public function getValue($recursive = \false)
     {
         $item = $this->data[$this->position][$this->key];
         if ($item instanceof Stub && Stub::TYPE_REF === $item->type && !$item->position) {
@@ -90,7 +90,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
                     if (isset($recursive[$v->position])) {
                         continue;
                     }
-                    $recursive[$v->position] = true;
+                    $recursive[$v->position] = \true;
                 }
                 $children[$k] = $children[$k]->getValue($recursive);
             }
@@ -268,10 +268,10 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         $refs = [0];
         $cursor = new Cursor();
         if ($cursor->attr = $this->context[SourceContextProvider::class] ?? []) {
-            $cursor->attr['if_links'] = true;
+            $cursor->attr['if_links'] = \true;
             $cursor->hashType = -1;
             $dumper->dumpScalar($cursor, 'default', '^');
-            $cursor->attr = ['if_links' => true];
+            $cursor->attr = ['if_links' => \true];
             $dumper->dumpScalar($cursor, 'default', ' ');
             $cursor->hashType = 0;
         }
@@ -287,7 +287,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         $cursor->refIndex = 0;
         $cursor->softRefTo = $cursor->softRefHandle = $cursor->softRefCount = 0;
         $cursor->hardRefTo = $cursor->hardRefHandle = $cursor->hardRefCount = 0;
-        $firstSeen = true;
+        $firstSeen = \true;
         if (!$item instanceof Stub) {
             $cursor->attr = [];
             $type = \gettype($item);
@@ -299,7 +299,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
                 if (!isset($refs[$r = $item->handle - (\PHP_INT_MAX >> 1)])) {
                     $cursor->refIndex = $refs[$r] = $cursor->refIndex ?: ++$refs[0];
                 } else {
-                    $firstSeen = false;
+                    $firstSeen = \false;
                 }
                 $cursor->hardRefTo = $refs[$r];
                 $cursor->hardRefHandle = $this->useRefHandles & $item->handle;
@@ -314,7 +314,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
                 if (!isset($refs[$r = $item->handle])) {
                     $cursor->refIndex = $refs[$r] = $cursor->refIndex ?: ++$refs[0];
                 } else {
-                    $firstSeen = false;
+                    $firstSeen = \false;
                 }
                 $cursor->softRefTo = $refs[$r];
             }
@@ -348,7 +348,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
                     $dumper->enterHash($cursor, $item->type, $item->class, $withChildren);
                     if ($withChildren) {
                         if ($cursor->skipChildren) {
-                            $withChildren = false;
+                            $withChildren = \false;
                             $cut = -1;
                         } else {
                             $cut = $this->dumpChildren($dumper, $cursor, $refs, $children, $cut, $item->type, null !== $item->class);
@@ -356,17 +356,17 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
                     } elseif ($children && 0 <= $cut) {
                         $cut += \count($children);
                     }
-                    $cursor->skipChildren = false;
+                    $cursor->skipChildren = \false;
                     $dumper->leaveHash($cursor, $item->type, $item->class, $withChildren, $cut);
                     break;
                 default:
                     throw new \RuntimeException(sprintf('Unexpected Stub type: "%s".', $item->type));
             }
         } elseif ('array' === $type) {
-            $dumper->enterHash($cursor, Cursor::HASH_INDEXED, 0, false);
-            $dumper->leaveHash($cursor, Cursor::HASH_INDEXED, 0, false, 0);
+            $dumper->enterHash($cursor, Cursor::HASH_INDEXED, 0, \false);
+            $dumper->leaveHash($cursor, Cursor::HASH_INDEXED, 0, \false, 0);
         } elseif ('string' === $type) {
-            $dumper->dumpString($cursor, $item, false, 0);
+            $dumper->dumpString($cursor, $item, \false, 0);
         } else {
             $dumper->dumpScalar($cursor, $type, $item);
         }
@@ -389,7 +389,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
             $cursor->hashKey = $dumpKeys ? $key : null;
             $this->dumpItem($dumper, $cursor, $refs, $child);
             if (++$cursor->hashIndex === $this->maxItemsPerDepth || $cursor->stop) {
-                $parentCursor->stop = true;
+                $parentCursor->stop = \true;
                 return $hashCut >= 0 ? $hashCut + $cursor->hashLength - $cursor->hashIndex : $hashCut;
             }
         }

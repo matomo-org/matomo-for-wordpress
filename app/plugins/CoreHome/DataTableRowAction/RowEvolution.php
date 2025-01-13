@@ -61,7 +61,7 @@ class RowEvolution
     /** The metrics for the graph that has been requested last */
     protected $graphMetrics;
     /** Whether or not to show all metrics in the evolution graph when to popover opens */
-    protected $initiallyShowAllMetrics = false;
+    protected $initiallyShowAllMetrics = \false;
     /**
      * The constructor
      * Initialize some local variables from the request
@@ -128,7 +128,7 @@ class RowEvolution
         $view->popoverTitle = $popoverTitle;
         return $view->render();
     }
-    protected function loadEvolutionReport($column = false)
+    protected function loadEvolutionReport($column = \false)
     {
         [$apiModule, $apiAction] = explode('.', $this->apiMethod);
         // getQueryStringFromParameters expects sanitised query parameter values
@@ -136,7 +136,7 @@ class RowEvolution
         if (!empty($this->segment)) {
             $parameters['segment'] = $this->segment;
         }
-        if ($column !== false) {
+        if ($column !== \false) {
             $parameters['column'] = $column;
         }
         $isComparing = DataComparisonFilter::isCompareParamsPresent();
@@ -183,7 +183,7 @@ class RowEvolution
     {
         $this->dataTable = $report['reportData'];
         $this->rowLabel = $this->extractPrettyLabel($report);
-        $this->rowIcon = !empty($report['logo']) ? $report['logo'] : false;
+        $this->rowIcon = !empty($report['logo']) ? $report['logo'] : \false;
         $this->availableMetrics = $report['metadata']['metrics'];
         $this->dimension = $report['metadata']['dimension'];
     }
@@ -194,26 +194,26 @@ class RowEvolution
      * @param array|bool $metrics
      * @return Factory
      */
-    public function getRowEvolutionGraph($graphType = false, $metrics = false)
+    public function getRowEvolutionGraph($graphType = \false, $metrics = \false)
     {
         // set up the view data table
-        $view = Factory::build($graphType ?: $this->graphType, $this->apiMethod, $controllerAction = 'CoreHome.getRowEvolutionGraph', $forceDefault = true);
+        $view = Factory::build($graphType ?: $this->graphType, $this->apiMethod, $controllerAction = 'CoreHome.getRowEvolutionGraph', $forceDefault = \true);
         $view->setDataTable($this->dataTable);
         if (!empty($this->graphMetrics)) {
             // In row Evolution popover, this is empty
             $view->config->columns_to_display = array_keys($metrics ?: $this->graphMetrics);
         }
         $view->requestConfig->request_parameters_to_modify['label'] = '';
-        $view->config->show_goals = false;
-        $view->config->show_search = false;
-        $view->config->show_all_views_icons = false;
-        $view->config->show_related_reports = false;
-        $view->config->show_footer_message = false;
+        $view->config->show_goals = \false;
+        $view->config->show_search = \false;
+        $view->config->show_all_views_icons = \false;
+        $view->config->show_related_reports = \false;
+        $view->config->show_footer_message = \false;
         foreach ($this->availableMetrics as $metric => $metadata) {
             $view->config->translations[$metric] = $metadata['name'];
         }
         if ($view->config instanceof GraphConfig) {
-            $view->config->show_series_picker = false;
+            $view->config->show_series_picker = \false;
         }
         if ($view->config instanceof JqplotGraphConfig) {
             $view->config->external_series_toggle = 'RowEvolutionSeriesToggle';
@@ -231,11 +231,11 @@ class RowEvolution
         $metrics = array();
         foreach ($this->availableMetrics as $metric => $metricData) {
             $unit = Metrics::getUnit($metric, $this->idSite);
-            $change = isset($metricData['change']) ? $metricData['change'] : false;
+            $change = isset($metricData['change']) ? $metricData['change'] : \false;
             [$first, $last] = $this->getFirstAndLastDataPointsForMetric($metric);
             $fractionDigits = max($this->getFractionDigits($first), $this->getFractionDigits($last));
             $details = Piwik::translate('RowEvolution_MetricBetweenText', array(NumberFormatter::getInstance()->format($first, $fractionDigits) . $unit, NumberFormatter::getInstance()->format($last, $fractionDigits) . $unit));
-            if ($change !== false) {
+            if ($change !== \false) {
                 $lowerIsBetter = Metrics::isLowerValueBetter($metric);
                 if (substr($change, 0, 1) == '+') {
                     $changeClass = $lowerIsBetter ? 'bad' : 'good';
@@ -245,7 +245,7 @@ class RowEvolution
                     $changeImage = $lowerIsBetter ? 'arrow_down_green' : 'arrow_down';
                 } else {
                     $changeClass = 'neutral';
-                    $changeImage = false;
+                    $changeImage = \false;
                 }
                 $change = '<span class="' . $changeClass . '">' . ($changeImage ? '<img src="plugins/MultiSites/images/' . $changeImage . '.png" /> ' : '') . $change . '</span>';
                 $details .= ', ' . Piwik::translate('RowEvolution_MetricChangeText', $change);
@@ -261,7 +261,7 @@ class RowEvolution
             }
             // TODO: this check should be determined by metric metadata, not hardcoded here
             if ($metric == 'nb_users' && $first == 0 && $last == 0) {
-                $newMetric['hide'] = true;
+                $newMetric['hide'] = \true;
             }
             $metrics[] = $newMetric;
             $i++;
@@ -337,6 +337,6 @@ class RowEvolution
     }
     protected function getRowEvolutionGraphFromController(\Piwik\Plugins\CoreHome\Controller $controller)
     {
-        return $controller->getRowEvolutionGraph($fetch = true, $rowEvolution = $this);
+        return $controller->getRowEvolutionGraph($fetch = \true, $rowEvolution = $this);
     }
 }

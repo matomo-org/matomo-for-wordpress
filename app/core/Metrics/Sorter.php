@@ -73,7 +73,7 @@ class Sorter
     private function getColumnValue(Row $row)
     {
         $value = $row->getColumn($this->config->primaryColumnToSort);
-        if ($value === false || is_array($value)) {
+        if ($value === \false || is_array($value)) {
             return null;
         }
         return $value;
@@ -85,9 +85,9 @@ class Sorter
     public function getPrimarySortOrder($order)
     {
         if ($order === 'asc') {
-            return SORT_ASC;
+            return \SORT_ASC;
         }
-        return SORT_DESC;
+        return \SORT_DESC;
     }
     /**
      * @param string $order   'asc' or 'desc'
@@ -97,9 +97,9 @@ class Sorter
     public function getSecondarySortOrder($order, $secondarySortColumn)
     {
         if ($secondarySortColumn === 'label') {
-            $secondaryOrder = SORT_ASC;
+            $secondaryOrder = \SORT_ASC;
             if ($order === 'asc') {
-                $secondaryOrder = SORT_DESC;
+                $secondaryOrder = \SORT_DESC;
             }
             return $secondaryOrder;
         }
@@ -140,7 +140,7 @@ class Sorter
             // if sorted by visits, then sort by label as a secondary column
             $column = 'label';
             $value = $row->hasColumn($column);
-            if ($value !== false) {
+            if ($value !== \false) {
                 return $column;
             }
             return null;
@@ -151,7 +151,7 @@ class Sorter
         }
         foreach ($defaultSecondaryColumn as $column) {
             $value = $row->hasColumn($column);
-            if ($value !== false) {
+            if ($value !== \false) {
                 return $column;
             }
         }
@@ -169,9 +169,9 @@ class Sorter
         if (isset($columnToSort) && $columnToSort !== 'label') {
             foreach ($table->getRowsWithoutSummaryRow() as $row) {
                 $value = $row->getColumn($columnToSort);
-                if ($value !== false && $value !== null && !is_array($value)) {
+                if ($value !== \false && $value !== null && !is_array($value)) {
                     if (is_numeric($value)) {
-                        $sortFlags = SORT_NUMERIC;
+                        $sortFlags = \SORT_NUMERIC;
                     } else {
                         $sortFlags = $this->getStringSortFlags();
                     }
@@ -184,9 +184,9 @@ class Sorter
     private function getStringSortFlags()
     {
         if ($this->config->naturalSort) {
-            $sortFlags = SORT_NATURAL | SORT_FLAG_CASE;
+            $sortFlags = \SORT_NATURAL | \SORT_FLAG_CASE;
         } else {
-            $sortFlags = SORT_STRING | SORT_FLAG_CASE;
+            $sortFlags = \SORT_STRING | \SORT_FLAG_CASE;
         }
         return $sortFlags;
     }

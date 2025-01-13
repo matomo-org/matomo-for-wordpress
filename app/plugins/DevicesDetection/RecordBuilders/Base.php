@@ -28,7 +28,7 @@ abstract class Base extends RecordBuilder
      * @var bool
      */
     private $enrichWithConversionMetrics;
-    public function __construct(string $recordName, string $labelSql, bool $enrichWithConversionMetrics = false)
+    public function __construct(string $recordName, string $labelSql, bool $enrichWithConversionMetrics = \false)
     {
         parent::__construct();
         $this->recordName = $recordName;

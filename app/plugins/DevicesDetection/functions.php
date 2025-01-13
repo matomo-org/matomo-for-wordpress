@@ -65,7 +65,7 @@ function getBrowserName($label)
     $browsers = BrowserParser::getAvailableBrowsers();
     if ($short && array_key_exists($short, $browsers)) {
         return trim(ucfirst($browsers[$short]));
-    } elseif (strlen($label) > 2 && strpos($label, 'UNK') === false) {
+    } elseif (strlen($label) > 2 && strpos($label, 'UNK') === \false) {
         return $label;
     }
     return Piwik::translate('General_Unknown');
@@ -156,7 +156,7 @@ function getDeviceTypeLogo($label)
 }
 function getModelName($label)
 {
-    if (strpos($label, ';') !== false) {
+    if (strpos($label, ';') !== \false) {
         [$brand, $model] = explode(';', $label, 2);
     } else {
         $brand = null;

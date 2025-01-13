@@ -51,7 +51,7 @@ trait ServerLogHandlerTrait
     /**
      * @param string|int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct(string $host, $level = Logger::DEBUG, bool $bubble = true, array $context = [])
+    public function __construct(string $host, $level = Logger::DEBUG, bool $bubble = \true, array $context = [])
     {
         parent::__construct($level, $bubble);
         if (!str_contains($host, '://')) {
@@ -66,12 +66,12 @@ trait ServerLogHandlerTrait
     public function handle(array $record) : bool
     {
         if (!$this->isHandling($record)) {
-            return false;
+            return \false;
         }
         set_error_handler(self::class . '::nullErrorHandler');
         try {
             if (!($this->socket = $this->socket ?: $this->createSocket())) {
-                return false === $this->bubble;
+                return \false === $this->bubble;
             }
         } finally {
             restore_error_handler();
@@ -108,7 +108,7 @@ trait ServerLogHandlerTrait
     {
         $socket = stream_socket_client($this->host, $errno, $errstr, 0, \STREAM_CLIENT_CONNECT | \STREAM_CLIENT_ASYNC_CONNECT | \STREAM_CLIENT_PERSISTENT, $this->context);
         if ($socket) {
-            stream_set_blocking($socket, false);
+            stream_set_blocking($socket, \false);
         }
         return $socket;
     }

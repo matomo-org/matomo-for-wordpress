@@ -57,7 +57,7 @@ class SegmentsList
      * @param string|false $segmentExpression The segment expression name to remove eg 'pageUrl'.
      *                                        If not supplied, all segments within that category will be removed.
      */
-    public function remove($segmentCategory, $segmentExpression = false)
+    public function remove($segmentCategory, $segmentExpression = \false)
     {
         foreach ($this->segments as $index => $segment) {
             if ($segment->getCategoryId() === $segmentCategory) {

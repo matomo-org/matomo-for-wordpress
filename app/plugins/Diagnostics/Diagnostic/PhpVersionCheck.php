@@ -25,7 +25,7 @@ class PhpVersionCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnosti
     public function execute()
     {
         global $piwik_minimumPHPVersion;
-        $actualVersion = PHP_VERSION;
+        $actualVersion = \PHP_VERSION;
         $label = sprintf('%s >= %s', $this->translator->translate('Installation_SystemCheckPhp'), $piwik_minimumPHPVersion);
         if ($this->isPhpVersionValid($piwik_minimumPHPVersion, $actualVersion)) {
             $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;

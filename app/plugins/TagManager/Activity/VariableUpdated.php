@@ -14,7 +14,7 @@ class VariableUpdated extends \Piwik\Plugins\TagManager\Activity\VariableBaseAct
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('updateContainerVariable')) {
-            return false;
+            return \false;
         }
         list($return, $finalAPIParameters) = $eventData;
         $idEntity = $finalAPIParameters['parameters']['idVariable'];

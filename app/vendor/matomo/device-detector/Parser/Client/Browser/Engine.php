@@ -45,7 +45,7 @@ class Engine extends AbstractClientParser
      */
     public function parse() : ?array
     {
-        $matches = false;
+        $matches = \false;
         foreach ($this->getRegexes() as $regex) {
             $matches = $this->matchUserAgent($regex['regex']);
             if ($matches) {

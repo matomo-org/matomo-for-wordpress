@@ -34,7 +34,7 @@ abstract class Descriptor implements DescriptorInterface
     public function describe(OutputInterface $output, object $object, array $options = [])
     {
         $this->output = $output;
-        switch (true) {
+        switch (\true) {
             case $object instanceof InputArgument:
                 $this->describeInputArgument($object, $options);
                 break;
@@ -57,9 +57,9 @@ abstract class Descriptor implements DescriptorInterface
     /**
      * Writes content to output.
      */
-    protected function write(string $content, bool $decorated = false)
+    protected function write(string $content, bool $decorated = \false)
     {
-        $this->output->write($content, false, $decorated ? OutputInterface::OUTPUT_NORMAL : OutputInterface::OUTPUT_RAW);
+        $this->output->write($content, \false, $decorated ? OutputInterface::OUTPUT_NORMAL : OutputInterface::OUTPUT_RAW);
     }
     /**
      * Describes an InputArgument instance.

@@ -20,7 +20,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
      */
     public function __construct($cacheProviders = [])
     {
-        $this->cacheProviders = $cacheProviders instanceof Traversable ? iterator_to_array($cacheProviders, false) : array_values($cacheProviders);
+        $this->cacheProviders = $cacheProviders instanceof Traversable ? iterator_to_array($cacheProviders, \false) : array_values($cacheProviders);
     }
     public function setDefaultLifeTimeForDownstreamCacheProviders(int $defaultLifeTimeForDownstreamCacheProviders) : void
     {
@@ -51,7 +51,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
                 return $value;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -82,17 +82,17 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
     {
         foreach ($this->cacheProviders as $cacheProvider) {
             if ($cacheProvider->doContains($id)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritDoc}
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        $stored = true;
+        $stored = \true;
         foreach ($this->cacheProviders as $cacheProvider) {
             $stored = $cacheProvider->doSave($id, $data, $lifeTime) && $stored;
         }
@@ -103,7 +103,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
-        $stored = true;
+        $stored = \true;
         foreach ($this->cacheProviders as $cacheProvider) {
             $stored = $cacheProvider->doSaveMultiple($keysAndValues, $lifetime) && $stored;
         }
@@ -114,7 +114,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doDelete($id)
     {
-        $deleted = true;
+        $deleted = \true;
         foreach ($this->cacheProviders as $cacheProvider) {
             $deleted = $cacheProvider->doDelete($id) && $deleted;
         }
@@ -125,7 +125,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doDeleteMultiple(array $keys)
     {
-        $deleted = true;
+        $deleted = \true;
         foreach ($this->cacheProviders as $cacheProvider) {
             $deleted = $cacheProvider->doDeleteMultiple($keys) && $deleted;
         }
@@ -136,7 +136,7 @@ class ChainCache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doFlush()
     {
-        $flushed = true;
+        $flushed = \true;
         foreach ($this->cacheProviders as $cacheProvider) {
             $flushed = $cacheProvider->doFlush() && $flushed;
         }

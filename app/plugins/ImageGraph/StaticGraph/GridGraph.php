@@ -56,7 +56,7 @@ abstract class GridGraph extends StaticGraph
         }
         $this->initpImage();
         // graph area coordinates
-        $topLeftXValue = $this->getGridLeftMargin($horizontalGraph, $withLabel = true);
+        $topLeftXValue = $this->getGridLeftMargin($horizontalGraph, $withLabel = \true);
         $topLeftYValue = $this->getGridTopMargin($horizontalGraph, $verticalLegend);
         $bottomRightXValue = $this->width - $this->getGridRightMargin($horizontalGraph);
         $bottomRightYValue = $this->getGraphBottom($horizontalGraph);
@@ -284,7 +284,7 @@ abstract class GridGraph extends StaticGraph
     {
         return $this->height - $this->getGridBottomMargin($horizontalGraph);
     }
-    protected function truncateLabel($label, $labelWidthLimit, $fontSize = false)
+    protected function truncateLabel($label, $labelWidthLimit, $fontSize = \false)
     {
         list($truncationTextWidth, $truncationTextHeight) = $this->getTextWidthHeight(self::TRUNCATION_TEXT, $fontSize);
         list($labelWidth, $labelHeight) = $this->getTextWidthHeight($label, $fontSize);

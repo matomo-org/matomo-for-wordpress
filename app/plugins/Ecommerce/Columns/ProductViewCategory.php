@@ -50,7 +50,7 @@ class ProductViewCategory extends ActionDimension
             $segment->setSegment($productCategoryName);
             $segment->setSqlFilter([TableLogAction::class, 'getOptimizedIdActionSqlMatch']);
             $segment->setSqlSegment('log_link_visit_action.' . $productCategoryColumnName);
-            $segment->setIsInternal(true);
+            $segment->setIsInternal(\true);
             $segment->setSuggestedValuesCallback(function ($idSite, $maxValuesToReturn, $table) {
                 $values = [];
                 foreach ($table->getRows() as $row) {
@@ -95,14 +95,14 @@ class ProductViewCategory extends ActionDimension
         if ($request->hasParam('_pkc')) {
             $categories = Common::unsanitizeInputValue($request->getParam('_pkc'));
             $categories = $this->handleCategoryParam($categories);
-            return $categories[$this->categoryNumber - 1] ?? false;
+            return $categories[$this->categoryNumber - 1] ?? \false;
         }
         // fall back to custom variables (might happen if old logs are replayed)
         if (Manager::getInstance()->isPluginActivated('CustomVariables')) {
             $customVariables = CustomVariablesRequestProcessor::getCustomVariablesInPageScope($request);
             if (isset($customVariables['custom_var_k5']) && $customVariables['custom_var_k5'] === '_pkc') {
                 $categories = $this->handleCategoryParam($customVariables['custom_var_v5'] ?? '');
-                return $categories[$this->categoryNumber - 1] ?? false;
+                return $categories[$this->categoryNumber - 1] ?? \false;
             }
         }
         return parent::onLookupAction($request, $action);
@@ -110,7 +110,7 @@ class ProductViewCategory extends ActionDimension
     protected function handleCategoryParam($categories)
     {
         if (0 === strpos($categories, '["')) {
-            $categories = array_values(array_filter((array) @\json_decode($categories, true)));
+            $categories = array_values(array_filter((array) @\json_decode($categories, \true)));
         } else {
             $categories = [$categories];
         }

@@ -7,7 +7,6 @@
  */
 
 import { expect, browser } from '@wdio/globals';
-import GettingStartedPage from './pageobjects/tag-manager/getting-started.page.js';
 import ManageContainersPage from './pageobjects/tag-manager/manage-containers.page.js';
 import ContainerDashboardPage from './pageobjects/tag-manager/container-dashboard.page.js';
 import ContainerTagsPage from './pageobjects/tag-manager/container-tags.page.js';
@@ -19,15 +18,6 @@ import Website from './website.js';
 describe('Matomo > Tag Manager', () => {
   before(async () => {
     await Website.login();
-  });
-
-  it('should load the getting started page correctly', async () => {
-    await GettingStartedPage.open();
-
-    await GettingStartedPage.disableHoverStyles();
-    await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.getting-started')
-    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the manage containers page correctly', async () => {

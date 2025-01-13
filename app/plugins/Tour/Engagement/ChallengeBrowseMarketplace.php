@@ -26,6 +26,6 @@ class ChallengeBrowseMarketplace extends \Piwik\Plugins\Tour\Engagement\Challeng
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'Marketplace', 'action' => 'overview', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'Marketplace', 'action' => 'overview', 'widget' => \false));
     }
 }

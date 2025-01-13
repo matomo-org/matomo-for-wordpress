@@ -26,7 +26,7 @@ require_once PIWIK_INCLUDE_PATH . '/plugins/Annotations/AnnotationList.php';
 class API extends \Piwik\Plugin\API
 {
     // do not automatically apply `Common::sanitizeInputValue` to all API parameters
-    protected $autoSanitizeInputParams = false;
+    protected $autoSanitizeInputParams = \false;
     /**
      * Create a new annotation for a site.
      *
@@ -38,7 +38,7 @@ class API extends \Piwik\Plugin\API
      *               'annotation') is the new annotation. The second element (indexed
      *               by 'idNote' is the new note's ID).
      */
-    public function add(int $idSite, string $date, string $note, bool $starred = false) : array
+    public function add(int $idSite, string $date, string $note, bool $starred = \false) : array
     {
         $this->checkUserCanAddNotesFor($idSite);
         $this->checkSiteExists($idSite);
@@ -75,7 +75,7 @@ class API extends \Piwik\Plugin\API
     public function save(int $idSite, int $idNote, ?string $date = null, ?string $note = null, ?bool $starred = null) : array
     {
         $this->checkSiteExists($idSite);
-        $this->checkDateIsValid($date, $canBeNull = true);
+        $this->checkDateIsValid($date, $canBeNull = \true);
         // get the annotations for the site
         $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // check permissions
@@ -168,7 +168,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasViewAccess($idSite);
         $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // if date/period are supplied, determine start/end date for search
-        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date ?? false, $period, $lastN ?? false);
+        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date ?? \false, $period, $lastN ?? \false);
         return $annotations->search($startDate, $endDate);
     }
     /**
@@ -196,11 +196,11 @@ class API extends \Piwik\Plugin\API
      *                 ...
      *               )
      */
-    public function getAnnotationCountForDates(string $idSite, string $date, string $period, ?int $lastN = null, bool $getAnnotationText = false) : array
+    public function getAnnotationCountForDates(string $idSite, string $date, string $period, ?int $lastN = null, bool $getAnnotationText = \false) : array
     {
         Piwik::checkUserHasViewAccess($idSite);
         // get start & end date for request. lastN is ignored if $period == 'range'
-        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date, $period, $lastN ?? false);
+        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date, $period, $lastN ?? \false);
         if ($period == 'range') {
             $period = 'day';
         }
@@ -259,7 +259,7 @@ class API extends \Piwik\Plugin\API
      */
     private static function checkUserCanAddNotesFor($idSite) : void
     {
-        if (!\Piwik\Plugins\Annotations\AnnotationList::canUserAddNotesFor($idSite)) {
+        if (!Piwik::isUserHasViewAccess($idSite) || Piwik::isUserIsAnonymous()) {
             throw new Exception("The current user is not allowed to add notes for site #{$idSite}.");
         }
     }
@@ -278,7 +278,7 @@ class API extends \Piwik\Plugin\API
      * Utility function, makes sure date string is valid date, and throws if
      * otherwise.
      */
-    private function checkDateIsValid($date, $canBeNull = false) : void
+    private function checkDateIsValid($date, $canBeNull = \false) : void
     {
         if ($date === null && $canBeNull) {
             return;

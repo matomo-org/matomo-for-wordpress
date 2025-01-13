@@ -68,7 +68,7 @@ abstract class AbstractSurrogateFragmentRenderer extends RoutableFragmentRendere
         if ($alt instanceof ControllerReference) {
             $alt = $this->generateSignedFragmentUri($alt, $request);
         }
-        $tag = $this->surrogate->renderIncludeTag($uri, $alt, $options['ignore_errors'] ?? false, $options['comment'] ?? '');
+        $tag = $this->surrogate->renderIncludeTag($uri, $alt, $options['ignore_errors'] ?? \false, $options['comment'] ?? '');
         return new Response($tag);
     }
     private function generateSignedFragmentUri(ControllerReference $uri, Request $request) : string
@@ -82,9 +82,9 @@ abstract class AbstractSurrogateFragmentRenderer extends RoutableFragmentRendere
                 continue;
             }
             if (!\is_array($value) || $this->containsNonScalars($value)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

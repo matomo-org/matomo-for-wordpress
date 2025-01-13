@@ -141,7 +141,7 @@ class Notification
      *
      * @var bool
      */
-    public $raw = false;
+    public $raw = \false;
     /**
      * Constructor.
      *

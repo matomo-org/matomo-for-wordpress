@@ -37,6 +37,6 @@ class API extends \Piwik\Plugin\API
             throw new \Exception('Can\'t dismiss unknown widget ' . $widgetName);
         }
         $this->promoWidgetDismissal->dismissPromoWidget($widgetName);
-        return true;
+        return \true;
     }
 }

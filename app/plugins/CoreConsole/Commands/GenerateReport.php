@@ -143,7 +143,7 @@ class GenerateReport extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginB
         }
         $categories = array_values(array_unique($categories));
         if (empty($category)) {
-            $category = $this->askAndValidate('Enter the report category, for instance "Visitor" (you can reuse any existing category or define a new one): ', $validate, false, $categories);
+            $category = $this->askAndValidate('Enter the report category, for instance "Visitor" (you can reuse any existing category or define a new one): ', $validate, \false, $categories);
         } else {
             $validate($category);
         }

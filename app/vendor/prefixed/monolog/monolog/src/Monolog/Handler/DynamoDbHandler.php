@@ -46,7 +46,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      * @param int            $level
      * @param bool           $bubble
      */
-    public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = \true)
     {
         if (defined('Aws\\Sdk::VERSION') && version_compare(Sdk::VERSION, '3.0', '>=')) {
             $this->version = 3;
@@ -79,7 +79,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     protected function filterEmptyFields(array $record)
     {
         return array_filter($record, function ($value) {
-            return !empty($value) || false === $value || 0 === $value;
+            return !empty($value) || \false === $value || 0 === $value;
         });
     }
     /**

@@ -23,10 +23,10 @@ use Piwik\UrlHelper;
  */
 class ActionSiteSearch extends Action
 {
-    private $searchCategory = false;
-    private $searchCount = false;
+    private $searchCategory = \false;
+    private $searchCount = \false;
     protected $originalUrl;
-    public function __construct(Request $request, $detect = true)
+    public function __construct(Request $request, $detect = \true)
     {
         parent::__construct(Action::TYPE_SITE_SEARCH, $request);
         $this->originalUrl = $request->getParam('url');
@@ -36,7 +36,7 @@ class ActionSiteSearch extends Action
     }
     public static function shouldHandle(Request $request)
     {
-        $search = new self($request, false);
+        $search = new self($request, \false);
         return $search->detectSiteSearch($request->getParam('url'));
     }
     protected function getActionsToLookup()
@@ -61,18 +61,18 @@ class ActionSiteSearch extends Action
     {
         $siteSearch = $this->detectSiteSearch($this->originalUrl);
         if (empty($siteSearch)) {
-            return false;
+            return \false;
         }
         list($actionName, $url, $category, $count) = $siteSearch;
         if (!empty($category)) {
             $this->searchCategory = trim($category);
         }
-        if ($count !== false) {
+        if ($count !== \false) {
             $this->searchCount = $count;
         }
         $this->setActionName($actionName);
         $this->setActionUrl($url);
-        return true;
+        return \true;
     }
     public function getSearchCategory()
     {
@@ -85,22 +85,22 @@ class ActionSiteSearch extends Action
     }
     public function getSearchCount()
     {
-        if ($this->searchCount !== false) {
+        if ($this->searchCount !== \false) {
             $this->searchCount = (int) $this->searchCount;
         }
         return $this->searchCount;
     }
     public static function detectSiteSearchFromUrl($website, $parsedUrl, $pageEncoding = null)
     {
-        $doRemoveSearchParametersFromUrl = true;
+        $doRemoveSearchParametersFromUrl = \true;
         $separator = '&';
-        $count = $actionName = $categoryName = false;
+        $count = $actionName = $categoryName = \false;
         $keywordParameters = isset($website['sitesearch_keyword_parameters']) ? $website['sitesearch_keyword_parameters'] : array();
         $queryString = !empty($parsedUrl['query']) ? $parsedUrl['query'] : '';
         $fragment = !empty($parsedUrl['fragment']) ? $parsedUrl['fragment'] : '';
         $parsedFragment = parse_url($fragment);
         // check if fragment contains a separate query (beginning with ?) otherwise assume complete fragment as query
-        if ($fragment && strpos($fragment, '?') !== false && !empty($parsedFragment['query'])) {
+        if ($fragment && strpos($fragment, '?') !== \false && !empty($parsedFragment['query'])) {
             $fragmentBeforeQuery = !empty($parsedFragment['path']) ? $parsedFragment['path'] : '';
             $fragmentQuery = $parsedFragment['query'];
         } else {
@@ -124,7 +124,7 @@ class ActionSiteSearch extends Action
             }
         }
         if (empty($actionName)) {
-            return false;
+            return \false;
         }
         $categoryParameters = isset($website['sitesearch_category_parameters']) ? $website['sitesearch_category_parameters'] : array();
         foreach ($categoryParameters as $categoryParameterRaw) {
@@ -163,7 +163,7 @@ class ActionSiteSearch extends Action
         $actionName = PageUrl::urldecodeValidUtf8($actionName);
         $actionName = trim($actionName);
         if (empty($actionName)) {
-            return false;
+            return \false;
         }
         if (is_array($categoryName)) {
             $categoryName = reset($categoryName);
@@ -181,9 +181,9 @@ class ActionSiteSearch extends Action
         $website = Cache::getCacheWebsiteAttributes($this->request->getIdSite());
         if (empty($website['sitesearch'])) {
             Common::printDebug("Internal 'Site Search' tracking is not enabled for this site. ");
-            return false;
+            return \false;
         }
-        $actionName = $url = $categoryName = $count = false;
+        $actionName = $url = $categoryName = $count = \false;
         $originalUrl = PageUrl::cleanupUrl($originalUrl);
         // Detect Site search from Tracking API parameters rather than URL
         $searchKwd = $this->request->getParam('search');
@@ -213,13 +213,13 @@ class ActionSiteSearch extends Action
         $categoryName = trim($categoryName);
         if (empty($actionName)) {
             Common::printDebug("(this is not a Site Search request)");
-            return false;
+            return \false;
         }
         Common::printDebug("Detected Site Search keyword '{$actionName}'. ");
         if (!empty($categoryName)) {
             Common::printDebug("- Detected Site Search Category '{$categoryName}'. ");
         }
-        if ($count !== false) {
+        if ($count !== \false) {
             Common::printDebug("- Search Results Count was '{$count}'. ");
         }
         if ($url != $originalUrl) {

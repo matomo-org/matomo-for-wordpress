@@ -13,7 +13,7 @@ use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 class CustomRequestProcessingVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
-    const ID = 'CustomRequestProcessing';
+    public const ID = 'CustomRequestProcessing';
     public function getId()
     {
         return self::ID;
@@ -24,7 +24,7 @@ class CustomRequestProcessingVariable extends \Piwik\Plugins\TagManager\Template
     }
     public function isCustomTemplate()
     {
-        return true;
+        return \true;
     }
     public function getParameters()
     {
@@ -53,6 +53,6 @@ class CustomRequestProcessingVariable extends \Piwik\Plugins\TagManager\Template
     }
     public function hasAdvancedSettings()
     {
-        return false;
+        return \false;
     }
 }

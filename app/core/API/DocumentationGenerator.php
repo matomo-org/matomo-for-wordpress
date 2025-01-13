@@ -45,9 +45,9 @@ class DocumentationGenerator
      * @param bool $outputExampleUrls
      * @return string
      */
-    public function getApiDocumentationAsString($outputExampleUrls = true)
+    public function getApiDocumentationAsString($outputExampleUrls = \true)
     {
-        list($toc, $str) = $this->generateDocumentation($outputExampleUrls, $prefixUrls = '', $displayTitlesAsEnrichedHeadline = true);
+        list($toc, $str) = $this->generateDocumentation($outputExampleUrls, $prefixUrls = '', $displayTitlesAsEnrichedHeadline = \true);
         return "<div vue-entry=\"CoreHome.ContentBlock\" content-title='Quick access to APIs' id='topApiRef' name='topApiRef'>\n\t\t\t\t{$toc}</div>\n\t\t\t\t{$str}";
     }
     /**
@@ -57,9 +57,9 @@ class DocumentationGenerator
      * @param string $prefixUrls
      * @return string
      */
-    public function getApiDocumentationAsStringForDeveloperReference($outputExampleUrls = true, $prefixUrls = '')
+    public function getApiDocumentationAsStringForDeveloperReference($outputExampleUrls = \true, $prefixUrls = '')
     {
-        list($toc, $str) = $this->generateDocumentation($outputExampleUrls, $prefixUrls, $displayTitlesAsEnrichedHeadline = false);
+        list($toc, $str) = $this->generateDocumentation($outputExampleUrls, $prefixUrls, $displayTitlesAsEnrichedHeadline = \false);
         return "<h2 id='topApiRef' name='topApiRef'>Quick access to APIs</h2>\n\t\t\t\t{$toc}\n\t\t\t\t{$str}";
     }
     protected function prepareModuleToDisplay($moduleName)
@@ -117,7 +117,7 @@ class DocumentationGenerator
         $str = '';
         $str .= "<span class=\"example\">";
         $exampleUrl = $this->getExampleUrl($class, $methodName, $parametersToSet);
-        if ($exampleUrl !== false) {
+        if ($exampleUrl !== \false) {
             $lastNUrls = '';
             if (preg_match('/(&period)|(&date)/', $exampleUrl)) {
                 $exampleUrlRss = $prefixUrls . $this->getExampleUrl($class, $methodName, array('date' => 'last10', 'period' => 'day') + $parametersToSet);
@@ -139,7 +139,7 @@ class DocumentationGenerator
      */
     public function checkIfClassCommentContainsHideAnnotation(ReflectionClass $rClass)
     {
-        return false !== strstr($rClass->getDocComment(), '@hide');
+        return \false !== strstr($rClass->getDocComment(), '@hide');
     }
     /**
      * Check if Class contains @internal
@@ -149,7 +149,7 @@ class DocumentationGenerator
      */
     private function checkIfCommentContainsInternalAnnotation($rClass)
     {
-        return false !== strstr($rClass->getDocComment(), '@internal');
+        return \false !== strstr($rClass->getDocComment(), '@internal');
     }
     /**
      * Check if documentation contains @hide annotation and deletes it
@@ -159,7 +159,7 @@ class DocumentationGenerator
      */
     public function checkDocumentation($moduleToCheck)
     {
-        if (strpos($moduleToCheck, '@hide') == true) {
+        if (strpos($moduleToCheck, '@hide') == \true) {
             $moduleToCheck = str_replace(strtok(strstr($moduleToCheck, '@hide'), "\n"), "", $moduleToCheck);
         }
         return $moduleToCheck;
@@ -200,55 +200,55 @@ class DocumentationGenerator
             'deleteLicenseKey',
         );
         if (in_array($methodName, $doNotPrintExampleForTheseMethods)) {
-            return false;
+            return \false;
         }
         // we try to give an URL example to call the API
         $aParameters = \Piwik\API\Proxy::getInstance()->getParametersList($class, $methodName);
-        $aParameters['format'] = false;
-        $aParameters['hideIdSubDatable'] = false;
-        $aParameters['serialize'] = false;
-        $aParameters['language'] = false;
-        $aParameters['translateColumnNames'] = false;
-        $aParameters['label'] = false;
-        $aParameters['labelSeries'] = false;
-        $aParameters['flat'] = false;
-        $aParameters['include_aggregate_rows'] = false;
-        $aParameters['filter_offset'] = false;
-        $aParameters['filter_limit'] = false;
-        $aParameters['filter_sort_column'] = false;
-        $aParameters['filter_sort_order'] = false;
-        $aParameters['filter_excludelowpop'] = false;
-        $aParameters['filter_excludelowpop_value'] = false;
-        $aParameters['filter_column_recursive'] = false;
-        $aParameters['filter_pattern'] = false;
-        $aParameters['filter_pattern_recursive'] = false;
-        $aParameters['filter_truncate'] = false;
-        $aParameters['hideColumns'] = false;
-        $aParameters['hideColumnsRecursively'] = false;
-        $aParameters['showColumns'] = false;
-        $aParameters['pivotBy'] = false;
-        $aParameters['pivotByColumn'] = false;
-        $aParameters['pivotByColumnLimit'] = false;
-        $aParameters['disable_queued_filters'] = false;
-        $aParameters['disable_generic_filters'] = false;
-        $aParameters['expanded'] = false;
-        $aParameters['idDimenson'] = false;
-        $aParameters['format_metrics'] = false;
-        $aParameters['compare'] = false;
-        $aParameters['compareDates'] = false;
-        $aParameters['comparePeriods'] = false;
-        $aParameters['compareSegments'] = false;
-        $aParameters['comparisonIdSubtables'] = false;
-        $aParameters['invert_compare_change_compute'] = false;
-        $aParameters['filter_update_columns_when_show_all_goals'] = false;
-        $aParameters['filter_show_goal_columns_process_goals'] = false;
+        $aParameters['format'] = \false;
+        $aParameters['hideIdSubDatable'] = \false;
+        $aParameters['serialize'] = \false;
+        $aParameters['language'] = \false;
+        $aParameters['translateColumnNames'] = \false;
+        $aParameters['label'] = \false;
+        $aParameters['labelSeries'] = \false;
+        $aParameters['flat'] = \false;
+        $aParameters['include_aggregate_rows'] = \false;
+        $aParameters['filter_offset'] = \false;
+        $aParameters['filter_limit'] = \false;
+        $aParameters['filter_sort_column'] = \false;
+        $aParameters['filter_sort_order'] = \false;
+        $aParameters['filter_excludelowpop'] = \false;
+        $aParameters['filter_excludelowpop_value'] = \false;
+        $aParameters['filter_column_recursive'] = \false;
+        $aParameters['filter_pattern'] = \false;
+        $aParameters['filter_pattern_recursive'] = \false;
+        $aParameters['filter_truncate'] = \false;
+        $aParameters['hideColumns'] = \false;
+        $aParameters['hideColumnsRecursively'] = \false;
+        $aParameters['showColumns'] = \false;
+        $aParameters['pivotBy'] = \false;
+        $aParameters['pivotByColumn'] = \false;
+        $aParameters['pivotByColumnLimit'] = \false;
+        $aParameters['disable_queued_filters'] = \false;
+        $aParameters['disable_generic_filters'] = \false;
+        $aParameters['expanded'] = \false;
+        $aParameters['idDimenson'] = \false;
+        $aParameters['format_metrics'] = \false;
+        $aParameters['compare'] = \false;
+        $aParameters['compareDates'] = \false;
+        $aParameters['comparePeriods'] = \false;
+        $aParameters['compareSegments'] = \false;
+        $aParameters['comparisonIdSubtables'] = \false;
+        $aParameters['invert_compare_change_compute'] = \false;
+        $aParameters['filter_update_columns_when_show_all_goals'] = \false;
+        $aParameters['filter_show_goal_columns_process_goals'] = \false;
         $extraParameters = StaticContainer::get('entities.idNames');
         $extraParameters = array_merge($extraParameters, StaticContainer::get('DocumentationGenerator.customParameters'));
         foreach ($extraParameters as $paramName) {
             if (isset($aParameters[$paramName])) {
                 continue;
             }
-            $aParameters[$paramName] = false;
+            $aParameters[$paramName] = \false;
         }
         $moduleName = \Piwik\API\Proxy::getInstance()->getModuleNameFromClassName($class);
         $aParameters = array_merge(array('module' => 'API', 'method' => $moduleName . '.' . $methodName), $aParameters);
@@ -258,7 +258,7 @@ class DocumentationGenerator
             } elseif ($defaultValue instanceof \Piwik\API\NoDefaultValue) {
                 // if there isn't a default value for a given parameter,
                 // we need a 'know default value' or we can't generate the link
-                return false;
+                return \false;
             }
         }
         return '?' . Url::getQueryStringFromParameters($aParameters);
@@ -293,9 +293,9 @@ class DocumentationGenerator
                 } elseif (!empty($parameter['type']) && $parameter['allowsNull']) {
                     $str .= "";
                     // don't display default value, as the ? before the type hint indicates it's optional
-                } elseif ($parameter['type'] === 'bool' && $defaultValue === true) {
+                } elseif ($parameter['type'] === 'bool' && $defaultValue === \true) {
                     $str .= " = true";
-                } elseif ($parameter['type'] === 'bool' && $defaultValue === false) {
+                } elseif ($parameter['type'] === 'bool' && $defaultValue === \false) {
                     $str .= " = false";
                 } else {
                     $str .= " = '{$defaultValue}'";

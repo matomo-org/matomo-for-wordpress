@@ -14,7 +14,7 @@ class TriggerUpdated extends \Piwik\Plugins\TagManager\Activity\TriggerBaseActiv
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('updateContainerTrigger')) {
-            return false;
+            return \false;
         }
         list($return, $finalAPIParameters) = $eventData;
         $idEntity = $finalAPIParameters['parameters']['idTrigger'];

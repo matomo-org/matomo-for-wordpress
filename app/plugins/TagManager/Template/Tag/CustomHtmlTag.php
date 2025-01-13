@@ -14,7 +14,7 @@ use Piwik\Url;
 use Piwik\Validators\NotEmpty;
 class CustomHtmlTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
 {
-    const ID = 'CustomHtml';
+    public const ID = 'CustomHtml';
     public function getId()
     {
         return self::ID;
@@ -25,7 +25,7 @@ class CustomHtmlTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
     }
     public function isCustomTemplate()
     {
-        return true;
+        return \true;
     }
     public function getParameters()
     {
@@ -34,8 +34,9 @@ class CustomHtmlTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
             $field->customFieldComponent = self::FIELD_TEXTAREA_VARIABLE_COMPONENT;
             $field->uiControl = FieldConfig::UI_CONTROL_TEXTAREA;
             $field->description = Piwik::translate('TagManager_CustomHtmlTagDescriptionText');
-            $field->inlineHelp = Piwik::translate('TagManager_CustomHtmlTagHelpText', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/tag-manager/faq_26815/', null, null, 'App.TagManager.getParameters') . '">', '</a>']);
+            $field->inlineHelp = Piwik::translate('TagManager_CustomHtmlTagHelpText', ['<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/tag-manager/faq_26815/', null, null, 'App.TagManager.getParameters') . '">', '</a>']);
             $field->validators[] = new NotEmpty();
+            $field->uiControlAttributes = ['spellcheck' => 'false'];
         }), $this->makeSetting('htmlPosition', 'bodyEnd', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_CustomHtmlHtmlPositionTitle');
             $field->availableValues = array('headStart' => 'Head Start', 'headEnd' => 'Head End', 'bodyStart' => 'Body Start', 'bodyEnd' => 'Body End');

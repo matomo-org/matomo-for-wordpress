@@ -23,9 +23,9 @@ class Update extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
     {
         $input = $this->getInput();
         $output = $this->getOutput();
-        $output->setDecorated(true);
-        $start = microtime(true);
-        $languages = API::getInstance()->getAvailableLanguageNames(true);
+        $output->setDecorated(\true);
+        $start = microtime(\true);
+        $languages = API::getInstance()->getAvailableLanguageNames(\true);
         $languageCodes = array();
         foreach ($languages as $languageInfo) {
             $languageCodes[] = $languageInfo['code'];
@@ -44,7 +44,7 @@ class Update extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
             $output->writeln("");
             // fetch base or specific plugin
             $this->fetchTranslations($plugin);
-            $files = _glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . DIRECTORY_SEPARATOR . '*.json');
+            $files = _glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . \DIRECTORY_SEPARATOR . '*.json');
             if (count($files) == 0) {
                 $output->writeln("No translation updates available! Skipped.");
                 continue;
@@ -60,15 +60,15 @@ class Update extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
                         continue;
                         # never create a new language for plugin only
                     }
-                    $createNewFile = false;
+                    $createNewFile = \false;
                     if ($input->isInteractive()) {
-                        $createNewFile = $this->askForConfirmation("\nLanguage {$code} does not exist. Should it be added? ", false);
+                        $createNewFile = $this->askForConfirmation("\nLanguage {$code} does not exist. Should it be added? ", \false);
                     }
                     if (!$createNewFile) {
                         continue;
                         # do not create a new file for the language
                     }
-                    @touch(PIWIK_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $code . '.json');
+                    @touch(PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR . 'lang' . \DIRECTORY_SEPARATOR . $code . '.json');
                     API::unsetAllInstances();
                     // unset language manager instance, so valid names are refetched
                     $this->runCommand('translations:generate-intl-data', ['--language' => $code], !$output->isVeryVerbose());
@@ -82,7 +82,7 @@ class Update extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
             $this->finishProgressBar();
             $output->writeln('');
         }
-        $output->writeln("Finished in " . round(microtime(true) - $start, 3) . "s");
+        $output->writeln("Finished in " . round(microtime(\true) - $start, 3) . "s");
         return self::SUCCESS;
     }
     /**

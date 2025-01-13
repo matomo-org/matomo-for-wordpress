@@ -108,6 +108,7 @@ class Pages
         $config->setMiddlewareParameters(array('module' => 'Goals', 'action' => 'hasConversions', 'idGoal' => $idGoal));
         $widgets[] = $config;
         $container = $this->createWidgetizableWidgetContainer('EcommerceOverview', $subcategory, $widgets);
+        $container->setName(Piwik::translate('Goals_EcommerceOverview'));
         return array($container);
     }
     /**
@@ -258,7 +259,7 @@ class Pages
             $order = array('Referrers_Referrers', 'General_Actions', 'General_Visit', 'General_Visitors', 'VisitsSummary_VisitsSummary');
         }
         $value = array_search($category, $order);
-        if (false === $value) {
+        if (\false === $value) {
             $value = count($order) + 1;
         }
         return $value;

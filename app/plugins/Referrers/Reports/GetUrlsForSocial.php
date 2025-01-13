@@ -19,13 +19,13 @@ class GetUrlsForSocial extends \Piwik\Plugins\Referrers\Reports\Base
         $this->dimension = new WebsitePage();
         $this->name = Piwik::translate('Referrers_Socials');
         $this->documentation = Piwik::translate('Referrers_WebsitesReportDocumentation', '<br />');
-        $this->isSubtableReport = true;
+        $this->isSubtableReport = \true;
         $this->order = 12;
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_goals = true;
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_goals = \true;
+        $view->config->show_exclude_low_population = \false;
         $view->requestConfig->filter_limit = 10;
     }
 }

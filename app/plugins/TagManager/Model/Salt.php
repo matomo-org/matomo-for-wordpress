@@ -12,8 +12,8 @@ use Piwik\Common;
 use Piwik\Option;
 class Salt
 {
-    const OPTION_TAGMANAGER_SALT = 'tagmanager_salt';
-    const SALT_LENGTH = 40;
+    public const OPTION_TAGMANAGER_SALT = 'tagmanager_salt';
+    public const SALT_LENGTH = 40;
     public function __construct($salt = '')
     {
         if ($this->isValidSalt($salt)) {

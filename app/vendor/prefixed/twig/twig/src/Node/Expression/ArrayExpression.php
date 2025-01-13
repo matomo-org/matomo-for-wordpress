@@ -38,10 +38,10 @@ class ArrayExpression extends AbstractExpression
             // we compare the string representation of the keys
             // to avoid comparing the line numbers which are not relevant here.
             if ((string) $key === (string) $pair['key']) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function addElement(AbstractExpression $value, ?AbstractExpression $key = null) : void
     {
@@ -58,24 +58,24 @@ class ArrayExpression extends AbstractExpression
             $compiler->raw('CoreExtension::merge(');
         }
         $compiler->raw('[');
-        $first = true;
-        $reopenAfterMergeSpread = false;
+        $first = \true;
+        $reopenAfterMergeSpread = \false;
         $nextIndex = 0;
         foreach ($keyValuePairs as $pair) {
             if ($reopenAfterMergeSpread) {
                 $compiler->raw(', [');
-                $reopenAfterMergeSpread = false;
+                $reopenAfterMergeSpread = \false;
             }
             if ($needsArrayMergeSpread && $pair['value']->hasAttribute('spread')) {
                 $compiler->raw('], ')->subcompile($pair['value']);
-                $first = true;
-                $reopenAfterMergeSpread = true;
+                $first = \true;
+                $reopenAfterMergeSpread = \true;
                 continue;
             }
             if (!$first) {
                 $compiler->raw(', ');
             }
-            $first = false;
+            $first = \false;
             if ($pair['value']->hasAttribute('spread') && !$needsArrayMergeSpread) {
                 $compiler->raw('...')->subcompile($pair['value']);
                 ++$nextIndex;
@@ -103,9 +103,9 @@ class ArrayExpression extends AbstractExpression
     {
         foreach ($pairs as $pair) {
             if ($pair['value']->hasAttribute('spread')) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

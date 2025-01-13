@@ -12,7 +12,7 @@ use Piwik\Common;
 use Piwik\SettingsPiwik;
 class AndroidContext extends \Piwik\Plugins\TagManager\Context\BaseContext
 {
-    const ID = 'android';
+    public const ID = 'android';
     public function getId()
     {
         return self::ID;

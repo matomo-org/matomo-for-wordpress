@@ -33,9 +33,9 @@ class Rules
     public const OPTION_BROWSER_TRIGGER_ARCHIVING = 'enableBrowserTriggerArchiving';
     public const FLAG_TABLE_PURGED = 'lastPurge_';
     /** Flag that will forcefully disable the archiving process (used in tests only) */
-    public static $archivingDisabledByTests = false;
+    public static $archivingDisabledByTests = \false;
     /** To disable the Pure Outdated Archive set this to true will skip this task */
-    public static $disablePureOutdatedArchive = false;
+    public static $disablePureOutdatedArchive = \false;
     /**
      * Returns the name of the archive field used to tell the status of an archive, (ie,
      * whether the archive was created successfully or not).
@@ -56,13 +56,13 @@ class Rules
     public static function shouldProcessReportsAllPlugins(array $idSites, Segment $segment, $periodLabel)
     {
         if (self::isRequestingToAndAbleToForceArchiveSinglePlugin()) {
-            return false;
+            return \false;
         }
         if ($segment->isEmpty() && ($periodLabel != 'range' || SettingsServer::isArchivePhpTriggered())) {
-            return true;
+            return \true;
         }
         if ($periodLabel === 'range' && !SettingsServer::isArchivePhpTriggered()) {
-            return false;
+            return \false;
         }
         return self::isSegmentPreProcessed($idSites, $segment);
     }
@@ -118,7 +118,7 @@ class Rules
         if ($isArchivingDisabled) {
             if ($period->getNumberOfSubperiods() == 0 && $dateStart->getTimestamp() <= $now) {
                 // Today: accept any recent enough archive
-                $minimumArchiveTime = false;
+                $minimumArchiveTime = \false;
             } else {
                 // This week, this month, this year:
                 // accept any archive that was processed today after 00:00:01 this morning
@@ -134,14 +134,14 @@ class Rules
         if ($timeToLiveSeconds <= 0) {
             throw new Exception(Piwik::translate('General_ExceptionInvalidArchiveTimeToLive'));
         }
-        Option::set(self::OPTION_TODAY_ARCHIVE_TTL, $timeToLiveSeconds, $autoLoad = true);
+        Option::set(self::OPTION_TODAY_ARCHIVE_TTL, $timeToLiveSeconds, $autoLoad = \true);
     }
     public static function getTodayArchiveTimeToLive()
     {
         $uiSettingIsEnabled = Controller::isGeneralSettingsAdminEnabled();
         if ($uiSettingIsEnabled) {
             $timeToLive = Option::get(self::OPTION_TODAY_ARCHIVE_TTL);
-            if ($timeToLive !== false) {
+            if ($timeToLive !== \false) {
                 return $timeToLive;
             }
         }
@@ -174,11 +174,11 @@ class Rules
         $isArchivingEnabled = self::isRequestAuthorizedToArchive() && !self::$archivingDisabledByTests;
         $generalConfig = Config::getInstance()->General;
         if ($periodLabel === 'range') {
-            if (isset($generalConfig['archiving_range_force_on_browser_request']) && $generalConfig['archiving_range_force_on_browser_request'] == false) {
+            if (isset($generalConfig['archiving_range_force_on_browser_request']) && $generalConfig['archiving_range_force_on_browser_request'] == \false) {
                 Log::debug("Not forcing archiving for range period.");
                 return $isArchivingEnabled;
             }
-            return true;
+            return \true;
         }
         if ($segment->isEmpty()) {
             // viewing "All Visits"
@@ -186,15 +186,15 @@ class Rules
         }
         if (!$isArchivingEnabled && (!self::isBrowserArchivingAvailableForSegments() || self::isSegmentPreProcessed($idSites, $segment)) && !SettingsServer::isArchivePhpTriggered()) {
             Log::debug("Archiving is disabled because of config setting browser_archiving_disabled_enforce=1 or because the segment is selected to be pre-processed.");
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     public static function isArchivingDisabledFor(array $idSites, Segment $segment, $periodLabel)
     {
         return !self::isArchivingEnabledFor($idSites, $segment, $periodLabel);
     }
-    public static function isRequestAuthorizedToArchive(\Piwik\ArchiveProcessor\Parameters $params = null)
+    public static function isRequestAuthorizedToArchive(?\Piwik\ArchiveProcessor\Parameters $params = null)
     {
         $isRequestAuthorizedToArchive = \Piwik\ArchiveProcessor\Rules::isBrowserTriggerEnabled() || SettingsServer::isArchivePhpTriggered();
         if (!empty($params)) {
@@ -213,7 +213,7 @@ class Rules
         $uiSettingIsEnabled = Controller::isGeneralSettingsAdminEnabled();
         if ($uiSettingIsEnabled) {
             $browserArchivingEnabled = Option::get(self::OPTION_BROWSER_TRIGGER_ARCHIVING);
-            if ($browserArchivingEnabled !== false) {
+            if ($browserArchivingEnabled !== \false) {
                 return (bool) $browserArchivingEnabled;
             }
         }
@@ -224,7 +224,7 @@ class Rules
         if (!is_bool($enabled)) {
             throw new Exception('Browser trigger archiving must be set to true or false.');
         }
-        Option::set(self::OPTION_BROWSER_TRIGGER_ARCHIVING, (int) $enabled, $autoLoad = true);
+        Option::set(self::OPTION_BROWSER_TRIGGER_ARCHIVING, (int) $enabled, $autoLoad = \true);
         Cache::clearCacheGeneral();
     }
     /**
@@ -247,7 +247,7 @@ class Rules
     {
         $segmentsToProcess = self::getSegmentsToProcess($idSites);
         if (empty($segmentsToProcess)) {
-            return false;
+            return \false;
         }
         // If the requested segment is one of the segments to pre-process
         // we ensure that any call to the API will trigger archiving of all reports for this segment
@@ -261,7 +261,7 @@ class Rules
      *
      * @return string[]
      */
-    public static function getSelectableDoneFlagValues($includeInvalidated = true, \Piwik\ArchiveProcessor\Parameters $params = null, $checkAuthorizedToArchive = true)
+    public static function getSelectableDoneFlagValues($includeInvalidated = \true, ?\Piwik\ArchiveProcessor\Parameters $params = null, $checkAuthorizedToArchive = \true)
     {
         $possibleValues = array(ArchiveWriter::DONE_OK, ArchiveWriter::DONE_OK_TEMPORARY);
         if ($includeInvalidated) {
@@ -276,7 +276,7 @@ class Rules
     public static function isRequestingToAndAbleToForceArchiveSinglePlugin()
     {
         if (!SettingsServer::isArchivePhpTriggered()) {
-            return false;
+            return \false;
         }
         return !empty($_GET['pluginOnly']) || !empty($_POST['pluginOnly']);
     }
@@ -292,7 +292,7 @@ class Rules
     {
         $pluginArchivingSetting = GeneralConfig::getConfigValue('disable_archiving_segment_for_plugins', $siteId);
         if (empty($pluginArchivingSetting)) {
-            return false;
+            return \false;
         }
         if (is_string($pluginArchivingSetting)) {
             $pluginArchivingSetting = explode(",", $pluginArchivingSetting);
@@ -306,7 +306,7 @@ class Rules
     public static function shouldProcessOnlyReportsRequestedInArchiveQuery(string $periodLabel) : bool
     {
         if (SettingsServer::isArchivePhpTriggered()) {
-            return false;
+            return \false;
         }
         return $periodLabel === 'range';
     }

@@ -86,9 +86,9 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
             $rawLogData = $rawLog->getValue();
             if ($rawLogData['priority']->getValue() > 300) {
                 $logType = 'error';
-            } elseif (isset($rawLogData['scream']) && false === $rawLogData['scream']->getValue()) {
+            } elseif (isset($rawLogData['scream']) && \false === $rawLogData['scream']->getValue()) {
                 $logType = 'deprecation';
-            } elseif (isset($rawLogData['scream']) && true === $rawLogData['scream']->getValue()) {
+            } elseif (isset($rawLogData['scream']) && \true === $rawLogData['scream']->getValue()) {
                 $logType = 'silenced';
             } else {
                 $logType = 'regular';
@@ -164,7 +164,7 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
             $log['priority'] = 100;
             $log['priorityName'] = 'DEBUG';
             $log['channel'] = null;
-            $log['scream'] = false;
+            $log['scream'] = \false;
             unset($log['type'], $log['file'], $log['line'], $log['trace'], $log['trace'], $log['count']);
             $logs[] = $log;
         }
@@ -200,18 +200,18 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
                 if (isset($silencedLogs[$h = spl_object_hash($exception)])) {
                     continue;
                 }
-                $silencedLogs[$h] = true;
+                $silencedLogs[$h] = \true;
                 if (!isset($sanitizedLogs[$message])) {
-                    $sanitizedLogs[$message] = $log + ['errorCount' => 0, 'scream' => true];
+                    $sanitizedLogs[$message] = $log + ['errorCount' => 0, 'scream' => \true];
                 }
                 $sanitizedLogs[$message]['errorCount'] += $exception->count;
                 continue;
             }
-            $errorId = md5("{$exception->getSeverity()}/{$exception->getLine()}/{$exception->getFile()}\x00{$message}", true);
+            $errorId = md5("{$exception->getSeverity()}/{$exception->getLine()}/{$exception->getFile()}\x00{$message}", \true);
             if (isset($sanitizedLogs[$errorId])) {
                 ++$sanitizedLogs[$errorId]['errorCount'];
             } else {
-                $log += ['errorCount' => 1, 'scream' => false];
+                $log += ['errorCount' => 1, 'scream' => \false];
                 $sanitizedLogs[$errorId] = $log;
             }
         }
@@ -220,16 +220,16 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
     private function isSilencedOrDeprecationErrorLog(array $log) : bool
     {
         if (!isset($log['context']['exception'])) {
-            return false;
+            return \false;
         }
         $exception = $log['context']['exception'];
         if ($exception instanceof SilencedErrorContext) {
-            return true;
+            return \true;
         }
-        if ($exception instanceof \ErrorException && \in_array($exception->getSeverity(), [\E_DEPRECATED, \E_USER_DEPRECATED], true)) {
-            return true;
+        if ($exception instanceof \ErrorException && \in_array($exception->getSeverity(), [\E_DEPRECATED, \E_USER_DEPRECATED], \true)) {
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function computeErrorsCount(array $containerDeprecationLogs) : array
     {
@@ -250,7 +250,7 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
                     if (isset($silencedLogs[$h = spl_object_hash($exception)])) {
                         continue;
                     }
-                    $silencedLogs[$h] = true;
+                    $silencedLogs[$h] = \true;
                     $count['scream_count'] += $exception->count;
                 } else {
                     ++$count['deprecation_count'];

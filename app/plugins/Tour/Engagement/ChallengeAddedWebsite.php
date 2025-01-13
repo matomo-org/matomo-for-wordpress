@@ -46,6 +46,6 @@ class ChallengeAddedWebsite extends \Piwik\Plugins\Tour\Engagement\Challenge
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'SitesManager', 'action' => 'index', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'SitesManager', 'action' => 'index', 'widget' => \false));
     }
 }

@@ -78,12 +78,12 @@ class Stock
         $BoxDownBorderG = isset($Format["BoxDownBorderG"]) ? $Format["BoxDownBorderG"] : $BoxDownG - 20;
         $BoxDownBorderB = isset($Format["BoxDownBorderB"]) ? $Format["BoxDownBorderB"] : $BoxDownB - 20;
         $BoxDownBorderAlpha = isset($Format["BoxDownBorderAlpha"]) ? $Format["BoxDownBorderAlpha"] : 100;
-        $ShadowOnBoxesOnly = isset($Format["ShadowOnBoxesOnly"]) ? $Format["ShadowOnBoxesOnly"] : true;
+        $ShadowOnBoxesOnly = isset($Format["ShadowOnBoxesOnly"]) ? $Format["ShadowOnBoxesOnly"] : \true;
         $MedianR = isset($Format["MedianR"]) ? $Format["MedianR"] : 255;
         $MedianG = isset($Format["MedianG"]) ? $Format["MedianG"] : 0;
         $MedianB = isset($Format["MedianB"]) ? $Format["MedianB"] : 0;
         $MedianAlpha = isset($Format["MedianAlpha"]) ? $Format["MedianAlpha"] : 100;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         $ImageMapTitle = isset($Format["ImageMapTitle"]) ? $Format["ImageMapTitle"] : "Stock Chart";
         /* Data Processing */
         if ($BoxUpSurrounding != null) {
@@ -152,7 +152,7 @@ class Stock
                 }
                 if ($ShadowOnBoxesOnly) {
                     $RestoreShadow = $this->pChartObject->Shadow;
-                    $this->pChartObject->Shadow = false;
+                    $this->pChartObject->Shadow = \false;
                 }
                 if ($LineWidth == 1) {
                     $this->pChartObject->drawLine($X, $PosArray[2], $X, $PosArray[3], $LineSettings);
@@ -203,7 +203,7 @@ class Stock
                 }
                 if ($ShadowOnBoxesOnly) {
                     $RestoreShadow = $this->pChartObject->Shadow;
-                    $this->pChartObject->Shadow = false;
+                    $this->pChartObject->Shadow = \false;
                 }
                 if ($ExtremityWidth == 1) {
                     $this->pChartObject->drawLine($PosArray[2], $Y - $ExtremityLength, $PosArray[2], $Y + $ExtremityLength, $ExtremitySettings);

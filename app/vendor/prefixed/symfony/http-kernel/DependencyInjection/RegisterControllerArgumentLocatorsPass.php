@@ -48,7 +48,7 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
     }
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition($this->resolverServiceId) && false === $container->hasDefinition($this->notTaggedControllerResolverServiceId)) {
+        if (\false === $container->hasDefinition($this->resolverServiceId) && \false === $container->hasDefinition($this->notTaggedControllerResolverServiceId)) {
             return;
         }
         $parameterBag = $container->getParameterBag();
@@ -59,10 +59,10 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
                 $publicAliases[(string) $alias][] = $id;
             }
         }
-        foreach ($container->findTaggedServiceIds($this->controllerTag, true) as $id => $tags) {
+        foreach ($container->findTaggedServiceIds($this->controllerTag, \true) as $id => $tags) {
             $def = $container->getDefinition($id);
-            $def->setPublic(true);
-            $def->setLazy(false);
+            $def->setPublic(\true);
+            $def->setLazy(\false);
             $class = $def->getClass();
             $autowire = $def->isAutowired();
             $bindings = $def->getBindings();
@@ -91,7 +91,7 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
             // validate and collect explicit per-actions and per-arguments service references
             foreach ($tags as $attributes) {
                 if (!isset($attributes['action']) && !isset($attributes['argument']) && !isset($attributes['id'])) {
-                    $autowire = true;
+                    $autowire = \true;
                     continue;
                 }
                 foreach (['action', 'argument', 'id'] as $k) {
@@ -103,13 +103,13 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
                     throw new InvalidArgumentException(sprintf('Invalid "action" attribute on tag "%s" for service "%s": no public "%s()" method found on class "%s".', $this->controllerTag, $id, $attributes['action'], $class));
                 }
                 [$r, $parameters] = $methods[$action];
-                $found = false;
+                $found = \false;
                 foreach ($parameters as $p) {
                     if ($attributes['argument'] === $p->name) {
                         if (!isset($arguments[$r->name][$p->name])) {
                             $arguments[$r->name][$p->name] = $attributes['id'];
                         }
-                        $found = true;
+                        $found = \true;
                         break;
                     }
                 }
@@ -137,7 +137,7 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
                     } elseif (isset($bindings[$bindingName = $type . ' $' . ($name = Target::parseName($p))]) || isset($bindings[$bindingName = '$' . $name]) || isset($bindings[$bindingName = $type])) {
                         $binding = $bindings[$bindingName];
                         [$bindingValue, $bindingId, , $bindingType, $bindingFile] = $binding->getValues();
-                        $binding->setValues([$bindingValue, $bindingId, true, $bindingType, $bindingFile]);
+                        $binding->setValues([$bindingValue, $bindingId, \true, $bindingType, $bindingFile]);
                         if (!$bindingValue instanceof Reference) {
                             $args[$p->name] = new Reference('.value.' . $container->hash($bindingValue));
                             $container->register((string) $args[$p->name], 'mixed')->setFactory('current')->addArgument([$bindingValue]);
@@ -156,7 +156,7 @@ class RegisterControllerArgumentLocatorsPass implements CompilerPassInterface
                     if (Request::class === $type || SessionInterface::class === $type || Response::class === $type) {
                         continue;
                     }
-                    if ($type && !$p->isOptional() && !$p->allowsNull() && !class_exists($type) && !interface_exists($type, false)) {
+                    if ($type && !$p->isOptional() && !$p->allowsNull() && !class_exists($type) && !interface_exists($type, \false)) {
                         $message = sprintf('Cannot determine controller argument for "%s::%s()": the $%s argument is type-hinted with the non-existent class or interface: "%s".', $class, $r->name, $p->name, $type);
                         // see if the type-hint lives in the same namespace as the controller
                         if (0 === strncmp($type, $class, strrpos($class, '\\'))) {

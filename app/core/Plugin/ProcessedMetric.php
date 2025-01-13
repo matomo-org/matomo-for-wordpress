@@ -61,7 +61,7 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
      */
     public function beforeCompute($report, DataTable $table)
     {
-        return true;
+        return \true;
     }
     /**
      * @param Row $row

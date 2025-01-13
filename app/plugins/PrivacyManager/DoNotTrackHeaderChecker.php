@@ -54,34 +54,34 @@ class DoNotTrackHeaderChecker
     {
         if (!$this->isActive()) {
             Common::printDebug("DoNotTrack support is not enabled, skip check");
-            return false;
+            return \false;
         }
         if (!$this->isHeaderDntFound()) {
             Common::printDebug("DoNotTrack header not found");
-            return false;
+            return \false;
         }
-        $shouldIgnore = false;
+        $shouldIgnore = \false;
         Piwik::postEvent('PrivacyManager.shouldIgnoreDnt', array(&$shouldIgnore));
         if ($shouldIgnore) {
             Common::printDebug("DoNotTrack header ignored by Matomo because of a plugin");
-            return false;
+            return \false;
         }
         Common::printDebug("DoNotTrack header found!");
-        return true;
+        return \true;
     }
     /**
      * Deactivates DoNotTrack header checking. This function will not be called by the Tracker.
      */
     public function deactivate()
     {
-        $this->config->doNotTrackEnabled = false;
+        $this->config->doNotTrackEnabled = \false;
     }
     /**
      * Activates DoNotTrack header checking. This function will not be called by the Tracker.
      */
     public function activate()
     {
-        $this->config->doNotTrackEnabled = true;
+        $this->config->doNotTrackEnabled = \true;
     }
     /**
      * Returns true if server side DoNotTrack support is enabled, false if otherwise.

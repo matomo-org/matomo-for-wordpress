@@ -19,7 +19,7 @@ class ActivatePlugin extends ConsoleCommand
     {
         $this->setName('plugin:activate');
         $this->setDescription('Activate a plugin.');
-        $this->addOptionalArgument('plugin', 'The plugin name you want to activate. Multiple plugin names can be specified separated by a space.', null, true);
+        $this->addOptionalArgument('plugin', 'The plugin name you want to activate. Multiple plugin names can be specified separated by a space.', null, \true);
     }
     protected function doExecute() : int
     {

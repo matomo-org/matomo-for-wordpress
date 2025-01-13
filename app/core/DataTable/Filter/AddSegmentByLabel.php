@@ -35,7 +35,7 @@ class AddSegmentByLabel extends BaseFilter
      * @param string $delimiter               The delimiter by which the label should be splitted.
      * @param bool $allowEmptyValue           Forces adding a segment metadata for empty values
      */
-    public function __construct($table, $segmentOrSegments, $delimiter = '', $allowEmptyValue = false)
+    public function __construct($table, $segmentOrSegments, $delimiter = '', $allowEmptyValue = \false)
     {
         parent::__construct($table);
         if (!is_array($segmentOrSegments)) {

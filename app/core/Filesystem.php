@@ -23,12 +23,12 @@ class Filesystem
      * @var bool
      * @internal
      */
-    public static $skipCacheClearOnUpdate = false;
+    public static $skipCacheClearOnUpdate = \false;
     /**
      * Called on Core install, update, plugin enable/disable
      * Will clear all cache that could be affected by the change in configuration being made
      */
-    public static function deleteAllCacheOnUpdate($pluginName = false)
+    public static function deleteAllCacheOnUpdate($pluginName = \false)
     {
         if (self::$skipCacheClearOnUpdate) {
             return;
@@ -97,7 +97,7 @@ class Filesystem
     {
         if (!is_dir($path)) {
             // the mode in mkdir is modified by the current umask
-            @mkdir($path, self::getChmodForPath($path), $recursive = true);
+            @mkdir($path, self::getChmodForPath($path), $recursive = \true);
         }
         // try to overcome restrictive umask (mis-)configuration
         if (!is_writable($path)) {
@@ -135,22 +135,22 @@ class Filesystem
             @exec($command, $output, $returnCode);
             // check if filesystem is NFS
             if ($returnCode == 0 && is_array($output) && count($output) > 1 && preg_match('/\\bnfs\\d?\\b/', implode("\n", $output))) {
-                return true;
+                return \true;
             }
         } elseif (function_exists('shell_exec')) {
             // use shell_exec
             $output = @shell_exec($command);
             if ($output) {
-                $commandFailed = false !== strpos($output, "no file systems processed");
+                $commandFailed = \false !== strpos($output, "no file systems processed");
                 $output = trim($output);
                 $outputArray = explode("\n", $output);
                 if (!$commandFailed && count($outputArray) > 1 && preg_match('/\\bnfs\\d?\\b/', $output)) {
                     // check if filesystem is NFS
-                    return true;
+                    return \true;
                 }
             }
         }
-        return false;
+        return \false;
         // not NFS, or we can't run a program to find out
     }
     /**
@@ -166,10 +166,10 @@ class Filesystem
      */
     public static function globr($sDir, $sPattern, $nFlags = 0)
     {
-        if (($aFiles = \_glob("{$sDir}/{$sPattern}", $nFlags)) == false) {
+        if (($aFiles = \_glob("{$sDir}/{$sPattern}", $nFlags)) == \false) {
             $aFiles = array();
         }
-        if (($aDirs = \_glob("{$sDir}/*", GLOB_ONLYDIR)) != false) {
+        if (($aDirs = \_glob("{$sDir}/*", \GLOB_ONLYDIR)) != \false) {
             foreach ($aDirs as $sSubDir) {
                 if (is_link($sSubDir)) {
                     continue;
@@ -189,12 +189,12 @@ class Filesystem
      * @param \Closure|false $beforeUnlink An optional closure to execute on a file path before unlinking.
      * @api
      */
-    public static function unlinkRecursive($dir, $deleteRootToo, \Closure $beforeUnlink = null)
+    public static function unlinkRecursive($dir, $deleteRootToo, ?\Closure $beforeUnlink = null)
     {
         if (!($dh = @opendir($dir))) {
             return;
         }
-        while (false !== ($obj = readdir($dh))) {
+        while (\false !== ($obj = readdir($dh))) {
             if ($obj == '.' || $obj == '..') {
                 continue;
             }
@@ -203,7 +203,7 @@ class Filesystem
                 $beforeUnlink($path);
             }
             if (!@unlink($path)) {
-                self::unlinkRecursive($path, true);
+                self::unlinkRecursive($path, \true);
             }
         }
         closedir($dh);
@@ -264,7 +264,7 @@ class Filesystem
         $pattern = '*';
         if (defined('GLOB_BRACE')) {
             // The GLOB_BRACE flag is not available on some non GNU systems, like Solaris or Alpine Linux.
-            $flags = GLOB_BRACE;
+            $flags = \GLOB_BRACE;
             $pattern = '{,.}*[!.]*';
             // matches all files and folders, including those starting with ".", but excludes "." and ".."
         }
@@ -294,11 +294,11 @@ class Filesystem
      * @return true
      * @api
      */
-    public static function copy($source, $dest, $excludePhp = false)
+    public static function copy($source, $dest, $excludePhp = \false)
     {
         if ($excludePhp) {
             if (self::hasPHPExtension($source)) {
-                return true;
+                return \true;
             }
         }
         $success = self::tryToCopyFileAndVerifyItWasCopied($source, $dest);
@@ -310,16 +310,16 @@ class Filesystem
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-        return true;
+        return \true;
     }
     private static function hasPHPExtension($file)
     {
         static $phpExtensions = array('php', 'tpl', 'twig');
         $path_parts = pathinfo($file);
         if (!empty($path_parts['extension']) && in_array($path_parts['extension'], $phpExtensions)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Copies the contents of a directory recursively from `$source` to `$target`.
@@ -331,12 +331,12 @@ class Filesystem
      * @throws Exception If a file cannot be copied.
      * @api
      */
-    public static function copyRecursive($source, $target, $excludePhp = false)
+    public static function copyRecursive($source, $target, $excludePhp = \false)
     {
         if (is_dir($source)) {
             self::mkdir($target);
             $d = dir($source);
-            while (false !== ($entry = $d->read())) {
+            while (\false !== ($entry = $d->read())) {
                 if ($entry == '.' || $entry == '..') {
                     continue;
                 }
@@ -364,7 +364,7 @@ class Filesystem
     public static function deleteFileIfExists($pathToFile)
     {
         if (!file_exists($pathToFile)) {
-            return true;
+            return \true;
         }
         return @unlink($pathToFile);
     }
@@ -399,7 +399,7 @@ class Filesystem
      * @param string $file
      * @param bool $silenceErrors If true, no exception will be thrown in case removing fails.
      */
-    public static function remove($file, $silenceErrors = false)
+    public static function remove($file, $silenceErrors = \false)
     {
         if (!file_exists($file)) {
             return;
@@ -456,7 +456,7 @@ class Filesystem
             $destMd5 = md5_file($file2);
             return $sourceMd5 === $destMd5;
         }
-        return true;
+        return \true;
     }
     private static function tryToCopyFileAndVerifyItWasCopied($source, $dest)
     {
@@ -472,7 +472,7 @@ class Filesystem
         if (file_exists($source) && file_exists($dest)) {
             return self::havePhpFilesSameContent($source, $dest);
         }
-        return true;
+        return \true;
     }
     /**
      * @param $path
@@ -496,9 +496,9 @@ class Filesystem
         @file_put_contents($pathTmp . '/' . $testFileName, 'Nothing to see here.');
         if (\file_exists($pathTmp . '/' . strtolower($testFileName))) {
             // Wrote caseSensitivityTest.txt but casesensitivitytest.txt exists, so case insensitive
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * in tmp/ (sub-)folder(s) we create empty index.htm|php files

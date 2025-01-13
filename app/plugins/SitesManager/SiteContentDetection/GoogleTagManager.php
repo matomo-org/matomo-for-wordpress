@@ -38,19 +38,19 @@ class GoogleTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'gtm.start';
-        if (strpos($data, $needle) !== false) {
-            return true;
+        if (strpos($data, $needle) !== \false) {
+            return \true;
         }
-        if (strpos($data, 'gtm.js') !== false) {
-            return true;
+        if (strpos($data, 'gtm.js') !== \false) {
+            return \true;
         }
         $tests = ["/googletagmanager/i"];
         foreach ($tests as $test) {
             if (preg_match($test, $data) === 1) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
@@ -59,7 +59,7 @@ class GoogleTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\
         $view = new View('@SitesManager/_gtmTabInstructions');
         $view->wasDetected = $detector->wasDetected(self::getId());
         $view->jsTag = $jsTag;
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         return $view->render();
     }
     public function renderOthersInstruction(SiteContentDetector $detector) : string

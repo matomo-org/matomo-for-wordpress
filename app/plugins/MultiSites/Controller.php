@@ -12,36 +12,47 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Date;
 use Piwik\Piwik;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Plugins\MultiSites\FeatureFlags\ImprovedAllWebsitesDashboard;
 use Piwik\Translation\Translator;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\Controller
 {
     /**
+     * @var FeatureFlagManager
+     */
+    private $featureFlagManager;
+    /**
      * @var Translator
      */
     private $translator;
-    public function __construct(Translator $translator)
+    public function __construct(Translator $translator, FeatureFlagManager $featureFlagManager)
     {
         parent::__construct();
+        $this->featureFlagManager = $featureFlagManager;
         $this->translator = $translator;
     }
     public function index()
     {
-        return $this->getSitesInfo($isWidgetized = false);
+        return $this->getSitesInfo($isWidgetized = \false);
     }
     public function standalone()
     {
-        return $this->getSitesInfo($isWidgetized = true);
+        return $this->getSitesInfo($isWidgetized = \true);
     }
     /**
      * @throws \Piwik\NoAccessException
      */
-    public function getSitesInfo($isWidgetized = false)
+    public function getSitesInfo($isWidgetized = \false)
     {
         Piwik::checkUserHasSomeViewAccess();
         $date = Piwik::getDate('today');
         $period = Piwik::getPeriod('day');
-        $view = new View("@MultiSites/getSitesInfo");
+        if ($this->featureFlagManager->isFeatureActive(ImprovedAllWebsitesDashboard::class)) {
+            $view = new View('@MultiSites/allWebsitesDashboard');
+        } else {
+            $view = new View('@MultiSites/getSitesInfo');
+        }
         $view->isWidgetized = $isWidgetized;
         $view->displayRevenueColumn = Common::isGoalPluginEnabled();
         $view->limit = Config::getInstance()->General['all_websites_website_per_page'];
@@ -59,7 +70,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->siteName = $this->translator->translate('General_AllWebsitesDashboard');
         return $view->render();
     }
-    public function getEvolutionGraph($columns = false)
+    public function getEvolutionGraph($columns = \false)
     {
         if (empty($columns)) {
             $columns = Common::getRequestVar('columns');

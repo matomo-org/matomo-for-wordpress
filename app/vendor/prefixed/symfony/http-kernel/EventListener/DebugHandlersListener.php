@@ -37,7 +37,7 @@ class DebugHandlersListener implements EventSubscriberInterface
     private $throwAt;
     private $scream;
     private $scope;
-    private $firstCall = true;
+    private $firstCall = \true;
     private $hasTerminatedWithException;
     /**
      * @param callable|null  $exceptionHandler A handler that must support \Throwable instances that will be called on Exception
@@ -46,14 +46,14 @@ class DebugHandlersListener implements EventSubscriberInterface
      * @param bool           $scream           Enables/disables screaming mode, where even silenced errors are logged
      * @param bool           $scope            Enables/disables scoping mode
      */
-    public function __construct(?callable $exceptionHandler = null, ?LoggerInterface $logger = null, $levels = \E_ALL, ?int $throwAt = \E_ALL, bool $scream = true, $scope = true, $deprecationLogger = null, $fileLinkFormat = null)
+    public function __construct(?callable $exceptionHandler = null, ?LoggerInterface $logger = null, $levels = \E_ALL, ?int $throwAt = \E_ALL, bool $scream = \true, $scope = \true, $deprecationLogger = null, $fileLinkFormat = null)
     {
         if (!\is_bool($scope)) {
             trigger_deprecation('symfony/http-kernel', '5.4', 'Passing a $fileLinkFormat is deprecated.');
             $scope = $deprecationLogger;
             $deprecationLogger = $fileLinkFormat;
         }
-        $handler = set_exception_handler('is_int');
+        $handler = set_exception_handler('var_dump');
         $this->earlyHandler = \is_array($handler) ? $handler[0] : null;
         restore_exception_handler();
         $this->exceptionHandler = $exceptionHandler;
@@ -69,14 +69,15 @@ class DebugHandlersListener implements EventSubscriberInterface
      */
     public function configure(?object $event = null)
     {
-        if ($event instanceof ConsoleEvent && !\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true)) {
+        if ($event instanceof ConsoleEvent && !\in_array(\PHP_SAPI, ['cli', 'phpdbg'], \true)) {
             return;
         }
         if (!$event instanceof KernelEvent ? !$this->firstCall : !$event->isMainRequest()) {
             return;
         }
-        $this->firstCall = $this->hasTerminatedWithException = false;
-        $handler = set_exception_handler('is_int');
+        $this->firstCall = $this->hasTerminatedWithException = \false;
+        $hasRun = null;
+        $handler = set_exception_handler('var_dump');
         $handler = \is_array($handler) ? $handler[0] : null;
         restore_exception_handler();
         if (!$handler instanceof ErrorHandler) {
@@ -99,12 +100,12 @@ class DebugHandlersListener implements EventSubscriberInterface
                 if ($this->scope) {
                     $handler->scopeAt($levels & ~\E_USER_DEPRECATED & ~\E_DEPRECATED);
                 } else {
-                    $handler->scopeAt(0, true);
+                    $handler->scopeAt(0, \true);
                 }
                 $this->logger = $this->deprecationLogger = $this->levels = null;
             }
             if (null !== $this->throwAt) {
-                $handler->throwAt($this->throwAt, true);
+                $handler->throwAt($this->throwAt, \true);
             }
         }
         if (!$this->exceptionHandler) {
@@ -116,7 +117,7 @@ class DebugHandlersListener implements EventSubscriberInterface
                         if ($hasRun) {
                             throw $e;
                         }
-                        $hasRun = true;
+                        $hasRun = \true;
                         $kernel->terminateWithException($e, $request);
                     };
                 }
@@ -133,6 +134,17 @@ class DebugHandlersListener implements EventSubscriberInterface
         if ($this->exceptionHandler) {
             if ($handler instanceof ErrorHandler) {
                 $handler->setExceptionHandler($this->exceptionHandler);
+                if (null !== $hasRun) {
+                    $throwAt = $handler->throwAt(0) | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR | \E_USER_ERROR | \E_RECOVERABLE_ERROR | \E_PARSE;
+                    $loggers = [];
+                    foreach ($handler->setLoggers([]) as $type => $log) {
+                        if ($type & $throwAt) {
+                            $loggers[$type] = [null, $log[1]];
+                        }
+                    }
+                    // Assume $kernel->terminateWithException() will log uncaught exceptions appropriately
+                    $handler->setLoggers($loggers);
+                }
             }
             $this->exceptionHandler = null;
         }

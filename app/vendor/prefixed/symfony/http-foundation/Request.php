@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\HttpFoundation;
 
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\JsonException;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
@@ -74,7 +75,7 @@ class Request
      * @var string[]
      */
     protected static $trustedHosts = [];
-    protected static $httpMethodParameterOverride = false;
+    protected static $httpMethodParameterOverride = \false;
     /**
      * Custom parameters.
      *
@@ -182,8 +183,8 @@ class Request
      * @var string|null
      */
     private $preferredFormat;
-    private $isHostValid = true;
-    private $isForwardedValid = true;
+    private $isHostValid = \true;
+    private $isForwardedValid = \true;
     /**
      * @var bool|null
      */
@@ -201,7 +202,7 @@ class Request
      */
     private const TRUSTED_HEADERS = [self::HEADER_FORWARDED => 'FORWARDED', self::HEADER_X_FORWARDED_FOR => 'X_FORWARDED_FOR', self::HEADER_X_FORWARDED_HOST => 'X_FORWARDED_HOST', self::HEADER_X_FORWARDED_PROTO => 'X_FORWARDED_PROTO', self::HEADER_X_FORWARDED_PORT => 'X_FORWARDED_PORT', self::HEADER_X_FORWARDED_PREFIX => 'X_FORWARDED_PREFIX'];
     /** @var bool */
-    private $isIisRewrite = false;
+    private $isIisRewrite = \false;
     /**
      * @param array                $query      The GET parameters
      * @param array                $request    The POST parameters
@@ -278,13 +279,26 @@ class Request
      * @param string|resource|null $content    The raw body data
      *
      * @return static
+     *
+     * @throws BadRequestException When the URI is invalid
      */
     public static function create(string $uri, string $method = 'GET', array $parameters = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
-        $server = array_replace(['SERVER_NAME' => 'localhost', 'SERVER_PORT' => 80, 'HTTP_HOST' => 'localhost', 'HTTP_USER_AGENT' => 'Symfony', 'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5', 'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7', 'REMOTE_ADDR' => '127.0.0.1', 'SCRIPT_NAME' => '', 'SCRIPT_FILENAME' => '', 'SERVER_PROTOCOL' => 'HTTP/1.1', 'REQUEST_TIME' => time(), 'REQUEST_TIME_FLOAT' => microtime(true)], $server);
+        $server = array_replace(['SERVER_NAME' => 'localhost', 'SERVER_PORT' => 80, 'HTTP_HOST' => 'localhost', 'HTTP_USER_AGENT' => 'Symfony', 'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5', 'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7', 'REMOTE_ADDR' => '127.0.0.1', 'SCRIPT_NAME' => '', 'SCRIPT_FILENAME' => '', 'SERVER_PROTOCOL' => 'HTTP/1.1', 'REQUEST_TIME' => time(), 'REQUEST_TIME_FLOAT' => microtime(\true)], $server);
         $server['PATH_INFO'] = '';
         $server['REQUEST_METHOD'] = strtoupper($method);
-        $components = parse_url($uri);
+        if (\false === ($components = parse_url(\strlen($uri) !== strcspn($uri, '?#') ? $uri : $uri . '#'))) {
+            throw new BadRequestException('Invalid URI.');
+        }
+        if (\false !== ($i = strpos($uri, '\\')) && $i < strcspn($uri, '?#')) {
+            throw new BadRequestException('Invalid URI: A URI cannot contain a backslash.');
+        }
+        if (\strlen($uri) !== strcspn($uri, "\r\n\t")) {
+            throw new BadRequestException('Invalid URI: A URI cannot contain CR/LF/TAB characters.');
+        }
+        if ('' !== $uri && (\ord($uri[0]) <= 32 || \ord($uri[-1]) <= 32)) {
+            throw new BadRequestException('Invalid URI: A URI must not start nor end with ASCII control characters or spaces.');
+        }
         if (isset($components['host'])) {
             $server['SERVER_NAME'] = $components['host'];
             $server['HTTP_HOST'] = $components['host'];
@@ -457,7 +471,7 @@ class Request
         $_COOKIE = $this->cookies->all();
         foreach ($this->headers->all() as $key => $value) {
             $key = strtoupper(str_replace('-', '_', $key));
-            if (\in_array($key, ['CONTENT_TYPE', 'CONTENT_LENGTH', 'CONTENT_MD5'], true)) {
+            if (\in_array($key, ['CONTENT_TYPE', 'CONTENT_LENGTH', 'CONTENT_MD5'], \true)) {
                 $_SERVER[$key] = implode(', ', $value);
             } else {
                 $_SERVER['HTTP_' . $key] = implode(', ', $value);
@@ -567,7 +581,7 @@ class Request
      */
     public static function enableHttpMethodParameterOverride()
     {
-        self::$httpMethodParameterOverride = true;
+        self::$httpMethodParameterOverride = \true;
     }
     /**
      * Checks whether support for the _method request parameter is enabled.
@@ -646,7 +660,7 @@ class Request
      */
     public function hasSession()
     {
-        $skipIfUninitialized = \func_num_args() > 0 ? func_get_arg(0) : false;
+        $skipIfUninitialized = \func_num_args() > 0 ? func_get_arg(0) : \false;
         return null !== $this->session && (!$skipIfUninitialized || $this->session instanceof SessionInterface);
     }
     public function setSession(SessionInterface $session)
@@ -820,7 +834,7 @@ class Request
         } else {
             $pos = strrpos($host, ':');
         }
-        if (false !== $pos && ($port = substr($host, $pos + 1))) {
+        if (\false !== $pos && ($port = substr($host, $pos + 1))) {
             return (int) $port;
         }
         return 'https' === $this->getScheme() ? 443 : 80;
@@ -965,7 +979,7 @@ class Request
         // This also applies to a segment with a colon character (e.g., "file:colon") that cannot be used
         // as the first segment of a relative-path reference, as it would be mistaken for a scheme name
         // (see https://tools.ietf.org/html/rfc3986#section-4.2).
-        return !isset($path[0]) || '/' === $path[0] || false !== ($colonPos = strpos($path, ':')) && ($colonPos < ($slashPos = strpos($path, '/')) || false === $slashPos) ? "./{$path}" : $path;
+        return !isset($path[0]) || '/' === $path[0] || \false !== ($colonPos = strpos($path, ':')) && ($colonPos < ($slashPos = strpos($path, '/')) || \false === $slashPos) ? "./{$path}" : $path;
     }
     /**
      * Generates the normalized query string for the Request.
@@ -993,7 +1007,7 @@ class Request
     public function isSecure()
     {
         if ($this->isFromTrustedProxy() && ($proto = $this->getTrustedValues(self::HEADER_X_FORWARDED_PROTO))) {
-            return \in_array(strtolower($proto[0]), ['https', 'on', 'ssl', '1'], true);
+            return \in_array(strtolower($proto[0]), ['https', 'on', 'ssl', '1'], \true);
         }
         $https = $this->server->get('HTTPS');
         return !empty($https) && 'off' !== strtolower($https);
@@ -1029,7 +1043,7 @@ class Request
             if (!$this->isHostValid) {
                 return '';
             }
-            $this->isHostValid = false;
+            $this->isHostValid = \false;
             throw new SuspiciousOperationException(sprintf('Invalid Host "%s".', $host));
         }
         if (\count(self::$trustedHostPatterns) > 0) {
@@ -1046,7 +1060,7 @@ class Request
             if (!$this->isHostValid) {
                 return '';
             }
-            $this->isHostValid = false;
+            $this->isHostValid = \false;
             throw new SuspiciousOperationException(sprintf('Untrusted Host "%s".', $host));
         }
         return $host;
@@ -1091,11 +1105,11 @@ class Request
             return $this->method;
         }
         $method = strtoupper($method);
-        if (\in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'], true)) {
+        if (\in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'], \true)) {
             return $this->method = $method;
         }
         if (!preg_match('/^[A-Z]++$/D', $method)) {
-            throw new SuspiciousOperationException(sprintf('Invalid method override "%s".', $method));
+            throw new SuspiciousOperationException('Invalid HTTP method override.');
         }
         return $this->method = $method;
     }
@@ -1142,7 +1156,7 @@ class Request
     public function getFormat(?string $mimeType)
     {
         $canonicalMimeType = null;
-        if ($mimeType && false !== ($pos = strpos($mimeType, ';'))) {
+        if ($mimeType && \false !== ($pos = strpos($mimeType, ';'))) {
             $canonicalMimeType = trim(substr($mimeType, 0, $pos));
         }
         if (null === static::$formats) {
@@ -1311,10 +1325,10 @@ class Request
      *
      * @return string|resource
      */
-    public function getContent(bool $asResource = false)
+    public function getContent(bool $asResource = \false)
     {
         $currentContentIsResource = \is_resource($this->content);
-        if (true === $asResource) {
+        if (\true === $asResource) {
             if ($currentContentIsResource) {
                 rewind($this->content);
                 return $this->content;
@@ -1326,14 +1340,14 @@ class Request
                 rewind($resource);
                 return $resource;
             }
-            $this->content = false;
+            $this->content = \false;
             return fopen('php://input', 'r');
         }
         if ($currentContentIsResource) {
             rewind($this->content);
             return stream_get_contents($this->content);
         }
-        if (null === $this->content || false === $this->content) {
+        if (null === $this->content || \false === $this->content) {
             $this->content = file_get_contents('php://input');
         }
         return $this->content;
@@ -1351,7 +1365,7 @@ class Request
             throw new JsonException('Request body is empty.');
         }
         try {
-            $content = json_decode($content, true, 512, \JSON_BIGINT_AS_STRING | (\PHP_VERSION_ID >= 70300 ? \JSON_THROW_ON_ERROR : 0));
+            $content = json_decode($content, \true, 512, \JSON_BIGINT_AS_STRING | (\PHP_VERSION_ID >= 70300 ? \JSON_THROW_ON_ERROR : 0));
         } catch (\JsonException $e) {
             throw new JsonException('Could not decode request body.', $e->getCode(), $e);
         }
@@ -1418,7 +1432,7 @@ class Request
         $extendedPreferredLanguages = [];
         foreach ($preferredLanguages as $language) {
             $extendedPreferredLanguages[] = $language;
-            if (false !== ($position = strpos($language, '_'))) {
+            if (\false !== ($position = strpos($language, '_'))) {
                 $superLanguage = substr($language, 0, $position);
                 if (!\in_array($superLanguage, $preferredLanguages)) {
                     $extendedPreferredLanguages[] = $superLanguage;
@@ -1527,7 +1541,7 @@ class Request
         }
         if (!$this->isSecure()) {
             // see https://tools.ietf.org/html/rfc8674#section-3
-            return $this->isSafeContentPreferred = false;
+            return $this->isSafeContentPreferred = \false;
         }
         return $this->isSafeContentPreferred = AcceptHeader::fromString($this->headers->get('Prefer'))->has('safe');
     }
@@ -1549,7 +1563,7 @@ class Request
             $requestUri = $this->server->get('REQUEST_URI');
             if ('' !== $requestUri && '/' === $requestUri[0]) {
                 // To only use path and query remove the fragment.
-                if (false !== ($pos = strpos($requestUri, '#'))) {
+                if (\false !== ($pos = strpos($requestUri, '#'))) {
                     $requestUri = substr($requestUri, 0, $pos);
                 }
             } else {
@@ -1604,7 +1618,7 @@ class Request
                 $seg = $segs[$index];
                 $baseUrl = '/' . $seg . $baseUrl;
                 ++$index;
-            } while ($last > $index && false !== ($pos = strpos($path, $baseUrl)) && 0 != $pos);
+            } while ($last > $index && \false !== ($pos = strpos($path, $baseUrl)) && 0 != $pos);
         }
         // Does the baseUrl have anything in common with the request_uri?
         $requestUri = $this->getRequestUri();
@@ -1620,7 +1634,7 @@ class Request
             return rtrim($prefix, '/' . \DIRECTORY_SEPARATOR);
         }
         $truncatedRequestUri = $requestUri;
-        if (false !== ($pos = strpos($requestUri, '?'))) {
+        if (\false !== ($pos = strpos($requestUri, '?'))) {
             $truncatedRequestUri = substr($requestUri, 0, $pos);
         }
         $basename = basename($baseUrl ?? '');
@@ -1631,7 +1645,7 @@ class Request
         // If using mod_rewrite or ISAPI_Rewrite strip the script filename
         // out of baseUrl. $pos !== 0 makes sure it is not matching a value
         // from PATH_INFO or QUERY_STRING
-        if (\strlen($requestUri) >= \strlen($baseUrl) && false !== ($pos = strpos($requestUri, $baseUrl)) && 0 !== $pos) {
+        if (\strlen($requestUri) >= \strlen($baseUrl) && \false !== ($pos = strpos($requestUri, $baseUrl)) && 0 !== $pos) {
             $baseUrl = substr($requestUri, 0, $pos + \strlen($baseUrl));
         }
         return rtrim($baseUrl, '/' . \DIRECTORY_SEPARATOR);
@@ -1669,7 +1683,7 @@ class Request
             return '/';
         }
         // Remove the query string from REQUEST_URI
-        if (false !== ($pos = strpos($requestUri, '?'))) {
+        if (\false !== ($pos = strpos($requestUri, '?'))) {
             $requestUri = substr($requestUri, 0, $pos);
         }
         if ('' !== $requestUri && '/' !== $requestUri[0]) {
@@ -1679,7 +1693,7 @@ class Request
             return $requestUri;
         }
         $pathInfo = substr($requestUri, \strlen($baseUrl));
-        if (false === $pathInfo || '' === $pathInfo) {
+        if (\false === $pathInfo || '' === $pathInfo) {
             // If substr() returns false then PATH_INFO is set to an empty string
             return '/';
         }
@@ -1698,7 +1712,7 @@ class Request
         // setting the default locale, the intl module is not installed, and
         // the call can be ignored:
         try {
-            if (class_exists(\Locale::class, false)) {
+            if (class_exists(\Locale::class, \false)) {
                 \Locale::setDefault($locale);
             }
         } catch (\Exception $e) {
@@ -1767,7 +1781,7 @@ class Request
                     continue;
                 }
                 if (self::HEADER_X_FORWARDED_PORT === $type) {
-                    if (str_ends_with($v, ']') || false === ($v = strrchr($v, ':'))) {
+                    if (str_ends_with($v, ']') || \false === ($v = strrchr($v, ':'))) {
                         $v = $this->isSecure() ? ':443' : ':80';
                     }
                     $v = '0.0.0.0' . $v;
@@ -1788,7 +1802,7 @@ class Request
         if (!$this->isForwardedValid) {
             return null !== $ip ? ['0.0.0.0', $ip] : [];
         }
-        $this->isForwardedValid = false;
+        $this->isForwardedValid = \false;
         throw new ConflictingHeadersException(sprintf('The request has both a trusted "%s" header and a trusted "%s" header, conflicting with each other. You should either configure your proxy to remove one of them, or configure your project to distrust the offending one.', self::TRUSTED_HEADERS[self::HEADER_FORWARDED], self::TRUSTED_HEADERS[$type]));
     }
     private function normalizeAndFilterClientIps(array $clientIps, string $ip) : array
@@ -1836,7 +1850,7 @@ class Request
     private function isIisRewrite() : bool
     {
         if (1 === $this->server->getInt('IIS_WasUrlRewritten')) {
-            $this->isIisRewrite = true;
+            $this->isIisRewrite = \true;
             $this->server->remove('IIS_WasUrlRewritten');
         }
         return $this->isIisRewrite;

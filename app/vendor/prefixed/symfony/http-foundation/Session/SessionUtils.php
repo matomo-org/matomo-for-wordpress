@@ -48,7 +48,7 @@ final class SessionUtils
         }
         header_remove('Set-Cookie');
         foreach ($otherCookies as $h) {
-            header($h, false);
+            header($h, \false);
         }
         return $sessionCookie;
     }

@@ -13,7 +13,7 @@ use Piwik\Validators\BaseValidator;
 use Piwik\Validators\CharacterLength;
 class Description
 {
-    const MAX_LENGTH = 1000;
+    public const MAX_LENGTH = 1000;
     /**
      * @var string
      */

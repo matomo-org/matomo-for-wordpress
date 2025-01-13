@@ -39,7 +39,7 @@ class API extends \Piwik\Plugin\API
      * @param array $settingValues Format: array('PluginName' => array(array('name' => 'SettingName1', 'value' => 'SettingValue1), ..))
      * @throws Exception
      */
-    public function setSystemSettings($settingValues, $passwordConfirmation = false)
+    public function setSystemSettings($settingValues, $passwordConfirmation = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -117,7 +117,7 @@ class API extends \Piwik\Plugin\API
         $email->safeSend();
         $superuserEmailAddresses = Piwik::getAllSuperUserAccessEmailAddresses();
         unset($superuserEmailAddresses[Piwik::getCurrentUserLogin()]);
-        $superUserEmail = false;
+        $superUserEmail = \false;
         foreach ($superuserEmailAddresses as $address) {
             $superUserEmail = $superUserEmail ?: $container->make(SettingsChangedEmail::class, array('login' => Piwik::translate('Installation_SuperUser'), 'emailAddress' => $address, 'pluginNames' => $pluginNames, 'superuser' => Piwik::getCurrentUserLogin()));
             $superUserEmail->addTo($address);

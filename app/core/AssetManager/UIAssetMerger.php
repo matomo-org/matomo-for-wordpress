@@ -114,7 +114,7 @@ abstract class UIAssetMerger
     private function shouldGenerate()
     {
         if (!$this->mergedAsset->exists()) {
-            return true;
+            return \true;
         }
         return !$this->isFileUpToDate();
     }
@@ -127,11 +127,11 @@ abstract class UIAssetMerger
         $firstLine = fgets($f);
         fclose($f);
         if (!empty($firstLine) && trim($firstLine) == trim($this->getCacheBusterValue())) {
-            return true;
+            return \true;
         }
         // Some CSS file in the merge, has changed since last merged asset was generated
         // Note: we do not detect changes in @import'ed LESS files
-        return false;
+        return \false;
     }
     private function adjustPaths()
     {

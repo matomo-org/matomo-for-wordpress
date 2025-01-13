@@ -22,7 +22,7 @@ class Dependency
     public function __construct()
     {
         $this->setPiwikVersion(Version::VERSION);
-        $this->setPhpVersion(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION);
+        $this->setPhpVersion(\PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION . '.' . \PHP_RELEASE_VERSION);
     }
     public function setEnvironment(Environment $environment)
     {
@@ -83,7 +83,7 @@ class Dependency
      */
     private function markPluginsWithoutUpperBoundMatomoRequirementAsIncompatible($requiredVersion)
     {
-        if (strpos($requiredVersion, ',') !== false) {
+        if (strpos($requiredVersion, ',') !== \false) {
             return $requiredVersion;
         }
         $minVersion = str_replace(array('>', '=', '<', '!', '~', '^'), '', $requiredVersion);
@@ -115,7 +115,7 @@ class Dependency
     public function hasDependencyToDisabledPlugin($requires)
     {
         if (empty($requires)) {
-            return false;
+            return \false;
         }
         foreach ($requires as $name => $requiredVersion) {
             $nameLower = strtolower($name);
@@ -124,11 +124,11 @@ class Dependency
                 // we do not check version, only whether it's activated. Everything that is not piwik or php is assumed
                 // a plugin so far.
                 if (!PluginManager::getInstance()->isPluginActivated($name)) {
-                    return true;
+                    return \true;
                 }
             }
         }
-        return false;
+        return \false;
     }
     private function getCurrentVersion($name)
     {

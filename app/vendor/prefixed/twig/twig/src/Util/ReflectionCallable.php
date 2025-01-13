@@ -22,7 +22,7 @@ final class ReflectionCallable
     private $name;
     public function __construct($callable, string $debugType = 'unknown', string $debugName = 'unknown')
     {
-        if (\is_string($callable) && false !== ($pos = strpos($callable, '::'))) {
+        if (\is_string($callable) && \false !== ($pos = strpos($callable, '::'))) {
             $callable = [substr($callable, 0, $pos), substr($callable, 2 + $pos)];
         }
         if (\is_array($callable) && method_exists($callable[0], $callable[1])) {

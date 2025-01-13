@@ -25,7 +25,7 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     /** @var Collection */
     private $collection;
     /** @var bool */
-    private $expirationIndexCreated = false;
+    private $expirationIndexCreated = \false;
     /**
      * This provider will default to the write concern and read preference
      * options set on the Database instance (or inherited from MongoDB or
@@ -49,12 +49,12 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $document = $this->collection->findOne(['_id' => $id], [\Doctrine\Common\Cache\MongoDBCache::DATA_FIELD, \Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD]);
         if ($document === null) {
-            return false;
+            return \false;
         }
         if ($this->isExpired($document)) {
             $this->createExpirationIndex();
             $this->doDelete($id);
-            return false;
+            return \false;
         }
         return unserialize($document[\Doctrine\Common\Cache\MongoDBCache::DATA_FIELD]->getData());
     }
@@ -65,14 +65,14 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $document = $this->collection->findOne(['_id' => $id], [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD]);
         if ($document === null) {
-            return false;
+            return \false;
         }
         if ($this->isExpired($document)) {
             $this->createExpirationIndex();
             $this->doDelete($id);
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -80,11 +80,11 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doSave($id, $data, $lifeTime = 0)
     {
         try {
-            $this->collection->updateOne(['_id' => $id], ['$set' => [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => $lifeTime > 0 ? new UTCDateTime((time() + $lifeTime) * 1000) : null, \Doctrine\Common\Cache\MongoDBCache::DATA_FIELD => new Binary(serialize($data), Binary::TYPE_GENERIC)]], ['upsert' => true]);
+            $this->collection->updateOne(['_id' => $id], ['$set' => [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => $lifeTime > 0 ? new UTCDateTime((time() + $lifeTime) * 1000) : null, \Doctrine\Common\Cache\MongoDBCache::DATA_FIELD => new Binary(serialize($data), Binary::TYPE_GENERIC)]], ['upsert' => \true]);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -94,9 +94,9 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
         try {
             $this->collection->deleteOne(['_id' => $id]);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -107,9 +107,9 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
             // Use remove() in lieu of drop() to maintain any collection indexes
             $this->collection->deleteMany([]);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -142,6 +142,6 @@ class ExtMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
         if ($this->expirationIndexCreated) {
             return;
         }
-        $this->collection->createIndex([\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => 1], ['background' => true, 'expireAfterSeconds' => 0]);
+        $this->collection->createIndex([\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => 1], ['background' => \true, 'expireAfterSeconds' => 0]);
     }
 }

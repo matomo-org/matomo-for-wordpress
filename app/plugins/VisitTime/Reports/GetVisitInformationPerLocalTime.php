@@ -22,7 +22,7 @@ class GetVisitInformationPerLocalTime extends \Piwik\Plugins\VisitTime\Reports\B
         $this->dimension = new LocalTime();
         $this->name = Piwik::translate('VisitTime_LocalTime');
         $this->documentation = Piwik::translate('VisitTime_WidgetLocalTimeDocumentation', array('<strong>', '</strong>'));
-        $this->constantRowsCount = true;
+        $this->constantRowsCount = \true;
         $this->order = 15;
         $this->subcategoryId = 'VisitTime_SubmenuTimes';
     }
@@ -33,7 +33,7 @@ class GetVisitInformationPerLocalTime extends \Piwik\Plugins\VisitTime\Reports\B
         $view->config->title = Piwik::translate('VisitTime_ColumnLocalTime');
         $view->config->addTranslation('label', Piwik::translate('VisitTime_LocalTime'));
         if ($view->isViewDataTableId(Graph::ID)) {
-            $view->config->max_graph_elements = false;
+            $view->config->max_graph_elements = \false;
         }
     }
     public function getRelatedReports()

@@ -29,7 +29,7 @@ class Visit extends LogTable
     }
     public function shouldJoinWithSubSelect()
     {
-        return true;
+        return \true;
     }
     public function getPrimaryKey()
     {

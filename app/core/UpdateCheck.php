@@ -28,7 +28,7 @@ class UpdateCheck
      * @param bool $force Force check
      * @param int $interval Interval used for update checks
      */
-    public static function check($force = false, $interval = null)
+    public static function check($force = \false, $interval = null)
     {
         if (!\Piwik\SettingsPiwik::isAutoUpdateEnabled()) {
             return;
@@ -37,7 +37,7 @@ class UpdateCheck
             $interval = self::CHECK_INTERVAL;
         }
         $lastTimeChecked = \Piwik\Option::get(self::LAST_TIME_CHECKED);
-        if ($force || $lastTimeChecked === false || time() - $interval > $lastTimeChecked) {
+        if ($force || $lastTimeChecked === \false || time() - $interval > $lastTimeChecked) {
             // set the time checked first, so that parallel Piwik requests don't all trigger the http requests
             \Piwik\Option::set(self::LAST_TIME_CHECKED, time(), $autoLoad = 1);
             $latestVersion = self::getLatestAvailableVersionNumber();
@@ -104,6 +104,6 @@ class UpdateCheck
         if (!empty($latestVersion) && version_compare(\Piwik\Version::VERSION, $latestVersion) == -1) {
             return $latestVersion;
         }
-        return false;
+        return \false;
     }
 }

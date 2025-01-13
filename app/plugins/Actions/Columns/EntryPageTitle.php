@@ -42,7 +42,7 @@ class EntryPageTitle extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionName = false;
+        $idActionName = \false;
         if (!empty($action)) {
             $idActionName = $action->getIdActionNameForEntryAndExitIds();
         }

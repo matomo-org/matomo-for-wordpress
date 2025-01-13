@@ -53,7 +53,7 @@ class DumpServer
             }
             $payload = @unserialize(base64_decode($message), ['allowed_classes' => [Data::class, Stub::class]]);
             // Impossible to decode the message, give up.
-            if (false === $payload) {
+            if (\false === $payload) {
                 if ($this->logger) {
                     $this->logger->warning('Unable to decode a message from {clientId} client.', ['clientId' => $clientId]);
                 }
@@ -77,7 +77,7 @@ class DumpServer
     {
         $sockets = [(int) $this->socket => $this->socket];
         $write = [];
-        while (true) {
+        while (\true) {
             $read = $sockets;
             stream_select($read, $write, $write, null);
             foreach ($read as $stream) {

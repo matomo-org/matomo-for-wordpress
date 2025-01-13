@@ -23,7 +23,7 @@ class Build extends ConsoleCommand
     {
         $this->setName('vue:build');
         $this->setDescription('Builds vue modules for one or more plugins.');
-        $this->addOptionalArgument('plugins', 'Plugins whose vue modules to build. Defaults to all plugins.', [], true);
+        $this->addOptionalArgument('plugins', 'Plugins whose vue modules to build. Defaults to all plugins.', [], \true);
         $this->addNoValueOption('bail', null, 'If supplied, will exit immediately.');
         $this->addNoValueOption('watch', null, 'If supplied, will watch for changes and automatically rebuild.');
         $this->addNoValueOption('clear-webpack-cache');
@@ -46,7 +46,7 @@ class Build extends ConsoleCommand
         $printBuildCommand = $input->getOption('print-build-command');
         $watch = $input->getOption('watch');
         $allPluginNames = $this->getAllPlugins();
-        $allPluginNames = $this->filterPluginsWithoutVueLibrary($allPluginNames, true);
+        $allPluginNames = $this->filterPluginsWithoutVueLibrary($allPluginNames, \true);
         $plugins = $input->getArgument('plugins');
         if (empty($plugins)) {
             $plugins = $allPluginNames;
@@ -61,7 +61,7 @@ class Build extends ConsoleCommand
         $plugins = $this->ensureUntranspiledPluginDependenciesArePresent($plugins);
         $plugins = PluginUmdAssetFetcher::orderPluginsByPluginDependencies($plugins);
         // remove webpack cache since it can result in strange builds if present
-        Filesystem::unlinkRecursive(PIWIK_INCLUDE_PATH . '/node_modules/.cache', true);
+        Filesystem::unlinkRecursive(PIWIK_INCLUDE_PATH . '/node_modules/.cache', \true);
         $bail = $input->getOption('bail');
         $failed = $this->build($plugins, $printBuildCommand, $allPluginNames, $watch, $bail);
         return $failed > 0 ? self::FAILURE : self::SUCCESS;
@@ -84,7 +84,7 @@ class Build extends ConsoleCommand
         $typeDirectory = PIWIK_INCLUDE_PATH . '/@types/' . $dependency . '/index.d.ts';
         return is_file($typeDirectory);
     }
-    private function build(array $plugins, bool $printBuildCommand, array $allPluginNames, bool $watch = false, bool $bail = false) : int
+    private function build(array $plugins, bool $printBuildCommand, array $allPluginNames, bool $watch = \false, bool $bail = \false) : int
     {
         if ($watch) {
             $this->watch($plugins, $printBuildCommand, $allPluginNames);
@@ -138,7 +138,7 @@ class Build extends ConsoleCommand
                     ++$attempts;
                     continue;
                 }
-                if ($returnCode != 0 || stripos($concattedOutput, 'warning') !== false) {
+                if ($returnCode != 0 || stripos($concattedOutput, 'warning') !== \false) {
                     $output->writeln("<error>Failed:</error>\n");
                     $output->writeln($cmdOutput);
                     $output->writeln("");
@@ -153,7 +153,7 @@ class Build extends ConsoleCommand
         shell_exec("rm " . "{$pluginDirPath}/vue/dist/{$plugin}.common.*.js* 2> /dev/null");
         return $returnCode != 0;
     }
-    private function filterPluginsWithoutVueLibrary(array $plugins, bool $isAll = false) : array
+    private function filterPluginsWithoutVueLibrary(array $plugins, bool $isAll = \false) : array
     {
         $pluginsWithVue = [];
         $logger = StaticContainer::get(LoggerInterface::class);
@@ -193,12 +193,12 @@ class Build extends ConsoleCommand
     private function clearWebpackCache() : void
     {
         $path = PIWIK_INCLUDE_PATH . '/node_modules/.cache';
-        Filesystem::unlinkRecursive($path, true);
+        Filesystem::unlinkRecursive($path, \true);
     }
     private function clearPluginTypes($plugin) : void
     {
         $path = PIWIK_INCLUDE_PATH . '/@types/' . $plugin;
-        Filesystem::unlinkRecursive($path, true);
+        Filesystem::unlinkRecursive($path, \true);
     }
     private function checkNodeJsVersion() : void
     {
@@ -215,7 +215,7 @@ class Build extends ConsoleCommand
     private function isTypeScriptRaceConditionInOutput(string $plugin, string $concattedOutput) : bool
     {
         if (!preg_match('/^TS2307: Cannot find module \'([^\']+)\' or its corresponding type declarations./', $concattedOutput, $matches)) {
-            return false;
+            return \false;
         }
         $file = $matches[1];
         $filePath = Manager::getPluginDirectory($plugin) . '/vue/src/' . $file;
@@ -229,7 +229,7 @@ class Build extends ConsoleCommand
         foreach ($pluginDirectories as $pluginDirectoryInfo) {
             $absolutePath = $pluginDirectoryInfo['pluginsPathAbsolute'];
             foreach (scandir($absolutePath) as $subdirectory) {
-                $wholePath = $absolutePath . DIRECTORY_SEPARATOR . $subdirectory;
+                $wholePath = $absolutePath . \DIRECTORY_SEPARATOR . $subdirectory;
                 if (is_dir($wholePath) && $subdirectory !== '.' && $subdirectory !== '..') {
                     $allPlugins[] = $subdirectory;
                 }

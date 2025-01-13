@@ -21,7 +21,7 @@ class LegacyMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     /** @var MongoCollection */
     private $collection;
     /** @var bool */
-    private $expirationIndexCreated = false;
+    private $expirationIndexCreated = \false;
     /**
      * This provider will default to the write concern and read preference
      * options set on the MongoCollection instance (or inherited from MongoDB or
@@ -44,12 +44,12 @@ class LegacyMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $document = $this->collection->findOne(['_id' => $id], [\Doctrine\Common\Cache\MongoDBCache::DATA_FIELD, \Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD]);
         if ($document === null) {
-            return false;
+            return \false;
         }
         if ($this->isExpired($document)) {
             $this->createExpirationIndex();
             $this->doDelete($id);
-            return false;
+            return \false;
         }
         return unserialize($document[\Doctrine\Common\Cache\MongoDBCache::DATA_FIELD]->bin);
     }
@@ -60,14 +60,14 @@ class LegacyMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $document = $this->collection->findOne(['_id' => $id], [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD]);
         if ($document === null) {
-            return false;
+            return \false;
         }
         if ($this->isExpired($document)) {
             $this->createExpirationIndex();
             $this->doDelete($id);
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -75,9 +75,9 @@ class LegacyMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doSave($id, $data, $lifeTime = 0)
     {
         try {
-            $result = $this->collection->update(['_id' => $id], ['$set' => [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => $lifeTime > 0 ? new MongoDate(time() + $lifeTime) : null, \Doctrine\Common\Cache\MongoDBCache::DATA_FIELD => new MongoBinData(serialize($data), MongoBinData::BYTE_ARRAY)]], ['upsert' => true, 'multiple' => false]);
+            $result = $this->collection->update(['_id' => $id], ['$set' => [\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => $lifeTime > 0 ? new MongoDate(time() + $lifeTime) : null, \Doctrine\Common\Cache\MongoDBCache::DATA_FIELD => new MongoBinData(serialize($data), MongoBinData::BYTE_ARRAY)]], ['upsert' => \true, 'multiple' => \false]);
         } catch (MongoCursorException $e) {
-            return false;
+            return \false;
         }
         return ($result['ok'] ?? 1) == 1;
     }
@@ -121,7 +121,7 @@ class LegacyMongoDBCache extends \Doctrine\Common\Cache\CacheProvider
         if ($this->expirationIndexCreated) {
             return;
         }
-        $this->expirationIndexCreated = true;
-        $this->collection->createIndex([\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => 1], ['background' => true, 'expireAfterSeconds' => 0]);
+        $this->expirationIndexCreated = \true;
+        $this->collection->createIndex([\Doctrine\Common\Cache\MongoDBCache::EXPIRATION_FIELD => 1], ['background' => \true, 'expireAfterSeconds' => 0]);
     }
 }

@@ -82,7 +82,7 @@ class VisitorDetails extends VisitorDetailsAbstract
                 }
             } while (isset($actionDetails[$nextActionId]));
             if (isset($action['timeSpent'])) {
-                $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], true);
+                $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], \true);
             }
             unset($action['timeSpentRef']);
         }
@@ -113,7 +113,7 @@ class VisitorDetails extends VisitorDetailsAbstract
         // Generation time
         if ($this->shouldHandleAction($action) && empty($action['eventType']) && isset($action['custom_float']) && $action['custom_float'] > 0) {
             $action['generationTimeMilliseconds'] = $action['custom_float'];
-            $action['generationTime'] = $formatter->getPrettyTimeFromSeconds($action['custom_float'] / 1000, true);
+            $action['generationTime'] = $formatter->getPrettyTimeFromSeconds($action['custom_float'] / 1000, \true);
             unset($action['custom_float']);
         }
         if (array_key_exists('custom_float', $action) && is_null($action['custom_float'])) {
@@ -123,7 +123,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             unset($action['pageLoadTime']);
         } else {
             $action['pageLoadTimeMilliseconds'] = $action['pageLoadTime'];
-            $action['pageLoadTime'] = $formatter->getPrettyTimeFromSeconds($action['pageLoadTime'] / 1000, true);
+            $action['pageLoadTime'] = $formatter->getPrettyTimeFromSeconds($action['pageLoadTime'] / 1000, \true);
         }
         if (array_key_exists('pageview_position', $action)) {
             $action['pageviewPosition'] = $action['pageview_position'];
@@ -139,7 +139,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             unset($action['url_prefix']);
         }
         if (!empty($action['url']) && strpos($action['url'], 'http://') === 0) {
-            $host = parse_url($action['url'], PHP_URL_HOST);
+            $host = parse_url($action['url'], \PHP_URL_HOST);
             if ($host && PageUrl::shouldUseHttpsHost($visitorDetails['idSite'], $host)) {
                 $action['url'] = 'https://' . mb_substr($action['url'], 7);
             }

@@ -3,6 +3,8 @@
 
   .multiPairField {
     margin-right: -0.75rem;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 
     .form-group.row {
       margin-left: -0.75rem;
@@ -10,11 +12,16 @@
 
     .input-field {
       padding-right: 0;
+      margin: 0;
     }
   }
 
   .comparisonField {
     max-width: 275px !important;
+  }
+
+  textarea.materialize-textarea {
+    min-height: 3rem;
   }
 
   .multiple {
@@ -125,4 +132,8 @@
   h2 {
     text-align: left;
   }
+}
+
+body.tagmanager .modal.open .expandableList {
+  position: relative;
 }

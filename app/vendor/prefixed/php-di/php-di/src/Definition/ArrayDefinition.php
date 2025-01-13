@@ -51,7 +51,7 @@ class ArrayDefinition implements Definition
             if ($value instanceof Definition) {
                 $str .= str_replace(\PHP_EOL, \PHP_EOL . '    ', (string) $value);
             } else {
-                $str .= var_export($value, true);
+                $str .= var_export($value, \true);
             }
             $str .= ',' . \PHP_EOL;
         }

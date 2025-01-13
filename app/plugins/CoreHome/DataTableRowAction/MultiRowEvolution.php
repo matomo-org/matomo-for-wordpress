@@ -20,7 +20,7 @@ class MultiRowEvolution extends \Piwik\Plugins\CoreHome\DataTableRowAction\RowEv
     /** The requested metric */
     protected $metric;
     /** Show all metrics in the evolution graph when the popover opens */
-    protected $initiallyShowAllMetrics = true;
+    protected $initiallyShowAllMetrics = \true;
     /** The metrics available in the metrics select */
     protected $metricsForSelect;
     /**
@@ -33,7 +33,7 @@ class MultiRowEvolution extends \Piwik\Plugins\CoreHome\DataTableRowAction\RowEv
         $this->metric = Common::getRequestVar('column', '', 'string');
         parent::__construct($idSite, $date);
     }
-    protected function loadEvolutionReport($column = false)
+    protected function loadEvolutionReport($column = \false)
     {
         // set the "column" parameter for the API.getRowEvolution call
         parent::loadEvolutionReport($this->metric);
@@ -66,7 +66,7 @@ class MultiRowEvolution extends \Piwik\Plugins\CoreHome\DataTableRowAction\RowEv
             return parent::getRowEvolutionGraphFromController($controller);
         });
     }
-    public function getRowEvolutionGraph($graphType = false, $metrics = false)
+    public function getRowEvolutionGraph($graphType = \false, $metrics = \false)
     {
         // the row evolution graphs should not compare serieses
         return Context::executeWithQueryParameters(['compareSegments' => [], 'comparePeriods' => [], 'compareDates' => []], function () use($graphType, $metrics) {

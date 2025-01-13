@@ -33,6 +33,6 @@ class Custom extends Migration
     }
     public function shouldIgnoreError($exception)
     {
-        return false;
+        return \false;
     }
 }
