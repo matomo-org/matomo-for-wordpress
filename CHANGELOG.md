@@ -1,5 +1,10 @@
 == Changelog ===
 
+= 5.2.0 =
+* Update Matomo core to 5.2.1.
+* Bug fix: using marketplace plugins in a multisite WordPress install could result in fatal errors on creation of a new blog.
+* Compatibility with the latest wpstatistics version in the wpstatistics importer.
+
 = 5.1.7 =
 * Bug fix: in scheduled report emails, fix the URLs for flag images.
 * Bug fix: use same charset/collate as WordPress.
