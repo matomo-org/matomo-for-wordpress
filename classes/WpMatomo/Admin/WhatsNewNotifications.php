@@ -99,6 +99,7 @@ class WhatsNewNotifications {
 		);
 
 		$unseen_notifications = $this->get_unseen_notification_pages();
+		$unseen_notifications = array_values( $unseen_notifications );
 		wp_localize_script(
 			'matomo-admin-js',
 			'mtmUnseenWhatsNewNotifications',

@@ -43,7 +43,7 @@ class Admin {
 			'matomo-admin-js',
 			plugins_url( '/assets/js/admin.js', MATOMO_ANALYTICS_FILE ),
 			[ 'jquery' ],
-			'1.0.2',
+			'1.0.3',
 			true
 		);
 		wp_localize_script(
