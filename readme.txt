@@ -14,8 +14,6 @@ Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analyt
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
 
-**New in version 5.1.4: fixes for a couple security issues. It is recommended to update to this version.**
-
 [youtube https://www.youtube.com/watch?v=puxi_Ey0iLc]
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
