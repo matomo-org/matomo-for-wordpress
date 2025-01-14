@@ -18,6 +18,8 @@ class MwpDiagnosticsPage extends MwpPage {
 
   async openTroubleshootingTab() {
     await $('a.nav-tab=Troubleshooting').click();
+    await $('#matomo_troubleshooting_update_from').waitForExist();
+    await browser.pause(500);
   }
 
   private async normalizePageContents() {
