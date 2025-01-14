@@ -173,7 +173,7 @@ table.matomo-tracking-form th {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background-color: red;
+    background-color: #d63638;
     border-radius: 50%;
     right: 4px;
 }

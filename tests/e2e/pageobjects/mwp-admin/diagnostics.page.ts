@@ -18,6 +18,8 @@ class MwpDiagnosticsPage extends MwpPage {
 
   async openTroubleshootingTab() {
     await $('a.nav-tab=Troubleshooting').click();
+    await $('#matomo_troubleshooting_update_from').waitForExist();
+    await browser.pause(500);
   }
 
   private async normalizePageContents() {
@@ -50,6 +52,8 @@ class MwpDiagnosticsPage extends MwpPage {
       $activePluginsValue.html(
         $activePluginsValue.html().replace(new RegExp('(' + matomoPlugins.join('|') + '):\\d+\\.\\d+\\.\\d+', 'gi'), '$1:')
       );
+
+      window.jQuery('tbody#logs_body > tr').remove();
     });
   }
 }
