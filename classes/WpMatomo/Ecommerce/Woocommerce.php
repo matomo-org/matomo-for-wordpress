@@ -134,7 +134,11 @@ class Woocommerce extends Base {
 
 		/** @var \WC_Cart $cart */
 		$cart = $woocommerce->cart;
-		if ( ! $is_coupon_update ) {
+		$cart->get_cart(); // triggers loading cart info from session
+		if ( ! $is_coupon_update
+			&& ! $cart->get_total( 'total' )
+			&& ! did_action( 'woocommerce_before_calculate_totals' )
+		) {
 			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
 			$cart->calculate_totals();
 		}
