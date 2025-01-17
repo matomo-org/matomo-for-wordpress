@@ -144,6 +144,10 @@ class Woocommerce extends Base {
 		}
 		$cart_content = $cart->get_cart();
 
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$this->logger->log( 'cart updated to: ' . wp_json_encode( $cart_content ) );
+		}
+
 		$tracking_code = '';
 
 		foreach ( $cart_content as $item ) {
@@ -165,6 +169,7 @@ class Woocommerce extends Base {
 			}
 
 			if ( empty( $product_or_variation ) ) {
+				$this->logger->log( sprintf( 'could not find product or variation with ID = %s', $item['product_id'] ) );
 				continue;
 			}
 
@@ -190,6 +195,7 @@ class Woocommerce extends Base {
 			$total = $cart->cart_contents_total;
 		}
 
+		// TODO: we can track shipping, discount, etc. as well here
 		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
