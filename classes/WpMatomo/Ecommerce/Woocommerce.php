@@ -195,7 +195,6 @@ class Woocommerce extends Base {
 			$total = $cart->cart_contents_total;
 		}
 
-		// TODO: we can track shipping, discount, etc. as well here
 		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
