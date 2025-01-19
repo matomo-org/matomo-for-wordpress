@@ -84,8 +84,9 @@ class Base {
 	protected function should_track_background() {
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
-			   || $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER
-			   || did_action( 'wp_footer' );
+			   || ( defined( 'MATOMO_TRACK_ECOMMERCE_SERVER_SIDE' ) && MATOMO_TRACK_ECOMMERCE_SERVER_SIDE )
+			   || did_action( 'wp_footer' )
+			   || $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
