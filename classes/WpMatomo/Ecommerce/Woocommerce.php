@@ -34,6 +34,12 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
+		add_action( 'woocommerce_after_calculate_totals', function ($cart) {
+			$this->logger->log( 'after calculate 1: ' . wp_json_encode( $cart->get_cart() ) );
+			$this->logger->log( 'after calculate 2: ' . wp_json_encode( $cart->get_totals() ) );
+
+			$this->logger->log('called from: ' . (new \Exception())->getTraceAsString());
+		} );
 
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -132,6 +138,8 @@ class Woocommerce extends Base {
 	public function on_cart_updated( $val = null, $is_coupon_update = false ) {
 		global $woocommerce;
 
+		$this->logger->log('cart updated from: ' . (new \Exception())->getTraceAsString());
+
 		/** @var \WC_Cart $cart */
 		$cart = $woocommerce->cart;
 		$cart->get_cart(); // triggers loading cart info from session
@@ -146,6 +154,7 @@ class Woocommerce extends Base {
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			$this->logger->log( 'cart updated to: ' . wp_json_encode( $cart_content ) );
+			$this->logger->log( 'cart totals: ' . wp_json_encode( $cart->get_totals() ) );
 		}
 
 		$tracking_code = '';

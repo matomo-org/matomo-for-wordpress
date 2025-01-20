@@ -104,6 +104,9 @@ class Base {
 	}
 
 	protected function wrap_script( $script ) {
+		$this->logger->log('tracking script: ' . $script);
+		$this->logger->log('should track in background: ' . $this->should_track_background());
+		$this->logger->log('const: ' . (defined('MATOMO_TRACK_ECOMMERCE_SERVER_SIDE') ? MATOMO_TRACK_ECOMMERCE_SERVER_SIDE : 'undefined'));
 		if ( $this->should_track_background() ) {
 			foreach ( $this->ajax_tracker_calls as $call ) {
 				$methods = [
