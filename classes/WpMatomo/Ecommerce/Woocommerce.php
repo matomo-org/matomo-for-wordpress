@@ -66,18 +66,16 @@ class Woocommerce extends Base {
 
 	public function after_calculate_totals() {
 		if ( ! $this->track_next_totals_change ) {
-			return null;
+			return;
 		}
 
 		try {
-			$val = $this->on_cart_updated( false );
+			$this->on_cart_updated( false );
 		} catch ( \Exception $e ) {
 			$this->logger->log_exception( 'woo_on_cart_update', $e );
 		} finally {
 			$this->track_next_totals_change = false;
 		}
-
-		return $val;
 	}
 
 	public function on_order_status_change( $order_id, $old_status, $new_status ) {
