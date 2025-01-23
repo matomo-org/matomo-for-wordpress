@@ -23,6 +23,8 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 class Woocommerce extends Base {
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
+	private $track_next_totals_change = false;
+
 	public function register_hooks() {
 		parent::register_hooks();
 
@@ -40,6 +42,7 @@ class Woocommerce extends Base {
 
 			$this->logger->log('called from: ' . (new \Exception())->getTraceAsString());
 		} );
+		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
 
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -57,8 +60,24 @@ class Woocommerce extends Base {
 			);
 		}
 
-		add_action( 'woocommerce_applied_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+	}
+
+	public function after_calculate_totals() {
+		if ( ! $this->track_next_totals_change ) {
+			return null;
+		}
+
+		try {
+			$val = $this->on_cart_updated( false );
+		} catch ( \Exception $e ) {
+			$this->logger->log_exception( 'woo_on_cart_update', $e );
+		} finally {
+			$this->track_next_totals_change = false;
+		}
+
+		return $val;
 	}
 
 	public function on_order_status_change( $order_id, $old_status, $new_status ) {
@@ -108,25 +127,8 @@ class Woocommerce extends Base {
 		}
 	}
 
-	public function on_coupon_updated_safe() {
-		try {
-			$val = null;
-			$val = $this->on_cart_updated( $val, true );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
-	}
-
-	public function on_cart_updated_safe( $val = null ) {
-		try {
-			$val = $this->on_cart_updated( $val );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
+	public function on_cart_updated_safe() {
+		$this->track_next_totals_change = true;
 	}
 
 	/**
