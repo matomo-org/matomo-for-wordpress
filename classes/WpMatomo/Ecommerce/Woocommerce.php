@@ -44,6 +44,11 @@ class Woocommerce extends Base {
 		} );
 		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
 
+		// NOTE: must be done before the actual AJAX handler since the handler will die at the end.
+		add_action( 'wp_ajax_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0);
+		add_action( 'wp_ajax_nopriv_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0);
+		add_action( 'wc_ajax_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0);
+
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
 			// because of woocommerce_applied_coupon and then also because of woocommerce_update_cart_action_cart_updated itself
