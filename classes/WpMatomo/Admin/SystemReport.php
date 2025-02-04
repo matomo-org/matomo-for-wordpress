@@ -1312,7 +1312,7 @@ class SystemReport {
 					array(
 						'method'    => 'GET',
 						'sslverify' => false,
-						'timeout'   => defined( 'MATOMO_LOCAL_ENVIRONMENT' ) && MATOMO_LOCAL_ENVIRONMENT ? 5 : 2,
+						'timeout'   => defined( 'MATOMO_LOCAL_ENVIRONMENT' ) && MATOMO_LOCAL_ENVIRONMENT ? 10 : 2,
 					)
 				);
 				if ( is_array( $result ) ) {
@@ -1337,6 +1337,8 @@ class SystemReport {
 							'is_error' => $is_error,
 						];
 					}
+				} else {
+					$this->logger->log( 'diagnostic check: wp_remove_post to index.php failed' );
 				}
 			}
 		}
