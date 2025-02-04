@@ -39,7 +39,12 @@ function checkWpDebugLogsForError() {
 
     let lines = contents.split("\n");
     let matomoErrors = lines.filter((line) => {
-      return /php (notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
+      line = line.toLowerCase();
+      return /php (notice|warning|error|deprecated):/i.test(line)
+        && line.includes('matomo')
+        // deprecated function warnings from other plugins
+        && !line.includes('_load_textdomain_just_in_time')
+        && !line.includes('print_inline_script');
     });
 
     if (matomoErrors.length) {
