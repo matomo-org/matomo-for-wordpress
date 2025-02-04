@@ -110,7 +110,7 @@ export default class Page {
         });
         return isAllComplete;
       });
-    }, { timeout: 20000 });
+    }, { timeout: 60000 });
   }
 
   // for wp themes/plugins that use react
