@@ -233,9 +233,6 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db( $db_url_override = null, $asn_url_override = null ) {
-		if (@$GLOBALS['test']) {
-			print "is main site: " . is_main_site() . "\n";@ob_flush();
-		}
 		if ( is_multisite() && ! is_main_site() ) {
 			return; // only run this task once per entire WP install
 		}
@@ -244,9 +241,8 @@ class ScheduledTasks {
 
 		$this->logger->log( 'Scheduled tasks update geoip database' );
 		try {
-			print "executing geoip update 1\n";@ob_flush();
 			Bootstrap::do_bootstrap();
-print "executing geoip update 2\n";@ob_flush();
+
 			$maxmind_license = $this->settings->get_global_option( 'maxmind_license_key' );
 			if ( empty( $maxmind_license ) ) {
 				$db_url  = GeoIp2::getDbIpLiteUrl();
@@ -276,7 +272,6 @@ print "executing geoip update 2\n";@ob_flush();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
 				LocationProvider::setCurrentProvider( Php::ID );
 			}
-			print "executing geoip update 3\n";@ob_flush();
 		} catch ( Exception $e ) {
 			$next = wp_next_scheduled( self::EVENT_GEOIP );
 			if ( false === $next || $next - time() > 2 * 24 * 60 * 60 ) {
