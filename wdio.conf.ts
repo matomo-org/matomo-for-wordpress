@@ -35,8 +35,6 @@ function checkWpDebugLogsForError() {
   try {
     let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8');
 
-    fs.appendFileSync(wpDebugLogConcatPath, contents);
-
     let lines = contents.split("\n");
     let matomoErrors = lines.filter((line) => {
       line = line.toLowerCase();
@@ -46,6 +44,8 @@ function checkWpDebugLogsForError() {
         && !line.includes('_load_textdomain_just_in_time')
         && !line.includes('print_inline_script');
     });
+
+    fs.appendFileSync(wpDebugLogConcatPath, lines.join("\n"));
 
     if (matomoErrors.length) {
       throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
