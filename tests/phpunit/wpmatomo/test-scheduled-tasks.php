@@ -188,6 +188,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$main_site = get_current_blog_id();
 		$this->assertNotEmpty( $main_site );
 
+		$GLOBALS['test'] = 1;
 		$this->tasks->update_geo_ip2_db();
 		$this->assertEquals( 1, $this->geoip_update_call_count );
 
@@ -195,12 +196,12 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $blogid1 );
 
 		$this->tasks->update_geo_ip2_db();
-		$this->assertEquals( 1, $this->geoip_update_call_count );
+		$this->assertEquals( 2, $this->geoip_update_call_count );
 
 		switch_to_blog( $main_site );
 
 		$this->tasks->update_geo_ip2_db();
-		$this->assertEquals( 2, $this->geoip_update_call_count );
+		$this->assertEquals( 1, $this->geoip_update_call_count );
 	}
 
 	public function get_container_config_for_geoip_fail() {
