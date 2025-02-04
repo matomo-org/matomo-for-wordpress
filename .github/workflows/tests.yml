@@ -291,6 +291,8 @@ jobs:
       # output debug.concat.log (created in a hook in wdio.conf.ts)
       - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || echo "debug.concat.log file does not exist"
         if: always()
+      - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || echo "debug.concat.log file does not exist for test-multi"
+        if: always()
 
   checkstyle:
     runs-on: 'ubuntu-20.04'

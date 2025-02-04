@@ -24,9 +24,9 @@ async function saveScreenshotIfError(test, error) {
   }
 }
 
-function checkWpDebugLogsForError() {
-  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.log');
-  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.concat.log');
+function checkWpDebugLogsForError(dirName: string) {
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.log');
+  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.concat.log');
 
   if (!fs.existsSync(wpDebugLogPath)) {
     return;
@@ -263,7 +263,8 @@ export const config: Options.Testrunner = {
     }
 
     try {
-      checkWpDebugLogsForError();
+      checkWpDebugLogsForError(WORDPRESS_DIR_NAME);
+      checkWpDebugLogsForError(`${WORDPRESS_DIR_NAME}-multi`);
     } catch (err) {
       await saveScreenshotIfError(test, err);
       throw err;
