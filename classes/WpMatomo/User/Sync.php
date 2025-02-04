@@ -364,7 +364,7 @@ class Sync {
 		}
 
 		if ( ! $matomo_user_login || empty( $user_in_matomo ) ) {
-			$this->logger->log( 'Matomo is now creating a user forUserId ' . $user_id . ' with matomo login ' . $matomo_user_login );
+			$this->logger->log( 'Matomo is now creating a user for user id ' . $user_id . ' with matomo login ' . $matomo_user_login );
 
 			$now      = Date::now()->getDatetime();
 			$password = new Password();

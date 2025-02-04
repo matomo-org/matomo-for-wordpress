@@ -10,7 +10,10 @@
 namespace WpMatomo;
 
 use Piwik\Application\Environment;
+use Piwik\Cache;
+use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
+use Piwik\Option;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -33,8 +36,6 @@ class Bootstrap {
 
 	private static $extra_di_definitions = [];
 
-	private static $environment_bootstrapped = false;
-
 	public static function set_extra_di_definitions( array $definitions ) {
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
 			throw new \Exception( 'set_extra_di_definitions is only for tests' );
@@ -42,6 +43,8 @@ class Bootstrap {
 
 		self::$extra_di_definitions = $definitions;
 	}
+
+	private static $environment_bootstrapped = false;
 
 	public static function get_extra_di_definitions() {
 		return self::$extra_di_definitions;
@@ -107,7 +110,7 @@ class Bootstrap {
 		self::$environment_bootstrapped = true;
 	}
 
-	public function bootstrap() {
+	public function bootstrap( $reset = false ) {
 		if ( self::is_bootstrapped() ) {
 			return;
 		}
@@ -146,5 +149,17 @@ class Bootstrap {
 	public static function do_bootstrap() {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();
+	}
+
+	public static function destroy_bootstrapped_environment() {
+		// TODO: check clearInMemoryCaches in test
+		Option::clearCache();
+		\Piwik\Site::clearCache();
+		Cache::getTransientCache()->flushAll();
+		\Piwik\Plugin\API::unsetAllInstances();
+		StaticContainer::clearContainer();
+
+		self::$environment_bootstrapped  = false;
+		self::$bootstrapped_by_wordpress = false;
 	}
 }
