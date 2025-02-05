@@ -481,7 +481,6 @@ class WordPress extends Plugin
         $files[] = "../plugins/WordPress/stylesheets/optout.css";
         $files[] = "../plugins/WordPress/stylesheets/export.css";
         $files[] = "../plugins/WordPress/stylesheets/blogselection.css";
-        $files[] = "../plugins/WordPress/stylesheets/siteselector.css";
         $files[] = "../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.less";
     }
 }
