@@ -44,15 +44,4 @@ export default class MatomoPage extends Page {
       $('#periodString a#date').text('');
     });
   }
-
-  async waitForSiteSelectorRemoved() {
-    try {
-      await browser.waitUntil(async () => {
-        return browser.execute(() => window.jQuery('.siteSelector').length === 0);
-      });
-    } catch (e) {
-      await $('.siteSelector').click();
-      throw e;
-    }
-  }
 }
