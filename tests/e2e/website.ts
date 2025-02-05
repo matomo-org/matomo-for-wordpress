@@ -73,7 +73,9 @@ class Website {
     }
 
     const baseUrl = await this.baseUrl();
-    await browser.url(`${baseUrl}/wp-login.php`);
+    await this.retry(3, async () => {
+      await browser.url(`${baseUrl}/wp-login.php`);
+    });
 
     await $('#user_login').setValue(process.env.WORDPRESS_USER_LOGIN || 'root');
     await $('#user_pass').setValue(process.env.WORDPRESS_USER_PASS || 'pass');
@@ -234,6 +236,20 @@ class Website {
 
   removeWordPressFolderOverride() {
     this.wordPressFolderOverride = null;
+  }
+
+  private async retry<R>(times: number, fn: () => Promise<R>) {
+    while (times > 0) {
+      try {
+        return await fn();
+      } catch (e) {
+        --times;
+
+        if (times <= 0) {
+          throw e;
+        }
+      }
+    }
   }
 }
 
