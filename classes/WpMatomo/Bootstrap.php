@@ -161,6 +161,13 @@ class Bootstrap {
 		\Piwik\Site::clearCache();
 		Cache::getTransientCache()->flushAll();
 		\Piwik\Plugin\API::unsetAllInstances();
+		\Piwik\Tracker\Cache::$cache = null;
+		\Piwik\DataTable\Manager::getInstance()->deleteAll();
+		\Piwik\DataAccess\ArchiveTableCreator::clear();
+		\Piwik\Plugins\ScheduledReports\API::$cache = [];
+		\Piwik\Singleton::clearAll();
+		\Piwik\ArchiveProcessor\PluginsArchiver::$archivers = [];
+		\Piwik\Notification\Manager::cancelAllNotifications();
 		StaticContainer::clearContainer();
 
 		self::$environment_bootstrapped  = false;
