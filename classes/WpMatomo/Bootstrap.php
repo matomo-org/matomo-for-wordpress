@@ -152,6 +152,10 @@ class Bootstrap {
 	}
 
 	public static function destroy_bootstrapped_environment() {
+		if ( ! self::$environment_bootstrapped ) {
+			return;
+		}
+
 		// TODO: check clearInMemoryCaches in test
 		Option::clearCache();
 		\Piwik\Site::clearCache();
