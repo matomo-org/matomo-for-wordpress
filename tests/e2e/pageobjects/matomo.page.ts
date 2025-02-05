@@ -22,9 +22,9 @@ export default class MatomoPage extends Page {
 
   async waitForLoading() {
     await browser.waitUntil(async () => {
-      const loadingGifs = await browser.execute(() => $('.loadingPiwik').length);
+      const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
       return loadingGifs === 0;
-    });
+    }, { timeout: 30000 });
   }
 
   async unfocus() {
