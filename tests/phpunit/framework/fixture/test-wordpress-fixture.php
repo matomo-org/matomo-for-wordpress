@@ -57,7 +57,7 @@ class MatomoUnit_WordPress_Fixture {
 		// see wp_version_check() in wp-includes/update.php
 		$current                  = new stdClass();
 		$current->updates         = array();
-		$current->version_checked = wp_get_wp_version();
+		$current->version_checked = function_exists( 'wp_get_wp_version' ) ? wp_get_wp_version() : getenv( 'WORDPRESS_VERSION' );
 		$current->last_checked    = time();
 		set_site_transient( 'update_core', $current );
 	}
