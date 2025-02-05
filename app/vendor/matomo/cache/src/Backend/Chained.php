@@ -78,11 +78,7 @@ class Chained implements Backend
     {
         $flushed = \true;
         foreach ($this->backends as $backend) {
-			try {
             $flushed = $backend->doFlush() && $flushed;
-			} catch (\Exception $ex) {
-				throw new Exception($ex->getMessage()); // TODO: remove
-			}
         }
         return $flushed;
     }

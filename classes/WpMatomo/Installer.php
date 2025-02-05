@@ -49,6 +49,10 @@ class Installer {
 		$this->logger   = new Logger();
 	}
 
+	public static function is_file_not_exists_failure( \Exception $ex ) {
+		return preg_match( '/no such file or directory/i', $ex->getMessage() );
+	}
+
 	public function register_hooks() {
 		add_action( 'activate_matomo/matomo.php', [ $this, 'install' ] ); // if activate_plugin is invoked with the path to the plugin entrypoint
 		add_action( 'activate_matomo', [ $this, 'install' ] ); // if activate_plugin is invoked with the plugin slug
@@ -191,7 +195,13 @@ class Installer {
 
 			Singleton::clearAll();
 			PluginApi::unsetAllInstances();
-			Cache::flushAll();
+			try {
+				Cache::flushAll();
+			} catch ( \Exception $ex ) {
+				if ( ! self::is_file_not_exists_failure( $ex ) ) { // ignore errors that involve a directory not existing
+					throw $ex;
+				}
+			}
 
 			$this->logger->log( 'Matomo install finished' );
 
