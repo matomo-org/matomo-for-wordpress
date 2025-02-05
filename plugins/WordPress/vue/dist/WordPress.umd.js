@@ -515,7 +515,7 @@ PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSetting
 
 
 external_CoreHome_["Matomo"].on('Matomo.topControlsRendered', function () {
-  $('.top_controls .siteSelector').hide();
+  $('.top_controls .sites_autocomplete').hide();
 });
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 

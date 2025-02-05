@@ -11,5 +11,5 @@ export { default as UseOptOutShortCode } from './UseOptOutShortCode/UseOptOutSho
 export { default as PluginMeasurableSettings } from './PluginMeasurableSettings/PluginMeasurableSettings.vue';
 
 Matomo.on('Matomo.topControlsRendered', () => {
-  $('.top_controls .siteSelector').hide();
+  $('.top_controls .sites_autocomplete').hide();
 });
