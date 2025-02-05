@@ -201,11 +201,18 @@ class Website {
       window.jQuery('#WPLANG').val(l).change();
     }, locale);
 
+    await browser.pause(500);
+
+    let selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set site language input to ${locale}`);
+    }
+
     await $('#submit').click();
 
     await $('#setting-error-settings_updated').waitForDisplayed();
 
-    const selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
+    selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
     if (selectedLanguage !== locale) {
       throw new Error(`unable to set site language to ${locale}`);
     }

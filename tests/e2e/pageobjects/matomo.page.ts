@@ -15,8 +15,16 @@ export default class MatomoPage extends Page {
 
   async open(path: string) {
     const result = super.open(path);
+    await this.waitForLoading();
     await this.addStylesToPage('table.entityTable tbody tr:hover td { background-color: unset !important; }');
     return result;
+  }
+
+  async waitForLoading() {
+    await browser.waitUntil(async () => {
+      const loadingGifs = await browser.execute(() => $('.loadingPiwik').length);
+      return loadingGifs === 0;
+    });
   }
 
   async unfocus() {
