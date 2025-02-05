@@ -13,6 +13,8 @@ class MatomoUnit_WordPress_Fixture {
 			}
 		}
 
+		$this->ensure_wp_version_check_is_not_run();
+
 		set_current_screen( 'front' );
 
 		$this->reset_roles();
@@ -48,5 +50,15 @@ class MatomoUnit_WordPress_Fixture {
 
 	public function switch_to_admin_page() {
 		set_current_screen( 'edit-post' );
+	}
+
+	private function ensure_wp_version_check_is_not_run() {
+		// the version check sends an HTTP request, and we don't need that to run during unit tests
+		// see wp_version_check() in wp-includes/update.php
+		$current                  = new stdClass();
+		$current->updates         = array();
+		$current->version_checked = wp_get_wp_version();
+		$current->last_checked    = time();
+		set_site_transient( 'update_core', $current );
 	}
 }
