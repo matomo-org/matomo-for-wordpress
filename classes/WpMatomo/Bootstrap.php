@@ -156,7 +156,6 @@ class Bootstrap {
 			return;
 		}
 
-		// TODO: check clearInMemoryCaches in test
 		Option::clearCache();
 		\Piwik\Site::clearCache();
 		Cache::getTransientCache()->flushAll();

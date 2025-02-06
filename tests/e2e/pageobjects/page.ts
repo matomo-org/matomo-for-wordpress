@@ -142,7 +142,7 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
     });
-    await browser.pause(500);
+    await browser.pause(1000);
   }
 
   async undoChangesToWpAdminForScreenshot() {

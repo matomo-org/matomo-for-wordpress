@@ -311,7 +311,9 @@ class Sync {
 		$user_model = new Model();
 		$user_id    = $wp_user->ID;
 		$login      = $wp_user->user_login;
-
+$user_table_prop = new \ReflectionProperty(get_class($user_model), 'userTable');
+$user_table_prop->setAccessible(true);
+$user_table = $user_table_prop->getValue($user_model);
 		$matomo_user_login = User::get_matomo_user_login( $user_id );
 		$user_in_matomo    = null;
 
@@ -364,14 +366,19 @@ class Sync {
 		}
 
 		if ( ! $matomo_user_login || empty( $user_in_matomo ) ) {
-			$this->logger->log( 'Matomo is now creating a user for user id ' . $user_id . ' with matomo login ' . $matomo_user_login );
+			$this->logger->log( 'Matomo is now creating a user for user id ' . $user_id . ' with matomo login ' . $matomo_user_login . ' (user model = ' . $user_table . ')' );
 
 			$now      = Date::now()->getDatetime();
 			$password = new Password();
 			// we generate some random password since log in using matomo won't be happening anyway
 			$password = $password->hash( $login . $now . Common::getRandomString( 200 ) . microtime( true ) . Common::generateUniqId() );
 
+			try {
 			$user_model->addUser( $matomo_user_login, $password, $wp_user->user_email, $now );
+			} catch (\Exception $ex) {
+				$this->logger->log('existing users: ' . print_r($user_model->getUsers([])), true);
+				throw $ex;
+			}
 
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
 		} elseif ( $user_in_matomo['email'] !== $wp_user->user_email ) {
