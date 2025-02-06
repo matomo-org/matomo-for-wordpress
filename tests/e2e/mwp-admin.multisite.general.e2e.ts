@@ -6,11 +6,12 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser,$ } from '@wdio/globals';
 import Website from './website.js';
 import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import DashboardPage from './pageobjects/matomo-reporting/dashboard.page.js';
+import MatomoCli from './apiobjects/matomo.cli.js';
 
 describe('MultiSite General', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -27,6 +28,46 @@ describe('MultiSite General', function() {
   after(async () => {
     Website.unsetSite();
     Website.removeWordPressFolderOverride();
+  });
+
+  it('should succeed when updating to the current code', async () => {
+    // TODO: code redundancy with test in update.e2e.ts
+    const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
+
+    await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
+    await $('a.upload-view-toggle').waitForDisplayed();
+
+    await browser.execute(() => {
+      window.jQuery('a.upload-view-toggle')[0].click();
+    });
+    await browser.pause(250);
+
+    await $('#pluginzip').setValue(pathToRelease);
+    await browser.pause(250);
+
+    await $('#install-plugin-submit').waitForClickable();
+    await browser.execute(() => {
+      window.jQuery('#install-plugin-submit')[0].click();
+    });
+
+    try {
+      await $('.update-from-upload-overwrite').waitForExist();
+
+      await browser.execute(() => {
+        window.jQuery('.update-from-upload-overwrite')[0].click();
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return window.jQuery && (
+          window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
+          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
+        );
+      });
+    }, {timeout: 60000});
   });
 
   it('should display the MWP admin pages for a single site correctly', async () => {
