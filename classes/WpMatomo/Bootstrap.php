@@ -36,6 +36,8 @@ class Bootstrap {
 
 	private static $extra_di_definitions = [];
 
+	private static $environment_bootstrapped = false;
+
 	public static function set_extra_di_definitions( array $definitions ) {
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
 			throw new \Exception( 'set_extra_di_definitions is only for tests' );
@@ -43,8 +45,6 @@ class Bootstrap {
 
 		self::$extra_di_definitions = $definitions;
 	}
-
-	private static $environment_bootstrapped = false;
 
 	public static function get_extra_di_definitions() {
 		return self::$extra_di_definitions;
@@ -110,7 +110,7 @@ class Bootstrap {
 		self::$environment_bootstrapped = true;
 	}
 
-	public function bootstrap( $reset = false ) {
+	public function bootstrap() {
 		if ( self::is_bootstrapped() ) {
 			return;
 		}
