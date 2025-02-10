@@ -10,6 +10,7 @@ import {browser, $, expect} from '@wdio/globals';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
+import MatomoCli from "./apiobjects/matomo.cli.ts";
 
 const SKIP_SETUP_LINK_SELECTOR = '.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link,.woocommerce-profiler-setup-store__button.is-tertiary';
 
@@ -257,6 +258,45 @@ class Website {
         }
       }
     }
+  }
+
+  async updateMatomoToLatest() {
+    const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
+
+    await browser.url(`${await this.baseUrl()}/wp-admin/plugin-install.php`);
+    await $('a.upload-view-toggle').waitForDisplayed();
+
+    await browser.execute(() => {
+      window.jQuery('a.upload-view-toggle')[0].click();
+    });
+    await browser.pause(250);
+
+    await $('#pluginzip').setValue(pathToRelease);
+    await browser.pause(250);
+
+    await $('#install-plugin-submit').waitForClickable();
+    await browser.execute(() => {
+      window.jQuery('#install-plugin-submit')[0].click();
+    });
+
+    try {
+      await $('.update-from-upload-overwrite').waitForExist();
+
+      await browser.execute(() => {
+        window.jQuery('.update-from-upload-overwrite')[0].click();
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return window.jQuery && (
+          window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
+          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
+        );
+      });
+    }, {timeout: 60000});
   }
 }
 
