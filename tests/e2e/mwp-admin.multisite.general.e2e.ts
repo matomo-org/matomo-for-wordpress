@@ -45,6 +45,7 @@ describe('MultiSite General', function() {
 
     // for some reason on the first load, the app/bootstrap.php cannot be found
     await GetStartedPage.open();
+    await browser.pause(3000);
     await GetStartedPage.open();
 
     await GetStartedPage.prepareWpAdminForScreenshot();
