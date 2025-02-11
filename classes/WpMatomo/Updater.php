@@ -10,7 +10,7 @@
 namespace WpMatomo;
 
 use Exception;
-use Piwik\Cache as PiwikCache;
+use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Db;
@@ -20,7 +20,6 @@ use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
-use WpMatomo\Paths;
 use WpMatomo\Updater\UpdateInProgressException;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -143,7 +142,13 @@ class Updater {
 		$paths->clear_cache_dir();
 
 		Option::clearCache();
-		PiwikCache::flushAll();
+		try {
+			Cache::flushAll();
+		} catch ( \Exception $ex ) {
+			if ( ! Installer::is_file_not_exists_failure( $ex ) ) { // ignore errors that involve a directory not existing
+				throw $ex;
+			}
+		}
 
 		$current_version = Option::get( 'version_core' );
 

@@ -24,9 +24,9 @@ async function saveScreenshotIfError(test, error) {
   }
 }
 
-function checkWpDebugLogsForError() {
-  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.log');
-  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.concat.log');
+function checkWpDebugLogsForError(dirName: string) {
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.log');
+  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.concat.log');
 
   if (!fs.existsSync(wpDebugLogPath)) {
     return;
@@ -35,12 +35,17 @@ function checkWpDebugLogsForError() {
   try {
     let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8');
 
-    fs.appendFileSync(wpDebugLogConcatPath, contents);
-
     let lines = contents.split("\n");
     let matomoErrors = lines.filter((line) => {
-      return /php (notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
+      line = line.toLowerCase();
+      return /php (notice|warning|error|deprecated):/i.test(line)
+        && line.includes('matomo')
+        // deprecated function warnings from other plugins
+        && !line.includes('_load_textdomain_just_in_time')
+        && !line.includes('print_inline_script');
     });
+
+    fs.appendFileSync(wpDebugLogConcatPath, lines.join("\n"));
 
     if (matomoErrors.length) {
       throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
@@ -258,7 +263,8 @@ export const config: Options.Testrunner = {
     }
 
     try {
-      checkWpDebugLogsForError();
+      checkWpDebugLogsForError(WORDPRESS_DIR_NAME);
+      checkWpDebugLogsForError(`${WORDPRESS_DIR_NAME}-multi`);
     } catch (err) {
       await saveScreenshotIfError(test, err);
       throw err;

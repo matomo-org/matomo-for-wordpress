@@ -179,7 +179,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	/**
 	 * @provideContainerConfig get_container_config_for_geoip_no_op
 	 */
-	public function test_geoip_only_runs_on_multisite_if_site_is_not_main_site() {
+	public function test_geoip_only_runs_on_multisite_if_site_is_main_site() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'only runs if multisite' );
 			return;
@@ -200,7 +200,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $main_site );
 
 		$this->tasks->update_geo_ip2_db();
-		$this->assertEquals( 2, $this->geoip_update_call_count );
+		$this->assertEquals( 1, $this->geoip_update_call_count );
 	}
 
 	public function get_container_config_for_geoip_fail() {

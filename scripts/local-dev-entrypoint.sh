@@ -70,6 +70,7 @@ function handle_cli_command() {
     ./vendor/bin/phpunit $EXECUTE_ARGS
     exit $?
   else
+    cd /var/www/html/matomo-for-wordpress
     "$EXECUTE_TARGET" $EXECUTE_ARGS
     exit $?
   fi
