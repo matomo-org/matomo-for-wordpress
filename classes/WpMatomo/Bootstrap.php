@@ -10,7 +10,10 @@
 namespace WpMatomo;
 
 use Piwik\Application\Environment;
+use Piwik\Cache;
+use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
+use Piwik\Option;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -146,5 +149,27 @@ class Bootstrap {
 	public static function do_bootstrap() {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();
+	}
+
+	public static function destroy_bootstrapped_environment() {
+		if ( ! self::$environment_bootstrapped ) {
+			return;
+		}
+
+		Option::clearCache();
+		\Piwik\Site::clearCache();
+		Cache::getTransientCache()->flushAll();
+		\Piwik\Plugin\API::unsetAllInstances();
+		\Piwik\Tracker\Cache::$cache = null;
+		\Piwik\DataTable\Manager::getInstance()->deleteAll();
+		\Piwik\DataAccess\ArchiveTableCreator::clear();
+		\Piwik\Plugins\ScheduledReports\API::$cache = [];
+		\Piwik\Singleton::clearAll();
+		\Piwik\ArchiveProcessor\PluginsArchiver::$archivers = [];
+		\Piwik\Notification\Manager::cancelAllNotifications();
+		StaticContainer::clearContainer();
+
+		self::$environment_bootstrapped  = false;
+		self::$bootstrapped_by_wordpress = false;
 	}
 }
