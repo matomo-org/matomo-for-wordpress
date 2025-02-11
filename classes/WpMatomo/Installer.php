@@ -121,24 +121,14 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
+			// TODO: mark installer running so only one runs at a time
+
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
 
 			$this->install_plugins_one_at_a_time();
 
 			$this->update_components();
-
-			// we're scheduling another update in case there are some dimensions to be updated or anything
-			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
-			// away but need an actual reload and cache clearance etc
-			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
-
-			// to set up geoip in the background later... don't want this to influence the install
-			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
-
-			// in case something fails with website or user creation
-			// also to set up all the other users
-			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 
 			update_option( self::OPTION_NAME_INSTALL_DATE, time() );
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
@@ -206,6 +196,22 @@ class Installer {
 			$this->logger->log( 'Matomo install finished' );
 
 			$this->mark_matomo_installed();
+
+			// we're scheduling another update in case there are some dimensions to be updated or anything
+			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
+			// away but need an actual reload and cache clearance etc
+			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
+
+			// to set up geoip in the background later... don't want this to influence the install
+			$tasks                      = new ScheduledTasks( $this->settings );
+			$last_geoip_update_run_time = $tasks->get_last_time_before_cron( ScheduledTasks::EVENT_GEOIP );
+			if ( empty( $last_geoip_update_run_time ) ) {
+				wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
+			}
+
+			// in case something fails with website or user creation
+			// also to set up all the other users
+			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 		}
 
 		return true;

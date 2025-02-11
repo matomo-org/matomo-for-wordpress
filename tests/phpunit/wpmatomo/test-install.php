@@ -3,12 +3,12 @@
  * @package matomo
  */
 
-use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager\Model as SitesModel;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
 use WpMatomo\Paths;
+use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
@@ -52,7 +52,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		return new Installer( $this->settings );
 	}
 
-	public function test_looks_like_it_is_installed_is_intalled_when_installed() {
+	public function test_looks_like_it_is_installed_returns_true_when_installed() {
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'core' => 1 ] ) );
 		$this->settings->save();
 
@@ -341,5 +341,54 @@ class InstallTest extends MatomoAnalytics_TestCase {
 			],
 			$existing
 		);
+	}
+
+	public function test_install_schedules_geoip_if_not_already_ran_once() {
+		// remove existing task if exists
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		if ( ! empty( $next ) ) {
+			wp_unschedule_event( $next, \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+			$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		}
+
+		$this->assertEmpty( $next );
+
+		// mark components not installed
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		// ensure last time before cron is empty
+		$tasks  = new ScheduledTasks( $this->settings );
+		$before = $tasks->get_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $before );
+
+		$this->installer->install();
+
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertNotEmpty( $next );
+	}
+
+	public function test_install_does_not_schedule_geoip_if_already_ran_once() {
+		// remove existing task if exists
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		if ( ! empty( $next ) ) {
+			wp_unschedule_event( $next, \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+			$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		}
+
+		$this->assertEmpty( $next );
+
+		// mark components not installed
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		// mark geoip already run
+		$tasks = new ScheduledTasks( $this->settings );
+		$tasks->set_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP, 900 );
+
+		$this->installer->install();
+
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $next );
 	}
 }
