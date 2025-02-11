@@ -121,7 +121,11 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
-			// TODO: mark installer running so only one runs at a time
+			if ( $this->is_install_in_progress() ) {
+				return false;
+			}
+
+			$this->mark_install_started();
 
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
@@ -470,6 +474,25 @@ class Installer {
 
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
 		$this->settings->save();
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		delete_option( $option_name );
+	}
+
+	private function mark_install_started() {
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		update_option( $option_name, time() );
+	}
+
+	private function is_install_in_progress() {
+		$five_minutes = 5 * 60;
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		$start_time  = get_option( $option_name );
+
+		// install is in progress if there is no last start time, or the last start time is before
+		// five minutes ago (we assume it failed in this case)
+		return ! empty( $start_time ) && $start_time >= time() - $five_minutes;
 	}
 
 	/**

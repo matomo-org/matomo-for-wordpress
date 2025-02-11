@@ -391,4 +391,37 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
 		$this->assertEmpty( $next );
 	}
+
+	public function test_install_runs_if_not_started() {
+		delete_option( Settings::OPTION_PREFIX . 'install-start-time' );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertTrue( $result );
+	}
+
+	public function test_install_does_not_run_if_started_recently() {
+		update_option( Settings::OPTION_PREFIX . 'install-start-time', time() - 10 );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertFalse( $result );
+	}
+
+	public function test_install_runs_if_last_started_more_than_five_minutes_ago() {
+		update_option( Settings::OPTION_PREFIX . 'install-start-time', time() - 310 );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertTrue( $result );
+	}
 }
