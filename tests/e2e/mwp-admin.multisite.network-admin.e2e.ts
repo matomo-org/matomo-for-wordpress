@@ -13,6 +13,7 @@ import NetworkSettingsPage from './pageobjects/mwp-network-admin/settings.page.j
 import NetworkDiagnosticsPage from './pageobjects/mwp-network-admin/diagnostics.page.js';
 import NetworkHelpPage from './pageobjects/mwp-network-admin/help.page.js';
 import NetworkMarketplacePage from './pageobjects/mwp-network-admin/marketplace.page.js';
+import GetStartedPage from "./pageobjects/mwp-admin/get-started.page";
 
 describe('Network Admin', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -32,6 +33,9 @@ describe('Network Admin', function() {
   });
 
   it('should display the multisite get started page correctly', async () => {
+    // for some reason on the first load, the app/bootstrap.php cannot be found
+    await NetworkMultiSitePage.open();
+    await browser.pause(3000);
     await NetworkMultiSitePage.open();
 
     await NetworkMultiSitePage.prepareWpAdminForScreenshot();
