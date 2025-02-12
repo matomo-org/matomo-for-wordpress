@@ -125,6 +125,8 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_update_from_version_applys_updates_from_specified_version_to_current() {
+		print_r(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName());
+
 		// remove a column that's added in the 5.0.0-b1 migration
 		\Piwik\Db::exec( 'ALTER TABLE ' . \Piwik\Common::prefixTable( 'log_conversion' ) . ' DROP COLUMN pageviews_before' );
 		// remove a column that's added in a TagManager migration
