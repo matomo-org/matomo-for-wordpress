@@ -442,11 +442,11 @@ class Installer {
 		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
 
 		foreach ( $plugin_files as $file ) {
-			if ( strpos( $file, 'matomo/matomo.php' ) !== false ) {
+			$plugin_name = basename( dirname( $file ) );
+			if ( 'matomo' === $plugin_name ) {
 				continue;
 			}
 
-			$plugin_name = basename( dirname( $file ) );
 			if ( empty( $installed_components[ $plugin_name ] ) ) {
 				return false;
 			}
