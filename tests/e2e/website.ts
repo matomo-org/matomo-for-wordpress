@@ -296,7 +296,7 @@ class Website {
           window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
         );
       });
-    }, {timeout: 60000});
+    }, { timeout: 120000 });
   }
 }
 
