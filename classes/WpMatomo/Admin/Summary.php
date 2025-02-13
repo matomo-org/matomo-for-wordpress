@@ -67,44 +67,7 @@ class Summary {
 
 		$report_dates_obj = new Dates();
 		$report_dates     = $report_dates_obj->get_supported_dates();
-
-		$user_preference = new UserPreferences();
-		$default_date    = $user_preference->getDefaultDate();
-		$report_period   = $user_preference->getDefaultPeriod();
-		switch ( $report_period ) {
-			case 'day':
-				$report_date = $default_date;
-				break;
-			case 'year':
-			case 'month':
-			case 'week':
-				switch ( $default_date ) {
-					case 'yesterday':
-						$report_date = 'last' . $report_period;
-						break;
-					case 'today':
-						$report_date = 'this' . $report_period;
-						break;
-				}
-				break;
-			case 'range':
-				switch ( $default_date ) {
-					case 'previous30':
-						$report_date = 'lastmonth';
-						break;
-					case 'previous7':
-						$report_date = 'lastweek';
-						break;
-					case 'last30':
-						$report_date = 'thismonth';
-						break;
-					case 'last7':
-						$report_date = 'thisweek';
-				}
-		}
-		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
-			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
-		}
+		$report_date      = $report_dates_obj->get_date_from_query();
 
 		list( $report_period_selected, $report_date_selected ) = $report_dates_obj->detect_period_and_date( $report_date );
 
