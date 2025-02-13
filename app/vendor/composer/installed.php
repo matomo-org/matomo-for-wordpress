@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.2.1',
-        'version' => '5.2.1.0',
-        'reference' => '369c2f1d1bc4d06708a7d476135e6db868dcb746',
+        'pretty_version' => '5.2.2',
+        'version' => '5.2.2.0',
+        'reference' => '9db905b7141363049ed76de156556618212c9d36',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.2.1',
-            'version' => '5.2.1.0',
-            'reference' => '369c2f1d1bc4d06708a7d476135e6db868dcb746',
+            'pretty_version' => '5.2.2',
+            'version' => '5.2.2.0',
+            'reference' => '9db905b7141363049ed76de156556618212c9d36',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -334,8 +334,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0',
+                0 => '1.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'rsky/pear-core-min' => array(

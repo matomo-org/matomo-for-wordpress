@@ -134,7 +134,12 @@ class WhatsNewNotifications {
 			return $this->statuses;
 		}
 
-		$this->statuses = get_option( self::NOTIFICATION_STATUSES_OPTION_NAME );
+		$option_name = $this->get_notification_status_option_name();
+		if ( $this->settings->is_network_enabled() ) {
+			$this->statuses = get_site_option( $option_name );
+		} else {
+			$this->statuses = get_option( $option_name );
+		}
 
 		if ( ! is_array( $this->statuses ) ) {
 			$this->statuses = [];
@@ -148,7 +153,13 @@ class WhatsNewNotifications {
 			$statuses = [];
 		}
 
-		update_option( self::NOTIFICATION_STATUSES_OPTION_NAME, $statuses );
+		$option_name = $this->get_notification_status_option_name();
+		if ( $this->settings->is_network_enabled() ) {
+			update_site_option( $option_name, $statuses );
+		} else {
+			update_option( $option_name, $statuses );
+		}
+
 		$this->statuses = $statuses;
 	}
 
@@ -296,5 +307,9 @@ class WhatsNewNotifications {
 
 		$text = ob_get_clean();
 		return $text;
+	}
+
+	private function get_notification_status_option_name() {
+		return self::NOTIFICATION_STATUSES_OPTION_NAME . '-' . get_current_user_id();
 	}
 }

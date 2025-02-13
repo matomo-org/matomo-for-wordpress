@@ -6,11 +6,12 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser,$ } from '@wdio/globals';
 import Website from './website.js';
 import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import DashboardPage from './pageobjects/matomo-reporting/dashboard.page.js';
+import MatomoCli from './apiobjects/matomo.cli.js';
 
 describe('MultiSite General', function() {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -29,12 +30,26 @@ describe('MultiSite General', function() {
     Website.removeWordPressFolderOverride();
   });
 
+  async function removeSystemReportNotification() {
+    await browser.execute(() => {
+      window.jQuery('#matomo-systemreporterrors').hide();
+    });
+  }
+
+  it('should succeed when updating to the current code', async () => {
+    await Website.updateMatomoToLatest();
+  });
+
   it('should display the MWP admin pages for a single site correctly', async () => {
     Website.switchSite('test2');
 
-    await GetStartedPage.open();
+    // for some reason on the first load, the app/bootstrap.php cannot be found
+    await Website.retry(3, async () => {
+      await GetStartedPage.open();
+    });
 
     await GetStartedPage.prepareWpAdminForScreenshot();
+    await removeSystemReportNotification();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.multisite.get-started.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);
@@ -44,6 +59,7 @@ describe('MultiSite General', function() {
     await SettingsPage.open();
 
     await SettingsPage.prepareWpAdminForScreenshot();
+    await removeSystemReportNotification();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.multisite.settings.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);

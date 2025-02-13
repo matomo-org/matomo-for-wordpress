@@ -17,11 +17,15 @@ class MwpSummaryPage extends MwpPage {
 
   async openWith(params: Record<string, string> = {}) {
     const query = querystring.stringify({ ...params, page: 'matomo-summary', 'force-past-date': '1' });
-    return await super.open(`/wp-admin/admin.php?${query}`);
+    let result = await super.open(`/wp-admin/admin.php?${query}`);
+    await $('.postbox').waitForExist({ timeout: 30000 });
+    return result;
   }
 
   async changePeriod(periodDescriptor: string) {
     await $(`a.button=${periodDescriptor}`).click();
+    await browser.pause(1000);
+    await $('.postbox').waitForExist({ timeout: 30000 });
   }
 
   async pinReport(index: number) {

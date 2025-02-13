@@ -49,6 +49,10 @@ class Installer {
 		$this->logger   = new Logger();
 	}
 
+	public static function is_file_not_exists_failure( \Exception $ex ) {
+		return preg_match( '/no such file or directory/i', $ex->getMessage() );
+	}
+
 	public function register_hooks() {
 		add_action( 'activate_matomo/matomo.php', [ $this, 'install' ] ); // if activate_plugin is invoked with the path to the plugin entrypoint
 		add_action( 'activate_matomo', [ $this, 'install' ] ); // if activate_plugin is invoked with the plugin slug
@@ -117,24 +121,18 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
+			if ( $this->is_install_in_progress() ) {
+				return false;
+			}
+
+			$this->mark_install_started();
+
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
 
 			$this->install_plugins_one_at_a_time();
 
 			$this->update_components();
-
-			// we're scheduling another update in case there are some dimensions to be updated or anything
-			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
-			// away but need an actual reload and cache clearance etc
-			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
-
-			// to set up geoip in the background later... don't want this to influence the install
-			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
-
-			// in case something fails with website or user creation
-			// also to set up all the other users
-			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 
 			update_option( self::OPTION_NAME_INSTALL_DATE, time() );
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
@@ -191,11 +189,33 @@ class Installer {
 
 			Singleton::clearAll();
 			PluginApi::unsetAllInstances();
-			Cache::flushAll();
+			try {
+				Cache::flushAll();
+			} catch ( \Exception $ex ) {
+				if ( ! self::is_file_not_exists_failure( $ex ) ) { // ignore errors that involve a directory not existing
+					throw $ex;
+				}
+			}
 
 			$this->logger->log( 'Matomo install finished' );
 
 			$this->mark_matomo_installed();
+
+			// we're scheduling another update in case there are some dimensions to be updated or anything
+			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
+			// away but need an actual reload and cache clearance etc
+			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
+
+			// to set up geoip in the background later... don't want this to influence the install
+			$tasks                      = new ScheduledTasks( $this->settings );
+			$last_geoip_update_run_time = $tasks->get_last_time_before_cron( ScheduledTasks::EVENT_GEOIP );
+			if ( empty( $last_geoip_update_run_time ) ) {
+				wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
+			}
+
+			// in case something fails with website or user creation
+			// also to set up all the other users
+			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 		}
 
 		return true;
@@ -422,11 +442,11 @@ class Installer {
 		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
 
 		foreach ( $plugin_files as $file ) {
-			if ( strpos( $file, 'matomo/matomo.php' ) !== false ) {
+			$plugin_name = basename( dirname( $file ) );
+			if ( 'matomo' === $plugin_name ) {
 				continue;
 			}
 
-			$plugin_name = basename( dirname( $file ) );
 			if ( empty( $installed_components[ $plugin_name ] ) ) {
 				return false;
 			}
@@ -454,6 +474,25 @@ class Installer {
 
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
 		$this->settings->save();
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		delete_option( $option_name );
+	}
+
+	private function mark_install_started() {
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		update_option( $option_name, time() );
+	}
+
+	private function is_install_in_progress() {
+		$five_minutes = 5 * 60;
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		$start_time  = get_option( $option_name );
+
+		// install is in progress if there is no last start time, or the last start time is before
+		// five minutes ago (we assume it failed in this case)
+		return ! empty( $start_time ) && $start_time >= time() - $five_minutes;
 	}
 
 	/**

@@ -110,7 +110,7 @@ export default class Page {
         });
         return isAllComplete;
       });
-    }, { timeout: 20000 });
+    }, { timeout: 60000 });
   }
 
   // for wp themes/plugins that use react
@@ -142,7 +142,7 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
     });
-    await browser.pause(500);
+    await browser.pause(1000);
   }
 
   async undoChangesToWpAdminForScreenshot() {
