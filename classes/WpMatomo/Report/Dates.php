@@ -120,6 +120,8 @@ class Dates {
 					case 'last7':
 						$report_date = 'thisweek';
 						break;
+					default:
+						break;
 				}
 				break;
 			default:
