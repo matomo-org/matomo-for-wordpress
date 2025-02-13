@@ -137,6 +137,10 @@ export default class Page {
 
   async prepareWpAdminForScreenshot() {
     await browser.execute(() => {
+      if (!window.jQuery('#wpadminbar,#adminmenumain').length) {
+        throw new Error('cannot find elements to hide');
+      }
+
       window.jQuery('.notice-ocean-extra-plugin').hide();
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();
