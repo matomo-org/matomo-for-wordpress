@@ -69,7 +69,7 @@ class Woocommerce extends Base {
 		}
 
 		try {
-			$this->on_cart_updated( false );
+			$this->on_cart_updated();
 		} catch ( \Exception $e ) {
 			$this->logger->log_exception( 'woo_on_cart_update', $e );
 		} finally {
@@ -128,25 +128,11 @@ class Woocommerce extends Base {
 		$this->track_next_totals_change = true;
 	}
 
-	/**
-	 * @param null $val needed for woocommerce_update_cart_action_cart_updated filter
-	 * @param bool $is_coupon_update set to true if cart was updated because of a coupon
-	 *
-	 * @return mixed
-	 */
-	public function on_cart_updated( $val = null, $is_coupon_update = false ) {
+	private function on_cart_updated() {
 		global $woocommerce;
 
 		/** @var \WC_Cart $cart */
-		$cart = $woocommerce->cart;
-		$cart->get_cart(); // triggers loading cart info from session
-		if ( ! $is_coupon_update
-			&& ! $cart->get_total( 'total' )
-			&& ! did_action( 'woocommerce_before_calculate_totals' )
-		) {
-			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
-			$cart->calculate_totals();
-		}
+		$cart         = $woocommerce->cart;
 		$cart_content = $cart->get_cart();
 
 		$tracking_code = '';
@@ -200,8 +186,6 @@ class Woocommerce extends Base {
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
-
-		return $val;
 	}
 
 	public function on_order( $order_id ) {

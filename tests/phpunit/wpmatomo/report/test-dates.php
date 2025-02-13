@@ -47,4 +47,9 @@ class ReportDatesTest extends MatomoUnit_TestCase {
 			array( '15-05-06', 'day', 'yesterday' ),
 		);
 	}
+
+	public function test_get_date_from_query() {
+		// TODO
+		throw new \Exception( 'todo' );
+	}
 }
