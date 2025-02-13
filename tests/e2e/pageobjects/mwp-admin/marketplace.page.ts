@@ -47,7 +47,7 @@ class MwpMarketplaceSetupWizard {
     await $('#pluginzip').setValue(pathToPlugin);
     await browser.pause(500);
     await $('#install-plugin-submit').click();
-    await $('.button=Activate Plugin').waitForDisplayed();
+    await $('.button=Activate Plugin').waitForDisplayed({ timeout: 30000 });
 
     await $('.button=Activate Plugin').click();
     await browser.waitUntil(() => {
