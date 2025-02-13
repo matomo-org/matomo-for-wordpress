@@ -34,9 +34,9 @@ describe('Network Admin', function() {
 
   it('should display the multisite get started page correctly', async () => {
     // for some reason on the first load, the app/bootstrap.php cannot be found
-    await NetworkMultiSitePage.open();
-    await browser.pause(3000);
-    await NetworkMultiSitePage.open();
+    await Website.retry(3, async () => {
+      await NetworkMultiSitePage.open();
+    });
 
     await NetworkMultiSitePage.prepareWpAdminForScreenshot();
     await expect(
