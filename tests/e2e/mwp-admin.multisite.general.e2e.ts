@@ -44,9 +44,9 @@ describe('MultiSite General', function() {
     Website.switchSite('test2');
 
     // for some reason on the first load, the app/bootstrap.php cannot be found
-    await GetStartedPage.open();
-    await browser.pause(3000);
-    await GetStartedPage.open();
+    await Website.retry(3, async () => {
+      await GetStartedPage.open();
+    });
 
     await GetStartedPage.prepareWpAdminForScreenshot();
     await removeSystemReportNotification();

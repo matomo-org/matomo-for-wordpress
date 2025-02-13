@@ -246,7 +246,7 @@ class Website {
     this.wordPressFolderOverride = null;
   }
 
-  private async retry<R>(times: number, fn: () => Promise<R>) {
+  public async retry<R>(times: number, fn: () => Promise<R>) {
     while (times > 0) {
       try {
         return await fn();
