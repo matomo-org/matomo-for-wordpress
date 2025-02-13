@@ -85,6 +85,8 @@ class Dates {
 
 		$report_dates = $this->get_supported_dates();
 
+		$report_date = 'yesterday';
+
 		$user_preference = new UserPreferences();
 		$default_date    = $user_preference->getDefaultDate();
 		$report_period   = $user_preference->getDefaultPeriod();
@@ -117,10 +119,14 @@ class Dates {
 						break;
 					case 'last7':
 						$report_date = 'thisweek';
+						break;
 				}
+				break;
+			default:
+				break;
 		}
-		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
-			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
+		if ( isset( $_REQUEST['report_date'] ) && isset( $report_dates[ $_REQUEST['report_date'] ] ) ) {
+			$report_date = sanitize_text_field( wp_unslash( $_REQUEST['report_date'] ) );
 		}
 		return $report_date;
 	}
