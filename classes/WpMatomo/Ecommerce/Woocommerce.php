@@ -11,6 +11,7 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -21,12 +22,19 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 }
 
 class Woocommerce extends Base {
+
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
 	private $track_next_totals_change = false;
 
 	public function register_hooks() {
 		parent::register_hooks();
+
+		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
+		if ( $use_server_side_id ) {
+			$server_side_visitor_id = new ServerSideVisitorId();
+			$server_side_visitor_id->register_hooks();
+		}
 
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );

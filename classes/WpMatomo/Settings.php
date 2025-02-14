@@ -35,6 +35,7 @@ class Settings {
 	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
+	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -116,6 +117,7 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
+		self::USE_SESSION_VISITOR_ID_OPTION_NAME   => false,
 	];
 
 	/**

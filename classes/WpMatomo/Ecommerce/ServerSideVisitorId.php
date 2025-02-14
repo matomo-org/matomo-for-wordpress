@@ -1,0 +1,69 @@
+<?php
+
+namespace WpMatomo\Ecommerce;
+
+use WooPiwik\Tracking\Tracker;class ServerSideVisitorId {
+
+	const VISITOR_ID_SESSION_VAR_NAME = 'matomo-for-wordpress-visitor-id';
+
+	public function register_hooks() {
+		add_action( 'woocommerce_init', [ $this, 'force_server_side_visitor_id' ] );
+	}
+
+	public function force_server_side_visitor_id() {
+		if ( $this->is_visitor_id_cookie_present() ) {
+			return; // cookie found, no need to force a server side generated one
+		}
+
+		if ( is_admin() ) {
+			return;
+		}
+
+		// only initialize the session early for requests that do not have the visitor ID cookie
+		$this->initialize_woocommerce_session_if_needed();
+
+		$visitor_id = WC()->session->get( self::VISITOR_ID_SESSION_VAR_NAME );
+		if ( empty( $visitor_id ) ) {
+			$tracker    = Tracker::makeConfigured();
+			$visitor_id = $tracker->setNewVisitorId()->randomVisitorId;
+			WC()->session->set( self::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
+		}
+
+		add_action(
+			'wp_head',
+			function () use ( $visitor_id ) {
+				echo '<script>window._paq = window._paq || []; window._paq.push(["setVisitorId", ' . wp_json_encode( $visitor_id ) . ']);</script>\n';
+			}
+		);
+	}
+
+	/**
+	 * Checks if any visitor ID cookie is found for the current request. This means it checks
+	 * for any cookie with the visitor ID cookie name prefix (_pk_id.). We don't look for the
+	 * full cookie name, since that would require getting the configured cookie domain, which
+	 * would add an extra DB query to every page load.
+	 *
+	 * @return bool
+	 */
+	private function is_visitor_id_cookie_present() {
+		if ( ! is_array( $_COOKIE ) || empty( $_COOKIE ) ) {
+			return false;
+		}
+
+		$cookie_prefix = Tracker::FIRST_PARTY_COOKIES_PREFIX . 'id.';
+		foreach ( $_COOKIE as $name => $value ) {
+			if ( strpos( $name, $cookie_prefix ) === 0 ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function initialize_woocommerce_session_if_needed() {
+		WC()->initialize_session();
+		if ( ! WC()->session->has_session() ) {
+			WC()->session->set_customer_session_cookie( true );
+		}
+	}
+}
