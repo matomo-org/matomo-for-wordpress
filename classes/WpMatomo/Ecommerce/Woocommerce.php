@@ -32,7 +32,7 @@ class Woocommerce extends Base {
 
 		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
 		if ( $use_server_side_id ) {
-			$server_side_visitor_id = new ServerSideVisitorId();
+			$server_side_visitor_id = new ServerSideVisitorId( $this->settings );
 			$server_side_visitor_id->register_hooks();
 		}
 

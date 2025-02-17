@@ -1,10 +1,29 @@
 <?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
 
 namespace WpMatomo\Ecommerce;
 
-use WooPiwik\Tracking\Tracker;class ServerSideVisitorId {
+use WpMatomo\Settings;
+use WpMatomo\AjaxTracker;
+
+class ServerSideVisitorId {
 
 	const VISITOR_ID_SESSION_VAR_NAME = 'matomo-for-wordpress-visitor-id';
+
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	public function __construct( Settings $settings ) {
+		$this->settings = $settings;
+	}
 
 	public function register_hooks() {
 		add_action( 'woocommerce_init', [ $this, 'force_server_side_visitor_id' ] );
@@ -24,7 +43,7 @@ use WooPiwik\Tracking\Tracker;class ServerSideVisitorId {
 
 		$visitor_id = WC()->session->get( self::VISITOR_ID_SESSION_VAR_NAME );
 		if ( empty( $visitor_id ) ) {
-			$tracker    = Tracker::makeConfigured();
+			$tracker    = new AjaxTracker( $this->settings );
 			$visitor_id = $tracker->setNewVisitorId()->randomVisitorId;
 			WC()->session->set( self::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 		}
@@ -50,7 +69,7 @@ use WooPiwik\Tracking\Tracker;class ServerSideVisitorId {
 			return false;
 		}
 
-		$cookie_prefix = Tracker::FIRST_PARTY_COOKIES_PREFIX . 'id.';
+		$cookie_prefix = AjaxTracker::FIRST_PARTY_COOKIES_PREFIX . 'id.';
 		foreach ( $_COOKIE as $name => $value ) {
 			if ( strpos( $name, $cookie_prefix ) === 0 ) {
 				return true;
