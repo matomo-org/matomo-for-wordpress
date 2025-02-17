@@ -5,10 +5,6 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
- * Code Based on
- * @author Andr&eacute; Br&auml;kling
- * https://github.com/braekling/WP-Matomo
- *
  */
 
 trait MatomoWooCommerceAwareTest {

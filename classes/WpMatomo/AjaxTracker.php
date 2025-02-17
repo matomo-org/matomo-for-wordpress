@@ -9,7 +9,8 @@
 
 namespace WpMatomo;
 
-use WpMatomo\Ecommerce\ServerSideVisitorId;use WpMatomo\TrackingCode\GeneratorOptions;
+use WpMatomo\Ecommerce\ServerSideVisitorId;
+use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,7 +47,7 @@ class AjaxTracker extends \MatomoTracker {
 
 		// we are using the tracker only in ajax so the referer contains the actual url
 		$this->urlReferrer = false;
-		$this->pageUrl	 = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
+		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
 
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
 			$tracking_code_generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings ) );
