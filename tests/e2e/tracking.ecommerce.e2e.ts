@@ -13,7 +13,7 @@ import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
-import BlogHomepagePage from "./pageobjects/blog-homepage.page";
+import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
