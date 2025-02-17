@@ -12,7 +12,8 @@ import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
-
+import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
+import BlogHomepagePage from "./pageobjects/blog-homepage.page";
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
@@ -51,5 +52,73 @@ describe('Tracking (Ecommerce)', function() {
     const visitsWithEcommerceOrder = visitsAfter.filter((v) => v.visitEcommerceStatus === 'ordered');
 
     expect(visitsWithEcommerceOrder.length).toEqual(1);
+  });
+
+  describe('cookieless', () => {
+    async function enableCookielessTracking() {
+      await SettingsPage.open();
+
+      await browser.evaluate(() => {
+        window.jQuery('#use_session_visitor_id').val(1);
+        window.jQuery('#disable_cookies').val(1);
+      });
+
+      await SettingsPage.saveSettings();
+    }
+
+    async function disableCookielessTracking() {
+      await SettingsPage.open();
+
+      await browser.evaluate(() => {
+        window.jQuery('#use_session_visitor_id').val(0);
+        window.jQuery('#disable_cookies').val(0);
+      });
+
+      await SettingsPage.saveSettings();
+    }
+
+    let userAgent = '';
+    before(async () => {
+      userAgent = await browser.evaluate(() => navigator.userAgent);
+      await enableCookielessTracking();
+    });
+
+    after(async () => {
+      await browser.emulate('userAgent', userAgent);
+      await disableCookielessTracking();
+    });
+
+    it('should track abandoned carts correctly with cookieless tracking and server side visitor ID', async () => {
+      const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+        idSite: '1',
+        lastMinutes: '60',
+      }));
+
+      // set new visitor
+      const cookies = await browser.getCookies();
+      for (let name in cookies) {
+        if (/^_pk_/.test(name)) {
+          await browser.deleteCookie(name);
+        }
+      }
+      await browser.emulate('userAgent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958');
+
+      await BlogHomepagePage.open();
+      await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
+
+      await BlogProductPage.open();
+      await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
+
+      await BlogProductPage.addToCart(); // tracked server side
+      await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
+
+      const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+        idSite: '1',
+        lastMinutes: '60',
+      }));
+
+      // note: the visitor log test will implicitly do more extensive test of the tracked data
+      expect(counters).toHaveLength(countersBefore.length + 1);
+    });
   });
 });
