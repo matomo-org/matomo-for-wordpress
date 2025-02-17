@@ -58,7 +58,7 @@ describe('Tracking (Ecommerce)', function() {
     async function enableCookielessTracking() {
       await SettingsPage.open();
 
-      await browser.evaluate(() => {
+      await browser.execute(() => {
         window.jQuery('#use_session_visitor_id').val(1);
         window.jQuery('#disable_cookies').val(1);
       });
@@ -69,7 +69,7 @@ describe('Tracking (Ecommerce)', function() {
     async function disableCookielessTracking() {
       await SettingsPage.open();
 
-      await browser.evaluate(() => {
+      await browser.execute(() => {
         window.jQuery('#use_session_visitor_id').val(0);
         window.jQuery('#disable_cookies').val(0);
       });
@@ -79,7 +79,7 @@ describe('Tracking (Ecommerce)', function() {
 
     let userAgent = '';
     before(async () => {
-      userAgent = await browser.evaluate(() => navigator.userAgent);
+      userAgent = await browser.execute(() => navigator.userAgent);
       await enableCookielessTracking();
     });
 
