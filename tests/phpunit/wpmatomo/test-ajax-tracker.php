@@ -65,7 +65,8 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			return;
 		}
 
-		$this->create_blog();
+		$idblog = $this->create_blog();
+		switch_to_blog( $idblog );
 
 		$tracker = new AjaxTracker( $this->settings );
 
