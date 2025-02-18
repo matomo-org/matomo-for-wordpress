@@ -12,6 +12,8 @@ if [[ "$1" = "bash" ]]; then
 fi
 
 function export_global() {
+  export WP_CLI_CACHE_DIR=/.wp-cli
+
   # http serves a single offer, whereas https serves multiple. we only want one
   export LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
   if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
@@ -78,6 +80,8 @@ function handle_cli_command() {
 
 function install_wordpress() {
   MULTISITE="$1"
+
+  chmod 777 "/.wp-cli"
 
   export_install_dependent $MULTISITE
   init_wpload_dir_file
