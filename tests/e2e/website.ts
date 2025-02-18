@@ -187,7 +187,7 @@ class Website {
           await $('.woocommerce-save-button.is-primary').click();
 
           await browser.waitUntil(async () => {
-            return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
+            return browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
           });
         }
       }
