@@ -181,10 +181,15 @@ class Website {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
 
-        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,.woocommerce-save-button.is-primary').waitForExist({ timeout: 90000 });
+        try {
+          await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,.woocommerce-save-button').waitForExist({ timeout: 90000 });
+        } catch (e) {
+          console.log(await browser.execute(() => document.body.innerHTML));
+          throw e;
+        }
 
-        if (await $('.woocommerce-save-button.is-primary').isExisting()) {
-          await $('.woocommerce-save-button.is-primary').click();
+        if (await $('.woocommerce-save-button').isExisting()) {
+          await $('.woocommerce-save-button').click();
 
           await browser.waitUntil(async () => {
             return browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
