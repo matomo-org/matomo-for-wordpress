@@ -181,7 +181,15 @@ class Website {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
 
-        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 60000 });
+        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,.woocommerce-save-button.is-primary').waitForExist({ timeout: 60000 });
+
+        if (await $('.woocommerce-save-button.is-primary').isExisting()) {
+          await $('.woocommerce-save-button.is-primary').click();
+
+          await browser.waitUntil(async () => {
+            return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
+          });
+        }
       }
     }
 
