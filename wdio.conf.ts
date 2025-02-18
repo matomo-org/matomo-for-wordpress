@@ -127,6 +127,7 @@ export const config: Options.Testrunner = {
   capabilities: [
     {
       browserName: 'firefox',
+      webSocketUrl: true,
       "moz:debuggerAddress": true,
       "moz:firefoxOptions": {
         args: ['-headless'],
