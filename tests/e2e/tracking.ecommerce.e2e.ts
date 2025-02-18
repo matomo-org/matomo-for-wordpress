@@ -118,7 +118,8 @@ describe('Tracking (Ecommerce)', function() {
       }));
 
       // note: the visitor log test will implicitly do more extensive test of the tracked data
-      expect(counters).toHaveLength(countersBefore.length + 1);
+      expect(counters).toHaveLength(1);
+      expect(counters[0].visits).toEqual(countersBefore[0].visits + 1);
     });
   });
 });
