@@ -30,10 +30,8 @@ function export_global() {
 }
 
 function export_install_dependent() {
-  ARG_MULTISITE="$1"
-  if [[ "$ARG_MULTISITE" = "1" ]]; then
-    export WORDPRESS_FOLDER="$WORDPRESS_FOLDER_BASE-multi"
-  fi
+  ARG_SUFFIX="$1"
+  export WORDPRESS_FOLDER="$WORDPRESS_FOLDER_BASE${ARG_SUFFIX}"
 
   export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
@@ -48,7 +46,11 @@ function handle_cli_command() {
   EXECUTE_TARGET="$1"
   EXECUTE_ARGS="${@:2}"
 
-  export_install_dependent $MULTISITE
+  if [[ "$MULTISITE" == "1" ]]; then
+    WP_FOLDER_SUFFIX="-multi"
+  fi
+
+  export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
 
   echo "Using WordPress install $WORDPRESS_FOLDER."
@@ -80,10 +82,11 @@ function handle_cli_command() {
 
 function install_wordpress() {
   MULTISITE="$1"
+  WP_FOLDER_SUFFIX="$2"
 
   chmod 777 "/.wp-cli"
 
-  export_install_dependent $MULTISITE
+  export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
 
   # install wp-cli.phar
@@ -559,7 +562,7 @@ wait_for_database
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
-install_wordpress 1
+install_wordpress 1 -multi
 
 touch /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
 touch /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
