@@ -35,9 +35,6 @@ describe('MWP Admin > Marketplace', () => {
     for (let plugin of wpPluginsToDelete) {
       await rm(path.join(pathToWordPress, plugin), { recursive: true, force: true });
     }
-
-    console.log(wpPluginsToDelete);
-    process.exit(1);
   }
 
   before(async () => {
