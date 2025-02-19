@@ -30,6 +30,11 @@ until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 420 )); d
   sleep 1
 done
 
+if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+  echo "did not setup local environment in time"
+  exit 1
+fi
+
 set -o allexport
 source .env.default
 source .env
