@@ -293,10 +293,22 @@ class Website {
       return await browser.execute(() => {
         return window.jQuery && (
           window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
+          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
+          window.jQuery('p:contains(Plugin installed successfully.)').length > 0
         );
       });
     }, { timeout: 120000 });
+
+    const activateButtonExists = await $('.button=Activate Plugin').isExisting();
+    if (activateButtonExists) {
+      await $('.button=Activate Plugin').click();
+
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => {
+          return window.jQuery && window.jQuery('p:contains(Plugin activated.)').length > 0;
+        });
+      }, { timeout: 120000 });
+    }
   }
 }
 

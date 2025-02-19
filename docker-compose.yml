@@ -15,6 +15,7 @@ services:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
@@ -47,6 +48,7 @@ services:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: .
       dockerfile: ./scripts/Dockerfile.local
@@ -85,6 +87,7 @@ services:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local

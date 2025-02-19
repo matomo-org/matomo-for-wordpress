@@ -7,6 +7,9 @@
  */
 
 import { expect, browser } from '@wdio/globals';
+import * as path from 'path';
+import { existsSync } from 'node:fs';
+import { readdir, rm } from 'node:fs/promises';
 import MwpMarketplacePage from './pageobjects/mwp-admin/marketplace.page.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
@@ -15,12 +18,35 @@ import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 describe('MWP Admin > Marketplace', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
+  async function deleteAllMarketplacePlugins() {
+    const wpPluginsToDelete = [
+      'matomo-marketplace-for-wordpress',
+    ];
+
+    const pathToWordPress = path.join('docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'plugins');
+    const dirs = await readdir(pathToWordPress);
+    for (let dir of dirs) {
+      const pluginJson = path.join(pathToWordPress, dir, 'plugin.json');
+      if (existsSync(pluginJson)) {
+        wpPluginsToDelete.push(dir);
+      }
+    }
+
+    for (let plugin of wpPluginsToDelete) {
+      await rm(path.join(pathToWordPress, plugin), { recursive: true, force: true });
+    }
+
+    console.log(wpPluginsToDelete);
+    process.exit(1);
+  }
+
   before(async () => {
     if (!process.env.PHP_VERSION) {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
     }
 
     await GlobalSetup.setUp();
+    await deleteAllMarketplacePlugins();
     await Website.login();
   });
 

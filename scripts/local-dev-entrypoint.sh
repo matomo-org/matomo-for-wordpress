@@ -566,5 +566,9 @@ install_wordpress 1 -multi
 
 touch /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
 touch /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
+chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
+chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
 
-start_webserver "$@"
+if [[ "$INSTALL_ONLY" != "1" ]]; then
+  start_webserver "$@"
+fi

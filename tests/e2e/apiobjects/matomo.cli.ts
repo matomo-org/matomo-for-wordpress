@@ -15,12 +15,15 @@ class MatomoCli {
     const command = 'npm run matomo:console -- wordpress:build-release --zip --name=test';
     execSync(command);
 
-    const pathToRelease = path.join(__dirname, '..', '..', '..', 'matomo-test.zip');
+    const pathToRelease = path.join(process.cwd(), 'matomo-test.zip');
     if (!fs.existsSync(pathToRelease)) {
       throw new Error(`Could not find built release at ${pathToRelease}.`);
     }
 
-    return pathToRelease;
+    const renamedPath = path.join(process.cwd(), 'matomo.zip');
+    fs.renameSync(pathToRelease, renamedPath);
+
+    return renamedPath;
   }
 }
 
