@@ -98,7 +98,7 @@ class Renderer {
 
 		$report_data     = new Data();
 		$report          = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
-		$has_report_data = ! empty( $report['reportData'] ) && $report['reportData']->getRowsCount();
+		$has_report_data = ! empty( $report['reportData'] ) && count( $report['reportData']->getRowsWithoutSummaryRow() );
 
 		ob_start();
 
