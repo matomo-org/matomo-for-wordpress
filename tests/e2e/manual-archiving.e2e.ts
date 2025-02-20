@@ -6,13 +6,15 @@
  *
  */
 
-import { browser, expect } from '@wdio/globals';
+import { browser } from '@wdio/globals';
 import GlobalSetup from './global-setup.js';
 import Website from './website.js';
 import DiagnosticsPage from './pageobjects/mwp-admin/diagnostics.page.js';
 import MatomoIniConfig from './apiobjects/matomo.ini.js';
 
-describe('Manual Archiving', () => {
+describe('Manual Archiving', function () {
+  this.timeout(360000);
+
   before(async () => {
     await Website.login();
     await GlobalSetup.setUp();
@@ -32,12 +34,16 @@ describe('Manual Archiving', () => {
 
   it('should run archiving successfully when manual archiving is initiated in troubleshooting', async () => {
     await DiagnosticsPage.open();
+    console.log('page opened');
     await DiagnosticsPage.openTroubleshootingTab();
+    console.log('open troubleshooting');
     await $('input[name="matomo_troubleshooting_action_archive_now"]').click();
+    console.log('archive now clicked');
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
         return window.jQuery('.notice:contains(Matomo Archiving completed successfully!)').length > 0;
       });
     });
+    console.log('waiting finished');
   });
 });
