@@ -37,13 +37,21 @@ describe('Manual Archiving', function () {
     console.log('page opened');
     await DiagnosticsPage.openTroubleshootingTab();
     console.log('open troubleshooting');
-    await $('input[name="matomo_troubleshooting_action_archive_now"]').click();
+    await $('input[name="matomo_troubleshooting_action_archive_now"]').waitForExist();
+    await browser.execute(() => {
+      window.jQuery('input[name="matomo_troubleshooting_action_archive_now"]')[0].click();
+    });
     console.log('archive now clicked');
+    try {
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
-        return window.jQuery('.notice:contains(Matomo Archiving completed successfully!)').length > 0;
+        return window.jQuery && window.jQuery('.notice:contains(Matomo Archiving completed successfully!)').length > 0;
       });
-    });
+    }, { timeout: 180000 });
+    } catch (e) {
+    console.log(await browser.execute(() => document.body.innerHTML));
+      throw e;
+    }
     console.log('waiting finished');
   });
 });

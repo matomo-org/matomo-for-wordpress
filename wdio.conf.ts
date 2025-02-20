@@ -46,7 +46,7 @@ function checkWpDebugLogsForError(dirName: string) {
       return /php (notice|warning|error|deprecated):/i.test(line) && line.includes('matomo');
     });
 
-    fs.appendFileSync(wpDebugLogConcatPath, matomoErrors.join("\n"));
+    fs.appendFileSync(wpDebugLogConcatPath, lines.join("\n"));
 
     if (matomoErrors.length) {
       throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
