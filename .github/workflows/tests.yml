@@ -263,6 +263,8 @@ jobs:
         if: always()
       - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || echo "debug.concat.log file does not exist for test-multi"
         if: always()
+      - run: cat .e2e-docker-out || echo ".e2e-docker-out file does not exist"
+        if: always()
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
