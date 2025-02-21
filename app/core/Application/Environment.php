@@ -112,37 +112,13 @@ class Environment
      */
     private function createContainer()
     {
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env1\n";@ob_flush();
-		}
         $pluginList = $this->getPluginListCached();
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env2\n";@ob_flush();
-		}
         $settings = $this->getGlobalSettingsCached();
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env3\n";@ob_flush();
-		}
         $extraDefinitions = $this->getExtraDefinitionsFromManipulators();
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env4\n";@ob_flush();
-		}
         $definitions = array_merge(StaticContainer::getDefinitions(), $extraDefinitions, array($this->definitions));
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env5\n";@ob_flush();
-		}
         $environments = array($this->environment);
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env6\n";@ob_flush();
-		}
         $environments = array_merge($environments, $this->getExtraEnvironmentsFromManipulators());
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env7\n";@ob_flush();
-		}
         $containerFactory = new ContainerFactory($pluginList, $settings, $environments, $definitions);
-		if (\Piwik\Common::isPhpCliMode()) {
-			print "env8\n";@ob_flush();
-		}
         return $containerFactory->create();
     }
     protected function getGlobalSettingsCached()

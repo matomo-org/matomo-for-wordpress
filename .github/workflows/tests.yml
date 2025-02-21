@@ -259,9 +259,9 @@ jobs:
       - run: npm run compose stop
 
       # output debug.concat.log (created in a hook in wdio.conf.ts)
-      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || echo "debug.concat.log file does not exist"
+      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.concat.log file does not exist"
         if: always()
-      - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || echo "debug.concat.log file does not exist for test-multi"
+      - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || cat ./docker/wordpress/test-multi/wp-content/debug.log || echo "debug.concat.log file does not exist for test-multi"
         if: always()
       - run: cat .e2e-docker-out || echo ".e2e-docker-out file does not exist"
         if: always()
