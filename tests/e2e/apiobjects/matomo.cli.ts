@@ -25,6 +25,16 @@ class MatomoCli {
 
     return renamedPath;
   }
+
+  async call(commandName: string, params: Record<string, string>) {
+    let command = commandName;
+    for (let name of Object.keys(params)) {
+      command += ` --${name}=${params[name]}`;
+    }
+    command = `docker compose --env-file .env.default --env-file .env run --rm exec matomo:console -- ${command}`;
+
+    execSync(command);
+  }
 }
 
 export default new MatomoCli();
