@@ -30,15 +30,19 @@ class Console extends Application
     private $environment;
     public function __construct(?Environment $environment = null)
     {
+		print "1\n";@ob_flush();
         $this->setServerArgsIfPhpCgi();
+		print "2\n";@ob_flush();
         parent::__construct('Matomo', \Piwik\Version::VERSION);
         $this->environment = $environment;
+		print "3\n";@ob_flush();
         $option = new InputOption('matomo-domain', null, InputOption::VALUE_OPTIONAL, 'Matomo URL (protocol and domain) eg. "http://matomo.example.org"');
         $this->getDefinition()->addOption($option);
         $option = new InputOption('xhprof', null, InputOption::VALUE_NONE, 'Enable profiling with XHProf');
         $this->getDefinition()->addOption($option);
         $option = new InputOption('ignore-warn', null, InputOption::VALUE_NONE, 'Return 0 exit code even if there are warning logs or error logs detected in the command output.');
         $this->getDefinition()->addOption($option);
+				print "4\n";@ob_flush();
     }
     public function renderThrowable(\Throwable $e, OutputInterface $output) : void
     {
@@ -84,15 +88,20 @@ class Console extends Application
         if ($input->hasParameterOption('--xhprof')) {
             \Piwik\Profiler::setupProfilerXHProf(\true, \true);
         }
+		print "_1\n";@ob_flush();
         $this->initMatomoHost($input);
+		print "_2\n";@ob_flush();
         $this->initEnvironment($output);
+		print "_3\n";@ob_flush();
         $this->initLoggerOutput($output);
+		print "_4\n";@ob_flush();
         try {
             self::initPlugins();
         } catch (ConfigNotFoundException $e) {
             // Piwik not installed yet, no config file?
             \Piwik\Log::warning($e->getMessage());
         }
+		print "_5\n";@ob_flush();
         $this->initAuth();
         $commands = $this->getAvailableCommands();
         foreach ($commands as $command) {
@@ -200,6 +209,7 @@ class Console extends Application
             $config = \Piwik\Config::getInstance();
             return $config;
         } catch (\Exception $e) {
+			print $e->getMessage()."\n";@ob_flush();
             $output->writeln($e->getMessage() . "\n");
         }
     }

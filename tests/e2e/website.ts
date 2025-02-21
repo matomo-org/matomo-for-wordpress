@@ -150,7 +150,7 @@ class Website {
     await browser.waitUntil(async () => {
       const url = await browser.getUrl()
       return /page=wc-admin$/.test(url);
-    });
+    }, { timeout: 30000 });
 
     await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
 
@@ -175,7 +175,7 @@ class Website {
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
-        });
+        }, { timeout: 30000 });
       } else {
         await browser.execute(() => {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();

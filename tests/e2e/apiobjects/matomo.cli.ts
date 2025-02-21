@@ -33,7 +33,13 @@ class MatomoCli {
     }
     command = `docker compose --env-file .env.default --env-file .env run --rm exec matomo:console -- ${command}`;
 
+    try {
     execSync(command);
+    } catch (e) {
+      console.log(e.stdout.toString());
+      console.log(e.stderr.toString());
+      throw e;
+    }
   }
 }
 

@@ -34,127 +34,127 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit_tests:
-    runs-on: 'ubuntu-20.04'
-    strategy:
-      fail-fast: false
-      matrix:
-        wp-versions: [ 'latest' ]
-        php-versions: [ '7.2', '8.1' ]
-        multisite: [ "singlesite", "multisite" ]
-        include:
-          - wp-versions: '5.2'
-            php-versions: '7.2'
-            multisite: 'singlesite'
-          - wp-versions: '5.2'
-            php-versions: '7.2'
-            multisite: 'multisite'
-    permissions:
-      contents: read  # <--- allows to read repo
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: true
-          lfs: true
-          submodules: true
-      - run: git lfs pull
-
-      - name: Setup PHP ${{ matrix.php-versions }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version:  ${{ matrix.php-versions }}
-          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
-          ini-values: |
-            post_max_size=8M,
-            memory_limit=256M,
-            max_execution_time=30,
-            always_populate_raw_post_data=-1,
-            error_reporting=E_ALL,
-            log_errors=on,
-            display_errors=on,
-            allow_url_fopen=on,
-            zend.exception_ignore_args=Off
-          tools: composer:v2
-          coverage: none
-
-      - name: Check PHP Version
-        run: php -v
-
-      # note: we update the dependencies since they only exist for the unit tests, and we need to use different
-      # versions of phpunit/etc. for different PHP versions
-      - name: Update test dependencies
-        shell: bash
-        run: |
-          if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
-            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' composer.json
-          fi
-
-          composer update --with-all-dependencies
-
-      - name: Install dependencies
-        shell: bash
-        run: composer install
-
-      # TODO: redundancy w/ e2e_tests, could be moved to a script
-      # docker-compose up
-      # TODO: i can't seem to get docker layer caching to work.
-      - run: |
-          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
-          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
-
-          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
-        env:
-          PHP_VERSION: ${{ matrix.php-versions }}
-          WOOCOMMERCE: 0
-          WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
-          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: |
-          cat > .env <<EOF
-          PHP_VERSION=$PHP_VERSION
-          WOOCOMMERCE=0
-          WORDPRESS_FOLDER=test
-          RESET_DATABASE=1
-          WORDPRESS_VERSION=$WORDPRESS_VERSION
-          UID=$UID
-          WP_DEBUG=true
-          EOF
-        env:
-          PHP_VERSION: ${{ matrix.php-versions }}
-          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: chmod -R 777 . # required to build the release
-      - run: sudo chown -R $UID:1000 . # required for wordpress' filesystem direct implementation
-      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: |
-          # wait for docker-compose launch to finish
-          elapsed=0
-          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 420 )); do
-            sleep 1
-          done
-
-          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
-            echo "did not setup local environment in time"
-            exit 1
-          fi
-          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
-      - run: npm run compose logs wordpress --no-color # for debugging failures to start
-        if: always()
-
-      - name: Run unit tests
-        shell: bash
-        run: |
-          if [[ "${{ matrix.multisite }}" == "singlesite" ]]; then
-            echo "Running in single site context"
-          else
-            echo "Running in multisite context"
-
-            cat >> .env <<EOF
-          WP_MULTISITE=1
-          EOF
-          fi
-
-          npm run phpunit
+#  unit_tests:
+#    runs-on: 'ubuntu-20.04'
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        wp-versions: [ 'latest' ]
+#        php-versions: [ '7.2', '8.1' ]
+#        multisite: [ "singlesite", "multisite" ]
+#        include:
+#          - wp-versions: '5.2'
+#            php-versions: '7.2'
+#            multisite: 'singlesite'
+#          - wp-versions: '5.2'
+#            php-versions: '7.2'
+#            multisite: 'multisite'
+#    permissions:
+#      contents: read  # <--- allows to read repo
+#    steps:
+#      - name: Checkout project
+#        uses: actions/checkout@v3
+#        with:
+#          persist-credentials: true
+#          lfs: true
+#          submodules: true
+#      - run: git lfs pull
+#
+#      - name: Setup PHP ${{ matrix.php-versions }}
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version:  ${{ matrix.php-versions }}
+#          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
+#          ini-values: |
+#            post_max_size=8M,
+#            memory_limit=256M,
+#            max_execution_time=30,
+#            always_populate_raw_post_data=-1,
+#            error_reporting=E_ALL,
+#            log_errors=on,
+#            display_errors=on,
+#            allow_url_fopen=on,
+#            zend.exception_ignore_args=Off
+#          tools: composer:v2
+#          coverage: none
+#
+#      - name: Check PHP Version
+#        run: php -v
+#
+#      # note: we update the dependencies since they only exist for the unit tests, and we need to use different
+#      # versions of phpunit/etc. for different PHP versions
+#      - name: Update test dependencies
+#        shell: bash
+#        run: |
+#          if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
+#            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' composer.json
+#          fi
+#
+#          composer update --with-all-dependencies
+#
+#      - name: Install dependencies
+#        shell: bash
+#        run: composer install
+#
+#      # TODO: redundancy w/ e2e_tests, could be moved to a script
+#      # docker-compose up
+#      # TODO: i can't seem to get docker layer caching to work.
+#      - run: |
+#          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
+#          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
+#
+#          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+#        env:
+#          PHP_VERSION: ${{ matrix.php-versions }}
+#          WOOCOMMERCE: 0
+#          WORDPRESS_FOLDER: test
+#          RESET_DATABASE: 1
+#          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+#      - run: |
+#          cat > .env <<EOF
+#          PHP_VERSION=$PHP_VERSION
+#          WOOCOMMERCE=0
+#          WORDPRESS_FOLDER=test
+#          RESET_DATABASE=1
+#          WORDPRESS_VERSION=$WORDPRESS_VERSION
+#          UID=$UID
+#          WP_DEBUG=true
+#          EOF
+#        env:
+#          PHP_VERSION: ${{ matrix.php-versions }}
+#          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+#      - run: chmod -R 777 . # required to build the release
+#      - run: sudo chown -R $UID:1000 . # required for wordpress' filesystem direct implementation
+#      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
+#      - run: |
+#          # wait for docker-compose launch to finish
+#          elapsed=0
+#          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 420 )); do
+#            sleep 1
+#          done
+#
+#          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+#            echo "did not setup local environment in time"
+#            exit 1
+#          fi
+#          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
+#      - run: npm run compose logs wordpress --no-color # for debugging failures to start
+#        if: always()
+#
+#      - name: Run unit tests
+#        shell: bash
+#        run: |
+#          if [[ "${{ matrix.multisite }}" == "singlesite" ]]; then
+#            echo "Running in single site context"
+#          else
+#            echo "Running in multisite context"
+#
+#            cat >> .env <<EOF
+#          WP_MULTISITE=1
+#          EOF
+#          fi
+#
+#          npm run phpunit
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'

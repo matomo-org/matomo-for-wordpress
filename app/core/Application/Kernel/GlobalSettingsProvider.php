@@ -44,6 +44,10 @@ class GlobalSettingsProvider
      */
     public function __construct($pathGlobal = null, $pathLocal = null, $pathCommon = null)
     {
+				if (\Piwik\Common::isPhpCliMode()) {
+        			print "gsp\n";@ob_flush();
+        		}
+
         $this->pathGlobal = $pathGlobal ?: Config::getGlobalConfigPath();
         $this->pathCommon = $pathCommon ?: Config::getCommonConfigPath();
         $this->pathLocal = $pathLocal ?: Config::getLocalConfigPath();

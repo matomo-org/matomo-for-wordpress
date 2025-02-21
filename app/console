@@ -29,4 +29,5 @@ if (!defined('PIWIK_ENABLE_ERROR_HANDLER') || PIWIK_ENABLE_ERROR_HANDLER) {
 FrontController::setUpSafeMode();
 
 $console = new Piwik\Console();
+echo "running console\n";@ob_flush();
 $console->run();

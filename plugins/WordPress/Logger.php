@@ -228,7 +228,6 @@ class Logger extends AbstractLogger implements LoggerInterface
             }
         }
 
-        print "$level $message\n";
         $this->logger->log($message);
 
         foreach ($this->handlers as $handler) {
