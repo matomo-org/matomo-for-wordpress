@@ -60,7 +60,7 @@ function handle_cli_command() {
     /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
-    cd /var/www/html/matomo-for-wordpress/app
+    cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
     ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
