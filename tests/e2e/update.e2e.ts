@@ -8,8 +8,9 @@
 
 import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
+import * as path from 'node:path';
+import * as fs from 'node:fs/promises';
 import Website from './website.js';
-import MatomoCli from './apiobjects/matomo.cli.js';
 import GdprToolsPage from './pageobjects/mwp-admin/about.page.js';
 
 describe('MWP Updating', () => {
@@ -21,7 +22,7 @@ describe('MWP Updating', () => {
 
   // sanity check to make sure we are updating from the latest stable version
   it('should have the latest stable version installed', async () => {
-    const pluginInfo = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
+    const pluginInfo: any = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
@@ -37,6 +38,13 @@ describe('MWP Updating', () => {
 
   it('should succeed when updating to the current code', async () => {
     await Website.updateMatomoToLatest();
+
+    const wpPluginsDir = path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'plugins');
+
+    const plugins = await fs.readdir(wpPluginsDir);
+    const matomoPlugins = plugins.filter((p) => /^matomo/.test(p) && p !== 'matomo-marketplace-for-wordpress');
+
+    expect(matomoPlugins).toEqual('matomo'); // ensure there are no duplicate plugins like 'matomo-1'
   });
 
   it('should display whats new notifications on install', async () => {
