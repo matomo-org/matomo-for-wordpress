@@ -192,24 +192,9 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 	return $relative_path;
 }
 
-/**
- * TODO: add test
- * NOTE: this function exists to quickly get the core version without having to bootstrap
- * Matomo core or having to interact with the filesystem.
- * We cannot load the Version core class, since it may get loaded later via the autoloader,
- * which will cause a fatal exception.
- * This function is called multiple times on every request to filter incompatible plugins,
- * so it must also be very performant.
- *
- * We ensure the value is correct via unit test in test-environment.php.
- *
- * @return string
- */
-function matomo_get_core_source_version() {
-	return '5.2.2';
-}
-
 function matomo_is_plugin_compatible( $wp_plugin_file ) {
+	require_once __DIR__ . '/app/core/Version.php';
+
 	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
 	clearstatcache( false, $plugin_manifest_path );
 
@@ -224,9 +209,7 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		return false;
 	}
 
-	$core_version = matomo_get_core_source_version();
-
-	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . $core_version . '_' . $modified_time;
+	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . \Piwik\Version::VERSION . '_' . $modified_time;
 	$cache_value = get_transient( $cache_key );
 	if ( false === $cache_value ) {
 		// assume the plugin is not compatible in case the below code fails.

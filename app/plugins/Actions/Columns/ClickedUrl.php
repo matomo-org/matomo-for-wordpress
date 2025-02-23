@@ -14,12 +14,6 @@ use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
 
-if (class_exists('\Piwik\Plugins\Actions\Columns\ClickedUrl', false)) {
-	error_log('Matomo: class already defined ' . (new \Exception())->getTraceAsString());
-	throw new \Exception('class already defined...');
-} else {
-	error_log('Matomo: class first defined ' . (new \Exception())->getTraceAsString());
-
 class ClickedUrl extends ActionDimension
 {
     protected $columnName = 'idaction_url';
@@ -38,5 +32,4 @@ class ClickedUrl extends ActionDimension
     {
         return new Discriminator('log_action', 'type', Action::TYPE_OUTLINK);
     }
-}
 }
