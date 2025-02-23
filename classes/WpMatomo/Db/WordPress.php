@@ -257,9 +257,18 @@ class WordPress extends Mysqli {
 			}
 		}
 
+		$before_question_sql = $sql;
 		$sql = str_replace( '?', '%s', $sql );
 
+		try {
 		$query = $wpdb->prepare( $sql, $bind );
+		} catch (\Exception $ex) {
+			error_log('wpdb error: ' . $ex->getMessage() . "\n" . $ex->getTraceAsString());
+			error_log("sql was: $sql");
+			error_log("unmodified sql: $before_question_sql");
+			error_log("bind was: " . var_export($bind, true));
+			throw $ex;
+		}
 
 		if ($has_replaced_null) {
 			$query = str_replace("'$null_placeholder'", 'NULL', $query);
