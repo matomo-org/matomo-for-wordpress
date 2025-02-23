@@ -44,7 +44,7 @@ describe('MWP Updating', () => {
     const plugins = await fs.readdir(wpPluginsDir);
     const matomoPlugins = plugins.filter((p) => /^matomo/.test(p) && p !== 'matomo-marketplace-for-wordpress');
 
-    expect(matomoPlugins).toEqual('matomo'); // ensure there are no duplicate plugins like 'matomo-1'
+    expect(matomoPlugins).toEqual(['matomo']); // ensure there are no duplicate plugins like 'matomo-1'
   });
 
   it('should display whats new notifications on install', async () => {
