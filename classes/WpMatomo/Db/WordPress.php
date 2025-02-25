@@ -258,7 +258,7 @@ class WordPress extends Mysqli {
 		}
 
 		$before_question_sql = $sql;
-		$sql = str_replace( '?', '%s', $sql );
+		$sql = $this->replace_placeholders( $sql );
 
 		try {
 		$query = $wpdb->prepare( $sql, $bind );
@@ -513,5 +513,55 @@ class WordPress extends Mysqli {
 		$this->after_execute_query( $wpdb, '' );
 
 		return $update;
+	}
+
+	// public for tests
+	public function replace_placeholders( $sql ) {
+		$replaced = '';
+
+		$i = 0;
+		while ( $i < strlen( $sql ) ) {
+			if ( $this->is_string_literal_start( $sql[$i] ) ) {
+				$quote       = $sql[$i];
+				$segment_end = $i + 1;
+
+				while ( $segment_end < strlen( $sql ) ) {
+					if ( $sql[ $segment_end ] === $quote ) {
+						if (
+							$segment_end + 1 >= strlen( $sql )
+							|| $sql[ $segment_end + 1 ] === $quote
+						) { // '' or ""
+							++$segment_end;
+						} else {
+							break;
+						}
+					}
+
+					++$segment_end;
+				}
+
+				++$segment_end; // advance past end quote
+
+				$replaced .= substr( $sql, $i, $segment_end - $i );
+			} else {
+				$segment_end = $i + 1;
+				while ( $segment_end < strlen( $sql ) && ! $this->is_string_literal_start( $sql[$segment_end] ) ) {
+					++$segment_end;
+				}
+
+				$segment = substr( $sql, $i, $segment_end - $i );
+				$segment = str_replace( '?', '%s', $segment );
+
+				$replaced .= $segment;
+			}
+
+			$i = $segment_end;
+		}
+
+		return $replaced;
+	}
+
+	private function is_string_literal_start( $s ) {
+		return $s === '\'' || $s === '"';
 	}
 }
