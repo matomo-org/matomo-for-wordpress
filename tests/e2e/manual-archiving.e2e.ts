@@ -32,41 +32,34 @@ describe('Manual Archiving', function () {
   });
 
   it('should run archiving successfully', async () => {
-    const params = new URLSearchParams();
-    params.set('idSite', '1');
-    params.set('dates', OverviewPage.getDefaultDate());
-    params.set('period', 'day');
-    await MatomoApi.call('POST', 'CoreAdminHome.invalidateArchivedReports', params);
-
-    await MatomoCli.call('core:archive', {
-      'force-idsites': '1',
-      'force-date-range': `${OverviewPage.getDefaultDate()},${OverviewPage.getDefaultDate()}`,
-      'force-periods': 'day',
-    });
-
-    await browser.pause(3000);
-    const visits = await MatomoApi.call('GET', 'VisitsSummary.get', new URLSearchParams({
-      idSite: 'all',
-      period: 'day',
-      date: OverviewPage.getDefaultDate(),
-    }));
-    console.log('found visits ' + JSON.stringify(visits, null, 2));
-
-    await MatomoCli.call('core:archive', {
-      'force-idsites': '1',
-      'force-date-range': 'yesterday,today',
-      'force-periods': 'day',
-    });
-
-    // wait until the data for the visits tracked in the past looks correct
     await browser.waitUntil(async () => {
+      const params = new URLSearchParams();
+      params.set('idSite', '1');
+      params.set('dates', OverviewPage.getDefaultDate());
+      params.set('period', 'day');
+      await MatomoApi.call('POST', 'CoreAdminHome.invalidateArchivedReports', params);
+
+      await MatomoCli.call('core:archive', {
+        'force-idsites': '1',
+        'force-date-range': `${OverviewPage.getDefaultDate()},${OverviewPage.getDefaultDate()}`,
+        'force-periods': 'day',
+      });
+
+      await MatomoCli.call('core:archive', {
+        'force-idsites': '1',
+        'force-date-range': 'yesterday,today',
+        'force-periods': 'day',
+      });
+
+      // check that the data looks correct (for some reason, archiving randomly results in an incorrect,
+      // invalidated archive)
       const visits = await MatomoApi.call('GET', 'VisitsSummary.get', new URLSearchParams({
         idSite: '1',
         period: 'day',
         date: OverviewPage.getDefaultDate(),
       }));
-      console.log('found visits ' + visits.nb_visits);
+
       return visits.nb_visits === 7;
-    }, { timeout: 60000 });
+    }, { timeout: 120000 });
   });
 });
