@@ -49,5 +49,7 @@ describe('Manual Archiving', function () {
       'force-date-range': 'yesterday,today',
       'force-periods': 'day',
     });
+
+    await browser.pause(3000);
   });
 });
