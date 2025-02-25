@@ -43,5 +43,11 @@ describe('Manual Archiving', function () {
       'force-date-range': `${OverviewPage.getDefaultDate()},${OverviewPage.getDefaultDate()}`,
       'force-periods': 'day',
     });
+
+    await MatomoCli.call('core:archive', {
+      'force-idsites': '1',
+      'force-date-range': 'yesterday,today',
+      'force-periods': 'day',
+    });
   });
 });

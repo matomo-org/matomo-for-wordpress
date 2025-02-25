@@ -78,6 +78,8 @@ class Website {
       await browser.url(`${baseUrl}/wp-login.php`);
     });
 
+    await $('#user_login').waitForExist();
+
     await $('#user_login').setValue(process.env.WORDPRESS_USER_LOGIN || 'root');
     await $('#user_pass').setValue(process.env.WORDPRESS_USER_PASS || 'pass');
     await $('#wp-submit').click();
