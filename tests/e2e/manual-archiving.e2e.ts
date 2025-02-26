@@ -33,7 +33,6 @@ describe('Manual Archiving', function () {
   });
 
   it('should run archiving successfully', async () => {
-    try {
     await browser.waitUntil(async () => {
       const params = new URLSearchParams();
       params.set('idSite', '1');
@@ -61,23 +60,23 @@ describe('Manual Archiving', function () {
         date: OverviewPage.getDefaultDate(),
       }));
 
+      if (visits.nb_visits !== 7) {
+        console.log(`found visits ${visits.nb_visits}`);
+        const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+          method: 'GET',
+          headers:{
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            action: 'test_get_archive_entries',
+          }),
+        });
+
+        const body = await r.text();
+        console.log('archive contents:');
+        console.log(body);
+      }
       return visits.nb_visits === 7;
     }, { timeout: 120000 });
-    } catch (e) {
-      const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
-        method: 'GET',
-        headers:{
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          action: 'test_get_archive_entries',
-        }),
-      });
-
-      const body = await r.text();
-      console.log('archive contents:');
-      console.log(body);
-      throw e;
-    }
   });
 });
