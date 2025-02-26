@@ -56,11 +56,12 @@ add_action(
 	3
 );
 
+// see manual-archiving.e2e.ts for more info
 add_action(
-    'wp_ajax_nopriv_test_get_archive_entries',
-    function () {
+	'wp_ajax_nopriv_test_get_archive_entries',
+	function () {
 		\WpMatomo\Bootstrap::do_bootstrap();
-		$data = \Piwik\Db::fetchAll('SELECT * FROM ' . \Piwik\Common::prefixTable('archive_numeric_2023_12'));
-        wp_send_json($data);
-    }
+		$data = \Piwik\Db::fetchAll( 'SELECT * FROM ' . \Piwik\Common::prefixTable( 'archive_numeric_2023_12' ) );
+		wp_send_json( $data );
+	}
 );

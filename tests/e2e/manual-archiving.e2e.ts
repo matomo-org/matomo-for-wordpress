@@ -61,6 +61,11 @@ describe('Manual Archiving', function () {
       }));
 
       if (visits.nb_visits !== 7) {
+        // TODO: this is temporary code to get more information to diagnose a random failure
+        // that can occur with archiving. archiving will succeed and find the correct number
+        // of visits, but the Matomo frontend will select an invalidated archive with incorrect
+        // data. when the random failure is fixed, this code should be removed.
+        // make sure to also remove the code in test-utility-plugin.php.
         console.log(`found visits ${visits.nb_visits}`);
         const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
           method: 'GET',
