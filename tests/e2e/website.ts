@@ -115,6 +115,10 @@ class Website {
     return this.wpNonce!;
   }
 
+  /**
+   * Misc Notes:
+   * - for simpler code here we disable woocommerce's reactified settings page in test-utility-plugin.php
+   */
   async setUpWooCommerce() {
     await this.login();
 

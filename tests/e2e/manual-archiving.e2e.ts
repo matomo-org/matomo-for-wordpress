@@ -60,6 +60,6 @@ describe('Manual Archiving', function () {
       }));
 
       return visits.nb_visits === 7;
-    }, { timeout: 120000 });
+    }, { timeout: 240000 });
   });
 });

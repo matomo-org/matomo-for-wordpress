@@ -18,6 +18,15 @@ if ( ! empty( $_GET['mwp_switch_to_locale'] ) ) {
 	switch_to_locale( wp_unslash( $_GET['mwp_switch_to_locale'] ) );
 }
 
+// disable woocommerce's reactified settings page
+add_filter(
+	'woocommerce_admin_get_feature_config',
+	function ( $config ) {
+		$config['reactify-classic-payments-settings'] = false;
+		return $config;
+	}
+);
+
 // if a PHP error is detected from within Matomo for WordPress, throw an exception
 // so we notice during tests and get a backtrace
 add_action(
