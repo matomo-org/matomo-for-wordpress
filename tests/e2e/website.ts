@@ -80,8 +80,14 @@ class Website {
 
     await $('#user_login').waitForExist();
 
-    await $('#user_login').setValue(process.env.WORDPRESS_USER_LOGIN || 'root');
-    await $('#user_pass').setValue(process.env.WORDPRESS_USER_PASS || 'pass');
+    await browser.execute(
+      (l, p) => {
+        window.jQuery('#user_login').val(l);
+        window.jQuery('#user_pass').val(p);
+      },
+      process.env.WORDPRESS_USER_LOGIN || 'root',
+      process.env.WORDPRESS_USER_PASS || 'pass'
+    );
     await $('#wp-submit').click();
 
     await browser.waitUntil(async function () {
@@ -179,9 +185,15 @@ class Website {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
         }, { timeout: 30000 });
       } else {
-        await browser.execute(() => {
-          window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
-        });
+        try {
+          await browser.execute(() => {
+            window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
+          });
+        } catch (e) {
+          console.log('Failed to setup WooCommerce, unknown content used in payment settings:');
+          console.log(await browser.execute(() => document.body.innerHTML));
+          throw e;
+        }
 
         await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 60000 });
       }
