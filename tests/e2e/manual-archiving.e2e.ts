@@ -7,6 +7,7 @@
  */
 
 import { browser } from '@wdio/globals';
+import fetch from 'node-fetch';
 import GlobalSetup from './global-setup.js';
 import Website from './website.js';
 import MatomoIniConfig from './apiobjects/matomo.ini.js';
@@ -32,6 +33,7 @@ describe('Manual Archiving', function () {
   });
 
   it('should run archiving successfully', async () => {
+    try {
     await browser.waitUntil(async () => {
       const params = new URLSearchParams();
       params.set('idSite', '1');
@@ -60,6 +62,22 @@ describe('Manual Archiving', function () {
       }));
 
       return visits.nb_visits === 7;
-    }, { timeout: 240000 });
+    }, { timeout: 120000 });
+    } catch (e) {
+      const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+        method: 'GET',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          action: 'test_get_archive_entries',
+        }),
+      });
+
+      const body = await r.text();
+      console.log('archive contents:');
+      console.log(body);
+      throw e;
+    }
   });
 });

@@ -55,3 +55,12 @@ add_action(
 	10,
 	3
 );
+
+add_action(
+    'wp_ajax_nopriv_test_get_archive_entries',
+    function () {
+		\WpMatomo\Bootstrap::do_bootstrap();
+		$data = \Piwik\Db::fetchAll('SELECT * FROM ' . \Piwik\Common::prefixTable('archive_numeric_2023_12'));
+        wp_send_json($data);
+    }
+);
