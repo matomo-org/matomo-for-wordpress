@@ -306,11 +306,3 @@ require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 
 new WpMatomo();
-
-// TODO: modify this to throw an exception if it comes from matomo for wordpress and add to tests
-add_action( 'wp_trigger_error_run', function ($function_name, $message, $error_level) {
-	if ($error_level !== E_NOTICE && strpos($message, '_load_textdomain_just_in_time') === false &&
-	strpos($message, 'print_inline_script') === false) {
-		throw new \Exception("Matomo: $function_name: $message");
-	}
-}, 10, 3);

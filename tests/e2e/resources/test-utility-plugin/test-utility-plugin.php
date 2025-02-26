@@ -17,3 +17,32 @@ if ( ! empty( $_GET['mwp_switch_to_locale'] ) ) {
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	switch_to_locale( wp_unslash( $_GET['mwp_switch_to_locale'] ) );
 }
+
+// if a PHP error is detected from within Matomo for WordPress, throw an exception
+// so we notice during tests and get a backtrace
+add_action(
+	'wp_trigger_error_run',
+	function ( $function_name, $message, $error_level ) {
+		if (
+			E_NOTICE !== $error_level
+			|| false !== strpos( $message, '_load_textdomain_just_in_time' )
+			|| false !== strpos( $message, 'print_inline_script' )
+		) {
+			return;
+		}
+
+		$ex    = new \Exception( "Matomo: $function_name: $message" );
+		$trace = $ex->getTraceAsString();
+
+		if (
+			false === stripos( $trace, 'matomo' )
+			&& false === stripos( $trace, 'piwik' )
+		) {
+			return;
+		}
+
+		throw $ex;
+	},
+	10,
+	3
+);
