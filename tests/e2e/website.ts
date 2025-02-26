@@ -189,15 +189,9 @@ class Website {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
         }, { timeout: 30000 });
       } else {
-        try {
-          await browser.execute(() => {
-            window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
-          });
-        } catch (e) {
-          console.log('Failed to setup WooCommerce, unknown content used in payment settings:');
-          console.log(await browser.execute(() => document.body.innerHTML));
-          throw e;
-        }
+        await browser.execute(() => {
+          window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
+        });
 
         await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 60000 });
       }

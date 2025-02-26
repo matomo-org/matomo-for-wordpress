@@ -513,18 +513,19 @@ class WordPress extends Mysqli {
 		$i = 0;
 		while ( $i < strlen( $sql ) ) {
 			if ( $this->is_string_literal_start( $sql[$i] ) ) {
-				$quote       = $sql[$i];
-				$segment_end = $i + 1;
+				$quote = $sql[$i];
 
+				$segment_end = $i + 1;
 				while ( $segment_end < strlen( $sql ) ) {
 					if ( $sql[ $segment_end ] === $quote ) {
-						if (
-							$segment_end + 1 >= strlen( $sql )
-							|| $sql[ $segment_end + 1 ] === $quote
-						) { // '' or ""
+						// '' or ""
+						$is_double_quote = $segment_end + 1 >= strlen( $sql )
+							|| $sql[ $segment_end + 1 ] === $quote;
+
+						if ( $is_double_quote ) {
 							++$segment_end;
 						} else {
-							break;
+							break; // not double quote, end of string literal
 						}
 					}
 
@@ -535,6 +536,7 @@ class WordPress extends Mysqli {
 
 				$replaced .= substr( $sql, $i, $segment_end - $i );
 			} else {
+				// advance until string literal or end of string
 				$segment_end = $i + 1;
 				while ( $segment_end < strlen( $sql ) && ! $this->is_string_literal_start( $sql[$segment_end] ) ) {
 					++$segment_end;
