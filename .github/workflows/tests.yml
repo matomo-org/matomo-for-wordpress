@@ -232,35 +232,6 @@ jobs:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: chmod -R 777 . # required to build the release
-      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: |
-          # wait for docker-compose launch to finish
-          elapsed=0
-          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 240 )); do
-            sleep 1
-          done
-
-          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
-            echo "did not setup local environment in time"
-            exit 1
-          fi
-          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
-      - run: npm run compose logs wordpress --no-color # for debugging failures to start
-        if: always()
-
-      # build release from current code
-      - run: |
-          npm run matomo:console -- wordpress:build-release --name=test --zip
-          mv matomo-test.zip matomo.zip
-
-      # restart wordpress but with latest stable matomo
-      - run: |
-          echo 'INSTALLING_FROM_ZIP=1' >> .env
-          docker compose --env-file .env.default --env-file .env stop wordpress
-          docker compose --env-file .env.default --env-file .env up -d wordpress
-          sleep 20
-          npm run compose logs wordpress --no-color
-
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
         env:
@@ -268,7 +239,6 @@ jobs:
           WOOCOMMERCE: 1
           WORDPRESS_FOLDER: test
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-          RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
           TEST_SHOP_LICENSE: ${{ secrets.TEST_SHOP_LICENSE }}
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v4
@@ -289,9 +259,11 @@ jobs:
       - run: npm run compose stop
 
       # output debug.concat.log (created in a hook in wdio.conf.ts)
-      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || echo "debug.concat.log file does not exist"
+      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.concat.log file does not exist"
         if: always()
-      - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || echo "debug.concat.log file does not exist for test-multi"
+      - run: cat ./docker/wordpress/test-multi/wp-content/debug.concat.log || cat ./docker/wordpress/test-multi/wp-content/debug.log || echo "debug.concat.log file does not exist for test-multi"
+        if: always()
+      - run: cat .e2e-docker-out || echo ".e2e-docker-out file does not exist"
         if: always()
 
   checkstyle:

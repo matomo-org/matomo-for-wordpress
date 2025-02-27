@@ -83,6 +83,7 @@ class API {
 		$this->register_route( 'UsersManager', 'getUsersLogin' );
 		$this->register_route( 'UsersManager', 'getUser' );
 		$this->register_route( 'Goals', 'getGoals' );
+		$this->register_route( 'VisitsSummary', 'get' );
 
 		// todo ideally we would make here work /goal/12345 to get goalId 12345
 		$this->register_route( 'Goals', 'getGoal' );

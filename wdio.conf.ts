@@ -35,14 +35,15 @@ function checkWpDebugLogsForError(dirName: string) {
   try {
     let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8');
 
-    let lines = contents.split("\n");
+    let lines = contents.split("\n").filter((line) => {
+      // deprecated function warnings from other plugins
+      return !line.includes('_load_textdomain_just_in_time')
+          && !line.includes('print_inline_script');
+    });
+
     let matomoErrors = lines.filter((line) => {
       line = line.toLowerCase();
-      return /php (notice|warning|error|deprecated):/i.test(line)
-        && line.includes('matomo')
-        // deprecated function warnings from other plugins
-        && !line.includes('_load_textdomain_just_in_time')
-        && !line.includes('print_inline_script');
+      return /php (notice|warning|error|deprecated):/i.test(line) && line.includes('matomo');
     });
 
     fs.appendFileSync(wpDebugLogConcatPath, lines.join("\n"));
@@ -100,6 +101,7 @@ export const config: Options.Testrunner = {
     './tests/e2e/tracking.e2e.ts',
     './tests/e2e/tracking.ecommerce.e2e.ts',
     './tests/e2e/tracking.tag-manager.e2e.ts',
+    './tests/e2e/manual-archiving.e2e.ts',
     './tests/e2e/mwp-language.e2e.ts',
   ],
   //

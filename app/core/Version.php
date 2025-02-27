@@ -9,6 +9,7 @@
 namespace Piwik;
 
 use DateTime;
+
 /**
  * Matomo version information.
  *

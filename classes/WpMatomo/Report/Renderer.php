@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Report;
 
+use Piwik\DataTable;
+use Piwik\DataTable\DataTableInterface;
 use WpMatomo\Capabilities;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -98,7 +100,7 @@ class Renderer {
 
 		$report_data     = new Data();
 		$report          = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
-		$has_report_data = ! empty( $report['reportData'] ) && $report['reportData']->getRowsCount();
+		$has_report_data = ! empty( $report['reportData'] ) && $this->has_rows_with_data( $report['reportData'], $first_metric_name );
 
 		ob_start();
 
@@ -111,5 +113,24 @@ class Renderer {
 		}
 
 		return ob_get_clean();
+	}
+
+	private function has_rows_with_data( DataTableInterface $table, $first_metric_name ) {
+		$has_data = false;
+		$table->filter(
+			function ( DataTable $table ) use ( &$has_data, $first_metric_name ) {
+				if ( $has_data ) {
+					return;
+				}
+
+				foreach ( $table->getRows() as $row ) {
+					if ( ! empty( $row[ $first_metric_name ] ) ) {
+						$has_data = true;
+						break;
+					}
+				}
+			}
+		);
+		return $has_data;
 	}
 }

@@ -12,12 +12,15 @@ import MwpPage from './page.js';
 class MwpDiagnosticsPage extends MwpPage {
   async open(overrideUrl?: string) {
     const result = await super.open(overrideUrl || '/wp-admin/admin.php?page=matomo-systemreport');
+    await $('a.nav-tab').waitForExist();
     await this.normalizePageContents();
     return result;
   }
 
   async openTroubleshootingTab() {
-    await $('a.nav-tab=Troubleshooting').click();
+    await browser.execute(() => {
+      window.jQuery('a.nav-tab:contains(Troubleshooting)')[0].click();
+    });
     await $('#matomo_troubleshooting_update_from').waitForExist();
     await browser.pause(500);
   }
