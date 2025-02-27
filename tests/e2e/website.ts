@@ -176,13 +176,24 @@ class Website {
 
     // enable cash on delivery
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
+    await $('div.woocommerce').waitForExist();
+
+    try {
+      $('#woocommerce_cod_enabled').waitForExist({ timeout: 5000 });
+    } catch (e) {
+      // ignore
+    }
+
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
     console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
 
+
     if (!isPaymentsSetup) {
-      if (await $('#woocommerce_cod_enabled').isExisting()) {
+      const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
+      console.log('is found originally: ' + isWooCommerceCodInputFound);
+      if (isWooCommerceCodInputFound) {
         await $('label[for="woocommerce_cod_enabled"]').click();
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
@@ -194,18 +205,26 @@ class Website {
         });
 
         try {
-          await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,.woocommerce-save-button').waitForExist({ timeout: 90000 });
+          await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
         } catch (e) {
           console.log(await browser.execute(() => document.body.innerHTML));
           throw e;
         }
 
         if (await $('.woocommerce-save-button').isExisting()) {
-          await $('.woocommerce-save-button').click();
-
-          await browser.waitUntil(async () => {
-            return browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
+          await browser.execute(() => {
+            window.jQuery('.woocommerce-save-button')[0].click();
           });
+
+          try {
+            await browser.waitUntil(async () => {
+              return await browser.execute(() => window.jQuery('.woocommerce-save-button[disabled],tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0);
+            }, { timeout: 60000 });
+          } catch (e) {
+            const html = await browser.execute(() => document.body.innerHTML);
+            console.log('html', html);
+            throw e;
+          }
         }
       }
     }
