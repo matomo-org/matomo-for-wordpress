@@ -12,6 +12,8 @@ if [[ "$1" = "bash" ]]; then
 fi
 
 function export_global() {
+  export WP_CLI_CACHE_DIR=/.wp-cli
+
   # http serves a single offer, whereas https serves multiple. we only want one
   export LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
   if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
@@ -28,10 +30,8 @@ function export_global() {
 }
 
 function export_install_dependent() {
-  ARG_MULTISITE="$1"
-  if [[ "$ARG_MULTISITE" = "1" ]]; then
-    export WORDPRESS_FOLDER="$WORDPRESS_FOLDER_BASE-multi"
-  fi
+  ARG_SUFFIX="$1"
+  export WORDPRESS_FOLDER="$WORDPRESS_FOLDER_BASE${ARG_SUFFIX}"
 
   export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
@@ -46,7 +46,11 @@ function handle_cli_command() {
   EXECUTE_TARGET="$1"
   EXECUTE_ARGS="${@:2}"
 
-  export_install_dependent $MULTISITE
+  if [[ "$MULTISITE" == "1" ]]; then
+    WP_FOLDER_SUFFIX="-multi"
+  fi
+
+  export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
 
   echo "Using WordPress install $WORDPRESS_FOLDER."
@@ -56,7 +60,7 @@ function handle_cli_command() {
     /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
-    cd /var/www/html/matomo-for-wordpress/app
+    cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
     ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
@@ -78,8 +82,11 @@ function handle_cli_command() {
 
 function install_wordpress() {
   MULTISITE="$1"
+  WP_FOLDER_SUFFIX="$2"
 
-  export_install_dependent $MULTISITE
+  chmod 777 "/.wp-cli"
+
+  export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
 
   # install wp-cli.phar
@@ -503,12 +510,12 @@ EOF
 
   # make sure the files can be edited outside of docker (for easier debugging)
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
-  touch /var/www/html/$WORDPRESS_FOLDER/debug.log /var/www/html/matomo.wpload_dir.php
+  touch /var/www/html/$WORDPRESS_FOLDER/wp-content/debug.log /var/www/html/matomo.wpload_dir.php
   mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp
   chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
   find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-  chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
+  chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/wp-content/debug.log" /var/www/html/matomo.wpload_dir.php
 
   echo "finish wordpress install (multisite = $MULTISITE)"
 }
@@ -555,9 +562,13 @@ wait_for_database
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
-install_wordpress 1
+install_wordpress 1 -multi
 
 touch /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
 touch /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
+chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
+chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
 
-start_webserver "$@"
+if [[ "$INSTALL_ONLY" != "1" ]]; then
+  start_webserver "$@"
+fi

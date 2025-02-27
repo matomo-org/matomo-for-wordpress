@@ -78,8 +78,16 @@ class Website {
       await browser.url(`${baseUrl}/wp-login.php`);
     });
 
-    await $('#user_login').setValue(process.env.WORDPRESS_USER_LOGIN || 'root');
-    await $('#user_pass').setValue(process.env.WORDPRESS_USER_PASS || 'pass');
+    await $('#user_login').waitForExist();
+
+    await browser.execute(
+      (l, p) => {
+        window.jQuery('#user_login').val(l);
+        window.jQuery('#user_pass').val(p);
+      },
+      process.env.WORDPRESS_USER_LOGIN || 'root',
+      process.env.WORDPRESS_USER_PASS || 'pass'
+    );
     await $('#wp-submit').click();
 
     await browser.waitUntil(async function () {
@@ -107,6 +115,10 @@ class Website {
     return this.wpNonce!;
   }
 
+  /**
+   * Misc Notes:
+   * - for simpler code here we disable woocommerce's reactified settings page in test-utility-plugin.php
+   */
   async setUpWooCommerce() {
     await this.login();
 
@@ -150,7 +162,7 @@ class Website {
     await browser.waitUntil(async () => {
       const url = await browser.getUrl()
       return /page=wc-admin$/.test(url);
-    });
+    }, { timeout: 30000 });
 
     await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
 
@@ -175,7 +187,7 @@ class Website {
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
-        });
+        }, { timeout: 30000 });
       } else {
         await browser.execute(() => {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
@@ -306,10 +318,22 @@ class Website {
       return await browser.execute(() => {
         return window.jQuery && (
           window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
+          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
+          window.jQuery('p:contains(Plugin installed successfully.)').length > 0
         );
       });
     }, { timeout: 120000 });
+
+    const activateButtonExists = await $('.button=Activate Plugin').isExisting();
+    if (activateButtonExists) {
+      await $('.button=Activate Plugin').click();
+
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => {
+          return window.jQuery && window.jQuery('p:contains(Plugin activated.)').length > 0;
+        });
+      }, { timeout: 120000 });
+    }
   }
 }
 

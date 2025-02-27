@@ -6,6 +6,7 @@
     "@wdio/local-runner": "^9.9.1",
     "@wdio/mocha-framework": "^9.9.0",
     "@wdio/spec-reporter": "^9.9.0",
+    "ini": "^5.0.0",
     "node-fetch": "^3.3.2",
     "pre-commit": "^1.2.2",
     "ts-node": "^10.9.1",
