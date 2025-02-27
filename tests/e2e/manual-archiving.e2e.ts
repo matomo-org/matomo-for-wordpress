@@ -67,7 +67,7 @@ describe('Manual Archiving', function () {
         // data. when the random failure is fixed, this code should be removed.
         // make sure to also remove the code in test-utility-plugin.php.
         console.log(`found visits ${visits.nb_visits}`);
-        const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+        const r = await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
           method: 'GET',
           headers:{
             'Content-Type': 'application/x-www-form-urlencoded'
