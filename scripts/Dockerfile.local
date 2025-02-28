@@ -24,7 +24,7 @@ ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 # install git lfs
 RUN curl -sL -o git-lfs.tar.gz "$( \
     node -e "fetch('https://api.github.com/repos/git-lfs/git-lfs/releases/latest').then(r => r.json()).then(v => { \
-        if (!v.assets.filter) { \
+        if (!v.assets || !v.assets.filter) { \
             console.log('unknown response:', JSON.stringify(v, null, 2)); \
         } \
         return v.assets.filter(i => /linux-amd64/.test(i.name)); \

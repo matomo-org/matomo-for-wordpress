@@ -36,7 +36,7 @@ describe('Network Admin', function() {
     // for some reason on the first load, the app/bootstrap.php cannot be found
     await Website.retry(3, async () => {
       await NetworkMultiSitePage.open();
-    }, 3);
+    }, 3000);
 
     await NetworkMultiSitePage.prepareWpAdminForScreenshot();
     await expect(

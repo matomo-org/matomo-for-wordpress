@@ -68,7 +68,7 @@ describe('Manual Archiving', function () {
         // make sure to also remove the code in test-utility-plugin.php.
         console.log(`found visits ${visits.nb_visits}`);
         const r = await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
-          method: 'GET',
+          method: 'POST',
           headers:{
             'Content-Type': 'application/x-www-form-urlencoded'
           },

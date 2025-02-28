@@ -16,13 +16,27 @@ export default class MatomoPage extends Page {
   async open(path: string) {
     const result = super.open(path);
     await this.waitForLoading();
-    await this.addStylesToPage('table.entityTable tbody tr:hover td { background-color: unset !important; }');
+    await this.addStylesToPage(`
+      table.entityTable tbody tr:hover td { background-color: unset !important; }
+
+      .dataTableVizEvolution {
+        max-height: 234px !important;
+      }
+    `);
     await this.removeWhatsNewIfPresent();
     return result;
   }
 
   async removeWhatsNewIfPresent() {
-    const exists = await $('.whatisnew').isExisting();
+    let exists = false;
+
+    try {
+      await $('.whatisnew').waitForExist({ timeout: 5000 });
+      exists = true;
+    } catch (e) {
+      // ignore
+    }
+
     if (exists) {
       await browser.execute(() => {
         window.jQuery('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();

@@ -102,15 +102,19 @@ export default class Page {
   }
 
   async waitForImages() {
-    await browser.waitUntil(async () => {
-      return browser.execute(function () {
-        let isAllComplete = true;
-        $('img').each((i, e) => {
-          isAllComplete = isAllComplete && e.complete;
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(function () {
+          let isAllComplete = true;
+          $('img').each((i, e) => {
+            isAllComplete = isAllComplete && e.complete;
+          });
+          return isAllComplete;
         });
-        return isAllComplete;
-      });
-    }, { timeout: 60000 });
+      }, { timeout: 60000 });
+    } catch (e) {
+      // ignore and try to compare a screenshot anyway
+    }
   }
 
   // for wp themes/plugins that use react

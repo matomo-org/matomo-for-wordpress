@@ -14,6 +14,8 @@ import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
+import * as path from "node:path";
+import * as fs from "node:fs";
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
@@ -95,17 +97,25 @@ describe('Tracking (Ecommerce)', function() {
       }));
 
       // set new visitor
-      const cookies = await browser.getCookies();
+      let cookies = await browser.getCookies();
       for (let name in cookies) {
-        console.log(`found cookie ${name}`);
         if (/^_pk_/.test(name)) {
           console.log(`deleting cookie ${name}`);
           await browser.deleteCookie(name);
         }
       }
-      await browser.emulate('userAgent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958');
+
+      const newUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958';
+      await browser.emulate('userAgent', newUserAgent);
+
+      const debugLog = path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'debug.log');
+      fs.appendFileSync(debugLog, "START ECOMMERCE TEST\n");
 
       await BlogHomepagePage.open();
+
+      const currentUserAgent = await browser.execute(() => navigator.userAgent);
+      expect(currentUserAgent).toEqual(newUserAgent);
+
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
 
       await BlogProductPage.open();
@@ -114,14 +124,25 @@ describe('Tracking (Ecommerce)', function() {
       await BlogProductPage.addToCart(); // tracked server side
       await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
 
+      // ensure we are doing cookieless tracking
+      const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
+      expect(matomoCookies).toEqual([]);
+
       const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
         idSite: '1',
         lastMinutes: '60',
       }));
 
-      // note: the visitor log test will implicitly do more extensive test of the tracked data
       expect(counters).toHaveLength(1);
       // expect(counters[0].visits).toEqual(parseInt(countersBefore[0].visits, 10) + 1);
+
+      // TODO: check visitor log
+      const visits = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
+        idSite: '1',
+        period: 'day',
+        date: 'today',
+      }));
+      console.log(JSON.stringify(visits, null, 2));
     });
   });
 });

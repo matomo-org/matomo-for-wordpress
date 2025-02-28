@@ -178,17 +178,12 @@ class Website {
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
     await $('div.woocommerce').waitForExist();
 
-    try {
-      $('#woocommerce_cod_enabled').waitForExist({ timeout: 5000 });
-    } catch (e) {
-      // ignore
-    }
+    $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
 
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
     console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
-
 
     if (!isPaymentsSetup) {
       const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
@@ -290,7 +285,7 @@ class Website {
     this.wordPressFolderOverride = null;
   }
 
-  public async retry<R>(times: number, fn: () => Promise<R>, sleepTimeInSecs: number = 0) {
+  public async retry<R>(times: number, fn: () => Promise<R>, sleepTimeInMsecs: number = 0) {
     while (times > 0) {
       try {
         return await fn();
@@ -301,8 +296,8 @@ class Website {
           throw e;
         }
 
-        if (sleepTimeInSecs) {
-          await browser.pause(sleepTimeInSecs);
+        if (sleepTimeInMsecs) {
+          await browser.pause(sleepTimeInMsecs);
         }
       }
     }
@@ -318,6 +313,7 @@ class Website {
       window.jQuery('a.upload-view-toggle')[0].click();
     });
     await browser.pause(250);
+    await $('#pluginzip').waitForClickable();
 
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);
@@ -327,25 +323,33 @@ class Website {
       window.jQuery('#install-plugin-submit')[0].click();
     });
 
-    try {
-      await $('.update-from-upload-overwrite').waitForExist();
-
-      await browser.execute(() => {
-        window.jQuery('.update-from-upload-overwrite')[0].click();
-      });
-    } catch (e) {
-      // ignore
-    }
-
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
         return window.jQuery && (
           window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
           window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin installed successfully.)').length > 0
+          window.jQuery('p:contains(Plugin installed successfully.)').length > 0 ||
+          window.jQuery('.update-from-upload-overwrite').length > 0
         );
       });
     }, { timeout: 120000 });
+
+    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite');
+    if (isAlreadyExistingPluginPage) {
+      await browser.execute(() => {
+        window.jQuery('.update-from-upload-overwrite')[0].click();
+      });
+
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => {
+          return window.jQuery && (
+            window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
+            window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
+            window.jQuery('p:contains(Plugin installed successfully.)').length > 0
+          );
+        });
+      }, { timeout: 120000 });
+    }
 
     const activateButtonExists = await $('.button=Activate Plugin').isExisting();
     if (activateButtonExists) {

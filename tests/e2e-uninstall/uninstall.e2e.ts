@@ -41,23 +41,55 @@ describe('MWP Uninstall', () => {
 
     await $('#delete-matomo').waitForExist({ timeout: 60000 });
 
-    await browser.execute(() => {
-      window.jQuery('#delete-matomo')[0].click();
-    });
-
-    await browser.pause(500); // wait for alert
-
     try {
-      // case when a confirm modal is shown
-      await browser.acceptAlert();
-      await $('#matomo-deleted').waitForExist({ timeout: 240000 });
-    } catch (e) {
-      // case when the user is redirected to a page with a <form>
-      await $('form #submit').waitForExist({ timeout: 30000 });
-      await $('form #submit').click();
+      await Website.retry(3, async () => {
+        await browser.execute(() => {
+          if (window.jQuery('#delete-matomo').length) {
+            window.jQuery('#delete-matomo')[0].click();
+          }
+        });
 
-      await $('table.plugins').waitForExist({ timeout: 180000 });
-      await browser.pause(30000);
+        await browser.pause(500); // wait for alert
+
+        // case when a confirm modal is shown
+        try {
+          await browser.acceptAlert();
+        } catch (e) {
+          // ignore
+        }
+
+        const hasDelete = await browser.execute(() => window.jQuery('#delete-matomo'));
+        if (hasDelete) {
+          const isDeleting = await browser.execute(() => {
+            const html = window.jQuery('#delete-matomo').html();
+            return html && html.includes('Deleting');
+          });
+          if (!isDeleting) {
+            throw new Error('clicking delete did nothing');
+          }
+        }
+      }, 500);
+    } catch (e) {
+      if ((e as Error).message !== 'clicking delete did nothing') {
+        throw e;
+      }
+
+      let deleteUrl = await browser.execute(() => window.jQuery('#delete-matomo').attr('href'));
+      deleteUrl = `${await Website.baseUrl()}/wp-admin/${deleteUrl}`;
+      console.log(`attempting to visit plugin delete URL manually (URL = ${deleteUrl})`);
+      await browser.url(deleteUrl);
+    }
+
+    await $('#matomo-deleted,form #submit').waitForExist({ timeout: 180000 });
+
+    const formExists = await $('form #submit').isExisting();
+    if (formExists) {
+      // case when the user is redirected to a page with a <form>
+        await $('form #submit').waitForExist({ timeout: 30000 });
+        await $('form #submit').click();
+
+        await $('table.plugins').waitForExist({ timeout: 180000 });
+        await browser.pause(30000);
     }
 
     // check that no matomo table exists in the database

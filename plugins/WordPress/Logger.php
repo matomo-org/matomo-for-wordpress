@@ -158,7 +158,7 @@ class Logger extends AbstractLogger implements LoggerInterface
         $is_tracker_debug = $this->is_tracker && ((!empty($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true) || StaticContainer::get("ini.Tracker.debug"));
 
         if ( !$is_tracker_debug && (!defined( 'WP_DEBUG' ) || WP_DEBUG !== true )) {
-            return;
+            //return;
         }
 
         $level = $this->make_numeric_level($level);
@@ -168,7 +168,9 @@ class Logger extends AbstractLogger implements LoggerInterface
         }
 
         if ($level < $this->level) {
-            return;
+            if (!SettingsServer::isTrackerApiRequest()) {
+                return;
+            }
         }
 
         $title = '';
