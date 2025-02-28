@@ -30,11 +30,15 @@ class ServerSideVisitorId {
 	}
 
 	public function force_server_side_visitor_id() {
+		error_log(__CLASS__ . '::' . __FUNCTION__);
+
 		if ( $this->is_visitor_id_cookie_present() ) {
+			error_log("visitor id cookie present");
 			return; // cookie found, no need to force a server side generated one
 		}
 
 		if ( is_admin() ) {
+			error_log("is admin page");
 			return;
 		}
 
@@ -45,12 +49,14 @@ class ServerSideVisitorId {
 		if ( empty( $visitor_id ) ) {
 			$tracker    = new AjaxTracker( $this->settings );
 			$visitor_id = $tracker->setNewVisitorId()->randomVisitorId;
+			error_log("creating visitor id: $visitor_id");
 			WC()->session->set( self::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 		}
 
 		add_action(
 			'wp_head',
 			function () use ( $visitor_id ) {
+				error_log("adding setVisitorId to head");
 				echo '<script>window._paq = window._paq || []; window._paq.push(["setVisitorId", ' . wp_json_encode( $visitor_id ) . ']);</script>\n';
 			}
 		);
@@ -65,6 +71,8 @@ class ServerSideVisitorId {
 	 * @return bool
 	 */
 	private function is_visitor_id_cookie_present() {
+		error_log(__CLASS__ . '::' . __FUNCTION__);
+
 		if ( ! is_array( $_COOKIE ) || empty( $_COOKIE ) ) {
 			return false;
 		}
@@ -80,6 +88,8 @@ class ServerSideVisitorId {
 	}
 
 	private function initialize_woocommerce_session_if_needed() {
+		error_log(__CLASS__ . '::' . __FUNCTION__);
+
 		WC()->initialize_session();
 		if ( ! WC()->session->has_session() ) {
 			WC()->session->set_customer_session_cookie( true );

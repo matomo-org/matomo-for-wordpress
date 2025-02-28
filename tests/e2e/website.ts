@@ -362,6 +362,21 @@ class Website {
       }, { timeout: 120000 });
     }
   }
+
+  /**
+   * Appends message to the WordPress debug.log file. Useful for marking where in
+   * the logs a specific test starts/ends.
+   *
+   * @param message
+   */
+  async log(message: string) {
+    if (message.substring(message.length - 1, message.length) !== "\n") {
+      message = `${message}\n`;
+    }
+
+    const debugLog = path.join(process.cwd(), 'docker', 'wordpress', await this.getWpFolder(), 'wp-content', 'debug.log');
+    fs.appendFileSync(debugLog, message);
+  }
 }
 
 export default new Website();

@@ -84,6 +84,9 @@ describe('Tracking (Ecommerce)', function() {
       });
 
       await SettingsPage.saveSettings();
+
+      const checked = await browser.execute(() => window.jQuery('#use_session_visitor_id').is(':checked'));
+      expect(checked).toBeTruthy();
     }
 
     before(async () => {
@@ -100,6 +103,9 @@ describe('Tracking (Ecommerce)', function() {
       });
 
       await enableCookielessTracking();
+
+      await SettingsPage.expandAllTrackingSettingsSections();
+      // throw new Error('forced error');
     });
 
     after(async () => {
@@ -117,6 +123,7 @@ describe('Tracking (Ecommerce)', function() {
     });
 
     it('should track abandoned carts correctly with cookieless tracking and server side visitor ID', async () => {
+      await Website.log("START ECOMMERCE TEST");
       const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
         idSite: '1',
         lastMinutes: '60',

@@ -32,8 +32,11 @@ class Woocommerce extends Base {
 
 		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
 		if ( $use_server_side_id ) {
+			error_log("using server side visitor id");
 			$server_side_visitor_id = new ServerSideVisitorId( $this->settings );
 			$server_side_visitor_id->register_hooks();
+		} else {
+			error_log("not using server side visitor id");
 		}
 
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
