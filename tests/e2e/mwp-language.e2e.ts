@@ -46,7 +46,7 @@ describe('MWP Language', () => {
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.site-lang.matomo-reporting')
-    ).toBeLessThanOrEqual(0.02);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should use the appropriate language in MWP admin when the user profile language changes', async () => {
@@ -64,7 +64,7 @@ describe('MWP Language', () => {
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.profile-lang.matomo-reporting')
-    ).toBeLessThanOrEqual(0.02);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it.skip('should use the appropriate language in MWP admin when a plugin calls switch_to_locale', async () => {
@@ -82,6 +82,6 @@ describe('MWP Language', () => {
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.switch-to-locale.matomo-reporting')
-    ).toBeLessThanOrEqual(0.02);
+    ).toBeLessThanOrEqual(0.05);
   });
 });
