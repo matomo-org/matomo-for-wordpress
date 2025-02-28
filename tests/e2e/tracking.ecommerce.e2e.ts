@@ -25,6 +25,11 @@ describe('Tracking (Ecommerce)', function() {
     await Website.deleteAllCookies();
   });
 
+  async function checkPageHasForcedVisitorId() {
+    const headHtml = await browser.execute(() => document.head.innerHTML);
+    expect(headHtml).toContain('window._paq.push(["setVisitorId"');
+  }
+
   it('should track ecommerce events and orders using the JS client', async () => {
     // TODO: these tests are not particularly great atm. there's no way to get the number of orders
     // overall or number of conversions overall without initiating archiving
@@ -127,14 +132,16 @@ describe('Tracking (Ecommerce)', function() {
       }
 
       await BlogHomepagePage.open();
-
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
+      await checkPageHasForcedVisitorId();
 
       await BlogProductPage.open();
       await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
+      await checkPageHasForcedVisitorId();
 
       await BlogProductPage.addToCart(); // tracked server side
       await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
+      await checkPageHasForcedVisitorId();
 
       // ensure we are doing cookieless tracking
       const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
