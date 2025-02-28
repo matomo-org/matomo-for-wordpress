@@ -7,6 +7,9 @@
  */
 
 import { expect, browser } from '@wdio/globals'
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import fetch from 'node-fetch';
 import BlogProductPage from './pageobjects/blog-product.page.js';
 import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
@@ -14,8 +17,7 @@ import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
-import * as path from "node:path";
-import * as fs from "node:fs";
+import OverviewPage from "./pageobjects/matomo-reporting/visitors/overview.page";
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
@@ -79,14 +81,33 @@ describe('Tracking (Ecommerce)', function() {
       await SettingsPage.saveSettings();
     }
 
-    let userAgent = '';
     before(async () => {
-      userAgent = await browser.execute(() => navigator.userAgent);
+      const newUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958';
+      await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          action: 'matomo_test_set_custom_user_agent',
+          ua: newUserAgent,
+        }),
+      });
+
       await enableCookielessTracking();
     });
 
     after(async () => {
-      await browser.emulate('userAgent', userAgent);
+      await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          action: 'matomo_test_set_custom_user_agent',
+        }),
+      });
+
       await disableCookielessTracking();
     });
 
@@ -105,16 +126,7 @@ describe('Tracking (Ecommerce)', function() {
         }
       }
 
-      const newUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958';
-      await browser.emulate('userAgent', newUserAgent);
-
-      const debugLog = path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'debug.log');
-      fs.appendFileSync(debugLog, "START ECOMMERCE TEST\n");
-
       await BlogHomepagePage.open();
-
-      const currentUserAgent = await browser.execute(() => navigator.userAgent);
-      expect(currentUserAgent).toEqual(newUserAgent);
 
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
 
@@ -134,15 +146,19 @@ describe('Tracking (Ecommerce)', function() {
       }));
 
       expect(counters).toHaveLength(1);
-      // expect(counters[0].visits).toEqual(parseInt(countersBefore[0].visits, 10) + 1);
+      expect(parseInt(counters[0].visits, 10)).toEqual(parseInt(countersBefore[0].visits, 10) + 1);
 
-      // TODO: check visitor log
+      // check latest visit in visitor log has an abandoned cart event + other actions
       const visits = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
         idSite: '1',
         period: 'day',
         date: 'today',
       }));
-      console.log(JSON.stringify(visits, null, 2));
+
+      console.log(visits[0]);
+      console.log(visits[visits.length - 1]);
+
+      // TODO: check that the last visit has an abandoned cart event + pageviews
     });
   });
 });

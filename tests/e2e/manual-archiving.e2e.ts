@@ -65,7 +65,6 @@ describe('Manual Archiving', function () {
         // Working around https://github.com/matomo-org/matomo/issues/23085.
         // If archive data selected is inaccurate, delete the entire archive table for the month,
         // and re-archive.
-        console.log(`found visits ${visits.nb_visits}`);
         await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
           method: 'POST',
           headers:{

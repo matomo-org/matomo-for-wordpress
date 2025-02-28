@@ -73,3 +73,29 @@ add_action(
 		wp_send_json( 'ok' );
 	}
 );
+
+// overwrite user agent to be used via appendToTrackingUrl() (webdriverio does not allow
+// changing the user agent sent with AJAX requests)
+add_action(
+	'wp_head',
+	function () {
+		$use_different_user_agent = get_option( 'matomo_test_user_agent' );
+		if ( $use_different_user_agent ) {
+			$user_agent_str = wp_json_encode( 'ua=' . rawurlencode( $use_different_user_agent ) );
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo "<script>window._paq = window._paq || []; _paq.push(['appendToTrackingUrl', $user_agent_str])</script>";
+		}
+	}
+);
+add_action(
+	'wp_ajax_nopriv_matomo_test_set_custom_user_agent',
+	function () {
+		if ( isset( $_REQUEST['ua'] ) ) {
+			$user_agent = sanitize_text_field( wp_unslash( $_REQUEST['ua'] ) );
+			update_option( 'matomo_test_user_agent', $user_agent );
+		} else {
+			delete_option( 'matomo_test_user_agent' );
+		}
+		wp_send_json( 'ok' );
+	}
+);
