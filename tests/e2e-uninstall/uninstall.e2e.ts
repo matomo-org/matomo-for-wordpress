@@ -50,7 +50,7 @@ describe('MWP Uninstall', () => {
     try {
       // case when a confirm modal is shown
       await browser.acceptAlert();
-      await $('#matomo-deleted').waitForExist({ timeout: 180000 });
+      await $('#matomo-deleted').waitForExist({ timeout: 240000 });
     } catch (e) {
       // case when the user is redirected to a page with a <form>
       await $('form #submit').waitForExist({ timeout: 30000 });

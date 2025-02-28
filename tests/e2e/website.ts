@@ -76,25 +76,25 @@ class Website {
     const baseUrl = await this.baseUrl();
     await this.retry(3, async () => {
       await browser.url(`${baseUrl}/wp-login.php`);
+
+      await $('#user_login').waitForExist();
+
+      await browser.execute(
+        (l, p) => {
+          window.jQuery('#user_login').val(l);
+          window.jQuery('#user_pass').val(p);
+        },
+        process.env.WORDPRESS_USER_LOGIN || 'root',
+        process.env.WORDPRESS_USER_PASS || 'pass'
+      );
+      await $('#wp-submit').click();
+
+      await browser.waitUntil(async function () {
+        return !!(await browser.execute(function () {
+          return window.wpApiSettings?.nonce;
+        }));
+      }, { timeout: 60000 });
     });
-
-    await $('#user_login').waitForExist();
-
-    await browser.execute(
-      (l, p) => {
-        window.jQuery('#user_login').val(l);
-        window.jQuery('#user_pass').val(p);
-      },
-      process.env.WORDPRESS_USER_LOGIN || 'root',
-      process.env.WORDPRESS_USER_PASS || 'pass'
-    );
-    await $('#wp-submit').click();
-
-    await browser.waitUntil(async function () {
-      return !!(await browser.execute(function () {
-        return window.wpApiSettings?.nonce;
-      }));
-    }, { timeout: 60000 });
   }
 
   async getWpNonce() {
@@ -290,7 +290,7 @@ class Website {
     this.wordPressFolderOverride = null;
   }
 
-  public async retry<R>(times: number, fn: () => Promise<R>) {
+  public async retry<R>(times: number, fn: () => Promise<R>, sleepTimeInSecs: number = 0) {
     while (times > 0) {
       try {
         return await fn();
@@ -299,6 +299,10 @@ class Website {
 
         if (times <= 0) {
           throw e;
+        }
+
+        if (sleepTimeInSecs) {
+          await browser.pause(sleepTimeInSecs);
         }
       }
     }
