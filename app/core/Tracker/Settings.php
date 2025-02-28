@@ -8,7 +8,7 @@
  */
 namespace Piwik\Tracker;
 
-use Piwik\Config;
+use Piwik\Common;use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Tracker;
@@ -32,6 +32,8 @@ class Settings
     {
         list($plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie) = $request->getPlugins();
         $userAgent = $request->getUserAgent();
+		Common::printDebug('user agent is ' . $userAgent);
+		Common::printDebug('client hints are: ' . var_export($request->getClientHints(), true));
         $deviceDetector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance($userAgent, $request->getClientHints());
         $aBrowserInfo = $deviceDetector->getClient();
         if (empty($aBrowserInfo['type']) || 'browser' !== $aBrowserInfo['type']) {
@@ -40,6 +42,7 @@ class Settings
         }
         $browserName = !empty($aBrowserInfo['short_name']) ? $aBrowserInfo['short_name'] : 'UNK';
         $browserVersion = !empty($aBrowserInfo['version']) ? $aBrowserInfo['version'] : '';
+		Common::printDebug('found browser name/version: ' . $browserName . ' - ' . $browserVersion);
         if ($deviceDetector->isBot()) {
             $os = self::OS_BOT;
         } else {
