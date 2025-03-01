@@ -106,6 +106,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_jserrors',
 			'track_api_endpoint',
 			Settings::SITE_CURRENCY,
+			Settings::USE_SESSION_VISITOR_ID_OPTION_NAME,
 		];
 
 		if ( matomo_has_tag_manager() ) {

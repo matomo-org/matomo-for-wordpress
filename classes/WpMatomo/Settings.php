@@ -117,7 +117,6 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
-		self::USE_SESSION_VISITOR_ID_OPTION_NAME   => false,
 	];
 
 	/**
@@ -126,9 +125,10 @@ class Settings {
 	 * @var array
 	 */
 	private $default_blog_settings = [
-		'noscript_code'                        => '',
-		'tracking_code'                        => '',
-		self::OPTION_LAST_TRACKING_CODE_UPDATE => 0,
+		'noscript_code'                          => '',
+		'tracking_code'                          => '',
+		self::OPTION_LAST_TRACKING_CODE_UPDATE   => 0,
+		self::USE_SESSION_VISITOR_ID_OPTION_NAME => false,
 	];
 
 	private $global_settings = [];

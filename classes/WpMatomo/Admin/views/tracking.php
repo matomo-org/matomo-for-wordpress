@@ -256,7 +256,10 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Use server generated Visitor ID', 'matomo' ),
 				$matomo_server_side_visitor_id_desc,
 				false,
-				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager',
+				false,
+				'',
+				false
 			);
 			?>
 			</tbody>

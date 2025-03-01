@@ -7,8 +7,6 @@
  */
 
 import { expect, browser } from '@wdio/globals'
-import * as path from 'node:path';
-import * as fs from 'node:fs';
 import fetch from 'node-fetch';
 import BlogProductPage from './pageobjects/blog-product.page.js';
 import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
@@ -17,7 +15,6 @@ import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
-import OverviewPage from "./pageobjects/matomo-reporting/visitors/overview.page";
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
@@ -73,6 +70,9 @@ describe('Tracking (Ecommerce)', function() {
       });
 
       await SettingsPage.saveSettings();
+
+      const checked = await browser.execute(() => window.jQuery('#use_session_visitor_id').is(':checked'));
+      expect(checked).toBeTruthy();
     }
 
     async function disableCookielessTracking() {
@@ -86,7 +86,7 @@ describe('Tracking (Ecommerce)', function() {
       await SettingsPage.saveSettings();
 
       const checked = await browser.execute(() => window.jQuery('#use_session_visitor_id').is(':checked'));
-      expect(checked).toBeTruthy();
+      expect(checked).toBeFalsy();
     }
 
     before(async () => {
