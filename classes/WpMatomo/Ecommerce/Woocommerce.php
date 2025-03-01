@@ -32,7 +32,6 @@ class Woocommerce extends Base {
 
 		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
 		if ( $use_server_side_id ) {
-			error_log("using server side visitor id");
 			$server_side_visitor_id = new ServerSideVisitorId( $this->settings );
 			$server_side_visitor_id->register_hooks();
 		}
@@ -73,7 +72,6 @@ class Woocommerce extends Base {
 	}
 
 	public function after_calculate_totals() {
-		error_log("after_calculate_totals: " . (new \Exception())->getTraceAsString());
 		if ( ! $this->track_next_totals_change ) {
 			return;
 		}
@@ -135,13 +133,12 @@ class Woocommerce extends Base {
 	}
 
 	public function on_cart_updated_safe() {
-		error_log("on_cart_updated_safe");
 		$this->track_next_totals_change = true;
 	}
 
 	private function on_cart_updated() {
 		global $woocommerce;
-error_log("on_cart_updated");
+
 		/** @var \WC_Cart $cart */
 		$cart         = $woocommerce->cart;
 		$cart_content = $cart->get_cart();
@@ -194,7 +191,7 @@ error_log("on_cart_updated");
 		}
 
 		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
-error_log("track in background: " . var_export($this->should_track_background(), true));
+
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
 	}
@@ -369,6 +366,7 @@ error_log("track in background: " . var_export($this->should_track_background(),
 	private function get_product_categories( $product ) {
 		$product_id = $this->get_product_id( $product );
 
+		// TODO: add an ecommerce log e2e test
 		$category_terms = get_the_terms( $product_id, 'product_cat' );
 
 		$categories = [];

@@ -178,16 +178,14 @@ class Website {
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
     await $('div.woocommerce').waitForExist();
 
-    $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
+    await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
 
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
-    console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
 
     if (!isPaymentsSetup) {
       const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
-      console.log('is found originally: ' + isWooCommerceCodInputFound);
       if (isWooCommerceCodInputFound) {
         await $('label[for="woocommerce_cod_enabled"]').click();
         await $('.woocommerce-save-button').click();

@@ -22,6 +22,7 @@ class ServerSideVisitorId {
 	private $settings;
 
 	public function __construct( Settings $settings ) {
+		// TODO: add debug logs for methods here
 		$this->settings = $settings;
 	}
 
@@ -83,7 +84,6 @@ class ServerSideVisitorId {
 		return false;
 	}
 
-	// TODO: add debug logs above
 	private function initialize_woocommerce_session_if_needed() {
 		WC()->initialize_session();
 		if ( ! WC()->session->has_session() ) {

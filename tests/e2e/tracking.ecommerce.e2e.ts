@@ -129,7 +129,6 @@ describe('Tracking (Ecommerce)', function() {
       let cookies = await browser.getCookies();
       for (let name in cookies) {
         if (/^_pk_/.test(name)) {
-          console.log(`deleting cookie ${name}`);
           await browser.deleteCookie(name);
         }
       }
@@ -165,10 +164,13 @@ describe('Tracking (Ecommerce)', function() {
         date: 'today',
       }));
 
-      console.log(visits[0]);
-      console.log(visits[visits.length - 1]);
+      expect(visits.length).toBeGreaterThan(1);
+      expect(parseInt(visits[0].totalAbandonedCartsRevenue, 10)).toBeGreaterThan(0);
+      expect(parseInt(visits[0].totalAbandonedCarts, 10)).toEqual(1);
+      expect(parseInt(visits[0].totalAbandonedCartsItems, 10)).toEqual(1);
 
-      // TODO: check that the last visit has an abandoned cart event + pageviews
+      const firstVisitPageviews = visits[0].actionDetails.filter(a => a.type === 'action');
+      expect(firstVisitPageviews.length).toBeGreaterThan(0);
     });
   });
 });
