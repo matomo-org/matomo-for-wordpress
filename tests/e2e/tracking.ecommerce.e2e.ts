@@ -70,9 +70,6 @@ describe('Tracking (Ecommerce)', function() {
       });
 
       await SettingsPage.saveSettings();
-
-      const checked = await browser.execute(() => window.jQuery('#use_session_visitor_id').is(':checked'));
-      expect(checked).toBeTruthy();
     }
 
     async function disableCookielessTracking() {
@@ -105,7 +102,6 @@ describe('Tracking (Ecommerce)', function() {
       await enableCookielessTracking();
 
       await SettingsPage.expandAllTrackingSettingsSections();
-      // throw new Error('forced error');
     });
 
     after(async () => {

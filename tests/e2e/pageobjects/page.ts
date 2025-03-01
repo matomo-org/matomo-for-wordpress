@@ -145,6 +145,7 @@ export default class Page {
         throw new Error('cannot find elements to hide');
       }
 
+      window.jQuery('.notice:contains(An error occurred while updating the geolocation database)').hide();
       window.jQuery('.notice-ocean-extra-plugin').hide();
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();

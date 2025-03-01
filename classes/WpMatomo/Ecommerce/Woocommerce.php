@@ -73,6 +73,7 @@ class Woocommerce extends Base {
 	}
 
 	public function after_calculate_totals() {
+		error_log("after_calculate_totals: " . (new \Exception())->getTraceAsString());
 		if ( ! $this->track_next_totals_change ) {
 			return;
 		}
@@ -134,12 +135,13 @@ class Woocommerce extends Base {
 	}
 
 	public function on_cart_updated_safe() {
+		error_log("on_cart_updated_safe");
 		$this->track_next_totals_change = true;
 	}
 
 	private function on_cart_updated() {
 		global $woocommerce;
-
+error_log("on_cart_updated");
 		/** @var \WC_Cart $cart */
 		$cart         = $woocommerce->cart;
 		$cart_content = $cart->get_cart();
@@ -192,7 +194,7 @@ class Woocommerce extends Base {
 		}
 
 		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
-
+error_log("track in background: " . var_export($this->should_track_background(), true));
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
 	}
