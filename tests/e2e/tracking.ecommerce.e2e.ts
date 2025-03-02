@@ -119,7 +119,6 @@ describe('Tracking (Ecommerce)', function() {
     });
 
     it('should track abandoned carts correctly with cookieless tracking and server side visitor ID', async () => {
-      await Website.log("START ECOMMERCE TEST");
       const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
         idSite: '1',
         lastMinutes: '60',
