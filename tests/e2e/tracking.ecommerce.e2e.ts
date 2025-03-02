@@ -171,6 +171,12 @@ describe('Tracking (Ecommerce)', function() {
 
       const firstVisitPageviews = visits[0].actionDetails.filter(a => a.type === 'action');
       expect(firstVisitPageviews.length).toBeGreaterThan(0);
+
+      // check that there are no visits with only ecommerce actions
+      const onlyEcommerceVisits = visits.filter((v) => {
+        return !(v.actionDetails || []).every((a) => /^ecommerce/.test(a));
+      });
+      expect(onlyEcommerceVisits.length).toEqual(0);
     });
   });
 });

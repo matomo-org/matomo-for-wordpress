@@ -8,7 +8,6 @@
  */
 namespace Piwik\Tracker;
 
-use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;

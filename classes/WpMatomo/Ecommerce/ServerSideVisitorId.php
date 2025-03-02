@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Ecommerce;
 
+use WpMatomo\Logger;
 use WpMatomo\Settings;
 use WpMatomo\AjaxTracker;
 
@@ -21,9 +22,14 @@ class ServerSideVisitorId {
 	 */
 	private $settings;
 
-	public function __construct( Settings $settings ) {
-		// TODO: add debug logs for methods here
+	/**
+	 * @var Logger
+	 */
+	private $logger;
+
+	public function __construct( Settings $settings, Logger $logger ) {
 		$this->settings = $settings;
+		$this->logger   = $logger;
 	}
 
 	public function register_hooks() {
@@ -43,11 +49,19 @@ class ServerSideVisitorId {
 			return;
 		}
 
+		if ( ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) ) {
+			return;
+		}
+
+		$this->logger->log( 'ServerSideVisitorId: visitor ID cookie missing from request' );
+
 		// only initialize the session early for requests that do not have the visitor ID cookie
 		$this->initialize_woocommerce_session_if_needed();
 
 		$visitor_id = WC()->session->get( self::VISITOR_ID_SESSION_VAR_NAME );
 		if ( empty( $visitor_id ) ) {
+			$this->logger->log( 'ServerSideVisitorId: no visitor ID in Woocommerce session, generating a new one' );
+
 			$tracker    = new AjaxTracker( $this->settings );
 			$visitor_id = $tracker->setNewVisitorId()->randomVisitorId;
 			WC()->session->set( self::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
@@ -56,6 +70,8 @@ class ServerSideVisitorId {
 		add_action(
 			'wp_head',
 			function () use ( $visitor_id ) {
+				$this->logger->log( 'ServerSideVisitorId: forcing use of server side visitor ID' );
+
 				echo '<script>window._paq = window._paq || []; window._paq.push(["setVisitorId", ' . wp_json_encode( $visitor_id ) . ']);</script>';
 			}
 		);
