@@ -10,7 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AuthResult;
-use Piwik\Plugins\UsersManager\Model;
+use Piwik\Config;use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
 use WpMatomo\User;
@@ -45,6 +45,11 @@ class Auth extends \Piwik\Plugins\Login\Auth
 	            // api authentication using token
 		        return parent::authenticate();
 	        }
+        } else if ($this->isAppPasswordInTokenAuthAllowed()) {
+            $result = $this->authApiWithTokenAuthAppPassword();
+            if (!empty($result)) {
+                return $result;
+            }
         }
 
         $login = 'anonymous';
@@ -73,6 +78,60 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
         if (!$isUserLoggedIn) {
             return null;
+        }
+
+        $login = User::get_matomo_user_login($loggedInUserId);
+
+        $userModel = new Model();
+        $matomoUser = $userModel->getUser($login);
+        if (empty($matomoUser)) {
+            return null;
+        }
+
+        $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
+        return new AuthResult($code, $login, $this->token_auth);
+    }
+
+    private function isAppPasswordInTokenAuthAllowed()
+    {
+        $wordPressConfig = Config::getInstance()->WordPress;
+        return !empty( $wordPressConfig['allow_app_password_as_token_auth'] ) && $wordPressConfig['allow_app_password_as_token_auth'] === '1';
+    }
+
+    private function authApiWithTokenAuthAppPassword()
+    {
+        if (!function_exists('wp_validate_application_password')) {
+            return null;
+        }
+
+        $tokenAuth = $this->token_auth;
+        if (empty($tokenAuth)) {
+            return null;
+        }
+
+        $parts = explode(':', $tokenAuth);
+        if (count($parts) !== 2) {
+            return null; // TODO: log
+        }
+
+        if (!empty($_GET['token_auth'])) {
+            return null; // TODO: log
+        }
+
+        [$user, $pass] = $parts;
+
+        $callback = function () { return true; };
+
+        add_filter('application_password_is_api_request', $callback);
+        try {
+            $authenticated = wp_authenticate_application_password(null, $user, $pass);
+            if (!($authenticated instanceof \WP_User)) {
+                return null;
+            }
+            $loggedInUserId = $authenticated->ID;
+
+        } finally {
+            remove_filter('application_password_is_api_request', $callback);
         }
 
         $login = User::get_matomo_user_login($loggedInUserId);
