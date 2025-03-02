@@ -64,6 +64,7 @@ describe('MWP Uninstall', () => {
             const html = window.jQuery('#delete-matomo').html();
             return html && html.includes('Deleting');
           });
+
           if (!isDeleting) {
             throw new Error('clicking delete did nothing');
           }
@@ -75,11 +76,13 @@ describe('MWP Uninstall', () => {
       }
 
       let deleteUrl = await browser.execute(() => window.jQuery('#delete-matomo').attr('href'));
+      let formExists = await $('form #submit').isExisting();
+
       if (deleteUrl) {
         deleteUrl = `${await Website.baseUrl()}/wp-admin/${deleteUrl}`;
         console.log(`attempting to visit plugin delete URL manually (URL = ${deleteUrl})`);
         await browser.url(deleteUrl);
-      } else {
+      } else if (!formExists) {
         await Website.dumpHtml();
         throw new Error('cannot find delete Matomo link URL');
       }
