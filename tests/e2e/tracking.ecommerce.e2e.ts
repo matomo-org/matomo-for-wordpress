@@ -174,7 +174,7 @@ describe('Tracking (Ecommerce)', function() {
 
       // check that there are no visits with only ecommerce actions
       const onlyEcommerceVisits = visits.filter((v) => {
-        return !(v.actionDetails || []).every((a) => /^ecommerce/.test(a));
+        return (v.actionDetails || []).every((a) => /^ecommerce/.test(a));
       });
       expect(onlyEcommerceVisits.length).toEqual(0);
     });
