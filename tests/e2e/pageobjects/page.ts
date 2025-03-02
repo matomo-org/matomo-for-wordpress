@@ -17,7 +17,10 @@ export default class Page {
       path = `/${path}`;
     }
 
-    const result = await browser.url(`${baseUrl}${path}`);
+    let result;
+    result = await Website.retry(3, async () => {
+      return await browser.url(`${baseUrl}${path}`);
+    });
 
     await this.addStylesToPage(`
     * {

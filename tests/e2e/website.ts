@@ -375,6 +375,12 @@ class Website {
     const debugLog = path.join(process.cwd(), 'docker', 'wordpress', await this.getWpFolder(), 'wp-content', 'debug.log');
     fs.appendFileSync(debugLog, message);
   }
+
+  async dumpHtml() {
+    const html = await browser.execute(() => document.querySelector('html')!.innerHTML);
+    console.log('page html:');
+    console.log(html);
+  }
 }
 
 export default new Website();
