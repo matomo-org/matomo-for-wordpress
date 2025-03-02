@@ -10,7 +10,8 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AuthResult;
-use Piwik\Config;use Piwik\Plugins\UsersManager\Model;
+use Piwik\Config;
+use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
 use WpMatomo\User;
