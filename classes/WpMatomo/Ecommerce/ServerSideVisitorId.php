@@ -86,7 +86,7 @@ class ServerSideVisitorId {
 	 * @return bool
 	 */
 	private function is_visitor_id_cookie_present() {
-		if ( ! is_array( $_COOKIE ) || empty( $_COOKIE ) ) {
+		if ( empty( $_COOKIE ) || ! is_array( $_COOKIE ) ) {
 			return false;
 		}
 

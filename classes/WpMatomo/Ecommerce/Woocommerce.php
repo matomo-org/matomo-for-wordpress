@@ -366,7 +366,6 @@ class Woocommerce extends Base {
 	private function get_product_categories( $product ) {
 		$product_id = $this->get_product_id( $product );
 
-		// TODO: add an ecommerce log e2e test
 		$category_terms = get_the_terms( $product_id, 'product_cat' );
 
 		$categories = [];
