@@ -31,7 +31,7 @@ class ServerSideVisitorIdTest extends MatomoUnit_TestCase {
 		$this->disable_woocommerce_cookies();
 
 		$settings       = new Settings();
-		$this->instance = new ServerSideVisitorId( $settings );
+		$this->instance = new ServerSideVisitorId( $settings, new \WpMatomo\Logger() );
 	}
 
 	public function tearDown(): void {
