@@ -79,6 +79,7 @@ class API {
 		$this->register_route( 'SegmentEditor', 'getAll' );
 		$this->register_route( 'SitesManager', 'getAllSites' );
 		$this->register_route( 'SitesManager', 'getAllSitesId' );
+		$this->register_route( 'SitesManager', 'getSitesIdWithAtLeastViewAccess' );
 		$this->register_route( 'UsersManager', 'getUsers' );
 		$this->register_route( 'UsersManager', 'getUsersLogin' );
 		$this->register_route( 'UsersManager', 'getUser' );
