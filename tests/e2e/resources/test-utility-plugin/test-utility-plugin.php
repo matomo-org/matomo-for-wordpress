@@ -14,7 +14,7 @@ add_filter( 'wp_mail_smtp_admin_setup_wizard_load_wizard', '__return_false' );
 
 // handle switch_to_locale (used by mwp-language.e2e.ts)
 if ( ! empty( $_GET['mwp_switch_to_locale'] ) ) {
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	switch_to_locale( wp_unslash( $_GET['mwp_switch_to_locale'] ) );
 }
 
@@ -58,10 +58,44 @@ add_action(
 
 // see manual-archiving.e2e.ts for more info
 add_action(
-	'wp_ajax_nopriv_test_get_archive_entries',
+	'wp_ajax_nopriv_test_remove_archive_table',
 	function () {
 		\WpMatomo\Bootstrap::do_bootstrap();
-		$data = \Piwik\Db::fetchAll( 'SELECT * FROM ' . \Piwik\Common::prefixTable( 'archive_numeric_2023_12' ) );
-		wp_send_json( $data );
+		if ( empty( $_REQUEST['date'] ) ) {
+			wp_send_json( 'nodate' );
+		}
+
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$date  = \Piwik\Date::factory( wp_unslash( $_REQUEST['date'] ) );
+		$table = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable( $date );
+		\Piwik\Db::exec( "DROP TABLE `$table`" );
+
+		wp_send_json( 'ok' );
+	}
+);
+
+// overwrite user agent to be used via appendToTrackingUrl() (webdriverio does not allow
+// changing the user agent sent with AJAX requests)
+add_action(
+	'wp_head',
+	function () {
+		$use_different_user_agent = get_option( 'matomo_test_user_agent' );
+		if ( $use_different_user_agent ) {
+			$user_agent_str = wp_json_encode( 'ua=' . rawurlencode( $use_different_user_agent ) );
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo "<script>window._paq = window._paq || []; _paq.push(['appendToTrackingUrl', $user_agent_str])</script>";
+		}
+	}
+);
+add_action(
+	'wp_ajax_nopriv_matomo_test_set_custom_user_agent',
+	function () {
+		if ( isset( $_REQUEST['ua'] ) ) {
+			$user_agent = sanitize_text_field( wp_unslash( $_REQUEST['ua'] ) );
+			update_option( 'matomo_test_user_agent', $user_agent );
+		} else {
+			delete_option( 'matomo_test_user_agent' );
+		}
+		wp_send_json( 'ok' );
 	}
 );

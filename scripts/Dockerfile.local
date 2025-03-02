@@ -6,14 +6,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zl
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd
 
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
-  && apt-get install git-lfs \
-  && git lfs -v
-
 # install node
 ENV NVM_DIR="/home/user/.nvm" \
-    NODE_VERSION="16.19.1" \
-    NVM_VERSION="0.39.3"
+    NODE_VERSION="20.18.1" \
+    NVM_VERSION="0.40.1"
 
 RUN mkdir -p "$NVM_DIR" \
   && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh" | bash \
@@ -24,3 +20,18 @@ RUN mkdir -p "$NVM_DIR" \
 
 ENV NODE_PATH="$NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules"
 ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
+
+# install git lfs
+RUN curl -sL -o git-lfs.tar.gz "$( \
+    node -e "fetch('https://api.github.com/repos/git-lfs/git-lfs/releases/latest').then(r => r.json()).then(v => { \
+        if (!v.assets || !v.assets.filter) { \
+            console.log('unknown response:', JSON.stringify(v, null, 2)); \
+        } \
+        return v.assets.filter(i => /linux-amd64/.test(i.name)); \
+    }).then(v => console.log(v[0].browser_download_url));" \
+  )" \
+  && ls \
+  && tar xvf git-lfs.tar.gz \
+  && cd git-lfs-* \
+  && ./install.sh \
+  && git lfs -v

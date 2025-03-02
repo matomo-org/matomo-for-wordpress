@@ -60,26 +60,21 @@ describe('Manual Archiving', function () {
         date: OverviewPage.getDefaultDate(),
       }));
 
+
       if (visits.nb_visits !== 7) {
-        // TODO: this is temporary code to get more information to diagnose a random failure
-        // that can occur with archiving. archiving will succeed and find the correct number
-        // of visits, but the Matomo frontend will select an invalidated archive with incorrect
-        // data. when the random failure is fixed, this code should be removed.
-        // make sure to also remove the code in test-utility-plugin.php.
-        console.log(`found visits ${visits.nb_visits}`);
-        const r = await fetch(`${Website.baseUrl()}/wp-admin/admin-ajax.php`, {
-          method: 'GET',
+        // Working around https://github.com/matomo-org/matomo/issues/23085.
+        // If archive data selected is inaccurate, delete the entire archive table for the month,
+        // and re-archive.
+        await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+          method: 'POST',
           headers:{
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: new URLSearchParams({
-            action: 'test_get_archive_entries',
+            action: 'test_remove_archive_table',
+            date: OverviewPage.getDefaultDate(),
           }),
         });
-
-        const body = await r.text();
-        console.log('archive contents:');
-        console.log(body);
       }
       return visits.nb_visits === 7;
     }, { timeout: 120000 });

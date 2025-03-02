@@ -11,6 +11,7 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -21,6 +22,7 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 }
 
 class Woocommerce extends Base {
+
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
 	private $track_next_totals_change = false;
@@ -28,12 +30,18 @@ class Woocommerce extends Base {
 	public function register_hooks() {
 		parent::register_hooks();
 
+		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
+		if ( $use_server_side_id ) {
+			$server_side_visitor_id = new ServerSideVisitorId( $this->settings, $this->logger );
+			$server_side_visitor_id->register_hooks();
+		}
+
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
-		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
 		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );

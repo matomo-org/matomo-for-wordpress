@@ -113,7 +113,7 @@ jobs:
       - run: |
           cat > .env <<EOF
           PHP_VERSION=$PHP_VERSION
-          WOOCOMMERCE=0
+          WOOCOMMERCE=1
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
@@ -183,7 +183,7 @@ jobs:
       # setup node
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: npm
           cache-dependency-path: '**/package-lock.json'
       - run: npm install
@@ -206,17 +206,6 @@ jobs:
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
-          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
-          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
-
-          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
-        env:
-          PHP_VERSION: ${{ matrix.php-versions }}
-          WOOCOMMERCE: 1
-          WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
-          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: |
           cat > .env <<EOF
           PHP_VERSION=$PHP_VERSION
           WOOCOMMERCE=1
@@ -230,6 +219,17 @@ jobs:
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: |
+          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
+          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
+
+          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: chmod -R 777 . # required to build the release
       # run tests

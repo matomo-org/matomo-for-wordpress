@@ -76,25 +76,25 @@ class Website {
     const baseUrl = await this.baseUrl();
     await this.retry(3, async () => {
       await browser.url(`${baseUrl}/wp-login.php`);
+
+      await $('#user_login').waitForExist();
+
+      await browser.execute(
+        (l, p) => {
+          window.jQuery('#user_login').val(l);
+          window.jQuery('#user_pass').val(p);
+        },
+        process.env.WORDPRESS_USER_LOGIN || 'root',
+        process.env.WORDPRESS_USER_PASS || 'pass'
+      );
+      await $('#wp-submit').click();
+
+      await browser.waitUntil(async function () {
+        return !!(await browser.execute(function () {
+          return window.wpApiSettings?.nonce;
+        }));
+      }, { timeout: 60000 });
     });
-
-    await $('#user_login').waitForExist();
-
-    await browser.execute(
-      (l, p) => {
-        window.jQuery('#user_login').val(l);
-        window.jQuery('#user_pass').val(p);
-      },
-      process.env.WORDPRESS_USER_LOGIN || 'root',
-      process.env.WORDPRESS_USER_PASS || 'pass'
-    );
-    await $('#wp-submit').click();
-
-    await browser.waitUntil(async function () {
-      return !!(await browser.execute(function () {
-        return window.wpApiSettings?.nonce;
-      }));
-    }, { timeout: 60000 });
   }
 
   async getWpNonce() {
@@ -176,13 +176,17 @@ class Website {
 
     // enable cash on delivery
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
+    await $('div.woocommerce').waitForExist();
+
+    await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
+
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
-    console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
 
     if (!isPaymentsSetup) {
-      if (await $('#woocommerce_cod_enabled').isExisting()) {
+      const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
+      if (isWooCommerceCodInputFound) {
         await $('label[for="woocommerce_cod_enabled"]').click();
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
@@ -193,7 +197,28 @@ class Website {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
 
-        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 60000 });
+        try {
+          await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
+        } catch (e) {
+          console.log(await browser.execute(() => document.body.innerHTML));
+          throw e;
+        }
+
+        if (await $('.woocommerce-save-button').isExisting()) {
+          await browser.execute(() => {
+            window.jQuery('.woocommerce-save-button')[0].click();
+          });
+
+          try {
+            await browser.waitUntil(async () => {
+              return await browser.execute(() => window.jQuery('.woocommerce-save-button[disabled],tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0);
+            }, { timeout: 60000 });
+          } catch (e) {
+            const html = await browser.execute(() => document.body.innerHTML);
+            console.log('html', html);
+            throw e;
+          }
+        }
       }
     }
 
@@ -258,7 +283,7 @@ class Website {
     this.wordPressFolderOverride = null;
   }
 
-  public async retry<R>(times: number, fn: () => Promise<R>) {
+  public async retry<R>(times: number, fn: () => Promise<R>, sleepTimeInMsecs: number = 0) {
     while (times > 0) {
       try {
         return await fn();
@@ -267,6 +292,10 @@ class Website {
 
         if (times <= 0) {
           throw e;
+        }
+
+        if (sleepTimeInMsecs) {
+          await browser.pause(sleepTimeInMsecs);
         }
       }
     }
@@ -282,6 +311,7 @@ class Website {
       window.jQuery('a.upload-view-toggle')[0].click();
     });
     await browser.pause(250);
+    await $('#pluginzip').waitForClickable();
 
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);
@@ -291,25 +321,33 @@ class Website {
       window.jQuery('#install-plugin-submit')[0].click();
     });
 
-    try {
-      await $('.update-from-upload-overwrite').waitForExist();
-
-      await browser.execute(() => {
-        window.jQuery('.update-from-upload-overwrite')[0].click();
-      });
-    } catch (e) {
-      // ignore
-    }
-
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
         return window.jQuery && (
           window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
           window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin installed successfully.)').length > 0
+          window.jQuery('p:contains(Plugin installed successfully.)').length > 0 ||
+          window.jQuery('.update-from-upload-overwrite').length > 0
         );
       });
     }, { timeout: 120000 });
+
+    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite');
+    if (isAlreadyExistingPluginPage) {
+      await browser.execute(() => {
+        window.jQuery('.update-from-upload-overwrite')[0].click();
+      });
+
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => {
+          return window.jQuery && (
+            window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
+            window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0 ||
+            window.jQuery('p:contains(Plugin installed successfully.)').length > 0
+          );
+        });
+      }, { timeout: 120000 });
+    }
 
     const activateButtonExists = await $('.button=Activate Plugin').isExisting();
     if (activateButtonExists) {
@@ -321,6 +359,27 @@ class Website {
         });
       }, { timeout: 120000 });
     }
+  }
+
+  /**
+   * Appends message to the WordPress debug.log file. Useful for marking where in
+   * the logs a specific test starts/ends.
+   *
+   * @param message
+   */
+  async log(message: string) {
+    if (message.substring(message.length - 1, message.length) !== "\n") {
+      message = `${message}\n`;
+    }
+
+    const debugLog = path.join(process.cwd(), 'docker', 'wordpress', await this.getWpFolder(), 'wp-content', 'debug.log');
+    fs.appendFileSync(debugLog, message);
+  }
+
+  async dumpHtml() {
+    const html = await browser.execute(() => document.querySelector('html')!.innerHTML);
+    console.log('page html:');
+    console.log(html);
   }
 }
 
