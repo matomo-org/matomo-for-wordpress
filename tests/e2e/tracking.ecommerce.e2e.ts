@@ -148,6 +148,7 @@ describe('Tracking (Ecommerce)', function() {
       const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
       expect(matomoCookies).toEqual([]);
 
+      // check that a new visit was tracked, instead of tracking to an existing visit
       const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
         idSite: '1',
         lastMinutes: '60',
