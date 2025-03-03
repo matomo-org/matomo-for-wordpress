@@ -6,20 +6,23 @@
  * @package matomo
  */
 
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 import MatomoIni from './apiobjects/matomo.ini.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
+import GlobalSetup from './global-setup';
 
 describe( 'Matomo API', function () {
+  before(async () => {
+    await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 1);
+  });
+
+  after(async () => {
+    await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 0);
+  });
+
   describe('Authentication', function () {
-    before(async () => {
-      await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 1);
-    });
-
-    after(async () => {
-      await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 0);
-    });
-
     // NOTE: authenticating via header is tested implicitly by GlobalSetup
     it('should allow authenticating via app password in token_auth when feature is enabled', async () => {
       const module = 'SitesManager';
@@ -138,6 +141,68 @@ describe( 'Matomo API', function () {
         message: 'Invalid token auth or token auth was not provided as a POST parameter.',
         result: 'error',
       });
+    });
+  });
+
+  describe('API Methods', function () {
+    async function checkApiResponseAgainstExpected(testName: string, apiOutput: string) {
+      const expectedPath = path.join(process.cwd(), 'tests', 'e2e', 'baseline', 'api', `${testName}.xml`);
+      const processedPath = path.join(process.cwd(), 'tests', 'e2e', 'actual', 'api', `${testName}.xml`);
+
+      if (!fs.existsSync(processedPath)) {
+        fs.mkdirSync(path.dirname(processedPath), { recursive: true });
+        fs.writeFileSync(processedPath, apiOutput);
+      }
+
+      if (!fs.existsSync(expectedPath)) {
+        throw new Error(`Cannot find ${testName}.xml expected API output file.`);
+      }
+
+      const expectedContents = fs.readFileSync(expectedPath).toString('utf-8');
+      expect(apiOutput).toEqual(expectedContents);
+    }
+
+    it('should call API.getProcessedReport successfully when using the Matomo API directly', async () => {
+      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=API.getProcessedReport&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=xml`;
+
+      const nonce = await Website.getWpNonce();
+      if (!nonce) {
+        throw new Error('No application password found!');
+      }
+
+      const userPass = `root:${nonce}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          token_auth: userPass,
+        }),
+      });
+
+      const data = await response.text();
+      await checkApiResponseAgainstExpected('API.getProcessedReport_direct', data);
+    });
+
+    it('should call API.getProcessedReport successfully when using the WordPress REST API', async () => {
+      const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/api/processed_report&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=xml&flat=1`;
+
+      const nonce = await Website.getWpNonce();
+      if (!nonce) {
+        throw new Error('No application password found!');
+      }
+
+      const userPass = `root:${nonce}`;
+      const response = await fetch(wordpressUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
+        },
+      });
+
+      const data = (await response.json()) as string;
+      await checkApiResponseAgainstExpected('API.getProcessedReport_rest', data);
     });
   });
 });

@@ -244,7 +244,7 @@ class API {
 			}
 		}
 
-		$output_format    = empty( $params['format'] ) ? 'json' : $params['format'];
+		$output_format    = empty( $params['format'] ) ? 'json' : strtolower( $params['format'] );
 		$params['format'] = 'original';
 
 		try {
