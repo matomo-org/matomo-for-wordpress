@@ -145,7 +145,11 @@ describe( 'Matomo API', function () {
   });
 
   describe('API Methods', function () {
-    async function checkApiResponseAgainstExpected(testName: string, apiOutput: string) {
+    async function checkApiResponseAgainstExpected(testName: string, apiOutput: any) {
+      delete apiOutput.timerMillis;
+
+      apiOutput = JSON.stringify(apiOutput, null, 2);
+
       const expectedPath = path.join(process.cwd(), 'tests', 'e2e', 'baseline', 'api', `${testName}.xml`);
       const processedPath = path.join(process.cwd(), 'tests', 'e2e', 'actual', 'api', `${testName}.xml`);
 
@@ -163,7 +167,7 @@ describe( 'Matomo API', function () {
     }
 
     it('should call API.getProcessedReport successfully when using the Matomo API directly', async () => {
-      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=API.getProcessedReport&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=xml`;
+      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=API.getProcessedReport&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=json`;
 
       const nonce = await Website.getWpNonce();
       if (!nonce) {
@@ -181,12 +185,12 @@ describe( 'Matomo API', function () {
         }),
       });
 
-      const data = await response.text();
+      const data = await response.json();
       await checkApiResponseAgainstExpected('API.getProcessedReport_direct', data);
     });
 
     it('should call API.getProcessedReport successfully when using the WordPress REST API', async () => {
-      const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/api/processed_report&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=xml&flat=1`;
+      const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/api/processed_report&apiModule=Actions&apiAction=getPageUrls&idSite=1&date=${GlobalSetup.getDateOfVisitTrackedInPast()}&period=month&format=json&flat=1`;
 
       const nonce = await Website.getWpNonce();
       if (!nonce) {
@@ -201,7 +205,7 @@ describe( 'Matomo API', function () {
         },
       });
 
-      const data = (await response.json()) as string;
+      const data = await response.json();
       await checkApiResponseAgainstExpected('API.getProcessedReport_rest', data);
     });
   });
