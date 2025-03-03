@@ -78,5 +78,66 @@ describe( 'Matomo API', function () {
         data: null,
       });
     });
+
+    it('should be possible to send API requests to the Matomo API endpoint', async () => {
+      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=SitesManager.getSitesIdWithAtLeastViewAccess&format=json`;
+
+      const nonce = await Website.getWpNonce(); // TODO: should this be called a nonce or app password? can't remember what terminology WP uses
+      if (!nonce) {
+        throw new Error('No application password found!');
+      }
+
+      // check an unauthenticated request (sanity check)
+      const userPass = `root:${nonce}`;
+      let response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          token_auth: 'wrong:token',
+        }),
+      });
+
+      let json = await response.json();
+      expect(json).toEqual({
+        message: 'Unable to authenticate with the provided token. It is either invalid or expired.',
+        result: 'error',
+      });
+
+      // check an authenticated request
+      response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          token_auth: userPass,
+        }),
+      });
+
+      json = await response.json();
+      expect(json).toEqual(['1']);
+    });
+
+    it('should not be allowed to send an app password to the Matomo API endpoint as a GET request query parameter', async () => {
+      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=SitesManager.getSitesIdWithAtLeastViewAccess&format=json`;
+
+      const nonce = await Website.getWpNonce(); // TODO: should this be called a nonce or app password? can't remember what terminology WP uses
+      if (!nonce) {
+        throw new Error('No application password found!');
+      }
+
+      const userPass = `root:${nonce}`;
+      const response = await fetch(`${url}&token_auth=${userPass}`, {
+        method: 'GET',
+      });
+
+      const json = await response.json();
+      expect(json).toEqual({
+        message: 'Invalid token auth or token auth was not provided as a POST parameter.',
+        result: 'error',
+      });
+    });
   });
 });
