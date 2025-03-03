@@ -91,6 +91,12 @@ describe( 'Matomo API', function () {
       const userPass = `root:${nonce}`;
       let response = await fetch(url, {
         method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          token_auth: 'wrong:token',
+        }),
       });
 
       let json = await response.json();
