@@ -44,7 +44,7 @@ describe( 'Matomo API', function () {
       });
 
       const json = await response.json();
-      expect(json).toEqual([1]);
+      expect(json).toEqual(['1']);
     });
 
     it('should not allow using a app password as a token_auth in a non-POST request', async () => {

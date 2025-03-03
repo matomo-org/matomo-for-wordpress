@@ -181,18 +181,21 @@ class Website {
     await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
 
     const isPaymentsSetup = await browser.execute(() => {
-      return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
+      return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0
+        || window.jQuery('#woocommerce_cod_enabled').is(':checked');
     });
 
     if (!isPaymentsSetup) {
       const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
+      const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
+
       if (isWooCommerceCodInputFound) {
         await $('label[for="woocommerce_cod_enabled"]').click();
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
         }, { timeout: 30000 });
-      } else {
+      } else if (isWoocommerceCodToggleFound) {
         await browser.execute(() => {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
@@ -200,7 +203,7 @@ class Website {
         try {
           await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
         } catch (e) {
-          console.log(await browser.execute(() => document.body.innerHTML));
+          await this.dumpHtml();
           throw e;
         }
 
@@ -214,10 +217,12 @@ class Website {
               return await browser.execute(() => window.jQuery('.woocommerce-save-button[disabled],tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0);
             }, { timeout: 60000 });
           } catch (e) {
-            const html = await browser.execute(() => document.body.innerHTML);
-            console.log('html', html);
+            await this.dumpHtml();
             throw e;
           }
+        } else {
+          await this.dumpHtml();
+          throw new Error('unknown page html in woocommerce setup');
         }
       }
     }

@@ -96,7 +96,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
     private function isAppPasswordInTokenAuthAllowed()
     {
         $wordPressConfig = Config::getInstance()->WordPress;
-        return !empty( $wordPressConfig['allow_app_password_as_token_auth'] ) && $wordPressConfig['allow_app_password_as_token_auth'] === '1';
+        return !empty( $wordPressConfig['allow_app_password_as_token_auth'] ) && strval( $wordPressConfig['allow_app_password_as_token_auth'] ) === '1';
     }
 
     private function authApiWithTokenAuthAppPassword()
