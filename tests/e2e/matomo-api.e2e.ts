@@ -17,7 +17,7 @@ describe( 'Matomo API', function () {
     });
 
     after(async () => {
-      await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 1);
+      await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 0);
     });
 
     // NOTE: authenticating via header is tested implicitly by GlobalSetup
@@ -31,9 +31,17 @@ describe( 'Matomo API', function () {
         throw new Error('No application password found!');
       }
 
-      const userPass = `root:${nonce}`;
+      // check an unauthenticated request (sanity check)
+      let response = await fetch(wordpressUrl, {
+        method: 'POST',
+      });
 
-      const response = await fetch(wordpressUrl, {
+      let json = await response.json();
+      expect(json).toEqual([]);
+
+      // check an authenticated request
+      const userPass = `root:${nonce}`;
+      response = await fetch(wordpressUrl, {
         method: 'POST',
         headers:{
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -43,7 +51,7 @@ describe( 'Matomo API', function () {
         }),
       });
 
-      const json = await response.json();
+      json = await response.json();
       expect(json).toEqual(['1']);
     });
 

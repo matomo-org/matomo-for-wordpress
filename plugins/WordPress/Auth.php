@@ -11,6 +11,8 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\AuthResult;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
+use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
@@ -101,18 +103,22 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
     private function authApiWithTokenAuthAppPassword()
     {
-        if (!function_exists('wp_validate_application_password')) {
-            return null;
-        }
-
         $tokenAuth = $this->token_auth;
         if (empty($tokenAuth)) {
             return null;
         }
 
+        $logger = StaticContainer::get(LoggerInterface::class);
+
+        if (!function_exists('wp_validate_application_password')) {
+            $logger->debug('WordPress\\Auth: wp_validate_application_password does not exist');
+            return null;
+        }
+
         $parts = explode(':', $tokenAuth);
         if (count($parts) !== 2) {
-            return null; // TODO: log
+            $logger->debug('WordPress\\Auth: app password provided in token_auth has incorrect format, expected "username:apppassword".');
+            return null;
         }
 
         if (

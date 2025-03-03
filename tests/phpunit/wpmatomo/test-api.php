@@ -180,4 +180,53 @@ class ApiTest extends MatomoAnalytics_TestCase {
 			$response->get_data()
 		);
 	}
+
+	public function test_dispatch_matomo_api_allows_post_for_all_methods() {
+		$this->create_set_super_admin();
+
+		$request  = new WP_REST_Request( 'POST', '/' . API::VERSION . '/api/matomo_version' );
+		$response = rest_get_server()->dispatch( $request );
+		$this->assertStringStartsWith( '5.', $response->get_data() );
+		$this->assertTrue( strlen( $response->get_data() ) < 15 );
+	}
+
+	public function test_dispatch_matomo_api_with_token_auth_in_get_fails() {
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+
+		\Piwik\Config::getInstance()->WordPress = [
+			'allow_app_password_as_token_auth' => 1,
+		];
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_param( 'token_auth', 'user:dummy' );
+		$response = rest_get_server()->dispatch( $request );
+		$this->assertEquals(
+			array(
+				'code'    => 'matomo_error',
+				'message' => 'Invalid token auth or token auth was not provided as a POST parameter.',
+				'data'    => null,
+			),
+			$response->get_data()
+		);
+	}
+
+	public function test_dispatch_matomo_api_ignores_app_passwords_with_incorrect_format() {
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+
+		\Piwik\Config::getInstance()->WordPress = [
+			'allow_app_password_as_token_auth' => 1,
+		];
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_param( 'token_auth', 'dummy' );
+		$response = rest_get_server()->dispatch( $request );
+		$this->assertEquals(
+			array(
+				'code'    => 'matomo_no_access_exception',
+				'message' => 'You must be logged in to access this functionality.',
+				'data'    => null,
+			),
+			$response->get_data()
+		);
+	}
 }
