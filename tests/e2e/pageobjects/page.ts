@@ -154,7 +154,12 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
     });
-    await browser.pause(1000);
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return !window.jQuery('#wpadminbar').is(':visible');
+      });
+    });
   }
 
   async undoChangesToWpAdminForScreenshot() {

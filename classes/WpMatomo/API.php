@@ -79,6 +79,7 @@ class API {
 		$this->register_route( 'SegmentEditor', 'getAll' );
 		$this->register_route( 'SitesManager', 'getAllSites' );
 		$this->register_route( 'SitesManager', 'getAllSitesId' );
+		$this->register_route( 'SitesManager', 'getSitesIdWithAtLeastViewAccess' );
 		$this->register_route( 'UsersManager', 'getUsers' );
 		$this->register_route( 'UsersManager', 'getUsersLogin' );
 		$this->register_route( 'UsersManager', 'getUser' );
@@ -191,11 +192,18 @@ class API {
 			}
 		}
 
+		$methods = [ $method ];
+		if ( ! in_array( 'POST', $methods, true ) ) {
+			// we allow posting to all methods so users can pass the app password as the token_auth
+			// instead of as a header if needed
+			$methods[] = 'POST';
+		}
+
 		register_rest_route(
 			self::VERSION,
 			'/' . $wp_api_module . '/' . $wp_api_action . '/',
 			[
-				'methods'             => $method,
+				'methods'             => $methods,
 				'callback'            => [ $this, 'execute_api_method' ],
 				'permission_callback' => '__return_true', // permissions are checked in the method itself
 				'matomoModule'        => $api_module,
