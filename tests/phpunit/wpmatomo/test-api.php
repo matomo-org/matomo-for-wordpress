@@ -98,7 +98,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	public function test_dispatch_matomo_api_must_use_correct_method() {
 		$this->create_set_super_admin();
 
-		$request  = new WP_REST_Request( 'POST', '/' . API::VERSION . '/api/matomo_version' );
+		$request  = new WP_REST_Request( 'PUT', '/' . API::VERSION . '/api/matomo_version' );
 		$response = rest_get_server()->dispatch( $request );
 		$data     = $response->get_data();
 		// some newer wp versions have a dot at the end
@@ -144,7 +144,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals(
 			array(
 				'code'    => 'matomo_error',
-				'message' => 'Please specify a value for \'name\'.',
+				'message' => 'Please specify a value for \'idGoal\'.',
 				'data'    => null,
 			),
 			$response->get_data()

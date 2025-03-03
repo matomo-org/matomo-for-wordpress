@@ -60,9 +60,12 @@ describe( 'Matomo API', function () {
       const userPass = `root:${nonce}`;
 
       try {
-        await fetch(`${wordpressUrl}&token_auth=${userPass}`, {
+        const response = await fetch(`${wordpressUrl}&token_auth=${userPass}`, {
           method: 'GET',
         });
+
+        const json = await response.json();
+        console.log('found error api response', json);
       } catch (e) {
         expect(e).toBeInstanceOf(Error);
         expect((e as Error).message).toEqual(''); // TODO
