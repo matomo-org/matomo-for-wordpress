@@ -115,8 +115,11 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null; // TODO: log
         }
 
-        if (!empty($_GET['token_auth'])) {
-            return null; // TODO: log
+        if (
+            empty($_SERVER['REQUEST_METHOD'])
+            || strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST'
+        ) {
+            throw new \Exception('Invalid token auth or token auth was not provided as a POST parameter.');
         }
 
         [$user, $pass] = $parts;

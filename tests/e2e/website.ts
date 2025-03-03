@@ -189,13 +189,15 @@ class Website {
       const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
       const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
 
-      if (isWooCommerceCodInputFound) {
+      const html = await browser.execute(() => window.querySelector('html').innerHTML);
+
+      if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
         await $('label[for="woocommerce_cod_enabled"]').click();
         await $('.woocommerce-save-button').click();
         await browser.waitUntil(async () => {
           return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
         }, { timeout: 30000 });
-      } else if (isWoocommerceCodToggleFound) {
+      } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
         await browser.execute(() => {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
@@ -221,7 +223,7 @@ class Website {
             throw e;
           }
         } else {
-          await this.dumpHtml();
+          console.log(html);
           throw new Error('unknown page html in woocommerce setup');
         }
       }
