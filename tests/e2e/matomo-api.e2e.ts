@@ -59,20 +59,16 @@ describe( 'Matomo API', function () {
 
       const userPass = `root:${nonce}`;
 
-      try {
-        const response = await fetch(`${wordpressUrl}&token_auth=${userPass}`, {
-          method: 'GET',
-        });
+      const response = await fetch(`${wordpressUrl}&token_auth=${userPass}`, {
+        method: 'GET',
+      });
 
-        const json = await response.json();
-        console.log('found error api response', json);
-      } catch (e) {
-        expect(e).toBeInstanceOf(Error);
-        expect((e as Error).message).toEqual(''); // TODO
-        return;
-      }
-
-      throw new Error('did not throw');
+      const json = await response.json();
+      expect(json).toEqual({
+        code: 'matomo_error',
+        message: 'Invalid token auth or token auth was not provided as a POST parameter.',
+        data: null,
+      });
     });
   });
 });

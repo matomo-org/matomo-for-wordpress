@@ -6,7 +6,7 @@
  *
  */
 
-import {browser, $, expect} from '@wdio/globals';
+import { browser, $ } from '@wdio/globals';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -186,47 +186,49 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
-      const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
-      const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
+      await this.retry(3, async () => {
+        const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
+        const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
 
-      const html = await browser.execute(() => window.querySelector('html').innerHTML);
+        const html = await browser.execute(() => document.querySelector('html')!.innerHTML);
 
-      if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
-        await $('label[for="woocommerce_cod_enabled"]').click();
-        await $('.woocommerce-save-button').click();
-        await browser.waitUntil(async () => {
-          return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
-        }, { timeout: 30000 });
-      } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
-        await browser.execute(() => {
-          window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
-        });
-
-        try {
-          await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
-        } catch (e) {
-          await this.dumpHtml();
-          throw e;
-        }
-
-        if (await $('.woocommerce-save-button').isExisting()) {
+        if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
+          await $('label[for="woocommerce_cod_enabled"]').click();
+          await $('.woocommerce-save-button').click();
+          await browser.waitUntil(async () => {
+            return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
+          }, { timeout: 30000 });
+        } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
           await browser.execute(() => {
-            window.jQuery('.woocommerce-save-button')[0].click();
+            window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
           });
 
           try {
-            await browser.waitUntil(async () => {
-              return await browser.execute(() => window.jQuery('.woocommerce-save-button[disabled],tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0);
-            }, { timeout: 60000 });
+            await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
           } catch (e) {
             await this.dumpHtml();
             throw e;
           }
-        } else {
-          console.log(html);
-          throw new Error('unknown page html in woocommerce setup');
+
+          if (await $('.woocommerce-save-button').isExisting()) {
+            await browser.execute(() => {
+              window.jQuery('.woocommerce-save-button')[0].click();
+            });
+
+            try {
+              await browser.waitUntil(async () => {
+                return await browser.execute(() => window.jQuery('.woocommerce-save-button[disabled],tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0);
+              }, { timeout: 60000 });
+            } catch (e) {
+              await this.dumpHtml();
+              throw e;
+            }
+          } else {
+            console.log(html);
+            throw new Error('unknown page html in woocommerce setup');
+          }
         }
-      }
+      });
     }
 
     this.isWooCommerceSetup = true;
