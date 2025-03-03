@@ -191,6 +191,10 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_dispatch_matomo_api_with_token_auth_in_get_fails() {
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '6.0', '<' ) ) {
+			$this->markTestSkipped();
+		}
+
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
 		\Piwik\Config::getInstance()->WordPress = [
