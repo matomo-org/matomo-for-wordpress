@@ -127,6 +127,7 @@ describe( 'Matomo API', function () {
       const json = await response.json();
       expect(json).toEqual({
         message: 'Invalid token auth or token auth was not provided as a POST parameter.',
+        result: 'error',
       });
     });
   });
