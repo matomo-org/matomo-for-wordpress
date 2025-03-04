@@ -15,8 +15,49 @@ export default class MatomoPage extends Page {
 
   async open(path: string) {
     const result = super.open(path);
-    await this.addStylesToPage('table.entityTable tbody tr:hover td { background-color: unset !important; }');
+    await this.waitForLoading();
+    await this.addStylesToPage(`
+      table.entityTable tbody tr:hover td { background-color: unset !important; }
+
+      .dataTableVizEvolution {
+        max-height: 234px !important;
+      }
+    `);
+    await this.removeWhatsNewIfPresent();
     return result;
+  }
+
+  async removeWhatsNewIfPresent() {
+    let exists = false;
+
+    try {
+      await $('.whatisnew').waitForExist({ timeout: 5000 });
+      exists = true;
+    } catch (e) {
+      // ignore
+    }
+
+    if (exists) {
+      await browser.execute(() => {
+        window.jQuery('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
+      });
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => window.jQuery('.whatisnew').length === 0);
+      });
+    }
+  }
+
+  async waitForLoading() {
+    try {
+      await browser.waitUntil(async () => {
+        const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
+        return loadingGifs === 0;
+      }, { timeout: 30000 });
+    } catch (e: any) {
+      if (!/condition timed out/i.test(e.message)) { // don't fail the whole test if this times out for some reason
+        throw e;
+      }
+    }
   }
 
   async unfocus() {

@@ -110,6 +110,47 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 'Dynamic', $row_format );
 	}
 
+	public function test_update_throws_if_update_from_version_is_not_a_semantic_version() {
+		$this->expectException( \Exception::class );
+		$this->expectExceptionMessage( 'Invalid version. Please specify a full version identifier' );
+
+		$this->updater->update( 'alskdfjsladkfj' );
+	}
+
+	public function test_update_throws_if_update_from_version_is_later_than_current_version() {
+		$this->expectException( \Exception::class );
+		$this->expectExceptionMessage( 'Invalid version. The given version is greater than the current Matomo version.' );
+
+		$this->updater->update( '99.99.99' );
+	}
+
+	public function test_update_from_version_applys_updates_from_specified_version_to_current() {
+		\Piwik\Plugin\Manager::getInstance()->activatePlugin( 'TagManager' );
+
+		$settings  = new Settings();
+		$installer = new \WpMatomo\Installer( $settings );
+		$installer->install();
+
+		// remove a column that's added in the 5.0.0-b1 migration
+		\Piwik\Db::exec( 'ALTER TABLE ' . \Piwik\Common::prefixTable( 'log_conversion' ) . ' DROP COLUMN pageviews_before' );
+		// remove a column that's added in a TagManager migration
+		\Piwik\Db::exec( 'ALTER TABLE ' . \Piwik\Common::prefixTable( 'tagmanager_container' ) . ' DROP COLUMN ignoreGtmDataLayer' );
+
+		$columns = $this->get_columns_for( 'log_conversion' );
+		$this->assertNotContains( 'pageviews_before', $columns );
+
+		$columns = $this->get_columns_for( 'tagmanager_container' );
+		$this->assertNotContains( 'ignoreGtmDataLayer', $columns );
+
+		$this->updater->update( '4.12.0' );
+
+		$columns = $this->get_columns_for( 'log_conversion' );
+		$this->assertContains( 'pageviews_before', $columns );
+
+		$columns = $this->get_columns_for( 'tagmanager_container' );
+		$this->assertContains( 'ignoreGtmDataLayer', $columns );
+	}
+
 	private function remove_log_conversion_dimensions( $dimensions_to_remove ) {
 		// remove columns
 		$statements = [];
@@ -149,5 +190,11 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 
 		$missing_columns = array_diff( $columns, $existing_columns );
 		$this->assertEquals( [], $missing_columns, 'Found missing columns' );
+	}
+
+	private function get_columns_for( $table_name ) {
+		$columns = \Piwik\Db::fetchAll( 'SHOW COLUMNS IN ' . \Piwik\Common::prefixTable( $table_name ) );
+		$columns = array_column( $columns, 'Field' );
+		return $columns;
 	}
 }

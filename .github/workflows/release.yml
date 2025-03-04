@@ -50,11 +50,14 @@ jobs:
           script: |
               core.setFailed('Release password didn\'t match.')
       - name: "Check if user is allowed"
-        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' && github.actor != 'lance-matomo' && github.actor != 'diosmosis' }}
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'diosmosis' }}
         uses: actions/github-script@v3
         with:
           script: |
             core.setFailed('User is not allowed to release.')
+      - run: |
+          sudo apt-get install -y subversion
+          svn --version
       - uses: actions/checkout@v3
         with:
           lfs: true

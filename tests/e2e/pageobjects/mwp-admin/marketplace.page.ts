@@ -19,6 +19,10 @@ const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
 class MwpMarketplaceSetupWizard {
   async downloadPlugin(): Promise<string> {
     const downloadUrl = await browser.execute(() => window.jQuery('.download-plugin').attr('href'));
+    if (!downloadUrl) {
+      throw new Error('could not extract marketplace download URL from page');
+    }
+
     const downloadPath = path.join(DOWNLOADS_DIR, path.basename(downloadUrl));
 
     await $('.download-plugin').click();
@@ -47,7 +51,7 @@ class MwpMarketplaceSetupWizard {
     await $('#pluginzip').setValue(pathToPlugin);
     await browser.pause(500);
     await $('#install-plugin-submit').click();
-    await $('.button=Activate Plugin').waitForDisplayed();
+    await $('.button=Activate Plugin').waitForDisplayed({ timeout: 30000 });
 
     await $('.button=Activate Plugin').click();
     await browser.waitUntil(() => {

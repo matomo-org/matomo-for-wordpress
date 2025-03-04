@@ -15,12 +15,31 @@ class MatomoCli {
     const command = 'npm run matomo:console -- wordpress:build-release --zip --name=test';
     execSync(command);
 
-    const pathToRelease = path.join(__dirname, '..', '..', '..', 'matomo-test.zip');
+    const pathToRelease = path.join(process.cwd(), 'matomo-test.zip');
     if (!fs.existsSync(pathToRelease)) {
       throw new Error(`Could not find built release at ${pathToRelease}.`);
     }
 
-    return pathToRelease;
+    const renamedPath = path.join(process.cwd(), 'matomo.zip');
+    fs.renameSync(pathToRelease, renamedPath);
+
+    return renamedPath;
+  }
+
+  async call(commandName: string, params: Record<string, string>) {
+    let command = commandName;
+    for (let name of Object.keys(params)) {
+      command += ` --${name}=${params[name]}`;
+    }
+    command = `docker compose --env-file .env.default --env-file .env run --rm exec matomo:console ${command}`;
+
+    try {
+      execSync(command);
+    } catch (e) {
+      console.log(e.stdout.toString());
+      console.log(e.stderr.toString());
+      throw e;
+    }
   }
 }
 

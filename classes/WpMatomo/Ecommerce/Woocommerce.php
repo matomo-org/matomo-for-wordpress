@@ -11,6 +11,7 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -21,19 +22,34 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 }
 
 class Woocommerce extends Base {
+
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
+
+	private $track_next_totals_change = false;
 
 	public function register_hooks() {
 		parent::register_hooks();
 
+		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
+		if ( $use_server_side_id ) {
+			$server_side_visitor_id = new ServerSideVisitorId( $this->settings, $this->logger );
+			$server_side_visitor_id->register_hooks();
+		}
+
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
-		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
+		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
+
+		// NOTE: must be done before the actual AJAX handler since the handler will die at the end.
+		add_action( 'wp_ajax_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'wp_ajax_nopriv_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'wc_ajax_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -51,8 +67,22 @@ class Woocommerce extends Base {
 			);
 		}
 
-		add_action( 'woocommerce_applied_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+	}
+
+	public function after_calculate_totals() {
+		if ( ! $this->track_next_totals_change ) {
+			return;
+		}
+
+		try {
+			$this->on_cart_updated();
+		} catch ( \Exception $e ) {
+			$this->logger->log_exception( 'woo_on_cart_update', $e );
+		} finally {
+			$this->track_next_totals_change = false;
+		}
 	}
 
 	public function on_order_status_change( $order_id, $old_status, $new_status ) {
@@ -102,42 +132,15 @@ class Woocommerce extends Base {
 		}
 	}
 
-	public function on_coupon_updated_safe() {
-		try {
-			$val = null;
-			$val = $this->on_cart_updated( $val, true );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
+	public function on_cart_updated_safe() {
+		$this->track_next_totals_change = true;
 	}
 
-	public function on_cart_updated_safe( $val = null ) {
-		try {
-			$val = $this->on_cart_updated( $val );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
-	}
-
-	/**
-	 * @param null $val needed for woocommerce_update_cart_action_cart_updated filter
-	 * @param bool $is_coupon_update set to true if cart was updated because of a coupon
-	 *
-	 * @return mixed
-	 */
-	public function on_cart_updated( $val = null, $is_coupon_update = false ) {
+	private function on_cart_updated() {
 		global $woocommerce;
 
 		/** @var \WC_Cart $cart */
-		$cart = $woocommerce->cart;
-		if ( ! $is_coupon_update ) {
-			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
-			$cart->calculate_totals();
-		}
+		$cart         = $woocommerce->cart;
 		$cart_content = $cart->get_cart();
 
 		$tracking_code = '';
@@ -161,6 +164,7 @@ class Woocommerce extends Base {
 			}
 
 			if ( empty( $product_or_variation ) ) {
+				$this->logger->log( sprintf( 'could not find product or variation with ID = %s', $item['product_id'] ) );
 				continue;
 			}
 
@@ -190,8 +194,6 @@ class Woocommerce extends Base {
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
-
-		return $val;
 	}
 
 	public function on_order( $order_id ) {

@@ -384,11 +384,22 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 		foreach ( $notifications as $id => $notification ) {
 			$status[ $id ] = WhatsNewNotifications::STATUS_DISMISSED;
 		}
-		update_option( WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME, $status );
+
+		$option_name = WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME . '-' . get_current_user_id();
+		if ( $this->settings->is_network_enabled() ) {
+			update_site_option( $option_name, $status );
+		} else {
+			update_option( $option_name, $status );
+		}
 	}
 
 	private function get_all_statuses() {
-		$statuses = get_option( WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME );
+		$option_name = WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME . '-' . get_current_user_id();
+		if ( $this->settings->is_network_enabled() ) {
+			$statuses = get_site_option( $option_name );
+		} else {
+			$statuses = get_option( $option_name );
+		}
 		return is_array( $statuses ) ? $statuses : [];
 	}
 }

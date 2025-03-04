@@ -8,8 +8,9 @@
 
 import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
+import * as path from 'node:path';
+import * as fs from 'node:fs/promises';
 import Website from './website.js';
-import MatomoCli from './apiobjects/matomo.cli.js';
 import GdprToolsPage from './pageobjects/mwp-admin/about.page.js';
 
 describe('MWP Updating', () => {
@@ -21,7 +22,7 @@ describe('MWP Updating', () => {
 
   // sanity check to make sure we are updating from the latest stable version
   it('should have the latest stable version installed', async () => {
-    const pluginInfo = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
+    const pluginInfo: any = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
@@ -36,42 +37,14 @@ describe('MWP Updating', () => {
   });
 
   it('should succeed when updating to the current code', async () => {
-    const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
+    await Website.updateMatomoToLatest();
 
-    await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
-    await $('a.upload-view-toggle').waitForDisplayed();
+    const wpPluginsDir = path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'plugins');
 
-    await browser.execute(() => {
-      window.jQuery('a.upload-view-toggle')[0].click();
-    });
-    await browser.pause(250);
+    const plugins = await fs.readdir(wpPluginsDir);
+    const matomoPlugins = plugins.filter((p) => /^matomo/.test(p) && p !== 'matomo-marketplace-for-wordpress');
 
-    await $('#pluginzip').setValue(pathToRelease);
-    await browser.pause(250);
-
-    await $('#install-plugin-submit').waitForClickable();
-    await browser.execute(() => {
-      window.jQuery('#install-plugin-submit')[0].click();
-    });
-
-    try {
-      await $('.update-from-upload-overwrite').waitForExist();
-
-      await browser.execute(() => {
-        window.jQuery('.update-from-upload-overwrite')[0].click();
-      });
-    } catch (e) {
-      // ignore
-    }
-
-    await browser.waitUntil(async () => {
-      return await browser.execute(() => {
-        return window.jQuery && (
-          window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
-        );
-      });
-    }, {timeout: 60000});
+    expect(matomoPlugins).toEqual(['matomo']); // ensure there are no duplicate plugins like 'matomo-1'
   });
 
   it('should display whats new notifications on install', async () => {
@@ -92,7 +65,7 @@ describe('MWP Updating', () => {
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => window.jQuery('.matomo-whats-new').length) === 0;
-    });
+    }, { timeout: 30000 });
 
     await browser.pause(1000); // additional wait for ajax methods to complete
   });

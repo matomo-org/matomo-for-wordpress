@@ -59,14 +59,17 @@ class Forms {
 	 * @param string  $group_name define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
 	 * @param string  $on_change javascript for onchange event (default: empty)
+	 * @param boolean $is_global whether the option is global or blog specific
 	 */
-	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = false, $on_change = '' ) {
+	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = false, $on_change = '', $is_global = true ) {
+		$value = $is_global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+
 		printf(
 			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
 			. '<th scope="row"><label for="%2$s">%s:</label></th>'
 			. '<td>'
 			. '<label class="matomo-toggle">'
-			. '<input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" />'
+			. '<input type="checkbox" value="1"' . ( $value ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" />'
 			. '<span class="slider"></span>'
 			. '</label>'
 			. '<input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s'

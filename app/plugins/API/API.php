@@ -379,7 +379,7 @@ class API extends \Piwik\Plugin\API
             $params = \Piwik\Request::fromQueryString($url)->getParameters();
             $params['format'] = 'json';
             $params += $queryParameters;
-            if (!empty($params['method']) && $params['method'] === 'API.getBulkRequest') {
+            if (!empty($params['method']) && is_string($params['method']) && trim($params['method']) === 'API.getBulkRequest') {
                 continue;
             }
             $req = new Request($params);

@@ -9,6 +9,7 @@
 
 namespace WpMatomo;
 
+use WpMatomo\Ecommerce\ServerSideVisitorId;
 use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
@@ -59,7 +60,27 @@ class AjaxTracker extends \MatomoTracker {
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
 				$this->has_cookie = true;
-				$this->setVisitorId( $this->cookieVisitorId );
+				try {
+					$this->setVisitorId( $this->cookieVisitorId );
+				} catch (\Exception $ex) {
+					// do not fatal if the visitor ID is invalid for some reason
+					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
+						throw $ex;
+					}
+				}
+			}
+		} else if ( function_exists( 'WC' ) && isset( WC()->session ) ) {
+			$visitor_id = WC()->session->get( ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME );
+			if ( ! empty( $visitor_id ) ) {
+				$this->hasCookie = true; // do not set cookies for this visitor, since it would have no effect anyway
+				try {
+					$this->setVisitorId( $visitor_id );
+				} catch ( \Exception $ex ) {
+					// do not fatal if the visitor ID is invalid for some reason
+					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
+						throw $ex;
+					}
+				}
 			}
 		}
 	}
@@ -100,4 +121,7 @@ class AjaxTracker extends \MatomoTracker {
 		return $response;
 	}
 
+	private function is_invalid_visitor_id_error( \Exception $ex ) {
+		return strpos( $ex->getMessage(), 'setVisitorId() expects' ) === 0;
+	}
 }

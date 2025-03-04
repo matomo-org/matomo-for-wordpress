@@ -294,6 +294,45 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertIsArray( $row );
 	}
 
+	/**
+	 * @dataProvider get_test_data_for_replace_placeholders
+	 */
+	public function test_replace_placeholders( $sql, $expected ) {
+		$actual = $this->db->replace_placeholders( $sql );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function get_test_data_for_replace_placeholders() {
+		return [
+			[ '', '' ],
+
+			[
+				'SELECT ? FROM ? WHERE ? >= ?',
+				'SELECT %s FROM %s WHERE %s >= %s',
+			],
+			[
+				'SELECT mytable.col, SUBSTRING(mytable.col2, \'\') FROM mytable WHERE mytable.col3 = \'abc\'',
+				'SELECT mytable.col, SUBSTRING(mytable.col2, \'\') FROM mytable WHERE mytable.col3 = \'abc\'',
+			],
+			[
+				"SELECT mytable.col, SOME_FUN('?', ?) FROM mytable WHERE ?.? = 'de?f'''",
+				"SELECT mytable.col, SOME_FUN('?', %s) FROM mytable WHERE %s.%s = 'de?f'''",
+			],
+			[
+				"SELECT '?' FROM mytable WHERE val = ? AND '' = FUN('?', '''?', ?)",
+				"SELECT '?' FROM mytable WHERE val = %s AND '' = FUN('?', '''?', %s)",
+			],
+			[
+				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND """?""" > ?',
+				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND """?""" > %s',
+			],
+			[
+				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND ? <> """?"""',
+				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND %s <> """?"""',
+			],
+		];
+	}
+
 	private function insert_many_values() {
 		$this->insert_access( 'foo', 'view' );
 		$this->insert_access( 'bar', 'write' );
@@ -305,6 +344,4 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 
 		return $this->db->query( sprintf( "insert into %s (login, idsite, access) values('%s', '1', '%s' )", $table, $login, $permission ) );
 	}
-
-
 }

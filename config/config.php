@@ -104,13 +104,7 @@ return array(
                         return;
                     }
                     // ensure correct path to config is set, ensure to update tables_prefix etc.
-                    $container = StaticContainer::getContainer();
-                    $container->set(\Piwik\Application\Kernel\GlobalSettingsProvider::class, $container->make(\Piwik\Application\Kernel\GlobalSettingsProvider::class));
-                    $container->set(\Piwik\Config::class, $container->make(\Piwik\Config::class));
-                    Option::clearCache();
-                    \Piwik\Site::clearCache();
-                    Cache::getTransientCache()->flushAll();
-                    API::unsetAllInstances();
+                    \WpMatomo\Bootstrap::destroy_bootstrapped_environment();
                 }, 10, 2);
             }
 		}

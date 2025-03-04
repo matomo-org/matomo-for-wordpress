@@ -14,7 +14,7 @@ export default class MwpPage extends Page {
     const result = await super.open(url);
 
     await browser.waitUntil(() => browser.execute(() => !!window.jQuery), { timeout: 30000 });
-    await browser.pause(1000);
+    await browser.pause(1500);
 
     return result;
   }

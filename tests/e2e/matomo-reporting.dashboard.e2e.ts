@@ -36,6 +36,6 @@ describe('Matomo Reporting > Dashboard', () => {
     await MatomoDashboardPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.dashboard')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 });

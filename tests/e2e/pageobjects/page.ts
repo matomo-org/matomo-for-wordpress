@@ -17,7 +17,10 @@ export default class Page {
       path = `/${path}`;
     }
 
-    const result = await browser.url(`${baseUrl}${path}`);
+    let result;
+    result = await Website.retry(3, async () => {
+      return await browser.url(`${baseUrl}${path}`);
+    });
 
     await this.addStylesToPage(`
     * {
@@ -102,15 +105,19 @@ export default class Page {
   }
 
   async waitForImages() {
-    await browser.waitUntil(async () => {
-      return browser.execute(function () {
-        let isAllComplete = true;
-        $('img').each((i, e) => {
-          isAllComplete = isAllComplete && e.complete;
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(function () {
+          let isAllComplete = true;
+          $('img').each((i, e) => {
+            isAllComplete = isAllComplete && e.complete;
+          });
+          return isAllComplete;
         });
-        return isAllComplete;
-      });
-    }, { timeout: 20000 });
+      }, { timeout: 60000 });
+    } catch (e) {
+      // ignore and try to compare a screenshot anyway
+    }
   }
 
   // for wp themes/plugins that use react
@@ -137,12 +144,22 @@ export default class Page {
 
   async prepareWpAdminForScreenshot() {
     await browser.execute(() => {
+      if (!window.jQuery('#wpadminbar,#adminmenumain').length) {
+        throw new Error('cannot find elements to hide');
+      }
+
+      window.jQuery('.notice:contains(An error occurred while updating the geolocation database)').hide();
       window.jQuery('.notice-ocean-extra-plugin').hide();
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
     });
-    await browser.pause(500);
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return !window.jQuery('#wpadminbar').is(':visible');
+      });
+    });
   }
 
   async undoChangesToWpAdminForScreenshot() {

@@ -9,6 +9,9 @@
 
 namespace WpMatomo\Report;
 
+use Piwik\Plugins\UsersManager\UserPreferences;
+use WpMatomo\Bootstrap;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -75,5 +78,58 @@ class Dates {
 		}
 
 		return [ $period, $date ];
+	}
+
+	public function get_date_from_query() {
+		Bootstrap::do_bootstrap();
+
+		$report_dates = $this->get_supported_dates();
+
+		$report_date = 'yesterday';
+
+		$user_preference = new UserPreferences();
+		$default_date    = $user_preference->getDefaultDate();
+		$report_period   = $user_preference->getDefaultPeriod();
+		switch ( $report_period ) {
+			case 'day':
+				$report_date = $default_date;
+				break;
+			case 'year':
+			case 'month':
+			case 'week':
+				switch ( $default_date ) {
+					case 'yesterday':
+						$report_date = 'last' . $report_period;
+						break;
+					case 'today':
+						$report_date = 'this' . $report_period;
+						break;
+				}
+				break;
+			case 'range':
+				switch ( $default_date ) {
+					case 'previous30':
+						$report_date = 'lastmonth';
+						break;
+					case 'previous7':
+						$report_date = 'lastweek';
+						break;
+					case 'last30':
+						$report_date = 'thismonth';
+						break;
+					case 'last7':
+						$report_date = 'thisweek';
+						break;
+					default:
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+		if ( isset( $_REQUEST['report_date'] ) && isset( $report_dates[ $_REQUEST['report_date'] ] ) ) {
+			$report_date = sanitize_text_field( wp_unslash( $_REQUEST['report_date'] ) );
+		}
+		return $report_date;
 	}
 }

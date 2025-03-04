@@ -12,6 +12,8 @@
 /tests/e2e/diff/
 /tests/e2e/downloads/
 /app/scoper.inc.php
+.e2e-docker-out
+.env.script
 
 # for local docker dev
 docker

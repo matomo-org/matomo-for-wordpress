@@ -10,7 +10,7 @@
 namespace WpMatomo;
 
 use Exception;
-use Piwik\Cache as PiwikCache;
+use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Db;
@@ -20,7 +20,6 @@ use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
-use WpMatomo\Paths;
 use WpMatomo\Updater\UpdateInProgressException;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -143,13 +142,34 @@ class Updater {
 		$paths->clear_cache_dir();
 
 		Option::clearCache();
-		PiwikCache::flushAll();
+		try {
+			Cache::flushAll();
+		} catch ( \Exception $ex ) {
+			if ( ! Installer::is_file_not_exists_failure( $ex ) ) { // ignore errors that involve a directory not existing
+				throw $ex;
+			}
+		}
 
 		$current_version = Option::get( 'version_core' );
 
 		try {
 			if ( ! empty( $update_from_version ) ) {
+				$update_from_version = trim( $update_from_version );
+
+				if ( ! preg_match( '/^\d+\.\d+.\d+/', $update_from_version ) ) {
+					throw new \Exception( __( 'Invalid version. Please specify a full version identifier like "5.0.0".', 'matomo' ) );
+				}
+
+				if ( version_compare( $update_from_version, Version::VERSION, '>' ) ) {
+					throw new \Exception( __( 'Invalid version. The given version is greater than the current Matomo version.', 'matomo' ) );
+				}
+
 				Option::set( 'version_core', $update_from_version );
+
+				$installed_plugins = Config::getInstance()->PluginsInstalled['PluginsInstalled'];
+				foreach ( $installed_plugins as $plugin ) {
+					Option::set( 'version_' . $plugin, $update_from_version );
+				}
 			}
 
 			\Piwik\Access::doAsSuperUser(

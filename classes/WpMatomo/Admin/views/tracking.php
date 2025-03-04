@@ -243,6 +243,24 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Choose the currency which will be used in reports. This currency will be used if you have an ecommerce store or if you are using the Matomo goals feature and assign a monetary value to a goal.', 'matomo' ),
 				''
 			);
+
+			$matomo_server_side_visitor_id_desc =
+				esc_html__( 'When enabled Matomo will force the use of a temporary server side generated ID if a Visitor ID cookie is not found. This allows ecommerce events to be properly attributed to visits when cookies are blocked or cookieless tracking is used. The visitor ID will only be valid for the duration of a single visit.', 'matomo' )
+				. '<br/><br/>'
+				. esc_html__( 'Note that using this setting may not be allowed by your local privacy regulations, as some regulations require consent to be given before using a visitor ID and/or tracking ecommerce events.', 'matomo' )
+				. '<br/><br/>'
+				. esc_html__( 'Also note: this setting will not work if you are using using Varnish or another caching mechanism as it starts the WooCommerce session early for visitors that do not have the visitor ID cookie.', 'matomo' );
+
+			$matomo_form->show_checkbox(
+				\WpMatomo\Settings::USE_SESSION_VISITOR_ID_OPTION_NAME,
+				esc_html__( 'Use server generated Visitor ID', 'matomo' ),
+				$matomo_server_side_visitor_id_desc,
+				false,
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager',
+				false,
+				'',
+				false
+			);
 			?>
 			</tbody>
 		</table>

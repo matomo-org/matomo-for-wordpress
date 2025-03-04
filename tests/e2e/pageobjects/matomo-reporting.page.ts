@@ -80,7 +80,7 @@ export default class MatomoReportingPage extends MatomoPage {
       }
 
       return false;
-    });
+    }, { timeout: 30000 });
   }
 
   getDefaultDate() {

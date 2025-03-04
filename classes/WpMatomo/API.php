@@ -79,10 +79,12 @@ class API {
 		$this->register_route( 'SegmentEditor', 'getAll' );
 		$this->register_route( 'SitesManager', 'getAllSites' );
 		$this->register_route( 'SitesManager', 'getAllSitesId' );
+		$this->register_route( 'SitesManager', 'getSitesIdWithAtLeastViewAccess' );
 		$this->register_route( 'UsersManager', 'getUsers' );
 		$this->register_route( 'UsersManager', 'getUsersLogin' );
 		$this->register_route( 'UsersManager', 'getUser' );
 		$this->register_route( 'Goals', 'getGoals' );
+		$this->register_route( 'VisitsSummary', 'get' );
 
 		// todo ideally we would make here work /goal/12345 to get goalId 12345
 		$this->register_route( 'Goals', 'getGoal' );
@@ -190,11 +192,18 @@ class API {
 			}
 		}
 
+		$methods = [ $method ];
+		if ( ! in_array( 'POST', $methods, true ) ) {
+			// we allow posting to all methods so users can pass the app password as the token_auth
+			// instead of as a header if needed
+			$methods[] = 'POST';
+		}
+
 		register_rest_route(
 			self::VERSION,
 			'/' . $wp_api_module . '/' . $wp_api_action . '/',
 			[
-				'methods'             => $method,
+				'methods'             => $methods,
 				'callback'            => [ $this, 'execute_api_method' ],
 				'permission_callback' => '__return_true', // permissions are checked in the method itself
 				'matomoModule'        => $api_module,

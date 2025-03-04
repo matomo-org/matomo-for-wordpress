@@ -9,10 +9,6 @@
 import fetch from 'node-fetch';
 import Website from '../website.js';
 
-function toSnakeCase(s: string) {
-  return s.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
-}
-
 class MatomoApi {
   async track(idsite: string, params: URLSearchParams) {
     const trackingEndpoint = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/matomo.php`;
@@ -43,7 +39,8 @@ class MatomoApi {
 
   async call(restMethod: string, apiMethod: string, params: URLSearchParams = new URLSearchParams()) {
     const [module, action] = apiMethod.split('.');
-    const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${toSnakeCase(module)}/${toSnakeCase(action.replace(/^(get|add|create)/, ''))}`;
+    const wpAction = action === 'get' ? 'get' : action.replace(/^(get|add|create)/, '');
+    const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${this.toSnakeCase(module)}/${this.toSnakeCase(wpAction)}`;
 
     const fullUrl = `${wordpressUrl}&${params}`;
 
@@ -98,6 +95,10 @@ class MatomoApi {
     }
 
     return result;
+  }
+
+  toSnakeCase(s: string) {
+    return s.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
   }
 }
 
