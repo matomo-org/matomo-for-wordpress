@@ -13,6 +13,7 @@
 * Bug fix: schedule geolocation db install and other events after an install completes successfully instead of during.
 * Bug fix: do not allow multiple requests to install Matomo at the same time.
 * Bug fix: do not trigger the golocation db install task during install, if it has run at least once before.
+* Bug fix: the normal Matomo site selector should not be displayed on Matomo reporting/admin pages. It is now hidden.
 
 = 5.2.0 =
 * Update Matomo core to 5.2.1.

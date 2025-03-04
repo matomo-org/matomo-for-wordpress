@@ -326,6 +326,10 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND """?""" > ?',
 				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND """?""" > %s',
 			],
+			[
+				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND ? <> """?"""',
+				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND %s <> """?"""',
+			],
 		];
 	}
 

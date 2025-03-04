@@ -140,7 +140,6 @@ class Auth extends \Piwik\Plugins\Login\Auth
                 return null;
             }
             $loggedInUserId = $authenticated->ID;
-
         } finally {
             remove_filter('application_password_is_api_request', $callback);
         }
