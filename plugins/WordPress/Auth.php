@@ -33,12 +33,9 @@ class Auth extends \Piwik\Plugins\Login\Auth
     {
         // tracking request authentication. only executes if a WordPress application password
         // is supplied and if a token_auth is supplied (though the token_auth is ignored).
-        $isTrackerApiRequest = SettingsServer::isTrackerApiRequest();
-        if ($isTrackerApiRequest) {
-            $result = $this->authTrackerWithAppPassword();
-            if (!empty($result)) {
-                return $result;
-            }
+        $result = $this->authTrackerWithAppPassword();
+        if (!empty($result)) {
+            return $result;
         }
 
         // UI request authentication
@@ -65,7 +62,17 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        if (TrackerConfig::getConfigValue('allow_wp_app_password_auth') != 1) {
+        if (SettingsServer::isTrackerApiRequest()
+            && TrackerConfig::getConfigValue('allow_wp_app_password_auth') != 1
+        ) {
+            return null;
+        }
+
+        $wordPressConfig = Config::getInstance()->WordPress;
+        if (
+            !isset( $wordPressConfig['allow_wp_app_password_auth'] )
+            || strval( $wordPressConfig['allow_wp_app_password_auth'] ) !== '1'
+        ) {
             return null;
         }
 
