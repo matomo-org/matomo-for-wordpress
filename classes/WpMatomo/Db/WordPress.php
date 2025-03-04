@@ -519,8 +519,8 @@ class WordPress extends Mysqli {
 				while ( $segment_end < strlen( $sql ) ) {
 					if ( $sql[ $segment_end ] === $quote ) {
 						// '' or ""
-						$is_double_quote = $segment_end + 1 >= strlen( $sql )
-							|| $sql[ $segment_end + 1 ] === $quote;
+						$is_double_quote = $segment_end + 1 < strlen( $sql )
+							&& $sql[ $segment_end + 1 ] === $quote;
 
 						if ( $is_double_quote ) {
 							++$segment_end;
