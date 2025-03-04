@@ -3,12 +3,12 @@
 = 5.2.1 =
 * Update Matomo core to 5.2.2.
 * New feature: tracking setting that allows generating a visitor ID server side if no visitor ID cookie exists.
-* Bug fix: fix issue causing errors in archiving for some Matomo premium plugins.
+* Bug fix: fix issue causing errors in archiving for some Matomo premium plugins that include '?' in SQL string literals.
 * Bug fix: in the summary, do not display reports that have nothing but empty rows.
 * Bug fix: only track cart updates after WooCommerce calculates cart totals, since triggering cart total calculation early can interfere with other WooCommerce plugins.
-* Bug fix: make sure to track ecommerce cart updates if the shipping changes.
+* Bug fix: make sure to track ecommerce cart updates if the shipping changes in WooCommerce.
 * Bug fix: avoid errors when displaying the summary page without a period and date specified in the URL.
-* Bug fix: fix issue with Matomo for WordPress plugin not being detected on Windows systems.
+* Bug fix: fix issue with Matomo for WordPress plugin not being detected properly on Windows systems.
 * Bug fix: when triggering an update manually in the Troubleshooting page, make sure core plugin updates are also executed, rather than just core updates.
 * Bug fix: schedule geolocation db install and other events after an install completes successfully instead of during.
 * Bug fix: do not allow multiple requests to install Matomo at the same time.
