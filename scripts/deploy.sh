@@ -83,7 +83,7 @@ cd "$GITHUB_WORKSPACE"
 git lfs fetch --all
 git lfs pull
 git lfs checkout
-grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png || die "lfs checkout failed"
+grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png && die "lfs checkout failed"
 
 echo "➤ Building release..."
 mkdir -p ./docker/wordpress
