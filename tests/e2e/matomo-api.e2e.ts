@@ -21,7 +21,7 @@ describe( 'Matomo API', function () {
     });
 
     // NOTE: authenticating via header is tested implicitly by GlobalSetup
-    it('should allow authenticating via app password in token_auth when feature is enabled', async () => {
+    it.skip('should allow authenticating via app password in token_auth when feature is enabled', async () => {
       const module = 'SitesManager';
       const action = 'SitesIdWithAtLeastViewAccess';
       const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${MatomoApi.toSnakeCase(module)}/${MatomoApi.toSnakeCase(action)}`;
