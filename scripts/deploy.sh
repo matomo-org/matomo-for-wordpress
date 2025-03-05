@@ -97,12 +97,6 @@ docker compose --env-file .env.default --env-file .env up -d wordpress
 sleep 60 # wait for docker-compose launch to finish
 npm run matomo:console -- wordpress:build-release --name=$VERSION --tgz
 
-echo "flag contents 1"
-echo ./app/plugins/Morpheus/icons/dist/flags/af.png
-cat ./app/plugins/Morpheus/icons/dist/flags/af.png
-echo ./app/plugins/Morpheus/icons/dist/flags/ag.png
-cat ./app/plugins/Morpheus/icons/dist/flags/ag.png
-
 echo "➤ Copying files..."
 tar -xf "matomo-$VERSION.tgz" --directory="$TMP_DIR" # the archive is created via the wordpress:build-release command
 
@@ -110,16 +104,6 @@ cd "$SVN_DIR"
 
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
-
-which git-lfs
-git-lfs --version
-
-echo "flag contents 2"
-echo $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/af.png
-cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/af.png
-echo $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/ag.png
-cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/ag.png
-exit
 
 # Add everything and commit to SVN (in chunks in case there's too many changes in Matomo core)
 PIECES=(app/core app/plugins app/vendor app .)
@@ -135,10 +119,6 @@ for chunk in ${PIECES[@]}; do
     echo "➤ existing trunk version: $(cat readme.txt | grep -oP "Stable tag: \K(.+)")"
   fi
   rsync -rc "$RSYNC_FROM" "$RSYNC_TO" --delete --delete-excluded
-
-  echo "after rsyncing $chunk"
-  cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/af.png
-  cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/ag.png
 
   if [[ "$chunk" == "." ]]; then
     echo "➤ rsynced version: $(cat readme.txt | grep -oP "Stable tag: \K(.+)")"
