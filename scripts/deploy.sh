@@ -80,10 +80,13 @@ echo "➤ Checking out git matomo-for-wordpress repository..."
 git clone --recurse-submodules --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 cd "$GITHUB_WORKSPACE"
+echo "➤ Fetching lfs files..."
 git lfs fetch --all
 git lfs pull
 git lfs checkout
-grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png || die "lfs checkout failed"
+if grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/*.png; then
+  die "lfs checkout failed"
+fi
 
 echo "➤ Building release..."
 mkdir -p ./docker/wordpress
