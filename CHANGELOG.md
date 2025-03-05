@@ -2,6 +2,7 @@
 
 = 5.2.2 =
 * Fix to a random failure in our automated release process that resulted in some broken images.
+* Bug fix: revert change causing REST API methods to be mismatched.
 
 = 5.2.1 =
 * Update Matomo core to 5.2.2.
