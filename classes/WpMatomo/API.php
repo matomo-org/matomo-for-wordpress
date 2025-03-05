@@ -193,11 +193,6 @@ class API {
 		}
 
 		$methods = [ $method ];
-		if ( ! in_array( 'POST', $methods, true ) ) {
-			// we allow posting to all methods so users can pass the app password as the token_auth
-			// instead of as a header if needed
-			$methods[] = 'POST';
-		}
 
 		register_rest_route(
 			self::VERSION,

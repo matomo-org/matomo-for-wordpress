@@ -64,17 +64,29 @@ jobs:
           fetch-depth: '0'
           token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
           submodules: true
-      - run: git lfs pull
+      - run: |
+          die() {
+            echo "$*" 1>&2 ;
+            exit 1;
+          }
+
+          git lfs fetch --all
+          git lfs pull
+          git lfs checkout
+
+          if grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png; then
+            die "lfs checkout failed"
+          fi
       - name: "Check tag"
         run: |
-            existing_version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
+            existing_version=$(cat matomo.php | grep -oP " * Version: \K(.+)")
 
             if [[ -n "${{ github.event.inputs.version }}" ]]
             then
               version="${{ github.event.inputs.version }}"
 
               if [[ "$existing_version" != "$version" ]]; then
-                echo "Version in readme.txt not set correctly, aborting."
+                echo "Version in matomo.php not set correctly, aborting."
                 exit 1
               fi
             else
