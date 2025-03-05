@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.2.2 =
+* Fix to a random failure in our automated release process that resulted in some broken images.
+
 = 5.2.1 =
 * Update Matomo core to 5.2.2.
 * New feature: tracking setting that allows generating a visitor ID server side if no visitor ID cookie exists.
