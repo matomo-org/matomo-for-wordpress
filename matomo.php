@@ -7,7 +7,7 @@
  * Version: 5.2.2
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 9.7.0
+ * WC tested up to: 9.7.1
  *
  * Matomo - free/libre analytics platform
  *
