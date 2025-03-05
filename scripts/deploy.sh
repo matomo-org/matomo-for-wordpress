@@ -109,8 +109,8 @@ which git-lfs
 git-lfs --version
 
 echo "flag contents"
-cat ./trunk/app/plugins/Morpheus/icons/dist/flags/af.png
-cat ./trunk/app/plugins/Morpheus/icons/dist/flags/ag.png
+cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/af.png
+cat $TMP_DIR/app/plugins/Morpheus/icons/dist/flags/ag.png
 exit
 
 # Add everything and commit to SVN (in chunks in case there's too many changes in Matomo core)
