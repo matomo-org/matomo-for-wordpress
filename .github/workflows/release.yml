@@ -73,7 +73,7 @@ jobs:
           git lfs fetch --all
           git lfs pull
           git lfs checkout
-          grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png || die "lfs checkout failed"
+          grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png && die "lfs checkout failed"
       - name: "Check tag"
         run: |
             existing_version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
