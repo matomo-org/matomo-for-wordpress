@@ -88,14 +88,6 @@ if grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/*.png; then
   die "lfs checkout failed"
 fi
 
-which git-lfs
-git-lfs --version
-
-echo "flag contents"
-cat ./app/plugins/Morpheus/icons/dist/flags/af.png
-cat ./app/plugins/Morpheus/icons/dist/flags/ag.png
-exit
-
 echo "➤ Building release..."
 mkdir -p ./docker/wordpress
 cat > .env <<EOF
@@ -112,6 +104,14 @@ cd "$SVN_DIR"
 
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
+
+which git-lfs
+git-lfs --version
+
+echo "flag contents"
+cat ./app/plugins/Morpheus/icons/dist/flags/af.png
+cat ./app/plugins/Morpheus/icons/dist/flags/ag.png
+exit
 
 # Add everything and commit to SVN (in chunks in case there's too many changes in Matomo core)
 PIECES=(app/core app/plugins app/vendor app .)
