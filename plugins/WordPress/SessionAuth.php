@@ -41,7 +41,7 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
             if (!empty($permission)) {
                 $matomo_user = $this->findMatomoUser($user->ID);
-                $token = $this->makeTemporaryToken($matomo_user['login'], $user->user_registered . '' . $user->ID);
+                $token = $this->makeTemporaryToken($user->ID);
 
                 if ($this->getTokenAuth() !== false
                     && $this->getTokenAuth() !== null
@@ -58,19 +58,31 @@ class SessionAuth extends \Piwik\Session\SessionAuth
         return new AuthResult(AuthResult::FAILURE, $login, $login);
     }
 
-    private function makeTemporaryToken($login, $register_date)
+    private function makeTemporaryToken($userId)
     {
-        $transientKey = md5($login . SettingsPiwik::getSalt() . $register_date);
-
-        $token = get_transient( $transientKey);
-
-        if (!$token) {
-            $token = Common::generateUniqId();
+        $manager = \WP_Session_Tokens::get_instance($userId);
+        if (empty($manager)) {
+            return null;
         }
 
-        set_transient( $transientKey, $token, 3600 ); // extend for one hour each time
+        $sessionToken = wp_get_session_token();
+        if (empty($sessionToken)) {
+            return null;
+        }
 
-        return $token;
+        $session = $manager->get($sessionToken);
+        if (empty($session)) {
+            return null;
+        }
+
+        $matomoToken = $session['matomo-ui-ta'] ?? null;
+        if (!$matomoToken) {
+            $matomoToken = Common::generateUniqId();
+            $session['matomo-ui-ta'] = $matomoToken;
+            $manager->update($sessionToken, $session);
+        }
+
+        return $matomoToken;
     }
 
     private function findMatomoUser($userId, $syncIfNotFound = true)
