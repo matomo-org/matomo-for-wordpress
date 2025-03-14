@@ -387,7 +387,6 @@ EOF
 
       # install woocommerce and stripe payment gateway
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce --activate $WOOCOMMERCE_VERSION
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce-gateway-stripe --activate
 
       # install oceanwp
       echo "installing oceanwp..."
