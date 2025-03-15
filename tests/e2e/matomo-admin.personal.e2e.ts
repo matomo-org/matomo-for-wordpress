@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser,$ } from '@wdio/globals';
 import EmailReportsPage from './pageobjects/matomo-admin/personal/email-reports.page.js';
 import PersonalSettingsPage from './pageobjects/matomo-admin/personal/settings.page.js';
 import Website from './website.js';
@@ -19,6 +19,15 @@ describe('Matomo Admin > Personal', () => {
   it('should load the personal settings page correctly', async () => {
     await PersonalSettingsPage.open();
 
+    await browser.execute(() => {
+      $('nav .badge-menu-item-container').closest('li').each(function () {
+        $(this).remove();
+      });
+    });
+    const c = await browser.execute(() => {
+      return $('nav .badge-menu-item-container').length;
+    });
+    console.log('ersonal settings, found: ' + c);
     await PersonalSettingsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.settings')

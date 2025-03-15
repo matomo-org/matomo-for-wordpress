@@ -23,11 +23,11 @@ export default class MatomoPage extends Page {
         max-height: 275px !important;
       }
     `);
-    await this.removeWhatsNewIfPresent();
+    await this.removeWhatsNewIfPresent(path);
     return result;
   }
 
-  async removeWhatsNewIfPresent() {
+  async removeWhatsNewIfPresent(u) {
     let exists = false;
 
     try {
@@ -39,17 +39,23 @@ export default class MatomoPage extends Page {
 
     if (exists) {
       await browser.execute(() => {
-        window.jQuery('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
+        $('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
       });
       await browser.waitUntil(async () => {
-        return await browser.execute(() => window.jQuery('.whatisnew').length === 0);
+        return await browser.execute(() => $('.whatisnew').length === 0);
       });
     }
 
-    console.log('hiding whats new badge');
-    await browser.execute(() => {
-      window.jQuery('nav .badge-menu-item-container').closest('li').hide();
-    });
+    await $('nav').waitForExist({ timeout: 1000 });
+    const h = await browser.execute(() => document.body.innerHTML);
+    console.log(`[${u}] icon-notifications_on: ` + h.indexOf('icon-notifications_on'));
+    try {
+      await browser.execute(() => {
+        $('nav .badge-menu-item-container').closest('li').remove();
+      });
+    } catch (e) {
+      console.log(`[${u}] failed to hide whats new icon: ${e.message}`);
+    }
   }
 
   async waitForLoading() {
