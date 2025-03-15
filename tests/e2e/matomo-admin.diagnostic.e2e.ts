@@ -19,6 +19,7 @@ describe('Matomo Admin > Diagnostic', () => {
   it('should load the tracking failures page correctly', async () => {
     await TrackingFailuresPage.open();
 
+    await TrackingFailuresPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.diagnostic.tracking-failures')
     ).toEqual(0);
