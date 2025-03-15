@@ -286,7 +286,7 @@ class ArchiveProcessor
      * Numeric values are not inserted if they equal `0`.
      *
      * @param string $name The name of the numeric value, eg, `'Referrers_distinctKeywords'`.
-     * @param float $value The numeric value.
+     * @param float|null $value The numeric value.
      * @api
      */
     public function insertNumericRecord($name, $value)

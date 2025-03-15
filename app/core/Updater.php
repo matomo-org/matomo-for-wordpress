@@ -227,6 +227,11 @@ class Updater
                     // prevent from getting updates from Piwik\Columns\Updater multiple times
                 }
                 $classNames[] = $className;
+                /*
+                 * Fetch available migrations as super user, to ensure having access to everything.
+                 * Otherwise migrations iterating e.g. over available sites or similar, might only update those the
+                 * current user has permission for.
+                 */
                 $migrationsForComponent = \Piwik\Access::doAsSuperUser(function () use($className) {
                     /** @var Updates $update */
                     $update = StaticContainer::getContainer()->make($className);
@@ -412,6 +417,9 @@ class Updater
             // case when the option table is not yet created (before 0.2.10)
         }
         if (!empty($componentsWithUpdateFile)) {
+            /*
+             * Perform updates as super user, so we bypass any permission checks and are able to change anything.
+             */
             \Piwik\Access::doAsSuperUser(function () use($componentsWithUpdateFile, &$coreError, &$deactivatedPlugins, &$errors, &$warnings) {
                 $pluginManager = \Piwik\Plugin\Manager::getInstance();
                 // if error in any core update, show message + help message + EXIT

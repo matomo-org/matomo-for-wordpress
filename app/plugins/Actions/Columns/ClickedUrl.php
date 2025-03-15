@@ -13,7 +13,6 @@ use Piwik\Columns\Join\ActionNameJoin;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
-
 class ClickedUrl extends ActionDimension
 {
     protected $columnName = 'idaction_url';

@@ -154,8 +154,8 @@ class Flattener extends DataTableManipulator
             if (!empty($report)) {
                 $subDimension = $report->getSubtableDimension();
             }
-            if ($level === 2) {
-                $subDimension = $report->getThirdLeveltableDimension();
+            if ($level > 1) {
+                $subDimension = $report->getNthLevelTableDimension($level);
             }
             if (empty($subDimension)) {
                 $report = ReportsProvider::factory($this->apiModule, $this->getApiMethodForSubtable($this->request));

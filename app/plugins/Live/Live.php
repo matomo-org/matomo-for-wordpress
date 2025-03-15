@@ -12,6 +12,7 @@ use Piwik\Cache;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Site;
 /**
  *
  */
@@ -47,10 +48,10 @@ class Live extends \Piwik\Plugin
             throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
         if (empty($idSite)) {
-            $idSite = Common::getRequestVar('idSite', 0, 'int');
+            $idSite = Common::getRequestVar('idSite', '', 'string');
         }
         if (!empty($idSite)) {
-            $idSites = is_array($idSite) ? $idSite : [$idSite];
+            $idSites = Site::getIdSitesFromIdSitesString($idSite);
             foreach ($idSites as $idSite) {
                 $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
                 if ($settings->disableVisitorLog->getValue() === \true) {
@@ -89,10 +90,10 @@ class Live extends \Piwik\Plugin
             throw new \Exception('Visitor profile is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
         if (empty($idSite)) {
-            $idSite = Common::getRequestVar('idSite', 0, 'int');
+            $idSite = Common::getRequestVar('idSite', '', 'string');
         }
         if (!empty($idSite)) {
-            $idSites = is_array($idSite) ? $idSite : [$idSite];
+            $idSites = Site::getIdSitesFromIdSitesString($idSite);
             foreach ($idSites as $idSite) {
                 $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
                 if ($settings->disableVisitorProfile->getValue() === \true) {

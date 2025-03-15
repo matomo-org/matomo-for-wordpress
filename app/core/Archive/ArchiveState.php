@@ -12,7 +12,6 @@ namespace Piwik\Archive;
 use Piwik\DataAccess\ArchiveWriter;
 use Piwik\DataTable;
 use Piwik\Date;
-use Piwik\Period\Range;
 use Piwik\Site;
 class ArchiveState
 {
@@ -26,18 +25,24 @@ class ArchiveState
      */
     public function addMetadataToResultCollection(\Piwik\Archive\DataCollection $collection, array $archiveData, array $archiveIds, array $archiveStates) : void
     {
+        $periodsEndDays = [];
         $periodsTsArchived = [];
+        $archiveIdsFlipped = [];
         foreach ($archiveData as $archive) {
-            $idSite = $archive['idsite'];
+            $idSite = (int) $archive['idsite'];
             $period = $archive['date1'] . ',' . $archive['date2'];
+            $periodsEndDays[$idSite][$period] = $archive['date2'];
             $periodsTsArchived[$idSite][$period] = $archive['ts_archived'];
         }
+        foreach ($archiveIds as $period => $periodArchiveIds) {
+            $archiveIdsFlipped[$period] = array_flip($periodArchiveIds);
+        }
         foreach ($periodsTsArchived as $idSite => $periods) {
-            $site = new Site($idSite);
+            $siteTimezone = Site::getTimezoneFor($idSite);
             foreach ($periods as $period => $tsArchived) {
-                $state = $this->checkArchiveStates($site, $period, $archiveIds, $archiveStates);
-                $range = new Range('day', $period);
-                $state = $this->checkTsArchived($state, $site, $range, $tsArchived);
+                $periodEndDay = $periodsEndDays[$idSite][$period];
+                $state = $this->checkArchiveStates($idSite, $period, $archiveIdsFlipped, $archiveStates);
+                $state = $this->checkTsArchived($state, $siteTimezone, $periodEndDay, $tsArchived);
                 if (null === $state) {
                     // do not set metadata, if no state was determined,
                     // to avoid generating unexpected default rows
@@ -48,13 +53,16 @@ class ArchiveState
         }
     }
     /**
-     * @param array<string, array<int>> $archiveIds
+     * @param array<string, array<int, bool>> $archiveIdsFlipped
      * @param array<int, array<string, array<int, int>>> $archiveStates
      */
-    private function checkArchiveStates(Site $site, string $period, array $archiveIds, array $archiveStates) : ?string
+    private function checkArchiveStates(int $idSite, string $period, array $archiveIdsFlipped, array $archiveStates) : ?string
     {
-        $idSite = $site->getId();
-        $availableStates = array_intersect_key($archiveStates[$idSite][$period] ?? [], array_flip($archiveIds[$period] ?? []));
+        if (!isset($archiveStates[$idSite][$period]) || !isset($archiveIdsFlipped[$period])) {
+            // do not determine state if no archives were used
+            return null;
+        }
+        $availableStates = array_intersect_key($archiveStates[$idSite][$period], $archiveIdsFlipped[$period]);
         if ([] === $availableStates) {
             // do not determine state if no archives were used
             return null;
@@ -67,15 +75,15 @@ class ArchiveState
         // includes DONE_OK, DONE_OK_TEMPORARY and DONE_PARTIAL
         return self::COMPLETE;
     }
-    private function checkTsArchived(?string $state, Site $site, Range $range, string $tsArchived) : ?string
+    private function checkTsArchived(?string $state, string $siteTimezone, string $periodEndDay, string $tsArchived) : ?string
     {
         if (self::COMPLETE !== $state) {
             // only archives detected as complete can be archived before range end
             return $state;
         }
-        $rangeEndTimestamp = $range->getDateTimeEnd()->setTimezone($site->getTimezone())->getTimestamp();
-        $tsArchivedTimestamp = Date::factory($tsArchived)->getTimestamp();
-        if ($tsArchivedTimestamp <= $rangeEndTimestamp) {
+        $datePeriodEnd = Date::factory($periodEndDay . ' 23:59:59')->setTimezone($siteTimezone);
+        $dateArchived = Date::factory($tsArchived);
+        if (!$datePeriodEnd->isEarlier($dateArchived)) {
             return self::INCOMPLETE;
         }
         return $state;

@@ -12,6 +12,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Cloud;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Graph;
+use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
 use Piwik\Plugins\VisitorInterest\Columns\PagesPerVisit;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
@@ -46,10 +47,12 @@ class GetNumberOfVisitsPerPage extends \Piwik\Plugins\VisitorInterest\Reports\Ba
         $view->config->show_exclude_low_population = \false;
         $view->config->show_offset_information = \false;
         $view->config->show_pagination_control = \false;
-        $view->config->show_limit_control = \false;
         $view->config->show_search = \false;
         $view->config->show_table_all_columns = \false;
         $view->config->columns_to_display = array('label', 'nb_visits');
+        if (!$view->isViewDataTableId(Evolution::ID)) {
+            $view->config->show_limit_control = \false;
+        }
         if ($view->isViewDataTableId(Graph::ID)) {
             $view->config->show_series_picker = \false;
             $view->config->selectable_columns = array();

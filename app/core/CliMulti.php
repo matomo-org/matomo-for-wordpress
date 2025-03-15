@@ -80,11 +80,28 @@ class CliMulti
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var int|null
+     */
+    private $signal = null;
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->supportsAsync = $this->supportsAsync();
         $this->supportsAsyncSymfony = $this->supportsAsyncSymfony();
         $this->logger = $logger ?: new NullLogger();
+    }
+    public function handleSignal(int $signal) : void
+    {
+        $this->signal = $signal;
+        if (\SIGTERM !== $signal) {
+            return;
+        }
+        foreach ($this->processes as $process) {
+            if ($process instanceof ProcessSymfony) {
+                $this->logger->debug('Aborting command: {command} [method = asyncCliSymfony]', ['command' => $process->getCommandLine()]);
+                $process->stop(0);
+            }
+        }
     }
     /**
      * It will request all given URLs in parallel (async) using the CLI and wait until all requests are finished.
@@ -106,12 +123,16 @@ class CliMulti
                 $this->timers[] = new \Piwik\Timer();
             }
         }
-        $chunks = array($piwikUrls);
+        $chunks = [$piwikUrls];
         if ($this->concurrentProcessesLimit) {
             $chunks = array_chunk($piwikUrls, $this->concurrentProcessesLimit);
         }
-        $results = array();
+        $results = [];
         foreach ($chunks as $urlsChunk) {
+            if (null !== $this->signal) {
+                $this->logSkippedRequests($urlsChunk);
+                continue;
+            }
             $results = array_merge($results, $this->requestUrls($urlsChunk));
         }
         return $results;
@@ -480,6 +501,12 @@ class CliMulti
         $this->cleanup();
         self::cleanupNotRemovedFiles();
         return $results;
+    }
+    private function logSkippedRequests(array $urls) : void
+    {
+        foreach ($urls as $url) {
+            $this->logger->debug('Skipped climulti:request after abort signal received: {url}', ['url' => $url]);
+        }
     }
     private static function getSuperUserTokenAuth()
     {

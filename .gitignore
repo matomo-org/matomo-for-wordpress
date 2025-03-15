@@ -14,6 +14,7 @@
 /app/scoper.inc.php
 .e2e-docker-out
 .env.script
+/app/.ddev
 
 # for local docker dev
 docker

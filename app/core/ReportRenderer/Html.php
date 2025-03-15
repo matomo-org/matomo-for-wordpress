@@ -94,7 +94,6 @@ class Html extends ReportRenderer
             if ($this->renderImageInline) {
                 $staticGraph = parent::getStaticGraph($reportMetadata, self::IMAGE_GRAPH_WIDTH, self::IMAGE_GRAPH_HEIGHT, $evolutionGraph, $processedReport['segment']);
                 $reportView->assign("generatedImageGraph", base64_encode($staticGraph));
-                unset($generatedImageGraph);
             }
         }
         $this->rendering .= $reportView->render();

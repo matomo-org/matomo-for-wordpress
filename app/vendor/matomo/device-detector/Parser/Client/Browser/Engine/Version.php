@@ -42,14 +42,14 @@ class Version extends AbstractClientParser
             return null;
         }
         if ('Gecko' === $this->engine || 'Clecko' === $this->engine) {
-            $pattern = '~[ ](?:rv[: ]([0-9\\.]+)).*(?:g|cl)ecko/[0-9]{8,10}~i';
+            $pattern = '~[ ](?:rv[: ]([0-9.]+)).*(?:g|cl)ecko/[0-9]{8,10}~i';
             if (\preg_match($pattern, $this->userAgent, $matches)) {
                 return ['version' => \array_pop($matches)];
             }
         }
         $engineToken = $this->engine;
         if ('Blink' === $this->engine) {
-            $engineToken = 'Chr[o0]me|Cronet';
+            $engineToken = 'Chr[o0]me|Chromium|Cronet';
         }
         if ('Arachne' === $this->engine) {
             $engineToken = 'Arachne\\/5\\.';
@@ -57,7 +57,7 @@ class Version extends AbstractClientParser
         if ('LibWeb' === $this->engine) {
             $engineToken = 'LibWeb\\+LibJs';
         }
-        \preg_match("~(?:{$engineToken})\\s*/?\\s*((?(?=\\d+\\.\\d)\\d+[.\\d]*|\\d{1,7}(?=(?:\\D|\$))))~i", $this->userAgent, $matches);
+        \preg_match("~(?:{$engineToken})\\s*[/_]?\\s*((?(?=\\d+\\.\\d)\\d+[.\\d]*|\\d{1,7}(?=(?:\\D|\$))))~i", $this->userAgent, $matches);
         if (!$matches) {
             return null;
         }

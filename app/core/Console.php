@@ -105,6 +105,10 @@ class Console extends Application
         \Piwik\Piwik::postEvent('Console.doRun', [&$exitCode, $input, $output]);
         if ($exitCode === null) {
             $self = $this;
+            /*
+             * Ensure to run console command with super user permission. Otherwise any permission check would fail,
+             * as we do not have any user session or authentication in place.
+             */
             $exitCode = \Piwik\Access::doAsSuperUser(function () use($input, $output, $self) {
                 return call_user_func(array($self, 'originDoRun'), $input, $output);
             });

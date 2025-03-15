@@ -73,12 +73,20 @@ class Scheduler
      * @var Lock
      */
     private $lock;
+    /**
+     * @var bool
+     */
+    private $hasReceivedAbortSignal = \false;
     public function __construct(\Piwik\Scheduler\TaskLoader $loader, LoggerInterface $logger, \Piwik\Scheduler\ScheduledTaskLock $lock)
     {
         $this->timetable = new \Piwik\Scheduler\Timetable();
         $this->loader = $loader;
         $this->logger = $logger;
         $this->lock = $lock;
+    }
+    public function handleSignal(int $signal) : void
+    {
+        $this->hasReceivedAbortSignal = in_array($signal, [\SIGINT, \SIGTERM], \true);
     }
     /**
      * Executes tasks that are scheduled to run, then reschedules them.
@@ -107,6 +115,10 @@ class Scheduler
             $this->logger->debug("Executing tasks with priority {priority}:", array('priority' => $priority));
             // loop through each task
             foreach ($tasks as $task) {
+                if ($this->hasReceivedAbortSignal) {
+                    $this->logger->info("Scheduler: Aborting due to received signal");
+                    return $executionResults;
+                }
                 // if the task does not have the current priority level, don't execute it yet
                 if ($task->getPriority() != $priority) {
                     continue;

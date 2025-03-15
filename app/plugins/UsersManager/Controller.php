@@ -39,6 +39,7 @@ class Controller extends ControllerAdmin
     public const NONCE_CHANGE_PASSWORD = 'changePasswordNonce';
     public const NONCE_ADD_AUTH_TOKEN = 'addAuthTokenNonce';
     public const NONCE_DELETE_AUTH_TOKEN = 'deleteAuthTokenNonce';
+    public const NONCE_SET_IGNORE_COOKIE = 'setIgnoreCookieNonce';
     /**
      * @var Translator
      */
@@ -163,7 +164,7 @@ class Controller extends ControllerAdmin
         $user = Request::processRequest('UsersManager.getUser', array('userLogin' => $userLogin));
         $view->userEmail = $user['email'];
         $view->userTokenAuth = Piwik::getCurrentUserTokenAuth();
-        $view->ignoreSalt = $this->getIgnoreCookieSalt();
+        $view->setIgnoreCookieNonce = Nonce::getNonce(self::NONCE_SET_IGNORE_COOKIE);
         $view->isUsersAdminEnabled = \Piwik\Plugins\UsersManager\UsersManager::isUsersAdminEnabled();
         $newsletterSignupOptionKey = \Piwik\Plugins\UsersManager\NewsletterSignup::NEWSLETTER_SIGNUP_OPTION . $userLogin;
         $view->showNewsletterSignup = Option::get($newsletterSignupOptionKey) === \false && SettingsPiwik::isInternetEnabled();
@@ -303,12 +304,9 @@ class Controller extends ControllerAdmin
     {
         Piwik::checkUserHasSomeViewAccess();
         Piwik::checkUserIsNotAnonymous();
-        $salt = Common::getRequestVar('ignoreSalt', \false, 'string');
-        if ($salt !== $this->getIgnoreCookieSalt()) {
-            throw new Exception("Not authorized");
-        }
+        Nonce::checkNonce(self::NONCE_SET_IGNORE_COOKIE);
         IgnoreCookie::setIgnoreCookie();
-        Piwik::redirectToModule('UsersManager', 'userSettings', array('token_auth' => \false));
+        Piwik::redirectToModule('UsersManager', 'userSettings', ['nonce' => \false]);
     }
     /**
      * The Super User can modify Anonymous user settings

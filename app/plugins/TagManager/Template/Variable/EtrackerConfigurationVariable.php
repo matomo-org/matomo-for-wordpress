@@ -18,6 +18,10 @@ class EtrackerConfigurationVariable extends \Piwik\Plugins\TagManager\Template\V
     {
         return self::ID;
     }
+    public function getDescription()
+    {
+        return Piwik::translate('TagManager_EtrackerMainVariableDescription');
+    }
     public function getCategory()
     {
         return self::CATEGORY_OTHERS;

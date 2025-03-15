@@ -54,6 +54,7 @@ class ActionsRequestProcessor extends RequestProcessor
         // when the visit is updated, these columns will be changed, so we have to do this before recordLogs
         $request->setMetadata('Actions', 'idReferrerActionUrl', $visitProperties->getProperty('visit_exit_idaction_url'));
         $request->setMetadata('Actions', 'idReferrerActionName', $visitProperties->getProperty('visit_exit_idaction_name'));
+        return \false;
     }
     public function afterRequestProcessed(VisitProperties $visitProperties, Request $request)
     {
@@ -63,6 +64,7 @@ class ActionsRequestProcessor extends RequestProcessor
             // other plugins can unset the action if they want
             $action->loadIdsFromLogActionTable();
         }
+        return \false;
     }
     public function recordLogs(VisitProperties $visitProperties, Request $request)
     {

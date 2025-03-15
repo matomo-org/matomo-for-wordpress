@@ -22,7 +22,7 @@ class AxeptioTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
     }
     public function getCategory()
     {
-        return Piwik::translate('TagManager_ConsentManagementPlatform');
+        return Piwik::translate('TagManager_ConsentManagement');
     }
     public function getIcon()
     {

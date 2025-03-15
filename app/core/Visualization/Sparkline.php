@@ -151,7 +151,7 @@ class Sparkline implements ViewInterface
     {
         $colors = Common::getRequestVar('colors', \false, 'json');
         $defaultColors = array('backgroundColor' => '#ffffff', 'lineColor' => '#162C4A', 'minPointColor' => '#ff7f7f', 'maxPointColor' => '#75BF7C', 'lastPointColor' => '#55AAFF', 'fillColor' => '#ffffff');
-        if (empty($colors)) {
+        if (empty($colors) || !is_array($colors)) {
             $colors = $defaultColors;
             //set default color, if no color passed
         } else {

@@ -26,10 +26,11 @@ use Piwik\Tracker\Cache;
  * @property int  $anonymizeUserId      If enabled, it will pseudo anonymize the User ID
  * @property int  $anonymizeOrderId     If enabled, it will anonymize the Order ID
  * @property string  $anonymizeReferrer  Whether the referrer should be anonymized and how it much it should be anonymized
+ * @property bool $randomizeConfigId    If enabled, Matomo will generate a new random Config ID (fingerprint) for each tracking request
  */
 class Config
 {
-    private $properties = array('useAnonymizedIpForVisitEnrichment' => array('type' => 'boolean', 'default' => \false), 'ipAddressMaskLength' => array('type' => 'integer', 'default' => 2), 'doNotTrackEnabled' => array('type' => 'boolean', 'default' => \false), 'ipAnonymizerEnabled' => array('type' => 'boolean', 'default' => \true), 'forceCookielessTracking' => array('type' => 'boolean', 'default' => \false), 'anonymizeUserId' => array('type' => 'boolean', 'default' => \false), 'anonymizeOrderId' => array('type' => 'boolean', 'default' => \false), 'anonymizeReferrer' => array('type' => 'string', 'default' => ''));
+    private $properties = array('useAnonymizedIpForVisitEnrichment' => array('type' => 'boolean', 'default' => \false), 'ipAddressMaskLength' => array('type' => 'integer', 'default' => 2), 'doNotTrackEnabled' => array('type' => 'boolean', 'default' => \false), 'ipAnonymizerEnabled' => array('type' => 'boolean', 'default' => \true), 'forceCookielessTracking' => array('type' => 'boolean', 'default' => \false), 'anonymizeUserId' => array('type' => 'boolean', 'default' => \false), 'anonymizeOrderId' => array('type' => 'boolean', 'default' => \false), 'anonymizeReferrer' => array('type' => 'string', 'default' => ''), 'randomizeConfigId' => array('type' => 'boolean', 'default' => \false));
     public function __set($name, $value)
     {
         if (!array_key_exists($name, $this->properties)) {

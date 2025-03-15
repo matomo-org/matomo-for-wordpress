@@ -97,12 +97,13 @@ class CustomDimensionsRequestProcessor extends RequestProcessor
     {
         $action = $request->getMetadata('Actions', 'action');
         if (empty($action) || !$action instanceof Action) {
-            return;
+            return \false;
         }
         $dimensionsToSet = $this->getCustomDimensionsInScope(CustomDimensions::SCOPE_ACTION, $request);
         foreach ($dimensionsToSet as $field => $value) {
             $action->setCustomField($field, $value);
         }
+        return \false;
     }
     private function getCustomDimensionsInScope($scope, Request $request)
     {

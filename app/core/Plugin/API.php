@@ -44,6 +44,7 @@ use Exception;
 abstract class API
 {
     private static $instances;
+    /** @var bool */
     protected $autoSanitizeInputParams = \true;
     /**
      * Returns the singleton instance for the derived class. If the singleton instance
