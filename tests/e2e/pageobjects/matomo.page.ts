@@ -45,17 +45,14 @@ export default class MatomoPage extends Page {
         return await browser.execute(() => $('.whatisnew').length === 0);
       });
     }
+  }
 
-    await $('nav').waitForExist({ timeout: 1000 });
-    const h = await browser.execute(() => document.body.innerHTML);
-    console.log(`[${u}] icon-notifications_on: ` + h.indexOf('icon-notifications_on'));
-    try {
-      await browser.execute(() => {
-        $('nav .badge-menu-item-container').closest('li').remove();
-      });
-    } catch (e) {
-      console.log(`[${u}] failed to hide whats new icon: ${e.message}`);
-    }
+  async prepareMatomoPageForScreenshot() {
+    await browser.execute(() => {
+      $('nav .badge-menu-item-container').closest('li').remove();
+    });
+    await this.disableHoverStyles();
+    await browser.pause(500);
   }
 
   async waitForLoading() {

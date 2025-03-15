@@ -24,7 +24,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the all channels page correctly', async () => {
     await AllChannelsPage.open();
 
-    await AllChannelsPage.disableHoverStyles();
+    await AllChannelsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.all-channels')
     ).toBeLessThan(0.1);
@@ -33,7 +33,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the campaign url builder page correctly', async () => {
     await CampaignUrlBuilderPage.open();
 
-    await CampaignUrlBuilderPage.disableHoverStyles();
+    await CampaignUrlBuilderPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.campaign-url-builder')
     ).toBeLessThan(0.1);
@@ -42,7 +42,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the campaigns page correctly', async () => {
     await CampaignsPage.open();
 
-    await CampaignsPage.disableHoverStyles();
+    await CampaignsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.campaigns')
     ).toBeLessThan(0.1);
@@ -51,7 +51,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the overview page correctly', async () => {
     await OverviewPage.open();
 
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.overview')
     ).toBeLessThan(0.1);
@@ -60,7 +60,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the search engine keywords page correctly', async () => {
     await SearchEnginesKeywordsPage.open();
 
-    await SearchEnginesKeywordsPage.disableHoverStyles();
+    await SearchEnginesKeywordsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.search-engine-keywords')
     ).toBeLessThan(0.1);
@@ -69,7 +69,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the social networks page correctly', async () => {
     await SocialNetworksPage.open();
 
-    await SocialNetworksPage.disableHoverStyles();
+    await SocialNetworksPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.social-networks')
     ).toBeLessThan(0.1);
@@ -78,7 +78,7 @@ describe('Matomo Reporting > Acquisition', () => {
   it('should load the websites page correctly', async () => {
     await WebsitesPage.open();
 
-    await WebsitesPage.disableHoverStyles();
+    await WebsitesPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.acquisition.websites')
     ).toBeLessThan(0.1);

@@ -19,16 +19,7 @@ describe('Matomo Admin > Personal', () => {
   it('should load the personal settings page correctly', async () => {
     await PersonalSettingsPage.open();
 
-    await browser.execute(() => {
-      $('nav .badge-menu-item-container').closest('li').each(function () {
-        $(this).remove();
-      });
-    });
-    const c = await browser.execute(() => {
-      return $('nav .badge-menu-item-container').length;
-    });
-    console.log('ersonal settings, found: ' + c);
-    await PersonalSettingsPage.disableHoverStyles();
+    await PersonalSettingsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.settings')
     ).toEqual(0);
@@ -37,7 +28,7 @@ describe('Matomo Admin > Personal', () => {
   it('should load the email reports page correctly', async () => {
     await EmailReportsPage.open();
 
-    await EmailReportsPage.disableHoverStyles();
+    await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports')
     ).toBeLessThanOrEqual(0.02);
@@ -49,7 +40,7 @@ describe('Matomo Admin > Personal', () => {
     await EmailReportsPage.startAddReport();
     await EmailReportsPage.createNewReport();
 
-    await EmailReportsPage.disableHoverStyles();
+    await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports.create')
     ).toBeLessThanOrEqual(0.02);

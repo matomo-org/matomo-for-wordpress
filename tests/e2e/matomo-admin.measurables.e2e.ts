@@ -19,7 +19,7 @@ describe('Matomo Admin > Measurables', () => {
   it('should load the goals page correctly', async () => {
     await GoalsAdminPage.open();
 
-    await GoalsAdminPage.disableHoverStyles();
+    await GoalsAdminPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.measurables.goals')
     ).toEqual(0);
@@ -28,7 +28,7 @@ describe('Matomo Admin > Measurables', () => {
   it('should load the custom dimensions page correctly', async () => {
     await CustomDimensionsAdminPage.open();
 
-    await CustomDimensionsAdminPage.disableHoverStyles();
+    await CustomDimensionsAdminPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.measurables.custom-dimensions')
     ).toEqual(0);

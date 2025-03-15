@@ -43,7 +43,7 @@ describe('MWP Language', () => {
 
   it('should use the appropriate language in Matomo Reporting when the site language changes', async () => {
     await OverviewPage.open();
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.site-lang.matomo-reporting')
     ).toBeLessThanOrEqual(0.05);
@@ -61,7 +61,7 @@ describe('MWP Language', () => {
 
   it('should use the appropriate language in Matomo Reporting when the user profile language changes', async () => {
     await OverviewPage.open();
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.profile-lang.matomo-reporting')
     ).toBeLessThanOrEqual(0.05);
@@ -79,7 +79,7 @@ describe('MWP Language', () => {
   it.skip('should use the appropriate language in Matomo Reporting when a plugin calls switch_to_locale', async () => {
     // mwp_switch_to_locale query param handled by test-utility-plugin.php
     await OverviewPage.openWith({ mwp_switch_to_locale: 'ja' });
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.switch-to-locale.matomo-reporting')
     ).toBeLessThanOrEqual(0.05);
