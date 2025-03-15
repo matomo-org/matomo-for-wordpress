@@ -20,7 +20,7 @@ export default class MatomoPage extends Page {
       table.entityTable tbody tr:hover td { background-color: unset !important; }
 
       .dataTableVizEvolution {
-        max-height: 234px !important;
+        max-height: 275px !important;
       }
     `);
     await this.removeWhatsNewIfPresent();
