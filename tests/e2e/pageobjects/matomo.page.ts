@@ -46,6 +46,7 @@ export default class MatomoPage extends Page {
       });
     }
 
+    console.log('hiding whats new badge');
     await browser.execute(() => {
       window.jQuery('nav .badge-menu-item-container').closest('li').hide();
     });
