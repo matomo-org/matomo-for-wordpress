@@ -153,6 +153,7 @@ export default class Page {
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
+      window.jQuery('nav .badge-menu-item-container').closest('li').hide();
     });
 
     await browser.waitUntil(async () => {
