@@ -45,6 +45,10 @@ export default class MatomoPage extends Page {
         return await browser.execute(() => window.jQuery('.whatisnew').length === 0);
       });
     }
+
+    await browser.execute(() => {
+      window.jQuery('nav .badge-menu-item-container').closest('li').hide();
+    });
   }
 
   async waitForLoading() {
