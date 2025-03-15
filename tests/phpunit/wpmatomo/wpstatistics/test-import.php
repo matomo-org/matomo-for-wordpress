@@ -80,7 +80,12 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			}
 
 			// update the wp-statistics database
-			\WP_STATISTICS\Install::install( is_multisite() );
+			if ( method_exists( \WP_STATISTICS\Install::class, 'create_table' ) ) {
+				\WP_STATISTICS\Install::create_table( is_multisite() );
+				\WP_STATISTICS\Install::create_options();
+			} else {
+				\WP_Statistics::install( is_multisite() );
+			}
 			$this->upgrade_wp_stats();
 
 			// run the import
