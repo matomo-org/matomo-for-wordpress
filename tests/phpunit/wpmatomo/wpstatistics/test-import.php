@@ -79,13 +79,26 @@ class ImportTest extends MatomoAnalytics_TestCase {
 				$this->manually_load_plugin();
 			}
 
+			update_option( 'wp_statistics_plugin_version', '1.0' ); // force upgrade from old sql dump version
+
 			// update the wp-statistics database
 			if ( method_exists( \WP_STATISTICS\Install::class, 'create_table' ) ) {
 				\WP_STATISTICS\Install::create_table( is_multisite() );
 				\WP_STATISTICS\Install::create_options();
 			} else {
-				\WP_Statistics::install( is_multisite() );
+				if ( is_multisite() ) {
+					// phpcs:ignore WordPress.DB
+					$blog_ids = $wpdb->get_col( "SELECT `blog_id` FROM $wpdb->blogs" );
+					foreach ( $blog_ids as $blog_id ) {
+						switch_to_blog( $blog_id );
+						\WP_Statistics\Service\Database\Managers\MigrationHandler::runMigrations();
+						restore_current_blog();
+					}
+				} else {
+					\WP_Statistics\Service\Database\Managers\MigrationHandler::runMigrations();
+				}
 			}
+
 			$this->upgrade_wp_stats();
 
 			// run the import
