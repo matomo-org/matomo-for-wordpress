@@ -36,7 +36,7 @@ class GenerateDimension extends \Piwik\Plugins\CoreConsole\Commands\GeneratePlug
         $dimensionClassName = $this->getDimensionClassName($dimensionName);
         $translatedDimensionName = $this->makeTranslationIfPossible($pluginName, ucfirst($dimensionName));
         $exampleFolder = Manager::getPluginDirectory('ExampleTracker');
-        $replace = array('example_action_dimension' => strtolower($columnName), 'example_visit_dimension' => strtolower($columnName), 'example_conversion_dimension' => strtolower($columnName), 'INTEGER(11) DEFAULT 0 NOT NULL' => strtoupper($columType), 'VARCHAR(255) DEFAULT NULL' => strtoupper($columType), 'ExampleDimension' => $dimensionClassName, 'ExampleVisitDimension' => $dimensionClassName, 'ExampleActionDimension' => $dimensionClassName, 'ExampleConversionDimension' => $dimensionClassName, 'ExampleTracker_DimensionName' => $translatedDimensionName, 'ExampleTracker' => $pluginName);
+        $replace = array('example_action_dimension' => strtolower($columnName), 'example_visit_dimension' => strtolower($columnName), 'example_conversion_dimension' => strtolower($columnName), 'INTEGER(11) DEFAULT 0 NULL' => strtoupper($columType), 'VARCHAR(255) DEFAULT NULL' => strtoupper($columType), 'ExampleDimension' => $dimensionClassName, 'ExampleVisitDimension' => $dimensionClassName, 'ExampleActionDimension' => $dimensionClassName, 'ExampleConversionDimension' => $dimensionClassName, 'ExampleTracker_DimensionName' => $translatedDimensionName, 'ExampleTracker' => $pluginName);
         $whitelistFiles = array('/Columns');
         if ('visit' == $type) {
             $whitelistFiles[] = '/Columns/ExampleVisitDimension.php';

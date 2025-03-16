@@ -265,7 +265,7 @@ class DbHelper
             \Piwik\Log::debug("Dropping table {$table}");
             \Piwik\Db::query("DROP TABLE IF EXISTS `{$table}`");
         }
-        ArchiveTableCreator::refreshTableList($forceReload = \true);
+        ArchiveTableCreator::refreshTableList();
     }
     /**
      * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 0

@@ -45,7 +45,7 @@ class Mysql extends Db
      */
     private $collation;
     protected $mysqlOptions = [];
-    protected $activeTransaction = \false;
+    protected $activeTransaction = null;
     /**
      * Builds the DB object
      *
@@ -219,7 +219,7 @@ class Mysql extends Db
             return $this->executeQuery($query, $parameters);
         } catch (Exception $e) {
             $isSelectQuery = stripos(trim($query), 'select ') === 0;
-            if ($isSelectQuery && !$this->activeTransaction && $this->isMysqlServerHasGoneAwayError($e)) {
+            if ($isSelectQuery && null === $this->activeTransaction && $this->isMysqlServerHasGoneAwayError($e)) {
                 // mysql may return a MySQL server has gone away error when trying to execute the query
                 // in that case we want to retry establishing the connection once after a short sleep
                 // we're only retrying SELECT queries to prevent updating or inserting records twice for some reason
@@ -314,11 +314,11 @@ class Mysql extends Db
     }
     /**
      * Start Transaction
-     * @return string TransactionID
+     * @return ?string TransactionID
      */
     public function beginTransaction()
     {
-        if (!$this->activeTransaction === \false) {
+        if ($this->activeTransaction !== null) {
             return;
         }
         try {
@@ -346,10 +346,10 @@ class Mysql extends Db
      */
     public function commit($xid)
     {
-        if ($this->activeTransaction != $xid || $this->activeTransaction === \false) {
+        if ($this->activeTransaction != $xid || $this->activeTransaction === null) {
             return;
         }
-        $this->activeTransaction = \false;
+        $this->activeTransaction = null;
         if (!$this->connection->commit()) {
             throw new DbException("Commit failed");
         }
@@ -362,10 +362,10 @@ class Mysql extends Db
      */
     public function rollBack($xid)
     {
-        if ($this->activeTransaction != $xid || $this->activeTransaction === \false) {
+        if ($this->activeTransaction != $xid || $this->activeTransaction === null) {
             return;
         }
-        $this->activeTransaction = \false;
+        $this->activeTransaction = null;
         if (!$this->connection->rollBack()) {
             throw new DbException("Rollback failed");
         }

@@ -197,7 +197,7 @@ class Website {
           await $('.woocommerce-save-button').click();
           await browser.waitUntil(async () => {
             return await browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
-          }, { timeout: 30000 });
+          }, { timeout: 60000 });
         } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
           await browser.execute(() => {
             window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();

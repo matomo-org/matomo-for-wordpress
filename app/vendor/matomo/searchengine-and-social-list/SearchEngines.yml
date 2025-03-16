@@ -46,6 +46,15 @@
     charsets:
       - UTF-8
       - gb2312
+  -
+    urls:
+      - www.sou.com
+    params:
+      - q
+    backlink: '?q={k}'
+    charsets:
+      - UTF-8
+      - gb2312
 Abacho:
   -
     urls:
@@ -354,12 +363,6 @@ Baidu:
     hiddenkeyword:
       - '/^$/'
       - '/'
-  -
-    urls:
-      - web.gougou.com
-    params:
-      - search
-    backlink: 'search?search={k}'
 Biglobe:
   -
     urls:
@@ -752,9 +755,10 @@ Fireball:
   -
     urls:
       - www.fireball.de
+      - fireball.com
     params:
       - q
-    backlink: 'ajax.asp?q={k}'
+    backlink: 'search/?q={k}'
 Firstsfind:
   -
     urls:
@@ -1428,6 +1432,13 @@ Jungle Spider:
       - www.jungle-spider.de
     params:
       - q
+Junior Safe Search:
+  -
+    urls:
+      - www.juniorsafesearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Jyxo:
   -
     urls:
@@ -1500,6 +1511,13 @@ Lo.st:
     params:
       - x_query
     backlink: 'cgi-bin/eolost.cgi?x_query={k}'
+Local Moxie:
+  -
+    urls:
+      - www.localmoxie.com
+    params:
+      - q
+    backlink: 'serp?q={k}'
 LookAny:
   -
     urls:
@@ -1623,6 +1641,13 @@ mozbot:
     params:
       - q
     backlink: 'results.php?q={k}'
+MyPrivateSearch:
+  -
+    urls:
+      - www.myprivatesearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 MySpace:
   -
     urls:
@@ -1769,6 +1794,13 @@ PeoplePC:
     params:
       - q
     backlink: 'search?q={k}'
+Perplexity:
+  -
+    urls:
+      - www.perplexity.ai
+    params:
+      - q
+    backlink: 'search?s=o&q={k}'
 Picsearch:
   -
     urls:
@@ -1798,6 +1830,13 @@ Poisk.Ru:
     backlink: 'cgi-bin/poisk?text={k}'
     charsets:
       - windows-1251
+Presearch:
+  -
+    urls:
+      - presearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 qip.ru:
   -
     urls:
@@ -2111,6 +2150,13 @@ Startsiden:
     params:
       - q
     backlink: 'sok/index.html?q={k}'
+Stract:
+  -
+    urls:
+      - stract.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Suche.info:
   -
     urls:
@@ -2137,6 +2183,13 @@ Surf Canyon:
       - surfcanyon.com
     params:
       - q
+Swiggle:
+  -
+    urls:
+      - swiggle.org.uk
+    params:
+      - q
+    backlink: '?q={k}'
 Swisscows:
   -
     urls:
@@ -2247,6 +2300,13 @@ Toppreise.ch:
     backlink: 'index.php?search={k}'
     charsets:
       - ISO-8859-1
+TUSK Search:
+  -
+    urls:
+      - tusksearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Trouvez.com:
   -
     urls:
@@ -2267,6 +2327,13 @@ Trusted Search:
     params:
       - w
     backlink: 'search?w={k}'
+Trustnav:
+  -
+    urls:
+      - search.trustnav.com
+    params:
+      - q
+    backlink: '?q={k}'
 Twingly:
   -
     urls:
@@ -2603,6 +2670,13 @@ Yellowmap:
       - yellowmap.de
     params:
       - ' '
+Yep:
+  -
+    urls:
+      - yep.com
+    params:
+      - q
+    backlink: 'web?q={k}'
 Yippy:
   -
     urls:
@@ -2610,6 +2684,20 @@ Yippy:
     params:
       - query
     backlink: 'search?query={k}'
+Yongzin:
+  -
+    urls:
+      - www.yongzin.com
+    params:
+      - word
+    backlink: 'page/search.do?word={k}'
+You:
+  -
+    urls:
+      - you.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 YouGoo:
   -
     urls:
@@ -2617,22 +2705,17 @@ YouGoo:
     params:
       - q
     backlink: '?cx=search&q={k}'
-Zapmeta:
+ZapMeta:
   -
     urls:
       - www.zapmeta.com
       - 'zapmeta.{}'
-      - uk.zapmeta.com
-      - ar.zapmeta.com
-      - au.zapmeta.com
-      - ca.zapmeta.com
-      - fi.zapmeta.com
-      - no.zapmeta.com
-      - tr.zapmeta.com
+      - '{}.zapmeta.com'
+      - 'www.zapmetasearch.{}'
     params:
       - q
       - query
-    backlink: '?q={k}'
+    backlink: 'search?q={k}'
 Zhongsou:
   -
     urls:

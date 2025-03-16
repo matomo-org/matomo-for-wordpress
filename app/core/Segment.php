@@ -90,6 +90,10 @@ class Segment
      */
     private $isSegmentEncoded;
     /**
+     * @var Exception|null
+     */
+    private $missingDatesException = null;
+    /**
      * Truncate the Segments to 8k
      */
     public const SEGMENT_TRUNCATE_LIMIT = 8192;
@@ -151,6 +155,23 @@ class Segment
             $this->initializeSegment(urldecode($segmentCondition), $idSites);
             $this->isSegmentEncoded = \true;
         }
+    }
+    /**
+     * Checks if the provided segmentCondition is valid and available for the given idSites
+     *
+     * @param string $segmentCondition
+     * @params array $idSites
+     * @return bool
+     * @api since Matomo 5.3.0
+     */
+    public static function isAvailable(string $segmentCondition, array $idSites) : bool
+    {
+        try {
+            new self($segmentCondition, $idSites);
+        } catch (Exception $e) {
+            return \false;
+        }
+        return \true;
     }
     /**
      * Returns the segment expression.
@@ -271,8 +292,7 @@ class Segment
         $requiresSubQuery = in_array($operator, [SegmentExpression::MATCH_DOES_NOT_CONTAIN, SegmentExpression::MATCH_NOT_EQUAL]) && !$this->isVisitSegment($segmentName);
         if ($requiresSubQuery && empty($this->startDate) && empty($this->endDate)) {
             if (\Piwik\Development::isEnabled()) {
-                $e = new Exception();
-                \Piwik\Log::warning("Avoiding segment subquery due to missing start date and/or an end date. Please ensure a start date and/or end date is set when initializing a segment if it's used to build a query. Stacktrace:\n" . $e->getTraceAsString());
+                $this->missingDatesException = new Exception();
             }
             return \false;
         }
@@ -470,6 +490,10 @@ class Segment
      */
     public function getSelectQuery($select, $from, $where = \false, $bind = array(), $orderBy = \false, $groupBy = \false, $limit = 0, $offset = 0, $forceGroupBy = \false)
     {
+        if (\Piwik\Development::isEnabled() && !empty($this->missingDatesException)) {
+            $e = new Exception();
+            \Piwik\Log::warning('Avoiding segment subquery due to missing start date and/or an end date. ' . 'Please ensure a start date and/or end date is set when initializing segment: ' . "\n\nCreation stacktrace:\n" . $this->missingDatesException->getTraceAsString() . "\n\nUsage stacktrace:\n" . $e->getTraceAsString());
+        }
         $segmentExpression = $this->segmentExpression;
         $limitAndOffset = null;
         if ($limit > 0) {
@@ -542,7 +566,8 @@ class Segment
             }
         }
         if (isset($foundStoredSegment)) {
-            return $foundStoredSegment['name'];
+            // segment name is stored sanitized
+            return \Piwik\Common::unsanitizeInputValues($foundStoredSegment['name']);
         }
         return $this->isSegmentEncoded ? urldecode($segment) : $segment;
     }

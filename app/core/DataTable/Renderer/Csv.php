@@ -12,6 +12,7 @@ use Piwik\Common;
 use Piwik\DataTable\Renderer;
 use Piwik\DataTable\Simple;
 use Piwik\DataTable;
+use Piwik\Filesystem;
 use Piwik\Period;
 use Piwik\Period\Range;
 use Piwik\Piwik;
@@ -259,6 +260,7 @@ class Csv extends Renderer
             $name = !empty($meta['name']) ? $meta['name'] : '';
             $fileName .= ' _ ' . $name . ' _ ' . $prettyDate . '.csv';
         }
+        $fileName = Filesystem::sanitizeFilename($fileName);
         // silent fail otherwise unit tests fail
         Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), \true);
         ProxyHttp::overrideCacheControlHeaders();

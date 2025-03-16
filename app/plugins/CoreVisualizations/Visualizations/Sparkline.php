@@ -53,7 +53,7 @@ class Sparkline extends ViewDataTable
             foreach ($comparisonSeries as $seriesName) {
                 $otherSeries[$seriesName] = [];
             }
-            $this->dataTable->filter(function (DataTable $table) use($comparisonSeries, &$otherSeries, $columnToPlot) {
+            $this->dataTable->filter(function (DataTable $table) use(&$otherSeries, $columnToPlot) {
                 foreach ($table->getRows() as $row) {
                     $comparisons = $row->getComparisons();
                     if (empty($comparisons)) {

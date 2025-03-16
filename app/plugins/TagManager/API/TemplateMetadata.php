@@ -52,6 +52,13 @@ class TemplateMetadata
                 return $tagA['order'] - $tagB['order'];
             });
         }
+        $analyticsCategoryName = Piwik::translate('TagManager_CategoryAnalytics');
+        $analyticsCategoryIndex = array_search($analyticsCategoryName, array_column($byCategory, 'name'));
+        if (!empty($byCategory[$analyticsCategoryIndex])) {
+            $analyticsCategory = $byCategory[$analyticsCategoryIndex];
+            unset($byCategory[$analyticsCategoryIndex]);
+            $byCategory = array_merge([$analyticsCategory], $byCategory);
+        }
         return $byCategory;
     }
 }

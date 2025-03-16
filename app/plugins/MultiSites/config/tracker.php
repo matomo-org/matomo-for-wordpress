@@ -1,5 +1,5 @@
 <?php
 
 namespace {
-    return array();
+    return [];
 }

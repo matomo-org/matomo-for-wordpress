@@ -131,7 +131,7 @@ class Sorter
      *
      * @param Row $row
      * @param int|string $primaryColumnToSort
-     * @return int
+     * @return ?string
      */
     public function getSecondaryColumnToSort(Row $row, $primaryColumnToSort)
     {
@@ -155,6 +155,7 @@ class Sorter
                 return $column;
             }
         }
+        return null;
     }
     /**
      * @param DataTable $table
