@@ -44,7 +44,7 @@
               @update:model-value="tag.name = $event; setValueHasChanged()"
               :maxlength="255"
               :title="translate('General_Name')"
-              :inline-help="translate('TagManager_TagNameHelpV2')"
+              :inline-help="tagNameHelpText"
               :placeholder="translate('TagManager_TagNamePlaceholder')"
             />
           </div>
@@ -293,6 +293,7 @@
             :key="index"
             class="collection-item avatar"
             @click="createTagType(tagTemplate)"
+            v-show="isTagVisible(tagTemplate.id)"
             :class="{
             disabledTemplate: isTagTemplateDisabled[tagTemplate.id],
             [`templateType${ tagTemplate.id}`]: true,
@@ -336,7 +337,7 @@ import {
   NotificationsStore,
   NotificationType,
   clone,
-  MatomoUrl,
+  MatomoUrl, externalLink,
 } from 'CoreHome';
 import { Field, SaveButton, GroupedSettings } from 'CorePluginsAdmin';
 import AvailableFireLimitsStore from '../AvailableFireLimit.store';
@@ -469,12 +470,13 @@ export default defineComponent({
       NotificationsStore.remove(notificationId);
       NotificationsStore.remove('ajaxHelper');
     },
-    showNotification(message: string, context: NotificationType['context']) {
+    showNotification(message: string, context: NotificationType['context'],
+      type: null|NotificationType['type'] = null) {
       const instanceId = NotificationsStore.show({
         message,
         context,
         id: notificationId,
-        type: 'transient',
+        type: type !== null ? type : 'toast',
       });
 
       setTimeout(() => {
@@ -703,16 +705,17 @@ export default defineComponent({
 
           setTimeout(() => {
             const createdX = translate('TagManager_CreatedX', translate('TagManager_Tag'));
-            let wantToRedeploy = '';
             if (this.hasPublishCapability()) {
-              wantToRedeploy = translate(
+              const wantToRedeploy = translate(
                 'TagManager_WantToDeployThisChangeCreateVersion',
                 '<a class="createNewVersionLink">',
                 '</a>',
               );
+              this.showNotification(`${createdX} ${wantToRedeploy}`, 'success', 'transient');
+              return;
             }
 
-            this.showNotification(`${createdX} ${wantToRedeploy}`, 'success');
+            this.showNotification(createdX, 'success');
           }, 200);
         });
       }).finally(() => {
@@ -753,16 +756,17 @@ export default defineComponent({
         this.cancel();
 
         const updatedAt = translate('TagManager_UpdatedX', translate('TagManager_Tag'));
-        let wantToDeploy = '';
         if (this.hasPublishCapability()) {
-          wantToDeploy = translate(
+          const wantToDeploy = translate(
             'TagManager_WantToDeployThisChangeCreateVersion',
             '<a class="createNewVersionLink">',
             '</a>',
           );
+          this.showNotification(`${updatedAt} ${wantToDeploy}`, 'success', 'transient');
+          return;
         }
 
-        this.showNotification(`${updatedAt} ${wantToDeploy}`, 'success');
+        this.showNotification(updatedAt, 'success');
       }).finally(() => {
         this.isUpdatingTag = false;
       });
@@ -783,6 +787,13 @@ export default defineComponent({
     },
     hasPublishCapability() {
       return Matomo.hasUserCapability('tagmanager_write') && Matomo.hasUserCapability('tagmanager_use_custom_templates');
+    },
+    isTagVisible(id: string) {
+      if (this.create && id === 'GoogleAnalytics4') {
+        return false;
+      }
+
+      return true;
     },
   },
   computed: {
@@ -830,6 +841,18 @@ export default defineComponent({
         translate('TagManager_Once24Hours'),
         translate('TagManager_OnceLifetime'),
       );
+    },
+    tagNameHelpText() {
+      let additionalHelpText = '';
+      console.log(this.tag);
+      if (this.tag.type === 'CustomHtml') {
+        additionalHelpText = translate('TagManager_CustomHTMLTagNameInlineHelpText',
+          '<br><br><strong>',
+          '</strong>',
+          externalLink('https://matomo.org/faq/tag-manager/how-to-add-google-ads-remarketing-tags-in-matomo-tag-manager/'),
+          '</a>');
+      }
+      return translate('TagManager_TagNameHelpV2') + additionalHelpText;
     },
   },
 });

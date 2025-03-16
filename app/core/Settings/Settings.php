@@ -56,7 +56,7 @@ abstract class Settings
     }
     /**
      * @ignore
-     * @return Setting
+     * @return ?Setting
      */
     public function getSetting($name)
     {

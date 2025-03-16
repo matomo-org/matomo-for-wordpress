@@ -74,9 +74,9 @@ class ReleaseChannels
     }
     /**
      * @param string $releaseChannelId
-     * @return ReleaseChannel
+     * @return ?ReleaseChannel
      */
-    private function factory($releaseChannelId)
+    private function factory($releaseChannelId) : ?ReleaseChannel
     {
         $releaseChannelId = strtolower($releaseChannelId);
         foreach ($this->getAllReleaseChannels() as $releaseChannel) {
@@ -84,5 +84,6 @@ class ReleaseChannels
                 return $releaseChannel;
             }
         }
+        return null;
     }
 }

@@ -385,7 +385,7 @@ EOF
         WOOCOMMERCE_VERSION="--version=7.6.1"
       fi
 
-      # install woocommerce and stripe payment gateway
+      # install woocommerce
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce --activate $WOOCOMMERCE_VERSION
 
       # install oceanwp

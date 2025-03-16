@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser,$ } from '@wdio/globals';
 import EmailReportsPage from './pageobjects/matomo-admin/personal/email-reports.page.js';
 import PersonalSettingsPage from './pageobjects/matomo-admin/personal/settings.page.js';
 import Website from './website.js';
@@ -19,7 +19,7 @@ describe('Matomo Admin > Personal', () => {
   it('should load the personal settings page correctly', async () => {
     await PersonalSettingsPage.open();
 
-    await PersonalSettingsPage.disableHoverStyles();
+    await PersonalSettingsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.settings')
     ).toEqual(0);
@@ -28,7 +28,7 @@ describe('Matomo Admin > Personal', () => {
   it('should load the email reports page correctly', async () => {
     await EmailReportsPage.open();
 
-    await EmailReportsPage.disableHoverStyles();
+    await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports')
     ).toBeLessThanOrEqual(0.02);
@@ -40,7 +40,7 @@ describe('Matomo Admin > Personal', () => {
     await EmailReportsPage.startAddReport();
     await EmailReportsPage.createNewReport();
 
-    await EmailReportsPage.disableHoverStyles();
+    await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports.create')
     ).toBeLessThanOrEqual(0.02);

@@ -18,6 +18,7 @@ class LogCaptureHandler extends AbstractHandler
     public function handle(array $record)
     {
         $this->allLogs[] = $record;
+        return \false;
     }
     /**
      * Returns all records. The records should be processed, so one could just use $record['message'].

@@ -20,14 +20,14 @@ export default class MatomoPage extends Page {
       table.entityTable tbody tr:hover td { background-color: unset !important; }
 
       .dataTableVizEvolution {
-        max-height: 234px !important;
+        max-height: 275px !important;
       }
     `);
-    await this.removeWhatsNewIfPresent();
+    await this.removeWhatsNewIfPresent(path);
     return result;
   }
 
-  async removeWhatsNewIfPresent() {
+  async removeWhatsNewIfPresent(u) {
     let exists = false;
 
     try {
@@ -39,12 +39,20 @@ export default class MatomoPage extends Page {
 
     if (exists) {
       await browser.execute(() => {
-        window.jQuery('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
+        $('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
       });
       await browser.waitUntil(async () => {
-        return await browser.execute(() => window.jQuery('.whatisnew').length === 0);
+        return await browser.execute(() => $('.whatisnew').length === 0);
       });
     }
+  }
+
+  async prepareMatomoPageForScreenshot() {
+    await browser.execute(() => {
+      $('nav .badge-menu-item-container').closest('li').remove();
+    });
+    await this.disableHoverStyles();
+    await browser.pause(500);
   }
 
   async waitForLoading() {

@@ -4,6 +4,9 @@ Badoo:
 Bebo:
   - bebo.com
 
+bilibili:
+  - bilibili.com
+
 BlackPlanet:
   - blackplanet.com
 
@@ -19,6 +22,12 @@ Classmates.com:
 
 Cyworld:
   - global.cyworld.com
+
+Douyin:
+  - douyin.com
+
+Douyu:
+  - douyu.com
 
 Gaia Online:
   - gaiaonline.com
@@ -78,6 +87,9 @@ Haboo:
 
 hi5:
   - hi5.com
+
+Huya:
+  - huya.com
 
 Hyves:
   - hyves.nl
@@ -158,9 +170,16 @@ Mastodon:
   - mastodon.world
   - mastodon.nz
   - graphics.social
+  - org.joinmastodon.android
+  - mastodon.eus
+  - mastodon.jalgi.eus
+  - tkm.eus
 
 MeinVZ:
   - meinvz.net
+
+MissEvan:
+  - missevan.com
 
 Mixi:
   - mixi.jp
@@ -191,6 +210,9 @@ Nasza-klasa.pl:
 
 Netlog:
   - netlog.com
+
+Niconico:
+  - nicovideo.jp
 
 Odnoklassniki:
   - odnoklassniki.ru
@@ -269,6 +291,10 @@ Snapchat:
 Sonico.com:
   - sonico.com
 
+SoundCloud:
+  - soundcloud.com
+  - gate.sc
+
 StackOverflow:
   - stackoverflow.com
 
@@ -298,6 +324,9 @@ Tuenti:
 tumblr:
   - tumblr.com
   - t.umblr.com
+
+Twitcast:
+  - twitcasting.tv
 
 Twitter:
   - twitter.com

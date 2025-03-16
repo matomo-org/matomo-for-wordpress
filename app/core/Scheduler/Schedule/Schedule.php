@@ -178,7 +178,7 @@ abstract class Schedule
                 }
                 return $result;
             case 'monthly':
-                $result = new \Piwik\Scheduler\Schedule\Monthly($periodDay);
+                $result = new \Piwik\Scheduler\Schedule\Monthly();
                 if ($periodDay !== \false) {
                     if (is_int($periodDay)) {
                         $result->setDay($periodDay);

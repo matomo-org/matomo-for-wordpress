@@ -113,7 +113,7 @@ class GenerateIntl extends ConsoleCommand
     protected function checkCurrencies()
     {
         $currencyDataUrl = 'https://raw.githubusercontent.com/unicode-org/cldr-json/%s/cldr-json/cldr-core/supplemental/currencyData.json';
-        $currencyData = Http::fetchRemoteFile(sprintf($currencyDataUrl, $this->CLDRVersion, 'en'));
+        $currencyData = Http::fetchRemoteFile(sprintf($currencyDataUrl, $this->CLDRVersion));
         $currencyData = json_decode($currencyData, \true);
         $currencyData = $currencyData['supplemental']['currencyData']['region'] ?? [];
         $cldrCurrencies = array();

@@ -217,7 +217,7 @@ class ConfigGet extends ConsoleCommand
                 $output .= $this->wrapInTag('info', $sectionAndSettingName . ' = ' . $this->wrapInTag('comment', $var));
                 break;
             default:
-                throw \InvalidArgumentException('Cannot output unknown type');
+                throw new \InvalidArgumentException('Cannot output unknown type');
         }
         return $output;
     }

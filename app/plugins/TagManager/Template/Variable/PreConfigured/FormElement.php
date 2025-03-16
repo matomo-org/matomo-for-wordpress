@@ -12,7 +12,7 @@ class FormElement extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigu
 {
     public function getCategory()
     {
-        return self::CATEGORY_CLICKS;
+        return self::CATEGORY_FORMS;
     }
     protected function getDataLayerVariableName()
     {

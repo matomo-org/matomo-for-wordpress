@@ -58,7 +58,6 @@ abstract class SMSProvider
      * @param string $smsText
      * @param string $phoneNumber
      * @param string $from
-     * @return bool true
      */
     public abstract function sendSMS($credentials, $smsText, $phoneNumber, $from);
     /**
