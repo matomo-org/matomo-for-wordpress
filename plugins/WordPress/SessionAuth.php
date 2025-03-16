@@ -26,6 +26,8 @@ if (!defined( 'ABSPATH')) {
 
 class SessionAuth extends \Piwik\Session\SessionAuth
 {
+    const MATOMO_UI_NONCE_NAME = 'matomo-ui';
+
     public function authenticate()
     {
         if (function_exists('is_user_logged_in') && is_user_logged_in()) {
@@ -43,10 +45,13 @@ class SessionAuth extends \Piwik\Session\SessionAuth
                 $matomo_user = $this->findMatomoUser($user->ID);
                 $token = $this->makeTemporaryToken($user->ID);
 
-                if ($this->getTokenAuth() !== false
+                if (
+                    $this->getTokenAuth() !== false
                     && $this->getTokenAuth() !== null
                     && !Common::hashEquals((string) $token, (string) $this->getTokenAuth()) // note both may be converted to empty string in worst case so still the one below needed
-                    && $token !== $this->getTokenAuth()) {
+                    && $token !== $this->getTokenAuth()
+                    && !wp_verify_nonce($this->getTokenAuth(), self::MATOMO_UI_NONCE_NAME)
+                ) {
                     return new AuthResult(AuthResult::FAILURE, $matomo_user['login'], null);
                 }
 
@@ -77,7 +82,7 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
         $matomoToken = $session['matomo-ui-ta'] ?? null;
         if (!$matomoToken) {
-            $matomoToken = Common::generateUniqId();
+            $matomoToken = wp_create_nonce(self::MATOMO_UI_NONCE_NAME);
             $session['matomo-ui-ta'] = $matomoToken;
             $manager->update($sessionToken, $session);
         }
