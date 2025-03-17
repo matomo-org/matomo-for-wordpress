@@ -3037,7 +3037,7 @@ function VueEntryContainervue_type_template_id_6cb9164b_render(_ctx, _cache, $pr
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/VueEntryContainer/VueEntryContainer.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/VueEntryContainer/VueEntryContainer.vue
 
 
@@ -3079,7 +3079,7 @@ function MatomoLoadervue_type_template_id_74f456c7_render(_ctx, _cache, $props, 
 
 /* harmony default export */ var MatomoLoadervue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({}));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MatomoLoader/MatomoLoader.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MatomoLoader/MatomoLoader.vue
 
 
@@ -3109,7 +3109,7 @@ MatomoLoadervue_type_script_lang_ts.render = MatomoLoadervue_type_template_id_74
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ActivityIndicator/ActivityIndicator.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ActivityIndicator/ActivityIndicator.vue
 
 
@@ -3139,7 +3139,7 @@ function Alertvue_type_template_id_32dc7f1c_render(_ctx, _cache, $props, $setup,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Alert/Alert.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Alert/Alert.vue
 
 
@@ -3429,7 +3429,7 @@ function MatomoDialogvue_type_template_id_1791e7fd_render(_ctx, _cache, $props, 
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MatomoDialog/MatomoDialog.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MatomoDialog/MatomoDialog.vue
 
 
@@ -4129,7 +4129,7 @@ function EnrichedHeadlinevue_type_template_id_5e16ac38_render(_ctx, _cache, $pro
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/EnrichedHeadline/EnrichedHeadline.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/EnrichedHeadline/EnrichedHeadline.vue
 
 
@@ -4275,7 +4275,7 @@ var ContentBlockvue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ContentBlock/ContentBlock.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ContentBlock/ContentBlock.vue
 
 
@@ -4950,7 +4950,7 @@ var Comparisons_store_ComparisonsStore = /*#__PURE__*/function () {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Comparisons/Comparisons.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Comparisons/Comparisons.vue
 
 
@@ -5100,7 +5100,7 @@ var MenuItemsDropdownvue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MenuItemsDropdown/MenuItemsDropdown.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MenuItemsDropdown/MenuItemsDropdown.vue
 
 
@@ -5437,7 +5437,7 @@ var DatePickervue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DatePicker/DatePicker.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DatePicker/DatePicker.vue
 
 
@@ -5660,7 +5660,7 @@ var DATE_FORMAT = 'YYYY-MM-DD';
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DateRangePicker/DateRangePicker.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DateRangePicker/DateRangePicker.vue
 
 
@@ -5774,7 +5774,7 @@ var piwikMaxDate = new Date(Matomo_Matomo.maxDateYear, Matomo_Matomo.maxDateMont
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/PeriodDatePicker/PeriodDatePicker.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/PeriodDatePicker/PeriodDatePicker.vue
 
 
@@ -5952,7 +5952,7 @@ var Notificationvue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Notification/Notification.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Notification/Notification.vue
 
 
@@ -6263,7 +6263,7 @@ Notifications_store_$(function () {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Notification/NotificationGroup.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Notification/NotificationGroup.vue
 
 
@@ -6347,7 +6347,7 @@ var REPORTING_HELP_NOTIFICATION_ID = 'reportingMenu-help';
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ShowHelpLink/ShowHelpLink.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ShowHelpLink/ShowHelpLink.vue
 
 
@@ -6728,7 +6728,7 @@ function AllSitesLinkvue_type_template_id_77d1c93d_render(_ctx, _cache, $props, 
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/SiteSelector/AllSitesLink.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/SiteSelector/AllSitesLink.vue
 
 
@@ -7027,7 +7027,7 @@ AllSitesLinkvue_type_script_lang_ts.render = AllSitesLinkvue_type_template_id_77
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/SiteSelector/SiteSelector.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/SiteSelector/SiteSelector.vue
 
 
@@ -7527,7 +7527,7 @@ function scrollFirstElementIntoView(element) {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/QuickAccess/QuickAccess.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/QuickAccess/QuickAccess.vue
 
 
@@ -7639,7 +7639,7 @@ var Field = useExternalPluginComponent('CorePluginsAdmin', 'Field');
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/FieldArray/FieldArray.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/FieldArray/FieldArray.vue
 
 
@@ -7876,7 +7876,7 @@ var MultiPairFieldvue_type_script_lang_ts_Field = useExternalPluginComponent('Co
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MultiPairField/MultiPairField.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MultiPairField/MultiPairField.vue
 
 
@@ -8568,7 +8568,7 @@ function isValidDate(d) {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/PeriodSelector/PeriodSelector.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/PeriodSelector/PeriodSelector.vue
 
 
@@ -9438,7 +9438,7 @@ var ReportingMenuvue_type_script_lang_ts_REPORTING_HELP_NOTIFICATION_ID = 'repor
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportingMenu/ReportingMenu.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportingMenu/ReportingMenu.vue
 
 
@@ -9755,7 +9755,7 @@ function WidgetLoadervue_type_template_id_e256fdba_render(_ctx, _cache, $props, 
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetLoader/WidgetLoader.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetLoader/WidgetLoader.vue
 
 
@@ -9843,7 +9843,7 @@ var Widget = useExternalPluginComponent('CoreHome', 'Widget');
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetContainer/WidgetContainer.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetContainer/WidgetContainer.vue
 
 
@@ -9969,7 +9969,7 @@ function WidgetByDimensionContainervue_type_script_lang_ts_arrayWithHoles(arr) {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetByDimensionContainer/WidgetByDimensionContainer.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/WidgetByDimensionContainer/WidgetByDimensionContainer.vue
 
 
@@ -10173,7 +10173,7 @@ function findContainer(widgetsByCategory, containerId) {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Widget/Widget.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Widget/Widget.vue
 
 
@@ -10632,7 +10632,7 @@ function hideOnlyRawDataNoticifation() {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportingPage/ReportingPage.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportingPage/ReportingPage.vue
 
 
@@ -11106,7 +11106,7 @@ var ReportExportPopovervue_type_script_lang_ts_Field = useExternalPluginComponen
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportExport/ReportExportPopover.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/ReportExport/ReportExportPopover.vue
 
 
@@ -11306,7 +11306,7 @@ function Sparklinevue_type_script_lang_ts_typeof(obj) { "@babel/helpers - typeof
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Sparkline/Sparkline.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Sparkline/Sparkline.vue
 
 
@@ -11371,7 +11371,7 @@ function Progressbarvue_type_template_id_08f50ba6_render(_ctx, _cache, $props, $
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Progressbar/Progressbar.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Progressbar/Progressbar.vue
 
 
@@ -11545,7 +11545,7 @@ var AjaxFormvue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/AjaxForm/AjaxForm.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/AjaxForm/AjaxForm.vue
 
 
@@ -11564,7 +11564,7 @@ function Passthroughvue_type_template_id_31c1d52c_render(_ctx, _cache, $props, $
 
 /* harmony default export */ var Passthroughvue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({}));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Passthrough/Passthrough.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/Passthrough/Passthrough.vue
 
 
@@ -12097,7 +12097,7 @@ function isBooleanLikeSet(value) {
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DataTable/DataTableActions.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/DataTable/DataTableActions.vue
 
 
@@ -12243,7 +12243,7 @@ function VersionInfoHeaderMessagevue_type_template_id_9eb6779c_render(_ctx, _cac
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/VersionInfoHeaderMessage/VersionInfoHeaderMessage.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/VersionInfoHeaderMessage/VersionInfoHeaderMessage.vue
 
 
@@ -12376,7 +12376,7 @@ var MobileLeftMenuvue_type_script_lang_ts_window = window,
   }
 }));
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MobileLeftMenu/MobileLeftMenu.vue?vue&type=script&lang=ts
-
+ 
 // CONCATENATED MODULE: ./plugins/CoreHome/vue/src/MobileLeftMenu/MobileLeftMenu.vue
 
 

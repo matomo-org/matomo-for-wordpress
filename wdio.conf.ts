@@ -160,7 +160,6 @@ export const config: Options.Testrunner = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  // logLevel: 'error',
   logLevel: 'error',
   //
   // Set specific log levels per logger
@@ -274,6 +273,7 @@ export const config: Options.Testrunner = {
     if (error) {
       await saveScreenshotIfError(test, error);
 
+      // TODO: this does not appear to display in the reporter, even though it works in the core UI screenshot tests
       test.err.message = `${test.err.message}\nCaptured Console Logs:\n${capturedLogs.join('\n')}`;
 
       return;

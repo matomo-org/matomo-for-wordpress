@@ -50,6 +50,12 @@ class SessionAuth extends \Piwik\Session\SessionAuth
                     && $this->getTokenAuth() !== null
                     && !Common::hashEquals((string) $token, (string) $this->getTokenAuth()) // note both may be converted to empty string in worst case so still the one below needed
                     && $token !== $this->getTokenAuth()
+                    // if multiple pages are opened with the same session simultaneously, a race
+                    // condition may occur, and not all of the pages will end up with the same
+                    // token_auth value. in this case, the token_auth/nonce will not match the
+                    // session value, but will still validate as a WordPress nonce. to handle
+                    // this race condition, we allow values that don't match through, as long as
+                    // they are valid nonces.
                     && !wp_verify_nonce($this->getTokenAuth(), self::MATOMO_UI_NONCE_NAME)
                 ) {
                     return new AuthResult(AuthResult::FAILURE, $matomo_user['login'], null);
