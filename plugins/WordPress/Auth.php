@@ -62,20 +62,6 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        if (SettingsServer::isTrackerApiRequest()
-            && TrackerConfig::getConfigValue('allow_wp_app_password_auth') != 1
-        ) {
-            return null;
-        }
-
-        $wordPressConfig = Config::getInstance()->WordPress;
-        if (
-            !isset( $wordPressConfig['allow_wp_app_password_auth'] )
-            || strval( $wordPressConfig['allow_wp_app_password_auth'] ) !== '1'
-        ) {
-            return null;
-        }
-
         $callback = function () { return true; };
 
         add_filter('application_password_is_api_request', $callback);
