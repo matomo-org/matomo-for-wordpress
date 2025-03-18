@@ -89,7 +89,7 @@ class ReportTotalsCalculator extends DataTableManipulator
             }
         }
         $tableMeta = $firstLevelTable->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
-        /** @var DataTable\Row $totalRow */
+        /** @var DataTable\Row|null $totalRow */
         $totalRow = null;
         foreach ($firstLevelTable->getRows() as $row) {
             if (!isset($totalRow)) {
@@ -130,7 +130,7 @@ class ReportTotalsCalculator extends DataTableManipulator
             $totalRow = $clone->getFirstRow();
         }
         if (isset($totalRow)) {
-            $totals = $row->getColumns();
+            $totals = $totalRow->getColumns();
             unset($totals['label']);
             $dataTable->setMetadata('totals', $totals);
             if (isset($totalRowUnformatted)) {
@@ -139,9 +139,9 @@ class ReportTotalsCalculator extends DataTableManipulator
             }
             if (1 === Common::getRequestVar('keep_totals_row', 0, 'integer', $this->request)) {
                 $totalLabel = Common::getRequestVar('keep_totals_row_label', Piwik::translate('General_Totals'), 'string', $this->request);
-                $row->deleteMetadata(\false);
-                $row->setColumn('label', $totalLabel);
-                $dataTable->setTotalsRow($row);
+                $totalRow->deleteMetadata(\false);
+                $totalRow->setColumn('label', $totalLabel);
+                $dataTable->setTotalsRow($totalRow);
             }
         }
         return $dataTable;
@@ -163,7 +163,7 @@ class ReportTotalsCalculator extends DataTableManipulator
         $request = $this->request;
         unset($request['idSubtable']);
         // to make sure we work on first level table
-        /** @var \Piwik\Period $period */
+        /** @var \Piwik\Period|false $period */
         $period = $table->getMetadata('period');
         if (!empty($period)) {
             // we want a dataTable, not a dataTable\map

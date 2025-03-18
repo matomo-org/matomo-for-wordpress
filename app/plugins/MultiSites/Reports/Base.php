@@ -16,8 +16,8 @@ abstract class Base extends \Piwik\Plugin\Report
     {
         $this->categoryId = 'General_MultiSitesSummary';
         $allMetricsInfo = API::getApiMetrics($enhanced = \true);
-        $metadataMetrics = array();
-        $processedMetricsMetadata = array();
+        $metadataMetrics = [];
+        $processedMetricsMetadata = [];
         foreach ($allMetricsInfo as $metricName => $metricSettings) {
             $metadataMetrics[$metricName] = Piwik::translate($metricSettings[API::METRIC_TRANSLATION_KEY]);
             $processedMetricsMetadata[$metricSettings[API::METRIC_EVOLUTION_COL_NAME_KEY]] = Piwik::translate($metricSettings[API::METRIC_TRANSLATION_KEY]) . " " . Piwik::translate('MultiSites_Evolution');

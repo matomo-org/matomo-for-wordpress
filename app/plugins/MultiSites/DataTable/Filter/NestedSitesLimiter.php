@@ -47,18 +47,18 @@ use Piwik\DataTable;
  */
 class NestedSitesLimiter extends BaseFilter
 {
+    /** @var int */
     private $offset = 0;
+    /** @var int */
     private $limit = 0;
-    /**
-     * @var Row[]
-     */
-    private $rows = array();
+    /** @var Row[] */
+    private $rows = [];
     /**
      * Constructor.
      *
      * @param DataTable $table The table to eventually filter.
      */
-    public function __construct($table, $offset, $limit)
+    public function __construct(DataTable $table, int $offset, int $limit)
     {
         parent::__construct($table);
         $this->offset = $offset;
@@ -92,15 +92,15 @@ class NestedSitesLimiter extends BaseFilter
         $this->prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows($lastGroupFromPreviousPage);
         $table->setRows($this->rows);
     }
-    private function hasNumberOfRequestedRowsFound()
+    private function hasNumberOfRequestedRowsFound() : bool
     {
         return count($this->rows) >= $this->limit;
     }
-    private function hasRows()
+    private function hasRows() : bool
     {
         return count($this->rows) !== 0;
     }
-    private function addRowIfNeeded(Row $row, $numRows)
+    private function addRowIfNeeded(Row $row, int $numRows) : void
     {
         $inOffset = $numRows >= $this->offset;
         if ($inOffset && !$this->hasNumberOfRequestedRowsFound()) {
@@ -108,9 +108,9 @@ class NestedSitesLimiter extends BaseFilter
         }
     }
     /**
-     * @param Row $lastGroupFromPreviousPage
+     * @param null|Row $lastGroupFromPreviousPage
      */
-    private function prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows($lastGroupFromPreviousPage)
+    private function prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows(?Row $lastGroupFromPreviousPage) : void
     {
         if ($lastGroupFromPreviousPage && !empty($this->rows)) {
             // the result starts with a row that does belong to a group, we make sure to show this group before that site

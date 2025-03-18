@@ -22,7 +22,7 @@ describe('Matomo Admin > Home', () => {
       window.jQuery('ul.rss').hide();
     });
 
-    await MatomoHomePage.disableHoverStyles();
+    await MatomoHomePage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.home')
     ).toEqual(0);

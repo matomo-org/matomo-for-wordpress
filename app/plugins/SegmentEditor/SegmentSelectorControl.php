@@ -10,7 +10,6 @@ namespace Piwik\Plugins\SegmentEditor;
 
 use Piwik\API\Request;
 use Piwik\ArchiveProcessor\Rules;
-use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
@@ -29,35 +28,32 @@ class SegmentSelectorControl extends UIControl
     /**
      * Constructor.
      */
-    public function __construct($idSite = \false)
+    public function __construct()
     {
         parent::__construct();
         $this->jsClass = "SegmentSelectorControl";
         $this->cssIdentifier = "segmentEditorPanel";
         $this->cssClass = "piwikTopControl borderedControl piwikSelector";
-        $this->idSite = $idSite ?: Common::getRequestVar('idSite', \false, 'int');
-        $this->selectedSegment = Common::getRequestVar('segment', \false, 'string');
+        $idSiteFromRequest = \Piwik\Request::fromRequest()->getIntegerParameter('idSite', -1);
+        $this->idSite = $idSiteFromRequest !== -1 ? $idSiteFromRequest : null;
         $formatter = StaticContainer::get('Piwik\\Plugins\\SegmentEditor\\SegmentFormatter');
         $this->segmentDescription = $formatter->getHumanReadable(Request::getRawSegmentFromRequest(), $this->idSite);
         $this->isAddingSegmentsForAllWebsitesEnabled = \Piwik\Plugins\SegmentEditor\SegmentEditor::isAddingSegmentsForAllWebsitesEnabled();
         $this->isCreateRealtimeSegmentsEnabled = \Piwik\Plugins\SegmentEditor\SegmentEditor::isCreateRealtimeSegmentsEnabled();
         $segments = APIMetadata::getInstance()->getSegmentsMetadata($this->idSite);
         $visitTitle = Piwik::translate('General_Visit');
-        $segmentsByCategory = array();
         foreach ($segments as $segment) {
             if ($segment['category'] == $visitTitle && ($segment['type'] == 'metric' && $segment['segment'] != 'visitIp')) {
                 $metricsLabel = mb_strtolower(Piwik::translate('General_Metrics'));
                 $segment['category'] .= ' (' . $metricsLabel . ')';
             }
-            $segmentsByCategory[$segment['category']][] = $segment;
         }
         $this->createRealTimeSegmentsIsEnabled = $this->isCreatingRealTimeSegmentsEnabled();
-        $this->segmentsByCategory = $segmentsByCategory;
         $this->nameOfCurrentSegment = '';
         $this->isSegmentNotAppliedBecauseBrowserArchivingIsDisabled = 0;
+        $this->selectedSegment = \Piwik\Request::fromRequest()->getStringParameter('segment', '');
         $this->availableSegments = \Piwik\Plugins\SegmentEditor\SegmentEditor::getAllSegmentsForSite($this->idSite);
         foreach ($this->availableSegments as &$savedSegment) {
-            $savedSegment['name'] = Common::sanitizeInputValue($savedSegment['name']);
             if (!empty($this->selectedSegment) && $this->selectedSegment == $savedSegment['definition']) {
                 $this->nameOfCurrentSegment = $savedSegment['name'];
                 $this->isSegmentNotAppliedBecauseBrowserArchivingIsDisabled = $this->wouldApplySegment($savedSegment) ? 0 : 1;

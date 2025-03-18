@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\ScheduledReports\ReportEmailGenerator;
 
+use Piwik\Filesystem;
 use Piwik\Mail;
 use Piwik\Plugins\ScheduledReports\API;
 use Piwik\Plugins\ScheduledReports\GeneratedReport;
@@ -39,7 +40,8 @@ class AttachedFileReportEmailGenerator extends ReportEmailGenerator
     {
         $message = $this->getMessageBody($report);
         $mail->setBodyHtml($message);
-        $mail->addAttachment($report->getContents(), $this->attachedFileMimeType, $report->getReportDescription() . $this->attachedFileExtension);
+        $reportFilename = Filesystem::sanitizeFilename($report->getReportDescription());
+        $mail->addAttachment($report->getContents(), $this->attachedFileMimeType, $reportFilename . $this->attachedFileExtension);
     }
     private function getMessageBody(GeneratedReport $report)
     {

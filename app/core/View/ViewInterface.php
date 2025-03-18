@@ -18,7 +18,7 @@ interface ViewInterface
     /**
      * Returns data.
      *
-     * @return string Serialized data, eg, (image, array, html...).
+     * @return ?string Serialized data, eg, (image, array, html...).
      */
     public function render();
 }

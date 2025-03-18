@@ -13,10 +13,12 @@ namespace Composer\Semver\Constraint;
 
 /**
  * Defines the absence of a constraint.
+ *
+ * This constraint matches everything.
  */
-class EmptyConstraint implements ConstraintInterface
+class MatchAllConstraint implements ConstraintInterface
 {
-    /** @var string */
+    /** @var string|null */
     protected $prettyString;
 
     /**
@@ -30,7 +32,15 @@ class EmptyConstraint implements ConstraintInterface
     }
 
     /**
-     * @param string $prettyString
+     * {@inheritDoc}
+     */
+    public function compile($otherOperator)
+    {
+        return 'true';
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function setPrettyString($prettyString)
     {
@@ -38,7 +48,7 @@ class EmptyConstraint implements ConstraintInterface
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getPrettyString()
     {
@@ -50,10 +60,26 @@ class EmptyConstraint implements ConstraintInterface
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {
-        return '[]';
+        return '*';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUpperBound()
+    {
+        return Bound::positiveInfinity();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLowerBound()
+    {
+        return Bound::zero();
     }
 }

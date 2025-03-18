@@ -71,5 +71,6 @@ class Cache extends File
             }
         }
         $this->directory = $initialDir;
+        return \true;
     }
 }

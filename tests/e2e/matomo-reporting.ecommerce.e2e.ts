@@ -22,7 +22,7 @@ describe('Matomo Reporting > Ecommerce', () => {
     await OverviewPage.open();
     await browser.pause(500);
 
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.overview')
     ).toBeLessThan(0.1);
@@ -31,7 +31,7 @@ describe('Matomo Reporting > Ecommerce', () => {
   it('should load the ecommerce log page correctly', async () => {
     await EcommerceLogPage.open();
 
-    await EcommerceLogPage.disableHoverStyles();
+    await EcommerceLogPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.ecommerce-log')
     ).toBeLessThan(0.1);
@@ -40,7 +40,7 @@ describe('Matomo Reporting > Ecommerce', () => {
   it('should load the products page correctly', async () => {
     await ProductsPage.open();
 
-    await ProductsPage.disableHoverStyles();
+    await ProductsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.products')
     ).toBeLessThan(0.1);
@@ -49,7 +49,7 @@ describe('Matomo Reporting > Ecommerce', () => {
   it('should load the sales page correctly', async () => {
     await SalesPage.open();
 
-    await SalesPage.disableHoverStyles();
+    await SalesPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.sales')
     ).toBeLessThan(0.1);

@@ -20,7 +20,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load the manage goals page correctly', async () => {
     await ManageGoalsPage.open();
 
-    await ManageGoalsPage.disableHoverStyles();
+    await ManageGoalsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.manage-goals')
     ).toBeLessThan(0.01);
@@ -29,7 +29,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load a single goal page correctly', async () => {
     await GoalPage.open();
 
-    await GoalPage.disableHoverStyles();
+    await GoalPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.single-goal')
     ).toBeLessThan(0.2); // by dimension reports' width can be random
@@ -38,7 +38,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load the goals overview page correctly', async () => {
     await GoalOverviewPage.open();
 
-    await GoalOverviewPage.disableHoverStyles();
+    await GoalOverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.overview')
     ).toBeLessThan(0.2); // by dimension reports' width can be random

@@ -108,16 +108,10 @@ class FormDatabaseSetup extends QuickForm2
         }
         $schema = $this->getSubmitValue('schema');
         $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => $this->getSubmitValue('type'), 'enable_ssl' => \false);
-        if (($portIndex = strpos($dbInfos['host'], '/')) !== \false) {
-            // unix_socket=/path/sock.n
-            $dbInfos['port'] = substr($dbInfos['host'], $portIndex);
-            $dbInfos['host'] = '';
-        } else {
-            if (($portIndex = strpos($dbInfos['host'], ':')) !== \false) {
-                // host:port
-                $dbInfos['port'] = substr($dbInfos['host'], $portIndex + 1);
-                $dbInfos['host'] = substr($dbInfos['host'], 0, $portIndex);
-            }
+        $extractedHostAndPort = \Piwik\Plugins\Installation\HostPortExtractor::extract($dbInfos['host']);
+        if (!is_null($extractedHostAndPort)) {
+            $dbInfos['host'] = $extractedHostAndPort->host;
+            $dbInfos['port'] = $extractedHostAndPort->port;
         }
         try {
             @Db::createDatabaseObject($dbInfos);

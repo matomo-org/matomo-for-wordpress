@@ -2017,7 +2017,6 @@
         "VisitsFrom": "%1$s%2$s pagbisita sa %3$s mula sa"
     },
     "Login": {
-        "BruteForceLog": " ",
         "ConfirmationLinkSent": "Ang link na upang ma-konpirma ang iyong detalye ay ipinadala na sa iyong inbox. Tignan ang iyong e-mail at bisitahin ang link na ito upang masagawa ang iyong hiling na baguhin ang iyong password.",
         "ExceptionInvalidSuperUserAccessAuthenticationMethod": "Ang isang user na may Super-access ay hindi maaaring e-authenticate gamit ang '%s' mechanism.",
         "ExceptionPasswordMD5HashExpected": "Ang parameter ng password ay inaasahan na maging isang MD5 hash ng password.",
@@ -2230,7 +2229,6 @@
     "SEO": {
         "Bing_IndexedPages": "Mga na index na pahina ng bing",
         "DomainAge": "Edad ng Domain",
-        "Google_IndexedPages": "Na index ng Google ang mga pahina",
         "Rank": "Ranggo",
         "SEORankingsFor": "Ranggo ng SEO para sa %s",
         "SeoRankings": "Ranggo sa SEO"

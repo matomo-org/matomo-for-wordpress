@@ -5,9 +5,6 @@
 
 use \WpMatomo\API;
 
-/**
- * @group only
- */
 class ApiTest extends MatomoAnalytics_TestCase {
 
 	/**

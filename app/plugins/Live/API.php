@@ -112,6 +112,16 @@ class API extends \Piwik\Plugin\API
         $hide = in_array($column, $hideColumns);
         return $show && !$hide;
     }
+    /*
+     * Returns if the visitor profile is enabled for the given site(s)
+     *
+     * @param string|int|array $idSite
+     * @return bool
+     */
+    public function isVisitorProfileEnabled($idSite) : bool
+    {
+        return \Piwik\Plugins\Live\Live::isVisitorProfileEnabled($idSite);
+    }
     /**
      * Returns the last visits tracked in the specified website
      * You can define any number of filters: none, one, many or all parameters can be defined
@@ -161,7 +171,7 @@ class API extends \Piwik\Plugin\API
         }
         $filterSortOrder = Common::getRequestVar('filter_sort_order', \false, 'string');
         $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSites, $period, $date, $segment, $filterOffset, $filterLimit, $minTimestamp, $filterSortOrder, $visitorId = \false);
-        $this->addFilterToCleanVisitors($dataTable, $idSites, $flat, $doNotFetchActions);
+        $this->addFilterToCleanVisitors($dataTable, $flat, $doNotFetchActions);
         $filterSortColumn = Common::getRequestVar('filter_sort_column', \false, 'string');
         if ($filterSortColumn) {
             $this->logger->warning('Sorting the API method "Live.getLastVisitDetails" by column is currently not supported. To avoid this warning remove the URL parameter "filter_sort_column" from your API request.');
@@ -198,7 +208,7 @@ class API extends \Piwik\Plugin\API
         }
         $limit = Config::getInstance()->General['live_visitor_profile_max_visits_to_aggregate'];
         $visits = $this->loadLastVisitsDetailsFromDatabase($idSite, $period = \false, $date = \false, $segment, $offset = 0, $limit, \false, \false, $visitorId);
-        $this->addFilterToCleanVisitors($visits, $idSite, $flat = \false, $doNotFetchActions = \false, $filterNow = \true);
+        $this->addFilterToCleanVisitors($visits, $flat = \false, $doNotFetchActions = \false, $filterNow = \true);
         if ($visits->getRowsCount() == 0) {
             return array();
         }
@@ -256,7 +266,7 @@ class API extends \Piwik\Plugin\API
         $model = new \Piwik\Plugins\Live\Model();
         $data = $model->queryLogVisits($idSite, \false, \false, \false, 0, 1, $visitorId, \false, 'ASC');
         $dataTable = $this->makeVisitorTableFromArray($data);
-        $this->addFilterToCleanVisitors($dataTable, $idSite, \false, \true);
+        $this->addFilterToCleanVisitors($dataTable, \false, \true);
         return $dataTable;
     }
     /**
@@ -280,18 +290,17 @@ class API extends \Piwik\Plugin\API
      * For an array of visits, query the list of pages for this visit
      * as well as make the data human readable
      * @param DataTable $dataTable
-     * @param int $idSite
      * @param bool $flat whether to flatten the array (eg. 'customVariables' names/values will appear in the root array rather than in 'customVariables' key
      * @param bool $doNotFetchActions If set to true, we only fetch visit info and not actions (much faster)
      * @param bool $filterNow If true, the visitors will be cleaned immediately
      */
-    private function addFilterToCleanVisitors(DataTable $dataTable, $idSite, $flat = \false, $doNotFetchActions = \false, $filterNow = \false)
+    private function addFilterToCleanVisitors(DataTable $dataTable, $flat = \false, $doNotFetchActions = \false, $filterNow = \false)
     {
         $filter = 'queueFilter';
         if ($filterNow) {
             $filter = 'filter';
         }
-        $dataTable->{$filter}(function ($table) use($idSite, $flat, $doNotFetchActions) {
+        $dataTable->{$filter}(function ($table) use($flat, $doNotFetchActions) {
             /** @var DataTable $table */
             $visitorFactory = new \Piwik\Plugins\Live\VisitorFactory();
             // live api is not summable, prevents errors like "Unexpected ECommerce status value"

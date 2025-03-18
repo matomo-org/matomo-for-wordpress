@@ -236,7 +236,7 @@ class Plugins
                 $plugin['versions'][$index]['release'] = $this->toLongDate($version['release']);
             }
         }
-        $haDownloadLink = \false;
+        $hasDownloadLink = \false;
         if (!empty($plugin['versions'])) {
             $latestVersion = end($plugin['versions']);
             $hasDownloadLink = !empty($latestVersion['download']);

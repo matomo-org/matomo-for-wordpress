@@ -26,7 +26,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the devices page correctly', async () => {
     await DevicesPage.open();
 
-    await DevicesPage.disableHoverStyles();
+    await DevicesPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.devices')
     ).toBeLessThan(0.1);
@@ -35,7 +35,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the locations page correctly', async () => {
     await LocationsPage.open();
 
-    await LocationsPage.disableHoverStyles();
+    await LocationsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.locations')
     ).toBeLessThan(0.1);
@@ -44,7 +44,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the overview page correctly', async () => {
     await OverviewPage.open();
 
-    await OverviewPage.disableHoverStyles();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.overview')
     ).toBeLessThan(0.1);
@@ -53,7 +53,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the real-time page correctly', async () => {
     await RealTimePage.open();
 
-    await RealTimePage.disableHoverStyles();
+    await RealTimePage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.real-time')
     ).toBeLessThan(0.3);
@@ -62,7 +62,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the real-time map page correctly', async () => {
     await RealTimeMapPage.open();
 
-    await RealTimeMapPage.disableHoverStyles();
+    await RealTimeMapPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.real-time-map')
     ).toBeLessThan(0.1);
@@ -71,7 +71,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the software page correctly', async () => {
     await SoftwarePage.open();
 
-    await SoftwarePage.disableHoverStyles();
+    await SoftwarePage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.software')
     ).toBeLessThan(0.1);
@@ -80,7 +80,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the times page correctly', async () => {
     await TimesPage.open();
 
-    await TimesPage.disableHoverStyles();
+    await TimesPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.times')
     ).toBeLessThan(0.1);
@@ -89,7 +89,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the user ID page correctly', async () => {
     await UserIdsPage.open();
 
-    await UserIdsPage.disableHoverStyles();
+    await UserIdsPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.user-ids')
     ).toBeLessThan(0.1);
@@ -98,7 +98,7 @@ describe('Matomo Reporting > Visitors', () => {
   it('should load the visits log page correctly', async () => {
     await VisitsLogPage.open();
 
-    await VisitsLogPage.disableHoverStyles();
+    await VisitsLogPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.visits-log')
     ).toBeLessThan(0.1);

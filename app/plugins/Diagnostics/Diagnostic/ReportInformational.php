@@ -68,6 +68,9 @@ class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
     {
         if (empty($this->idSiteCache)) {
             $idSites = null;
+            /*
+             * Performed as super user to ensure we are able to fetch all available site ids.
+             */
             Access::doAsSuperUser(function () use(&$idSites) {
                 $idSites = Site::getIdSitesFromIdSitesString('all');
             });

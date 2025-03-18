@@ -92,6 +92,14 @@ class VisitRequestProcessor extends RequestProcessor
             return \true;
         }
         $privacyConfig = new PrivacyManagerConfig();
+        if ($privacyConfig->randomizeConfigId) {
+            // always new visit when randomising config id
+            $request->setMetadata('CoreHome', 'visitorId', $this->userSettings->getRandomConfigId());
+            $request->setMetadata('CoreHome', 'isVisitorKnown', \false);
+            $request->setMetadata('CoreHome', 'isNewVisit', \true);
+            $request->setMetadata('CoreHome', 'lastKnownVisit', \false);
+            return \false;
+        }
         $ip = $request->getIpString();
         if ($privacyConfig->useAnonymizedIpForVisitEnrichment) {
             $ip = $visitProperties->getProperty('location_ip');
@@ -123,6 +131,7 @@ class VisitRequestProcessor extends RequestProcessor
          */
         $this->eventDispatcher->postEvent('Tracker.setVisitorIp', array(&$ip));
         $visitProperties->setProperty('location_ip', $ip);
+        return \false;
     }
     /**
      * Determines if the tracker if the current action should be treated as the start of a new visit or
