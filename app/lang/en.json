@@ -3310,7 +3310,9 @@
         "PasswordResetCancelConfirmTitle": "Password reset cancellation",
         "PasswordResetCancelConfirm": "Confirm password reset cancellation",
         "PasswordResetCancelConfirmDescription": "You've requested to cancel your password reset. Please confirm your choice to ensure your request is processed. If this was not your intention, you can safely close this page.",
-        "PasswordResetCancelTokenIssue": "We noticed you tried to cancel your password reset request. Unfortunately, this link is no longer valid because it has either expired, is invalid or has been used already."
+        "PasswordResetCancelTokenIssue": "We noticed you tried to cancel your password reset request. Unfortunately, this link is no longer valid because it has either expired, is invalid or has been used already.",
+        "PleaseNote": "Please note",
+        "PasswordResetEmailAppTokens": "Changing your password does not automatically revoke your app-specific tokens. If you suspect unauthorised access, please delete your existing tokens and generate new ones in the token management section."
     },
     "Marketplace": {
         "ActivateLicenseKey": "Activate",
@@ -5979,6 +5981,7 @@
         "PasswordChangeNotificationSubject": "Your Matomo account's password has just been changed",
         "PasswordChangedEmail": "Your password has just been changed. The change was initiated from the following device: %1$s (IP address = %2$s).",
         "PasswordChangeTerminatesOtherSessions": "When you change your password, any other active session of this account will be logged out.",
+        "PasswordChangeDoesNotRevokeAuthTokens": "Changing your password won't revoke app-specific tokens. If you suspect unauthorized access, delete and regenerate them in the %1$s section at the bottom of the page.",
         "NewsletterSignupTitle": "Newsletter Signup",
         "NewsletterSignupMessage": "Subscribe to our newsletter to receive regular information about Matomo. You can unsubscribe from it any time. This service uses MadMimi. Learn more about it on %1$sMatomo's Privacy Policy page%2$s.",
         "NewsletterSignupFailureMessage": "Whoops, something went wrong. We weren't able to sign you up for the newsletter.",
