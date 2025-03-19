@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.3.0 =
+* Update Matomo core to 5.3.1.
+* Allow Matomo API and tracker requests to be authenticated by WordPress App Passwords.
+* Allow direct access to the Matomo API, rather than only through the WordPress REST API.
+* Bug fix: fix session token auth storage issue causing "Oops there was a problem" error messages for some users.
+
 = 5.2.2 =
 * Fix to a random failure in our automated release process that resulted in some broken images.
 * Bug fix: revert change causing REST API methods to be mismatched.
