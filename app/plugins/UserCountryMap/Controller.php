@@ -59,7 +59,7 @@ class Controller extends \Piwik\Plugin\Controller
         $config['regionDataUrl'] = $this->report('UserCountry', 'getRegion', $this->idSite, $period, $date, $token_auth, \true, $segment);
         $config['cityDataUrl'] = $this->report('UserCountry', 'getCity', $this->idSite, $period, $date, $token_auth, \true, $segment);
         $config['countrySummaryUrl'] = $this->getApiRequestUrl('VisitsSummary', 'get', $this->idSite, $period, $date, $token_auth, \true, $segment);
-        $view->defaultMetric = array_key_exists('nb_uniq_visitors', $config['visitsSummary']) ? 'nb_uniq_visitors' : 'nb_visits';
+        $view->defaultMetric = array_key_exists('nb_uniq_visitors', $config['visitsSummary'] ?? []) ? 'nb_uniq_visitors' : 'nb_visits';
         $noVisitTranslation = $this->translator->translate('UserCountryMap_NoVisit');
         // some translations containing metric number
         $translations = ['nb_visits' => $this->translator->translate('General_NVisits'), 'no_visit' => $noVisitTranslation, 'nb_actions' => $this->translator->translate('VisitsSummary_NbActionsDescription'), 'nb_actions_per_visit' => $this->translator->translate('VisitsSummary_NbActionsPerVisit'), 'bounce_rate' => $this->translator->translate('VisitsSummary_NbVisitsBounced'), 'avg_time_on_site' => $this->translator->translate('VisitsSummary_AverageVisitDuration'), 'and_n_others' => $this->translator->translate('UserCountryMap_AndNOthers'), 'nb_uniq_visitors' => $this->translator->translate('General_NUniqueVisitors'), 'nb_users' => $this->translator->translate('VisitsSummary_NbUsers')];

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.2.2',
-        'version' => '5.2.2.0',
-        'reference' => '9db905b7141363049ed76de156556618212c9d36',
+        'pretty_version' => '5.3.1',
+        'version' => '5.3.1.0',
+        'reference' => 'f13f61faec48d2cf6151b62822259d6261064f8d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,18 +11,18 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.4',
-            'version' => '1.5.4.0',
-            'reference' => 'bc0593537a463e55cadf45fd938d23b75095b7e1',
+            'pretty_version' => '1.5.5',
+            'version' => '1.5.5.0',
+            'reference' => '08c50d5ec4c6ced7d0271d2862dec8c1033283e6',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'composer/semver' => array(
-            'pretty_version' => '1.7.2',
-            'version' => '1.7.2.0',
-            'reference' => '647490bbcaf7fc4891c58f47b825eb99d19c377a',
+            'pretty_version' => '3.4.3',
+            'version' => '3.4.3.0',
+            'reference' => '4313d26ada5e0c4edfbd1dc481a92ff7bff91f12',
             'type' => 'library',
             'install_path' => __DIR__ . '/./semver',
             'aliases' => array(),
@@ -76,9 +76,9 @@
             'dev_requirement' => false,
         ),
         'matomo/device-detector' => array(
-            'pretty_version' => '6.4.1',
-            'version' => '6.4.1.0',
-            'reference' => '0d364e0dd6c177da3c24cd4049178026324fd7ac',
+            'pretty_version' => '6.4.5',
+            'version' => '6.4.5.0',
+            'reference' => '270bbc41f80994e80805ac377b67324eba53c412',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/device-detector',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.2.2',
-            'version' => '5.2.2.0',
-            'reference' => '9db905b7141363049ed76de156556618212c9d36',
+            'pretty_version' => '5.3.1',
+            'version' => '5.3.1.0',
+            'reference' => 'f13f61faec48d2cf6151b62822259d6261064f8d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9b5c253251697fd478fddeea6d58c3bf9639b7ef',
+            'reference' => 'e0626611bb4df52acccc898cb713444d8f8a5c85',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -149,7 +149,7 @@
         'matomo/searchengine-and-social-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8b8a059cd0ccadc3d9534724f662f7558a821c43',
+            'reference' => '86aaf6e82e5e2c38eb73865fbbdcd266166e73d2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/searchengine-and-social-list',
             'aliases' => array(
@@ -277,7 +277,7 @@
         'piwik/device-detector' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '6.4.1',
+                0 => '6.4.5',
             ),
         ),
         'piwik/referrer-spam-blacklist' => array(
@@ -540,18 +540,18 @@
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.7.7',
-            'version' => '6.7.7.0',
-            'reference' => 'cfbc0028cc23f057f2baf9e73bdc238153c22086',
+            'pretty_version' => '6.8.2',
+            'version' => '6.8.2.0',
+            'reference' => 'f7a781073e1645062f163e058139e2f89355d420',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'tedivm/jshrink' => array(
-            'pretty_version' => 'v1.4.0',
-            'version' => '1.4.0.0',
-            'reference' => '0513ba1407b1f235518a939455855e6952a48bbc',
+            'pretty_version' => 'v1.7.0',
+            'version' => '1.7.0.0',
+            'reference' => '7a35f5a4651ca2ce77295eb8a3b4e133ba47e19e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tedivm/jshrink',
             'aliases' => array(),

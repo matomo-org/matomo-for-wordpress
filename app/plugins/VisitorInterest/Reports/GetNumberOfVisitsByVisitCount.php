@@ -11,6 +11,7 @@ namespace Piwik\Plugins\VisitorInterest\Reports;
 use Piwik\Metrics;
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
+use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
 use Piwik\Plugins\VisitorInterest\Columns\VisitsbyVisitNumber;
 use Piwik\Plugins\CoreHome\Columns\Metrics\VisitsPercent;
 class GetNumberOfVisitsByVisitCount extends \Piwik\Plugins\VisitorInterest\Reports\Base
@@ -38,9 +39,11 @@ class GetNumberOfVisitsByVisitCount extends \Piwik\Plugins\VisitorInterest\Repor
         $view->config->enable_sort = \false;
         $view->config->show_offset_information = \false;
         $view->config->show_pagination_control = \false;
-        $view->config->show_limit_control = \false;
         $view->config->show_search = \false;
         $view->config->show_table_all_columns = \false;
         $view->config->show_all_views_icons = \false;
+        if (!$view->isViewDataTableId(Evolution::ID)) {
+            $view->config->show_limit_control = \false;
+        }
     }
 }

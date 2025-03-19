@@ -55,6 +55,7 @@ class EcommerceRequestProcessor extends RequestProcessor
             $request->setMetadata('Actions', 'action', null);
             // don't track actions when tracking ecommerce orders
         }
+        return \false;
     }
     public function afterRequestProcessed(VisitProperties $visitProperties, Request $request)
     {
@@ -63,6 +64,7 @@ class EcommerceRequestProcessor extends RequestProcessor
             $isThereExistingCartInVisit = $this->goalManager->detectIsThereExistingCartInVisit($visitProperties->getProperties());
             $request->setMetadata('Goals', 'isThereExistingCartInVisit', $isThereExistingCartInVisit);
         }
+        return \false;
     }
     private function isRequestForAnOrder(Request $request)
     {

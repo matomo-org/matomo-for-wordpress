@@ -123,6 +123,9 @@ class Controller extends \Piwik\Plugin\Controller
             $view->error = Piwik::translate('ScheduledReports_NoSubscriptionFound');
             return $view->render();
         }
+        /*
+         * Executed as super user, as we need to fetch a scheduled report, without the current user being authenticated.
+         */
         $report = Access::doAsSuperUser(function () use($subscription) {
             $reports = Request::processRequest('ScheduledReports.getReports', ['idReport' => $subscription['idreport']]);
             return reset($reports);

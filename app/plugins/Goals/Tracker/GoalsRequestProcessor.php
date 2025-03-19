@@ -83,6 +83,7 @@ class GoalsRequestProcessor extends RequestProcessor
                 $request->setMetadata('Goals', 'visitIsConverted', \true);
             }
         }
+        return \false;
     }
     public function recordLogs(VisitProperties $visitProperties, Request $request)
     {

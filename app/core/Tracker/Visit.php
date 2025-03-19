@@ -471,8 +471,9 @@ class Visit implements \Piwik\Tracker\VisitInterface
      */
     private function setIdVisitorForExistingVisit($valuesToUpdate)
     {
-        if (strlen($this->visitProperties->getProperty('idvisitor')) == Tracker::LENGTH_BINARY_ID) {
-            $valuesToUpdate['idvisitor'] = $this->visitProperties->getProperty('idvisitor');
+        $idVisitor = $this->visitProperties->getProperty('idvisitor');
+        if (!empty($idVisitor) && Tracker::LENGTH_BINARY_ID == strlen($idVisitor)) {
+            $valuesToUpdate['idvisitor'] = $idVisitor;
         }
         $visitorId = $this->request->getVisitorId();
         if ($visitorId && strlen($visitorId) === Tracker::LENGTH_BINARY_ID) {

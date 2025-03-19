@@ -28,7 +28,7 @@ class Settings
     {
         $this->isSameFingerprintsAcrossWebsites = $isSameFingerprintsAcrossWebsites;
     }
-    public function getConfigId(\Piwik\Tracker\Request $request, $ipAddress)
+    public function getConfigId(\Piwik\Tracker\Request $request, $ipAddress) : string
     {
         list($plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie) = $request->getPlugins();
         $userAgent = $request->getUserAgent();
@@ -81,6 +81,10 @@ class Settings
         }
         return $this->getConfigHash($request, $os, $browserName, $browserVersion, $plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie, $ipAddress, $browserLang, $fingerprintSalt);
     }
+    public function getRandomConfigId() : string
+    {
+        return $this->getRandomConfigHash();
+    }
     /**
      * Returns a 64-bit hash that attempts to identify a user.
      * Maintaining some privacy by default, eg. prevents the merging of several Piwik serve together for matching across instances..
@@ -101,7 +105,7 @@ class Settings
      * @param $fingerprintHash
      * @return string
      */
-    protected function getConfigHash(\Piwik\Tracker\Request $request, $os, $browserName, $browserVersion, $plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie, $ip, $browserLang, $fingerprintHash)
+    protected function getConfigHash(\Piwik\Tracker\Request $request, $os, $browserName, $browserVersion, $plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie, $ip, $browserLang, $fingerprintHash) : string
     {
         // prevent the config hash from being the same, across different Piwik instances
         // (limits ability of different Piwik instances to cross-match users)
@@ -110,6 +114,14 @@ class Settings
         if (!$this->isSameFingerprintsAcrossWebsites) {
             $configString .= $request->getIdSite();
         }
+        return $this->createHashOfConfigString($configString);
+    }
+    protected function getRandomConfigHash() : string
+    {
+        return $this->createHashOfConfigString(random_bytes(64));
+    }
+    private function createHashOfConfigString(string $configString) : string
+    {
         $hash = md5($configString, $raw_output = \true);
         return substr($hash, 0, Tracker::LENGTH_BINARY_ID);
     }

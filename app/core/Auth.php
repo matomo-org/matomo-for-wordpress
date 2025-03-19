@@ -50,7 +50,7 @@ interface Auth
     /**
      * Must return the Authentication module's name, e.g., `"Login"`.
      *
-     * @return string
+     * @return ?string
      */
     public function getName();
     /**
@@ -62,7 +62,7 @@ interface Auth
     /**
      * Returns the login of the user being authenticated.
      *
-     * @return string
+     * @return ?string
      */
     public function getLogin();
     /**
@@ -72,7 +72,7 @@ interface Auth
      * should be specific to the user and not easily guessed. Piwik's default Auth implementation
      * uses an MD5 hash of a user's password.
      *
-     * @return string
+     * @return ?string
      * @throws Exception if the token auth secret does not exist or cannot be obtained.
      */
     public function getTokenAuthSecret();

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
+class ComposerStaticInit53c426f26948346209f1babf136ab925
 {
     public static $files = array(
 'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -310,11 +310,15 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Composer\\CaBundle\\CaBundle' => __DIR__ . '/..' . '/composer/ca-bundle/src/CaBundle.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Semver\\Comparator' => __DIR__ . '/..' . '/composer/semver/src/Comparator.php',
-        'Composer\\Semver\\Constraint\\AbstractConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/AbstractConstraint.php',
+        'Composer\\Semver\\CompilingMatcher' => __DIR__ . '/..' . '/composer/semver/src/CompilingMatcher.php',
+        'Composer\\Semver\\Constraint\\Bound' => __DIR__ . '/..' . '/composer/semver/src/Constraint/Bound.php',
         'Composer\\Semver\\Constraint\\Constraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/Constraint.php',
         'Composer\\Semver\\Constraint\\ConstraintInterface' => __DIR__ . '/..' . '/composer/semver/src/Constraint/ConstraintInterface.php',
-        'Composer\\Semver\\Constraint\\EmptyConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/EmptyConstraint.php',
+        'Composer\\Semver\\Constraint\\MatchAllConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/MatchAllConstraint.php',
+        'Composer\\Semver\\Constraint\\MatchNoneConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/MatchNoneConstraint.php',
         'Composer\\Semver\\Constraint\\MultiConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/MultiConstraint.php',
+        'Composer\\Semver\\Interval' => __DIR__ . '/..' . '/composer/semver/src/Interval.php',
+        'Composer\\Semver\\Intervals' => __DIR__ . '/..' . '/composer/semver/src/Intervals.php',
         'Composer\\Semver\\Semver' => __DIR__ . '/..' . '/composer/semver/src/Semver.php',
         'Composer\\Semver\\VersionParser' => __DIR__ . '/..' . '/composer/semver/src/VersionParser.php',
         'CpChart\\Barcode\\Barcode128' => __DIR__ . '/..' . '/szymach/c-pchart/src/Barcode/Barcode128.php',
@@ -658,7 +662,6 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\CliMulti\\Process' => __DIR__ . '/../..' . '/core/CliMulti/Process.php',
         'Piwik\\CliMulti\\ProcessSymfony' => __DIR__ . '/../..' . '/core/CliMulti/ProcessSymfony.php',
         'Piwik\\CliMulti\\RequestCommand' => __DIR__ . '/../..' . '/core/CliMulti/RequestCommand.php',
-        'Piwik\\CliMulti\\RequestParser' => __DIR__ . '/../..' . '/core/CliMulti/RequestParser.php',
         'Piwik\\CliMulti\\StaticOutput' => __DIR__ . '/../..' . '/core/CliMulti/StaticOutput.php',
         'Piwik\\Columns\\ComputedMetricFactory' => __DIR__ . '/../..' . '/core/Columns/ComputedMetricFactory.php',
         'Piwik\\Columns\\Dimension' => __DIR__ . '/../..' . '/core/Columns/Dimension.php',
@@ -1055,6 +1058,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\MigrateTokenAuths' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/MigrateTokenAuths.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\OptimizeArchiveTables' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/OptimizeArchiveTables.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\PurgeOldArchiveData' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/PurgeOldArchiveData.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Commands\\ResetInvalidations' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/ResetInvalidations.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\RunScheduledTasks' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/RunScheduledTasks.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\SetConfig' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/SetConfig.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\SetConfig\\ConfigSettingManipulation' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/SetConfig/ConfigSettingManipulation.php',
@@ -1086,16 +1090,23 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\CoreAdminHome\\Widgets\\GetTrackingFailures' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Widgets/GetTrackingFailures.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixture\\DuplicateActions' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixture/DuplicateActions.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixture\\TrackingFailures' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixture/TrackingFailures.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixtures\\CoreArchiverProcessSignal' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixtures/CoreArchiverProcessSignal.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixtures\\CoreArchiverProcessSignal\\StepControl' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixtures/CoreArchiverProcessSignal/StepControl.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixtures\\RunScheduledTasksProcessSignal' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixtures/RunScheduledTasksProcessSignal.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixtures\\RunScheduledTasksProcessSignal\\StepControl' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixtures/RunScheduledTasksProcessSignal/StepControl.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Fixtures\\SimpleFixtureTrackFewVisits' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Fixtures/SimpleFixtureTrackFewVisits.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Framework\\Mock\\API' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Framework/Mock/API.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\APITest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/APITest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\ArchivesToPurgeDistributedListTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/ArchivesToPurgeDistributedListTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\ConfigDeleteTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/ConfigDeleteTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\ConfigGetTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/ConfigGetTest.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\CoreArchiverProcessSignalTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/CoreArchiverProcessSignalTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\DeleteLogsDataTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/DeleteLogsDataTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\InvalidateReportDataTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/InvalidateReportDataTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\OptimizeArchiveTablesTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/OptimizeArchiveTablesTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\PurgeOldArchiveDataTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/PurgeOldArchiveDataTest.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\ResetInvalidationsTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/ResetInvalidationsTest.php',
+        'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\RunScheduledTasksProcessSignalTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/RunScheduledTasksProcessSignalTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\Commands\\SetConfigTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/Commands/SetConfigTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\FixDuplicateActionsTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/FixDuplicateActionsTest.php',
         'Piwik\\Plugins\\CoreAdminHome\\tests\\Integration\\InvalidateReportDataTest' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/tests/Integration/InvalidateReportDataTest.php',
@@ -1134,6 +1145,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\CoreConsole\\Commands\\WatchLog' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/WatchLog.php',
         'Piwik\\Plugins\\CoreConsole\\CoreConsole' => __DIR__ . '/../..' . '/plugins/CoreConsole/CoreConsole.php',
         'Piwik\\Plugins\\CoreConsole\\FeatureFlags\\CliMultiProcessSymfony' => __DIR__ . '/../..' . '/plugins/CoreConsole/FeatureFlags/CliMultiProcessSymfony.php',
+        'Piwik\\Plugins\\CoreConsole\\FeatureFlags\\SystemSignals' => __DIR__ . '/../..' . '/plugins/CoreConsole/FeatureFlags/SystemSignals.php',
         'Piwik\\Plugins\\CoreConsole\\tests\\System\\ArchiveCronTest' => __DIR__ . '/../..' . '/plugins/CoreConsole/tests/System/ArchiveCronTest.php',
         'Piwik\\Plugins\\CoreHome\\Categories\\ActionsCategory' => __DIR__ . '/../..' . '/plugins/CoreHome/Categories/ActionsCategory.php',
         'Piwik\\Plugins\\CoreHome\\Categories\\DevicesSubcategory' => __DIR__ . '/../..' . '/plugins/CoreHome/Categories/DevicesSubcategory.php',
@@ -1785,6 +1797,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\Installation\\FormDefaultSettings' => __DIR__ . '/../..' . '/plugins/Installation/FormDefaultSettings.php',
         'Piwik\\Plugins\\Installation\\FormFirstWebsiteSetup' => __DIR__ . '/../..' . '/plugins/Installation/FormFirstWebsiteSetup.php',
         'Piwik\\Plugins\\Installation\\FormSuperUser' => __DIR__ . '/../..' . '/plugins/Installation/FormSuperUser.php',
+        'Piwik\\Plugins\\Installation\\HostPortExtractor' => __DIR__ . '/../..' . '/plugins/Installation/HostPortExtractor.php',
         'Piwik\\Plugins\\Installation\\Installation' => __DIR__ . '/../..' . '/plugins/Installation/Installation.php',
         'Piwik\\Plugins\\Installation\\Menu' => __DIR__ . '/../..' . '/plugins/Installation/Menu.php',
         'Piwik\\Plugins\\Installation\\Onboarding' => __DIR__ . '/../..' . '/plugins/Installation/Onboarding.php',
@@ -1792,6 +1805,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\Installation\\View' => __DIR__ . '/../..' . '/plugins/Installation/View.php',
         'Piwik\\Plugins\\Installation\\Widgets\\GetSystemCheck' => __DIR__ . '/../..' . '/plugins/Installation/Widgets/GetSystemCheck.php',
         'Piwik\\Plugins\\Installation\\tests\\System\\APITest' => __DIR__ . '/../..' . '/plugins/Installation/tests/System/APITest.php',
+        'Piwik\\Plugins\\Installation\\tests\\Unit\\HostPortExtractorTest' => __DIR__ . '/../..' . '/plugins/Installation/tests/Unit/HostPortExtractorTest.php',
         'Piwik\\Plugins\\Intl\\Commands\\GenerateIntl' => __DIR__ . '/../..' . '/plugins/Intl/Commands/GenerateIntl.php',
         'Piwik\\Plugins\\Intl\\DateTimeFormatProvider' => __DIR__ . '/../..' . '/plugins/Intl/DateTimeFormatProvider.php',
         'Piwik\\Plugins\\Intl\\Intl' => __DIR__ . '/../..' . '/plugins/Intl/Intl.php',
@@ -2008,7 +2022,6 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\MultiSites\\Controller' => __DIR__ . '/../..' . '/plugins/MultiSites/Controller.php',
         'Piwik\\Plugins\\MultiSites\\Dashboard' => __DIR__ . '/../..' . '/plugins/MultiSites/Dashboard.php',
         'Piwik\\Plugins\\MultiSites\\DataTable\\Filter\\NestedSitesLimiter' => __DIR__ . '/../..' . '/plugins/MultiSites/DataTable/Filter/NestedSitesLimiter.php',
-        'Piwik\\Plugins\\MultiSites\\FeatureFlags\\ImprovedAllWebsitesDashboard' => __DIR__ . '/../..' . '/plugins/MultiSites/FeatureFlags/ImprovedAllWebsitesDashboard.php',
         'Piwik\\Plugins\\MultiSites\\Menu' => __DIR__ . '/../..' . '/plugins/MultiSites/Menu.php',
         'Piwik\\Plugins\\MultiSites\\MultiSites' => __DIR__ . '/../..' . '/plugins/MultiSites/MultiSites.php',
         'Piwik\\Plugins\\MultiSites\\Reports\\Base' => __DIR__ . '/../..' . '/plugins/MultiSites/Reports/Base.php',
@@ -2061,6 +2074,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\PrivacyManager\\Dao\\LogDataAnonymizer' => __DIR__ . '/../..' . '/plugins/PrivacyManager/Dao/LogDataAnonymizer.php',
         'Piwik\\Plugins\\PrivacyManager\\Diagnostic\\PrivacyInformational' => __DIR__ . '/../..' . '/plugins/PrivacyManager/Diagnostic/PrivacyInformational.php',
         'Piwik\\Plugins\\PrivacyManager\\DoNotTrackHeaderChecker' => __DIR__ . '/../..' . '/plugins/PrivacyManager/DoNotTrackHeaderChecker.php',
+        'Piwik\\Plugins\\PrivacyManager\\FeatureFlags\\ConfigIdRandomisation' => __DIR__ . '/../..' . '/plugins/PrivacyManager/FeatureFlags/ConfigIdRandomisation.php',
         'Piwik\\Plugins\\PrivacyManager\\IPAnonymizer' => __DIR__ . '/../..' . '/plugins/PrivacyManager/IPAnonymizer.php',
         'Piwik\\Plugins\\PrivacyManager\\LogDataPurger' => __DIR__ . '/../..' . '/plugins/PrivacyManager/LogDataPurger.php',
         'Piwik\\Plugins\\PrivacyManager\\Menu' => __DIR__ . '/../..' . '/plugins/PrivacyManager/Menu.php',
@@ -2075,6 +2089,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\PrivacyManager\\Validators\\VisitsDataSubject' => __DIR__ . '/../..' . '/plugins/PrivacyManager/Validators/VisitsDataSubject.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Fixtures\\FewVisitsAnonymizedFixture' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Fixtures/FewVisitsAnonymizedFixture.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Fixtures\\MultipleSitesMultipleVisitsFixture' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Fixtures/MultipleSitesMultipleVisitsFixture.php',
+        'Piwik\\Plugins\\PrivacyManager\\tests\\Fixtures\\RandomizedConfigIdVisitsFixture' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Fixtures/RandomizedConfigIdVisitsFixture.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Framework\\Mock\\Config' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Framework/Mock/Config.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Integration\\Dao\\LogDataAnonymizerTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Integration/Dao/LogDataAnonymizerTest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Integration\\DataPurgingTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Integration/DataPurgingTest.php',
@@ -2085,6 +2100,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\PrivacyManager\\tests\\System\\APITest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/System/APITest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\System\\AnonymizationTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/System/AnonymizationTest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\System\\PurgeDataTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/System/PurgeDataTest.php',
+        'Piwik\\Plugins\\PrivacyManager\\tests\\System\\RandomizedConfigIdTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/System/RandomizedConfigIdTest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Unit\\AnonymizeIPTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Unit/AnonymizeIPTest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Unit\\AnonymizeReferrerTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Unit/AnonymizeReferrerTest.php',
         'Piwik\\Plugins\\PrivacyManager\\tests\\Unit\\DoNotTrackHeaderCheckerTest' => __DIR__ . '/../..' . '/plugins/PrivacyManager/tests/Unit/DoNotTrackHeaderCheckerTest.php',
@@ -2194,7 +2210,6 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\SEO\\Metric\\Aggregator' => __DIR__ . '/../..' . '/plugins/SEO/Metric/Aggregator.php',
         'Piwik\\Plugins\\SEO\\Metric\\Bing' => __DIR__ . '/../..' . '/plugins/SEO/Metric/Bing.php',
         'Piwik\\Plugins\\SEO\\Metric\\DomainAge' => __DIR__ . '/../..' . '/plugins/SEO/Metric/DomainAge.php',
-        'Piwik\\Plugins\\SEO\\Metric\\Google' => __DIR__ . '/../..' . '/plugins/SEO/Metric/Google.php',
         'Piwik\\Plugins\\SEO\\Metric\\Metric' => __DIR__ . '/../..' . '/plugins/SEO/Metric/Metric.php',
         'Piwik\\Plugins\\SEO\\Metric\\MetricsProvider' => __DIR__ . '/../..' . '/plugins/SEO/Metric/MetricsProvider.php',
         'Piwik\\Plugins\\SEO\\Metric\\ProviderCache' => __DIR__ . '/../..' . '/plugins/SEO/Metric/ProviderCache.php',
@@ -2408,6 +2423,7 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\GoogleAnalytics4EventTag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/GoogleAnalytics4EventTag.php',
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\GoogleAnalytics4Tag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/GoogleAnalytics4Tag.php',
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\GoogleAnalyticsUniversalTag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/GoogleAnalyticsUniversalTag.php',
+        'Piwik\\Plugins\\TagManager\\Template\\Tag\\GoogleConsentModeV2Tag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/GoogleConsentModeV2Tag.php',
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\GoogleTagTag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/GoogleTagTag.php',
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\HoneybadgerTag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/HoneybadgerTag.php',
         'Piwik\\Plugins\\TagManager\\Template\\Tag\\HotjarTag' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Tag/HotjarTag.php',
@@ -3093,10 +3109,10 @@ class ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit48a6fdae53f1ce9d920dd673ae5eb2d1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit53c426f26948346209f1babf136ab925::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit53c426f26948346209f1babf136ab925::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit53c426f26948346209f1babf136ab925::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit53c426f26948346209f1babf136ab925::$classMap;
 
         }, null, ClassLoader::class);
     }

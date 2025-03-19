@@ -60,6 +60,17 @@ function checkWpDebugLogsForError(dirName: string) {
   }
 }
 
+let capturedLogs: string[] = [];
+
+async function handleConsoleLogs() {
+  await browser.sessionSubscribe({ events: ['log.entryAdded'] });
+
+  browser.on('log.entryAdded', (entryAdded) => {
+    const message = `[${entryAdded.method}] ${entryAdded.text}`;
+    capturedLogs.push(message);
+  });
+}
+
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -261,6 +272,10 @@ export const config: Options.Testrunner = {
 
     if (error) {
       await saveScreenshotIfError(test, error);
+
+      // TODO: this does not appear to display in the reporter, even though it works in the core UI screenshot tests
+      test.error.message = `${test.error.message}\nCaptured Console Logs:\n${capturedLogs.join('\n')}`;
+
       return;
     }
 
@@ -329,6 +344,8 @@ export const config: Options.Testrunner = {
    * @param {object}         browser      instance of created browser/device session
    */
   before: async function (capabilities, specs) {
+    await handleConsoleLogs();
+
     // must be run per wdio instance to have the correct test entity IDs
     // the setUp itself should only add entities the first time it's called
     // which happens before any e2e test is run via a wdio.conf.ts hook.
@@ -350,8 +367,9 @@ export const config: Options.Testrunner = {
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (test, context) {
-  // },
+  beforeTest: function (test, context) {
+    capturedLogs = [];
+  },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)
@@ -376,7 +394,6 @@ export const config: Options.Testrunner = {
    */
   // afterTest: function(test, context, { error, result, duration, passed, retries }) {
   // },
-
 
   /**
    * Hook that gets executed after the suite has ended

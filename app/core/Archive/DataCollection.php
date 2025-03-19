@@ -298,6 +298,7 @@ class DataCollection
         $result = [];
         if (!empty($metadataNamesToIndexBy)) {
             $metadataName = array_shift($metadataNamesToIndexBy);
+            $indexKeyValues = [];
             if ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_SITE_INDEX) {
                 $indexKeyValues = array_values($this->sitesId);
             } elseif ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX) {

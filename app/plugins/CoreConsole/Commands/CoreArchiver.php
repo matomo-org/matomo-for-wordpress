@@ -13,6 +13,22 @@ use Piwik\Plugin\ConsoleCommand;
 use Piwik\Site;
 class CoreArchiver extends ConsoleCommand
 {
+    /**
+     * @var CronArchive|null
+     */
+    private $archiver = null;
+    public function getSystemSignalsToHandle() : array
+    {
+        return [\SIGINT, \SIGTERM];
+    }
+    public function handleSystemSignal(int $signal) : void
+    {
+        if (null === $this->archiver) {
+            // archiving has not yet started, stop immediately
+            exit;
+        }
+        $this->archiver->handleSignal($signal);
+    }
     protected function configure()
     {
         $this->configureArchiveCommand($this);
@@ -25,8 +41,8 @@ class CoreArchiver extends ConsoleCommand
             $message = '"force-date-last-n" is deprecated. Please use the "process_new_segments_from" INI configuration option instead.';
             $output->writeln('<comment>' . $message . '</comment>');
         }
-        $archiver = $this->makeArchiver($input->getOption('url'));
-        $archiver->main();
+        $this->archiver = $this->makeArchiver($input->getOption('url'));
+        $this->archiver->main();
         return self::SUCCESS;
     }
     protected function makeArchiver($url)
@@ -44,6 +60,7 @@ class CoreArchiver extends ConsoleCommand
         $archiver->shouldArchiveAllSites = $input->getOption('force-all-websites');
         $archiver->maxSitesToProcess = $input->getOption('max-websites-to-process');
         $archiver->maxArchivesToProcess = $input->getOption('max-archives-to-process');
+        $archiver->stopProcessingAfter = $input->getOption('stop-processing-after');
         $archiver->setUrlToPiwik($url);
         $archiveFilter = new CronArchive\ArchiveFilter();
         $archiveFilter->setDisableSegmentsArchiving($input->getOption('skip-all-segments'));
@@ -85,6 +102,7 @@ class CoreArchiver extends ConsoleCommand
         $command->addOptionalValueOption('concurrent-archivers', null, "The number of max archivers to run in parallel. Depending on how you start the archiver as a cronjob, you may need to double the amount of archivers allowed if the same process appears twice in the `ps ex` output.", 3);
         $command->addRequiredValueOption('max-websites-to-process', null, "Maximum number of websites to process during a single execution of the archiver. Can be used to limit the process lifetime e.g. to avoid increasing memory usage.");
         $command->addRequiredValueOption('max-archives-to-process', null, "Maximum number of archives to process during a single execution of the archiver. Can be used to limit the process lifetime e.g. to avoid increasing memory usage.");
+        $command->addOptionalValueOption('stop-processing-after', null, "Number of seconds how long a job is allowed to start new archiving processes. When limit is reached job will wrap up after finishing current processes.", 60 * 60 * 24);
         $command->addNoValueOption('disable-scheduled-tasks', null, "Skips executing Scheduled tasks (sending scheduled reports, db optimization, etc.).");
         $command->addNoValueOption('accept-invalid-ssl-certificate', null, "It is _NOT_ recommended to use this argument. Instead, you should use a valid SSL certificate!\nIt can be " . "useful if you specified --url=https://... or if you are using Piwik with force_ssl=1");
         $command->addOptionalValueOption('php-cli-options', null, 'Forwards the PHP configuration options to the PHP CLI command. For example "-d memory_limit=8G". Note: These options are only applied if the archiver actually uses CLI and not HTTP.', $default = '');

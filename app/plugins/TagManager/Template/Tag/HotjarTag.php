@@ -58,7 +58,7 @@ class HotjarTag extends BaseTag
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->validators[] = new NotEmpty();
         }), $this->makeSetting('hjsv', 6, FieldConfig::TYPE_INT, function (FieldConfig $field) {
-            $field->title = Piwik::translate('TagManager_HotjarHJSV');
+            $field->title = Piwik::translate('TagManager_HotjarSnippetVersion');
             $field->description = Piwik::translate('TagManager_HotjarHJSVDescription');
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->validators[] = new NotEmpty();
