@@ -20,63 +20,73 @@ describe( 'Matomo API', function () {
       await MatomoIni.set('WordPress', 'allow_app_password_as_token_auth', 0);
     });
 
-    // NOTE: authenticating via header is tested implicitly by GlobalSetup TODO: this is not true, as GlobalSetup runs against latest stable version, not git
-    it.skip('should allow authenticating via app password in token_auth when feature is enabled', async () => {
-      const module = 'SitesManager';
-      const action = 'SitesIdWithAtLeastViewAccess';
-      const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${MatomoApi.toSnakeCase(module)}/${MatomoApi.toSnakeCase(action)}`;
+    it('should be possible to use app passwords via Authorization HTTP header to the REST endpoint', async () => {
+      const url = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/sites_manager/sites_id_with_at_least_view_access&idSite=1`;
 
-      const nonce = await Website.getWpNonce();
+      const nonce = await Website.getWpNonce(); // TODO: should this be called a nonce or app password? can't remember what terminology WP uses
       if (!nonce) {
         throw new Error('No application password found!');
       }
 
-      // check an unauthenticated request (sanity check)
-      let response = await fetch(wordpressUrl, {
-        method: 'POST',
+      const userPass = `root:${nonce}`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
+        },
       });
 
-      let json = await response.json();
-      expect(json).toEqual([]);
+      const json = await response.json();
+      expect(json).toEqual(['1']);
+    });
 
-      // check an authenticated request
-      const userPass = `root:${nonce}`;
-      response = await fetch(wordpressUrl, {
+    it('should be possible to send API requests to the Matomo API endpoint with app passwords in an HTTP Authorization header', async () => {
+      const url = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/index.php?module=API&method=SitesManager.getSitesIdWithAtLeastViewAccess&format=json`;
+
+      const nonce = await Website.getWpNonce(); // TODO: should this be called a nonce or app password? can't remember what terminology WP uses
+      if (!nonce) {
+        throw new Error('No application password found!');
+      }
+
+      // check it fails without an authorization or token_auth
+      let response = await fetch(url, {
         method: 'POST',
         headers:{
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({
-          token_auth: userPass,
-        }),
+      });
+
+      let json = await response.json();
+      expect(json).toEqual({
+        message: 'Wordpress_TokenAuthMissing',
+        result: 'error',
+      });
+
+      // check it fails with an incorrect authorization
+      response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from('root:blah').toString('base64')}`,
+        },
+      });
+
+      json = await response.json();
+      expect(json).toEqual([]);
+
+      // check it works with a correct token
+      const userPass = `root:${nonce}`;
+      response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
+        },
       });
 
       json = await response.json();
       expect(json).toEqual(['1']);
-    });
-
-    it('should not allow using a app password as a token_auth in a non-POST request', async () => {
-      const module = 'SitesManager';
-      const action = 'SitesIdWithAtLeastViewAccess';
-      const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${MatomoApi.toSnakeCase(module)}/${MatomoApi.toSnakeCase(action)}`;
-
-      const nonce = await Website.getWpNonce();
-      if (!nonce) {
-        throw new Error('No application password found!');
-      }
-
-      const userPass = `root:${nonce}`;
-
-      const response = await fetch(`${wordpressUrl}&token_auth=${userPass}`, {
-        method: 'GET',
-      });
-
-      const json = await response.json();
-      expect(json).toEqual({
-        code: 'matomo_error',
-        message: 'Invalid token auth or token auth was not provided as a POST parameter.',
-        data: null,
-      });
     });
 
     it('should be possible to send API requests to the Matomo API endpoint', async () => {

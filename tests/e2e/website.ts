@@ -194,7 +194,7 @@ class Website {
 
         if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
           await $('label[for="woocommerce_cod_enabled"]').click();
-          await $('.woocommerce-save-button').click();
+          await browser.execute(() => window.jQuery('.woocommerce-save-button')[0].click());
           await browser.waitUntil(async () => {
             return await browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
           }, { timeout: 60000 });
