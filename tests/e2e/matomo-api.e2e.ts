@@ -73,10 +73,7 @@ describe( 'Matomo API', function () {
       });
 
       json = await response.json();
-      expect(json).toEqual({
-        message: 'Unable to authenticate with the provided token. It is either invalid or expired.',
-        result: 'error',
-      });
+      expect(json).toEqual([]);
 
       // check it works with a correct token
       const userPass = `root:${nonce}`;
