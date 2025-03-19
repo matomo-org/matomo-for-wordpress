@@ -31,6 +31,8 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
     public function authenticate()
     {
+        // authenticate app password provided via Authorization header. for tracking,
+        // a dummy token_auth is still required.
         $result = $this->authWithAppPassword();
         if (!empty($result)) {
             return $result;
