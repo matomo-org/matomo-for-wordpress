@@ -51,7 +51,7 @@ class WordPress extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCon
             $idSite = $request->getIntegerParameter('idSite', 0);
             $period = $request->getStringParameter('period', 'day');
             $date = $request->getStringParameter('date', 'yesterday');
-            $authLink = SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'date' => $date, 'period' => $period, 'module' => 'UsersManager', 'action' => 'addNewToken']);
+            $authLink = SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'date' => urlencode($date), 'period' => urlencode($period), 'module' => 'UsersManager', 'action' => 'addNewToken']);
         }
         $view->authLink = $authLink;
         $view->faqLink = $faqLink;
