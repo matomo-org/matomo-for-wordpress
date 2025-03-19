@@ -21,7 +21,7 @@ describe( 'Matomo API', function () {
     });
 
     it('should be possible to use app passwords via Authorization HTTP header to the REST endpoint', async () => {
-      const url = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/sites_manager/sites_id_with_at_least_view_access`;
+      const url = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/sites_manager/sites_id_with_at_least_view_access&idSite=1`;
 
       const nonce = await Website.getWpNonce(); // TODO: should this be called a nonce or app password? can't remember what terminology WP uses
       if (!nonce) {
@@ -30,7 +30,7 @@ describe( 'Matomo API', function () {
 
       const userPass = `root:${nonce}`;
       const response = await fetch(url, {
-        method: 'POST',
+        method: 'GET',
         headers:{
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,

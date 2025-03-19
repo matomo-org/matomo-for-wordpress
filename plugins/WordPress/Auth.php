@@ -31,9 +31,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
     public function authenticate()
     {
-        // tracking request authentication. only executes if a WordPress application password
-        // is supplied and if a token_auth is supplied (though the token_auth is ignored).
-        $result = $this->authTrackerWithAppPassword();
+        $result = $this->authWithAppPassword();
         if (!empty($result)) {
             return $result;
         }
@@ -56,7 +54,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
         return new AuthResult(AuthResult::FAILURE, $login, $this->token_auth);
     }
 
-    private function authTrackerWithAppPassword()
+    private function authWithAppPassword()
     {
         if (!function_exists('wp_validate_application_password')) {
             return null;
