@@ -49,8 +49,38 @@ describe( 'Matomo API', function () {
         throw new Error('No application password found!');
       }
 
+      // check it fails without an authorization or token_auth
+      let response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      });
+
+      let json = await response.json();
+      expect(json).toEqual({
+        message: 'Wordpress_TokenAuthMissing',
+        result: 'error',
+      });
+
+      // check it fails with an incorrect authorization
+      response = await fetch(url, {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${Buffer.from('root:blah').toString('base64')}`,
+        },
+      });
+
+      json = await response.json();
+      expect(json).toEqual({
+        message: 'Unable to authenticate with the provided token. It is either invalid or expired.',
+        result: 'error',
+      });
+
+      // check it works with a correct token
       const userPass = `root:${nonce}`;
-      const response = await fetch(url, {
+      response = await fetch(url, {
         method: 'POST',
         headers:{
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -58,7 +88,7 @@ describe( 'Matomo API', function () {
         },
       });
 
-      const json = await response.json();
+      json = await response.json();
       expect(json).toEqual(['1']);
     });
 
