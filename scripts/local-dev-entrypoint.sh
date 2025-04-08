@@ -413,7 +413,6 @@ EOF
     else
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme activate oceanwp
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce-gateway-stripe
     fi
   fi
 
