@@ -43,7 +43,7 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
-		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
+		// add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
 		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
 
 		// NOTE: must be done before the actual AJAX handler since the handler will die at the end.
