@@ -341,6 +341,10 @@ class Woocommerce extends Base {
 		}
 
 		$product = wc_get_product( $product_id );
+		if ( ! is_object( $product ) ) {
+			$this->logger->log( "Failed to get product for product ID = $product_id." );
+			return;
+		}
 
 		$pr         = $product_or_variation ? $product_or_variation : $product;
 		$sku        = $this->get_sku( $pr );
