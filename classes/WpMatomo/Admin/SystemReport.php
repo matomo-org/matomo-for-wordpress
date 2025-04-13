@@ -18,6 +18,7 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Filesystem;
+use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
@@ -70,6 +71,7 @@ class SystemReport {
 	const TROUBLESHOOT_UPDATE_GEOIP_DB    = 'matomo_troubleshooting_action_update_geoipdb';
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
+	const REGENERATE_TRACKING_CODE        = 'matomo_troubleshooting_action_regen_tracking_code';
 
 	private $not_compatible_plugins = [
 		'minify-html-markup',
@@ -229,6 +231,25 @@ class SystemReport {
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_ALL_USERS ] ) ) {
 					$sync = new UserSync();
 					$sync->sync_all();
+				}
+			}
+
+			if ( ! empty( $_POST[ self::REGENERATE_TRACKING_CODE ] ) ) {
+				try {
+					Bootstrap::do_bootstrap();
+
+					// regenerate tracker.js file in Matomo
+					Piwik::postEvent( 'CustomJsTracker.updateTracker' );
+
+					// regenerate embed tracking code in MWP
+					$options                 = new WpMatomo\TrackingCode\GeneratorOptions( $this->settings );
+					$tracking_code_generator = new WpMatomo\TrackingCode\TrackingCodeGenerator( $this->settings, $options );
+
+					$tracking_code_generator->update_tracking_code();
+
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
+				} catch ( \Exception $ex ) {
+					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
 				}
 			}
 		}

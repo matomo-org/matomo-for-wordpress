@@ -246,13 +246,18 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
 					   class='button-primary'
 					   title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ); ?>" type="submit"
 					   title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
 					   class='button-primary'
-					   value="<?php esc_html_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
+				<br/><br/>
 			<?php } ?>
+			<input name="<?php echo esc_attr( SystemReport::REGENERATE_TRACKING_CODE ); ?>" type="submit"
+				   class="button-primary"
+				   title="<?php esc_attr_e( 'Force the cached tracking code to be regenerated. The tracking code is usually regenerated on update and after changing tracking settings, or if a Matomo plugin is installed/updated, but if you need to do it manually, you can do it here.', 'matomo' ); ?>"
+				   value="<?php esc_attr_e( 'Regenerate tracking code', 'matomo' ); ?>">
 		</form>
 
 		<?php
