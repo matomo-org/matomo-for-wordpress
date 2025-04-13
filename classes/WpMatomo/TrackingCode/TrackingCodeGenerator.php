@@ -322,6 +322,20 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
 
+		$script = <<<EOF
+(function () {
+	function initTracking() {
+		$script
+	}
+
+	if (document.prerendering) {
+		document.addEventListener('prerenderingchange', initTracking, {once: true});
+	} else {
+		initTracking();
+	}
+})();
+EOF;
+
 		if ( function_exists( 'wp_get_inline_script_tag' ) ) {
 			$script = wp_get_inline_script_tag(
 				$script,
