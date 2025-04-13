@@ -56,6 +56,7 @@
             :class="`${footerIconGroup.class} tableIcon
               ${activeFooterIconIds.indexOf(footerIcon.id) !== -1 ? 'activeIcon' : ''}`"
             :data-footer-icon-id="footerIcon.id"
+            :aria-label="footerIcon.title"
           >
             <span
               v-if="/^icon-/.test(footerIcon.icon || '')"
@@ -90,6 +91,7 @@
         maxFilterLimit,
       }"
       :title="translate('General_ExportThisReport')"
+      :aria-label="translate('General_ExportThisReport')"
       href=""
       style="margin-right:3.5px"
       @click.prevent
@@ -102,6 +104,7 @@
       id="dataTableFooterExportAsImageIcon"
       @click.prevent="showExportImage($event)"
       :title="translate('General_ExportAsImage')"
+      :aria-label="translate('General_ExportAsImage')"
       style="margin-right:3.5px"
     >
       <span class="icon-image"></span>
@@ -112,6 +115,7 @@
       class="dataTableAction annotationView"
       href
       :title="translate('Annotations_Annotations')"
+      :aria-label="translate('Annotations_Annotations')"
       @click.prevent
       style="margin-right:3.5px"
     ><span class="icon-annotation"></span></a>
@@ -121,6 +125,7 @@
       class="dropdown-button dataTableAction searchAction"
       href
       :title="translate('General_Search')"
+      :aria-label="translate('General_Search')"
       style="margin-right:3.5px"
       draggable="false"
       @click.prevent
@@ -142,6 +147,7 @@
       href
       @click.prevent
       :title="action.title"
+      :aria-label="action.title"
       style="margin-right:3.5px"
     >
       <span v-if="/^icon-/.test(action.icon || '')" :class="action.icon"></span>
@@ -199,6 +205,7 @@
       href=""
       @click.prevent
       :title="translate('CoreHome_ChangePeriod')"
+      :aria-label="translate('CoreHome_ChangePeriod')"
       :data-target="`dropdownPeriods${randomIdForDropdown}`"
     >
       <div>
