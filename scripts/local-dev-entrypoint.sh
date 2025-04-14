@@ -263,6 +263,8 @@ EOF
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
   fi
 
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
+
   # link matomo for wordpress volume as wordpress plugin
   if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
     if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
