@@ -342,7 +342,8 @@ class Woocommerce extends Base {
 
 		$product = wc_get_product( $product_id );
 		if ( ! is_object( $product ) ) {
-			$this->logger->log( "Failed to get product for product ID = $product_id." );
+			$order_id = $order ? $this->get_order_id( $order ) : 'unspecified';
+			$this->logger->log( "Failed to get product for product ID = $product_id (order ID = $order_id)." );
 			return;
 		}
 
@@ -439,7 +440,7 @@ class Woocommerce extends Base {
 		if ( method_exists( $order, 'get_meta' ) ) {
 			return $order->get_meta( $name );
 		} else {
-			$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+			$id = $this->get_order_id( $order );
 			return get_post_meta( $id, $name, true );
 		}
 	}
@@ -454,7 +455,7 @@ class Woocommerce extends Base {
 			if ( method_exists( $order, 'update_meta_data' ) ) {
 				$order->update_meta_data( $name, $value );
 			} else {
-				$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+				$id = $this->get_order_id( $order );
 				update_post_meta( $id, $name, $value );
 			}
 		}
@@ -462,5 +463,9 @@ class Woocommerce extends Base {
 		if ( method_exists( $order, 'save' ) ) {
 			$order->save();
 		}
+	}
+
+	private function get_order_id( $order ) {
+		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
 	}
 }
