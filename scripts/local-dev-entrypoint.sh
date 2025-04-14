@@ -405,6 +405,8 @@ EOF
     }
 
     # add 5 test products
+    echo "Generating test products..."
+
     if ! wc_product_exists PROD_1; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
@@ -450,6 +452,39 @@ EOF
     APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
     echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
   fi
+
+  # add some test pages and posts
+  echo "generating test pages/posts..."
+
+  function wp_post_exists() {
+    POST_TYPE="$1"
+    POST_NAME="$2"
+    POST_COUNT=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post list --post_type="$POST_TYPE" | grep "$POST_NAME" | wc -l )
+    [ $POST_COUNT != "0" ]
+  }
+
+  function wp_new_post() {
+    POST_TYPE=$1
+    POST_NAME=$2
+    POST_TITLE=$3
+    POST_CONTENT="
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices tellus eu ante finibus, ac finibus nunc interdum. Donec arcu ante, eleifend vel mollis at, varius et mi. Nullam sagittis justo sit amet arcu mattis, eu rutrum ligula imperdiet. Maecenas condimentum libero sem, scelerisque porttitor magna viverra at. Vivamus sollicitudin facilisis maximus. Nulla vitae eros tristique eros gravida tempor. Nunc eleifend tortor ac nisl porttitor rhoncus. Quisque vestibulum suscipit ligula, sed pulvinar tellus bibendum ac. Ut porta gravida arcu in eleifend.</p>
+
+<p>Suspendisse venenatis varius congue. Morbi varius, velit sit amet imperdiet pharetra, orci ex molestie leo, a fermentum lorem est sit amet mi. Quisque dolor dolor, mattis finibus interdum nec, interdum ut mauris. Duis cursus lectus id turpis ornare mollis. Donec posuere eget ipsum vitae suscipit. Phasellus ac faucibus nisl, laoreet lacinia nisi. Nunc est turpis, sagittis vitae tempus nec, efficitur et dui. Quisque tincidunt ante at tortor tincidunt porttitor. Donec at vulputate neque. Mauris aliquet non sapien nec convallis. Mauris scelerisque gravida tortor. Pellentesque in pulvinar arcu. Maecenas ante sem, mollis sed augue vitae, consequat sollicitudin ex.</p>
+";
+
+    if ! wp_post_exists "$POST_TYPE" "$POST_NAME"; then
+      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post create --post_type="$POST_TYPE" --post_name="$POST_NAME" --post_title="$POST_TITLE" --post_content="$POST_CONTENT" --post_status=publish
+    fi
+  }
+
+  wp_new_post page "about" "About"
+  wp_new_post page "contact-us" "Contact Us"
+  wp_new_post page "learn-more" "Learn More"
+
+  wp_new_post post "march-update" "March Update"
+  wp_new_post post "10-new-ways-to-whatever" "Learn 10 exciting new ways to WHATEVER!"
+  wp_new_post post "why-use-our-stuff" "Why you should be using our stuff and whatnot!"
 
   # setup everything required for unit tests
   if [ "$WORDPRESS_VERSION" = "trunk" ]; then
