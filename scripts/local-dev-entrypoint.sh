@@ -345,6 +345,12 @@ EOF
   fi
 
   # other plugins used during tests
+  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ]; then
+    echo "installing speculation-rules"
+
+    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate speculation-rules
+  fi
+
   if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
     echo "installing wp-statistics"
 
