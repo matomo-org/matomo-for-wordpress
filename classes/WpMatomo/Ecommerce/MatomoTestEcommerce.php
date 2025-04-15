@@ -11,6 +11,8 @@ namespace WpMatomo\Ecommerce;
  */
 class MatomoTestEcommerce extends Base {
 
+	private $force_track_in_background = false;
+
 	/**
 	 * Render public the wrap_script method. Required for the unit tests
 	 *
@@ -33,5 +35,13 @@ class MatomoTestEcommerce extends Base {
 	 */
 	public function make_matomo_js_tracker_call( $params ) {
 		return parent::make_matomo_js_tracker_call( $params );
+	}
+
+	public function set_force_track_in_background( $force_track ) {
+		$this->force_track_in_background = $force_track;
+	}
+
+	protected function should_track_background() {
+		return $this->force_track_in_background || parent::should_track_background();
 	}
 }

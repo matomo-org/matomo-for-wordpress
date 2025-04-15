@@ -127,7 +127,7 @@ class Base {
 
 						// let the caller know order tracking failed so we don't mark the order as tracked
 						// in Matomo for WordPress
-						if ( 'trackEcommerceOrder' === $call ) {
+						if ( 'doTrackEcommerceOrder' === $tracker_method ) {
 							$failed = true;
 						}
 					}

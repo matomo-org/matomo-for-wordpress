@@ -573,7 +573,7 @@ namespace {
             $this->doBulkRequests = \true;
         }
         /**
-         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored  
+         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored
          * tracking actions previously as this method won't be sending any previously stored actions before disabling it.
          *
          */
@@ -665,7 +665,7 @@ namespace {
          * Returns the PageView id. If the id was manually set using `setPageViewId()`, that id will be returned.
          * If the id was not set manually, the id that was automatically generated in last `doTrackPageView()` will
          * be returned. If there was no last page view, this will be false.
-         * 
+         *
          * @return mixed The PageView id as string or false if there is none yet.
          */
         public function getPageviewId()
