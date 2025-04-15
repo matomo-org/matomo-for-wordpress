@@ -103,8 +103,14 @@ class Base {
 		return $code;
 	}
 
+	/**
+	 * @param string $script
+	 * @return string|false the JS script code or `false` if a server side order tracking request failed
+	 */
 	protected function wrap_script( $script ) {
 		if ( $this->should_track_background() ) {
+			$failed = false;
+
 			foreach ( $this->ajax_tracker_calls as $call ) {
 				$methods = [
 					'addEcommerceItem'         => 'addEcommerceItem',
@@ -118,10 +124,20 @@ class Base {
 						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 					} catch ( Exception $e ) {
 						$this->logger->log_exception( $call[0], $e );
+
+						// let the caller know order tracking failed so we don't mark the order as tracked
+						// in Matomo for WordPress
+						if ( 'trackEcommerceOrder' === $call ) {
+							$failed = true;
+						}
 					}
 				}
 			}
 			$this->ajax_tracker_calls = [];
+
+			if ( $failed ) {
+				return false;
+			}
 
 			return '';
 		}

@@ -267,14 +267,18 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_tracked => 1,
-			]
-		);
+		$wrapped_script = $this->wrap_script( $tracking_code );
 
-		return $this->wrap_script( $tracking_code );
+		if ( false !== $wrapped_script ) {
+			$this->save_order_metadata(
+				$order,
+				[
+					$this->key_order_tracked => 1,
+				]
+			);
+		}
+
+		return strval( $wrapped_script );
 	}
 
 	private function isWC3() {
