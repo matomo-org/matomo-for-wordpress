@@ -50,9 +50,10 @@ class Base {
 	private $ajax_tracker_calls = [];
 
 	public function __construct( AjaxTracker $tracker, Settings $settings ) {
-		$this->logger   = new Logger();
-		$this->tracker  = $tracker;
-		$this->settings = $settings;
+		$this->logger      = new Logger();
+		$this->tracker     = $tracker;
+		$this->settings    = $settings;
+		$this->sync_config = new WpMatomo\Site\Sync\SyncConfig( $settings );
 
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
@@ -109,6 +110,8 @@ class Base {
 	 */
 	protected function wrap_script( $script ) {
 		if ( $this->should_track_background() ) {
+			$debug = $this->is_tracker_debug_enabled();
+
 			$failed = false;
 
 			foreach ( $this->ajax_tracker_calls as $call ) {
@@ -119,6 +122,10 @@ class Base {
 				];
 				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
 					try {
+						if ( $debug ) {
+							$this->tracker->setDebugStringAppend( 'debug=1' );
+						}
+
 						$tracker_method = $methods[ $call[0] ];
 						array_shift( $call );
 						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
@@ -130,6 +137,8 @@ class Base {
 						if ( 'doTrackEcommerceOrder' === $tracker_method ) {
 							$failed = true;
 						}
+					} finally {
+						$this->tracker->DEBUG_APPEND_URL = '';
 					}
 				}
 			}
@@ -154,5 +163,10 @@ class Base {
 		}
 
 		return $script;
+	}
+
+	private function is_tracker_debug_enabled() {
+		return strval( $this->sync_config->get_config_value( 'Tracker', 'debug' ) ) === '1'
+			|| strval( $this->sync_config->get_config_value( 'Tracker', 'debug_on_demand' ) ) === '1';
 	}
 }
