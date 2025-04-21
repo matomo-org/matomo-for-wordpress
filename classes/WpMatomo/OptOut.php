@@ -21,7 +21,8 @@ class OptOut {
 	private $language = null;
 
 	public function register_hooks() {
-		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
+		add_shortcode( 'matomo_opt_out', [ $this, 'show_opt_out' ] );
+		add_shortcode( 'matomo_opt_out_classic', [ $this, 'show_classic_opt_out' ] );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 		add_action( 'init', [ $this, 'load_block' ] );
 	}
@@ -37,15 +38,24 @@ class OptOut {
 	}
 
 	public function show_opt_out( $atts ) {
-		$a = shortcode_atts(
-			[
-				'language' => null,
-			],
-			$atts
-		);
-		if ( ! empty( $a['language'] ) && strlen( $a['language'] ) < 6 ) {
-			$this->language = $a['language'];
-		}
+		$this->language = $this->get_language_from_atts( $atts );
+
+		$div_id = 'matomo-opt-out-form-embed';
+
+		$url = plugins_url( "/wp-content/plugins/matomo/app/index.php?module=CoreAdminHome&action=optOutJS&divId=$div_id&language=auto&showIntro=1", MATOMO_ANALYTICS_FILE );
+		$url = esc_attr( $url );
+
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		$content = <<<EOF
+<div id="$div_id"></div>
+<script src="$url"></script>
+EOF;
+
+		return $content;
+	}
+
+	public function show_classic_opt_out( $atts ) {
+		$this->language = $this->get_language_from_atts( $atts );
 
 		try {
 			Bootstrap::do_bootstrap();
@@ -113,5 +123,18 @@ class OptOut {
 				'editor_script' => 'matomo-opt-out',
 			)
 		);
+	}
+
+	private function get_language_from_atts( $atts ) {
+		$a = shortcode_atts(
+			[
+				'language' => null,
+			],
+			$atts
+		);
+		if ( ! empty( $a['language'] ) && strlen( $a['language'] ) < 6 ) {
+			return $a['language'];
+		}
+		return null;
 	}
 }
