@@ -994,6 +994,7 @@
         "JsTrackingCodeAdvancedOptionsStep": "Optional: use the advanced options to customise your tracking code."
     },
     "CoreHome": {
+        "ReportConfiguration": "Report Configuration",
         "CategoryNoData": "No data in this category. Try to \"Include all population\".",
         "ChangeVisualization": "Change visualization",
         "ChangePeriod": "Change period",
