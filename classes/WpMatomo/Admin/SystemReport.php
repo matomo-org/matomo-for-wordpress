@@ -245,7 +245,7 @@ class SystemReport {
 					$options                 = new WpMatomo\TrackingCode\GeneratorOptions( $this->settings );
 					$tracking_code_generator = new WpMatomo\TrackingCode\TrackingCodeGenerator( $this->settings, $options );
 
-					$tracking_code_generator->update_tracking_code();
+					$tracking_code_generator->update_tracking_code( true );
 
 					echo '<div class="notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
 				} catch ( \Exception $ex ) {

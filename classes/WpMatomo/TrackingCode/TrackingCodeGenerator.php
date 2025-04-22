@@ -63,9 +63,12 @@ class TrackingCodeGenerator {
 		add_action( 'matomo_tracking_settings_changed', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
 	}
 
-	public function update_tracking_code() {
-		if ( $this->settings->is_current_tracking_code()
-			 && $this->settings->get_option( 'tracking_code' ) ) {
+	public function update_tracking_code( $force = false ) {
+		if (
+			$this->settings->is_current_tracking_code()
+			&& $this->settings->get_option( 'tracking_code' )
+			&& ! $force
+		) {
 			return false;
 		}
 
