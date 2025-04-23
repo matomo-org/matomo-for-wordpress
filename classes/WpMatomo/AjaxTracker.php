@@ -98,8 +98,14 @@ class AjaxTracker extends \MatomoTracker {
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
-			return; // not installed or synced yet
+			return null; // not installed or synced yet
 		}
+
+		if ( $this->is_prerender() ) {
+			// do not track if for some reason we are prerendering
+			return null;
+		}
+
 		$args = array(
 			'method' => $method,
 		);
@@ -123,5 +129,12 @@ class AjaxTracker extends \MatomoTracker {
 
 	private function is_invalid_visitor_id_error( \Exception $ex ) {
 		return strpos( $ex->getMessage(), 'setVisitorId() expects' ) === 0;
+	}
+
+	private function is_prerender() {
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$purpose = strtolower( isset( $_SERVER['HTTP_SEC_PURPOSE'] ) ? wp_unslash( $_SERVER['HTTP_SEC_PURPOSE'] ) : '' );
+		return strpos( 'prefetch', $purpose ) !== false
+			|| strpos( 'prerender', $purpose ) !== false;
 	}
 }

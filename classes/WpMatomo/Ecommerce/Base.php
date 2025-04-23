@@ -82,10 +82,6 @@ class Base {
 	}
 
 	protected function should_track_background() {
-		if ( $this->is_prerender() ) {
-			return false;
-		}
-
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
 			   || ( defined( 'MATOMO_TRACK_ECOMMERCE_SERVER_SIDE' ) && MATOMO_TRACK_ECOMMERCE_SERVER_SIDE )
@@ -125,6 +121,7 @@ class Base {
 					}
 				}
 			}
+
 			$this->ajax_tracker_calls = [];
 
 			return '';
@@ -142,12 +139,5 @@ class Base {
 		}
 
 		return $script;
-	}
-
-	private function is_prerender() {
-		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$purpose = strtolower( isset( $_SERVER['HTTP_SEC_PURPOSE'] ) ? wp_unslash( $_SERVER['HTTP_SEC_PURPOSE'] ) : '' );
-		return strpos( 'prefetch', $purpose ) !== false
-			|| strpos( 'prerender', $purpose ) !== false;
 	}
 }
