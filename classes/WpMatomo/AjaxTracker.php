@@ -118,7 +118,9 @@ class AjaxTracker extends \MatomoTracker {
 		// 1) Not send any response no matter what happens
 		// 2) Never exit at any point
 
-		$response = wp_remote_request( $url . '&bots=1', $args );
+		$url = $url . '&bots=1';
+
+		$response = $this->wp_remote_request( $url, $args );
 
 		if (is_wp_error($response)) {
 			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
@@ -134,7 +136,17 @@ class AjaxTracker extends \MatomoTracker {
 	private function is_prerender() {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$purpose = strtolower( isset( $_SERVER['HTTP_SEC_PURPOSE'] ) ? wp_unslash( $_SERVER['HTTP_SEC_PURPOSE'] ) : '' );
-		return strpos( 'prefetch', $purpose ) !== false
-			|| strpos( 'prerender', $purpose ) !== false;
+		return strpos( $purpose, 'prefetch' ) !== false
+			|| strpos( $purpose, 'prerender' ) !== false;
+	}
+
+	/**
+	 * for tests to override
+	 * @param string $url
+	 * @param array $args
+	 * @return array|\WP_Error
+	 */
+	protected function wp_remote_request( $url, $args ) {
+		return wp_remote_request( $url, $args );
 	}
 }

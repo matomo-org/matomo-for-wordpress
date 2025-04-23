@@ -83,7 +83,7 @@ class TrackingCodeGenerator {
 		$idsite  = Site::get_matomo_site_id( $blod_id );
 
 		if ( ! $idsite ) {
-			$this->logger->log( 'Not found related idSite for blog ' . get_current_blog_id() );
+			$this->logger->log( 'Found no related idSite for blog ' . get_current_blog_id() );
 
 			return false;
 		}
@@ -327,15 +327,14 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 		$script = <<<EOF
 (function () {
-	function initTracking() {
-		$script
-	}
-
-	if (document.prerendering) {
-		document.addEventListener('prerenderingchange', initTracking, {once: true});
-	} else {
-		initTracking();
-	}
+function initTracking() {
+$script
+}
+if (document.prerendering) {
+	document.addEventListener('prerenderingchange', initTracking, {once: true});
+} else {
+	initTracking();
+}
 })();
 EOF;
 
