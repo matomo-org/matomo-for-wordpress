@@ -247,7 +247,7 @@ class SystemReport {
 
 					$tracking_code_generator->update_tracking_code( true );
 
-					echo '<div class="notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'JavaScript tracking code regenerated successfully.', 'matomo' ) . '</p></div>';
 				} catch ( \Exception $ex ) {
 					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
 				}
