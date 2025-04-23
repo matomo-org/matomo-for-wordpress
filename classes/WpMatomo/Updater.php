@@ -108,7 +108,7 @@ class Updater {
 			Filesystem::deleteAllCacheOnUpdate();
 
 			$tracking_code_generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
-			$tracking_code_generator->update_tracking_code();
+			$tracking_code_generator->update_tracking_code( true );
 		}
 
 		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
