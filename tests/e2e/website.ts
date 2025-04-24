@@ -159,10 +159,15 @@ class Website {
       await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
     }
 
-    await browser.waitUntil(async () => {
-      const url = await browser.getUrl()
-      return /page=wc-admin$/.test(url);
-    }, { timeout: 30000 });
+    try {
+        await browser.waitUntil(async () => {
+            const url = await browser.getUrl()
+            return /page=wc-admin$/.test(url);
+        }, {timeout: 30000});
+    } catch (e) {
+        console.log(`did not redirect to wc-admin, url is: ${await browser.getUrl()}`);
+        throw e;
+    }
 
     await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
 
