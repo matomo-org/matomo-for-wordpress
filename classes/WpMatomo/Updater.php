@@ -114,6 +114,8 @@ class Updater {
 		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
 			update_option( $key, $plugin_version );
 		}
+
+		return array_keys( $plugins_requiring_update );
 	}
 
 	public function update( $update_from_version = null ) {

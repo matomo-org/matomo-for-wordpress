@@ -14,6 +14,9 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 		parent::setUp();
 		TrackingSettings::register_ajax();
 		$this->wordpress_fixture->switch_to_admin_page();
+		$this->settings = new Settings();
+		$this->settings->set_global_option( 'track_js_endpoint', 'plugin' );
+		$this->settings->save();
 	}
 
 	public function test_generate_tracking_code_fails_if_an_incorrect_nonce_is_given() {
@@ -36,15 +39,24 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 		$idsite = $site->get_current_matomo_site_id();
 
 		$space = '';
-		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' ) ) {
+		if ( $this->is_wordpress5() ) {
 			$space = ' ';
 		}
 
 		$expected_js_code = <<<JS
 <!-- Matomo --><script{$space}>
+(function () {
+function initTracking() {
 var _paq = window._paq = window._paq || [];
 _paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
+}
+if (document.prerendering) {
+	document.addEventListener('prerenderingchange', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();
 </script>
 <!-- End Matomo Code -->
 JS;
@@ -80,16 +92,25 @@ JS;
 		$idsite = $site->get_current_matomo_site_id();
 
 		$space = '';
-		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' ) ) {
+		if ( $this->is_wordpress5() ) {
 			$space = ' ';
 		}
 
 		$expected_js_code = <<<JS
 <!-- Matomo --><script{$space}>
+(function () {
+function initTracking() {
 var _paq = window._paq = window._paq || [];
 _paq.push(['setRequestMethod', 'POST']);
 _paq.push(['enableHeartBeatTimer', 72]);_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
+}
+if (document.prerendering) {
+	document.addEventListener('prerenderingchange', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();
 </script>
 <!-- End Matomo Code -->
 JS;
@@ -105,5 +126,12 @@ JS;
 			],
 			$response
 		);
+	}
+
+	private function is_wordpress5() {
+		$version = getenv( 'WORDPRESS_VERSION' );
+		return 'latest' !== $version
+			&& 'trunk' !== $version
+			&& version_compare( $version, '5.2', '<=' );
 	}
 }
