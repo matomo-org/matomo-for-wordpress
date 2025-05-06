@@ -127,6 +127,13 @@ class Base {
 						}
 
 						$tracker_method = $methods[ $call[0] ];
+
+						if ( 'doTrackEcommerceOrder' === $tracker_method ) {
+							$this->logger->log('sapi: ' . (defined('PHP_SAPI') ? PHP_SAPI : 'not defined'));
+							$this->logger->log('request: ' . var_export($_REQUEST, true));
+							$this->logger->log('cookie: ' . var_export($_COOKIE, true));
+						}
+
 						array_shift( $call );
 						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 					} catch ( Exception $e ) {
