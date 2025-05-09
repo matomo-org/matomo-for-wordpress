@@ -23,7 +23,7 @@ if (!defined('PIWIK_USER_PATH')) {
     define('PIWIK_USER_PATH', PIWIK_INCLUDE_PATH);
 }
 /**
- * Encapsulates and manages a [Twig](http://twig.sensiolabs.org/) template.
+ * Encapsulates and manages a [Twig](https://twig.sensiolabs.org/) template.
  *
  * View lets you set properties that will be passed on to a Twig template.
  * View will also set several properties that will be available in all Twig
