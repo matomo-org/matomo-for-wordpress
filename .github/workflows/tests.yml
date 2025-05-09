@@ -162,7 +162,10 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest', 'trunk' ]
-        php-versions: [ '7.2', '8.1' ]
+        php-versions: [ '8.1' ]
+        include:
+          - wp-versions: '6.7.2'
+            php-versions: '7.2'
     permissions:
       contents: read  # <--- allows to read repo
     steps:
