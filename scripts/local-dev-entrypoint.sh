@@ -345,7 +345,7 @@ EOF
   fi
 
   # other plugins used during tests
-  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ]; then
+  if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" && php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);" ]]; then
     echo "installing speculation-rules"
 
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate speculation-rules
