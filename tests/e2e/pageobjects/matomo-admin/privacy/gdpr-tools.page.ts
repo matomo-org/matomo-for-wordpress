@@ -16,6 +16,7 @@ class GdprToolsPage extends MatomoAdminPage {
     await browser.waitUntil(async () => {
       return !(await $('.loadingPiwik').isDisplayed());
     }, { timeout: 20000 });
+    await browser.pause(500);
 
     return result;
   }

@@ -51,7 +51,7 @@ class DocumentationGenerator
         return "<div vue-entry=\"CoreHome.ContentBlock\" content-title='Quick access to APIs' id='topApiRef' name='topApiRef'>\n\t\t\t\t{$toc}</div>\n\t\t\t\t{$str}";
     }
     /**
-     * Used on developer.piwik.org
+     * Used on developer.matomo.org
      *
      * @param bool|true $outputExampleUrls
      * @param string $prefixUrls

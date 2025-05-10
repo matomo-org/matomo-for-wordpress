@@ -193,7 +193,7 @@ class SettingsServer
         return \false;
     }
     /**
-     * @see http://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+     * @see https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
      * @param $value
      * @return false|float|int
      */

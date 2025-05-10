@@ -29,7 +29,7 @@ class TimezoneCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
         if (SettingsServer::isTimezoneSupportEnabled()) {
             return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK));
         }
-        $comment = sprintf('%s<br />%s.', $this->translator->translate('SitesManager_AdvancedTimezoneSupportNotFound'), '<a href="http://php.net/manual/en/datetime.installation.php" rel="noreferrer noopener" target="_blank">Timezone PHP documentation</a>');
+        $comment = sprintf('%s<br />%s.', $this->translator->translate('SitesManager_AdvancedTimezoneSupportNotFound'), '<a href="https://php.net/manual/en/datetime.installation.php" rel="noreferrer noopener" target="_blank">Timezone PHP documentation</a>');
         return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment));
     }
 }

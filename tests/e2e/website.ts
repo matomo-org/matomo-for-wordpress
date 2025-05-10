@@ -183,7 +183,7 @@ class Website {
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
     await $('div.woocommerce').waitForExist();
 
-    await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle,#woocommerce_cod_enabled').waitForExist({ timeout: 60000 });
+    await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle,#woocommerce_cod_enabled,#_wc_offline_payment_methods_group').waitForExist({ timeout: 60000 });
 
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0
@@ -194,10 +194,27 @@ class Website {
       await this.retry(3, async () => {
         const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
         const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
+        const isWoocommerceTakeOfflinePaymentsFound = await $('#_wc_offline_payment_methods_group').isExisting();
 
         const html = await browser.execute(() => document.querySelector('html')!.innerHTML);
 
-        if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
+        if (isWoocommerceTakeOfflinePaymentsFound) {
+            await $('#_wc_offline_payment_methods_group').click();
+
+            await browser.waitUntil(async () => {
+                return await browser.execute(() => window.jQuery('.woocommerce-list__item-title:contains(Cash on delivery)').length > 0);
+            }, { timeout: 30000 });
+
+            await browser.execute(() => {
+                window.jQuery('.woocommerce-list__item-title:contains(Cash on delivery)').closest('.woocommerce-list__item-inner').find('a.is-primary')[0].click();
+            });
+
+            await browser.waitUntil(async () => {
+                return await browser.execute(() => {
+                    return window.jQuery('.woocommerce-list__item-inner a.is-secondary').length > 0;
+                });
+            }, { timeout: 30000 });
+        } else if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
           await $('label[for="woocommerce_cod_enabled"]').click();
           await browser.execute(() => window.jQuery('.woocommerce-save-button')[0].click());
           await browser.waitUntil(async () => {
@@ -229,9 +246,10 @@ class Website {
               throw e;
             }
           } else {
-            console.log(html);
             throw new Error('unknown page html in woocommerce setup');
           }
+        } else {
+            throw new Error('unknown page html in woocommerce setup');
         }
       });
     }
