@@ -265,6 +265,46 @@ EOF
 
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
 
+  if [[ ! -f "/var/www/html/$WORDPRESS_FOLDER/.htaccess" ]]; then
+    if [[ "$MULTISITE" == "1" ]]; then
+      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+# BEGIN WordPress Multisite
+# Using subfolder network type: https://wordpress.org/documentation/article/htaccess/#multisite
+
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+
+# add a trailing slash to /wp-admin
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule . $WORDPRESS_FOLDER/index.php [L]
+
+# END WordPress Multisite
+EOF
+    else
+      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+# BEGIN WordPress
+
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /$WORDPRESS_FOLDER/index.php [L]
+
+# END WordPress
+EOF
+    fi
+  fi
+
   # link matomo for wordpress volume as wordpress plugin
   if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
     if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
@@ -345,7 +385,7 @@ EOF
   fi
 
   # other plugins used during tests
-  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ] && [ php -r "exit('$WORDPRESS_VERSION' === 'trunk' || version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);" ]; then
+  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ] && php -r "exit('$WORDPRESS_VERSION' === 'trunk' || version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);"; then
     echo "installing speculation-rules"
 
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate speculation-rules
