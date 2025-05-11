@@ -67,7 +67,7 @@ class DbAdapterCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
             $message .= $this->translator->translate('Installation_SystemCheckPdoAndMysqliHelp', array('<br /><br /><code>--with-mysqli</code><br /><code>--with-pdo-mysql</code><br /><br />', '<br /><br /><code>extension=mysqli.so</code><br /><code>extension=pdo.so</code><br /><code>extension=pdo_mysql.so</code><br />'));
         }
         $message .= $this->translator->translate('Installation_RestartWebServer') . '<br/><br/>';
-        $message .= $this->translator->translate('Installation_SystemCheckPhpPdoAndMysqli', array('<a style="color:red" href="http://php.net/pdo">', '</a>', '<a style="color:red" href="http://php.net/mysqli">', '</a>'));
+        $message .= $this->translator->translate('Installation_SystemCheckPhpPdoAndMysqli', array('<a style="color:red" href="https://php.net/pdo">', '</a>', '<a style="color:red" href="https://php.net/mysqli">', '</a>'));
         $message .= '</p>';
         return $message;
     }

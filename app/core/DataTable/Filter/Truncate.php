@@ -109,7 +109,7 @@ class Truncate extends BaseFilter
             if (!isset($rows[$i])) {
                 // case when the last row is a summary row, it is not indexed by $count but by DataTable::ID_SUMMARY_ROW
                 $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
-                //FIXME: I'm not sure why it could return false, but it was reported in: http://forum.piwik.org/read.php?2,89324,page=1#msg-89442
+                //FIXME: I'm not sure why it could return false, but it was reported in: https://forum.piwik.org/read.php?2,89324,page=1#msg-89442
                 if ($summaryRow) {
                     $newRow->sumRow($summaryRow, $enableCopyMetadata = \false, $aggregationOps);
                 }

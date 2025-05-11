@@ -274,7 +274,7 @@ export const config: Options.Testrunner = {
       await saveScreenshotIfError(test, error);
 
       // TODO: this does not appear to display in the reporter, even though it works in the core UI screenshot tests
-      test.error.message = `${test.error.message}\nCaptured Console Logs:\n${capturedLogs.join('\n')}`;
+      error.message = `${error.message}\nCaptured Console Logs:\n${capturedLogs.join('\n')}`;
 
       return;
     }
