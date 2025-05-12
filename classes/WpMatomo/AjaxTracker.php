@@ -133,6 +133,10 @@ class AjaxTracker extends \MatomoTracker {
 		return strpos( $ex->getMessage(), 'setVisitorId() expects' ) === 0;
 	}
 
+	/**
+	 * See https://developer.chrome.com/docs/web-platform/prerender-pages
+	 * @return bool
+	 */
 	private function is_prerender() {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$purpose = strtolower( isset( $_SERVER['HTTP_SEC_PURPOSE'] ) ? wp_unslash( $_SERVER['HTTP_SEC_PURPOSE'] ) : '' );

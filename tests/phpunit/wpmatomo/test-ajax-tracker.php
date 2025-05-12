@@ -11,7 +11,6 @@ use WpMatomo\AjaxTracker;
 use WpMatomo\Settings;
 
 /**
- * @group only
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  * phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
  * phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -169,6 +168,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			public $sent_requests = [];
 
 			protected function wp_remote_request( $url, $args ) {
+				// remove random query params
 				$url = preg_replace( '/&_id=[^&]+/', '', $url );
 				$url = preg_replace( '/&r=[^&]+/', '', $url );
 				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
@@ -179,8 +179,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			}
 		};
 
-		// test without sec-purpose
-		if ( empty( $header_value ) ) {
+		if ( empty( $header_value ) ) { // test without sec-purpose
 			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
 		} else {
 			$_SERVER['HTTP_SEC_PURPOSE'] = $header_value;

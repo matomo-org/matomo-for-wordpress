@@ -34,7 +34,7 @@ describe('Network Admin', function() {
 
   it('should display the multisite get started page correctly', async () => {
     // for some reason on the first load, the app/bootstrap.php cannot be found
-    // TODO: sometimes there's a random failure here where the browser gets redirected to the login page. unsure why this happens/
+    // TODO: sometimes there's a random failure here where the browser gets redirected to the login page. unsure why this happens.
     await Website.retry(3, async () => {
       await NetworkMultiSitePage.open();
     }, 3000);

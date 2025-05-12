@@ -263,8 +263,10 @@ EOF
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
   fi
 
+  # set permalink structure to /%postname%/
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
 
+  # add .htaccess files required for the above permalink structure change
   if [[ ! -f "/var/www/html/$WORDPRESS_FOLDER/.htaccess" ]]; then
     if [[ "$MULTISITE" == "1" ]]; then
       cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
