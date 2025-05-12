@@ -528,6 +528,8 @@ EOF
       POST_CONTENT="$POST_CONTENT
 
 [matomo_opt_out]
+
+[matomo_opt_out_classic]
 "
     fi
 
