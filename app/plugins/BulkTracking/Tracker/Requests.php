@@ -36,7 +36,7 @@ class Requests
     private function checkTokenAuthNotEmpty($token)
     {
         if (empty($token)) {
-            throw new Exception("token_auth must be specified when using Bulk Tracking Import. " . " See <a href='https://developer.piwik.org/api-reference/tracking-api'>Tracking Doc</a>");
+            throw new Exception("token_auth must be specified when using Bulk Tracking Import. " . " See <a href='https://developer.matomo.org/api-reference/tracking-api'>Tracking Doc</a>");
         }
     }
     /**

@@ -309,7 +309,7 @@ abstract class Base extends VisitDimension
                 break;
             }
         }
-        if (empty($campaignName)) {
+        if (empty($campaignName) || !is_string($campaignName)) {
             return \false;
         }
         $this->typeReferrerAnalyzed = Common::REFERRER_TYPE_CAMPAIGN;

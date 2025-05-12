@@ -402,7 +402,7 @@ class Date
         return $isLeap;
     }
     /**
-     * Converts this date to the requested string format. See {@link http://php.net/date}
+     * Converts this date to the requested string format. See {@link https://php.net/date}
      * for the list of format strings.
      *
      * @param string $format
@@ -1002,7 +1002,7 @@ class Date
     }
     private static function getInvalidDateFormatException($dateString)
     {
-        $message = \Piwik\Piwik::translate('General_ExceptionInvalidDateFormat', array("YYYY-MM-DD, or 'today' or 'yesterday'", "strtotime", "http://php.net/strtotime"));
+        $message = \Piwik\Piwik::translate('General_ExceptionInvalidDateFormat', array("YYYY-MM-DD, or 'today' or 'yesterday'", "strtotime", "https://php.net/strtotime"));
         return new Exception($message . ": " . var_export($dateString, \true));
     }
     /**

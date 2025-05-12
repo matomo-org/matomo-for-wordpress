@@ -49,7 +49,7 @@ class ContainerFactory
         $this->definitions = $definitions;
     }
     /**
-     * @link http://php-di.org/doc/container-configuration.html
+     * @link https://php-di.org/doc/container-configuration.html
      * @throws \Exception
      * @return Container
      */
