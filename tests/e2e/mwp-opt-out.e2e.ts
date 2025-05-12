@@ -29,4 +29,6 @@ describe('OptOut', () => {
             await browser.checkFullPageScreen(`mwp.page-with-opt-out.${process.env.PHP_VERSION}${trunkSuffix}`)
         ).toEqual(0);
     });
+
+    // TODO: test
 });

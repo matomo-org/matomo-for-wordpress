@@ -18,9 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class OptOut {
+	const OPT_OUT_DIV_ID = 'matomo-opt-out-form-embed';
+
 	private $language = null;
 
 	public function register_hooks() {
+		// TODO: instead of changing the default behavior of the opt out, which may have custom styling in existing users
+		// setups, lets create a new shortcode and reference that one in HTML.
 		add_shortcode( 'matomo_opt_out', [ $this, 'show_opt_out' ] );
 		add_shortcode( 'matomo_opt_out_classic', [ $this, 'show_classic_opt_out' ] );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
@@ -29,7 +33,10 @@ class OptOut {
 
 	public function load_scripts() {
 		if ( ! is_admin() ) {
-			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
+			wp_register_script( 'matomo_opt_out_classic_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
+
+			$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . self::OPT_OUT_DIV_ID . '&language=auto&showIntro=1';
+			wp_register_script( 'matomo_opt_out_js', plugins_url( $url, MATOMO_ANALYTICS_FILE ), [], 1, true );
 		}
 	}
 
@@ -40,17 +47,12 @@ class OptOut {
 	public function show_opt_out( $atts ) {
 		$this->language = $this->get_language_from_atts( $atts );
 
+		wp_enqueue_script( 'matomo_opt_out_js' );
+
 		$div_id = 'matomo-opt-out-form-embed';
 
-		$url = plugins_url( "app/index.php?module=CoreAdminHome&action=optOutJS&divId=$div_id&language=auto&showIntro=1", MATOMO_ANALYTICS_FILE );
-		$url = esc_attr( $url );
-
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
-		$content = <<<EOF
-<div id="$div_id"></div>
-<script src="$url"></script>
-EOF;
-
+		$content = "<div id=\"$div_id\"></div>";
 		return $content;
 	}
 
@@ -73,7 +75,7 @@ EOF;
 			return '<p>' . $this->translate( 'CoreAdminHome_OptOutDntFound' ) . '</p>';
 		}
 
-		wp_enqueue_script( 'matomo_opt_out_js' );
+		wp_enqueue_script( 'matomo_opt_out_classic_js' );
 
 		$track_visits = empty( $_COOKIE['mtm_consent_removed'] );
 
