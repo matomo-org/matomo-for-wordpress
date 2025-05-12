@@ -92,7 +92,7 @@ export default class Page {
       });
 
       return trackedPageviews >= expectedTrackingRequestCount;
-    });
+    }, { timeout: 20000 });
 
     await browser.pause(500); // wait for matomo to process the tracking requests
   }

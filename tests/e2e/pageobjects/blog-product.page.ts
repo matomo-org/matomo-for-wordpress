@@ -10,7 +10,7 @@ import Page from './page.js';
 
 class BlogProductPage extends Page {
   open() {
-    return super.open('/?product=folding-monitors');
+    return super.open('/product/folding-monitors/');
   }
 
   async addToCart() {

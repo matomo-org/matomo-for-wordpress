@@ -33,16 +33,12 @@ describe('Network Admin', function() {
   });
 
   it('should display the multisite get started page correctly', async () => {
-    const isLoginBefore = await $('#user_login').isExisting();
-
     // for some reason on the first load, the app/bootstrap.php cannot be found
+    // TODO: sometimes there's a random failure here where the browser gets redirected to the login page. unsure why this happens.
     await Website.retry(3, async () => {
       await NetworkMultiSitePage.open();
     }, 3000);
 
-    const isLoginAfter = await $('#user_login').isExisting();
-
-    console.log(`isLoginBefore: ${isLoginBefore} - isLoginAfter: ${isLoginAfter}`);
     await NetworkMultiSitePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.network.multisite.${process.env.PHP_VERSION}${trunkSuffix}`)

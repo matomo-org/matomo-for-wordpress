@@ -63,9 +63,12 @@ class TrackingCodeGenerator {
 		add_action( 'matomo_tracking_settings_changed', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
 	}
 
-	public function update_tracking_code() {
-		if ( $this->settings->is_current_tracking_code()
-			 && $this->settings->get_option( 'tracking_code' ) ) {
+	public function update_tracking_code( $force = false ) {
+		if (
+			$this->settings->is_current_tracking_code()
+			&& $this->settings->get_option( 'tracking_code' )
+			&& ! $force
+		) {
 			return false;
 		}
 
@@ -80,7 +83,7 @@ class TrackingCodeGenerator {
 		$idsite  = Site::get_matomo_site_id( $blod_id );
 
 		if ( ! $idsite ) {
-			$this->logger->log( 'Not found related idSite for blog ' . get_current_blog_id() );
+			$this->logger->log( 'Found no related idSite for blog ' . get_current_blog_id() );
 
 			return false;
 		}
@@ -321,6 +324,19 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
+
+		$script = <<<EOF
+(function () {
+function initTracking() {
+$script
+}
+if (document.prerendering) {
+	document.addEventListener('prerenderingchange', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();
+EOF;
 
 		if ( function_exists( 'wp_get_inline_script_tag' ) ) {
 			$script = wp_get_inline_script_tag(

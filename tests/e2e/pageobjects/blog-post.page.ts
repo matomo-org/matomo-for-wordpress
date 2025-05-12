@@ -10,7 +10,7 @@ import Page from './page.js';
 
 class BlogPostPage extends Page {
   open() {
-    return super.open('?p=1');
+    return super.open('/march-update/');
   }
 }
 

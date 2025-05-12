@@ -25,6 +25,9 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 		parent::setUp();
 
 		$this->settings = new Settings();
+		$this->settings->set_global_option( 'track_js_endpoint', 'plugin' );
+		$this->settings->save();
+
 		WpMatomo\Site::map_matomo_site_id( get_current_blog_id(), 21 );
 	}
 
@@ -51,15 +54,24 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
 
 		$this->assertSame(
-			'<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
+			'<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . '(function () {
+function initTracking() {
+var _paq = window._paq = window._paq || [];
 _paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
+}
+if (document.prerendering) {
+	document.addEventListener(\'prerenderingchange\', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
 			$this->get_tracking_code()
 		);
 	}
@@ -82,13 +94,15 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/pl
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
 
 		$this->assertSame(
-			'<!-- Matomo --><script ' . $this->get_type_attribute() . '>' . "\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
+			'<!-- Matomo --><script ' . $this->get_type_attribute() . '>' . "\n$cdata_start" . '(function () {
+function initTracking() {
+var _paq = window._paq = window._paq || [];
 _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
 if (!window._paq.find || !window._paq.find(function (m) { return m[0] === "disableCookies"; })) {
@@ -97,7 +111,14 @@ if (!window._paq.find || !window._paq.find(function (m) { return m[0] === "disab
 _paq.push([\'enableCrossDomainLinking\']);
 _paq.push(["setCookieDomain", "*.example.org"]);
 _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);
+}
+if (document.prerendering) {
+	document.addEventListener(\'prerenderingchange\', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
 			$this->get_tracking_code()
 		);
 	}
@@ -293,7 +314,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 	public function test_prepare_tracking_code_when_using_options_from_request() {
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
@@ -304,18 +325,211 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 			'track_heartbeat' => 72,
 		];
 
-		$settings  = new Settings();
-		$generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings, $request ) );
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings, $request ) );
 
 		$this->assertSame(
 			[
-				'script'   => '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
+				'script'   => '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start"
+					. '(function () {
+function initTracking() {
+var _paq = window._paq = window._paq || [];
 _paq.push([\'setRequestMethod\', \'POST\']);
 _paq.push([\'enableHeartBeatTimer\', 72]);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'1\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
+}
+if (document.prerendering) {
+	document.addEventListener(\'prerenderingchange\', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
 				'noscript' => '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>',
 			],
 			$generator->prepare_tracking_code( 1 )
 		);
+	}
+
+	public function test_update_tracking_code_sets_tracking_code_if_not_generated() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$this->settings->set_option( 'tracking_code', null );
+		$this->settings->save();
+
+		$this->settings->init_settings();
+		$this->assertEmpty( $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+
+		$this->assertNotEmpty( $result );
+		$this->assertArrayHasKey( 'script', $result );
+		$this->assertArrayHasKey( 'noscript', $result );
+		$this->assertNotEmpty( $result['script'] );
+		$this->assertIsString( $result['noscript'] );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( $result['script'], $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( $result['noscript'], $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_sets_tracking_code_if_generated_is_out_of_date() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->save();
+
+		$this->set_tracking_code_out_of_date();
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+
+		$this->assertNotEmpty( $result );
+		$this->assertArrayHasKey( 'script', $result );
+		$this->assertArrayHasKey( 'noscript', $result );
+		$this->assertNotEmpty( $result['script'] );
+		$this->assertIsString( $result['noscript'] );
+		$this->assertNotEquals( 'blahblah', $result['script'] );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( $result['script'], $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( $result['noscript'], $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_does_nothing_if_generated_and_not_out_of_date() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->set_option( 'noscript_code', 'blahblah2' );
+		$this->settings->save();
+
+		$this->set_tracking_code_not_out_of_date();
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+		$this->assertFalse( $result );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( 'blahblah2', $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_sets_tracking_code_if_forced() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->set_option( 'noscript_code', 'blahblah2' );
+		$this->settings->save();
+
+		$this->set_tracking_code_not_out_of_date();
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code( true );
+
+		$this->assertNotEmpty( $result );
+		$this->assertArrayHasKey( 'script', $result );
+		$this->assertArrayHasKey( 'noscript', $result );
+		$this->assertNotEmpty( $result['script'] );
+		$this->assertIsString( $result['noscript'] );
+		$this->assertNotEquals( 'blahblah', $result['script'] );
+		$this->assertNotEquals( 'blahblah2', $result['noscript'] );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( $result['script'], $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( $result['noscript'], $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_does_nothing_if_tracking_is_not_enabled() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DISABLED );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->set_option( 'noscript_code', 'blahblah2' );
+		$this->settings->save();
+
+		$this->set_tracking_code_out_of_date();
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+		$this->assertFalse( $result );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( 'blahblah2', $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_does_nothing_if_tracking_mode_is_manual() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_MANUALLY );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->set_option( 'noscript_code', 'blahblah2' );
+		$this->settings->save();
+
+		$this->set_tracking_code_out_of_date();
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+		$this->assertFalse( $result );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( 'blahblah2', $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	public function test_update_tracking_code_does_nothing_if_current_site_is_not_mapped() {
+		$this->settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$this->settings->set_option( 'tracking_code', 'blahblah' );
+		$this->settings->set_option( 'noscript_code', 'blahblah2' );
+		$this->settings->save();
+
+		$this->set_tracking_code_out_of_date();
+
+		WpMatomo\Site::map_matomo_site_id( get_current_blog_id(), null );
+
+		$this->settings->init_settings();
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+
+		$generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+		$result    = $generator->update_tracking_code();
+		$this->assertFalse( $result );
+
+		$this->settings->init_settings();
+
+		$this->assertEquals( 'blahblah', $this->settings->get_option( 'tracking_code' ) );
+		$this->assertEquals( 'blahblah2', $this->settings->get_option( 'noscript_code' ) );
+	}
+
+	private function set_tracking_code_out_of_date() {
+		$this->settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 5000 );
+		$this->settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() );
+		$this->settings->save();
+	}
+
+	private function set_tracking_code_not_out_of_date() {
+		$this->settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() );
+		$this->settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 5000 );
+		$this->settings->save();
+	}
+
+	private function is_wordpress_not_using_cdata_tags() {
+		return getenv( 'WORDPRESS_VERSION' )
+			&& (
+				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
+				&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
+				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
+			);
 	}
 }
