@@ -42,7 +42,7 @@ class OptOut {
 
 		$div_id = 'matomo-opt-out-form-embed';
 
-		$url = plugins_url( "/wp-content/plugins/matomo/app/index.php?module=CoreAdminHome&action=optOutJS&divId=$div_id&language=auto&showIntro=1", MATOMO_ANALYTICS_FILE );
+		$url = plugins_url( "app/index.php?module=CoreAdminHome&action=optOutJS&divId=$div_id&language=auto&showIntro=1", MATOMO_ANALYTICS_FILE );
 		$url = esc_attr( $url );
 
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
