@@ -42,7 +42,7 @@ class MySQLMetadataProvider
      * Gets general database info that is not specific to any table.
      *
      * @throws Exception
-     * @return array See http://dev.mysql.com/doc/refman/5.1/en/show-status.html .
+     * @return array See https://dev.mysql.com/doc/refman/5.1/en/show-status.html .
      */
     public function getDBStatus()
     {
@@ -53,7 +53,7 @@ class MySQLMetadataProvider
      *
      * @param string $table The name of the table. Should not be prefixed (ie, 'log_visit' is
      *                      correct, 'matomo_log_visit' is not).
-     * @return array See http://dev.mysql.com/doc/refman/5.1/en/show-table-status.html .
+     * @return array See https://dev.mysql.com/doc/refman/5.1/en/show-table-status.html .
      */
     public function getTableStatus($table)
     {
@@ -71,7 +71,7 @@ class MySQLMetadataProvider
      *
      * @param string $matchingRegex Regex used to filter out tables whose name doesn't
      *                              match it.
-     * @return array The table information. See http://dev.mysql.com/doc/refman/5.5/en/show-table-status.html
+     * @return array The table information. See https://dev.mysql.com/doc/refman/5.5/en/show-table-status.html
      *               for specifics.
      */
     public function getAllTablesStatus($matchingRegex = null)
@@ -99,7 +99,7 @@ class MySQLMetadataProvider
     /**
      * Returns table statuses for every log table.
      *
-     * @return array An array of status arrays. See http://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
+     * @return array An array of status arrays. See https://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
      */
     public function getAllLogTableStatus()
     {
@@ -109,7 +109,7 @@ class MySQLMetadataProvider
     /**
      * Returns table statuses for every numeric archive table.
      *
-     * @return array An array of status arrays. See http://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
+     * @return array An array of status arrays. See https://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
      */
     public function getAllNumericArchiveStatus()
     {
@@ -119,7 +119,7 @@ class MySQLMetadataProvider
     /**
      * Returns table statuses for every blob archive table.
      *
-     * @return array An array of status arrays. See http://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
+     * @return array An array of status arrays. See https://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
      */
     public function getAllBlobArchiveStatus()
     {
@@ -129,7 +129,7 @@ class MySQLMetadataProvider
     /**
      * Returns table statuses for every admin table.
      *
-     * @return array An array of status arrays. See http://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
+     * @return array An array of status arrays. See https://dev.mysql.com/doc/refman/5.5/en/show-table-status.html.
      */
     public function getAllAdminTableStatus()
     {
