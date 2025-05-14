@@ -102,6 +102,7 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/Morpheus/stylesheets/base/icons.css";
         $stylesheets[] = "plugins/Morpheus/stylesheets/base.less";
         $stylesheets[] = "plugins/Morpheus/stylesheets/main.less";
+        $stylesheets[] = "plugins/CoreHome/stylesheets/a11y.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/coreHome.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/dataTable.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/cloud.less";
@@ -365,6 +366,7 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_YouAreCurrentlyUsing';
         $translationKeys[] = 'General_Copy';
         $translationKeys[] = 'General_CopiedToClipboard';
+        $translationKeys[] = 'CoreHome_ReportConfiguration';
         // add admin menu translations
         if (SettingsPiwik::isMatomoInstalled() && Common::getRequestVar('module', '') != 'CoreUpdater' && Piwik::isUserHasSomeViewAccess()) {
             /*
