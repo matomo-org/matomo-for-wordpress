@@ -263,6 +263,50 @@ EOF
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
   fi
 
+  # set permalink structure to /%postname%/
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
+
+  # add .htaccess files required for the above permalink structure change
+  if [[ ! -f "/var/www/html/$WORDPRESS_FOLDER/.htaccess" ]]; then
+    if [[ "$MULTISITE" == "1" ]]; then
+      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+# BEGIN WordPress Multisite
+# Using subfolder network type: https://wordpress.org/documentation/article/htaccess/#multisite
+
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+
+# add a trailing slash to /wp-admin
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule . $WORDPRESS_FOLDER/index.php [L]
+
+# END WordPress Multisite
+EOF
+    else
+      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+# BEGIN WordPress
+
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /$WORDPRESS_FOLDER/index.php [L]
+
+# END WordPress
+EOF
+    fi
+  fi
+
   # link matomo for wordpress volume as wordpress plugin
   if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
     if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
@@ -343,6 +387,12 @@ EOF
   fi
 
   # other plugins used during tests
+  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ] && php -r "exit('$WORDPRESS_VERSION' === 'trunk' || version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);"; then
+    echo "installing speculation-rules"
+
+    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate speculation-rules
+  fi
+
   if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
     echo "installing wp-statistics"
 
@@ -376,6 +426,13 @@ EOF
     /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate $VERSION_ARGUMENT $PLUGIN || true
   done
 
+  # install oceanwp
+  echo "installing oceanwp..."
+  if php -r 'exit(version_compare(PHP_VERSION, "7.3", "<") ? 0 : 1);'; then
+    OCEANWP_VERSION="--version=3.5.5"
+  fi
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate $OCEANWP_VERSION
+
   # setup woocommerce if requested
   if [[ "$WOOCOMMERCE" == "1" ]]; then
     if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
@@ -387,32 +444,42 @@ EOF
 
       # install woocommerce
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce --activate $WOOCOMMERCE_VERSION
+    else
+      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce
+    fi
 
-      # install oceanwp
-      echo "installing oceanwp..."
-      if php -r 'exit(version_compare(PHP_VERSION, "7.3", "<") ? 0 : 1);'; then
-        OCEANWP_VERSION="--version=3.5.5"
-      fi
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate $OCEANWP_VERSION
+    function wc_product_exists() {
+      PROD_SKU=$1
+      PROD_COUNT=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product list --sku=$PROD_SKU --format=count )
+      [ $PROD_COUNT != "0" ]
+    }
 
-      # add 5 test products
+    # add 5 test products
+    echo "Generating test products..."
+
+    if ! wc_product_exists PROD_1; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
+    fi
 
+    if ! wc_product_exists PROD_2; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
+    fi
 
+    if ! wc_product_exists PROD_3; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
+    fi
 
+    if ! wc_product_exists PROD_4; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
+    fi
 
+    if ! wc_product_exists PROD_5; then
       IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
-    else
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme activate oceanwp
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce
     fi
   fi
 
@@ -435,6 +502,39 @@ EOF
     APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
     echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
   fi
+
+  # add some test pages and posts
+  echo "generating test pages/posts..."
+
+  function wp_post_exists() {
+    POST_TYPE="$1"
+    POST_NAME="$2"
+    POST_COUNT=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post list --post_type="$POST_TYPE" | grep "$POST_NAME" | wc -l )
+    [ $POST_COUNT != "0" ]
+  }
+
+  function wp_new_post() {
+    POST_TYPE=$1
+    POST_NAME=$2
+    POST_TITLE=$3
+    POST_CONTENT="
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices tellus eu ante finibus, ac finibus nunc interdum. Donec arcu ante, eleifend vel mollis at, varius et mi. Nullam sagittis justo sit amet arcu mattis, eu rutrum ligula imperdiet. Maecenas condimentum libero sem, scelerisque porttitor magna viverra at. Vivamus sollicitudin facilisis maximus. Nulla vitae eros tristique eros gravida tempor. Nunc eleifend tortor ac nisl porttitor rhoncus. Quisque vestibulum suscipit ligula, sed pulvinar tellus bibendum ac. Ut porta gravida arcu in eleifend.</p>
+
+<p>Suspendisse venenatis varius congue. Morbi varius, velit sit amet imperdiet pharetra, orci ex molestie leo, a fermentum lorem est sit amet mi. Quisque dolor dolor, mattis finibus interdum nec, interdum ut mauris. Duis cursus lectus id turpis ornare mollis. Donec posuere eget ipsum vitae suscipit. Phasellus ac faucibus nisl, laoreet lacinia nisi. Nunc est turpis, sagittis vitae tempus nec, efficitur et dui. Quisque tincidunt ante at tortor tincidunt porttitor. Donec at vulputate neque. Mauris aliquet non sapien nec convallis. Mauris scelerisque gravida tortor. Pellentesque in pulvinar arcu. Maecenas ante sem, mollis sed augue vitae, consequat sollicitudin ex.</p>
+";
+
+    if ! wp_post_exists "$POST_TYPE" "$POST_NAME"; then
+      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post create --post_type="$POST_TYPE" --post_name="$POST_NAME" --post_title="$POST_TITLE" --post_content="$POST_CONTENT" --post_status=publish
+    fi
+  }
+
+  wp_new_post page "about" "About"
+  wp_new_post page "contact-us" "Contact Us"
+  wp_new_post page "learn-more" "Learn More"
+
+  wp_new_post post "march-update" "March Update"
+  wp_new_post post "10-new-ways-to-whatever" "Learn 10 exciting new ways to WHATEVER!"
+  wp_new_post post "why-use-our-stuff" "Why you should be using our stuff and whatnot!"
 
   # setup everything required for unit tests
   if [ "$WORDPRESS_VERSION" = "trunk" ]; then

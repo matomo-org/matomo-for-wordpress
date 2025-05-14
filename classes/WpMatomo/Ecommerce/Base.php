@@ -121,6 +121,7 @@ class Base {
 					}
 				}
 			}
+
 			$this->ajax_tracker_calls = [];
 
 			return '';

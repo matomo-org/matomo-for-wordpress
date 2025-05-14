@@ -115,6 +115,17 @@ class Website {
     return this.wpNonce!;
   }
 
+  async gotoWooCommerceSetupWizard() {
+      await browser.url(`${await this.baseUrl()}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
+      const skipSetupLink = $(SKIP_SETUP_LINK_SELECTOR);
+      try {
+          await skipSetupLink.waitForDisplayed();
+      } catch (e) {
+          // ignore
+      }
+      return skipSetupLink;
+  }
+
   /**
    * Misc Notes:
    * - for simpler code here we disable woocommerce's reactified settings page in test-utility-plugin.php
@@ -128,13 +139,14 @@ class Website {
 
     const baseUrl = await this.baseUrl();
 
-    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
-    const skipSetupLink = $(SKIP_SETUP_LINK_SELECTOR);
-    try {
-      await skipSetupLink.waitForDisplayed();
-    } catch (e) {
-      // ignore
-    }
+    await this.gotoWooCommerceSetupWizard();
+
+    // on php 7.2, setting the permalink via wp cli somehow causes the woocommerce setup to break.
+    // visiting the permalink settings page, then going back to the setup wizard, fixes this. no
+    // idea why.
+    await browser.url(`${baseUrl}/wp-admin/options-permalink.php`)
+    await $('#permalink-input-plain').waitForExist({ timeout: 30000 });
+    const skipSetupLink = await this.gotoWooCommerceSetupWizard();
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
@@ -159,10 +171,15 @@ class Website {
       await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
     }
 
-    await browser.waitUntil(async () => {
-      const url = await browser.getUrl()
-      return /page=wc-admin$/.test(url);
-    }, { timeout: 30000 });
+    try {
+        await browser.waitUntil(async () => {
+            const url = await browser.getUrl()
+            return /page=wc-admin$/.test(url);
+        }, {timeout: 30000});
+    } catch (e) {
+        console.log(`did not redirect to wc-admin, url is: ${await browser.getUrl()}`);
+        throw e;
+    }
 
     await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
 

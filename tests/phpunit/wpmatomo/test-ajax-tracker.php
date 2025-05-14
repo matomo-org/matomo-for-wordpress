@@ -50,6 +50,8 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			$_SERVER['HTTP_REFERER'] = $this->old_referrer;
 		}
 
+		unset( $_SERVER['HTTP_SEC_PURPOSE'] );
+
 		$this->unset_wc_session();
 
 		if ( $this->blogid ) {
@@ -156,6 +158,71 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEmpty( $tracker->cookieVisitorId );
 		$this->assertEmpty( $tracker->forcedVisitorId );
+	}
+
+	/**
+	 * @dataProvider get_sec_purpose_test_values
+	 */
+	public function test_ajax_tracker_with_sec_purpose_header( $header_value, $expected_requests ) {
+		$tracker = new class( $this->settings ) extends AjaxTracker {
+			public $sent_requests = [];
+
+			protected function wp_remote_request( $url, $args ) {
+				// remove random query params
+				$url = preg_replace( '/&_id=[^&]+/', '', $url );
+				$url = preg_replace( '/&r=[^&]+/', '', $url );
+				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
+				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
+
+				$this->sent_requests[] = $url;
+				return null;
+			}
+		};
+
+		if ( empty( $header_value ) ) { // test without sec-purpose
+			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
+		} else {
+			$_SERVER['HTTP_SEC_PURPOSE'] = $header_value;
+		}
+
+		$tracker->setUrl( 'https://testurl' );
+		$tracker->doTrackPageView( 'test document' );
+
+		$this->assertEquals( $expected_requests, $tracker->sent_requests );
+	}
+
+	public function get_sec_purpose_test_values() {
+		return [
+			[
+				null,
+				[
+					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+				],
+			],
+			[
+				'randomvalue',
+				[
+					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+				],
+			],
+
+			[
+				'prefetch',
+				[],
+			],
+			[
+				'prefetch;prerender',
+				[],
+			],
+			[
+				'prerender',
+				[],
+			],
+			[
+				'astrangeprefetchvalue',
+				[],
+			],
+		];
 	}
 
 	private function create_blog() {

@@ -20,6 +20,8 @@ use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
+use WpMatomo\TrackingCode\GeneratorOptions;
+use WpMatomo\TrackingCode\TrackingCodeGenerator;
 use WpMatomo\Updater\UpdateInProgressException;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,10 +84,8 @@ class Updater {
 	}
 
 	public function update_if_needed() {
-		$executed_updates = [];
-
 		$plugins_requiring_update = $this->get_plugins_requiring_update();
-		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
+		if ( ! empty( $plugins_requiring_update ) ) {
 			try {
 				$this->update();
 			} catch ( UpdateInProgressException $e ) {
@@ -94,9 +94,8 @@ class Updater {
 				return; // we also don't execute any further update as they should be executed in another process
 			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'plugin_update', $e );
-				continue;
+				return;
 			}
-			$executed_updates[] = $key;
 
 			// we're scheduling another update in case there are some dimensions to be updated or anything
 			// we do not do this in the "update" method as otherwise we might be calling this recursively...
@@ -104,14 +103,19 @@ class Updater {
 			// away but need an actual reload and cache clearance etc
 			wp_schedule_single_event( time() + 15, ScheduledTasks::EVENT_UPDATE );
 
-			update_option( $key, $plugin_version );
-
 			// we make sure to delete cache even if no component was updated eg there may be translation updates etc
 			// and caches need to be invalidated
 			Filesystem::deleteAllCacheOnUpdate();
+
+			$tracking_code_generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
+			$tracking_code_generator->update_tracking_code( true );
 		}
 
-		return $executed_updates;
+		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
+			update_option( $key, $plugin_version );
+		}
+
+		return array_keys( $plugins_requiring_update );
 	}
 
 	public function update( $update_from_version = null ) {
