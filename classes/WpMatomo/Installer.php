@@ -167,6 +167,7 @@ class Installer {
 			try {
 				// sync user now again after installing plugins...
 				// before eg the users_language table would not have been available yet
+				$this->logger->log( 'Creating user...' );
 				$this->create_user();
 			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_create_user', $e );
@@ -174,6 +175,7 @@ class Installer {
 
 			try {
 				// update plugins if there are any
+				$this->logger->log( 'Updating components if needed...' );
 				$this->update_components();
 			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_update_comp', $e );
