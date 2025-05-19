@@ -135,6 +135,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/vendor/prefixed/twig/twig/src/Node/Expression/Filter/RawFilter.php',
 			'app/vendor/prefixed/twig/twig/src/Node/NameDeprecation.php',
 			'app/vendor/prefixed/twig/twig/src/Util/ReflectionCallable.php',
+
+			// added via patch
+			'app/plugins/CoreHome/stylesheets/a11y.less',
 		];
 
 		try {

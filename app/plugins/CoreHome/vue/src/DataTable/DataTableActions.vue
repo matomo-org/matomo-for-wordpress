@@ -18,6 +18,7 @@
       v-if="hasConfigItems && (isAnyConfigureIconHighlighted || isTableView)"
     >
       <span class="icon-configure"></span>
+      <span class="visually-hidden">{{ translate('CoreHome_ReportConfiguration') }}</span>
     </a>
 
     <a v-if="hasFooterIconsToShow"
@@ -93,7 +94,10 @@
       href=""
       style="margin-right:3.5px"
       @click.prevent
-    ><span class="icon-export"></span></a>
+    >
+      <span class="icon-export"></span>
+      <span class="visually-hidden">{{ translate('General_ExportThisReport') }}</span>
+    </a>
 
     <a
       v-if="showExportAsImageIcon"
