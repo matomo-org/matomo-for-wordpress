@@ -25,8 +25,8 @@ class OptOut {
 	public function register_hooks() {
 		// TODO: instead of changing the default behavior of the opt out, which may have custom styling in existing users
 		// setups, lets create a new shortcode and reference that one in HTML.
-		add_shortcode( 'matomo_opt_out', [ $this, 'show_opt_out' ] );
-		add_shortcode( 'matomo_opt_out_classic', [ $this, 'show_classic_opt_out' ] );
+		add_shortcode( 'matomo_opt_out', [ $this, 'show_classic_opt_out' ] );
+		add_shortcode( 'matomo_opt_out_form', [ $this, 'show_opt_out' ] );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 		add_action( 'init', [ $this, 'load_block' ] );
 	}

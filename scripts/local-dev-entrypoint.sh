@@ -527,9 +527,9 @@ EOF
     if [ "$HAS_OPT_OUT" = "1" ]; then
       POST_CONTENT="$POST_CONTENT
 
-[matomo_opt_out]
+[matomo_opt_out_form]
 
-[matomo_opt_out_classic]
+[matomo_opt_out]
 "
     fi
 
