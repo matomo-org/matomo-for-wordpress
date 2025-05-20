@@ -14,14 +14,16 @@ class ContactUsPage extends Page {
 
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });
         await browser.waitUntil(() => browser.execute(() => {
-            return window.jQuery('#matomo-opt-out-form-embed input#trackVisits').length;
+            return window.jQuery('input#trackVisits:visible').length > 0;
         }), { timeout: 60000 })
 
+        const count = await browser.execute(() => window.jQuery('#matomo-opt-out-form-embed input#trackVisits:visible').length);
+        console.log('found ' + count);
         return result;
     }
 
     async clickOptOut() {
-        await $('#matomo-opt-out-form-embed #trackVisits').click();
+        await $('#trackVisits').click();
         await browser.pause(500);
     }
 

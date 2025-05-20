@@ -59,7 +59,7 @@ describe('OptOut', () => {
     });
 
     it('should opt the user in when the checkbox is checked (new)', async () => {
-        await ContactUsPage.clickOptOutClassic();
+        await ContactUsPage.clickOptOut();
         await ContactUsPage.open();
 
         const countOfCheckedInputs = await browser.execute(() => {
