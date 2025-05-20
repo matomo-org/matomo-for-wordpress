@@ -14,10 +14,6 @@ describe('OptOut', () => {
     const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
     before(async () => {
-        if (!process.env.PHP_VERSION) { // TODO: check this in wdio.conf
-            throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
-        }
-
         await Website.login();
     });
 

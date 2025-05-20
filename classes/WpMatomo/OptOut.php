@@ -23,8 +23,6 @@ class OptOut {
 	private $language = null;
 
 	public function register_hooks() {
-		// TODO: instead of changing the default behavior of the opt out, which may have custom styling in existing users
-		// setups, lets create a new shortcode and reference that one in HTML.
 		add_shortcode( 'matomo_opt_out', [ $this, 'show_classic_opt_out' ] );
 		add_shortcode( 'matomo_opt_out_form', [ $this, 'show_opt_out' ] );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
@@ -33,7 +31,7 @@ class OptOut {
 
 	public function load_scripts() {
 		if ( ! is_admin() ) {
-			wp_register_script( 'matomo_opt_out_classic_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
+			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
 		}
 	}
 
@@ -45,12 +43,12 @@ class OptOut {
 		$this->language = $this->get_language_from_atts( $atts );
 		$this->language = isset( $this->language ) ? $this->language : 'auto';
 
-		$div_id = 'matomo-opt-out-form-embed';
+		$div_id = self::OPT_OUT_DIV_ID;
 
-		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . self::OPT_OUT_DIV_ID . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
+		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . $div_id . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
 		$url = plugins_url( $url, MATOMO_ANALYTICS_FILE );
 
-		wp_enqueue_script( 'matomo_opt_out_js', $url, [], 2, true ); // output in the footer
+		wp_enqueue_script( 'matomo_opt_out_form_js', $url, [], 1, true ); // output in the footer
 
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
 		$content = "<div id=\"$div_id\"></div>";
