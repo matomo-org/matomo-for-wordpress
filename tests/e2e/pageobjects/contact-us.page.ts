@@ -12,13 +12,14 @@ class ContactUsPage extends Page {
     async open() {
         const result = super.open('/contact-us/');
 
+        await $('#matomo_optout_checkbox').waitForExist({ timeout: 30000 });
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });
         await browser.waitUntil(() => browser.execute(() => {
             return window.jQuery('input#trackVisits:visible').length > 0;
         }), { timeout: 60000 })
 
-        const count = await browser.execute(() => window.jQuery('#matomo-opt-out-form-embed input#trackVisits:visible').length);
-        console.log('found ' + count);
+        await browser.pause(10000);
+
         return result;
     }
 
