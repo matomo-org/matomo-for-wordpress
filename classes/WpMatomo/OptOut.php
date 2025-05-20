@@ -50,11 +50,10 @@ class OptOut {
 		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . self::OPT_OUT_DIV_ID . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
 		$url = plugins_url( $url, MATOMO_ANALYTICS_FILE );
 
+		wp_enqueue_script( 'matomo_opt_out_js', $url, [], 2, true ); // output in the footer
+
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
-		$content = <<<EOF
-<script src="$url"></script>
-<div id="$div_id"></div>
-EOF;
+		$content = "<div id=\"$div_id\"></div>";
 		return $content;
 	}
 
