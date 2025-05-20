@@ -30,5 +30,14 @@ describe('OptOut', () => {
         ).toEqual(0);
     });
 
+    it('should opt the user out preference when the checkbox is unchecked (classic)', async () => {
+        await ContactUsPage.clickOptOutClassic();
+        await ContactUsPage.open();
+
+        await ContactUsPage.prepareBlogPostPageForScreenshot();
+        await expect(
+            await browser.checkFullPageScreen(`mwp.page-with-opt-out.classic-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
+        ).toEqual(0);
+    });
     // TODO: test
 });

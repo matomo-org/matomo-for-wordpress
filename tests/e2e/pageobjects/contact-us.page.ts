@@ -17,6 +17,16 @@ class ContactUsPage extends Page {
 
         return result;
     }
+
+    async clickOptOut() {
+        await $('#matomo-opt-out-form-embed #trackVisits').click();
+        await browser.pause(500);
+    }
+
+    async clickOptOutClassic() {
+        await $('form #matomo_optout_checkbox').click();
+        await browser.pause(500);
+    }
 }
 
 export default new ContactUsPage();
