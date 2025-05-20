@@ -34,9 +34,6 @@ class OptOut {
 	public function load_scripts() {
 		if ( ! is_admin() ) {
 			wp_register_script( 'matomo_opt_out_classic_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
-
-			$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . self::OPT_OUT_DIV_ID . '&language=auto&showIntro=1';
-			wp_register_script( 'matomo_opt_out_js', plugins_url( $url, MATOMO_ANALYTICS_FILE ), [], 1, true );
 		}
 	}
 
@@ -46,13 +43,18 @@ class OptOut {
 
 	public function show_opt_out( $atts ) {
 		$this->language = $this->get_language_from_atts( $atts );
-
-		wp_enqueue_script( 'matomo_opt_out_js' );
+		$this->language = isset( $this->language ) ? $this->language : 'auto';
 
 		$div_id = 'matomo-opt-out-form-embed';
 
+		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . self::OPT_OUT_DIV_ID . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
+		$url = plugins_url( $url, MATOMO_ANALYTICS_FILE );
+
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
-		$content = "<div id=\"$div_id\"></div>";
+		$content = <<<EOF
+<script src="$url"></script>
+<div id="$div_id"></div>
+EOF;
 		return $content;
 	}
 

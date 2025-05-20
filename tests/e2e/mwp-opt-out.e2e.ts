@@ -30,7 +30,7 @@ describe('OptOut', () => {
         ).toEqual(0);
     });
 
-    it('should opt the user out preference when the checkbox is unchecked (classic)', async () => {
+    it('should opt the user out when the checkbox is unchecked (classic)', async () => {
         await ContactUsPage.clickOptOutClassic();
         await ContactUsPage.open();
 
@@ -39,5 +39,37 @@ describe('OptOut', () => {
             await browser.checkFullPageScreen(`mwp.page-with-opt-out.classic-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
         ).toEqual(0);
     });
-    // TODO: test
+
+    it('should opt the user in when the checkbox is checked (classic)', async () => {
+        await ContactUsPage.clickOptOutClassic();
+        await ContactUsPage.open();
+
+        const countOfCheckedInputs = await browser.execute(() => {
+            return window.jQuery('input:checked').length;
+        });
+
+        expect(countOfCheckedInputs).toEqual(2);
+    });
+
+    it('should opt the user out when the checkbox is unchecked (new)', async () => {
+        await ContactUsPage.clickOptOut();
+        await ContactUsPage.open();
+
+        const countOfCheckedInputs = await browser.execute(() => {
+            return window.jQuery('input:checked').length;
+        });
+
+        expect(countOfCheckedInputs).toEqual(0);
+    });
+
+    it('should opt the user in when the checkbox is checked (new)', async () => {
+        await ContactUsPage.clickOptOutClassic();
+        await ContactUsPage.open();
+
+        const countOfCheckedInputs = await browser.execute(() => {
+            return window.jQuery('input:checked').length;
+        });
+
+        expect(countOfCheckedInputs).toEqual(2);
+    });
 });
