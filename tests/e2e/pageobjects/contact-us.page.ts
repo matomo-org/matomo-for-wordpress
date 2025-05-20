@@ -13,7 +13,9 @@ class ContactUsPage extends Page {
         const result = super.open('/contact-us/');
 
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });
-        await $('#matomo-opt-out-form-embed input').waitForDisplayed({ timeout: 60000 });
+        await browser.waitUntil(() => browser.execute(() => {
+            return window.jQuery('#matomo-opt-out-form-embed input#trackVisits').length;
+        }), { timeout: 60000 })
 
         return result;
     }
