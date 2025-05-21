@@ -133,6 +133,8 @@ class Woocommerce extends Base {
 	}
 
 	public function on_cart_updated_safe() {
+		$this->logger->log( 'on_cart_updated_safe: ' . ( new \Exception() )->getTraceAsString() );
+
 		$this->track_next_totals_change = true;
 	}
 
