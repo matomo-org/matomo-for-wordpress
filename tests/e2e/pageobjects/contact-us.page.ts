@@ -24,13 +24,17 @@ class ContactUsPage extends Page {
     }
 
     async clickOptOut() {
-        await $('#trackVisits').click();
-        await browser.pause(500);
+        await browser.execute(() => {
+            window.jQuery('#trackVisits').click();
+        });
+        await browser.pause(1000);
     }
 
     async clickOptOutClassic() {
-        await $('form #matomo_optout_checkbox').click();
-        await browser.pause(500);
+        await browser.execute(() => {
+            window.jQuery('form #matomo_optout_checkbox').click();
+        });
+        await browser.pause(1000);
     }
 }
 
