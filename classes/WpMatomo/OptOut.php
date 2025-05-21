@@ -74,7 +74,7 @@ class OptOut {
 			return '<p>' . $this->translate( 'CoreAdminHome_OptOutDntFound' ) . '</p>';
 		}
 
-		wp_enqueue_script( 'matomo_opt_out_classic_js' );
+		wp_enqueue_script( 'matomo_opt_out_js' );
 
 		$track_visits = empty( $_COOKIE['mtm_consent_removed'] );
 
