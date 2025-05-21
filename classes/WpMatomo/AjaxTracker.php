@@ -60,6 +60,7 @@ class AjaxTracker extends \MatomoTracker {
 		$has_wc_session = function_exists( 'WC' ) && isset( WC()->session );
 		if ( $has_wc_session ) {
 			$visitor_id = WC()->session->get( ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME );
+			$this->logger->log("setting visitor ID from session: " . $visitor_id);
 			if ( ! empty( $visitor_id ) ) {
 				$this->hasCookie = true; // do not set cookies for this visitor
 				try {
@@ -74,6 +75,7 @@ class AjaxTracker extends \MatomoTracker {
 		}
 
 		if ( empty( $this->forcedVisitorId ) && $this->loadVisitorIdCookie() ) {
+			$this->logger->log("setting visitor ID from cookie: " . $this->cookieVisitorId);
 			if ( ! empty( $this->cookieVisitorId ) ) {
 				$this->has_cookie = true;
 				try {

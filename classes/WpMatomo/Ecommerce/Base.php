@@ -128,6 +128,10 @@ class Base {
 
 						$tracker_method = $methods[ $call[0] ];
 
+						if ( 'doTrackEcommerceOrder' === $tracker_method || 'doTrackEcommerceCartUpdate' === $tracker_method ) {
+							$this->logger->log('cookie: ' . var_export($_COOKIE, true));
+						}
+
 						array_shift( $call );
 						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 					} catch ( Exception $e ) {
