@@ -162,6 +162,12 @@ export default class Page {
     });
   }
 
+  async prepareBlogPostPageForScreenshot() {
+    await browser.execute(() => {
+      window.jQuery('#wpadminbar').hide();
+    });
+  }
+
   async undoChangesToWpAdminForScreenshot() {
     await browser.execute(() => {
       window.jQuery('.notice-ocean-extra-plugin').show();

@@ -517,11 +517,21 @@ EOF
     POST_TYPE=$1
     POST_NAME=$2
     POST_TITLE=$3
+    HAS_OPT_OUT="${4:-0}"
     POST_CONTENT="
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices tellus eu ante finibus, ac finibus nunc interdum. Donec arcu ante, eleifend vel mollis at, varius et mi. Nullam sagittis justo sit amet arcu mattis, eu rutrum ligula imperdiet. Maecenas condimentum libero sem, scelerisque porttitor magna viverra at. Vivamus sollicitudin facilisis maximus. Nulla vitae eros tristique eros gravida tempor. Nunc eleifend tortor ac nisl porttitor rhoncus. Quisque vestibulum suscipit ligula, sed pulvinar tellus bibendum ac. Ut porta gravida arcu in eleifend.</p>
 
 <p>Suspendisse venenatis varius congue. Morbi varius, velit sit amet imperdiet pharetra, orci ex molestie leo, a fermentum lorem est sit amet mi. Quisque dolor dolor, mattis finibus interdum nec, interdum ut mauris. Duis cursus lectus id turpis ornare mollis. Donec posuere eget ipsum vitae suscipit. Phasellus ac faucibus nisl, laoreet lacinia nisi. Nunc est turpis, sagittis vitae tempus nec, efficitur et dui. Quisque tincidunt ante at tortor tincidunt porttitor. Donec at vulputate neque. Mauris aliquet non sapien nec convallis. Mauris scelerisque gravida tortor. Pellentesque in pulvinar arcu. Maecenas ante sem, mollis sed augue vitae, consequat sollicitudin ex.</p>
 ";
+
+    if [ "$HAS_OPT_OUT" = "1" ]; then
+      POST_CONTENT="$POST_CONTENT
+
+[matomo_opt_out_form]
+
+[matomo_opt_out]
+"
+    fi
 
     if ! wp_post_exists "$POST_TYPE" "$POST_NAME"; then
       /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post create --post_type="$POST_TYPE" --post_name="$POST_NAME" --post_title="$POST_TITLE" --post_content="$POST_CONTENT" --post_status=publish
@@ -529,7 +539,7 @@ EOF
   }
 
   wp_new_post page "about" "About"
-  wp_new_post page "contact-us" "Contact Us"
+  wp_new_post page "contact-us" "Contact Us" 1
   wp_new_post page "learn-more" "Learn More"
 
   wp_new_post post "march-update" "March Update"
