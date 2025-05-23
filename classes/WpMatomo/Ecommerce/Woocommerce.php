@@ -36,6 +36,9 @@ class Woocommerce extends Base {
 			$server_side_visitor_id->register_hooks();
 		}
 
+		// compatibility with the All In One SEO plugin
+		add_filter( 'aioseo_schema_woocommerce_add_to_cart_skip_hooks', [ $this, 'aioseo_add_to_cart_skip' ] );
+
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
 		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
@@ -69,6 +72,17 @@ class Woocommerce extends Base {
 
 		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+	}
+
+	/**
+	 * TODO: quick description for why this is needed
+	 *
+	 * @param array $hooks_to_skip
+	 * @return array
+	 */
+	public function aioseo_add_to_cart_skip( $hooks_to_skip ) {
+		$hooks_to_skip[ __CLASS__ ] = 'on_cart_updated_safe';
+		return $hooks_to_skip;
 	}
 
 	public function after_calculate_totals() {
