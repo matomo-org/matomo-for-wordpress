@@ -319,12 +319,43 @@ class ScheduledTasks {
 
 		$this->remove_task_errors( [ 'archive_bootstrap', 'archive_main' ] );
 
+		$this->logger->log( 'Scheduled tasks archive data' );
+
+		$original_request_uri = $this->replace_request_uri_with_matomo_index();
+		try {
+			return $this->invoke_cron_archive( $force, $throw_exception );
+		} finally {
+			if ( null !== $original_request_uri ) {
+				$_SERVER['REQUEST_URI'] = $original_request_uri;
+			}
+		}
+	}
+
+	private function replace_request_uri_with_matomo_index() {
+		// TODO: move to new class and unit test
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			$this->logger->log( 'Unexpected: $_SERVER["REQUEST_URI"] is missing.' );
+			return null;
+		}
+
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$original_request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+
+		$query = wp_parse_url( $original_request_uri, PHP_URL_QUERY );
+		if ( ! empty( $query ) ) {
+			$query = '?' . $query;
+		}
+
+		$_SERVER['REQUEST_URI'] = plugins_url( 'app/index.php', MATOMO_ANALYTICS_FILE ) . $query;
+
+		return $original_request_uri;
+	}
+
+	private function invoke_cron_archive( $force, $throw_exception ) {
 		// exceptions should not be rethrown as they will prevent other cron tasks
 		// from running (wp-cron.php does not handle exceptions). we only want exceptions
 		// when running tests.
 		$should_rethrow_exception = ( defined( 'MATOMO_PHPUNIT_TEST' ) && MATOMO_PHPUNIT_TEST );
-
-		$this->logger->log( 'Scheduled tasks archive data' );
 
 		try {
 			Bootstrap::do_bootstrap();
