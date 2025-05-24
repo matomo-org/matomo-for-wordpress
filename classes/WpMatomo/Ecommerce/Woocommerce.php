@@ -75,7 +75,16 @@ class Woocommerce extends Base {
 	}
 
 	/**
-	 * TODO: quick description for why this is needed
+	 * The All In One SEO plugin temporarily adds products to the WooCommerce cart, calculates
+	 * some things, then empties the cart. This results in WooCommerce hooks being fired for
+	 * a cart change, even though the user never actually added anything to their cart.
+	 *
+	 * The All In One SEO plugin works around this by removing certain add_to_cart hooks
+	 * then re-adding them. To avoid tracking an ecommerce cart update during this temporary
+	 * cart addition, we have to tell AIOSEO to skip our add_to_cart hook.
+	 *
+	 * Note: this isn't documented in the AIOSEO plugin, so it's possible the way they do
+	 * this can change in the future.
 	 *
 	 * @param array $hooks_to_skip
 	 * @return array
