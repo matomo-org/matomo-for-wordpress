@@ -23,7 +23,10 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 
 class AjaxTracker extends \MatomoTracker {
 	private $has_cookie = false;
+
 	private $logger;
+
+	private $tracking_aborted = false;
 
 	public function __construct( Settings $settings ) {
 		$this->logger = new Logger();
@@ -57,6 +60,8 @@ class AjaxTracker extends \MatomoTracker {
 			$this->disableCookieSupport();
 		}
 
+		$only_track_if_visitor_id_present = $settings->get_option( Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME );
+
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
 				$this->has_cookie = true;
@@ -82,6 +87,9 @@ class AjaxTracker extends \MatomoTracker {
 					}
 				}
 			}
+		} else if ( $only_track_if_visitor_id_present ) {
+			$this->tracking_aborted = true;
+			$this->logger->log('visitor ID not found, aborting tracking (due to Only Track If Visitor ID Present setting)');
 		}
 	}
 
@@ -96,6 +104,10 @@ class AjaxTracker extends \MatomoTracker {
 	}
 
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+		if ( $this->tracking_aborted ) {
+			return null;
+		}
+
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
 			return null; // not installed or synced yet

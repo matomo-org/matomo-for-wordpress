@@ -43,6 +43,8 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$this->disable_woocommerce_cookies();
 
 		$this->settings = new Settings();
+		$this->settings->set_option( Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME, false );
+		$this->settings->save();
 	}
 
 	public function tearDown(): void {
@@ -164,20 +166,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 	 * @dataProvider get_sec_purpose_test_values
 	 */
 	public function test_ajax_tracker_with_sec_purpose_header( $header_value, $expected_requests ) {
-		$tracker = new class( $this->settings ) extends AjaxTracker {
-			public $sent_requests = [];
-
-			protected function wp_remote_request( $url, $args ) {
-				// remove random query params
-				$url = preg_replace( '/&_id=[^&]+/', '', $url );
-				$url = preg_replace( '/&r=[^&]+/', '', $url );
-				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
-				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
-
-				$this->sent_requests[] = $url;
-				return null;
-			}
-		};
+		$tracker = $this->make_mock_ajax_tracker();
 
 		if ( empty( $header_value ) ) { // test without sec-purpose
 			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
@@ -225,8 +214,78 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		];
 	}
 
+	public function test_ajax_tracker_sends_no_request_when_only_track_with_visitor_id_enabled_and_no_visitor_id() {
+		$this->settings->set_option( Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME, true );
+		$this->settings->save();
+
+		$this->assertArrayNotHasKey( '_pk_id_1_3678', $_COOKIE );
+
+		$tracker = $this->make_mock_ajax_tracker();
+		$tracker->setUrl( 'https://testurl' );
+		$tracker->doTrackPageView( 'test document' );
+
+		$this->assertEmpty( $tracker->sent_requests );
+	}
+
+	public function test_ajax_tracker_sends_request_when_only_track_with_visitor_id_enabled_and_visitor_id_in_cookie() {
+		$this->settings->set_option( Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME, true );
+		$this->settings->save();
+
+		$visitor_id               = '3333456789abcdef';
+		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+
+		$tracker = $this->make_mock_ajax_tracker();
+		$tracker->setUrl( 'https://testurl' );
+		$tracker->doTrackPageView( 'test document' );
+
+		$expected_requests = [
+			'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=' . $visitor_id . '&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+		];
+
+		$this->assertEquals( $expected_requests, $tracker->sent_requests );
+	}
+
+	public function test_ajax_tracker_sends_request_when_only_track_with_visitor_id_enabled_and_visitor_id_in_session() {
+		$this->settings->set_option( Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME, true );
+		$this->settings->save();
+
+		$this->assertArrayNotHasKey( '_pk_id_1_3678', $_COOKIE );
+
+		$visitor_id = '2223456789abcdef';
+
+		$this->initialize_wc_session();
+		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
+
+		$tracker = $this->make_mock_ajax_tracker();
+		$tracker->setUrl( 'https://testurl' );
+		$tracker->doTrackPageView( 'test document' );
+
+		$expected_requests = [
+			'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=' . $visitor_id . '&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+		];
+
+		$this->assertEquals( $expected_requests, $tracker->sent_requests );
+	}
+
 	private function create_blog() {
 		$this->blogid = self::factory()->blog->create();
 		return $this->blogid;
+	}
+
+	private function make_mock_ajax_tracker() {
+		return new class( $this->settings ) extends AjaxTracker {
+			public $sent_requests = [];
+
+			protected function wp_remote_request( $url, $args ) {
+				// remove random query params
+				$url = preg_replace( '/&_id=[^&]+/', '', $url );
+				$url = preg_replace( '/&r=[^&]+/', '', $url );
+				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
+				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
+
+				$this->sent_requests[] = $url;
+				return null;
+			}
+		};
 	}
 }
