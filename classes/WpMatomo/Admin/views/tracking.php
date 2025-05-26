@@ -244,7 +244,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				''
 			);
 
-			$matomo_only_track_if_visitor_id_present_desc = esc_html__( 'This setting, when enabled, prevents server side tracking of ecommerce events when a visitor ID is not found, which can happen if, for example, a user does not give consent for tracking. If you use a consent manager, it is recommended to keep this setting enabled.', 'matomo' );
+			$matomo_only_track_if_visitor_id_present_desc = esc_html__( 'This setting, when enabled, prevents server side tracking of ecommerce events when a visitor ID is not found. This can happen if, for example, a user does not give consent for tracking. If you use a consent manager, it is recommended to keep this setting enabled.', 'matomo' );
 
 			$matomo_form->show_checkbox(
 				\WpMatomo\Settings::ONLY_TRACK_ECOMMERCE_IF_VISITOR_ID_PRESENT_OPTION_NAME,
