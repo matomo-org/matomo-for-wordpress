@@ -36,6 +36,9 @@ class Woocommerce extends Base {
 			$server_side_visitor_id->register_hooks();
 		}
 
+		// compatibility with the All In One SEO plugin
+		add_filter( 'aioseo_schema_woocommerce_add_to_cart_skip_hooks', [ $this, 'aioseo_add_to_cart_skip' ] );
+
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
 		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
@@ -69,6 +72,26 @@ class Woocommerce extends Base {
 
 		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+	}
+
+	/**
+	 * The All In One SEO plugin temporarily adds products to the WooCommerce cart, calculates
+	 * some things, then empties the cart. This results in WooCommerce hooks being fired for
+	 * a cart change, even though the user never actually added anything to their cart.
+	 *
+	 * The All In One SEO plugin works around this by removing certain add_to_cart hooks
+	 * then re-adding them. To avoid tracking an ecommerce cart update during this temporary
+	 * cart addition, we have to tell AIOSEO to skip our add_to_cart hook.
+	 *
+	 * Note: this isn't documented in the AIOSEO plugin, so it's possible the way they do
+	 * this can change in the future.
+	 *
+	 * @param array $hooks_to_skip
+	 * @return array
+	 */
+	public function aioseo_add_to_cart_skip( $hooks_to_skip ) {
+		$hooks_to_skip[ __CLASS__ ] = 'on_cart_updated_safe';
+		return $hooks_to_skip;
 	}
 
 	public function after_calculate_totals() {
