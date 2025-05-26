@@ -120,7 +120,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<p><?php echo sprintf( esc_html__( 'Download the %1$sMatomo Marketplace for WordPress%2$s plugin.', 'matomo' ), '<em>', '</em>' ); ?></p>
 
-				<a class="button-primary download-plugin" rel="noreferrer noopener" target="_blank" href="http://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip">
+				<a class="button-primary download-plugin" rel="noreferrer noopener" target="_blank" href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip">
 					<?php esc_html_e( 'Download', 'matomo' ); ?>
 				</a>
 			</div>
