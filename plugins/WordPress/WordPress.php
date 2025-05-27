@@ -355,77 +355,15 @@ class WordPress extends Plugin
         });
     }
 
-    public function onDispatchRequestEnd(&$result, $module, $action, $parameters) {
-        // TODO: extract and unit test
+    public function onDispatchRequestEnd(&$result, $module, $action, $parameters)
+    {
     	if (!empty($result) && is_string($result)) {
     		// https://wordpress.org/support/topic/bugged-favicon/#post-12995669
     		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
 
-            // replace all links to third party Matomo plugin files with their proper WordPress URLs
-            $result = preg_replace_callback(
-                '%\"plugins/.*?\"%',
-                function ($matches) {
-                    // $url looks like plugins/SearchEngineKeywordsPerformance/images/...
-                    $url = $matches[0];
-                    $segments = explode('/', $url);
-                    $plugin = $segments[1] ?? '';
-
-                    // entries in this array will look like SearchEngineKeywordsPerformance/SearchEngineKeywordsPerformance.php
-                    $allPluginsInstalledInWp = $GLOBALS['MATOMO_PLUGIN_FILES'] ?? [];
-                    foreach ($allPluginsInstalledInWp as $matomoPluginFile) {
-                        if ($matomoPluginFile === $plugin . '/' . $plugin . '.php') {
-                            array_shift($segments);
-                            array_shift($segments);
-                            $urlRelativeToPlugin = implode('/', $segments);
-
-                            return plugins_url($urlRelativeToPlugin, $matomoPluginFile);
-                        }
-                    }
-
-                    return $matches[0];
-                },
-                $result
-            );
-
-            // replace URLs to third party Matomo plugin files in JSON values (used to initiate Vue components)
-            $result = preg_replace_callback(
-                '%&quot;(?:\\.\\\\/)?plugins\\\\/.*?&quot;%',
-                function ($matches) {
-                    $url = Common::unsanitizeInputValue( $matches[0] );
-                    $url = json_decode($url, true);
-                    if (empty($url) || !is_string($url)) { // sanity check
-                        return $matches[0];
-                    }
-
-                    if (substr($url, 0, 2) === './') {
-                        $url = substr($url, 2);
-                    }
-
-                    // TODO: code redundancy
-                    $segments = explode('/', $url);
-                    $plugin = $segments[1] ?? '';
-
-                    // entries in this array will look like:
-                    // /path/to/wordpress/wp-content/plugins/SearchEngineKeywordsPerformance/SearchEngineKeywordsPerformance.php
-                    $allPluginsInstalledInWp = $GLOBALS['MATOMO_PLUGIN_FILES'] ?? [];
-                    foreach ($allPluginsInstalledInWp as $matomoPluginFile) {
-                        if (basename($matomoPluginFile) === $plugin . '.php') {
-                            array_shift($segments);
-                            array_shift($segments);
-                            $urlRelativeToPlugin = implode('/', $segments);
-
-                            $replace = plugins_url($urlRelativeToPlugin, $matomoPluginFile);
-                            $replace = json_encode($replace);
-                            $replace = Common::sanitizeInputValue($replace);
-                            return $replace;
-                        }
-                    }
-
-                    return $matches[0];
-                },
-                $result
-            );
+            $pluginUrlReplacer = new \PluginUrlReplacer();
+            $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
 	    }
     }
     public function onDispatchRequest(&$module, &$action, &$parameters)
