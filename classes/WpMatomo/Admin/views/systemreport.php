@@ -32,6 +32,7 @@ use WpMatomo\Admin\SystemReport;
 /** @var bool $matomo_has_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
+/** @var array $matomo_scheduled_tasks */
 
 if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	function matomo_format_value_text( $value ) {
@@ -233,7 +234,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_RUN_UPDATER ); ?>" type="submit"
 					   class='button-primary'
 					   title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Run Updater', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Run Updater', 'matomo' ); ?>">
 				<label for="matomo_troubleshooting_update_from">Run updates from version:</label>
 				<input id="matomo_troubleshooting_update_from"
 					   type="text"
@@ -258,6 +259,26 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				   class="button-primary"
 				   title="<?php esc_attr_e( 'Force the cached tracking code to be regenerated. The tracking code is usually regenerated on update and after changing tracking settings, or if a Matomo plugin is installed/updated, but if you need to do it manually, you can do it here.', 'matomo' ); ?>"
 				   value="<?php esc_attr_e( 'Regenerate tracking code', 'matomo' ); ?>">
+			<br/>
+			<br/>
+
+			<input name="<?php echo esc_attr( SystemReport::RUN_SCHEDULED_TASK ); ?>" type="submit"
+				   class="button-primary"
+				   title="<?php esc_attr_e( 'Run a scheduled task by name.', 'matomo' ); ?>"
+				   value="<?php esc_attr_e( 'Run scheduled task', 'matomo' ); ?>"
+				   />
+			<label for="matomo_troubleshooting_run_task">Task to run:</label>
+			<select
+				id="matomo_troubleshooting_run_task"
+				name="matomo_troubleshooting_run_task"
+				title="<?php esc_attr_e( 'Pick a task to run', 'matomo' ); ?>"
+			>
+				<?php foreach ( $matomo_scheduled_tasks as $matomo_task ) { ?>
+				<option value="<?php echo esc_attr( $matomo_task ); ?>"><?php echo esc_html( $matomo_task ); ?></option>
+				<?php } ?>
+			</select>
+			<br/>
+			<br/>
 		</form>
 
 		<?php
