@@ -26,6 +26,9 @@ use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\WordPress\WordPress;
+use Piwik\Scheduler\Scheduler;
+use Piwik\Scheduler\Task;
+use Piwik\Scheduler\TaskLoader;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
 use Piwik\Version;
@@ -72,6 +75,7 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
 	const REGENERATE_TRACKING_CODE        = 'matomo_troubleshooting_action_regen_tracking_code';
+	const RUN_SCHEDULED_TASK              = 'matomo_troubleshooting_action_run_task';
 
 	private $not_compatible_plugins = [
 		'minify-html-markup',
@@ -252,6 +256,25 @@ class SystemReport {
 					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
 				}
 			}
+
+			if ( ! empty( $_POST[ self::RUN_SCHEDULED_TASK ] ) ) {
+				try {
+					Bootstrap::do_bootstrap();
+
+					if ( empty( $_POST['matomo_troubleshooting_run_task'] ) ) {
+						throw new \Exception( __( 'No task specified.', 'matomo' ) );
+					}
+
+					$task_to_run = sanitize_text_field( wp_unslash( $_POST['matomo_troubleshooting_run_task'] ) );
+
+					$scheduler = StaticContainer::get( Scheduler::class );
+					$message   = $scheduler->runTaskNow( $task_to_run );
+
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'Task ran successfully', 'matomo' ) . ': ' . esc_html( $message ) . '</p></div>';
+				} catch ( \Exception $e ) {
+					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
+				}
+			}
 		}
 	}
 
@@ -339,8 +362,9 @@ class SystemReport {
 		$matomo_tables                    = [];
 		$matomo_has_exception_logs        = [];
 		$matomo_has_warning_and_no_errors = false;
+		$matomo_scheduled_tasks           = [];
 
-		if ( empty( $matomo_active_tab ) ) {
+		if ( empty( $matomo_active_tab ) ) { // system report
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			$this->initial_error_reporting = @error_reporting();
 			$matomo_tables                 = $this->get_error_tables();
@@ -351,6 +375,14 @@ class SystemReport {
 			$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 			$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
 			$matomo_has_exception_logs        = $this->logger->get_last_logged_entries();
+		} else { // troubleshooting
+			try {
+				Bootstrap::do_bootstrap();
+				$scheduler              = StaticContainer::get( Scheduler::class );
+				$matomo_scheduled_tasks = $scheduler->getTaskList();
+			} catch ( \Exception $e ) {
+				$this->logger->log_exception( 'troubleshooting', $e );
+			}
 		}
 
 		include dirname( __FILE__ ) . '/views/systemreport.php';
