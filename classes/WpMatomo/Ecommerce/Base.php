@@ -105,6 +105,8 @@ class Base {
 
 	protected function wrap_script( $script ) {
 		if ( $this->should_track_background() ) {
+			$tracking_succeeded = false;
+
 			foreach ( $this->ajax_tracker_calls as $call ) {
 				$methods = [
 					'addEcommerceItem'         => 'addEcommerceItem',
@@ -115,8 +117,10 @@ class Base {
 					try {
 						$tracker_method = $methods[ $call[0] ];
 						array_shift( $call );
-						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+						$tracking_method_result = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+						$tracking_succeeded     = false !== $tracking_method_result;
 					} catch ( Exception $e ) {
+						$tracking_succeeded = false;
 						$this->logger->log_exception( $call[0], $e );
 					}
 				}
@@ -124,7 +128,7 @@ class Base {
 
 			$this->ajax_tracker_calls = [];
 
-			return '';
+			return $tracking_succeeded ? '' : false;
 		}
 
 		if ( empty( $script ) ) {

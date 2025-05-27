@@ -265,16 +265,22 @@ class Woocommerce extends Base {
 		];
 		$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 
-		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
+		$wrapped_script = $this->wrap_script( $tracking_code );
 
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_tracked => 1,
-			]
-		);
+		if ( false !== $wrapped_script ) {
+			$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		return $this->wrap_script( $tracking_code );
+			$this->save_order_metadata(
+				$order,
+				[
+					$this->key_order_tracked => 1,
+				]
+			);
+		} else {
+			$this->logger->log( sprintf( 'Did not track order %s with number %s, either due to failure or missing visitor ID', $order_id, $order_id_to_track ) );
+		}
+
+		return $wrapped_script;
 	}
 
 	private function isWC3() {
