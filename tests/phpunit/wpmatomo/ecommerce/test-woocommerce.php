@@ -7,6 +7,9 @@
  * @package matomo
  */
 
+// for @runInSeparateProcess annotation used below
+require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
+
 /**
  * @package matomo
  */
@@ -218,7 +221,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			remove_filter( 'woocommerce_order_needs_payment', '__return_false' );
 			remove_filter( 'woocommerce_payment_complete_order_status', $complete_order_status_cb );
 			$this->stopped_doing_ajax();
-			ob_end_flush();
+			ob_end_clean();
 		}
 
 		$order = $this->get_order();
