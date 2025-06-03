@@ -103,23 +103,35 @@ class Base {
 		return $code;
 	}
 
-	protected function wrap_script( $script ) {
-		if ( $this->should_track_background() ) {
-			foreach ( $this->ajax_tracker_calls as $call ) {
-				$methods = [
-					'addEcommerceItem'         => 'addEcommerceItem',
-					'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
-					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
-				];
-				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
-					try {
-						$tracker_method = $methods[ $call[0] ];
-						array_shift( $call );
-						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
-					} catch ( Exception $e ) {
-						$this->logger->log_exception( $call[0], $e );
+	protected function wrap_script( $script, $force_background_tracking = false, $forced_visitor_id = false ) {
+		if (
+			$force_background_tracking
+			|| $this->should_track_background()
+		) {
+			$previous_visitor_id = $this->tracker->forcedVisitorId;
+			if ( ! empty( $forced_visitor_id ) ) {
+				$this->tracker->set_visitor_id_safe( $forced_visitor_id );
+			}
+
+			try {
+				foreach ( $this->ajax_tracker_calls as $call ) {
+					$methods = [
+						'addEcommerceItem'         => 'addEcommerceItem',
+						'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
+						'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
+					];
+					if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
+						try {
+							$tracker_method = $methods[ $call[0] ];
+							array_shift( $call );
+							call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+						} catch ( Exception $e ) {
+							$this->logger->log_exception( $call[0], $e );
+						}
 					}
 				}
+			} finally {
+				$this->tracker->forcedVisitorId = $previous_visitor_id;
 			}
 
 			$this->ajax_tracker_calls = [];

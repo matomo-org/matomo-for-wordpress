@@ -60,27 +60,24 @@ class AjaxTracker extends \MatomoTracker {
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
 				$this->has_cookie = true;
-				try {
-					$this->setVisitorId( $this->cookieVisitorId );
-				} catch (\Exception $ex) {
-					// do not fatal if the visitor ID is invalid for some reason
-					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
-						throw $ex;
-					}
-				}
+				$this->set_visitor_id_safe( $this->cookieVisitorId );
 			}
 		} else if ( function_exists( 'WC' ) && isset( WC()->session ) ) {
 			$visitor_id = WC()->session->get( ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME );
 			if ( ! empty( $visitor_id ) ) {
 				$this->hasCookie = true; // do not set cookies for this visitor, since it would have no effect anyway
-				try {
-					$this->setVisitorId( $visitor_id );
-				} catch ( \Exception $ex ) {
-					// do not fatal if the visitor ID is invalid for some reason
-					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
-						throw $ex;
-					}
-				}
+				$this->set_visitor_id_safe( $visitor_id );
+			}
+		}
+	}
+
+	public function set_visitor_id_safe( $visitor_id ) {
+		try {
+			$this->setVisitorId( $visitor_id );
+		} catch ( \Exception $ex ) {
+			// do not fatal if the visitor ID is invalid for some reason
+			if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
+				throw $ex;
 			}
 		}
 	}

@@ -11,6 +11,7 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\AjaxTracker;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,9 +24,13 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 
 class Woocommerce extends Base {
 
+	const DELAYED_TRACKING_EVENT_NAME = 'matomo_delayed_track_order';
+
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
 	private $track_next_totals_change = false;
+
+	private $key_order_received_visited = 'matomo-order-received-visited';
 
 	public function register_hooks() {
 		parent::register_hooks();
@@ -72,6 +77,8 @@ class Woocommerce extends Base {
 
 		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+
+		add_action( 'matomo_delayed_track_order', [ $this, 'on_delayed_order_track' ], 10, 2 );
 	}
 
 	/**
@@ -149,10 +156,30 @@ class Woocommerce extends Base {
 		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
 			$order_id = isset( $wp->query_vars['order-received'] ) ? $wp->query_vars['order-received'] : 0;
 			if ( ! empty( $order_id ) && $order_id > 0 ) {
+				$this->mark_order_received_page_visited( $order_id );
+
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $this->on_order( $order_id );
 			}
 		}
+	}
+
+	private function mark_order_received_page_visited( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		$this->save_order_metadata(
+			$order,
+			[
+				$this->key_order_received_visited => '1',
+			]
+		);
+	}
+
+	private function has_order_received_been_visited( \WC_Order $order ) {
+		return $this->get_order_meta( $order, $this->key_order_received_visited ) === '1';
 	}
 
 	public function on_cart_updated_safe() {
@@ -219,7 +246,7 @@ class Woocommerce extends Base {
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
 	}
 
-	public function on_order( $order_id ) {
+	public function on_order( $order_id, $is_delayed_tracking = false, $forced_visitor_id = false ) {
 		$order = wc_get_order( $order_id );
 		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
 		if ( ! $order ) {
@@ -234,6 +261,11 @@ class Woocommerce extends Base {
 		if ( $this->get_order_meta( $order, $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
+			return '';
+		}
+
+		if ( ! $is_delayed_tracking && ! $this->has_order_received_been_visited( $order ) ) {
+			$this->delay_order_tracking( $order );
 			return '';
 		}
 
@@ -297,7 +329,16 @@ class Woocommerce extends Base {
 			]
 		);
 
-		return $this->wrap_script( $tracking_code );
+		$force_background_tracking = $is_delayed_tracking;
+		return $this->wrap_script( $tracking_code, $force_background_tracking, $forced_visitor_id );
+	}
+
+	public function on_delayed_order_track( $order_id, $visitor_id ) {
+		$this->on_order( $order_id, true, $visitor_id );
+	}
+
+	private function delay_order_tracking( \WC_Order $order ) {
+		wp_schedule_single_event( time() + 180, self::DELAYED_TRACKING_EVENT_NAME, [ $this->get_order_id( $order ), $this->tracker->forcedVisitorId ] );
 	}
 
 	private function isWC3() {

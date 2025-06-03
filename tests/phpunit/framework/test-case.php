@@ -241,4 +241,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	protected function doing_ajax() {
 		add_filter( 'wp_doing_ajax', '__return_true' );
 	}
+
+	protected function stopped_doing_ajax() {
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
 }
