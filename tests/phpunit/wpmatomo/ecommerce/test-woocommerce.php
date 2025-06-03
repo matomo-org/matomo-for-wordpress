@@ -217,15 +217,17 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			} catch ( \WPDieException $ex ) {
 				// ignore
 			}
+			ob_end_flush();
 		} finally {
 			remove_filter( 'woocommerce_order_needs_payment', '__return_false' );
 			remove_filter( 'woocommerce_payment_complete_order_status', $complete_order_status_cb );
 			$this->stopped_doing_ajax();
-			ob_end_clean();
+			ob_end_flush();
 		}
 
 		$order = $this->get_order();
 		$this->assertEquals( 'pending', $order->get_status() );
+		exit;
 	}
 
 	private function simulate_order_received_page_visit() {

@@ -19,8 +19,8 @@ class MatomoTestEcommerce extends Base {
 	 * @return string
 	 * @see Base::wrap_script()
 	 */
-	public function wrap_script( $script ) {
-		return parent::wrap_script( $script );
+	public function wrap_script( $script, $force_background_tracking, $forced_visitor_id ) {
+		return parent::wrap_script( $script, $force_background_tracking, $forced_visitor_id );
 	}
 
 	/**
