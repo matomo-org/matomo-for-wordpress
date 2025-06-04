@@ -55,10 +55,12 @@ class RolesTest extends MatomoUnit_TestCase {
 		$roles = $this->roles->get_available_roles_for_configuration();
 		$this->assertSame(
 			array(
-				'editor'      => 'Editor',
-				'author'      => 'Author',
-				'contributor' => 'Contributor',
-				'subscriber'  => 'Subscriber',
+				'editor'       => 'Editor',
+				'author'       => 'Author',
+				'contributor'  => 'Contributor',
+				'subscriber'   => 'Subscriber',
+				'customer'     => 'Customer',
+				'shop_manager' => 'Shop manager',
 			),
 			$roles
 		);
