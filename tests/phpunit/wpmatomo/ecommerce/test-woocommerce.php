@@ -28,6 +28,10 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		if ( ! $this->is_test_case_runnable() ) {
+			$this->markTestSkipped( 'cannot run test in current environment' );
+		}
+
 		$this->clear_superglobals();
 
 		$this->manually_load_woocommerce();
@@ -341,5 +345,12 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			}
 		};
 		$this->test_instance->register_hooks();
+	}
+
+	private function is_test_case_runnable() {
+		$wordpress_version = getenv( 'WORDPRESS_VERSION' );
+		return version_compare( $wordpress_version, '5.3', '<' )
+			&& 'trunk' !== $wordpress_version
+			&& 'latest' !== $wordpress_version;
 	}
 }
