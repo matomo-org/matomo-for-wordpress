@@ -19,7 +19,7 @@ class MatomoTestEcommerce extends Base {
 	 * @return string
 	 * @see Base::wrap_script()
 	 */
-	public function wrap_script( $script, $force_background_tracking, $forced_visitor_id ) {
+	public function wrap_script( $script, $force_background_tracking = false, $forced_visitor_id = false ) {
 		return parent::wrap_script( $script, $force_background_tracking, $forced_visitor_id );
 	}
 

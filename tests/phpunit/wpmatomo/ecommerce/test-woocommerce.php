@@ -210,6 +210,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			$_POST['billing_state']      = 'CA';
 			$_POST['billing_postcode']   = '94103-4313';
 			$_POST['billing_email']      = 'alistair.mcgroooovy@myemail.com';
+			$_POST['billing_phone']      = '123-456-7890';
 			$_POST['payment_method']     = 'cod';
 
 			try {
@@ -217,7 +218,6 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			} catch ( \WPDieException $ex ) {
 				// ignore
 			}
-			ob_end_flush();
 		} finally {
 			remove_filter( 'woocommerce_order_needs_payment', '__return_false' );
 			remove_filter( 'woocommerce_payment_complete_order_status', $complete_order_status_cb );
@@ -227,7 +227,6 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 		$order = $this->get_order();
 		$this->assertEquals( 'pending', $order->get_status() );
-		exit;
 	}
 
 	private function simulate_order_received_page_visit() {
