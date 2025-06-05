@@ -7,6 +7,8 @@
  *
  */
 
+namespace Piwik\Plugins\WordPress\Html;
+
 use Piwik\Common;
 
 class PluginUrlReplacer

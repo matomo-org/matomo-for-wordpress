@@ -19,6 +19,7 @@ use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
+use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
 use Piwik\Version;
@@ -362,7 +363,7 @@ class WordPress extends Plugin
     		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
 
-            $pluginUrlReplacer = new \PluginUrlReplacer();
+            $pluginUrlReplacer = new PluginUrlReplacer();
             $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
 	    }
     }
