@@ -86,6 +86,9 @@ class ImportTest extends MatomoAnalytics_TestCase {
 				\WP_STATISTICS\Install::create_table( is_multisite() );
 				\WP_STATISTICS\Install::create_options();
 			} else {
+				\WP_STATISTICS\Option::saveOptionGroup( 'migrated', false, 'db' );
+				\WP_STATISTICS\Option::saveOptionGroup( 'check', false, 'db' );
+
 				if ( is_multisite() ) {
 					// phpcs:ignore WordPress.DB
 					$blog_ids = $wpdb->get_col( "SELECT `blog_id` FROM $wpdb->blogs" );
@@ -96,6 +99,18 @@ class ImportTest extends MatomoAnalytics_TestCase {
 					}
 				} else {
 					\WP_Statistics\Service\Database\Managers\MigrationHandler::runMigrations();
+				}
+
+				// invoke the schema migration process manually, since the HTTP request
+				// wp-statistics normally makes to start it asynchronously, does not work
+				// in the test environment
+				try {
+					$process = WP_Statistics()->getBackgroundProcess( 'schema_migration_process' );
+					$method  = new \ReflectionMethod( $process, 'handle' );
+					$method->setAccessible( true );
+					$method->invoke( $process );
+				} catch ( \WPDieException $ex ) {
+					// ignore
 				}
 			}
 
