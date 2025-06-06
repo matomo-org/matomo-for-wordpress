@@ -486,7 +486,7 @@ EOF
   # setup wp-mail-smtp
   if [[ "$WORDPRESS_VERSION" != "trunk" ]] && php -r "exit(version_compare('$WORDPRESS_VERSION', '5.5', '<') ? 0 : 1);"; then
     WP_MAIL_SMTP_VERSION="--version=3.11.1"
-  elif [[ "$WORDPRESS_VERSION" != "trunk" ]] && php -r "exit(version_compare('$WORDPRESS_VERSION', '7.4', '<') ? 0 : 1);"; then
+  elif php -r "exit(version_compare('$PHP_VERSION', '7.4', '<') ? 0 : 1);"; then
     WP_MAIL_SMTP_VERSION="--version=4.4.0"
   fi
 
