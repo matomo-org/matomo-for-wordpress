@@ -10,6 +10,26 @@
 // for @runInSeparateProcess annotation used below
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
 
+class TestAjaxTracker extends \WpMatomo\AjaxTracker {
+	public $captured_urls = [];
+
+	protected function wp_remote_request( $url, $args ) {
+		// remove random query params
+		$url = preg_replace( '/&_id=[^&]+/', '&_id=REMOVED', $url );
+		$url = preg_replace( '/&r=[^&]+/', '', $url );
+		$url = preg_replace( '/&_idts=[^&]+/', '', $url );
+		$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
+
+		$this->captured_urls[] = $url;
+	}
+}
+
+class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
+	protected function should_track_background() {
+		return true;
+	}
+}
+
 /**
  * @package matomo
  */
@@ -354,25 +374,9 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		// NOTE: this can't be put into the setup, since AjaxTracker loads the visitor ID cookie during
 		// construction, and we want to change it during tests
 		$this->settings = new \WpMatomo\Settings();
-		$this->tracker  = new class( $this->settings ) extends \WpMatomo\AjaxTracker {
-			public $captured_urls = [];
+		$this->tracker  = new TestAjaxTracker( $this->settings );
 
-			protected function wp_remote_request( $url, $args ) {
-				// remove random query params
-				$url = preg_replace( '/&_id=[^&]+/', '&_id=REMOVED', $url );
-				$url = preg_replace( '/&r=[^&]+/', '', $url );
-				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
-				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
-
-				$this->captured_urls[] = $url;
-			}
-		};
-
-		$this->test_instance = new class( $this->tracker, $this->settings ) extends \WpMatomo\Ecommerce\Woocommerce {
-			protected function should_track_background() {
-				return true;
-			}
-		};
+		$this->test_instance = new TestWoocommerce( $this->tracker, $this->settings );
 		$this->test_instance->register_hooks();
 	}
 
