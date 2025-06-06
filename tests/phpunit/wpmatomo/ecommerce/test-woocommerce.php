@@ -165,6 +165,35 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_order_tracking_order_processed_after_order_received_with_no_visitorid() {
+		$this->make_test_instance();
+
+		$this->simulate_add_to_cart();
+		$this->simulate_payment_complete_with_pending_status();
+		$this->simulate_order_received_page_visit();
+
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+
+		$this->mark_order_processing();
+
+		// if order status is changed after order received visited, the delayed tracking event should never be scheduled
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+
+		$this->assertEquals(
+			[
+				// ecommerce cart tracking request
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
+				// ecommerce order tracking request
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+			],
+			$this->tracker->captured_urls
+		);
+	}
+
 	private function add_test_product() {
 		$product = new WC_Product_Simple();
 		$product->set_name( 'a tiny hat' );
@@ -330,7 +359,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 			protected function wp_remote_request( $url, $args ) {
 				// remove random query params
-				$url = preg_replace( '/&_id=[^&]+/', '', $url );
+				$url = preg_replace( '/&_id=[^&]+/', '&_id=REMOVED', $url );
 				$url = preg_replace( '/&r=[^&]+/', '', $url );
 				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
 				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
@@ -349,8 +378,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 	private function is_test_case_runnable() {
 		$wordpress_version = getenv( 'WORDPRESS_VERSION' );
-		return version_compare( $wordpress_version, '5.3', '<' )
-			&& 'trunk' !== $wordpress_version
-			&& 'latest' !== $wordpress_version;
+		return version_compare( $wordpress_version, '5.3', '>' )
+			|| 'trunk' === $wordpress_version
+			|| 'latest' === $wordpress_version;
 	}
 }
