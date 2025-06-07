@@ -150,4 +150,14 @@ class AjaxTracker extends \MatomoTracker {
 	protected function wp_remote_request( $url, $args ) {
 		return wp_remote_request( $url, $args );
 	}
+
+	/**
+	 * In Matomo for WordPress we want to rely entirely on JavaScript tracker
+	 * for creating cookies.
+	 *
+	 * @return void
+	 */
+	protected function setFirstPartyCookies() {
+		// disabled
+	}
 }
