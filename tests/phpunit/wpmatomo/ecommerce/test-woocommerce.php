@@ -190,6 +190,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_order_processed_after_order_received_with_no_visitorid() {
+		// no cookie when user adding to cart
+
 		$this->make_test_instance();
 
 		$this->simulate_add_to_cart();
@@ -203,12 +205,18 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		// if order status is changed after order received visited, the delayed tracking event should never be scheduled
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
 
+		$visitor_id               = '0123456789abcdef';
+		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+
+		$this->execute_next_scheduled_event( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+
+		// check that there is no cid= parameter, just a _id= parameter, which signifies a cookie
 		$this->assertEquals(
 			[
 				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
 				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
 			],
 			$this->tracker->captured_urls
 		);
