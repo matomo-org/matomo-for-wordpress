@@ -111,6 +111,8 @@ class Base {
 			$previous_visitor_id = $this->tracker->forcedVisitorId;
 			if ( ! empty( $forced_visitor_id ) ) {
 				$this->tracker->set_visitor_id_safe( $forced_visitor_id );
+			} elseif ( '' === $forced_visitor_id ) {
+				$this->tracker->setNewVisitorId();
 			}
 
 			try {

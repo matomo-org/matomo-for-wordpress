@@ -28,6 +28,14 @@ class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 	protected function should_track_background() {
 		return true;
 	}
+
+	public function setTracker( $tracker ) {
+		$this->tracker = $tracker;
+	}
+
+	public function getTracker() {
+		return $this->tracker;
+	}
 }
 
 /**
@@ -86,10 +94,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_when_expected_user_flow() {
-		$visitor_id               = '0123456789abcdef';
-		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
-
 		$this->make_test_instance();
+		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
@@ -113,10 +119,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_when_order_processed_before_order_received() {
-		$visitor_id               = '0123456789abcdef';
-		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
-
 		$this->make_test_instance();
+		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
@@ -135,7 +139,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$this->simulate_order_received_page_visit();
 
 		// set different visitor ID to simulate the event executing during another visitor's request
-		$this->tracker->forcedVisitorId = '4444456789abcdef';
+		$this->set_visitor_id_cookie( '4444456789abcdef' );
 
 		$this->execute_next_scheduled_event( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
 
@@ -158,10 +162,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_order_processed_after_order_received() {
-		$visitor_id               = '0123456789abcdef';
-		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
-
 		$this->make_test_instance();
+		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
@@ -196,27 +198,23 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
-		$this->simulate_order_received_page_visit();
-
-		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
-
 		$this->mark_order_processing();
 
-		// if order status is changed after order received visited, the delayed tracking event should never be scheduled
-		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
 
-		$visitor_id               = '0123456789abcdef';
-		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
 		$this->execute_next_scheduled_event( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+
+		$this->simulate_order_received_page_visit();
 
 		// check that there is no cid= parameter, just a _id= parameter, which signifies a cookie
 		$this->assertEquals(
 			[
 				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
 				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
 			],
 			$this->tracker->captured_urls
 		);
@@ -283,7 +281,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			remove_filter( 'woocommerce_order_needs_payment', '__return_false' );
 			remove_filter( 'woocommerce_payment_complete_order_status', $complete_order_status_cb );
 			$this->stopped_doing_ajax();
-			ob_end_flush();
+			ob_end_clean();
 		}
 
 		$order = $this->get_order();
@@ -325,10 +323,15 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	private function execute_next_scheduled_event( $event_name ) {
 		$events = $this->get_events_scheduled( $event_name );
 		$event  = reset( $events );
+		if ( empty( $event ) ) {
+			throw new \Exception( 'unexpected: no event found' );
+		}
+
+		$args = empty( $event['args'] ) ? [] : $event['args'];
 
 		// phpcs:disable PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ellipsisFound
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
-		do_action( $event_name, ...$event['args'] );
+		do_action( $event_name, ...$args );
 	}
 
 	private function get_order() {
@@ -393,5 +396,17 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		return version_compare( $wordpress_version, '5.3', '>' )
 			|| 'trunk' === $wordpress_version
 			|| 'latest' === $wordpress_version;
+	}
+
+	private function set_visitor_id_cookie( $visitor_id ) {
+		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+
+		// recreate the tracker so the tracker will read the new visitor ID
+		$captured_urls                = $this->tracker->captured_urls;
+		$this->tracker                = new TestAjaxTracker( $this->settings );
+		$this->tracker->captured_urls = $captured_urls;
+
+		$this->test_instance->setTracker( $this->tracker );
+		$this->assertEquals( $visitor_id, $this->test_instance->getTracker()->forcedVisitorId );
 	}
 }

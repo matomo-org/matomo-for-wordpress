@@ -334,7 +334,7 @@ class Woocommerce extends Base {
 	}
 
 	public function on_delayed_order_track( $order_id, $visitor_id ) {
-		$this->on_order( $order_id, true, $visitor_id );
+		$this->on_order( $order_id, true, $visitor_id ? $visitor_id : '' );
 	}
 
 	private function delay_order_tracking( \WC_Order $order ) {
