@@ -162,13 +162,17 @@ class Website {
     if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
       await possibleModalButton.click();
     } else { // latest woocommerce
-      await $('#woocommerce-select-control-0__help').click();
+      await browser.execute(() => {
+        window.jQuery('#woocommerce-select-control-0__help')[0].click();
+      });
 
       await browser.execute(() => {
         window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
       });
 
-      await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-profiler-go-to-mystore__button-container > button')[0].click();
+      });
     }
 
     try {

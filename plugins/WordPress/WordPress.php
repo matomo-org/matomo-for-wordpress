@@ -19,6 +19,7 @@ use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
+use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
 use Piwik\Version;
@@ -355,11 +356,15 @@ class WordPress extends Plugin
         });
     }
 
-    public function onDispatchRequestEnd(&$result, $module, $action, $parameters) {
+    public function onDispatchRequestEnd(&$result, $module, $action, $parameters)
+    {
     	if (!empty($result) && is_string($result)) {
     		// https://wordpress.org/support/topic/bugged-favicon/#post-12995669
     		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
+
+            $pluginUrlReplacer = new PluginUrlReplacer();
+            $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
 	    }
     }
     public function onDispatchRequest(&$module, &$action, &$parameters)
