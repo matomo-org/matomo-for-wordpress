@@ -53,12 +53,26 @@ class AjaxTracker extends \MatomoTracker {
 			$tracking_code_generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings ) );
 			$cookie_domain = $tracking_code_generator->get_tracking_cookie_domain();
 			$this->enableCookies( $cookie_domain );
+			if (
+				( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'add_to_cart' )
+				|| ( isset( $_POST['action'] ) && $_POST['action'] === 'add_to_cart' )
+			) {
+				$this->logger->log('[add_to_cart log] cookie domain is: ' . $cookie_domain );
+				$this->logger->log('[add_to_cart log] visitor id cookie name is: ' . $this->getCookieName( 'id' ) );
+				$this->logger->log('[add_to_cart log] cookies sent: ' . var_export( array_keys( $_COOKIE ), true ) );
+			}
 		} else {
 			$this->disableCookieSupport();
 		}
 
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
+				if (
+					( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'add_to_cart' )
+					|| ( isset( $_POST['action'] ) && $_POST['action'] === 'add_to_cart' )
+				) {
+					$this->logger->log( '[add_to_cart log] found cookie: ' . $this->cookieVisitorId );
+				}
 				$this->has_cookie = true;
 				$this->set_visitor_id_safe( $this->cookieVisitorId );
 			}
@@ -67,6 +81,13 @@ class AjaxTracker extends \MatomoTracker {
 			if ( ! empty( $visitor_id ) ) {
 				$this->hasCookie = true; // do not set cookies for this visitor, since it would have no effect anyway
 				$this->set_visitor_id_safe( $visitor_id );
+			}
+		} else {
+			if (
+				( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'add_to_cart' )
+				|| ( isset( $_POST['action'] ) && $_POST['action'] === 'add_to_cart' )
+			) {
+				$this->logger->log( '[add_to_cart log] no cookie found' );
 			}
 		}
 	}
