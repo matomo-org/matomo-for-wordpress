@@ -9,6 +9,7 @@
 * Make sure report export and report config buttons in report footers are noticed by screen readers.
 * Update Matomo core to 5.3.2.
 * Fix critical error that can occur if a product cannot be found during tracking.
+* Fix issue causing images in third party Matomo plugins to fail to load.
 
 = 5.3.0 =
 * Update Matomo core to 5.3.1.
