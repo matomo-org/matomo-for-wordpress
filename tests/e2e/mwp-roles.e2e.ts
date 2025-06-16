@@ -28,7 +28,7 @@ describe('MWP Roles', () => {
             return window
                 .jQuery('.wp-menu-name')
                 .toArray()
-                .map((e) => window.jQuery(e).text());
+                .map((e) => window.jQuery(e).text().trim());
         });
 
         expect(menuItems).toContain('Dashboard');
@@ -44,7 +44,7 @@ describe('MWP Roles', () => {
             return window
                 .jQuery('.wp-submenu a')
                 .toArray()
-                .map((e) => window.jQuery(e).text());
+                .map((e) => window.jQuery(e).text().trim());
         });
 
         expect(matomoMenuItems).toEqual(['Summary', 'Reporting', 'Help', 'Marketplace']);
