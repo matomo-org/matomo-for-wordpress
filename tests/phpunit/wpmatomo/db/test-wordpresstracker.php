@@ -14,6 +14,8 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	private $db;
 
 	public function setUp(): void {
+		$this->overwrite_wpdb = false;
+
 		parent::setUp();
 		$this->db = new WordPress(
 			array(
