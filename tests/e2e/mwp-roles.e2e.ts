@@ -22,7 +22,7 @@ describe('MWP Roles', () => {
     it('should display the wordpress admin dashboard when the user has view access', async () => {
         await Website.login('matomoviewuser', 'matomoviewuser');
 
-        await $('#dashboard-widgets-wrap').waitForExist({ timeout: 60000 });
+        await $('form#your-profile').waitForExist({ timeout: 60000 });
 
         const menuItems = await browser.execute(() => {
             return window
