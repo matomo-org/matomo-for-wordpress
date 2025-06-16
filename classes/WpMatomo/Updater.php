@@ -214,6 +214,8 @@ class Updater {
 		if ( $this->settings->should_disable_addhandler() ) {
 			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_DISABLE_ADDHANDLER );
 		}
+
+		do_action( 'matomo_update' );
 	}
 
 	public function is_upgrade_in_progress() {
