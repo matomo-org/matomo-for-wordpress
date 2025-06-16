@@ -39,8 +39,8 @@ class Roles {
 	 * Adds role capabilities to Matomo roles in case they changed
 	 * between Matomo for WordPress versions.
 	 *
-	 * Note: at the moment, we don't remove capbilities in case a user
-	 * has used a plugin to manipulate them.
+	 * Note: at the moment we don't remove capabilities that shouldn't
+	 * be there, in case a user has used another WP plugin to customize them.
 	 *
 	 * @return void
 	 */
