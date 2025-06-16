@@ -14,7 +14,14 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	private $db;
 
 	public function setUp(): void {
+		global $wpdb;
+
+		$this->overwrite_wpdb = false;
+
 		parent::setUp();
+
+		$wpdb->show_errors( false );
+
 		$this->db = new WordPress(
 			array(
 				'enable_ssl'     => false,
