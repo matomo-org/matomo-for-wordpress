@@ -549,6 +549,23 @@ EOF
   wp_new_post post "10-new-ways-to-whatever" "Learn 10 exciting new ways to WHATEVER!"
   wp_new_post post "why-use-our-stuff" "Why you should be using our stuff and whatnot!"
 
+  # create users with matomo roles
+  echo "adding test users..."
+  function wp_new_user() {
+    ROLE="${1}_role"
+    USERID="${1//_}user"
+    USEREMAIL="${USERID}@nowhere.com"
+
+    if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user exists "$USERID"; then
+      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user create "$USERID" "$USEREMAIL" --user_pass="$USERID" --role="$ROLE"
+    fi
+  }
+
+  wp_new_user matomo_view
+  wp_new_user matomo_write
+  wp_new_user matomo_admin
+  wp_new_user matomo_superuser
+
   # setup everything required for unit tests
   if [ "$WORDPRESS_VERSION" = "trunk" ]; then
     WORDPRESS_SVN_FOLDER="trunk"
