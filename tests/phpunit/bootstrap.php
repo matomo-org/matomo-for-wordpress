@@ -11,6 +11,10 @@
  * @todo find why this warning is triggered
  * phpcs:disable WordPress.Security.EscapeOutput.DeprecatedWhitelistCommentFound
  */
+
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+
 $tests_dir = getenv( 'WP_TESTS_DIR' );
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound

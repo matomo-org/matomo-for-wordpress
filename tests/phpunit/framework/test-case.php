@@ -22,6 +22,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	private $original_wpdb = null;
 
+	protected $overwrite_wpdb = true;
+
 	/**
 	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
 	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
@@ -37,7 +39,10 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->overwrite_wpdb();
+		if ( $this->overwrite_wpdb ) {
+			$this->overwrite_wpdb();
+		}
+
 		$this->set_ajax_die_handler();
 
 		if ( is_multisite() ) {
@@ -56,7 +61,10 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		$this->wordpress_fixture->tear_down();
 
 		$this->remove_ajax_die_handler();
-		$this->restore_wpdb();
+
+		if ( $this->overwrite_wpdb ) {
+			$this->restore_wpdb();
+		}
 
 		parent::tearDown();
 

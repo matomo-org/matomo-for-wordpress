@@ -68,7 +68,7 @@ class Website {
     this.site = siteSlug;
   }
 
-  async login() {
+  async login(user?: string, pass?: string) {
     if (this.loggedIn) {
       return;
     }
@@ -84,8 +84,8 @@ class Website {
           window.jQuery('#user_login').val(l);
           window.jQuery('#user_pass').val(p);
         },
-        process.env.WORDPRESS_USER_LOGIN || 'root',
-        process.env.WORDPRESS_USER_PASS || 'pass'
+        user || process.env.WORDPRESS_USER_LOGIN || 'root',
+        pass || process.env.WORDPRESS_USER_PASS || 'pass'
       );
       await $('#wp-submit').click();
 
@@ -95,6 +95,17 @@ class Website {
         }));
       }, { timeout: 60000 });
     });
+  }
+
+  async logout() {
+    const logoutLink = $('#wp-admin-bar-logout a');
+    if (await logoutLink.isExisting()) {
+        await browser.execute(() => {
+            window.jQuery('#wp-admin-bar-logout a')[0].click();
+        });
+
+        await $('#user_login').waitForExist({ timeout: 60000 });
+    }
   }
 
   async getWpNonce() {
@@ -162,13 +173,17 @@ class Website {
     if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
       await possibleModalButton.click();
     } else { // latest woocommerce
-      await $('#woocommerce-select-control-0__help').click();
+      await browser.execute(() => {
+        window.jQuery('#woocommerce-select-control-0__help')[0].click();
+      });
 
       await browser.execute(() => {
         window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
       });
 
-      await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-profiler-go-to-mystore__button-container > button')[0].click();
+      });
     }
 
     try {

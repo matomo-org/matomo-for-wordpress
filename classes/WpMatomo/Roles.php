@@ -32,6 +32,30 @@ class Roles {
 
 	public function register_hooks() {
 		add_action( 'init', [ $this, 'add_roles' ] );
+		add_action( 'matomo_update', [ $this, 'on_update' ] );
+	}
+
+	/**
+	 * Adds role capabilities to Matomo roles in case they changed
+	 * between Matomo for WordPress versions.
+	 *
+	 * Note: at the moment we don't remove capabilities that shouldn't
+	 * be there, in case a user has used another WP plugin to customize them.
+	 *
+	 * @return void
+	 */
+	public function on_update() {
+		if ( ! $this->has_set_up_roles() ) {
+			$this->add_roles();
+			return;
+		}
+
+		$roles = $this->get_matomo_roles();
+		foreach ( $roles as $role_name => $config ) {
+			foreach ( $config['capabilities'] as $capability => $ignore ) {
+				wp_roles()->add_cap( $role_name, $capability );
+			}
+		}
 	}
 
 	public function get_available_roles_for_configuration() {
@@ -64,20 +88,36 @@ class Roles {
 	public function get_matomo_roles() {
 		return [
 			self::ROLE_VIEW      => [
-				'name'       => 'Matomo View',
-				'defaultCap' => Capabilities::KEY_VIEW,
+				'name'         => 'Matomo View',
+				'capabilities' => [
+					Capabilities::KEY_VIEW => true,
+					'read'                 => true,
+					'view_admin_dashboard' => true,
+				],
 			],
 			self::ROLE_WRITE     => [
-				'name'       => 'Matomo Write',
-				'defaultCap' => Capabilities::KEY_WRITE,
+				'name'         => 'Matomo Write',
+				'capabilities' => [
+					Capabilities::KEY_WRITE => true,
+					'read'                  => true,
+					'view_admin_dashboard'  => true,
+				],
 			],
 			self::ROLE_ADMIN     => [
-				'name'       => 'Matomo Admin',
-				'defaultCap' => Capabilities::KEY_ADMIN,
+				'name'         => 'Matomo Admin',
+				'capabilities' => [
+					Capabilities::KEY_ADMIN => true,
+					'read'                  => true,
+					'view_admin_dashboard'  => true,
+				],
 			],
 			self::ROLE_SUPERUSER => [
-				'name'       => 'Matomo Super User',
-				'defaultCap' => Capabilities::KEY_SUPERUSER,
+				'name'         => 'Matomo Super User',
+				'capabilities' => [
+					Capabilities::KEY_SUPERUSER => true,
+					'read'                      => true,
+					'view_admin_dashboard'      => true,
+				],
 			],
 		];
 	}
@@ -85,7 +125,7 @@ class Roles {
 	public function add_roles( $force = false ) {
 		if ( ! $this->has_set_up_roles() || $force ) {
 			foreach ( $this->get_matomo_roles() as $role_name => $config ) {
-				add_role( $role_name, $config['name'], [ $config['defaultCap'] => true ] );
+				add_role( $role_name, $config['name'], $config['capabilities'] );
 			}
 			$this->mark_roles_set_up();
 		}

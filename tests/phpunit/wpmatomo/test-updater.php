@@ -16,9 +16,14 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	private $updater;
 
 	public function setUp(): void {
+		global $wpdb;
+
+		$this->overwrite_wpdb      = false;
 		$this->disable_temp_tables = true;
 
 		parent::setUp();
+
+		$wpdb->show_errors( false );
 
 		$this->updater = new Updater( new Settings() );
 	}

@@ -1,5 +1,16 @@
 == Changelog ===
 
+= 5.3.1 =
+* New troubleshooting tool that runs a specific scheduled task.
+* Fix compatibility issue with the All In One SEO plugin that resulted in incorrectly tracking a cart addition on a product view.
+* Use HTTPS link to the marketplace install archive.
+* Add JavaScript opt out code in new shortcode which is now considered the recommended option.
+* Workaround lack of prerendering support in Matomo core JavaScript tracker.
+* Make sure report export and report config buttons in report footers are noticed by screen readers.
+* Update Matomo core to 5.3.2.
+* Fix critical error that can occur if a product cannot be found during tracking.
+* Fix issue causing images in third party Matomo plugins to fail to load.
+
 = 5.3.0 =
 * Update Matomo core to 5.3.1.
 * Allow Matomo API and tracker requests to be authenticated by WordPress App Passwords.
