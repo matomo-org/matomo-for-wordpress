@@ -82,6 +82,11 @@ class AjaxTracker extends \MatomoTracker {
 		}
 	}
 
+	public function is_success_response( $response ) {
+		$gif_response = "R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+		return $response === base64_decode( $gif_response );
+	}
+
 	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ) {
 		if ( ! $this->has_cookie ) {
 			// we only set / overwrite cookies if it is a visitor that has eg no JS enabled or ad blocker enabled etc.

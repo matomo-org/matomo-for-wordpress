@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Base {
+	const DELAYED_SERVER_SIDE_TRACKING_HOOK = 'matomo_delayed_tracking';
+
 	protected $key_order_tracked = 'order-tracked';
 
 	/**
@@ -56,6 +58,8 @@ class Base {
 
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
+
+		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, 'do_delayed_tracking' );
 	}
 
 	public function register_hooks() {
@@ -103,38 +107,20 @@ class Base {
 		return $code;
 	}
 
-	protected function wrap_script( $script, $force_background_tracking = false, $forced_visitor_id = false ) {
-		if (
-			$force_background_tracking
-			|| $this->should_track_background()
-		) {
-			$previous_visitor_id = $this->tracker->forcedVisitorId;
-			if ( ! empty( $forced_visitor_id ) ) {
-				$this->tracker->set_visitor_id_safe( $forced_visitor_id );
-			} elseif ( '' === $forced_visitor_id ) {
-				$this->tracker->setNewVisitorId();
+	protected function wrap_script( $script ) {
+		if ( $this->should_track_background() ) {
+			if ( $this->should_delay_server_side_tracking() ) {
+				$this->delay_background_tracking();
+				// TODO: delay here
+				// on next pageview, if session data exists, track it.
+					// remove tracking data from session
+				// when event executes, if tracking data is in session, execute it and remove.
+					// if doTrackEcommerceOrder is here,
+				wp_unschedule_event()
+				return false; // TODO: do not say order tracked
 			}
 
-			try {
-				foreach ( $this->ajax_tracker_calls as $call ) {
-					$methods = [
-						'addEcommerceItem'         => 'addEcommerceItem',
-						'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
-						'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
-					];
-					if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
-						try {
-							$tracker_method = $methods[ $call[0] ];
-							array_shift( $call );
-							call_user_func_array( [ $this->tracker, $tracker_method ], $call );
-						} catch ( Exception $e ) {
-							$this->logger->log_exception( $call[0], $e );
-						}
-					}
-				}
-			} finally {
-				$this->tracker->forcedVisitorId = $previous_visitor_id;
-			}
+			$this->track_in_background( $this->ajax_tracker_calls );
 
 			$this->ajax_tracker_calls = [];
 
@@ -153,5 +139,79 @@ class Base {
 		}
 
 		return $script;
+	}
+
+	private function track_in_background( $ajax_tracker_calls ) {
+		foreach ( $ajax_tracker_calls as $call ) {
+			$methods = [
+				'addEcommerceItem'         => 'addEcommerceItem',
+				'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
+				'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
+			];
+			if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
+				try {
+					$tracker_method = $methods[ $call[0] ];
+					array_shift( $call );
+					$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+
+					if (
+						$tracker_method === 'doTrackEcommerceCartUpdate'
+						&& $this->tracker->is_success_response( $response )
+					) {
+						$order_id = reset( $call );
+						$this->set_order_been_tracked( $order_id );
+					}
+				} catch ( Exception $e ) {
+					$this->logger->log_exception( $call[0], $e );
+				}
+			}
+		}
+	}
+
+	protected function delay_background_tracking() {
+		$delay_time    = $this->get_seconds_to_delay_tracking();
+		$tracking_time = time() + $delay_time;
+
+		$tracking_data = [
+			'calls'        => $this->ajax_tracker_calls,
+			'delayed_time' => $tracking_time,
+			// TODO: add ip, visitorid + time
+		];
+
+		wp_schedule_single_event( $tracking_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+
+		$this->save_ajax_calls_in_session( $tracking_data );
+	}
+
+	protected function should_delay_server_side_tracking() {
+		if ( ! $this->supports_delayed_tracking() ) {
+			return false;
+		}
+
+		return false; // TODO: get from setting
+	}
+
+	protected function supports_delayed_tracking() {
+		return false; // TODO: override in WooCommerce
+	}
+
+	protected function get_seconds_to_delay_tracking() {
+		return 180; // TODO: get from setting
+	}
+
+	protected function do_delayed_tracking( $tracking_info ) {
+		// TODO: what if we already tracked?
+
+		$calls = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
+		$this->track_in_background( $calls );
+	}
+
+	protected function save_ajax_calls_in_session($data ) {
+		// empty
+		// TODO: override in WooCommerce
+	}
+
+	protected function get_ajax_calls_in_session() {
+		// TODO
 	}
 }
