@@ -137,30 +137,44 @@ class Base {
 		return $script;
 	}
 
-	private function track_in_background( $ajax_tracker_calls ) {
-		foreach ( $ajax_tracker_calls as $call ) {
-			$methods = [
-				'addEcommerceItem'         => 'addEcommerceItem',
-				'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
-				'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
-			];
-			if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
-				try {
-					$tracker_method = $methods[ $call[0] ];
-					array_shift( $call );
-					$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+	private function track_in_background( $ajax_tracker_calls, $visitor_id = null, $tracking_time = null ) {
+		$original_visitor_id = $this->tracker->forcedVisitorId;
+		if ( ! empty( $visitor_id ) ) {
+			$this->tracker->set_visitor_id_safe( $visitor_id );
+		}
 
-					if (
-						'doTrackEcommerceCartUpdate' === $tracker_method
-						&& $this->tracker->is_success_response( $response )
-					) {
-						$order_id = reset( $call );
-						$this->set_order_been_tracked( $order_id );
+		if ( ! empty( $tracking_time ) ) {
+			$this->tracker->setForceVisitDateTime( $tracking_time );
+		}
+
+		try {
+			foreach ( $ajax_tracker_calls as $call ) {
+				$methods = [
+					'addEcommerceItem'         => 'addEcommerceItem',
+					'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
+					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
+				];
+				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
+					try {
+						$tracker_method = $methods[ $call[0] ];
+						array_shift( $call );
+						$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
+
+						if (
+							'doTrackEcommerceCartUpdate' === $tracker_method
+							&& $this->tracker->is_success_response( $response )
+						) {
+							$order_id = reset( $call );
+							$this->set_order_been_tracked( $order_id );
+						}
+					} catch ( Exception $e ) {
+						$this->logger->log_exception( $call[0], $e );
 					}
-				} catch ( Exception $e ) {
-					$this->logger->log_exception( $call[0], $e );
 				}
 			}
+		} finally {
+			$this->tracker->forcedVisitorId = $original_visitor_id;
+			$this->tracker->forcedDatetime  = false;
 		}
 	}
 
@@ -169,8 +183,10 @@ class Base {
 		$tracking_time = time() + $delay_time;
 
 		$tracking_data = [
-			'calls'        => $this->ajax_tracker_calls,
-			'delayed_time' => $tracking_time,
+			'calls'         => $this->ajax_tracker_calls,
+			'delayed_time'  => $tracking_time,
+			'visitor_id'    => $this->tracker->forcedVisitorId, // TODO: use in tracking
+			'tracking_time' => time(), // TODO: use in tracking
 			// TODO: add ip, visitorid + time
 		];
 
@@ -209,8 +225,11 @@ class Base {
 	}
 
 	protected function do_delayed_tracking( $tracking_info ) {
-		$calls = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
-		$this->track_in_background( $calls );
+		$calls         = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
+		$visitor_id    = isset( $tracking_info['visitor_id'] ) ? $tracking_info['visitor_id'] : null;
+		$tracking_time = isset( $tracking_info['tracking_time'] ) ? $tracking_info['tracking_time'] : null;
+
+		$this->track_in_background( $calls, $visitor_id, $tracking_time );
 
 		$this->save_ajax_calls_in_session( [] );
 	}
