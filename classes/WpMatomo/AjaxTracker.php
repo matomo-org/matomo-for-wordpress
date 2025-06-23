@@ -22,6 +22,11 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 }
 
 class AjaxTracker extends \MatomoTracker {
+
+	const IP_ADDRESS_FORWARDING_HEADER             = 'X-Matomo-Forwarded-Ip';
+	const IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME = 'HTTP_X_MATOMO_FORWARDED_IP';
+	const IP_ADDRESS_FORWARDING_NONCE_NAME         = 'matomo-track-forward-ip';
+
 	private $has_cookie = false;
 	private $logger;
 
@@ -115,6 +120,15 @@ class AjaxTracker extends \MatomoTracker {
 			$args['body'] = $data;
 		}
 
+		if ( ! empty( $this->ip ) ) {
+			$args['headers'] = [
+				self::IP_ADDRESS_FORWARDING_HEADER => $this->ip,
+			];
+
+			$ip_nonce = wp_create_nonce( self::IP_ADDRESS_FORWARDING_NONCE_NAME );
+			$url      = $url . '&ip_nonce=' . rawurlencode( $ip_nonce );
+		}
+
 		// todo at some point we could think about including `matomo.php` here instead of doing an http request
 		// however we would need to make sure to set a custom tracker response handler to
 		// 1) Not send any response no matter what happens
@@ -164,5 +178,27 @@ class AjaxTracker extends \MatomoTracker {
 	 */
 	protected function setFirstPartyCookies() {
 		// disabled
+	}
+
+	/**
+	 * TODO
+	 */
+	public static function add_ip_forward_proxy_header( \Piwik\Config $config ) {
+		if ( empty( $_REQUEST['ip_nonce'] ) ) {
+			return;
+		}
+
+		$ip_nonce = $_REQUEST['ip_nonce'];
+		if ( ! wp_verify_nonce( $ip_nonce, self::IP_ADDRESS_FORWARDING_NONCE_NAME ) ) {
+			return;
+		}
+
+		$proxy_client_headers = $config->General['proxy_client_headers'];
+		if ( ! is_array( $proxy_client_headers ) ) {
+			$proxy_client_headers = [];
+		}
+		$proxy_client_headers[] = self::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME;
+
+		$config->General['proxy_client_headers'] = $proxy_client_headers;
 	}
 }

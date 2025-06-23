@@ -15,6 +15,7 @@ use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\AjaxTracker;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
+use WpMatomo\Site\Sync\SyncConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -52,10 +53,16 @@ class Base {
 
 	private $ajax_tracker_calls = [];
 
-	public function __construct( AjaxTracker $tracker, Settings $settings ) {
+	/**
+	 * @var SyncConfig
+	 */
+	private $config;
+
+	public function __construct( AjaxTracker $tracker, Settings $settings, SyncConfig $config ) {
 		$this->logger   = new Logger();
 		$this->tracker  = $tracker;
 		$this->settings = $settings;
+		$this->config   = $config;
 
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
@@ -137,7 +144,7 @@ class Base {
 		return $script;
 	}
 
-	private function track_in_background( $ajax_tracker_calls, $visitor_id = null, $tracking_time = null ) {
+	private function track_in_background( $ajax_tracker_calls, $visitor_id = null, $tracking_time = null, $ip = null ) {
 		$original_visitor_id = $this->tracker->forcedVisitorId;
 		if ( ! empty( $visitor_id ) ) {
 			$this->tracker->set_visitor_id_safe( $visitor_id );
@@ -145,6 +152,10 @@ class Base {
 
 		if ( ! empty( $tracking_time ) ) {
 			$this->tracker->setForceVisitDateTime( $tracking_time );
+		}
+
+		if ( ! empty( $ip ) ) {
+			$this->tracker->setIp( $ip );
 		}
 
 		try {
@@ -182,12 +193,24 @@ class Base {
 		$delay_time    = $this->get_seconds_to_delay_tracking();
 		$tracking_time = time() + $delay_time;
 
+		$client_headers = $this->config->get_config_value( 'General', 'proxy_client_headers' );
+		foreach ( $client_headers as $header ) {
+			if ( isset( $_SERVER[ $header ] ) ) {
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$ip = wp_unslash( $_SERVER[ $header ] );
+			}
+		}
+		if ( empty( $ip ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : null;
+		}
+
 		$tracking_data = [
 			'calls'         => $this->ajax_tracker_calls,
 			'delayed_time'  => $tracking_time,
-			'visitor_id'    => $this->tracker->forcedVisitorId, // TODO: use in tracking
-			'tracking_time' => time(), // TODO: use in tracking
-			// TODO: add ip, visitorid + time
+			'visitor_id'    => $this->tracker->forcedVisitorId,
+			'tracking_time' => time(),
+			'ip'            => $ip,
 		];
 
 		$this->save_ajax_calls_in_session( $tracking_data );
@@ -228,8 +251,9 @@ class Base {
 		$calls         = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
 		$visitor_id    = isset( $tracking_info['visitor_id'] ) ? $tracking_info['visitor_id'] : null;
 		$tracking_time = isset( $tracking_info['tracking_time'] ) ? $tracking_info['tracking_time'] : null;
+		$ip            = isset( $tracking_info['ip'] ) ? $tracking_info['ip'] : null;
 
-		$this->track_in_background( $calls, $visitor_id, $tracking_time );
+		$this->track_in_background( $calls, $visitor_id, $tracking_time, $ip );
 
 		$this->save_ajax_calls_in_session( [] );
 	}

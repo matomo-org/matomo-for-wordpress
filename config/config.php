@@ -109,6 +109,8 @@ return array(
             }
 		}
 
+		\WpMatomo\AjaxTracker::add_ip_forward_proxy_header( $previous );
+
 		return $previous;
 	}),
 	'Piwik\Mail\Transport' => \Piwik\DI::autowire('WpMatomo\Email'),
