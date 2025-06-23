@@ -120,7 +120,7 @@ class Base {
 		if ( $this->should_track_background() ) {
 			if ( $this->should_delay_server_side_tracking() ) {
 				$this->delay_background_tracking();
-				return false; // TODO: do not say order tracked
+				return false;
 			}
 
 			$this->track_in_background( $this->ajax_tracker_calls );
@@ -172,7 +172,7 @@ class Base {
 						$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 
 						if (
-							'doTrackEcommerceCartUpdate' === $tracker_method
+							'doTrackEcommerceOrder' === $tracker_method
 							&& $this->tracker->is_success_response( $response )
 						) {
 							$order_id = reset( $call );
@@ -219,15 +219,17 @@ class Base {
 	}
 
 	protected function should_delay_server_side_tracking() {
-		if ( ! $this->supports_delayed_tracking() ) {
-			return false;
-		}
-
-		return false; // TODO: get from setting
+		return $this->supports_delayed_tracking();
+		// TODO: do we want this to be enabled by default or not? it would be better if so as it's
+		// pretty hard to tell when its needed.
 	}
 
 	protected function get_seconds_to_delay_tracking() {
-		return 180; // TODO: get from setting
+		$delay = $this->settings->get_option( Settings::SERVER_SIDE_TRACKING_DELAY_SECS );
+		if ( $delay <= 0 ) {
+			$delay = 180;
+		}
+		return $delay;
 	}
 
 	protected function maybe_do_delayed_tracking_early() {

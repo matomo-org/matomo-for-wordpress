@@ -36,6 +36,7 @@ class Settings {
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
+	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -129,6 +130,7 @@ class Settings {
 		'tracking_code'                          => '',
 		self::OPTION_LAST_TRACKING_CODE_UPDATE   => 0,
 		self::USE_SESSION_VISITOR_ID_OPTION_NAME => false,
+		self::SERVER_SIDE_TRACKING_DELAY_SECS    => 180,
 	];
 
 	private $global_settings = [];

@@ -313,13 +313,6 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_tracked => 1,
-			]
-		);
-
 		return $this->wrap_script( $tracking_code );
 	}
 
