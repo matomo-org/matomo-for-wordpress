@@ -21,7 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Base {
-	const DELAYED_SERVER_SIDE_TRACKING_HOOK = 'matomo_delayed_tracking';
+	const DELAYED_SERVER_SIDE_TRACKING_HOOK        = 'matomo_delayed_tracking';
+	const DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY = 'matomo_delayed_tracking_data';
 
 	protected $key_order_tracked = 'order-tracked';
 
@@ -60,6 +61,7 @@ class Base {
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
 
 		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, 'do_delayed_tracking' );
+		add_action( 'wp_footer', 'maybe_do_delayed_tracking_early' );
 	}
 
 	public function register_hooks() {
@@ -111,12 +113,6 @@ class Base {
 		if ( $this->should_track_background() ) {
 			if ( $this->should_delay_server_side_tracking() ) {
 				$this->delay_background_tracking();
-				// TODO: delay here
-				// on next pageview, if session data exists, track it.
-					// remove tracking data from session
-				// when event executes, if tracking data is in session, execute it and remove.
-					// if doTrackEcommerceOrder is here,
-				wp_unschedule_event()
 				return false; // TODO: do not say order tracked
 			}
 
@@ -155,7 +151,7 @@ class Base {
 					$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 
 					if (
-						$tracker_method === 'doTrackEcommerceCartUpdate'
+						'doTrackEcommerceCartUpdate' === $tracker_method
 						&& $this->tracker->is_success_response( $response )
 					) {
 						$order_id = reset( $call );
@@ -178,9 +174,9 @@ class Base {
 			// TODO: add ip, visitorid + time
 		];
 
-		wp_schedule_single_event( $tracking_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
-
 		$this->save_ajax_calls_in_session( $tracking_data );
+
+		wp_schedule_single_event( $tracking_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
 	}
 
 	protected function should_delay_server_side_tracking() {
@@ -191,27 +187,59 @@ class Base {
 		return false; // TODO: get from setting
 	}
 
-	protected function supports_delayed_tracking() {
-		return false; // TODO: override in WooCommerce
-	}
-
 	protected function get_seconds_to_delay_tracking() {
 		return 180; // TODO: get from setting
 	}
 
-	protected function do_delayed_tracking( $tracking_info ) {
-		// TODO: what if we already tracked?
+	protected function maybe_do_delayed_tracking_early() {
+		if (
+			! $this->supports_delayed_tracking()
+			|| $this->should_track_background()
+		) {
+			return;
+		}
 
+		$tracking_data = $this->get_ajax_calls_in_session();
+		if ( ! empty( $tracking_data ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->make_matomo_js_tracker_call( $tracking_data['calls'] );
+
+			wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+		}
+	}
+
+	protected function do_delayed_tracking( $tracking_info ) {
 		$calls = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
 		$this->track_in_background( $calls );
+
+		$this->save_ajax_calls_in_session( [] );
 	}
 
-	protected function save_ajax_calls_in_session($data ) {
+	/**
+	 * TODO: documentation
+	 *
+	 * @return false
+	 */
+	protected function supports_delayed_tracking() {
+		return false;
+	}
+
+	/**
+	 * TODO: documentation
+	 *
+	 * @param array $data
+	 * @return void
+	 */
+	protected function save_ajax_calls_in_session( $data ) {
 		// empty
-		// TODO: override in WooCommerce
 	}
 
+	/**
+	 * TODO: documentation
+	 *
+	 * @return array
+	 */
 	protected function get_ajax_calls_in_session() {
-		// TODO
+		return [];
 	}
 }

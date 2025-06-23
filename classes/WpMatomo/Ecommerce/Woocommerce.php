@@ -323,16 +323,6 @@ class Woocommerce extends Base {
 		return $this->wrap_script( $tracking_code );
 	}
 
-	/*
-	public function on_delayed_order_track( $order_id, $visitor_id ) {
-		$this->on_order( $order_id, true, $visitor_id ? $visitor_id : '' );
-	}
-
-	private function delay_order_tracking( \WC_Order $order ) {
-		wp_schedule_single_event( time() + 180, self::DELAYED_TRACKING_EVENT_NAME, [ $this->get_order_id( $order ), $this->tracker->forcedVisitorId ] );
-	}
-	*/
-
 	private function isWC3() {
 		global $woocommerce;
 		$result = version_compare( $woocommerce->version, '3.0', '>=' );
@@ -482,10 +472,11 @@ class Woocommerce extends Base {
 	protected function has_order_been_tracked_already( $order_id ) {
 		$order = wc_get_order( $order_id );
 		if ( empty( $order ) ) {
-			return;
+			return false;
 		}
 
-		$this->get_order_meta( $order, $this->key_order_tracked ) == 1;
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		return $this->get_order_meta( $order, $this->key_order_tracked ) == 1;
 	}
 
 	protected function set_order_been_tracked( $order_id ) {
@@ -538,5 +529,28 @@ class Woocommerce extends Base {
 
 	private function get_order_id( $order ) {
 		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+	}
+
+	protected function save_ajax_calls_in_session( $data ) {
+		if ( ! empty( WC()->session ) ) {
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, $data );
+		}
+	}
+
+	protected function get_ajax_calls_in_session() {
+		if ( empty( WC()->session ) ) {
+			return [];
+		}
+
+		$calls = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+		if ( ! is_array( $calls ) ) {
+			return [];
+		}
+
+		return $calls;
+	}
+
+	protected function supports_delayed_tracking() {
+		return true;
 	}
 }
