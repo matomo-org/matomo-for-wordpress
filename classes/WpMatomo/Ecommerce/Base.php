@@ -232,7 +232,7 @@ class Base {
 		return $delay;
 	}
 
-	protected function maybe_do_delayed_tracking_early() {
+	public function maybe_do_delayed_tracking_early() {
 		if (
 			! $this->supports_delayed_tracking()
 			|| $this->should_track_background()
@@ -249,7 +249,7 @@ class Base {
 		}
 	}
 
-	protected function do_delayed_tracking( $tracking_info ) {
+	public function do_delayed_tracking( $tracking_info ) {
 		$calls         = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
 		$visitor_id    = isset( $tracking_info['visitor_id'] ) ? $tracking_info['visitor_id'] : null;
 		$tracking_time = isset( $tracking_info['tracking_time'] ) ? $tracking_info['tracking_time'] : null;
