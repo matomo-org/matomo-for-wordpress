@@ -11,6 +11,14 @@ namespace WpMatomo\Ecommerce;
  */
 class MatomoTestEcommerce extends Base {
 
+	public $should_track_background = false;
+
+	public $supports_delayed_tracking = false;
+
+	public $session_data = [];
+
+	public $tracked_orders = [];
+
 	/**
 	 * Render public the wrap_script method. Required for the unit tests
 	 *
@@ -19,8 +27,8 @@ class MatomoTestEcommerce extends Base {
 	 * @return string
 	 * @see Base::wrap_script()
 	 */
-	public function wrap_script( $script, $force_background_tracking = false, $forced_visitor_id = false ) {
-		return parent::wrap_script( $script, $force_background_tracking, $forced_visitor_id );
+	public function wrap_script( $script ) {
+		return parent::wrap_script( $script );
 	}
 
 	/**
@@ -33,5 +41,32 @@ class MatomoTestEcommerce extends Base {
 	 */
 	public function make_matomo_js_tracker_call( $params ) {
 		return parent::make_matomo_js_tracker_call( $params );
+	}
+
+	protected function should_track_background() {
+		return $this->should_track_background;
+	}
+
+	protected function get_ajax_calls_in_session() {
+		return $this->session_data['ajax_calls'];
+	}
+
+	protected function save_ajax_calls_in_session( $data ) {
+		$this->session_data['ajax_calls'] = $data;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function supports_delayed_tracking() {
+		return $this->supports_delayed_tracking;
+	}
+
+	public function set_order_been_tracked( $order_id ) {
+		$this->tracked_orders[] = $order_id;
+	}
+
+	public function has_order_been_tracked_already( $order_id ) {
+		return in_array( $order_id, $this->tracked_orders, true );
 	}
 }

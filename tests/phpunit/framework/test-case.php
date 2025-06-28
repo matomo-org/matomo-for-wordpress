@@ -253,4 +253,34 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	protected function stopped_doing_ajax() {
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}
+
+	public function assert_event_not_scheduled( $event_name ) {
+		$events = $this->get_events_scheduled( $event_name );
+		$this->assertCount( 0, $events );
+	}
+
+	public function assert_event_scheduled( $event_name ) {
+		$events = $this->get_events_scheduled( $event_name );
+		$this->assertCount( 1, $events );
+	}
+
+	public function get_events_scheduled( $event_name ) {
+		$result = [];
+
+		$cron = _get_cron_array();
+		foreach ( $cron as $cronhooks ) {
+			if ( isset( $cronhooks[ $event_name ] ) ) {
+				$result = array_merge( $result, $cronhooks[ $event_name ] );
+			}
+		}
+
+		return $result;
+	}
+
+	public function execute_scheduled_event( $event_name ) {
+		$events = $this->get_events_scheduled( $event_name );
+		$event  = reset( $events );
+
+		do_action( $event_name, $event['args'] );
+	}
 }

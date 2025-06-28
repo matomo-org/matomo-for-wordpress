@@ -67,7 +67,7 @@ class Base {
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
 
-		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, 'do_delayed_tracking' );
+		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
 		add_action( 'wp_footer', 'maybe_do_delayed_tracking_early' );
 	}
 
@@ -190,14 +190,16 @@ class Base {
 	}
 
 	protected function delay_background_tracking() {
-		$delay_time    = $this->get_seconds_to_delay_tracking();
-		$tracking_time = time() + $delay_time;
+		$delay_time   = $this->get_seconds_to_delay_tracking();
+		$delayed_time = time() + $delay_time;
 
 		$client_headers = $this->config->get_config_value( 'General', 'proxy_client_headers' );
-		foreach ( $client_headers as $header ) {
-			if ( isset( $_SERVER[ $header ] ) ) {
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				$ip = wp_unslash( $_SERVER[ $header ] );
+		if ( ! empty( $client_headers ) ) {
+			foreach ( $client_headers as $header ) {
+				if ( isset( $_SERVER[ $header ] ) ) {
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$ip = wp_unslash( $_SERVER[ $header ] );
+				}
 			}
 		}
 		if ( empty( $ip ) ) {
@@ -207,7 +209,7 @@ class Base {
 
 		$tracking_data = [
 			'calls'         => $this->ajax_tracker_calls,
-			'delayed_time'  => $tracking_time,
+			'delayed_time'  => $delayed_time,
 			'visitor_id'    => $this->tracker->forcedVisitorId,
 			'tracking_time' => time(),
 			'ip'            => $ip,
@@ -215,7 +217,7 @@ class Base {
 
 		$this->save_ajax_calls_in_session( $tracking_data );
 
-		wp_schedule_single_event( $tracking_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+		wp_schedule_single_event( $delayed_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
 	}
 
 	protected function should_delay_server_side_tracking() {
@@ -243,9 +245,10 @@ class Base {
 		$tracking_data = $this->get_ajax_calls_in_session();
 		if ( ! empty( $tracking_data ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $this->make_matomo_js_tracker_call( $tracking_data['calls'] );
+			echo $this->wrap_script( $this->make_matomo_js_tracker_call( $tracking_data['calls'] ) );
 
 			wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+			$this->save_ajax_calls_in_session( [] );
 		}
 	}
 

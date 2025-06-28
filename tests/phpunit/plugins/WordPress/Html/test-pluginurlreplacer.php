@@ -4,7 +4,6 @@ use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 
 /**
  * @package matomo
- * @group only
  * phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
  * phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
  */

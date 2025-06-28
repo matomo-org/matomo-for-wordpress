@@ -50,6 +50,8 @@ class AjaxTracker extends \MatomoTracker {
 
 		parent::__construct( $idsite, $api_endpoint );
 
+		$this->ip = false;
+
 		// we are using the tracker only in ajax so the referer contains the actual url
 		$this->urlReferrer = false;
 		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;

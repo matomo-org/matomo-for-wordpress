@@ -9,20 +9,7 @@
 
 // for @runInSeparateProcess annotation used below
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
-
-class TestAjaxTracker extends \WpMatomo\AjaxTracker {
-	public $captured_urls = [];
-
-	protected function wp_remote_request( $url, $args ) {
-		// remove random query params
-		$url = preg_replace( '/&_id=[^&]+/', '&_id=REMOVED', $url );
-		$url = preg_replace( '/&r=[^&]+/', '', $url );
-		$url = preg_replace( '/&_idts=[^&]+/', '', $url );
-		$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
-
-		$this->captured_urls[] = $url;
-	}
-}
+require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 	protected function should_track_background() {
@@ -356,30 +343,6 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$options['enabled'] = 'yes';
 		update_option( 'woocommerce_cod_settings', $options );
 	}
-
-	private function assert_event_not_scheduled( $event_name ) {
-		$events = $this->get_events_scheduled( $event_name );
-		$this->assertCount( 0, $events );
-	}
-
-	private function assert_event_scheduled( $event_name ) {
-		$events = $this->get_events_scheduled( $event_name );
-		$this->assertCount( 1, $events );
-	}
-
-	private function get_events_scheduled( $event_name ) {
-		$result = [];
-
-		$cron = _get_cron_array();
-		foreach ( $cron as $cronhooks ) {
-			if ( isset( $cronhooks[ $event_name ] ) ) {
-				$result = array_merge( $result, $cronhooks[ $event_name ] );
-			}
-		}
-
-		return $result;
-	}
-
 
 	private function make_test_instance() {
 		// NOTE: this can't be put into the setup, since AjaxTracker loads the visitor ID cookie during
