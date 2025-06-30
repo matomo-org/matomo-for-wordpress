@@ -68,7 +68,7 @@ class Base {
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
 
 		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
-		add_action( 'wp_footer', 'maybe_do_delayed_tracking_early' );
+		add_action( 'wp_footer', [ $this, 'maybe_do_delayed_tracking_early' ] );
 	}
 
 	public function register_hooks() {
@@ -215,9 +215,11 @@ class Base {
 			'ip'            => $ip,
 		];
 
-		$this->save_ajax_calls_in_session( $tracking_data );
+		$this->add_ajax_calls_to_session( $tracking_data );
 
 		wp_schedule_single_event( $delayed_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+
+		$this->ajax_tracker_calls = [];
 	}
 
 	protected function should_delay_server_side_tracking() {
@@ -242,25 +244,34 @@ class Base {
 			return;
 		}
 
-		$tracking_data = $this->get_ajax_calls_in_session();
-		if ( ! empty( $tracking_data ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $this->wrap_script( $this->make_matomo_js_tracker_call( $tracking_data['calls'] ) );
+		$all_queued_tracking = $this->get_ajax_calls_in_session();
+		if ( ! empty( $all_queued_tracking ) ) {
+			foreach ( $all_queued_tracking as $tracking_data ) {
+				if ( ! wp_get_scheduled_event( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data, $tracking_data['delayed_time'] ) ) {
+					continue; // delayed tracking event already ran
+				}
 
-			wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
-			$this->save_ajax_calls_in_session( [] );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $this->wrap_script( $this->make_matomo_js_tracker_call( $tracking_data['calls'] ) );
+
+				wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+			}
+
+			$this->remove_ajax_calls_in_session();
 		}
 	}
 
 	public function do_delayed_tracking( $tracking_info ) {
+		// WP cron jobs can be executed during normal requests, in this case, make sure we don't use
+		// the visitor ID of the current request/session
+		$this->tracker->setNewVisitorId();
+
 		$calls         = isset( $tracking_info['calls'] ) ? $tracking_info['calls'] : [];
 		$visitor_id    = isset( $tracking_info['visitor_id'] ) ? $tracking_info['visitor_id'] : null;
 		$tracking_time = isset( $tracking_info['tracking_time'] ) ? $tracking_info['tracking_time'] : null;
 		$ip            = isset( $tracking_info['ip'] ) ? $tracking_info['ip'] : null;
 
 		$this->track_in_background( $calls, $visitor_id, $tracking_time, $ip );
-
-		$this->save_ajax_calls_in_session( [] );
 	}
 
 	/**
@@ -275,10 +286,19 @@ class Base {
 	/**
 	 * TODO: documentation
 	 *
+	 * @return void
+	 */
+	protected function remove_ajax_calls_in_session() {
+		// empty
+	}
+
+	/**
+	 * TODO
+	 *
 	 * @param array $data
 	 * @return void
 	 */
-	protected function save_ajax_calls_in_session( $data ) {
+	protected function add_ajax_calls_to_session( $data ) {
 		// empty
 	}
 

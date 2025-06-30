@@ -524,9 +524,17 @@ class Woocommerce extends Base {
 		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
 	}
 
-	protected function save_ajax_calls_in_session( $data ) {
+	protected function add_ajax_calls_to_session( $data ) {
 		if ( ! empty( WC()->session ) ) {
-			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, $data );
+			$queue   = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+			$queue[] = $data;
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, $queue );
+		}
+	}
+
+	protected function remove_ajax_calls_in_session() {
+		if ( ! empty( WC()->session ) ) {
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, [] );
 		}
 	}
 

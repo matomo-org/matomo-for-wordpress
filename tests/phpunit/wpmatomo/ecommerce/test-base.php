@@ -302,8 +302,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		ob_start();
 		$this->base->maybe_do_delayed_tracking_early();
-		$output = ob_get_contents();
-		ob_end_clean();
+		$output = ob_get_clean();
 
 		$this->assertEmpty( $output );
 	}

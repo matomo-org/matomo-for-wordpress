@@ -12,9 +12,8 @@ require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-te
 require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
-	protected function should_track_background() {
-		return true;
-	}
+
+	public $should_track_background = false;
 
 	public function setTracker( $tracker ) {
 		$this->tracker = $tracker;
@@ -22,6 +21,10 @@ class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 	public function getTracker() {
 		return $this->tracker;
+	}
+
+	protected function should_track_background() {
+		return $this->should_track_background;
 	}
 }
 
@@ -34,6 +37,9 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 	private $product_id;
 
+	/**
+	 * @var TestWoocommerce
+	 */
 	private $test_instance;
 
 	private $settings;
@@ -86,19 +92,61 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
-		$this->simulate_order_received_page_visit();
 
-		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$session_data = WC()->session->get( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+		$this->assertNotEmpty( $session_data );
+
+		foreach ( $session_data as &$entry ) {
+			$tracking_time = $entry['tracking_time'];
+			$delayed_time  = $entry['delayed_time'];
+
+			$this->assertEquals( $tracking_time + 180, $delayed_time );
+
+			unset( $entry['tracking_time'] );
+			unset( $entry['delayed_time'] );
+		}
 
 		$this->assertEquals(
 			[
-				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
-				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+				[
+					'calls'      => [
+						[
+							'addEcommerceItem',
+							10,
+							'a tiny hat',
+							[ 'Uncategorized' ],
+							12,
+							2,
+						],
+						[
+							'trackEcommerceCartUpdate',
+							24,
+						],
+					],
+					'visitor_id' => '0123456789abcdef',
+					'ip'         => '127.0.0.1',
+				],
 			],
-			$this->tracker->captured_urls
+			$session_data
 		);
+
+		$tracking_code = $this->simulate_order_received_page_visit();
+
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+
+		$session_data = WC()->session->get( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+		$this->assertEmpty( $session_data );
+
+		$expected_code = <<<EOF
+<script type="text/javascript">
+/* <![CDATA[ */
+window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceCartUpdate","24.00"]]);
+/* ]]> */
+</script>
+
+EOF;
+
+		$this->assertEquals( $expected_code, $tracking_code );
 	}
 
 	/**
@@ -106,6 +154,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_when_order_processed_before_order_received() {
+		// TODO: start from here
 		$this->make_test_instance();
 		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
@@ -113,97 +162,107 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$this->simulate_payment_complete_with_pending_status();
 		$this->mark_order_processing();
 
-		$this->assertEquals(
-			[
-				// only ecommerce cart tracking request since we haven't visited order received yet
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
-			],
-			$this->tracker->captured_urls
-		);
+		// two events scheduled, one for add to cart, another for the ecommerce order
+		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, 2 );
 
-		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$tracking_code = $this->simulate_order_received_page_visit();
 
-		$this->simulate_order_received_page_visit();
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		// set different visitor ID to simulate the event executing during another visitor's request
-		$this->set_visitor_id_cookie( '4444456789abcdef' );
+		$expected_code = <<<EOF
+<script type="text/javascript">
+/* <![CDATA[ */
+window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceCartUpdate","24.00"]]);
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceOrder","11","24.00",24,"0","0",0]]);
+/* ]]> */
+</script>
 
-		$this->execute_next_scheduled_event( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+EOF;
 
-		$this->assertEquals(
-			[
-				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
-				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
-			],
-			$this->tracker->captured_urls
-		);
-
-		// check that the detected visitor ID was set back to what it was before tracking was executed
-		$this->assertEquals( '4444456789abcdef', $this->tracker->forcedVisitorId );
+		$this->assertEquals( $expected_code, $tracking_code );
 	}
 
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_order_tracking_order_processed_after_order_received() {
+	public function test_order_tracking_order_with_late_order_received_visited() {
 		$this->make_test_instance();
 		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
-		$this->simulate_order_received_page_visit();
-
-		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
-
 		$this->mark_order_processing();
 
-		// if order status is changed after order received visited, the delayed tracking event should never be scheduled
-		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, 2 );
+
+		$this->execute_scheduled_event( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, true );
+
+		$captured_urls = array_map(
+			function ( $url ) {
+				return preg_replace( '/&cdt=[^&]+/', '&cdt=REMOVED', $url );
+			},
+			$this->tracker->captured_urls
+		);
 
 		$this->assertEquals(
 			[
-				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
-				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
 			],
-			$this->tracker->captured_urls
+			$captured_urls
 		);
+
+		$tracking_code = $this->simulate_order_received_page_visit();
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+		$this->assertEmpty( $tracking_code );
 	}
 
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_order_tracking_order_processed_after_order_received_with_no_visitorid() {
+	public function test_order_tracking_delayed_with_no_visitorid() {
+		// TODO
 		// no cookie when user adding to cart
 
 		$this->make_test_instance();
 
 		$this->simulate_add_to_cart();
 		$this->simulate_payment_complete_with_pending_status();
-		$this->mark_order_processing();
+		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$this->mark_order_processing();
+		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, 2 );
 
 		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
-		$this->execute_next_scheduled_event( \WpMatomo\Ecommerce\Woocommerce::DELAYED_TRACKING_EVENT_NAME );
+		$this->execute_scheduled_event( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, true );
 
-		$this->simulate_order_received_page_visit();
+		$tracking_code = $this->simulate_order_received_page_visit();
+		$this->assertEmpty( $tracking_code );
 
-		// check that there is no cid= parameter, just a _id= parameter, which signifies a cookie
+		$captured_urls = array_map(
+			function ( $url ) {
+				return preg_replace( '/&cdt=[^&]+/', '&cdt=REMOVED', $url );
+			},
+			$this->tracker->captured_urls
+		);
+
+		// check that there is no cid= parameter which would be set when detecting a visitor ID cookie,
+		// just an _id= parameter
 		$this->assertEquals(
 			[
 				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
 				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
 			],
-			$this->tracker->captured_urls
+			$captured_urls
 		);
 	}
 
@@ -219,6 +278,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function simulate_add_to_cart() {
+		$this->test_instance->should_track_background = true;
+
 		$this->doing_ajax();
 
 		try {
@@ -230,13 +291,15 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			} catch ( \WPDieException $ex ) {
 				// ignore
 			}
-			ob_end_clean(); // the ajax method calls ob_start() at the beginning
+			ob_get_clean(); // the ajax method calls ob_start() at the beginning
 		} finally {
 			$this->stopped_doing_ajax();
 		}
 	}
 
 	private function simulate_payment_complete_with_pending_status() {
+		$this->test_instance->should_track_background = true;
+
 		$this->doing_ajax();
 
 		ob_start();
@@ -281,6 +344,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		add_filter( 'woocommerce_is_order_received_page', '__return_true' );
 
 		try {
+			$this->test_instance->should_track_background = false;
+
 			$this->assertTrue( is_order_received_page() );
 
 			$order    = $this->get_order();
@@ -291,10 +356,15 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 			ob_start();
 			try {
 				// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				do_action( 'wp_head' );
+				do_action( 'wp_footer' );
 			} finally {
-				ob_end_clean();
+				$result = ob_get_clean();
 			}
+
+			// remove script added by woocommerce in wp_footer event
+			$result = preg_replace( '%<script type="application/ld\+json">.*?</script>%', '', $result );
+
+			return $result;
 		} finally {
 			remove_filter( 'woocommerce_is_order_received_page', '__return_true' );
 
@@ -303,22 +373,10 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function mark_order_processing() {
+		$this->test_instance->should_track_background = true;
+
 		$order = $this->get_order();
 		$this->assertTrue( $order->update_status( 'processing' ) );
-	}
-
-	private function execute_next_scheduled_event( $event_name ) {
-		$events = $this->get_events_scheduled( $event_name );
-		$event  = reset( $events );
-		if ( empty( $event ) ) {
-			throw new \Exception( 'unexpected: no event found' );
-		}
-
-		$args = empty( $event['args'] ) ? [] : $event['args'];
-
-		// phpcs:disable PHPCompatibility.LanguageConstructs.NewLanguageConstructs.t_ellipsisFound
-		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
-		do_action( $event_name, ...$args );
 	}
 
 	private function get_order() {
@@ -347,10 +405,11 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	private function make_test_instance() {
 		// NOTE: this can't be put into the setup, since AjaxTracker loads the visitor ID cookie during
 		// construction, and we want to change it during tests
-		$this->settings = new \WpMatomo\Settings();
-		$this->tracker  = new TestAjaxTracker( $this->settings );
+		$this->settings    = new \WpMatomo\Settings();
+		$this->tracker     = new TestAjaxTracker( $this->settings );
+		$this->sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
 
-		$this->test_instance = new TestWoocommerce( $this->tracker, $this->settings );
+		$this->test_instance = new TestWoocommerce( $this->tracker, $this->settings, $this->sync_config );
 		$this->test_instance->register_hooks();
 	}
 

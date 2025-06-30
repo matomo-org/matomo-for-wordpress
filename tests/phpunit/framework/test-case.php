@@ -255,13 +255,12 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	}
 
 	public function assert_event_not_scheduled( $event_name ) {
-		$events = $this->get_events_scheduled( $event_name );
-		$this->assertCount( 0, $events );
+		$this->assert_event_scheduled( $event_name, 0 );
 	}
 
-	public function assert_event_scheduled( $event_name ) {
+	public function assert_event_scheduled( $event_name, $times = 1 ) {
 		$events = $this->get_events_scheduled( $event_name );
-		$this->assertCount( 1, $events );
+		$this->assertCount( $times, $events );
 	}
 
 	public function get_events_scheduled( $event_name ) {
@@ -277,10 +276,20 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		return $result;
 	}
 
-	public function execute_scheduled_event( $event_name ) {
+	public function execute_scheduled_event( $event_name, $execute_all = false ) {
 		$events = $this->get_events_scheduled( $event_name );
-		$event  = reset( $events );
 
-		do_action( $event_name, $event['args'] );
+		if ( ! $execute_all ) {
+			$events         = [ reset( $events ) ];
+			$rest_of_events = array_slice( $events, 1 );
+		} else {
+			$rest_of_events = [];
+		}
+
+		foreach ( $events as $event ) {
+			do_action( $event_name, $event['args'] );
+		}
+
+		_set_cron_array( $rest_of_events );
 	}
 }
