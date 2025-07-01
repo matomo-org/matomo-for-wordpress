@@ -11,6 +11,9 @@
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
 require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
+/**
+ * @group only
+ */
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 	public $should_track_background = false;
@@ -154,7 +157,6 @@ EOF;
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_when_order_processed_before_order_received() {
-		// TODO: start from here
 		$this->make_test_instance();
 		$this->set_visitor_id_cookie( '0123456789abcdef' );
 
@@ -227,7 +229,6 @@ EOF;
 	 * @preserveGlobalState disabled
 	 */
 	public function test_order_tracking_delayed_with_no_visitorid() {
-		// TODO
 		// no cookie when user adding to cart
 
 		$this->make_test_instance();

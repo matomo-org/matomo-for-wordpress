@@ -51,8 +51,12 @@ class MatomoTestEcommerce extends Base {
 		return $this->session_data['ajax_calls'];
 	}
 
-	protected function save_ajax_calls_in_session( $data ) {
-		$this->session_data['ajax_calls'] = $data;
+	protected function add_ajax_calls_to_session( $data ) {
+		$this->session_data['ajax_calls'][] = $data;
+	}
+
+	protected function remove_ajax_calls_in_session() {
+		$this->session_data['ajax_calls'] = [];
 	}
 
 	/**

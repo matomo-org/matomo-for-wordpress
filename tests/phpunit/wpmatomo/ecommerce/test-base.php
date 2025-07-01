@@ -147,23 +147,21 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$this->assertEmpty( $this->test_tracker->captured_urls );
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$delayed_time  = $this->base->session_data['ajax_calls']['delayed_time'];
-		$tracking_time = $this->base->session_data['ajax_calls']['tracking_time'];
+		$tracking_time = $this->base->session_data['ajax_calls'][0]['tracking_time'];
 
-		$this->assertEquals( $tracking_time + 180, $delayed_time );
-
-		unset( $this->base->session_data['ajax_calls']['delayed_time'] );
-		unset( $this->base->session_data['ajax_calls']['tracking_time'] );
+		$this->check_and_remove_delayed_tracking_times();
 
 		$this->assertEquals(
 			[
 				'ajax_calls' => [
-					'calls'      => [
-						[ 'trackEcommerceCartUpdate', 100 ],
-						[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
+					[
+						'calls'      => [
+							[ 'trackEcommerceCartUpdate', 100 ],
+							[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
+						],
+						'visitor_id' => false,
+						'ip'         => '127.0.0.1',
 					],
-					'visitor_id' => false,
-					'ip'         => '127.0.0.1',
 				],
 			],
 			$this->base->session_data
@@ -174,13 +172,6 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$this->assertEquals(
 			[
-				'ajax_calls' => [],
-			],
-			$this->base->session_data
-		);
-
-		$this->assertEquals(
-			[
 				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&_id=REMOVED&url=&urlref=&idgoal=0&revenue=100&ip_nonce=REMOVED&bots=1',
 				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&_id=REMOVED&url=&urlref=&idgoal=0&revenue=300&ec_st=200&ec_tx=40&ec_sh=60&ec_id=orderid&ip_nonce=REMOVED&bots=1',
 			],
@@ -188,6 +179,8 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		);
 
 		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
+
+		$this->base->maybe_do_delayed_tracking_early();
 	}
 
 	public function test_wrap_script_tracks_immediately_in_background_if_delaying_unsupported() {
@@ -239,22 +232,23 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$this->assertEmpty( $this->test_tracker->captured_urls );
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$tracking_time = $this->base->session_data['ajax_calls']['tracking_time'];
+		$tracking_time = $this->base->session_data['ajax_calls'][0]['tracking_time'];
 
-		unset( $this->base->session_data['ajax_calls']['delayed_time'] );
-		unset( $this->base->session_data['ajax_calls']['tracking_time'] );
+		$this->check_and_remove_delayed_tracking_times();
 
 		$this->assertEquals(
 			[
 				'ajax_calls' => [
-					'calls'      => [
-						[
-							'trackEcommerceCartUpdate',
-							100,
+					[
+						'calls'      => [
+							[
+								'trackEcommerceCartUpdate',
+								100,
+							],
 						],
+						'visitor_id' => $visitor_id,
+						'ip'         => $ip,
 					],
-					'visitor_id' => $visitor_id,
-					'ip'         => $ip,
 				],
 			],
 			$this->base->session_data
@@ -264,13 +258,6 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		// check the event works properly
 		$this->execute_scheduled_event( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
-
-		$this->assertEquals(
-			[
-				'ajax_calls' => [],
-			],
-			$this->base->session_data
-		);
 
 		$this->assertEquals(
 			[
@@ -313,9 +300,11 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$this->base->session_data = [
 			'ajax_calls' => [
-				'calls' => [
-					[ 'trackEcommerceCartUpdate', 100 ],
-					[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
+				[
+					'calls' => [
+						[ 'trackEcommerceCartUpdate', 100 ],
+						[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
+					],
 				],
 			],
 		];
@@ -343,7 +332,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$this->base->session_data = [ 'ajax_calls' => $calls ];
+		$this->base->session_data = [ 'ajax_calls' => [ $calls ] ];
 
 		ob_start();
 		$this->base->maybe_do_delayed_tracking_early();
@@ -369,5 +358,17 @@ EOF;
 		);
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+	}
+
+	private function check_and_remove_delayed_tracking_times() {
+		foreach ( $this->base->session_data['ajax_calls'] as &$call ) {
+			$delayed_time  = $call['delayed_time'];
+			$tracking_time = $call['tracking_time'];
+
+			$this->assertEquals( $tracking_time + 180, $delayed_time );
+
+			unset( $call['delayed_time'] );
+			unset( $call['tracking_time'] );
+		}
 	}
 }
