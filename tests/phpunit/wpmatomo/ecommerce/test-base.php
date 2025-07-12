@@ -181,6 +181,13 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
 
 		$this->base->maybe_do_delayed_tracking_early();
+
+		$this->assertEquals(
+			[
+				'ajax_calls' => [],
+			],
+			$this->base->session_data
+		);
 	}
 
 	public function test_wrap_script_tracks_immediately_in_background_if_delaying_unsupported() {

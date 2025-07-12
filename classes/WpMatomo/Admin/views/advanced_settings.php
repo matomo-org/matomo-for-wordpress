@@ -109,7 +109,7 @@ if ( $was_updated ) {
 				<?php esc_html_e( 'Number of seconds delay before server side tracking is executed.', 'matomo' ); ?>
 				<br/><br/>
 				<?php esc_html_e( 'When E-commerce events like cart updates and orders occur during AJAX or REST requests they must be tracked using server side tracking.', 'matomo' ); ?>
-				<?php esc_html_e( 'Server side tracking, however, can result in less useful data, so before doing it, Matomo will try to use JavaScript tracking on the next pageview.', 'matomo' ); ?>
+				<?php esc_html_e( 'Server side tracking, however, can result in less useful data, so before doing it Matomo will try to use JavaScript tracking on the next pageview.', 'matomo' ); ?>
 				<?php esc_html_e( 'If no page view occurs, then server side tracking is used. This setting controls how long Matomo waits before deciding to do server side tracking.', 'matomo' ); ?>
 			</td>
 		</tr>

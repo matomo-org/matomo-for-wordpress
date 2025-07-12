@@ -11,9 +11,6 @@
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
 require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
-/**
- * @group only
- */
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 	public $should_track_background = false;
@@ -357,7 +354,7 @@ EOF;
 			ob_start();
 			try {
 				// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				do_action( 'wp_footer' );
+				do_action( 'wp_head' );
 			} finally {
 				$result = ob_get_clean();
 			}

@@ -28,8 +28,6 @@ class Woocommerce extends Base {
 
 	private $track_next_totals_change = false;
 
-	private $key_order_received_visited = 'matomo-order-received-visited';
-
 	public function register_hooks() {
 		parent::register_hooks();
 
@@ -152,30 +150,10 @@ class Woocommerce extends Base {
 		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
 			$order_id = isset( $wp->query_vars['order-received'] ) ? $wp->query_vars['order-received'] : 0;
 			if ( ! empty( $order_id ) && $order_id > 0 ) {
-				$this->mark_order_received_page_visited( $order_id );
-
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $this->on_order( $order_id );
 			}
 		}
-	}
-
-	private function mark_order_received_page_visited( $order_id ) {
-		$order = wc_get_order( $order_id );
-		if ( empty( $order ) ) {
-			return;
-		}
-
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_received_visited => '1',
-			]
-		);
-	}
-
-	private function has_order_received_been_visited( \WC_Order $order ) {
-		return $this->get_order_meta( $order, $this->key_order_received_visited ) === '1';
 	}
 
 	public function on_cart_updated_safe() {
@@ -524,7 +502,7 @@ class Woocommerce extends Base {
 		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
 	}
 
-	protected function add_ajax_calls_to_session( $data ) {
+	protected function add_tracking_calls_to_session( $data ) {
 		if ( ! empty( WC()->session ) ) {
 			$queue   = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
 			$queue[] = $data;
@@ -532,13 +510,13 @@ class Woocommerce extends Base {
 		}
 	}
 
-	protected function remove_ajax_calls_in_session() {
+	protected function remove_tracking_calls_in_session() {
 		if ( ! empty( WC()->session ) ) {
 			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, [] );
 		}
 	}
 
-	protected function get_ajax_calls_in_session() {
+	protected function get_tracking_calls_in_session() {
 		if ( empty( WC()->session ) ) {
 			return [];
 		}

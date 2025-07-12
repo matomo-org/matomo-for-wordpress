@@ -47,15 +47,15 @@ class MatomoTestEcommerce extends Base {
 		return $this->should_track_background;
 	}
 
-	protected function get_ajax_calls_in_session() {
+	protected function get_tracking_calls_in_session() {
 		return $this->session_data['ajax_calls'];
 	}
 
-	protected function add_ajax_calls_to_session( $data ) {
+	protected function add_tracking_calls_to_session( $data ) {
 		$this->session_data['ajax_calls'][] = $data;
 	}
 
-	protected function remove_ajax_calls_in_session() {
+	protected function remove_tracking_calls_in_session() {
 		$this->session_data['ajax_calls'] = [];
 	}
 

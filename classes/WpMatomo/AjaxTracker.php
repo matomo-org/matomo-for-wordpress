@@ -183,7 +183,20 @@ class AjaxTracker extends \MatomoTracker {
 	}
 
 	/**
-	 * TODO
+	 * Enables the handling of the X-Matomo-Forwarded-Ip, if it should be for
+	 * the current request.
+	 *
+	 * Matomo for WordPress uses a custom header to correctly track client IP addresses
+	 * when doing server side tracking. We choose to use this approach instead
+	 * of the `cip` tracking parameter, since that parameter requires the use of
+	 * a token_auth, and creating and storing a token_auth is more complexity than
+	 * we want.
+	 *
+	 * Instead, we use a WP nonce to check whether the current request is authorized
+	 * to handle the X-Matomo-Forwarded-Ip header.
+	 *
+	 * If it should be handled, the X-Matomo-Forwarded-Ip header is added to Matomo's
+	 * list of proxy HTTP headers to look at for IP addresses.
 	 */
 	public static function add_ip_forward_proxy_header( \Piwik\Config $config ) {
 		if ( empty( $_REQUEST['ip_nonce'] ) ) {

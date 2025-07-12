@@ -68,7 +68,7 @@ class Base {
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
 
 		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
-		add_action( 'wp_footer', [ $this, 'maybe_do_delayed_tracking_early' ] );
+		add_action( 'wp_head', [ $this, 'maybe_do_delayed_tracking_early' ] );
 	}
 
 	public function register_hooks() {
@@ -186,6 +186,7 @@ class Base {
 		} finally {
 			$this->tracker->forcedVisitorId = $original_visitor_id;
 			$this->tracker->forcedDatetime  = false;
+			$this->tracker->ip              = false;
 		}
 	}
 
@@ -215,7 +216,7 @@ class Base {
 			'ip'            => $ip,
 		];
 
-		$this->add_ajax_calls_to_session( $tracking_data );
+		$this->add_tracking_calls_to_session( $tracking_data );
 
 		wp_schedule_single_event( $delayed_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
 
@@ -224,8 +225,6 @@ class Base {
 
 	protected function should_delay_server_side_tracking() {
 		return $this->supports_delayed_tracking();
-		// TODO: do we want this to be enabled by default or not? it would be better if so as it's
-		// pretty hard to tell when its needed.
 	}
 
 	protected function get_seconds_to_delay_tracking() {
@@ -237,6 +236,9 @@ class Base {
 	}
 
 	public function maybe_do_delayed_tracking_early() {
+		// do not output tracking code if we do not support delayed tracking
+		// or if the current request requires background tracking (in which case
+		// outputting JS code would not work)
 		if (
 			! $this->supports_delayed_tracking()
 			|| $this->should_track_background()
@@ -244,7 +246,7 @@ class Base {
 			return;
 		}
 
-		$all_queued_tracking = $this->get_ajax_calls_in_session();
+		$all_queued_tracking = $this->get_tracking_calls_in_session();
 		if ( ! empty( $all_queued_tracking ) ) {
 			foreach ( $all_queued_tracking as $tracking_data ) {
 				if ( ! wp_get_scheduled_event( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data, $tracking_data['delayed_time'] ) ) {
@@ -257,12 +259,12 @@ class Base {
 				wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
 			}
 
-			$this->remove_ajax_calls_in_session();
+			$this->remove_tracking_calls_in_session();
 		}
 	}
 
 	public function do_delayed_tracking( $tracking_info ) {
-		// WP cron jobs can be executed during normal requests, in this case, make sure we don't use
+		// WP cron jobs can be executed during normal requests. in such a case, make sure we don't use
 		// the visitor ID of the current request/session
 		$this->tracker->setNewVisitorId();
 
@@ -275,7 +277,11 @@ class Base {
 	}
 
 	/**
-	 * TODO: documentation
+	 * Returns true if this ecommerce tracking implementation supports delayed
+	 * server side tracking.
+	 *
+	 * In order for an implementation to support this, it must be able to save
+	 * tracking information as session data.
 	 *
 	 * @return false
 	 */
@@ -284,30 +290,36 @@ class Base {
 	}
 
 	/**
-	 * TODO: documentation
+	 * Removes all tracking calls currently stored in the session.
+	 *
+	 * This method must be overridden by ecommerce tracking implementations.
 	 *
 	 * @return void
 	 */
-	protected function remove_ajax_calls_in_session() {
+	protected function remove_tracking_calls_in_session() {
 		// empty
 	}
 
 	/**
-	 * TODO
+	 * Adds provided queued tracking information to the session.
 	 *
-	 * @param array $data
+	 * This method must be overridden by ecommerce tracking implementations.
+	 *
+	 * @param array $calls
 	 * @return void
 	 */
-	protected function add_ajax_calls_to_session( $data ) {
+	protected function add_tracking_calls_to_session( $calls ) {
 		// empty
 	}
 
 	/**
-	 * TODO: documentation
+	 * Returns tracking calls stored in the session, if any.
+	 *
+	 * This method must be overridden by ecommerce tracking implementations.
 	 *
 	 * @return array
 	 */
-	protected function get_ajax_calls_in_session() {
+	protected function get_tracking_calls_in_session() {
 		return [];
 	}
 }
