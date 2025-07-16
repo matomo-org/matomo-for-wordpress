@@ -66,7 +66,20 @@ class Bootstrap {
 	}
 
 	public static function is_environment_bootstrapped() {
-		return self::$environment_bootstrapped;
+		return self::$environment_bootstrapped && self::is_container_existing();
+	}
+
+	private static function is_container_existing() {
+		if ( ! class_exists( StaticContainer::class, false ) ) {
+			return false;
+		}
+
+		try {
+			StaticContainer::getContainer();
+			return true;
+		} catch ( \Exception $ex ) {
+			return false;
+		}
 	}
 
 	public static function bootstrap_environment() {
