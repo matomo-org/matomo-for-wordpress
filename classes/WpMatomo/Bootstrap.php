@@ -70,7 +70,9 @@ class Bootstrap {
 	}
 
 	public static function bootstrap_environment() {
+		error_log("Matomo: boostrapping matomo environment");
 		if ( self::is_environment_bootstrapped() ) {
+			error_log("Matomo: environment already bootstrapped");
 			return;
 		}
 
@@ -111,7 +113,9 @@ class Bootstrap {
 	}
 
 	public function bootstrap() {
+		error_log("Matomo: boostrapping matomo");
 		if ( self::is_bootstrapped() ) {
+			error_log("Matomo: matomo already bootstrapped");
 			return;
 		}
 
@@ -119,6 +123,15 @@ class Bootstrap {
 		self::$assume_not_bootstrapped   = false; // we need to unset it again to prevent recursion
 
 		self::bootstrap_environment();
+
+		try {
+			StaticContainer::getContainer();
+			$container_exists = true;
+		} catch (\Exception $ex) {
+			$container_exists = false;
+		}
+
+		error_log("Matomo: container exists: " . var_export($container_exists, true));
 
 		FrontController::unsetInstance();
 		$controller = FrontController::getInstance();
