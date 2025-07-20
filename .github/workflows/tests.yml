@@ -35,7 +35,7 @@ concurrency:
 
 jobs:
   unit_tests:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-24.04'
     strategy:
       fail-fast: false
       matrix:
@@ -156,7 +156,7 @@ jobs:
           npm run phpunit
 
   e2e_tests:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-24.04'
     strategy:
       fail-fast: false
       matrix:
@@ -263,7 +263,7 @@ jobs:
         if: always()
 
   checkstyle:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-24.04'
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
