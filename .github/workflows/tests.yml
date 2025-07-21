@@ -104,7 +104,7 @@ jobs:
       # TODO: redundancy w/ e2e_tests, could be moved to a script
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
-      - run: docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+      - run: docker buildx build --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 0
@@ -222,7 +222,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+      - run: docker buildx build --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
