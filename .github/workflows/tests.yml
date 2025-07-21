@@ -60,6 +60,8 @@ jobs:
           submodules: true
       - run: git lfs pull
 
+      - run: curl http://deb.debian.org
+
       - name: Setup PHP ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@v2
         with:
