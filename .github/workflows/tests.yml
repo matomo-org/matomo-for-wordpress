@@ -157,6 +157,7 @@ jobs:
 
           npm run phpunit
 
+
   e2e_tests:
     runs-on: 'ubuntu-24.04'
     strategy:
