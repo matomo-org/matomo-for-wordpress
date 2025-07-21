@@ -257,7 +257,8 @@ class WpMatomo {
 			&& ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
-			$woocommerce = new Woocommerce( $tracker, self::$settings );
+			$sync_config = new SiteSync\SyncConfig( self::$settings );
+			$woocommerce = new Woocommerce( $tracker, self::$settings, $sync_config );
 			$woocommerce->register_hooks();
 
 			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings );
