@@ -35,7 +35,7 @@ concurrency:
 
 jobs:
   unit_tests:
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
@@ -159,7 +159,7 @@ jobs:
 
 
   e2e_tests:
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
@@ -266,7 +266,7 @@ jobs:
         if: always()
 
   checkstyle:
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-latest'
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
