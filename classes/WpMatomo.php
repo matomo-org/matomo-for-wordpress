@@ -261,7 +261,7 @@ class WpMatomo {
 			$woocommerce = new Woocommerce( $tracker, self::$settings, $sync_config );
 			$woocommerce->register_hooks();
 
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings );
+			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings, $sync_config );
 			$easy_digital_downloads->register_hooks();
 
 			$member_press = new MemberPress( $tracker, self::$settings );
