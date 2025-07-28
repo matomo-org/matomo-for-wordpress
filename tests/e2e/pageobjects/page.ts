@@ -19,7 +19,12 @@ export default class Page {
 
     let result;
     result = await Website.retry(3, async () => {
-      return await browser.url(`${baseUrl}${path}`);
+      let r = await browser.url(`${baseUrl}${path}`);
+      if (await $('#user_login').isExisting()) {
+        await Website.login(); // logged out for some reason
+        throw new Error('force retry');
+      }
+      return r;
     });
 
     await this.addStylesToPage(`
