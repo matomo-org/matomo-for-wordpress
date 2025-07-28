@@ -66,14 +66,14 @@ class Base {
 
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
-
-		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
-		add_action( 'wp_head', [ $this, 'maybe_do_delayed_tracking_early' ] );
 	}
 
 	public function register_hooks() {
 		if ( ! is_admin() ) {
 			add_action( 'wp_footer', [ $this, 'on_print_queues' ], 99999, 0 );
+			add_action( 'wp_footer', [ $this, 'maybe_do_delayed_tracking_early' ], 99999, 0 );
+
+			add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
 		}
 	}
 
@@ -98,7 +98,7 @@ class Base {
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
 			   || ( defined( 'MATOMO_TRACK_ECOMMERCE_SERVER_SIDE' ) && MATOMO_TRACK_ECOMMERCE_SERVER_SIDE )
-			   || did_action( 'wp_footer' )
+			   || ( did_action( 'wp_footer' ) && ! doing_action( 'wp_footer' ) )
 			   || $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
@@ -218,7 +218,7 @@ class Base {
 
 		$this->add_tracking_calls_to_session( $tracking_data );
 
-		wp_schedule_single_event( $delayed_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+		wp_schedule_single_event( $delayed_time, self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $tracking_data ] );
 
 		$this->ajax_tracker_calls = [];
 	}
@@ -249,14 +249,19 @@ class Base {
 		$all_queued_tracking = $this->get_tracking_calls_in_session();
 		if ( ! empty( $all_queued_tracking ) ) {
 			foreach ( $all_queued_tracking as $tracking_data ) {
-				if ( ! wp_get_scheduled_event( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data, $tracking_data['delayed_time'] ) ) {
+				if ( ! wp_get_scheduled_event( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $tracking_data ], $tracking_data['delayed_time'] ) ) {
 					continue; // delayed tracking event already ran
 				}
 
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $this->wrap_script( $this->make_matomo_js_tracker_call( $tracking_data['calls'] ) );
+				$script = '';
+				foreach ( $tracking_data['calls'] as $call ) {
+					$script .= $this->make_matomo_js_tracker_call( $call );
+				}
 
-				wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, $tracking_data );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $this->wrap_script( $script );
+
+				wp_unschedule_event( $tracking_data['delayed_time'], self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $tracking_data ] );
 			}
 
 			$this->remove_tracking_calls_in_session();
