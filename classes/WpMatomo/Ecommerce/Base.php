@@ -72,9 +72,9 @@ class Base {
 		if ( ! is_admin() ) {
 			add_action( 'wp_footer', [ $this, 'on_print_queues' ], 99999, 0 );
 			add_action( 'wp_footer', [ $this, 'maybe_do_delayed_tracking_early' ], 99999, 0 );
-
-			add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ] );
 		}
+
+		add_action( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $this, 'do_delayed_tracking' ], 10, 1 );
 	}
 
 	public function on_print_queues() {

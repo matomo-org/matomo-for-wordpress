@@ -287,7 +287,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		}
 
 		foreach ( $events as $event ) {
-			do_action( $event_name, $event['args'] );
+			do_action_ref_array( $event_name, $event['args'] );
 		}
 
 		_set_cron_array( $rest_of_events );

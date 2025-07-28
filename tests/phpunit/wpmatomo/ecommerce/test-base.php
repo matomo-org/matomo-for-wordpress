@@ -56,6 +56,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		 * use a custom object which provide public methods of the Base class
 		 */
 		$this->base = new MatomoTestEcommerce( $this->test_tracker, $this->settings, $this->sync_config );
+		$this->base->register_hooks();
 	}
 
 	public function tearDown(): void {
@@ -149,22 +150,20 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$tracking_time = $this->base->session_data['ajax_calls'][0]['tracking_time'];
 
-		$this->check_and_remove_delayed_tracking_times();
+		$session_data = $this->check_and_remove_delayed_tracking_times();
 
 		$this->assertEquals(
 			[
-				'ajax_calls' => [
-					[
-						'calls'      => [
-							[ 'trackEcommerceCartUpdate', 100 ],
-							[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
-						],
-						'visitor_id' => false,
-						'ip'         => '127.0.0.1',
+				[
+					'calls'      => [
+						[ 'trackEcommerceCartUpdate', 100 ],
+						[ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ],
 					],
+					'visitor_id' => false,
+					'ip'         => '127.0.0.1',
 				],
 			],
-			$this->base->session_data
+			$session_data
 		);
 
 		// check the event works properly
@@ -180,6 +179,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
 
+		$this->base->should_track_background = false;
 		$this->base->maybe_do_delayed_tracking_early();
 
 		$this->assertEquals(
@@ -226,6 +226,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		// recreate tracker since it detects cookies on construction
 		$this->test_tracker = new TestAjaxTracker( $this->settings );
 		$this->base         = new MatomoTestEcommerce( $this->test_tracker, $this->settings, $this->sync_config );
+		$this->base->register_hooks();
 
 		$this->base->should_track_background   = true;
 		$this->base->supports_delayed_tracking = true;
@@ -241,24 +242,22 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$tracking_time = $this->base->session_data['ajax_calls'][0]['tracking_time'];
 
-		$this->check_and_remove_delayed_tracking_times();
+		$session_data = $this->check_and_remove_delayed_tracking_times();
 
 		$this->assertEquals(
 			[
-				'ajax_calls' => [
-					[
-						'calls'      => [
-							[
-								'trackEcommerceCartUpdate',
-								100,
-							],
+				[
+					'calls'      => [
+						[
+							'trackEcommerceCartUpdate',
+							100,
 						],
-						'visitor_id' => $visitor_id,
-						'ip'         => $ip,
 					],
+					'visitor_id' => $visitor_id,
+					'ip'         => $ip,
 				],
 			],
-			$this->base->session_data
+			$session_data
 		);
 
 		$this->assertFalse( $this->base->has_order_been_tracked_already( 'orderid' ) );
@@ -335,7 +334,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 			],
 		];
 
-		wp_schedule_single_event( $calls['delayed_time'], \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, $calls );
+		wp_schedule_single_event( $calls['delayed_time'], \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $calls ] );
 
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
@@ -349,7 +348,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$expected_tracking_code = <<<EOF
 <script type="text/javascript">
 /* <![CDATA[ */
-window._paq = window._paq || []; window._paq.push([["trackEcommerceCartUpdate",100],["trackEcommerceOrder","orderid",300,200,40,60,0]]);
+window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate",100]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","orderid",300,200,40,60,0]);
 /* ]]> */
 </script>
 
@@ -368,7 +367,8 @@ EOF;
 	}
 
 	private function check_and_remove_delayed_tracking_times() {
-		foreach ( $this->base->session_data['ajax_calls'] as &$call ) {
+		$ajax_calls = $this->base->session_data['ajax_calls'];
+		foreach ( $ajax_calls as &$call ) {
 			$delayed_time  = $call['delayed_time'];
 			$tracking_time = $call['tracking_time'];
 
@@ -377,5 +377,6 @@ EOF;
 			unset( $call['delayed_time'] );
 			unset( $call['tracking_time'] );
 		}
+		return $ajax_calls;
 	}
 }
