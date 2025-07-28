@@ -93,11 +93,25 @@ SQL;
 	protected function get_started() {
 		global $wpdb;
 		$table = DB::table( 'visit' );
-		$sql   = <<<SQL
+		if ( ! empty( $table ) ) {
+			$sql = <<<SQL
 SELECT min(last_visit) from $table
 SQL;
-		$row   = $wpdb->get_row( $sql, ARRAY_N );
-		return Date::factory( $row[0] );
+		} else {
+			$table = DB::table( 'visitor' );
+
+			$sql = <<<SQL
+SELECT min(last_view) from $table
+SQL;
+		}
+
+		$row  = $wpdb->get_row( $sql, ARRAY_N );
+		$date = $row[0];
+		if ( empty( $date ) ) {
+			return Date::yesterday();
+		}
+
+		return Date::factory( $date );
 	}
 
 	/**
