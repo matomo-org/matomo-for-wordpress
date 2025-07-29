@@ -171,5 +171,6 @@ class Bootstrap {
 
 		self::$environment_bootstrapped  = false;
 		self::$bootstrapped_by_wordpress = false;
+		self::$assume_not_bootstrapped   = true;
 	}
 }
