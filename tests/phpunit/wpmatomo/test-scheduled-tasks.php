@@ -200,7 +200,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $main_site );
 
 		$this->tasks->update_geo_ip2_db();
-		$this->assertEquals( 1, $this->geoip_update_call_count );
+		$this->assertEquals( 2, $this->geoip_update_call_count );
 	}
 
 	public function get_container_config_for_geoip_fail() {
