@@ -292,4 +292,13 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		_set_cron_array( $rest_of_events );
 	}
+
+	protected function is_wordpress_not_using_cdata_tags() {
+		return getenv( 'WORDPRESS_VERSION' )
+			&& (
+				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
+				&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
+				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
+			);
+	}
 }

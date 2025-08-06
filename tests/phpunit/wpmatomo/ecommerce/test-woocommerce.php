@@ -11,6 +11,9 @@
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
 require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
+/**
+ * @group only
+ */
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 	public $should_track_background = false;
@@ -138,12 +141,17 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$session_data = WC()->session->get( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
 		$this->assertEmpty( $session_data );
 
+		$cdata_start = "\n/* <![CDATA[ */";
+		$cdata_end   = "/* ]]> */\n";
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
 		$expected_code = <<<EOF
-<script type="text/javascript">
-/* <![CDATA[ */
+<script type="text/javascript">$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
-/* ]]> */
-</script>
+$cdata_end</script>
 
 EOF;
 
@@ -169,17 +177,20 @@ EOF;
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
+		$cdata_start = "\n/* <![CDATA[ */";
+		$cdata_end   = "/* ]]> */\n";
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
 		$expected_code = <<<EOF
-<script type="text/javascript">
-/* <![CDATA[ */
+<script type="text/javascript">$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
-/* ]]> */
-</script>
-<script type="text/javascript">
-/* <![CDATA[ */
+$cdata_end</script>
+<script type="text/javascript">$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","11","24.00",24,"0","0",0]);
-/* ]]> */
-</script>
+$cdata_end</script>
 
 EOF;
 
