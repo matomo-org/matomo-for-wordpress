@@ -30,6 +30,7 @@ class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 /**
  * @package matomo
+ * @group only
  */
 class WoocommerceTest extends MatomoAnalytics_TestCase {
 
@@ -140,7 +141,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$expected_code = <<<EOF
 <script type="text/javascript">
 /* <![CDATA[ */
-window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceCartUpdate","24.00"]]);
+window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
 /* ]]> */
 </script>
 
@@ -171,12 +172,12 @@ EOF;
 		$expected_code = <<<EOF
 <script type="text/javascript">
 /* <![CDATA[ */
-window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceCartUpdate","24.00"]]);
+window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
 /* ]]> */
 </script>
 <script type="text/javascript">
 /* <![CDATA[ */
-window._paq = window._paq || []; window._paq.push([["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2],["trackEcommerceOrder","11","24.00",24,"0","0",0]]);
+window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","11","24.00",24,"0","0",0]);
 /* ]]> */
 </script>
 
@@ -354,7 +355,7 @@ EOF;
 			ob_start();
 			try {
 				// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				do_action( 'wp_head' );
+				do_action( 'wp_footer' );
 			} finally {
 				$result = ob_get_clean();
 			}
