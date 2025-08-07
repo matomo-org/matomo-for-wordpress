@@ -345,12 +345,19 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
+		$cdata_start = "\n/* <![CDATA[ */";
+		$cdata_end   = "/* ]]> */\n";
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
+		$script_type = $this->get_type_attribute();
+
 		$expected_tracking_code = <<<EOF
-<script type="text/javascript">
-/* <![CDATA[ */
+<script $script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate",100]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","orderid",300,200,40,60,0]);
-/* ]]> */
-</script>
+$cdata_end</script>
 
 EOF;
 
