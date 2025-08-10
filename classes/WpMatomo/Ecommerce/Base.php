@@ -103,9 +103,7 @@ class Base {
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
-		if ( $this->should_track_background() ) {
-			$this->ajax_tracker_calls[] = $params;
-		}
+		$this->ajax_tracker_calls[] = $params;
 
 		$code = 'window._paq = window._paq || [];';
 		if ( $this->settings->get_global_option( 'disable_cookies' ) ) {
@@ -141,7 +139,17 @@ class Base {
 			$script = '<script >' . PHP_EOL . $script . PHP_EOL . '</script>' . PHP_EOL;
 		}
 
+		// NOTE: we expect the script to be echo'd after wrap_script is called
+		$this->set_order_been_tracked_if_ajax_calls_has_order_track();
+
 		return $script;
+	}
+
+	private function set_order_been_tracked_if_ajax_calls_has_order_track() {
+		foreach ( $this->ajax_tracker_calls as $call ) {
+			$tracker_method = array_shift( $call );
+			$this->set_order_been_tracked_if_call_is_track_order( $tracker_method, $call );
+		}
 	}
 
 	private function track_in_background( $ajax_tracker_calls, $visitor_id = null, $tracking_time = null, $ip = null ) {
@@ -171,12 +179,8 @@ class Base {
 						array_shift( $call );
 						$response = call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 
-						if (
-							'doTrackEcommerceOrder' === $tracker_method
-							&& $this->tracker->is_success_response( $response )
-						) {
-							$order_id = reset( $call );
-							$this->set_order_been_tracked( $order_id );
+						if ( $this->tracker->is_success_response( $response ) ) {
+							$this->set_order_been_tracked_if_call_is_track_order( $tracker_method, $call );
 						}
 					} catch ( Exception $e ) {
 						$this->logger->log_exception( $call[0], $e );
@@ -187,6 +191,16 @@ class Base {
 			$this->tracker->forcedVisitorId = $original_visitor_id;
 			$this->tracker->forcedDatetime  = false;
 			$this->tracker->ip              = false;
+		}
+	}
+
+	private function set_order_been_tracked_if_call_is_track_order( $tracker_method, $params ) {
+		if (
+			'doTrackEcommerceOrder' === $tracker_method
+			|| 'trackEcommerceOrder' === $tracker_method
+		) {
+			$order_id = reset( $params );
+			$this->set_order_been_tracked( $order_id );
 		}
 	}
 
@@ -247,7 +261,7 @@ class Base {
 		}
 
 		$all_queued_tracking = $this->get_tracking_calls_in_session();
-		if ( ! empty( $all_queued_tracking ) ) {
+		if ( ! empty( $all_queued_tracking ) && is_array( $all_queued_tracking ) ) {
 			foreach ( $all_queued_tracking as $tracking_data ) {
 				if ( ! wp_get_scheduled_event( self::DELAYED_SERVER_SIDE_TRACKING_HOOK, [ $tracking_data ], $tracking_data['delayed_time'] ) ) {
 					continue; // delayed tracking event already ran
@@ -256,6 +270,9 @@ class Base {
 				$script = '';
 				foreach ( $tracking_data['calls'] as $call ) {
 					$script .= $this->make_matomo_js_tracker_call( $call );
+
+					$tracker_method = array_shift( $call );
+					$this->set_order_been_tracked_if_call_is_track_order( $tracker_method, $call );
 				}
 
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
