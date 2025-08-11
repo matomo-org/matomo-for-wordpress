@@ -11,9 +11,6 @@
 require_once __DIR__ . '/../../framework/traits/test-matomo-woocommerce-aware-test.php';
 require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
 
-/**
- * @group only
- */
 class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 	public $should_track_background = false;
@@ -33,7 +30,6 @@ class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 
 /**
  * @package matomo
- * @group only
  */
 class WoocommerceTest extends MatomoAnalytics_TestCase {
 

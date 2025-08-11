@@ -134,6 +134,43 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
+	public function test_wrap_script_outputs_code_when_not_tracking_in_background() {
+		$this->base->should_track_background   = false;
+		$this->base->supports_delayed_tracking = true;
+
+		$script  = '';
+		$script .= $this->base->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', 400 ] );
+		$script .= $this->base->make_matomo_js_tracker_call( [ 'trackEcommerceOrder', 'orderid', 300, 200, 40, 60, 0 ] );
+
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+
+		$script = $this->base->wrap_script( $script );
+
+		$cdata_start = "\n/* <![CDATA[ */";
+		$cdata_end   = "/* ]]> */\n";
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
+		$script_type = $this->get_type_attribute();
+
+		$expected = <<<EOF
+<script $script_type>$cdata_start
+window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate",400]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","orderid",300,200,40,60,0]);
+$cdata_end</script>
+
+EOF;
+
+		$this->assertEquals( $expected, $script );
+
+		$this->assertEmpty( $this->test_tracker->captured_urls );
+		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+		$this->assertEmpty( $this->base->session_data );
+
+		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
+	}
+
 	public function test_wrap_script_delays_background_tracking_via_event() {
 		$this->base->should_track_background   = true;
 		$this->base->supports_delayed_tracking = true;
