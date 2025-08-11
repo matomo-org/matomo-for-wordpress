@@ -248,7 +248,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$config                                  = StaticContainer::get( \Piwik\Config::class );
 		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
 
-		AjaxTracker::add_ip_forward_proxy_header( $config );
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
 
 		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
 	}
@@ -259,7 +259,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$config                                  = StaticContainer::get( \Piwik\Config::class );
 		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
 
-		AjaxTracker::add_ip_forward_proxy_header( $config );
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
 
 		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
 	}
@@ -270,7 +270,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$config                                  = StaticContainer::get( \Piwik\Config::class );
 		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
 
-		AjaxTracker::add_ip_forward_proxy_header( $config );
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
 
 		$this->assertEquals( [ 'a', 'b', 'c', AjaxTracker::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME ], $config->General['proxy_client_headers'] );
 	}

@@ -109,7 +109,7 @@ return array(
             }
 		}
 
-		\WpMatomo\AjaxTracker::add_ip_forward_proxy_header( $previous );
+		\WpMatomo\AjaxTracker::add_ip_forward_proxy_header_to_config( $previous );
 
 		return $previous;
 	}),

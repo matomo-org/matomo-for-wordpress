@@ -198,7 +198,7 @@ class AjaxTracker extends \MatomoTracker {
 	 * If it should be handled, the X-Matomo-Forwarded-Ip header is added to Matomo's
 	 * list of proxy HTTP headers to look at for IP addresses.
 	 */
-	public static function add_ip_forward_proxy_header( \Piwik\Config $config ) {
+	public static function add_ip_forward_proxy_header_to_config(\Piwik\Config $config ) {
 		if ( empty( $_REQUEST['ip_nonce'] ) ) {
 			return;
 		}

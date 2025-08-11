@@ -279,6 +279,8 @@ class BaseTest extends MatomoAnalytics_TestCase {
 			],
 			$this->test_tracker->captured_requests
 		);
+
+		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
 	}
 
 	public function test_maybe_do_delayed_tracking_early_does_nothing_if_delayed_tracking_unsupported() {
@@ -298,6 +300,8 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$output = ob_get_clean();
 
 		$this->assertEmpty( $output );
+
+		$this->assertFalse( $this->base->has_order_been_tracked_already( 'orderid' ) );
 	}
 
 	public function test_maybe_do_delayed_tracking_early_does_nothing_if_the_current_request_requires_background_tracking() {
@@ -321,6 +325,8 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		ob_end_clean();
 
 		$this->assertEmpty( $output );
+
+		$this->assertFalse( $this->base->has_order_been_tracked_already( 'orderid' ) );
 	}
 
 	public function test_maybe_do_delayed_tracking_uses_detected_visitor_information_in_session() {
@@ -371,6 +377,8 @@ EOF;
 		);
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
+
+		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
 	}
 
 	private function check_and_remove_delayed_tracking_times() {
