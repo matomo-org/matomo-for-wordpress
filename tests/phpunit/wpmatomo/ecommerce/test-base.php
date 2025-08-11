@@ -180,7 +180,8 @@ EOF;
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$this->base->wrap_script( '' );
+		$script = $this->base->wrap_script( '' );
+		$this->assertEmpty( $script );
 
 		$this->assertEmpty( $this->test_tracker->captured_urls );
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
@@ -236,7 +237,8 @@ EOF;
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$this->base->wrap_script( '' );
+		$script = $this->base->wrap_script( '' );
+		$this->assertEmpty( $script );
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
@@ -272,7 +274,8 @@ EOF;
 
 		$this->assert_event_not_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
 
-		$this->base->wrap_script( '' );
+		$script = $this->base->wrap_script( '' );
+		$this->assertEmpty( $script );
 
 		$this->assertEmpty( $this->test_tracker->captured_urls );
 		$this->assert_event_scheduled( \WpMatomo\Ecommerce\Base::DELAYED_SERVER_SIDE_TRACKING_HOOK );
