@@ -87,7 +87,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
@@ -320,7 +320,8 @@ EOF;
 			$this->test_tracker->captured_requests
 		);
 
-		$this->assertTrue( $this->base->has_order_been_tracked_already( 'orderid' ) );
+		// no ecommerce order, just cart update
+		$this->assertFalse( $this->base->has_order_been_tracked_already( 'orderid' ) );
 	}
 
 	public function test_maybe_do_delayed_tracking_early_does_nothing_if_delayed_tracking_unsupported() {
