@@ -26,6 +26,12 @@ add_filter(
 		return $config;
 	}
 );
+add_filter(
+	'experimental_woocommerce_admin_payment_reactify_render_sections',
+	function () {
+		return [];
+	}
+);
 
 // if a PHP error is detected from within Matomo for WordPress, throw an exception
 // so we notice during tests and get a backtrace
