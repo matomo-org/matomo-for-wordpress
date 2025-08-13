@@ -273,10 +273,12 @@ class Website {
               throw e;
             }
           } else {
-            throw new Error('unknown page html in woocommerce setup');
+            await this.dumpHtml();
+            throw new Error('unknown page html in woocommerce setup (no save button)');
           }
         } else {
-            throw new Error('unknown page html in woocommerce setup');
+          await this.dumpHtml();
+          throw new Error('unknown page html in woocommerce setup');
         }
       });
     }
