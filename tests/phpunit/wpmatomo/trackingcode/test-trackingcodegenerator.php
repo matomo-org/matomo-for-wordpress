@@ -523,13 +523,4 @@ if (document.prerendering) {
 		$this->settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 5000 );
 		$this->settings->save();
 	}
-
-	private function is_wordpress_not_using_cdata_tags() {
-		return getenv( 'WORDPRESS_VERSION' )
-			&& (
-				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
-				&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
-				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
-			);
-	}
 }

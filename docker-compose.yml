@@ -109,6 +109,8 @@ services:
       EXECUTE_CLI: 1
     depends_on:
       - "$BACKEND"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # database service definitions
   mariadb:

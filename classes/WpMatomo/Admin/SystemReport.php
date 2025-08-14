@@ -1335,6 +1335,20 @@ class SystemReport {
 				: esc_html__( 'The WordPress Filesystem abstraction was not initialized correctly (WP_Filesystem() returned false). This indicates a WordPress or server configuration issue which may cause problems in Matomo and other plugins. To resolve it, contact your hosting provider.', 'matomo' ),
 		];
 
+		$system_cron_warning = esc_html__( 'Warning: Your WordPress site does not appear to have a system cron job set up to run the WordPress cron. Matomo uses the WordPress cron to generate reports and to delete temporary data to provide compliance with various privacy regulations (e.g., GDPR).', 'matomo' )
+			. '<br/><br/>'
+			. esc_html__( 'Without a system cron job set up, these tasks may be run irregularly or infrequently, which could lead to personal data being retained longer than allowed.', 'matomo' )
+			. '<br/><br/>'
+			. esc_html__( 'To avoid this, we recommend setting up a system cron job to run the WordPress cron regularly. Contact your hosting provider if you require help with this.', 'matomo' );
+
+		$is_system_cron_set_up = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
+		$rows[]                = [
+			'name'       => 'System Cron Set Up',
+			'value'      => $is_system_cron_set_up,
+			'is_warning' => ! $is_system_cron_set_up,
+			'comment'    => $is_system_cron_set_up ? null : $system_cron_warning,
+		];
+
 		return $rows;
 	}
 

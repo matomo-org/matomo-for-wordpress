@@ -9,6 +9,9 @@
 
 use WpMatomo\AjaxTracker;
 use WpMatomo\Settings;
+use Piwik\Container\StaticContainer;
+
+require_once __DIR__ . '/../framework/mocks/mock-ajax-tracker.php';
 
 /**
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -225,8 +228,78 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		];
 	}
 
+	public function test_set_visitor_id_safe_sets_visitor_id_when_valid() {
+		$visitor_id = '0123456789abcdef';
+
+		$tracker = new AjaxTracker( $this->settings );
+		$tracker->set_visitor_id_safe( $visitor_id );
+		$this->assertEquals( $visitor_id, $tracker->forcedVisitorId );
+	}
+
+	public function test_set_visitor_id_does_not_set_visitorid() {
+		$visitor_id = 'garbagevalue';
+
+		$tracker = new AjaxTracker( $this->settings );
+		$tracker->set_visitor_id_safe( $visitor_id );
+		$this->assertEmpty( $tracker->forcedVisitorId );
+	}
+
+	public function test_add_ip_forward_proxy_header_does_nothing_without_nonce() {
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_add_ip_forward_proxy_header_does_nothing_if_nonce_is_not_valid() {
+		$_REQUEST['ip_nonce'] = 'wrongnonce';
+
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_add_ip_forward_proxy_header_modifies_config_correctly_when_valid_nonce_exists() {
+		$_REQUEST['ip_nonce'] = wp_create_nonce( AjaxTracker::IP_ADDRESS_FORWARDING_NONCE_NAME );
+
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c', AjaxTracker::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_ajax_tracker_sends_correct_request_when_custom_ip_is_used() {
+		$tracker = $this->make_mock_tracker();
+		$tracker->setIp( '1.2.3.4' );
+		$tracker->doTrackPageView( 'test page' );
+
+		$expected_requests = [
+			[
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
+				[
+					'method'  => 'GET',
+					'headers' => [
+						'X-Matomo-Forwarded-Ip' => '1.2.3.4',
+					],
+				],
+			],
+		];
+		$this->assertEquals( $expected_requests, $tracker->captured_requests );
+	}
+
 	private function create_blog() {
 		$this->blogid = self::factory()->blog->create();
 		return $this->blogid;
+	}
+
+	private function make_mock_tracker() {
+		return new TestAjaxTracker( $this->settings );
 	}
 }

@@ -6,9 +6,6 @@ use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 
-/**
- * @group only
- */
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
 	 * static due to multiple tests instanciations
@@ -96,6 +93,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 					$run_migrations = [ \WP_Statistics\Service\Database\Managers\MigrationHandler::class, 'runMigrations' ];
 				} elseif ( method_exists( \WP_Statistics\Service\Database\Managers\MigrationHandler::class, 'runSchemaMigrations' ) ) {
 					$run_migrations = [ \WP_Statistics\Service\Database\Managers\MigrationHandler::class, 'runSchemaMigrations' ];
+				} elseif ( method_exists( \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'runSchemaMigrations' ) ) {
+					$run_migrations = [ \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'runSchemaMigrations' ];
 				} else {
 					throw new \Exception( 'do not know how to run wp-statistics migrations' );
 				}

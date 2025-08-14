@@ -14,6 +14,8 @@ trait MatomoWooCommerceAwareTest {
 
 		WC()->frontend_includes();
 		WC()->include_template_functions();
+		WC_Install::install();
+		\Automattic\WooCommerce\Blocks\Package::init();
 	}
 
 	public function disable_woocommerce_cookies() {

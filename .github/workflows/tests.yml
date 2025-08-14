@@ -35,7 +35,7 @@ concurrency:
 
 jobs:
   unit_tests:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
@@ -78,6 +78,9 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Check PHP Version
         run: php -v
 
@@ -99,11 +102,7 @@ jobs:
       # TODO: redundancy w/ e2e_tests, could be moved to a script
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
-      - run: |
-          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
-          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
-
-          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+      - run: docker buildx build --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 0
@@ -156,8 +155,9 @@ jobs:
 
           npm run phpunit
 
+
   e2e_tests:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
@@ -180,6 +180,9 @@ jobs:
       - uses: browser-actions/setup-firefox@v1
       - run: firefox --version
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       # setup node
       - uses: actions/setup-node@v3
         with:
@@ -188,7 +191,6 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
       - run: npm install
 
-      # TODO: try to remove this after prefixing
       # disable deprecation notices in e2e tests. we can't control much of the code being
       # tested (ie, WordPress, other WordPress plugins), and it's very easy for one of them
       # to trigger a deprecation notice
@@ -204,7 +206,6 @@ jobs:
           echo 'post_max_size = 128M' >> docker/php-custom.ini
 
       # docker-compose up
-      # TODO: i can't seem to get docker layer caching to work.
       - run: |
           cat > .env <<EOF
           PHP_VERSION=$PHP_VERSION
@@ -220,11 +221,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: |
-          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
-          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
-
-          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+      - run: docker buildx build --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
@@ -267,7 +264,7 @@ jobs:
         if: always()
 
   checkstyle:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-latest'
     steps:
       - name: Checkout project
         uses: actions/checkout@v3

@@ -22,6 +22,11 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 }
 
 class AjaxTracker extends \MatomoTracker {
+
+	const IP_ADDRESS_FORWARDING_HEADER             = 'X-Matomo-Forwarded-Ip';
+	const IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME = 'HTTP_X_MATOMO_FORWARDED_IP';
+	const IP_ADDRESS_FORWARDING_NONCE_NAME         = 'matomo-track-forward-ip';
+
 	private $has_cookie = false;
 	private $logger;
 
@@ -45,6 +50,8 @@ class AjaxTracker extends \MatomoTracker {
 
 		parent::__construct( $idsite, $api_endpoint );
 
+		$this->ip = false;
+
 		// we are using the tracker only in ajax so the referer contains the actual url
 		$this->urlReferrer = false;
 		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
@@ -60,29 +67,31 @@ class AjaxTracker extends \MatomoTracker {
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
 				$this->has_cookie = true;
-				try {
-					$this->setVisitorId( $this->cookieVisitorId );
-				} catch (\Exception $ex) {
-					// do not fatal if the visitor ID is invalid for some reason
-					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
-						throw $ex;
-					}
-				}
+				$this->set_visitor_id_safe( $this->cookieVisitorId );
 			}
 		} else if ( function_exists( 'WC' ) && isset( WC()->session ) ) {
 			$visitor_id = WC()->session->get( ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME );
 			if ( ! empty( $visitor_id ) ) {
 				$this->hasCookie = true; // do not set cookies for this visitor, since it would have no effect anyway
-				try {
-					$this->setVisitorId( $visitor_id );
-				} catch ( \Exception $ex ) {
-					// do not fatal if the visitor ID is invalid for some reason
-					if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
-						throw $ex;
-					}
-				}
+				$this->set_visitor_id_safe( $visitor_id );
 			}
 		}
+	}
+
+	public function set_visitor_id_safe( $visitor_id ) {
+		try {
+			$this->setVisitorId( $visitor_id );
+		} catch ( \Exception $ex ) {
+			// do not fatal if the visitor ID is invalid for some reason
+			if ( ! $this->is_invalid_visitor_id_error( $ex ) ) {
+				throw $ex;
+			}
+		}
+	}
+
+	public function is_success_response( $response ) {
+		$gif_response = "R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+		return $response === base64_decode( $gif_response );
 	}
 
 	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ) {
@@ -111,6 +120,15 @@ class AjaxTracker extends \MatomoTracker {
 		);
 		if ( ! empty( $data ) ) {
 			$args['body'] = $data;
+		}
+
+		if ( ! empty( $this->ip ) ) {
+			$args['headers'] = [
+				self::IP_ADDRESS_FORWARDING_HEADER => $this->ip,
+			];
+
+			$ip_nonce = wp_create_nonce( self::IP_ADDRESS_FORWARDING_NONCE_NAME );
+			$url      = $url . '&ip_nonce=' . rawurlencode( $ip_nonce );
 		}
 
 		// todo at some point we could think about including `matomo.php` here instead of doing an http request
@@ -152,5 +170,50 @@ class AjaxTracker extends \MatomoTracker {
 	 */
 	protected function wp_remote_request( $url, $args ) {
 		return wp_remote_request( $url, $args );
+	}
+
+	/**
+	 * In Matomo for WordPress we want to rely entirely on JavaScript tracker
+	 * for creating cookies.
+	 *
+	 * @return void
+	 */
+	protected function setFirstPartyCookies() {
+		// disabled
+	}
+
+	/**
+	 * Enables the handling of the X-Matomo-Forwarded-Ip, if it should be for
+	 * the current request.
+	 *
+	 * Matomo for WordPress uses a custom header to correctly track client IP addresses
+	 * when doing server side tracking. We choose to use this approach instead
+	 * of the `cip` tracking parameter, since that parameter requires the use of
+	 * a token_auth, and creating and storing a token_auth is more complexity than
+	 * we want.
+	 *
+	 * Instead, we use a WP nonce to check whether the current request is authorized
+	 * to handle the X-Matomo-Forwarded-Ip header.
+	 *
+	 * If it should be handled, the X-Matomo-Forwarded-Ip header is added to Matomo's
+	 * list of proxy HTTP headers to look at for IP addresses.
+	 */
+	public static function add_ip_forward_proxy_header_to_config(\Piwik\Config $config ) {
+		if ( empty( $_REQUEST['ip_nonce'] ) ) {
+			return;
+		}
+
+		$ip_nonce = $_REQUEST['ip_nonce'];
+		if ( ! wp_verify_nonce( $ip_nonce, self::IP_ADDRESS_FORWARDING_NONCE_NAME ) ) {
+			return;
+		}
+
+		$proxy_client_headers = $config->General['proxy_client_headers'];
+		if ( ! is_array( $proxy_client_headers ) ) {
+			$proxy_client_headers = [];
+		}
+		$proxy_client_headers[] = self::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME;
+
+		$config->General['proxy_client_headers'] = $proxy_client_headers;
 	}
 }

@@ -11,6 +11,7 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\AjaxTracker;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -44,7 +45,7 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 0, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_after_cart_item_quantity_update', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
 		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
@@ -290,13 +291,6 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_tracked => 1,
-			]
-		);
-
 		return $this->wrap_script( $tracking_code );
 	}
 
@@ -447,11 +441,27 @@ class Woocommerce extends Base {
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		throw new \Exception( 'has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead' );
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return false;
+		}
+
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		return $this->get_order_meta( $order, $this->key_order_tracked ) == 1;
 	}
 
 	protected function set_order_been_tracked( $order_id ) {
-		throw new \Exception( 'set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead' );
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		$this->save_order_metadata(
+			$order,
+			[
+				$this->key_order_tracked => 1,
+			]
+		);
 	}
 
 	/**
@@ -490,5 +500,36 @@ class Woocommerce extends Base {
 
 	private function get_order_id( $order ) {
 		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+	}
+
+	protected function add_tracking_calls_to_session( $data ) {
+		if ( ! empty( WC()->session ) ) {
+			$queue   = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+			$queue[] = $data;
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, $queue );
+		}
+	}
+
+	protected function remove_tracking_calls_in_session() {
+		if ( ! empty( WC()->session ) ) {
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, [] );
+		}
+	}
+
+	protected function get_tracking_calls_in_session() {
+		if ( empty( WC()->session ) ) {
+			return [];
+		}
+
+		$calls = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+		if ( ! is_array( $calls ) ) {
+			return [];
+		}
+
+		return $calls;
+	}
+
+	protected function supports_delayed_tracking() {
+		return true;
 	}
 }

@@ -36,6 +36,7 @@ class ServerSideVisitorIdTest extends MatomoUnit_TestCase {
 
 	public function tearDown(): void {
 		$this->unset_wc_session();
+		$_COOKIE = [];
 		parent::tearDown();
 	}
 
