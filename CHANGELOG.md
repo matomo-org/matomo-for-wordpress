@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.3.2 =
+* Fix ecommerce tracking issues that occur when WordPress plugins that initiate WooCommerce events from JavaScript hosted on another server, like the Klarna plugin.
+* Fix issue site switching error that occurs during scheduled task execution when resetting the Matomo environment.
+* Fix issue preventing users with Matomo roles only to view the WordPress admin dashboard.
+* Fix image display issue with SearchEngineKeywordsPerformance plugin.
+
 = 5.3.1 =
 * New troubleshooting tool that runs a specific scheduled task.
 * Fix compatibility issue with the All In One SEO plugin that resulted in incorrectly tracking a cart addition on a product view.
