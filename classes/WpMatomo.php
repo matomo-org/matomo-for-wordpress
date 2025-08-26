@@ -258,8 +258,11 @@ class WpMatomo {
 			$tracker = new AjaxTracker( self::$settings );
 
 			$sync_config = new SiteSync\SyncConfig( self::$settings );
-			$woocommerce = new Woocommerce( $tracker, self::$settings, $sync_config );
-			$woocommerce->register_hooks();
+
+			if ( function_exists( 'WC' ) ) {
+				$woocommerce = new Woocommerce( $tracker, self::$settings, $sync_config );
+				$woocommerce->register_hooks();
+			}
 
 			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings, $sync_config );
 			$easy_digital_downloads->register_hooks();
