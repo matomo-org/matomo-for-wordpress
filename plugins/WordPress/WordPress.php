@@ -399,7 +399,7 @@ class WordPress extends Plugin
             }
         }
 
-        if ($requestedModule === 'login') {
+        if (strtolower($requestedModule) === 'login') {
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
                 return; // allowed
             }
@@ -460,9 +460,19 @@ class WordPress extends Plugin
     public function noAccess(Exception $exception)
     {
         if (Common::isXmlHttpRequest()) {
-            $frontController = FrontController::getInstance();
-            echo $frontController->dispatch('Login', 'ajaxNoAccess', array($exception->getMessage()));
-            return;
+            // copied code from Login.ajaxNoAccess to avoid infinite recursion caused by User.isNotAuthorized event
+            $errorMessage = $exception->getMessage();
+            echo sprintf(
+                '<div class="alert alert-danger">
+                    <p><strong>%s:</strong> %s</p>
+                    <p><a href="%s">%s</a></p>
+                </div>',
+                Piwik::translate('General_Error'),
+                htmlentities($errorMessage, Common::HTML_ENCODING_QUOTE_STYLE, 'UTF-8', $doubleEncode = \false),
+                'index.php?module=' . Piwik::getLoginPluginName(),
+                Piwik::translate('Login_LogIn')
+            );
+            exit; // exit required to avoid infinite recursion
         }
 
 	    $redirect_url = WordPress::getWpLoginUrl();
