@@ -144,6 +144,8 @@ describe('Tracking (Ecommerce)', function() {
       await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
       await checkPageHasForcedVisitorId();
 
+      await browser.pause(1000);
+
       // ensure we are doing cookieless tracking
       const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
       expect(matomoCookies).toEqual([]);

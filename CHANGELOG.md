@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.3.3 =
+* Fix regression causing fatal errors when ecommerce tracking is used but WooCommerce is not installed.
+* Workaround infinite recursion problem in Matomo core that occurs when an AJAX method is not authorized to function.
+
 = 5.3.2 =
 * Fix ecommerce tracking issues that occur when WordPress plugins that initiate WooCommerce events from JavaScript hosted on another server, like the Klarna plugin.
 * Fix issue site switching error that occurs during scheduled task execution when resetting the Matomo environment.
