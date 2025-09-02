@@ -1343,10 +1343,15 @@ class SystemReport {
 
 		$is_system_cron_set_up = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 		$rows[]                = [
-			'name'       => 'System Cron Set Up',
+			'name'       => esc_html__( 'System Cron Set Up', 'matomo' ),
 			'value'      => $is_system_cron_set_up,
 			'is_warning' => ! $is_system_cron_set_up,
 			'comment'    => $is_system_cron_set_up ? null : $system_cron_warning,
+		];
+
+		$rows[] = [
+			'name'  => esc_html__( 'Current User Locale', 'matomo' ),
+			'value' => get_user_locale( get_current_user_id() ),
 		];
 
 		return $rows;
