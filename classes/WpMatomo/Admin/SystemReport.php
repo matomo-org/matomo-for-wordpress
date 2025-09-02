@@ -675,6 +675,20 @@ class SystemReport {
 				'value'   => $upgrade_in_progress,
 				'comment' => '',
 			];
+
+			$lang = esc_html__( 'Unknown', 'matomo' );
+			try {
+				$login     = WpMatomo\User::get_matomo_user_login( get_current_user_id() );
+				$user_lang = \Piwik\Plugins\LanguagesManager\API::getInstance()->getLanguageForUser( $login );
+				$lang      = isset( $user_lang ) ? $user_lang : $lang;
+			} catch ( \Throwable $ex ) {
+				$lang = esc_html__( 'Error', 'matomo' ) . ': ' . $ex->getMessage();
+			}
+
+			$rows[] = [
+				'name'  => esc_html__( 'Current Matomo User Language', 'matomo' ),
+				'value' => $lang,
+			];
 		}
 
 		if ( ! $wpmatomo_updater->load_plugin_functions() ) {
