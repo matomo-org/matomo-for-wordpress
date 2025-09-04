@@ -23,7 +23,7 @@ class Aggregator implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     {
         $this->providers = $this->getProviders();
     }
-    public function getMetrics($domain)
+    public function getMetrics(string $domain)
     {
         $metrics = [];
         foreach ($this->providers as $provider) {

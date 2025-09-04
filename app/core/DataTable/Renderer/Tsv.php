@@ -30,7 +30,7 @@ class Tsv extends \Piwik\DataTable\Renderer\Csv
      *
      * @return string
      */
-    public function render()
+    public function render() : string
     {
         return parent::render();
     }

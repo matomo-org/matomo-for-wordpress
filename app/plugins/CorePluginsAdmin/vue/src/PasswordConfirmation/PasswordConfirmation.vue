@@ -26,9 +26,11 @@
           :uicontrol="'password'"
           :disabled="!requiresPasswordConfirmation ? 'disabled' : undefined"
           :name="'currentUserPassword'"
+          :id="passwordFieldId"
           :autocomplete="'off'"
           :full-width="true"
           :title="translate('UsersManager_YourCurrentPassword')"
+          v-auto-clear-password
         >
         </Field>
       </div>
@@ -51,7 +53,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Matomo } from 'CoreHome';
+import { Matomo, AutoClearPassword } from 'CoreHome';
 import Field from '../Field/Field.vue';
 import KeyPressEvent = JQuery.KeyPressEvent;
 
@@ -71,6 +73,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    passwordFieldId: {
+      type: String,
+      default: () => 'currentUserPassword',
+    },
   },
   data(): PasswordConfirmationState {
     return {
@@ -79,6 +85,9 @@ export default defineComponent({
     };
   },
   emits: ['confirmed', 'aborted', 'update:modelValue'],
+  directives: {
+    AutoClearPassword,
+  },
   components: {
     Field,
   },
@@ -88,11 +97,17 @@ export default defineComponent({
   methods: {
     onClickConfirm(event: MouseEvent) {
       event.preventDefault();
+      const root = this.$refs.root as HTMLElement;
+      const $root = $(root);
+      $root.modal('close');
       this.$emit('confirmed', this.passwordConfirmation);
       this.passwordConfirmation = '';
     },
     onClickCancel(event: MouseEvent) {
       event.preventDefault();
+      const root = this.$refs.root as HTMLElement;
+      const $root = $(root);
+      $root.modal('close');
       this.$emit('aborted');
       this.passwordConfirmation = '';
     },
@@ -112,7 +127,7 @@ export default defineComponent({
       $root.modal({
         dismissible: false,
         onOpenEnd: () => {
-          const passwordField = '.modal.open #currentUserPassword';
+          const passwordField = `.modal.open #${this.passwordFieldId}`;
           $(passwordField).focus();
           $(passwordField).off('keypress').keypress(onEnter);
         },

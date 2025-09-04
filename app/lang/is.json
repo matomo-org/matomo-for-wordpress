@@ -1,5 +1,6 @@
 {
     "General": {
+        "12HourClock": "12 tíma klukka",
         "API": "API",
         "AboutPiwikX": "Um Matomo %s",
         "Action": "Aðgerð",
@@ -266,6 +267,7 @@
         "WhereThe": "þar sem"
     },
     "Installation": {
+        "CollaborativeProject": "Matomo er samvinnuverkefni byggt af ást.",
         "Email": "Netfang",
         "Password": "Lykilorð"
     },
@@ -1458,6 +1460,7 @@
         "WidgetPages": "Síður á hverja heimsókn"
     },
     "VisitsSummary": {
+        "AverageGenerationTime": "íslenska",
         "GenerateQueries": "%s fyrirspurnir framkvæmdar",
         "GenerateTime": "%s sekúndur að gera þessa síðu",
         "NbActionsDescription": "%s aðgerðir (síðuflettingar, niðurhal og linkar frá vefnum)",

@@ -265,6 +265,7 @@ class Updater
          * served directly by the web server.  May be shared.
          */
         if (PIWIK_INCLUDE_PATH !== PIWIK_DOCUMENT_ROOT) {
+            // @phpstan-ignore notIdentical.alwaysFalse
             // Copy PHP files that expect to be in the document root
             $specialCases = array('/index.php', '/piwik.php', '/js/index.php');
             foreach ($specialCases as $file) {

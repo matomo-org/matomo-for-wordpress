@@ -68,6 +68,7 @@ if (!function_exists('get_print_class')) { function get_print_class() { return \
 if (!function_exists('get_resource_id')) { function get_resource_id() { return \Matomo\Dependencies\get_resource_id(...func_get_args()); } }
 if (!function_exists('get_tooltip_attributes')) { function get_tooltip_attributes() { return \Matomo\Dependencies\get_tooltip_attributes(...func_get_args()); } }
 if (!function_exists('grapheme_extract')) { function grapheme_extract() { return \Matomo\Dependencies\grapheme_extract(...func_get_args()); } }
+if (!function_exists('grapheme_str_split')) { function grapheme_str_split() { return \Matomo\Dependencies\grapheme_str_split(...func_get_args()); } }
 if (!function_exists('grapheme_stripos')) { function grapheme_stripos() { return \Matomo\Dependencies\grapheme_stripos(...func_get_args()); } }
 if (!function_exists('grapheme_stristr')) { function grapheme_stristr() { return \Matomo\Dependencies\grapheme_stristr(...func_get_args()); } }
 if (!function_exists('grapheme_strlen')) { function grapheme_strlen() { return \Matomo\Dependencies\grapheme_strlen(...func_get_args()); } }
@@ -77,8 +78,6 @@ if (!function_exists('grapheme_strrpos')) { function grapheme_strrpos() { return
 if (!function_exists('grapheme_strstr')) { function grapheme_strstr() { return \Matomo\Dependencies\grapheme_strstr(...func_get_args()); } }
 if (!function_exists('grapheme_substr')) { function grapheme_substr() { return \Matomo\Dependencies\grapheme_substr(...func_get_args()); } }
 if (!function_exists('gzopen')) { function gzopen() { return \Matomo\Dependencies\gzopen(...func_get_args()); } }
-if (!function_exists('gzseek')) { function gzseek() { return \Matomo\Dependencies\gzseek(...func_get_args()); } }
-if (!function_exists('gztell')) { function gztell() { return \Matomo\Dependencies\gztell(...func_get_args()); } }
 if (!function_exists('hrtime')) { function hrtime() { return \Matomo\Dependencies\hrtime(...func_get_args()); } }
 if (!function_exists('humbug_phpscoper_expose_class')) { function humbug_phpscoper_expose_class() { return \Matomo\Dependencies\humbug_phpscoper_expose_class(...func_get_args()); } }
 if (!function_exists('iconv')) { function iconv() { return \Matomo\Dependencies\iconv(...func_get_args()); } }

@@ -41,7 +41,7 @@ class LogQueryBuilder
     {
         return $this->forcedInnerGroupBy;
     }
-    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset)
+    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
     {
         if (!is_array($from)) {
             $from = array($from);
@@ -52,6 +52,11 @@ class LogQueryBuilder
             $segmentSql = $segmentExpression->getSql();
             $where = $this->getWhereMatchBoth($where, $segmentSql['where']);
             $bind = array_merge($bind, $segmentSql['bind']);
+        }
+        // hack to allow db planner and db query optimiser to use an anti-join which results in a lower cost query
+        // and filtering on the log_visit table first when it doesn't need to consider null-extended rows
+        if ($from === ['log_link_visit_action', 'log_visit']) {
+            $from[1] = ['table' => 'log_visit', 'join' => 'INNER JOIN'];
         }
         $tables = new JoinTables($this->logTableProvider, $from);
         $join = new JoinGenerator($tables);
@@ -72,7 +77,7 @@ class LogQueryBuilder
         } elseif ($joinWithSubSelect) {
             $sql = $this->buildWrappedSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $tables);
         } else {
-            $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
+            $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $withRollup);
         }
         return array('sql' => $sql, 'bind' => $bind);
     }
@@ -190,7 +195,7 @@ class LogQueryBuilder
      * @param string|int $limitAndOffset limit by clause eg '5' for Limit 5 Offset 0 or '10, 5' for Limit 5 Offset 10
      * @return string
      */
-    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset)
+    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
     {
         $sql = "\n\t\t\tSELECT\n\t\t\t\t{$select}\n\t\t\tFROM\n\t\t\t\t{$from}";
         if ($where) {
@@ -198,8 +203,14 @@ class LogQueryBuilder
         }
         if ($groupBy) {
             $sql .= "\n\t\t\tGROUP BY\n\t\t\t\t{$groupBy}";
+            if ($withRollup) {
+                $sql .= "\n                    WITH ROLLUP";
+            }
         }
         if ($orderBy) {
+            if ($withRollup) {
+                $sql = "\n                        SELECT * FROM (\n                            {$sql}\n                        ) AS rollupQuery";
+            }
             $sql .= "\n\t\t\tORDER BY\n\t\t\t\t{$orderBy}";
         }
         $sql = $this->appendLimitClauseToQuery($sql, $limitAndOffset);

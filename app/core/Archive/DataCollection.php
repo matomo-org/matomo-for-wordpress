@@ -93,6 +93,7 @@ class DataCollection
      * @var \Piwik\Segment
      */
     private $segment;
+    private $isBuiltWithoutArchives = \true;
     /**
      * Constructor.
      *
@@ -116,6 +117,14 @@ class DataCollection
         }
         $this->segment = $segment;
         $this->defaultRow = $defaultRow;
+    }
+    public function setAsBuiltWithoutArchives(bool $flag) : void
+    {
+        $this->isBuiltWithoutArchives = $flag;
+    }
+    public function wasBuiltWithoutArchives() : bool
+    {
+        return $this->isBuiltWithoutArchives;
     }
     /**
      * Returns a reference to the data for a specific site & period. If there is

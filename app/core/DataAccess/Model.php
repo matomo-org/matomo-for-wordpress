@@ -292,8 +292,14 @@ class Model
     }
     public function getTemporaryArchivesOlderThan($archiveTable, $purgeArchivesOlderThan)
     {
-        $query = "SELECT idarchive FROM " . $archiveTable . "\n                  WHERE name LIKE 'done%'\n                    AND ((  value = " . \Piwik\DataAccess\ArchiveWriter::DONE_OK_TEMPORARY . "\n                            AND ts_archived < ?)\n                         OR value IN (" . \Piwik\DataAccess\ArchiveWriter::DONE_ERROR . ", " . \Piwik\DataAccess\ArchiveWriter::DONE_ERROR_INVALIDATED . "))";
+        $temporaryArchiveValues = [\Piwik\DataAccess\ArchiveWriter::DONE_OK_TEMPORARY, \Piwik\DataAccess\ArchiveWriter::DONE_ERROR, \Piwik\DataAccess\ArchiveWriter::DONE_ERROR_INVALIDATED];
+        $query = "SELECT idarchive FROM {$archiveTable}\n                  WHERE name LIKE 'done%'\n                        AND ts_archived < ?\n                        AND value IN (" . implode(', ', $temporaryArchiveValues) . ")";
         return Db::fetchAll($query, array($purgeArchivesOlderThan));
+    }
+    public function getArchivesMissingDoneFlag(string $archiveTable) : array
+    {
+        $query = "SELECT DISTINCT idarchive\n                    FROM {$archiveTable}\n                    WHERE idarchive NOT IN (\n                            SELECT DISTINCT idarchive\n                            FROM {$archiveTable}\n                            WHERE name LIKE 'done%'\n                        )";
+        return Db::fetchAll($query);
     }
     public function deleteArchivesWithPeriod($numericTable, $blobTable, $period, $date)
     {

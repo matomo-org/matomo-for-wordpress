@@ -314,6 +314,46 @@ class API extends \Piwik\Plugin\API
         return $sites;
     }
     /**
+     * Returns the list of websites, where the current user has at least the provided access level
+     *
+     * @param string $permission one of view, write or admin
+     * @param null|string $pattern pattern to match name against
+     * @param null|int $limit optional parameter to limit the amount of returned records
+     * @param int[] $sitesToExclude optional array of Integer IDs of sites to exclude from the result.
+     * @param string[] $siteTypesToExclude optional array of site types to exclude from the result.
+     * @return array for each site, an array of information (idsite, name, main_url, etc.)
+     */
+    public function getSitesWithMinimumAccess(string $permission, ?string $pattern = null, ?int $limit = null, array $sitesToExclude = [], array $siteTypesToExclude = []) : array
+    {
+        switch (strtolower($permission)) {
+            case Access\Role\Admin::ID:
+                $sitesId = Access::getInstance()->getSitesIdWithAdminAccess();
+                break;
+            case Access\Role\Write::ID:
+                $sitesId = Access::getInstance()->getSitesIdWithAtLeastWriteAccess();
+                break;
+            case Access\Role\View::ID:
+                $sitesId = Access::getInstance()->getSitesIdWithAtLeastViewAccess();
+                break;
+            default:
+                throw new Exception('Invalid permission provided');
+        }
+        // Remove the sites to exclude from the list of IDs.
+        if (is_array($sitesId) && is_array($sitesToExclude) && count($sitesToExclude)) {
+            $sitesId = array_diff($sitesId, $sitesToExclude);
+        }
+        if (empty($pattern)) {
+            $sites = $this->getSitesFromIds($sitesId, $limit, $siteTypesToExclude);
+        } else {
+            $sites = $this->getModel()->getPatternMatchSites($sitesId, $pattern, $limit, $siteTypesToExclude);
+            foreach ($sites as &$site) {
+                $this->enrichSite($site);
+            }
+            $sites = Site::setSitesFromArray($sites);
+        }
+        return $sites;
+    }
+    /**
      * Returns the messages to warn users on site deletion.
      *
      * @param int $idSite
@@ -426,11 +466,12 @@ class API extends \Piwik\Plugin\API
      *
      * @param array $idSites list of website ID
      * @param bool $limit
+     * @param string[] $siteTypesToExclude optional array of site types to exclude from the result.
      * @return array
      */
-    private function getSitesFromIds($idSites, $limit = \false)
+    private function getSitesFromIds($idSites, $limit = \false, array $siteTypesToExclude = [])
     {
-        $sites = $this->getModel()->getSitesFromIds($idSites, $limit);
+        $sites = $this->getModel()->getSitesFromIds($idSites, $limit, $siteTypesToExclude);
         foreach ($sites as &$site) {
             $this->enrichSite($site);
         }
@@ -675,7 +716,7 @@ class API extends \Piwik\Plugin\API
      * @param string $passwordConfirmation the current user's password, only required when the request is authenticated with session token auth
      * @throws Exception
      */
-    public function deleteSite($idSite, $passwordConfirmation = null)
+    public function deleteSite($idSite, #[\SensitiveParameter] $passwordConfirmation = null)
     {
         Piwik::checkUserHasSuperUserAccess();
         \Piwik\Plugins\SitesManager\SitesManager::dieIfSitesAdminIsDisabled();
@@ -710,13 +751,15 @@ class API extends \Piwik\Plugin\API
     }
     private function checkValidTimezone($timezone)
     {
-        $timezones = $this->getTimezonesList();
-        foreach (array_values($timezones) as $cities) {
-            foreach ($cities as $timezoneId => $city) {
-                if ($timezoneId == $timezone) {
-                    return \true;
-                }
-            }
+        try {
+            Date::factory('today', $timezone);
+        } catch (\Exception $e) {
+            throw new Exception($this->translator->translate('SitesManager_ExceptionInvalidTimezone', [$timezone]));
+        }
+        $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL_WITH_BC);
+        $timezones = array_merge($timezones, array_keys($this->getTimezonesListUTCOffsets()));
+        if (in_array($timezone, $timezones)) {
+            return \true;
         }
         throw new Exception($this->translator->translate('SitesManager_ExceptionInvalidTimezone', [$timezone]));
     }
@@ -943,6 +986,7 @@ class API extends \Piwik\Plugin\API
      */
     public function getExcludedReferrers($idSite)
     {
+        Piwik::checkUserHasViewAccess($idSite);
         try {
             $attributes = Cache::getCacheWebsiteAttributes($idSite);
             if (isset($attributes['excluded_referrers'])) {

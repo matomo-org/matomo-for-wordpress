@@ -1,4 +1,16 @@
-These are community-contributed definitions for search engine and social network detections list maintained and used by [Matomo](https://matomo.org/) (formerly Piwik), the leading open source web analytics platform.
+These are community-contributed definitions for AI assistant, search engine and social network detections list maintained and used by [Matomo](https://matomo.org/) (formerly Piwik), the leading open source web analytics platform.
+
+# AI Assistants
+
+AI Assistants are defined in YAML format in the file `AIAssistants.yml`
+
+The definitions contain the name of the AI Assistant, as well as a list of one or more urls.
+
+```YAML
+"My AI":
+  - my-ai.com
+  - myai.org
+```
 
 # Social Networks
 

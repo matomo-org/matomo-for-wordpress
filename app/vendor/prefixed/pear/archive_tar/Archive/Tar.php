@@ -47,24 +47,6 @@ if (!\class_exists('Matomo\\Dependencies\\PEAR')) {
 }
 \define('Matomo\\Dependencies\\ARCHIVE_TAR_ATT_SEPARATOR', 90001);
 \define('Matomo\\Dependencies\\ARCHIVE_TAR_END_BLOCK', \pack("a512", ''));
-if (!\function_exists('gzopen') && \function_exists('Matomo\\Dependencies\\gzopen64')) {
-    function gzopen($filename, $mode, $use_include_path = 0)
-    {
-        return gzopen64($filename, $mode, $use_include_path);
-    }
-}
-if (!\function_exists('gztell') && \function_exists('Matomo\\Dependencies\\gztell64')) {
-    function gztell($zp)
-    {
-        return gztell64($zp);
-    }
-}
-if (!\function_exists('gzseek') && \function_exists('Matomo\\Dependencies\\gzseek64')) {
-    function gzseek($zp, $offset, $whence = \SEEK_SET)
-    {
-        return gzseek64($zp, $offset, $whence);
-    }
-}
 /**
  * Creates a (compressed) Tar archive
  *
@@ -216,7 +198,7 @@ class Archive_Tar extends PEAR
         if (\version_compare(\PHP_VERSION, "5.5.0-dev") < 0) {
             $this->_fmt = "a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/" . "a8checksum/a1typeflag/a100link/a6magic/a2version/" . "a32uname/a32gname/a8devmajor/a8devminor/a131prefix";
         } else {
-            $this->_fmt = "Z100filename/Z8mode/Z8uid/Z8gid/Z12size/Z12mtime/" . "Z8checksum/Z1typeflag/Z100link/Z6magic/Z2version/" . "Z32uname/Z32gname/Z8devmajor/Z8devminor/Z131prefix";
+            $this->_fmt = "Z100filename/Z8mode/Z8uid/Z8gid/a12size/Z12mtime/" . "Z8checksum/Z1typeflag/Z100link/Z6magic/Z2version/" . "Z32uname/Z32gname/Z8devmajor/Z8devminor/Z131prefix";
         }
         $this->buffer_length = $buffer_length;
     }
@@ -838,42 +820,43 @@ class Archive_Tar extends PEAR
     {
         if (\is_resource($this->_file)) {
             if ($p_len === null) {
-                if ($this->_compress_type == 'gz') {
-                    @\gzputs($this->_file, $p_binary_data);
-                } else {
-                    if ($this->_compress_type == 'bz2') {
-                        @\bzwrite($this->_file, $p_binary_data);
-                    } else {
-                        if ($this->_compress_type == 'lzma2') {
-                            @xzwrite($this->_file, $p_binary_data);
-                        } else {
-                            if ($this->_compress_type == 'none') {
-                                @\fputs($this->_file, $p_binary_data);
-                            } else {
-                                $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
-                            }
-                        }
-                    }
+                switch ($this->_compress_type) {
+                    case 'gz':
+                        $bytes = @\gzwrite($this->_file, $p_binary_data);
+                        break;
+                    case 'bz2':
+                        $bytes = @\bzwrite($this->_file, $p_binary_data);
+                        break;
+                    case 'lzma2':
+                        $bytes = @xzwrite($this->_file, $p_binary_data);
+                        break;
+                    case 'none':
+                        $bytes = @\fwrite($this->_file, $p_binary_data);
+                        break;
+                    default:
+                        $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
+                        return \false;
                 }
             } else {
-                if ($this->_compress_type == 'gz') {
-                    @\gzputs($this->_file, $p_binary_data, $p_len);
-                } else {
-                    if ($this->_compress_type == 'bz2') {
-                        @\bzwrite($this->_file, $p_binary_data, $p_len);
-                    } else {
-                        if ($this->_compress_type == 'lzma2') {
-                            @xzwrite($this->_file, $p_binary_data, $p_len);
-                        } else {
-                            if ($this->_compress_type == 'none') {
-                                @\fputs($this->_file, $p_binary_data, $p_len);
-                            } else {
-                                $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
-                            }
-                        }
-                    }
+                switch ($this->_compress_type) {
+                    case 'gz':
+                        $bytes = @\gzwrite($this->_file, $p_binary_data, $p_len);
+                        break;
+                    case 'bz2':
+                        $bytes = @\bzwrite($this->_file, $p_binary_data, $p_len);
+                        break;
+                    case 'lzma2':
+                        $bytes = @xzwrite($this->_file, $p_binary_data, $p_len);
+                        break;
+                    case 'none':
+                        $bytes = @\fwrite($this->_file, $p_binary_data, $p_len);
+                        break;
+                    default:
+                        $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
+                        return \false;
                 }
             }
+            return $bytes !== \false;
         }
         return \true;
     }
@@ -948,7 +931,7 @@ class Archive_Tar extends PEAR
         if (\is_resource($this->_file)) {
             // ----- Write the last 0 filled block for end of archive
             $v_binary_data = \pack('a1024', '');
-            $this->_writeBlock($v_binary_data);
+            return $this->_writeBlock($v_binary_data);
         }
         return \true;
     }
@@ -1078,7 +1061,9 @@ class Archive_Tar extends PEAR
                     $pack_format = \sprintf('a%d', $this->buffer_length);
                 }
                 $v_binary_data = \pack($pack_format, "{$v_buffer}");
-                $this->_writeBlock($v_binary_data);
+                if (!$this->_writeBlock($v_binary_data)) {
+                    return \false;
+                }
             }
             \fclose($v_file);
         } else {
@@ -1123,7 +1108,9 @@ class Archive_Tar extends PEAR
         $i = 0;
         while (($v_buffer = \substr($p_string, $i++ * 512, 512)) != '') {
             $v_binary_data = \pack("a512", $v_buffer);
-            $this->_writeBlock($v_binary_data);
+            if (!$this->_writeBlock($v_binary_data)) {
+                return \false;
+            }
         }
         return \true;
     }

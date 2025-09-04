@@ -65,7 +65,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.4.5';
+    public const VERSION = '6.4.7';
     /**
      * Constant used as value for unknown browser / os
      */
@@ -893,11 +893,12 @@ class DeviceDetector
          */
         if ('Coolita OS' === $osName) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
+            $this->brand = 'coocaa';
         }
         /**
          * All devices that contain Andr0id in string are assumed to be a tv
          */
-        $hasDeviceTvType = \false === \in_array($this->device, [AbstractDeviceParser::DEVICE_TYPE_TV, AbstractDeviceParser::DEVICE_TYPE_PERIPHERAL]) && $this->matchUserAgent('Andr0id|(?:Android(?: UHD)?|Google) TV|\\(lite\\) TV|BRAVIA| TV$');
+        $hasDeviceTvType = \false === \in_array($this->device, [AbstractDeviceParser::DEVICE_TYPE_TV, AbstractDeviceParser::DEVICE_TYPE_PERIPHERAL]) && $this->matchUserAgent('Andr0id|(?:Android(?: UHD)?|Google) TV|\\(lite\\) TV|BRAVIA|Firebolt| TV$');
         if ($hasDeviceTvType) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }

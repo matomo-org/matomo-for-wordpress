@@ -10,6 +10,7 @@ namespace Piwik\Plugins\Login;
 
 use Exception;
 use Piwik\Auth\Password;
+use Piwik\Auth\PasswordStrength;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -66,6 +67,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     protected $passwordVerify;
     /**
+     * @var PasswordStrength
+     */
+    private $passwordStrength;
+    /**
      * Constructor.
      *
      * @param PasswordResetter $passwordResetter
@@ -74,8 +79,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @param PasswordVerifier $passwordVerify
      * @param BruteForceDetection $bruteForceDetection
      * @param SystemSettings $systemSettings
+     * @param PasswordStrength $passwordStrength
      */
-    public function __construct($passwordResetter = null, $auth = null, $sessionInitializer = null, $passwordVerify = null, $bruteForceDetection = null, $systemSettings = null)
+    public function __construct($passwordResetter = null, $auth = null, $sessionInitializer = null, $passwordVerify = null, $bruteForceDetection = null, $systemSettings = null, $passwordStrength = null)
     {
         parent::__construct();
         if (empty($passwordResetter)) {
@@ -102,6 +108,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $systemSettings = StaticContainer::get('Piwik\\Plugins\\Login\\SystemSettings');
         }
         $this->systemSettings = $systemSettings;
+        if (empty($passwordStrength)) {
+            $passwordStrength = StaticContainer::get('Piwik\\Auth\\PasswordStrength');
+        }
+        $this->passwordStrength = $passwordStrength;
     }
     /**
      * Default action
@@ -144,6 +154,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view = new View('@Login/login');
         $view->AccessErrorString = $messageNoAccess;
         $view->infoMessage = nl2br($infoMessage);
+        $view->passwordStrengthValidationRules = $this->passwordStrength->getRules();
         $view->addForm($form);
         $this->configureView($view);
         self::setHostValidationVariablesView($view);
@@ -252,7 +263,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @param string $urlToRedirect URL to redirect to, if successfully authenticated
      * @param bool $passwordHashed indicates if $password is hashed
      */
-    protected function authenticateAndRedirect($login, $password, $urlToRedirect = \false, $passwordHashed = \false)
+    protected function authenticateAndRedirect($login, #[\SensitiveParameter] $password, $urlToRedirect = \false, #[\SensitiveParameter] $passwordHashed = \false)
     {
         Nonce::discardNonce('Login.login');
         $this->auth->setLogin($login);
@@ -305,28 +316,31 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     public function resetPassword()
     {
-        $infoMessage = null;
-        $formErrors = null;
         $form = new \Piwik\Plugins\Login\FormResetPassword();
-        if ($form->validate()) {
-            $nonce = $form->getSubmitValue('form_nonce');
-            $errorMessage = Nonce::verifyNonceWithErrorMessage('Login.login', $nonce);
-            if ($errorMessage === "") {
-                $formErrors = $this->resetPasswordFirstStep($form);
-                if (empty($formErrors)) {
-                    $infoMessage = Piwik::translate('Login_ConfirmationLinkSent');
-                }
-            } else {
-                $formErrors = [$errorMessage];
-            }
-        } else {
-            // if invalid, display error
-            $formData = $form->getFormData();
-            $formErrors = $formData['errors'];
+        if (\false === $form->validate()) {
+            return $this->renderResetPasswordView($form->getFormData()['errors']);
         }
+        $nonceError = Nonce::verifyNonceWithErrorMessage('Login.login', $form->getSubmitValue('form_nonce'));
+        if (!empty($nonceError)) {
+            return $this->renderResetPasswordView([$nonceError]);
+        }
+        $password = $form->getSubmitValue('form_password');
+        $brokenRules = $this->passwordStrength->validatePasswordStrength($password);
+        if (!empty($brokenRules)) {
+            $errorMsg = $this->passwordStrength->formatValidationFailedMessage($brokenRules);
+            return $this->renderResetPasswordView([$errorMsg]);
+        }
+        $firstStepFormErrors = $this->resetPasswordFirstStep($form);
+        if (!empty($firstStepFromErrors)) {
+            return $this->renderResetPasswordView([$firstStepFormErrors]);
+        }
+        return $this->renderResetPasswordView([], Piwik::translate('Login_ConfirmationLinkPossiblySent'));
+    }
+    private function renderResetPasswordView(array $formErrors = [], ?string $responseMessage = null) : string
+    {
         $view = new View('@Login/resetPassword');
-        $view->infoMessage = $infoMessage;
         $view->formErrors = $formErrors;
+        $view->infoMessage = $responseMessage;
         return $view->render();
     }
     /**
@@ -344,6 +358,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         try {
             $this->passwordResetter->initiatePasswordResetProcess($loginMail, $password);
+        } catch (\Piwik\Plugins\Login\PasswordResetUserIsInvalidException $ex) {
+            Log::debug($ex);
+            return null;
         } catch (Exception $ex) {
             Log::debug($ex);
             return [$ex->getMessage()];
@@ -522,6 +539,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             } catch (\Exception $e) {
                 $error = $e->getMessage();
             }
+            // check password strength
+            $brokenRules = $this->passwordStrength->validatePasswordStrength($password);
+            if (!empty($brokenRules)) {
+                $error = $this->passwordStrength->formatValidationFailedMessage($brokenRules);
+            }
             // confirm matching passwords
             if ($password !== $passwordConfirmation) {
                 $error = Piwik::translate('Login_PasswordsDoNotMatch');
@@ -556,6 +578,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view->privacyPolicyUrl = $privacyPolicyUrl;
         $view->token = $token;
         $view->loginPlugin = Piwik::getLoginPluginName();
+        $view->passwordStrengthValidationRules = $this->passwordStrength->getRules();
         $this->configureView($view);
         self::setHostValidationVariablesView($view);
         return $view->render();

@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\API\Renderer;
 
 use Piwik\API\ApiRenderer;
+use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\DataTable\DataTableInterface;
@@ -62,7 +63,7 @@ class Original extends ApiRenderer
     }
     public function sendHeader()
     {
-        if ($this->shouldSerialize()) {
+        if (Request::isRootRequestApiRequest()) {
             self::sendPlainTextHeader();
         }
     }
@@ -71,10 +72,9 @@ class Original extends ApiRenderer
      *
      * @return bool
      */
-    private function shouldSerialize()
+    private function shouldSerialize() : bool
     {
-        $serialize = Common::getRequestVar('serialize', 0, 'int', $this->request);
-        return !empty($serialize);
+        return $this->requestObj->getBoolParameter('serialize', \false);
     }
     private function serializeIfNeeded($response)
     {

@@ -143,7 +143,7 @@ class ErrorHandler
                 \Piwik\Common::sendResponseCode(500);
                 // Convert the error to an exception with an HTML message
                 $e = new \Exception();
-                $backtrace = \Piwik_ShouldPrintBackTraceWithMessage() ? $e->getTraceAsString() : '';
+                $backtrace = \Piwik\ExceptionHandler::shouldPrintBackTraceWithMessage() ? $e->getTraceAsString() : '';
                 $message = self::getHtmlMessage($errno, $errstr, $errfile, $errline, $backtrace);
                 throw new ErrorException($message, 0, $errno, $errfile, $errline);
             case \E_WARNING:

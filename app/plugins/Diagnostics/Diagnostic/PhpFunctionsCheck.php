@@ -43,7 +43,7 @@ class PhpFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnos
      */
     private function getRequiredFunctions()
     {
-        return array('debug_backtrace', 'eval', 'hash', 'gzcompress', 'gzuncompress', 'pack');
+        return array('debug_backtrace', 'escapeshellarg', 'eval', 'hash', 'gzcompress', 'gzuncompress', 'pack');
     }
     /**
      * Tests if a function exists. Also handles the case where a function is disabled via Suhosin.

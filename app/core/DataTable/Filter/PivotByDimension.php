@@ -362,12 +362,12 @@ class PivotByDimension extends BaseFilter
     private function getRequestParamOverride(DataTable $table)
     {
         $params = array('pivotBy' => '', 'column' => '', 'flat' => 0, 'totals' => 0, 'disable_queued_filters' => 1, 'disable_generic_filters' => 1, 'showColumns' => '', 'hideColumns' => '');
-        /** @var Site $site */
+        /** @var Site|false $site */
         $site = $table->getMetadata('site');
         if (!empty($site)) {
             $params['idSite'] = $site->getId();
         }
-        /** @var Period $period */
+        /** @var Period|false $period */
         $period = $table->getMetadata('period');
         if (!empty($period)) {
             $params['period'] = $period->getLabel();

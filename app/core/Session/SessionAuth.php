@@ -49,7 +49,7 @@ class SessionAuth implements Auth
     {
         // empty
     }
-    public function setTokenAuth($token_auth)
+    public function setTokenAuth(#[\SensitiveParameter] $token_auth)
     {
         $this->tokenAuth = $token_auth;
     }
@@ -67,11 +67,11 @@ class SessionAuth implements Auth
     {
         // empty
     }
-    public function setPassword($password)
+    public function setPassword(#[\SensitiveParameter] $password)
     {
         // empty
     }
-    public function setPasswordHash($passwordHash)
+    public function setPasswordHash(#[\SensitiveParameter] $passwordHash)
     {
         // empty
     }
@@ -125,7 +125,7 @@ class SessionAuth implements Auth
     {
         return new AuthResult(AuthResult::FAILURE, null, null);
     }
-    private function makeAuthSuccess($user, $tokenAuth)
+    private function makeAuthSuccess($user, #[\SensitiveParameter] $tokenAuth)
     {
         $this->user = $user;
         $this->tokenAuth = $tokenAuth;

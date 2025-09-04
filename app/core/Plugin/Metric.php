@@ -171,7 +171,7 @@ abstract class Metric
      */
     public static function getMetricValues(DataTable $table, $columnName, $mappingNameToId = null)
     {
-        if (empty($mappingIdToName)) {
+        if (empty($mappingNameToId)) {
             $mappingNameToId = Metrics::getMappingFromNameToId();
         }
         $columnName = self::getActualMetricColumn($table, $columnName, $mappingNameToId);
@@ -190,7 +190,7 @@ abstract class Metric
     {
         $firstRow = $table->getFirstRow();
         if (!empty($firstRow) && $firstRow->hasColumn($columnName) === \false) {
-            if (empty($mappingIdToName)) {
+            if (empty($mappingNameToId)) {
                 $mappingNameToId = Metrics::getMappingFromNameToId();
             }
             if (array_key_exists($columnName, $mappingNameToId)) {

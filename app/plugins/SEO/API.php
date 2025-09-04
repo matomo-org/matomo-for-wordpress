@@ -36,7 +36,7 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSomeViewAccess();
         $metricProvider = new ProviderCache(new Aggregator());
-        $domain = Url::getHostFromUrl($url);
+        $domain = Url::getHostFromUrl($url) ?: '';
         $metrics = $metricProvider->getMetrics($domain);
         $dataTable = $this->toDataTable($metrics);
         $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, ['id' => 'skip', 'rank' => 'skip', 'logo' => 'skip', 'logo_link' => 'skip', 'logo_tooltip' => 'skip', 'rank_suffix' => 'skip']);

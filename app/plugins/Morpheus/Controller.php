@@ -113,7 +113,7 @@ export default defineComponent({
     placeholder="Some text here"
     v-model="username"
   />
-</div>', [], \false);
+</div>', [], [], \false);
         $snippets[] = $this->formSnippet('withInlineHelp', 'email', "''", '', '<div v-form>
   <Field
     uicontrol="email"
@@ -156,11 +156,38 @@ export default defineComponent({
     v-model="pwd"
   />
 </div>');
+        $snippets[] = $this->formSnippet('passwordAutoClear', 'pwdAutoClear', "''", '', '<div v-form>
+  <Field
+    uicontrol="password"
+    name="password_autoclear"
+    title="Password with auto-clear after 5 seconds"
+    placeholder="When you stop typing, field will clear after 5 seconds"
+    v-model="pwdAutoClear"
+    v-auto-clear-password="{ delay: 5 }"
+  >
+    <template v-slot:inline-help>
+      Without the configuration object passed to the directive, the delay defaults to 600 seconds (10 minutes). You can provide a custom delay if you need. A delay too short may impact usability of the field. 
+    </template>
+  </Field>
+</div>', [], [['plugin' => 'CoreHome', 'directive' => 'AutoClearPassword']]);
+        // rules are hardcoded as json-encoding the regular expressions produces an output that breaks the combination of single and double quotes used here
+        $snippets[] = $this->formSnippet('passwordStrength', 'pwdStrength', "''", '', '<div v-form>
+  <Field
+    uicontrol="password"
+    name="password_strength"
+    title="Password with strength indicator"
+    v-model="pwdStrength"
+    :ui-control-attributes="{
+      passwordStrengthValidationRules: [{\'validationRegex\':\'\\/^.{12,}$\\/\',\'ruleText\':\'At least 12 characters\'},{\'validationRegex\':\'\\/^.*[a-z].*$\\/\',\'ruleText\':\'Contains a lowercase letter\'},{\'validationRegex\':\'\\/^.*[A-Z].*$\\/\',\'ruleText\':\'Contains an uppercase letter\'},{\'validationRegex\':\'\\/^.*[0-9].*$\\/\',\'ruleText\':\'Contains a number\'},{\'validationRegex\':\'\\/^.*[!@#$%^&*(){}~].*$\\/\',\'ruleText\':\'Contains a special character\'}]
+    }"
+  >
+  </Field>
+</div>');
         $snippets[] = $this->formSnippet('complexHelp', 'text', "''", '', '<div v-form>
   <Field
     uicontrol="text"
     name="alias"
-    title="Disabeld text field"
+    title="Disabled text field"
     :disabled="true"
     placeholder="This value cannot be changed"
     v-model="text"
@@ -198,7 +225,7 @@ export default defineComponent({
     v-model="description"
   />
 </div>');
-        // TODOO: handle arrays
+        // TODO: handle arrays
         $snippets[] = $this->formSnippet('language', ['language', 'phoneNumber', 'selectedExpand'], ['1', '[\'1\']', 'null'], [1, ['1'], null], '<div v-form>
   <Field
     uicontrol="select"
@@ -534,11 +561,11 @@ export default defineComponent({
     </tbody>
   </table>
 </ContentBlock>', 'components' => [['plugin' => 'CoreHome', 'component' => 'ContentBlock']], 'directives' => [['plugin' => 'CoreHome', 'directive' => 'ContentTable']]];
-        $icons = ['Manage' => ['add', 'edit', 'delete', 'plus', 'minus', 'archive', 'add1', 'remove'], 'Alerts' => ['error', 'warning', 'info', 'success', 'help', 'ok'], 'Navigation' => ['arrow-left', 'arrow-right', 'arrow-left-2', 'arrow-right-2', 'arrow-top', 'arrow-bottom', 'zoom-in', 'zoom-out', 'show', 'hide', 'search', 'menu-hamburger', 'more-horiz', 'more-verti', 'arrowup', 'arrowdown', 'chevron-right', 'chevron-left', 'chevron-down', 'chevron-up'], 'Window-Widget' => ['minimise', 'fullscreen', 'close', 'maximise', 'refresh', 'reload'], 'Reports' => ['table', 'table-more', 'chart-bar', 'chart-pie', 'evolution', 'funnel', 'form', 'transition', 'overlay', 'lab', 'clock'], 'Users' => ['user', 'user-add', 'users', 'user-personal'], 'Date-picker' => ['calendar', 'datepicker-arr-l', 'datepicker-arr-r'], 'Annotations' => ['annotation'], 'E-commerce' => ['ecommerce-order', 'ecommerce-abandoned-cart'], 'Goals' => ['goal'], 'Insights' => ['insights'], 'Segments' => ['segment'], 'Visitors' => ['visitor-profile', 'segmented-visits-log'], 'Lock' => ['locked'], 'Media' => ['audio', 'play', 'pause', 'replay', 'stop', 'fast-forward', 'fast-rewind', 'skip-next', 'skip-previous'], 'Other' => ['configure', 'document', 'email', 'export', 'feed', 'download', 'image', 'code', 'star', 'drop', 'drop-crossed', 'business', 'finance', 'folder', 'github', 'open-source', 'puzzle', 'server', 'tag-cloud', 'sign-in', 'sign-out', 'settings', 'rocket', 'bug', 'upload', 'embed', 'heart', 'merge', 'content-copy', 'new_releases', 'notifications_on', 'reporting-dashboard', 'reporting-actions', 'reporting-visitors', 'reporting-referer', 'admin-diagnostic', 'admin-platform', 'admin-development', 'admin-settings', 'marketplace', 'plugin', 'circle', 'dollar-sign', 'hits']];
+        $icons = ['Manage' => ['add', 'edit', 'delete', 'plus', 'minus', 'archive', 'add1', 'remove'], 'Alerts' => ['error', 'warning', 'info', 'success', 'help', 'ok'], 'Navigation' => ['arrow-left', 'arrow-right', 'arrow-left-2', 'arrow-right-2', 'arrow-top', 'arrow-bottom', 'zoom-in', 'zoom-out', 'show', 'hide', 'search', 'menu-hamburger', 'more-horiz', 'more-verti', 'arrowup', 'arrowdown', 'chevron-right', 'chevron-left', 'chevron-down', 'chevron-up'], 'Window-Widget' => ['minimise', 'fullscreen', 'close', 'maximise', 'refresh', 'reload'], 'Reports' => ['table', 'table-more', 'chart-bar', 'chart-pie', 'evolution', 'funnel', 'form', 'transition', 'overlay', 'lab', 'clock', 'dashboard-customize'], 'Users' => ['user', 'user-add', 'users', 'user-personal'], 'Date-picker' => ['calendar', 'datepicker-arr-l', 'datepicker-arr-r'], 'Annotations' => ['annotation'], 'E-commerce' => ['ecommerce-order', 'ecommerce-abandoned-cart'], 'Goals' => ['goal'], 'Insights' => ['insights'], 'Segments' => ['segment'], 'Visitors' => ['visitor-profile', 'segmented-visits-log'], 'Lock' => ['locked'], 'Media' => ['audio', 'play', 'pause', 'replay', 'stop', 'fast-forward', 'fast-rewind', 'skip-next', 'skip-previous'], 'Other' => ['configure', 'document', 'email', 'export', 'feed', 'download', 'image', 'code', 'star', 'drop', 'drop-crossed', 'business', 'finance', 'folder', 'github', 'open-source', 'puzzle', 'server', 'tag-cloud', 'sign-in', 'sign-out', 'settings', 'rocket', 'bug', 'upload', 'embed', 'heart', 'merge', 'content-copy', 'new_releases', 'notifications_on', 'reporting-dashboard', 'reporting-actions', 'reporting-visitors', 'reporting-referer', 'admin-diagnostic', 'admin-platform', 'admin-development', 'admin-settings', 'marketplace', 'plugin', 'circle', 'dollar-sign', 'hits']];
         // @phpcs:enable Generic.Files.LineLength
         return $this->renderTemplate('demo', ['snippets' => $snippets, 'icons' => $icons]);
     }
-    private function formSnippet($id, $dataName, $dataValueCode, $dataValue, $demoCode, $extraComponents = [], $noMargin = \true)
+    private function formSnippet($id, $dataName, $dataValueCode, $dataValue, $demoCode, $extraComponents = [], $extraDirectives = [], $noMargin = \true)
     {
         if (is_array($dataName)) {
             $dataCode = "";
@@ -556,6 +583,6 @@ export default defineComponent({
         } else {
             $data = [$dataName => $dataValue];
         }
-        return ['id' => "form.{$id}", 'code' => "<template>\n  %vue_embed%\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue';\nimport { Field, Form } from 'CorePluginsAdmin';\n\nexport default defineComponent({\n  components: {\n    Field,\n  },\n  directives: {\n    Form,\n  },\n  data() {\n    return {\n{$dataCode}    };\n  },\n});\n</script>", 'vue_embed' => $demoCode, 'components' => array_merge([['plugin' => 'CorePluginsAdmin', 'component' => 'Field']], $extraComponents), 'directives' => [['plugin' => 'CorePluginsAdmin', 'directive' => 'Form']], 'data' => $data, 'noMargin' => $noMargin];
+        return ['id' => "form.{$id}", 'code' => "<template>\n  %vue_embed%\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue';\nimport { Field, Form } from 'CorePluginsAdmin';\n\nexport default defineComponent({\n  components: {\n    Field,\n  },\n  directives: {\n    Form,\n  },\n  data() {\n    return {\n{$dataCode}    };\n  },\n});\n</script>", 'vue_embed' => $demoCode, 'components' => array_merge([['plugin' => 'CorePluginsAdmin', 'component' => 'Field']], $extraComponents), 'directives' => array_merge([['plugin' => 'CorePluginsAdmin', 'directive' => 'Form']], $extraDirectives), 'data' => $data, 'noMargin' => $noMargin];
     }
 }

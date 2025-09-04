@@ -42,6 +42,10 @@ class VisitsPercent extends ProcessedMetric
     {
         return Piwik::translate('General_ColumnPercentageVisits');
     }
+    public function getDocumentation()
+    {
+        return Piwik::translate('General_ColumnPercentageVisitsDocumentation');
+    }
     public function compute(Row $row)
     {
         $visits = $this->getMetric($row, 'nb_visits');

@@ -33,7 +33,7 @@ class Service
     {
         $this->domain = $domain;
     }
-    public function authenticate($accessToken)
+    public function authenticate(#[\SensitiveParameter] $accessToken)
     {
         if (empty($accessToken)) {
             $this->accessToken = null;
