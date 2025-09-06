@@ -143,9 +143,8 @@ namespace {
          * @throws Zend_Db_Adapter_Exception
          */
         public function __construct(
-			#[\SensitiveParameter]
-			$config
-		)
+#[\SensitiveParameter]
+$config)
         {
             /*
              * Verify that adapter parameters are in an array.
@@ -245,9 +244,8 @@ namespace {
          * @throws Zend_Db_Adapter_Exception
          */
         protected function _checkRequiredOptions(
-			#[\SensitiveParameter]
-			array $config
-		)
+#[\SensitiveParameter]
+array $config)
         {
             // we need at least a dbname
             if (!\array_key_exists('dbname', $config)) {

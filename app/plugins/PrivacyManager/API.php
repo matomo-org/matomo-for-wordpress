@@ -111,7 +111,9 @@ class API extends \Piwik\Plugin\API
         // Note: Datatable PostProcessor is disabled for this method in PrivacyManager::shouldDisablePostProcessing
         return $result;
     }
-    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [], #[\SensitiveParameter] $passwordConfirmation = '')
+    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [],
+#[\SensitiveParameter]
+$passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -226,7 +228,9 @@ class API extends \Piwik\Plugin\API
     /**
      * @internal
      */
-    public function setDeleteReportsSettings($enableDeleteReports = 0, $deleteReportsOlderThan = 3, $keepBasic = 0, $keepDay = 0, $keepWeek = 0, $keepMonth = 0, $keepYear = 0, $keepRange = 0, $keepSegments = 0, #[\SensitiveParameter] $passwordConfirmation = '')
+    public function setDeleteReportsSettings($enableDeleteReports = 0, $deleteReportsOlderThan = 3, $keepBasic = 0, $keepDay = 0, $keepWeek = 0, $keepMonth = 0, $keepYear = 0, $keepRange = 0, $keepSegments = 0,
+#[\SensitiveParameter]
+$passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -254,7 +258,9 @@ class API extends \Piwik\Plugin\API
      *
      * @internal
      */
-    public function executeDataPurge(#[\SensitiveParameter] $passwordConfirmation)
+    public function executeDataPurge(
+#[\SensitiveParameter]
+$passwordConfirmation)
     {
         $this->confirmCurrentUserPassword($passwordConfirmation);
         Piwik::checkUserHasSuperUserAccess();

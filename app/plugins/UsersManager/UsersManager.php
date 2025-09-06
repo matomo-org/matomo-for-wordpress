@@ -82,7 +82,9 @@ class UsersManager extends \Piwik\Plugin
             }
         }
     }
-    public static function hashTrackingToken(#[\SensitiveParameter] $tokenAuth, $idSite)
+    public static function hashTrackingToken(
+#[\SensitiveParameter]
+$tokenAuth, $idSite)
     {
         return sha1($idSite . $tokenAuth . SettingsPiwik::getSalt());
     }
@@ -120,7 +122,9 @@ class UsersManager extends \Piwik\Plugin
         $l = strlen($input);
         return $l >= self::PASSWORD_MIN_LENGTH;
     }
-    public static function checkPassword(#[\SensitiveParameter] $password)
+    public static function checkPassword(
+#[\SensitiveParameter]
+$password)
     {
         /**
          * Triggered before core password validator check password.
@@ -146,7 +150,9 @@ class UsersManager extends \Piwik\Plugin
             throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidPasswordTooLong', array(self::PASSWORD_MAX_LENGTH)));
         }
     }
-    public static function getPasswordHash(#[\SensitiveParameter] $password)
+    public static function getPasswordHash(
+#[\SensitiveParameter]
+$password)
     {
         if (SettingsPiwik::isUserCredentialsSanityCheckEnabled()) {
             self::checkBasicPasswordStrength($password);
@@ -155,7 +161,9 @@ class UsersManager extends \Piwik\Plugin
         // to change how the root pwd is saved in the config file
         return md5($password);
     }
-    public static function checkBasicPasswordStrength(#[\SensitiveParameter] $password)
+    public static function checkBasicPasswordStrength(
+#[\SensitiveParameter]
+$password)
     {
         $ex = new \Exception('This password is too weak, please supply another value or reset it.');
         $numDistinctCharacters = strlen(count_chars($password, 3));
@@ -173,7 +181,9 @@ class UsersManager extends \Piwik\Plugin
      * @param string $exceptionMessage Message of the exception thrown.
      * @throws Exception if the password hash length is incorrect.
      */
-    public static function checkPasswordHash(#[\SensitiveParameter] $passwordHash, $exceptionMessage)
+    public static function checkPasswordHash(
+#[\SensitiveParameter]
+$passwordHash, $exceptionMessage)
     {
         if (strlen($passwordHash) != 32 || !ctype_xdigit($passwordHash)) {
             // MD5 hash length

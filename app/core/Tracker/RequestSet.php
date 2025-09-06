@@ -42,7 +42,9 @@ class RequestSet
             $this->requests[] = $request;
         }
     }
-    public function setTokenAuth(#[\SensitiveParameter] $tokenAuth)
+    public function setTokenAuth(
+#[\SensitiveParameter]
+$tokenAuth)
     {
         $this->tokenAuth = $tokenAuth;
     }

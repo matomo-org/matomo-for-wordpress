@@ -56,7 +56,9 @@ class UserRepository
      * @param bool   $isPasswordHashed
      * @throws \Exception
      */
-    public function create(string $userLogin, string $email, ?int $initialIdSite = null, #[\SensitiveParameter] string $password = '', bool $isPasswordHashed = \false) : void
+    public function create(string $userLogin, string $email, ?int $initialIdSite = null,
+#[\SensitiveParameter]
+string $password = '', bool $isPasswordHashed = \false) : void
     {
         if (!Piwik::hasUserSuperUserAccess()) {
             // check if the user has admin access to the site

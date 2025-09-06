@@ -138,7 +138,9 @@ class TwoFactorAuth extends \Piwik\Plugin
     {
         return StaticContainer::get(\Piwik\Plugins\TwoFactorAuth\Validator::class);
     }
-    private function isValidTokenAuth(#[\SensitiveParameter] $tokenAuth)
+    private function isValidTokenAuth(
+#[\SensitiveParameter]
+$tokenAuth)
     {
         $model = new Model();
         $user = $model->getUserByTokenAuth($tokenAuth);
