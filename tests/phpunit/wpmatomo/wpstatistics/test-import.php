@@ -302,7 +302,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 	private function upgrade_wp_stats() {
 		if ( ! method_exists( \WP_STATISTICS\Install::class, 'plugin_upgrades' ) ) {
-			return;
+			$this->markTestSkipped( 'new version of wp-statistics does not have old plugin upgrade code' );
 		}
 
 		$install = new class() extends \WP_STATISTICS\Install {
