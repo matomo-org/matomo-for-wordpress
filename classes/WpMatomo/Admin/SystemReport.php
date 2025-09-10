@@ -23,6 +23,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\WordPress\WordPress;
@@ -687,6 +688,16 @@ class SystemReport {
 
 			$rows[] = [
 				'name'  => esc_html__( 'Current Matomo User Language', 'matomo' ),
+				'value' => $lang,
+			];
+
+			$lang = LanguagesManager::getLanguageForSession();
+			if ( empty( $lang ) ) {
+				$lang = esc_html__( 'None', 'matomo' );
+			}
+
+			$rows[] = [
+				'name'  => esc_html__( 'Current Matomo Language Cookie Value', 'matomo' ),
 				'value' => $lang,
 			];
 		}
