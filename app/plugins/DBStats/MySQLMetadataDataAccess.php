@@ -18,7 +18,7 @@ class MySQLMetadataDataAccess
 {
     public function getDBStatus()
     {
-        if (function_exists('mysql_connect')) {
+        if (function_exists('mysql_connect') && function_exists('mysql_stat') && function_exists('mysql_close')) {
             $configDb = Config::getInstance()->database;
             $link = mysql_connect($configDb['host'], $configDb['username'], $configDb['password']);
             $status = mysql_stat($link);

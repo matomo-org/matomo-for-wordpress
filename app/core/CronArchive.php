@@ -756,8 +756,9 @@ class CronArchive
         $period = PeriodFactory::build('day', $date);
         $params = new Parameters(new \Piwik\Site($idSite), $period, new \Piwik\Segment('', [$idSite], $period->getDateStart(), $period->getDateEnd()));
         $loader = new Loader($params);
-        if ($loader->canSkipThisArchive()) {
-            $this->logger->debug("  " . ucfirst($dateStr) . " archive can be skipped due to no visits for idSite = {$idSite}, skipping invalidation...");
+        $canSkip = $loader->canSkipThisArchiveWithReason();
+        if ($canSkip[0] === \true) {
+            $this->logger->info('  ' . ucfirst($dateStr) . " archive can be skipped for period for idSite = {$idSite} because: " . $canSkip[1]);
             return;
         }
         $isYesterday = $dateStr === 'yesterday';

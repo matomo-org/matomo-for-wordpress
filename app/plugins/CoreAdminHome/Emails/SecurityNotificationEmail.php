@@ -13,7 +13,7 @@ use Piwik\View;
 use Piwik\Piwik;
 abstract class SecurityNotificationEmail extends Mail
 {
-    public static $notifyPluginList = ['Login' => 'CoreAdminHome_BruteForce', 'TwoFactorAuth' => 'CoreAdminHome_TwoFactorAuth', 'CoreAdminHome' => 'CoreAdminHome_Cors'];
+    public static $notifyPluginList = ['Login' => 'CoreAdminHome_Login', 'TwoFactorAuth' => 'CoreAdminHome_TwoFactorAuth', 'CoreAdminHome' => 'CoreAdminHome_Cors'];
     /**
      * @var string
      */

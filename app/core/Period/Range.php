@@ -122,6 +122,7 @@ class Range extends Period
      */
     public function getDateStart()
     {
+        /** @var Date|null $dateStart */
         $dateStart = parent::getDateStart();
         if (empty($dateStart)) {
             throw new Exception("Specified date range is invalid.");

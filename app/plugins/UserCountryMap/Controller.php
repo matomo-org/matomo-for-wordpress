@@ -154,7 +154,9 @@ class Controller extends \Piwik\Plugin\Controller
             throw new Exception($this->translator->translate('General_Required', 'Plugin UserCountry'));
         }
     }
-    private function getMetrics($idSite, $period, $date, $token_auth)
+    private function getMetrics($idSite, $period, $date,
+#[\SensitiveParameter]
+$token_auth)
     {
         $request = new Request('method=API.getMetadata&format=json' . '&apiModule=UserCountry&apiAction=getCountry' . '&idSite=' . $idSite . '&period=' . $period . '&date=' . $date . '&token_auth=' . $token_auth . '&filter_limit=-1');
         $metaData = json_decode($request->process(), \true);
@@ -171,7 +173,9 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $metrics;
     }
-    private function getApiRequestUrl($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = \false, $segmentOverride = \false)
+    private function getApiRequestUrl($module, $action, $idSite, $period, $date,
+#[\SensitiveParameter]
+$token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         // use processed reports
         $url = "?module=" . $module . "&method=" . $module . "." . $action . "&format=JSON" . "&idSite=" . $idSite . "&period=" . $period . "&date=" . $date . "&token_auth=" . $token_auth . "&segment=" . ($segmentOverride ?: Request::getRawSegmentFromRequest()) . "&enable_filter_excludelowpop=1" . "&showRawMetrics=1";
@@ -182,7 +186,9 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $url;
     }
-    private function report($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = \false, $segmentOverride = \false)
+    private function report($module, $action, $idSite, $period, $date,
+#[\SensitiveParameter]
+$token_auth, $filter_by_country = \false, $segmentOverride = \false)
     {
         return $this->getApiRequestUrl('API', 'getProcessedReport&apiModule=' . $module . '&apiAction=' . $action, $idSite, $period, $date, $token_auth, $filter_by_country, $segmentOverride);
     }

@@ -155,6 +155,8 @@ class Live extends \Piwik\Plugin
         $translationKeys[] = 'Live_OnClickStart';
         $translationKeys[] = 'Live_LinkVisitorLog';
         $translationKeys[] = 'Live_VisitorLog';
+        $translationKeys[] = 'General_ColumnNbVisitsDocumentation';
+        $translationKeys[] = 'General_ColumnNbActionsDocumentation';
     }
     public function renderAction(&$renderedAction, $action, $previousAction, $visitorDetails)
     {

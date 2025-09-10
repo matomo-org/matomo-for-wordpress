@@ -210,6 +210,7 @@ class Profiler
             throw new Exception("The profiler output dir '" . ini_get("xhprof.output_dir") . "' should exist and be writable.");
         }
         if (!function_exists('xhprof_error')) {
+            // @phpstan-ignore function.inner
             function xhprof_error($out)
             {
                 echo substr($out, 0, 300) . '...';
@@ -238,7 +239,7 @@ class Profiler
             } elseif (function_exists('tideways_xhprof_disable') || function_exists('tideways_disable')) {
                 if (function_exists('tideways_xhprof_disable')) {
                     $xhprofData = tideways_xhprof_disable();
-                } else {
+                } elseif (function_exists('tideways_disable')) {
                     $xhprofData = tideways_disable();
                 }
                 $runId = uniqid();

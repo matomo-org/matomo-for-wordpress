@@ -398,7 +398,7 @@ class ArchiveSelector
                     continue;
                 }
                 if (empty($archiveData[$metric])) {
-                    if (!empty($result[$metric]) || $result[$metric] === 0 || $result[$metric] === '0') {
+                    if (!empty($result[$metric]) || $result[$metric] === 0 || $result[$metric] === 0.0 || $result[$metric] === '0') {
                         $archiveData[$metric] = $result[$metric];
                     }
                 }

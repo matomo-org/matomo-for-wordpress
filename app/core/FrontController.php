@@ -10,6 +10,7 @@ namespace Piwik;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Manager;
@@ -352,7 +353,7 @@ class FrontController extends \Piwik\Singleton
         }
         // Force the auth to use the token_auth if specified, so that embed dashboard
         // and all other non widgetized controller methods works fine
-        if (\Piwik\Common::getRequestVar('token_auth', '', 'string') !== '' && Request::shouldReloadAuthUsingTokenAuth(null)) {
+        if (StaticContainer::get(AuthenticationToken::class)->getAuthToken() !== '' && Request::shouldReloadAuthUsingTokenAuth(null)) {
             Request::reloadAuthUsingTokenAuth();
             Request::checkTokenAuthIsNotLimited($module, $action);
         }
@@ -387,7 +388,7 @@ class FrontController extends \Piwik\Singleton
         if (!ctype_alnum($module)) {
             throw new Exception("Invalid module name '{$module}'");
         }
-        list($module, $action) = Request::getRenamedModuleAndAction($module, $action);
+        [$module, $action] = Request::getRenamedModuleAndAction($module, $action);
         if (!\Piwik\SettingsPiwik::isInternetEnabled() && \Piwik\Plugin\Manager::getInstance()->doesPluginRequireInternetConnection($module)) {
             throw new PluginRequiresInternetException($module);
         }
@@ -455,7 +456,7 @@ class FrontController extends \Piwik\Singleton
     {
         $isDashboardReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=CoreHome&action=index') !== \false;
         $isAllWebsitesReferrer = !empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'module=MultiSites&action=index') !== \false;
-        if ($isDashboardReferrer && !empty($_POST['token_auth']) && \Piwik\Common::getRequestVar('widget', 0, 'int') === 1) {
+        if ($isDashboardReferrer && StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely() && \Piwik\Common::getRequestVar('widget', 0, 'int') === 1) {
             \Piwik\Session::close();
         }
         if (($isDashboardReferrer || $isAllWebsitesReferrer) && \Piwik\Common::getRequestVar('viewDataTable', '', 'string') === 'sparkline') {
@@ -482,7 +483,7 @@ class FrontController extends \Piwik\Singleton
      */
     private function doDispatch($module, $action, $parameters)
     {
-        list($module, $action, $parameters) = $this->prepareDispatch($module, $action, $parameters);
+        [$module, $action, $parameters] = $this->prepareDispatch($module, $action, $parameters);
         /**
          * Triggered directly before controller actions are dispatched.
          *
@@ -566,7 +567,8 @@ class FrontController extends \Piwik\Singleton
             // don't use the session auth during CLI requests
             return null;
         }
-        if (\Piwik\Common::getRequestVar('token_auth', '', 'string') !== '' && !\Piwik\Common::getRequestVar('force_api_session', 0)) {
+        $token = StaticContainer::get(AuthenticationToken::class);
+        if ($token->getAuthToken() !== '' && !$token->isSessionToken()) {
             return null;
         }
         $module = \Piwik\Common::getRequestVar('module', self::DEFAULT_MODULE, 'string');
@@ -651,7 +653,7 @@ class FrontController extends \Piwik\Singleton
         if ($generalConfig['enable_framed_pages'] == '1' || $generalConfig['enable_framed_settings'] == '1') {
             return \true;
         }
-        if (\Piwik\Common::getRequestVar('token_auth', '', 'string') !== '') {
+        if (StaticContainer::get(AuthenticationToken::class)->getAuthToken() !== '') {
             return \true;
         }
         if (\Piwik\Piwik::isUserIsAnonymous()) {

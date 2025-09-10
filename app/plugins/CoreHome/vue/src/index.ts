@@ -96,3 +96,11 @@ export {
 } from './VersionInfoHeaderMessage/VersionInfoHeaderMessage.vue';
 export { default as MobileLeftMenu } from './MobileLeftMenu/MobileLeftMenu.vue';
 export { default as scrollToAnchorInUrl } from './scrollToAnchorInUrl';
+export { default as SearchFiltersPersistenceStore } from './SearchFiltersPersistence/SearchFiltersPersistence.store';
+export { default as AutoClearPassword } from './AutoClearPassword/AutoClearPassword';
+export { default as PasswordStrength } from './PasswordStrength/PasswordStrength.vue';
+export * from './PasswordStrength/PasswordStrength';
+export { default as EntityDuplicatorModal } from './EntityDuplicator/EntityDuplicatorModal.vue';
+export { default as EntityDuplicatorAction } from './EntityDuplicator/EntityDuplicatorAction.vue';
+export * from './EntityDuplicator/EntityDuplicatorStore';
+export * from './EntityDuplicator/EntityDuplicatorAdapter';

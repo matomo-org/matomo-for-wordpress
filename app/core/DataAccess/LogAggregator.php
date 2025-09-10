@@ -289,12 +289,13 @@ class LogAggregator
      * @param             $orderBy
      * @param int         $limit
      * @param int         $offset
+     * @param bool        $withRollup
      *
      * @return array|mixed|string
      * @throws \Piwik\Exception\DI\DependencyException
      * @throws \Piwik\Exception\DI\NotFoundException
      */
-    public function generateQuery($select, $from, $where, $groupBy, $orderBy, $limit = 0, $offset = 0)
+    public function generateQuery($select, $from, $where, $groupBy, $orderBy, $limit = 0, $offset = 0, bool $withRollup = \false)
     {
         $segment = $this->segment;
         $bind = $this->getGeneralQueryBindParams();
@@ -334,7 +335,7 @@ class LogAggregator
                 }
             }
         }
-        $query = $segment->getSelectQuery($select, $from, $where, $bind, $orderBy, $groupBy, $limit, $offset);
+        $query = $segment->getSelectQuery($select, $from, $where, $bind, $orderBy, $groupBy, $limit, $offset, $forceGroupBy = \false, $withRollup);
         if (is_array($query) && array_key_exists('sql', $query)) {
             $query['sql'] = DbHelper::addOriginHintToQuery($query['sql'], $this->queryOriginHint, $this->dateStart, $this->dateEnd, $this->sites, $this->segment);
             if (DatabaseConfig::getConfigValue('enable_first_table_join_prefix')) {

@@ -25,6 +25,7 @@ namespace {
         \define('PIWIK_INCLUDE_PATH', \PIWIK_DOCUMENT_ROOT);
     }
     require_once \PIWIK_INCLUDE_PATH . '/core/bootstrap.php';
+    require_once \PIWIK_INCLUDE_PATH . '/core/Request/AuthenticationToken.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Plugin/Controller.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Exception/NotYetInstalledException.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Plugin/ControllerAdmin.php';

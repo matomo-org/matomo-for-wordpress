@@ -28,6 +28,10 @@ class AverageTimeOnDimension extends AverageTimeOnPage
     {
         return Piwik::translate('CustomDimensions_ColumnAvgTimeOnDimension');
     }
+    public function getDocumentation()
+    {
+        return Piwik::translate('CustomDimensions_ColumnAvgTimeOnDimensionDocumentation');
+    }
     public function getSemanticType() : ?string
     {
         return Dimension::TYPE_DURATION_S;

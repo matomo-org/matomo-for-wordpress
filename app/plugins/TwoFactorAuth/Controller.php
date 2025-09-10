@@ -257,7 +257,9 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $this->renderTemplate('showRecoveryCodes', array('codes' => $recoveryCodes, 'regenerateNonce' => Nonce::getNonce(self::REGENERATE_CODES_2FA_NONCE), 'regenerateError' => $regenerateError, 'regenerateSuccess' => $regenerateSuccess));
     }
-    private function getTwoFaBarCodeSetupUrl($secret)
+    private function getTwoFaBarCodeSetupUrl(
+#[\SensitiveParameter]
+$secret)
     {
         $title = $this->settings->twoFactorAuthTitle->getValue();
         $descr = Piwik::getCurrentUserLogin();

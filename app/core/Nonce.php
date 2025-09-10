@@ -190,6 +190,10 @@ class Nonce
             $nonce = \Piwik\Common::getRequestVar('nonce', null, 'string');
         }
         if (!self::verifyNonce($nonceName, $nonce, $allowedReferrerHost)) {
+            if (!empty($nonce)) {
+                self::discardNonce($nonceName);
+                // Invalidate nonce on failed attempts
+            }
             throw new \Exception(\Piwik\Piwik::translate('General_ExceptionSecurityCheckFailed'));
         }
         self::discardNonce($nonceName);

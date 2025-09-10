@@ -284,7 +284,7 @@ class API extends \Piwik\Plugin\API
 				WHEN ' . Common::REFERRER_TYPE_SEARCH_ENGINE . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_SOCIAL_NETWORK . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_WEBSITE . ' THEN log_visit.referer_url
-				WHEN ' . Common::REFERRER_TYPE_CAMPAIGN . ' THEN CONCAT(log_visit.referer_name, \' \', log_visit.referer_keyword)
+				WHEN ' . Common::REFERRER_TYPE_CAMPAIGN . ' THEN CONCAT_WS(\' \', log_visit.referer_name, log_visit.referer_keyword)
 			END', 'referer_type');
         $rankingQuery->addLabelColumn('referrer_data');
         // get one limited group per referrer type

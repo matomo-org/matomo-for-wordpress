@@ -95,6 +95,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 					$run_migrations = [ \WP_Statistics\Service\Database\Managers\MigrationHandler::class, 'runSchemaMigrations' ];
 				} elseif ( method_exists( \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'runSchemaMigrations' ) ) {
 					$run_migrations = [ \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'runSchemaMigrations' ];
+				} elseif ( method_exists( \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'init' ) ) {
+					$run_migrations = [ \WP_Statistics\Service\Database\Migrations\Schema\SchemaManager::class, 'init' ];
 				} else {
 					throw new \Exception( 'do not know how to run wp-statistics migrations' );
 				}
@@ -299,6 +301,10 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function upgrade_wp_stats() {
+		if ( ! method_exists( \WP_STATISTICS\Install::class, 'plugin_upgrades' ) ) {
+			$this->markTestSkipped( 'new version of wp-statistics does not have old plugin upgrade code' );
+		}
+
 		$install = new class() extends \WP_STATISTICS\Install {
 			public function __construct() {
 				// skip since we don't want to handle hooks again

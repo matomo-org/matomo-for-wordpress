@@ -42,7 +42,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\SitesManager\SitesManager::dieIfSitesAdminIsDisabled();
-        return $this->renderTemplate('index');
+        $pluginManager = Manager::getInstance();
+        $rollUpEnabled = $pluginManager->isPluginLoaded('RollUpReporting') && $pluginManager->isPluginActivated('RollUpReporting');
+        return $this->renderTemplate('index', ['rollUpEnabled' => $rollUpEnabled]);
     }
     public function globalSettings()
     {

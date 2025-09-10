@@ -131,6 +131,9 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/vue/src/FieldArray/FieldArray.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Comparisons/Comparisons.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/vue-transitions.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/PasswordStrength/PasswordStrength.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/EntityDuplicator/EntityDuplicatorModal.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/EntityDuplicator/EntityDuplicatorAction.less";
     }
     public function getJsFiles(&$jsFiles)
     {
@@ -165,6 +168,7 @@ class CoreHome extends \Piwik\Plugin
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
+        $translationKeys[] = 'CoreHome_ReportConfiguration';
         $translationKeys[] = 'General_Export';
         $translationKeys[] = 'General_InvalidDateRange';
         $translationKeys[] = 'General_Loading';
@@ -329,6 +333,7 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreHome_ExportTooltip';
         $translationKeys[] = 'CoreHome_ExportTooltipWithLink';
         $translationKeys[] = 'CoreHome_FlattenReport';
+        $translationKeys[] = 'CoreHome_IncludeDimensionsSeparately';
         $translationKeys[] = 'CoreHome_CustomLimit';
         $translationKeys[] = 'CoreHome_ExpandSubtables';
         $translationKeys[] = 'CoreHome_HomeShortcut';
@@ -366,7 +371,12 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_YouAreCurrentlyUsing';
         $translationKeys[] = 'General_Copy';
         $translationKeys[] = 'General_CopiedToClipboard';
-        $translationKeys[] = 'CoreHome_ReportConfiguration';
+        $translationKeys[] = 'CoreHome_ReportLowercase';
+        $translationKeys[] = 'CoreHome_LearnMoreFullStop';
+        $translationKeys[] = 'CoreHome_ChooseWebsite';
+        $translationKeys[] = 'CoreHome_CopyModalNote';
+        $translationKeys[] = 'CoreHome_CopyX';
+        $translationKeys[] = 'CoreHome_CopyXDescription';
         // add admin menu translations
         if (SettingsPiwik::isMatomoInstalled() && Common::getRequestVar('module', '') != 'CoreUpdater' && Piwik::isUserHasSomeViewAccess()) {
             /*

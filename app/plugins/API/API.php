@@ -133,7 +133,7 @@ class API extends \Piwik\Plugin\API
         foreach ($types as $type) {
             $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite = 0, $type->getId());
             $settingsMetadata = new SettingsMetadata();
-            $available[] = array('id' => $type->getId(), 'name' => Piwik::translate($type->getName()), 'description' => Piwik::translate($type->getDescription()), 'howToSetupUrl' => $type->getHowToSetupUrl(), 'settings' => $settingsMetadata->formatSettings($measurableSettings));
+            $available[] = array('id' => $type->getId(), 'name' => Piwik::translate($type->getName()), 'description' => Piwik::translate($type->getDescription()), 'longDescription' => Piwik::translate($type->getLongDescription()), 'howToSetupUrl' => $type->getHowToSetupUrl(), 'settings' => $settingsMetadata->formatSettings($measurableSettings));
         }
         return $available;
     }
@@ -379,7 +379,8 @@ class API extends \Piwik\Plugin\API
             $params = \Piwik\Request::fromQueryString($url)->getParameters();
             $params['format'] = 'json';
             $params += $queryParameters;
-            if (!empty($params['method']) && is_string($params['method']) && trim($params['method']) === 'API.getBulkRequest') {
+            $method = $params['method'] ?? '';
+            if (!empty($method) && is_string($method) && preg_replace('/[^\\w\\.]+/', '', Common::sanitizeInputValue($method)) === 'API.getBulkRequest') {
                 continue;
             }
             $req = new Request($params);

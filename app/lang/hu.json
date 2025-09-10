@@ -399,8 +399,8 @@
         "Visitors": "Látogatók",
         "VisitsWith": "Látogatások ezzel: %s",
         "Warning": "Figyelmeztetés",
-        "WarningFileIntegrityNoManifest": "A fájlintegritás ellenőrzés nem hajtható végre, mivel hiányzik a manifest.inc.php fájl.",
         "WarningFileIntegrityNoHashFile": "A fájlintegritás ellenőrzés nem hajtható végre, mivel az hash_file() funkció nem elérhető.",
+        "WarningFileIntegrityNoManifest": "A fájlintegritás ellenőrzés nem hajtható végre, mivel hiányzik a manifest.inc.php fájl.",
         "WarningPasswordStored": "%1$sFigyelmeztetés:%2$s Ez a jelszó eltárolásra kerül a konfigurációs fájlban, így bárki láthatja, aki hozzáfér a fájlhoz.",
         "Warnings": "Figyelmeztetések",
         "Website": "Weboldal",
@@ -1950,7 +1950,6 @@
         "VisitorLogDocumentation": "Ez a táblázat a legutolsó látogatásokat mutatja a kiválasztott időintervallumon belül.%1$s Ha az időintervallum tartalmazz a mai napot is, akkor élőben láthatod látogatóid! %2$s Az itt kijelzett adatok mindig élőek maradnak, függetlenül, hogy hogyan és milyen gyakran használod az archiválásra szolgáló cron job-ot."
     },
     "Login": {
-        "ConfirmationLinkSent": "A megerősítő link továbbításra került postafiókjába. Kérjük ellenőrizze e-mailjeit és kattintson a linkre a jelszóváltoztatás megerősítéséhez.",
         "ExceptionInvalidSuperUserAccessAuthenticationMethod": "Egy felhasználó, akor Szuper felhasználó szinttel rendelkezik, nem használhatja a %s belépési mechanizmust.",
         "ExceptionPasswordMD5HashExpected": "A jelszóparaméternek egyeznie kellene a jelszó MD5 hash értékével.",
         "InvalidOrExpiredToken": "A kód érvénytelen vagy lejárt.",

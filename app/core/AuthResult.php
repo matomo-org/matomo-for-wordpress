@@ -45,7 +45,9 @@ class AuthResult
      * @param string $login identity
      * @param string $tokenAuth
      */
-    public function __construct($code, $login, $tokenAuth)
+    public function __construct($code, $login,
+#[\SensitiveParameter]
+$tokenAuth)
     {
         $this->code = (int) $code;
         $this->login = $login;

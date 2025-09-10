@@ -259,6 +259,16 @@ class Schema extends Singleton
         return $this->getSchema()->optimizeTables($tables, $force);
     }
     /**
+     * Returns if the database engine can provide a rollup ranking query result
+     * without needing additional sorting.
+     *
+     * @return bool
+     */
+    public function supportsRankingRollupWithoutExtraSorting() : bool
+    {
+        return $this->getSchema()->supportsRankingRollupWithoutExtraSorting();
+    }
+    /**
      * Returns if the database engine is able to use sorted subqueries
      *
      * @return bool
@@ -278,5 +288,26 @@ class Schema extends Singleton
     public function getSupportedReadIsolationTransactionLevel() : string
     {
         return $this->getSchema()->getSupportedReadIsolationTransactionLevel();
+    }
+    /**
+     * Returns the type of the current database (e.g. MySQL, MariaDb, ...)
+     */
+    public function getDatabaseType() : string
+    {
+        return $this->getSchema()->getDatabaseType();
+    }
+    /**
+     * Returns the version of the currently used database server
+     */
+    public function getVersion() : string
+    {
+        return $this->getSchema()->getVersion();
+    }
+    /**
+     * Returns if the currently used database version has reach its EOL
+     */
+    public function hasReachedEOL() : string
+    {
+        return $this->getSchema()->hasReachedEOL();
     }
 }

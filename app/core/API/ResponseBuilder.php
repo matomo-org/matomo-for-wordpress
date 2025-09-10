@@ -15,6 +15,7 @@ use Piwik\DataTable\DataTableInterface;
 use Piwik\DataTable\Filter\ColumnDelete;
 use Piwik\DataTable\Filter\Pattern;
 use Piwik\DataTable\Renderer;
+use Piwik\ExceptionHandler;
 use Piwik\Http\HttpCodeException;
 use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 /**
@@ -38,7 +39,7 @@ class ResponseBuilder
         $this->outputFormat = $outputFormat;
         $this->request = $request;
         $this->apiRenderer = \Piwik\API\ApiRenderer::factory($outputFormat, $request);
-        $this->shouldPrintBacktrace = $shouldPrintBacktrace === null ? \Piwik_ShouldPrintBackTraceWithMessage() : $shouldPrintBacktrace;
+        $this->shouldPrintBacktrace = $shouldPrintBacktrace === null ? ExceptionHandler::shouldPrintBackTraceWithMessage() : $shouldPrintBacktrace;
     }
     public function disableSendHeader()
     {
