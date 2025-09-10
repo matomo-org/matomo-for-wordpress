@@ -68,7 +68,9 @@ class Password
      * @param string $password
      * @return string
      */
-    public function hash($password)
+    public function hash(
+#[\SensitiveParameter]
+$password)
     {
         return password_hash($password, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
@@ -107,7 +109,11 @@ class Password
      * @param string $hash
      * @return boolean
      */
-    public function verify($password, $hash)
+    public function verify(
+#[\SensitiveParameter]
+$password,
+#[\SensitiveParameter]
+$hash)
     {
         return password_verify($password, $hash);
     }

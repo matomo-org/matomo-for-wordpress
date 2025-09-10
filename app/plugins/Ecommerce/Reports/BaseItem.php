@@ -37,11 +37,11 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
     }
     public function getMetricsDocumentation()
     {
-        // we do not check whether it is abandon carts if not set re performance improvements
-        if ($this->isAbandonedCart($fetchIfNotSet = \false)) {
-            return array('revenue' => Piwik::translate('Goals_ColumnRevenueDocumentation', Piwik::translate('Goals_DocumentationRevenueGeneratedByProductSales')), 'quantity' => Piwik::translate('Goals_ColumnQuantityDocumentation', $this->name), 'orders' => Piwik::translate('Goals_ColumnOrdersDocumentation', $this->name), 'avg_price' => Piwik::translate('Goals_ColumnAveragePriceDocumentation', $this->name), 'avg_quantity' => Piwik::translate('Goals_ColumnAverageQuantityDocumentation', $this->name), 'nb_visits' => Piwik::translate('Goals_ColumnVisitsProductDocumentation', $this->name), 'conversion_rate' => Piwik::translate('Goals_ColumnConversionRateProductDocumentation', $this->name));
+        if ($this->isAbandonedCart(\false)) {
+            return ['revenue' => Piwik::translate('Goals_ColumnRevenueLeftInCartDocumentation'), 'quantity' => Piwik::translate('Goals_ColumnQuantityLeftInCartDocumentation', $this->name), 'avg_price' => Piwik::translate('Goals_ColumnAveragePriceDocumentation', $this->name), 'avg_quantity' => Piwik::translate('Goals_ColumnAverageQuantityDocumentation', $this->name), 'nb_visits' => Piwik::translate('Goals_ColumnVisitsProductDocumentation', $this->name), 'abandoned_carts' => Piwik::translate('Goals_ColumnAbandonedCartsDocumentation', $this->name)];
+        } else {
+            return ['revenue' => Piwik::translate('Goals_ColumnRevenueDocumentation', Piwik::translate('Goals_DocumentationRevenueGeneratedByProductSales')), 'quantity' => Piwik::translate('Goals_ColumnQuantityDocumentation', $this->name), 'orders' => Piwik::translate('Goals_ColumnOrdersDocumentation', $this->name), 'avg_price' => Piwik::translate('Goals_ColumnAveragePriceDocumentation', $this->name), 'avg_quantity' => Piwik::translate('Goals_ColumnAverageQuantityDocumentation', $this->name), 'nb_visits' => Piwik::translate('Goals_ColumnVisitsProductDocumentation', $this->name), 'conversion_rate' => Piwik::translate('Goals_ColumnConversionRateProductDocumentation', $this->name)];
         }
-        return array();
     }
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {

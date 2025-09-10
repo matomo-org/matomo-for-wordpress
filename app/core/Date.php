@@ -49,7 +49,9 @@ class Date
     public const DATE_FORMAT_MONTH_LONG = DateTimeFormatProvider::DATE_FORMAT_MONTH_LONG;
     public const DATE_FORMAT_YEAR = DateTimeFormatProvider::DATE_FORMAT_YEAR;
     public const TIME_FORMAT = DateTimeFormatProvider::TIME_FORMAT;
-    // for tests
+    /** for tests
+     * @var null|int
+     */
     public static $now = null;
     /**
      * Max days for months (non-leap-year). See {@link addPeriod()} implementation.

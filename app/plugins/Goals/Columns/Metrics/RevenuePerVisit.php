@@ -35,6 +35,10 @@ class RevenuePerVisit extends ProcessedMetric
     {
         return Piwik::translate('General_ColumnValuePerVisit');
     }
+    public function getDocumentation()
+    {
+        return Piwik::translate('General_ColumnValuePerVisitDocumentation');
+    }
     public function getDependentMetrics()
     {
         return array('revenue', 'nb_visits', 'nb_conversions', 'goals');

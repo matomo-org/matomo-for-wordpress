@@ -147,7 +147,7 @@ class IniFileChain
             }
             // if either local/config have non-default values and the other doesn't,
             // OR both have values, but different values, we must write to config.ini.php
-            if (empty($changedSection) xor empty($existingMutableSection) || !empty($changedSection) && !empty($existingMutableSection) && self::compareElements($changedSection, $existingMutableSection)) {
+            if ((empty($changedSection) xor empty($existingMutableSection)) || self::compareElements($changedSection, $existingMutableSection)) {
                 $dirty = \true;
             }
             $configToWrite[$sectionName] = $changedSection;

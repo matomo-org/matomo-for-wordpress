@@ -30,9 +30,9 @@ class SegmentQueryDecorator extends LogQueryBuilder
         $this->storedSegmentService = $storedSegmentService;
         parent::__construct($logTablesProvider);
     }
-    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limit)
+    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limit, bool $withRollup = \false)
     {
-        $result = parent::getSelectQueryString($segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limit);
+        $result = parent::getSelectQueryString($segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limit, $withRollup);
         $prefixParts = array();
         if (SettingsServer::isArchivePhpTriggered()) {
             $prefixParts[] = 'trigger = CronArchive';

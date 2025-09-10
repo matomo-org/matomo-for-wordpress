@@ -17,6 +17,8 @@ abstract class Base extends \Piwik\Plugin\Report
     protected function init()
     {
         $this->categoryId = 'General_Visitors';
+        $this->subcategoryId = 'UserCountry_SubmenuLocations';
+        $this->hasGoalMetrics = \true;
     }
     protected function getGeoIPReportDocSuffix()
     {

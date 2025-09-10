@@ -24,12 +24,13 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
      * @var LoggerInterface
      */
     private $logger;
+    private $createdOnRegex = '#(?:Creation Date|Created On|created|Registration Date|Registered on):?\\s*([\\d]{4}-[\\d]{2}-[\\d]{2})#i';
     public function __construct(Formatter $formatter, LoggerInterface $logger)
     {
         $this->formatter = $formatter;
         $this->logger = $logger;
     }
-    public function getMetrics($domain)
+    public function getMetrics(string $domain)
     {
         $domain = str_replace('www.', '', $domain ?? '');
         $ages = array();
@@ -63,10 +64,18 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     {
         $response = $this->getUrl('https://archive.org/wayback/available?timestamp=19900101&url=' . urlencode($domain));
         $data = json_decode($response, \true);
-        if (empty($data["archived_snapshots"]["closest"]["timestamp"])) {
-            return 0;
+        if (!empty($data["archived_snapshots"]["closest"]["timestamp"])) {
+            return strtotime($data["archived_snapshots"]["closest"]["timestamp"]);
         }
-        return strtotime($data["archived_snapshots"]["closest"]["timestamp"]);
+        return 0;
+    }
+    private function getUrlPlaintext(string $url) : string
+    {
+        $response = $this->getUrl($url);
+        // strip all tags
+        $response = strip_tags($response);
+        // replace one or multiple white chars with a space
+        return (string) preg_replace('/\\s+/', ' ', $response);
     }
     /**
      * Returns the domain age who.is lists for the current url
@@ -76,8 +85,8 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
      */
     private function getAgeWhoIs($domain)
     {
-        $data = $this->getUrl('https://www.who.is/whois/' . urlencode($domain));
-        preg_match('#(?:Creation Date|Created On|created|Registered on)\\.*:\\s*([ \\ta-z0-9\\/\\-:\\.]+)#si', $data, $p);
+        $data = $this->getUrlPlaintext('https://www.who.is/whois/' . urlencode($domain));
+        preg_match($this->createdOnRegex, $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
             if ($value === \false) {
@@ -95,8 +104,8 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
      */
     private function getAgeWhoisCom($domain)
     {
-        $data = $this->getUrl('https://www.whois.com/whois/' . urlencode($domain));
-        preg_match('#(?:Creation Date|Created On|created|Registration Date):\\s*([ \\ta-z0-9\\/\\-:\\.]+)#si', $data, $p);
+        $data = $this->getUrlPlaintext('https://www.whois.com/whois/' . urlencode($domain));
+        preg_match($this->createdOnRegex, $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
             if ($value === \false) {

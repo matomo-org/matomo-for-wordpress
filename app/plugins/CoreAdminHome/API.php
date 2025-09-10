@@ -100,18 +100,28 @@ class API extends \Piwik\Plugin\API
     /**
      * @internal
      */
-    public function setBrandingSettings($useCustomLogo)
+    public function setBrandingSettings($useCustomLogo, $hasCustomLogo, $hasCustomFavicon)
     {
         Piwik::checkUserHasSuperUserAccess();
         $customLogo = new \Piwik\Plugins\CoreAdminHome\CustomLogo();
-        if ($customLogo->isCustomLogoFeatureEnabled()) {
-            if ($useCustomLogo) {
-                $customLogo->enable();
-            } else {
-                $customLogo->disable();
-            }
+        $response = [];
+        if (!$useCustomLogo || $useCustomLogo && !$hasCustomLogo && !$hasCustomFavicon) {
+            $customLogo->removeLogos();
+            $customLogo->disable();
+            $response['useCustomLogo'] = \false;
+            return $response;
         }
-        return \true;
+        $customLogo->enable();
+        $response['useCustomLogo'] = \true;
+        if ($hasCustomLogo && $customLogo->hasTempLogo()) {
+            $customLogo->publishUserLogo();
+            $response['customLogoPath'] = $customLogo->getPathUserLogo();
+        }
+        if ($hasCustomFavicon && $customLogo->hasTempFavicon()) {
+            $customLogo->publishUserFavicon();
+            $response['customFaviconPath'] = $customLogo->getPathUserFavicon();
+        }
+        return $response;
     }
     /**
      * Invalidates report data, forcing it to be recomputed during the next archiving run.
@@ -349,7 +359,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserIsNotAnonymous();
         $model = new UsersModel();
         $user = $model->getUser(Piwik::getCurrentUserLogin());
-        if (is_array($user)) {
+        if (!empty($user)) {
             $userChanges = new UserChanges($user);
             $userChanges->markChangesAsRead();
             return \true;

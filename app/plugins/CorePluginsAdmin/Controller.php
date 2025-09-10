@@ -14,6 +14,7 @@ use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Exception\MissingFilePermissionException;
+use Piwik\ExceptionHandler;
 use Piwik\Filechecks;
 use Piwik\Filesystem;
 use Piwik\Nonce;
@@ -90,11 +91,7 @@ class Controller extends Plugin\ControllerAdmin
         if (!\Piwik\Plugins\CorePluginsAdmin\CorePluginsAdmin::isPluginUploadEnabled()) {
             throw new \Exception('Plugin upload disabled by config');
         }
-        $nonce = Common::getRequestVar('nonce', null, 'string');
-        if (!Nonce::verifyNonce(MarketplaceController::INSTALL_NONCE, $nonce)) {
-            throw new \Exception($this->translator->translate('General_ExceptionSecurityCheckFailed'));
-        }
-        Nonce::discardNonce(MarketplaceController::INSTALL_NONCE);
+        Nonce::checkNonce(MarketplaceController::INSTALL_NONCE);
         if (!$this->passwordVerify->isPasswordCorrect(Piwik::getCurrentUserLogin(), \Piwik\Request::fromRequest()->getStringParameter('confirmPassword'))) {
             throw new \Exception($this->translator->translate('Login_LoginPasswordNotCorrect'));
         }
@@ -232,7 +229,7 @@ class Controller extends Plugin\ControllerAdmin
             if (!isset($plugin['info'])) {
                 $suffix = $this->translator->translate('CorePluginsAdmin_PluginNotWorkingAlternative');
                 // If the plugin has been renamed, we do not show message to ask user to update plugin
-                list($pluginNameRenamed, $methodName) = Request::getRenamedModuleAndAction($pluginName, 'index');
+                [$pluginNameRenamed, $methodName] = Request::getRenamedModuleAndAction($pluginName, 'index');
                 if ($pluginName != $pluginNameRenamed) {
                     $suffix = "You may uninstall the plugin or manually delete the files in /path/to/matomo/plugins/{$pluginName}/";
                 }
@@ -276,7 +273,7 @@ class Controller extends Plugin\ControllerAdmin
         $outputFormat = strtolower($outputFormat);
         if (!empty($outputFormat) && 'html' !== $outputFormat) {
             $errorMessage = $lastError['message'];
-            if (!empty($lastError['backtrace']) && \Piwik_ShouldPrintBackTraceWithMessage()) {
+            if (!empty($lastError['backtrace']) && ExceptionHandler::shouldPrintBackTraceWithMessage()) {
                 $errorMessage .= $lastError['backtrace'];
             }
             if (Piwik::isUserIsAnonymous()) {
@@ -290,7 +287,7 @@ class Controller extends Plugin\ControllerAdmin
         if (Common::isPhpCliMode()) {
             throw new Exception("Error: " . var_export($lastError, \true));
         }
-        if (!\Piwik_ShouldPrintBackTraceWithMessage()) {
+        if (!ExceptionHandler::shouldPrintBackTraceWithMessage()) {
             unset($lastError['backtrace']);
         }
         $view = new View('@CorePluginsAdmin/safemode');
@@ -411,11 +408,7 @@ class Controller extends Plugin\ControllerAdmin
     protected function initPluginModification($nonceName)
     {
         Piwik::checkUserHasSuperUserAccess();
-        $nonce = Common::getRequestVar('nonce', null, 'string');
-        if (!Nonce::verifyNonce($nonceName, $nonce)) {
-            throw new \Exception($this->translator->translate('General_ExceptionSecurityCheckFailed'));
-        }
-        Nonce::discardNonce($nonceName);
+        Nonce::checkNonce($nonceName);
         $pluginName = Common::getRequestVar('pluginName', null, 'string');
         if (!$this->pluginManager->isValidPluginName($pluginName)) {
             throw new Exception('Invalid plugin name');

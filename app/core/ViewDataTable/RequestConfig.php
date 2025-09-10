@@ -82,11 +82,11 @@ class RequestConfig
     /**
      * The list of request parameters that are 'Client Side Parameters'.
      */
-    public $clientSideParameters = array('filter_excludelowpop', 'filter_excludelowpop_value', 'filter_pattern', 'filter_column', 'filter_offset', 'flat', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
+    public $clientSideParameters = array('filter_excludelowpop', 'filter_excludelowpop_value', 'filter_pattern', 'filter_column', 'filter_offset', 'flat', 'show_dimensions', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
     /**
      * The list of ViewDataTable properties that can be overridden by query parameters.
      */
-    public $overridableProperties = array('filter_sort_column', 'filter_sort_order', 'filter_limit', 'filter_offset', 'filter_pattern', 'filter_column', 'filter_excludelowpop', 'filter_excludelowpop_value', 'disable_generic_filters', 'disable_queued_filters', 'flat', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
+    public $overridableProperties = array('filter_sort_column', 'filter_sort_order', 'filter_limit', 'filter_offset', 'filter_pattern', 'filter_column', 'filter_excludelowpop', 'filter_excludelowpop_value', 'disable_generic_filters', 'disable_queued_filters', 'flat', 'show_dimensions', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
     /**
      * Controls which column to sort the DataTable by before truncating and displaying.
      *
@@ -114,6 +114,12 @@ class RequestConfig
      * Default value: false
      */
     public $flat = \false;
+    /**
+     * If true, dimensions in flattened reports will be added as separate columns
+     *
+     * Default value: false
+     */
+    public $show_dimensions = \false;
     /**
      * If set to true or "1", the report may calculate totals information and show percentage values for each row in
      * relative to the total value.
@@ -290,7 +296,7 @@ class RequestConfig
         if (strpos($this->apiMethodToRequestDataTable, '.') === \false) {
             return '';
         }
-        list($module, $method) = explode('.', $this->apiMethodToRequestDataTable);
+        [$module, $method] = explode('.', $this->apiMethodToRequestDataTable);
         return $module;
     }
     public function getApiMethodToRequest()
@@ -298,7 +304,7 @@ class RequestConfig
         if (strpos($this->apiMethodToRequestDataTable, '.') === \false) {
             return '';
         }
-        list($module, $method) = explode('.', $this->apiMethodToRequestDataTable);
+        [$module, $method] = explode('.', $this->apiMethodToRequestDataTable);
         return $method;
     }
     public function getRequestParam($paramName)

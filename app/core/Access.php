@@ -12,6 +12,7 @@ use Exception;
 use Piwik\Access\CapabilitiesProvider;
 use Piwik\API\Request;
 use Piwik\Access\RolesProvider;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\API as SitesManagerApi;
 use Piwik\Session\SessionAuth;
@@ -134,14 +135,12 @@ class Access
             return \false;
         }
         $result = null;
-        $forceApiSessionPost = \Piwik\Common::getRequestVar('force_api_session', 0, 'int', $_POST);
-        $forceApiSessionGet = \Piwik\Common::getRequestVar('force_api_session', 0, 'int', $_GET);
         $isApiRequest = \Piwik\Piwik::getModule() === 'API' && (\Piwik\Piwik::getAction() === 'index' || !\Piwik\Piwik::getAction());
         $apiMethod = Request::getMethodIfApiRequest(null);
         $isGetApiRequest = !empty($apiMethod) && 1 === substr_count($apiMethod, '.') && strpos($apiMethod, '.get') > 0;
-        if ($forceApiSessionPost && $isApiRequest || $forceApiSessionGet && $isApiRequest && $isGetApiRequest) {
-            $request = $forceApiSessionGet && $isApiRequest && $isGetApiRequest ? $_GET : $_POST;
-            $tokenAuth = \Piwik\Common::getRequestVar('token_auth', '', 'string', $request);
+        $token = StaticContainer::get(AuthenticationToken::class);
+        if ($isApiRequest && $token->isSessionToken() && ($token->wasTokenAuthProvidedSecurely() || $isGetApiRequest)) {
+            $tokenAuth = $token->getAuthToken();
             \Piwik\Session::start();
             $auth = StaticContainer::get(SessionAuth::class);
             $auth->setTokenAuth($tokenAuth);

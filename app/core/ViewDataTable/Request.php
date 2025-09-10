@@ -49,7 +49,7 @@ class Request
         // - we request the method to call to get this specific DataTable
         // - the format = original specifies that we want to get the original DataTable structure itself, not rendered
         $requestArray = array('method' => $this->requestConfig->apiMethodToRequestDataTable, 'format' => 'original');
-        $toSetEventually = array_merge(array('filter_limit', 'keep_totals_row', 'keep_summary_row', 'filter_sort_column', 'filter_sort_order', 'filter_excludelowpop', 'filter_excludelowpop_value', 'filter_column', 'filter_pattern', 'flat', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit'), $this->requestConfig->getExtraParametersToSet());
+        $toSetEventually = array_merge(array('filter_limit', 'keep_totals_row', 'keep_summary_row', 'filter_sort_column', 'filter_sort_order', 'filter_excludelowpop', 'filter_excludelowpop_value', 'filter_column', 'filter_pattern', 'flat', 'show_dimensions', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit'), $this->requestConfig->getExtraParametersToSet());
         foreach ($toSetEventually as $varToSet) {
             $value = $this->getDefaultOrCurrent($varToSet);
             if (\false !== $value) {

@@ -179,6 +179,11 @@ class Http
                 throw new Exception(sprintf('Hostname %s is in list of disallowed hosts', $parsedUrl['host']));
             }
         }
+        // When sending an insecure request, but https is forced, and we would care about valid certificates, log a warning
+        // Note: accepting invalid ssl certificates should only be used when requesting data from a configured website
+        if ($parsedUrl['scheme'] === 'http' && \Piwik\SettingsPiwik::isHttpsForced() && $acceptInvalidSslCertificate === \false) {
+            \Piwik\Log::warning('Matomo is configured to force HTTPS, but is sending an insecure request to ' . $aUrl);
+        }
         $contentLength = 0;
         $fileLength = 0;
         if (!empty($requestBody) && is_array($requestBody)) {
@@ -281,7 +286,7 @@ class Http
                 $connectPort = $port;
                 $requestHeader = "{$httpMethod} {$path} HTTP/{$httpVer}\r\n";
                 if ('https' == $url['scheme']) {
-                    $connectHost = 'ssl://' . $connectHost;
+                    $connectHost = 'tls://' . $connectHost;
                 }
             }
             // connection attempt
@@ -439,7 +444,7 @@ class Http
             } else {
                 $response = @file_get_contents($aUrl, 0, $ctx);
                 // try to get http status code from response headers
-                if (isset($http_response_header) && preg_match('~^HTTP/(\\d\\.\\d)\\s+(\\d+)(\\s*.*)?~', implode("\n", $http_response_header), $m)) {
+                if (!empty($http_response_header) && preg_match('~^HTTP/(\\d\\.\\d)\\s+(\\d+)(\\s*.*)?~', implode("\n", $http_response_header), $m)) {
                     $status = (int) $m[2];
                 }
                 if (!$status && $response === \false) {

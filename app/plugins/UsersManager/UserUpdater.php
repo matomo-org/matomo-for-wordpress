@@ -19,7 +19,9 @@ class UserUpdater
      * @param bool $_isPasswordHashed
      * @throws \Exception
      */
-    public function updateUserWithoutCurrentPassword($userLogin, $password = \false, $email = \false, $_isPasswordHashed = \false)
+    public function updateUserWithoutCurrentPassword($userLogin,
+#[\SensitiveParameter]
+$password = \false, $email = \false, $_isPasswordHashed = \false)
     {
         \Piwik\Plugins\UsersManager\API::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \false;
         try {

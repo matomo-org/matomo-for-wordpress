@@ -191,7 +191,8 @@ class PasswordResetter
         // get the user's login
         $user = $this->getUserInformation($loginOrEmail);
         if ($user === null) {
-            throw new Exception(Piwik::translate('Login_InvalidUsernameEmail'));
+            // throw a custom exception type so it can be handled/suppressed
+            throw new \Piwik\Plugins\Login\PasswordResetUserIsInvalidException(Piwik::translate('Login_InvalidUsernameEmail'));
         }
         $login = $user['login'];
         $keySuffix = time() . Common::getRandomString($length = 32);
@@ -241,7 +242,9 @@ class PasswordResetter
      * @throws Exception If there is no user with login '$login', if $resetToken is not a
      *                   valid token or if the token has expired.
      */
-    public function setHashedPasswordForLogin($login, $passwordHash)
+    public function setHashedPasswordForLogin($login,
+#[\SensitiveParameter]
+$passwordHash)
     {
         /*
          * Executed as super user, as we need to update the password, without the current user being authenticated yet.
@@ -303,7 +306,11 @@ class PasswordResetter
         $token = $this->generateSecureHash($expiry . $user['login'] . $user['email'] . $user['ts_password_modified'] . $keySuffix, $user['password']);
         return $token;
     }
-    public function doesResetPasswordHashMatchesPassword($passwordPlain, $passwordHash)
+    public function doesResetPasswordHashMatchesPassword(
+#[\SensitiveParameter]
+$passwordPlain,
+#[\SensitiveParameter]
+$passwordHash)
     {
         $passwordPlain = UsersManager::getPasswordHash($passwordPlain);
         return $this->passwordHelper->verify($passwordPlain, $passwordHash);
@@ -375,7 +382,9 @@ class PasswordResetter
      * @param string $newPassword The password to check.
      * @throws Exception if $newPassword is inferior in some way.
      */
-    protected function checkNewPassword($newPassword)
+    protected function checkNewPassword(
+#[\SensitiveParameter]
+$newPassword)
     {
         UsersManager::checkPassword($newPassword);
     }
@@ -413,7 +422,9 @@ class PasswordResetter
      * @param string $passwordHash The password hash to check.
      * @throws Exception if the password hash length is incorrect.
      */
-    protected function checkPasswordHash($passwordHash)
+    protected function checkPasswordHash(
+#[\SensitiveParameter]
+$passwordHash)
     {
         $hashInfo = $this->passwordHelper->info($passwordHash);
         if (!isset($hashInfo['algo']) || 0 >= $hashInfo['algo']) {
@@ -473,7 +484,9 @@ class PasswordResetter
      *
      * @throws Exception if a password reset was already requested within one hour
      */
-    private function savePasswordResetInfo($login, $newPassword, $keySuffix)
+    private function savePasswordResetInfo($login,
+#[\SensitiveParameter]
+$newPassword, $keySuffix)
     {
         $optionName = self::getPasswordResetInfoOptionName($login);
         $existingResetInfo = Option::get($optionName);

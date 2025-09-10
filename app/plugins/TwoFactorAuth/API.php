@@ -19,7 +19,9 @@ class API extends \Piwik\Plugin\API
     {
         $this->twoFa = $twoFa;
     }
-    public function resetTwoFactorAuth($userLogin, $passwordConfirmation = '')
+    public function resetTwoFactorAuth($userLogin,
+#[\SensitiveParameter]
+$passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

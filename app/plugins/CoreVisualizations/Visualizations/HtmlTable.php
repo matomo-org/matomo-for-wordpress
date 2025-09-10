@@ -86,7 +86,7 @@ class HtmlTable extends Visualization
             $hasMultipleDimensions = is_array($dimensions) && count($dimensions) > 1;
             $this->assignTemplateVar('hasMultipleDimensions', $hasMultipleDimensions);
             if ($hasMultipleDimensions) {
-                if ($this->config->show_dimensions) {
+                if ($this->shouldShowDimensions()) {
                     // ensure first metric translation is used as label if other dimensions are in separate columns
                     $this->config->addTranslation('label', $this->config->translations[reset($dimensions)]);
                 } else {
@@ -97,7 +97,7 @@ class HtmlTable extends Visualization
                     $this->config->addTranslation('label', implode(' - ', $labels));
                 }
             }
-            if ($this->config->show_dimensions && $hasMultipleDimensions) {
+            if ($this->shouldShowDimensions() && $hasMultipleDimensions) {
                 $properties = $this->config;
                 array_shift($dimensions);
                 // shift away first dimension, as that will be shown as label
@@ -143,16 +143,7 @@ class HtmlTable extends Visualization
                     }
                 }
             }
-            if ($this->config->show_dimensions && $hasMultipleDimensions) {
-                $this->dataTable->filter(function ($dataTable) use($dimensions) {
-                    /** @var DataTable $dataTable */
-                    $rows = $dataTable->getRows();
-                    foreach ($rows as $row) {
-                        foreach ($dimensions as $dimension) {
-                            $row->setColumn($dimension, $row->getMetadata($dimension));
-                        }
-                    }
-                });
+            if ($this->shouldShowDimensions() && $hasMultipleDimensions) {
                 # replace original label column with first dimension
                 $firstDimension = array_shift($dimensions);
                 $this->dataTable->filter('ColumnCallbackAddMetadata', array('label', 'combinedLabel', function ($label) {
@@ -226,6 +217,10 @@ class HtmlTable extends Visualization
     protected function isFlattened()
     {
         return $this->requestConfig->flat || Common::getRequestVar('flat', '');
+    }
+    protected function shouldShowDimensions()
+    {
+        return $this->requestConfig->show_dimensions || Common::getRequestVar('show_dimensions', '');
     }
     private function getSiteSummary()
     {

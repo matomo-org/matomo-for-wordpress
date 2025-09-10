@@ -28,18 +28,18 @@ class Rss extends Renderer
      *
      * @return string
      */
-    public function render()
+    public function render() : string
     {
         return $this->renderTable($this->table);
     }
     /**
      * Computes the output for the given data table
      *
-     * @param DataTable $table
+     * @param DataTable|DataTable\Map $table
      * @return string
      * @throws Exception
      */
-    protected function renderTable($table)
+    protected function renderTable($table) : string
     {
         if (!$table instanceof DataTable\Map || $table->getKeyName() != 'date') {
             throw new Exception("RSS feeds can be generated for one specific website &idSite=X." . "\nPlease specify only one idSite or consider using &format=XML instead.");
@@ -75,7 +75,7 @@ class Rss extends Renderer
      *
      * @return string
      */
-    protected function getRssFooter()
+    protected function getRssFooter() : string
     {
         return "\t</channel>\n</rss>";
     }
@@ -84,7 +84,7 @@ class Rss extends Renderer
      *
      * @return string
      */
-    protected function getRssHeader()
+    protected function getRssHeader() : string
     {
         $generationDate = date('r', Date::getNowTimestamp());
         $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\">\n  <channel>\n    <title>matomo statistics - RSS</title>\n    <link>https://matomo.org</link>\n    <description>Matomo RSS feed</description>\n    <pubDate>{$generationDate}</pubDate>\n    <generator>matomo</generator>\n    <language>en</language>\n    <lastBuildDate>{$generationDate}</lastBuildDate>\n";

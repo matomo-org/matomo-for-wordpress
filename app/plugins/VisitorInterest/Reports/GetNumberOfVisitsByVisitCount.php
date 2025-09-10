@@ -28,6 +28,12 @@ class GetNumberOfVisitsByVisitCount extends \Piwik\Plugins\VisitorInterest\Repor
         $this->constantRowsCount = \true;
         $this->order = 25;
     }
+    public function getMetricsDocumentation()
+    {
+        $documentation = parent::getMetricsDocumentation();
+        $documentation['nb_visits_percentage'] = Piwik::translate('VisitorInterest_ColumnPercentageVisitsDocumentation');
+        return $documentation;
+    }
     public function configureView(ViewDataTable $view)
     {
         $view->requestConfig->filter_sort_column = 'label';
