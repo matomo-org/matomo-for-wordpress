@@ -43,7 +43,11 @@ class Website {
   }
 
   async getWpFolder() {
-    const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
+    let wordpressVersion = process.env.WORDPRESS_VERSION || 'latest';
+    if (wordpressVersion === 'latest') {
+      wordpressVersion = await getLatestWordpressVersion();
+    }
+
     const wordpressFolder = this.wordPressFolderOverride || process.env.WORDPRESS_FOLDER || wordpressVersion;
     return wordpressFolder;
   }

@@ -7,9 +7,11 @@
     "@wdio/mocha-framework": "^9.9.0",
     "@wdio/spec-reporter": "^9.9.0",
     "ini": "^5.0.0",
+    "minimist": "^1.2.8",
     "node-fetch": "^3.3.2",
     "pre-commit": "^1.2.2",
     "ts-node": "^10.9.1",
+    "tsx": "^4.20.5",
     "typescript": "^5.2.2",
     "wdio-image-comparison-service": "^5.0.3",
     "wdio-intercept-service": "^4.4.0",
@@ -23,7 +25,8 @@
     "wp:cli": "docker compose --env-file .env.default --env-file .env run --rm exec wp",
     "phpunit": "docker compose --env-file .env.default --env-file .env run --rm exec phpunit",
     "mariadb": "docker compose --env-file .env.default --env-file .env run --rm mariadb mariadb -h mariadb -u root -p",
-    "cron": "docker compose --env-file .env.default --env-file .env run --rm "
+    "cron": "docker compose --env-file .env.default --env-file .env run --rm ",
+    "tests:generate-wpstatistics-data": "./tests/test-data-gen/bin/gen"
   },
   "dependencies": {
     "chart.js": "^3.4.1"

@@ -6,10 +6,19 @@
  *
  */
 
-import {$, browser} from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import Website from '../website.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default class Page {
+
+  public static ipAddressOverride: string|null = null;
+  public static userAgentOverride: string|null = null;
+
   async open(path: string) {
     const baseUrl = await Website.baseUrl();
 
@@ -17,9 +26,12 @@ export default class Page {
       path = `/${path}`;
     }
 
+    this.overrideRequestDetails(Page.ipAddressOverride, Page.userAgentOverride);
+
     let result;
     result = await Website.retry(3, async () => {
       let r = await browser.url(`${baseUrl}${path}`);
+      await browser.setupInterceptor();
       if (await $('#user_login').isExisting()) {
         await Website.login(); // logged out for some reason
         throw new Error('force retry');
@@ -179,5 +191,15 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').show();
       window.jQuery('#footer-upgrade').show();
     });
+  }
+
+  overrideRequestDetails(ipAddress: string, userAgent: string) {
+    const overrides = {
+      ipAddress,
+      userAgent,
+    };
+
+    const overrideFile = path.join(__dirname, '..', 'resources', 'test-utility-plugin', 'overrides.json');
+    fs.writeFileSync(overrideFile, JSON.stringify(overrides));
   }
 }
