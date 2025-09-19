@@ -199,7 +199,7 @@ export default class Page {
       userAgent,
     };
 
-    const overrideFile = path.join(__dirname, '..', 'resources', 'test-utility-plugin', 'overrides.json');
+    const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');
     fs.writeFileSync(overrideFile, JSON.stringify(overrides));
   }
 }

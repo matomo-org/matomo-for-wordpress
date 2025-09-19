@@ -41,7 +41,8 @@ export default abstract class Visitor {
 
   async waitForWpStatisticsTracking(expectedRequestCount = 1) {
     await browser.waitUntil(async () => {
-      const actualRequestCount = (await browser.getRequests({ includePending: false }))
+      const requests = await browser.getRequests({ includePending: false });
+      const actualRequestCount = requests
         .filter((r) => /\/wp-json\/wp-statistics\//.test(r.url));
       return actualRequestCount >= expectedRequestCount;
     }, { timeout: 30000 });

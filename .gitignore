@@ -15,6 +15,7 @@
 .e2e-docker-out
 .env.script
 /app/.ddev
+.e2e-test-overrides.json
 
 # for local docker dev
 docker

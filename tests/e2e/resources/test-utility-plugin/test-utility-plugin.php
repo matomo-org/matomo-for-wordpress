@@ -100,16 +100,15 @@ add_action(
 	}
 );
 
-// handle ip address and user agent overrides
 function matomo_test_utility_plugin_request_overrides() {
-	$override_path = __DIR__ . '/overrides.json';
+	$override_path = __DIR__ . '../plugins/matomo/.e2e-test-overrides.json';
+
 	if ( ! is_file( $override_path ) ) {
 		return;
 	}
 
 	$contents = file_get_contents( $override_path );
 	$contents = json_decode( $contents, true );
-
 	if ( ! empty( $contents['ipAddress'] ) ) {
 		$_SERVER['REMOTE_ADDR'] = $contents['ipAddress'];
 	}
@@ -119,4 +118,5 @@ function matomo_test_utility_plugin_request_overrides() {
 	}
 }
 
+// handle ip address and user agent overrides
 matomo_test_utility_plugin_request_overrides();

@@ -15,7 +15,7 @@ import { config as wdioConfig } from '../../wdio.conf.js';
 
 async function initWebdriverIo() {
   const options = {
-    logLevel: Config.verbose ? 'info' : 'error',
+    logLevel: Config.verbose ? 'debug' : 'error',
     capabilities: (wdioConfig as any).capabilities[0],
   };
 
