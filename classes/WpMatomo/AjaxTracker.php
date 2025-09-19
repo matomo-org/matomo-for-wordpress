@@ -208,7 +208,8 @@ class AjaxTracker extends \MatomoTracker {
 			return;
 		}
 
-		$proxy_client_headers = $config->General['proxy_client_headers'];
+		$general = $config->General;
+		$proxy_client_headers = isset( $general['proxy_client_headers'] ) ? $general['proxy_client_headers'] : [];
 		if ( ! is_array( $proxy_client_headers ) ) {
 			$proxy_client_headers = [];
 		}
