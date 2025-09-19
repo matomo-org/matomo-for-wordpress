@@ -386,7 +386,7 @@ class SettingsTest extends MatomoAnalytics_TestCase {
 		$settings          = new Settings();
 		$saved_user_agents = $settings->get_global_user_agent_exclusions();
 
-		$this->assertEquals( $user_agents, $saved_user_agents );
+		$this->assertEquals( [ 'testuseragent', 'anothertestuseragent' ], $saved_user_agents );
 	}
 
 	public function test_excluded_user_agents_in_mwp_are_added_to_tracker_cache_general() {

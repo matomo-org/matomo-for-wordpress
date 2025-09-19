@@ -243,6 +243,7 @@ class Settings {
 
 		foreach ( $keys_changed as $key_changed ) {
 			if ( self::GLOBAL_USER_AGENT_EXCLUSIONS === $key_changed ) {
+				Bootstrap::do_bootstrap();
 				Cache::clearCacheGeneral();
 			}
 
@@ -516,15 +517,17 @@ class Settings {
 	}
 
 	public function set_global_user_agent_exclusions( $user_agents ) {
-		Bootstrap::do_bootstrap();
-
 		$this->set_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
 	}
 
 	public function get_global_user_agent_exclusions() {
 		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
 		if ( ! is_array( $user_agents ) ) {
-			Bootstrap::do_bootstrap();
+			// only bootstrap if we can't access the SitesManager API.
+			// if we always
+			if ( ! class_exists( \Piwik\Plugins\SitesManager\API::class ) ) {
+				Bootstrap::do_bootstrap();
+			}
 
 			$user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
 			$user_agents = explode( ',', $user_agents );

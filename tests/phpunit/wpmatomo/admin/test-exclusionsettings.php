@@ -7,6 +7,7 @@ use Piwik\Plugins\SitesManager\API;
 use WpMatomo\Admin\ExclusionSettings;
 use WpMatomo\Capabilities;
 use WpMatomo\Admin\InvalidIpException;
+use WpMatomo\Settings;
 
 class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 
@@ -46,10 +47,12 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 		$this->exclusion_settings->show_settings();
 		$output = ob_get_clean();
 
+		$settings = new Settings();
+
 		// verify actually saved
 		$this->assertEquals( '127.0.0.1,127.0.0.2', API::getInstance()->getExcludedIpsGlobal() );
 		$this->assertEquals( 'test,test2', API::getInstance()->getExcludedQueryParametersGlobal() );
-		$this->assertEquals( 'firefox,safari', API::getInstance()->getExcludedUserAgentsGlobal() );
+		$this->assertEquals( [ 'firefox', 'safari' ], $settings->get_global_user_agent_exclusions() );
 		$this->assertNotEmpty( API::getInstance()->getKeepURLFragmentsGlobal() );
 	}
 
