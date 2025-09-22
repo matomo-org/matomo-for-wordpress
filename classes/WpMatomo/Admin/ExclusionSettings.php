@@ -54,7 +54,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$api                   = API::getInstance();
 		$excluded_ips          = $this->from_comma_list( $api->getExcludedIpsGlobal() );
 		$excluded_query_params = $this->from_comma_list( $api->getExcludedQueryParametersGlobal() );
-		$excluded_user_agents  = $this->from_comma_list( $api->getExcludedUserAgentsGlobal() );
+		$excluded_user_agents  = $this->join_on_newlines( $this->settings->get_global_user_agent_exclusions() );
 		$keep_url_fragments    = $api->getKeepURLFragmentsGlobal();
 		$current_ip            = $this->get_current_ip();
 		$settings              = $this->settings;
@@ -92,9 +92,9 @@ class ExclusionSettings implements AdminSettingsInterface {
 			}
 
 			if ( isset( $post['excluded_user_agents'] ) ) {
-				$useragents = $this->to_comma_list( $post['excluded_user_agents'] );
-				if ( $useragents !== $api->getExcludedUserAgentsGlobal() ) {
-					$api->setGlobalExcludedUserAgents( $useragents );
+				$useragents = $this->split_on_newlines( $post['excluded_user_agents'] );
+				if ( $useragents !== $this->settings->get_global_user_agent_exclusions() ) {
+					$this->settings->set_global_user_agent_exclusions( $useragents );
 				}
 			}
 
@@ -117,22 +117,40 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return false;
 	}
 
-	private function to_comma_list( $value ) {
+	/**
+	 * @param array $value
+	 * @return string
+	 */
+	private function split_on_newlines( $value ) {
+		if ( empty( $value ) ) {
+			return [];
+		}
+
+		$value = stripslashes( $value ); // WordPress adds slashes
+		$value = str_replace( "\r", '', $value );
+		$value = array_filter( explode( "\n", $value ) );
+		return $value;
+	}
+
+	/**
+	 * @param array $value
+	 * @return string
+	 */
+	private function join_on_newlines( $value ) {
 		if ( empty( $value ) ) {
 			return '';
 		}
-		$value = stripslashes( $value ); // WordPress adds slashes
-		$value = str_replace( "\r", '', $value );
 
-		return implode( ',', array_filter( explode( "\n", $value ) ) );
+		return implode( "\n", array_filter( $value ) );
+	}
+
+	private function to_comma_list( $value ) {
+		$value = $this->split_on_newlines( $value );
+		return implode( ',', $value );
 	}
 
 	private function from_comma_list( $value ) {
-		if ( empty( $value ) ) {
-			return '';
-		}
-
-		return implode( "\n", array_filter( explode( ',', $value ) ) );
+		return $this->join_on_newlines( explode( ',', $value ) );
 	}
 
 	/**
