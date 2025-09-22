@@ -524,7 +524,8 @@ class Settings {
 		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
 		if ( ! is_array( $user_agents ) ) {
 			// only bootstrap if we can't access the SitesManager API.
-			// if we always
+			// if we always bootstrap, it is possible to try initializing the FrontController before Matomo
+			// installation completes, which will fail.
 			if ( ! class_exists( \Piwik\Plugins\SitesManager\API::class ) ) {
 				Bootstrap::do_bootstrap();
 			}
