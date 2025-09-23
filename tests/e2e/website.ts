@@ -222,7 +222,7 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
-      await this.retry(3, async () => {
+      await this.retry(1, async () => {
         const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
         const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
         const isWoocommerceTakeOfflinePaymentsFound = await $('#_wc_offline_payment_methods_group,#experimental_wc_settings_payments_main').isExisting();
@@ -248,12 +248,43 @@ class Website {
             window.jQuery('span:contains(Cash on delivery)').closest('.woocommerce-list__item-inner').find('a.is-primary,button')[0].click();
           });
 
-          await browser.waitUntil(async () => {
-            return await browser.execute(() => {
-              return window.jQuery('#experimental_wc_settings_payments_main button.is-secondary').length > 0
-                  || window.jQuery('.woocommerce-list__item-inner a.is-secondary').length > 0;
+          await browser.waitUntil(() => {
+            return browser.execute(() => {
+              return window.jQuery('label.components-checkbox-control__label').length > 0
+                || window.jQuery('.is-secondary').length > 0;
             });
           }, { timeout: 30000 });
+
+          const hasCheckbox = await browser.execute(() => {
+            return window.jQuery('label.components-checkbox-control__label:contains(Enable cash on delivery payments)').parent().find('input').is('[type="checkbox"]');
+          });
+          if (hasCheckbox) {
+            const isCheckboxChecked = await browser.execute(() => {
+              return window.jQuery('label.components-checkbox-control__label:contains(Enable cash on delivery payments)').parent().find('input').is(':checked');
+            });
+            if (!isCheckboxChecked) {
+              await browser.execute(() => {
+                window.jQuery('label.components-checkbox-control__label:contains(Enable cash on delivery payments)').parent().find('input')[0].click();
+              });
+
+              await browser.execute(() => {
+                window.jQuery('button.is-primary')[0].click();
+              });
+
+              await browser.waitUntil(() => {
+                return browser.execute(() => {
+                  return window.jQuery('.components-snackbar__content:contains(Settings updated successfully)').length > 0;
+                });
+              });
+            }
+          } else {
+            await browser.waitUntil(async () => {
+              return await browser.execute(() => {
+                return window.jQuery('#experimental_wc_settings_payments_main button.is-secondary').length > 0
+                  || window.jQuery('.woocommerce-list__item-inner a.is-secondary').length > 0;
+              });
+            }, { timeout: 30000 });
+          }
         } else if (isWooCommerceCodInputFound || html.includes('#woocommerce_cod_enabled')) {
           await $('label[for="woocommerce_cod_enabled"]').click();
           await browser.execute(() => window.jQuery('.woocommerce-save-button')[0].click());
@@ -295,6 +326,21 @@ class Website {
         }
       });
     }
+
+    // launch store
+    await browser.url(`${await this.baseUrl()}/wp-admin/admin.php?page=wc-admin`);
+    await $('.woocommerce-homescreen .woocommerce-task-list__item-title').waitForExist({ timeout: 30000 });
+
+    await browser.execute(() => {
+      window.jQuery('.woocommerce-task-list__item-title:contains(Launch your store)').closest('li')[0].click();
+    });
+
+    await $('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group').waitForExist({ timeout: 30000 });
+    await browser.execute(() => {
+      window.jQuery('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group button')[0].click();
+    });
+
+    await $('.woocommerce-launch-store__congrats-heading').waitForExist({ timeout: 30000 });
 
     this.isWooCommerceSetup = true;
   }

@@ -30,6 +30,11 @@ export default abstract class Visitor {
     Page.userAgentOverride = this.userAgent;
 
     try {
+      await browser.deleteCookies();
+      await browser.execute(() => {
+        window.sessionStorage.clear();
+      });
+
       await this.visit();
     } finally {
       Page.ipAddressOverride = originalIpAddressOverride;
@@ -43,9 +48,10 @@ export default abstract class Visitor {
     await browser.waitUntil(async () => {
       const requests = await browser.getRequests({ includePending: false });
       const actualRequestCount = requests
-        .filter((r) => /\/wp-json\/wp-statistics\//.test(r.url));
+        .filter((r) => /\/wp-json\/wp-statistics\//.test(r.url))
+        .length;
       return actualRequestCount >= expectedRequestCount;
-    }, { timeout: 30000 });
+    }, { timeout: 120000 });
 
     await browser.pause(1000); // for visit length
   }

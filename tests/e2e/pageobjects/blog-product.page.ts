@@ -35,7 +35,7 @@ class BlogProductPage extends Page {
     });
 
     const checkoutPage = await browser.execute(() => {
-      return window.jQuery('a:contains("View cart")').attr('href');
+      return window.jQuery && window.jQuery('a:contains("View cart")').attr('href');
     });
     await browser.url(checkoutPage);
 
@@ -44,7 +44,7 @@ class BlogProductPage extends Page {
         // the checkout button can have different classes when run locally vs. CI
         return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
       });
-    });
+    }, { timeout: 60000 });
   }
 
   async searchProducts(searchText: string) {

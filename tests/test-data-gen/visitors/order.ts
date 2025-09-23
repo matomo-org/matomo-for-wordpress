@@ -30,6 +30,8 @@ export default class Order extends Visitor {
     await BlogProductPage.open(product3);
     await this.waitForWpStatisticsTracking();
     await BlogProductPage.addToCart();
+    await BlogProductPage.open(product3);
+    await this.waitForWpStatisticsTracking();
     await BlogProductPage.addToCart();
 
     await BlogProductPage.checkout();

@@ -9,9 +9,12 @@
 import 'dotenv/config';
 import * as webdriverio from 'webdriverio';
 import WebdriverAjaxExports from 'wdio-intercept-service';
-import { _setGlobal } from '@wdio/globals';
+import WebdriverImageComparisonExports from 'wdio-image-comparison-service';
+import {_setGlobal, browser} from '@wdio/globals';
 import Config from './config.js';
 import { config as wdioConfig } from '../../wdio.conf.js';
+import PluginsAdminPage from '../e2e/pageobjects/wp-admin/plugins-admin.page.js';
+import Website from '../e2e/website.js';
 
 async function initWebdriverIo() {
   const options = {
@@ -22,9 +25,21 @@ async function initWebdriverIo() {
   return webdriverio.remote(options);
 }
 
+async function activateWpStatistics() {
+  await PluginsAdminPage.open();
+  await $('[data-slug="wp-statistics"]').waitForExist({ timeout: 60000 });
+  if (await $('#activate-wp-statistics').isExisting()) {
+    await $('#activate-wp-statistics').click();
+    await $('#deactivate-wp-statistics').waitForExist({ timeout: 60000 });
+  }
+}
+
 export default async function generate() {
   const WebdriverAjax = WebdriverAjaxExports.default;
   const interceptService = new WebdriverAjax();
+
+  const WebdriverImageComparisonService = WebdriverImageComparisonExports.default;
+  let wdioImageComparisonService = new WebdriverImageComparisonService({});
 
   const browser = await initWebdriverIo();
   _setGlobal('browser', browser);
@@ -32,19 +47,30 @@ export default async function generate() {
   _setGlobal('$', (selector) => browser.$(selector));
   _setGlobal('$$', (selector) => browser.$$(selector));
 
+  wdioImageComparisonService.defaultOptions.autoSaveBaseline = true
+  browser.defaultOptions = wdioImageComparisonService.defaultOptions;
+  wdioImageComparisonService.folders.actualFolder = '';
+  browser.folders = wdioImageComparisonService.folders;
+  wdioImageComparisonService.before(browser.capabilities)
   interceptService.before(null, null, browser);
 
-  for (let i = 0; i < Config.visits; ++i) {
-    interceptService.beforeTest();
+  let visitor;
 
-    const visitor = (await Config.visitors.next()).value;
-    try {
+  try {
+    await Website.setUpWooCommerce();
+    await activateWpStatistics();
+
+    for (let i = 0; i < Config.visits; ++i) {
+      interceptService.beforeTest();
+
+      visitor = (await Config.visitors.next()).value;
       await visitor.execute();
-      throw new Error('force');
-    } catch (e) {
-      console.log(`Failed to execute visits: ${e.message} [URL = ${await browser.getUrl()}]`);
-      await browser.saveScreenshot('failure.png');
-      throw e;
     }
+  } catch (e) {
+    console.log(`Failed to execute visits: ${e.message} [URL = ${await browser.getUrl()}]`);
+    await browser.saveFullPageScreen('failure');
+    throw e;
+  } finally {
+    await browser.deleteSession();
   }
 }

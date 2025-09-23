@@ -10,6 +10,7 @@ import { $, browser } from '@wdio/globals';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import interceptor from 'wdio-intercept-service/lib/interceptor.js';
 import Website from '../website.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,7 +20,36 @@ export default class Page {
   public static ipAddressOverride: string|null = null;
   public static userAgentOverride: string|null = null;
 
+  public static interceptorSetup = false;
+
+  async setupInterceptor() {
+    if (Page.interceptorSetup) {
+      return;
+    }
+
+    const interceptorSetup = interceptor.setup
+      .toString()
+      // for some reason, the script fails to execute as a preload script
+      // if \r or \n are in the code. so we use ordinal values to workaround this.
+      .replace("'\\r\\n'", 'String.fromCharCode(13) + String.fromCharCode(10)')
+      .replace('function setup(done) {', '')
+      .replace(/}\s*$/, '');
+
+    // use init script instead of setupInterceptor() so ajax requests sent
+    // on page initialization are captured.
+    await browser.addInitScript(function (s) {
+      return (new Function(s))();
+    }, interceptorSetup);
+
+    await browser.addInitScript(function () {
+      window.setsomething = 'yes';
+    });
+    Page.interceptorSetup = true;
+  }
+
   async open(path: string) {
+    await this.setupInterceptor();
+
     const baseUrl = await Website.baseUrl();
 
     if (!/^\//.test(path)) {
@@ -31,7 +61,6 @@ export default class Page {
     let result;
     result = await Website.retry(3, async () => {
       let r = await browser.url(`${baseUrl}${path}`);
-      await browser.setupInterceptor();
       if (await $('#user_login').isExisting()) {
         await Website.login(); // logged out for some reason
         throw new Error('force retry');
