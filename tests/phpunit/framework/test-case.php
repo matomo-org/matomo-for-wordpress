@@ -201,6 +201,9 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			}
 
 			public function &__get( $name ) {
+				if ($name === 'use_mysqli') {
+					throw new \Exception('force');
+				}
 				return $this->original_wpdb->$name;
 			}
 
