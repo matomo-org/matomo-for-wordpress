@@ -101,7 +101,7 @@ add_action(
 );
 
 function matomo_test_utility_plugin_request_overrides() {
-	$override_path = __DIR__ . '../plugins/matomo/.e2e-test-overrides.json';
+	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 
 	if ( ! is_file( $override_path ) ) {
 		return;

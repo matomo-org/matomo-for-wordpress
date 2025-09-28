@@ -55,12 +55,13 @@ export default async function generate() {
   interceptService.before(null, null, browser);
 
   let visitor;
+  let i = 0;
 
   try {
     await Website.setUpWooCommerce();
     await activateWpStatistics();
 
-    for (let i = 0; i < Config.visits; ++i) {
+    for (; i < Config.visits; ++i) {
       interceptService.beforeTest();
 
       visitor = (await Config.visitors.next()).value;
@@ -68,8 +69,7 @@ export default async function generate() {
     }
   } catch (e) {
     console.log(`Failed to execute visits: ${e.message} [URL = ${await browser.getUrl()}]`);
-    await browser.saveFullPageScreen('failure');
-    throw e;
+    await browser.saveFullPageScreen(`failure_visit${i}`);
   } finally {
     await browser.deleteSession();
   }

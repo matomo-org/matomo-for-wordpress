@@ -6,6 +6,7 @@
  *
  */
 
+import Website from '../website.js';
 import Page from './page.js';
 
 export enum Product {
@@ -34,9 +35,17 @@ class BlogProductPage extends Page {
       return exists;
     });
 
-    const checkoutPage = await browser.execute(() => {
-      return window.jQuery && window.jQuery('a:contains("View cart")').attr('href');
-    });
+    let checkoutPage = await Website.retry(3, async () => {
+      let cp = await browser.execute(() => {
+        return window.jQuery ? window.jQuery('a:contains("View cart")').attr('href') : null;
+      });
+
+      if (!cp) {
+        throw new Error('force retry');
+      }
+
+      return cp;
+    }, 500);
     await browser.url(checkoutPage);
 
     await browser.waitUntil(() => {
@@ -61,8 +70,12 @@ class BlogProductPage extends Page {
   }
 
   async checkout() {
-    await browser.execute(() => {
-      window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
+    await Website.retry(3, async () => {
+      await browser.execute(() => {
+        window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
+      });
+
+      return $('input#email,#billing_email').waitForExist({ timeout: 60000 });
     });
   }
 }
