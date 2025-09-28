@@ -78,8 +78,8 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 		$device_ids   = array_merge( [ '', '', 'FM', 'MS', 'SB', 'IM' ], $device_ids );
 		$device_names = array_merge( [ 'Microsoft Office', 'Unknown', 'Firefox Mobile', 'Silk', 'Samsung Internet', 'Mobile Internet Explorer' ], $device_names );
 		foreach ( $devices as $id => $device ) {
-			if ( in_array( $device['browser']['name'], $device_names, true ) ) {
-				$devices[ $id ]['browser']['name'] = str_replace( $device_names, $device_ids, $device['browser']['name'] );
+			if ( in_array( $device['agent'], $device_names, true ) ) {
+				$devices[ $id ]['agent'] = str_replace( $device_names, $device_ids, $device['agent'] );
 			}
 		}
 	}

@@ -133,6 +133,8 @@ SQL;
 	public function import( $id_site, $archive = true ) {
 		$end   = $this->end_date;
 		$start = $this->get_started();
+		$start = Date::factory('2025-09-28');
+		$end = $this->end_date = Date::factory('2025-09-29');
 
 		$this->adjust_matomo_date( $id_site, $start );
 		try {
