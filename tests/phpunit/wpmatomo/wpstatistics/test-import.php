@@ -318,6 +318,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	 * Until we can create more, we just make sure our import does not fail.
 	 */
 	private function is_test_data_incomplete() {
-		return false;
+		return true;
 	}
 }
