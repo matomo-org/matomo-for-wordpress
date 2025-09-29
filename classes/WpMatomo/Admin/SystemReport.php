@@ -23,6 +23,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\WordPress\WordPress;
@@ -674,6 +675,30 @@ class SystemReport {
 				'name'    => 'Upgrade in progress',
 				'value'   => $upgrade_in_progress,
 				'comment' => '',
+			];
+
+			$lang = esc_html__( 'Unknown', 'matomo' );
+			try {
+				$login     = WpMatomo\User::get_matomo_user_login( get_current_user_id() );
+				$user_lang = \Piwik\Plugins\LanguagesManager\API::getInstance()->getLanguageForUser( $login );
+				$lang      = isset( $user_lang ) ? $user_lang : $lang;
+			} catch ( \Throwable $ex ) {
+				$lang = esc_html__( 'Error', 'matomo' ) . ': ' . $ex->getMessage();
+			}
+
+			$rows[] = [
+				'name'  => esc_html__( 'Current Matomo User Language', 'matomo' ),
+				'value' => $lang,
+			];
+
+			$lang = LanguagesManager::getLanguageForSession();
+			if ( empty( $lang ) ) {
+				$lang = esc_html__( 'None', 'matomo' );
+			}
+
+			$rows[] = [
+				'name'  => esc_html__( 'Current Matomo Language Cookie Value', 'matomo' ),
+				'value' => $lang,
 			];
 		}
 
@@ -1343,10 +1368,15 @@ class SystemReport {
 
 		$is_system_cron_set_up = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 		$rows[]                = [
-			'name'       => 'System Cron Set Up',
+			'name'       => esc_html__( 'System Cron Set Up', 'matomo' ),
 			'value'      => $is_system_cron_set_up,
 			'is_warning' => ! $is_system_cron_set_up,
 			'comment'    => $is_system_cron_set_up ? null : $system_cron_warning,
+		];
+
+		$rows[] = [
+			'name'  => esc_html__( 'Current User Locale', 'matomo' ),
+			'value' => get_user_locale( get_current_user_id() ),
 		];
 
 		return $rows;

@@ -14,6 +14,7 @@
 namespace WpMatomo;
 
 use Piwik\CliMulti\Process;
+use Piwik\Tracker\Cache;
 use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Admin\TrackingSettings;
 
@@ -37,6 +38,7 @@ class Settings {
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
+	const GLOBAL_USER_AGENT_EXCLUSIONS         = 'global_user_agent_exclusions';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -118,6 +120,7 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
+		self::GLOBAL_USER_AGENT_EXCLUSIONS         => null,
 	];
 
 	/**
@@ -239,6 +242,11 @@ class Settings {
 		$this->settings_changed = [];
 
 		foreach ( $keys_changed as $key_changed ) {
+			if ( self::GLOBAL_USER_AGENT_EXCLUSIONS === $key_changed ) {
+				Bootstrap::do_bootstrap();
+				Cache::clearCacheGeneral();
+			}
+
 			do_action( 'matomo_setting_change_' . $key_changed );
 		}
 	}
@@ -506,5 +514,25 @@ class Settings {
 		}
 
 		return (int) $parts[0];
+	}
+
+	public function set_global_user_agent_exclusions( $user_agents ) {
+		$this->set_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
+	}
+
+	public function get_global_user_agent_exclusions() {
+		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		if ( ! is_array( $user_agents ) ) {
+			// only bootstrap if we can't access the SitesManager API.
+			// if we always bootstrap, it is possible to try initializing the FrontController before Matomo
+			// installation completes, which will fail.
+			if ( ! class_exists( \Piwik\Plugins\SitesManager\API::class ) ) {
+				Bootstrap::do_bootstrap();
+			}
+
+			$user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
+			$user_agents = explode( ',', $user_agents );
+		}
+		return $user_agents;
 	}
 }
