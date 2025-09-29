@@ -109,8 +109,6 @@ async function* instantiateVisitors(visitorNames: Generator<string>): AsyncGener
     yield new VisitorType();
   }
 }
-
-// TODO: document config structure somewhere
 export class Config {
   public visits: number;
   public visitors: AsyncGenerator<VisitorInterface>;
@@ -131,7 +129,7 @@ export class Config {
   }
 
   getVisitsConfig(config: Record<string, string>): number {
-    const visitsConfig = config.visits || process.env.MWP_TEST_DATA_VISITS_COUNT || '100'; // TODO: document
+    const visitsConfig = config.visits || process.env.MWP_TEST_DATA_VISITS_COUNT || '100';
     if (visitsConfig === 'random') {
       return Math.floor(Math.random() * 1000) + 1;
     }
