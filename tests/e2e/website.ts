@@ -331,16 +331,21 @@ class Website {
     await browser.url(`${await this.baseUrl()}/wp-admin/admin.php?page=wc-admin`);
     await $('.woocommerce-homescreen .woocommerce-task-list__item-title').waitForExist({ timeout: 30000 });
 
-    await browser.execute(() => {
-      window.jQuery('.woocommerce-task-list__item-title:contains(Launch your store)').closest('li')[0].click();
+    const hasLaunchYourStore = await browser.execute(() => {
+      return window.jQuery('.woocommerce-task-list__item-title:contains(Launch your store)').length > 0;
     });
+    if (hasLaunchYourStore) {
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-task-list__item-title:contains(Launch your store)').closest('li')[0].click();
+      });
 
-    await $('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group').waitForExist({ timeout: 30000 });
-    await browser.execute(() => {
-      window.jQuery('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group button')[0].click();
-    });
+      await $('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group').waitForExist({timeout: 30000});
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-edit-site-sidebar-navigation-screen-launch-store-button__group button')[0].click();
+      });
 
-    await $('.woocommerce-launch-store__congrats-heading').waitForExist({ timeout: 30000 });
+      await $('.woocommerce-launch-store__congrats-heading').waitForExist({ timeout: 30000 });
+    }
 
     this.isWooCommerceSetup = true;
   }
