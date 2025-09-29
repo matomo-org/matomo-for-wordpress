@@ -24,7 +24,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 	private function can_be_tested() {
 		if ( is_null( $this->enabled ) ) {
-			$this->enabled = file_exists( $this->plugin_file() );
+			$this->enabled = file_exists( $this->plugin_file() ) && ! $this->is_test_data_incomplete();
 		}
 
 		return $this->enabled;
