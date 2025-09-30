@@ -1,4 +1,11 @@
 <?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ *
+ */
 
 namespace WpMatomo\WpStatistics;
 
@@ -133,8 +140,6 @@ SQL;
 	public function import( $id_site, $archive = true ) {
 		$end   = $this->end_date;
 		$start = $this->get_started();
-		$start = Date::factory('2025-09-28');
-		$end = $this->end_date = Date::factory('2025-09-29');
 
 		$this->adjust_matomo_date( $id_site, $start );
 		try {
