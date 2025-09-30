@@ -116,6 +116,14 @@ function matomo_test_utility_plugin_request_overrides() {
 	if ( ! empty( $contents['userAgent'] ) ) {
 		$_SERVER['HTTP_USER_AGENT'] = $contents['userAgent'];
 	}
+
+	// wp-statistics specific query parameter override
+	if ( ! empty( $contents['referrer'] ) ) {
+		$encoded_referrer     = base64_encode( $contents['referrer'] );
+		$_GET['referred']     = $encoded_referrer;
+		$_POST['referred']    = $encoded_referrer;
+		$_REQUEST['referred'] = $encoded_referrer;
+	}
 }
 
 // handle ip address and user agent overrides

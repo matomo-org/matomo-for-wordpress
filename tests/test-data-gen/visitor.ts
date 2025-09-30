@@ -14,10 +14,12 @@ export default abstract class Visitor {
 
   private ip: string;
   private userAgent: string;
+  private referrer: string;
 
   constructor() {
     this.ip = Config.ipAddresses.next().value;
     this.userAgent = Config.userAgents.next().value;
+    this.referrer = Config.referrers.next().value;
   }
 
   async execute() {
@@ -25,9 +27,11 @@ export default abstract class Visitor {
 
     const originalIpAddressOverride = Page.ipAddressOverride;
     const originalUserAgentOverride = Page.userAgentOverride;
+    const originalReferrerOverride = Page.referrerOverride;
 
     Page.ipAddressOverride = this.ip;
     Page.userAgentOverride = this.userAgent;
+    Page.referrerOverride = this.referrer;
 
     try {
       await browser.deleteCookies();
@@ -39,6 +43,7 @@ export default abstract class Visitor {
     } finally {
       Page.ipAddressOverride = originalIpAddressOverride;
       Page.userAgentOverride = originalUserAgentOverride;
+      Page.referrerOverride = originalReferrerOverride;
 
       visitEnd();
     }
