@@ -19,6 +19,7 @@ export default class Page {
 
   public static ipAddressOverride: string|null = null;
   public static userAgentOverride: string|null = null;
+  public static referrerOverride: string|null = null;
 
   public static interceptorSetup = false;
 
@@ -42,9 +43,6 @@ export default class Page {
       return (new Function(s))();
     }, interceptorSetup);
 
-    await browser.addInitScript(function () {
-      window.setsomething = 'yes';
-    });
     Page.interceptorSetup = true;
   }
 
@@ -57,7 +55,7 @@ export default class Page {
       path = `/${path}`;
     }
 
-    this.overrideRequestDetails(Page.ipAddressOverride, Page.userAgentOverride);
+    this.overrideRequestDetails(Page.ipAddressOverride, Page.userAgentOverride, Page.referrerOverride);
 
     let result;
     result = await Website.retry(3, async () => {
@@ -223,10 +221,11 @@ export default class Page {
     });
   }
 
-  overrideRequestDetails(ipAddress: string, userAgent: string) {
+  overrideRequestDetails(ipAddress: string, userAgent: string, referrer: string) {
     const overrides = {
       ipAddress,
       userAgent,
+      referrer,
     };
 
     const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');

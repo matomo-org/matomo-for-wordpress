@@ -63,6 +63,25 @@ const USER_AGENTS = [
   'Mozilla/5.0 (iPad; CPU OS 14_7_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/136.0 Mobile/15E148 Safari/605.1.15',
 ];
 
+const REFERRERS = [
+  'http://facebook.com/whatever',
+  'http://www.facebook.com/another/path',
+  null, // direct entry
+  'http://fb.me/?q=sdlfjs&n=slfjsd',
+  'http://twitter.com/whatever2',
+  'http://someothersite.com/path',
+  null,
+  'http://www.twitter.com/index?a=2334',
+  'http://t.co/id/?y=dsfs',
+  'http://www.flickr.com',
+  null,
+  'http://xanga.com',
+  'http://skyrock.com',
+  'http://mixi.jp',
+  'http://example.com',
+  null,
+];
+
 function* randomElements<T>(values: T[]): Generator<T> {
   while (true) {
     const n = Math.floor(Math.random() * values.length);
@@ -116,6 +135,7 @@ export class Config {
   public userAgents: Generator<string>;
   public products: Generator<Product>;
   public posts: Generator<Post>;
+  public referrers: Generator<string>;
   public verbose: boolean;
 
   constructor(config: Record<string, string> = {}) {
@@ -125,6 +145,7 @@ export class Config {
     this.userAgents = this.getUserAgentsConfig(config);
     this.products = this.getProductsConfig(config);
     this.posts = this.getPostsConfig(config);
+    this.referrers = this.getReferrersConfig(config);
     this.verbose = !! config.verbose;
   }
 
@@ -148,7 +169,7 @@ export class Config {
     const series = this.getSeriesConfig(
       'visitors',
       config.visitors || process.env.MWP_VISITORS_SERIES_TYPE || 'sequential',
-      allVisitorTypes
+      allVisitorTypes,
     );
 
     return instantiateVisitors(series);
@@ -158,7 +179,7 @@ export class Config {
     const series = this.getSeriesConfig(
       'ip_addresses',
       config.ip_addresses || process.env.MWP_IP_ADDRESSES_SERIES_TYPE || 'sequential',
-      IP_ADDRESSES
+      IP_ADDRESSES,
     );
     return addLastByteToIp(series);
   }
@@ -167,7 +188,7 @@ export class Config {
     return this.getSeriesConfig(
       'user_agents',
       config.user_agents || process.env.MWP_USER_AGENTS_SERIES_TYPE || 'sequential',
-      USER_AGENTS
+      USER_AGENTS,
     );
   }
 
@@ -183,7 +204,15 @@ export class Config {
     return this.getSeriesConfig(
       'posts',
       config.posts || process.env.MWP_POSTS_SERIES_TYPE || 'sequential',
-      Object.values(Post)
+      Object.values(Post),
+    );
+  }
+
+  getReferrersConfig(config: Record<string, string>): Generator<string> {
+    return this.getSeriesConfig(
+      'referrers',
+      config.referrers || process.env.MWP_POSTS_SERIES_TYPE || 'sequential',
+      REFERRERS,
     );
   }
 
