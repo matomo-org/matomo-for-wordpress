@@ -33,7 +33,8 @@ export default class Page {
       // if \r or \n are in the code. so we use ordinal values to workaround this.
       .replace("'\\r\\n'", 'String.fromCharCode(13) + String.fromCharCode(10)')
       .replace('function setup(done) {', '')
-      .replace(/}\s*$/, '');
+      .replace(/}\s*$/, '')
+      .replace('done(window[NAMESPACE]);', '');
 
     // use init script instead of setupInterceptor() so ajax requests sent
     // on page initialization are captured.
