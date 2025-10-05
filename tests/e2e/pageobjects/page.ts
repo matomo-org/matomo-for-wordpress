@@ -6,16 +6,56 @@
  *
  */
 
-import {$, browser} from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import interceptor from 'wdio-intercept-service/lib/interceptor.js';
 import Website from '../website.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default class Page {
+
+  public static ipAddressOverride: string|null = null;
+  public static userAgentOverride: string|null = null;
+  public static referrerOverride: string|null = null;
+
+  public static interceptorSetup = false;
+
+  async setupInterceptor() {
+    if (Page.interceptorSetup) {
+      return;
+    }
+
+    const interceptorSetup = interceptor.setup
+      .toString()
+      // for some reason, the script fails to execute as a preload script
+      // if \r or \n are in the code. so we use ordinal values to workaround this.
+      .replace("'\\r\\n'", 'String.fromCharCode(13) + String.fromCharCode(10)')
+      .replace('function setup(done) {', '')
+      .replace(/}\s*$/, '')
+      .replace('done(window[NAMESPACE]);', '');
+
+    // use init script instead of setupInterceptor() so ajax requests sent
+    // on page initialization are captured.
+    await browser.addInitScript(function (s) {
+      return (new Function(s))();
+    }, interceptorSetup);
+
+    Page.interceptorSetup = true;
+  }
+
   async open(path: string) {
+    await this.setupInterceptor();
+
     const baseUrl = await Website.baseUrl();
 
     if (!/^\//.test(path)) {
       path = `/${path}`;
     }
+
+    this.overrideRequestDetails(Page.ipAddressOverride, Page.userAgentOverride, Page.referrerOverride);
 
     let result;
     result = await Website.retry(3, async () => {
@@ -179,5 +219,16 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').show();
       window.jQuery('#footer-upgrade').show();
     });
+  }
+
+  overrideRequestDetails(ipAddress: string, userAgent: string, referrer: string) {
+    const overrides = {
+      ipAddress,
+      userAgent,
+      referrer,
+    };
+
+    const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');
+    fs.writeFileSync(overrideFile, JSON.stringify(overrides));
   }
 }

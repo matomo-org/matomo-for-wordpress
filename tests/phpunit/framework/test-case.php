@@ -169,6 +169,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		$wpdb = new class( $this->original_wpdb ) {
 			private $original_wpdb;
 
+			private $use_mysqli = true; // see class-wpdb.php
+
 			public function __construct( $original_wpdb ) {
 				$this->original_wpdb = $original_wpdb;
 			}
@@ -201,6 +203,9 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			}
 
 			public function &__get( $name ) {
+				if ( 'use_mysqli' === $name ) {
+					return $this->use_mysqli;
+				}
 				return $this->original_wpdb->$name;
 			}
 

@@ -616,12 +616,13 @@ EOF
   \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
   \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
-  # install GeoLite2 for matomo/wp-statisitcs
-  if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb ]; then
+  # install GeoLite2 for wp-statisitcs
+  if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb ]; then
     echo "downloading GeoLite2-City.mmdb..."
 
-    mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo
-    curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb
+    mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics
+    curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    gunzip /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
   fi
 
   # set allow_wp_app_password_auth tracker config, used in tests

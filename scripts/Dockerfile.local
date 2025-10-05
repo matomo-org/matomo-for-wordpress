@@ -8,6 +8,8 @@ RUN if (echo "$PHP_VERSION" | grep -Eq '^7\.2\.'); then  \
   fi
 
 RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git subversion
+RUN apt-get install -y --no-install-recommends mariadb-client-compat || \
+  apt-get install -y --no-install-recommends default-mysql-client
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd
 

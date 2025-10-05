@@ -99,3 +99,32 @@ add_action(
 		wp_send_json( 'ok' );
 	}
 );
+
+function matomo_test_utility_plugin_request_overrides() {
+	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
+
+	if ( ! is_file( $override_path ) ) {
+		return;
+	}
+
+	$contents = file_get_contents( $override_path );
+	$contents = json_decode( $contents, true );
+	if ( ! empty( $contents['ipAddress'] ) ) {
+		$_SERVER['REMOTE_ADDR'] = $contents['ipAddress'];
+	}
+
+	if ( ! empty( $contents['userAgent'] ) ) {
+		$_SERVER['HTTP_USER_AGENT'] = $contents['userAgent'];
+	}
+
+	// wp-statistics specific query parameter override
+	if ( ! empty( $contents['referrer'] ) ) {
+		$encoded_referrer     = base64_encode( $contents['referrer'] );
+		$_GET['referred']     = $encoded_referrer;
+		$_POST['referred']    = $encoded_referrer;
+		$_REQUEST['referred'] = $encoded_referrer;
+	}
+}
+
+// handle ip address and user agent overrides
+matomo_test_utility_plugin_request_overrides();
