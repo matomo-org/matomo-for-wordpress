@@ -12,6 +12,7 @@ use WpMatomo\WpStatistics\Importer;
 use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
+use WpMatomo\WpStatistics\IncompatibleWpStatisticsVersion;
 
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
@@ -143,7 +144,11 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$id_site  = $site->get_current_matomo_site_id();
 			// do not run the archiving for performances issues and because we test only daily reports
 			$importer->set_should_rethrow( true );
-			$importer->import( $id_site, false );
+			try {
+				$importer->import( $id_site, false );
+			} catch ( IncompatibleWpStatisticsVersion $ex ) {
+				$this->enabled = false;
+			}
 		}
 	}
 
@@ -259,6 +264,34 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
+	}
+
+	/**
+	 * @dataProvider getTestDataForCheckCompatibleVersion
+	 */
+	public function test_check_compatible_version( $wp_statistics_version, $should_throw ) {
+		if ( $should_throw ) {
+			$this->expectException( IncompatibleWpStatisticsVersion::class );
+			$this->expectExceptionMessage( 'Incompatible WP Statistics version' );
+		} else {
+			$this->expectNotToPerformAssertions();
+		}
+
+		$importer = new Importer( new \Psr\Log\NullLogger() );
+		$importer->set_should_rethrow( true );
+		$importer->check_compatible_version( $wp_statistics_version );
+	}
+
+	public function getTestDataForCheckCompatibleVersion() {
+		return [
+			[ '', true ],
+			[ 'garbagevalue', true ],
+			[ '4.3.2', true ],
+			[ '14.15.1', true ],
+			[ '14.15.2', false ],
+			[ '14.15.3', false ],
+			[ '15.2.0', false ],
+		];
 	}
 
 	protected function fetch_report( $report_name, $method ) {

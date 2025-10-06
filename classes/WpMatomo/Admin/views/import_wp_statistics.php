@@ -20,16 +20,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @var string $matomo_wp_statistics_version
+ * @var bool $matomo_is_compatible_with_wp_statistics
+ */
 ?>
 
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
 
+	<?php
+	if ( ! $matomo_is_compatible_with_wp_statistics ) {
+		?>
+	<div class="notice notice-warning is-dismissible">
+		<p>
+			<?php
+			echo esc_html(
+				sprintf( __( 'The currently installed WP Statistics version (%1$s) is too old. Please update to the latest version before running the importer.', 'matomo' ), $matomo_wp_statistics_version )
+			);
+			?>
+		</p>
+	</div>
+		<?php
+	}
+	?>
+
 	<h1><?php esc_html_e( 'Import your WP Statistics data into Matomo', 'matomo' ); ?></h1>
 
-		<h2>1. <?php esc_html_e( 'Install the WP-CLI', 'matomo' ); ?></h2>
+	<h2>1. <?php esc_html_e( 'Install the WP-CLI', 'matomo' ); ?></h2>
 
-		<?php echo sprintf( esc_html__( 'The WP-CLI is the official WordPress client command line tool. Follow these installation instructions: %s.', 'matomo' ), '<a href="https://wp-cli.org/#installing" rel="noreferrer noopener" target="_blank">here</a>' ); ?>
+	<?php echo sprintf( esc_html__( 'The WP-CLI is the official WordPress client command line tool. Follow these installation instructions: %s.', 'matomo' ), '<a href="https://wp-cli.org/#installing" rel="noreferrer noopener" target="_blank">here</a>' ); ?>
+
 	<h2>2. <?php esc_html_e( 'Run the import', 'matomo' ); ?></h2>
 
 	<?php echo sprintf( esc_html__( 'Run the command %1$s or depending on your set-up you may need to run it like this: %2$s.', 'matomo' ), '<code>php wp-cli.phar matomo importWpStatistics</code>', '<code>wp matomo importWpStatistics</code>' ); ?>

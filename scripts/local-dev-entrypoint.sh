@@ -400,7 +400,6 @@ EOF
     if php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
       WP_STATS_VERSION="--version=13.2.16"
     elif php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
-      echo "php version is: $PHP_VERSION"
       WP_STATS_VERSION="--version=14.5.2"
     fi
 
