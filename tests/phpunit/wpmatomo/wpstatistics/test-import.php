@@ -13,9 +13,6 @@ use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 
-/**
- * @group only
- */
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
 	 * static due to multiple tests instanciations
@@ -34,7 +31,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 	private function can_be_tested() {
 		if ( is_null( $this->enabled ) ) {
-			$this->enabled = file_exists( $this->plugin_file() ) && ! $this->is_test_data_incomplete();
+			$this->enabled = file_exists( $this->plugin_file() );
 		}
 
 		return $this->enabled;
@@ -182,10 +179,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
@@ -195,10 +188,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
@@ -206,10 +195,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	public function test_cities_found() {
 		if ( ! $this->can_be_tested() ) {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
-		}
-
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCity' );
@@ -222,10 +207,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'DevicesDetection', 'getBrowsers' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
@@ -235,10 +216,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'DevicesDetection', 'getOsVersions' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
@@ -246,10 +223,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	public function test_referrers_found() {
 		if ( ! $this->can_be_tested() ) {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
-		}
-
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
 		}
 
 		$report = $this->fetch_report( 'Referrers', 'getWebsites' );
@@ -263,10 +236,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'Referrers', 'getSearchEngines' );
 		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
@@ -274,10 +243,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	public function test_visitors_found() {
 		if ( ! $this->can_be_tested() ) {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
-		}
-
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
 		}
 
 		$report = $this->fetch_report( 'VisitsSummary', 'get' );
@@ -290,10 +255,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 	public function test_pages_found() {
 		if ( ! $this->can_be_tested() ) {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
-		}
-
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
 		}
 
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
@@ -321,13 +282,5 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			}
 		};
 		$install->plugin_upgrades();
-	}
-
-	/**
-	 * The newest version of wp-statistics no longer upgrades our test data.
-	 * Until we can create more, we just make sure our import does not fail.
-	 */
-	private function is_test_data_incomplete() {
-		return false;
 	}
 }
