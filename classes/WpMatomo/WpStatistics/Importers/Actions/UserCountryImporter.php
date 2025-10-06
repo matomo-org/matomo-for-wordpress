@@ -29,6 +29,9 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	protected $visitors = null;
 
+	/**
+	 * @var Geoip2
+	 */
 	private $geoip;
 
 	public function __construct( LoggerInterface $logger ) {
@@ -96,13 +99,5 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		$this->insert_record( Archiver::COUNTRY_RECORD_NAME, $countries, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
 		$this->insert_numeric_records( [ Archiver::DISTINCT_COUNTRIES_METRIC => $countries->getRowsCount() ] );
 		Common::destroy( $countries );
-	}
-
-	private function get_ip( $visitor ) {
-		if ( isset( $visitor['IP'] ) ) {
-			return $visitor['IP'];
-		}
-
-		return $visitor['ip']['value'];
 	}
 }

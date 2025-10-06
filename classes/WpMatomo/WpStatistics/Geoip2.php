@@ -104,6 +104,6 @@ class Geoip2 {
 	}
 
 	public function get_matomo_city_code( $city, $region ) {
-		return $city . '|' . $region; // TODO: longitude latitude?
+		return $city . '|' . $region;
 	}
 }
