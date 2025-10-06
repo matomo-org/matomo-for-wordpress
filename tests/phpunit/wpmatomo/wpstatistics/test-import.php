@@ -307,7 +307,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			'parameters' => array(),
 		);
 
-		return $this->data->fetch_report( $meta, 'day', '2025-09-28', 'nb_visits', 10000 );
+		return $this->data->fetch_report( $meta, 'day', '2025-09-30', 'nb_visits', 10000 );
 	}
 
 	private function upgrade_wp_stats() {
