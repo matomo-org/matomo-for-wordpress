@@ -69,12 +69,7 @@ class Geoip2 {
 		}
 	}
 
-	/**
-	 * @param string $ip
-	 * @param string $region
-	 * @return string
-	 */
-	public function get_matomo_region_code( $country, $region_name ) { // TODO: change
+	public function get_matomo_region_code( $country, $region_name ) {
 		try {
 			$country = strtoupper( $country );
 			$regions = include dirname( MATOMO_ANALYTICS_FILE ) . '/app/plugins/GeoIp2/data/isoRegionNames.php';
