@@ -2,13 +2,11 @@
 
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
-use Matomo\Network\IPUtils;
 use Piwik\Common;
 use Piwik\Config as PiwikConfig;
 use Piwik\Date;
 use Psr\Log\LoggerInterface;
 use WP_STATISTICS\GeoIP;
-use WP_STATISTICS\IP;
 use WpMatomo\WpStatistics\DataConverters\UserCityConverter;
 use WpMatomo\WpStatistics\DataConverters\UserCountryConverter;
 use WpMatomo\WpStatistics\DataConverters\UserRegionConverter;
