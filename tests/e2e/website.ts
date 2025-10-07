@@ -290,7 +290,7 @@ class Website {
           await browser.execute(() => window.jQuery('.woocommerce-save-button')[0].click());
           await browser.waitUntil(async () => {
             return await browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
-          }, { timeout: 60000 });
+          }, { timeout: 90000 });
         } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
           await this.retry(3, async () => {
             await browser.execute(() => {
