@@ -2,8 +2,8 @@
 
 ## Code Status
 
-[![Build Status Develop](https://img.shields.io/github/actions/workflow/status/matomo-org/matomo-for-wordpress/tests.yml?branch=develop&style=flat-square&label=build%20develop)](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml?query=branch%3Adevelop)
-[![Build Status Live](https://img.shields.io/github/actions/workflow/status/matomo-org/matomo-for-wordpress/tests.yml?branch=live&style=flat-square&label=build%20live)](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml?query=branch%3Alive)
+[![Matomo for WordPress Tests](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml/badge.svg?branch=develop)](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml?query=branch%3Adevelop)
+[![Matomo for WordPress Tests](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml/badge.svg?branch=live)](https://github.com/matomo-org/matomo-for-wordpress/actions/workflows/tests.yml?query=branch%3Alive)
 
 ## Description
 
