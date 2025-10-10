@@ -78,7 +78,7 @@ class DbTable implements \SessionHandlerInterface
     public function read($id)
     {
         $id = $this->hashSessionId($id);
-        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?' . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
+        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM `' . $this->config['name'] . '`' . ' WHERE ' . $this->config['primary'] . ' = ?' . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
         $result = $this->fetchOne($sql, array($id, time()));
         if (!$result) {
             $result = '';
@@ -137,7 +137,7 @@ class DbTable implements \SessionHandlerInterface
     public function destroy($id) : bool
     {
         $id = $this->hashSessionId($id);
-        $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?';
+        $sql = 'DELETE FROM `' . $this->config['name'] . '` WHERE ' . $this->config['primary'] . ' = ?';
         $this->query($sql, array($id));
         return \true;
     }
@@ -151,7 +151,7 @@ class DbTable implements \SessionHandlerInterface
     #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
-        $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
+        $sql = 'DELETE FROM `' . $this->config['name'] . '`' . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
         $this->query($sql, array(time()));
         return \true;
     }

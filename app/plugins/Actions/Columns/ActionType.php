@@ -28,9 +28,9 @@ class ActionType extends ActionDimension
     protected $nameSingular = 'Actions_ActionType';
     protected $namePlural = 'Actions_ActionTypes';
     protected $category = 'General_Actions';
-    public function __construct()
+    public function getAcceptValues()
     {
-        $this->acceptValues = 'A type of action, such as: pageviews, contents, sitesearches, events, outlinks, downloads';
+        return Piwik::translate('Actions_ActionTypeSegmentHelp', 'pageviews, contents, sitesearches, events, outlinks, downloads');
     }
     public function getEnumColumnValues()
     {

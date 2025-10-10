@@ -19,13 +19,13 @@ class Manager
 {
     public const MAX_NOTIFICATIONS_IN_SESSION = 30;
     /**
-     * @var SessionNamespace
+     * @var ?SessionNamespace
      */
     private static $session = null;
     /**
-     * @var Notification[]
+     * @var array<string, Notification>
      */
-    private static $notifications = array();
+    private static $notifications = [];
     /**
      * Posts a notification that will be shown in Piwik's status bar. If a notification with the same ID
      * has been posted and has not been closed/removed, it will be replaced with `$notification`.
@@ -38,7 +38,7 @@ class Manager
      *                   pending ones.
      * @api
      */
-    public static function notify($id, Notification $notification)
+    public static function notify($id, Notification $notification) : bool
     {
         self::checkId($id);
         self::removeOldestNotificationsIfThereAreTooMany();
@@ -49,7 +49,7 @@ class Manager
      *
      * @param string $id The notification ID, see {@link notify()}.
      */
-    public static function cancel($id)
+    public static function cancel($id) : void
     {
         self::checkId($id);
         self::removeNotification($id);
@@ -60,21 +60,21 @@ class Manager
      * Call this method after the notifications have been
      * displayed to make sure temporary notifications won't be displayed twice.
      */
-    public static function cancelAllNonPersistent()
+    public static function cancelAllNonPersistent() : void
     {
-        foreach (static::getAllNotifications() as $id => $notification) {
+        foreach (self::getAllNotifications() as $id => $notification) {
             if (Notification::TYPE_PERSISTENT != $notification->type) {
-                static::removeNotification($id);
+                self::removeNotification($id);
             }
         }
     }
     /**
      * Determine all notifications that needs to be displayed. They are sorted by priority. Highest priorities first.
-     * @return \ArrayObject
+     * @return array<string, Notification>
      */
-    public static function getAllNotificationsToDisplay()
+    public static function getAllNotificationsToDisplay() : array
     {
-        $notifications = static::getAllNotifications();
+        $notifications = self::getAllNotifications();
         uasort($notifications, function ($n1, $n2) {
             /** @var Notification $n1 */
             /** @var Notification $n2 */
@@ -89,7 +89,7 @@ class Manager
      * @param $id
      * @throws \Exception In case id is empty or if id contains non word characters
      */
-    private static function checkId($id)
+    private static function checkId($id) : void
     {
         if (empty($id)) {
             throw new \Exception('Notification ID is empty.');
@@ -98,7 +98,7 @@ class Manager
             throw new \Exception('Invalid Notification ID given. Only word characters (AlNum + underscore) allowed.');
         }
     }
-    private static function addNotification($id, Notification $notification)
+    private static function addNotification($id, Notification $notification) : bool
     {
         self::saveNotificationAcrossUiRequestsIfNeeded($id, $notification);
         if (count(self::$notifications) >= self::MAX_NOTIFICATIONS_IN_SESSION) {
@@ -109,30 +109,33 @@ class Manager
         self::$notifications[$id] = $notification;
         return \true;
     }
-    private static function saveNotificationAcrossUiRequestsIfNeeded($id, Notification $notification)
+    private static function saveNotificationAcrossUiRequestsIfNeeded($id, Notification $notification) : void
     {
         if (self::isSessionEnabled()) {
             // we need to save even non persistent notifications if possible. Otherwise if there's a redirect
             // a notification is not shown on the next page view
-            $session = static::getSession();
+            $session = self::getSession();
             $session->notifications[$id] = $notification;
         }
     }
-    private static function removeOldestNotificationsIfThereAreTooMany()
+    private static function removeOldestNotificationsIfThereAreTooMany() : void
     {
         if (!self::isSessionEnabled()) {
             return;
         }
         $maxNotificationsInSession = self::MAX_NOTIFICATIONS_IN_SESSION;
-        $session = static::getSession();
+        $session = self::getSession();
         while (count($session->notifications) >= $maxNotificationsInSession) {
             array_shift($session->notifications);
         }
     }
-    private static function getAllNotifications()
+    /**
+     * @return array<string, Notification>
+     */
+    private static function getAllNotifications() : array
     {
         if (!self::isSessionEnabled()) {
-            return array();
+            return [];
         }
         $notifications = self::$notifications;
         foreach ($notifications as $id => $notification) {
@@ -140,49 +143,47 @@ class Manager
             // writable / enabled at the time the notification was added.
             self::saveNotificationAcrossUiRequestsIfNeeded($id, $notification);
         }
-        if (self::isSessionEnabled()) {
-            $session = static::getSession();
-            foreach ($session->notifications as $id => $notification) {
-                $notifications[$id] = $notification;
-            }
+        $session = self::getSession();
+        foreach ($session->notifications as $id => $notification) {
+            $notifications[$id] = $notification;
         }
         return $notifications;
     }
-    private static function removeNotification($id)
+    private static function removeNotification($id) : void
     {
         if (array_key_exists($id, self::$notifications)) {
             unset(self::$notifications[$id]);
         }
         if (self::isSessionEnabled()) {
-            $session = static::getSession();
+            $session = self::getSession();
             if (array_key_exists($id, $session->notifications)) {
                 unset($session->notifications[$id]);
             }
         }
     }
-    private static function isSessionEnabled()
+    private static function isSessionEnabled() : bool
     {
         return Session::isWritable() && Session::isReadable();
     }
-    /**
-     * @return SessionNamespace
-     */
-    private static function getSession()
+    private static function getSession() : SessionNamespace
     {
-        if (!isset(static::$session)) {
-            static::$session = new SessionNamespace('notification');
+        if (!isset(self::$session)) {
+            self::$session = new SessionNamespace('notification');
         }
-        if (empty(static::$session->notifications) && self::isSessionEnabled()) {
-            static::$session->notifications = array();
+        if (empty(self::$session->notifications) && self::isSessionEnabled()) {
+            self::$session->notifications = [];
         }
-        return static::$session;
+        return self::$session;
     }
-    public static function cancelAllNotifications()
+    public static function cancelAllNotifications() : void
     {
         self::$notifications = [];
     }
-    // for tests
-    public static function getPendingInMemoryNotifications()
+    /**
+     * for tests
+     * @return array<string, Notification>
+     */
+    public static function getPendingInMemoryNotifications() : array
     {
         return self::$notifications;
     }

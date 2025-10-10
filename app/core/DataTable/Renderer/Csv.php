@@ -194,7 +194,7 @@ class Csv extends Renderer
         if (is_string($value)) {
             $value = str_replace(["\t"], ' ', $value);
             // surround value with double quotes if it contains a double quote or a commonly used separator
-            if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
+            if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, $this->lineEnd) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
             }
         }

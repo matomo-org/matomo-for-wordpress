@@ -181,7 +181,7 @@ class DbHelper
      */
     public static function tableHasIndex($table, $indexName)
     {
-        $result = \Piwik\Db::get()->fetchOne('SHOW INDEX FROM ' . $table . ' WHERE Key_name = ?', [$indexName]);
+        $result = \Piwik\Db::get()->fetchOne('SHOW INDEX FROM `' . $table . '` WHERE Key_name = ?', [$indexName]);
         return !empty($result);
     }
     /**

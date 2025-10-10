@@ -28,6 +28,7 @@ class Common
     public const REFERRER_TYPE_WEBSITE = 3;
     public const REFERRER_TYPE_CAMPAIGN = 6;
     public const REFERRER_TYPE_SOCIAL_NETWORK = 7;
+    public const REFERRER_TYPE_AI_ASSISTANT = 8;
     // Flag used with htmlspecialchar. See php.net/htmlspecialchars.
     public const HTML_ENCODING_QUOTE_STYLE = \ENT_QUOTES;
     public static $isCliMode = null;
@@ -1069,5 +1070,23 @@ class Common
             return $validLanguages;
         }
         return $validLanguages;
+    }
+    /**
+     * Flatten variously nested arrays into a single flat list of values
+     *
+     * @param array $array
+     * @return array
+     */
+    public static function flattenArray(array $array) : array
+    {
+        $result = [];
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, static::flattenArray($value));
+            } else {
+                $result[] = $value;
+            }
+        }
+        return $result;
     }
 }

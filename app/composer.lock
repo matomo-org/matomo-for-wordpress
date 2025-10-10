@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.7",
+            "version": "1.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
+                "reference": "719026bb30813accb68271fee7e39552a58e9f65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
-                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/719026bb30813accb68271fee7e39552a58e9f65",
+                "reference": "719026bb30813accb68271fee7e39552a58e9f65",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.8"
             },
             "funding": [
                 {
@@ -74,26 +74,22 @@
                 {
                     "url": "https://github.com/composer",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2025-05-26T15:08:54+00:00"
+            "time": "2025-08-20T18:49:47+00:00"
         },
         {
             "name": "composer/semver",
-            "version": "3.4.3",
+            "version": "3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "4313d26ada5e0c4edfbd1dc481a92ff7bff91f12"
+                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/4313d26ada5e0c4edfbd1dc481a92ff7bff91f12",
-                "reference": "4313d26ada5e0c4edfbd1dc481a92ff7bff91f12",
+                "url": "https://api.github.com/repos/composer/semver/zipball/198166618906cb2de69b95d7d47e5fa8aa1b2b95",
+                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +141,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.4.3"
+                "source": "https://github.com/composer/semver/tree/3.4.4"
             },
             "funding": [
                 {
@@ -155,13 +151,9 @@
                 {
                     "url": "https://github.com/composer",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2024-09-19T14:15:21+00:00"
+            "time": "2025-08-20T19:15:30+00:00"
         },
         {
             "name": "davaxi/sparkline",
@@ -715,12 +707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/referrer-spam-list.git",
-                "reference": "e28590ce3c8ef0cfb2f56939e4c99fe0d205b4ad"
+                "reference": "55c13719876f80b64ba268735cd35f61d7ffd6dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/referrer-spam-list/zipball/e28590ce3c8ef0cfb2f56939e4c99fe0d205b4ad",
-                "reference": "e28590ce3c8ef0cfb2f56939e4c99fe0d205b4ad",
+                "url": "https://api.github.com/repos/matomo-org/referrer-spam-list/zipball/55c13719876f80b64ba268735cd35f61d7ffd6dd",
+                "reference": "55c13719876f80b64ba268735cd35f61d7ffd6dd",
                 "shasum": ""
             },
             "replace": {
@@ -736,9 +728,9 @@
             "description": "Community-contributed list of referrer spammers",
             "support": {
                 "issues": "https://github.com/matomo-org/referrer-spam-list/issues",
-                "source": "https://github.com/matomo-org/referrer-spam-list/tree/4.0.1"
+                "source": "https://github.com/matomo-org/referrer-spam-list/tree/master"
             },
-            "time": "2025-08-03T07:43:11+00:00"
+            "time": "2025-09-09T12:29:36+00:00"
         },
         {
             "name": "matomo/searchengine-and-social-list",
@@ -746,12 +738,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/searchengine-and-social-list.git",
-                "reference": "4e6bdf8a6d831fa179b0743803feb6a3deffee90"
+                "reference": "6487a125a1cbf8d957931921165c6f66dd6a092f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/searchengine-and-social-list/zipball/4e6bdf8a6d831fa179b0743803feb6a3deffee90",
-                "reference": "4e6bdf8a6d831fa179b0743803feb6a3deffee90",
+                "url": "https://api.github.com/repos/matomo-org/searchengine-and-social-list/zipball/6487a125a1cbf8d957931921165c6f66dd6a092f",
+                "reference": "6487a125a1cbf8d957931921165c6f66dd6a092f",
                 "shasum": ""
             },
             "replace": {
@@ -768,7 +760,7 @@
                 "issues": "https://github.com/matomo-org/searchengine-and-social-list/issues",
                 "source": "https://github.com/matomo-org/searchengine-and-social-list/tree/master"
             },
-            "time": "2025-05-27T12:49:16+00:00"
+            "time": "2025-09-11T10:57:38+00:00"
         },
         {
             "name": "maxmind-db/reader",
@@ -4163,16 +4155,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.28",
+            "version": "1.12.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "fcf8b71aeab4e1a1131d1783cef97b23a51b87a9"
+                "reference": "0835c625a38ac6484f050077116b6668bc3ab57d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fcf8b71aeab4e1a1131d1783cef97b23a51b87a9",
-                "reference": "fcf8b71aeab4e1a1131d1783cef97b23a51b87a9",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0835c625a38ac6484f050077116b6668bc3ab57d",
+                "reference": "0835c625a38ac6484f050077116b6668bc3ab57d",
                 "shasum": ""
             },
             "require": {
@@ -4217,7 +4209,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T17:15:39+00:00"
+            "time": "2025-09-16T08:46:57+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4518,16 +4510,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.44",
+            "version": "8.5.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e1d7ab63dc670dedf76202bb01b593195b0d4196"
+                "reference": "2da51ff4b15c95e8c060d7dd693fd5899f87a112"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e1d7ab63dc670dedf76202bb01b593195b0d4196",
-                "reference": "e1d7ab63dc670dedf76202bb01b593195b0d4196",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2da51ff4b15c95e8c060d7dd693fd5899f87a112",
+                "reference": "2da51ff4b15c95e8c060d7dd693fd5899f87a112",
                 "shasum": ""
             },
             "require": {
@@ -4596,7 +4588,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.44"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.46"
             },
             "funding": [
                 {
@@ -4620,7 +4612,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-20T14:35:58+00:00"
+            "time": "2025-09-14T06:16:44+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -5453,16 +5445,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.13.2",
+            "version": "3.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "5b5e3821314f947dd040c70f7992a64eac89025c"
+                "reference": "ad545ea9c1b7d270ce0fc9cbfb884161cd706119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/5b5e3821314f947dd040c70f7992a64eac89025c",
-                "reference": "5b5e3821314f947dd040c70f7992a64eac89025c",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ad545ea9c1b7d270ce0fc9cbfb884161cd706119",
+                "reference": "ad545ea9c1b7d270ce0fc9cbfb884161cd706119",
                 "shasum": ""
             },
             "require": {
@@ -5533,7 +5525,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-06-17T22:17:01+00:00"
+            "time": "2025-09-05T05:47:09+00:00"
         },
         {
             "name": "symfony/yaml",

@@ -26,7 +26,7 @@ class Actions
             $id = (int) $id;
         }
         $table = Common::prefixTable('log_action');
-        $sql = "DELETE FROM {$table} WHERE idaction IN (" . implode(",", $idActions) . ")";
+        $sql = "DELETE FROM `{$table}` WHERE idaction IN (" . implode(",", $idActions) . ")";
         Db::query($sql);
     }
 }

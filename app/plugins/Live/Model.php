@@ -121,7 +121,7 @@ class Model
             $where .= ' AND visit_last_action_time <= ?';
             $bind[] = $dateEnd;
         }
-        $dateTime = $readerDb->fetchOne(sprintf('SELECT visit_last_action_time from %s WHERE %s ORDER BY visit_last_action_time DESC LIMIT 1', Common::prefixTable('log_visit'), $where), $bind);
+        $dateTime = $readerDb->fetchOne(sprintf('SELECT visit_last_action_time FROM `%s` WHERE %s ORDER BY visit_last_action_time DESC LIMIT 1', Common::prefixTable('log_visit'), $where), $bind);
         return $dateTime ?: '';
     }
     private function executeLogVisitsQuery($sql, $bind, $segment, $dateStart, $dateEnd, $minTimestamp, $limit)
