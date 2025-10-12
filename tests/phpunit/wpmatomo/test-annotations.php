@@ -80,11 +80,13 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 		$this->assertSame(
 			array(
 				array(
+					'id'              => 1,
+					'idsite'          => 1,
 					'date'            => gmdate( 'Y-m-d' ),
 					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post->ID,
 					'starred'         => 0,
 					'user'            => 'super user was set',
-					'idNote'          => 0,
+					'idNote'          => 1,
 					'canEditOrDelete' => true,
 				),
 			),
