@@ -99,6 +99,10 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 			}
 		}
 
+		if ( ! empty( $errors ) ) {
+			var_export( $errors );
+		}
+
 		$this->assertEquals( [], $errors );
 	}
 
