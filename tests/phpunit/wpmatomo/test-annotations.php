@@ -77,7 +77,7 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 		$post = self::factory()->post->create_and_get( array( 'post_title' => 'hello-world' ) );
 		wp_publish_post( $post );
 
-		$this->assertSame(
+		$this->assertEquals(
 			array(
 				array(
 					'id'              => 1,
@@ -86,8 +86,8 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post->ID,
 					'starred'         => 0,
 					'user'            => 'super user was set',
-					'idNote'          => 1,
 					'canEditOrDelete' => true,
+					'idNote'          => 1,
 				),
 			),
 			$this->get_all_annotations()
