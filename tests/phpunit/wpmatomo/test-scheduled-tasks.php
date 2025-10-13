@@ -84,6 +84,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->settings->force_disable_addhandler = false;
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @noTestMode
+	 */
 	public function test_archive_does_not_fail() {
 		$this->assertEquals( array(), $this->tasks->archive() );
 	}
