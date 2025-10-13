@@ -92,7 +92,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	public function test_archive_does_not_fail() {
 		try {
-			$errors = $this->tasks->archive();
+			$errors = $this->tasks->archive( false, false );
 		} catch ( \Exception $ex ) {
 			if ( strpos( $ex->getMessage(), 'total errors during this script execution' ) === false ) {
 				throw $ex;
