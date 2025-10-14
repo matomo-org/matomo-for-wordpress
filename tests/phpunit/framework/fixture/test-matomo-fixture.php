@@ -58,6 +58,10 @@ class MatomoUnit_Matomo_Fixture {
 			}
 		}
 
+		if ( ! empty( $annotations['method']['noDebugLog'] ) ) {
+			define( 'MATOMO_DEBUG', false );
+		}
+
 		$this->uninstall_matomo();
 
 		clearstatcache();

@@ -93,6 +93,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 * @noTestMode
+	 * @noDebugLog
 	 * @throws \Exception Rethrows.
 	 */
 	public function test_archive_does_not_fail() {
