@@ -157,7 +157,17 @@ define( 'DB_PASSWORD', 'pass' );
 define( 'DB_HOST', getenv('WP_DB_HOST') );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
-define( 'WP_DEBUG', $WP_DEBUG );
+
+\$matomo_is_archive_request = !empty(\$_SERVER['argv'])
+                             && is_array(\$_SERVER['argv'])
+                             && in_array('climulti:request', \$_SERVER['argv'], true);
+
+if ( \$matomo_is_archive_request ) {
+    define( 'WP_DEBUG', false );
+} else {
+    define( 'WP_DEBUG', $WP_DEBUG );
+}
+
 define( 'WP_DEBUG_LOG', $WP_DEBUG_LOG );
 define( 'WP_DEBUG_DISPLAY', $WP_DEBUG_DISPLAY );
 define( 'WP_ENVIRONMENT_TYPE', 'local' );
