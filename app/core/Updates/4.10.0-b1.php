@@ -35,11 +35,11 @@ class Updates_4_10_0_b1 extends PiwikUpdates
     public function getMigrations(Updater $updater)
     {
         $table = Common::prefixTable('report');
-        $invalidCount = Db::fetchOne("SELECT COUNT(*) FROM {$table} WHERE reports = ? OR parameters = ?", ['Array', 'Array']);
+        $invalidCount = Db::fetchOne("SELECT COUNT(*) FROM `{$table}` WHERE reports = ? OR parameters = ?", ['Array', 'Array']);
         if (0 === (int) $invalidCount) {
             return [];
         }
-        return [$this->migration->db->sql("DELETE FROM " . $table . " WHERE reports = 'Array' OR parameters = 'Array'")];
+        return [$this->migration->db->sql("DELETE FROM `{$table}` WHERE reports = 'Array' OR parameters = 'Array'")];
     }
     public function doUpdate(Updater $updater)
     {

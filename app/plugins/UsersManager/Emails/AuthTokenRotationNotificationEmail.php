@@ -11,7 +11,6 @@ namespace Piwik\Plugins\UsersManager\Emails;
 use Piwik\Config;
 use Piwik\Mail;
 use Piwik\Piwik;
-use Piwik\Plugins\LanguagesManager\LanguagesHelper;
 use Piwik\Plugins\UsersManager\TokenNotifications\TokenNotification;
 use Piwik\SettingsPiwik;
 use Piwik\Url;
@@ -36,14 +35,12 @@ class AuthTokenRotationNotificationEmail extends Mail
     }
     private function setUpEmail() : void
     {
-        LanguagesHelper::doWithUserLanguage($this->recipient, function () {
-            $this->setDefaultFromPiwik();
-            $this->addTo($this->recipient);
-            $this->setSubject($this->getDefaultSubject());
-            $this->addReplyTo($this->getFrom(), $this->getFromName());
-            $this->setBodyText($this->getDefaultBodyText());
-            $this->setWrappedHtmlBody($this->getDefaultBodyView());
-        });
+        $this->setDefaultFromPiwik();
+        $this->addTo($this->recipient);
+        $this->setSubject($this->getDefaultSubject());
+        $this->addReplyTo($this->getFrom(), $this->getFromName());
+        $this->setBodyText($this->getDefaultBodyText());
+        $this->setWrappedHtmlBody($this->getDefaultBodyView());
     }
     private function getRotationPeriodPretty() : string
     {
@@ -52,11 +49,15 @@ class AuthTokenRotationNotificationEmail extends Mail
     }
     protected function getManageAuthTokensLink() : string
     {
-        return SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['module' => 'UsersManager', 'action' => 'userSecurity']) . '#authtokens';
+        return $this->getInstanceUrl() . 'index.php?' . Url::getQueryStringFromParameters(['module' => 'UsersManager', 'action' => 'userSecurity']) . '#authtokens';
+    }
+    protected function getInstanceUrl() : string
+    {
+        return SettingsPiwik::getPiwikUrl();
     }
     protected function getDefaultSubject() : string
     {
-        return Piwik::translate('UsersManager_AuthTokenNotificationEmailSubject');
+        return Piwik::translate('UsersManager_AuthTokenNotificationEmailSubjectAll', [$this->getInstanceUrl()]);
     }
     protected function getDefaultBodyText() : string
     {
@@ -73,10 +74,10 @@ class AuthTokenRotationNotificationEmail extends Mail
     }
     protected function assignCommonParameters(View $view) : void
     {
-        $view->tokenName = $this->notification->getTokenName();
-        $view->tokenCreationDate = $this->notification->getTokenCreationDate();
+        $view->tokens = $this->notification->getTokens();
         $view->rotationPeriod = $this->getRotationPeriodPretty();
         $view->manageAuthTokensLink = $this->getManageAuthTokensLink();
+        $view->instanceUrl = $this->getInstanceUrl();
         foreach ($this->emailData as $item => $value) {
             $view->assign($item, $value);
         }

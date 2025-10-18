@@ -75,7 +75,7 @@ abstract class SiteContentDetectionAbstract
      * Returns if the current detection succeeded for the provided site content or not.
      *
      * @param string|null $data
-     * @param array|null  $headers
+     * @param array<string,string>|null $headers
      * @return bool
      */
     public abstract function isDetected(?string $data = null, ?array $headers = null) : bool;
@@ -113,7 +113,7 @@ abstract class SiteContentDetectionAbstract
      * Returns details used to render the recommendation on no data screen
      *
      * @param SiteContentDetector $detector
-     * @return array
+     * @return array{title: string, text: string, button: string}
      */
     public function getRecommendationDetails(SiteContentDetector $detector) : array
     {

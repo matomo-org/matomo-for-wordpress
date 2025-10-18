@@ -23,6 +23,7 @@ class CapabilitiesProvider
         $cacheId = CacheId::siteAware(CacheId::languageAware('Capabilities'));
         $cache = PiwikCache::getTransientCache();
         if (!$cache->contains($cacheId)) {
+            /** @var Capability[] $capabilities */
             $capabilities = [];
             /**
              * Triggered to add new capabilities.
@@ -61,10 +62,11 @@ class CapabilitiesProvider
             $cache->save($cacheId, $capabilities);
             return $capabilities;
         }
+        /** @var Capability[] */
         return $cache->fetch($cacheId);
     }
     /**
-     * @param $capabilityId
+     * @param string $capabilityId
      * @return Capability|null
      * @throws Exception
      */
@@ -90,20 +92,20 @@ class CapabilitiesProvider
         return $ids;
     }
     /**
-     * @param $capabilityId
+     * @param string $capabilityId
      * @return bool
      * @throws Exception
      */
-    public function isValidCapability($capabilityId) : bool
+    public function isValidCapability(string $capabilityId) : bool
     {
         $capabilities = $this->getAllCapabilityIds();
         return \in_array($capabilityId, $capabilities, \true);
     }
     /**
-     * @param $capabilityId
+     * @param string $capabilityId
      * @throws Exception
      */
-    public function checkValidCapability($capabilityId) : void
+    public function checkValidCapability(string $capabilityId) : void
     {
         if (!$this->isValidCapability($capabilityId)) {
             $capabilities = $this->getAllCapabilityIds();

@@ -26,6 +26,8 @@ class VisitorDetails extends VisitorDetailsAbstract
         $visitor['referrerSearchEngineIcon'] = $this->getSearchEngineIcon();
         $visitor['referrerSocialNetworkUrl'] = $this->getSocialNetworkUrl();
         $visitor['referrerSocialNetworkIcon'] = $this->getSocialNetworkIcon();
+        $visitor['referrerAIAssistantUrl'] = $this->getAIAssistantUrl();
+        $visitor['referrerAIAssistantIcon'] = $this->getAIAssistantIcon();
     }
     public function renderVisitorDetails($visitorDetails)
     {
@@ -118,6 +120,21 @@ class VisitorDetails extends VisitorDetailsAbstract
         $socialNetworkUrl = $this->getSocialNetworkUrl();
         if (!is_null($socialNetworkUrl)) {
             return \Piwik\Plugins\Referrers\Social::getInstance()->getLogoFromUrl($socialNetworkUrl);
+        }
+        return null;
+    }
+    protected function getAIAssistantUrl() : ?string
+    {
+        if ($this->getReferrerType() === 'ai' && !empty($this->details['referer_name'])) {
+            return \Piwik\Plugins\Referrers\AIAssistant::getInstance()->getMainUrl($this->details['referer_url']);
+        }
+        return null;
+    }
+    protected function getAIAssistantIcon() : ?string
+    {
+        $aiAssistantUrl = $this->getAIAssistantUrl();
+        if (!is_null($aiAssistantUrl)) {
+            return \Piwik\Plugins\Referrers\AIAssistant::getInstance()->getLogoFromUrl($aiAssistantUrl);
         }
         return null;
     }

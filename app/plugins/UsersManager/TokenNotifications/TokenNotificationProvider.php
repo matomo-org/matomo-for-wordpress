@@ -23,7 +23,7 @@ abstract class TokenNotificationProvider implements \Piwik\Plugins\UsersManager\
     }
     protected abstract function getPeriodThreshold() : ?string;
     protected abstract function getTokensToNotify(string $periodThreshold) : array;
-    protected abstract function createNotification(array $token) : \Piwik\Plugins\UsersManager\TokenNotifications\TokenNotification;
+    protected abstract function createNotification(string $login, array $tokens) : \Piwik\Plugins\UsersManager\TokenNotifications\TokenNotification;
     public function getTokenNotificationsForDispatch() : array
     {
         $periodThreshold = $this->getPeriodThreshold();
@@ -31,9 +31,13 @@ abstract class TokenNotificationProvider implements \Piwik\Plugins\UsersManager\
             return [];
         }
         $tokensToNotify = $this->getTokensToNotify($periodThreshold);
-        $notifications = [];
+        $tokensToNotifyPerUser = [];
         foreach ($tokensToNotify as $t) {
-            $notifications[] = $this->createNotification($t);
+            $tokensToNotifyPerUser[$t['login']][] = $t;
+        }
+        $notifications = [];
+        foreach ($tokensToNotifyPerUser as $login => $tokens) {
+            $notifications[] = $this->createNotification($login, $tokens);
         }
         return $notifications;
     }

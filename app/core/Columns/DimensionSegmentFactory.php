@@ -8,6 +8,7 @@
  */
 namespace Piwik\Columns;
 
+use Piwik\Piwik;
 use Piwik\Plugin\Segment;
 /**
  * A factory to create segments from a dimension.
@@ -124,7 +125,7 @@ class DimensionSegmentFactory
         if (!empty($enum)) {
             $enumValues = array_values($enum);
             $enumValues = array_slice($enumValues, 0, 20);
-            $acceptValues = 'Eg. ' . implode(', ', $enumValues);
+            $acceptValues = Piwik::translate('General_ForExampleShort') . ' ' . implode(', ', $enumValues);
         }
         return $acceptValues;
     }

@@ -183,7 +183,7 @@ class Access
     {
         $access = \Piwik\Common::prefixTable('access');
         $siteTable = \Piwik\Common::prefixTable('site');
-        return "SELECT " . $select . " FROM " . $access . " as t1\n\t\t\t\tJOIN " . $siteTable . " as t2 USING (idsite) WHERE login = ?";
+        return "SELECT " . $select . " FROM `" . $access . "` as t1\n\t\t\t\tJOIN `" . $siteTable . "` as t2 USING (idsite) WHERE login = ?";
     }
     /**
      * Make sure a login name is set

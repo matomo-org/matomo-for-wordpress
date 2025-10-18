@@ -68,7 +68,7 @@ class Sequence
      */
     public function exists()
     {
-        $query = $this->db->query('SELECT * FROM ' . $this->table . ' WHERE name = ?', $this->name);
+        $query = $this->db->query('SELECT * FROM `' . $this->table . '` WHERE name = ?', $this->name);
         return $query->rowCount() > 0;
     }
     /**
@@ -96,7 +96,7 @@ class Sequence
      */
     public function getCurrentId()
     {
-        $sql = 'SELECT value FROM ' . $this->table . ' WHERE name = ?';
+        $sql = 'SELECT value FROM `' . $this->table . '` WHERE name = ?';
         $id = $this->db->fetchOne($sql, array($this->name));
         if (!empty($id) || '0' === $id || 0 === $id) {
             return (int) $id;

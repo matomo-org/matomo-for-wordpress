@@ -22,6 +22,7 @@ use Piwik\Nonce;
 use Piwik\Piwik;
 use Piwik\Plugins\CoreAdminHome\Emails\UserAcceptInvitationEmail;
 use Piwik\Plugins\CoreAdminHome\Emails\UserDeclinedInvitationEmail;
+use Piwik\Plugins\LanguagesManager\LanguagesHelper;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
 use Piwik\Plugins\PrivacyManager\SystemSettings;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
@@ -561,8 +562,10 @@ $passwordHashed = \false)
                 if (!empty($user['invited_by'])) {
                     $invitedBy = $model->getUser($user['invited_by']);
                     if ($invitedBy) {
-                        $mail = StaticContainer::getContainer()->make(UserAcceptInvitationEmail::class, ['login' => $user['invited_by'], 'emailAddress' => $invitedBy['email'], 'userLogin' => $user['login']]);
-                        $mail->safeSend();
+                        LanguagesHelper::doWithUserLanguage($invitedBy['email'], function () use($user, $invitedBy) {
+                            $mail = StaticContainer::getContainer()->make(UserAcceptInvitationEmail::class, ['login' => $user['invited_by'], 'emailAddress' => $invitedBy['email'], 'userLogin' => $user['login']]);
+                            $mail->safeSend();
+                        });
                     }
                 }
                 /**

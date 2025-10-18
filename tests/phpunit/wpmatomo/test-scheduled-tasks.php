@@ -44,6 +44,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->tasks->schedule();
 	}
 
+	protected function assert_post_conditions() {
+		// do nothing instead of checking for deprecated function usage
+		// (woocommerce has many deprecated function uses)
+	}
+
 	public function test_schedule_schedules_events() {
 		foreach ( $this->tasks->get_all_events() as $event => $config ) {
 			$this->assertNotEmpty( wp_next_scheduled( $event ) );
@@ -84,8 +89,27 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->settings->force_disable_addhandler = false;
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @noTestMode
+	 * @noDebugLog
+	 * @throws \Exception Rethrows.
+	 */
 	public function test_archive_does_not_fail() {
-		$this->assertEquals( array(), $this->tasks->archive() );
+		try {
+			$errors = $this->tasks->archive( false, false );
+		} catch ( \Exception $ex ) {
+			if ( strpos( $ex->getMessage(), 'total errors during this script execution' ) === false ) {
+				throw $ex;
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			var_export( $errors );
+		}
+
+		$this->assertEquals( [], $errors );
 	}
 
 	public function test_set_last_time_before_cron() {

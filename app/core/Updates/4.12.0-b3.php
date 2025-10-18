@@ -34,7 +34,7 @@ class Updates_4_12_0_b3 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        $column = Db::fetchRow('SHOW COLUMNS FROM ' . Common::prefixTable('user') . ' LIKE \'idchange_last_viewed\'');
+        $column = Db::fetchRow('SHOW COLUMNS FROM `' . Common::prefixTable('user') . '` LIKE \'idchange_last_viewed\'');
         if (empty($column) || strpos(strtolower($column['Type']), 'int') !== \false || strpos(strtolower($column['Type']), 'unsigned') !== \false) {
             return [];
         }

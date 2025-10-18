@@ -2619,6 +2619,8 @@
         "MultiSites_Must_Be_Activated": "برای ایجاد متن پیامک های آمار وبسایت تان , لطفا افزونه چندسایته را در پیویک فعال نمایید.",
         "PhoneNumbers": "شماره تلفن ها",
         "PluginDescription": "ایجاد و دانلود گزارش اس ام اس های سفارشی و آنها را به تلفن همراه خود را بر اساس بارگیری در این هفته و یا ماهانه روزانه میفرسته.",
+        "SMS_Content_Too_Long": "محتوای پیام بسیار بلند است",
+        "SettingsMenu": "پیام رسانی با موبایل",
         "Settings_APIKey": "کلیدAPI",
         "Settings_CountryCode": "کد کشور",
         "Settings_CredentialNotProvided": "قبل از اینکه شما بتوانید شماره تلفن ایجاد کنید و یا آن را مدیریت نمایید، لطفا Matomo را با اکانت SMS بالا متصل نمایید.",
@@ -2637,10 +2639,7 @@
         "Settings_SuperAdmin": "تنظیمات ابر کاربر",
         "Settings_UpdateOrDeleteAccount": "شما می توانید این اکانت را %1$supdate%2$s یا %3$sdelete%4$s نمایید.",
         "Settings_ValidatePhoneNumber": "تایید",
-        "SettingsMenu": "پیام رسانی با موبایل",
-        "SMS_Content_Too_Long": "محتوای پیام بسیار بلند است",
-        "TopLinkTooltip": "گزارش های تحلیل آماری وب را در ایمیل یا روی موبایل تان دریافت کنید!",
-        "TopMenu": "گزارش های پیامکی و ایمیلی"
+        "TopLinkTooltip": "گزارش های تحلیل آماری وب را در ایمیل یا روی موبایل تان دریافت کنید!"
     },
     "MultiSites": {
         "Evolution": "تکامل",
@@ -2770,11 +2769,8 @@
         "CreateAndScheduleReport": "ایجاد و زمانبندی یک گزارش",
         "CreateReport": "ایجاد گزارش",
         "CustomVisitorSegment": "بخش سفارشی بازدید کنندگان:",
-        "DescriptionOnFirstPage": "توضیحات گزارش در اولین صفحه گزارش نمایش داده خواهد شد.",
         "DisplayFormat_TablesOnly": "نمایش جداول تنها (بدون نمودار)",
         "EmailHello": "درود,",
-        "EmailReports": "گزارش ها را ایمیل کن",
-        "EmailSchedule": "زمانبندی ایمیل",
         "EvolutionGraph": "نمایش نمودارهای گرافیکی برای مقدار %s بالا",
         "FrontPage": "صفحه اول",
         "MonthlyScheduleHelp": "زمانبندی ماهانه: گزارش در اولین روز هر ماه فرستاده خواهد شد.",

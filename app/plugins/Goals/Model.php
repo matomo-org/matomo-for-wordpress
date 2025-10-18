@@ -21,7 +21,7 @@ class Model
     private function getNextIdGoal($idSite)
     {
         $db = $this->getDb();
-        $idGoal = $db->fetchOne("SELECT max(idgoal) + 1 FROM " . $this->table . "\n                                 WHERE idsite = ?", $idSite);
+        $idGoal = $db->fetchOne("SELECT max(idgoal) + 1 FROM `" . $this->table . "`\n                                 WHERE idsite = ?", $idSite);
         if (empty($idGoal)) {
             $idGoal = 1;
         }
@@ -53,18 +53,18 @@ class Model
     {
         $idSite = (int) $idSite;
         $idGoal = (int) $idGoal;
-        $goals = Db::fetchRow("SELECT * FROM " . $this->table . "\n                                WHERE idsite = {$idSite} AND idgoal = {$idGoal}\n                                      AND deleted = 0 LIMIT 1");
+        $goals = Db::fetchRow("SELECT * FROM `" . $this->table . "`\n                                WHERE idsite = {$idSite} AND idgoal = {$idGoal}\n                                      AND deleted = 0 LIMIT 1");
         return $goals;
     }
     public function getActiveGoals($idSite)
     {
         $idSite = array_map('intval', $idSite);
-        $goals = Db::fetchAll("SELECT * FROM " . $this->table . "\n                                WHERE idsite IN (" . implode(", ", $idSite) . ")\n                                      AND deleted = 0");
+        $goals = Db::fetchAll("SELECT * FROM `" . $this->table . "`\n                                WHERE idsite IN (" . implode(", ", $idSite) . ")\n                                      AND deleted = 0");
         return $goals;
     }
     public function deleteGoalsForSite($idSite)
     {
-        Db::query("DELETE FROM " . $this->table . " WHERE idsite = ? ", array($idSite));
+        Db::query("DELETE FROM `" . $this->table . "` WHERE idsite = ? ", [$idSite]);
     }
     public function deleteGoal($idSite, $idGoal)
     {
@@ -74,7 +74,7 @@ class Model
     }
     public function getActiveGoalCount()
     {
-        return (int) Db::fetchOne("SELECT count(*) FROM " . $this->table . "\n                                WHERE deleted = 0");
+        return (int) Db::fetchOne("SELECT count(*) FROM `" . $this->table . "`\n                                WHERE deleted = 0");
     }
     private function getDb()
     {
@@ -90,6 +90,6 @@ class Model
      */
     public function doesGoalExist(int $idGoal, int $idSite) : bool
     {
-        return (bool) Db::fetchOne("SELECT COUNT(*) FROM " . $this->table . "\n                                WHERE deleted = 0 AND idsite = ? AND idgoal = ?", [$idSite, $idGoal]);
+        return (bool) Db::fetchOne("SELECT COUNT(*) FROM `" . $this->table . "`\n                                WHERE deleted = 0 AND idsite = ? AND idgoal = ?", [$idSite, $idGoal]);
     }
 }

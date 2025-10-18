@@ -273,9 +273,9 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         $variables = $this->dao->getContainerVariables($idSite, $idContainerVersion);
         return $this->enrichVariables($variables);
     }
-    public function deleteContainerVariable($idSite, $idContainerVersion, $idVariable)
+    public function deleteContainerVariable($idSite, $idContainerVersion, $idVariable, $skipReferenceCheck = \false)
     {
-        if ($this->getContainerVariableReferences($idSite, $idContainerVersion, $idVariable)) {
+        if (!$skipReferenceCheck && $this->getContainerVariableReferences($idSite, $idContainerVersion, $idVariable)) {
             throw new \Exception(Piwik::translate('TagManager_ErrorDeleteReferencedVariable'));
         }
         $this->dao->deleteContainerVariable($idSite, $idContainerVersion, $idVariable, $this->getCurrentDateTime());

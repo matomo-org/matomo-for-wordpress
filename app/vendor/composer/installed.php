@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.4.0',
-        'version' => '5.4.0.0',
-        'reference' => 'bd1721a8afe4762c7b9a46116467c995b724a3dd',
+        'pretty_version' => '5.5.0',
+        'version' => '5.5.0.0',
+        'reference' => '74743a4b9a198721b72ebf909102589ab706a9ea',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,18 +11,18 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.7',
-            'version' => '1.5.7.0',
-            'reference' => 'd665d22c417056996c59019579f1967dfe5c1e82',
+            'pretty_version' => '1.5.8',
+            'version' => '1.5.8.0',
+            'reference' => '719026bb30813accb68271fee7e39552a58e9f65',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'composer/semver' => array(
-            'pretty_version' => '3.4.3',
-            'version' => '3.4.3.0',
-            'reference' => '4313d26ada5e0c4edfbd1dc481a92ff7bff91f12',
+            'pretty_version' => '3.4.4',
+            'version' => '3.4.4.0',
+            'reference' => '198166618906cb2de69b95d7d47e5fa8aa1b2b95',
             'type' => 'library',
             'install_path' => __DIR__ . '/./semver',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.4.0',
-            'version' => '5.4.0.0',
-            'reference' => 'bd1721a8afe4762c7b9a46116467c995b724a3dd',
+            'pretty_version' => '5.5.0',
+            'version' => '5.5.0.0',
+            'reference' => '74743a4b9a198721b72ebf909102589ab706a9ea',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e28590ce3c8ef0cfb2f56939e4c99fe0d205b4ad',
+            'reference' => '55c13719876f80b64ba268735cd35f61d7ffd6dd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -149,7 +149,7 @@
         'matomo/searchengine-and-social-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4e6bdf8a6d831fa179b0743803feb6a3deffee90',
+            'reference' => '6487a125a1cbf8d957931921165c6f66dd6a092f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/searchengine-and-social-list',
             'aliases' => array(
