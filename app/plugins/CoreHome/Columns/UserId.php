@@ -35,7 +35,7 @@ class UserId extends VisitDimension
     protected $segmentName = 'userId';
     protected $nameSingular = 'General_UserId';
     protected $namePlural = 'General_UserIds';
-    protected $acceptValues = 'any non empty unique string identifying the user (such as an email address or a username).';
+    protected $acceptValues = 'UserId_UserIdSegmentHelp';
     public function __construct()
     {
         $this->columnType = 'VARCHAR(' . self::MAXLENGTH . ') NULL';

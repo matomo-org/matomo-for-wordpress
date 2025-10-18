@@ -102,10 +102,10 @@ class Import
             $this->tags->deleteContainerTag($idSite, $idContainerVersion, $tag['idtag']);
         }
         foreach ($this->triggers->getContainerTriggers($idSite, $idContainerVersion) as $trigger) {
-            $this->triggers->deleteContainerTrigger($idSite, $idContainerVersion, $trigger['idtrigger']);
+            $this->triggers->deleteContainerTrigger($idSite, $idContainerVersion, $trigger['idtrigger'], \true);
         }
         foreach ($this->variables->getContainerVariables($idSite, $idContainerVersion) as $variable) {
-            $this->variables->deleteContainerVariable($idSite, $idContainerVersion, $variable['idvariable']);
+            $this->variables->deleteContainerVariable($idSite, $idContainerVersion, $variable['idvariable'], \true);
         }
         $ecv = $exportedContainerVersion;
         foreach ($ecv['variables'] as $variable) {

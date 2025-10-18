@@ -10,8 +10,7 @@ namespace Piwik\Plugins\UsersManager\TokenNotifications;
 
 interface TokenNotificationInterface
 {
-    public function getTokenId() : string;
-    public function getTokenName() : string;
-    public function getTokenCreationDate() : string;
+    public function getTokens() : array;
+    public function getTokenIds() : array;
     public function dispatch() : bool;
 }

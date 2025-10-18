@@ -8,10 +8,8 @@
  */
 namespace Piwik\Plugins\UsersManager\TokenNotifications;
 
-use Piwik\Common;
 use Piwik\Config;
 use Piwik\Date;
-use Piwik\Db;
 class TokenExpirationWarningNotificationProvider extends \Piwik\Plugins\UsersManager\TokenNotifications\TokenNotificationProvider
 {
     protected function getPeriodThreshold() : ?string
@@ -21,20 +19,16 @@ class TokenExpirationWarningNotificationProvider extends \Piwik\Plugins\UsersMan
     }
     protected function getTokensToNotify(string $periodThreshold) : array
     {
-        $db = Db::get();
-        // Join on user table is done, to ensure we only fetch tokens, where the user still exists
-        $sql = "SELECT * FROM " . Common::prefixTable('user_token_auth') . " t" . " JOIN  " . Common::prefixTable('user') . " u ON t.login = u.login" . " WHERE t.date_expired IS NOT null" . " AND (t.date_expired <= ?)" . " AND (t.date_created <= ?)" . " AND t.ts_expiration_warning_notified IS NULL" . " AND t.system_token = 0" . " AND t.login != ?";
-        $tokensToNotify = $db->fetchAll($sql, [$periodThreshold, $this->today, 'anonymous']);
-        return $tokensToNotify;
+        return $this->userModel->getTokensExpiringSoon($periodThreshold);
     }
-    protected function createNotification(array $token) : \Piwik\Plugins\UsersManager\TokenNotifications\TokenNotification
+    protected function createNotification(string $login, array $tokens) : \Piwik\Plugins\UsersManager\TokenNotifications\TokenNotification
     {
-        $user = $this->userModel->getUser($token['login']);
+        $user = $this->userModel->getUser($login);
         $email = $user['email'];
-        return new \Piwik\Plugins\UsersManager\TokenNotifications\AuthTokenExpirationWarningEmailNotification($token['idusertokenauth'], $token['description'], $token['date_created'], [$email], [$email => ['login' => $token['login']]], $token['date_expired']);
+        return new \Piwik\Plugins\UsersManager\TokenNotifications\AuthTokenExpirationWarningEmailNotification($tokens, [$email], [$email => ['login' => $login]]);
     }
     public function setTokenNotificationDispatched(string $tokenId) : void
     {
-        $this->userModel->setExpirationWarningNotificationWasSentForToken($tokenId, Date::factory('now')->getDatetime());
+        $this->userModel->setExpirationWarningNotificationWasSentForToken($tokenId, $this->today);
     }
 }

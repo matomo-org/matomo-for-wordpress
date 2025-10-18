@@ -185,7 +185,7 @@ class ArchiveSelector
         foreach ($siteIds as $index => $siteId) {
             $siteIds[$index] = (int) $siteId;
         }
-        $getArchiveIdsSql = "SELECT idsite, date1, date2,\n                                    GROUP_CONCAT(CONCAT(idarchive,'|',`name`,'|',`value`) ORDER BY idarchive DESC SEPARATOR ',') AS archives\n                               FROM %s\n                              WHERE idsite IN (" . implode(',', $siteIds) . ")\n                                AND " . self::getNameCondition($plugins, $segment, $includeInvalidated) . "\n                                AND %s\n                           GROUP BY idsite, date1, date2";
+        $getArchiveIdsSql = "SELECT idsite, date1, date2,\n                                    GROUP_CONCAT(CONCAT(idarchive,'|',`name`,'|',`value`) ORDER BY idarchive DESC SEPARATOR ',') AS archives\n                               FROM `%s`\n                              WHERE idsite IN (" . implode(',', $siteIds) . ")\n                                AND " . self::getNameCondition($plugins, $segment, $includeInvalidated) . "\n                                AND %s\n                           GROUP BY idsite, date1, date2";
         $monthToPeriods = array();
         foreach ($periods as $period) {
             /** @var Period $period */
@@ -539,7 +539,7 @@ class ArchiveSelector
             $inNames = Common::getSqlStringFieldsArray($bind);
             $whereNameIs = "name IN ({$inNames})";
         }
-        $getValuesSql = "SELECT value, name, idsite, date1, date2, ts_archived\n                                FROM %s\n                                WHERE idarchive IN (%s)\n                                  AND " . $whereNameIs . "\n                             {$orderBy}";
+        $getValuesSql = "SELECT value, name, idsite, date1, date2, ts_archived\n                                FROM `%s`\n                                WHERE idarchive IN (%s)\n                                  AND " . $whereNameIs . "\n                             {$orderBy}";
         // ascending order so we use the latest data found
         return [$getValuesSql, $bind];
     }

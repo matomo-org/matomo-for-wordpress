@@ -51,7 +51,7 @@ class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
         $time = Date::now()->subDay($numDays)->getDatetime();
         try {
             $idSites = $this->getImplodedIdSitesSecure();
-            $row = Db::fetchOne('SELECT idsite from ' . $table . ' where idsite in (' . $idSites . ') and visit_last_action_time > ? LIMIT 1', $time);
+            $row = Db::fetchOne('SELECT idsite from `' . $table . '` where idsite in (' . $idSites . ') and visit_last_action_time > ? LIMIT 1', $time);
         } catch (\Exception $e) {
             $row = null;
         }

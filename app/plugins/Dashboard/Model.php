@@ -31,7 +31,7 @@ class Model
      */
     public function getLayoutForUser($login, $idDashboard)
     {
-        $query = sprintf('SELECT layout FROM %s WHERE login = ? AND iddashboard = ?', $this->table);
+        $query = sprintf('SELECT layout FROM `%s` WHERE login = ? AND iddashboard = ?', $this->table);
         $bind = array($login, $idDashboard);
         $layouts = Db::fetchAll($query, $bind);
         return $layouts;
@@ -55,7 +55,7 @@ class Model
     public function updateDashboardName($login, $idDashboard, $name)
     {
         $bind = array($name, $login, $idDashboard);
-        $query = sprintf('UPDATE %s SET name = ? WHERE login = ? AND iddashboard = ?', $this->table);
+        $query = sprintf('UPDATE `%s` SET name = ? WHERE login = ? AND iddashboard = ?', $this->table);
         Db::query($query, $bind);
     }
     /**
@@ -63,7 +63,7 @@ class Model
      */
     public function deleteDashboardForUser($idDashboard, $login)
     {
-        $query = sprintf('DELETE FROM %s WHERE iddashboard = ? AND login = ?', $this->table);
+        $query = sprintf('DELETE FROM `%s` WHERE iddashboard = ? AND login = ?', $this->table);
         Db::query($query, array($idDashboard, $login));
     }
     /**
@@ -73,7 +73,7 @@ class Model
     public function createNewDashboardForUser($login, $name, $layout)
     {
         $nextId = $this->getNextIdDashboard($login);
-        $query = sprintf('INSERT INTO %s (login, iddashboard, name, layout) VALUES (?, ?, ?, ?)', $this->table);
+        $query = sprintf('INSERT INTO `%s` (login, iddashboard, name, layout) VALUES (?, ?, ?, ?)', $this->table);
         $bind = array($login, $nextId, $name, $layout);
         Db::query($query, $bind);
         return $nextId;
@@ -84,12 +84,12 @@ class Model
     public function createOrUpdateDashboard($login, $idDashboard, $layout)
     {
         $bind = array($login, $idDashboard, $layout, $layout);
-        $query = sprintf('INSERT INTO %s (login, iddashboard, layout) VALUES (?,?,?) ON DUPLICATE KEY UPDATE layout=?', $this->table);
+        $query = sprintf('INSERT INTO `%s` (login, iddashboard, layout) VALUES (?,?,?) ON DUPLICATE KEY UPDATE layout=?', $this->table);
         Db::query($query, $bind);
     }
     private function getNextIdDashboard($login)
     {
-        $nextIdQuery = sprintf('SELECT MAX(iddashboard)+1 FROM %s WHERE login = ?', $this->table);
+        $nextIdQuery = sprintf('SELECT MAX(iddashboard)+1 FROM `%s` WHERE login = ?', $this->table);
         $nextId = Db::fetchOne($nextIdQuery, array($login));
         if (empty($nextId)) {
             $nextId = 1;
@@ -106,7 +106,7 @@ class Model
     public function updateLayoutForUser($login, $idDashboard, $layout)
     {
         $bind = array($login, $idDashboard, $layout, $layout);
-        $query = sprintf('INSERT INTO %s (login, iddashboard, layout) VALUES (?,?,?) ON DUPLICATE KEY UPDATE layout=?', $this->table);
+        $query = sprintf('INSERT INTO `%s` (login, iddashboard, layout) VALUES (?,?,?) ON DUPLICATE KEY UPDATE layout=?', $this->table);
         Db::query($query, $bind);
     }
     public static function install()

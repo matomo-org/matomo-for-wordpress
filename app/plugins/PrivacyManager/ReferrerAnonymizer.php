@@ -51,9 +51,9 @@ class ReferrerAnonymizer
             return $name;
             // we always want to keep the keyword since it is from the viewed page url, not the referrer
         }
-        if ($referrerType == Common::REFERRER_TYPE_SOCIAL_NETWORK || $referrerType == Common::REFERRER_TYPE_SEARCH_ENGINE) {
+        if ($referrerType == Common::REFERRER_TYPE_SOCIAL_NETWORK || $referrerType == Common::REFERRER_TYPE_SEARCH_ENGINE || $referrerType == Common::REFERRER_TYPE_AI_ASSISTANT) {
             return $name;
-            // we also keep the name of the social network or search engine since it should not be personal information
+            // we also keep the name of the ai assistant, social network or search engine since it should not be personal information
         }
         if ($anonymizeOption == self::EXCLUDE_ALL) {
             // mostly for website referrers we unset it
