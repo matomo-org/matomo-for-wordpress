@@ -30,7 +30,7 @@ class Model
      */
     public function getAllSegmentsAndIgnoreVisibility()
     {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE deleted = 0";
+        $sql = "SELECT * FROM `" . $this->getTable() . "` WHERE deleted = 0";
         $segments = $this->getDb()->fetchAll($sql);
         return $segments;
     }
@@ -116,7 +116,7 @@ class Model
     public function getSegmentsDeletedSince(Date $date)
     {
         $dateStr = $date->getDatetime();
-        $sql = "SELECT DISTINCT `definition`, `enable_only_idsite`, `hash` FROM " . Common::prefixTable('segment') . " WHERE deleted = 1 AND ts_last_edit >= ?";
+        $sql = "SELECT DISTINCT `definition`, `enable_only_idsite`, `hash` FROM `" . Common::prefixTable('segment') . "`" . " WHERE deleted = 1 AND ts_last_edit >= ?";
         $deletedSegments = Db::fetchAll($sql, array($dateStr));
         if (empty($deletedSegments)) {
             return array();
@@ -166,7 +166,7 @@ class Model
         }
         $whereClauses = implode(' OR ', $whereClauses);
         // Check for any non-deleted segments with the same definition
-        $sql = "SELECT DISTINCT definition, enable_only_idsite FROM " . Common::prefixTable('segment') . " WHERE deleted = 0 AND (" . $whereClauses . ")";
+        $sql = "SELECT DISTINCT definition, enable_only_idsite FROM `" . Common::prefixTable('segment') . "`" . " WHERE deleted = 0 AND (" . $whereClauses . ")";
         return Db::fetchAll($sql, $bind);
     }
     public function deleteSegment($idSegment)
@@ -196,7 +196,7 @@ class Model
     public function getSegment($idSegment)
     {
         $db = $this->getDb();
-        $segment = $db->fetchRow("SELECT * FROM " . $this->getTable() . " WHERE idsegment = ?", $idSegment);
+        $segment = $db->fetchRow("SELECT * FROM `" . $this->getTable() . "` WHERE idsegment = ?", $idSegment);
         return $segment;
     }
     private function getDb()
@@ -205,7 +205,7 @@ class Model
     }
     private function buildQuerySortedByName($where)
     {
-        return "SELECT * FROM " . $this->getTable() . " WHERE {$where} ORDER BY name ASC";
+        return "SELECT * FROM `" . $this->getTable() . "` WHERE {$where} ORDER BY name ASC";
     }
     private function createHash($definition)
     {

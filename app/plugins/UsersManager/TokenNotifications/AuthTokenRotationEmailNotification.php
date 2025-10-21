@@ -9,7 +9,7 @@
 namespace Piwik\Plugins\UsersManager\TokenNotifications;
 
 use Piwik\Plugins\UsersManager\Emails\AuthTokenRotationNotificationEmail;
-class AuthTokenRotationEmailNotification extends \Piwik\Plugins\UsersManager\TokenNotifications\TokenEmailNotification
+final class AuthTokenRotationEmailNotification extends \Piwik\Plugins\UsersManager\TokenNotifications\TokenEmailNotification
 {
     public function getEmailClass() : string
     {

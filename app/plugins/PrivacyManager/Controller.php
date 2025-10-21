@@ -22,7 +22,6 @@ use Piwik\Plugins\CustomJsTracker\File;
 use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\LanguagesManager\API as APILanguagesManager;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\ConfigIdRandomisation;
 use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
@@ -44,14 +43,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     private $referrerAnonymizer;
     /** @var SiteContentDetector */
     private $siteContentDetector;
-    /** @var FeatureFlagManager */
-    private $featureFlagManager;
-    public function __construct(\Piwik\Plugins\PrivacyManager\ReferrerAnonymizer $referrerAnonymizer, SiteContentDetector $siteContentDetector, FeatureFlagManager $featureFlagManager)
+    public function __construct(\Piwik\Plugins\PrivacyManager\ReferrerAnonymizer $referrerAnonymizer, SiteContentDetector $siteContentDetector)
     {
         parent::__construct();
         $this->referrerAnonymizer = $referrerAnonymizer;
         $this->siteContentDetector = $siteContentDetector;
-        $this->featureFlagManager = $featureFlagManager;
     }
     private function checkDataPurgeAdminSettingsIsEnabled()
     {
@@ -200,7 +196,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $view->dbUser = PiwikConfig::getInstance()->database['username'];
             $view->deactivateNonce = Nonce::getNonce(self::DEACTIVATE_DNT_NONCE);
             $view->activateNonce = Nonce::getNonce(self::ACTIVATE_DNT_NONCE);
-            $view->configRandomisationFeatureFlag = $this->featureFlagManager->isFeatureActive(ConfigIdRandomisation::class);
             $view->maskLengthOptions = [['key' => '1', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["1", "192.168.100.xxx"]), 'description' => ''], ['key' => '2', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["2", "192.168.xxx.xxx"]), 'description' => Piwik::translate('General_Recommended')], ['key' => '3', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["3", "192.xxx.xxx.xxx"]), 'description' => ''], ['key' => '4', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskFully'), 'description' => '']];
             $view->useAnonymizedIpForVisitEnrichmentOptions = [['key' => '1', 'value' => Piwik::translate('General_Yes'), 'description' => Piwik::translate('PrivacyManager_RecommendedForPrivacy')], ['key' => '0', 'value' => Piwik::translate('General_No'), 'description' => '']];
             $view->scheduleDeletionOptions = [['key' => '1', 'value' => Piwik::translate('Intl_PeriodDay')], ['key' => '7', 'value' => Piwik::translate('Intl_PeriodWeek')], ['key' => '30', 'value' => Piwik::translate('Intl_PeriodMonth')]];

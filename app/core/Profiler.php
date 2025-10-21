@@ -114,7 +114,7 @@ class Profiler
             $db = \Piwik\Tracker::getDatabase();
         }
         $tableName = \Piwik\Common::prefixTable('log_profiling');
-        $all = $db->fetchAll('SELECT * FROM ' . $tableName);
+        $all = $db->fetchAll('SELECT * FROM `' . $tableName . '`');
         if ($all === \false) {
             return;
         }

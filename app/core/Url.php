@@ -278,7 +278,7 @@ class Url
      *
      * @param bool $checkIfTrusted Whether to do trusted host check. Should ALWAYS be true,
      *                             except in Controller.
-     * @return string|bool eg, `"demo.matomo.org"` or false if no host found.
+     * @return string|bool eg, `"demo.matomo.cloud"` or false if no host found.
      */
     public static function getHost($checkIfTrusted = \true)
     {
@@ -734,7 +734,7 @@ class Url
      * @param string|null $medium   Optional campaign medium, defaults to App.[module].[action] where module and action are
      *                              taken from the currently viewed application page, eg. 'CoreAdminHome.trackingCodeGenerator'
      *
-     * @return string|null      www.matomo.org/faq/123?mtm_campaign=Matomo_App&mtm_source=Matomo_App_OnPremise&mtm_medium=App.CoreAdminHome.trackingCodeGenerator
+     * @return ($url is string ? string : null)      www.matomo.org/faq/123?mtm_campaign=Matomo_App&mtm_source=Matomo_App_OnPremise&mtm_medium=App.CoreAdminHome.trackingCodeGenerator
      */
     public static function addCampaignParametersToMatomoLink(?string $url = null, ?string $campaign = null, ?string $source = null, ?string $medium = null) : ?string
     {
@@ -761,7 +761,7 @@ class Url
             }
             $medium = 'App.' . $module . '.' . $action;
         }
-        $newParams = ['mtm_campaign' => $campaign ?? 'Matomo_App', 'mtm_source' => $source ?? 'Matomo_App_' . (\Piwik\Plugin\Manager::getInstance()->isPluginLoaded('Cloud') ? 'Cloud' : 'OnPremise'), 'mtm_medium' => $medium];
+        $newParams = ['mtm_campaign' => $campaign ?? 'Matomo_App', 'mtm_source' => $source ?? 'Matomo_App_' . (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('Cloud') ? 'Cloud' : 'OnPremise'), 'mtm_medium' => $medium];
         // Add parameters to the link, overriding any existing campaign parameters while preserving the path and query string
         $pathAndQueryString = \Piwik\UrlHelper::getPathAndQueryFromUrl($url, $newParams, \true);
         return 'https://' . $domain . '/' . $pathAndQueryString;

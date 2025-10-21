@@ -19,6 +19,7 @@ class Tasks extends \Piwik\Plugin\Tasks
         if (SettingsPiwik::isInternetEnabled() === \true && Config::getInstance()->General['enable_referrer_definition_syncs'] == 1) {
             $this->weekly('updateSearchEngines');
             $this->weekly('updateSocials');
+            $this->weekly('updateAIAssistants');
         }
     }
     /**
@@ -26,10 +27,13 @@ class Tasks extends \Piwik\Plugin\Tasks
      *
      * @see https://github.com/matomo-org/searchengine-and-social-list
      */
-    public function updateSearchEngines()
+    public function updateSearchEngines() : void
     {
         $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/SearchEngines.yml';
         $list = Http::sendHttpRequest($url, 30);
+        if (!is_string($list)) {
+            return;
+        }
         $searchEngines = \Piwik\Plugins\Referrers\SearchEngine::getInstance()->loadYmlData($list);
         if (count($searchEngines) < 200) {
             return;
@@ -41,14 +45,35 @@ class Tasks extends \Piwik\Plugin\Tasks
      *
      * @see https://github.com/matomo-org/searchengine-and-social-list
      */
-    public function updateSocials()
+    public function updateSocials() : void
     {
         $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/Socials.yml';
         $list = Http::sendHttpRequest($url, 30);
+        if (!is_string($list)) {
+            return;
+        }
         $socials = \Piwik\Plugins\Referrers\Social::getInstance()->loadYmlData($list);
         if (count($socials) < 50) {
             return;
         }
         Option::set(\Piwik\Plugins\Referrers\Social::OPTION_STORAGE_NAME, base64_encode(serialize($socials)));
+    }
+    /**
+     * Update the AI definitions
+     *
+     * @see https://github.com/matomo-org/searchengine-and-social-list
+     */
+    public function updateAIAssistants() : void
+    {
+        $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/AIAssistants.yml';
+        $list = Http::sendHttpRequest($url, 30);
+        if (!is_string($list)) {
+            return;
+        }
+        $aiAssistants = \Piwik\Plugins\Referrers\AIAssistant::getInstance()->loadYmlData($list);
+        if (count($aiAssistants) < 5) {
+            return;
+        }
+        Option::set(\Piwik\Plugins\Referrers\AIAssistant::OPTION_STORAGE_NAME, base64_encode(serialize($aiAssistants)));
     }
 }

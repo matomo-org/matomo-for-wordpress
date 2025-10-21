@@ -53,7 +53,7 @@ class TableLogAction
     {
         // now, we handle the cases =@ (contains) and !@ (does not contain)
         // build the expression based on the match type
-        $sql = 'SELECT idaction FROM ' . Common::prefixTable('log_action') . ' WHERE %s AND type = ' . $actionType . ' )';
+        $sql = 'SELECT idaction FROM `' . Common::prefixTable('log_action') . '` WHERE %s AND type = ' . $actionType . ' )';
         switch ($matchType) {
             case SegmentExpression::MATCH_CONTAINS:
                 // use concat to make sure, no %s occurs because some plugins use %s in their sql
@@ -147,7 +147,7 @@ class TableLogAction
         if ($segmentName === 'actionType') {
             $actionType = (int) $valueToMatch;
             $valueToMatch = array();
-            $sql = 'SELECT idaction FROM ' . Common::prefixTable('log_action') . ' WHERE type = ' . $actionType . ' )';
+            $sql = 'SELECT idaction FROM `' . Common::prefixTable('log_action') . '` WHERE type = ' . $actionType . ' )';
         } else {
             $actionType = self::guessActionTypeFromSegment($segmentName);
             $valueToMatch = self::removeProtocolIfSegmentStoredWithoutIt($valueToMatch, $actionType, $segmentName);

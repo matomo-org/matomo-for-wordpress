@@ -47,13 +47,17 @@ class AuthTokenExpirationWarningNotificationEmail extends Mail
         $expirationPeriodDays = Config::getInstance()->General['auth_token_expiration_notification_days'];
         return $expirationPeriodDays . ' ' . Piwik::translate('Intl_PeriodDay' . ($expirationPeriodDays === 1 ? '' : 's'));
     }
+    protected function getInstanceUrl() : string
+    {
+        return SettingsPiwik::getPiwikUrl();
+    }
     protected function getManageAuthTokensLink() : string
     {
-        return SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['module' => 'UsersManager', 'action' => 'userSecurity']) . '#authtokens';
+        return $this->getInstanceUrl() . 'index.php?' . Url::getQueryStringFromParameters(['module' => 'UsersManager', 'action' => 'userSecurity']) . '#authtokens';
     }
     protected function getDefaultSubject() : string
     {
-        return Piwik::translate('UsersManager_AuthTokenExpirationWarningEmailSubject', [$this->getExpirationWarningPeriodPretty()]);
+        return Piwik::translate('UsersManager_AuthTokenExpirationWarningEmailSubjectAll', [$this->getInstanceUrl(), $this->getExpirationWarningPeriodPretty()]);
     }
     protected function getDefaultBodyText() : string
     {
@@ -70,10 +74,10 @@ class AuthTokenExpirationWarningNotificationEmail extends Mail
     }
     protected function assignCommonParameters(View $view) : void
     {
-        $view->tokenName = $this->notification->getTokenName();
-        $view->tokenExpirationDate = $this->notification->getTokenExpirationDate();
+        $view->tokens = $this->notification->getTokens();
         $view->expirationWarningPeriod = $this->getExpirationWarningPeriodPretty();
         $view->manageAuthTokensLink = $this->getManageAuthTokensLink();
+        $view->instanceUrl = $this->getInstanceUrl();
         foreach ($this->emailData as $item => $value) {
             $view->assign($item, $value);
         }

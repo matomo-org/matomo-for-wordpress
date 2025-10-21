@@ -34,22 +34,32 @@ class MatomoUnit_Matomo_Fixture {
 		$test_class_name  = get_class( $test_case );
 		$test_method_name = $test_case->getName();
 
-		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
-			define( 'PIWIK_TEST_MODE', true );
-		}
-
 		unset( $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] );
 
 		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
-		if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
-			$container_config = $annotations['method']['provideContainerConfig'][0];
 
-			$method      = new ReflectionMethod( $test_case, $container_config );
-			$definitions = $method->invoke( $test_case );
+		if (
+			empty( $annotations['method']['noTestMode'] )
+			&& ! defined( 'PIWIK_TEST_MODE' )
+		) {
+			define( 'PIWIK_TEST_MODE', true );
+		}
 
-			Bootstrap::set_extra_di_definitions( $definitions );
-		} else {
-			Bootstrap::set_extra_di_definitions( [] );
+		if ( defined( 'PIWIK_TEST_MODE' ) ) {
+			if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
+				$container_config = $annotations['method']['provideContainerConfig'][0];
+
+				$method      = new ReflectionMethod( $test_case, $container_config );
+				$definitions = $method->invoke( $test_case );
+
+				Bootstrap::set_extra_di_definitions( $definitions );
+			} else {
+				Bootstrap::set_extra_di_definitions( [] );
+			}
+		}
+
+		if ( ! empty( $annotations['method']['noDebugLog'] ) ) {
+			define( 'MATOMO_DEBUG', false );
 		}
 
 		$this->uninstall_matomo();
@@ -123,7 +133,9 @@ class MatomoUnit_Matomo_Fixture {
 		$this->uninstall_matomo();
 
 		$this->reset_config_for_install();
-		Bootstrap::set_extra_di_definitions( [] );
+		if ( defined( 'PIWIK_TEST_MODE' ) ) {
+			Bootstrap::set_extra_di_definitions( [] );
+		}
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();

@@ -11,6 +11,7 @@ namespace Piwik\Plugins\Annotations;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Date;
+use Piwik\Piwik;
 use Piwik\View;
 /**
  * Controller for the Annotations plugin.
@@ -69,7 +70,7 @@ class Controller extends \Piwik\Plugin\Controller
         $dateFormat = Date::DATE_FORMAT_SHORT;
         $view->startDatePretty = $startDate->getLocalized($dateFormat);
         $view->endDatePretty = $endDate->getLocalized($dateFormat);
-        $view->canUserAddNotes = \Piwik\Plugins\Annotations\AnnotationList::canUserAddNotesFor($this->idSite);
+        $view->canUserAddNotes = self::canUserAddNotesFor($this->idSite);
         return $view->render();
     }
     /**
@@ -190,5 +191,15 @@ class Controller extends \Piwik\Plugin\Controller
         $view->annotationCounts = reset($annotationCounts);
         // only one idSite allowed for this action
         return $view->render();
+    }
+    /**
+     * Returns true if the current user can add notes for a specific site.
+     *
+     * @param int $idSite The site to add notes to.
+     * @return bool
+     */
+    public static function canUserAddNotesFor(int $idSite) : bool
+    {
+        return Piwik::isUserHasWriteAccess($idSite);
     }
 }

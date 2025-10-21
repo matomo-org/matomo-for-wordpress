@@ -22,7 +22,7 @@ class GetSocials extends \Piwik\Plugins\Referrers\Reports\Base
         parent::init();
         $this->dimension = new SocialNetwork();
         $this->name = Piwik::translate('Referrers_Socials');
-        $this->documentation = Piwik::translate('Referrers_WebsitesReportDocumentation', '<br />');
+        $this->documentation = Piwik::translate('Referrers_SocialsReportDocumentation', '<br />');
         $this->actionToLoadSubTables = 'getUrlsForSocial';
         $this->hasGoalMetrics = \true;
         $this->order = 11;
