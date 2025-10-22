@@ -148,6 +148,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 								}
 								?>
 									 ">
+							<?php
+							if ( ! empty( $matomo_feature['price'] ) && 'free' !== $matomo_feature['price'] ) {
+								?>
+								<span class="plugin-price"><?php echo esc_html( $matomo_feature['price'] ); ?></span>
+								<?php
+							}
+							?>
 							<p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
 								<?php
 								if ( ! empty( $matomo_feature['video'] ) ) {
@@ -175,7 +182,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 										?>
 										<span class="dashicons dashicons-cart" style="vertical-align: middle;"></span>
 										<?php
-										echo esc_html( $matomo_feature['price'] );
+										esc_html_e( 'Start free trial...', 'matomo' );
 									}
 									?>
 									</a>
