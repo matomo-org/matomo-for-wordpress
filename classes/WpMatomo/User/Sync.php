@@ -240,22 +240,15 @@ class Sync {
 
 			if ( $matomo_login ) {
 				$locale      = get_user_locale( $user->ID );
-				$locale_dash = Common::mb_strtolower( str_replace( '_', '-', $locale ) );
-				$parts       = [];
-				if ( $locale && in_array( $locale_dash, [ 'zh-cn', 'zh-tw', 'pt-br', 'es-ar' ], true ) ) {
-					$parts = [ $locale_dash ];
-				} elseif ( ! empty( $locale ) && is_string( $locale ) ) {
-					$parts = explode( '_', $locale );
-				}
-
-				if ( ! empty( $parts[0] ) ) {
-					$lang = $parts[0];
-					if ( Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
-						 && Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
-						 && API::getInstance()->isLanguageAvailable( $lang ) ) {
-						$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
-						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
-					}
+				$lang        = self::get_matomo_lang_from_locale( $locale );
+				if (
+					! empty( $lang )
+					&& Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
+					&& Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
+					&& API::getInstance()->isLanguageAvailable( $lang )
+				) {
+					$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
+					$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 				}
 			}
 			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
@@ -380,5 +373,16 @@ class Sync {
 		}
 
 		return $matomo_user_login;
+	}
+
+	public static function get_matomo_lang_from_locale( $locale ) {
+		$locale_dash = Common::mb_strtolower( str_replace( '_', '-', $locale ) );
+		$parts       = [];
+		if ( $locale && in_array( $locale_dash, [ 'zh-cn', 'zh-tw', 'pt-br', 'es-ar' ], true ) ) {
+			$parts = [ $locale_dash ];
+		} elseif ( ! empty( $locale ) && is_string( $locale ) ) {
+			$parts = explode( '_', $locale );
+		}
+		return ! empty( $parts[0] ) ? $parts[0] : null;
 	}
 }
