@@ -65,12 +65,17 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="matomo,wpmatomo"/>
+			<property name="prefixes" type="array">
+			    <element key="0" value="matomo" />
+			    <element key="1" value="wpmatomo" />
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="matomo"/>
+			<property name="text_domain" type="array">
+			    <element key="0" value="matomo" />
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
