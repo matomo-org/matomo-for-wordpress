@@ -1,10 +1,18 @@
 <?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
 
 use WpMatomo\Site;
 use WpMatomo\WpStatistics\Importer;
 use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
+use WpMatomo\WpStatistics\IncompatibleWpStatisticsVersion;
 
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
@@ -24,7 +32,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 	private function can_be_tested() {
 		if ( is_null( $this->enabled ) ) {
-			$this->enabled = file_exists( $this->plugin_file() ) && ! $this->is_test_data_incomplete();
+			$this->enabled = file_exists( $this->plugin_file() );
 		}
 
 		return $this->enabled;
@@ -136,7 +144,11 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$id_site  = $site->get_current_matomo_site_id();
 			// do not run the archiving for performances issues and because we test only daily reports
 			$importer->set_should_rethrow( true );
-			$importer->import( $id_site, false );
+			try {
+				$importer->import( $id_site, false );
+			} catch ( IncompatibleWpStatisticsVersion $ex ) {
+				$this->enabled = false;
+			}
 		}
 	}
 
@@ -172,12 +184,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertGreaterThan( 80, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_regions_found() {
@@ -185,12 +193,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertGreaterThan( 300, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_cities_found() {
@@ -198,13 +202,9 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'UserCountry', 'getCity' );
 		// 500 due to the limit in the datatable
-		$this->assertEquals( 500, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_browsers_found() {
@@ -212,12 +212,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'DevicesDetection', 'getBrowsers' );
-		$this->assertGreaterThanOrEqual( 15, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_os_found() {
@@ -225,12 +221,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'DevicesDetection', 'getOsVersions' );
-		$this->assertEquals( 10, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_referrers_found() {
@@ -238,12 +230,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'Referrers', 'getWebsites' );
-		$this->assertEquals( 49, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_search_engines_found() {
@@ -253,12 +241,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'Referrers', 'getSearchEngines' );
-		$this->assertEquals( 6, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_visitors_found() {
@@ -266,15 +250,11 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
-		}
-
 		$report = $this->fetch_report( 'VisitsSummary', 'get' );
 		$row    = $report['reportData']->getFirstRow();
 
 		$this->assertInstanceOf( \Piwik\DataTable\Row::class, $row );
-		$this->assertEquals( 1298, $row->getColumn( 'nb_visits' ) );
+		$this->assertGreaterThan( 0, $row->getColumn( 'nb_visits' ) );
 	}
 
 	public function test_pages_found() {
@@ -282,12 +262,36 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
 		}
 
-		if ( $this->is_test_data_incomplete() ) {
-			$this->markTestSkipped( 'New test data has not been created yet.' );
+		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
+		$this->assertGreaterThan( 0, $report['reportData']->getRowsCount() );
+	}
+
+	/**
+	 * @dataProvider getTestDataForCheckCompatibleVersion
+	 */
+	public function test_check_compatible_version( $wp_statistics_version, $should_throw ) {
+		if ( $should_throw ) {
+			$this->expectException( IncompatibleWpStatisticsVersion::class );
+			$this->expectExceptionMessage( 'Incompatible WP Statistics version' );
+		} else {
+			$this->expectNotToPerformAssertions();
 		}
 
-		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
-		$this->assertGreaterThan( 75, $report['reportData']->getRowsCount() );
+		$importer = new Importer( new \Psr\Log\NullLogger() );
+		$importer->set_should_rethrow( true );
+		$importer->check_compatible_version( $wp_statistics_version );
+	}
+
+	public function getTestDataForCheckCompatibleVersion() {
+		return [
+			[ '', true ],
+			[ 'garbagevalue', true ],
+			[ '4.3.2', true ],
+			[ '14.15.1', true ],
+			[ '14.15.2', false ],
+			[ '14.15.3', false ],
+			[ '15.2.0', false ],
+		];
 	}
 
 	protected function fetch_report( $report_name, $method ) {
@@ -297,12 +301,12 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			'parameters' => array(),
 		);
 
-		return $this->data->fetch_report( $meta, 'day', '2020-10-17', 'nb_visits', 10000 );
+		return $this->data->fetch_report( $meta, 'day', '2025-09-30', 'nb_visits', 10000 );
 	}
 
 	private function upgrade_wp_stats() {
 		if ( ! method_exists( \WP_STATISTICS\Install::class, 'plugin_upgrades' ) ) {
-			$this->markTestSkipped( 'new version of wp-statistics does not have old plugin upgrade code' );
+			return;
 		}
 
 		$install = new class() extends \WP_STATISTICS\Install {
@@ -311,13 +315,5 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			}
 		};
 		$install->plugin_upgrades();
-	}
-
-	/**
-	 * The newest version of wp-statistics no longer upgrades our test data.
-	 * Until we can create more, we just make sure our import does not fail.
-	 */
-	private function is_test_data_incomplete() {
-		return true;
 	}
 }

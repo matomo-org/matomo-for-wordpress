@@ -106,6 +106,7 @@ class RecordImporter {
 						'order'     => 'DESC',
 						'user_info' => true,
 						'page_info' => true,
+						'decorate'  => false,
 					]
 				);
 			} catch ( \Exception $e ) {
@@ -117,7 +118,12 @@ class RecordImporter {
 			if ( $no_data ) {
 				$visitors = [];
 			} else {
-				$visitors = $this->convert_visitors_to_array( $visitors );
+				$visitors = array_map(
+					function ( $visitor ) {
+						return (array) $visitor;
+					},
+					$visitors
+				);
 			}
 			$visitors_found = array_merge( $visitors_found, $visitors );
 		} while ( true !== $no_data );
