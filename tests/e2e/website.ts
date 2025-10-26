@@ -222,7 +222,7 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
-      await this.retry(1, async () => {
+      await this.retry(3, async () => {
         const isWooCommerceCodInputFound = await $('#woocommerce_cod_enabled').isExisting();
         const isWoocommerceCodToggleFound = await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle').isExisting();
         const isWoocommerceTakeOfflinePaymentsFound = await $('#_wc_offline_payment_methods_group,#experimental_wc_settings_payments_main').isExisting();
@@ -290,18 +290,15 @@ class Website {
           await browser.execute(() => window.jQuery('.woocommerce-save-button')[0].click());
           await browser.waitUntil(async () => {
             return await browser.execute(() => window.jQuery('#message:contains(Your settings have been saved)').length > 0);
-          }, { timeout: 60000 });
+          }, { timeout: 90000 });
         } else if (isWoocommerceCodToggleFound || html.includes('data-gateway_id="cod"')) {
-          await browser.execute(() => {
-            window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
-          });
+          await this.retry(3, async () => {
+            await browser.execute(() => {
+              window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
+            });
 
-          try {
-            await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 90000 });
-          } catch (e) {
-            await this.dumpHtml();
-            throw e;
-          }
+            await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 30000 });
+          });
 
           if (await $('.woocommerce-save-button').isExisting()) {
             await browser.execute(() => {

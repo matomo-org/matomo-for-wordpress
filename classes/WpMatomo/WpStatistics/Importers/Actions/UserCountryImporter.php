@@ -27,6 +27,9 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	protected $visitors = null;
 
+	/**
+	 * @var Geoip2
+	 */
 	private $geoip;
 
 	public function __construct( LoggerInterface $logger ) {
@@ -60,17 +63,12 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 	 * @return string
 	 */
 	private function getRegion( array $visitor ) {
-		$matches = [];
-		$region  = '';
-		if ( ! empty( $visitor['city'] ) && preg_match( self::CITY_PATTERN, $visitor['city'], $matches ) ) {
-			$region = trim( $matches[1] );
-		}
-		return $region;
+		return $visitor['region'];
 	}
 
 	private function import_regions() {
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_region'] = $this->geoip->get_matomo_region_code( $this->get_ip( $visitor ), $this->getRegion( $visitor ) );
+			$this->visitors[ $id ]['matomo_region'] = $this->geoip->get_matomo_region_code( $visitor['matomo_country'], $this->getRegion( $visitor ) );
 		}
 		$regions = UserRegionConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_regions} regions...', [ 'nb_regions' => $regions->getRowsCount() ] );
@@ -81,7 +79,7 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 	private function import_cities() {
 		// apply the country name to normalize with the matomo data
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_city'] = $this->geoip->get_matomo_city_code( $this->get_ip( $visitor ), $this->getRegion( $visitor ) );
+			$this->visitors[ $id ]['matomo_city'] = $this->geoip->get_matomo_city_code( $visitor['city'], $visitor['matomo_region'] );
 		}
 		$cities = UserCityConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_cities} cities...', [ 'nb_cities' => $cities->getRowsCount() ] );
@@ -91,20 +89,13 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	private function import_countries() {
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_country'] = $this->geoip->get_matomo_country_code( $this->get_ip( $visitor ) );
+			$this->visitors[ $id ]['matomo_country'] = $visitor['location'];
 		}
+
 		$countries = UserCountryConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_countries} countries...', [ 'nb_countries' => $countries->getRowsCount() ] );
 		$this->insert_record( Archiver::COUNTRY_RECORD_NAME, $countries, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
 		$this->insert_numeric_records( [ Archiver::DISTINCT_COUNTRIES_METRIC => $countries->getRowsCount() ] );
 		Common::destroy( $countries );
-	}
-
-	private function get_ip( $visitor ) {
-		if ( isset( $visitor['IP'] ) ) {
-			return $visitor['IP'];
-		}
-
-		return $visitor['ip']['value'];
 	}
 }

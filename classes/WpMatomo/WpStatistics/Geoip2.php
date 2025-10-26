@@ -69,56 +69,41 @@ class Geoip2 {
 		}
 	}
 
-	/**
-	 * @param string $ip
-	 * @param string $region
-	 * @return string
-	 */
-	public function get_matomo_region_code( $ip, $region ) {
+	public function get_matomo_region_code( $country, $region_name ) {
 		try {
-			$record = $this->get_record( $ip );
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$region_code = $record->mostSpecificSubdivision->isoCode;
-			if ( empty( $region_code ) ) {
-				$regions = include dirname( MATOMO_ANALYTICS_FILE ) . '/app/plugins/GeoIp2/data/isoRegionNames.php';
-				if ( array_key_exists( $record->country->isoCode, $regions ) ) {
-					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					$region_name         = $record->mostSpecificSubdivision->name;
-					$regions_for_country = $regions[ $record->country->isoCode ];
+			$country = strtoupper( $country );
+			$regions = include dirname( MATOMO_ANALYTICS_FILE ) . '/app/plugins/GeoIp2/data/isoRegionNames.php';
+			if ( array_key_exists( $country, $regions ) ) {
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$regions_for_country = $regions[ $country ];
 
-					$region_code = null;
-					foreach ( $regions_for_country as $code => $region_info ) {
-						if ( $region_info['name'] === $region_name
+				$region_code = null;
+				foreach ( $regions_for_country as $code => $region_info ) {
+					if ( $region_info['name'] === $region_name
+						|| in_array( $region_name, $region_info['altNames'], true )
+					) {
+						$region_code = $code;
+						break;
+					}
+
+					if ( $region_name
+						&& (
+							$region_name === $region_info['name']
 							|| in_array( $region_name, $region_info['altNames'], true )
-						) {
-							$region_code = $code;
-							break;
-						}
-
-						if ( $region
-							&& (
-								$region === $region_info['name']
-								|| in_array( $region, $region_info['altNames'], true )
-							)
-						) {
-							$region_code = $code;
-							break;
-						}
+						)
+					) {
+						$region_code = $code;
+						break;
 					}
 				}
 			}
-			return $region_code . '|' . $this->get_matomo_country_code( $ip );
+			return $region_code . '|' . $country;
 		} catch ( \Exception $e ) {
 			return '|us';
 		}
 	}
 
-	public function get_matomo_city_code( $ip, $region ) {
-		try {
-			$record = $this->get_record( $ip );
-			return $record->city->name . '|' . $this->get_matomo_region_code( $ip, $region ) . '|' . $record->location->latitude . '|' . $record->location->longitude;
-		} catch ( \Exception $e ) {
-			return '||us';
-		}
+	public function get_matomo_city_code( $city, $region ) {
+		return $city . '|' . $region;
 	}
 }
