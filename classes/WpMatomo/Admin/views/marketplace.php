@@ -382,7 +382,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		],
 	];
 
-	matomo_show_tables( $matomo_feature_sections, $matomo_version );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
 
 	?>
 
