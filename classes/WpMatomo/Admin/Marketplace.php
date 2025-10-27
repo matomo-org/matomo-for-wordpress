@@ -74,7 +74,11 @@ class Marketplace {
 	}
 
 	private function get_currency_based_on_timezone() {
-		$timezone = wp_timezone();
+		if ( ! function_exists( 'wp_timezone' ) ) {
+			return 'EUR';
+		}
+
+		$timezone = \wp_timezone();
 		$now      = new \DateTime( 'now', $timezone );
 		$offset   = $now->getOffset() / 3600;
 
