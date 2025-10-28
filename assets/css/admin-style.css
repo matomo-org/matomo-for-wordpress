@@ -210,3 +210,8 @@ table.matomo-tracking-form th {
     font-style: italic;
     color: #9D2235;
 }
+
+.plugin-price {
+    font-weight: bold;
+    color: #f77b00;
+}

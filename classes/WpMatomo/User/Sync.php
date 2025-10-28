@@ -239,8 +239,8 @@ class Sync {
 			}
 
 			if ( $matomo_login ) {
-				$locale      = get_user_locale( $user->ID );
-				$lang        = self::get_matomo_lang_from_locale( $locale );
+				$locale = get_user_locale( $user->ID );
+				$lang   = self::get_matomo_lang_from_locale( $locale );
 				if (
 					! empty( $lang )
 					&& Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )

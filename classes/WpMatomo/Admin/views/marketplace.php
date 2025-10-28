@@ -19,6 +19,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 		'wp_version' => ! empty( $GLOBALS['wp_version'] ) ? $GLOBALS['wp_version'] : '',
 	]
 );
+
+/** @var string $matomo_currency */
 ?>
 <div class="wrap">
 
@@ -58,7 +60,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 
 	<?php
-	function matomo_show_tables( $matomo_feature_sections, $matomo_version ) {
+	function matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency ) {
 		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 			$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
 			$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
@@ -146,6 +148,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 								}
 								?>
 									 ">
+							<?php
+							if ( ! empty( $matomo_feature['price'] ) && 'free' !== $matomo_feature['price'] ) {
+								?>
+								<span class="plugin-price"><?php echo esc_html( $matomo_feature['price'] ); ?></span>
+								<?php
+							}
+							?>
 							<p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
 								<?php
 								if ( ! empty( $matomo_feature['video'] ) ) {
@@ -157,18 +166,26 @@ $matomo_extra_url_params = '&' . http_build_query(
 							</p>
 							<?php
 							if ( ! empty( $matomo_feature['price'] ) ) {
+								$matomo_button_url = ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url;
+								if ( 'free' !== $matomo_feature['price'] ) {
+									$matomo_button_url .= '&add-to-cart=ws&currency=' . $matomo_currency;
+								}
 								?>
-								<p class="authors"><a class="button-primary"
-													  rel="noreferrer noopener" target="_blank"
-													  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url ); ?>">
+								<p class="authors">
+									<a class="button-primary"
+										rel="noreferrer noopener" target="_blank"
+										href="<?php echo esc_url( $matomo_button_url ); ?>">
 									<?php
 									if ( 'free' === $matomo_feature['price'] ) {
 										esc_html_e( 'Download', 'matomo' );
 									} else {
-										echo esc_html( $matomo_feature['price'] );
+										?>
+										<span class="dashicons dashicons-cart" style="vertical-align: middle;"></span>
+										<?php
+										esc_html_e( 'Start free trial...', 'matomo' );
 									}
 									?>
-								</a>
+									</a>
 								</p>
 								<?php
 							}
@@ -236,7 +253,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	/** @var \WpMatomo\Settings $settings */
 	$matomo_version = $settings->get_matomo_major_version();
 
-	matomo_show_tables( $matomo_feature_sections, $matomo_version );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
 
 	echo '<br>';
 
@@ -365,7 +382,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		],
 	];
 
-	matomo_show_tables( $matomo_feature_sections, $matomo_version );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
 
 	?>
 
