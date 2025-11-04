@@ -23,18 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 </style>
 <script>
 	window.addEventListener( 'DOMContentLoaded', function () {
-		function displayAdBlockNotice() {
-			if ( window.matomoAdminJsLoaded ) {
-				return;
-			}
-
-			var notice = document.querySelector( '#matomo-adblocker-notice' );
-			if ( notice ) {
-				notice.classList.add( 'adblocker-found' );
-			}
+		if ( window.matomoAdminJsLoaded ) {
+			return;
 		}
 
-		setTimeout(displayAdBlockNotice, 5000);
+		var notice = document.querySelector( '#matomo-adblocker-notice' );
+		if ( notice ) {
+			notice.classList.add( 'adblocker-found' );
+		}
 	} );
 </script>
 
