@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+use WpMatomo\Admin\AdBlockDetector;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Admin\Chart;
 use WpMatomo\Admin\Dashboard;
@@ -64,6 +65,9 @@ class WpMatomo {
 		}
 
 		add_action( 'init', [ $this, 'init_plugin' ] );
+
+		$adblock_detector = new AdBlockDetector();
+		$adblock_detector->register_hooks();
 
 		$capabilities = new Capabilities( self::$settings );
 		$capabilities->register_hooks();
