@@ -464,7 +464,16 @@ class Url
         self::redirectToUrl(self::getCurrentUrlWithoutQueryString());
     }
     private static function redirectToUrlNoExit($url)
-    {
+	{
+		/**
+		 * @internal
+		 */
+		Piwik::postEvent('Url.redirectToUrlNoExit', [&$url]);
+
+		if ($url === null) {
+			return;
+		}
+
         if (\Piwik\UrlHelper::isLookLikeUrl($url) || strpos($url, 'index.php') === 0) {
             \Piwik\Common::sendResponseCode(302);
             \Piwik\Common::sendHeader("X-Robots-Tag: noindex");

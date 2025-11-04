@@ -13,7 +13,7 @@ use Piwik\Common;
 
 class PluginUrlReplacer
 {
-    public function replaceThirdPartyPluginUrls($html): string
+    public function replaceThirdPartyPluginUrls(string $html): string
     {
         // replace all links to third party Matomo plugin files with their proper WordPress URLs
         $html = preg_replace_callback(
@@ -54,6 +54,13 @@ class PluginUrlReplacer
             $html
         );
 
+        return $html;
+    }
+
+    public function replaceIndexPhpUrlsToMwpReporting(string $html): string
+    {
+        // replace all links to index.php? to admin.php?page=matomo-reporting&...
+        // TODO
         return $html;
     }
 

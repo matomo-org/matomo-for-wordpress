@@ -312,7 +312,13 @@ class Menu {
 			);
 		}
 
-		wp_safe_redirect( $url );
+		$_SERVER['REQUEST_URI'] = $url;
+
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $defaults );
+		$_GET = array_merge( $defaults, $_GET );
+
+		include dirname( MATOMO_ANALYTICS_FILE ) . '/app/index.php';
+
 		exit;
 	}
 
@@ -379,10 +385,13 @@ class Menu {
 		return $url;
 	}
 
-	public function go_to_matomo_page( $module, $action, $cap ) {
+	public function go_to_matomo_page( $module, $action, $cap ) { // TODO: rename
 		if ( ! current_user_can( $cap ) ) {
 			return;
 		}
+
+		// TODO: set URL, load index.php, get tha fuck outta heaaaaah
+
 		Bootstrap::do_bootstrap();
 
 		$user_preferences = new UserPreferences();
@@ -393,7 +402,14 @@ class Menu {
 		$url  = self::make_matomo_app_base_url();
 		$url .= '?idSite=' . (int) $website_id . '&period=' . rawurlencode( $default_period ) . '&date=' . rawurlencode( $default_date );
 		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
-		wp_safe_redirect( $url );
+
+		$_SERVER['REQUEST_URI'] = $url;
+
+		$_GET = [];
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $_GET );
+
+		include dirname( MATOMO_ANALYTICS_FILE ) . '/app/index.php';
+
 		exit;
 	}
 }
