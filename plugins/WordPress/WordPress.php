@@ -22,6 +22,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 use Piwik\Scheduler\Task;
+use Piwik\SettingsPiwik;
 use Piwik\Url;
 use Piwik\Version;
 use Piwik\Widget\WidgetsList;
@@ -403,7 +404,7 @@ class WordPress extends Plugin
 
             $pluginUrlReplacer = new PluginUrlReplacer(); // TODO: rename
             $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls($result);
-            $result = $pluginUrlReplacer->replaceIndexPhpUrlsToMwpReporting($result);
+            $result = $pluginUrlReplacer->replaceIndexPhpUrlsToMwpReporting(SettingsPiwik::getPiwikUrl(), $result);
 	    }
     }
     public function onDispatchRequest(&$module, &$action, &$parameters)

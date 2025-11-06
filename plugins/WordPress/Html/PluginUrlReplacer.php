@@ -57,10 +57,53 @@ class PluginUrlReplacer
         return $html;
     }
 
-    public function replaceIndexPhpUrlsToMwpReporting(string $html): string
+    // TODO: docs + test
+    public function replaceIndexPhpUrlsToMwpReporting(string $matomoUrl, string $html): string
     {
         // replace all links to index.php? to admin.php?page=matomo-reporting&...
-        // TODO
+
+        // TODO: handle single quote strings in above code too
+        $html = preg_replace_callback(
+            '%=\s*(["\'])((' . preg_quote( $matomoUrl ) . ')?/*(index\.php)?[^/]*?)\1%',
+            function ($matches) {
+                $url = Common::unsanitizeInputValue( $matches[2] );
+
+                $replace = $this->rewriteMatomoPathToWpAdmin($url);
+                if (!empty($replace)) {
+                    return '=' . $matches[1] . $replace . $matches[1];
+                }
+
+                return $matches[0];
+            },
+            $html
+        );
+
+        $jsonMatomoUrl = json_encode($matomoUrl);
+        $jsonMatomoUrl = substr($jsonMatomoUrl, 1, strlen($jsonMatomoUrl) - 2);
+
+        // replace URLs to Matomo in JSON values (used to initiate Vue components)
+        $html = preg_replace_callback(
+            '%&quot;(' . preg_quote($jsonMatomoUrl) . ')?(?:\\\\/)*(index\.php)\?[^/]*?&quot;%',
+            function ($matches) {
+                // $url looks like plugins/SearchEngineKeywordsPerformance/images/...
+                $url = Common::unsanitizeInputValue( $matches[0] );
+                $url = json_decode($url, true);
+                if (empty($url) || !is_string($url)) { // sanity check
+                    return $matches[0];
+                }
+
+                $replace = $this->rewriteMatomoPathToWpAdmin($url);
+                if (!empty($replace)) {
+                    $replace = json_encode($replace);
+                    $replace = Common::sanitizeInputValue($replace);
+                    return $replace;
+                }
+
+                return $matches[0];
+            },
+            $html
+        );
+
         return $html;
     }
 
@@ -88,5 +131,32 @@ class PluginUrlReplacer
         }
 
         return null;
+    }
+
+    private function rewriteMatomoPathToWpAdmin(string $url): ?string
+    {
+        if (substr($url, 0, 2) === './') {
+            $url = substr($url, 2);
+        }
+
+        $url = ltrim($url, '/');
+
+        // check if it is a valid URL
+        $urlParts = wp_parse_url($url);
+        if ($urlParts === false) {
+            return null;
+        }
+
+        // check if it looks like a Matomo URL (has a module query param)
+        parse_str($urlParts['query'] ?? '', $query);
+        if (empty($query['module'])) {
+            return null;
+        }
+
+        $query['page'] = 'matomo-reporting';
+
+        $newQuery = http_build_query($query);
+
+        return home_url( '/wp-admin/admin.php' ) . '?' . $newQuery;
     }
 }

@@ -314,7 +314,7 @@ class Menu {
 
 		$_SERVER['REQUEST_URI'] = $url;
 
-		parse_str( parse_url( $url, PHP_URL_QUERY ), $defaults );
+		parse_str( wp_parse_url( $url, PHP_URL_QUERY ), $defaults );
 		$_GET = array_merge( $defaults, $_GET );
 
 		include dirname( MATOMO_ANALYTICS_FILE ) . '/app/index.php';
@@ -385,7 +385,8 @@ class Menu {
 		return $url;
 	}
 
-	public function go_to_matomo_page( $module, $action, $cap ) { // TODO: rename
+	public function go_to_matomo_page( $module, $action, $cap ) {
+		// TODO: rename function
 		if ( ! current_user_can( $cap ) ) {
 			return;
 		}
@@ -406,7 +407,7 @@ class Menu {
 		$_SERVER['REQUEST_URI'] = $url;
 
 		$_GET = [];
-		parse_str( parse_url( $url, PHP_URL_QUERY ), $_GET );
+		parse_str( wp_parse_url( $url, PHP_URL_QUERY ), $_GET );
 
 		include dirname( MATOMO_ANALYTICS_FILE ) . '/app/index.php';
 
