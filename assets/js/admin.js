@@ -6,7 +6,12 @@
  * @package matomo
  */
 
+window.matomoAdminJsLoaded = true;
+
 window.jQuery(document).ready(function ($) {
+  // hide in case it was displayed while this file was loading
+  $('#matomo-adblocker-notice').removeClass('adblocker-found');
+
   // referral notice dismiss
   if (typeof mtmReferralDismissNoticeAjax !== 'undefined' && mtmReferralDismissNoticeAjax.ajax_url) {
     $(document).on( 'click', '#matomo-referral .notice-dismiss', function () {
