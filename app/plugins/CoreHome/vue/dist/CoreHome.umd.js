@@ -1089,6 +1089,7 @@ class AjaxHelper_AjaxHelper {
     if (options.abortable === false) {
       helper.abortable = false;
     }
+    Matomo_Matomo.postEvent('AjaxHelper.send', this);
     return helper.send().then(result => {
       const data = result instanceof AjaxHelper_AjaxHelper ? result.requestHandle.responseJSON : result;
       // check for error if not using default notification behavior

@@ -13,6 +13,41 @@ use Piwik\Common;
 
 class PluginUrlReplacer
 {
+    // TODO: rewrite this class so we only do one preg_replace_callback
+
+
+    public function replaceUrls(string $matomoUrl, string $html): string
+    {
+        $html = preg_replace_callback(
+            '%([\'"]|&quot;)[^\s\'"}]*?\1%',
+            function ($matches) {
+                $url = $matches[0];
+                if (strlen($url) < 5) {
+                    return $matches[0];
+                }
+
+                $url = substr($url, strlen($matches[1]), strlen($url) - strlen($matches[1]));
+
+                // TODO: comment
+                $path = parse_url( $url, PHP_URL_PATH );
+                if (is_file(PIWIK_INCLUDE_PATH . '/' . $path)) {
+                    return plugins_url( '/app/' . $url, MATOMO_ANALYTICS_FILE );
+                }
+                if (is_file(dirname(MATOMO_ANALYTICS_FILE) . '/' . $path)) {
+                    return plugins_url( '/' . $url, MATOMO_ANALYTICS_FILE );
+                }
+
+                // TODO
+                return $matches[0];
+            },
+            $html
+        );
+
+        $html = $this->replaceThirdPartyPluginUrls($html);
+        $html = $this->replaceIndexPhpUrlsToMwpReporting($matomoUrl, $html);
+        return $html;
+    }
+
     public function replaceThirdPartyPluginUrls(string $html): string
     {
         // replace all links to third party Matomo plugin files with their proper WordPress URLs
@@ -109,6 +144,8 @@ class PluginUrlReplacer
 
     private function rewritePathIfThirdPartyPluginUrl(string $url): ?string
     {
+        // TODO: rename method since it renames for core plugins too
+
         if (substr($url, 0, 2) === './') {
             $url = substr($url, 2);
         }

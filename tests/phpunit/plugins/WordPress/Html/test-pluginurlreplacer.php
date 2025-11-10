@@ -33,7 +33,7 @@ class PluginUrlReplacerTest extends MatomoUnit_TestCase {
 		parent::tearDown();
 	}
 
-	public function test_replaceThirdPartyPluginUrls_replaces_plugin_urls_in_html() {
+	public function test_replaceUrls_replaces_plugin_urls_in_html() {
 		$html = <<<EOF
 <html>
 <head>
@@ -65,11 +65,11 @@ EOF;
 </html>
 EOF;
 
-		$actual_output = $this->instance->replaceThirdPartyPluginUrls( $html );
+		$actual_output = $this->instance->replaceUrls( $html );
 		$this->assertEquals( $expected_output, $actual_output );
 	}
 
-	public function test_replaceThirdPartyPluginUrls_replaces_plugin_urls_in_json_in_html() {
+	public function test_replaceUrls_replaces_plugin_urls_in_json_in_html() {
 		$json = [
 			'images' => [
 				'someproduct'        => [
@@ -118,11 +118,11 @@ EOF;
 </html>
 EOF;
 
-		$actual_output = $this->instance->replaceThirdPartyPluginUrls( $html );
+		$actual_output = $this->instance->replaceUrls( $html );
 		$this->assertEquals( $expected_output, $actual_output );
 	}
 
-	public function test_replaceIndexPhpUrlsToMwpReporting_replaces_urls_in_html_attributes() {
+	public function test_replaceUrls_replaces_urls_in_html_attributes() {
 		$home_url   = home_url();
 		$matomo_url = 'https://matomo.mysite.com';
 
@@ -173,11 +173,11 @@ EOF;
 </html>
 EOF;
 
-		$actual_output = $this->instance->replaceIndexPhpUrlsToMwpReporting( $matomo_url, $html );
+		$actual_output = $this->instance->replaceUrls( $matomo_url, $html );
 		$this->assertEquals( $expected_output, $actual_output );
 	}
 
-	public function test_replaceIndexPhpUrlsToMwpReporting_replaces_urls_in_json_in_html() {
+	public function test_replaceUrls_replaces_urls_in_json_in_html() {
 		$home_url   = home_url();
 		$matomo_url = 'https://matomo.mysite.com';
 
@@ -242,7 +242,7 @@ EOF;
 </html>
 EOF;
 
-		$actual_output = $this->instance->replaceIndexPhpUrlsToMwpReporting( $matomo_url, $html );
+		$actual_output = $this->instance->replaceUrls( $matomo_url, $html );
 		$this->assertEquals( $expected_output, $actual_output );
 	}
 }

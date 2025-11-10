@@ -19,7 +19,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 
 # install node
 ENV NVM_DIR="/home/user/.nvm" \
-    NODE_VERSION="20.18.1" \
+    NODE_VERSION="16.20.2" \
     NVM_VERSION="0.40.1"
 
 RUN mkdir -p "$NVM_DIR" \

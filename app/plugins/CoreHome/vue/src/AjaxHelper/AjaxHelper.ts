@@ -250,6 +250,8 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
       helper.abortable = false;
     }
 
+    Matomo.postEvent('AjaxHelper.send', this);
+
     return helper.send().then((result: R | ErrorResponse | AjaxHelper) => {
       const data = result instanceof AjaxHelper ? result.requestHandle!.responseJSON : result;
 

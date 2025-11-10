@@ -62,6 +62,7 @@ class WordPress extends Plugin
             'System.filterSystemSummaryItems' => 'filterSystemSummaryItems',
             'CliMulti.supportsAsync' => 'supportsAsync',
             'Template.header' => 'onHeader',
+            'Template.jsGlobalVariables' => 'addJsGlobalVariables',
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
@@ -81,7 +82,13 @@ class WordPress extends Plugin
         );
     }
 
-    public function recirectToUrlNoExit(&$url) {
+    public function addJsGlobalVariables(&$output)
+    {
+        $output .= 'piwik.mwpHomeUrl = ' . json_encode(home_url()) . ';';
+    }
+
+    public function recirectToUrlNoExit(&$url)
+    {
         if (\Piwik\UrlHelper::isLookLikeUrl($url) || strpos($url, 'index.php') === 0) {
             $url = preg_replace('/^index\.php/', 'admin.php', $url);
             if (strpos($url, 'page=matomo-reporting') === false) {
@@ -403,8 +410,7 @@ class WordPress extends Plugin
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
 
             $pluginUrlReplacer = new PluginUrlReplacer(); // TODO: rename
-            $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls($result);
-            $result = $pluginUrlReplacer->replaceIndexPhpUrlsToMwpReporting(SettingsPiwik::getPiwikUrl(), $result);
+            $result = $pluginUrlReplacer->replaceUrls(SettingsPiwik::getPiwikUrl(), $result);
 	    }
     }
     public function onDispatchRequest(&$module, &$action, &$parameters)
