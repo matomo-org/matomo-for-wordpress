@@ -13,39 +13,42 @@ use Piwik\Common;
 
 class PluginUrlReplacer
 {
+    const CONTENT_TYPE_HTML = 'html';
+    const CONTENT_TYPE_LESS = 'less';
     // TODO: rewrite this class so we only do one preg_replace_callback
 
-
-    public function replaceUrls(string $matomoUrl, string $html): string
+    public function replaceUrls(string $matomoUrl, string $content, string $contentType): string
     {
-        $html = preg_replace_callback(
-            '%([\'"]|&quot;)[^\s\'"}]*?\1%',
-            function ($matches) {
-                $url = $matches[0];
-                if (strlen($url) < 5) {
-                    return $matches[0];
+        // TODO: rename forEachUrl
+        $this->forEachUrlReplaceWith($content, $contentType, function ($quote, $url) use ($matomoUrl) {
+            if (preg_match('%^(' . preg_quote($matomoUrl, '%') . ')?/*index\.php%', $url)) {
+                $rewritten = $this->rewriteMatomoPathToWpAdmin($url);
+                if ($rewritten) {
+                    return $quote . $rewritten . $quote;
                 }
+            }
 
-                $url = substr($url, strlen($matches[1]), strlen($url) - strlen($matches[1]));
+            // TODO: comment
+            $path = parse_url( $url, PHP_URL_PATH );
+            if (is_file(PIWIK_INCLUDE_PATH . '/' . $path)) {
+                return $quote . plugins_url( '/app/' . $url, MATOMO_ANALYTICS_FILE ) . $quote;
+            }
+            if (is_file(dirname(MATOMO_ANALYTICS_FILE) . '/' . $path)) {
+                return $quote . plugins_url( '/' . $url, MATOMO_ANALYTICS_FILE ) . $quote;
+            }
 
-                // TODO: comment
-                $path = parse_url( $url, PHP_URL_PATH );
-                if (is_file(PIWIK_INCLUDE_PATH . '/' . $path)) {
-                    return plugins_url( '/app/' . $url, MATOMO_ANALYTICS_FILE );
+            // TODO: comment, or refactor
+            if (preg_match('%^(?:\./)?plugins/%', $url)) {
+                $replace = $this->rewritePathIfThirdPartyPluginUrl($url);
+                if (!empty($replace)) {
+                    return $quote . $replace . $quote;
                 }
-                if (is_file(dirname(MATOMO_ANALYTICS_FILE) . '/' . $path)) {
-                    return plugins_url( '/' . $url, MATOMO_ANALYTICS_FILE );
-                }
+            }
 
-                // TODO
-                return $matches[0];
-            },
-            $html
-        );
+            return null;
+        });
 
-        $html = $this->replaceThirdPartyPluginUrls($html);
-        $html = $this->replaceIndexPhpUrlsToMwpReporting($matomoUrl, $html);
-        return $html;
+        return $content;
     }
 
     public function replaceThirdPartyPluginUrls(string $html): string
@@ -195,5 +198,55 @@ class PluginUrlReplacer
         $newQuery = http_build_query($query);
 
         return home_url( '/wp-admin/admin.php' ) . '?' . $newQuery;
+    }
+
+    private function forEachUrlReplaceWith(string &$content, string $contentType, callable $fn)
+    {
+        if ($contentType === self::CONTENT_TYPE_HTML) {
+            $regex = '%([\'"]|&quot;)[^\s\'"})]*?\1%';
+        } else if ($contentType === self::CONTENT_TYPE_LESS) {
+            $regex = '%url\(([\'"]?)[^\s\'"})]*?\1\)%';
+        } else {
+            throw new \InvalidArgumentException('contentType ' . $contentType . ' not recognized');
+        }
+
+        $content = preg_replace_callback(
+            $regex,
+            function ($matches) use ($fn, $contentType) {
+                $url = $matches[0];
+                if (strlen($url) < 5) {
+                    return $matches[0];
+                }
+
+                $quote = $matches[1];
+
+                if ($contentType === self::CONTENT_TYPE_HTML) {
+                    $url = Common::unsanitizeInputValue($url);
+
+                    if ($quote === '&quot;') {
+                        $url = json_decode($url, true);
+                    } else {
+                        $url = substr($url, 1, strlen($url) - 2);
+                    }
+                } else if ($contentType === self::CONTENT_TYPE_LESS) {
+                    $url = substr($url, 4, strlen($url) - 5); // remove url( ... )
+                    if (!empty($quote)) {
+                        $url = substr($url, 1, strlen($url) - 2); // remove ['"] ... ['"]
+                    }
+                }
+
+                $replace = $fn($matches[1], $url);
+                if ($replace === null) {
+                    return $matches[0];
+                }
+
+                if ($contentType === self::CONTENT_TYPE_LESS) {
+                    $replace = 'url(' . $replace . ')';
+                }
+
+                return $replace;
+            },
+            $content
+        );
     }
 }

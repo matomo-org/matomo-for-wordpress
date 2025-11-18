@@ -79,6 +79,7 @@ class WordPress extends Plugin
             'Tracker.setTrackerCacheGeneral' => ['function' => 'setTrackerCacheGeneral', 'after' => true],
             'Platform.initialized' => ['function' => 'onPlatformInitialized', 'before' => true],
             'Url.redirectToUrlNoExit' => 'recirectToUrlNoExit',
+            'AssetManager.filterMergedStylesheets' => 'replaceUrlsInLess',
         );
     }
 
@@ -402,17 +403,28 @@ class WordPress extends Plugin
         });
     }
 
-    public function onDispatchRequestEnd(&$result, $module, $action, $parameters)
+    public function onDispatchRequestEnd(&$result)
     {
     	if (!empty($result) && is_string($result)) {
     		// https://wordpress.org/support/topic/bugged-favicon/#post-12995669
     		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
 
-            $pluginUrlReplacer = new PluginUrlReplacer(); // TODO: rename
-            $result = $pluginUrlReplacer->replaceUrls(SettingsPiwik::getPiwikUrl(), $result);
+            $this->replaceUrlsInOutput($result, PluginUrlReplacer::CONTENT_TYPE_HTML);
 	    }
     }
+
+    public function replaceUrlsInLess(&$output)
+    {
+        $this->replaceUrlsInOutput($output, PluginUrlReplacer::CONTENT_TYPE_LESS);
+    }
+
+    public function replaceUrlsInOutput(&$output, $contentType)
+    {
+        $pluginUrlReplacer = new PluginUrlReplacer(); // TODO: rename
+        $output = $pluginUrlReplacer->replaceUrls(SettingsPiwik::getPiwikUrl(), $output, $contentType);
+    }
+
     public function onDispatchRequest(&$module, &$action, &$parameters)
     {
         if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {

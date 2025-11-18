@@ -250,8 +250,6 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
       helper.abortable = false;
     }
 
-    Matomo.postEvent('AjaxHelper.send', this);
-
     return helper.send().then((result: R | ErrorResponse | AjaxHelper) => {
       const data = result instanceof AjaxHelper ? result.requestHandle!.responseJSON : result;
 
@@ -512,6 +510,8 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
       $(this.loadingElement).fadeIn();
     }
 
+    Matomo.postEvent('AjaxHelper.send', this);
+
     this.requestHandle = this.buildAjaxCall();
     if (this.abortable) {
       window.globalAjaxQueue.push(this.requestHandle);
@@ -572,6 +572,7 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
     const parameters = this.mixinDefaultGetParams(this.getParams);
 
     let url = this.getUrl;
+    console.log(`building: ${url}`);
     if (url[url.length - 1] !== '?') {
       url += '&';
     }

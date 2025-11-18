@@ -1089,7 +1089,6 @@ class AjaxHelper_AjaxHelper {
     if (options.abortable === false) {
       helper.abortable = false;
     }
-    Matomo_Matomo.postEvent('AjaxHelper.send', this);
     return helper.send().then(result => {
       const data = result instanceof AjaxHelper_AjaxHelper ? result.requestHandle.responseJSON : result;
       // check for error if not using default notification behavior
@@ -1377,6 +1376,7 @@ class AjaxHelper_AjaxHelper {
     if (this.loadingElement) {
       AjaxHelper_$(this.loadingElement).fadeIn();
     }
+    Matomo_Matomo.postEvent('AjaxHelper.send', this);
     this.requestHandle = this.buildAjaxCall();
     if (this.abortable) {
       window.globalAjaxQueue.push(this.requestHandle);
@@ -1428,6 +1428,7 @@ class AjaxHelper_AjaxHelper {
     const self = this;
     const parameters = this.mixinDefaultGetParams(this.getParams);
     let url = this.getUrl;
+    console.log(`building: ${url}`);
     if (url[url.length - 1] !== '?') {
       url += '&';
     }
