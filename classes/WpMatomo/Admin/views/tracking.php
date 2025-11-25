@@ -348,6 +348,14 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				true,
 				$matomo_full_generated_tracking_group . ' matomo-feed_campaign-option matomo-track-option-tagmanager'
 			);
+
+			$matomo_form->show_checkbox(
+				\WpMatomo\Settings::TRACK_AI_BOTS,
+				esc_html__( 'Track AI Bots', 'matomo' ),
+				esc_html__( 'If enabled, AI bots will trigger page views even if they do not execute JavaScript. These page views can be seen in the special AI Assistants report.', 'matomo' ),
+				false,
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+			);
 			?>
 			</tbody>
 		</table>

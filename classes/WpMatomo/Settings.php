@@ -39,6 +39,7 @@ class Settings {
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
 	const GLOBAL_USER_AGENT_EXCLUSIONS         = 'global_user_agent_exclusions';
+	const TRACK_AI_BOTS                        = 'track_ai_bots';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -86,6 +87,7 @@ class Settings {
 		'track_ecommerce'                          => true,
 		'track_search'                             => false,
 		'track_404'                                => false,
+		self::TRACK_AI_BOTS                        => false,
 		'tagmanger_container_ids'                  => [],
 		'add_post_annotations'                     => [],
 		'add_customvars_box'                       => false,

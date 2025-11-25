@@ -79,6 +79,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_heartbeat',
 			'track_user_id',
 			'track_datacfasync',
+			Settings::TRACK_AI_BOTS,
 			'tagmanger_container_ids',
 			'set_download_extensions',
 			'set_download_classes',
