@@ -506,6 +506,10 @@ class Settings {
 		return (bool) $this->get_global_option( self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME );
 	}
 
+	public function is_ai_bot_tracking_enabled() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS );
+	}
+
 	public function get_matomo_major_version() {
 		$core_version = $this->get_global_option( 'core_version' );
 		$core_version = isset( $core_version ) ? $core_version : '';
