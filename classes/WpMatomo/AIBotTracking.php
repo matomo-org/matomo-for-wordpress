@@ -68,7 +68,10 @@ class AIBotTracking {
 			return;
 		}
 
-		if ( ! $this->settings->is_ai_bot_tracking_enabled() ) {
+		if (
+			! $this->settings->is_ai_bot_tracking_enabled()
+			|| ! $this->settings->is_tracking_enabled()
+		) {
 			return;
 		}
 

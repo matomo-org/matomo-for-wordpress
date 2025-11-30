@@ -102,6 +102,26 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->assertFalse( $should_track );
 	}
 
+	public function test_should_track_current_page_should_return_false_if_tracking_disabled() {
+		$this->settings->set_global_option( Settings::TRACK_AI_BOTS, true );
+		$this->settings->save();
+
+		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/';
+
+		$should_track = $this->ai_bot_tracking->should_track_current_page();
+		$this->assertFalse( $should_track );
+	}
+
+	public function test_should_track_current_page_should_return_false_if_tracking_enabled_but_ai_bot_tracking_disabled() {
+		$this->settings->set_global_option( 'track_mode', 'disabled' );
+		$this->settings->save();
+
+		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/';
+
+		$should_track = $this->ai_bot_tracking->should_track_current_page();
+		$this->assertFalse( $should_track );
+	}
+
 	/**
 	 * @dataProvider getTestDataForShouldTrackCurrentPageWithWebPages
 	 */
@@ -210,6 +230,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	}
 
 	private function enable_ai_bot_tracking() {
+		$this->settings->set_global_option( 'track_mode', 'disabled' );
 		$this->settings->set_global_option( Settings::TRACK_AI_BOTS, true );
 		$this->settings->save();
 	}
