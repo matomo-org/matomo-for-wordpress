@@ -366,6 +366,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         $variable = $this->getContainerVariable($idSite, $idContainerVersion, $idVariable);
         $newVarName = $this->dao->makeCopyNameUnique($idDestinationSite, $variable['name'], $idDestinationVersion);
         $this->copyReferencedVariables($variable, $idSite, $idContainerVersion, $idDestinationSite, $idDestinationVersion);
+        $this->postCopyVariableActivity($idSite, $idDestinationSite, $idContainerVersion, null, $idDestinationContainer, $variable);
         return $this->addContainerVariable($idDestinationSite, $idDestinationVersion, $variable['type'], $newVarName, $variable['parameters'], $variable['default_value'], $variable['lookup_table'], $variable['description']);
     }
     private function copyVariableByNameIfNoEquivalent(string $variableName, int $idSite, int $idContainerVersion, int $idDestinationSite, int $idDestinationContainerVersion) : string
@@ -400,6 +401,7 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
         // Insert the new variable
         $newVarName = $this->dao->makeCopyNameUnique($idDestinationSite, $variable['name'], $idDestinationContainerVersion);
         $this->addContainerVariable($idDestinationSite, $idDestinationContainerVersion, $variable['type'], $newVarName, $variable['parameters'], $variable['default_value'], $variable['lookup_table'], $variable['description']);
+        $this->postCopyVariableActivity($idSite, $idDestinationSite, $idContainerVersion, $idDestinationContainerVersion, null, $variable);
         return $newVarName;
     }
     private function updateVariableColumns($idSite, $idContainerVersion, $idVariable, $columns)
@@ -444,5 +446,12 @@ class Variable extends \Piwik\Plugins\TagManager\Model\BaseModel
             }
         }
         return $variable;
+    }
+    private function postCopyVariableActivity(int $idSite, int $idDestinationSite, int $idContainerVersion, ?int $idDestinationContainerVersion, ?string $idDestinationContainer, array $variable)
+    {
+        if (class_exists('\\Piwik\\Plugins\\ActivityLog\\ActivityParamObject\\EntityDuplicatedData')) {
+            $additionalData = ['idSite' => $idSite, 'idDestinationSites' => $idDestinationSite, 'idContainerVersion' => $idContainerVersion, 'idDestinationContainer' => $idDestinationContainer, 'idDestinationContainerVersion' => $idDestinationContainerVersion, 'idVariable' => $variable['idvariable']];
+            (new \Piwik\Plugins\ActivityLog\ActivityParamObject\EntityDuplicatedData('TagManager_Variable', $variable['name'], $variable['idvariable'], $idSite, [$idDestinationSite], $additionalData))->postActivityEvent();
+        }
     }
 }

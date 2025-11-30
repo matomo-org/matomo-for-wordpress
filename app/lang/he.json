@@ -246,6 +246,7 @@
         "Locale": "he_IL.UTF-8",
         "Logout": "להתנתק",
         "MainMetrics": "מדדים עיקריים",
+        "ManagePlugins": "ניהול תוספים",
         "Matches": "התאמות",
         "Measurable": "מדיד",
         "Measurables": "מדידים",
@@ -621,6 +622,7 @@
         "ImageTrackingIntro1": "כאשר המבקרים ביטלו את יישום הג'אווה או שלא בשימוש, אתה יכול להשתמש בתמונת קישור למעקב אחרי המבקרים",
         "ImageTrackingLink": "קישור מעקב כתמונה",
         "JavaScriptTracking": "מעקב בג'אווה-סקריפט",
+        "Login": "משתמש",
         "LogoUpload": "בחירת קובץ לוגו",
         "MenuDiagnostic": "אבחון",
         "MenuGeneralSettings": "הגדרות כלליות",
@@ -787,8 +789,11 @@
         "GeoIPDatabases": "מסד נתונים GeoIP"
     },
     "Goals": {
+        "CategoryTextGeneral_Actions": "עמודים",
         "CategoryTextReferrers_Referrers": "הפניות",
-        "ColumnConversions": "המרות"
+        "ColumnConversions": "המרות",
+        "EntryPages": "עמודי כניסה",
+        "PageTitles": "כותרות עמוד"
     },
     "Installation": {
         "Congratulations": "ברכות",
@@ -2010,6 +2015,10 @@
         "PluginKeywords": "מילות מפתח",
         "PluginVersionInfo": "%1$s מתוך %2$s"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "כל האתרים",
+        "TotalPageviews": "סך כל הצפיות בדפים"
+    },
     "Overlay": {
         "Clicks": "%s לחיצות",
         "Location": "מיקום",
@@ -2021,7 +2030,11 @@
     },
     "PrivacyManager": {
         "AnonymizeData": "הפוך מידע לאנונימי",
-        "AnonymizeIpInlineHelp": "הסתרת הספרות האחרונות של כתובת הIP של המבקרים בכדי להתיישר עם החוקים \/ תקנות המקומיים."
+        "AnonymizeIpInlineHelp": "הסתרת הספרות האחרונות של כתובת הIP של המבקרים בכדי להתיישר עם החוקים \/ תקנות המקומיים.",
+        "ComplianceTableSettingStatus": "מצב"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "מבט כללי"
     },
     "Referrers": {
         "Campaigns": "קמפיינים",
@@ -2068,6 +2081,10 @@
         "CategoryDate": "תאריך",
         "CategoryEmail": "אימייל",
         "CategoryErrors": "שגיאות",
+        "EtrackerTagTransactionCurrencyTitle": "מטבע",
+        "InvalidDebugUrlError": "שגיאה",
+        "MatomoConfigurationMatomoUserIdTitle": "User ID",
+        "MatomoTagEcommerceViewPrice": "מחיר",
         "PageUrlVariableName": "כתובת העמוד",
         "Version": "גרסה"
     },
@@ -2079,6 +2096,9 @@
     "Transitions": {
         "BouncesInline": "%s קפיצות",
         "TransitionsSubcategoryHelp2": "פרטים נוספים"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "אימות דו-שלבי"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "כתובת איי.פי. %s היא כתובת מקומית ולא ניתן לאתרה גיאוגרפית.",
@@ -2110,6 +2130,7 @@
     },
     "UsersManager": {
         "2FA": "אימות דו-שלבי",
+        "Active": "פעיל",
         "AllWebsites": "כל האתרים",
         "Email": "אימייל",
         "ManageAccess": "ניהול הרשאות",
@@ -2117,6 +2138,7 @@
         "MenuUsers": "משתמשים",
         "PrivNone": "אין הרשאות",
         "PrivView": "הצג",
+        "Status": "מצב",
         "User": "משתמש",
         "Username": "שם משתמש",
         "UsersManagement": "ניהול משתמשים"

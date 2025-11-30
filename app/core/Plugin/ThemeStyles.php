@@ -12,7 +12,7 @@ use Piwik\Piwik;
 class ThemeStyles
 {
     // to maintain BC w/ old names that were defined in LESS
-    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorText' => 'theme-color-text', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextContrast' => 'theme-color-text-contrast', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBorder' => 'theme-color-border', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border'];
+    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorText' => 'theme-color-text', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextContrast' => 'theme-color-text-contrast', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBorder' => 'theme-color-border', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border'];
     /**
      * @var string
      */
@@ -25,6 +25,14 @@ class ThemeStyles
      * @var string
      */
     public $colorBrandContrast = '#fff';
+    /**
+     * @var string
+     */
+    public $colorFocusRing = '#0969da';
+    /**
+     * @var string
+     */
+    public $colorFocusRingAlternative;
     /**
      * @var string
      */
@@ -131,6 +139,7 @@ class ThemeStyles
     public $colorWidgetBorder;
     public function __construct()
     {
+        $this->colorFocusRingAlternative = $this->colorBrand;
         $this->colorMenuContrastText = $this->colorText;
         $this->colorMenuContrastTextSelected = $this->colorMenuContrastText;
         $this->colorMenuContrastBackground = $this->colorBackgroundContrast;

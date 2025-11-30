@@ -127,7 +127,7 @@ class InvalidLicenses
         if (empty($info['loginUrl'])) {
             return '';
         }
-        return '<a href="' . $info['loginUrl'] . '" target="_blank" rel="noreferrer noopener">';
+        return Url::getExternalLinkTag($info['loginUrl']);
     }
     private function getSubscritionSummaryMessage()
     {

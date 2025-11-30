@@ -403,7 +403,7 @@ class Php extends GeoIp2
         if (extension_loaded('maxminddb')) {
             $desc .= Piwik::translate('GeoIp2_LocationProviderDesc_Php_WithExtension', array('<strong>', '</strong>'));
         }
-        $installDocs = '<a rel="noreferrer"  target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_163') . '">' . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a>';
+        $installDocs = Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_163') . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a>';
         $availableInfo = $this->getSupportedLocationInfo();
         $availableDatabaseTypes = array();
         if (isset($availableInfo[self::CITY_NAME_KEY]) && $availableInfo[self::CITY_NAME_KEY]) {

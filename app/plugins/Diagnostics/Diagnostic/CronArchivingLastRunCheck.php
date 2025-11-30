@@ -49,14 +49,14 @@ class CronArchivingLastRunCheck implements \Piwik\Plugins\Diagnostics\Diagnostic
         // check archiving has been run
         $lastRunTime = (int) Option::get(CronArchive::OPTION_ARCHIVING_FINISHED_TS);
         if (empty($lastRunTime)) {
-            $comment = $this->translator->translate('Diagnostics_CronArchivingHasNotRun') . '<br/><br/>' . $this->translator->translate('Diagnostics_CronArchivingRunDetails', [$coreArchiveShort, $mailto, $commandToRerun, '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/') . '" target="_blank" rel="noreferrer noopener">', '</a>']);
+            $comment = $this->translator->translate('Diagnostics_CronArchivingHasNotRun') . '<br/><br/>' . $this->translator->translate('Diagnostics_CronArchivingRunDetails', [$coreArchiveShort, $mailto, $commandToRerun, Url::getExternalLinkTag('https://matomo.org/docs/setup-auto-archiving/'), '</a>']);
             return [\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR, $comment)];
         }
         $lastRunTimePretty = Date::factory($lastRunTime)->getLocalized(DateTimeFormatProvider::DATETIME_FORMAT_LONG);
         $diffTime = self::getTimeSinceLastSuccessfulRun($lastRunTime);
         $formatter = new Formatter();
         $diffTimePretty = $formatter->getPrettyTimeFromSeconds($diffTime);
-        $errorComment = $this->translator->translate('Diagnostics_CronArchivingHasNotRunInAWhile', [$lastRunTimePretty, $diffTimePretty]) . '<br/><br/>' . $this->translator->translate('Diagnostics_CronArchivingRunDetails', [$coreArchiveShort, $mailto, $commandToRerun, '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/') . '" target="_blank" rel="noreferrer noopener">', '</a>']);
+        $errorComment = $this->translator->translate('Diagnostics_CronArchivingHasNotRunInAWhile', [$lastRunTimePretty, $diffTimePretty]) . '<br/><br/>' . $this->translator->translate('Diagnostics_CronArchivingRunDetails', [$coreArchiveShort, $mailto, $commandToRerun, Url::getExternalLinkTag('https://matomo.org/docs/setup-auto-archiving/'), '</a>']);
         // check archiving has been run recently
         if ($diffTime > self::SECONDS_IN_DAY * 2) {
             $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR, $errorComment);

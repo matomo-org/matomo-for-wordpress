@@ -441,8 +441,14 @@ class Http
                     fwrite($file, $response);
                 }
                 fclose($handle);
+                if (function_exists('http_get_last_response_headers')) {
+                    $http_response_header = http_get_last_response_headers();
+                }
             } else {
                 $response = @file_get_contents($aUrl, 0, $ctx);
+                if (function_exists('http_get_last_response_headers')) {
+                    $http_response_header = http_get_last_response_headers();
+                }
                 // try to get http status code from response headers
                 if (!empty($http_response_header) && preg_match('~^HTTP/(\\d\\.\\d)\\s+(\\d+)(\\s*.*)?~', implode("\n", $http_response_header), $m)) {
                     $status = (int) $m[2];
@@ -499,7 +505,7 @@ class Http
             if ($httpMethod == 'HEAD') {
                 @curl_setopt($ch, \CURLOPT_NOBODY, \true);
             }
-            if (strtolower($httpMethod) === 'post' && !empty($requestBodyQuery)) {
+            if (in_array(strtolower($httpMethod), ['post', 'put']) && !empty($requestBodyQuery)) {
                 curl_setopt($ch, \CURLOPT_POST, 1);
                 curl_setopt($ch, \CURLOPT_POSTFIELDS, $requestBodyQuery);
             }

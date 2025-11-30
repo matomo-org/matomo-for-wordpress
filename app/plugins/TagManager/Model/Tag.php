@@ -162,6 +162,10 @@ class Tag extends \Piwik\Plugins\TagManager\Model\BaseModel
         // If the destination site isn't set, simply use the source site
         $idDestinationSite = $idDestinationSite ?? $idSite;
         $newName = $this->dao->makeCopyNameUnique($idDestinationSite, $tag['name'], $idDestinationVersion);
+        if (class_exists('\\Piwik\\Plugins\\ActivityLog\\ActivityParamObject\\EntityDuplicatedData')) {
+            $additionalData = ['idSite' => $idSite, 'idDestinationSites' => $idDestinationSite, 'idContainerVersion' => $idContainerVersion, 'idDestinationContainer' => $idDestinationContainer, 'idTag' => $idTag];
+            (new \Piwik\Plugins\ActivityLog\ActivityParamObject\EntityDuplicatedData('TagManager_Tag', $tag['name'], $idTag, $idSite, [$idDestinationSite], $additionalData))->postActivityEvent();
+        }
         return $this->addContainerTag($idDestinationSite, $idDestinationVersion, $tag['type'], $newName, $tag['parameters'], $tag['fire_trigger_ids'], $tag['block_trigger_ids'], $tag['fire_limit'], $tag['fire_delay'], $tag['priority'], $tag['start_date'], $tag['end_date'], $tag['description'], $tag['status']);
     }
     private function copyReferencedVariablesAndTriggers(array &$tag, int $idSite, int $idContainerVersion, int $idDestinationSite, string $idDestinationContainer) : int

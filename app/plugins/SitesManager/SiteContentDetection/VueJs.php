@@ -55,7 +55,7 @@ class VueJs extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteContent
             return '';
             // don't show on others page if tab is being displayed
         }
-        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataVueDescription', ['<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://github.com/AmazingDreams/vue-matomo') . '">vue-matomo</a>', '<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-websites-that-use-vue-js/') . '">', '</a>']));
+        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataVueDescription', [Url::getExternalLinkTag('https://github.com/AmazingDreams/vue-matomo') . 'vue-matomo</a>', Url::getExternalLinkTag('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-websites-that-use-vue-js/'), '</a>']));
     }
     private function getVueInitializeCode(int $vueVersion = 3) : string
     {

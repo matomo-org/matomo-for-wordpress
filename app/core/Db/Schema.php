@@ -21,7 +21,7 @@ class Schema extends Singleton
     /**
      * Type of database schema
      *
-     * @var SchemaInterface
+     * @var SchemaInterface|null
      */
     private $schema = null;
     /**
@@ -74,6 +74,14 @@ class Schema extends Singleton
             $this->loadSchema();
         }
         return $this->schema;
+    }
+    /**
+     * Unset schema instance
+     * @return void
+     */
+    public function unsetSchema() : void
+    {
+        $this->schema = null;
     }
     /**
      * Returns the default collation for a charset.
@@ -302,6 +310,14 @@ class Schema extends Singleton
     public function getVersion() : string
     {
         return $this->getSchema()->getVersion();
+    }
+    /**
+     * Returns the minimum supported version of the currently used database server
+     * @return string
+     */
+    public function getMinimumSupportedVersion() : string
+    {
+        return $this->getSchema()->getMinimumSupportedVersion();
     }
     /**
      * Returns if the currently used database version has reach its EOL

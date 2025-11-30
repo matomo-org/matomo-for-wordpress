@@ -9,6 +9,7 @@ export interface ComplianceRequirement {
 
 interface ComplianceStatus {
   complianceModeEnforced: boolean;
+  complianceConfigControlled: boolean;
   complianceRequirements: ComplianceRequirement[];
 }
 
@@ -23,6 +24,7 @@ interface ComplianceStoreState {
   loading: boolean;
   complianceType: string;
   complianceModeEnforced: boolean;
+  complianceConfigControlled: boolean;
   complianceRequirements: ComplianceRequirement[];
   fetchComplianceError: string | null;
   saveComplianceError: string | null;
@@ -31,7 +33,7 @@ interface ComplianceStoreState {
 export interface ComplianceStore {
   state: DeepReadonly<ComplianceStoreState>;
   setIdSite: (idSite: string) => void;
-  saveComplianceStatus: (enabled: boolean) => void;
+  saveComplianceStatus: (enabled: boolean, password: string) => void;
 }
 
 export async function fetchCompliancePolicies(): Promise<CompliancePolicy[]> {
@@ -51,6 +53,7 @@ export function createComplianceStore(initialType: string): ComplianceStore {
     loading: false,
     complianceType: initialType,
     complianceModeEnforced: false,
+    complianceConfigControlled: false,
     complianceRequirements: [],
     fetchComplianceError: null,
     saveComplianceError: null,
@@ -71,6 +74,7 @@ export function createComplianceStore(initialType: string): ComplianceStore {
 
   function storeComplianceStatus(complianceData: ComplianceStatus) {
     state.complianceModeEnforced = complianceData.complianceModeEnforced;
+    state.complianceConfigControlled = complianceData.complianceConfigControlled;
     state.complianceRequirements = complianceData.complianceRequirements;
   }
 
@@ -92,7 +96,7 @@ export function createComplianceStore(initialType: string): ComplianceStore {
     fetchCompliance();
   }
 
-  function saveComplianceStatus(enforce: boolean) {
+  function saveComplianceStatus(enforce: boolean, password: string) {
     state.loading = true;
     state.saveComplianceError = null;
     AjaxHelper.post<boolean>(
@@ -104,6 +108,7 @@ export function createComplianceStore(initialType: string): ComplianceStore {
       },
       {
         createErrorNotification: false,
+        passwordConfirmation: password,
       },
     ).then(() => {
       fetchCompliance();

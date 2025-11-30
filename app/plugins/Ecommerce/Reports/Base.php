@@ -11,8 +11,8 @@ namespace Piwik\Plugins\Ecommerce\Reports;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
-use Piwik\Site;
 use Piwik\Url;
+use Piwik\Site;
 abstract class Base extends Report
 {
     protected function init()
@@ -45,15 +45,15 @@ abstract class Base extends Report
             $availableReports[] = $this->buildReportMetadata();
         }
     }
-    private function isEcommerceEnabledByInfos($infos)
+    private function isEcommerceEnabledByInfos(array $infos) : bool
     {
         $idSite = $infos['idSite'];
         if (empty($idSite) || !is_numeric($idSite)) {
             return \false;
         }
-        return $this->isEcommerceEnabled($idSite);
+        return $this->isEcommerceEnabled((int) $idSite);
     }
-    private function isEcommerceEnabled($idSite)
+    private function isEcommerceEnabled(int $idSite) : bool
     {
         $site = new Site($idSite);
         return $site->isEcommerceEnabled();

@@ -6,21 +6,20 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+declare (strict_types=1);
 namespace Piwik\Plugins\Referrers\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\Plugins\Referrers\Columns\WebsitePage;
-class GetUrlsForAIAssistant extends \Piwik\Plugins\Referrers\Reports\Base
+use Piwik\Plugins\Actions\Columns\EntryPageUrl;
+class GetEntryPageUrlsForAIAssistant extends \Piwik\Plugins\Referrers\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension = new WebsitePage();
+        $this->dimension = new EntryPageUrl();
         $this->name = Piwik::translate('Referrers_AIAssistants');
-        $this->documentation = Piwik::translate('Referrers_WebsitesReportDocumentation', '<br />');
         $this->isSubtableReport = \true;
-        $this->order = 14;
     }
     public function configureView(ViewDataTable $view)
     {

@@ -2,7 +2,7 @@
 
 Component providing Network tools.
 
-[![Build Status](https://travis-ci.org/matomo-org/component-network.svg?branch=master)](https://travis-ci.org/matomo-org/component-network)
+[![PHPUnit](https://github.com/matomo-org/component-network/actions/workflows/phpunit.yml/badge.svg)](https://github.com/matomo-org/component-network/actions/workflows/phpunit.yml)
 
 ## Installation
 

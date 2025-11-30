@@ -66,11 +66,11 @@ class ExceptionToTextProcessor
         return Log::$debugBacktraceForTests ?: self::getMessageAndWholeBacktrace($exception, $this->forcePrintBacktrace ? \true : null);
     }
     /**
-     * @param \Exception|array $exception
+     * @param \Throwable|array{message: ?string, backtrace: ?string} $exception
      * @param bool|null $shouldPrintBacktrace
-     * @return mixed|string
+     * @return string
      */
-    public static function getMessageAndWholeBacktrace($exception, ?bool $shouldPrintBacktrace = null)
+    public static function getMessageAndWholeBacktrace($exception, ?bool $shouldPrintBacktrace = null) : string
     {
         if ($shouldPrintBacktrace === null) {
             $shouldPrintBacktrace = ExceptionHandler::shouldPrintBackTraceWithMessage();
@@ -88,7 +88,7 @@ class ExceptionToTextProcessor
         if (!$shouldPrintBacktrace) {
             return ExceptionHandler::replaceSensitiveValues($exception->getMessage());
         }
-        $message = "";
+        $message = '';
         $e = $exception;
         do {
             if ($e !== $exception) {

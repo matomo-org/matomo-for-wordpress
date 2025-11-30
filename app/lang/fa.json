@@ -784,6 +784,7 @@
         "JsTrackingCodeMissingEmail2": "برای شروع داده‌های ردیابی و فهم کاربران خود، نیاز به راه‌اندازی ردیابی بر روی وبسایت یا اپ موبایل خود دارید. برای وبسایت‌ها به راحتی کد ردیابی را قبل از برچسب %s قرار دهید.",
         "JsTrackingCodeMissingEmail3": "برای سفارشی‌سازی بیشتر کد ردیابی خود، %1$sاینجا را کلیک کنید%2$s (یا %3$sراهنمای ردیابی JavaScript%4$s را مشاهده کنید).",
         "LearnMore": "اطلاعات بیشتر",
+        "Login": "نام کاربری",
         "LogoNotWriteableInstruction": "برای استفاده از لوگوی سفارشی به جای لوگوی پیشفرض Matomo، اجازه‌ی نوشتن را در دایرکتوری %1$s را بدهید. Matomo برای ذخیره لوگوها در %2$s نیاز به دسترسی نوشتن دارد.",
         "LogoUpload": "انتخاب آرم برای آپلود",
         "LogoUploadFailed": "فایل بارگزاری شده قابل پردازش نیست. لطفا صحت فرمت فایل را بررسی کنید.",
@@ -859,6 +860,7 @@
         "ChangeVisualization": "تغییر تصویرسازی",
         "CheckForUpdates": "بررسی برای بروزرسانی",
         "CheckPiwikOut": "پیویک را بررسی کنید!",
+        "ChooseWebsite": "انتخاب وب سایت",
         "ChooseX": "انتخاب %1$s",
         "ClickRowToExpandOrContract": "روی این ردیف کلیک کنید تا زیرمجموعه را باز یا بسته کنید.",
         "ClickToEditX": "برای ویرایش %s کلیک کنید",
@@ -902,6 +904,7 @@
         "RemoveTotalsRowDataTable": "این گزارش مجموع ردیف‌ها را نمایش می‌دهد %s حذف کنید",
         "ReportGeneratedOn": "گزارش تولید شده است در %s",
         "ReportGeneratedXAgo": "گزارش %s قبل تولید شده است",
+        "ReportLowercase": "گزارش",
         "SharePiwikLong": "سلام! من تازه یک نرم‌افزار رایگان عالی پیدا کردم: Matomo!\n\nMatomo به شما اجازه‌ی ردیابی بازدیدکنندگان وبسایت شما را به صورت رایگان می‌دهد. حتما بررسی کنید!",
         "ShareThis": "این را به اشتراک بگذارید",
         "ShortcutCalendar": "برای باز کردن تقویم (d به معنای تاریخ)",
@@ -1014,6 +1017,7 @@
         "UpdateAutomatically": "بروزرسانی خودکار",
         "UpdateSuccessTitle": "پیویک با موفقیت به روزرسانی شد!",
         "UpdateTitle": "بروزرسانی",
+        "Updating": "به‌روزرسانی",
         "UpgradeComplete": "بروزرسانی کامل شد!",
         "UpgradePiwik": "ارتقا پیویک",
         "VerifyingUnpackedFiles": "بررسی فایل های آن پک شده",
@@ -1021,6 +1025,9 @@
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "ما به طور خودکار این افزونه ها را غیر فعال کردیم: %s",
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "شما می توانید به طور خودکار به نسخه ی %s بروزرسانی کنید یا بسته را دانلود و دستی نصب کنید:",
         "YourDatabaseIsOutOfDate": "پایگاه داده پیویک شما از رده خارج است و قبل از ادامه باید ارتقا یابد."
+    },
+    "CustomDimensions": {
+        "CustomDimensions": "ابعاد سفارشی"
     },
     "DBStats": {
         "DatabaseUsage": "پایگاه داده مورد استفاده",
@@ -1160,6 +1167,9 @@
         "BestKeywords": "بالا شما تبدیل کلمات کلیدی عبارتند از:",
         "BestReferrers": "شما بهترین وب سایت معرف ها عبارتند از:",
         "CaseSensitive": "همسان بودن حروف حساس",
+        "CategoryTextDevicesDetection_DevicesDetection": "وسایل",
+        "CategoryTextGeneral_Actions": "صفحه‌ها",
+        "CategoryTextReferrers_Referrers": "ارجاع دهنده ها",
         "ClickOutlink": "با کلیک بر روی لینک به یک وب سایت خارجی",
         "ColumnAverageOrderRevenueDocumentation": "ارزش نظم به طور متوسط (AOV) کل درآمد از تمامی سفارشات تجارت الکترونیک و تقسیم بر تعداد سفارشات است.",
         "ColumnAveragePriceDocumentation": "میانگین درآمد برای %s",
@@ -1188,6 +1198,7 @@
         "EcommerceOrder": "سفارش تجارت الکترونیک",
         "EcommerceOverview": "بررسی اجمالی تجارت الکترونیک",
         "EcommerceReports": "گزارش تجارت الکترونیک",
+        "EntryPages": "صفحات ورودی",
         "ExternalWebsiteUrl": "آدرس وب سایت خارجی",
         "Filename": "نام فایل",
         "GoalConversion": "بازدهی هدف",
@@ -1207,6 +1218,7 @@
         "NewVisitorsConversionRateIs": "نرخ تبدیلات بازدیدکنندگان جدید %s است",
         "Optional": "(اختیاری)",
         "PageTitle": "عنوان صفحه",
+        "PageTitles": "عنوان های صفحه",
         "Pattern": "الگو",
         "ProductCategory": "دسته محصول",
         "ProductName": "نام محصول",
@@ -2566,7 +2578,7 @@
         "NewPassword": "‌رمزعبور جدید",
         "NewPasswordRepeat": "رمزعبور جدید (تکرار)",
         "PasswordChanged": "رمزعبور شما تغییر کرد.",
-        "PasswordRepeat": "تکرار رمزعبور",
+        "PasswordRepeat": "رمز عبور (تکرار)",
         "PasswordsDoNotMatch": "رمزعبور ها یکسان نیستند.",
         "RememberMe": "مرا به خاطر داشته باش",
         "WrongPasswordEntered": "لطفا رمزعبور خود را وارد کنید."
@@ -2642,9 +2654,11 @@
         "TopLinkTooltip": "گزارش های تحلیل آماری وب را در ایمیل یا روی موبایل تان دریافت کنید!"
     },
     "MultiSites": {
+        "AllWebsitesDashboardTitle": "همه وب سايت ها",
         "Evolution": "تکامل",
         "LoadingWebsites": "درحال بارگزاری وب سایت ها",
-        "TopLinkTooltip": "اطلاعات آماری همه وب سایت هایتان را مقایسه کنید."
+        "TopLinkTooltip": "اطلاعات آماری همه وب سایت هایتان را مقایسه کنید.",
+        "TotalPageviews": "تمام بازدیدصفحه ها"
     },
     "Overlay": {
         "Clicks": "%s کلیک",
@@ -2671,6 +2685,7 @@
         "AnonymizeIpMaskLengtDescription": "انتخاب کنید چه تعداد از IP های بازدید کنندهگان باید مخفی باشند.",
         "AnonymizeIpMaskLength": "%1$s بایت (ها) - e.g. %2$s",
         "ClickHereSettings": "برای دسترسی به تنظیمات %s اینجا کلیک کنید.",
+        "ComplianceTableSettingStatus": "وضعیت",
         "CurrentDBSize": "اندازه بانک اطلاعاتی کنونی",
         "DBPurged": "پایگاه داده پالایش شد.",
         "DeleteDataInterval": "داده های قدیمی را حذف کن هر",
@@ -2689,6 +2704,7 @@
         "FontColor": "رنگ فونت",
         "FontSize": "سایز فونت",
         "GetPurgeEstimate": "برآورد پاکسازی",
+        "IPAddress": "آدرس آی‌پی",
         "KeepBasicMetrics": "حفظ معیارهای پایه (بازدیدها، بازدیدهای صفحه، نرخ فرار، تبدیل هدف و غیره)",
         "LastAction": "آخرین فعالیت",
         "LastDelete": "حذف آخرین بود",
@@ -2705,8 +2721,12 @@
         "UseAnonymizeIp": "آدرس آی پی بازدیدکنندگان گمنام",
         "UseDeleteReports": "به طور منظم گزارش های قدیمی را از بانک اطلاعاتی حذف کنید"
     },
+    "ProfessionalServices": {
+        "PromoOverview": "بازبینی"
+    },
     "Referrers": {
         "Acquisition": "دستاوردها",
+        "CampaignSource": "منبع",
         "Campaigns": "کمپین",
         "ColumnCampaign": "کمپین بین المللی حقوق بشر",
         "ColumnSearchEngine": "موتور جستجو",
@@ -2839,6 +2859,7 @@
         "ExcludedIps": "به غیر از آی پی های",
         "ExcludedParameters": "پارامتر های محروم",
         "ExcludedUserAgents": "عامل های کاربری محروم شده",
+        "ExclusionTypeOptionCustom": "سفارشی",
         "GlobalExcludedUserAgentHelp1": "فهرستی عامل های کاربری وارد کنید تا از ردیابی توسط پیویک محروم شوند.",
         "GlobalExcludedUserAgentHelp2": "شما میتوانید از این استفاده کنید تا چند روبات را از ردیابی توسط پیویک محروم کنید.",
         "GlobalListExcludedIps": "لیست عمومی آی پی های محروم",
@@ -2867,6 +2888,7 @@
         "Timezone": "منطقه زمانی",
         "TrackingSiteSearch": "ردیابی جستجوی داخلی سایت",
         "TrackingTags": "کد رهگیری %s",
+        "Type": "نوع",
         "UTCTimeIs": "UTC زمان %s.",
         "Urls": "آدرس ها",
         "WebsitesManagement": "مدیریت وب سایت ها",
@@ -2874,6 +2896,7 @@
         "YourCurrentIpAddressIs": "آی پی آدرس جاری شما %s"
     },
     "TagManager": {
+        "BingUETTagIdTitle": "شناسه",
         "CategoryClicks": "کلیک ها",
         "CategoryCustom": "سفارشی",
         "CategoryDate": "تاریخ",
@@ -2881,19 +2904,38 @@
         "CategoryEmail": "ایمیل",
         "CategoryErrors": "خطاها",
         "CategoryHistory": "تاریخچه",
+        "ChooseWebsite": "انتخاب وب سایت",
         "ComparisonContains": "شامل",
         "ComparisonEndsWith": "پایان با",
         "ComparisonGreaterThan": "بیشتر است از",
         "ComparisonStartsWith": "شروع شده با",
         "Condition": "وضعیت",
+        "ContainerLowercase": "کانتینر",
         "CreatedDate": "تاریخ ایجاد",
+        "DataLayerVariableName": "لایه داده",
+        "Environment": "محیط",
+        "EtrackerConfigurationVariableCustomDimensionsTitle": "ابعاد سفارشی",
+        "EtrackerTagTransactionCurrencyTitle": "پول",
         "Filter": "فیلتر",
+        "InvalidDebugUrlError": "خطا",
         "LearnMore": "اطلاعات بیشتر",
+        "MatomoConfigurationMatomoCustomDimensionsTitle": "ابعاد سفارشی",
+        "MatomoConfigurationMatomoJsEndpointCustom": "سفارشی",
+        "MatomoConfigurationMatomoTrackingEndpointCustom": "سفارشی",
+        "MatomoConfigurationMatomoUserIdTitle": "شناسه کاربری",
+        "MatomoTagEcommerceViewPrice": "قیمت",
+        "MatomoTagEcommerceViewProductName": "نام محصول",
+        "MatomoTagEcommerceViewProductSKU": "محصول SKU",
         "PageTitleVariableName": "عنوان صفحه",
         "PageUrlVariableName": "آدرس صفحه",
         "ReferrerUrlVariableName": "URL بازگشتی",
         "ReferrerVariableName": "URL بازگشتی",
+        "TagLowercase": "برچسب",
+        "TagManager": "Tag Manager",
+        "TriggerLowercase": "شروع کننده",
         "Type": "نوع",
+        "UserAgentVariableName": "عامل کاربر",
+        "VariableLowercase": "متغییر",
         "Version": "ویرایش",
         "ViewX": "مشاهده %s"
     },
@@ -2949,6 +2991,10 @@
         "XOfAllPageviews": "%s از همه ی بازدیدهای این صفحه",
         "XOutOfYVisits": "%1$s (از %2$s)",
         "TransitionsSubcategoryHelp2": "جزئیات بیشتر"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "تأیید دو مرحله‌ای (2FA)",
+        "TwoFactorAuthentication": "احراز هویت دو عاملی"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "آدرس آیپی (IP) %s یک آدرس محلی است و قابلیت مکان یابی ندارد.",
@@ -3008,6 +3054,7 @@
     },
     "UsersManager": {
         "2FA": "احراز هویت دو عاملی",
+        "Active": "فعال",
         "AllWebsites": "همه وب سایت ها",
         "AnonymousUserHasViewAccess": "توجه: کاربر %1$s در%2$s دسترسی به این وب سایت می باشد.",
         "AnonymousUserHasViewAccess2": "گزارش تجزیه و تحلیل و اطلاعات بازدید کنندگان خود را علنی قابل مشاهده است.",
@@ -3038,9 +3085,11 @@
         "PrivView": "نمایش",
         "ReportDateToLoadByDefault": "تاریخ گزارش به طور پیش فرض باز",
         "ReportToLoadByDefault": "گزارش به طور پیش فرض باز",
+        "Status": "وضعیت",
         "SuperUserAccessManagement": "مدیریت دسترسی کاربر فوق العاده",
         "TheLoginScreen": "نمایش ورودی",
         "ThereAreCurrentlyNRegisteredUsers": "هم اکنون %s کاربر عضو وجود دارد.",
+        "TwoFactorAuthentication": "احراز هویت دو عاملی",
         "TypeYourPasswordAgain": "پسورد جدیدتان را دوباره بنویسید.",
         "User": "کاربر",
         "Username": "نام کاریری",
@@ -3105,11 +3154,17 @@
         "GenerateQueries": "%s پرس و جو های اجرا شده",
         "GenerateTime": "%s ثانیه برای تولید صفحه",
         "NbActionsDescription": "فعالیت ها %s",
+        "NbPageviewsDescription": "نمایش‌های صفحه",
+        "NbUsersDescription": "کاربران",
         "VisitsSummary": "خلاصه بازدیدها",
         "VisitsSummaryDocumentation": "این مروری بر تکامل بازدید است.",
         "WidgetLastVisits": "نمودار آخرین بازدید ها",
         "WidgetOverviewGraph": "مرور به وسیله نمودار",
         "WidgetVisits": "مرور بازدید ها"
+    },
+    "WebsiteMeasurable": {
+        "Website": "وب سایت",
+        "Websites": "وب سایت ها"
     },
     "Widgetize": {
         "OpenInNewWindow": "باز کردن در یک پنجره جدید"

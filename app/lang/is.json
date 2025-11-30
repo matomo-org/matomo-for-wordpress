@@ -80,6 +80,7 @@
         "LoadingData": "Sækir gögn…",
         "Locale": "is_IS.UTF-8",
         "Logout": "Útskrá",
+        "ManagePlugins": "Íbótastjórnun",
         "MediumToHighTrafficItIsRecommendedTo": "Á vefsvæðum með umferð yfir meðallagi, er mælt með að úrvinnsla skýrslna sé ekki framkvæmd tíðar en á hálftíma fresti (%1$s sekúndur) eða á klukkustundar fresti (%2$s seconds).",
         "MinutesSeconds": "%1$s mín %2$ss",
         "Monthly": "Mánaðalega",
@@ -180,6 +181,7 @@
         "YouMayOptOutBis": "Til að framkvæma það val, vinsamlegast smelltu hér fyrir neðan til að fá útvals smáköku."
     },
     "CoreHome": {
+        "ChooseWebsite": "Veldu vef",
         "ShowJSCode": "Sýna JavaScript kóða til að setja inn",
         "ThereIsNoDataForThisReport": "Það eru eingin gögn til fyrir þessa skýrslu"
     },
@@ -1316,6 +1318,9 @@
         "PluginKeywords": "Leitarorð",
         "SubscriptionType": "Tegund"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "Allir vefir"
+    },
     "Overlay": {
         "Location": "Staðsetning"
     },
@@ -1323,7 +1328,11 @@
         "ColumnTimeServer": "Tímabelti þjóns"
     },
     "PrivacyManager": {
-        "AnonymizeIpInlineHelp": "Hylja síðusta bæti gesta IP-tölu til samræðis við persónuverndarlaga þíns lands."
+        "AnonymizeIpInlineHelp": "Hylja síðusta bæti gesta IP-tölu til samræðis við persónuverndarlaga þíns lands.",
+        "ComplianceTableSettingStatus": "Staða"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Yfirlit"
     },
     "Referrers": {
         "Campaigns": "Herferðir",
@@ -1383,6 +1392,9 @@
         "CategoryClicks": "Músasmellir",
         "CategoryDate": "Dagsetning",
         "CategoryEmail": "Netfang",
+        "ChooseWebsite": "Veldu vef",
+        "EtrackerTagTransactionCurrencyTitle": "Gjaldmiðill",
+        "InvalidDebugUrlError": "Villa",
         "PageUrlVariableName": "Síðu slóð",
         "ReferrerUrlVariableName": "URL Sendanda",
         "ReferrerVariableName": "URL Sendanda",
@@ -1409,6 +1421,7 @@
         "LanguageCode": "Kóði tungumáls"
     },
     "UsersManager": {
+        "Active": "Kveikt",
         "AllWebsites": "Allir vefir",
         "ApplyToAllWebsites": "Virkja fyrir alla vefi",
         "Email": "Netfang",
@@ -1419,6 +1432,7 @@
         "PrivNone": "Engin aðgangur",
         "PrivView": "Sýn",
         "ReportToLoadByDefault": "Skýrsla sem sjálfgefið er að sækja",
+        "Status": "Staða",
         "TheLoginScreen": "Skjár fyrir auðkenningu",
         "User": "Notandi",
         "Username": "Notandanafn",

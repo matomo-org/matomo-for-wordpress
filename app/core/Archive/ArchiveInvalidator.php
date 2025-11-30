@@ -414,7 +414,7 @@ class ArchiveInvalidator
         if (empty($segment) && Rules::shouldProcessSegmentsWhenReArchivingReports()) {
             foreach ($idSites as $idSite) {
                 foreach (Rules::getSegmentsToProcess([$idSite]) as $segment) {
-                    $this->markArchivesAsInvalidated($idSites, $dates, 'day', new Segment($segment, [$idSite]), $cascadeDown = \false, $forceInvalidateRanges = \false, $name);
+                    $this->markArchivesAsInvalidated([$idSite], $dates, 'day', new Segment($segment, [$idSite]), $cascadeDown = \false, $forceInvalidateRanges = \false, $name);
                 }
             }
         }

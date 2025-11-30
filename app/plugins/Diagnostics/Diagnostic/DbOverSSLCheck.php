@@ -47,7 +47,7 @@ class DbOverSSLCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
                     break;
             }
         }
-        $comment .= '<br />' . '<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/') . '"> FAQ on matomo.org</a>';
+        $comment .= '<br />' . Url::getExternalLinkTag('https://matomo.org/faq/') . 'FAQ on matomo.org</a>';
         return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment));
     }
 }

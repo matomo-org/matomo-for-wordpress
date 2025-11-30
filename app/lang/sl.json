@@ -207,6 +207,7 @@
         "Locale": "sl_SI.UTF-8",
         "Logout": "Izpis",
         "MainMetrics": "Glavna metrika",
+        "ManagePlugins": "Urejanje Vtičnikov",
         "Matches": "Zadetki",
         "Measurable": "Merljivo",
         "Measurables": "Merjenje",
@@ -590,10 +591,12 @@
         "ImageTrackingIntro3": "Za celoten seznam možnosti, ki so na voljo za povezavo za sledenje s pomočjo slike, poglejte %1$sTracking API documentacijo%2$s.",
         "ImageTrackingLink": "Povezava za sledenje s pomočjo slike",
         "JavaScriptTracking": "Sledenje s pomočjo Javascripta",
+        "Login": "vpis",
         "LogoUpload": "Izberite Logo za nalaganje",
         "MenuDevelopment": "Razvoj",
         "MenuDiagnostic": "Diagnostika",
         "MenuGeneralSettings": "Splošne nastavitve",
+        "MenuMeasurables": "Merjenje",
         "OptOutComplete": "Odjavljeno; vaši obiski spletne strani ne bodo zabeleženi z orodjem za analitiko.",
         "OptOutCompleteBis": "Upoštevajte, da če izbrišete piškotke, izbrišete tudi piškotek za onemogočanje analitike ali če spremenite računalnike ali spletne brskalnike, morate postopek odjave izvesti še enkrat.",
         "OptOutDntFound": "Vaš brskalnik sporoča, da ne želite biti sledeni. To je nastavitev brskalnika, zato se ne boste mogli odločiti za sledenje, dokler ne onemogočite funkcije »Ne sledi« v vašem brskalniku.",
@@ -612,6 +615,7 @@
         "ChangeVisualization": "Spremenite način prikazovanja",
         "CheckForUpdates": "Preveri za posodobitve",
         "CheckPiwikOut": "Preverite Matomo!",
+        "ChooseWebsite": "Izberite spletno stran",
         "ChooseX": "Izberite %1$s",
         "ClickToEditX": "Kliknite za urejanje %s",
         "ClickToSeeFullInformation": "Kliknite za ogled vseh informacij",
@@ -637,6 +641,7 @@
         "ReportGeneratedOn": "Poročilo ustvarjano na %s",
         "ReportGeneratedXAgo": "Poročilo ustvarjano pred %s",
         "ShowJSCode": "Prikaži JavaScript kodo za vstavljanje",
+        "SystemSummaryPhpVersion": "Različica PHP",
         "ThereIsNoDataForThisReport": "Za to poročilo ni podatkov."
     },
     "CorePluginsAdmin": {
@@ -759,6 +764,9 @@
         "AbandonedCart": "Opuščen voziček",
         "AddGoal": "Dodaj Cilj",
         "AddNewGoal": "Dodaj nov cilj",
+        "CategoryTextDevicesDetection_DevicesDetection": "Naprave",
+        "CategoryTextGeneral_Actions": "Strani",
+        "CategoryTextReferrers_Referrers": "Napotitelji",
         "ColumnConversions": "Konverzije",
         "ColumnConversionsDocumentation": "Število konverzij za %s.",
         "ColumnRevenueDocumentation": "Skupni prihodki ustvarjeni z %s.",
@@ -772,6 +780,7 @@
         "EcommerceLog": "Ecommerce zgodovina",
         "EcommerceOrder": "Ecommerce naročilo",
         "EcommerceOverview": "Ecommerce pregled",
+        "EntryPages": "Vstopne strani",
         "ExternalWebsiteUrl": "URL zunanje strani",
         "Filename": "ime datoteke",
         "GoalConversion": "Spreobrnitev cilja",
@@ -785,6 +794,7 @@
         "MatchesExpression": "se ujema z nizom %s",
         "Optional": "(opcijsko)",
         "PageTitle": "Naslov strani",
+        "PageTitles": "Naslovi strani",
         "Pattern": "Vzorec",
         "ProductCategory": "Kategorija izdelkov",
         "ProductName": "Ime izdelka",
@@ -804,11 +814,13 @@
         "DatabaseSetupDatabaseName": "ime podatkovne baze",
         "DatabaseSetupLogin": "vpis",
         "DatabaseSetupServer": "strežnik podatkovne baze",
+        "Email": "Email",
         "Extension": "razširitev",
         "Installation": "Namestitev",
         "InstallationStatus": "Status namestitve",
         "Legend": "Legenda",
         "Optional": "Izbirno",
+        "Password": "Geslo",
         "PasswordDoNotMatch": "gesli se ne ujemata",
         "PercentDone": "%s %% Končano",
         "PleaseFixTheFollowingErrors": "Prosimo, odpravite sledeče napake",
@@ -1894,8 +1906,10 @@
         "Settings_PhoneNumber": "Telefonska številka"
     },
     "MultiSites": {
+        "AllWebsitesDashboardTitle": "Vse spletne strani",
         "Evolution": "Evolucija",
-        "LoadingWebsites": "Nalaganje strani"
+        "LoadingWebsites": "Nalaganje strani",
+        "TotalPageviews": "Vseh ogledov strani"
     },
     "Overlay": {
         "Location": "Lokacija"
@@ -1906,6 +1920,7 @@
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonimiziraj zadnji bajt IP naslova obiskovalca, da se s tem izpolnijo zahteve lokalnih zakonov\/smernic o zasebnosti.",
         "ClickHereSettings": "Kliknite tu za dostop do %s nastavitev.",
+        "ComplianceTableSettingStatus": "Status",
         "DeleteLogsOlderThan": "Izbriši dnevnike, starejše od",
         "DeleteMaxRowsNoLimit": "brez omejitve",
         "LastDelete": "Zadnji izbris je bil",
@@ -1914,7 +1929,11 @@
         "NextDelete": "Naslednji izbris je predviden",
         "TeaserHeadline": "Nastavitve zasebnosti"
     },
+    "ProfessionalServices": {
+        "PromoOverview": "Pregled"
+    },
     "Referrers": {
+        "CampaignSource": "Vir",
         "Campaigns": "Kampanje",
         "ColumnCampaign": "Kampanja",
         "ColumnSearchEngine": "Spletni Iskalnik",
@@ -1990,8 +2009,8 @@
         "ExcludedParameters": "Izključeni Parametri",
         "JsTrackingTagHelp": "Tu je JavaScript sledilna koda, ki jo vključite v vse vaše strani",
         "ListOfIpsToBeExcludedOnAllWebsites": "Spodnji IP-ji bodo izključeni iz sledenja na vseh spletnih straneh.",
-        "NotFound": "Ni bilo najdenih spletnih strani za",
         "NoWebsites": "Nimate spletnih strani za urejanje",
+        "NotFound": "Ni bilo najdenih spletnih strani za",
         "OnlyOneSiteAtTime": "Sočasno lahko urejate zgolj eno spletno stran. Prosimo, shranite ali pa prekličite vaše trenutne spremembe za spletno stran %s.",
         "SelectACity": "Izberite mesto",
         "SelectDefaultCurrency": "Izberete lahko privzeto valuto. Ta bo uporabljena na vseh novo-dodanih spletnih straneh.",
@@ -1999,8 +2018,9 @@
         "Sites": "Spletne strani",
         "Timezone": "Časovno območje",
         "TrackingTags": "Sledilna koda za %s",
-        "Urls": "Povezave",
+        "Type": "Tip",
         "UTCTimeIs": "UTC čas je %s.",
+        "Urls": "Povezave",
         "WebsitesManagement": "Upravljanje spletnih strani",
         "YourCurrentIpAddressIs": "Vaš trenuten IP je %s"
     },
@@ -2008,6 +2028,13 @@
         "CategoryClicks": "Kliki",
         "CategoryDate": "Datum",
         "CategoryEmail": "Email",
+        "ChooseWebsite": "Izberite spletno stran",
+        "EtrackerTagTransactionCurrencyTitle": "Valuta",
+        "InvalidDebugUrlError": "Napaka",
+        "MatomoConfigurationMatomoUserIdTitle": "Uporabniški ID",
+        "MatomoTagEcommerceViewPrice": "Cena",
+        "MatomoTagEcommerceViewProductName": "Ime izdelka",
+        "MatomoTagEcommerceViewProductSKU": "SKU izdelka",
         "PageTitleVariableName": "Naslov strani",
         "PageUrlVariableName": "URL spletne strani",
         "Tag": "Oznaka",
@@ -2063,6 +2090,7 @@
         "LanguageCode": "Šifra jezika"
     },
     "UsersManager": {
+        "Active": "Aktivno",
         "AllWebsites": "Vse spletne strani",
         "ApplyToAllWebsites": "Uveljavi za vse spletne strani",
         "DeleteConfirm": "Ste prepričani, da želite izbrisati uporabnika %s?",
@@ -2080,6 +2108,7 @@
         "PrivView": "Ogled",
         "ReportDateToLoadByDefault": "Privzet časovni obseg",
         "ReportToLoadByDefault": "Privzeto prikaži",
+        "Status": "Status",
         "TheLoginScreen": "Obrazec za vpis",
         "ThereAreCurrentlyNRegisteredUsers": "Trenutno je %s registriranih uporabnikov.",
         "TypeYourPasswordAgain": "Ponovno vpišite vaše novo geslo.",
@@ -2126,6 +2155,10 @@
         "WidgetLastVisits": "Graf zadnjih obiskov",
         "WidgetOverviewGraph": "Pregled z grafom",
         "WidgetVisits": "Povzetek obiskov"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Spletna stran",
+        "Websites": "Spletne strani"
     },
     "Widgetize": {
         "OpenInNewWindow": "Odpri v novem oknu"

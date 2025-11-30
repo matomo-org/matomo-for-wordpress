@@ -152,6 +152,7 @@ class DbHelper
      */
     public static function checkDatabaseVersion()
     {
+        Schema::getInstance()->unsetSchema();
         \Piwik\Db::get()->checkServerVersion();
     }
     /**

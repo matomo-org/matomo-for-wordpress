@@ -214,6 +214,7 @@
         "Locale": "vi_VN.UTF-8",
         "Logout": "Đăng xuất",
         "MainMetrics": "Các số liệu chính",
+        "ManagePlugins": "Quản lý các Plugin.",
         "Matches": "Mối liên kết (Matches)",
         "Measurable": "Đo lường",
         "Measurables": "Đo lường",
@@ -609,6 +610,7 @@
         "Contents": "Nội dung"
     },
     "CoreAdminHome": {
+        "AddNewTrustedHost": "Thêm host tin tưởng mới",
         "Administration": "Quản trị",
         "ArchivingSettings": "Cấu hình archiving",
         "BrandingSettings": "Thiết lập Branding",
@@ -650,11 +652,13 @@
         "JSTracking_VisitorCustomVars": "Theo dõi biến tuỳ chỉnh cho khách truy cập này",
         "JSTracking_VisitorCustomVarsDesc": "Ví dụ, với tên biến \"Type\" và giá trị \"khách hàng\".",
         "JavaScriptTracking": "Theo dõi JavaScript",
+        "Login": "Đăng nhập",
         "LogoUpload": "Chọn một logo để tải lên",
         "LogoUploadHelp": "Xin vui lòng tải lên file dưới định dạng %1$s với chiều cao tối thiểu là %2$s pixels",
         "MenuDevelopment": "Phát triển",
         "MenuDiagnostic": "chẩn đoán",
         "MenuGeneralSettings": "cài đặt chung",
+        "MenuMeasurables": "Đo lường",
         "OptOutComplete": "Việc không tham gia hoàn tất; Việc thăm trang web này của bạn sẽ không được ghi lại bởi các công cụ Web Analytics.",
         "OptOutCompleteBis": "Ghi nhớ rằng nếu bạn xóa cookies hoặc xóa cookie opt-out (quảng cáo, spam), hay nếu bạn tùy chỉnh máy tính hoặc trình duyệt của bạn, bạn sẽ phải tiến hành các thao tác opt-out (chặn spam, quảng cáo) lại một lần nữa.",
         "OptOutExplanation": "Matomo được sử dụng để cung cấp quyền riêng tư trên Internet. Để cung cấp cho những khách ghé thăm trang web của bạn các lựa chọn chặn Matomo Web Analytics, bạn có thể thêm vào mã HTML sau trên trang web của bạn, ví dụ tùy chỉnh trong trang Quyền Riêng tư.",
@@ -682,6 +686,7 @@
         "CategoryNoData": "Không có dữ liệu trong mục này. Thử \"tất cả các thành phần\"",
         "CheckForUpdates": "Kiểm tra các bản cập nhật",
         "CheckPiwikOut": "Thủ tục thoát Matomo!",
+        "ChooseWebsite": "Chọn website",
         "CloseWidgetDirections": "Bạn có thể đóng widget này bằng cách click vào biểu tượng \"X\" ở trên cùng của các widget",
         "DataForThisReportHasBeenPurged": "Các dữ liệu cho báo cáo này là nhiều hơn %s tháng và đã được loại bỏ",
         "DataTableExcludeAggregateRows": "Hàng tổng hợp hiển thị %s Hide",
@@ -709,6 +714,7 @@
         "ShowJSCode": "Hiển thị đoạn mã JavaScript để chèn",
         "SubscribeAndBecomePiwikSupporter": "Thực hiện một trang thanh toán bằng thẻ tín dụng an toàn (Paypal) để trở thành một nhà tài trợ cho Matomo!",
         "SupportPiwik": "Ủng hộ Matomo!",
+        "SystemSummaryPhpVersion": "Phiên bản PHP",
         "TableNoData": "Không có dữ liệu cho bảng này.",
         "ThereIsNoDataForThisReport": "Không có dữ liệu cho báo cáo này",
         "UnFlattenDataTable": "Báo cáo là rõ ràng %s Làm cho nó có thứ bậc",
@@ -756,10 +762,11 @@
         "Websites": "Websites"
     },
     "CoreUpdater": {
+        "CheckingForPluginUpdates": "Đang kiểm tra cập nhật plugin mới",
         "CriticalErrorDuringTheUpgradeProcess": "Lỗi nghiêm trọng trong quá trình cập nhạt:",
         "DatabaseUpgradeRequired": "Nâng cấp cơ sở dữ liệu",
-        "DownloadingUpdateFromX": "Đang download để update từ %s",
         "DownloadX": "Tải xuống %s",
+        "DownloadingUpdateFromX": "Đang download để update từ %s",
         "EmptyDatabaseError": "Database %s rỗng. Bạn phải sửa hoặc xóa file cấu hình Matomo.",
         "ErrorDIYHelp": "Nếu bạn là người dùng thông thạo hệ thống (advanced user) và gặp phải lỗi trong quá trình cập nhật:",
         "ErrorDIYHelp_1": "phát hiện nguyên nhân và sửa lại (ví dụ memory_limit hay max_execution_time)",
@@ -784,23 +791,23 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Cơ sở dữ liệu Matomo sẽ được nâng cấp từ phiên bản %1$s lên phiên bản mới %2$s.",
         "ReadyToGo": "Sẵn sàng thực hiện?",
         "TheFollowingPluginsWillBeUpgradedX": "Các plugin sau sẽ được cập nhật: %s",
-        "ThereIsNewVersionAvailableForUpdate": "Có phiên bản mới của Matomo để cập nhật",
         "TheUpgradeProcessMayFailExecuteCommand": "Nếu bạn có database Matomo lớn, các gói cập nhật có mất rất nhiều khi chạy trên trình duyệt. Trong trường hợp này, bạn có thể tiến hành các gói cập nhật này từ chế độ dòng lệnh: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Quá trình cập nhật database có thể mất thời gian một chút, bạn vui lòng kiên nhẫn chờ đợi.",
+        "ThereIsNewVersionAvailableForUpdate": "Có phiên bản mới của Matomo để cập nhật",
         "UnpackingTheUpdate": "Đang giải nén gói cập nhật",
         "UpdateAutomatically": "Cập nhật tự động",
         "UpdateHasBeenCancelledExplanation": "Matomo One Click Update đã bị thoát. Nếu bạn không thể sửa được thông điệp lỗi ở trên, bạn có thể update Matomo bằng tay. %1$s Vui lòng xem %2$stài liệu cập nhật %3$s để bắt đầu!",
-        "UpdateTitle": "Cập nhật",
         "UpdateSuccessTitle": "Matomo vừa được cập nhật thành công!",
+        "UpdateTitle": "Cập nhật",
         "Updating": "Đang cập nhật",
         "UpgradeComplete": "Cập nhật xong!",
         "UpgradePiwik": "Cập nhật Matomo!",
         "VerifyingUnpackedFiles": "Xác minh các tập tin giải nén",
+        "ViewVersionChangelog": "Xem thay đổi cho phiên bản này:",
         "WarningMessages": "Cảnh báo:",
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "Chúng tôi tự động tắt các plugin sau: %s",
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Bạn có thể cập nhật tự động phiên bản %s hoặc tải về gói cập nhật và tự cài dặt.",
-        "YourDatabaseIsOutOfDate": "Cơ sở dữ liệu Matomo của bạn đã lỗi thời, và phải được nâng cấp trước khi bạn có thể tiếp tục.",
-        "ViewVersionChangelog": "Xem thay đổi cho phiên bản này:"
+        "YourDatabaseIsOutOfDate": "Cơ sở dữ liệu Matomo của bạn đã lỗi thời, và phải được nâng cấp trước khi bạn có thể tiếp tục."
     },
     "DBStats": {
         "DatabaseUsage": "Cơ sở dữ liệu đang sử dụng",
@@ -953,6 +960,8 @@
         "BestKeywords": "Các từ khóa chuyển đổi hàng đầu của bạn là:",
         "BestReferrers": "Các website chỉ dẫn chuyển đổi tốt nhất là:",
         "CaseSensitive": "Case sensitive phù hợp",
+        "CategoryTextGeneral_Actions": "Số trang",
+        "CategoryTextReferrers_Referrers": "giới thiệu",
         "ClickOutlink": "Click vào một link của một website bên ngoài",
         "ColumnAverageOrderRevenueDocumentation": "Giá trị đơn hàng trung bình (AOV) là tổng doanh thu từ tất cả các đơn đặt hàng thương mại điện tử chia cho số đơn đặt hàng.",
         "ColumnAveragePriceDocumentation": "Doanh thu trung bình cho %s này.",
@@ -986,6 +995,7 @@
         "EcommerceOrder": "Đặt hàng Thương mại điện tử",
         "EcommerceOverview": "Thương mại điện tử tổng quan",
         "EcommerceReports": "Các báo cáo thương mại điện tử",
+        "EntryPages": "Trang khởi đầu",
         "ExceptionInvalidMatchingString": "Nếu bạn chọn 'kết hợp chính xác', các chuỗi kết hợp phải là một URL bắt đầu với %1$s. Ví dụ, '%2$s'.",
         "ExternalWebsiteUrl": "Đường dẫn (URL) của website nước ngoài",
         "Filename": "Tên tệp tin",
@@ -1009,6 +1019,7 @@
         "NewVisitorsConversionRateIs": "Tỷ lệ chuyển đổi các khách truy cập mới là %s",
         "Optional": "(tùy chọn)",
         "PageTitle": "Tiêu đề trang",
+        "PageTitles": "Tiêu đề trang",
         "Pattern": "Mẫu",
         "ProductCategory": "Danh mục sản phẩm",
         "ProductName": "Tên sản phẩm",
@@ -1046,6 +1057,7 @@
         "DatabaseSetupLogin": "Đăng nhập",
         "DatabaseSetupServer": "Máy chủ cơ sở dữ liệu",
         "DatabaseSetupTablePrefix": "Bảng tiền tố",
+        "Email": "Email",
         "Extension": "Bổ sung",
         "Filesystem": "Tập tin hệ thống",
         "GoBackAndDefinePrefix": "Quay trở lại và xác định một số tiền tố cho các bảng Matomo",
@@ -2238,10 +2250,12 @@
         "VerificationText": "Mã số là %1$s. Để xác nhận số điện thoại của bạn và nhận được báo cáo SMS Matomo hãy sao chép mã này trong mẫu truy cập thông qua Matomo → %2$s → %3$s."
     },
     "MultiSites": {
+        "AllWebsitesDashboardTitle": "Tất cả website",
         "Evolution": "Sự tiến triển",
         "LoadingWebsites": "Đang tải website",
         "PluginDescription": "Xem và so sánh toàn bộ các website bạn quản lý",
-        "TopLinkTooltip": "So sánh các số liệu thống kê Web Analytics cho tất cả các trang web của bạn."
+        "TopLinkTooltip": "So sánh các số liệu thống kê Web Analytics cho tất cả các trang web của bạn.",
+        "TotalPageviews": "Tổng số lượt xem trang"
     },
     "Overlay": {
         "Clicks": "%s click",
@@ -2261,6 +2275,7 @@
         "RedirectUrlErrorUser": "Yêu cầu quản trị của bạn thêm các tên miền như một URL bổ sung"
     },
     "PagePerformance": {
+        "ColumnAveragePageLoadTime": "Thời gian tải trang trung bình",
         "ColumnTimeServer": "Giờ máy chủ"
     },
     "PrivacyManager": {
@@ -2268,6 +2283,7 @@
         "AnonymizeIpMaskLengtDescription": "Chọn bao nhiêu byte IPs của khách truy cập nên giấu.",
         "AnonymizeIpMaskLength": "%1$s byte(s) - ví dụ %2$s.",
         "ClickHereSettings": "Click chuột tại đây để truy cập các cài đặt %s.",
+        "ComplianceTableSettingStatus": "Trạng thái",
         "CurrentDBSize": "Kích thước cơ sở dữ liệu hiện tại",
         "DBPurged": "Loại bỏ DB.",
         "DeleteDataInterval": "Xóa mọi dữ liệu cũ",
@@ -2287,6 +2303,7 @@
         "EstimatedSpaceSaved": "Không gian ước tính đã lưu",
         "GeolocationAnonymizeIpNote": "Lưu ý: Định vị sẽ có khoảng kết quả tương tự với 1 byte ẩn danh. Với 2 byte hoặc nhiều hơn, Định vị sẽ không chính xác.",
         "GetPurgeEstimate": "Thiết lập ước lượng thanh lọc",
+        "IPAddress": "địa chỉ IP",
         "KeepBasicMetrics": "Giữ các số liệu cơ bản (thăm, xem trang, tỷ lệ thoát, chuyển đổi mục tiêu, chuyển đổi thương mại điện tử, vv)",
         "KeepReportSegments": "Đã dữ liệu trên, cũng giữ các báo cáo phân đoạn",
         "LastDelete": "Việc xóa lần cuối trên",
@@ -2304,8 +2321,13 @@
         "UseAnonymizedIpForVisitEnrichment": "Cũng sử dụng các địa chỉ IP ẩn danh khi làm phong phú thêm các lượt truy cập.",
         "UseDeleteReports": "Thường xuyên xóa báo cáo cũ từ cơ sở dữ liệu"
     },
+    "ProfessionalServices": {
+        "PromoOverview": "Tổng quan"
+    },
     "Referrers": {
+        "Acquisition": "Nguồn tiếp cận",
         "AllReferrersReportDocumentation": "Báo cáo này cho thấy tất cả sự chỉ dẫn của bạn trong một báo cáo, liệt kê tất cả các trang web, từ khóa tìm kiếm và Chiến dịch được sử dụng bởi khách truy cập để tìm trang web của bạn.",
+        "CampaignSource": "Mã nguồn",
         "Campaigns": "Các chiến dịch",
         "CampaignsDocumentation": "Khách truy cập đã tới trang web của bạn như là kết quả của một chiến dịch. %1$s Xem báo cáo %2$s để biết thêm chi tiết.",
         "ColumnCampaign": "Chiến dịch",
@@ -2497,6 +2519,7 @@
         "Timezone": "Múi giờ",
         "TrackingSiteSearch": "Theo dõi việc tìm kiếm trang web nội bộ",
         "TrackingTags": "Mã theo dõi cho %s",
+        "Type": "Kiểu",
         "UTCTimeIs": "Thời gian UTC là %s.",
         "Urls": "Các URL",
         "WebsitesManagement": "Quản lý các trang web",
@@ -2509,8 +2532,15 @@
         "CategoryEmail": "Email",
         "CategoryErrors": "Lỗi",
         "CategoryHistory": "Lịch sử",
+        "ChooseWebsite": "Chọn website",
         "ComparisonContains": "chứa",
         "Condition": "Điều kiện",
+        "EtrackerTagTransactionCurrencyTitle": "Tiền tệ",
+        "InvalidDebugUrlError": "Lỗi",
+        "MatomoConfigurationMatomoUserIdTitle": "ID người dùng",
+        "MatomoTagEcommerceViewPrice": "Giá",
+        "MatomoTagEcommerceViewProductName": "Tên sản phẩm",
+        "MatomoTagEcommerceViewProductSKU": "Sản phẩm SKU",
         "PageTitleVariableName": "Tiêu đề trang",
         "PageUrlVariableName": "URL của trang",
         "ReferrerUrlVariableName": "URL tham chiếu",
@@ -2548,6 +2578,9 @@
         "TransitionsSubcategoryHelp2": "Xem chi tiết hơn",
         "XOfAllPageviews": "%s của tất cả các lượt xem của trang này",
         "XOutOfYVisits": "%1$s (trong số %2$s)"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "2FA"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Địa chỉ IP %s là một địa chỉ địa phương và không có thể được geolocated.",
@@ -2613,6 +2646,8 @@
         "PluginDescription": "Các báo cáo ngôn ngữ được sử dụng bởi trình duyệt người dùng của bạn."
     },
     "UsersManager": {
+        "2FA": "2FA",
+        "Active": "Kích hoạt",
         "AllWebsites": "Tất cả các website",
         "AnonymousUser": "Người dùng ẩn danh",
         "AnonymousUserHasViewAccess": "Lưu ý: Người dùng %1$s có truy cập %2$s đến website này.",
@@ -2649,6 +2684,7 @@
         "PrivView": "Xem",
         "ReportDateToLoadByDefault": "Báo cáo theo ngày nạp mặc định",
         "ReportToLoadByDefault": "Báo cáo nạp mặc định",
+        "Status": "Trạng thái",
         "TheLoginScreen": "Màn hình đăng nhập",
         "ThereAreCurrentlyNRegisteredUsers": "Hiện tại có %s người dùng đăng ký.",
         "TypeYourPasswordAgain": "Gõ lại mật khẩu mới.",
@@ -2661,6 +2697,7 @@
         "YourVisitsAreNotIgnored": "%1$s lượt truy cập của bạn không được bỏ qua bởi Matomo %2$s (cookie Matomo bỏ qua đã không tìm thấy trong trình duyệt của bạn)."
     },
     "VisitFrequency": {
+        "ColumnActionsByNewVisits": "Hành động các lượt truy cập mới",
         "ColumnActionsByReturningVisits": "Hành động các lượt truy cập quay lại",
         "ColumnAverageVisitDurationForReturningVisitors": "Trung bình. Thời gian truy cập quay lại (tính theo giây)",
         "ColumnAvgActionsPerReturningVisit": "Trung bình. Các hành động mỗi lượt truy cập quay lại",
@@ -2714,6 +2751,7 @@
         "WidgetVisitsByNumDocumentation": "Trong báo cáo này, bạn có thể thấy số lượng truy cập những người đã truy cập lần thứ N, tức là. Khách truy cập trang web của bạn ít nhất là N lần."
     },
     "VisitsSummary": {
+        "AverageGenerationTime": "Thời gian khởi tạo trung bình",
         "GenerateQueries": "Thực thi truy vấn %s",
         "GenerateTime": "%s giây để tạo trang",
         "NbActionsDescription": "Hành động %s",
@@ -2722,6 +2760,10 @@
         "WidgetLastVisits": "Các lượt truy cập theo thời gian",
         "WidgetOverviewGraph": "Các lượt truy cập tổng quan (với đồ thị)",
         "WidgetVisits": "Các lượt truy cập tổng quan"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Website",
+        "Websites": "Websites"
     },
     "Widgetize": {
         "OpenInNewWindow": "Mở trong một cửa sổ mới",

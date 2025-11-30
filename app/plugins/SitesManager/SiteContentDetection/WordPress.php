@@ -61,6 +61,6 @@ class WordPress extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCon
             return '';
             // don't show on others page if tab is being displayed
         }
-        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataWordpressDescription', ['<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-wordpress/') . '">', '</a>']));
+        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataWordpressDescription', [Url::getExternalLinkTag('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-wordpress/'), '</a>']));
     }
 }

@@ -10,8 +10,10 @@ namespace Piwik\Plugins\Resolution\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
+use Piwik\Plugins\Resolution\Resolution as ResolutionPlugin;
 use Piwik\Plugins\Resolution\Columns\Resolution;
 use Piwik\Plugin\ReportsProvider;
+use Piwik\Request;
 class GetResolution extends \Piwik\Plugins\Resolution\Reports\Base
 {
     protected function init()
@@ -30,5 +32,10 @@ class GetResolution extends \Piwik\Plugins\Resolution\Reports\Base
     public function getRelatedReports()
     {
         return array(ReportsProvider::factory('Resolution', 'getConfiguration'));
+    }
+    public function isEnabled()
+    {
+        $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
+        return \false === ResolutionPlugin::isScreenResolutionDetectionDisabledByCompliancePolicy($idSite);
     }
 }

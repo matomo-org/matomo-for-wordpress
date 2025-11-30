@@ -44,7 +44,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         \Piwik\Plugins\SitesManager\SitesManager::dieIfSitesAdminIsDisabled();
         $pluginManager = Manager::getInstance();
         $rollUpEnabled = $pluginManager->isPluginLoaded('RollUpReporting') && $pluginManager->isPluginActivated('RollUpReporting');
-        return $this->renderTemplate('index', ['rollUpEnabled' => $rollUpEnabled]);
+        $privacyManagerEnabled = $pluginManager->isPluginLoaded('PrivacyManager') && $pluginManager->isPluginActivated('PrivacyManager');
+        return $this->renderTemplate('index', ['rollUpEnabled' => $rollUpEnabled, 'privacyManagerEnabled' => $privacyManagerEnabled]);
     }
     public function globalSettings()
     {
@@ -195,7 +196,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         $googleAnalyticsImporterInstruction = [];
         if (!Manager::getInstance()->isPluginLoaded('GoogleAnalyticsImporter')) {
-            $googleAnalyticsImporterInstruction = ['id' => 'GoogleAnalyticsImporter', 'name' => Piwik::translate('CoreAdminHome_ImportFromGoogleAnalytics'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('CoreAdminHome_ImportFromGoogleAnalyticsDescription', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://plugins.matomo.org/GoogleAnalyticsImporter') . '" rel="noopener noreferrer" target="_blank">', '</a>'])];
+            $googleAnalyticsImporterInstruction = ['id' => 'GoogleAnalyticsImporter', 'name' => Piwik::translate('CoreAdminHome_ImportFromGoogleAnalytics'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('CoreAdminHome_ImportFromGoogleAnalyticsDescription', [Url::getExternalLinkTag('https://plugins.matomo.org/GoogleAnalyticsImporter'), '</a>'])];
         }
         /**
          * @ignore
@@ -215,7 +216,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     }
     private function renderOthersTab($othersInstructions) : string
     {
-        array_unshift($othersInstructions, ['id' => 'ImageTracking', 'name' => Piwik::translate('CoreAdminHome_ImageTracking'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_ImageTrackingDescription', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/tracking-api/reference/') . '" rel="noreferrer noopener" target="_blank">', '</a>'])], ['id' => 'LogAnalytics', 'name' => Piwik::translate('SitesManager_LogAnalytics'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_LogAnalyticsDescription', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/log-analytics/') . '" rel="noreferrer noopener" target="_blank">', '</a>'])], ['id' => 'MobileAppsAndSDKs', 'name' => Piwik::translate('SitesManager_MobileAppsAndSDKs'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_MobileAppsAndSDKsDescription', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/integrate/#programming-language-platforms-and-frameworks') . '" rel="noreferrer noopener" target="_blank">', '</a>'])], ['id' => 'HttpTrackingApi', 'name' => Piwik::translate('CoreAdminHome_HttpTrackingApi'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('CoreAdminHome_HttpTrackingApiDescription', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://developer.matomo.org/api-reference/tracking-api') . '" rel="noreferrer noopener" target="_blank">', '</a>'])]);
+        array_unshift($othersInstructions, ['id' => 'ImageTracking', 'name' => Piwik::translate('CoreAdminHome_ImageTracking'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_ImageTrackingDescription', [Url::getExternalLinkTag('https://matomo.org/docs/tracking-api/reference/'), '</a>'])], ['id' => 'LogAnalytics', 'name' => Piwik::translate('SitesManager_LogAnalytics'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_LogAnalyticsDescription', [Url::getExternalLinkTag('https://matomo.org/log-analytics/'), '</a>'])], ['id' => 'MobileAppsAndSDKs', 'name' => Piwik::translate('SitesManager_MobileAppsAndSDKs'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('SitesManager_MobileAppsAndSDKsDescription', [Url::getExternalLinkTag('https://matomo.org/integrate/#programming-language-platforms-and-frameworks'), '</a>'])], ['id' => 'HttpTrackingApi', 'name' => Piwik::translate('CoreAdminHome_HttpTrackingApi'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'othersInstruction' => Piwik::translate('CoreAdminHome_HttpTrackingApiDescription', [Url::getExternalLinkTag('https://developer.matomo.org/api-reference/tracking-api'), '</a>'])]);
         $googleAnalyticsImporterInstruction = $this->getGoogleAnalyticsImporterInstruction();
         if (!empty($googleAnalyticsImporterInstruction)) {
             $othersInstructions[] = $googleAnalyticsImporterInstruction;
@@ -242,7 +243,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if (null === $detectedCms || empty($detectedCms::getInstructionUrl())) {
             return '';
         }
-        return Piwik::translate('SitesManager_SiteWithoutDataDetectedSite', [$detectedCms::getName(), '<a target="_blank" rel="noreferrer noopener" href="' . $detectedCms::getInstructionUrl() . '">', '</a>']);
+        return Piwik::translate('SitesManager_SiteWithoutDataDetectedSite', [$detectedCms::getName(), Url::getExternalLinkTag($detectedCms::getInstructionUrl()), '</a>']);
     }
     private function getInviteUserLink()
     {

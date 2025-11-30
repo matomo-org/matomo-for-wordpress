@@ -132,7 +132,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         }
         $message = Piwik::translate('General_CurrentlyUsingUnsecureHttp');
         $message .= " ";
-        $message .= Piwik::translate('General_ReadThisToLearnMore', ['<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_91/') . '">', '</a>']);
+        $message .= Piwik::translate('General_ReadThisToLearnMore', [Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_91/'), '</a>']);
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
         $notification->raw = \true;

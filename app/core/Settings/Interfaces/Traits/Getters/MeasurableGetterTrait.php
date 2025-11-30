@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ */
 namespace Piwik\Settings\Interfaces\Traits\Getters;
 
 use Piwik\Piwik;
@@ -32,4 +38,11 @@ trait MeasurableGetterTrait
     protected static abstract function getMeasurableDefaultValue();
     protected static abstract function getMeasurableName() : string;
     protected static abstract function getMeasurableType() : string;
+    /**
+     * @deprecated Will be removed in 6.0 in favour of making getMeasurableName public
+     */
+    public static function getMeasurableSettingShortName() : string
+    {
+        return self::getMeasurableName();
+    }
 }

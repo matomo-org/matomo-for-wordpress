@@ -25,6 +25,11 @@ use Matomo\Dependencies\Twig\Loader\FilesystemLoader;
 use Matomo\Dependencies\Twig\TwigFilter;
 use Matomo\Dependencies\Twig\TwigFunction;
 use Matomo\Dependencies\Twig\TwigTest;
+/**
+ * @param string $string
+ * @param int $size
+ * @return string
+ */
 function piwik_filter_truncate($string, $size)
 {
     if (mb_strlen(html_entity_decode($string)) <= $size) {
@@ -34,14 +39,29 @@ function piwik_filter_truncate($string, $size)
         return reset($shortenString) . "...";
     }
 }
+/**
+ * @param string $string
+ * @param int $minFractionDigits
+ * @param int $maxFractionDigits
+ * @return mixed
+ */
 function piwik_format_number($string, $minFractionDigits, $maxFractionDigits)
 {
     $formatter = \Piwik\NumberFormatter::getInstance();
     return $formatter->format($string, $minFractionDigits, $maxFractionDigits);
 }
+/**
+ * @param Environment $env
+ * @param string $string
+ * @param string $strategy
+ * @param ?string $charset
+ * @param bool $autoescape
+ * @return string
+ * @throws \Twig\Error\RuntimeError
+ */
 function piwik_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = \false)
 {
-    $string = \Matomo\Dependencies\twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+    $string = $env->getRuntime(\Matomo\Dependencies\Twig\Runtime\EscaperRuntime::class)->escape($string, $strategy, $charset, $autoescape);
     switch ($strategy) {
         case 'url':
             $encoded = rawurlencode('{');
@@ -50,6 +70,11 @@ function piwik_escape_filter(Environment $env, $string, $strategy = 'html', $cha
             return $string;
     }
 }
+/**
+ * @param string|number $amount
+ * @param int $idSite
+ * @return mixed
+ */
 function piwik_format_money($amount, $idSite)
 {
     $currencySymbol = \Piwik\Site::getCurrencySymbolFor($idSite);
@@ -68,6 +93,9 @@ class Twig
      * @var Environment
      */
     private $twig;
+    /**
+     * @var Formatter
+     */
     private $formatter;
     public function __construct()
     {
@@ -76,7 +104,7 @@ class Twig
         //get current theme
         $manager = \Piwik\Plugin\Manager::getInstance();
         $theme = $manager->getThemeEnabled();
-        $loaders = array();
+        $loaders = [];
         $this->formatter = new Formatter();
         //create loader for custom theme to overwrite twig templates
         if ($theme && $theme->getPluginName() != \Piwik\Plugin\Manager::DEFAULT_THEME) {
@@ -91,13 +119,13 @@ class Twig
         $chainLoader = new ChainLoader($loaders);
         // Create new Twig Environment and set cache dir
         $cache = StaticContainer::get('twig.cache');
-        $this->twig = new Environment($chainLoader, array(
+        $this->twig = new Environment($chainLoader, [
             'debug' => \true,
             // to use {{ dump(var) }} in twig templates
             'strict_variables' => \true,
             // throw an exception if variables are invalid
             'cache' => $cache,
-        ));
+        ]);
         $this->twig->addExtension(new DebugExtension());
         $this->addFilterTranslate();
         $this->addFilterListings();
@@ -141,40 +169,40 @@ class Twig
         $this->addTestIsNumeric();
         $this->twig->addExtension(new EscapeFilter());
     }
-    private function addTestFalse()
+    private function addTestFalse() : void
     {
         $test = new TwigTest('false', function ($value) {
             return \false === $value;
         });
         $this->twig->addTest($test);
     }
-    private function addTestTrue()
+    private function addTestTrue() : void
     {
         $test = new TwigTest('true', function ($value) {
             return \true === $value;
         });
         $this->twig->addTest($test);
     }
-    private function addTestEmptyString()
+    private function addTestEmptyString() : void
     {
         $test = new TwigTest('emptyString', function ($value) {
             return '' === $value;
         });
         $this->twig->addTest($test);
     }
-    protected function addFunctionGetJavascriptTranslations()
+    protected function addFunctionGetJavascriptTranslations() : void
     {
-        $getJavascriptTranslations = new TwigFunction('getJavascriptTranslations', array(StaticContainer::get('Piwik\\Translation\\Translator'), 'getJavascriptTranslations'));
+        $getJavascriptTranslations = new TwigFunction('getJavascriptTranslations', [StaticContainer::get(Translator::class), 'getJavascriptTranslations']);
         $this->twig->addFunction($getJavascriptTranslations);
     }
-    protected function addFunctionIsPluginLoaded()
+    protected function addFunctionIsPluginLoaded() : void
     {
         $isPluginLoadedFunction = new TwigFunction('isPluginLoaded', function ($pluginName) {
             return \Piwik\Plugin\Manager::getInstance()->isPluginLoaded($pluginName);
         });
         $this->twig->addFunction($isPluginLoadedFunction);
     }
-    protected function addFunctionIncludeAssets()
+    protected function addFunctionIncludeAssets() : void
     {
         $includeAssetsFunction = new TwigFunction('includeAssets', function ($params) {
             if (!isset($params['type'])) {
@@ -193,7 +221,7 @@ class Twig
         });
         $this->twig->addFunction($includeAssetsFunction);
     }
-    protected function addFunctionPostEvent()
+    protected function addFunctionPostEvent() : void
     {
         $postEventFunction = new TwigFunction('postEvent', function ($eventName) {
             // get parameters to twig function
@@ -203,26 +231,42 @@ class Twig
             // make the first value the string that will get output in the template
             // plugins can modify this string
             $str = '';
-            $params = array_merge(array(&$str), $params);
+            $params = array_merge([&$str], $params);
             \Piwik\Piwik::postEvent($eventName, $params);
             return $str;
-        }, array('is_safe' => array('html')));
+        }, ['is_safe' => ['html']]);
         $this->twig->addFunction($postEventFunction);
     }
-    protected function addFunctionSparkline()
+    protected function addFunctionSparkline() : void
     {
-        $sparklineFunction = new TwigFunction('sparkline', function ($src) {
-            $width = Sparkline::DEFAULT_WIDTH;
-            $height = Sparkline::DEFAULT_HEIGHT;
-            return sprintf(\Piwik\Twig::SPARKLINE_TEMPLATE, $src, $width, $height);
-        }, array('is_safe' => array('html')));
+        $twigEnv = $this->getTwigEnvironment();
+        $sparklineFunction = new TwigFunction(
+            'sparkline',
+            /**
+             * @param string $src
+             * @return string
+             */
+            function ($src) use($twigEnv) {
+                $width = Sparkline::DEFAULT_WIDTH;
+                $height = Sparkline::DEFAULT_HEIGHT;
+                return sprintf(\Piwik\Twig::SPARKLINE_TEMPLATE, piwik_escape_filter($twigEnv, $src, 'html_attr'), $width, $height);
+            },
+            ['is_safe' => ['html']]
+        );
         $this->twig->addFunction($sparklineFunction);
     }
-    protected function addFunctionLinkTo()
+    protected function addFunctionLinkTo() : void
     {
-        $urlFunction = new TwigFunction('linkTo', function ($params) {
-            return 'index.php' . \Piwik\Url::getCurrentQueryStringWithParametersModified($params);
-        });
+        $urlFunction = new TwigFunction(
+            'linkTo',
+            /**
+             * @param array<string, mixed> $params
+             * @return string
+             */
+            function ($params) {
+                return 'index.php' . \Piwik\Url::getCurrentQueryStringWithParametersModified($params);
+            }
+        );
         $this->twig->addFunction($urlFunction);
     }
     /**
@@ -232,16 +276,14 @@ class Twig
      *     externallink(url)
      *
      */
-    private function addFunctionExternalLink()
+    private function addFunctionExternalLink() : void
     {
         $externalLink = new TwigFunction('externallink', function ($url) {
-            // Add tracking parameters if a matomo.org link
-            $url = \Piwik\Url::addCampaignParametersToMatomoLink($url);
-            return "<a target='_blank' rel='noreferrer noopener' href='" . $url . "'>";
+            return \Piwik\Url::getExternalLinkTag($url);
         });
         $this->twig->addFunction($externalLink);
     }
-    private function addFunctionExternalRawLink()
+    private function addFunctionExternalRawLink() : void
     {
         $externalRawLink = new TwigFunction('externalrawlink', function ($url) {
             // Add tracking parameters if a matomo.org link
@@ -249,42 +291,37 @@ class Twig
         });
         $this->twig->addFunction($externalRawLink);
     }
-    /**
-     * @return FilesystemLoader
-     */
-    private function getDefaultThemeLoader()
+    private function getDefaultThemeLoader() : FilesystemLoader
     {
         $themeDir = Manager::getPluginDirectory(\Piwik\Plugin\Manager::DEFAULT_THEME) . '/templates/';
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader([$themeDir], PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
         return $themeLoader;
     }
     /**
      * create template loader for a custom theme
-     * @param \Piwik\Plugin $theme
-     * @return FilesystemLoader|bool
      */
-    protected function getCustomThemeLoader(\Piwik\Plugin $theme)
+    protected function getCustomThemeLoader(\Piwik\Plugin $theme) : ?FilesystemLoader
     {
         $pluginsDir = Manager::getPluginDirectory($theme->getPluginName());
         $themeDir = $pluginsDir . '/templates/';
         if (!file_exists($themeDir)) {
-            return \false;
+            return null;
         }
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader([$themeDir], PIWIK_DOCUMENT_ROOT . \DIRECTORY_SEPARATOR);
         return $themeLoader;
     }
-    public function getTwigEnvironment()
+    public function getTwigEnvironment() : Environment
     {
         return $this->twig;
     }
-    protected function addFilterNotification()
+    protected function addFilterNotification() : void
     {
         $twigEnv = $this->getTwigEnvironment();
         $notificationFunction = new TwigFilter('notification', function ($message, $options) use($twigEnv) {
             $template = '<div style="display:none" data-role="notification" ';
             foreach ($options as $key => $value) {
                 if (ctype_alpha($key)) {
-                    $template .= sprintf('data-%s="%s" ', $key, \Matomo\Dependencies\twig_escape_filter($twigEnv, $value, 'html_attr'));
+                    $template .= sprintf('data-%s="%s" ', $key, piwik_escape_filter($twigEnv, $value, 'html_attr'));
                 }
             }
             $template .= '>';
@@ -295,30 +332,37 @@ class Twig
             }
             $template .= '</div>';
             return $template;
-        }, array('is_safe' => array('html')));
+        }, ['is_safe' => ['html']]);
         $this->twig->addFilter($notificationFunction);
     }
-    protected function addFilterSafeDecodeRaw()
+    protected function addFilterSafeDecodeRaw() : void
     {
-        $rawSafeDecoded = new TwigFilter('rawSafeDecoded', function ($string) {
-            if ($string === null) {
-                return '';
-            }
-            $string = str_replace('+', '%2B', $string);
-            $string = str_replace('&nbsp;', html_entity_decode('&nbsp;', \ENT_COMPAT | \ENT_HTML401, 'UTF-8'), $string);
-            $string = SafeDecodeLabel::decodeLabelSafe($string);
-            return $string;
-        }, array('is_safe' => array('all')));
+        $rawSafeDecoded = new TwigFilter(
+            'rawSafeDecoded',
+            /**
+             * @param ?string $string
+             * @return string
+             */
+            function ($string) {
+                if ($string === null) {
+                    return '';
+                }
+                $string = str_replace('+', '%2B', $string);
+                $string = str_replace('&nbsp;', html_entity_decode('&nbsp;', \ENT_COMPAT | \ENT_HTML401, 'UTF-8'), $string);
+                return SafeDecodeLabel::decodeLabelSafe($string);
+            },
+            ['is_safe' => ['all']]
+        );
         $this->twig->addFilter($rawSafeDecoded);
     }
-    protected function addFilterPrettyDate()
+    protected function addFilterPrettyDate() : void
     {
         $prettyDate = new TwigFilter('prettyDate', function ($dateString, $period) {
             return \Piwik\Period\Factory::build($period, $dateString)->getLocalizedShortString();
         });
         $this->twig->addFilter($prettyDate);
     }
-    protected function addFilterPercentage()
+    protected function addFilterPercentage() : void
     {
         $percentage = new TwigFilter('percentage', function ($string, $totalValue, $precision = 1) {
             $formatter = \Piwik\NumberFormatter::getInstance();
@@ -326,7 +370,7 @@ class Twig
         });
         $this->twig->addFilter($percentage);
     }
-    protected function addFilterPercent()
+    protected function addFilterPercent() : void
     {
         $percentage = new TwigFilter('percent', function ($string, $precision = 1) {
             $formatter = \Piwik\NumberFormatter::getInstance();
@@ -334,7 +378,7 @@ class Twig
         });
         $this->twig->addFilter($percentage);
     }
-    protected function addFilterPercentEvolution()
+    protected function addFilterPercentEvolution() : void
     {
         $percentage = new TwigFilter('percentEvolution', function ($string) {
             $formatter = \Piwik\NumberFormatter::getInstance();
@@ -342,80 +386,84 @@ class Twig
         });
         $this->twig->addFilter($percentage);
     }
-    private function getProfessionalServicesAdvertising()
-    {
-        return StaticContainer::get('Piwik\\ProfessionalServices\\Advertising');
-    }
-    protected function addFilterNumber()
+    protected function addFilterNumber() : void
     {
         $formatter = new TwigFilter('number', function ($string, $minFractionDigits = 0, $maxFractionDigits = 0) {
             return piwik_format_number($string, $minFractionDigits, $maxFractionDigits);
         });
         $this->twig->addFilter($formatter);
     }
-    protected function addFilterAnonymiseSystemInfo()
+    protected function addFilterAnonymiseSystemInfo() : void
     {
-        $formatter = new TwigFilter('anonymiseSystemInfo', function ($string) {
-            if ($string === null) {
-                return '';
+        $formatter = new TwigFilter(
+            'anonymiseSystemInfo',
+            /**
+             * @param bool|string|null $string
+             */
+            function ($string) {
+                if ($string === null) {
+                    return '';
+                }
+                if (is_bool($string)) {
+                    return (int) $string;
+                }
+                $string = str_replace([PIWIK_DOCUMENT_ROOT, str_replace('/', '\\/', PIWIK_DOCUMENT_ROOT)], '$DOC_ROOT', $string);
+                $string = str_replace([PIWIK_USER_PATH, str_replace('/', '\\/', PIWIK_USER_PATH)], '$USER_PATH', $string);
+                $string = str_replace([PIWIK_INCLUDE_PATH, str_replace('/', '\\/', PIWIK_INCLUDE_PATH)], '$INCLUDE_PATH', $string);
+                // replace anything token like
+                $string = preg_replace('/[[:xdigit:]]{31,80}/', 'TOKEN_REPLACED', $string);
+                // just in case it was somehow show in a text
+                if (\Piwik\SettingsPiwik::isMatomoInstalled()) {
+                    $string = str_replace(\Piwik\SettingsPiwik::getPiwikUrl() ?: '', '$MATOMO_URL', $string);
+                    $string = str_replace(\Piwik\SettingsPiwik::getSalt(), '$MATOMO_SALT', $string);
+                }
+                return $string;
             }
-            if ($string === \false || $string === \true) {
-                return (int) $string;
-            }
-            $string = str_replace([PIWIK_DOCUMENT_ROOT, str_replace('/', '\\/', PIWIK_DOCUMENT_ROOT)], '$DOC_ROOT', $string);
-            $string = str_replace([PIWIK_USER_PATH, str_replace('/', '\\/', PIWIK_USER_PATH)], '$USER_PATH', $string);
-            $string = str_replace([PIWIK_INCLUDE_PATH, str_replace('/', '\\/', PIWIK_INCLUDE_PATH)], '$INCLUDE_PATH', $string);
-            // replace anything token like
-            $string = preg_replace('/[[:xdigit:]]{31,80}/', 'TOKEN_REPLACED', $string);
-            // just in case it was somehow show in a text
-            if (\Piwik\SettingsPiwik::isMatomoInstalled()) {
-                $string = str_replace(\Piwik\SettingsPiwik::getPiwikUrl(), '$MATOMO_URL', $string);
-                $string = str_replace(\Piwik\SettingsPiwik::getSalt(), '$MATOMO_SALT', $string);
-            }
-            return $string;
-        });
+        );
         $this->twig->addFilter($formatter);
     }
-    protected function addFilterNonce()
+    protected function addFilterNonce() : void
     {
-        $nonce = new TwigFilter('nonce', array('Piwik\\Nonce', 'getNonce'));
+        $nonce = new TwigFilter('nonce', ['Piwik\\Nonce', 'getNonce']);
         $this->twig->addFilter($nonce);
     }
-    private function addFilterMd5()
+    private function addFilterMd5() : void
     {
         $md5 = new TwigFilter('md5', function ($value) {
             return md5($value);
         });
         $this->twig->addFilter($md5);
     }
-    private function addFilterOnlyDomain()
+    private function addFilterOnlyDomain() : void
     {
         $domainOnly = new TwigFilter('domainOnly', function ($url) {
             $parsed = parse_url($url);
-            return $parsed['scheme'] . '://' . $parsed['host'];
+            return ($parsed['scheme'] ?? '') . '://' . ($parsed['host'] ?? '');
         });
         $this->twig->addFilter($domainOnly);
     }
-    protected function addFilterTruncate()
+    protected function addFilterTruncate() : void
     {
         $truncateFilter = new TwigFilter('truncate', function ($string, $size) {
             return piwik_filter_truncate($string, $size);
         });
         $this->twig->addFilter($truncateFilter);
     }
-    protected function addFilterMoney()
+    protected function addFilterMoney() : void
     {
-        $moneyFilter = new TwigFilter('money', function ($amount) {
-            if (func_num_args() != 2) {
-                throw new Exception('the money modifier expects one parameter: the idSite.');
+        $moneyFilter = new TwigFilter(
+            'money',
+            /**
+             * @param number|string $amount
+             * @param string|int $idSite
+             */
+            function ($amount, $idSite) {
+                return piwik_format_money($amount, $idSite);
             }
-            $idSite = func_get_args();
-            $idSite = $idSite[1];
-            return piwik_format_money($amount, $idSite);
-        });
+        );
         $this->twig->addFilter($moneyFilter);
     }
-    protected function addFilterSumTime()
+    protected function addFilterSumTime() : void
     {
         $formatter = $this->formatter;
         $sumtimeFilter = new TwigFilter('sumtime', function ($numberOfSeconds) use($formatter) {
@@ -423,20 +471,19 @@ class Twig
         });
         $this->twig->addFilter($sumtimeFilter);
     }
-    protected function addFilterUrlRewriteWithParameters()
+    protected function addFilterUrlRewriteWithParameters() : void
     {
         $urlRewriteFilter = new TwigFilter('urlRewriteWithParameters', function ($parameters) {
             $parameters['updated'] = null;
-            $url = \Piwik\Url::getCurrentQueryStringWithParametersModified($parameters);
-            return $url;
+            return \Piwik\Url::getCurrentQueryStringWithParametersModified($parameters);
         });
         $this->twig->addFilter($urlRewriteFilter);
     }
-    protected function addFilterTranslate()
+    protected function addFilterTranslate() : void
     {
         $translateFilter = new TwigFilter('translate', function ($stringToken) {
             if (func_num_args() <= 1) {
-                $aValues = array();
+                $aValues = [];
             } else {
                 $aValues = func_get_args();
                 array_shift($aValues);
@@ -450,7 +497,7 @@ class Twig
         });
         $this->twig->addFilter($translateFilter);
     }
-    protected function addFilterListings()
+    protected function addFilterListings() : void
     {
         $andListing = new TwigFilter('andListing', function ($items) {
             if (!is_array($items)) {
@@ -469,7 +516,7 @@ class Twig
         });
         $this->twig->addFilter($orListing);
     }
-    private function addPluginNamespaces(FilesystemLoader $loader)
+    private function addPluginNamespaces(FilesystemLoader $loader) : void
     {
         $pluginManager = \Piwik\Plugin\Manager::getInstance();
         $plugins = $pluginManager->getAllPluginsNames();
@@ -486,7 +533,7 @@ class Twig
      * Plugin-Templates can be overwritten by putting identically named templates in plugins/[theme]/templates/plugins/[plugin]/
      *
      */
-    private function addCustomPluginNamespaces(FilesystemLoader $loader, $pluginName)
+    private function addCustomPluginNamespaces(FilesystemLoader $loader, string $pluginName) : void
     {
         $pluginManager = \Piwik\Plugin\Manager::getInstance();
         $plugins = $pluginManager->getAllPluginsNames();
@@ -498,20 +545,7 @@ class Twig
             }
         }
     }
-    /**
-     * Prepend relative paths with absolute Piwik path
-     *
-     * @param string $value relative path (pass by reference)
-     * @param int $key (don't care)
-     * @param string $path Piwik root
-     */
-    public static function addPiwikPath(&$value, $key, $path)
-    {
-        if ($value[0] != '/' && $value[0] != \DIRECTORY_SEPARATOR) {
-            $value = $path . "/{$value}";
-        }
-    }
-    private function addFilterSafelink()
+    private function addFilterSafelink() : void
     {
         $safelink = new TwigFilter('safelink', function ($url) {
             if (!\Piwik\UrlHelper::isLookLikeSafeUrl($url)) {
@@ -533,26 +567,21 @@ class Twig
      * {{ 'https://matomo.org/faq/123'|trackmatomolink('SomeCampaign', 'SomeSource', 'SomeMedium') }}
      *
      */
-    private function addFilterTrackMatomoLink()
+    private function addFilterTrackMatomoLink() : void
     {
-        $trackLink = new TwigFilter('trackmatomolink', function ($url) {
-            $params = func_get_args();
-            array_shift($params);
-            $campaign = count($params) > 0 ? $params[0] : null;
-            $source = count($params) > 1 ? $params[1] : null;
-            $medium = count($params) > 2 ? $params[2] : null;
+        $trackLink = new TwigFilter('trackmatomolink', function ($url, $campaign = null, $source = null, $medium = null) {
             return \Piwik\Url::addCampaignParametersToMatomoLink($url, $campaign, $source, $medium);
         });
         $this->twig->addFilter($trackLink);
     }
-    private function addFilterImplode()
+    private function addFilterImplode() : void
     {
         $implode = new TwigFilter('implode', function ($value, $separator) {
             return implode($separator, $value);
         });
         $this->twig->addFilter($implode);
     }
-    private function addFilterPreventLinking()
+    private function addFilterPreventLinking() : void
     {
         $preventLinking = new TwigFilter('preventLinking', function ($string) {
             while (preg_match('/\\w+\\.\\w+/i', $string, $matches)) {
@@ -562,7 +591,7 @@ class Twig
         }, ['is_safe' => ['all']]);
         $this->twig->addFilter($preventLinking);
     }
-    private function addTestIsNumeric()
+    private function addTestIsNumeric() : void
     {
         $test = new TwigTest('numeric', function ($value) {
             return is_numeric($value);
