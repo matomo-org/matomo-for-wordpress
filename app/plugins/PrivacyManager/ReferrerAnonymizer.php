@@ -16,9 +16,9 @@ class ReferrerAnonymizer
     public const EXCLUDE_PATH = 'exclude_path';
     public const EXCLUDE_ALL = 'exclude_all';
     public const EXCLUDE_NONE = '';
-    public function getAvailableAnonymizationOptions()
+    public static function getAvailableAnonymizationOptions() : array
     {
-        return array(self::EXCLUDE_NONE => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeNone'), self::EXCLUDE_QUERY => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeQuery'), self::EXCLUDE_PATH => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludePath'), self::EXCLUDE_ALL => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeAll'));
+        return [self::EXCLUDE_NONE => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeNone'), self::EXCLUDE_QUERY => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeQuery'), self::EXCLUDE_PATH => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludePath'), self::EXCLUDE_ALL => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeAll')];
     }
     // referer_keyword: searched keyword or campaign keyword
     public function anonymiseReferrerKeyword($keyword, $referrerType, $anonymizeOption)

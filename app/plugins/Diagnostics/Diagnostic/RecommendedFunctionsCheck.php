@@ -49,7 +49,7 @@ class RecommendedFunctionsCheck implements \Piwik\Plugins\Diagnostics\Diagnostic
     private function getHelpMessage($function)
     {
         $messages = array('shell_exec' => 'Installation_SystemCheckShellExecHelp', 'set_time_limit' => 'Installation_SystemCheckTimeLimitHelp', 'mail' => 'Installation_SystemCheckMailHelp', 'parse_ini_file' => 'Installation_SystemCheckParseIniFileHelp', 'glob' => 'Installation_SystemCheckGlobHelp', 'gzopen' => 'Installation_SystemCheckZlibHelp');
-        $translation_params = array('shell_exec' => ["<a href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/') . "' rel='noopener' target='_blank'>", "</a>"]);
+        $translation_params = ['shell_exec' => [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/'), '</a>']];
         return $this->translator->translate($messages[$function], $translation_params[$function] ?? []);
     }
 }

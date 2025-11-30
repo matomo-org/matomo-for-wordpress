@@ -38,6 +38,7 @@
         "LoadingData": "ውሂብ በማስገባት ላይ…",
         "Locale": "am_ET.UTF-8",
         "Logout": "ውጣ",
+        "ManagePlugins": "ተሰኪዎች መመነጅ",
         "NUniqueVisitors": "%s የተለዩ ጎብኚዎች",
         "NVisits": "%s ጉበኝቶች",
         "Next": "ቀጥል",
@@ -1386,6 +1387,12 @@
     "PagePerformance": {
         "ColumnTimeServer": "የአገልጋይ ሰዓት"
     },
+    "PrivacyManager": {
+        "ComplianceTableSettingStatus": "ሁኔታ"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "አጠቃላይ እይታ"
+    },
     "Referrers": {
         "ColumnSearchEngine": "የመፈለጊያ ሞተሮች",
         "ColumnWebsite": "ድር ጣቢያዎች",
@@ -1434,6 +1441,8 @@
     "TagManager": {
         "CategoryClicks": "ጠቃድርጎች",
         "CategoryEmail": "ኢ-ሜይል",
+        "EtrackerTagTransactionCurrencyTitle": "ገንዘብ",
+        "InvalidDebugUrlError": "ስህተት",
         "Version": "ስሪት"
     },
     "UserCountry": {
@@ -1449,6 +1458,7 @@
         "LanguageCode": "የቋንቋ ኮድ"
     },
     "UsersManager": {
+        "Active": "ገባሪ",
         "AllWebsites": "ሁሉንም ድር ጣቢያዎች",
         "ApplyToAllWebsites": "በሁሉም ድር ጣቢያዎች ላይ ተግብር",
         "DeleteConfirm": "እርግጠኛ ነህ ተጠቃሚዎቹን መሰረዝ ትፈልጋለህ %s?",
@@ -1462,6 +1472,7 @@
         "PrivAdmin": "አስተዳዳሪ",
         "PrivNone": "መድረሻ የለም",
         "PrivView": "ትእይታ",
+        "Status": "ሁኔታ",
         "User": "ተጠቃሚ",
         "UsersManagement": "የተጠቃሚዎች ምነጃ",
         "UsersManagementMainDescription": "አዳዲስ ተጤቃሚዎችን ይፍጠሩ ወይም ያሉትን ያልቁ።ፈቃዳቸውን ከላይ ማዘጋጀት ይቻላል."

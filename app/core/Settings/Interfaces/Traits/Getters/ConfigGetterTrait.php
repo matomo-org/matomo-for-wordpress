@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ */
 namespace Piwik\Settings\Interfaces\Traits\Getters;
 
 use Piwik\Config;
@@ -24,4 +30,11 @@ trait ConfigGetterTrait
     }
     protected static abstract function getConfigSection() : string;
     protected static abstract function getConfigSettingName() : string;
+    /**
+     * @deprecated Will be removed in 6.0 in favour of making getConfigSettingName public
+     */
+    public static function getConfigSettingShortName() : string
+    {
+        return self::getConfigSettingName();
+    }
 }

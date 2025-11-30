@@ -1,36 +1,42 @@
 <?php
 
-namespace Piwik\Plugins\WebsiteMeasurable\Settings;
+namespace Piwik\Plugins\Live\Settings;
 
 use Piwik\Piwik;
 use Piwik\Policy\CnilPolicy;
 use Piwik\Settings\Interfaces\MeasurableSettingInterface;
 use Piwik\Settings\Interfaces\PolicyComparisonInterface;
+use Piwik\Settings\Interfaces\SystemSettingInterface;
 use Piwik\Settings\Interfaces\Traits\Getters\MeasurableGetterTrait;
+use Piwik\Settings\Interfaces\Traits\Getters\SystemGetterTrait;
 use Piwik\Settings\Interfaces\Traits\PolicyComparisonTrait;
 use Piwik\Settings\FieldConfig;
 use Piwik\Settings\Interfaces\SettingValueInterface;
-use Piwik\Site;
 /**
- * @implements MeasurableSettingInterface<int>
- * @implements PolicyComparisonInterface<int>
- * @implements SettingValueInterface<int>
+ * @implements MeasurableSettingInterface<bool>
+ * @implements PolicyComparisonInterface<bool>
+ * @implements SettingValueInterface<bool>
+ * @implements SystemSettingInterface<bool>
  */
-class Ecommerce implements MeasurableSettingInterface, PolicyComparisonInterface, SettingValueInterface
+class VisitorLogDisabled implements MeasurableSettingInterface, PolicyComparisonInterface, SettingValueInterface, SystemSettingInterface
 {
     /**
-     * @use MeasurableGetterTrait<int>
+     * @use MeasurableGetterTrait<bool>
      */
     use MeasurableGetterTrait;
     /**
-     * @use PolicyComparisonTrait<int>
+     * @use PolicyComparisonTrait<bool>
      */
     use PolicyComparisonTrait;
     /**
-     * @var int
+     * @use SystemGetterTrait<bool>
+     */
+    use SystemGetterTrait;
+    /**
+     * @var bool
      */
     private $value;
-    private function __construct(int $value)
+    private function __construct(bool $value)
     {
         $this->value = $value;
     }
@@ -40,49 +46,52 @@ class Ecommerce implements MeasurableSettingInterface, PolicyComparisonInterface
     }
     protected static function getMeasurableName() : string
     {
-        return 'ecommerce';
+        return 'disable_visitor_log';
     }
     protected static function getMeasurableDefaultValue()
     {
-        return 0;
+        return \false;
     }
     protected static function getMeasurableType() : string
     {
-        return FieldConfig::TYPE_INT;
+        return FieldConfig::TYPE_BOOL;
+    }
+    protected static function getSystemName() : string
+    {
+        return 'disable_visitor_log';
+    }
+    protected static function getSystemDefaultValue()
+    {
+        return \false;
+    }
+    protected static function getSystemType() : string
+    {
+        return FieldConfig::TYPE_BOOL;
     }
     public static function getTitle() : string
     {
-        return Piwik::translate('WebsiteMeasurable_EcommercePolicySettingTitle');
+        return Piwik::translate('Live_DisableVisitsLogAndProfile');
     }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         // TODO add dynamic messaging
-        return Piwik::translate('WebsiteMeasurable_EcommercePolicySettingRequirementNote');
+        return Piwik::translate('Live_VisitorLogPolicySettingRequirementNote');
     }
     public static function getInlineHelp() : string
     {
-        return Piwik::translate('SitesManager_EcommerceHelp');
+        return Piwik::translate('Live_DisableVisitsLogAndProfileDescription');
     }
     public static function getPolicyRequirements() : array
     {
         $policyValues = [];
-        $policyValues[CnilPolicy::class] = 0;
+        $policyValues[CnilPolicy::class] = \true;
         return $policyValues;
     }
     public static function getInstance(?int $idSite = null) : self
     {
         $values = self::getPolicyRequiredValues($idSite);
-        if (is_null($idSite)) {
-            $values['measurable'] = null;
-            $ids = Site::getIdSitesFromIdSitesString('all');
-            $settingStatesPerMeasurable = array_map(function ($id) {
-                return self::getMeasurableValue(intval($id), \true);
-            }, $ids);
-            $anyActive = array_sum($settingStatesPerMeasurable) !== 0;
-            $values['system'] = intval($anyActive);
-        } else {
-            $values['measurable'] = self::getMeasurableValue($idSite, \true);
-        }
+        $values['measurable'] = $idSite === null ? null : self::getMeasurableValue($idSite);
+        $values['system'] = self::getSystemValue();
         $strictest = self::getStrictestValueFromArray($values);
         return new self($strictest);
     }
@@ -97,9 +106,6 @@ class Ecommerce implements MeasurableSettingInterface, PolicyComparisonInterface
     }
     protected static function compareStrictness($value1, $value2)
     {
-        if ($value1 < $value2) {
-            return $value1;
-        }
-        return $value2;
+        return $value1 || $value2;
     }
 }

@@ -93,21 +93,25 @@
         "GeneralSettings": "ڕێکختنە گشتییەکان",
         "Locale": "ku_TR.UTF-8",
         "Measurables": "پێوانەکان",
+        "MoreDetails": "وردەکاریی زیاتر",
         "No": "نە",
         "Password": "تێپەڕوشە",
         "Save": "پاشەکەوتکردن",
         "Security": "پاراستن",
         "Table": "جەدوەل",
+        "TrackingScopeAction": "Çalakî",
         "TranslatorName": "-",
         "UsePlusMinusIconsDocumentation": "بۆ گەڕان لە لای چەپەوە ئایکۆنی کۆ و کەمکردن بەکار بێنە.",
         "UserIds": "پێناسەکانی بەکارهێنەر",
         "Username": "ناوی بەکارهێنەری",
         "View": "نیشاندان",
         "Website": "وێبسایت",
+        "WellDone": "دەست خۆش!",
         "Yes": "بەڵێ"
     },
     "Mobile": {
-        "ChooseSegment": "هەڵبژاردنی کەرت"
+        "ChooseSegment": "هەڵبژاردنی کەرت",
+        "ShowAll": "هەموویان نیشان بدە"
     },
     "Actions": {
         "AvgGenerationTimeTooltip": "مامناوەند بەپێی %1$s کرتە %2$s لەنێوان %3$s و %4$s",
@@ -1238,6 +1242,9 @@
         "RememberMe": "منت لەبیر بێ",
         "WrongPasswordEntered": "تکایە تێپەڕشە دروستەکەت تێبنووسە."
     },
+    "MultiSites": {
+        "TotalPageviews": "Tevahîya dîtina rûpelan"
+    },
     "Referrers": {
         "ColumnWebsite": "وێبسایت",
         "SubmenuWebsitesOnly": "وێبسایتەکان",
@@ -1255,6 +1262,7 @@
         "WidgetResolutionsDocumentation": "ئەم ڕاپۆرتە ڕێزووڵووشنی دیمەندەری بەکارهێنەران نیشان دەدا لەو کاتەدا کە وێبسایتەکەتیان بینیوە."
     },
     "SitesManager": {
+        "ExclusionTypeOptionCustom": "دڵخواز",
         "Sites": "وێبسایتەکان"
     },
     "TagManager": {
@@ -1262,7 +1270,9 @@
         "CategoryCustom": "دڵخواز",
         "CategoryDate": "ڕێکەوت",
         "CategoryErrors": "هەڵەکان",
-        "CreatedDate": "ڕێکەوتی دروستبوون"
+        "CreatedDate": "ڕێکەوتی دروستبوون",
+        "MatomoConfigurationMatomoJsEndpointCustom": "دڵخواز",
+        "MatomoConfigurationMatomoTrackingEndpointCustom": "دڵخواز"
     },
     "Tour": {
         "CompletionTitle": "دەست خۆش!"

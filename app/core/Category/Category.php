@@ -37,7 +37,7 @@ class Category
     protected $order = 99;
     /**
      * The icon for this category, eg 'icon-user'
-     * @var int
+     * @var string
      */
     protected $icon = '';
     /**

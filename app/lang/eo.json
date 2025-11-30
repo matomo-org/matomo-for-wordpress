@@ -313,6 +313,7 @@
         "Totals": "Totaloj",
         "TrackingScopeAction": "Ago",
         "TrackingScopePage": "Paĝo",
+        "TrackingScopeVisit": "Vizito",
         "TransitionsRowActionTooltipTitle": "Malfermaj tradukoj",
         "TranslatorName": "David de Ugarte, Manuel Ortega",
         "UniquePurchases": "Unikaj aĉetoj",
@@ -420,6 +421,9 @@
         "PluginSettings": "Kromprogramaj agordoj",
         "SettingsSaveSuccess": "Agordoj ĝisdatigitaj"
     },
+    "CoreHome": {
+        "ChooseWebsite": "Elekti retpaĝon"
+    },
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Skribebla Sekvanta JavaSkripto (%s)",
         "DiagnosticPiwikJsNotWritable": "La JavaSkriptan sekvanta dosiero %sne stas skriblebla. Pro tio aliaj kromprogramoj ne povas etendi la JavaSkriptan sekvanto. Estontece eĉ kelkaj kernaj funkcioj povus ne funkcii kiel atendite.",
@@ -433,6 +437,9 @@
     },
     "Feedback": {
         "Forums": "Forumoj"
+    },
+    "Goals": {
+        "CategoryTextGeneral_Actions": "Paĝoj"
     },
     "Installation": {
         "Password": "Pasvorto"
@@ -1362,12 +1369,23 @@
         "Year_Short": "Year",
         "Yesterday": "Yesterday"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "Ĉiuj la retejoj",
+        "TotalPageviews": "Totalaj paĝomontroj"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Superrigardo"
+    },
     "Referrers": {
+        "CampaignSource": "Fonto",
         "ColumnWebsite": "Retejo"
     },
     "TagManager": {
         "CategoryDate": "Dato",
-        "CategoryErrors": "Eraroj"
+        "CategoryErrors": "Eraroj",
+        "ChooseWebsite": "Elekti retpaĝon",
+        "InvalidDebugUrlError": "Eraro",
+        "MatomoTagEcommerceViewPrice": "Prezo"
     },
     "Tour": {
         "CompletionTitle": "Bone!"
@@ -1381,12 +1399,18 @@
         "User": "Uzanto",
         "Username": "Uzantnomo"
     },
+    "VisitTime": {
+        "NHour": "%s h"
+    },
     "VisitorInterest": {
         "NPages": "%s paĝoj",
         "OnePage": "1 paĝo"
     },
     "VisitsSummary": {
         "NbActionsDescription": "%s agoj"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Retejo"
     },
     "Widgetize": {
         "OpenInNewWindow": "Fermi en novan fenestron"

@@ -32,8 +32,8 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     public $releaseChannel;
     /** @var Setting */
     public $sendPluginUpdateEmail;
-    /** @var Setting */
-    public $updateToUtf8mb4;
+    /** @var Setting|null */
+    public $updateToUtf8mb4 = null;
     /**
      * @var ReleaseChannels
      */
@@ -80,7 +80,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                     throw new \Exception('Release channel is not valid');
                 }
             };
-            $field->inlineHelp = Piwik::translate('CoreAdminHome_DevelopmentProcess') . '<br/>' . Piwik::translate('CoreAdminHome_StableReleases', ["<a target='_blank' rel='noreferrer noopener' href='" . Url::addCampaignParametersToMatomoLink('https://developer.matomo.org/guides/core-team-workflow#influencing-piwik-development') . "'>", "</a>"]) . '<br/>' . Piwik::translate('CoreAdminHome_LtsReleases');
+            $field->inlineHelp = Piwik::translate('CoreAdminHome_DevelopmentProcess') . '<br/>' . Piwik::translate('CoreAdminHome_StableReleases', [Url::getExternalLinkTag('https://developer.matomo.org/guides/core-team-workflow#influencing-piwik-development'), '</a>']) . '<br/>' . Piwik::translate('CoreAdminHome_LtsReleases');
         });
     }
     private function createSendPluginUpdateEmail()
@@ -98,7 +98,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             $field->introduction = Piwik::translate('CoreUpdater_ConvertToUtf8mb4');
             $field->title = Piwik::translate('CoreUpdater_TriggerDatabaseConversion');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
-            $field->inlineHelp = Piwik::translate('CoreUpdater_Utf8mb4ConversionHelp', ['�', '<code>' . PIWIK_INCLUDE_PATH . '/console core:convert-to-utf8mb4</code>', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/') . '" rel="noreferrer noopener" target="_blank">', '</a>']);
+            $field->inlineHelp = Piwik::translate('CoreUpdater_Utf8mb4ConversionHelp', ['�', '<code>' . PIWIK_INCLUDE_PATH . '/console core:convert-to-utf8mb4</code>', Url::getExternalLinkTag('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/'), '</a>']);
         });
     }
 }

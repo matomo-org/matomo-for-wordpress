@@ -40,7 +40,7 @@ class SettingsProvider
      * @param string $pluginName
      * @return SystemSettings|null
      */
-    public function getSystemSettings($pluginName)
+    public function getSystemSettings(string $pluginName) : ?SystemSettings
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
         if ($plugin) {
@@ -49,13 +49,14 @@ class SettingsProvider
                 return StaticContainer::get($settings);
             }
         }
+        return null;
     }
     /**
      * Get user settings implemented by a specific plugin (if implemented by this plugin).
      * @param string $pluginName
      * @return UserSettings|null
      */
-    public function getUserSettings($pluginName)
+    public function getUserSettings(string $pluginName) : ?UserSettings
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
         if ($plugin) {
@@ -64,6 +65,7 @@ class SettingsProvider
                 return StaticContainer::get($settings);
             }
         }
+        return null;
     }
     /**
      * Returns all available system settings. A plugin has to specify a file named `SystemSettings.php` containing a
@@ -72,7 +74,7 @@ class SettingsProvider
      *
      * @return SystemSettings[]   An array containing array([pluginName] => [setting instance]).
      */
-    public function getAllSystemSettings()
+    public function getAllSystemSettings() : array
     {
         $cacheId = CacheId::languageAware('AllSystemSettings');
         $cache = PiwikCache::getTransientCache();
@@ -96,7 +98,7 @@ class SettingsProvider
      *
      * @return UserSettings[]   An array containing array([pluginName] => [setting instance]).
      */
-    public function getAllUserSettings()
+    public function getAllUserSettings() : array
     {
         $cacheId = CacheId::languageAware('AllUserSettings');
         $cache = PiwikCache::getTransientCache();
@@ -133,9 +135,10 @@ class SettingsProvider
         if ($plugin) {
             $component = $plugin->findComponent('MeasurableSettings', 'Piwik\\Settings\\Measurable\\MeasurableSettings');
             if ($component) {
-                return StaticContainer::getContainer()->make($component, array('idSite' => $idSite, 'idMeasurableType' => $idType));
+                return StaticContainer::getContainer()->make($component, ['idSite' => $idSite, 'idMeasurableType' => $idType]);
             }
         }
+        return null;
     }
     /**
      * @api
@@ -161,19 +164,19 @@ class SettingsProvider
         }
         return $byPluginName;
     }
-    private function getLoadedAndActivated($pluginName)
+    private function getLoadedAndActivated(string $pluginName) : ?Plugin
     {
         if (!$this->pluginManager->isPluginLoaded($pluginName)) {
-            return;
+            return null;
         }
         try {
             if (!$this->pluginManager->isPluginActivated($pluginName)) {
-                return;
+                return null;
             }
             $plugin = $this->pluginManager->getLoadedPlugin($pluginName);
         } catch (\Exception $e) {
             // we are not allowed to use possible settings from this plugin, plugin is not active
-            return;
+            return null;
         }
         return $plugin;
     }

@@ -1341,7 +1341,7 @@ $passwordConfirmation = null)
         Piwik::postEvent('UsersManager.inviteUser.generateInviteLinkToken', [$userLogin, $user['email']]);
         return SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters(['module' => Piwik::getLoginPluginName(), 'action' => 'acceptInvitation', 'token' => $token]);
     }
-    private function executeConcurrencySafe(string $userLogin, callable $callback = null)
+    private function executeConcurrencySafe(string $userLogin, callable $callback) : void
     {
         $lock = new Lock(StaticContainer::get(LockBackend::class), 'UsersManager.changePermissions');
         $lock->execute($userLogin, $callback);

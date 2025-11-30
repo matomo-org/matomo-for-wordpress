@@ -1,25 +1,36 @@
 <?php
 
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ */
 namespace Piwik\Plugins\PrivacyManager\Settings;
 
 use Piwik\Piwik;
-use Piwik\Settings\Interfaces\OptionSettingInterface;
+use Piwik\Plugins\PrivacyManager\Config;
+use Piwik\Settings\Interfaces\CustomSettingInterface;
 use Piwik\Settings\Interfaces\PolicyComparisonInterface;
 use Piwik\Settings\Interfaces\SettingValueInterface;
+use Piwik\Settings\Interfaces\Traits\Getters\CustomGetterTrait;
 use Piwik\Settings\Interfaces\Traits\PolicyComparisonTrait;
-use Piwik\Settings\Interfaces\Traits\Getters\OptionGetterTrait;
 use Piwik\Policy\CnilPolicy;
 /**
+ * @implements CustomSettingInterface<int|null>
  * @implements PolicyComparisonInterface<int|null>
  * @implements SettingValueInterface<int|null>
  */
-class IPAnonymisation implements OptionSettingInterface, PolicyComparisonInterface, SettingValueInterface
+class IPAnonymisation implements CustomSettingInterface, PolicyComparisonInterface, SettingValueInterface
 {
-    use OptionGetterTrait;
     /**
      * @use PolicyComparisonTrait<int|null>
      */
     use PolicyComparisonTrait;
+    /**
+     * @use CustomGetterTrait<int|null>
+     */
+    use CustomGetterTrait;
     /**
      * @var int|null
      */
@@ -32,9 +43,14 @@ class IPAnonymisation implements OptionSettingInterface, PolicyComparisonInterfa
     {
         return $this->value;
     }
-    protected static function getOptionName() : string
+    protected static function getCustomSettingName() : string
     {
-        return 'PrivacyManager.ipAnonymizerEnabled';
+        return 'ipAnonymizerEnabled';
+    }
+    public static function getCustomValue(?int $idSite = null)
+    {
+        // disallowing compliance override to prevent indefinite loop in getting the value
+        return (new Config($idSite))->getFromOption(self::getCustomSettingName(), $allowPolicyComplianceOverride = \false);
     }
     public static function getTitle() : string
     {
@@ -57,9 +73,9 @@ class IPAnonymisation implements OptionSettingInterface, PolicyComparisonInterfa
     }
     public static function getInstance(?int $idSite = null) : self
     {
-        $optionValue = intval(self::getOptionValue());
         $values = self::getPolicyRequiredValues($idSite);
-        $values['option'] = $optionValue;
+        $customValue = self::getCustomValue($idSite);
+        $values['custom'] = isset($customValue) ? (int) $customValue : null;
         $x = self::getStrictestValueFromArray($values);
         return new self($x);
     }

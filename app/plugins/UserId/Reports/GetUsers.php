@@ -53,7 +53,7 @@ class GetUsers extends \Piwik\Plugins\UserId\Reports\Base
         $view->config->show_related_reports = \false;
         $view->config->show_insights = \false;
         $view->config->show_pivot_by_subtable = \false;
-        $view->config->no_data_message = Piwik::translate('CoreHome_ThereIsNoDataForThisReport') . '<br><br>' . sprintf(Piwik::translate('UserId_ThereIsNoDataForThisReportHelp'), "<a target='_blank' rel='noreferrer noopener' href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-id/') . "'>", "</a>");
+        $view->config->no_data_message = Piwik::translate('CoreHome_ThereIsNoDataForThisReport') . '<br><br>' . sprintf(Piwik::translate('UserId_ThereIsNoDataForThisReportHelp'), Url::getExternalLinkTag('https://matomo.org/docs/user-id/'), '</a>');
         if ($view->isViewDataTableId(HtmlTable::ID)) {
             $view->config->disable_row_evolution = \false;
         }

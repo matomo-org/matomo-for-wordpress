@@ -395,6 +395,8 @@ class Container extends \Piwik\Plugins\TagManager\Model\BaseModel
         // If the destination site is empty, assume the source is the destination
         $idDestinationSite = $idDestinationSite === 0 ? $idSite : $idDestinationSite;
         $container = $this->getContainer($idSite, $idContainer);
+        $containerName = $container['name'];
+        $idContainerVersion = $container['draft']['idcontainerversion'] ?? null;
         // Make sure that the name of the container isn't already in use for the destination site
         $container['name'] = $this->dao->makeCopyNameUnique($idDestinationSite, $container['name']);
         $idContainerNew = $this->addContainer($idDestinationSite, $container['context'], $container['name'], $container['description'], $container['ignoreGtmDataLayer'], $container['isTagFireLimitAllowedInPreviewMode'], $container['activelySyncGtmDataLayer']);
@@ -403,6 +405,11 @@ class Container extends \Piwik\Plugins\TagManager\Model\BaseModel
         $exported = $this->getExport()->exportContainerVersion($idSite, $idContainer, $container['draft']['idcontainerversion']);
         $import = StaticContainer::get('Piwik\\Plugins\\TagManager\\API\\Import');
         $import->importContainerVersion($exported, $idDestinationSite, $idContainerNew, $idContainerNewVersion);
+        // Make sure to record the activity for the report being copied
+        if (class_exists('\\Piwik\\Plugins\\ActivityLog\\ActivityParamObject\\EntityDuplicatedData')) {
+            $additionalData = ['idSite' => $idSite, 'idDestinationSites' => $idDestinationSite, 'idContainerVersion' => $idContainerVersion, 'idContainer' => $idContainer];
+            (new \Piwik\Plugins\ActivityLog\ActivityParamObject\EntityDuplicatedData('TagManager_Container', $containerName, $idContainerNewVersion, $idSite, [$idDestinationSite], $additionalData))->postActivityEvent();
+        }
         // If we're copying to the same site, we're done
         if ($idSite === $idDestinationSite) {
             return $idContainerNew;

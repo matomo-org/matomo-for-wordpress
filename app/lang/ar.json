@@ -203,6 +203,7 @@
         "Locale": "ar_EG.UTF-8",
         "Logout": "تسحيل خروج",
         "MainMetrics": "أهم مقاييس",
+        "ManagePlugins": "إدارة التطبيقات",
         "Matches": "مطابقات",
         "MediumToHighTrafficItIsRecommendedTo": "للمواقع متوسطة وعالية الزيارات، نفضل معالجة تقارير اليوم الحالي على الأكثر كل نصف ساعة (%1$s ثانية) أو كل ساعة (%2$s ثانية).",
         "Metadata": "الفوقية",
@@ -389,9 +390,9 @@
         "Visitors": "الزوار",
         "VisitsWith": "الزيارات بـ %s",
         "Warning": "تنبيه",
+        "WarningFileIntegrityNoHashFile": "لم يمكن إتمام فحص سلامة الملفات بسبب فقد دالة hash_file().",
         "WarningFileIntegrityNoManifest": "لم يمكن إجراء فحص سلامة الملفات بسبب فقد ملف manifest.inc.php.",
         "WarningFileIntegrityNoManifestDeployingFromGit": "هذه الرسالة طبيعية إن كنت تنشر Matomo من Git .",
-        "WarningFileIntegrityNoHashFile": "لم يمكن إتمام فحص سلامة الملفات بسبب فقد دالة hash_file().",
         "WarningPasswordStored": "%1$sتنبيه:%2$s سيتم حفظ كلمة المرور هذه في ملف الإعدادات وظاهرة لأياً كان ممن يمكنه الوصول إليه.",
         "Website": "الموقع",
         "Weekly": "أسبوعي",
@@ -622,6 +623,7 @@
         "JSTracking_VisitorCustomVars": "تتبع متغيرات مخصصة عند زيارة هذا الزائر",
         "JSTracking_VisitorCustomVarsDesc": "على سبيل المثال، باسم متغير \"النوع\" وقيمته \"العميل\".",
         "JavaScriptTracking": "التتبع بجافاسكريبت",
+        "Login": "اسم المستخدم",
         "LogoUpload": "اختر شعاراً لرفعه",
         "MenuDiagnostic": "التشخيص",
         "MenuGeneralSettings": "الإعدادات العامة",
@@ -658,6 +660,7 @@
         "ChangeVisualization": "تغيير العرض",
         "CheckForUpdates": "بحث عن تحديثات",
         "CheckPiwikOut": "تفحص بايويك!",
+        "ChooseWebsite": "اختر الموقع",
         "ClickRowToExpandOrContract": "إضغط هذا الصف لتوسيع أو طيّ الجدول الفرعي.",
         "ClickToEditX": "إضغط لتحرير %s",
         "CloseSearch": "إغلاق البحث",
@@ -690,6 +693,7 @@
         "QuickAccessTitle": "إبحث عن %s . استخدم مفاتيح الأسهم لتصفح نتائج البحث. اختصار: إضغط 'f' للبحث.",
         "ReportGeneratedOn": "تم إنشاء التقرير في %s",
         "ReportGeneratedXAgo": "التقارير المستخرجة منذ %s",
+        "ReportLowercase": "تقرير",
         "Segments": "فئات",
         "SharePiwikLong": "مرحباً.. وجدت تطبيقاً رائعاً مفتوح المصدر: Matomo!\n\nسيمكنك بايويك من تتبع زوار موقعك مجاناً، ويتوجب عليك حقاً أن تجربه الآن!",
         "SharePiwikShort": "Matomo هو برنامج احصائيات ويب مجاني ومفتوح المصدر، إمتلك بياناتك",
@@ -738,8 +742,8 @@
     "CoreUpdater": {
         "CriticalErrorDuringTheUpgradeProcess": "خطأ حرج أثناء عملية التحديث:",
         "DatabaseUpgradeRequired": "تحديث قاعدة البيانات مطلوب",
-        "DownloadingUpdateFromX": "جاري تحميل التحديث من %s",
         "DownloadX": "تحميل %s",
+        "DownloadingUpdateFromX": "جاري تحميل التحديث من %s",
         "EmptyDatabaseError": "قاعدة البيانات %s فارغة. يتوجب عليك تحرير أو إزالة ملف إعدادات Matomo.",
         "ErrorDIYHelp": "إذا كنت مستخدماً محترفاً وواجهت خطأ في عملية الترقية:",
         "ErrorDIYHelp_1": "قم بتحديد مصدر المشكلة وصححه (مثلاً: memory_limit أو max_execution_time)",
@@ -763,14 +767,15 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "ستتم ترقية قاعدة بيانات Matomo من الإصدار %1$s إلى الإصدار الجديد %2$s.",
         "ReadyToGo": "هل أنت مستعد؟",
         "TheFollowingPluginsWillBeUpgradedX": "سيتم تحديث الإضافات التالية: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "يوجد إصدار أحدث من Matomo",
         "TheUpgradeProcessMayFailExecuteCommand": "إذا كانت قاعدة بيانات Matomo كبيرة جداً، قد تستغرق عملية التحديث وقتاً طويلاً من خلال المتصفح. في هذه الحالة، يمكنك إجراء عملية التحديث من خلال أمر المحث التالي: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "قد تستغرق عملية التحديث بعض الوقت، لذ كن صبوراً.",
+        "ThereIsNewVersionAvailableForUpdate": "يوجد إصدار أحدث من Matomo",
         "UnpackingTheUpdate": "جاري فك ضغط ملفات التحديث",
         "UpdateAutomatically": "تحديث آلي",
         "UpdateHasBeenCancelledExplanation": "تم إلغاء تحديث Matomo الآلي. إذا لم يكن في استطاعتك حل رسالة الخطأ الواردة أعلاه، فنوصي بالتحديث اليدوي لنظام Matomo. %1$s يرجى مراجعة %2$s مساعدة التحديث %3$s لتبدأ!",
-        "UpdateTitle": "تحديث",
         "UpdateSuccessTitle": "تم تحديث Matomo بنجاح!",
+        "UpdateTitle": "تحديث",
+        "Updating": "التحديث",
         "UpgradeComplete": "اكتملت عملية الترقية!",
         "UpgradePiwik": "ترقية Matomo",
         "VerifyingUnpackedFiles": "جاري تعريف الملفات",
@@ -886,12 +891,13 @@
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "هل لديك خطأ أو ميزة تود إضافتها وتريد إخبارنا عنها؟",
+        "Forums": "المنتديات",
+        "HowCanWeHelp": "كيف يمكننا مساعدتك؟",
         "IWantTo": "أرغب في:",
         "LearnWaysToParticipate": "تعرف على كافة الطرق التي يمكنك %1$s المساهمة %2$s بها.",
         "ManuallySendEmailTo": "الرجاء إرسال رسالتك يدوياً إلى",
         "SendFeedback": "أرسل التغذية الراجعة",
-        "ThankYou": "شكراً لمساعدتك في جعل Matomo أفضل!",
-        "Forums": "المنتديات"
+        "ThankYou": "شكراً لمساعدتك في جعل Matomo أفضل!"
     },
     "GeoIp2": {
         "AssumingNonApache": "لم أجد دالة apache_get_modules ، أفترض أن خادم ويب ليس Apache.",
@@ -904,6 +910,7 @@
         "GeoIPDatabases": "قواعد بيانات GeoIP"
     },
     "Goals": {
+        "AbandonedCart": "السلات المهملة",
         "AddGoal": "أضف هدفاً",
         "AddNewGoal": "أضف هدفاً جديداً",
         "AddNewGoalOrEditExistingGoal": "%1$s أضف هدفاً جديداً %2$s أو %3$s حرر %4$s أهدافاً قائمة",
@@ -913,8 +920,9 @@
         "BestKeywords": "أفضل الكلمات الدلالية من حيث التحويل:",
         "BestReferrers": "أفضل المواقع التي جلبت زيارات ربحية هي:",
         "CaseSensitive": "يطابق حالة الأحرف",
-        "CategoryTextReferrers_Referrers": "مرسلو الزوار",
         "CategoryTextDevicesDetection_DevicesDetection": "الأجهزة",
+        "CategoryTextGeneral_Actions": "الصفحات",
+        "CategoryTextReferrers_Referrers": "مرسلو الزوار",
         "ClickOutlink": "ينقر رابط لموقع خارجي",
         "ColumnConversions": "التحويلات",
         "Contains": "يتضمن %s",
@@ -926,6 +934,7 @@
         "DefaultRevenueHelp": "على سبيل المثال، نموذج الاتصال الذي يرسله الزائر قد يساوي 10 جنيه في المتوسط. سيساعدك Matomo في فهم كيف تؤدي القطاعات المختلفة من زياراتك.",
         "DeleteGoalConfirm": "هل ترغب حقاً في حذف الهدف %s؟",
         "Download": "تحميل ملف",
+        "EntryPages": "صفحات الوصول",
         "ExceptionInvalidMatchingString": "إذا اخترت \"مطابق تماماً\"، فإن العبارة المطابقة يجب أن تكون رابط ويب يبدأ بالتالي %1$s. على سبيل المثال \"%2$s\".",
         "ExternalWebsiteUrl": "رابط موقع خارجي",
         "Filename": "اسم الملف",
@@ -934,9 +943,9 @@
         "GoalIsTriggered": "تم تفعيل الهدف",
         "GoalIsTriggeredWhen": "سيتم تفعيل الهدف عندما",
         "GoalName": "اسم الهدف",
+        "GoalX": "الهدف %s",
         "Goals": "الأهداف",
         "GoalsOverview": "نظرة عامة على الأهداف",
-        "GoalX": "الهدف %s",
         "HelpOneConversionPerVisit": "إذا كانت صفحة تضاهي الهدف يتم تحديثها أو مشاهدتها أكثر من مرة في الزيارة، سيتم احتساب الهدف في أول مرة يتم تحميل الصفحة فيها أثناء هذه الزيارة.",
         "IsExactly": "يساوي بالضبط %s",
         "Manually": "يدوياً",
@@ -945,10 +954,11 @@
         "NewVisitorsConversionRateIs": "معدل التحويل للزيارات الجديدة هو %s",
         "Optional": "(اختياري)",
         "PageTitle": "عنوان الصفحة",
+        "PageTitles": "عناوين الصفحة",
         "Pattern": "النمط",
         "ReturningVisitorsConversionRateIs": "معدل التحويل للزيارات المتكررة هو %s",
-        "UpdateGoal": "تحديث هدف",
         "URL": "الرابط",
+        "UpdateGoal": "تحديث هدف",
         "ViewAndEditGoals": "مشاهدة وتحرير الأهداف",
         "VisitPageTitle": "يزور صفحة بعنوان معين",
         "VisitUrl": "زيارة رابط معين (صفحة أو مجموعة من الصفحات)",
@@ -2297,7 +2307,7 @@
         "LogIn": "تسجيل الدخول",
         "LoginPasswordNotCorrect": "اسم المستخدم أو كلمة المرور غير صحيحة",
         "LostYourPassword": "فقدت كلمة المرور؟",
-        "PasswordRepeat": "كلمة المرور (تأكيد)",
+        "PasswordRepeat": "كلمة المرور(كرّرها)",
         "PasswordsDoNotMatch": "كلمتي المرور غير متطابقتين.",
         "RememberMe": "تذكرني"
     },
@@ -2330,7 +2340,9 @@
         "ViewRepositoryChangelog": "مشاهدة التعديلات"
     },
     "MultiSites": {
-        "Evolution": "التطور"
+        "AllWebsitesDashboardTitle": "كافة المواقع",
+        "Evolution": "التطور",
+        "TotalPageviews": "إجمالي عدد المشاهدات"
     },
     "Overlay": {
         "Location": "المكان"
@@ -2339,7 +2351,13 @@
         "ColumnTimeServer": "توقيت الملقم"
     },
     "PrivacyManager": {
-        "AnonymizeIpInlineHelp": "قم بتشفير آخر بايت من عناوين IP للزوار للإلتزام بقوانين\/إرشادات الخصوصية المحلية."
+        "AnonymizeIpInlineHelp": "قم بتشفير آخر بايت من عناوين IP للزوار للإلتزام بقوانين\/إرشادات الخصوصية المحلية.",
+        "ComplianceTableSettingStatus": "الحالة",
+        "IPAddress": "عنوان IP",
+        "PrivacyPolicy": "‮سياسة الخصوصية"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "نظرة عامة"
     },
     "Referrers": {
         "Campaigns": "الحملات",
@@ -2461,12 +2479,18 @@
         "CategoryEmail": "بريد إلكتروني",
         "CategoryErrors": "أخطاء",
         "CategoryHistory": "التاريخ",
+        "ChooseWebsite": "اختر الموقع",
+        "EtrackerTagTransactionCurrencyTitle": "العملة",
+        "InvalidDebugUrlError": "خطأ",
         "ManageX": "إدارة %s",
+        "MatomoConfigurationMatomoUserIdTitle": "معرّف المستخدم",
+        "MatomoTagEcommerceViewPrice": "السعر",
         "PageTitleVariableName": "عنوان الصفحة",
         "PageUrlVariableName": "رابط الصفحة",
         "ReferrerUrlVariableName": "جاء من",
         "ReferrerVariableName": "جاء من",
         "Tag": "علامة",
+        "TagLowercase": "وسم",
         "Type": "النوع",
         "Version": "الإصدار"
     },
@@ -2537,6 +2561,7 @@
     },
     "UsersManager": {
         "2FA": "مث",
+        "Active": "مفعل",
         "AllWebsites": "كافة المواقع",
         "ApplyToAllWebsites": "تطبيق على كافة المواقع",
         "ClickHereToDeleteTheCookie": "انقر هنا لحذف الكوكيز وليتتبع Matomo زياراتك",
@@ -2559,6 +2584,7 @@
         "PrivView": "مشاهدة",
         "ReportDateToLoadByDefault": "تاريخ التقرير ليتم تحميله",
         "ReportToLoadByDefault": "التقرير الافتراضي",
+        "Status": "الحالة",
         "TheLoginScreen": "شاشة تسجيل الدخول",
         "ThereAreCurrentlyNRegisteredUsers": "يوجد حالياً %s مستخدم مسجل.",
         "TwoFactorAuthentication": "المصادقة الثنائية",
@@ -2572,6 +2598,7 @@
         "YourVisitsAreNotIgnored": "%1$s لا يتم تجاهل زياراتك في Matomo%2$s (كوكيز التجاهل غير موجودة في متصفحك)."
     },
     "VisitFrequency": {
+        "ColumnActionsByNewVisits": "الإجراءات بواسطة الزيارات الجديدة",
         "ColumnActionsByReturningVisits": "السلوكيات بواسطة الزيارات العائدة",
         "ColumnAverageVisitDurationForReturningVisitors": "متوسط طول الزيارة للزوار العائدين (بالثواني)",
         "ColumnAvgActionsPerReturningVisit": "متوسط السلوكيات لكل زيارة عائدة",

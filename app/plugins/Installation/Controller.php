@@ -117,9 +117,9 @@ class Controller extends ControllerAdmin
         if ($form->validate()) {
             try {
                 $dbInfos = $form->createDatabaseObject();
+                $this->createConfigFile($dbInfos);
                 DbHelper::checkDatabaseVersion();
                 Db::get()->checkClientVersion();
-                $this->createConfigFile($dbInfos);
                 $this->redirectToNextStep(__FUNCTION__);
             } catch (Exception $e) {
                 $view->errorMessage = Common::sanitizeInputValue($e->getMessage());
@@ -568,7 +568,7 @@ $password, $email)
         $firstAccess = (int) $config->General['installation_first_accessed'];
         $threeDaysAgo = Date::getNowTimestamp() - 3 * 24 * 60 * 60;
         if ($firstAccess < $threeDaysAgo) {
-            Piwik::exitWithErrorMessage(Piwik::translate('Installation_ErrorExpired1') . "\n<br/>" . Piwik::translate('Installation_ErrorExpired2') . "\n<ul>" . "\n<li>" . Piwik::translate('Installation_ErrorExpired3', ['<strong>', '</strong>']) . '</li>' . "\n<li>" . Piwik::translate('Installation_ErrorExpired4', ['<strong>', '</strong>']) . '</li>' . "\n<li>" . Piwik::translate('Installation_ErrorExpired5') . '</li>' . "\n</ul>" . Piwik::translate('Installation_ErrorExpired6') . "\n<br/>" . Piwik::translate('Installation_ErrorExpired7', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-install/manage-secure-access-to-the-matomo-installer/') . '" rel="noreferrer noopener" target="_blank">', '</a>']));
+            Piwik::exitWithErrorMessage(Piwik::translate('Installation_ErrorExpired1') . "\n<br/>" . Piwik::translate('Installation_ErrorExpired2') . "\n<ul>" . "\n<li>" . Piwik::translate('Installation_ErrorExpired3', ['<strong>', '</strong>']) . '</li>' . "\n<li>" . Piwik::translate('Installation_ErrorExpired4', ['<strong>', '</strong>']) . '</li>' . "\n<li>" . Piwik::translate('Installation_ErrorExpired5') . '</li>' . "\n</ul>" . Piwik::translate('Installation_ErrorExpired6') . "\n<br/>" . Piwik::translate('Installation_ErrorExpired7', [Url::getExternalLinkTag('https://matomo.org/faq/how-to-install/manage-secure-access-to-the-matomo-installer/'), '</a>']));
         }
     }
     private function setUpInstallationExpiration(Config $config, int $timestamp) : void

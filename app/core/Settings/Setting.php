@@ -38,7 +38,7 @@ class Setting
      */
     protected $pluginName;
     /**
-     * @var FieldConfig
+     * @var FieldConfig|null
      */
     protected $config;
     /**

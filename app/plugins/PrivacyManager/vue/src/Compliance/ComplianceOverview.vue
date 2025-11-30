@@ -7,7 +7,7 @@
 
 <template>
   <ContentBlock :content-title="title">
-    <p>{{ description }}</p>
+  <p v-html="$sanitize(description)" />
     <ActivityIndicator :loading="state.loading"/>
     <template v-if="!state.loading">
       <div v-if="state.fetchComplianceError" class="notification system notification-error">
@@ -18,11 +18,7 @@
         <ComplianceTable
           :results="state.complianceRequirements"
         />
-        <div v-if="state.saveComplianceError" class="notification system notification-error">
-            {{ translate('General_ErrorTryAgain') }}
-            {{ translate('General_ExceptionContactSupportGeneric', ['','']) }}
-        </div>
-        <template v-else>
+        <template v-if="!state.complianceConfigControlled">
           <Field
             uicontrol="checkbox"
             :name="'site-' + idSite + '-' + complianceType +  '-enableFeature'"
@@ -31,6 +27,10 @@
             :inline-help="translate('PrivacyManager_ComplianceEnforceCheckboxHelp')"
             v-model="shouldEnforceComplianceMode"
           />
+          <div v-if="state.saveComplianceError" class="notification system notification-error">
+              {{ translate('General_ErrorTryAgain') }}
+              {{ translate('General_ExceptionContactSupportGeneric', ['','']) }}
+          </div>
           <SaveButton
             :class="'site-' + idSite + '-' + complianceType +  '-save'"
             @confirm="this.showPasswordConfirmation = true"
@@ -40,6 +40,7 @@
             :model-value="this.showPasswordConfirmation"
             :passwordFieldId="'password' + complianceType"
             @confirmed="saveSettings"
+            @aborted="resetSave"
           />
         </template>
       </template>
@@ -85,8 +86,11 @@ export default defineComponent({
     ContentBlock,
   },
   methods: {
-    saveSettings() {
-      this.saveComplianceStatus(this.shouldEnforceComplianceMode);
+    saveSettings(password: string) {
+      this.saveComplianceStatus(this.shouldEnforceComplianceMode, password);
+      this.showPasswordConfirmation = false;
+    },
+    resetSave() {
       this.showPasswordConfirmation = false;
     },
   },

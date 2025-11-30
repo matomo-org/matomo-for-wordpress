@@ -7,6 +7,7 @@ use Piwik\Piwik;
 use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 use Piwik\Metrics\Formatter;
+use Piwik\Url;
 /**
  * Check if Piwik is connected with database through ssl.
  */
@@ -38,7 +39,7 @@ class DbMaxPacket implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
             $formatter = new Formatter\Html();
             $pretty = $formatter->getPrettySizeFromBytes($maxPacketBytes['Value'], 'M', $precision = 1);
             $configured = str_replace(array(' M', '&nbsp;M'), 'MB', $pretty);
-            $comment = Piwik::translate('Diagnostics_MysqlMaxPacketSizeWarning', ['<a href="https://dev.mysql.com/doc/refman/en/packet-too-large.html" rel="noreferrer noopener" target="_blank">', '</a>', '64MB', $configured]);
+            $comment = Piwik::translate('Diagnostics_MysqlMaxPacketSizeWarning', [Url::getExternalLinkTag('https://dev.mysql.com/doc/refman/en/packet-too-large.html'), '</a>', '64MB', $configured]);
         }
         return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, $status, $comment));
     }

@@ -10,7 +10,6 @@ namespace Piwik\Scheduler;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
-use Piwik\Plugin\Tasks;
 /**
  * Loads scheduled tasks.
  */
@@ -22,7 +21,6 @@ class TaskLoader
     public function loadTasks()
     {
         $tasks = array();
-        /** @var Tasks[] $pluginTasks */
         $pluginTasks = PluginManager::getInstance()->findComponents('Tasks', 'Piwik\\Plugin\\Tasks');
         foreach ($pluginTasks as $pluginTask) {
             $pluginTask = StaticContainer::get($pluginTask);

@@ -149,6 +149,7 @@ class Trigger extends \Piwik\Plugins\TagManager\Model\BaseModel
         }
         StaticContainer::get(\Piwik\Plugins\TagManager\Model\Variable::class)->copyReferencedVariables($trigger, $idSite, $idContainerVersion, $idDestinationSite, $idDestinationVersion);
         $newName = $this->dao->makeCopyNameUnique($idDestinationSite, $trigger['name'], $idDestinationVersion);
+        $this->postCopyTriggerActivity($idSite, $idDestinationSite, $idContainerVersion, $idDestinationVersion, null, $trigger);
         return $this->addContainerTrigger($idDestinationSite, $idDestinationVersion, $trigger['type'], $newName, $trigger['parameters'], $trigger['conditions'], $trigger['description']);
     }
     /**
@@ -172,6 +173,7 @@ class Trigger extends \Piwik\Plugins\TagManager\Model\BaseModel
         $trigger = $this->getContainerTrigger($idSite, $idContainerVersion, $idTrigger);
         StaticContainer::get(\Piwik\Plugins\TagManager\Model\Variable::class)->copyReferencedVariables($trigger, $idSite, $idContainerVersion, $idDestinationSite, $idDestinationVersion);
         $newName = $this->dao->makeCopyNameUnique($idDestinationSite, $trigger['name'], $idDestinationVersion);
+        $this->postCopyTriggerActivity($idSite, $idDestinationSite, $idContainerVersion, null, $idDestinationContainer, $trigger);
         return $this->addContainerTrigger($idDestinationSite, $idDestinationVersion, $trigger['type'], $newName, $trigger['parameters'], $trigger['conditions'], $trigger['description']);
     }
     private function updateTriggerColumns($idSite, $idContainerVersion, $idTrigger, $columns)
@@ -216,5 +218,12 @@ class Trigger extends \Piwik\Plugins\TagManager\Model\BaseModel
             }
         }
         return $trigger;
+    }
+    private function postCopyTriggerActivity(int $idSite, int $idDestinationSite, int $idContainerVersion, ?int $idDestinationContainerVersion, ?string $idDestinationContainer, array $trigger)
+    {
+        if (class_exists('\\Piwik\\Plugins\\ActivityLog\\ActivityParamObject\\EntityDuplicatedData')) {
+            $additionalData = ['idSite' => $idSite, 'idDestinationSites' => $idDestinationSite, 'idContainerVersion' => $idContainerVersion, 'idDestinationContainer' => $idDestinationContainer, 'idDestinationContainerVersion' => $idDestinationContainerVersion, 'idTrigger' => $trigger['idtrigger']];
+            (new \Piwik\Plugins\ActivityLog\ActivityParamObject\EntityDuplicatedData('TagManager_Trigger', $trigger['name'], $trigger['idtrigger'], $idSite, [$idDestinationSite], $additionalData))->postActivityEvent();
+        }
     }
 }

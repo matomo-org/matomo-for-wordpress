@@ -143,13 +143,13 @@ class DefaultProvider extends LocationProvider
      */
     public function getInfo()
     {
-        $desc = '<p>' . Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ' . Piwik::translate('UserCountry_DefaultLocationProviderDesc2', ['<strong>', '', '', '</strong>']) . '</p><p><a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_163') . '" rel="noreferrer noopener"  target="_blank">' . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a></p>';
+        $desc = '<p>' . Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ' . Piwik::translate('UserCountry_DefaultLocationProviderDesc2', ['<strong>', '', '', '</strong>']) . '</p><p>' . Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_163') . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a></p>';
         return ['id' => self::ID, 'title' => self::TITLE, 'description' => $desc, 'order' => 1];
     }
     public function getUsageWarning() : ?string
     {
         $comment = Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ';
-        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/geo-locate/') . '" rel="noreferrer noopener" target="_blank">', '', '', '</a>']);
+        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', [Url::getExternalLinkTag('https://matomo.org/docs/geo-locate/'), '', '', '</a>']);
         return $comment;
     }
 }

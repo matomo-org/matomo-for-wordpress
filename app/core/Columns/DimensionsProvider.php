@@ -14,7 +14,7 @@ class DimensionsProvider
 {
     /**
      * @param $dimensionId
-     * @return Dimension
+     * @return ?Dimension
      */
     public function factory($dimensionId)
     {

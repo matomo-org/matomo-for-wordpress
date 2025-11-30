@@ -68,6 +68,6 @@ class GoogleTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\
             return '';
             // don't show on others page if tab is being displayed
         }
-        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataGoogleTagManagerDescription', ['<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-within-gtm-google-tag-manager') . '">', '</a>']));
+        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataGoogleTagManagerDescription', [Url::getExternalLinkTag('https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-within-gtm-google-tag-manager'), '</a>']));
     }
 }

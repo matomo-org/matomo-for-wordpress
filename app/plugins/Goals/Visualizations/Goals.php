@@ -48,6 +48,8 @@ class Goals extends HtmlTable
         $this->config->show_totals_row = \false;
         if ($this->config->disable_subtable_when_show_goals) {
             $this->config->subtable_controller_action = null;
+            $this->config->show_flatten_table = \false;
+            $this->requestConfig->request_parameters_to_modify['flat'] = \false;
         }
         $this->setShowGoalsColumnsProperties();
     }
@@ -60,7 +62,7 @@ class Goals extends HtmlTable
         $this->config->show_exclude_low_population = \true;
         if (1 == Common::getRequestVar('documentationForGoalsPage', 0, 'int')) {
             // TODO: should not use query parameter
-            $this->config->documentation = Piwik::translate('Goals_ConversionByTypeReportDocumentation', ['<br />', '<br />', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/tracking-goals-web-analytics/') . '" rel="noreferrer noopener" target="_blank">', '</a>']);
+            $this->config->documentation = Piwik::translate('Goals_ConversionByTypeReportDocumentation', ['<br />', '<br />', Url::getExternalLinkTag('https://matomo.org/docs/tracking-goals-web-analytics/'), '</a>']);
         }
         if ($this->displayType == self::GOALS_DISPLAY_NORMAL) {
             $this->config->metrics_documentation['nb_visits'] = Piwik::translate('Goals_ColumnVisits');

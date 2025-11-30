@@ -31,12 +31,13 @@ class DoNotTrackHeaderChecker
     /**
      * Checks for DoNotTrack headers and if found, sets `$exclude` to `true`.
      */
-    public function checkHeaderInTracker(&$exclude)
+    public function checkHeaderInTracker(&$exclude, $request)
     {
         if ($exclude) {
             Common::printDebug("Visit is already excluded, no need to check DoNotTrack support.");
             return;
         }
+        $this->config->setIdSite((int) $request->getIdSiteIfExists());
         $exclude = $this->isDoNotTrackFound();
         if ($exclude) {
             IgnoreCookie::deleteThirdPartyCookieUIDIfExists();

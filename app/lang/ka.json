@@ -95,6 +95,7 @@
         "LoadingData": "მონაცემები იტვირთება…",
         "Locale": "ka_GE.UTF-8",
         "Logout": "გასვლა",
+        "ManagePlugins": "პლაგინების მენეჯმენტი",
         "MediumToHighTrafficItIsRecommendedTo": "საშუალო და მაღალი ტრაფიკის მქონე ვებ საიტებისთვის ჩვენ გირჩევთ დღის რეპორტები დაამუშავოთ ყოველ ნახევარ საათში (%1$s წამი) ან ყოველ საათში (%2$s წამი).",
         "MinutesSeconds": "%1$s წუთი %2$sწმ",
         "Monthly": "ყოველ თვე",
@@ -164,8 +165,8 @@
         "VisitorSettings": "ვიზიტორის პარამეტრები",
         "Visitors": "ვიზიტორები",
         "Warning": "გაფრთხილება",
-        "WarningFileIntegrityNoManifest": "ფაილის მთლიანობის შემოწმება ვერ განხორციელდება, რადგან manifest.inc.php ფაილი არ არსებობს.",
         "WarningFileIntegrityNoHashFile": "ფაილის მთლიანობის შემოწმება ვერ დასრულდება, რადგან hash_file() ფუნქცია არ არსებობს.",
+        "WarningFileIntegrityNoManifest": "ფაილის მთლიანობის შემოწმება ვერ განხორციელდება, რადგან manifest.inc.php ფაილი არ არსებობს.",
         "WarningPasswordStored": "%1$sგაფრთხილება:%2$s ეს პაროლი ჩაიწერება კონფიგ ფაილში, რომლის ნახვასაც შეძლებს ყველა, ვისაც მასზე წვდომა აქვს.",
         "Website": "ვებ საიტი",
         "Weekly": "ყოველ კვირა",
@@ -195,6 +196,7 @@
     "CoreAdminHome": {
         "Administration": "ადმინისტრირება",
         "EmailServerSettings": "ელ.ფოსტის სერვერის პარამეტრები",
+        "Login": "მომხმარებლის სახელი",
         "MenuGeneralSettings": "ძირითადი პარამეტრები",
         "OptOutComplete": "უარი დაფიქსირდა; ამ საიტზე თქვენი ვიზიტები არ ჩაიწერება ვებ ანალიზატორის ინსტრუმენტით.",
         "OptOutCompleteBis": "მიაქციეთ ყურადღება, რომ თუ თქვენ გაასუფთავებთ ქუქიებს, წაიშლება უარის ქუქი, ან თუ შეიცვლით კომპიუტერს ან ვებ ბრაუზერს უარის დაფიქსირების პროცედურა თავიდან უნდა განახორციელოთ.",
@@ -206,6 +208,7 @@
     },
     "CoreHome": {
         "CategoryNoData": "ამ კატეგორიაში მონაცემები არ არის. ცადეთ \"ყველა მონაწილის ჩართვა\".",
+        "ChooseWebsite": "აირჩიეთ ვებ საიტი",
         "ShowJSCode": "JavaScript კოდის ნახვა, რომელიც უნდა ჩაისვას ვებ გვერდზე",
         "SystemSummaryPhpVersion": "PHP ვერსია",
         "ThereIsNoDataForThisReport": "რეპორტისთვის მონაცემები არ არის.",
@@ -320,6 +323,7 @@
         "BestKeywords": "საუკეთესო კონვერციის საკვანძო სიტყვებია:",
         "BestReferrers": "საუკეთესო კინვერციის ვებ საიტების რეფერერებია:",
         "CaseSensitive": "რეგისტრზე დამოკიდებული შედარება",
+        "CategoryTextGeneral_Actions": "გვერდები",
         "CategoryTextReferrers_Referrers": "რეფერერები",
         "ClickOutlink": "დააწკაპუნებს გარე ვებ საიტის ბმულზე",
         "ColumnConversions": "კონვერსიები",
@@ -377,6 +381,7 @@
         "Optional": "ოფციონალური",
         "Password": "პაროლი",
         "PasswordDoNotMatch": "პაროლი არ დაემთხვა",
+        "PasswordRepeat": "პაროლი (გამეორება)",
         "PercentDone": "%s %% შესრულდა",
         "PleaseFixTheFollowingErrors": "გთხოვთ, შეასწოროთ შემდეგი შეცდომები",
         "Requirements": "Matomo მოთხოვნები",
@@ -1631,6 +1636,7 @@
         "SubscriptionType": "ტიპი"
     },
     "MultiSites": {
+        "AllWebsitesDashboardTitle": "ყველა ვებ საიტი",
         "Evolution": "ევოლუცია"
     },
     "Overlay": {
@@ -1640,7 +1646,11 @@
         "ColumnTimeServer": "სერვერის დრო"
     },
     "PrivacyManager": {
-        "AnonymizeIpInlineHelp": "გახადეთ ანონიმური ვიზიტორების IP მისამრთის ბოლო ბაიტი, რათა დააკმაყოფილოთ კონფიდენციალურობის ადგილობრივი კანონი\/განაწესი."
+        "AnonymizeIpInlineHelp": "გახადეთ ანონიმური ვიზიტორების IP მისამრთის ბოლო ბაიტი, რათა დააკმაყოფილოთ კონფიდენციალურობის ადგილობრივი კანონი\/განაწესი.",
+        "ComplianceTableSettingStatus": "სტატუსი"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "მიმოხილვა"
     },
     "Referrers": {
         "Campaigns": "კამპანიები",
@@ -1739,6 +1749,9 @@
         "CategoryClicks": "დაწკაპუნებები",
         "CategoryDate": "თარიღი",
         "CategoryEmail": "ელ.ფოსტა",
+        "ChooseWebsite": "აირჩიეთ ვებ საიტი",
+        "EtrackerTagTransactionCurrencyTitle": "ვალუტა",
+        "InvalidDebugUrlError": "შეცდომა",
         "PageUrlVariableName": "გვერდის URL",
         "ReferrerUrlVariableName": "რეფერერის URL",
         "ReferrerVariableName": "რეფერერის URL",
@@ -1765,6 +1778,7 @@
         "LanguageCode": "ენის კოდი"
     },
     "UsersManager": {
+        "Active": "აქტიური",
         "AllWebsites": "ყველა ვებ საიტი",
         "ApplyToAllWebsites": "ყველა ვებ საიტზე გამოყენება",
         "ClickHereToDeleteTheCookie": "დააწკაპუნეთ აქ, რომ წაშალოთ ქუქი და თქვენი ვიზიტების ტრეკირების საშუალება მისცეთ Matomo–ს",
@@ -1788,6 +1802,7 @@
         "PrivView": "დათვალიერება",
         "ReportDateToLoadByDefault": "ნაგულისხმევად ჩასატვირთი რეპორტის თარიღი",
         "ReportToLoadByDefault": "ნაგულისხმევად ჩასატვირთი რეპორტი",
+        "Status": "სტატუსი",
         "TheLoginScreen": "სისტემაში შესვლის ეკრანი",
         "TypeYourPasswordAgain": "აკრიფეთ ახალი პაროლი კიდევ ერთხელ.",
         "User": "მომხმარებელი",
