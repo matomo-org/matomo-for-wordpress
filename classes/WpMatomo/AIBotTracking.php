@@ -20,10 +20,12 @@ class AIBotTracking {
 
 	private static $request_start_time_ms;
 
+	private static $ai_bot_tracked = false;
+
 	private static $extensions_to_track = [
 		'', // no extension
 
-		'html',
+		'htm',
 		'html',
 	];
 
@@ -37,9 +39,14 @@ class AIBotTracking {
 	 */
 	private $tracker;
 
-	public function __construct( Settings $settings ) {
+	/**
+	 * @param Settings       $settings
+	 * @param ?AIBotTracking $tracker
+	 */
+	public function __construct( $settings, $tracker = null ) {
 		$this->settings = $settings;
-		$this->tracker  = new AjaxTracker( $settings );
+		$this->tracker  = isset( $tracker ) ? $tracker : new AjaxTracker( $settings );
+		$this->tracker->setRequestTimeout( 1 );
 	}
 
 	public function register_hooks() {
@@ -47,6 +54,12 @@ class AIBotTracking {
 	}
 
 	public function do_ai_bot_tracking() {
+		if ( self::$ai_bot_tracked ) {
+			return;
+		}
+
+		self::$ai_bot_tracked = true;
+
 		if ( ! $this->should_track_current_page() ) {
 			return;
 		}
@@ -66,8 +79,11 @@ class AIBotTracking {
 			$response_code = 200;
 		}
 
+		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		$source = 'wordpress';
+
 		// TODO: response size and source, unsure what to put here
-		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms );
+		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
 	}
 
 	public function should_track_current_page() {
@@ -89,28 +105,12 @@ class AIBotTracking {
 			return false;
 		}
 
-		if ( $this->is_request_for_robots_txt( $request_path ) ) {
-			return false;
-		}
-
-		if ( $this->is_request_for_sitemap_xml( $request_path ) ) {
-			return false;
-		}
-
 		return true;
 	}
 
 	private function is_request_for_file( $request_path ) {
 		$extension = pathinfo( $request_path, PATHINFO_EXTENSION );
 		return ! in_array( $extension, self::$extensions_to_track, true );
-	}
-
-	private function is_request_for_robots_txt( $request_path ) {
-		return preg_match( '%/robots\.txt$%', $request_path );
-	}
-
-	private function is_request_for_sitemap_xml( $request_path ) {
-		return preg_match( '%/sitemap\.xml$%', $request_path );
 	}
 
 	private function get_request_elapsed_time() {
@@ -123,6 +123,10 @@ class AIBotTracking {
 
 	private static function get_current_time_ms() {
 		return (int) ( microtime( true ) * 1000 );
+	}
+
+	public static function set_is_ai_bot_tracked( $is_tracked ) {
+		self::$ai_bot_tracked = $is_tracked;
 	}
 }
 

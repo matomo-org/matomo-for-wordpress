@@ -104,15 +104,15 @@ class AjaxTracker extends \MatomoTracker {
 		}
 	}
 
-	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+	protected function sendRequest( string $url, string $method = 'GET', $data = null, bool $force = false ): string {
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
-			return null; // not installed or synced yet
+			return ''; // not installed or synced yet
 		}
 
 		if ( $this->is_prerender() ) {
 			// do not track if for some reason we are prerendering
-			return null;
+			return '';
 		}
 
 		$args = array(
@@ -140,11 +140,12 @@ class AjaxTracker extends \MatomoTracker {
 
 		$response = $this->wp_remote_request( $url, $args );
 
-		if (is_wp_error($response)) {
-			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
+		if ( is_wp_error( $response ) ) {
+			$this->logger->log_exception( 'ajax_tracker', new \Exception( $response->get_error_message() ) );
+			return '';
 		}
 
-		return $response;
+		return $response['body'];
 	}
 
 	private function is_invalid_visitor_id_error( \Exception $ex ) {

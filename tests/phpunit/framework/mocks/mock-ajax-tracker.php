@@ -26,7 +26,9 @@ class TestAjaxTracker extends AjaxTracker {
 		$this->captured_urls[]     = $url;
 		$this->captured_requests[] = [ $url, $args ];
 
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-		return base64_decode( 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==' );
+		return [
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			'body' => base64_decode( 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==' ),
+		];
 	}
 }

@@ -61,6 +61,9 @@
 		<exclude name="PHPCompatibility.InitialValue.NewConstantScalarExpressions.constFound"/>
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
 		<exclude name="WordPress.PHP.IniSet.Risky"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.stringFound"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.boolFound"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.stringFound"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>

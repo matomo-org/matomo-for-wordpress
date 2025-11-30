@@ -27,11 +27,11 @@ class MatomoLocalTracker extends PiwikTracker {
 		$this->extra_server_vars[ $name ] = $value;
 	}
 
-	protected function getBaseUrl() {
+	protected function getBaseUrl(): string {
 		return self::$URL; // avoid adding another query string
 	}
 
-	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+	protected function sendRequest( string $url, string $method = 'GET', $data = null, bool $force = false ): string {
 		if ( ! empty( $this->token_auth ) ) {
 			$url .= '&token_auth=' . rawurlencode( $this->token_auth );
 		}
