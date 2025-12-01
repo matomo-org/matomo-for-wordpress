@@ -640,6 +640,7 @@
         "ChangeVisualization": "ערוך תצוגה",
         "CheckForUpdates": "בדוק עדכונים",
         "CheckPiwikOut": "בדוק את מטומו!",
+        "ChooseWebsite": "בחירת אתר",
         "ChooseX": "בחר %1$s",
         "ClickToEditX": "לחץ לעריכה %s",
         "ClickToSeeFullInformation": "לחץ למידע מלא",
@@ -810,6 +811,7 @@
         "Optional": "אופציונלי",
         "Password": "סיסמה",
         "PasswordDoNotMatch": "סיסמה לא תואמת",
+        "PasswordRepeat": "סיסמה (שוב)",
         "PercentDone": "%s %% עברו",
         "Requirements": "דרישות Matomo",
         "SetupWebsite": "הגדרת אתר",
@@ -2180,12 +2182,12 @@
         "OnePage": "עמוד 1",
         "VisitNum": "מספר ביקור",
         "VisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון",
-        "visitsByVisitCount": "ביקורים לפי מספר ביקור",
         "VisitsPerDuration": "ביקורים למשך ביקור",
         "VisitsPerNbOfPages": "ביקורים למספר עמודים",
         "WidgetLengths": "משך ביקורים",
         "WidgetPages": "עמודים לביקור",
-        "WidgetVisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון"
+        "WidgetVisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון",
+        "visitsByVisitCount": "ביקורים לפי מספר ביקור"
     },
     "VisitsSummary": {
         "GenerateQueries": "%s שאילתות בוצעו",

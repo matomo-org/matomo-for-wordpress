@@ -839,6 +839,9 @@
         "ViewAndAddAnnotations": "View and add annotations for %s…",
         "YouCannotModifyThisNote": "You cannot modify this annotation, because you did not create it, nor do you have admin access for this site."
     },
+    "BotTracking": {
+        "PluginDescription": "Track and analyze visits from AI bots such as ChatGPT-User and similar. This plugin helps you understand how AI-driven tools interact with your website by logging and reporting bot-triggered requests."
+    },
     "Contents": {
         "PluginDescription": "Content and banner tracking lets you measure the performance (views, clicks, CTR) of any piece of content on your pages (Banner ad, image, any item).",
         "Impressions": "Impressions",
@@ -1060,7 +1063,6 @@
         "JsTrackingCodeAdvancedOptionsStep": "Optional: use the advanced options to customise your tracking code."
     },
     "CoreHome": {
-        "ReportConfiguration": "Report Configuration",
         "CategoryNoData": "No data in this category. Try to \"Include all population\".",
         "ChangeVisualization": "Change visualization",
         "ChangePeriod": "Change period",
@@ -4286,7 +4288,9 @@
         "CompareThisSegment": "Compare this segment with the selected segment and period.",
         "Test": "Test",
         "UpdatingAllSitesSegmentPermittedToSuperUser": "This segment was made accessible to all sites by the super user. Now, only super users are allowed to update or remove it.",
-        "UpdatingForeignSegmentPermittedToSuperUser": "You can only edit and delete custom segments that you have created yourself. This segment was created and 'shared with you' by the Super User. To modify this segment, you can first create a new one by clicking on 'Add new segment'. Then you can customize the segment's definition."
+        "UpdatingForeignSegmentPermittedToSuperUser": "You can only edit and delete custom segments that you have created yourself. This segment was created and 'shared with you' by the Super User. To modify this segment, you can first create a new one by clicking on 'Add new segment'. Then you can customize the segment's definition.",
+        "LimitSegmentsSettingTitle": "Limit available segments",
+        "LimitSegmentsSettingRequirementNote": "Limit the available segments to be compliant."
     },
     "SitesManager": {
         "AddSite": "Add a new website",
@@ -6151,7 +6155,7 @@
         "PasswordChangeTerminatesOtherSessions": "When you change your password, any other active session of this account will be logged out.",
         "PasswordChangeDoesNotRevokeAuthTokens": "Changing your password won't revoke app-specific tokens. If you suspect unauthorized access, delete and regenerate them in the %1$s section at the bottom of the page.",
         "NewsletterSignupTitle": "Newsletter Signup",
-        "NewsletterSignupMessage": "Subscribe to our newsletter to receive regular information about Matomo. You can unsubscribe from it any time. This service uses MadMimi. Learn more about it on %1$sMatomo's Privacy Policy page%2$s.",
+        "NewsletterSignupMessage": "Subscribe to our newsletter to receive regular information about Matomo. You can unsubscribe from it any time. Learn more about it on %1$sMatomo's Privacy Policy page%2$s.",
         "NewsletterSignupFailureMessage": "Whoops, something went wrong. We weren't able to sign you up for the newsletter.",
         "NewsletterSignupSuccessMessage": "Super, you're all signed up! We'll be in touch soon.",
         "FirstWebsitePermission": "First website permission",

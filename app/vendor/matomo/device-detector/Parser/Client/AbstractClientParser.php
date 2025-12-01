@@ -64,7 +64,7 @@ abstract class AbstractClientParser extends AbstractParser
         $regexes = $instance->getRegexes();
         $names = [];
         foreach ($regexes as $regex) {
-            if (\false !== \strpos($regex['name'], '$1')) {
+            if (\false !== \strpos($regex['name'], '$1') || \false !== \strpos($regex['name'], '$2')) {
                 continue;
             }
             $names[] = $regex['name'];

@@ -2360,6 +2360,7 @@
         "PromoOverview": "نظرة عامة"
     },
     "Referrers": {
+        "Acquisition": "الاستحواذ",
         "Campaigns": "الحملات",
         "ColumnCampaign": "الحملة",
         "ColumnSearchEngine": "محرك بحث",
@@ -2400,6 +2401,7 @@
         "SeoRankings": "رتب ملائمة محركات البحث"
     },
     "ScheduledReports": {
+        "AggregateReportsFormat": "خيارات العرض",
         "AlsoSendReportToTheseEmails": "أرسل التقرير إلى هذه العناوين أيضاً (عنوان لكل سطر):",
         "AreYouSureDeleteReport": "هل ترغب حقاً في حذف هذا التقرير وجدولته الزمنية؟",
         "CancelAndReturnToReports": "إلغاء و%1$s رجوع إلى قائمة التقارير%2$s",
@@ -2628,15 +2630,16 @@
         "OnePage": "صفحة واحدة",
         "VisitNum": "رقم الزيارة",
         "VisitsByDaysSinceLast": "الزيارات حسب الأيام منذ آخر زيارة",
-        "visitsByVisitCount": "الزيارات برقم الزيارة",
         "VisitsPerDuration": "الزيارات لزمن الزيارة",
         "VisitsPerNbOfPages": "الزيارات لعدد الصفحات",
         "WidgetLengths": "طول الزيارة",
         "WidgetLengthsDocumentation": "يمكنك مشاهدة كم الزيارات التي لها مدة كلية معيّنة في هذا التقرير. يُعرض التقرير في البداية على صورة غيمة وسوم ثم تُعرض المدد الأكثر شيوعاً بخط أكبر.",
         "WidgetPages": "الصفحات لكل زيارة",
-        "WidgetVisitsByDaysSinceLast": "الزيارات حسب الأيام منذ آخر زيارة"
+        "WidgetVisitsByDaysSinceLast": "الزيارات حسب الأيام منذ آخر زيارة",
+        "visitsByVisitCount": "الزيارات برقم الزيارة"
     },
     "VisitsSummary": {
+        "AverageGenerationTime": "متوسط وقت التوليد",
         "AverageVisitDuration": "معدل طول الزيارة",
         "GenerateQueries": "%s استعلام تم تنفيذهم",
         "GenerateTime": "%s ثانية لإنشاء هذه الصفحة",

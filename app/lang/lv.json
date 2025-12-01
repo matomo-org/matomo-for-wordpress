@@ -1247,6 +1247,7 @@
         "Optional": "Izvēles",
         "Password": "Parole",
         "PasswordDoNotMatch": "paroles nesakrīt",
+        "PasswordRepeat": "Parole (atkārtoti)",
         "PercentDone": "%s %% pabeigts",
         "PleaseFixTheFollowingErrors": "Lūdzu izlabojiet sekojošās kļūdas",
         "Requirements": "Matomo prasības",
@@ -3179,11 +3180,11 @@
         "NPages": "%s lapas",
         "OnePage": "1 lapa",
         "VisitNum": "Apmeklējuma numurs",
-        "visitsByVisitCount": "Apmeklējumu pēc apmeklējuma numura",
         "VisitsPerDuration": "Apmeklējumi pēc apmeklējuma ilguma",
         "VisitsPerNbOfPages": "Apmeklējumi pēc lapu skaita",
         "WidgetLengths": "Apmeklējumu garums",
-        "WidgetPages": "Lapas apmeklējumā"
+        "WidgetPages": "Lapas apmeklējumā",
+        "visitsByVisitCount": "Apmeklējumu pēc apmeklējuma numura"
     },
     "VisitsSummary": {
         "AverageGenerationTime": "vidējais ģenerēšanas ilgums",

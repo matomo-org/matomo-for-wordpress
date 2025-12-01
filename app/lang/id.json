@@ -4658,6 +4658,7 @@
     },
     "Tour": {
         "AddAnnotation": "Tambahkan anotasi",
+        "AddAnotherWebsite": "Tambahkan situs web lain",
         "AddReport": "Tambahkan laporan terjadwal",
         "AddSegment": "Tambahkan segmen",
         "BecomeMatomoExpert": "Menjadi seorang Pakar Matomo",
@@ -4889,6 +4890,7 @@
         "2FA": "2FA",
         "Active": "Aktif",
         "AddExistingUser": "Tambahkan pengguna yang sudah ada",
+        "AddNewUser": "Tambahkan pengguna baru",
         "AddSuperuserAccessConfirm": "Memberikan akses pengguna super kepada pengguna akan memungkinkan pengguna untuk memiliki kontrol penuh atas Matomo dan harus dilakukan dengan hemat. Masukkan kata sandi Anda untuk melanjutkan.",
         "AddUserNoInitialAccessError": "Pengguna baru harus diberikan akses ke situs web, harap setel parameter 'initialIdSite'.",
         "AllUsersAreSelected": "Semua pengguna %1$s dipilih.",
@@ -5013,7 +5015,7 @@
         "MenuUserSettings": "Pengaturan pengguna",
         "MenuUsers": "Pengguna",
         "NewsletterSignupFailureMessage": "Ups, ada yang tidak beres. Kami tidak dapat mendaftarkan Anda ke buletin.",
-        "NewsletterSignupMessage": "Berlangganan buletin kami untuk menerima informasi rutin tentang Matomo. Anda dapat berhenti berlangganan kapan saja. Layanan ini menggunakan MadMimi. Pelajari lebih lanjut di %1$shalaman Kebijakan Privasi Matomo%2$s.",
+        "NewsletterSignupMessage": "Berlangganan buletin kami untuk menerima informasi rutin tentang Matomo. Anda dapat berhenti berlangganan kapan saja. Pelajari lebih lanjut di %1$shalaman Kebijakan Privasi Matomo%2$s.",
         "NewsletterSignupSuccessMessage": "Super, Anda sudah mendaftar! Kami akan segera menghubungi Anda.",
         "NewsletterSignupTitle": "Pendaftaran Buletin",
         "NoAccessWarning": "Pengguna ini belum diberikan akses ke situs web. Ketika mereka log masuk, mereka akan melihat pesan kesalahan. Untuk mencegahnya, tambahkan akses ke situs web di bawah ini.",
@@ -5190,7 +5192,7 @@
         "WidgetLengthsDocumentation": "Dalam laporan ini, Anda dapat mengetahui berapa banyak kunjungan memiliki total lama kunjungan tertentu. Awalnya, laporan tersebut ditampilkan sebagai tag awan, jangka waktu yang lebih umum ditampilkan dalam huruf yang lebih besar.",
         "WidgetPages": "Halaman tiap kunjungan",
         "WidgetPagesDocumentation": "Dalam laporan ini, Anda dapat melihat berapa banyak kunjungan yang terlibat sejumlah tampilan halaman. Awalnya, laporan tersebut ditampilkan sebagai tag awan, jumlah lebih umum dari halaman ditampilkan dalam huruf yang lebih besar.",
-        "WidgetVisitsByDaysSinceLast": "Kunjungan berdasar Hari sejak Kunjungan Terakhir",
+        "WidgetVisitsByDaysSinceLast": "Pengunjung berdasar hari sejak kunjungan terakhir",
         "WidgetVisitsByDaysSinceLastDocumentation": "Di laporan ini, Anda dapat melihat berapa banyak kunjungan dari pengunjung beberapa hari yang lalu.",
         "WidgetVisitsByNumDocumentation": "Di laporan ini, Anda dapat melihat jumlah kunjungan ke-N, misalnya, siapa pengunjung yang mengunjungi situs Anda dalam N waktu terakhir.",
         "visitsByVisitCount": "Kunjungan berdasar Jumlah Kunjungan"

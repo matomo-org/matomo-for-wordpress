@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.6.1',
-        'version' => '5.6.1.0',
-        'reference' => 'd4d44494ae3029427e6917aef6ddedb3e08928fc',
+        'pretty_version' => 'dev-5.x-dev',
+        'version' => 'dev-5.x-dev',
+        'reference' => 'c9c5f83d82e03dde9a616ce3a55fe34e20c8fbb1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -76,9 +76,9 @@
             'dev_requirement' => false,
         ),
         'matomo/device-detector' => array(
-            'pretty_version' => '6.4.7',
-            'version' => '6.4.7.0',
-            'reference' => 'e53eed31bb1530851feebe52bd64c3451da19e77',
+            'pretty_version' => '6.4.8',
+            'version' => '6.4.8.0',
+            'reference' => '56baf981af4f192e15a4f369d4975af847a81ccb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/device-detector',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.6.1',
-            'version' => '5.6.1.0',
-            'reference' => 'd4d44494ae3029427e6917aef6ddedb3e08928fc',
+            'pretty_version' => 'dev-5.x-dev',
+            'version' => 'dev-5.x-dev',
+            'reference' => 'c9c5f83d82e03dde9a616ce3a55fe34e20c8fbb1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8f8c5c8fb0aa8fcd57ca11d21c1ab77078996411',
+            'reference' => '76a95371c68529c1e385d16bfbb895a27ceb486d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -158,9 +158,9 @@
             'dev_requirement' => false,
         ),
         'maxmind-db/reader' => array(
-            'pretty_version' => 'v1.12.1',
-            'version' => '1.12.1.0',
-            'reference' => '815939e006b7e68062b540ec9e86aaa8be2b6ce4',
+            'pretty_version' => 'v1.13.1',
+            'version' => '1.13.1.0',
+            'reference' => '2194f58d0f024ce923e685cdf92af3daf9951908',
             'type' => 'library',
             'install_path' => __DIR__ . '/../maxmind-db/reader',
             'aliases' => array(),
@@ -266,9 +266,9 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v7.0.0',
-            'version' => '7.0.0.0',
-            'reference' => 'c7111310c6116ba508a6a170a89eaaed2129bd42',
+            'pretty_version' => 'v7.0.1',
+            'version' => '7.0.1.0',
+            'reference' => '360ae911ce62e25e11249f6140fa58939f556ebe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
@@ -277,7 +277,7 @@
         'piwik/device-detector' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '6.4.7',
+                0 => '6.4.8',
             ),
         ),
         'piwik/referrer-spam-blacklist' => array(
@@ -540,9 +540,9 @@
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.10.0',
-            'version' => '6.10.0.0',
-            'reference' => 'ca5b6de294512145db96bcbc94e61696599c391d',
+            'pretty_version' => '6.10.1',
+            'version' => '6.10.1.0',
+            'reference' => '7a2701251e5d52fc3d508fd71704683eb54f5939',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),

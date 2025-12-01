@@ -836,6 +836,9 @@
         "ViewAndAddAnnotations": "Shihni dhe shtoni shënime për %s…",
         "YouCannotModifyThisNote": "S’e ndryshoni dot këtë shënim, ngaqë s’e krijuat ju, as keni të drejta përgjegjësi për këtë sajt."
     },
+    "BotTracking": {
+        "PluginDescription": "Ndiqni dhe analizoni vizita prej robotësh IA, bie fjala, ChatGPT-User dhe të ngjashëm. Kjo shtojcë ju ndihmon të kuptoni si ndërveprojnë me sajtin tuaj mjete të bazuar në IA, duke regjistruar dhe raportuar kërkesa të ardhura nga robotë."
+    },
     "Contents": {
         "ContentImpression": "Përshtypje Lënde",
         "ContentInteraction": "Ndërveprim Me Lëndën",
@@ -1569,6 +1572,7 @@
         "TV": "Tv",
         "Tablet": "Tablet",
         "UserAgent": "Agjent Përdoruesi",
+        "Wearable": "Portativ",
         "WidgetBrowserVersionsDocumentation": "Ky raport përmban të dhëna rreth llojeve të shfletuesit që përdornin vizitorët tuaj. Secili version i një shfletuesi tregohet veçmas.",
         "WidgetBrowsers": "Shfletues Vizitori",
         "WidgetBrowsersDocumentation": "Ky raport përmban të dhëna rreth ç’lloje shfletuesish përdornin vizitorët tuaj.",
@@ -4343,6 +4347,8 @@
         "DefaultAllVisits": "Krejt vizitat",
         "DragDropCondition": "Kusht Merr &amp; Vër",
         "HideMessageInFuture": "Fshihe këtë mesazh në të ardhmen",
+        "LimitSegmentsSettingRequirementNote": "Kufizo segmente të përdorshëm në ata që janë në përputhje me standarde.",
+        "LimitSegmentsSettingTitle": "Kufizo segmente të përdorshëm",
         "LoadingSegmentedDataMayTakeSomeTime": "Përpunimi i të dhënave sipas segmentesh vizitorësh mund të hajë ca minuta…",
         "OperatorAND": "DHE",
         "OperatorOR": "OSE",
@@ -6168,7 +6174,7 @@
         "MenuUserSettings": "Rregullime përdoruesi",
         "MenuUsers": "Përdorues",
         "NewsletterSignupFailureMessage": "Hëm, diç shkoi ters. S’qemë në gjendje t’ju regjistronim për buletinin tonë.",
-        "NewsletterSignupMessage": "Pajtohuni te buletini ynë, për të marrë informacione periodike rreth Matomo-s. Mund të shpajtoheni kur të doni. Ky shërbim përdor MadMimi. Mësoni më tepër rreth tij, te %1$sfaqja e Rregullave të Privatësisë në Matomo%2$s.",
+        "NewsletterSignupMessage": "Pajtohuni te buletini ynë, për të marrë informacione periodike rreth Matomo-s. Mund të shpajtoheni kur të doni. Mësoni më tepër rreth tij, te %1$sfaqja e Rregullave të Privatësisë në Matomo%2$s.",
         "NewsletterSignupSuccessMessage": "Super, u regjistruat! Do të lidhemi së shpejti bashkë.",
         "NewsletterSignupTitle": "Regjistrim Për Buletin",
         "NoAccessWarning": "Këtij përdoruesi s’i është lejuar hyrje në ndonjë sajt. Kur të bëjë hyrjen në llogari, do të shohë një mesazh gabimi. Për ta parandaluar këtë, shtoni më poshtë hyrjen në një sajt.",
