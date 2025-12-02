@@ -182,6 +182,7 @@
         "Tax": "Treth",
         "Total": "Cyfanswm",
         "TotalRevenue": "Cyfanswm Refeniw",
+        "TrackingScopeVisit": "Ymweliad",
         "TranslatorName": "Hefin Williams",
         "UniquePurchases": "Pryniant Unigol",
         "Unknown": "Anadnabyddus",
@@ -214,6 +215,9 @@
     },
     "Actions": {
         "PagesSubcategoryHelp3": "Defnyddiwch yr eiconau mwy (+) a llai (-) ar y chwith i lywio."
+    },
+    "CoreHome": {
+        "ChooseWebsite": "Dewiswch wefan"
     },
     "DBStats": {
         "Table": "Tabl"
@@ -1236,6 +1240,9 @@
         "Year_Short": "bl.",
         "Yesterday": "Ddoe"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "Yr Holl Wefannau"
+    },
     "Referrers": {
         "ColumnWebsite": "Gwefan"
     },
@@ -1243,13 +1250,20 @@
         "Currency": "Arian Breiniol"
     },
     "TagManager": {
-        "CategoryDate": "Dyddiad"
+        "CategoryDate": "Dyddiad",
+        "ChooseWebsite": "Dewiswch wefan",
+        "EtrackerTagTransactionCurrencyTitle": "Arian Breiniol",
+        "InvalidDebugUrlError": "Gwall",
+        "MatomoTagEcommerceViewPrice": "Pris"
     },
     "UsersManager": {
         "Username": "Enw Defnyddiwr"
     },
     "VisitTime": {
         "NHour": "%s awr"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Gwefan"
     },
     "Widgetize": {
         "OpenInNewWindow": "Agor mewn ffenestr newydd"

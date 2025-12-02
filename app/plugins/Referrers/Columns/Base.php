@@ -319,24 +319,24 @@ abstract class Base extends VisitDimension
         } else {
             if (AIAssistantDetection::getInstance()->isAIAssistantUrl($this->referrerUrl)) {
                 $aiAssistantName = AIAssistantDetection::getInstance()->getAIAssistantFromDomain($this->referrerUrl);
+                /**
+                 * Triggered when detecting the AI of a referrer URL.
+                 *
+                 * Plugins can use this event to provide custom AI detection logic.
+                 *
+                 * @param string|false &$aiAssistantName Name of the AI Assistant, or false if none detected
+                 *
+                 *                                        This parameter is initialized to the results
+                 *                                        of Matomo's default AI detection
+                 *                                        logic.
+                 * @param string referrerUrl The referrer URL from the tracking request.
+                 */
+                Piwik::postEvent('Tracker.detectReferrerAIAssistant', [&$aiAssistantName, $this->referrerUrl]);
+                $cachedReferrerAIAssistants[$this->referrerUrl] = $aiAssistantName;
+                $cache->save($cacheKey, $cachedReferrerAIAssistants);
             } elseif ($utmSource && AIAssistantDetection::getInstance()->isAIAssistantUrl($utmSource)) {
                 $aiAssistantName = AIAssistantDetection::getInstance()->getAIAssistantFromDomain($utmSource);
             }
-            /**
-             * Triggered when detecting the AI of a referrer URL.
-             *
-             * Plugins can use this event to provide custom AI detection logic.
-             *
-             * @param string|false &$aiAssistantName Name of the AI Assistant, or false if none detected
-             *
-             *                                        This parameter is initialized to the results
-             *                                        of Matomo's default AI detection
-             *                                        logic.
-             * @param string referrerUrl The referrer URL from the tracking request.
-             */
-            Piwik::postEvent('Tracker.detectReferrerAIAssistant', [&$aiAssistantName, $this->referrerUrl]);
-            $cachedReferrerAIAssistants[$this->referrerUrl] = $aiAssistantName;
-            $cache->save($cacheKey, $cachedReferrerAIAssistants);
         }
         if ($aiAssistantName === \false) {
             return \false;
@@ -387,7 +387,7 @@ abstract class Base extends VisitDimension
         if (!isset($this->currentUrlParse['query']) && !isset($this->currentUrlParse['fragment'])) {
             return;
         }
-        $campaignParameters = Common::getCampaignParameters();
+        $campaignParameters = Common::getCampaignParameters(intval($this->idsite));
         $this->campaignNames = $campaignParameters[0];
         $this->campaignKeywords = $campaignParameters[1];
         $found = \false;
@@ -410,7 +410,7 @@ abstract class Base extends VisitDimension
     protected function detectReferrerCampaignFromTrackerParams(Request $request) : void
     {
         $campaignName = null;
-        $campaignParameters = Common::getCampaignParameters();
+        $campaignParameters = Common::getCampaignParameters(intval($request->getIdSite()));
         $allTrackingParams = $request->getRawParams();
         foreach ($campaignParameters[0] as $parameter) {
             if (!empty($allTrackingParams[$parameter])) {

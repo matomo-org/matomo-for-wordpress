@@ -215,6 +215,7 @@
         "Locale": "hu_HU.UTF-8",
         "Logout": "Kilépés",
         "MainMetrics": "Főbb mutatók",
+        "ManagePlugins": "Bővítménykezelés",
         "Matches": "Egyezések",
         "Measurable": "mérhető",
         "MeasurableId": "mérhető ID",
@@ -589,6 +590,7 @@
         "JSTracking_VisitorCustomVars": "Saját változó kovetése látogatónként",
         "JSTracking_VisitorCustomVarsDesc": "Példa: változó: \"Típus\", érték: \"Ügyfél\".",
         "JavaScriptTracking": "JavaScript Követés",
+        "Login": "felhasználó",
         "LogoNotWriteableInstruction": "Egyedi logó használatához írási jogosultságra van szükség a következő könyvtárhoz: %1$s A logók tárolásához a következőfájlokhoz írási jogosultság szükséges: %2$s.",
         "LogoUpload": "Válasszon egy logót a feltöltéshez",
         "LogoUploadFailed": "A feltöltött fájl nem feldolgozható. Kérjük ellenőrizze, hogy a fájl formátuma érvényes-e.",
@@ -637,12 +639,13 @@
     },
     "CoreHome": {
         "CategoryNoData": "Nincs adat ebben a kategóriában. Próbáld meg a \"Tartalmazza a teljes populációt\" opciót.",
+        "ChooseWebsite": "Válassz weboldalt",
         "NoPrivilegesAskPiwikAdmin": "'%1$s' felhasználóként léptél be, de úgy tűnik, hogy nem rendelkezel semmilyen jogosultsággal. %2$s Kérd meg a Matomo adminisztrátorod (kattints ide egy email írásához)%3$s, hogy adjon számodra 'megtekintési' jogosultságot a webhelyhez.",
+        "Segments": "Szegmensek",
         "ShowJSCode": "Mutasd a JavaScript kódot a beillesztéshez",
-        "ThereIsNoDataForThisReport": "Nincs adat ehhez a jelentéshez.",
-        "WebAnalyticsReports": "Webanalitikai jelentések",
         "SystemSummaryPhpVersion": "PHP verzió",
-        "Segments": "Szegmensek"
+        "ThereIsNoDataForThisReport": "Nincs adat ehhez a jelentéshez.",
+        "WebAnalyticsReports": "Webanalitikai jelentések"
     },
     "CorePluginsAdmin": {
         "Activate": "Bekapcsol",
@@ -756,6 +759,7 @@
         "BestKeywords": "A legjobban konvertáló kulcsszavak a következőek:",
         "BestReferrers": "A legjobban konvertáló hivatkozó weboldalak a következőek:",
         "CaseSensitive": "Kisbetű-nagybetű érzékeny egyezés",
+        "CategoryTextGeneral_Actions": "weblap",
         "CategoryTextReferrers_Referrers": "Források",
         "ClickOutlink": "rákattintanak egy külső weboldalra mutató linkre",
         "ColumnConversions": "Konverziók",
@@ -766,6 +770,7 @@
         "DefaultRevenueHelp": "Például egy látogató által elküldött kapcsolatfelvételi űrlap 1000 forintnak megfelelő értéket jelenthet átlagosan. A Matomo segít annak megértésében, hogy az egyes látogatói szegmensek hogyan teljesítenek ennek fényében.",
         "DeleteGoalConfirm": "Biztosan törölni szeretnéd a %s elnevezésű célt?",
         "Download": "letöltenek egy fájlt",
+        "EntryPages": "Belépési lapok",
         "ExceptionInvalidMatchingString": "Ha a pontos egyezést választja, akkor a sztringnek egy %1$s kezdetű URL-nek kell lennie, mint pl. %2$s.",
         "ExternalWebsiteUrl": "Külső weboldal URL-je",
         "Filename": "fájlnév",
@@ -782,6 +787,7 @@
         "MatchesExpression": "egyezik ezzel a kifejezéssel: %s",
         "NewVisitorsConversionRateIs": "Új látogatók konverziós aránya %s",
         "Optional": "(opcionális)",
+        "PageTitles": "Oldalak címe",
         "Pattern": "Egyezési minta",
         "ReturningVisitorsConversionRateIs": "A visszatérő látogatók konverziós aránya %s",
         "URL": "URL",
@@ -1946,6 +1952,7 @@
         "KeywordRankedOnSearchResultForThisVisitor": "A %1$s kulcsszó %2$s. helyezésen jelent meg a(z) %3$s. találati lista oldalon a látogató számára.",
         "LastHours": "Legutóbbi %s óra",
         "LastMinutes": "Legutóbbi %s perc",
+        "LastVisit": "Utolsó látogatás",
         "Referrer_URL": "Hivatkozó URL",
         "VisitorLogDocumentation": "Ez a táblázat a legutolsó látogatásokat mutatja a kiválasztott időintervallumon belül.%1$s Ha az időintervallum tartalmazz a mai napot is, akkor élőben láthatod látogatóid! %2$s Az itt kijelzett adatok mindig élőek maradnak, függetlenül, hogy hogyan és milyen gyakran használod az archiválásra szolgáló cron job-ot."
     },
@@ -1974,7 +1981,9 @@
         "MobileAppDescription": "Egy natív mobil alkalmazás iOS, Android vagy egyéb más mobil operációs rendszerekhez."
     },
     "MultiSites": {
-        "Evolution": "Trendek"
+        "AllWebsitesDashboardTitle": "Összes weboldal",
+        "Evolution": "Trendek",
+        "TotalPageviews": "Összes oldalnézet"
     },
     "Overlay": {
         "Location": "Hely"
@@ -1984,10 +1993,15 @@
         "ColumnTimeServer": "Szerveridő"
     },
     "PrivacyManager": {
-        "AnonymizeIpInlineHelp": "A látogatók IP címeinek utolsó bájtját törölve megakadályozza a látogatók beazonosítását, hogy megfelelhess a helyi adatvédelmi törvényeknek és ajánlásoknak."
+        "AnonymizeIpInlineHelp": "A látogatók IP címeinek utolsó bájtját törölve megakadályozza a látogatók beazonosítását, hogy megfelelhess a helyi adatvédelmi törvényeknek és ajánlásoknak.",
+        "ComplianceTableSettingStatus": "Állapot"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Áttekintés"
     },
     "Referrers": {
         "Acquisition": "Birtokba vétel",
+        "CampaignSource": "Forrás",
         "Campaigns": "Kampányok",
         "ColumnCampaign": "Kampány",
         "ColumnSearchEngine": "Keresőoldal",
@@ -2089,6 +2103,11 @@
         "CategoryDate": "Dátum",
         "CategoryEmail": "E-mail-cím",
         "CategoryErrors": "Hibák",
+        "ChooseWebsite": "Válassz weboldalt",
+        "EtrackerTagTransactionCurrencyTitle": "Pénznem",
+        "InvalidDebugUrlError": "Hiba",
+        "MatomoConfigurationMatomoUserIdTitle": "felhasználó azonosító",
+        "MatomoTagEcommerceViewPrice": "Ár",
         "PageUrlVariableName": "Weblap URL-je",
         "ReferrerUrlVariableName": "Hivatkozó URL",
         "ReferrerVariableName": "Hivatkozó URL",
@@ -2101,6 +2120,9 @@
     },
     "Transitions": {
         "TransitionsSubcategoryHelp2": "több részlet"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "2FA"
     },
     "UserCountry": {
         "Continent": "Kontinens",
@@ -2125,6 +2147,7 @@
     },
     "UsersManager": {
         "2FA": "2FA",
+        "Active": "Aktív",
         "AllWebsites": "Összes weboldal",
         "ApplyToAllWebsites": "Alkalmazás minden weboldalra",
         "ClickHereToDeleteTheCookie": "Kattints ide a szűrés érdekében lementett süti törléséhez, hogy a továbbiakban a Matomo regisztrálja látogatásaid.",
@@ -2148,6 +2171,7 @@
         "PrivView": "Megtekintés",
         "ReportDateToLoadByDefault": "Alapértelmezett időintervallum a betöltődő jelentésekhez",
         "ReportToLoadByDefault": "Alapértelmezettként betöltődő jelentés",
+        "Status": "Állapot",
         "TheLoginScreen": "Belépési képernyő",
         "TypeYourPasswordAgain": "Add meg az új jelszót még egyszer.",
         "User": "Felhasználó",
@@ -2159,6 +2183,7 @@
         "YourVisitsAreNotIgnored": "%1$sLátogatásaid nem kerültek ignorálásra a Matomo által%2$s (Az ehhez szükséges süti nem volt megtalálható a böngésződben.)"
     },
     "VisitFrequency": {
+        "ColumnActionsByNewVisits": "Műveletek az Új Látogassa",
         "ColumnActionsByReturningVisits": "Ismétlődő látogatások akciói",
         "ColumnAverageVisitDurationForReturningVisitors": "Látogatások átlagos időtartama visszatérő látogatók esetén (másodpercekben)",
         "ColumnAvgActionsPerReturningVisit": "Akciók átlagos gyakorisága ismétlődő látogatások esetén",

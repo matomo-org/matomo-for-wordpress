@@ -161,6 +161,7 @@
         "LoadingPopover": "Įkeliama %s…",
         "Locale": "lt_LT.UTF-8",
         "Logout": "Atsijungti",
+        "ManagePlugins": "Tvarkyti papildinius",
         "MediumToHighTrafficItIsRecommendedTo": "Vidutinio ir didelio srauto svetainėms rekomenduojame generuoti kasdienines ataskaitas kas pusę valandos (%1$s sekundės) arba kas valandą (%2$s sekundės).",
         "MinutesSeconds": "%1$s min. %2$ssek.",
         "Monthly": "Kas mėnesį",
@@ -283,8 +284,8 @@
         "VisitorSettings": "Lankytojų nustatymai",
         "Visitors": "Lankytojai",
         "Warning": "Įspėjimas",
-        "WarningFileIntegrityNoManifest": "Failo vientisumo patikra negali būti atlikta dėl nesamo manifest.inc.php failo.",
         "WarningFileIntegrityNoHashFile": "Failo vientisumo patikra negali būti atlikta dėl nesamos hash_file() funkcijos.",
+        "WarningFileIntegrityNoManifest": "Failo vientisumo patikra negali būti atlikta dėl nesamo manifest.inc.php failo.",
         "WarningPasswordStored": "%1$sĮspėjimas:%2$s Šis slaptažodis bus išsaugotas konfigūracijos faile, kuris bus matomas kiekvienam turinčiam priėjimą prie šio failo.",
         "Warnings": "Įspėjimai",
         "Website": "Svetainė",
@@ -359,9 +360,10 @@
         "ArchivingSettings": "Archyvavimo nustatymai",
         "EmailServerSettings": "El. pašto serverio nustatymai",
         "ForBetaTestersOnly": "Tik beta testuotojams",
-        "JavaScriptTracking": "JavaScript sekimas",
         "HttpTrackingApi": "HTTP sekimo API",
         "JSTracking_DisableCookies": "Išjungti visus sekimo slapukus",
+        "JavaScriptTracking": "JavaScript sekimas",
+        "Login": "prisijungimas",
         "MenuGeneralSettings": "Pagrindiniai nustatymai",
         "PluginSettings": "Papildinio nustatymai",
         "PluginSettingsSaveFailed": "Nepavyko įrašyti papildinio nustatymų",
@@ -372,7 +374,9 @@
     },
     "CoreHome": {
         "CategoryNoData": "Šioje kategorijoje duomenų nėra. Pabandykite \"Įtraukti visą populiaciją\"",
+        "ChangeCurrentWebsite": "Pasirinkite svetainę, šiuo metu pasirinkta svetainė: %s",
         "CheckForUpdates": "Tikrinti ar yra atnaujinimų",
+        "ChooseWebsite": "Pasirinkti svetainę",
         "ClickToSeeFullInformation": "Spustelėkite, norėdami matyti daugiau informacijos",
         "CloseSearch": "Užverti paiešką",
         "CloseWidgetDirections": "Galite užverti šį valdiklį, spusteldami ant valdiklio viršuje esančios \"X\" piktogramos.",
@@ -380,9 +384,9 @@
         "Menu": "Meniu",
         "SharePiwikShort": "Matomo! Nemokama\/laisva saityno analitika. Būkite savo duomenų savininkais.",
         "ShowJSCode": "Parodyti JavaScript kodą įvedimui",
+        "SystemSummaryPhpVersion": "PHP versija",
         "ThereIsNoDataForThisReport": "Nėra duomenų šiai ataskaitai.",
-        "WebAnalyticsReports": "Žiniatinklio analizės sprendimo ataskaitos",
-        "ChangeCurrentWebsite": "Pasirinkite svetainę, šiuo metu pasirinkta svetainė: %s"
+        "WebAnalyticsReports": "Žiniatinklio analizės sprendimo ataskaitos"
     },
     "CorePluginsAdmin": {
         "Activate": "Aktyvinti",
@@ -600,6 +604,9 @@
         "BestKeywords": "Jū9sų geriausi konversijos raktažodžiai:",
         "BestReferrers": "Jūsų geriausios konversijos svetainės:",
         "CaseSensitive": "Raidžių dydžio sutapimas",
+        "CategoryTextDevicesDetection_DevicesDetection": "Įrenginiai",
+        "CategoryTextGeneral_Actions": "Puslapiai",
+        "CategoryTextReferrers_Referrers": "Šaltiniai",
         "ClickOutlink": "Paspauskite ant nuorodos į išorinį puslapį",
         "ColumnConversions": "Konversijos",
         "Contains": "turi %s",
@@ -615,9 +622,9 @@
         "GoalIsTriggered": "Uždavinys paleistas",
         "GoalIsTriggeredWhen": "Uždavinys paleistas kai",
         "GoalName": "Uždavinio pavadinimas",
+        "GoalX": "Uždavinys %s",
         "Goals": "Uždaviniai",
         "GoalsOverview": "Uždavinių apžvalga",
-        "GoalX": "Uždavinys %s",
         "IsExactly": "yra tiksliai %s",
         "Manually": "rankiniu būdu",
         "ManuallyTriggeredUsingJavascriptFunction": "Uždavinys paleistas rankiniu būdu naudojantis JavaScript API trackGoal()",
@@ -626,8 +633,8 @@
         "Optional": "(papildoma)",
         "Pattern": "Derinys",
         "ReturningVisitorsConversionRateIs": "Sugrįžtančių lankytojų konversijos koeficientas yra %s",
-        "UpdateGoal": "Atnaujinti uždavinį",
         "URL": "URL",
+        "UpdateGoal": "Atnaujinti uždavinį",
         "ViewAndEditGoals": "Peržiūrėti ir redaguoti uždavinius",
         "VisitUrl": "Aplankyti pateiktą URL (puslapį ar puslapių grupę)",
         "WhenVisitors": "kai lankytojai",
@@ -1925,22 +1932,22 @@
         "VisitorsLastVisit": "Šio lankytojo paskutinis apsilankymas buvo prieš %s dienų."
     },
     "Login": {
+        "CurrentlyBlockedIPs": "Šiuo metu užblokuoti IP adresai",
+        "CurrentlyBlockedIPsUnblockConfirm": "Ar tikrai norite atblokuoti visus šiuo metu užblokuotus IP adresus?",
+        "IPsAlwaysBlocked": "Šie IP adresai yra visuomet užblokuoti",
         "InvalidOrExpiredToken": "Netinkamas arba pasibaigęs talonas",
         "InvalidUsernameEmail": "Netinkamas naudotojo vardas ir\/arba el. pašto adresas",
         "LogIn": "Prisijungti",
         "LoginOrEmail": "Naudotojo vardas ar el. paštas",
-        "CurrentlyBlockedIPs": "Šiuo metu užblokuoti IP adresai",
-        "IPsAlwaysBlocked": "Šie IP adresai yra visuomet užblokuoti",
-        "UnblockAllIPs": "Atblokuoti visus šiuo metu užblokuotus IP adresus",
-        "CurrentlyBlockedIPsUnblockConfirm": "Ar tikrai norite atblokuoti visus šiuo metu užblokuotus IP adresus?",
         "LoginPasswordNotCorrect": "Naudotojo vardas ir slaptažodis neteisingi",
         "LostYourPassword": "Pamiršote slaptažodį?",
         "NewPassword": "Naujas slaptažodis",
         "NewPasswordRepeat": "Naujas slaptažodis (pakartokite)",
         "PasswordChanged": "Jūsų slaptažodis buvo pakeistas.",
-        "PasswordRepeat": "Slaptažodis (pakartoti)",
+        "PasswordRepeat": "Slaptažodis (pakartokite)",
         "PasswordsDoNotMatch": "Slaptažodžiai nesutampa",
-        "RememberMe": "Prisiminti mane"
+        "RememberMe": "Prisiminti mane",
+        "UnblockAllIPs": "Atblokuoti visus šiuo metu užblokuotus IP adresus"
     },
     "Marketplace": {
         "ActivateLicenseKey": "Aktyvinti",
@@ -1980,6 +1987,7 @@
         "Settings_SuperAdmin": "Super naudotojo nustatymai"
     },
     "MultiSites": {
+        "AllWebsitesDashboardTitle": "Visos svetainės",
         "Evolution": "Raida",
         "LoadingWebsites": "Įkeliamos svetainės"
     },
@@ -1993,27 +2001,32 @@
     "PrivacyManager": {
         "AnonymizeData": "Anonimizuoti duomenis",
         "AnonymizeIpInlineHelp": "Paslėpkite savo lankytojų IP adresus, jei to reikalauja Jūsų vidaus taisyklės ar įstatymai.",
+        "ComplianceTableSettingStatus": "Būsena",
         "CurrentDBSize": "Esamas duomenų bazės dydis",
         "DeleteDataInterval": "Ištrinti senus duomenis kas",
-        "DeleteOldVisitorLogs": "Ištrinti senus lankytojų žurnalus",
-        "DeleteOldRawData": "Reguliariai ištrinti senus neapdorotus duomenis",
         "DeleteLogsOlderThan": "Ištrinti įrašus senesnius nei",
         "DeleteMaxRows": "Maksimalus vienu metu trinamų eilučių kiekis:",
+        "DeleteOldRawData": "Reguliariai ištrinti senus neapdorotus duomenis",
+        "DeleteOldVisitorLogs": "Ištrinti senus lankytojų žurnalus",
         "IndividualsRights": "Asmenų teisės",
         "LastDelete": "Paskutinis išvalymas atliktas",
         "MenuPrivacySettings": "Privatumas",
         "NextDelete": "Kitas suplanuotas ištrynimas po",
-        "ReportsDataSavedEstimate": "Duomenų bazės dydis",
-        "TeaserHeadline": "Privatumo nustatymai",
-        "UseAnonymizeIp": "Anonimizuoti lankytojų IP adresus",
+        "PrivacyPolicy": "Privatumo politika",
         "PrivacyPolicyUrl": "Privatumo politikos URL",
         "PrivacyPolicyUrlDescription": "Nuoroda į jūsų privatumo politikos puslapį.",
+        "ReportsDataSavedEstimate": "Duomenų bazės dydis",
+        "TeaserHeadline": "Privatumo nustatymai",
         "TermsAndConditionUrl": "Nuostatų ir sąlygų URL",
         "TermsAndConditionUrlDescription": "Nuoroda į jūsų nuostatų ir sąlygų puslapį.",
-        "PrivacyPolicy": "Privatumo politika",
-        "TermsAndConditions": "Nuostatos ir sąlygos"
+        "TermsAndConditions": "Nuostatos ir sąlygos",
+        "UseAnonymizeIp": "Anonimizuoti lankytojų IP adresus"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Bendras vaizdas"
     },
     "Referrers": {
+        "CampaignSource": "Šaltinis",
         "Campaigns": "Kampanijos",
         "ColumnCampaign": "Kampanija",
         "ColumnSearchEngine": "Paieškos sistema",
@@ -2143,6 +2156,7 @@
         "CategoryPageVariables": "Puslapio kintamieji",
         "CategorySEO": "SEO",
         "CategoryVisibility": "Matomumas",
+        "ChooseWebsite": "Pasirinkti svetainę",
         "CreatedDate": "Sukūrimo data",
         "CurrentTimeInLocalTimezone": "Jūsų dabartinis vietinis laikas yra %1$s%2$s%3$s.",
         "DeleteX": "Ištrinti %s",
@@ -2150,15 +2164,19 @@
         "DisablePreview": "Išjungti peržiūrą",
         "DisablingPreviewPleaseWait": "Išjungiama peržiūros veiksena, palaukite…",
         "EnablingPreviewPleaseWait": "Įjungiama peržiūros veiksena, palaukite…",
+        "EtrackerTagTransactionCurrencyTitle": "Valiuta",
         "FullscreenTriggerName": "Visas ekranas",
         "HideAdvancedSettings": "Slėpti išplėstinius nustatymus",
+        "InvalidDebugUrlError": "Klaida",
         "IsoDateVariableDescription": "Dabartinė data ir laikas ISO formatu, pavyzdžiui, \"2018-03-19T14:00:00.587Z\".",
         "IsoDateVariableName": "ISO data",
         "JavaScriptVariableName": "JavaScript kintamasis",
         "LocalDateVariableName": "Vietinė data",
         "LocalHourVariableName": "Vietinė valanda",
         "LocalTimeVariableName": "Vietinis laikas",
+        "MatomoConfigurationMatomoUserIdTitle": "Naudotojo ID",
         "MatomoConfigurationVariableName": "Matomo konfigūracija",
+        "MatomoTagEcommerceViewPrice": "Kaina",
         "PageUrlVariableDescription": "Grąžina pilną puslapio URL",
         "PageUrlVariableName": "Puslapio URL",
         "PreviewModeVariableName": "Peržiūros veiksena",
@@ -2174,6 +2192,7 @@
         "UserAgentVariableName": "Naudotojo agentas",
         "Variable": "Kintamasis",
         "VariableBeingUsedBy": "Šiuo metu kintamasis yra naudojamas šiose vietose:",
+        "VariableLowercase": "kintamasis",
         "Variables": "Kintamieji",
         "Version": "Versija",
         "VersionDescription": "Versijos aprašas"
@@ -2224,6 +2243,7 @@
         "PluginDescription": "Praneša apie jūsų lankytojų naršyklių naudojamą kalbą."
     },
     "UsersManager": {
+        "Active": "Aktyvus",
         "AddExistingUser": "Pridėti esamą naudotoją",
         "AllWebsites": "Visos svetainės",
         "AnonymousUser": "Anoniminis naudotojas",
@@ -2269,6 +2289,7 @@
         "PrivAdmin": "Administruoti",
         "PrivNone": "Neleidžiama",
         "PrivView": "Matyti",
+        "Status": "Būsena",
         "TheLoginScreen": "Prisijungimo langas",
         "ThereAreCurrentlyNRegisteredUsers": "Šiuo metu yra %s registruotų naudotojų.",
         "TypeYourPasswordAgain": "Pakartokite savo naują slaptažodį.",
@@ -2335,7 +2356,8 @@
         "WidgetVisits": "Apsilankymų peržiūra"
     },
     "WebsiteMeasurable": {
-        "Website": "Svetainė"
+        "Website": "Svetainė",
+        "Websites": "Svetainės"
     },
     "Widgetize": {
         "OpenInNewWindow": "Atverti naujame lange"

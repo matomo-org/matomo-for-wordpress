@@ -35,7 +35,7 @@ class CronArchivingCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
         if (SettingsPiwik::isMatomoInstalled()) {
             $isBrowserTriggerEnabled = Rules::isBrowserTriggerEnabled();
             if ($isBrowserTriggerEnabled) {
-                $comment = $this->translator->translate('Diagnostics_BrowserTriggeredArchivingEnabled', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/') . '" target="_blank" rel="noreferrer noopener">', '</a>']);
+                $comment = $this->translator->translate('Diagnostics_BrowserTriggeredArchivingEnabled', [Url::getExternalLinkTag('https://matomo.org/docs/setup-auto-archiving/'), '</a>']);
                 $result[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment);
                 $archiveLastStarted = Option::get(CronArchive::OPTION_ARCHIVING_STARTED_TS);
                 $thirtySixHoursAgoInSeconds = 36 * 3600;
@@ -45,7 +45,7 @@ class CronArchivingCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
                     $formatter = new Formatter();
                     $lastStarted = $formatter->getPrettyTimeFromSeconds(time() - $archiveLastStarted, \true);
                     $label = $this->translator->translate('Diagnostics_BrowserAndAutoArchivingEnabledLabel');
-                    $comment = $this->translator->translate('Diagnostics_BrowserAndAutoArchivingEnabledComment', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/') . '" target="_blank" rel="noreferrer noopener">', '</a>', $lastStarted]);
+                    $comment = $this->translator->translate('Diagnostics_BrowserAndAutoArchivingEnabledComment', [Url::getExternalLinkTag('https://matomo.org/docs/setup-auto-archiving/'), '</a>', $lastStarted]);
                     $result[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment);
                 }
             }
@@ -62,7 +62,7 @@ class CronArchivingCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
             } else {
                 $reasonText = implode(', ', $reasons);
             }
-            $comment .= $this->translator->translate('Installation_NotSupported') . ' ' . $this->translator->translate('Goals_Optional') . ' (' . $this->translator->translate('General_Reasons') . ': ' . $reasonText . ')' . $this->translator->translate('General_LearnMore', [' <a target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/') . '">', '</a>']);
+            $comment .= $this->translator->translate('Installation_NotSupported') . ' ' . $this->translator->translate('Goals_Optional') . ' (' . $this->translator->translate('General_Reasons') . ': ' . $reasonText . ')' . $this->translator->translate('General_LearnMore', [' ' . Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/') . '">', '</a>']);
             $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_INFORMATIONAL;
         }
         $label = $this->translator->translate('Installation_SystemCheckCronArchiveProcess') . ' - ' . $this->translator->translate('Installation_SystemCheckCronArchiveProcessCLI');

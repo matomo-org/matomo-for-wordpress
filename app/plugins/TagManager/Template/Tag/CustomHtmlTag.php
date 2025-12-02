@@ -34,7 +34,7 @@ class CustomHtmlTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
             $field->customFieldComponent = self::FIELD_TEXTAREA_VARIABLE_COMPONENT;
             $field->uiControl = FieldConfig::UI_CONTROL_TEXTAREA;
             $field->description = Piwik::translate('TagManager_CustomHtmlTagDescriptionText');
-            $field->inlineHelp = Piwik::translate('TagManager_CustomHtmlTagHelpText', ['<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/tag-manager/faq_26815/', null, null, 'App.TagManager.getParameters') . '">', '</a>']);
+            $field->inlineHelp = Piwik::translate('TagManager_CustomHtmlTagHelpText', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/faq_26815/', null, null, 'App.TagManager.getParameters'), '</a>']);
             $field->validators[] = new NotEmpty();
             $field->uiControlAttributes = ['spellcheck' => 'false'];
         }), $this->makeSetting('htmlPosition', 'bodyEnd', FieldConfig::TYPE_STRING, function (FieldConfig $field) {

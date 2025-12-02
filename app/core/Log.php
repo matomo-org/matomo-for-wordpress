@@ -79,7 +79,7 @@ class Log extends \Piwik\Singleton
     /**
      * Singleton instance.
      *
-     * @var Log
+     * @var Log|null
      */
     private static $instance;
     /**

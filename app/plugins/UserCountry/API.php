@@ -232,7 +232,7 @@ class API extends \Piwik\Plugin\API
     /**
      * Returns a simple mapping from country code to country name
      *
-     * @return \string[]
+     * @return string[]
      */
     public function getCountryCodeMapping()
     {

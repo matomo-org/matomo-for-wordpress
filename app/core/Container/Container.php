@@ -26,6 +26,11 @@ class Container extends DIContainer implements ContainerInterface
         // ensure this container class can be resolved
         $this->resolvedEntries[self::class] = $this;
     }
+    /**
+     * @template T of object
+     * @param class-string<T>|string $name Container entry name.
+     * @return ($name is class-string<T> ? T : mixed)
+     */
     public function get($name)
     {
         try {
@@ -34,6 +39,11 @@ class Container extends DIContainer implements ContainerInterface
             throw new NotFoundException($e->getMessage(), $e->getCode(), $e);
         }
     }
+    /**
+     * @template T of object
+     * @param class-string<T>|string $name Container entry name.
+     * @return ($name is class-string<T> ? T : mixed)
+     */
     public function make($name, array $parameters = [])
     {
         try {

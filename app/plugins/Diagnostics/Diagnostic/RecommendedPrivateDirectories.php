@@ -23,6 +23,6 @@ class RecommendedPrivateDirectories extends \Piwik\Plugins\Diagnostics\Diagnosti
     }
     protected function addError(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult &$result)
     {
-        $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_INFORMATIONAL, $this->translator->translate('Diagnostics_UrlsAccessibleViaBrowser') . ' ' . $this->translator->translate('General_ReadThisToLearnMore', ['<a target="_blank" rel="noopener noreferrer" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/how-do-i-fix-the-error-private-directories-are-accessible/') . '">', '</a>'])));
+        $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_INFORMATIONAL, $this->translator->translate('Diagnostics_UrlsAccessibleViaBrowser') . ' ' . $this->translator->translate('General_ReadThisToLearnMore', [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-do-i-fix-the-error-private-directories-are-accessible/'), '</a>'])));
     }
 }

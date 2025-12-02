@@ -417,8 +417,8 @@ class Proxy
                             $requestValue = Common::getRequestVar($name, $defaultValue, $type, $parametersRequest);
                         }
                     } catch (Exception $e) {
-                        // Special case: empty parameter in the URL, should return the empty string
-                        if (isset($parametersRequest[$name]) && $parametersRequest[$name] === '') {
+                        // Special case: empty parameter in the URL, should return the empty string, if no incompatible type is defined
+                        if (isset($parametersRequest[$name]) && $parametersRequest[$name] === '' && (empty($type) || $type === 'string')) {
                             $requestValue = '';
                         } else {
                             $requestValue = $defaultValue;

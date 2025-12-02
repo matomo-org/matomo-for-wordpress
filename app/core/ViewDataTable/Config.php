@@ -18,6 +18,7 @@ use Piwik\Period\PeriodValidator;
 use Piwik\Piwik;
 use Piwik\Plugins\API\API;
 use Piwik\Plugin\ReportsProvider;
+use Piwik\Request;
 /**
  * Contains base display properties for {@link Piwik\Plugin\ViewDataTable}s. Manipulating these
  * properties in a ViewDataTable instance will change how its report will be displayed.
@@ -621,6 +622,35 @@ class Config
         return $filters[1];
     }
     /**
+     * Sets secondary dimensions for the current report. This will make the related reports to display secondary dimension reports.
+     * This requires the API to be able to handle the `secondaryDimension` parameter.
+     * The properties {@link $related_reports} and {@link $related_reports_title} will be overwritten for this purpose.
+     *
+     * @template T of array<string, string>
+     * @param T $dimensions
+     * @param key-of<T> $defaultDimension
+     * @return void
+     */
+    public function setSecondaryDimensions(array $dimensions, string $defaultDimension) : void
+    {
+        $this->show_related_reports = \true;
+        $this->related_reports = [];
+        $secondaryDimension = $defaultDimension;
+        $requestedDimension = Request::fromRequest()->getStringParameter('secondaryDimension', '');
+        if (array_key_exists($requestedDimension, $dimensions)) {
+            $secondaryDimension = $requestedDimension;
+        }
+        $secondaryDimensionTranslation = $dimensions[$secondaryDimension];
+        $this->related_reports_title = Piwik::translate('General_SecondaryDimension', $secondaryDimensionTranslation) . "<br/>" . Piwik::translate('General_SwitchToSecondaryDimension', '');
+        foreach ($dimensions as $dimension => $dimensionLabel) {
+            if ($dimension === $secondaryDimension) {
+                // don't show as related report the currently selected dimension
+                continue;
+            }
+            $this->addRelatedReport($this->controllerName . '.' . $this->controllerAction, $dimensionLabel, ['secondaryDimension' => $dimension]);
+        }
+    }
+    /**
      * Adds a related report to the {@link $related_reports} property. If the report
      * references the one that is currently being displayed, it will not be added to the related
      * report list.
@@ -632,7 +662,7 @@ class Config
      */
     public function addRelatedReport($relatedReport, $title, $queryParams = array())
     {
-        list($module, $action) = explode('.', $relatedReport);
+        [$module, $action] = explode('.', $relatedReport);
         // don't add the related report if it references this report
         if ($this->controllerName === $module && $this->controllerAction === $action) {
             if (empty($queryParams)) {

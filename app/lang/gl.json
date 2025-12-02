@@ -1382,7 +1382,11 @@
         "ActivateLicenseKey": "Activar",
         "PluginKeywords": "Palabras clave"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "Todas as Webs"
+    },
     "ProfessionalServices": {
+        "PromoOverview": "Xeral",
         "WidgetPremiumServicesForPiwik": "Funcións Premium &amp; Servizos para Matomo"
     },
     "Referrers": {
@@ -1419,6 +1423,9 @@
         "SEORankingsFor": "Clasificación SEO para %s",
         "SeoRankings": "Rankings de SEO"
     },
+    "SegmentEditor": {
+        "Test": "Proba"
+    },
     "SitesManager": {
         "AddSite": "Engadir un sitio",
         "Currency": "Moeda",
@@ -1440,6 +1447,8 @@
         "ComparisonGreaterThan": "é maior de",
         "ComparisonStartsWith": "comeza por",
         "Condition": "Condición",
+        "EtrackerTagTransactionCurrencyTitle": "Moeda",
+        "InvalidDebugUrlError": "Erro",
         "PageUrlVariableName": "URL da páxina",
         "Tag": "Etiqueta"
     },

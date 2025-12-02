@@ -62,6 +62,7 @@
         "LoadingData": "భోగట్టా లోడవుతూంది…",
         "Locale": "te_IN.UTF-8",
         "Logout": "నిష్క్రమించు",
+        "ManagePlugins": "ప్లగిన్ల నిర్వహణ",
         "MinutesSeconds": "%1$s నిమి %2$sక్ష",
         "MultiSitesSummary": "అన్ని వెబ్‌సైట్లూ",
         "NVisits": "%s సందర్శనలు",
@@ -99,6 +100,7 @@
         "TagCloud": "ట్యాగు మేఘం",
         "Total": "మొత్తం",
         "TotalRevenue": "మొత్తం ఆదాయం",
+        "TrackingScopeAction": "చర్య",
         "TranslatorName": "వీవెన్ (Veeven)",
         "Update": "నవీకరించు",
         "Upload": "ఎక్కించు",
@@ -155,9 +157,11 @@
     },
     "CoreAdminHome": {
         "Administration": "నిర్వహణ",
+        "Login": "వాడుకరి పేరు",
         "MenuGeneralSettings": "సాధారణ అమరికలు"
     },
     "CoreHome": {
+        "ChooseWebsite": "వెబ్ సైటుని ఎంచుకోండి",
         "Default": "అప్రమేయం"
     },
     "CorePluginsAdmin": {
@@ -200,17 +204,21 @@
         "WidgetBrowsers": "సందర్శకుల విహారిణులు"
     },
     "Goals": {
+        "CategoryTextGeneral_Actions": "పుటలు",
         "ColumnConversions": "మార్పిళ్ళు",
         "GoalName": "లక్ష్యపు పేరు",
         "Goals": "లక్ష్యాలు",
-        "Optional": "(ఐచ్చికం)"
+        "Optional": "(ఐచ్చికం)",
+        "PageTitles": "పేజీ శీర్షికలు"
     },
     "Installation": {
         "Congratulations": "అభినందనలు",
         "DatabaseSetupLogin": "వాడుకరి పేరు",
+        "Email": "ఈమెయిలు",
         "Installation": "స్థాపన",
         "InstallationStatus": "స్థాపన స్థితి",
         "Optional": "ఐచ్చికం",
+        "Password": "సంకేతపదం",
         "PercentDone": "%s %% పూర్తి",
         "PleaseFixTheFollowingErrors": "దయచేసి ఈ కింది పొరపాట్లను సరిదిద్దండి",
         "Requirements": "పివిక్ ఆవశ్యకాలు",
@@ -1415,15 +1423,22 @@
         "PluginKeywords": "కీపదాలు",
         "SubscriptionType": "రకం"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "అన్ని వెబ్‌సైట్లూ"
+    },
     "Overlay": {
         "Clicks": "%s నొక్కులు",
         "Link": "లంకె",
         "Location": "ప్రాంతం"
     },
     "PrivacyManager": {
+        "ComplianceTableSettingStatus": "స్థితి",
         "DeleteMaxRowsNoLimit": "పరిమితి లేదు",
         "MenuPrivacySettings": "గోప్యత",
         "TeaserHeadline": "గోప్యతా అమరికలు"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "అవలోకనం"
     },
     "Referrers": {
         "Campaigns": "ప్రచారాలు",
@@ -1454,12 +1469,17 @@
         "Currency": "మారక ద్రవ్యం",
         "GlobalWebsitesSettings": "సార్వత్రిక వెబ్‌సైటు అమరికలు",
         "Sites": "జాలగూళ్ళు",
-        "Timezone": "కాల మండలం"
+        "Timezone": "కాల మండలం",
+        "Type": "రకం"
     },
     "TagManager": {
         "CategoryClicks": "నొక్కులు",
         "CategoryDate": "తేదీ",
         "CategoryEmail": "ఈమెయిలు",
+        "ChooseWebsite": "వెబ్ సైటుని ఎంచుకోండి",
+        "EtrackerTagTransactionCurrencyTitle": "మారక ద్రవ్యం",
+        "InvalidDebugUrlError": "పొరపాటు",
+        "MatomoTagEcommerceViewPrice": "వెల",
         "PageUrlVariableName": "పుట చిరునామా",
         "Type": "రకం",
         "Version": "సంచిక"
@@ -1484,6 +1504,7 @@
         "LanguageCode": "భాషా సంకేతం"
     },
     "UsersManager": {
+        "Active": "చేతనం",
         "AllWebsites": "అన్ని వెబ్‌సైట్లూ",
         "Email": "ఈమెయిలు",
         "ExceptionEmailExists": "'%s' అనే ఈమెయిలుతో వాడుకరి ఇప్పటికే ఉన్నారు.",
@@ -1492,6 +1513,7 @@
         "MenuAnonymousUserSettings": "ఆజ్ఞాత వాడుకరుల అమరికలు",
         "MenuUserSettings": "వాడుకరి అమరికలు",
         "MenuUsers": "వాడుకరులు",
+        "Status": "స్థితి",
         "User": "వాడుకరి",
         "Username": "వాడుకరి పేరు",
         "UsersManagement": "వాడుకరుల నిర్వహణ",
@@ -1520,5 +1542,9 @@
     "VisitsSummary": {
         "NbActionsDescription": "%s చర్యలు",
         "VisitsSummary": "సందర్శనల సంగ్రహం"
+    },
+    "WebsiteMeasurable": {
+        "Website": "వెబ్‌సైటు",
+        "Websites": "జాలగూళ్ళు"
     }
 }

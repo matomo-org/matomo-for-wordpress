@@ -262,7 +262,7 @@ class ServerModule extends GeoIp2
     public function getUsageWarning() : ?string
     {
         $comment = Piwik::translate('GeoIp2_GeoIPLocationProviderNotRecommended') . ' ';
-        $comment .= Piwik::translate('GeoIp2_LocationProviderDesc_ServerModule2', array('<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/geo-locate/') . '" rel="noreferrer noopener" target="_blank">', '', '', '</a>'));
+        $comment .= Piwik::translate('GeoIp2_LocationProviderDesc_ServerModule2', array(Url::getExternalLinkTag('https://matomo.org/docs/geo-locate/'), '', '', '</a>'));
         return $comment;
     }
 }

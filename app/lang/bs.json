@@ -410,13 +410,16 @@
         "BrandingSettings": "Postavke brendiranja",
         "BruteForce": "Brute Force",
         "EmailServerSettings": "Postavke email servera",
+        "Login": "Prijavi se",
         "MenuDiagnostic": "Dijagnostika",
         "MenuGeneralSettings": "Opšte postavke"
     },
     "CoreHome": {
         "CheckForUpdates": "Provjeri nove verzije",
         "CheckPiwikOut": "Probajte Matomo!",
+        "ChooseWebsite": "Izaberite web sajt",
         "PeriodRange": "Domet",
+        "ReportLowercase": "izvještaj",
         "ShareThis": "Podijeli ovo"
     },
     "CorePluginsAdmin": {
@@ -450,12 +453,15 @@
         "Minimise": "Minimiziraj"
     },
     "Goals": {
+        "CategoryTextGeneral_Actions": "Stranice",
         "ColumnConversions": "Konverzije",
         "Contains": "sadrži %s",
         "Download": "Preuzmi datoteku",
+        "EntryPages": "Ulazne stranice",
         "GoalName": "Naziv cilja",
         "IsExactly": "je tačno %s",
         "Manually": "ručno",
+        "PageTitles": "Naslovi stranica",
         "ProductCategory": "Kategorija proizvoda",
         "ProductName": "Ime proizvoda",
         "Products": "Proizvodi",
@@ -1508,8 +1514,18 @@
     "Marketplace": {
         "ActivateLicenseKey": "Aktiviraj"
     },
+    "MultiSites": {
+        "AllWebsitesDashboardTitle": "Sve web stranice"
+    },
+    "PrivacyManager": {
+        "ComplianceTableSettingStatus": "Status"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Pregled"
+    },
     "Referrers": {
         "Acquisition": "Akvizicija",
+        "CampaignSource": "Izvor",
         "ColumnWebsite": "Web stranica"
     },
     "SitesManager": {
@@ -1519,6 +1535,11 @@
     "TagManager": {
         "CategoryClicks": "Klikovi",
         "CategoryDate": "Datum",
+        "ChooseWebsite": "Izaberite web sajt",
+        "EtrackerTagTransactionCurrencyTitle": "Valuta",
+        "InvalidDebugUrlError": "Greška",
+        "MatomoTagEcommerceViewPrice": "Cijena",
+        "MatomoTagEcommerceViewProductName": "Ime proizvoda",
         "PageUrlVariableName": "URL stranice",
         "Version": "Verzija"
     },
@@ -1526,8 +1547,10 @@
         "CompletionTitle": "Bravo!"
     },
     "UsersManager": {
+        "Active": "Aktivno",
         "PrivAdmin": "Administracija",
         "PrivView": "Vidi",
+        "Status": "Status",
         "Username": "Korisničko ime"
     },
     "VisitTime": {

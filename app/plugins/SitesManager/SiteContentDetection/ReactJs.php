@@ -54,6 +54,6 @@ class ReactJs extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConte
             return '';
             // don't show on others page if tab is being displayed
         }
-        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataReactDescription', ['<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/guide/tag-manager/') . '">', '</a>', '<a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/new-to-piwik/how-do-i-start-tracking-data-with-matomo-on-websites-that-use-react/') . '">', '</a>']));
+        return sprintf('<p>%s</p>', Piwik::translate('SitesManager_SiteWithoutDataReactDescription', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/'), '</a>', Url::getExternalLinkTag('https://matomo.org/faq/new-to-piwik/how-do-i-start-tracking-data-with-matomo-on-websites-that-use-react/'), '</a>']));
     }
 }

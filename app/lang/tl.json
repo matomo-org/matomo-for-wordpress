@@ -188,6 +188,7 @@
         "Locale": "tl_PH.UTF-8",
         "Logout": "Mag-sign out",
         "MainMetrics": "Pangunahing sukatan",
+        "ManagePlugins": "Pamamahala ng plugin",
         "Matches": "Matches",
         "MediumToHighTrafficItIsRecommendedTo": "Para sa may katam-taman hanggang mataas na website traffic aming nirerekomenda na e-proseso ang ulat para sa ngayon araw o kada kalahating oras (%1$s segundo) o bawat oras (%2$s segundo)",
         "Metadata": "Metadata",
@@ -289,13 +290,16 @@
         "SaveImageOnYourComputer": "Upang i-save ang larawan sa iyong computer i-right click sa imahe at piliin ang \"I-save ang Imahe Bilang ...\"",
         "Search": "Hanapin",
         "SearchNoResults": "Walang mga resulta",
+        "SecondaryDimension": "Pangalawang dimensyon ay %s.",
         "Security": "Seguridad",
         "SeeAll": "tingnan lahat",
         "SeeTheOfficialDocumentationForMoreInformation": "Tingan ang %1$s opisyal na dokumentasyon %2$s para sa karagdagang impormasyon.",
         "SeeThisFaq": "Tingnan ang %1$s this faq %2$s.",
         "Segment": "Bahagi",
         "SelectYesIfYouWantToSendEmailsViaServer": "Piliin ang \"Oo\" kung gusto mo o magpadala ng e-mail sa pamamagitan ng isang server sa halip na ang mga lokal na mail function.",
+        "SwitchToSecondaryDimension": "Lumipat sa %s",
         "Table": "Talahanayan",
+        "TrackingScopeAction": "Aksyon",
         "TranslatorName": "Intripid",
         "Update": "I-update",
         "UserIds": "Users",
@@ -527,6 +531,7 @@
         "JSTracking_VisitorCustomVars": "Subaybayan ang mga custom na variable para sa bisitang ito",
         "JSTracking_VisitorCustomVarsDesc": "Halimbawa, mayroong pangalan ng variable na \"Type\" at value na \"Customer\"",
         "JavaScriptTracking": "Pagsubaybay ng JavaScript",
+        "Login": "Login",
         "LogoNotWriteableInstruction": "Upang gamitin ang iyong pasadyang logo sa halip na ang default na Matomo logo, bigyan ng pahintulot na magsulat sa direktoryong ito: %1$s kailangan ng Matomo ng write access para sa iyong mga logo na naka-imbak sa mga file ng %2$s.",
         "LogoUpload": "Piliin ang Logo na i-upload",
         "LogoUploadHelp": "Mangyaring mag-upload ng isang file sa format na %1$s na may pinakamababang taas na %2$s na pixel.",
@@ -560,6 +565,8 @@
         "CategoryNoData": "Walang data sa kategoryang ito. Subukan ang \"Isama ang lahat ng populasyon\".",
         "CheckForUpdates": "Suriin kung may mga update",
         "CheckPiwikOut": "Suriin ang Matomo!",
+        "ChooseWebsite": "Pumili ng website",
+        "ClickRowToExpandOrContract": "I-click ang hanay na ito, upang palawakin o ikontrata ang subtable",
         "CloseWidgetDirections": "Maaari mong isara ang widget na ito sa pamamagitan ng pag-click sa icon na 'X' na nasa tuktok ng widget.",
         "DataForThisReportHasBeenPurged": "Ang data para sa ulat na ito ay higit sa %s na buwang gulang at ito ay na-purge na.",
         "DataTableExcludeAggregateRows": "Ang pinagsama-samang mga hilera ay ipinapakita %s Itago ang mga ito",
@@ -578,6 +585,7 @@
         "InjectedHostWarningIntro": "Ina-access mo na ngayon Matomo mula sa %1$s, ngunit ang Matomo ay na-configure upang tumakbo sa address na ito: %2$s.",
         "NoPrivilegesAskPiwikAdmin": "Ikaw ay naka-log-in bilang '%1$s' ngunit mukhang wala kang anumang pahintulot na naka-set sa Matomo. %2$s Tanungin ang iyong Matomo administrator (i-click upang i-email) %3$s upang bigyan ka ng 'view' access sa website.",
         "PeriodRange": "Pagitan",
+        "PivotBySubtable": "Ang ulat na ito ay hindi umiikot %1$s Paikutin ng %2$s",
         "ReportGeneratedOn": "Ang ulat ay ginawa sa %s",
         "ReportGeneratedXAgo": "Ang ulat ay ginawa %s na ang nakalilipas",
         "SharePiwikShort": "Matomo! Libreng web analytics. Maging may-ari ng iyong data",
@@ -585,15 +593,14 @@
         "ShowJSCode": "Ipakita ang Javascript code upang ipasok",
         "SubscribeAndBecomePiwikSupporter": "Magpatuloy sa isang secure na pahina sa pagbabayad gamit ang credit card (PayPal) upang maging isang Matomo Supporter!",
         "SupportPiwik": "Suportahan ang Matomo!",
+        "SystemSummaryPhpVersion": "Bersyon ng PHP",
         "TableNoData": "Walang data para sa talahanayang ito.",
         "ThereIsNoDataForThisReport": "Walang data para sa ulat na ito.",
         "UnFlattenDataTable": "Ang ulat ay flat %s Gawin itong hierarchical",
+        "UndoPivotBySubtable": "Ang ulat na ito ay napaikot %s I-undo ang pagpaikot",
         "ViewAllPiwikVideoTutorials": "Tingnan ang lahat Matomo Video Tutorials",
         "WebAnalyticsReports": "Mga Ulat ng Analitiko ng Web",
-        "YouAreUsingTheLatestVersion": "Ginagamit mo ang pinaka bagong bersyon ng Matomo",
-        "ClickRowToExpandOrContract": "I-click ang hanay na ito, upang palawakin o ikontrata ang subtable",
-        "UndoPivotBySubtable": "Ang ulat na ito ay napaikot %s I-undo ang pagpaikot",
-        "PivotBySubtable": "Ang ulat na ito ay hindi umiikot %1$s Paikutin ng %2$s"
+        "YouAreUsingTheLatestVersion": "Ginagamit mo ang pinaka bagong bersyon ng Matomo"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "I-uninstall",
@@ -806,8 +813,6 @@
         "MaxValueDocumentation": "Ang maximum na halaga para sa kaganapang ito.",
         "MinValueDocumentation": "Ang minimum na halaga para sa kaganapang ito.",
         "PluginDescription": "Subaybayan ang mga kaganapan at kumuha ng mga balita sa aktibidad ng iyong mga bisita.",
-        "SecondaryDimension": "Pangalawang dimensyon ay %s.",
-        "SwitchToSecondaryDimension": "Lumipat sa %s",
         "TopEvents": "Mga nangungunang events",
         "TotalEvents": "Total events",
         "TotalEventsDocumentation": "Kabuuang bilang ng mga event",
@@ -862,6 +867,13 @@
         "UpdaterWasLastRun": "Ang updater ay huling na i-run ng %s.",
         "UpdaterWillRunNext": "Ito ang susunod na naka-schedule upang tumakbo ng %s."
     },
+    "Goals": {
+        "CategoryTextDevicesDetection_DevicesDetection": "Mga Device",
+        "CategoryTextGeneral_Actions": "pahina",
+        "CategoryTextReferrers_Referrers": "Mga Referrer",
+        "EntryPages": "Mga entry page",
+        "PageTitles": "Mga pamagat ng pahina"
+    },
     "Insights": {
         "DayComparedToPreviousDay": "nakaraang araw",
         "DayComparedToPreviousWeek": "Sa parehong araw sa nakaraang linggo",
@@ -894,6 +906,7 @@
         "DatabaseSetupLogin": "Login",
         "DatabaseSetupServer": "Database Server",
         "DatabaseSetupTablePrefix": "Table Prefix",
+        "Email": "Email",
         "Extension": "karugtong",
         "Filesystem": "Sistema ng File",
         "GetInvolved": "Kung gusto mo ang nakikita mo maari kang %1$s makibahagi %2$s.",
@@ -912,6 +925,7 @@
         "NfsFilesystemWarningSuffixInstall": "Ang pag-gamit ng file based session sa NFS ay sobrang mabagal iyong kakailanganin ang pag dag-dag ng maximum number na komokonekta sa iyong database server.",
         "NotSupported": "Hindi supportado",
         "Optional": "Opsyonal",
+        "Password": "Password",
         "PasswordDoNotMatch": "password ay hindi tumutugma",
         "PercentDone": "%s %% Tapos na",
         "PiwikOrgNewsletter": "I-email sa akin ang mga pangunahing update sa komunidad ng Matomo",
@@ -2106,7 +2120,8 @@
     "MultiSites": {
         "Evolution": "Ebolusyon",
         "LoadingWebsites": "Naglo-load ang mga website",
-        "TopLinkTooltip": "Ikumpara ang stats ng Web Analytics para sa lahat ng iyong Website."
+        "TopLinkTooltip": "Ikumpara ang stats ng Web Analytics para sa lahat ng iyong Website.",
+        "TotalPageviews": "kabuuang mga Pageview"
     },
     "Overlay": {
         "Clicks": "%s na mga click",
@@ -2134,6 +2149,7 @@
         "AnonymizeIpMaskLengtDescription": "Piliin kung gaano karaming byte ng IP ng bisita ang dapat na ikubli.",
         "AnonymizeIpMaskLength": "%1$s (na) byte - hal %2$s",
         "ClickHereSettings": "Mag-click dito upang i-access ang mga setting sa %s.",
+        "ComplianceTableSettingStatus": "Status",
         "CurrentDBSize": "Kasalukuyang laki ng database",
         "DBPurged": "DB purged",
         "DeleteDataInterval": "Tanggalin ang mga lumang data sa bawat",
@@ -2170,6 +2186,9 @@
         "UseAnonymizeIp": "I-anonymize ang IP addresses ng mga bisita.",
         "UseAnonymizedIpForVisitEnrichment": "Gamitin rin ang hindi kilalang IP address kapag bumibisita.",
         "UseDeleteReports": "Palaging tanggalin ang mga lumang report sa database"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "Overview"
     },
     "Referrers": {
         "Acquisition": "Pag-acquire",
@@ -2359,6 +2378,7 @@
         "Timezone": "Time zone",
         "TrackingSiteSearch": "Pag track sa panloob na paghahanap sa site",
         "TrackingTags": "Ang tracking code para sa %s",
+        "Type": "Uri",
         "UTCTimeIs": "Ang orasn ng UTC ay %s.",
         "Urls": "Mga URL",
         "WebsitesManagement": "Pamamahala ng mga website",
@@ -2371,11 +2391,15 @@
         "CategoryDevice": "Aparato",
         "CategoryEmail": "Email",
         "CategoryHistory": "Kasaysayan",
+        "ChooseWebsite": "Pumili ng website",
         "ComparisonContains": "naglalaman",
         "ComparisonEndsWith": "ay nagtatapos sa",
         "ComparisonGreaterThan": "ay mas malaki sa",
         "ComparisonStartsWith": "nagsisimula sa",
         "Condition": "Kondisyon",
+        "EtrackerTagTransactionCurrencyTitle": "Pera",
+        "InvalidDebugUrlError": "Mali",
+        "MatomoTagEcommerceViewPrice": "Presyo",
         "PageUrlVariableName": "URL ng Pahina",
         "ReferrerUrlVariableName": "Referrer URL",
         "ReferrerVariableName": "Referrer URL",
@@ -2411,6 +2435,9 @@
         "TransitionsSubcategoryHelp2": "Higit pang mga detalye",
         "XOfAllPageviews": "%s ng lahat ng mga tanawin ng pahinang ito",
         "XOutOfYVisits": "%1$s (mula sa %2$s)"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "2FA"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Ang IP address %s ay isang lokal na address at hindi maaaring i-geolocated.",
@@ -2477,6 +2504,7 @@
     },
     "UsersManager": {
         "2FA": "2FA",
+        "Active": "Aktibo",
         "AllWebsites": "Ang lahat ng mga website",
         "AnonymousUserHasViewAccess": "Tandaan: ang %1$s user ay may %2$s na access sa website na ito",
         "AnonymousUserHasViewAccess2": "Ang iyong ulat na pang analytics at ang mga impormasyon ng iyong mga bisita ay makikita ng publiko.",
@@ -2513,6 +2541,7 @@
         "PrivView": "Tingnan",
         "ReportDateToLoadByDefault": "Petsa upang i-load ang default na Ulat.",
         "ReportToLoadByDefault": "Ulat na nakaload ng default",
+        "Status": "Status",
         "SuperUserAccessManagement": "Pamamahala ng Super User access",
         "SuperUserAccessManagementGrantMore": "Maaari kang magbigay ng Super-access ng user sa ibang mga gumagamit ng Matomo. Mangyaring maingat na gamitin ang feature na ito.",
         "SuperUserAccessManagementMainDescription": "Supers users ay may pinakamataas na permiso. Maaari silang magsagawa ng lahat ng mga administratibong gawain gaya ng pagdaragdag ng mga bagong website upang ito ay masubay-bayan ang pag-dagdag ng mga users pagbabago ng mga permiso sa mga user pag activate at pag de-activate ng mga plugis at pati na ang pag-install ng bagong plugins mula sa Market Place.",
@@ -2588,6 +2617,10 @@
         "WidgetLastVisits": "Mga pagbisita sa paglipas ng panahon",
         "WidgetOverviewGraph": "Mga pagbisita pangkalahatang-ideya ng (na may mga graph)",
         "WidgetVisits": "Visits Overview"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Website",
+        "Websites": "Websites"
     },
     "Widgetize": {
         "OpenInNewWindow": "Bukas sa isang bagong window",

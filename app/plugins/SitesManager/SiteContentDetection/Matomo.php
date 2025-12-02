@@ -90,7 +90,7 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
         $consentManagerName = $consentManager::getName();
         $consentManagerUrl = $consentManager::getInstructionUrl();
         $consentManagerIsConnected = in_array($consentManagerId, $detector->connectedConsentManagers);
-        $notificationMessage = '<p>' . Piwik::translate('PrivacyManager_ConsentManagerDetected', [$consentManagerName, '<a href="' . $consentManagerUrl . '" target="_blank" rel="noreferrer noopener">', '</a>']) . '</p>';
+        $notificationMessage = '<p>' . Piwik::translate('PrivacyManager_ConsentManagerDetected', [$consentManagerName, Url::getExternalLinkTag($consentManagerUrl), '</a>']) . '</p>';
         if (!empty($consentManagerIsConnected)) {
             $notificationMessage .= '<p>' . Piwik::translate('SitesManager_ConsentManagerConnected', [$consentManagerName]) . '</p>';
         }

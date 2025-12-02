@@ -197,6 +197,7 @@
         "Locale": "hi_IN.UTF-8",
         "Logout": "बाहर करें",
         "MainMetrics": "मुख्य मैट्रिक्स",
+        "ManagePlugins": "प्लगइन्स प्रबंधन",
         "Matches": "मेल खाता है",
         "Measurable": "औसत दर्जे का",
         "Measurables": "औसत दर्जे का",
@@ -597,6 +598,7 @@
         "JSTracking_VisitorCustomVars": "इस आगंतुक के लिए कस्टम चर खोजे",
         "JSTracking_VisitorCustomVarsDesc": "उदाहरण के लिए, चर नाम \"प्रकार\" के साथ और मूल्य \"ग्राहक\".",
         "JavaScriptTracking": "जावास्क्रिप्ट ट्रैकिंग",
+        "Login": "लॉगिन",
         "LogoUpload": "अपलोड करने के लिए किसी लोगो को चुनें",
         "MenuDiagnostic": "डायग्नोस्टिक",
         "MenuGeneralSettings": "सामान्य सेटिंग्स",
@@ -626,6 +628,7 @@
         "ChangeVisualization": "विज़ुअलाइज़ेशन बदलें",
         "CheckForUpdates": "अद्यतन देखें",
         "CheckPiwikOut": "Matomo की जाँच करें!",
+        "ChooseWebsite": "वेबसाइट चुनें",
         "ChooseX": "%1$s चुनें",
         "ClickToEditX": "%s को संपादित करने के लिए क्लिक करें",
         "ClickToSeeFullInformation": "पूरी जानकारी देखने के लिए क्लिक करें",
@@ -914,6 +917,7 @@
         "BestKeywords": "आपका शीर्ष परिवर्तित कीवर्ड हैं:",
         "BestReferrers": "आपका सबसे अच्छा परिवर्तित वेबसाइटों सन्दर्भदाता हैं:",
         "CaseSensitive": "संवेदनशील प्रकरण मिलना",
+        "CategoryTextGeneral_Actions": "पृष्ठों",
         "CategoryTextGeneral_Visit": "नियम",
         "CategoryTextGeneral_Visitors": "उपयोगकर्ता का स्थान",
         "CategoryTextReferrers_Referrers": "सन्दर्भदाता",
@@ -951,6 +955,7 @@
         "EcommerceOrder": "ईकॉमर्स के आदेश",
         "EcommerceOverview": "ईकॉमर्स अवलोकन",
         "EcommerceReports": "ईकॉमर्स रिपोर्टें",
+        "EntryPages": "प्रवेश पन्ने",
         "ExceptionInvalidMatchingString": "आप 'सटीक मैच' चुनते हैं, तो मिलान स्ट्रिंग %1$s की शुरुआत के साथ एक URL होना चाहिए. उदाहरण के लिए, '%2$s' में.",
         "ExternalWebsiteUrl": "बाहरी वेबसाइट यूआरएल",
         "Filename": "फ़ाइल का नाम",
@@ -976,6 +981,7 @@
         "NewVisitorsConversionRateIs": "नई आगंतुक रूपांतरण दर %s है",
         "Optional": "(वैकल्पिक)",
         "PageTitle": "पृष्ठ शीर्षक",
+        "PageTitles": "पृष्ठों के शीर्षक",
         "Pattern": "प्रतिमान",
         "ProductCategory": "उत्पाद श्रेणी",
         "ProductName": "उत्पाद का नाम",
@@ -2421,6 +2427,7 @@
     },
     "MultiSites": {
         "AllWebsitesDashboardDocumentation": "यह रिपोर्ट आपको आपकी प्रत्येक वेबसाइट के लिए एक सूचनात्मक अवलोकन प्रदान करती है, जिसमें आपके आगंतुकों के बारे में सबसे सामान्य मीट्रिक शामिल हैं।",
+        "AllWebsitesDashboardTitle": "सभी वेबसाइटें",
         "Evolution": "विकास",
         "EvolutionComparisonDay": "पिछले आंशिक अवधि के %3$s %2$s की तुलना में इस दिन %1$s %2$s (%4$s) विकास: %5$s",
         "EvolutionComparisonIncomplete": "वर्तमान में चयनित समयावधि %1$s पूर्ण हो गई है।",
@@ -2431,7 +2438,8 @@
         "LoadingWebsites": "लोड हो रहा है वेबसाइट",
         "PluginDescription": "इस उपयोगी 'सभी वेबसाइट' डैशबोर्ड में अपनी सभी वेबसाइटों और ऐप्स को देखें और तुलना करें।",
         "SingleWebsitesDashboardDocumentation": "यह रिपोर्ट आपको एक विशिष्ट वेबसाइट के लिए एक सूचनात्मक अवलोकन प्रदान करती है, जिसमें आपके आगंतुकों के बारे में सबसे सामान्य मीट्रिक शामिल हैं।",
-        "TopLinkTooltip": "आपकी वेबसाइट सभी के लिए वेब विश्लेषिकी आँकड़ों की तुलना करें."
+        "TopLinkTooltip": "आपकी वेबसाइट सभी के लिए वेब विश्लेषिकी आँकड़ों की तुलना करें.",
+        "TotalPageviews": "कुल पृष्ठ दृश्य"
     },
     "Overlay": {
         "Clicks": "%s क्लिक करता है",
@@ -2460,6 +2468,7 @@
         "AnonymizeIpMaskLengtDescription": "आवृत किया जाना चाहिए कि कितने बाइट्स 'दर्शकों के आईपी का चयन करें.",
         "AnonymizeIpMaskLength": "%1$s बाइट - e.g. %2$s",
         "ClickHereSettings": "%s की सेटिंग्स का उपयोग करने के लिए यहां क्लिक करें.",
+        "ComplianceTableSettingStatus": "स्थिति",
         "CurrentDBSize": "वर्तमान डेटाबेस का आकार",
         "DBPurged": "डीबी शुद्ध किए गए.",
         "DeleteDataInterval": "हर पुराने डेटा हटाएं",
@@ -2496,9 +2505,16 @@
         "UseAnonymizeIp": "आगंतुक आईपी पते को गुमनाम करे",
         "UseDeleteReports": "नियमित रूप से डेटाबेस से पुरानी रिपोर्टें हटाना"
     },
+    "ProfessionalServices": {
+        "PromoOverview": "अवलोकन"
+    },
     "Referrers": {
         "Acquisition": "अधिग्रहण",
         "AllReferrersReportDocumentation": "इस रिपोर्ट में अपनी वेबसाइट खोजने के लिए अपने आगंतुकों द्वारा उपयोग किए गए सभी वेबसाइटों, खोज कीवर्ड और अभियान को सूचीबद्ध, एक एकीकृत रिपोर्ट में आपके सभी सन्दर्भदाता दिखाता है.",
+        "CampaignGroup": "अभियान समूह",
+        "CampaignMedium": "अभियान माध्यम",
+        "CampaignPlacement": "अभियान प्लेसमेंट",
+        "CampaignSource": "अभियान स्रोत",
         "Campaigns": "अभियान",
         "CampaignsDocumentation": "आगंतुकों जो एक अभियान के परिणाम के रूप में अपनी वेबसाइट पर आए. अधिक जानकारी के लिए %1$sरिपोर्ट %2$s देखें.",
         "ColumnCampaign": "अभियान",
@@ -2692,12 +2708,20 @@
         "CategoryDevice": "न्यूनतम मूल्य",
         "CategoryEmail": "ईमेल",
         "CategorySEO": "SEO",
+        "ChooseWebsite": "वेबसाइट चुनें",
         "ComparisonContains": "युक्ति",
+        "EtrackerTagTransactionCurrencyTitle": "मुद्रा",
         "Filter": "फ़िल्टर",
+        "InvalidDebugUrlError": "त्रुटि",
+        "MatomoConfigurationMatomoUserIdTitle": "यूज़र आईडी",
+        "MatomoTagEcommerceViewPrice": "कीमत",
+        "MatomoTagEcommerceViewProductName": "उत्पाद का नाम",
+        "MatomoTagEcommerceViewProductSKU": "उत्पाद SKU",
         "PageTitleVariableName": "पृष्ठ शीर्षक",
         "PageUrlVariableName": "पृष्ठ का यू.आर.एल",
         "ReferrerUrlVariableName": "संदर्भ URL",
         "ReferrerVariableName": "संदर्भ URL",
+        "Tag": "टैग",
         "Type": "प्रकार",
         "Version": "संस्करण"
     },
@@ -2730,6 +2754,9 @@
         "TransitionsSubcategoryHelp2": "अधिक जानकारी",
         "XOfAllPageviews": "इस पृष्ठ के सभी दृश्यों का %s",
         "XOutOfYVisits": "%1$s (बाहर %2$s)"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "२एफए"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "आईपी पता \"%s\" स्थानीय है, इसलिए इसे जियोलोकेट नहीं किया जा सकता।",
@@ -2794,6 +2821,7 @@
     },
     "UsersManager": {
         "2FA": "२एफए",
+        "Active": "सक्रिय",
         "AllWebsites": "सभी वेबसाइटों",
         "AnonymousUser": "बेनामी उपयोगकर्ता",
         "AnonymousUserHasViewAccess2": "आपकी Analytics रिपोर्ट और अपने दर्शकों के बारे में जानकारी सार्वजनिक रूप से देखा जा सकता है।",
@@ -2813,6 +2841,7 @@
         "PrivAdmin": "व्यवस्थापक",
         "PrivNone": "प्रवेश नही",
         "PrivView": "देखना",
+        "Status": "स्थिति",
         "Username": "उपयोगकर्ता नाम"
     },
     "VisitFrequency": {

@@ -39,7 +39,7 @@ class Urls extends \Piwik\Settings\Measurable\MeasurableProperty
             $self->checkAtLeastOneUrl($urls);
         };
         $config->transform = function ($urls) use($self) {
-            return $this->cleanParameterUrls($urls);
+            return $self->cleanParameterUrls($urls);
         };
         $this->config = $config;
         return $this->config;

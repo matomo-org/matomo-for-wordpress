@@ -26,7 +26,7 @@ abstract class RecordBuilder
      */
     protected $maxRowsInSubtable;
     /**
-     * @var string|null
+     * @var string|int|null
      */
     protected $columnToSortByBeforeTruncation;
     /**
@@ -214,7 +214,7 @@ abstract class RecordBuilder
      * Derived classes should define this method to aggregate log data for a single day and return the records
      * to store indexed by record names.
      *
-     * @return (DataTable|int|float|string)[] Record values indexed by their record name, eg, `['MyPlugin_MyRecord' => new DataTable()]`
+     * @return array<string, DataTable|int|float|string> Record values indexed by their record name, eg, `['MyPlugin_MyRecord' => new DataTable()]`
      */
     protected abstract function aggregate(ArchiveProcessor $archiveProcessor) : array;
     protected function insertBlobRecord(ArchiveProcessor $archiveProcessor, string $recordName, DataTable $record, ?int $maxRowsInTable, ?int $maxRowsInSubtable, ?string $columnToSortByBeforeTruncation) : void

@@ -269,7 +269,7 @@ class Manager
     /**
      * Returns `true` if plugin is loaded (in memory).
      *
-     * @param string $name Name of plugin, eg, `'Acions'`.
+     * @param string $name Name of plugin, eg, `'Actions'`.
      * @return bool
      * @api
      */

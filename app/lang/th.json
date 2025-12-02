@@ -102,6 +102,7 @@
         "DisplaySimpleTable": "แสดงตารางแบบง่าย",
         "DisplayTableWithGoalMetrics": "แสดงตารางกับตัวชี้วัดเป้าหมาย",
         "DisplayTableWithMoreMetrics": "แสดงตารางที่มีตัวชี้วัดเพิ่มเติม",
+        "Documentation": "การบันทึกข้อมูล",
         "Donate": "บริจาค",
         "Done": "เรียบร้อย",
         "Download": "ดาวน์โหลด",
@@ -165,6 +166,7 @@
         "Locale": "th_TH.UTF-8",
         "Logout": "ออกจากระบบ",
         "MainMetrics": "ตัวชี้วัดหลัก",
+        "ManagePlugins": "จัดการปลั้กอิน",
         "MediumToHighTrafficItIsRecommendedTo": "สำหรับขนาดกลางไปยังเว็บไซต์การจราจรที่สูง เราขอแนะนำในการประมวลผลรายงานสำหรับวันนี้ โดยส่วนใหญ่จะเป็นทุกครึ่งชั่วโมง (%1$s วินาที) หรือทุกชั่วโมง (%2$s วินาที)",
         "Metadata": "เมตาดาต้า",
         "Metric": "ตัวชี้วัด",
@@ -261,6 +263,8 @@
         "TimeOnPage": "เวลาในหน้า",
         "Total": "รวม",
         "TotalRevenue": "รายได้รวม",
+        "TrackingScopeAction": "ดำเนินการ",
+        "TrackingScopeVisit": "เข้าชม",
         "TranslatorName": "coyoty, jaideejung007, ariesanywhere",
         "UniquePurchases": "Unique Purchases",
         "Unknown": "ไม่รู้จัก",
@@ -402,6 +406,7 @@
     "CoreAdminHome": {
         "Administration": "การจัดการระบบ",
         "EmailServerSettings": "การตั้งค่าเซิร์ฟเวอร์อีเมล์",
+        "Login": "ชื่อผู้ใช้ฐานข้อมูล",
         "LogoUpload": "เลือกรูปโลโก้ที่ต้องการอัพโหลด",
         "MenuGeneralSettings": "ตั้งค่าทั่วไป",
         "OptOutComplete": "เลือกที่จะไม่ครบถ้วนเมื่อคุณเยี่ยมชมเว็บไซต์นี้จะไม่ถูกบันทึกโดยเครื่องมือวิเคราะห์เว็บ",
@@ -418,9 +423,11 @@
         "CategoryNoData": "ไม่มีข้อมูลในประเภทนี้ พยายาม \"รวมประชากรทั้งหมด\"",
         "ChangeVisualization": "เปลี่ยน มุมมอง",
         "CheckForUpdates": "ตรวจสอบชุดอัพเดท",
+        "ChooseWebsite": "เลือกเว็บไซต์",
         "Default": "ค่าเริ่มต้น",
         "ShowJSCode": "แสดงรหัส JavaScript เมื่อต้องการแทรก",
         "SupportPiwik": "สนับสนุน Matomo!",
+        "SystemSummaryPhpVersion": "เวอร์ชั่น PHP",
         "ThereIsNoDataForThisReport": "ไม่มีข้อมูลสำหรับรายงานนี้",
         "ViewAllPiwikVideoTutorials": "ดูคลิปวีดีโอสอน Matomo ทั้งหมด",
         "WebAnalyticsReports": "รายงานการวิเคราะห์เว็บไซต์",
@@ -477,6 +484,7 @@
         "UpdateHasBeenCancelledExplanation": "การอัพเดต Matomo ในคลิกเดียวถูกยกเลิกแล้ว หากคุณไม่สามารถแก้ไขข้อความข้อผิดพลาด แนะนำให้คุณอัพเดต Matomo แบบ Manual %1$s กรุณาตรวจสอบ %2$s เอกสารการอัพเดต %3$s เพื่อเริ่มดำเนินการ",
         "UpdateSuccessTitle": "Matomo ได้รับการอัพเดตเรียบร้อยแล้ว",
         "UpdateTitle": "อัพเดต",
+        "Updating": "กำลังอัปเดต",
         "UpgradeComplete": "การอัพเดตเสร็จสมบูรณ์",
         "UpgradePiwik": "อัพเกรด Matomo",
         "VerifyingUnpackedFiles": "กำลังตรวจสอบแพคเกจของไฟล์",
@@ -560,6 +568,8 @@
         "BestKeywords": "การแปลงคีย์เวิร์ดยอดนิยมของคุณคือ:",
         "BestReferrers": "แปลงแหล่งที่มาเว็บไซต์ที่ดีที่สุดของคุณคือ:",
         "CaseSensitive": "ค่าเล็กที่ตรงกัน",
+        "CategoryTextGeneral_Actions": "หน้า",
+        "CategoryTextReferrers_Referrers": "แหล่งที่มา",
         "ClickOutlink": "คลิกที่ลิงค์เพื่อไปยังเว็บไซต์ภายนอก",
         "ColumnConversions": "การแปลงข้อมูล",
         "Contains": "ประกอบด้วย %s",
@@ -581,9 +591,9 @@
         "GoalIsTriggered": "เป้าหมายจะถูกเรียก",
         "GoalIsTriggeredWhen": "เป้าหมายจะถูกเรียกเมื่อ",
         "GoalName": "ชื่อเป้าหมาย",
+        "GoalX": "เป้าหมาย %s",
         "Goals": "เป้าหมาย",
         "GoalsOverview": "ภาพรวมของเป้าหมาย",
-        "GoalX": "เป้าหมาย %s",
         "IsExactly": "คือว่า %s",
         "Manually": "ด้วยตนเอง",
         "ManuallyTriggeredUsingJavascriptFunction": "เป้าหมายถูกเรียกด้วยตนเองโดยใช้ JavaScript API trackGoal()",
@@ -594,11 +604,11 @@
         "Pattern": "แบบแผน",
         "ProductCategory": "หมวดหมู่สินค้า",
         "ProductName": "ชื่อสินค้า",
-        "Products": "รายการ",
         "ProductSKU": "รหัส SKU สินค้า",
+        "Products": "รายการ",
         "ReturningVisitorsConversionRateIs": "อัตราการย้อนกลับของการแปลงผู้เข้าชมเป็น %s",
-        "UpdateGoal": "อัพเดตเป้าหมาย",
         "URL": "URL",
+        "UpdateGoal": "อัพเดตเป้าหมาย",
         "ViewAndEditGoals": "ดูและแก้ไขเป้าหมาย",
         "VisitUrl": "การเข้าชมได้รับ URL (หน้าหรือกลุ่มของหน้า)",
         "WhenVisitors": "เมื่อผู้เข้าชม",
@@ -616,6 +626,7 @@
         "DatabaseSetupLogin": "ชื่อผู้ใช้ฐานข้อมูล",
         "DatabaseSetupServer": "เซิร์ฟเวอร์ฐานข้อมูล",
         "DatabaseSetupTablePrefix": "คำนำหน้าตาราง",
+        "Email": "อีเมล์",
         "Extension": "นามสกุล",
         "Filesystem": "ระบบไฟล์",
         "GoBackAndDefinePrefix": "กลับไปและตั้งชื่อ Prefix สำหรับตาราง Matomo",
@@ -625,6 +636,7 @@
         "Legend": "Legend",
         "NfsFilesystemWarning": "เซิร์ฟเวอร์ของคุณใช้ระบบไฟล์แบบ NFS",
         "Optional": "ตัวเลือก",
+        "Password": "รหัสผ่าน",
         "PasswordDoNotMatch": "รหัสผ่านไม่ถูกต้อง",
         "PercentDone": "ติดตั้งเสร็จไปแล้ว %s %%",
         "PleaseFixTheFollowingErrors": "กรุณาแก้ไขข้อผิดพลาดต่อไปนี้",
@@ -1887,7 +1899,8 @@
     "Marketplace": {
         "ActivateLicenseKey": "เปิดใช้งาน",
         "PluginKeywords": "คีย์เวิร์ด",
-        "SubscriptionType": "รูปแบบ"
+        "SubscriptionType": "รูปแบบ",
+        "Support": "บริการช่วยเหลือ"
     },
     "MobileMessaging": {
         "PhoneNumbers": "หมายเลขโทรศัพท์",
@@ -1899,7 +1912,9 @@
         "Settings_SuperAdmin": "ตั้งค่ำสำหรับผู้ใช้งานขั้นสูงสุด"
     },
     "MultiSites": {
-        "Evolution": "ความเปลี่ยนแปลง"
+        "AllWebsitesDashboardTitle": "เว็บไซต์ทั้งหมด",
+        "Evolution": "ความเปลี่ยนแปลง",
+        "TotalPageviews": "เพจวิวทั้งหมด"
     },
     "Overlay": {
         "Clicks": "%s คลิก",
@@ -1914,6 +1929,7 @@
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymize มีขนาดเป็นไบต์ล่าสุดของที่อยู่ IP ของผู้เข้าชมเพื่อให้สอดคล้องกับนโยบายข้อมูลส่วนบุคคลภายในเครื่องของคุณ",
         "ClickHereSettings": "คลิกที่นี่เพื่อเข้าถึงการตั้งค่า %s",
+        "ComplianceTableSettingStatus": "สถานะ",
         "CurrentDBSize": "ขนาดฐานข้อมูลปัจจุบัน",
         "DBPurged": "ล้าง DB",
         "DeleteDataInterval": "ลบข้อมูลเก่าทุกๆ",
@@ -1928,6 +1944,9 @@
         "ReportsDataSavedEstimate": "ขนาดฐานข้อมูล",
         "TeaserHeadline": "การตั้งค่าความเป็นส่วนตัว",
         "UseAnonymizeIp": "ผู้เข้าชมแบบไม่ระบุที่อยู่ IP"
+    },
+    "ProfessionalServices": {
+        "PromoOverview": "ภาพรวม"
     },
     "Referrers": {
         "Campaigns": "แคมเปญ",
@@ -2025,6 +2044,7 @@
         "Sites": "เว็บไซต์",
         "Timezone": "โซนเวลา",
         "TrackingTags": "ติดตามแท็กสำหรับ%s",
+        "Type": "รูปแบบ",
         "UTCTimeIs": "เวลา UTC คือ %s",
         "Urls": "URLs",
         "WebsitesManagement": "การจัดการเว็บไซต์",
@@ -2034,6 +2054,12 @@
         "CategoryClicks": "คลิก",
         "CategoryDate": "วันที่",
         "CategoryEmail": "อีเมล์",
+        "ChooseWebsite": "เลือกเว็บไซต์",
+        "EtrackerTagTransactionCurrencyTitle": "สกุลเงิน",
+        "InvalidDebugUrlError": "ผิดพลาด",
+        "MatomoTagEcommerceViewPrice": "ราคา",
+        "MatomoTagEcommerceViewProductName": "ชื่อสินค้า",
+        "MatomoTagEcommerceViewProductSKU": "รหัส SKU สินค้า",
         "PageTitleVariableName": "ชื่อหน้าเว็บ",
         "PageUrlVariableName": "URL หน้า",
         "ReferrerUrlVariableName": "ที่มา URL",
@@ -2072,6 +2098,7 @@
         "LanguageCode": "รหัสภาษา"
     },
     "UsersManager": {
+        "Active": "เปิดการทำงาน",
         "AllWebsites": "เว็บไซต์ทั้งหมด",
         "ApplyToAllWebsites": "กระทำกับเว็บไซต์ทั้งหมด",
         "ClickHereToDeleteTheCookie": "คลิกที่นี่เพื่อลบคุกกี้ และมี Matomo ติดตามเข้าชมของคุณ",
@@ -2095,6 +2122,7 @@
         "PrivView": "มุมมอง",
         "ReportDateToLoadByDefault": "รายงานวันที่โหลด โดยค่าเริ่มต้น",
         "ReportToLoadByDefault": "รายงานเพื่อโหลดตามค่าเริ่มต้น",
+        "Status": "สถานะ",
         "TheLoginScreen": "หน้าจอการเข้าสู่ระบบ",
         "TypeYourPasswordAgain": "พิมพ์รหัสผ่านของคุณใหม่อีกครั้ง",
         "User": "ผู้ใช้",
@@ -2148,6 +2176,10 @@
         "WidgetLastVisits": "กราฟของผู้เข้าชมล่าสุด",
         "WidgetOverviewGraph": "ภาพรวมและกราฟ",
         "WidgetVisits": "ภาพรวมผู้เข้าชม"
+    },
+    "WebsiteMeasurable": {
+        "Website": "เว็บไซต์",
+        "Websites": "เว็บไซต์"
     },
     "Widgetize": {
         "OpenInNewWindow": "เปิดในหน้าต่างใหม่"

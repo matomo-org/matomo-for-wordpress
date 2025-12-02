@@ -680,7 +680,7 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasAdminAccess($idSite);
         $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite, $idMeasurableType = \false);
-        return $this->settingsMetadata->formatSettings($measurableSettings);
+        return $this->settingsMetadata->formatSettings($measurableSettings, $idSite);
     }
     private function setAndValidateMeasurableSettings($idSite, $idType, $settingValues)
     {
@@ -716,7 +716,7 @@ class API extends \Piwik\Plugin\API
      * @param string $passwordConfirmation the current user's password, only required when the request is authenticated with session token auth
      * @throws Exception
      */
-    public function deleteSite($idSite,
+    public function deleteSite(int $idSite,
 #[\SensitiveParameter]
 $passwordConfirmation = null)
     {

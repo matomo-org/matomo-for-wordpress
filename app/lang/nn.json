@@ -175,6 +175,7 @@
         "Locale": "nn_NO.UTF-8",
         "Logout": "Logg ut",
         "MainMetrics": "Hovudverdiar",
+        "ManagePlugins": "Innstikkstyring",
         "Measurable": "Målbar",
         "Measurables": "Målbare",
         "MediumToHighTrafficItIsRecommendedTo": "For nettstader med middels til høg trafikk, tilrår me å handsama rapportar for idag maksimalt kvar halve (%1$s sekundar) eller heile time (%2$s sekundar).",
@@ -187,6 +188,7 @@
         "Mobile": "Mobil",
         "Monthly": "Kvar månad",
         "MonthlyReports": "Månadsrapportar",
+        "MoreDetails": "Meer details",
         "MultiSitesSummary": "Alle nettstadene",
         "NUniqueVisitors": "%s unike vitjarar",
         "NVisits": "%s vitjingar",
@@ -301,6 +303,7 @@
         "Weekly": "Kvar veke",
         "WeeklyReport": "kvar veke",
         "WeeklyReports": "Vekesrapportar",
+        "WellDone": "Goed gedaan!",
         "Widget": "Småprogram",
         "Widgets": "Småprogram",
         "XFromY": "%1$s van %2$s",
@@ -328,7 +331,8 @@
         "EnableGraphsLabel": "Vis grafar",
         "EvolutionGraph": "Historisk graf",
         "NavigationBack": "Tilbake",
-        "NetworkError": "Nettverksfeil"
+        "NetworkError": "Nettverksfeil",
+        "ShowAll": "Toon alle"
     },
     "RowEvolution": {
         "MetricBetweenText": "mellom %1$s og %2$s",
@@ -373,8 +377,10 @@
         "ClickHereToOptOut": "Klikk her for å melda deg av.",
         "CustomLogoHelpText": "Du kan tilpassa Matomo-logoen som visast i brukargrensesnittet og e-postrapportar.",
         "EmailServerSettings": "Innstillingar for e-posttenar",
+        "Login": "brukarnamn",
         "LogoUpload": "Last opp ein logo",
         "MenuGeneralSettings": "Generelle innstillingar",
+        "MenuMeasurables": "Målbare",
         "OptOutComplete": "Avmelding fullførd. Vitjingane dine til denne nettsida vil ikkje loggførast av nettstatistikkverktøyet.",
         "OptOutCompleteBis": "Dersom du slettar infokapslane dine eller byter datamaskin eller nettlesar, må du avmelda deg på nytt.",
         "OptOutExplanation": "Matomo er oppteken av personvern på Internett.For å gje vitjarane dine valet om å slå av Matomo Nettstatistikk, kan du leggja til følgjande HTML-kode på ei av sidene dine, til dømes ei side med retningsliner for personvern.",
@@ -386,6 +392,7 @@
     },
     "CoreHome": {
         "CategoryNoData": "Ingen data i denne kategorien. Prøv \"Inkluder heile datasettet\".",
+        "ChooseWebsite": "Vel nettside",
         "DataForThisReportHasBeenPurged": "Data for denne rapporten er meir enn %s månader gammal og er fjerna.",
         "DataTableExcludeAggregateRows": "Samlingsrader er vist %s Skjul dei",
         "DataTableIncludeAggregateRows": "Samlingsrader er skjult %s Vis dei",
@@ -397,7 +404,9 @@
         "PeriodRange": "Periode",
         "ReportGeneratedOn": "Rapport generert den %s",
         "ReportGeneratedXAgo": "Rapport generert %s sidan",
+        "ReportLowercase": "rapport",
         "ShowJSCode": "Vis JavaScript-koden for å setja inn.",
+        "SystemSummaryPhpVersion": "PHP-versjon",
         "ThereIsNoDataForThisReport": "Det finst ingen data for denne rapporten.",
         "UnFlattenDataTable": "Denne rapporten er flat %s Gjer den hierarkisk",
         "WebAnalyticsReports": "Nettstatistikkrapportar"
@@ -460,6 +469,9 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Du kan oppdatera til versjon %s automatisk, eller lasta ned og installera pakka manuelt:",
         "YourDatabaseIsOutOfDate": "Matomo-databasa di er gamal, og må bli oppgradert før du kan halda fram."
     },
+    "CustomDimensions": {
+        "CustomDimensions": "Tilpassa dimensjon"
+    },
     "DBStats": {
         "DatabaseUsage": "Databasebruk",
         "DataSize": "Datastorleik",
@@ -517,9 +529,10 @@
         "Browsers": "Nettlesarar",
         "ColumnBrowser": "Nettlesar",
         "ColumnOperatingSystem": "Operativsystem",
-        "dataTableLabelTypes": "Type",
         "OperatingSystems": "Operativsystem",
-        "WidgetBrowsers": "Nytta nettlesarar"
+        "UserAgent": "Brukaragent",
+        "WidgetBrowsers": "Nytta nettlesarar",
+        "dataTableLabelTypes": "Type"
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Vil du rapportera ein feil eller førespurnad om ein funksjon?",
@@ -532,6 +545,8 @@
     },
     "Goals": {
         "AddNewGoal": "Legg til eit nytt mål",
+        "CategoryTextGeneral_Actions": "Sider",
+        "CategoryTextReferrers_Referrers": "Referansar",
         "ClickOutlink": "Klikk på ein lenke til ein ekstern nettstad",
         "ColumnConversionRateDocumentation": "Prosentar av vitjingar som nådde målet %s.",
         "ColumnRevenueDocumentation": "Totale inntekter generert av %s.",
@@ -551,9 +566,9 @@
         "GoalIsTriggered": "Mål er nådd",
         "GoalIsTriggeredWhen": "Målet er nådd når",
         "GoalName": "Målnamn",
+        "GoalX": "Mål %s",
         "Goals": "Mål",
         "GoalsOverview": "Måloversyn",
-        "GoalX": "Mål %s",
         "IsExactly": "er nøyaktig %s",
         "LeftInCart": "%s att i handlevogn",
         "Manually": "manuelt",
@@ -563,8 +578,8 @@
         "ProductCategory": "Produktkategori",
         "ProductName": "Produktnamn",
         "Products": "Produkt",
-        "UpdateGoal": "Oppdater mål",
         "URL": "URL",
+        "UpdateGoal": "Oppdater mål",
         "ViewAndEditGoals": "Vis og endre mål",
         "VisitPageTitle": "Vitje ein sidetittel",
         "VisitUrl": "Vitj ein gitt URL (side eller gruppe av sider)",
@@ -587,12 +602,14 @@
         "DatabaseSetupLogin": "brukarnamn",
         "DatabaseSetupServer": "databasetenar",
         "DatabaseSetupTablePrefix": "tabellprefiks",
+        "Email": "Epost",
         "Extension": "utviding",
         "GoBackAndDefinePrefix": "Gå attende og vel ein prefiks for Matomo-tabellane",
         "Installation": "Installasjon",
         "InstallationStatus": "Installasjonstatus",
         "LargePiwikInstances": "Hjelp for større Matomo-installasjonar",
         "Optional": "Valfri",
+        "Password": "Passord",
         "PasswordDoNotMatch": "Passorda samsvarer ikkje",
         "PercentDone": "%s %% Ferdig",
         "PleaseFixTheFollowingErrors": "Rett på følgjande feil",
@@ -1705,7 +1722,9 @@
         "SubscriptionType": "Type"
     },
     "MultiSites": {
-        "Evolution": "Evolusjon"
+        "AllWebsitesDashboardTitle": "Alle nettstadene",
+        "Evolution": "Evolusjon",
+        "TotalPageviews": "Totale sidevisingar"
     },
     "Overlay": {
         "Location": "Plass"
@@ -1715,9 +1734,16 @@
     },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymiser siste del av IPen til vitjarane for å overhalda lokale lovar og retningsliner for personvern.",
+        "ComplianceTableSettingStatus": "Status",
+        "GDPR": "GDPR",
+        "IPAddress": "IP-adresse",
         "KeepBasicMetrics": "Behald standardverdiar (vitjingar, sidevisningar, hoppfrekvens, målkonverteringar, netthandelkonverteringar, osb)"
     },
+    "ProfessionalServices": {
+        "PromoOverview": "Oversikt"
+    },
     "Referrers": {
+        "CampaignSource": "Bron",
         "Campaigns": "Kampanjar",
         "ColumnCampaign": "Kampanje",
         "ColumnSearchEngine": "Søkjemotor",
@@ -1768,17 +1794,34 @@
         "SelectACity": "Vel ein by",
         "ShowTrackingTag": "vis sporingskode",
         "Sites": "Nettstadar",
+        "Type": "Type",
         "Urls": "Adresser",
         "WebsitesManagement": "Nettstadsbehandling",
         "YourCurrentIpAddressIs": "Din gjeldande IP-adresse er %s"
     },
     "TagManager": {
+        "BingUETTagIdTitle": "ID",
         "CategoryClicks": "Klikk",
         "CategoryDate": "Dato",
         "CategoryEmail": "Epost",
+        "ChooseWebsite": "Vel nettside",
+        "ContainerLowercase": "behaldar",
+        "DataLayerVariableName": "Datalag",
+        "Environment": "Miljø",
+        "EtrackerConfigurationVariableCustomDimensionsTitle": "Tilpassa dimensjon",
+        "EtrackerTagTransactionCurrencyTitle": "Valuta",
+        "InvalidDebugUrlError": "Feil",
+        "MatomoConfigurationMatomoCustomDimensionsTitle": "Tilpassa dimensjon",
+        "MatomoTagEcommerceViewPrice": "Pris",
+        "MatomoTagEcommerceViewProductName": "Produktnamn",
         "PageTitleVariableName": "Sidetittel",
         "PageUrlVariableName": "Side-URL",
+        "TagLowercase": "merk",
+        "TagManager": "Merkehandtering",
+        "TriggerLowercase": "utløysar",
         "Type": "Type",
+        "UserAgentVariableName": "Brukaragent",
+        "VariableLowercase": "variabel",
         "Version": "Versjon"
     },
     "Tour": {
@@ -1787,6 +1830,10 @@
     },
     "Transitions": {
         "TransitionsSubcategoryHelp2": "Meer details"
+    },
+    "TwoFactorAuth": {
+        "TwoFAShort": "2FA",
+        "TwoFactorAuthentication": "To-faktor autentisering"
     },
     "UserCountry": {
         "Continent": "Kontinent",
@@ -1806,6 +1853,8 @@
         "LanguageCode": "Språkkode"
     },
     "UsersManager": {
+        "2FA": "2FA",
+        "Active": "Aktivt",
         "AllWebsites": "Alle nettstader",
         "ApplyToAllWebsites": "Gjer gjeldande for alle nettstader",
         "ClickHereToDeleteTheCookie": "Klikk her for å sletta informasjonskapselen slik at Matomo loggar dine vitjingar",
@@ -1825,7 +1874,9 @@
         "PrivAdmin": "Administrator",
         "PrivNone": "Inga tilgang",
         "PrivView": "Vis",
+        "Status": "Status",
         "TheLoginScreen": "Innloggingsskjermen",
+        "TwoFactorAuthentication": "To-faktor autentisering",
         "TypeYourPasswordAgain": "Skriv ditt nye passord på nytt.",
         "User": "Brukar",
         "Username": "Brukarnamn",
@@ -1877,9 +1928,16 @@
     "VisitsSummary": {
         "GenerateQueries": "%s spørjingar køyrd",
         "GenerateTime": "%s sekundar å generera denne siden",
+        "NbOutlinksDescription": "lenker ut",
+        "NbPageviewsDescription": "sidevisingar",
+        "NbUsersDescription": "brukarar",
         "WidgetLastVisits": "Siste vitjingar",
         "WidgetOverviewGraph": "Oversikt med graf",
         "WidgetVisits": "Vitjingsoversikt"
+    },
+    "WebsiteMeasurable": {
+        "Website": "Nettstad",
+        "Websites": "Nettstadar"
     },
     "Widgetize": {
         "OpenInNewWindow": "Opne i nytt vindage"

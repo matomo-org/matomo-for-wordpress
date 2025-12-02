@@ -149,6 +149,9 @@ class CorePluginsAdmin extends Plugin
         $translations[] = 'General_Cancel';
         $translations[] = 'UsersManager_ConfirmThisChange';
         $translations[] = 'UsersManager_ConfirmWithPassword';
+        $translations[] = 'UsersManager_ConfirmWithReAuthentication';
         $translations[] = 'UsersManager_YourCurrentPassword';
+        $translations[] = 'PrivacyManager_PolicyControlledSetting';
+        $translations[] = 'PrivacyManager_ViewPrivacyComplianceOverview';
     }
 }

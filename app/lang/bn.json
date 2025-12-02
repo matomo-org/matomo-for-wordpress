@@ -24,6 +24,8 @@
         "Description": "বিবরণ",
         "Desktop": "ডেস্কটপ",
         "Details": "বিস্তারিত",
+        "Documentation": "ডকুমেন্টেশন",
+        "Donate": "অনুদান",
         "Done": "সম্পন্ন",
         "Download": "ডাউনলোড করুন",
         "Downloads": "ডাউনলোড করুন",
@@ -84,6 +86,9 @@
     "RowEvolution": {
         "CompareRows": "রেকর্ড তুলনা"
     },
+    "API": {
+        "Glossary": "শব্দকোষ"
+    },
     "CorePluginsAdmin": {
         "Activate": "সক্রিয় করুন",
         "Activated": "সক্রিয় হয়েছে",
@@ -93,6 +98,9 @@
         "PluginHomepage": "প্লাগইনসমূহের মূলপাতা",
         "Status": "অবস্থা",
         "Version": "সংস্করণ"
+    },
+    "CoreUpdater": {
+        "Updating": "আপডেট করা"
     },
     "DBStats": {
         "Table": "সারণি"
@@ -105,9 +113,11 @@
         "RenameDashboard": "ড্যাশবোর্ডের নাম পরিবর্তন"
     },
     "Feedback": {
+        "HowCanWeHelp": "আমরা কীভাবে সাহায্য করতে পারি?",
         "IWantTo": "আমি চাই:"
     },
     "Installation": {
+        "Installation": "ইনস্টল করা",
         "PasswordRepeat": "পাসওয়ার্ড (অাবার)"
     },
     "Intl": {
@@ -1310,7 +1320,13 @@
         "RememberMe": "অামাকে মনে রেখো ।"
     },
     "Marketplace": {
-        "ActivateLicenseKey": "সক্রিয় করুন"
+        "ActivateLicenseKey": "সক্রিয় করুন",
+        "Support": "সহায়তা"
+    },
+    "PrivacyManager": {
+        "ComplianceTableSettingStatus": "অবস্থা",
+        "IPAddress": "আইপি ঠিকানা",
+        "PrivacyPolicy": "গোপনীয়তা নীতি"
     },
     "Referrers": {
         "ColumnWebsite": "ওয়েবসাইট"
@@ -1321,6 +1337,9 @@
     },
     "TagManager": {
         "CategoryDate": "তারিখ",
+        "EtrackerTagTransactionCurrencyTitle": "মুদ্রা",
+        "InvalidDebugUrlError": "ত্রুটি",
+        "MatomoTagEcommerceViewPrice": "মূল্য",
         "Tag": "ট্যাগ",
         "Version": "সংস্করণ"
     },
@@ -1328,6 +1347,8 @@
         "None": "কিছুই না"
     },
     "UsersManager": {
+        "Active": "সক্রিয়",
+        "Status": "অবস্থা",
         "Username": "ব্যবহারকারীর নাম"
     },
     "VisitTime": {
