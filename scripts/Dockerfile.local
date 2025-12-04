@@ -7,7 +7,7 @@ RUN if (echo "$PHP_VERSION" | grep -Eq '^7\.2\.'); then  \
   && sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list ; \
   fi
 
-RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git subversion
+RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git subversion chromium
 RUN apt-get install -y --no-install-recommends mariadb-client-compat || \
   apt-get install -y --no-install-recommends default-mysql-client
 

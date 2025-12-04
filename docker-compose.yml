@@ -50,8 +50,8 @@ services:
       - .env
       - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
-      context: .
-      dockerfile: ./scripts/Dockerfile.local
+      context: ./scripts
+      dockerfile: ./Dockerfile.local
       args:
         PHP_VERSION: "$PHP_VERSION"
         PHP_TYPE: fpm
@@ -101,6 +101,7 @@ services:
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./scripts/local-gitconfig:/.gitconfig
+      - ./scripts/.puppeteerrc.cjs:/var/www/html/.puppeteerrc.cjs
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
@@ -109,6 +110,8 @@ services:
       EXECUTE_CLI: 1
     depends_on:
       - "$BACKEND"
+    links:
+      - wordpress
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -120,6 +123,8 @@ services:
     volumes:
       - ./docker/mariadb:/var/lib/mysql:delegated
       - ./docker/maria_custom_my.cnf:/etc/mysql/conf.d/mycustom.cnf
+    ports:
+      - "3307:3306"
     deploy:
       restart_policy:
         condition: on-failure
