@@ -37,9 +37,6 @@ services:
     depends_on:
       - $BACKEND
       - mailer
-    deploy:
-      restart_policy:
-        condition: on-failure
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -65,9 +62,6 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - "$BACKEND"
-    deploy:
-      restart_policy:
-        condition: on-failure
   nginx:
     image: nginx
     volumes:
