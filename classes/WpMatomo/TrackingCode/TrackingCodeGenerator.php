@@ -316,6 +316,16 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$data_of_async_option['data-cfasync'] = 'false';
 		}
 
+		if ( $this->settings->is_ai_bot_tracking_enabled() ) {
+			// recMode is a temporary parameter introduced in core to conditionally
+			// enable AI bot tracking. if AI bot tracking is enabled in MWP, we set
+			// it to `2` here, to enable "auto" mode when doing JS tracking. in this
+			// mode, tracking requests with AI bot user agents will be tracked as bots
+			// instead of visits, while all other requests will be tracked normally
+			// as visits.
+			$options[] = "_paq.push(['appendToTrackingUrl', 'recMode=2']);";
+		}
+
 		$script  = "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
