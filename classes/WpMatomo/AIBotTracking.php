@@ -94,6 +94,10 @@ class AIBotTracking {
 			return false;
 		}
 
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return false;
+		}
+
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;
 		}
@@ -104,6 +108,10 @@ class AIBotTracking {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$request_path = (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
 
+		if ( preg_match( '/matomo\.php$/', $request_path ) ) {
+			return false;
+		}
+
 		if ( $this->is_request_for_file( $request_path ) ) {
 			return false;
 		}
@@ -112,6 +120,10 @@ class AIBotTracking {
 	}
 
 	private function is_request_for_file( $request_path ) {
+		if ( ! is_file( $_SERVER['DOCUMENT_ROOT'] . $request_path ) ) {
+			return false;
+		}
+
 		$extension = pathinfo( $request_path, PATHINFO_EXTENSION );
 		return ! in_array( $extension, self::$extensions_to_track, true );
 	}

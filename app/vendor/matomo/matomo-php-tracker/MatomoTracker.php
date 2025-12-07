@@ -1235,6 +1235,8 @@ class MatomoTracker
 	{
 		$url = $this->getRequest($this->idSite);
 
+		$url .= '&recMode=1';
+
 		if (!empty($httpStatus)) {
 			$url .= '&http_status=' . $httpStatus;
 		}
@@ -1775,852 +1777,850 @@ didn't change any existing VisitorId value */
 		if (!empty($this->attributionInfo)) {
 			return json_encode($this->attributionInfo);
 		}
+    }
 
-		return $this->getCookieMatchingName('ref');
-	}
+    /**
+     * Some Tracking API functionality requires express authentication, using either the
+     * Super User token_auth, or a user with 'admin' access to the website.
+     *
+     * The following features require access:
+     * - force the visitor IP
+     * - force the date &  time of the tracking requests rather than track for the current datetime
+     *
+     * @param string $token_auth token_auth 32 chars token_auth string
+     * @return $this
+     */
+    public function setTokenAuth(string $token_auth)
+    {
+        $this->token_auth = $token_auth;
 
-	/**
-	 * Some Tracking API functionality requires express authentication, using either the
-	 * Super User token_auth, or a user with 'admin' access to the website.
-	 *
-	 * The following features require access:
-	 * - force the visitor IP
-	 * - force the date &  time of the tracking requests rather than track for the current datetime
-	 *
-	 * @param string $token_auth token_auth 32 chars token_auth string
-	 * @return $this
-	 */
-	public function setTokenAuth(string $token_auth)
-	{
-		$this->token_auth = $token_auth;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Sets local visitor time
+     *
+     * @param string $time HH:MM:SS format
+     * @return $this
+     */
+    public function setLocalTime(string $time)
+    {
+        [$hour, $minute, $second] = explode(':', $time);
+        $this->localHour = (int)$hour;
+        $this->localMinute = (int)$minute;
+        $this->localSecond = (int)$second;
 
-	/**
-	 * Sets local visitor time
-	 *
-	 * @param string $time HH:MM:SS format
-	 * @return $this
-	 */
-	public function setLocalTime(string $time)
-	{
-		[$hour, $minute, $second] = explode(':', $time);
-		$this->localHour = (int)$hour;
-		$this->localMinute = (int)$minute;
-		$this->localSecond = (int)$second;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Sets user resolution width and height.
+     *
+     * @param int $width
+     * @param int $height
+     * @return $this
+     */
+    public function setResolution(int $width, int $height)
+    {
+        $this->width = $width;
+        $this->height = $height;
 
-	/**
-	 * Sets user resolution width and height.
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @return $this
-	 */
-	public function setResolution(int $width, int $height)
-	{
-		$this->width = $width;
-		$this->height = $height;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Sets if the browser supports cookies
+     * This is reported in "List of plugins" report in Matomo.
+     *
+     * @return $this
+     */
+    public function setBrowserHasCookies(bool $hasCookies)
+    {
+        $this->hasCookies = $hasCookies;
 
-	/**
-	 * Sets if the browser supports cookies
-	 * This is reported in "List of plugins" report in Matomo.
-	 *
-	 * @return $this
-	 */
-	public function setBrowserHasCookies(bool $hasCookies)
-	{
-		$this->hasCookies = $hasCookies;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Will append a custom string at the end of the Tracking request.
+     *
+     * @return $this
+     */
+    public function setDebugStringAppend(string $debugString)
+    {
+        $this->DEBUG_APPEND_URL = '&' . $debugString;
 
-	/**
-	 * Will append a custom string at the end of the Tracking request.
-	 *
-	 * @return $this
-	 */
-	public function setDebugStringAppend(string $debugString)
-	{
-		$this->DEBUG_APPEND_URL = '&' . $debugString;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Sets visitor browser supported plugins
+     *
+     * @return $this
+     */
+    public function setPlugins(
+        bool $flash = false,
+        bool $java = false,
+        bool $quickTime = false,
+        bool $realPlayer = false,
+        bool $pdf = false,
+        bool $windowsMedia = false,
+        bool $silverlight = false
+    ) {
+        $this->plugins =
+            '&fla=' . (int)$flash .
+            '&java=' . (int)$java .
+            '&qt=' . (int)$quickTime .
+            '&realp=' . (int)$realPlayer .
+            '&pdf=' . (int)$pdf .
+            '&wma=' . (int)$windowsMedia .
+            '&ag=' . (int)$silverlight;
 
-	/**
-	 * Sets visitor browser supported plugins
-	 *
-	 * @return $this
-	 */
-	public function setPlugins(
-		bool $flash = false,
-		bool $java = false,
-		bool $quickTime = false,
-		bool $realPlayer = false,
-		bool $pdf = false,
-		bool $windowsMedia = false,
-		bool $silverlight = false
-	) {
-		$this->plugins =
-			'&fla=' . (int)$flash .
-			'&java=' . (int)$java .
-			'&qt=' . (int)$quickTime .
-			'&realp=' . (int)$realPlayer .
-			'&pdf=' . (int)$pdf .
-			'&wma=' . (int)$windowsMedia .
-			'&ag=' . (int)$silverlight;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * By default, MatomoTracker will read first party cookies
+     * from the request and write updated cookies in the response (using setrawcookie).
+     * This can be disabled by calling this function.
+     */
+    public function disableCookieSupport(): void
+    {
+        $this->configCookiesDisabled = true;
+    }
 
-	/**
-	 * By default, MatomoTracker will read first party cookies
-	 * from the request and write updated cookies in the response (using setrawcookie).
-	 * This can be disabled by calling this function.
-	 */
-	public function disableCookieSupport(): void
-	{
-		$this->configCookiesDisabled = true;
-	}
+    /**
+     * Returns the maximum number of seconds the tracker will spend waiting for a response
+     * from Matomo. Defaults to 600 seconds.
+     */
+    public function getRequestTimeout(): int
+    {
+        return $this->requestTimeout;
+    }
 
-	/**
-	 * Returns the maximum number of seconds the tracker will spend waiting for a response
-	 * from Matomo. Defaults to 600 seconds.
-	 */
-	public function getRequestTimeout(): int
-	{
-		return $this->requestTimeout;
-	}
+    /**
+     * Sets the maximum number of seconds that the tracker will spend waiting for a response
+     * from Matomo.
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function setRequestTimeout(int $timeout)
+    {
+        if ($timeout < 0) {
+            throw new Exception("Invalid value supplied for request timeout: $timeout");
+        }
 
-	/**
-	 * Sets the maximum number of seconds that the tracker will spend waiting for a response
-	 * from Matomo.
-	 *
-	 * @return $this
-	 * @throws Exception
-	 */
-	public function setRequestTimeout(int $timeout)
-	{
-		if ($timeout < 0) {
-			throw new Exception("Invalid value supplied for request timeout: $timeout");
-		}
+        $this->requestTimeout = $timeout;
 
-		$this->requestTimeout = $timeout;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Returns the maximum number of seconds the tracker will spend trying to connect to Matomo.
+     * Defaults to 300 seconds.
+     */
+    public function getRequestConnectTimeout(): int
+    {
+        return $this->requestConnectTimeout;
+    }
 
-	/**
-	 * Returns the maximum number of seconds the tracker will spend trying to connect to Matomo.
-	 * Defaults to 300 seconds.
-	 */
-	public function getRequestConnectTimeout(): int
-	{
-		return $this->requestConnectTimeout;
-	}
+    /**
+     * Sets the maximum number of seconds that the tracker will spend tryint to connect to Matomo.
+     *
+     * @param int $timeout
+     * @return $this
+     * @throws Exception
+     */
+    public function setRequestConnectTimeout(int $timeout)
+    {
+        if ($timeout < 0) {
+            throw new Exception("Invalid value supplied for request connect timeout: $timeout");
+        }
 
-	/**
-	 * Sets the maximum number of seconds that the tracker will spend tryint to connect to Matomo.
-	 *
-	 * @param int $timeout
-	 * @return $this
-	 * @throws Exception
-	 */
-	public function setRequestConnectTimeout(int $timeout)
-	{
-		if ($timeout < 0) {
-			throw new Exception("Invalid value supplied for request connect timeout: $timeout");
-		}
+        $this->requestConnectTimeout = $timeout;
 
-		$this->requestConnectTimeout = $timeout;
-
-		return $this;
-	}
+        return $this;
+    }
 
 	/**
-	 * Sets the request method to POST, which is recommended when using setTokenAuth()
-	 * to prevent the token from being recorded in server logs. Avoid using redirects
-	 * when using POST to prevent the loss of POST values. When using Log Analytics,
-	 * be aware that POST requests are not parseable/replayable.
-	 *
-	 * @param string $method Either 'POST' or 'GET'
-	 * @return $this
-	 */
-	public function setRequestMethodNonBulk(string $method)
-	{
-		$this->requestMethod = strtoupper($method) === 'POST' ? 'POST' : 'GET';
+     * Sets the request method to POST, which is recommended when using setTokenAuth()
+     * to prevent the token from being recorded in server logs. Avoid using redirects
+     * when using POST to prevent the loss of POST values. When using Log Analytics,
+     * be aware that POST requests are not parseable/replayable.
+     *
+     * @param string $method Either 'POST' or 'GET'
+     * @return $this
+     */
+    public function setRequestMethodNonBulk(string $method)
+    {
+        $this->requestMethod = strtoupper($method) === 'POST' ? 'POST' : 'GET';
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * If a proxy is needed to look up the address of the Matomo site, set it with this
-	 * @param string $proxy IP as string, for example "173.234.92.107"
-	 */
-	public function setProxy(string $proxy, int $proxyPort = 80): void
-	{
-		$this->proxy = $proxy;
-		$this->proxyPort = $proxyPort;
-	}
+    /**
+     * If a proxy is needed to look up the address of the Matomo site, set it with this
+     * @param string $proxy IP as string, for example "173.234.92.107"
+     */
+    public function setProxy(string $proxy, int $proxyPort = 80): void
+    {
+        $this->proxy = $proxy;
+        $this->proxyPort = $proxyPort;
+    }
 
-	/**
-	 * If the proxy IP and the proxy port have been set, with the setProxy() function
-	 * returns a string, like "173.234.92.107:80"
-	 */
-	private function getProxy(): ?string
-	{
-		if (isset($this->proxy) && isset($this->proxyPort)) {
-			return $this->proxy.":".$this->proxyPort;
-		}
-		return null;
-	}
+    /**
+     * If the proxy IP and the proxy port have been set, with the setProxy() function
+     * returns a string, like "173.234.92.107:80"
+     */
+    private function getProxy(): ?string
+    {
+        if (isset($this->proxy) && isset($this->proxyPort)) {
+            return $this->proxy.":".$this->proxyPort;
+        }
+        return null;
+    }
 
-	/**
-	 * Used in tests to output useful error messages.
-	 *
-	 * @ignore
-	 */
-	static public $DEBUG_LAST_REQUESTED_URL = false;
+    /**
+     * Used in tests to output useful error messages.
+     *
+     * @ignore
+     */
+    static public $DEBUG_LAST_REQUESTED_URL = false;
 
-	/**
-	 * Returns array of curl options for request
-	 *
-	 * @return array<int, mixed>
-	 */
-	protected function prepareCurlOptions(
-		string $url,
-		string $method,
-			   $data,
-		bool $forcePostUrlEncoded
-	): array {
-		$options = [
-			CURLOPT_URL => $url,
-			CURLOPT_USERAGENT => $this->userAgent,
-			CURLOPT_HEADER => true,
-			CURLOPT_TIMEOUT => $this->requestTimeout,
-			CURLOPT_CONNECTTIMEOUT => $this->requestConnectTimeout,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HTTPHEADER => [
-				'Accept-Language: ' . $this->acceptLanguage,
-			],
-		];
+    /**
+     * Returns array of curl options for request
+     *
+     * @return array<int, mixed>
+     */
+    protected function prepareCurlOptions(
+        string $url,
+        string $method,
+        $data,
+        bool $forcePostUrlEncoded
+    ): array {
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_USERAGENT => $this->userAgent,
+            CURLOPT_HEADER => true,
+            CURLOPT_TIMEOUT => $this->requestTimeout,
+            CURLOPT_CONNECTTIMEOUT => $this->requestConnectTimeout,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Accept-Language: ' . $this->acceptLanguage,
+            ],
+        ];
 
-		if ($method === 'GET') {
-			$options[CURLOPT_FOLLOWLOCATION] = true;
-		}
+        if ($method === 'GET') {
+            $options[CURLOPT_FOLLOWLOCATION] = true;
+        }
 
-		if (defined('PATH_TO_CERTIFICATES_FILE')) {
-			$options[CURLOPT_CAINFO] = PATH_TO_CERTIFICATES_FILE;
-		}
+        if (defined('PATH_TO_CERTIFICATES_FILE')) {
+            $options[CURLOPT_CAINFO] = PATH_TO_CERTIFICATES_FILE;
+        }
 
-		$proxy = $this->getProxy();
-		if (isset($proxy)) {
-			$options[CURLOPT_PROXY] = $proxy;
-		}
+        $proxy = $this->getProxy();
+        if (isset($proxy)) {
+            $options[CURLOPT_PROXY] = $proxy;
+        }
 
-		switch ($method) {
-			case 'POST':
-				$options[CURLOPT_POST] = true;
-				break;
-			default:
-				break;
-		}
+        switch ($method) {
+            case 'POST':
+                $options[CURLOPT_POST] = true;
+                break;
+            default:
+                break;
+        }
 
-		// only supports JSON data
-		if (!empty($data) && $forcePostUrlEncoded) {
-			$options[CURLOPT_HTTPHEADER][] = 'Content-Type: application/x-www-form-urlencoded';
-			$options[CURLOPT_POSTFIELDS] = $data;
-			$options[CURLOPT_POST] = true;
-			if (defined('CURL_REDIR_POST_ALL')) {
-				$options[CURLOPT_POSTREDIR] = CURL_REDIR_POST_ALL;
-				$options[CURLOPT_FOLLOWLOCATION] = true;
-			}
-		} elseif (!empty($data)) {
-			$options[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
-			$options[CURLOPT_HTTPHEADER][] = 'Expect:';
-			$options[CURLOPT_POSTFIELDS] = $data;
-		}
+        // only supports JSON data
+        if (!empty($data) && $forcePostUrlEncoded) {
+            $options[CURLOPT_HTTPHEADER][] = 'Content-Type: application/x-www-form-urlencoded';
+            $options[CURLOPT_POSTFIELDS] = $data;
+            $options[CURLOPT_POST] = true;
+            if (defined('CURL_REDIR_POST_ALL')) {
+                $options[CURLOPT_POSTREDIR] = CURL_REDIR_POST_ALL;
+                $options[CURLOPT_FOLLOWLOCATION] = true;
+            }
+        } elseif (!empty($data)) {
+            $options[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
+            $options[CURLOPT_HTTPHEADER][] = 'Expect:';
+            $options[CURLOPT_POSTFIELDS] = $data;
+        }
 
-		if (!empty($this->outgoingTrackerCookies)) {
-			$options[CURLOPT_COOKIE] = http_build_query($this->outgoingTrackerCookies);
-			$this->outgoingTrackerCookies = array();
-		}
+        if (!empty($this->outgoingTrackerCookies)) {
+            $options[CURLOPT_COOKIE] = http_build_query($this->outgoingTrackerCookies);
+            $this->outgoingTrackerCookies = array();
+        }
 
-		return $options;
-	}
+        return $options;
+    }
 
-	/**
-	 * Returns array of stream options for request
-	 *
-	 * @return array{http: array<string, mixed>}
-	 */
-	protected function prepareStreamOptions(string $method, $data, bool $forcePostUrlEncoded): array
-	{
-		$stream_options = [
-			'http' => [
-				'method' => $method,
-				'user_agent' => $this->userAgent,
-				'header' => "Accept-Language: " . $this->acceptLanguage . "\r\n",
-				'timeout' => $this->requestTimeout,
-			],
-		];
+    /**
+     * Returns array of stream options for request
+     *
+     * @return array{http: array<string, mixed>}
+     */
+    protected function prepareStreamOptions(string $method, $data, bool $forcePostUrlEncoded): array
+    {
+        $stream_options = [
+            'http' => [
+                'method' => $method,
+                'user_agent' => $this->userAgent,
+                'header' => "Accept-Language: " . $this->acceptLanguage . "\r\n",
+                'timeout' => $this->requestTimeout,
+            ],
+        ];
 
-		$proxy = $this->getProxy();
-		if (isset($proxy)) {
-			$stream_options['http']['proxy'] = $proxy;
-		}
+        $proxy = $this->getProxy();
+        if (isset($proxy)) {
+            $stream_options['http']['proxy'] = $proxy;
+        }
 
-		// only supports JSON data
-		if (!empty($data) && $forcePostUrlEncoded) {
-			$stream_options['http']['header'] .= "Content-Type: application/x-www-form-urlencoded \r\n";
-			$stream_options['http']['content'] = $data;
-		} elseif (!empty($data)) {
-			$stream_options['http']['header'] .= "Content-Type: application/json \r\n";
-			$stream_options['http']['content'] = $data;
-		}
+        // only supports JSON data
+        if (!empty($data) && $forcePostUrlEncoded) {
+            $stream_options['http']['header'] .= "Content-Type: application/x-www-form-urlencoded \r\n";
+            $stream_options['http']['content'] = $data;
+        } elseif (!empty($data)) {
+            $stream_options['http']['header'] .= "Content-Type: application/json \r\n";
+            $stream_options['http']['content'] = $data;
+        }
 
-		if (!empty($this->outgoingTrackerCookies)) {
-			$stream_options['http']['header'] .= 'Cookie: ' . http_build_query($this->outgoingTrackerCookies) . "\r\n";
-			$this->outgoingTrackerCookies = array();
-		}
+        if (!empty($this->outgoingTrackerCookies)) {
+            $stream_options['http']['header'] .= 'Cookie: ' . http_build_query($this->outgoingTrackerCookies) . "\r\n";
+            $this->outgoingTrackerCookies = array();
+        }
 
-		return $stream_options;
-	}
+        return $stream_options;
+    }
 
-	/**
-	 * @ignore
-	 */
-	protected function sendRequest(string $url, string $method = 'GET', $data = null, bool $force = false): string
-	{
-		self::$DEBUG_LAST_REQUESTED_URL = $url;
+    /**
+     * @ignore
+     */
+    protected function sendRequest(string $url, string $method = 'GET', $data = null, bool $force = false): string
+    {
+        self::$DEBUG_LAST_REQUESTED_URL = $url;
 
-		// if doing a bulk request, store the url
-		if ($this->doBulkRequests && !$force) {
-			$this->storedTrackingActions[]
-				= $url
-				. (!empty($this->userAgent) ? ('&ua=' . urlencode($this->userAgent)) : '')
-				. (!empty($this->acceptLanguage) ? ('&lang=' . urlencode($this->acceptLanguage)) : '');
+        // if doing a bulk request, store the url
+        if ($this->doBulkRequests && !$force) {
+            $this->storedTrackingActions[]
+                = $url
+                . (!empty($this->userAgent) ? ('&ua=' . urlencode($this->userAgent)) : '')
+                . (!empty($this->acceptLanguage) ? ('&lang=' . urlencode($this->acceptLanguage)) : '');
 
-			// Clear custom variables & dimensions so they don't get copied over to other users in the bulk request
-			$this->clearCustomVariables();
-			$this->clearCustomDimensions();
-			$this->clearCustomTrackingParameters();
-			$this->userAgent = false;
-			$this->clientHints = false;
-			$this->acceptLanguage = false;
+            // Clear custom variables & dimensions so they don't get copied over to other users in the bulk request
+            $this->clearCustomVariables();
+            $this->clearCustomDimensions();
+            $this->clearCustomTrackingParameters();
+            $this->userAgent = false;
+            $this->clientHints = false;
+            $this->acceptLanguage = false;
 
-			return true;
-		}
+            return true;
+        }
 
-		$forcePostUrlEncoded = false;
-		if (!$this->doBulkRequests) {
-			if (!empty($this->requestMethod) && strtoupper($this->requestMethod) === 'POST') {
-				// POST ALL parameters and have no GET parameters
-				$urlParts = explode('?', $url);
+        $forcePostUrlEncoded = false;
+        if (!$this->doBulkRequests) {
+            if (!empty($this->requestMethod) && strtoupper($this->requestMethod) === 'POST') {
+                // POST ALL parameters and have no GET parameters
+                $urlParts = explode('?', $url);
 
-				$url = $urlParts[0];
-				$data = $urlParts[1];
-				$forcePostUrlEncoded = true;
+                $url = $urlParts[0];
+                $data = $urlParts[1];
+                $forcePostUrlEncoded = true;
 
-				$method = 'POST';
-			}
+                $method = 'POST';
+            }
 
-			if (!empty($this->token_auth)) {
-				$appendTokenString = '&token_auth=' . urlencode($this->token_auth);
+            if (!empty($this->token_auth)) {
+                $appendTokenString = '&token_auth=' . urlencode($this->token_auth);
 
-				if (empty($this->requestMethod) || $method === 'POST') {
-					// Only post token_auth but use GET URL parameters for everything else
-					$forcePostUrlEncoded = true;
-					if (empty($data)) {
-						$data = '';
-					}
-					$data .= $appendTokenString;
-					$data = ltrim($data, '&'); // when no request method set we don't want it to start with '&'
-				} elseif (!empty($this->token_auth)) {
-					// Use GET for all URL parameters
-					$url .= $appendTokenString;
-				}
-			}
-		}
+                if (empty($this->requestMethod) || $method === 'POST') {
+                    // Only post token_auth but use GET URL parameters for everything else
+                    $forcePostUrlEncoded = true;
+                    if (empty($data)) {
+                        $data = '';
+                    }
+                    $data .= $appendTokenString;
+                    $data = ltrim($data, '&'); // when no request method set we don't want it to start with '&'
+                } elseif (!empty($this->token_auth)) {
+                    // Use GET for all URL parameters
+                    $url .= $appendTokenString;
+                }
+            }
+        }
 
-		$content = '';
+        $content = '';
 
-		if (function_exists('curl_init') && function_exists('curl_exec')) {
-			$options = $this->prepareCurlOptions($url, $method, $data, $forcePostUrlEncoded);
+        if (function_exists('curl_init') && function_exists('curl_exec')) {
+            $options = $this->prepareCurlOptions($url, $method, $data, $forcePostUrlEncoded);
 
-			$ch = curl_init();
-			curl_setopt_array($ch, $options);
-			ob_start();
-			$response = @curl_exec($ch);
+            $ch = curl_init();
+            curl_setopt_array($ch, $options);
+            ob_start();
+            $response = @curl_exec($ch);
 
-			try {
-				$header = '';
+            try {
+                $header = '';
 
-				if ($response === false) {
-					$curlError = curl_error($ch);
-					if (!empty($curlError)) {
-						throw new \RuntimeException($curlError);
-					}
-				}
+                if ($response === false) {
+                    $curlError = curl_error($ch);
+                    if (!empty($curlError)) {
+                        throw new \RuntimeException($curlError);
+                    }
+                }
 
-				if (!empty($response)) {
-					// extract header
-					$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-					$header = substr($response, 0, $headerSize);
+                if (!empty($response)) {
+                    // extract header
+                    $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                    $header = substr($response, 0, $headerSize);
 
-					// extract content
-					$content = substr($response, $headerSize);
-				}
+                    // extract content
+                    $content = substr($response, $headerSize);
+                }
 
-				$this->parseIncomingCookies(explode("\r\n", $header));
-			} finally {
-				curl_close($ch);
-				ob_end_clean();
-			}
-		} elseif (function_exists('stream_context_create')) {
-			$stream_options = $this->prepareStreamOptions($method, $data, $forcePostUrlEncoded);
+                $this->parseIncomingCookies(explode("\r\n", $header));
+            } finally {
+                curl_close($ch);
+                ob_end_clean();
+            }
+        } elseif (function_exists('stream_context_create')) {
+            $stream_options = $this->prepareStreamOptions($method, $data, $forcePostUrlEncoded);
 
-			$ctx = stream_context_create($stream_options);
-			$response = file_get_contents($url, 0, $ctx);
-			$content = $response;
+            $ctx = stream_context_create($stream_options);
+            $response = file_get_contents($url, 0, $ctx);
+            $content = $response;
 
-			$this->parseIncomingCookies($http_response_header);
-		}
+            $this->parseIncomingCookies($http_response_header);
+        }
 
-		return $content;
-	}
+        return $content;
+    }
 
-	/**
-	 * Returns current timestamp, or forced timestamp/datetime if it was set
-	 * @return string|int
-	 */
-	protected function getTimestamp()
-	{
-		return !empty($this->forcedDatetime)
-			? strtotime($this->forcedDatetime)
-			: time();
-	}
+    /**
+     * Returns current timestamp, or forced timestamp/datetime if it was set
+     * @return string|int
+     */
+    protected function getTimestamp()
+    {
+        return !empty($this->forcedDatetime)
+            ? strtotime($this->forcedDatetime)
+            : time();
+    }
 
-	/**
-	 * Returns the base URL for the Matomo server.
-	 */
-	protected function getBaseUrl(): string
-	{
-		if (empty(self::$URL)) {
-			throw new Exception(
-				'You must first set the Matomo Tracker URL by calling
+    /**
+     * Returns the base URL for the Matomo server.
+     */
+    protected function getBaseUrl(): string
+    {
+        if (empty(self::$URL)) {
+            throw new Exception(
+                'You must first set the Matomo Tracker URL by calling
                  MatomoTracker::$URL = \'http://your-website.org/matomo/\';'
-			);
-		}
-		if (strpos(self::$URL, '/matomo.php') === false
-			&& strpos(self::$URL, '/proxy-matomo.php') === false
-		) {
-			self::$URL = rtrim(self::$URL, '/');
-			self::$URL .= '/matomo.php';
-		}
+            );
+        }
+        if (strpos(self::$URL, '/matomo.php') === false
+            && strpos(self::$URL, '/proxy-matomo.php') === false
+        ) {
+            self::$URL = rtrim(self::$URL, '/');
+            self::$URL .= '/matomo.php';
+        }
 
-		return self::$URL;
-	}
+        return self::$URL;
+    }
 
-	/**
-	 * @ignore
-	 */
-	protected function getRequest(int $idSite): string
-	{
-		$this->setFirstPartyCookies();
+    /**
+     * @ignore
+     */
+    protected function getRequest(int $idSite): string
+    {
+        $this->setFirstPartyCookies();
 
-		$customFields = '';
-		if (!empty($this->customParameters)) {
-			$customFields = '&' . http_build_query($this->customParameters, '', '&');
-		}
+        $customFields = '';
+        if (!empty($this->customParameters)) {
+            $customFields = '&' . http_build_query($this->customParameters, '', '&');
+        }
 
-		$customDimensions = '';
-		if (!empty($this->customDimensions)) {
-			$customDimensions = '&' . http_build_query($this->customDimensions, '', '&');
-		}
+        $customDimensions = '';
+        if (!empty($this->customDimensions)) {
+            $customDimensions = '&' . http_build_query($this->customDimensions, '', '&');
+        }
 
-		$baseUrl = $this->getBaseUrl();
-		$start = '?';
-		if (strpos($baseUrl, '?') !== false) {
-			$start = '&';
-		}
+        $baseUrl = $this->getBaseUrl();
+        $start = '?';
+        if (strpos($baseUrl, '?') !== false) {
+            $start = '&';
+        }
 
-		$url = $baseUrl . $start .
-			'idsite=' . $idSite .
-			'&rec=1' .
-			'&apiv=' . self::VERSION .
-			'&r=' . substr(strval(mt_rand()), 2, 6) .
+        $url = $baseUrl . $start .
+            'idsite=' . $idSite .
+            '&rec=1' .
+            '&apiv=' . self::VERSION .
+            '&r=' . substr(strval(mt_rand()), 2, 6) .
 
-			// XDEBUG_SESSIONS_START and KEY are related to the PHP Debugger, this can be ignored in other languages
-			(!empty($_GET['XDEBUG_SESSION_START']) ?
-				'&XDEBUG_SESSION_START=' . @urlencode($_GET['XDEBUG_SESSION_START']) : '') .
-			(!empty($_GET['KEY']) ? '&KEY=' . @urlencode($_GET['KEY']) : '') .
+            // XDEBUG_SESSIONS_START and KEY are related to the PHP Debugger, this can be ignored in other languages
+            (!empty($_GET['XDEBUG_SESSION_START']) ?
+                '&XDEBUG_SESSION_START=' . @urlencode($_GET['XDEBUG_SESSION_START']) : '') .
+            (!empty($_GET['KEY']) ? '&KEY=' . @urlencode($_GET['KEY']) : '') .
 
-			// Only allowed for Admin/Super User, token_auth required,
-			((!empty($this->ip) && !empty($this->token_auth)) ? '&cip=' . $this->ip : '') .
-			(!empty($this->userId) ? '&uid=' . urlencode($this->userId) : '') .
-			(!empty($this->forcedDatetime) ? '&cdt=' . urlencode($this->forcedDatetime) : '') .
-			(!empty($this->forcedNewVisit) ? '&new_visit=1' : '') .
+            // Only allowed for Admin/Super User, token_auth required,
+            ((!empty($this->ip) && !empty($this->token_auth)) ? '&cip=' . $this->ip : '') .
+            (!empty($this->userId) ? '&uid=' . urlencode($this->userId) : '') .
+            (!empty($this->forcedDatetime) ? '&cdt=' . urlencode($this->forcedDatetime) : '') .
+            (!empty($this->forcedNewVisit) ? '&new_visit=1' : '') .
 
-			// Values collected from cookie
-			'&_idts=' . $this->createTs .
+            // Values collected from cookie
+            '&_idts=' . $this->createTs .
 
-			// These parameters are set by the JS, but optional when using API
-			(!empty($this->plugins) ? $this->plugins : '') .
-			(($this->localHour !== false && $this->localMinute !== false && $this->localSecond !== false) ?
-				'&h=' . $this->localHour . '&m=' . $this->localMinute . '&s=' . $this->localSecond : '') .
-			(!empty($this->width) && !empty($this->height) ? '&res=' . $this->width . 'x' . $this->height : '') .
-			(!empty($this->hasCookies) ? '&cookie=' . $this->hasCookies : '') .
+            // These parameters are set by the JS, but optional when using API
+            (!empty($this->plugins) ? $this->plugins : '') .
+            (($this->localHour !== false && $this->localMinute !== false && $this->localSecond !== false) ?
+                '&h=' . $this->localHour . '&m=' . $this->localMinute . '&s=' . $this->localSecond : '') .
+            (!empty($this->width) && !empty($this->height) ? '&res=' . $this->width . 'x' . $this->height : '') .
+            (!empty($this->hasCookies) ? '&cookie=' . $this->hasCookies : '') .
 
-			// Various important attributes
-			(!empty($this->customData) ? '&data=' . $this->customData : '') .
-			(!empty($this->visitorCustomVar) ? '&_cvar=' . urlencode(json_encode($this->visitorCustomVar)) : '') .
-			(!empty($this->pageCustomVar) ? '&cvar=' . urlencode(json_encode($this->pageCustomVar)) : '') .
-			(!empty($this->eventCustomVar) ? '&e_cvar=' . urlencode(json_encode($this->eventCustomVar)) : '') .
-			(!empty($this->forcedVisitorId) ? '&cid=' . $this->forcedVisitorId : '&_id=' . $this->getVisitorId()) .
+            // Various important attributes
+            (!empty($this->customData) ? '&data=' . $this->customData : '') .
+            (!empty($this->visitorCustomVar) ? '&_cvar=' . urlencode(json_encode($this->visitorCustomVar)) : '') .
+            (!empty($this->pageCustomVar) ? '&cvar=' . urlencode(json_encode($this->pageCustomVar)) : '') .
+            (!empty($this->eventCustomVar) ? '&e_cvar=' . urlencode(json_encode($this->eventCustomVar)) : '') .
+            (!empty($this->forcedVisitorId) ? '&cid=' . $this->forcedVisitorId : '&_id=' . $this->getVisitorId()) .
 
-			// URL parameters
-			'&url=' . urlencode($this->pageUrl ?? '') .
-			'&urlref=' . urlencode($this->urlReferrer ?? '') .
-			((!empty($this->pageCharset) && $this->pageCharset != self::DEFAULT_CHARSET_PARAMETER_VALUES) ?
-				'&cs=' . $this->pageCharset : '') .
+            // URL parameters
+            '&url=' . urlencode($this->pageUrl ?? '') .
+            '&urlref=' . urlencode($this->urlReferrer ?? '') .
+            ((!empty($this->pageCharset) && $this->pageCharset != self::DEFAULT_CHARSET_PARAMETER_VALUES) ?
+                '&cs=' . $this->pageCharset : '') .
 
-			// unique pageview id
-			(!empty($this->idPageview) ? '&pv_id=' . urlencode($this->idPageview) : '') .
+            // unique pageview id
+            (!empty($this->idPageview) ? '&pv_id=' . urlencode($this->idPageview) : '') .
 
-			// Attribution information, so that Goal conversions are attributed to the right referrer or campaign
-			// Campaign name
-			(!empty($this->attributionInfo[0]) ? '&_rcn=' . urlencode($this->attributionInfo[0]) : '') .
-			// Campaign keyword
-			(!empty($this->attributionInfo[1]) ? '&_rck=' . urlencode($this->attributionInfo[1]) : '') .
-			// Timestamp at which the referrer was set
-			(!empty($this->attributionInfo[2]) ? '&_refts=' . $this->attributionInfo[2] : '') .
-			// Referrer URL
-			(!empty($this->attributionInfo[3]) ? '&_ref=' . urlencode($this->attributionInfo[3]) : '') .
+            // Attribution information, so that Goal conversions are attributed to the right referrer or campaign
+            // Campaign name
+            (!empty($this->attributionInfo[0]) ? '&_rcn=' . urlencode($this->attributionInfo[0]) : '') .
+            // Campaign keyword
+            (!empty($this->attributionInfo[1]) ? '&_rck=' . urlencode($this->attributionInfo[1]) : '') .
+            // Timestamp at which the referrer was set
+            (!empty($this->attributionInfo[2]) ? '&_refts=' . $this->attributionInfo[2] : '') .
+            // Referrer URL
+            (!empty($this->attributionInfo[3]) ? '&_ref=' . urlencode($this->attributionInfo[3]) : '') .
 
-			// custom location info
-			(!empty($this->country) ? '&country=' . urlencode($this->country) : '') .
-			(!empty($this->region) ? '&region=' . urlencode($this->region) : '') .
-			(!empty($this->city) ? '&city=' . urlencode($this->city) : '') .
-			(!empty($this->lat) ? '&lat=' . urlencode($this->lat) : '') .
-			(!empty($this->long) ? '&long=' . urlencode($this->long) : '') .
-			$customFields . $customDimensions .
-			(!$this->sendImageResponse ? '&send_image=0' : '') .
+            // custom location info
+            (!empty($this->country) ? '&country=' . urlencode($this->country) : '') .
+            (!empty($this->region) ? '&region=' . urlencode($this->region) : '') .
+            (!empty($this->city) ? '&city=' . urlencode($this->city) : '') .
+            (!empty($this->lat) ? '&lat=' . urlencode($this->lat) : '') .
+            (!empty($this->long) ? '&long=' . urlencode($this->long) : '') .
+            $customFields . $customDimensions .
+            (!$this->sendImageResponse ? '&send_image=0' : '') .
 
-			// client hints
-			(!empty($this->clientHints) ? ('&uadata=' . urlencode(json_encode($this->clientHints))) : '') .
+            // client hints
+            (!empty($this->clientHints) ? ('&uadata=' . urlencode(json_encode($this->clientHints))) : '') .
 
-			// DEBUG
-			$this->DEBUG_APPEND_URL;
+            // DEBUG
+            $this->DEBUG_APPEND_URL;
 
-		if (!empty($this->idPageview)) {
-			$url .=
-				($this->networkTime !== false ? '&pf_net=' . ((int)$this->networkTime) : '') .
-				($this->serverTime !== false ? '&pf_srv=' . ((int)$this->serverTime) : '') .
-				($this->transferTime !== false ? '&pf_tfr=' . ((int)$this->transferTime) : '') .
-				($this->domProcessingTime !== false ? '&pf_dm1=' . ((int)$this->domProcessingTime) : '') .
-				($this->domCompletionTime !== false ? '&pf_dm2=' . ((int)$this->domCompletionTime) : '') .
-				($this->onLoadTime !== false ? '&pf_onl=' . ((int)$this->onLoadTime) : '');
-			$this->clearPerformanceTimings();
-		}
+        if (!empty($this->idPageview)) {
+            $url .=
+                ($this->networkTime !== false ? '&pf_net=' . ((int)$this->networkTime) : '') .
+                ($this->serverTime !== false ? '&pf_srv=' . ((int)$this->serverTime) : '') .
+                ($this->transferTime !== false ? '&pf_tfr=' . ((int)$this->transferTime) : '') .
+                ($this->domProcessingTime !== false ? '&pf_dm1=' . ((int)$this->domProcessingTime) : '') .
+                ($this->domCompletionTime !== false ? '&pf_dm2=' . ((int)$this->domCompletionTime) : '') .
+                ($this->onLoadTime !== false ? '&pf_onl=' . ((int)$this->onLoadTime) : '');
+            $this->clearPerformanceTimings();
+        }
 
-		foreach ($this->ecommerceView as $param => $value) {
-			$url .= '&' . $param . '=' . urlencode($value);
-		}
+        foreach ($this->ecommerceView as $param => $value) {
+            $url .= '&' . $param . '=' . urlencode($value);
+        }
 
-		// Reset page level custom variables after this page view
-		$this->ecommerceView = [];
-		$this->pageCustomVar = [];
-		$this->eventCustomVar = [];
-		$this->clearCustomDimensions();
-		$this->clearCustomTrackingParameters();
+        // Reset page level custom variables after this page view
+        $this->ecommerceView = [];
+        $this->pageCustomVar = [];
+        $this->eventCustomVar = [];
+        $this->clearCustomDimensions();
+        $this->clearCustomTrackingParameters();
 
-		// force new visit only once, user must call again setForceNewVisit()
-		$this->forcedNewVisit = false;
+        // force new visit only once, user must call again setForceNewVisit()
+        $this->forcedNewVisit = false;
 
-		return $url;
-	}
+        return $url;
+    }
 
 
-	/**
-	 * Returns a first party cookie which name contains $name
-	 *
-	 * @return string String value of cookie, or false if not found
-	 * @ignore
-	 */
-	protected function getCookieMatchingName(string $name)
-	{
-		if ($this->configCookiesDisabled) {
-			return false;
-		}
-		if (!is_array($_COOKIE)) {
-			return false;
-		}
-		$name = $this->getCookieName($name);
+    /**
+     * Returns a first party cookie which name contains $name
+     *
+     * @return string String value of cookie, or false if not found
+     * @ignore
+     */
+    protected function getCookieMatchingName(string $name)
+    {
+        if ($this->configCookiesDisabled) {
+            return false;
+        }
+        if (!is_array($_COOKIE)) {
+            return false;
+        }
+        $name = $this->getCookieName($name);
 
-		// Matomo cookie names use dots separators in matomo.js,
-		// but PHP Replaces . with _ http://www.php.net/manual/en/language.variables.predefined.php#72571
-		$name = str_replace('.', '_', $name);
-		foreach ($_COOKIE as $cookieName => $cookieValue) {
-			if (strpos($cookieName, $name) !== false) {
-				return $cookieValue;
-			}
-		}
+        // Matomo cookie names use dots separators in matomo.js,
+        // but PHP Replaces . with _ http://www.php.net/manual/en/language.variables.predefined.php#72571
+        $name = str_replace('.', '_', $name);
+        foreach ($_COOKIE as $cookieName => $cookieValue) {
+            if (strpos($cookieName, $name) !== false) {
+                return $cookieValue;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
-	 * will return "/dir1/dir2/index.php"
-	 *
-	 * @ignore
-	 */
-	protected static function getCurrentScriptName(): string
-	{
-		$url = '';
-		if (!empty($_SERVER['PATH_INFO'])) {
-			$url = $_SERVER['PATH_INFO'];
-		} else {
-			if (!empty($_SERVER['REQUEST_URI'])) {
-				if (($pos = strpos($_SERVER['REQUEST_URI'], '?')) !== false) {
-					$url = substr($_SERVER['REQUEST_URI'], 0, $pos);
-				} else {
-					$url = $_SERVER['REQUEST_URI'];
-				}
-			}
-		}
-		if (empty($url) && isset($_SERVER['SCRIPT_NAME'])) {
-			$url = $_SERVER['SCRIPT_NAME'];
-		} elseif (empty($url)) {
-			$url = '/';
-		}
+    /**
+     * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
+     * will return "/dir1/dir2/index.php"
+     *
+     * @ignore
+     */
+    protected static function getCurrentScriptName(): string
+    {
+        $url = '';
+        if (!empty($_SERVER['PATH_INFO'])) {
+            $url = $_SERVER['PATH_INFO'];
+        } else {
+            if (!empty($_SERVER['REQUEST_URI'])) {
+                if (($pos = strpos($_SERVER['REQUEST_URI'], '?')) !== false) {
+                    $url = substr($_SERVER['REQUEST_URI'], 0, $pos);
+                } else {
+                    $url = $_SERVER['REQUEST_URI'];
+                }
+            }
+        }
+        if (empty($url) && isset($_SERVER['SCRIPT_NAME'])) {
+            $url = $_SERVER['SCRIPT_NAME'];
+        } elseif (empty($url)) {
+        	$url = '/';
+        }
 
-		if (!empty($url) && $url[0] !== '/') {
-			$url = '/' . $url;
-		}
+        if (!empty($url) && $url[0] !== '/') {
+            $url = '/' . $url;
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
-	/**
-	 * If the current URL is 'http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
-	 * will return 'http'
-	 *
-	 * @return string 'https' or 'http'
-	 * @ignore
-	 */
-	protected static function getCurrentScheme(): string
-	{
-		if (isset($_SERVER['HTTPS'])
-			&& ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)
-		) {
-			return 'https';
-		}
+    /**
+     * If the current URL is 'http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
+     * will return 'http'
+     *
+     * @return string 'https' or 'http'
+     * @ignore
+     */
+    protected static function getCurrentScheme(): string
+    {
+        if (isset($_SERVER['HTTPS'])
+            && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === true)
+        ) {
+            return 'https';
+        }
 
-		return 'http';
-	}
+        return 'http';
+    }
 
-	/**
-	 * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
-	 * will return "http://example.org"
-	 *
-	 * @ignore
-	 */
-	protected static function getCurrentHost(): string
-	{
-		if (isset($_SERVER['HTTP_HOST'])) {
-			return $_SERVER['HTTP_HOST'];
-		}
+    /**
+     * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
+     * will return "http://example.org"
+     *
+     * @ignore
+     */
+    protected static function getCurrentHost(): string
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            return $_SERVER['HTTP_HOST'];
+        }
 
-		return 'unknown';
-	}
+        return 'unknown';
+    }
 
-	/**
-	 * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
-	 * will return "?param1=value1&param2=value2"
-	 *
-	 * @ignore
-	 */
-	protected static function getCurrentQueryString(): string
-	{
-		$url = '';
-		if (isset($_SERVER['QUERY_STRING'])
-			&& !empty($_SERVER['QUERY_STRING'])
-		) {
-			$url .= '?' . $_SERVER['QUERY_STRING'];
-		}
+    /**
+     * If current URL is "http://example.org/dir1/dir2/index.php?param1=value1&param2=value2"
+     * will return "?param1=value1&param2=value2"
+     *
+     * @ignore
+     */
+    protected static function getCurrentQueryString(): string
+    {
+        $url = '';
+        if (isset($_SERVER['QUERY_STRING'])
+            && !empty($_SERVER['QUERY_STRING'])
+        ) {
+            $url .= '?' . $_SERVER['QUERY_STRING'];
+        }
 
-		return $url;
-	}
+        return $url;
+    }
 
-	/**
-	 * Returns the current full URL (scheme, host, path and query string.
-	 *
-	 * @ignore
-	 */
-	protected static function getCurrentUrl(): string
-	{
-		return self::getCurrentScheme() . '://'
-			. self::getCurrentHost()
-			. self::getCurrentScriptName()
-			. self::getCurrentQueryString();
-	}
+    /**
+     * Returns the current full URL (scheme, host, path and query string.
+     *
+     * @ignore
+     */
+    protected static function getCurrentUrl(): string
+    {
+        return self::getCurrentScheme() . '://'
+        . self::getCurrentHost()
+        . self::getCurrentScriptName()
+        . self::getCurrentQueryString();
+    }
 
-	/**
-	 * Sets the first party cookies as would the matomo.js
-	 * All cookies are supported: 'id' and 'ses' and 'ref' and 'cvar' cookies.
-	 * @return $this
-	 */
-	protected function setFirstPartyCookies()
-	{
-		if ($this->configCookiesDisabled) {
-			return $this;
-		}
+    /**
+     * Sets the first party cookies as would the matomo.js
+     * All cookies are supported: 'id' and 'ses' and 'ref' and 'cvar' cookies.
+     * @return $this
+     */
+    protected function setFirstPartyCookies()
+    {
+        if ($this->configCookiesDisabled) {
+            return $this;
+        }
 
-		if (empty($this->cookieVisitorId)) {
-			$this->loadVisitorIdCookie();
-		}
+        if (empty($this->cookieVisitorId)) {
+            $this->loadVisitorIdCookie();
+        }
 
-		// Set the 'ref' cookie
-		$attributionInfo = $this->getAttributionInfo();
-		if (!empty($attributionInfo)) {
-			$this->setCookie('ref', $attributionInfo, $this->configReferralCookieTimeout);
-		}
+        // Set the 'ref' cookie
+        $attributionInfo = $this->getAttributionInfo();
+        if (!empty($attributionInfo)) {
+            $this->setCookie('ref', $attributionInfo, $this->configReferralCookieTimeout);
+        }
 
-		// Set the 'ses' cookie
-		$this->setCookie('ses', '*', $this->configSessionCookieTimeout);
+        // Set the 'ses' cookie
+        $this->setCookie('ses', '*', $this->configSessionCookieTimeout);
 
-		// Set the 'id' cookie
-		$cookieValue = $this->getVisitorId() . '.' . $this->createTs;
-		$this->setCookie('id', $cookieValue, $this->configVisitorCookieTimeout);
+        // Set the 'id' cookie
+        $cookieValue = $this->getVisitorId() . '.' . $this->createTs;
+        $this->setCookie('id', $cookieValue, $this->configVisitorCookieTimeout);
 
-		// Set the 'cvar' cookie
-		$this->setCookie('cvar', json_encode($this->visitorCustomVar), $this->configSessionCookieTimeout);
-		return $this;
-	}
+        // Set the 'cvar' cookie
+        $this->setCookie('cvar', json_encode($this->visitorCustomVar), $this->configSessionCookieTimeout);
+        return $this;
+    }
 
-	/**
-	 * Sets a first party cookie to the client to improve dual JS-PHP tracking.
-	 *
-	 * This replicates the matomo.js tracker algorithms for consistency and better accuracy.
-	 *
-	 * @return $this
-	 */
-	protected function setCookie(string $cookieName, $cookieValue, int $cookieTTL)
-	{
-		$cookieExpire = $this->currentTs + $cookieTTL;
-		if (!headers_sent()) {
-			$header = 'Set-Cookie: ' . rawurlencode($this->getCookieName($cookieName)) . '=' . rawurlencode($cookieValue)
-				. (empty($cookieExpire) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $cookieExpire) . ' GMT')
-				. (empty($this->configCookiePath) ? '' : '; path=' . $this->configCookiePath)
-				. (empty($this->configCookieDomain) ? '' : '; domain=' . rawurlencode($this->configCookieDomain))
-				. (!$this->configCookieSecure ? '' : '; secure')
-				. (!$this->configCookieHTTPOnly ? '' : '; HttpOnly')
-				. (!$this->configCookieSameSite ? '' : '; SameSite=' . rawurlencode($this->configCookieSameSite));
+    /**
+     * Sets a first party cookie to the client to improve dual JS-PHP tracking.
+     *
+     * This replicates the matomo.js tracker algorithms for consistency and better accuracy.
+     *
+     * @return $this
+     */
+    protected function setCookie(string $cookieName, $cookieValue, int $cookieTTL)
+    {
+        $cookieExpire = $this->currentTs + $cookieTTL;
+        if (!headers_sent()) {
+            $header = 'Set-Cookie: ' . rawurlencode($this->getCookieName($cookieName)) . '=' . rawurlencode($cookieValue)
+                . (empty($cookieExpire) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $cookieExpire) . ' GMT')
+                . (empty($this->configCookiePath) ? '' : '; path=' . $this->configCookiePath)
+                . (empty($this->configCookieDomain) ? '' : '; domain=' . rawurlencode($this->configCookieDomain))
+                . (!$this->configCookieSecure ? '' : '; secure')
+                . (!$this->configCookieHTTPOnly ? '' : '; HttpOnly')
+                . (!$this->configCookieSameSite ? '' : '; SameSite=' . rawurlencode($this->configCookieSameSite));
 
-			header($header, false);
-		}
-		return $this;
-	}
+            header($header, false);
+        }
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	protected function getCustomVariablesFromCookie()
-	{
-		$cookie = $this->getCookieMatchingName('cvar');
-		if (!$cookie) {
-			return [];
-		}
+    /**
+     * @return array
+     */
+    protected function getCustomVariablesFromCookie()
+    {
+        $cookie = $this->getCookieMatchingName('cvar');
+        if (!$cookie) {
+            return [];
+        }
 
-		return json_decode($cookie, true);
-	}
+        return json_decode($cookie, true);
+    }
 
-	/**
-	 * Sets a cookie to be sent to the tracking server.
-	 *
-	 * @param $name
-	 * @param $value
-	 */
-	public function setOutgoingTrackerCookie($name, $value)
-	{
-		if ($value === null) {
-			unset($this->outgoingTrackerCookies[$name]);
-		}
-		else {
-			$this->outgoingTrackerCookies[$name] = $value;
-		}
-	}
+    /**
+     * Sets a cookie to be sent to the tracking server.
+     *
+     * @param $name
+     * @param $value
+     */
+    public function setOutgoingTrackerCookie($name, $value)
+    {
+        if ($value === null) {
+            unset($this->outgoingTrackerCookies[$name]);
+        }
+        else {
+            $this->outgoingTrackerCookies[$name] = $value;
+        }
+    }
 
-	/**
-	 * Gets a cookie which was set by the tracking server.
-	 *
-	 * @param $name
-	 *
-	 * @return bool|string
-	 */
-	public function getIncomingTrackerCookie($name)
-	{
-		if (isset($this->incomingTrackerCookies[$name])) {
-			return $this->incomingTrackerCookies[$name];
-		}
+    /**
+     * Gets a cookie which was set by the tracking server.
+     *
+     * @param $name
+     *
+     * @return bool|string
+     */
+    public function getIncomingTrackerCookie($name)
+    {
+        if (isset($this->incomingTrackerCookies[$name])) {
+            return $this->incomingTrackerCookies[$name];
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Reads incoming tracking server cookies.
-	 *
-	 * @param array $headers Array with HTTP response headers as values
-	 */
-	protected function parseIncomingCookies(array $headers): void
-	{
-		$this->incomingTrackerCookies = [];
+    /**
+     * Reads incoming tracking server cookies.
+     *
+     * @param array $headers Array with HTTP response headers as values
+     */
+    protected function parseIncomingCookies(array $headers): void
+    {
+        $this->incomingTrackerCookies = [];
 
-		if (!empty($headers)) {
-			$headerName = 'set-cookie:';
-			$headerNameLength = strlen($headerName);
+        if (!empty($headers)) {
+            $headerName = 'set-cookie:';
+            $headerNameLength = strlen($headerName);
 
-			foreach($headers as $header) {
-				if (strpos(strtolower($header), $headerName) !== 0) {
-					continue;
-				}
-				$cookies = trim(substr($header, $headerNameLength));
-				$posEnd = strpos($cookies, ';');
-				if ($posEnd !== false) {
-					$cookies = substr($cookies, 0, $posEnd);
-				}
-				parse_str($cookies, $this->incomingTrackerCookies);
-			}
-		}
-	}
+            foreach($headers as $header) {
+                if (strpos(strtolower($header), $headerName) !== 0) {
+                    continue;
+                }
+                $cookies = trim(substr($header, $headerNameLength));
+                $posEnd = strpos($cookies, ';');
+                if ($posEnd !== false) {
+                    $cookies = substr($cookies, 0, $posEnd);
+                }
+                parse_str($cookies, $this->incomingTrackerCookies);
+            }
+        }
+    }
 
-	/**
-	 * Returns true if the given user agent belongs to a known AI bot.
-	 *
-	 * @param string $userAgent
-	 * @return bool
-	 */
-	public static function isUserAgentAIBot(string $userAgent): bool
-	{
-		if (empty($userAgent)) {
-			return false;
-		}
+    /**
+     * Returns true if the given user agent belongs to a known AI bot.
+     *
+     * @param string $userAgent
+     * @return bool
+     */
+    public static function isUserAgentAIBot(string $userAgent): bool
+    {
+        if (empty($userAgent)) {
+            return false;
+        }
 
-		foreach (self::$aiBotUserAgentSubstrings as $substring) {
-			if (stripos($userAgent, $substring) !== false) {
-				return true;
-			}
-		}
-		return false;
-	}
+        foreach (self::$aiBotUserAgentSubstrings as $substring) {
+            if (stripos($userAgent, $substring) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 /**
@@ -2632,9 +2632,9 @@ didn't change any existing VisitorId value */
  */
 function Matomo_getUrlTrackPageView($idSite, $documentTitle = '')
 {
-	$tracker = new MatomoTracker($idSite);
+    $tracker = new MatomoTracker($idSite);
 
-	return $tracker->getUrlTrackPageView($documentTitle);
+    return $tracker->getUrlTrackPageView($documentTitle);
 }
 
 /**
@@ -2647,9 +2647,9 @@ function Matomo_getUrlTrackPageView($idSite, $documentTitle = '')
  */
 function Matomo_getUrlTrackGoal($idSite, $idGoal, $revenue = 0.0)
 {
-	$tracker = new MatomoTracker($idSite);
+    $tracker = new MatomoTracker($idSite);
 
-	return $tracker->getUrlTrackGoal($idGoal, $revenue);
+    return $tracker->getUrlTrackGoal($idGoal, $revenue);
 }
 
 /**
@@ -2658,5 +2658,5 @@ function Matomo_getUrlTrackGoal($idSite, $idGoal, $revenue = 0.0)
  * @deprecated
  */
 if (!class_exists('\PiwikTracker')) {
-	include_once('PiwikTracker.php');
+    include_once('PiwikTracker.php');
 }
