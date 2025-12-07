@@ -130,6 +130,8 @@ services:
     volumes:
       - ./docker/mysql:/var/lib/mysql:delegated
       - ./docker/container-files/mysql_custom_my.cnf:/etc/mysql/conf.d/mycustom.cnf
+    ports:
+      - "3307:3306"
     deploy:
       restart_policy:
         condition: on-failure

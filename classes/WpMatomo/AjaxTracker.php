@@ -116,16 +116,17 @@ class AjaxTracker extends \MatomoTracker {
 		}
 
 		$args = array(
-			'method' => $method,
+			'method'  => $method,
+			'headers' => [
+				'User-Agent' => $this->userAgent,
+			],
 		);
 		if ( ! empty( $data ) ) {
 			$args['body'] = $data;
 		}
 
 		if ( ! empty( $this->ip ) ) {
-			$args['headers'] = [
-				self::IP_ADDRESS_FORWARDING_HEADER => $this->ip,
-			];
+			$args['headers'][self::IP_ADDRESS_FORWARDING_HEADER] = $this->ip;
 
 			$ip_nonce = wp_create_nonce( self::IP_ADDRESS_FORWARDING_NONCE_NAME );
 			$url      = $url . '&ip_nonce=' . rawurlencode( $ip_nonce );
