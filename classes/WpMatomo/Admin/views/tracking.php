@@ -29,6 +29,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $cookie_consent_modes */
 /** @var string $matomo_exclusion_settings_url */
 /** @var array $matomo_track_mode_descriptions $matomo_form */
+/** @var bool $matomo_is_advanced_cache_used */
+/** @var bool $matomo_is_track_script_used_in_wp_config */
+/** @var bool $matomo_is_track_ai_enabled */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -354,8 +357,32 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Track AI Bots', 'matomo' ),
 				esc_html__( 'If enabled, AI bots will trigger page views even if they do not execute JavaScript. These page views can be seen in the special AI Assistants report.', 'matomo' ),
 				false,
-				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager',
+				false,
+				"window.jQuery('.matomo-track-ai-warning').toggle();"
 			);
+
+			if ( $matomo_is_advanced_cache_used && $matomo_is_track_script_used_in_wp_config === false ) {
+				?>
+				<tr>
+					<td></td>
+					<td>
+						<div class="matomo-inline-notice matomo-warning matomo-track-ai-warning" style="<?php echo $matomo_is_track_ai_enabled ? '' : 'display:none;'; ?>">
+							<p>
+								<strong><?php esc_html_e( 'Warning', 'matomo' ); ?>:</strong>
+								<?php esc_html_e( 'We noticed WordPress\' advanced cache feature is active. This feature will serve your blog pages without ever loading your WordPress plugins. To track AI bots while the advanced cache is active you will need to add the following snippet to your wp-config.php file:', 'matomo' ); ?>
+							</p>
+							<p>
+								<textarea rows="3" readonly="readonly">if ( is_file( ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php' ) ) {
+	require_once ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php';
+}</textarea>
+							</p>
+							<p><?php echo sprintf( esc_html__( 'Make sure to add it immediately before the line that reads %1$srequire_once ABSPATH . \'wp-settings.php\';%2$s.', 'matomo' ), '<code>', '</code>' ); ?></p>
+						</div>
+					</td>
+				</tr>
+				<?php
+			}
 			?>
 			</tbody>
 		</table>

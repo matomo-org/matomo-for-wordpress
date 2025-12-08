@@ -72,7 +72,7 @@ async function trackPageViewWithAiUserAgent() {
   await pageview(USER_AGENT_AI_BOT);
 
   const botRequestCountAfter = await getLogBotRequestCount();
-console.log(botRequestCountBefore + ' - ' + botRequestCountAfter);
+
   console.log('trackPageViewWithAiUserAgent:');
   console.log(`  creates bot request: ${chalk.green(botRequestCountBefore < botRequestCountAfter ? 'Y' : 'N')}`);
 }
