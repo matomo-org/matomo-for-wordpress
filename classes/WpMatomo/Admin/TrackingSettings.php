@@ -48,6 +48,41 @@ class TrackingSettings implements AdminSettingsInterface {
 		$this->add_hooks();
 	}
 
+	// TODO: unit tests for this and below
+
+	/**
+	 * TODO
+	 * @return bool
+	 */
+	public static function is_advance_cache_used() {
+		return defined( 'WP_CACHE' )
+			&& WP_CACHE
+			&& file_exists( WP_CONTENT_DIR . '/advanced-cache.php' );
+	}
+
+	/**
+	 * TODO
+	 * @return bool|null
+	 */
+	public static function is_track_script_used_in_wp_config() {
+		$wp_config_path = ABSPATH . '/wp-config.php';
+
+		if ( ! is_file( $wp_config_path ) ) {
+			return null;
+		}
+
+		$wp_config_contents = file_get_contents( $wp_config_path );
+
+		// some systems may disable reading of files outside of wp-content
+		if ( ! is_string( $wp_config_contents ) ) {
+			return null;
+		}
+
+		$is_track_ai_bot_script_used = preg_match( '/require_once.*?track_ai_bot\.php/', $wp_config_contents ) === 1;
+
+		return $is_track_ai_bot_script_used;
+	}
+
 	public function get_title() {
 		return esc_html__( 'Tracking', 'matomo' );
 	}
@@ -335,6 +370,11 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		$matomo_exclusion_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=exlusions' );
+
+		$matomo_is_advanced_cache_used            = self::is_advance_cache_used();
+		$matomo_is_track_script_used_in_wp_config = self::is_track_script_used_in_wp_config();
+
+		$matomo_is_track_ai_enabled = $this->settings->is_ai_bot_tracking_enabled();
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
