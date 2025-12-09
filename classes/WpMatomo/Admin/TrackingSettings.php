@@ -83,6 +83,21 @@ class TrackingSettings implements AdminSettingsInterface {
 		return $is_track_ai_bot_script_used;
 	}
 
+	public static function is_htaccess_serving_cache_files() {
+		if ( ! is_file( ABSPATH . '/.htaccess' ) ) {
+			return false;
+		}
+
+		if ( ! function_exists( 'apache_get_modules' ) ) {
+			return false; // not using apache
+		}
+
+		$htaccess_contents     = file_get_contents( ABSPATH . '/.htaccess' );
+		$is_rewrite_rule_found = preg_match( '%RewriteRule.*?/wp-content/cache/wp-rocket/%', $htaccess_contents ) === 1;
+
+		return $is_rewrite_rule_found;
+	}
+
 	public function get_title() {
 		return esc_html__( 'Tracking', 'matomo' );
 	}
@@ -373,6 +388,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$matomo_is_advanced_cache_used            = self::is_advance_cache_used();
 		$matomo_is_track_script_used_in_wp_config = self::is_track_script_used_in_wp_config();
+		$matomo_is_htaccess_serving_cache_files   = self::is_htaccess_serving_cache_files();
 
 		$matomo_is_track_ai_enabled = $this->settings->is_ai_bot_tracking_enabled();
 

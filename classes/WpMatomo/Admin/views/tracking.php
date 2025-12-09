@@ -362,7 +362,21 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				"window.jQuery('.matomo-track-ai-warning').toggle();"
 			);
 
-			if ( $matomo_is_advanced_cache_used && $matomo_is_track_script_used_in_wp_config === false ) {
+			if ( $matomo_is_htaccess_serving_cache_files ) {
+				?>
+				<tr>
+					<td></td>
+					<td>
+						<div class="matomo-inline-notice matomo-warning matomo-track-ai-warning" style="<?php echo $matomo_is_track_ai_enabled ? '' : 'display:none;'; ?>">
+							<p>
+								<strong><?php esc_html_e( 'Warning', 'matomo' ); ?>:</strong>
+								<?php esc_html_e( 'Your caching plugin is using an .htaccess file to serve cached pages directly through your webserver, bypassing PHP. AI bots cannot be tracked for pages served this way. Please consult your caching plugin documentation if you wish to disable this behavior.', 'matomo' ); ?>
+							</p>
+						</div>
+					</td>
+				</tr>
+				<?php
+			} else if ( $matomo_is_advanced_cache_used && $matomo_is_track_script_used_in_wp_config === false ) {
 				?>
 				<tr>
 					<td></td>
