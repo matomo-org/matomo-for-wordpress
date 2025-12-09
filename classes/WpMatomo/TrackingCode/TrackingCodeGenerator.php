@@ -12,12 +12,11 @@ namespace WpMatomo\TrackingCode;
 use WP_Query;
 use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\AjaxTracker;
 use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\Settings;
 use WpMatomo\Site;
-// phpcs:ignore PHPCompatibility.UseDeclarations.NewUseConstFunction.Found
-use function is_user_logged_in;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -316,6 +315,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$data_of_async_option['data-cfasync'] = 'false';
 		}
 
+		$script = '';
+
 		if ( $this->settings->is_ai_bot_tracking_enabled() ) {
 			// recMode is a temporary parameter introduced in core to conditionally
 			// enable AI bot tracking. if AI bot tracking is enabled in MWP, we set
@@ -324,9 +325,38 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			// instead of visits, while all other requests will be tracked normally
 			// as visits.
 			$options[] = "_paq.push(['appendToTrackingUrl', 'recMode=2']);";
+
+			// set cookie via javascript cookie for known AI bots so we can skip tracking server side
+			// for them.
+			$userAgentSubstrings = wp_json_encode( AjaxTracker::AI_BOT_USER_AGENT_SUBSTRINGS );
+			array_unshift(
+				$options,
+				<<<EOF
+_paq.push([ function () {
+  var userAgentSubstrings = $userAgentSubstrings;
+  for (var i = 0; i < userAgentSubstrings.length; ++i) {
+  	var isAiBotUserAgent = navigator.userAgent.toLowerCase().indexOf(userAgentSubstrings[i].toLowerCase()) !== -1;
+  	if (isAiBotUserAgent) {
+      var path = this.getCookiePath();
+      var domain = this.getCookieDomain();
+      var sameSite = this.getConfigCookieSameSite();
+
+      document.cookie = 'matomo_has_js=1;path=' +
+      	(path || '/') +
+      	(domain ? ';domain=' + domain : '') +
+		';SameSite=' + sameSite
+		;
+
+  	  return;
+  	}
+  }
+} ]);
+EOF
+			);
+
 		}
 
-		$script  = "var _paq = window._paq = window._paq || [];\n";
+		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
 		$script .= "_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);";
@@ -413,7 +443,7 @@ EOF;
 
 	private function apply_user_tracking( $tracking_code ) {
 		$user_id_to_track = null;
-		if ( is_user_logged_in() ) {
+		if ( \is_user_logged_in() ) {
 			// Get the User ID Admin option, and the current user's data
 			$uid_from     = $this->settings->get_global_option( 'track_user_id' );
 			$current_user = wp_get_current_user(); // current user

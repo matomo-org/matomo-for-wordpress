@@ -31,7 +31,7 @@ class MatomoTracker
 	 */
 	static public $URL = '';
 
-	private static $aiBotUserAgentSubstrings = [
+	public const AI_BOT_USER_AGENT_SUBSTRINGS = [
 		'GPTBot',
 		'ChatGPT-User',
 		'MistralAI-User',
@@ -2614,7 +2614,7 @@ didn't change any existing VisitorId value */
             return false;
         }
 
-        foreach (self::$aiBotUserAgentSubstrings as $substring) {
+        foreach (self::AI_BOT_USER_AGENT_SUBSTRINGS as $substring) {
             if (stripos($userAgent, $substring) !== false) {
                 return true;
             }
