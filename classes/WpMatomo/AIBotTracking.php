@@ -64,6 +64,10 @@ class AIBotTracking {
 			return;
 		}
 
+		if ( $this->is_js_execution_detected() ) {
+			return;
+		}
+
 		if ( ! AjaxTracker::isUserAgentAIBot( $this->tracker->userAgent ) ) {
 			return;
 		}
@@ -84,6 +88,7 @@ class AIBotTracking {
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
 		$source = 'wordpress';
+		file_put_contents(__DIR__ . '/../../test.log', "5\n", FILE_APPEND);
 
 		// TODO: response size and source, unsure what to put here
 		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
@@ -142,6 +147,11 @@ class AIBotTracking {
 
 	public static function set_is_ai_bot_tracked( $is_tracked ) {
 		self::$ai_bot_tracked = $is_tracked;
+	}
+
+	public function is_js_execution_detected() {
+		return ! empty( $_COOKIE['matomo_has_js'] )
+			&& $_COOKIE['matomo_has_js'] === '1';
 	}
 }
 
