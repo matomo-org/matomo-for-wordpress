@@ -44,6 +44,7 @@ async function pageview(userAgent) {
 
   if (response.status < 200 || response.status > 299) {
     console.log(chalk.red(`  Pageview request failed! Response code: ${response.status}`));
+    console.log(await response.text());
   }
 
   await new Promise((resolve) => setTimeout(resolve, 2000));

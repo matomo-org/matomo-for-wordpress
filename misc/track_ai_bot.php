@@ -12,6 +12,10 @@
 function matomo_track_if_ai_bot() {
 	global $wpdb;
 
+	if ( ! defined( 'WP_CACHE' ) || ! WP_CACHE ) {
+		return; // advanced-cache.php not in use
+	}
+
 	require_once __DIR__ . '/../app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 
 	// check user agent is AI bot first thing, so if it is a normal request, we do
@@ -23,22 +27,22 @@ function matomo_track_if_ai_bot() {
 
 	$GLOBALS['wp_plugin_paths'] = [];
 
-	require ABSPATH . WPINC . '/class-wp-list-util.php';
-	require ABSPATH . WPINC . '/class-wp-token-map.php';
-	require ABSPATH . WPINC . '/formatting.php';
-	require ABSPATH . WPINC . '/functions.php';
-	require ABSPATH . WPINC . '/link-template.php';
-	require ABSPATH . WPINC . '/general-template.php';
-	require ABSPATH . WPINC . '/http.php';
-	require ABSPATH . WPINC . '/class-wp-http.php';
-	require ABSPATH . WPINC . '/class-wp-http-streams.php';
-	require ABSPATH . WPINC . '/class-wp-http-curl.php';
-	require ABSPATH . WPINC . '/class-wp-http-proxy.php';
-	require ABSPATH . WPINC . '/class-wp-http-cookie.php';
-	require ABSPATH . WPINC . '/class-wp-http-encoding.php';
-	require ABSPATH . WPINC . '/class-wp-http-response.php';
-	require ABSPATH . WPINC . '/class-wp-http-requests-response.php';
-	require ABSPATH . WPINC . '/class-wp-http-requests-hooks.php';
+	require_once ABSPATH . WPINC . '/class-wp-list-util.php';
+	require_once ABSPATH . WPINC . '/class-wp-token-map.php';
+	require_once ABSPATH . WPINC . '/formatting.php';
+	require_once ABSPATH . WPINC . '/functions.php';
+	require_once ABSPATH . WPINC . '/link-template.php';
+	require_once ABSPATH . WPINC . '/general-template.php';
+	require_once ABSPATH . WPINC . '/http.php';
+	require_once ABSPATH . WPINC . '/class-wp-http.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-streams.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-curl.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-proxy.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-cookie.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-encoding.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-response.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-requests-response.php';
+	require_once ABSPATH . WPINC . '/class-wp-http-requests-hooks.php';
 
 	require_once __DIR__ . '/../classes/WpMatomo/Logger.php';
 	require_once __DIR__ . '/../classes/WpMatomo/Site.php';
