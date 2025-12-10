@@ -18,6 +18,7 @@ namespace WpMatomo;
  */
 class AIBotTracking {
 
+	// TODO: can use timer_float() instead
 	private static $request_start_time_ms;
 
 	private static $ai_bot_tracked = false;
@@ -27,6 +28,7 @@ class AIBotTracking {
 
 		'htm',
 		'html',
+		'php',
 	];
 
 	/**
@@ -79,6 +81,15 @@ class AIBotTracking {
 			return;
 		}
 
+		// TODO: manual track code may not set elapsed time correctly. should be able to set start time via query param
+		if ( $this->is_using_litespeed_cache() && ! defined( 'MATOMO_IN_LITESPEED_ESI' ) ) {
+			// TODO: openlitespeed does not support esi, so it won't work there. must display warning in this case.
+			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE );
+			echo "$track_script_url\n";
+			echo '<esi:include src="http://localhost/6.9/wp-content/plugins/matomo/misc/track_ai_bot.php" cache-control="no-cache" />';
+			return;
+		}
+
 		$response_code      = http_response_code();
 		$request_elapsed_ms = $this->get_request_elapsed_time();
 
@@ -88,7 +99,6 @@ class AIBotTracking {
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
 		$source = 'wordpress';
-		file_put_contents(__DIR__ . '/../../test.log', "5\n", FILE_APPEND);
 
 		// TODO: response size and source, unsure what to put here
 		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
@@ -106,9 +116,6 @@ class AIBotTracking {
 		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 			return false;
 		}
-
-		// TODO: test on advanced-cache cache miss
-		// TODO: test with html files created
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$request_path = (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
@@ -152,6 +159,10 @@ class AIBotTracking {
 	public function is_js_execution_detected() {
 		return ! empty( $_COOKIE['matomo_has_js'] )
 			&& $_COOKIE['matomo_has_js'] === '1';
+	}
+
+	public function is_using_litespeed_cache() {
+		return php_sapi_name() === 'litespeed';
 	}
 }
 

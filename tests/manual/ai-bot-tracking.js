@@ -85,7 +85,7 @@ async function trackTwoPageViewsWithPuppeteerAndAiUserAgent() {
   const botRequestCountBefore = await getLogBotRequestCount();
 
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: true,
   });
 
   const page = await browser.newPage();

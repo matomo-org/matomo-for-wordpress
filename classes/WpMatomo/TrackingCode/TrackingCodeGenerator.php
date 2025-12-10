@@ -339,7 +339,7 @@ _paq.push([ function () {
   	if (isAiBotUserAgent) {
       var path = this.getCookiePath();
       var domain = this.getCookieDomain();
-      var sameSite = this.getConfigCookieSameSite();
+      var sameSite = 'Lax';
 
       document.cookie = 'matomo_has_js=1;path=' +
       	(path || '/') +

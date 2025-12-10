@@ -6,14 +6,23 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-
 // TODO: docs on what this script does
 
+// TODO: disable direct access, but still allow it to be used without ABSPATH defined
 function matomo_track_if_ai_bot() {
 	global $wpdb;
 
-	if ( ! defined( 'WP_CACHE' ) || ! WP_CACHE ) {
+	$is_litespeed = php_sapi_name() === 'litespeed';
+
+	if (
+		( ! defined( 'WP_CACHE' ) || ! WP_CACHE )
+		&& ! $is_litespeed
+	) {
 		return; // advanced-cache.php not in use
+	}
+
+	if ( $is_litespeed ) {
+		define( 'MATOMO_IN_LITESPEED_ESI', true ); // executing via esi:include directive
 	}
 
 	require_once __DIR__ . '/../app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
@@ -27,10 +36,24 @@ function matomo_track_if_ai_bot() {
 
 	$GLOBALS['wp_plugin_paths'] = [];
 
-	require_once ABSPATH . WPINC . '/class-wp-list-util.php';
-	require_once ABSPATH . WPINC . '/class-wp-token-map.php';
-	require_once ABSPATH . WPINC . '/formatting.php';
-	require_once ABSPATH . WPINC . '/functions.php';
+	if ( ! defined( 'ABSPATH' ) ) {
+		// being called from a litespeed esi:include directive
+		define( 'SHORTINIT', true );
+
+		$wp_config_file = dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-config.php';
+		if ( ! is_file( $wp_config_file ) ) {
+			$wp_config_file = dirname( dirname( dirname( dirname( dirname( $_SERVER['SCRIPT_FILENAME'] ) ) ) ) ) . '/wp-config.php';
+		}
+
+		require_once $wp_config_file;
+	} else {
+		// being called from request that uses advanced-cache.php
+		require_once ABSPATH . WPINC . '/class-wp-list-util.php';
+		require_once ABSPATH . WPINC . '/class-wp-token-map.php';
+		require_once ABSPATH . WPINC . '/formatting.php';
+		require_once ABSPATH . WPINC . '/functions.php';
+	}
+
 	require_once ABSPATH . WPINC . '/link-template.php';
 	require_once ABSPATH . WPINC . '/general-template.php';
 	require_once ABSPATH . WPINC . '/http.php';
