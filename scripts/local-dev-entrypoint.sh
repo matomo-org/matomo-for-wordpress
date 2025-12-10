@@ -660,18 +660,39 @@ EOF
 }
 
 function start_webserver() {
-  a2enmod rewrite || true
-
   # TODO: is it possible to use wp-cli for this?
   # make sure home url points to 'localhost'
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
   if [ -f /usr/local/lsws/bin/lshttpd ]  &> /dev/null; then
-    /entrypoint.sh "$@"
+    mkdir -p /usr/local/lsws/logs
+
+    chown 1000 /usr/local/lsws /tmp -R
+    chmod 777 /usr/local/lsws /tmp -R
+    chmod 600 /usr/local/lsws/admin/cgid/secret/cgid.sock
+
+    cp /lstrial.key /usr/local/lsws/conf/trial.key
+
+    /usr/local/lsws/bin/lswsctrl start
+    $@
+
+    echo "waiting for server start..."
+    while true; do
+      if /usr/local/lsws/bin/lswsctrl status | /usr/bin/grep 'litespeed is running with PID *' > /dev/null; then
+        break
+      fi
+      sleep 1
+    done
+
+    sleep 5
+
+    tail -f -n 50 /usr/local/lsws/logs/error.log
   elif ! which apache2-foreground &> /dev/null; then
     php-fpm "$@"
   else
+    a2enmod rewrite || true
+
     # set port to exposed port so we can make server side requests to localhost
     sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
 
