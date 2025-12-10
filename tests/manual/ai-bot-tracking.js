@@ -81,12 +81,8 @@ async function trackPageViewWithAiUserAgent() {
 /**
  * TODO describe test
  */
-async function trackTwoPageViewsWithPuppeteerAndAiUserAgent() {
+async function trackTwoPageViewsWithPuppeteerAndAiUserAgent(browser) {
   const botRequestCountBefore = await getLogBotRequestCount();
-
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
 
   const page = await browser.newPage();
   await page.setUserAgent(USER_AGENT_AI_BOT);
@@ -98,21 +94,40 @@ async function trackTwoPageViewsWithPuppeteerAndAiUserAgent() {
   } catch (e) {
     await page.screenshot({ fullPage: true, path: './failure.png' });
     throw e;
-  } finally {
-    await browser.close();
   }
 
   const botRequestCountAfter = await getLogBotRequestCount();
 
   console.log('trackTwoPageViewsWithPuppeteerAndAiUserAgent:');
   console.log(`  creates bot request: ${chalk.green(botRequestCountBefore < botRequestCountAfter ? 'Y' : 'N')}`);
-  console.log(`  creates single bot request: ${chalk.green(botRequestCountAfter - botRequestCountBefore === 1 ? 'Y' : 'N')}`);
+
+  // reload page after matomo_has_js cookie is set
+  try {
+    await page.reload();
+    await page.waitForNetworkIdle();
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  } catch (e) {
+    await page.screenshot({ fullPage: true, path: './failure.png' });
+    throw e;
+  }
+
+  const botRequestCountAfterReload = await getLogBotRequestCount();
+
+  console.log(`  creates single bot request: ${chalk.green(botRequestCountAfterReload - botRequestCountAfter === 1 ? 'Y' : 'N')}`);
 }
 
 async function runTests() {
-  await trackNormalPageView();
-  await trackPageViewWithAiUserAgent();
-  await trackTwoPageViewsWithPuppeteerAndAiUserAgent();
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
+
+  try {
+    await trackNormalPageView();
+    await trackPageViewWithAiUserAgent();
+    await trackTwoPageViewsWithPuppeteerAndAiUserAgent(browser);
+  } finally {
+    await browser.close();
+  }
 }
 
 runTests()

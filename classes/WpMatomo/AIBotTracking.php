@@ -85,8 +85,7 @@ class AIBotTracking {
 		if ( $this->is_using_litespeed_cache() && ! defined( 'MATOMO_IN_LITESPEED_ESI' ) ) {
 			// TODO: openlitespeed does not support esi, so it won't work there. must display warning in this case.
 			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE );
-			echo "$track_script_url\n";
-			echo '<esi:include src="http://localhost/6.9/wp-content/plugins/matomo/misc/track_ai_bot.php" cache-control="no-cache" />';
+			echo '<esi:include src="' . esc_attr( $track_script_url ) . '" cache-control="no-cache" />';
 			return;
 		}
 
