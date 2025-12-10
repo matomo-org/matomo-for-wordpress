@@ -20,13 +20,12 @@ services:
       context: ./scripts
       dockerfile: ./Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-apache}"
     environment:
       RUN_AS_USER: "${UID:-1000}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
@@ -53,11 +52,10 @@ services:
       context: ./scripts
       dockerfile: ./Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: fpm
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-fpm}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
@@ -72,8 +70,8 @@ services:
     image: nginx
     volumes:
       - ./scripts/local-dev-nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
     depends_on:
       - fpm
     ports:
@@ -92,11 +90,10 @@ services:
       context: ./scripts
       dockerfile: ./Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-apache}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
