@@ -30,6 +30,7 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
+      - ./lstrial.key:/lstrial.key
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
