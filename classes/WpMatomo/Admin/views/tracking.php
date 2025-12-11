@@ -359,7 +359,15 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager',
 				false,
-				"window.jQuery('.matomo-track-ai-warning').toggle();"
+				"window.jQuery('.matomo-track-ai-warning,.matomo-track-ai-using-esi').toggle();"
+			);
+
+			$matomo_form->show_checkbox(
+				\WpMatomo\Settings::TRACK_AI_BOTS_USING_ESI,
+				esc_html__( 'Track AI Bots using Edge Side Includes', 'matomo' ),
+				esc_html__( 'If you are using a CDN to serve your blog, you will not be able to track AI bots in the traditional method. If your CDN supports ESI (Edge Side Includes), however, you can enable this option to use this feature for tracking AI bots.', 'matomo' ),
+				! $matomo_is_track_ai_enabled,
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager matomo-track-ai-using-esi'
 			);
 
 			if ( $matomo_is_htaccess_serving_cache_files ) {

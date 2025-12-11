@@ -115,12 +115,13 @@ class AjaxTracker extends \MatomoTracker {
 			return '';
 		}
 
-		$args = array(
-			'method'  => $method,
-			'headers' => [
+		$args = [
+			'method'   => $method,
+			'headers'  => [
 				'User-Agent' => $this->userAgent,
 			],
-		);
+			'blocking' => false,
+		];
 		if ( ! empty( $data ) ) {
 			$args['body'] = $data;
 		}
