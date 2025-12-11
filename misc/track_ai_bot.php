@@ -22,7 +22,7 @@ function matomo_track_if_ai_bot() {
 	}
 
 	if ( $is_litespeed ) {
-		define( 'MATOMO_IN_LITESPEED_ESI', true ); // executing via esi:include directive
+		define( 'MATOMO_IN_AI_ESI', true ); // executing via esi:include directive
 	}
 
 	require_once __DIR__ . '/../app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';

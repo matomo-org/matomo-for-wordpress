@@ -40,6 +40,7 @@ class Settings {
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
 	const GLOBAL_USER_AGENT_EXCLUSIONS         = 'global_user_agent_exclusions';
 	const TRACK_AI_BOTS                        = 'track_ai_bots';
+	const TRACK_AI_BOTS_USING_ESI              = 'track_ai_bots_using_esi';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -88,6 +89,7 @@ class Settings {
 		'track_search'                             => false,
 		'track_404'                                => false,
 		self::TRACK_AI_BOTS                        => false,
+		self::TRACK_AI_BOTS_USING_ESI              => false,
 		'tagmanger_container_ids'                  => [],
 		'add_post_annotations'                     => [],
 		'add_customvars_box'                       => false,
@@ -508,6 +510,10 @@ class Settings {
 
 	public function is_ai_bot_tracking_enabled() {
 		return (bool) $this->get_global_option( self::TRACK_AI_BOTS );
+	}
+
+	public function is_tracking_ai_bots_via_esi_includes() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS_USING_ESI );
 	}
 
 	public function get_matomo_major_version() {

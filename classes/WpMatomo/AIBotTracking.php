@@ -82,7 +82,11 @@ class AIBotTracking {
 		}
 
 		// TODO: manual track code may not set elapsed time correctly. should be able to set start time via query param
-		if ( $this->is_using_litespeed_cache() && ! defined( 'MATOMO_IN_LITESPEED_ESI' ) ) {
+		$is_using_esi_to_track = $this->is_using_litespeed_cache() || $this->settings->is_tracking_ai_bots_via_esi_includes();
+		if (
+			$is_using_esi_to_track
+			&& ! defined( 'MATOMO_IN_AI_ESI' )
+		) {
 			// TODO: openlitespeed does not support esi, so it won't work there. must display warning in this case.
 			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE );
 			echo '<esi:include src="' . esc_attr( $track_script_url ) . '" cache-control="no-cache" />';
