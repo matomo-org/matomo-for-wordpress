@@ -93,7 +93,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		$htaccess_contents     = file_get_contents( ABSPATH . '/.htaccess' );
-		$is_rewrite_rule_found = preg_match( '%RewriteRule.*?/wp-content/cache/wp-rocket/%', $htaccess_contents ) === 1;
+		$is_rewrite_rule_found = preg_match( '%RewriteRule.*?/wp-content/cache/%', $htaccess_contents ) === 1;
 
 		return $is_rewrite_rule_found;
 	}
