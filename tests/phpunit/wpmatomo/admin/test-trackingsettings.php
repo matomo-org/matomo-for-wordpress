@@ -8,7 +8,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 
-class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
+class AdminTrackingSettingsTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var TrackingSettings
@@ -28,11 +28,16 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 
 		$this->create_set_super_admin();
 		$this->assume_admin_page();
+
+		$this->delete_temp_wp_config();
 	}
 
 	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
+
+		$this->delete_temp_wp_config();
+
 		parent::tearDown();
 	}
 
@@ -115,4 +120,59 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->assertFalse( $this->tracking_settings->validate_html_comments( $html ) );
 	}
 
+	public function test_is_track_script_used_in_wp_config_when_wp_config_does_not_exist() {
+		$this->assertNull( TrackingSettings::is_track_script_used_in_wp_config( __DIR__ ) );
+	}
+
+	public function test_is_track_script_used_in_wp_config_when_wp_config_not_readable() {
+		$wp_config_path = $this->get_wp_config_path();
+
+		$contents = <<<EOF
+<?php
+
+if ( is_file( ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php' ) ) {
+	require_once ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php';
+}
+EOF;
+
+		file_put_contents( $wp_config_path, $contents );
+		chmod( __DIR__ . '/wp-config.php', 222 ); // write only
+		$this->assertFalse( is_readable( $wp_config_path ) );
+
+		$this->assertNull( TrackingSettings::is_track_script_used_in_wp_config( __DIR__ ) );
+	}
+
+	public function test_is_track_script_used_in_wp_config_when_snippet_is_present() {
+		$wp_config_path = $this->get_wp_config_path();
+
+		$contents = <<<EOF
+<?php
+
+if ( is_file( ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php' ) ) {
+	require_once ABSPATH . 'wp-content/plugins/matomo/misc/track_ai_bot.php';
+}
+EOF;
+
+		file_put_contents( $wp_config_path, $contents );
+
+		$this->assertTrue( TrackingSettings::is_track_script_used_in_wp_config( __DIR__ ) );
+	}
+
+	public function test_is_track_script_used_in_wp_config_when_wp_config_is_readable_and_snippet_is_not_present() {
+		$wp_config_path = $this->get_wp_config_path();
+
+		file_put_contents( $wp_config_path, '<?php' );
+
+		$this->assertFalse( TrackingSettings::is_track_script_used_in_wp_config( __DIR__ ) );
+	}
+
+	private function delete_temp_wp_config() {
+		if ( is_file( $this->get_wp_config_path() ) ) {
+			unlink( $this->get_wp_config_path() );
+		}
+	}
+
+	private function get_wp_config_path() {
+		return __DIR__ . '/wp-config.php';
+	}
 }

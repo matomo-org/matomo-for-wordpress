@@ -616,6 +616,7 @@ define( 'WPMS_SMTP_AUTH', false );
 define( 'WPMS_SMTP_AUTOTLS', true );
 define( 'WPMS_SMTP_USER', '' );
 define( 'WPMS_SMTP_PASS', '' );
+
 EOF
   fi
 
