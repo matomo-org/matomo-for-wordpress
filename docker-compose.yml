@@ -99,7 +99,6 @@ services:
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./scripts/local-gitconfig:/.gitconfig
-      - ./scripts/.puppeteerrc.cjs:/var/www/html/.puppeteerrc.cjs
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
