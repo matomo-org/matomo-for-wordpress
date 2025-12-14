@@ -48,26 +48,36 @@ class TrackingSettings implements AdminSettingsInterface {
 		$this->add_hooks();
 	}
 
-	// TODO: unit tests for this and below
-
 	/**
-	 * TODO
+	 * Returns true if WordPress is configured to use the advanced-cache.php
+	 * file, and if such a file exists.
+	 *
 	 * @return bool
 	 */
-	public static function is_advance_cache_used() {
+	public static function is_advanced_cache_used() {
 		return defined( 'WP_CACHE' )
 			&& WP_CACHE
-			&& file_exists( WP_CONTENT_DIR . '/advanced-cache.php' );
+			&& is_file( WP_CONTENT_DIR . '/advanced-cache.php' );
 	}
 
 	/**
-	 * TODO
-	 * @return bool|null
+	 * To track AI bots when the advanced-cache.php file is in use, a
+	 * special code snippet must be added to a user's wp-config.php.
+	 *
+	 * This function checks if the required snippet has been added to
+	 * this WordPress' wp-config.php file.
+	 *
+	 * @param string $abspath_override only used for tests.
+	 * @return bool|null true if the snippet is detected, false if it is not,
+	 *                   and null if the wp-config.php file cannot be read for
+	 *                   some reason
 	 */
-	public static function is_track_script_used_in_wp_config() {
-		$wp_config_path = ABSPATH . '/wp-config.php';
+	public static function is_track_script_used_in_wp_config( $abspath_override = null ) {
+		$abspath_override = ! empty( $abspath_override ) ? $abspath_override : ABSPATH;
 
-		if ( ! is_file( $wp_config_path ) ) {
+		$wp_config_path = $abspath_override . '/wp-config.php';
+
+		if ( ! is_readable( $wp_config_path ) ) {
 			return null;
 		}
 
@@ -387,7 +397,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$matomo_exclusion_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=exlusions' );
 
-		$matomo_is_advanced_cache_used            = self::is_advance_cache_used();
+		$matomo_is_advanced_cache_used            = self::is_advanced_cache_used();
 		$matomo_is_track_script_used_in_wp_config = self::is_track_script_used_in_wp_config();
 		$matomo_is_htaccess_serving_cache_files   = self::is_htaccess_serving_cache_files();
 

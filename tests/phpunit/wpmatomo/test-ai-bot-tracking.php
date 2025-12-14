@@ -12,9 +12,6 @@ use WpMatomo\AIBotTracking;
 
 require_once __DIR__ . '/../framework/mocks/mock-ajax-tracker.php';
 
-/**
- * @group only
- */
 class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 	/**
