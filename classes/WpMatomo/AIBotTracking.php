@@ -10,16 +10,32 @@
 namespace WpMatomo;
 
 /**
- * TODO: docs including note about not using many dependencies
+ * Performs server side tracking for AI bots.
  *
- * TODO: tests
+ * Normal server side tracking: when no caching plugins or CDNs are being
+ * used, this class will send tracking requests in the wp_footer hook.
  *
- * TODO: after proven to work, merge matomo-php-tracker PR and update app/vendor
+ * When advanced-cache.php is used: when a caching plugin creates an
+ * advanced-cache.php file that WordPress uses, tracking must be done
+ * through the standalone script in misc/track_ai_bot.php. This script
+ * must be manually added to a user's wp-config.php file, right after
+ * ABSPATH is defined.
+ *
+ * When .htaccess is used: when a caching plugin modifies the .htaccess
+ * to serve cached files directly, AI bot tracking is not possible.
+ *
+ * When a CDN is used: when a CDN is used to serve cached content, AI
+ * bot tracking can be accomplished through the use of ESI (Edge Side Includes).
+ * In this case, this class outputs an `<esi:include>` directive that
+ * loads the misc/track_ai_bot.php script. This technique will only work
+ * for CDNs that support ESI.
+ *
+ * The misc/track_ai_bot.php script uses this class without all of WordPress loaded.
+ * It can also be loaded outside of WordPress. Because of this, it is important
+ * that the script and this class use as few total dependencies as possible. Otherwise,
+ * AI bot tracking reduce the performance of requests to cached content.
  */
 class AIBotTracking {
-
-	// TODO: can use timer_float() instead
-	private static $request_start_time_ms;
 
 	private static $ai_bot_tracked = false;
 
@@ -55,7 +71,7 @@ class AIBotTracking {
 		add_action( 'wp_footer', [ $this, 'do_ai_bot_tracking' ], 999999 );
 	}
 
-	public function do_ai_bot_tracking() {
+	public function do_ai_bot_tracking( $already_elapsed_request_time_ms = 0 ) {
 		if ( self::$ai_bot_tracked ) {
 			return;
 		}
@@ -81,20 +97,19 @@ class AIBotTracking {
 			return;
 		}
 
-		// TODO: manual track code may not set elapsed time correctly. should be able to set start time via query param
 		$is_using_esi_to_track = $this->is_using_litespeed_cache() || $this->settings->is_tracking_ai_bots_via_esi_includes();
 		if (
 			$is_using_esi_to_track
-			&& ! defined( 'MATOMO_IN_AI_ESI' )
+			&& empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
 		) {
 			// TODO: openlitespeed does not support esi, so it won't work there. must display warning in this case.
-			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE );
+			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE ) . '?mtm_elapsed=' . rawurlencode( (int) ( timer_float() * 1000 ) );
 			echo '<esi:include src="' . esc_attr( $track_script_url ) . '" cache-control="no-cache" />';
 			return;
 		}
 
 		$response_code      = http_response_code();
-		$request_elapsed_ms = $this->get_request_elapsed_time();
+		$request_elapsed_ms = (int) ( timer_float() * 1000 ) + $already_elapsed_request_time_ms;
 
 		if ( empty( $response_code ) ) {
 			$response_code = 200;
@@ -103,7 +118,7 @@ class AIBotTracking {
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
 		$source = 'wordpress';
 
-		// TODO: response size and source, unsure what to put here
+		// cannot count bytes echo'd so no response size tracked
 		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
 	}
 
@@ -113,6 +128,10 @@ class AIBotTracking {
 		}
 
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return false;
+		}
+
+		if ( defined( 'DOING_AJAX' )  && DOING_AJAX ) {
 			return false;
 		}
 
@@ -135,20 +154,12 @@ class AIBotTracking {
 	}
 
 	private function is_request_for_file( $request_path ) {
-		if ( ! is_file( $_SERVER['DOCUMENT_ROOT'] . $request_path ) ) {
+		if ( is_dir( $_SERVER['DOCUMENT_ROOT'] . $request_path ) ) {
 			return false;
 		}
 
 		$extension = pathinfo( $request_path, PATHINFO_EXTENSION );
 		return ! in_array( $extension, self::$extensions_to_track, true );
-	}
-
-	private function get_request_elapsed_time() {
-		return self::get_current_time_ms() - self::$request_start_time_ms;
-	}
-
-	public static function record_request_start_time() {
-		self::$request_start_time_ms = self::get_current_time_ms();
 	}
 
 	private static function get_current_time_ms() {
@@ -168,5 +179,3 @@ class AIBotTracking {
 		return php_sapi_name() === 'litespeed';
 	}
 }
-
-AIBotTracking::record_request_start_time();
