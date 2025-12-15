@@ -102,7 +102,6 @@ class AIBotTracking {
 			$is_using_esi_to_track
 			&& empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
 		) {
-			// TODO: openlitespeed does not support esi, so it won't work there. must display warning in this case.
 			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE ) . '?mtm_elapsed=' . rawurlencode( (int) ( timer_float() * 1000 ) );
 			echo '<esi:include src="' . esc_attr( $track_script_url ) . '" cache-control="no-cache" />';
 			return;

@@ -6,22 +6,30 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-// TODO: docs on what this script does
 
-// TODO: disable direct access, but still allow it to be used without ABSPATH defined
+/*
+ * This script, when included or visited, will send an AI bot tracking
+ * request to Matomo in a shutdown function.
+ *
+ * It will only send this request if the current user agent is for a
+ * known AI bot.
+ *
+ * This script can be added to a user's wp-config.php or be executed
+ * via an HTTP request in an <esi:include> directive. It should have as
+ * few dependencies as possible, and load as few PHP file as possible.
+ */
+
 function matomo_track_if_ai_bot() {
 	global $wpdb;
 
-	$is_litespeed = php_sapi_name() === 'litespeed';
-
 	if (
 		( ! defined( 'WP_CACHE' ) || ! WP_CACHE )
-		&& ! $is_litespeed
+		&& empty( $_GET['mtm_elapsed'] )
 	) {
 		return; // advanced-cache.php not in use
 	}
 
-	if ( $is_litespeed ) {
+	if ( isset( $_GET['mtm_elapsed'] ) ) {
 		$GLOBALS['MATOMO_IN_AI_ESI'] = true; // executing via esi:include directive
 	}
 
@@ -37,7 +45,7 @@ function matomo_track_if_ai_bot() {
 	$GLOBALS['wp_plugin_paths'] = [];
 
 	if ( ! defined( 'ABSPATH' ) ) {
-		// being called from a litespeed esi:include directive
+		// being called from a esi:include directive
 		define( 'SHORTINIT', true );
 
 		$wp_config_file = dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-config.php';
@@ -95,4 +103,4 @@ function matomo_track_if_ai_bot() {
 	$ai_bot_tracking->do_ai_bot_tracking( $already_elapsed );
 }
 
-register_shutdown_function('matomo_track_if_ai_bot');
+register_shutdown_function( 'matomo_track_if_ai_bot' );
