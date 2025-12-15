@@ -5,11 +5,31 @@ import fetch from 'node-fetch';
 import chalk from 'chalk';
 import puppeteer from 'puppeteer';
 
+/**
+ * This script is a manual testing aid. It three basic tests against
+ * specific MWP install. These tests include:
+ *
+ * - test that no bot is recorded for a normal pageview with no AI bot user agent
+ * - test that a bot is recorded for a normal pageview when an AI bot user agent
+ *   is in use
+ * - test that when a browser that executes JavaScript views a page with an AI bot
+ *   user agent, at least one AI bot is logged.
+ *   - test that after the first pageview, subsequent pageviews with a browser that
+ *     executes JavaScript, only one AI bot request is recorded per pageview.
+ *
+ * The idea is to change the environment, by installing different plugins, enabling
+ * different settings, using different web servers, then run this script to quickly
+ * see if AI bot tracking works for that setup.
+ *
+ * Before running this script, make sure to customize the consts to point to your
+ * WordPress install.
+ */
+
 const MYSQL_HOST = 'localhost';
 const MYSQL_PORT = 3307;
 const MYSQL_USER = 'root';
 const MYSQL_PASS = 'pass';
-const MYSQL_DATABASE = 'wp_matomo_6_9'; // TODO: use env var in .env?
+const MYSQL_DATABASE = 'wp_matomo_6_9';
 
 const MATOMO_BASE_URL = 'http://localhost/6.9';
 
@@ -23,10 +43,6 @@ const connection = await mysql.createConnection({
   database: MYSQL_DATABASE,
   port: MYSQL_PORT,
 });
-
-/**
- * TODO describe script and how to use
- */
 
 async function getLogBotRequestCount() {
   const [ results ] = await connection.query('SELECT COUNT(*) AS count FROM wp_matomo_log_bot_request');
@@ -51,7 +67,8 @@ async function pageview(userAgent) {
 }
 
 /**
- * TODO describe test
+ * Check that viewing a page without an AI user agent does not log
+ * a bot request.
  */
 async function trackNormalPageView() {
   const botRequestCountBefore = await getLogBotRequestCount();
@@ -65,7 +82,8 @@ async function trackNormalPageView() {
 }
 
 /**
- * TODO describe test
+ * Check that viewing a page with an AI user agent logs a single
+ * bot request. (Does not execute JavaScript.)
  */
 async function trackPageViewWithAiUserAgent() {
   const botRequestCountBefore = await getLogBotRequestCount();
@@ -79,7 +97,11 @@ async function trackPageViewWithAiUserAgent() {
 }
 
 /**
- * TODO describe test
+ * Check that viewing a page with a browser that executes JavaScript
+ * will create at least one logged bot request.
+ *
+ * Then checks that subsequent page views in this browser do not log
+ * more than one bot request per pageview.
  */
 async function trackTwoPageViewsWithPuppeteerAndAiUserAgent(browser) {
   const botRequestCountBefore = await getLogBotRequestCount();
