@@ -1,4 +1,4 @@
-/* Matomo Javascript - cb=224dce1373e41405746d21f2f483d235*/
+/* Matomo Javascript - cb=0b52840553e9f46de2ea0e7f88b55e84*/
 
 /*!
  * Matomo - free/libre analytics platform
@@ -1345,7 +1345,7 @@ function age(r){var nowSecs=Math.floor(now);var o=(r.lastActionTimestamp-oldest)
 function relativeTime(ds){var val=function(val){return'<strong>'+Math.round(val)+'</strong>';};return(ds<90?_.seconds_ago.replace('%s',val(ds)):ds<5400?_.minutes_ago.replace('%s',val(ds / 60)):ds<129600?_.hours_ago.replace('%s',val(ds / 3600)):_.days_ago.replace('%s',val(ds / 86400)));}
 function visitTooltip(r){var ds=new Date().getTime()/ 1000-r.lastActionTimestamp,ad=r.actionDetails,ico=function(src){return'<img height="16px" src="'+src+'" alt="" class="icon" />&nbsp;';};return'<h3>'+(r.city?$('<span>').text(r.city).html()+' / ':'')+$('<span>').text(r.country).html()+'</h3>'+
 ico(r.countryFlag)+ico(r.browserIcon)+ico(r.operatingSystemIcon)+'<br/>'+
-r.deviceType+' ('+r.deviceModel+')<br/>'+
+$('<span>').text(r.deviceType).html()+' ('+$('<span>').text(r.deviceModel).html()+')<br/>'+
 (r.userId?_pk_translate('General_UserId')+':&nbsp;'+$('<span>').text(r.userId).html()+'<br/>':'')+
 (ad&&ad.length&&ad[ad.length-1].pageTitle?''+$('<span>').text(ad[ad.length-1].pageTitle).html()+'<br/>':'')+'<div class="rel-time" data-actiontime="'+r.lastActionTimestamp+'">'+relativeTime(ds)+'</div>'+
 (r.referrerType=="direct"?r.referrerTypeName:_.from+': '+$('<span>').text(r.referrerName).html())+'<br />'+'<small>'+_.local_time+': '+r.visitLocalTime+'</small><br />'+

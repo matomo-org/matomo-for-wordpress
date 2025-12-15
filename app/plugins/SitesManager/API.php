@@ -32,7 +32,6 @@ use Piwik\Plugins\WebsiteMeasurable\Settings\Urls;
 use Piwik\ProxyHttp;
 use Piwik\Scheduler\Scheduler;
 use Piwik\Settings\Measurable\MeasurableProperty;
-use Piwik\Settings\Measurable\MeasurableSettings;
 use Piwik\SettingsPiwik;
 use Piwik\SettingsServer;
 use Piwik\Site;
@@ -688,9 +687,6 @@ class API extends \Piwik\Plugin\API
         $this->settingsMetadata->setPluginSettings($measurableSettings, $settingValues);
         return $measurableSettings;
     }
-    /**
-     * @param MeasurableSettings[] $measurableSettings
-     */
     private function saveMeasurableSettings($idSite, $idType, $settingValues)
     {
         $measurableSettings = $this->setAndValidateMeasurableSettings($idSite, $idType, $settingValues);

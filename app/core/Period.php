@@ -217,7 +217,7 @@ abstract class Period
      *
      * Note: the time component of the period's dates and `$date` is ignored.
      *
-     * @param Date $today
+     * @param Date $date
      * @return bool
      */
     public function isDateInPeriod(\Piwik\Date $date)

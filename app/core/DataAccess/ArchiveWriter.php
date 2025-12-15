@@ -104,7 +104,6 @@ class ArchiveWriter
     /**
      * ArchiveWriter constructor.
      * @param ArchiveProcessor\Parameters $params
-     * @param bool $isArchiveTemporary Deprecated. Has no effect.
      * @throws Exception
      */
     public function __construct(ArchiveProcessor\Parameters $params)
