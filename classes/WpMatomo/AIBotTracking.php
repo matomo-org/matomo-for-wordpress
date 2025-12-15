@@ -130,7 +130,7 @@ class AIBotTracking {
 			return false;
 		}
 
-		if ( defined( 'DOING_AJAX' )  && DOING_AJAX ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return false;
 		}
 
@@ -153,7 +153,11 @@ class AIBotTracking {
 	}
 
 	private function is_request_for_file( $request_path ) {
-		if ( is_dir( $_SERVER['DOCUMENT_ROOT'] . $request_path ) ) {
+		if (
+			! empty( $_SERVER['DOCUMENT_ROOT'] )
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			&& is_dir( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) . $request_path )
+		) {
 			return false;
 		}
 
@@ -171,7 +175,7 @@ class AIBotTracking {
 
 	public function is_js_execution_detected() {
 		return ! empty( $_COOKIE['matomo_has_js'] )
-			&& $_COOKIE['matomo_has_js'] === '1';
+			&& '1' === $_COOKIE['matomo_has_js'];
 	}
 
 	public function is_using_litespeed_cache() {

@@ -1,9 +1,15 @@
 #!/usr/bin/env node
-
-import mysql from 'mysql2/promise';
-import fetch from 'node-fetch';
-import chalk from 'chalk';
-import puppeteer from 'puppeteer';
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ * Code Based on
+ * @author Andr&eacute; Br&auml;kling
+ * https://github.com/braekling/matomo
+ *
+ */
 
 /**
  * This script is a manual testing aid. It three basic tests against
@@ -24,6 +30,11 @@ import puppeteer from 'puppeteer';
  * Before running this script, make sure to customize the consts to point to your
  * WordPress install.
  */
+
+import mysql from 'mysql2/promise';
+import fetch from 'node-fetch';
+import chalk from 'chalk';
+import puppeteer from 'puppeteer';
 
 const MYSQL_HOST = 'localhost';
 const MYSQL_PORT = 3307;

@@ -1,5 +1,9 @@
 <?php
 /**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
 
@@ -8,6 +12,11 @@ use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 
+/**
+ * @package matomo
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+ */
 class AdminTrackingSettingsTest extends MatomoAnalytics_TestCase {
 
 	/**

@@ -20,6 +20,7 @@ use WpMatomo\TrackingCode\TrackingCodeGenerator;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
+
 /**
  * TODO: maybe we can move the form data collection to a single class
  * Note: nonce verification exists, but phpcs can't tell since it's in a method
@@ -81,6 +82,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			return null;
 		}
 
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$wp_config_contents = file_get_contents( $wp_config_path );
 
 		// some systems may disable reading of files outside of wp-content
