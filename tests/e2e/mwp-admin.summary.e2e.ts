@@ -9,6 +9,8 @@
 import { expect, browser, $ } from '@wdio/globals';
 import MwpSummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import Website from './website.js';
+import MatomoApi from "./apiobjects/matomo.api.js";
+import OverviewPage from "./pageobjects/matomo-reporting/visitors/overview.page.js";
 
 describe('MWP Admin > Summary', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -34,6 +36,7 @@ describe('MWP Admin > Summary', () => {
     await MwpSummaryPage.changePeriod('This month');
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
+    console.log(await browser.execute(() => document.documentElement.innerHTML));
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.summary.thismonth.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);

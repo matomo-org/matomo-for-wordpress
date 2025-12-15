@@ -150,41 +150,70 @@ class QueueConsumer
         $siteCreationTime = Date::factory(Site::getCreationDateFor($this->idSite));
         // get archives to process simultaneously
         $archivesToProcess = [];
+		file_put_contents(ABSPATH . '/wp-content/debug.log', 'queue consumer start loop' . '\n', FILE_APPEND);
         while (count($archivesToProcess) < $this->countOfProcesses) {
             $invalidatedArchive = $this->getNextInvalidatedArchive($this->idSite, array_keys($invalidationsToExcludeInBatch));
+			if (
+				!empty($invalidatedArchive['periodObj'])
+				&& $invalidatedArchive['periodObj']->getDateStart()->toString('Y') == '2025'
+				&& empty($invalidatedArchive['segment'])
+			) {
+				$v = $invalidatedArchive;
+				unset($v['periodObj']);
+				$logged = true;
+				file_put_contents(ABSPATH . '/wp-content/debug.log', print_r($v, true) . '\n', FILE_APPEND);
+			}
             if (empty($invalidatedArchive)) {
                 $this->logger->debug("No next invalidated archive.");
                 break;
             }
             $invalidationDesc = $this->getInvalidationDescription($invalidatedArchive);
             if ($invalidatedArchive['periodObj']->getDateEnd()->isEarlier($siteCreationTime)) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 01\n', FILE_APPEND);
+				}
                 $this->logger->debug("Invalidation is for period that is older than the site's creation time, ignoring: {$invalidationDesc}");
                 $this->model->deleteInvalidations([$invalidatedArchive]);
                 continue;
             }
             if (!empty($invalidatedArchive['plugin']) && !Manager::getInstance()->isPluginActivated($invalidatedArchive['plugin'])) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 02\n', FILE_APPEND);
+				}
                 $this->logger->debug("Plugin specific archive {$invalidatedArchive['idarchive']}'s plugin is deactivated, ignoring {$invalidationDesc}.");
                 $this->model->deleteInvalidations([$invalidatedArchive]);
                 continue;
             }
             if ($invalidatedArchive['segment'] === null) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 03\n', FILE_APPEND);
+				}
                 $this->logger->debug("Found archive for segment that is not auto archived, ignoring: {$invalidationDesc}");
                 $this->addInvalidationToExclude($invalidatedArchive);
                 continue;
             }
             if ($this->archiveArrayContainsArchive($archivesToProcess, $invalidatedArchive)) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 04\n', FILE_APPEND);
+				}
                 $this->logger->debug("Found duplicate invalidated archive {$invalidatedArchive['idarchive']}, ignoring: {$invalidationDesc}");
                 $this->addInvalidationToExclude($invalidatedArchive);
                 $this->model->deleteInvalidations([$invalidatedArchive]);
                 continue;
             }
             if ($this->model->isSimilarArchiveInProgress($invalidatedArchive)) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 05\n', FILE_APPEND);
+				}
                 $this->logger->debug("Found duplicate invalidated archive (same archive currently in progress), ignoring: {$invalidationDesc}");
                 $this->addInvalidationToExclude($invalidatedArchive);
                 $this->model->deleteInvalidations([$invalidatedArchive]);
                 continue;
             }
             if (self::hasIntersectingPeriod($archivesToProcess, $invalidatedArchive)) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 06\n', FILE_APPEND);
+				}
                 $this->logger->debug("Found archive with intersecting period with others in concurrent batch, skipping until next batch: {$invalidationDesc}");
                 $idinvalidation = $invalidatedArchive['idinvalidation'];
                 $invalidationsToExcludeInBatch[$idinvalidation] = \true;
@@ -192,12 +221,18 @@ class QueueConsumer
             }
             $reason = $this->shouldSkipArchive($invalidatedArchive);
             if ($reason) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 07 ('. $reason. ')\n', FILE_APPEND);
+				}
                 $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, {$reason}: {$invalidationDesc}");
                 $this->addInvalidationToExclude($invalidatedArchive);
                 continue;
             }
             [$isUsableExists, $archivedTime] = $this->usableArchiveExists($invalidatedArchive);
             if ($isUsableExists) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 08\n', FILE_APPEND);
+				}
                 $now = Date::now()->getDatetime();
                 $this->addInvalidationToExclude($invalidatedArchive);
                 if (empty($invalidatedArchive['plugin'])) {
@@ -213,6 +248,9 @@ class QueueConsumer
             }
             $alreadyInProgressId = $this->model->isArchiveAlreadyInProgress($invalidatedArchive);
             if ($alreadyInProgressId) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 09\n', FILE_APPEND);
+				}
                 $this->addInvalidationToExclude($invalidatedArchive);
                 if ($alreadyInProgressId < $invalidatedArchive['idinvalidation']) {
                     $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is older, not removing invalidation.");
@@ -224,6 +262,9 @@ class QueueConsumer
             }
             $reason = $this->shouldSkipArchiveBecauseLowerPeriodOrSegmentIsInProgress($invalidatedArchive);
             if ($reason !== null) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 09 '. $reason.'\n', FILE_APPEND);
+				}
                 $this->logger->debug("Skipping invalidated archive, {$reason}: {$invalidationDesc}");
                 $invalidationsToExcludeInBatch[$invalidatedArchive['idinvalidation']] = \true;
                 $this->addInvalidationToExclude($invalidatedArchive);
@@ -231,6 +272,9 @@ class QueueConsumer
             }
             $started = $this->model->startArchive($invalidatedArchive);
             if (!$started) {
+				if (!empty($logged)) {
+					file_put_contents(ABSPATH . '/wp-content/debug.log', ' 10\n', FILE_APPEND);
+				}
                 // another process started on this archive, pull another one
                 $this->logger->debug("Archive invalidation is being handled by another process: {$invalidationDesc}");
                 $this->addInvalidationToExclude($invalidatedArchive);
@@ -280,6 +324,7 @@ class QueueConsumer
             $periodLabel = $this->periodIdsToLabels[$nextArchive['period']];
             if (!PeriodFactory::isPeriodEnabledForAPI($periodLabel) || PeriodFactory::isAnyLowerPeriodDisabledForAPI($periodLabel)) {
                 $this->logger->info("Found invalidation for period that is disabled in the API, skipping and removing: {$nextArchive['idinvalidation']}");
+				file_put_contents(ABSPATH . '/wp-content/debug.log', "Found invalidation for period that is disabled in the API, skipping and removing: {$nextArchive['idinvalidation']}" . '\n', FILE_APPEND);
                 $this->model->deleteInvalidations([$nextArchive]);
                 continue;
             }
@@ -287,6 +332,9 @@ class QueueConsumer
             $nextArchive['periodObj'] = PeriodFactory::build($periodLabel, $periodDate);
             $isCronArchivingEnabled = $this->findSegmentForArchive($nextArchive);
             if ($isCronArchivingEnabled) {
+				$v = $nextArchive;
+				unset($v['periodObj']);
+				file_put_contents(ABSPATH . '/wp-content/debug.log', 'next archive: '.var_export($v, true) . '\n', FILE_APPEND);
                 return $nextArchive;
             }
             $this->logger->debug("Found invalidation for segment that does not have auto archiving enabled, skipping: {$nextArchive['idinvalidation']}");
