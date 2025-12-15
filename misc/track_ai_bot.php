@@ -22,7 +22,7 @@ function matomo_track_if_ai_bot() {
 	}
 
 	if ( $is_litespeed ) {
-		define( 'MATOMO_IN_AI_ESI', true ); // executing via esi:include directive
+		$GLOBALS['MATOMO_IN_AI_ESI'] = true; // executing via esi:include directive
 	}
 
 	require_once __DIR__ . '/../app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
@@ -88,9 +88,11 @@ function matomo_track_if_ai_bot() {
 		wp_plugin_directory_constants();
 	}
 
+	$already_elapsed = isset( $_GET['mtm_elapsed'] ) ? (int) wp_unslash( $_GET['mtm_elapsed'] ) : null;
+
 	$settings        = new \WpMatomo\Settings();
 	$ai_bot_tracking = new \WpMatomo\AIBotTracking( $settings );
-	$ai_bot_tracking->do_ai_bot_tracking();
+	$ai_bot_tracking->do_ai_bot_tracking( $already_elapsed );
 }
 
 register_shutdown_function('matomo_track_if_ai_bot');
