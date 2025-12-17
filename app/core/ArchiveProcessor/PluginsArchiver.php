@@ -9,7 +9,6 @@
 namespace Piwik\ArchiveProcessor;
 
 use Piwik\ArchiveProcessor;
-use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\CronArchive\Performance\Logger;
 use Piwik\DataAccess\ArchiveWriter;
@@ -111,12 +110,6 @@ class PluginsArchiver
         $archiveOnlyPlugin = $this->params->getRequestedPlugin();
         $archiveOnlyReports = $this->params->getArchiveOnlyReport();
         foreach ($archivers as $pluginName => $archiverClass) {
-			if (
-				$this->params->getPeriod()->getDateStart()->toString('Y') == '2025'
-				&& $this->params->getSegment()->getString() == ''
-			) {
-				file_put_contents(ABSPATH . '/wp-content/debug.log', 'processing archives for: ' . $pluginName . ' - ' . $this->params . " (archive only=$archiveOnlyReports)\n", FILE_APPEND);
-			}
             // if we are archiving specific reports for a single plugin then we don't need or want to create
             // Archiver instances, since they will set the archive to partial even if the requested reports aren't
             // handled by the Archiver

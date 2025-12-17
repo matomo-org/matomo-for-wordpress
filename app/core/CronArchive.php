@@ -342,7 +342,6 @@ class CronArchive
         $countOfProcesses = $this->getMaxConcurrentApiRequests();
         $queueConsumer = new QueueConsumer($this->logger, $this->websiteIdArchiveList, $countOfProcesses, $pid, $this->model, $this->segmentArchiving, $this, $this->archiveFilter);
         $queueConsumer->setMaxSitesToProcess($this->maxSitesToProcess);
-		file_put_contents(ABSPATH . '/wp-content/debug.log', "invalidations: " . print_r(Db::fetchAll('SELECT * FROM ' . Common::prefixTable('archive_invalidations')), true) . '\n', FILE_APPEND);
         while (\true) {
             if (null !== $this->signal) {
                 $this->logger->info("Archiving will stop now because signal to abort received");
@@ -379,7 +378,7 @@ class CronArchive
                 $this->logger->info("Maximum time limit per execution has been reached.");
                 break;
             }
-		}
+        }
         $this->disconnectDb();
         $this->logger->info("Done archiving!");
         $this->logSection("SUMMARY");
@@ -731,9 +730,7 @@ class CronArchive
             try {
                 $this->logger->debug('  Will invalidate archived reports for ' . $date . ' for following websites ids: ' . $listSiteIds);
                 $this->invalidateWithSegments($siteIdsToInvalidate, $date, 'day');
-				file_put_contents(ABSPATH . '/wp-content/debug.log', "invalidations after 'invalidate again': " . print_r(Db::fetchAll('SELECT * FROM ' . Common::prefixTable('archive_invalidations')), true) . '\n', FILE_APPEND);
             } catch (Exception $e) {
-				file_put_contents(ABSPATH . '/wp-content/debug.log', "invalidate again error: " . $e->getMessage() . "\n".$e->getTraceAsString() . '\n', FILE_APPEND);
                 $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($e);
                 $this->logger->info('  Failed to invalidate archived reports: ' . $message);
             }
@@ -788,13 +785,12 @@ class CronArchive
             $idSites = [$idSites];
         }
         foreach ($idSites as $idSite) {
-			// TODO: problem is here
             $site = new \Piwik\Site($idSite);
             $params = new Parameters($site, $periodObj, new \Piwik\Segment('', [$idSite], $periodObj->getDateTimeStart()->setTimezone($site->getTimezone()), $periodObj->getDateTimeEnd()->setTimezone($site->getTimezone())));
             if ($this->canWeSkipInvalidatingBecauseThereIsAUsablePeriod($params, $skipWhenRunningOrNewEnoughArchiveExists)) {
-				file_put_contents(ABSPATH . '/wp-content/debug.log', '  Found usable archive for '.$params.', skipping invalidation.', FILE_APPEND);
+                $this->logger->debug('  Found usable archive for {archive}, skipping invalidation.', ['archive' => $params]);
             } elseif ($skipWhenRunningOrNewEnoughArchiveExists && $this->canWeSkipInvalidatingBecauseInvalidationAlreadyInProgress($site->getId(), $periodObj)) {
-				file_put_contents(ABSPATH . '/wp-content/debug.log', '  Invalidation for '.$params.' already in progress, skipping invalidation.', FILE_APPEND);
+                $this->logger->debug('  Invalidation for {archive} already in progress, skipping invalidation.', ['archive' => $params]);
             } else {
                 $this->getApiToInvalidateArchivedReport()->invalidateArchivedReports($idSite, $date, $period, $segment = \false, $cascadeDown = \false, $period === 'range');
             }

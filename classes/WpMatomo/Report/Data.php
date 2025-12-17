@@ -10,7 +10,6 @@
 namespace WpMatomo\Report;
 
 use Piwik\API\Request;
-use Piwik\Common;
 use WpMatomo\Bootstrap;
 use WpMatomo\Site;
 
