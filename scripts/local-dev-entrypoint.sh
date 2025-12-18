@@ -407,10 +407,8 @@ EOF
     echo "installing wp-statistics"
 
     WP_STATS_VERSION=""
-    if php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
+    if php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);" || php -r "exit(version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
       WP_STATS_VERSION="--version=13.2.16"
-    elif php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
-      WP_STATS_VERSION="--version=14.5.2"
     fi
 
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate wp-statistics $WP_STATS_VERSION
@@ -441,6 +439,7 @@ EOF
   if php -r 'exit(version_compare(PHP_VERSION, "7.3", "<") ? 0 : 1);'; then
     OCEANWP_VERSION="--version=3.5.5"
   fi
+
   $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate $OCEANWP_VERSION
 
   # setup woocommerce if requested

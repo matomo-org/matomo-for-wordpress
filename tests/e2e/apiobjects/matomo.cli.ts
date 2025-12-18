@@ -29,7 +29,7 @@ class MatomoCli {
   async call(commandName: string, params: Record<string, string>) {
     let command = commandName;
     for (let name of Object.keys(params)) {
-      command += ` --${name}=${params[name]}`;
+      command += ` ${name}${params[name] ? `=${params[name]}` : ''}`;
     }
     command = `docker compose --env-file .env.default --env-file .env run --rm exec matomo:console ${command}`;
 

@@ -88,8 +88,6 @@ class NumberFormatter
      * @see \Piwik\NumberFormatter::format()
      *
      * @param string|int|float $value
-     * @param int $maximumFractionDigits
-     * @param int $minimumFractionDigits
      * @return mixed|string
      */
     public function formatNumberCompact($value)
@@ -165,8 +163,6 @@ class NumberFormatter
      * @see \Piwik\NumberFormatter::format()
      *
      * @param string|int|float $value
-     * @param int $maximumFractionDigits
-     * @param int $minimumFractionDigits
      * @return mixed|string
      */
     public function formatCurrencyCompact($value, $currency)

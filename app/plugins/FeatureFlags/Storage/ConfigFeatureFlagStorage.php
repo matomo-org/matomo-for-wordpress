@@ -76,7 +76,7 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     }
     /**
      * @internal
-     * @param string $feature
+     * @param string $featureName
      * @return void
      */
     public function deleteFeatureFlag(string $featureName) : void
