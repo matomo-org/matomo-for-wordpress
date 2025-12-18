@@ -512,6 +512,9 @@ class Loader
             $currentPeriod = $period;
             do {
                 $parentPeriodLabel = $currentPeriod->getParentPeriodLabel();
+                if (!Period\Factory::isPeriodEnabledForAPI($parentPeriodLabel)) {
+                    $parentPeriodLabel = null;
+                }
                 if ($parentPeriodLabel) {
                     $parentPeriod = Period\Factory::build($parentPeriodLabel, $date1);
                     $cacheKey = CacheId::siteAware(sprintf($cacheKeyStr, $parentPeriod->getLabel(), $parentPeriod->getRangeString()), [$idSite]);

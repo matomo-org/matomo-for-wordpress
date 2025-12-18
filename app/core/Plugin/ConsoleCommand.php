@@ -346,7 +346,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
         return $this->output;
     }
     /**
-     * @param OutputInterface $ouput
+     * @param OutputInterface $output
      *
      * @return void
      */

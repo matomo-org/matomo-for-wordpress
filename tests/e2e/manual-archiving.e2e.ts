@@ -34,34 +34,40 @@ describe('Manual Archiving', function () {
 
   it('should run archiving successfully', async () => {
     await browser.waitUntil(async () => {
-      const params = new URLSearchParams();
-      params.set('idSite', '1');
-      params.set('dates', OverviewPage.getDefaultDate());
-      params.set('period', 'day');
-      await MatomoApi.call('POST', 'CoreAdminHome.invalidateArchivedReports', params);
+      const periodsToInvalidate = ['day', 'week', 'month'];
+      for (let period of periodsToInvalidate) {
+        const params = new URLSearchParams();
+        params.set('idSite', '1');
+        params.set('dates', `${OverviewPage.getDefaultDate()},today`);
+        params.set('period', period);
+        await MatomoApi.call('POST', 'CoreAdminHome.invalidateArchivedReports', params);
+      }
 
       await MatomoCli.call('core:archive', {
-        'force-idsites': '1',
-        'force-date-range': `${OverviewPage.getDefaultDate()},${OverviewPage.getDefaultDate()}`,
-        'force-periods': 'day',
+        '--force-idsites': '1',
+        '--force-date-range': `${OverviewPage.getDefaultDate()},${OverviewPage.getDefaultDate()}`,
+        '--force-periods': 'day,week,month',
+        '-vvv': '',
       });
 
       await MatomoCli.call('core:archive', {
-        'force-idsites': '1',
-        'force-date-range': 'yesterday,today',
-        'force-periods': 'day',
+        '--force-idsites': '1',
+        '--force-date-range': 'yesterday,today',
+        '--force-periods': 'day,week,month',
+        '-vvv': '',
       });
 
       // check that the data looks correct (for some reason, archiving randomly results in an incorrect,
       // invalidated archive)
       const visits = await MatomoApi.call('GET', 'VisitsSummary.get', new URLSearchParams({
         idSite: '1',
-        period: 'day',
+        period: 'month',
         date: OverviewPage.getDefaultDate(),
       }));
 
-
       if (visits.nb_visits !== 7) {
+        console.log(`Found monthly visits to be ${visits.nb_visits} instead of expected 7, archiving again.`);
+
         // Working around https://github.com/matomo-org/matomo/issues/23085.
         // If archive data selected is inaccurate, delete the entire archive table for the month,
         // and re-archive.
