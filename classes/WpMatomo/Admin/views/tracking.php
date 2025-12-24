@@ -32,6 +32,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $matomo_is_advanced_cache_used */
 /** @var bool $matomo_is_track_script_used_in_wp_config */
 /** @var bool $matomo_is_track_ai_enabled */
+/** @var bool $matomo_is_using_litespeed */
+/** @var bool $matomo_is_using_litespeed_cache */
+/** @var bool $matomo_is_track_via_esi_enabled */
+/** @var bool $matomo_is_esi_enabled_in_litespeed */
+/** @var bool $matomo_is_htaccess_serving_cache_files */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -405,6 +410,44 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				! $matomo_is_track_ai_enabled,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager matomo-track-ai-using-esi'
 			);
+
+			if ( $matomo_is_using_litespeed && $matomo_is_using_litespeed_cache ) {
+				if ( ! $matomo_is_track_via_esi_enabled ) {
+					?>
+				<tr>
+					<td></td>
+					<td>
+						<div class="matomo-inline-notice matomo-warning matomo-track-ai-warning" style="<?php echo $matomo_is_track_ai_enabled ? '' : 'display:none;'; ?>">
+							<p>
+								<strong><?php esc_html_e( 'Warning', 'matomo' ); ?>:</strong>
+								<?php esc_html_e( 'We noticed you are using a LiteSpeed webserver with the LiteSpeed Cache plugin. Tracking AI bots with LiteSpeed can only be accomplished via ESI. Please enable the feature both here and in your LiteSpeed webserver.', 'matomo' ); ?>
+							</p>
+						</div>
+					</td>
+				</tr>
+					<?php
+				} elseif ( ! $matomo_is_esi_enabled_in_litespeed ) {
+					?>
+				<tr>
+					<td></td>
+					<td>
+						<div class="matomo-inline-notice matomo-warning matomo-track-ai-warning" style="<?php echo $matomo_is_track_ai_enabled ? '' : 'display:none;'; ?>">
+							<p>
+								<strong><?php esc_html_e( 'Warning', 'matomo' ); ?>:</strong>
+								<?php
+									echo sprintf(
+										esc_html__( 'ESI is not currently enabled in your LiteSpeed webserver. To track AI bots with LiteSpeed it is required to enable this feature. %1$sSee LiteSpeed docs for more info.%2$s', 'matomo' ),
+										'<a href="https://docs.litespeedtech.com/lscache/lscwp/cache/#esi-tab" target="_blank" rel="noreferrer noopener">',
+										'</a>'
+									);
+								?>
+							</p>
+						</div>
+					</td>
+				</tr>
+					<?php
+				}
+			}
 
 			?>
 			</tbody>

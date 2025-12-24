@@ -97,7 +97,7 @@ class AIBotTracking {
 			return;
 		}
 
-		$is_using_esi_to_track = $this->is_using_litespeed_cache() || $this->settings->is_tracking_ai_bots_via_esi_includes();
+		$is_using_esi_to_track = $this->settings->is_tracking_ai_bots_via_esi_includes();
 		if (
 			$is_using_esi_to_track
 			&& empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
@@ -165,10 +165,6 @@ class AIBotTracking {
 		return ! in_array( $extension, self::$extensions_to_track, true );
 	}
 
-	private static function get_current_time_ms() {
-		return (int) ( microtime( true ) * 1000 );
-	}
-
 	public static function set_is_ai_bot_tracked( $is_tracked ) {
 		self::$ai_bot_tracked = $is_tracked;
 	}
@@ -176,9 +172,5 @@ class AIBotTracking {
 	public function is_js_execution_detected() {
 		return ! empty( $_COOKIE['matomo_has_js'] )
 			&& '1' === $_COOKIE['matomo_has_js'];
-	}
-
-	public function is_using_litespeed_cache() {
-		return php_sapi_name() === 'litespeed';
 	}
 }

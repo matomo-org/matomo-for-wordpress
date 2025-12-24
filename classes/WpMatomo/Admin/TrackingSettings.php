@@ -386,7 +386,6 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<a id="tagmanager-read-more-link" style="display:inline-block" href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
 
-		// /var/www/html/test/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -403,7 +402,12 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_is_track_script_used_in_wp_config = self::is_track_script_used_in_wp_config();
 		$matomo_is_htaccess_serving_cache_files   = self::is_htaccess_serving_cache_files();
 
-		$matomo_is_track_ai_enabled = $this->settings->is_ai_bot_tracking_enabled();
+		$matomo_is_track_ai_enabled      = $this->settings->is_ai_bot_tracking_enabled();
+		$matomo_is_track_via_esi_enabled = $this->settings->is_track_via_esi_enabled();
+
+		$matomo_is_using_litespeed          = $this->is_using_litespeed_web_server();
+		$matomo_is_using_litespeed_cache    = $this->is_using_litespeed_cache_plugin();
+		$matomo_is_esi_enabled_in_litespeed = $this->is_litespeed_esi_enabled_in_webserver();
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
@@ -521,5 +525,19 @@ class TrackingSettings implements AdminSettingsInterface {
 		$tracking_code = $generator->prepare_tracking_code( $idsite );
 
 		wp_send_json( $tracking_code );
+	}
+
+	public function is_using_litespeed_web_server() {
+		return php_sapi_name() === 'litespeed';
+	}
+
+	public function is_using_litespeed_cache_plugin() {
+		return is_plugin_active( 'litespeed-cache/litespeed-cache.php' );
+	}
+
+	private function is_litespeed_esi_enabled_in_webserver() {
+		// see https://docs.litespeedtech.com/lscache/lscwp/api/#get-esi-enable-status
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return (bool) apply_filters( 'litespeed_esi_status', false );
 	}
 }

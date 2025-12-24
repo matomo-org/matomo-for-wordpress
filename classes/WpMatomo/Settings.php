@@ -547,4 +547,8 @@ class Settings {
 		}
 		return $user_agents;
 	}
+
+	public function is_track_via_esi_enabled() {
+		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
+	}
 }
