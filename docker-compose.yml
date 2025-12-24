@@ -30,7 +30,6 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
-      - ./lstrial.key:/lstrial.key
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
@@ -74,6 +73,37 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+
+  # litespeed enterprise (requires license)
+  litespeed:
+    env_file:
+      - .env.default
+      - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
+    build:
+      context: ./scripts
+      dockerfile: ./Dockerfile.local
+      args:
+        BASE_IMAGE: litespeedtech/litespeed:6.3.2-lsphp81
+    environment:
+      RUN_AS_USER: "${UID:-1000}"
+      DOCUMENT_ROOT: /var/www/vhosts/localhost/html
+    volumes:
+      - ./docker/wordpress:/var/www/vhosts/localhost/html
+      - .:/var/www/vhosts/localhost/html/matomo-for-wordpress
+      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - ./docker/wp-cli:/.wp-cli
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-gitconfig:/root/.gitconfig
+      - ./lstrial.key:/lstrial.key
+    ports:
+      - "$PORT:$PORT"
+    entrypoint: /usr/src/entrypoint.sh
+    depends_on:
+      - $BACKEND
+      - mailer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # service for running CLI utilities including wp-cli, the matomo console and phpunit
   exec:

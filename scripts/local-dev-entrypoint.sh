@@ -667,6 +667,7 @@ function start_webserver() {
 
   if [ -f /usr/local/lsws/bin/lshttpd ]  &> /dev/null; then
     mkdir -p /usr/local/lsws/logs
+    mkdir -p /tmp/lshttpd
 
     chown 1000 /usr/local/lsws /tmp -R
     chmod 777 /usr/local/lsws /tmp -R
@@ -685,9 +686,7 @@ function start_webserver() {
       sleep 1
     done
 
-    sleep 5
-
-    tail -f -n 50 /usr/local/lsws/logs/error.log
+    tail -f -n 50 /usr/local/lsws/logs/error.log /usr/local/lsws/logs/stderr.log
   elif ! which apache2-foreground &> /dev/null; then
     php-fpm "$@"
   else
