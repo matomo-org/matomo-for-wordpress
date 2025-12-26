@@ -76,7 +76,16 @@ class WordPress extends Plugin
             'Controller.CorePluginsAdmin.safemode.end' => 'modifySafemodeHtml',
             'Tracker.setTrackerCacheGeneral' => ['function' => 'setTrackerCacheGeneral', 'after' => true],
             'Platform.initialized' => ['function' => 'onPlatformInitialized', 'before' => true],
+            'Template.jsGlobalVariables' => 'addJsGlobalVariables',
         );
+    }
+
+    public function addJsGlobalVariables(&$output) {
+        $output .= 'piwik.mwpHomeUrl = ' . json_encode(\home_url()) . ";\n";
+
+        $settings = WpMatomo::$settings ?: new Settings();
+        $isAiBotTrackingEnabledInMwp = $settings->is_ai_bot_tracking_enabled();
+        $output .= 'piwik.isAiBotTrackingEnabledInMwp = ' . json_encode($isAiBotTrackingEnabledInMwp) . ";\n";
     }
 
     public function onPlatformInitialized()
@@ -160,6 +169,7 @@ class WordPress extends Plugin
         $translationKeys[] = 'WordPress_SaveChanges';
         $translationKeys[] = 'WordPress_NoMeasurableSettingsAvailable';
         $translationKeys[] = 'General_Confirm'; // this is not loaded client side by default for some reason
+        $translationKeys[] = 'WordPress_AIBotTrackingIsNotEnabled';
 	}
 
     public function modifyTourChallenges(&$challenges)
