@@ -147,7 +147,7 @@ class API extends \Piwik\Plugin\API
         if ($segment['login'] !== Piwik::getCurrentUserLogin()) {
             throw new Exception($this->getMessageCannotEditSegmentCreatedBySuperUser());
         }
-        if ((int) $segment['enable_only_idsite'] === 0 && !Piwik::hasUserSuperUserAccess()) {
+        if ((int) $segment['enable_only_idsite'] === 0) {
             throw new Exception(Piwik::translate('SegmentEditor_UpdatingAllSitesSegmentPermittedToSuperUser'));
         }
     }
@@ -168,7 +168,7 @@ class API extends \Piwik\Plugin\API
          *
          * @param int $idSegment The ID of the segment being deleted.
          */
-        Piwik::postEvent('SegmentEditor.deactivate', array($idSegment));
+        Piwik::postEvent('SegmentEditor.deactivate', [$idSegment]);
         $this->getModel()->deleteSegment($idSegment);
         Cache::getEagerCache()->flushAll();
     }
@@ -202,7 +202,7 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Changing value for enabledAllUsers is permitted to super users only.');
         }
         $autoArchive = $this->checkAutoArchive($autoArchive, $idSite);
-        $bind = array('name' => $name, 'definition' => $definition, 'enable_all_users' => (int) $enabledAllUsers, 'enable_only_idsite' => (int) $idSite, 'auto_archive' => (int) $autoArchive, 'ts_last_edit' => Date::now()->getDatetime());
+        $bind = ['name' => $name, 'definition' => $definition, 'enable_all_users' => (int) $enabledAllUsers, 'enable_only_idsite' => (int) $idSite, 'auto_archive' => (int) $autoArchive, 'ts_last_edit' => Date::now()->getDatetime()];
         /**
          * Triggered before a segment is modified.
          *
@@ -211,7 +211,7 @@ class API extends \Piwik\Plugin\API
          *
          * @param int $idSegment The ID of the segment which visibility is reduced.
          */
-        Piwik::postEvent('SegmentEditor.update', array($idSegment, $bind));
+        Piwik::postEvent('SegmentEditor.update', [$idSegment, $bind]);
         $this->getModel()->updateSegment($idSegment, $bind);
         $segmentDefinitionChanged = $segment['definition'] !== $definition;
         if ($segmentDefinitionChanged && $autoArchive && !Rules::isBrowserTriggerEnabled()) {
@@ -241,7 +241,7 @@ class API extends \Piwik\Plugin\API
         $definition = $this->checkSegmentValue($definition, $idSite);
         $enabledAllUsers = $this->checkEnabledAllUsers($enabledAllUsers);
         $autoArchive = $this->checkAutoArchive($autoArchive, $idSite);
-        $bind = array('name' => $name, 'definition' => $definition, 'login' => Piwik::getCurrentUserLogin(), 'enable_all_users' => (int) $enabledAllUsers, 'enable_only_idsite' => (int) $idSite, 'auto_archive' => (int) $autoArchive, 'ts_created' => Date::now()->getDatetime(), 'deleted' => 0);
+        $bind = ['name' => $name, 'definition' => $definition, 'login' => Piwik::getCurrentUserLogin(), 'enable_all_users' => (int) $enabledAllUsers, 'enable_only_idsite' => (int) $idSite, 'auto_archive' => (int) $autoArchive, 'ts_created' => Date::now()->getDatetime(), 'starred' => 0, 'starred_by' => null, 'deleted' => 0];
         $id = $this->getModel()->createSegment($bind);
         Cache::getEagerCache()->flushAll();
         if ($autoArchive && !Rules::isBrowserTriggerEnabled() && $this->processNewSegmentsFrom != SegmentArchiving::CREATION_TIME) {
@@ -249,6 +249,39 @@ class API extends \Piwik\Plugin\API
             $this->segmentArchiving->reArchiveSegment($addedSegment);
         }
         return $id;
+    }
+    /**
+     * Stars a stored segment.
+     *
+     * @param int $idSegment
+     * @return array{result: boolean, starred_by: string}
+     * @throws Exception if the user is not logged in or does not have the required permissions.
+     */
+    public function star(int $idSegment) : array
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $segment = $this->getSegmentOrFail($idSegment);
+        $this->checkUserCanEditOrDeleteSegment($segment);
+        $login = Piwik::getCurrentUserLogin();
+        $bind = ['starred' => 1, 'starred_by' => $login];
+        $result = $this->getModel()->updateSegment($idSegment, $bind);
+        return ['result' => $result, 'starred_by' => $login];
+    }
+    /**
+     * Unstars a stored segment.
+     *
+     * @param int $idSegment
+     * @return array{result: boolean}
+     * @throws Exception if the user is not logged in or does not have the required permissions.
+     */
+    public function unstar(int $idSegment) : array
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $segment = $this->getSegmentOrFail($idSegment);
+        $this->checkUserCanEditOrDeleteSegment($segment);
+        $bind = ['starred' => 0, 'starred_by' => null];
+        $result = $this->getModel()->updateSegment($idSegment, $bind);
+        return ['result' => $result];
     }
     /**
      * Returns a stored segment by ID
@@ -334,7 +367,7 @@ class API extends \Piwik\Plugin\API
      */
     private function sortSegmentsCreatedByUserFirst(array $segments) : array
     {
-        $orderedSegments = array();
+        $orderedSegments = [];
         foreach ($segments as $id => &$segment) {
             if ($segment['login'] == Piwik::getCurrentUserLogin()) {
                 $orderedSegments[] = $segment;

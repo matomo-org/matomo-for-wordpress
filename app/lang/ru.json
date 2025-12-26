@@ -780,6 +780,9 @@
         "ViewAndAddAnnotations": "Просмотреть и добавить примечания для %s…",
         "YouCannotModifyThisNote": "Вы не можете изменить это примечание, так как вы не являетесь её автором или у вас нет прав администратора."
     },
+    "BotTracking": {
+        "PageUrl": "URL страницы"
+    },
     "Contents": {
         "PluginDescription": "Отслеживание контента и баннеров позволяет вам измерять эффективность (просмотры, клики, CTR) любой части контента на ваших страницах (баннер-реклама, изображение, любой элемент).",
         "Impressions": "Показы",
@@ -4162,6 +4165,7 @@
         "CustomHtmlTagDescription": "Позволяет встраивать любой пользовательский HTML, например JavaScript или CSS стили.",
         "CustomHtmlTagHelp": "Пользовательский HTML-тег позволяет вставлять любой тег, который еще не поддерживается. Возможности этого тега практически безграничны.",
         "CustomHtmlTagName": "Пользовательский HTML",
+        "CustomHtmlTagTitle": "Пользовательский HTML",
         "CustomImageTagDescription": "Позволяет встроить любое изображение, например пиксель слежения.",
         "CustomImageTagHelp": "Этот тег позволяет добавить, например, прозрачный пиксель отслеживания на ваш сайт.",
         "CustomImageTagName": "Пользовательское изображение",
@@ -4258,8 +4262,10 @@
         "ErrorXNotProvided": "Укажите значение для \"%1$s\".",
         "ErrorXNotWhitelisted": "Значение \"%1$s\" недопустимо, используйте одно из: %2$s.",
         "ErrorXTooLong": "\"%1$s\" слишком длинно, разрешено не более %2$s символов.",
+        "EtrackerConfigurationVariableCustomDimensionsDescription": "При желании установите один или несколько пользовательских параметров.",
         "EtrackerConfigurationVariableCustomDimensionsTitle": "Пользовательские параметры",
         "EtrackerTagDescription": "etracker — это система веб-аналитики, вы можете выбрать отправку просмотра страницы или события.",
+        "EtrackerTagFormNameTitle": "Имя формы",
         "EtrackerTagName": "Веб-анализ etracker",
         "EtrackerTagTransactionCurrencyTitle": "Валюта",
         "Except": "Кроме",
@@ -4531,6 +4537,7 @@
         "ThemeColorTagDescription": "Стиль пользовательского интерфейса поддерживаемых браузеров.",
         "ThemeColorTagHelp": "Этот тег поддерживает Chrome на Android и другие браузеры, которые понимают 'theme-color'.",
         "ThemeColorTagName": "Цветовая тема",
+        "ThemeColorTagThemeColorTitle": "Цветовая тема",
         "TimeSinceLoadVariableDescription": "Подсчитывает время, прошедшее с момента загрузки страницы.",
         "TimeSinceLoadVariableName": "Время с момента загрузки страницы",
         "TimerTriggerDescription": "Запускается через определенный интервал, например каждые 3 секунды.",
@@ -4906,19 +4913,13 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Местное время",
-        "ColumnServerTime": "Время на сервере",
         "DayOfWeek": "День недели",
         "LocalTime": "Посещений по местному времени",
-        "NHour": "%s ч.",
         "PluginDescription": "Сообщает местное время и время на сервере когда посетители смотрели вебсайт или приложение.",
-        "ServerTime": "Посещений по времени на сервере",
         "SubmenuTimes": "По времени",
         "VisitsByDayOfWeek": "Посещения по дням недели",
         "WidgetByDayOfWeekDocumentation": "Этот график показывает число посещений по каждому дню в неделе.",
-        "WidgetLocalTime": "Посещений по местному времени",
-        "WidgetLocalTimeDocumentation": "Этот график показывает, какое время было у %1$s посетителя в его временной зоне %2$s во время его посещения.",
-        "WidgetServerTime": "Посещений по времени на сервере",
-        "WidgetServerTimeDocumentation": "Этот график показывает, какое время было на %1$s сервере в его временной зоне %2$s во время посещения сайта."
+        "WidgetLocalTimeDocumentation": "Этот график показывает, какое время было у %1$s посетителя в его временной зоне %2$s во время его посещения."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s мин",

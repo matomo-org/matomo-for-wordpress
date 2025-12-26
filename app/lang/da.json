@@ -754,6 +754,9 @@
         "ViewAndAddAnnotations": "Vis og tilføj annotationer for %s…",
         "YouCannotModifyThisNote": "Du kan ikke ændre denne annotation, da du ikke har oprettet den eller har administrator adgang."
     },
+    "BotTracking": {
+        "PageUrl": "Side URL"
+    },
     "Contents": {
         "PluginDescription": "Indhold og banner sporing gør dig i stand til at måle effektiviteten (besøg, klik, CTR) af ethvert indhold på dine sider (bannerreklamer, billeder, hvad som helst).",
         "Impressions": "Visninger",
@@ -3590,18 +3593,12 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokaltid",
-        "ColumnServerTime": "Servertid",
         "DayOfWeek": "Dag i ugen",
         "LocalTime": "Besøg pr. lokaltid",
-        "NHour": "%s",
-        "ServerTime": "Besøg pr. servertid",
         "SubmenuTimes": "Klokkeslæt",
         "VisitsByDayOfWeek": "Besøg efter ugedag",
         "WidgetByDayOfWeekDocumentation": "Denne graf viser antallet af besøg hjemmesiden har modtaget på hver dag i ugen.",
-        "WidgetLocalTime": "Besøg (lokaltid)",
-        "WidgetLocalTimeDocumentation": "Diagrammet viser, hvad klokken var i %1$s besøgendes tidszone %2$s under deres besøg.",
-        "WidgetServerTime": "Besøg (servertid)",
-        "WidgetServerTimeDocumentation": "Diagrammet viser, hvad klokken var i %1$s serverens tidszone %2$s under besøgene."
+        "WidgetLocalTimeDocumentation": "Diagrammet viser, hvad klokken var i %1$s besøgendes tidszone %2$s under deres besøg."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min.",

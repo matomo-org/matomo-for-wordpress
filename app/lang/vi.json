@@ -600,6 +600,9 @@
         "ViewAndAddAnnotations": "Hiện thị và thêm chú thích cho %s…",
         "YouCannotModifyThisNote": "Bạn không thể sửa đổi chú thích này, bởi vì bạn đã không tạo ra nó, bạn cũng không có quyền quản trị trang web này."
     },
+    "BotTracking": {
+        "PageUrl": "URL của trang"
+    },
     "Contents": {
         "PluginDescription": "Chức năng theo dõi nội dung và banner cho phép bạn đánh giá được hiệu quả (lượt xem, click, CTR) của bất kỳ trang web nào.",
         "Impressions": "Lượt hiển thị cho người dùng",
@@ -2717,18 +2720,12 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Giờ địa phương",
-        "ColumnServerTime": "Giờ máy chủ",
         "DayOfWeek": "Ngày trong tuần",
         "LocalTime": "Lượt truy cập mỗi giờ địa phương",
-        "NHour": "%sh",
-        "ServerTime": "Các lượt truy cập theo mỗi thời gian máy chủ",
         "SubmenuTimes": "Số lần",
         "VisitsByDayOfWeek": "Các lượt truy cập theo ngày trong tuần",
         "WidgetByDayOfWeekDocumentation": "Đồ thị này cho thấy số lần truy cập mà trang web của bạn nhận được mỗi ngày trong tuần.",
-        "WidgetLocalTime": "Các lượt truy cập theo giờ địa phương (Local)",
-        "WidgetLocalTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của khách truy cập %2$s trong các lượt truy cập của họ.",
-        "WidgetServerTime": "Các lượt truy cập bởi giờ Server",
-        "WidgetServerTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của Server %2$s trong các lượt truy cập."
+        "WidgetLocalTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của khách truy cập %2$s trong các lượt truy cập của họ."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s phút",

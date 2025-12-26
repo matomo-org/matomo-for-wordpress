@@ -553,6 +553,9 @@
         "ViewAndAddAnnotations": "%s टिप्पणियां देखें और जोड़…",
         "YouCannotModifyThisNote": "आप इस टिपण्णी में परिवर्तन नहीं कर सकते हैं क्योंकि न तो आपने इसके लेखक हैं और न ही आपके पास इस साइट के लिए एडमिन एक्सेस है।"
     },
+    "BotTracking": {
+        "PageUrl": "पृष्ठ का यू.आर.एल"
+    },
     "Contents": {
         "PluginDescription": "सामग्री और बैनर पर नज़र रखने से आप किसी भी अपने पृष्ठों पर सामग्री का टुकड़ा (बैनर विज्ञापन, छवि, किसी भी आइटम) का प्रदर्शन (विचारों, क्लिक, CTR) को मापने की सुविधा देता है।",
         "Impressions": "छापे",
@@ -2862,16 +2865,11 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "स्थानीय समय",
-        "ColumnServerTime": "सर्वर समय",
         "DayOfWeek": "सप्ताह के दिन",
         "LocalTime": "स्थानीय समय के अनुसार दौरा",
-        "NHour": "%sh",
         "PluginDescription": "स्थानीय समय और अपने आगंतुकों को अपनी वेबसाइट या एप्लिकेशन को देखने जब सर्वर समय रिपोर्ट।",
-        "ServerTime": "सर्वर समय प्रति दौरा",
         "SubmenuTimes": "टाइम्स",
-        "VisitsByDayOfWeek": "सप्ताह के दिन से दौरा",
-        "WidgetLocalTime": "स्थानीय समय से दौरा",
-        "WidgetServerTime": "सर्वर समय से दौरा"
+        "VisitsByDayOfWeek": "सप्ताह के दिन से दौरा"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s–%2$s मिनट",

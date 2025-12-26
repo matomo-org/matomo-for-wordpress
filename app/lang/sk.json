@@ -587,6 +587,9 @@
         "ViewAndAddAnnotations": "Zobraziť a pridať anotácie pre %s…",
         "YouCannotModifyThisNote": "Nemôžete upraviť túto anotáciu, pretože ste ju nevytvorili, ani nemáte administrátorský prístup pre túto stránku."
     },
+    "BotTracking": {
+        "PageUrl": "Adresa stránky"
+    },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Pridať nového dôveryhodného hostiteľa",
         "Administration": "Administrácia",
@@ -2391,19 +2394,13 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Miestny čas",
-        "ColumnServerTime": "Serverový čas",
         "DayOfWeek": "Deň v týždni",
         "LocalTime": "Návštevníci podľa lokálneho času",
-        "NHour": "%sh",
         "PluginDescription": "Hlási miestny čas a čas servera, kedy si vaši návštevníci prezerajú vašu stránku alebo aplikáciu.",
-        "ServerTime": "Návštevníci podľa serverového času",
         "SubmenuTimes": "Časy",
         "VisitsByDayOfWeek": "Návštevy podľa dňa v týždni",
         "WidgetByDayOfWeekDocumentation": "Tento graf zobrazuje množstvo návštev, ktoré vaša web stránka prijala v každom dni týždňa.",
-        "WidgetLocalTime": "Návštevníci podľa lokálneho času",
-        "WidgetLocalTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma návštevníka %2$s počas návštevy.",
-        "WidgetServerTime": "Návštevníci podľa serverového času",
-        "WidgetServerTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma servera %2$s počas návštevy."
+        "WidgetLocalTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma návštevníka %2$s počas návštevy."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",

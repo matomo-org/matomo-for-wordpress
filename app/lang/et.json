@@ -528,6 +528,9 @@
         "NoAnnotations": "Antud ajavahemiku kohta puuduvad märkmed.",
         "ViewAndAddAnnotations": "Vaata ja lisa märkmeid %s kohta…"
     },
+    "BotTracking": {
+        "PageUrl": "Lehe URL"
+    },
     "Contents": {
         "InteractionRate": "Koostoime mõju",
         "ContentName": "Sisu nimi",
@@ -2466,15 +2469,10 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokaalne aeg",
-        "ColumnServerTime": "Serveri aeg",
         "DayOfWeek": "Nädalapäev",
         "LocalTime": "Külastused kohaliku kellaaja järgi",
-        "NHour": "%s",
-        "ServerTime": "Külastused serveri kellaaja järgi",
         "SubmenuTimes": "Külastusajad",
-        "VisitsByDayOfWeek": "Külastused nädalapäeva järgi",
-        "WidgetLocalTime": "Külastused kohaliku kellaaja järgi",
-        "WidgetServerTime": "Külastused serveri kellaaja järgi"
+        "VisitsByDayOfWeek": "Külastused nädalapäeva järgi"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",

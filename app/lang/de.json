@@ -668,7 +668,6 @@
         "AIAgentName": "KI-Agentenname",
         "AIAgentVisits": "KI-Agentenbesuche",
         "AIAgentVisitsDocumentation": "Dies ist eine Übersicht über KI-Agenten-Besuche. Der Datenverkehr von KI-Agenten beinhaltet nur Besuche, bei denen ein KI Ihre Seite in einem echten Browser öffnet und sich wie ein menschlicher Besucher verhält. Es beinhaltet nicht Hintergrundanfragen von ChatGPT oder anderen KI-Tools, die Ihre Seiten abrufen, ohne einen Browser zu verwenden.",
-        "AIAssistants": "KI-Assistenten",
         "ColumnAIAgentActions": "Aktionen von KI-Agentenbesuchen",
         "ColumnAIAgentAverageVisitDuration": "Durchschnittliche Dauer eines KI-Agenten Besuchs (in Sekunden)",
         "ColumnAIAgentAvgActionsPerVisit": "Durchschnittliche Aktionen pro KI-Agenten-Besuch",
@@ -831,6 +830,9 @@
         "PluginDescription": "Erlaubt Ihnen Anmerkungen zu verschiedenen Tagen hinzuzufügen, um Änderungen zu markieren, die an der Webseite gemacht wurden, Analysen zu speichern, die bezüglich Ihrer Daten gemacht wurden und um Ihre Gedanken mit Ihren Kollegen zu teilen. Durch das Hinzufügen von Anmerkungen stellen Sie sicher, dass Sie sich daran erinnern warum die Daten so sind, wie sie sind.",
         "ViewAndAddAnnotations": "Anmerkungen zu %s ansehen und hinzufügen…",
         "YouCannotModifyThisNote": "Sie können diese Anmerkung nicht ändern, da Sie sie weder erstellt haben noch administrativen Zugang für diese Seite besitzen."
+    },
+    "BotTracking": {
+        "PageUrl": "Seiten-URL"
     },
     "Contents": {
         "ContentImpression": "Inhaltsimpression",
@@ -6029,21 +6031,8 @@
         "ColumnLocalMinute": "Lokalzeit - Minute (Start des Besuchs)",
         "ColumnLocalTime": "Ortszeit",
         "ColumnServerHour": "Serverzeit - Stunde",
-        "ColumnServerMinute": "Serverzeit — Minute",
-        "ColumnServerTime": "Server-Zeit",
         "ColumnSiteHour": "Seitenzeit — Stunde",
         "ColumnUTCMinute": "Zeit in UTC — Minute",
-        "ColumnVisitEndServerDate": "Serverzeit — Datum (Zeit der letzten Aktion)",
-        "ColumnVisitEndServerDayOfMonth": "Serverzeit — Tag des Monats (Zeit der letzten Aktion)",
-        "ColumnVisitEndServerDayOfWeek": "Serverzeit — Wochentag (Zeit der letzten Aktion)",
-        "ColumnVisitEndServerDayOfYear": "Serverzeit — Tag des Jahres (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitEndServerHour": "Serverzeit - Stunde (Zeit der letzten Aktion)",
-        "ColumnVisitEndServerMinute": "Serverzeit — Minute (Zeit der letzten Aktion)",
-        "ColumnVisitEndServerMonth": "Serverzeit — Monat (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitEndServerQuarter": "Serverzeit — Quartal (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitEndServerSecond": "Serverzeit — Sekunde (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitEndServerWeekOfYear": "Serverzeit — Woche des Jahres (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitEndServerYear": "Serverzeit — Jahr (Zeitpunkt der letzten Aktion)",
         "ColumnVisitEndSiteHour": "Seitenzeit — Stunde (Zeitpunkt der letzten Aktion)",
         "ColumnVisitEndUTCDate": "Zeit in UTC — Datum (Zeitpunkt der letzten Aktion)",
         "ColumnVisitEndUTCDayOfMonth": "Zeit in UTC — Tag des Monats (Zeitpunkt der letzten Aktion)",
@@ -6055,24 +6044,17 @@
         "ColumnVisitEndUTCSecond": "Zeit in UTC — Sekunde (Zeitpunkt der letzten Aktion)",
         "ColumnVisitEndUTCWeekOfYear": "Zeit in UTC — Woche des Jahres (Zeitpunkt der letzten Aktion)",
         "ColumnVisitEndUTCYear": "Zeit in UTC — Jahr (Zeitpunkt der letzten Aktion)",
-        "ColumnVisitStartServerHour": "Serverzeit — Stunde (Start des Besuchs)",
-        "ColumnVisitStartServerMinute": "Serverzeit — Minute (Start des Besuchs)",
         "ColumnVisitStartSiteHour": "Seitenzeit — Stunde (Start des Besuchs)",
         "ColumnVisitStartUTCMinute": "Zeit in UTC — Minute (Beginn des Besuchs)",
         "DayOfWeek": "Wochentag",
         "LocalTime": "Besuche nach lokaler Zeit",
-        "NHour": "%sh",
         "PluginDescription": "Liefert die lokale Zeit und die Serverzeit, an der Ihre Besucher Ihre Webseite oder App verwenden.",
-        "ServerTime": "Besuche nach Server-Zeit",
         "SiteTime": "Besuche pro Stunde in der Zeitzone der Webseite",
         "SubmenuTimes": "Zeiten",
         "TimesSubcategoryHelp": "Der \"Zeitbereich\" zeigt Ihnen wann Leute Ihre Seite besuchen. Populäre lokalen Zeiten helfen Ihnen die Seite zu pflegen. Die beliebtesten Serverzeiten zeigen technische Anforderungen auf.",
         "VisitsByDayOfWeek": "Besuche nach Wochentagen",
         "WidgetByDayOfWeekDocumentation": "Dieser Graph zeigt die Anzahl der Besuche Ihrer Webseite nach Wochentagen.",
-        "WidgetLocalTime": "Besuche nach lokaler Zeit",
         "WidgetLocalTimeDocumentation": "Dieser Graph zeigt, wie viel Uhr es %1$s in der Zeitzone des Besuchers %2$s war, als er die Seite besuchte.",
-        "WidgetServerTime": "Besuche nach Serverzeit",
-        "WidgetServerTimeDocumentation": "Dieser Graph zeigt, wie viel Uhr es %1$s in der Zeitzone des Servers %2$s war, als die Seite besucht wurde.",
         "WidgetSiteTimeDocumentation": "Dieser Graph zeigt wie viel Uhr es in der %1$s Zeitzone der Webseite %2$s während der Besuche war."
     },
     "VisitorInterest": {
@@ -6126,7 +6108,6 @@
         "WidgetVisits": "Besucherübersicht"
     },
     "WebsiteMeasurable": {
-        "EcommercePolicySettingRequirementNote": "E-Commerce muss deaktiviert werden",
         "Website": "Webseite",
         "WebsiteDescription": "Eine Webseite besteht aus mehreren Webseiten die typischerweise von einer einzelnen Domain ausgeliefert werden.",
         "Websites": "Webseiten"

@@ -1399,9 +1399,6 @@
         "User": "Uzanto",
         "Username": "Uzantnomo"
     },
-    "VisitTime": {
-        "NHour": "%s h"
-    },
     "VisitorInterest": {
         "NPages": "%s paĝoj",
         "OnePage": "1 paĝo"

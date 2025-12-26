@@ -685,6 +685,9 @@
         "ViewAndAddAnnotations": "Skatīt un pievienot anotācijas %s…",
         "YouCannotModifyThisNote": "Jūs nevarat mainīt šo anotāciju, jo neesat to izveidojis, un jums nav administratīvās piekļuves šai vietnei."
     },
+    "BotTracking": {
+        "PageUrl": "Lapas URL"
+    },
     "CoreAdminHome": {
         "AcceptInvite": "Pieņemt ielūgumu",
         "AddNewTrustedHost": "Pievienot jaunu uzticamu resursdatoru",
@@ -3165,12 +3168,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokālais laiks",
-        "ColumnServerTime": "Servera laiks",
         "LocalTime": "Apmeklējumi pēc vietējā laika",
-        "NHour": "%s st.",
-        "ServerTime": "Apmeklējumi pēc servera laika",
-        "SubmenuTimes": "Laiki",
-        "WidgetLocalTime": "Apmeklējumi pēc lokālā laika"
+        "SubmenuTimes": "Laiki"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min.",

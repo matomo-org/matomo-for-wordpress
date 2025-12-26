@@ -171,6 +171,9 @@
         "SubmenuPagesExit": "Útgangssíður",
         "SubmenuPageTitles": "Síðu titlar"
     },
+    "BotTracking": {
+        "PageUrl": "Síðu slóð"
+    },
     "CoreAdminHome": {
         "Administration": "Umsjón",
         "EmailServerSettings": "Póstþjóns stillingar",
@@ -1451,13 +1454,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Staðartími",
-        "ColumnServerTime": "Tímabelti þjóns",
         "LocalTime": "Heimsóknir miðað við staðartíma",
-        "NHour": "%st",
-        "ServerTime": "Heimsóknir miðað við tíma vefþjóns",
-        "SubmenuTimes": "Tímar",
-        "WidgetLocalTime": "Heimsóknir skv. staðartíma",
-        "WidgetServerTime": "Heimsóknir skv. tímabelti þjóns"
+        "SubmenuTimes": "Tímar"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s mín",

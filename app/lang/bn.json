@@ -1351,9 +1351,6 @@
         "Status": "অবস্থা",
         "Username": "ব্যবহারকারীর নাম"
     },
-    "VisitTime": {
-        "NHour": "%s ঘঃ"
-    },
     "WebsiteMeasurable": {
         "Website": "ওয়েবসাইট"
     },

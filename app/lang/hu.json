@@ -545,6 +545,9 @@
         "ActionType": "Akció típusa",
         "PagesSubcategoryHelp3": "Használd a baloldali plusz és mínusz ikonokat a navigációhoz."
     },
+    "BotTracking": {
+        "PageUrl": "Weblap URL-je"
+    },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Új megbízható host hozzáadása",
         "Administration": "Adminisztráció",
@@ -2205,13 +2208,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Helyi idő",
-        "ColumnServerTime": "Szerveridő",
         "LocalTime": "Látogatások\/helyi idő",
-        "NHour": "%s ó",
-        "ServerTime": "Látogatások\/szerveridő",
-        "SubmenuTimes": "Idő",
-        "WidgetLocalTime": "Látogatások helyi idő szerint",
-        "WidgetServerTime": "Látogatások szerveridő szerint"
+        "SubmenuTimes": "Idő"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s perc",

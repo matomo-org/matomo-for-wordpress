@@ -67,18 +67,19 @@ class Http
      * @param bool $checkHostIsAllowed whether we should check if the target host is allowed or not. This should only
      *                                 be set to false when using a hardcoded URL.
      *
+     * @return string|array|bool  If `$destinationPath` is not specified the HTTP response is returned on success. `false`
+     *                            is returned on failure.
+     *                            If `$getExtendedInfo` is `true` and `$destinationPath` is not specified an array with
+     *                            the following information is returned on success:
+     *
+     *                            - **status**: the HTTP status code
+     *                            - **headers**: the HTTP headers
+     *                            - **data**: the HTTP response data
+     *
+     *                            `false` is still returned on failure.
      * @throws Exception if the response cannot be saved to `$destinationPath`, if the HTTP response cannot be sent,
      *                   if there are more than 5 redirects or if the request times out.
-     * @return bool|string If `$destinationPath` is not specified the HTTP response is returned on success. `false`
-     *                     is returned on failure.
-     *                     If `$getExtendedInfo` is `true` and `$destinationPath` is not specified an array with
-     *                     the following information is returned on success:
-     *
-     *                     - **status**: the HTTP status code
-     *                     - **headers**: the HTTP headers
-     *                     - **data**: the HTTP response data
-     *
-     *                     `false` is still returned on failure.
+     * @phpstan-return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
      * @api
      */
     public static function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $checkHostIsAllowed = \true)
@@ -142,8 +143,8 @@ class Http
      * @param bool $checkHostIsAllowed whether we should check if the target host is allowed or not. This should only
      *                                 be set to false when using a hardcoded URL.
      *
-     * @return string|array  true (or string/array) on success; false on HTTP response error code (1xx or 4xx)
-     *@throws Exception
+     * @return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
+     * @throws Exception
      */
     public static function sendHttpRequestBy($method, $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $requestBody = null, $additionalHeaders = array(), $forcePost = null, $checkHostIsAllowed = \true)
     {
@@ -227,7 +228,7 @@ class Http
          *                      - 'verifySsl' A boolean whether SSL certificate should be verified
          *                      - 'destinationPath' If set, the response of the HTTP request should be saved to this file
          * @param string &$response A plugin listening to this event should assign the HTTP response it received to this variable, for example "{value: true}"
-         * @param string &$status A plugin listening to this event should assign the HTTP status code it received to this variable, for example "200"
+         * @param int &$status A plugin listening to this event should assign the HTTP status code it received to this variable, for example "200"
          * @param array &$headers A plugin listening to this event should assign the HTTP headers it received to this variable, eg array('Content-Length' => '5')
          */
         \Piwik\Piwik::postEvent('Http.sendHttpRequest', array($aUrl, $httpEventParams, &$response, &$status, &$headers));
@@ -602,7 +603,7 @@ class Http
          *                      - 'verifySsl' A boolean whether SSL certificate should be verified
          *                      - 'destinationPath' If set, the response of the HTTP request should be saved to this file
          * @param string &$response The response of the HTTP request, for example "{value: true}"
-         * @param string &$status The returned HTTP status code, for example "200"
+         * @param int &$status The returned HTTP status code, for example "200"
          * @param array &$headers The returned headers, eg array('Content-Length' => '5')
          */
         \Piwik\Piwik::postEvent('Http.sendHttpRequest.end', array($aUrl, $httpEventParams, &$response, &$status, &$headers));
@@ -712,7 +713,7 @@ class Http
         }
         // download a chunk of the file
         $result = \Piwik\Http::sendHttpRequest($url, $timeout = 300, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = array($existingSize, min($existingSize + 1024 * 1024 - 1, $expectedFileSize)), $getExtendedInfo = \true);
-        if ($result === \false || $result['status'] < 200 || $result['status'] > 299) {
+        if ($result['status'] < 200 || $result['status'] > 299) {
             $result['data'] = self::truncateStr($result['data'], 1024);
             \Piwik\Log::info("Failed to download range '%s-%s' of file from url '%s'. Got result: %s", $byteRange[0], $byteRange[1], $url, print_r($result, \true));
             throw new Exception(\Piwik\Piwik::translate('General_DownloadFail_HttpRequestFail'));
@@ -760,9 +761,10 @@ class Http
      * @param string $destinationPath The path to download the file to.
      * @param int $tries (deprecated)
      * @param int $timeout The amount of seconds to wait before aborting the HTTP request.
+     * @return string|bool
      * @throws Exception if the response cannot be saved to `$destinationPath`, if the HTTP response cannot be sent,
      *                   if there are more than 5 redirects or if the request times out.
-     * @return bool `true` on success, throws Exception on failure
+     * @phpstan-return ($destinationPath is null ? false|string : bool)
      * @api
      */
     public static function fetchRemoteFile($url, $destinationPath = null, $tries = 0, $timeout = 10)

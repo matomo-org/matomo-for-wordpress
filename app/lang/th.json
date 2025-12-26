@@ -403,6 +403,9 @@
         "EnterAnnotationText": "กรอกหมายเหตุของคุณ…",
         "LoginToAnnotate": "เข้าสู่ระบบเพื่อสร้างหมายเหตุประกอบ"
     },
+    "BotTracking": {
+        "PageUrl": "URL หน้า"
+    },
     "CoreAdminHome": {
         "Administration": "การจัดการระบบ",
         "EmailServerSettings": "การตั้งค่าเซิร์ฟเวอร์อีเมล์",
@@ -2146,14 +2149,9 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "เวลาของท้องถิ่น",
-        "ColumnServerTime": "เวลาของเซิร์ฟเวอร์",
         "DayOfWeek": "วันในสัปดาห์",
         "LocalTime": "จำนวนผู้ชมต่อเวลาท้องถิ่น",
-        "NHour": "%s ชม.",
-        "ServerTime": "จำนวนผู้ชมต่อเวลาของเซิร์ฟเวอร์",
-        "SubmenuTimes": "เวลา",
-        "WidgetLocalTime": "จำนวนผู้ชมตามเวลาท้องถิ่น",
-        "WidgetServerTime": "จำนวนผู้ชมตามเวลาของเซิร์ฟเวอร์"
+        "SubmenuTimes": "เวลา"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s นาที",

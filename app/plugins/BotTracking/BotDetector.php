@@ -14,6 +14,7 @@ namespace Piwik\Plugins\BotTracking;
  */
 class BotDetector
 {
+    public const BOT_TYPE_AI_ASSISTANT = 'ai_assistant';
     /** @var null|array{bot_name: string, bot_type: string} */
     private $detectionResult;
     /**
@@ -21,7 +22,7 @@ class BotDetector
      *
      * @var array<string, string>
      */
-    private $aiAssistantPatterns = ['ChatGPT-User' => 'ai_assistant', 'MistralAI-User' => 'ai_assistant', 'Gemini-Deep-Research' => 'ai_assistant', 'Claude-User' => 'ai_assistant', 'Perplexity-User' => 'ai_assistant', 'Google-NotebookLM' => 'ai_assistant', 'Devin' => 'ai_assistant'];
+    private $aiAssistantPatterns = ['ChatGPT-User' => self::BOT_TYPE_AI_ASSISTANT, 'MistralAI-User' => self::BOT_TYPE_AI_ASSISTANT, 'Gemini-Deep-Research' => self::BOT_TYPE_AI_ASSISTANT, 'Claude-User' => self::BOT_TYPE_AI_ASSISTANT, 'Perplexity-User' => self::BOT_TYPE_AI_ASSISTANT, 'Google-NotebookLM' => self::BOT_TYPE_AI_ASSISTANT, 'Devin' => self::BOT_TYPE_AI_ASSISTANT];
     public function __construct(string $userAgent)
     {
         $this->detectionResult = $this->detect($userAgent);

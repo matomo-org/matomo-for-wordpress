@@ -611,6 +611,9 @@
         "LoginToAnnotate": "יש להתחבר כדי ליצור הערה.",
         "NoAnnotations": "אין הסברים על טווח תאריכים זה"
     },
+    "BotTracking": {
+        "PageUrl": "כתובת העמוד"
+    },
     "CoreAdminHome": {
         "Administration": "ניהול",
         "BrandingSettings": "הגדרות מיתוג",
@@ -2083,6 +2086,7 @@
         "CategoryDate": "תאריך",
         "CategoryEmail": "אימייל",
         "CategoryErrors": "שגיאות",
+        "ChooseWebsite": "בחירת אתר",
         "EtrackerTagTransactionCurrencyTitle": "מטבע",
         "InvalidDebugUrlError": "שגיאה",
         "MatomoConfigurationMatomoUserIdTitle": "User ID",
@@ -2161,16 +2165,11 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "זמן מקומי",
-        "ColumnServerTime": "זמן שרת",
         "DayOfWeek": "יום בשבוע",
         "LocalTime": "ביקורים לזמן מקומי",
-        "NHour": "שעה %s",
-        "ServerTime": "ביקורים לזמן שרת",
         "SubmenuTimes": "זמנים",
         "VisitsByDayOfWeek": "ביקורים לפי יום בשבוע",
-        "WidgetByDayOfWeekDocumentation": "גרף זה מציג את מספר הביקורים שאתרך קיבל בכל יום בשבוע.",
-        "WidgetLocalTime": "ביקורים לפי זמן מקומי",
-        "WidgetServerTime": "ביקורים לפי זמן שרת"
+        "WidgetByDayOfWeekDocumentation": "גרף זה מציג את מספר הביקורים שאתרך קיבל בכל יום בשבוע."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s דקות",

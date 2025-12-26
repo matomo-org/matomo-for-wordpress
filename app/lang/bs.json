@@ -403,6 +403,9 @@
         "LoginToAnnotate": "Prijavite se da napravite novu bilješku.",
         "NoAnnotations": "Nema bilješki za ovaj vremenski period."
     },
+    "BotTracking": {
+        "PageUrl": "URL stranice"
+    },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Dodajte novi pouzdani host",
         "Administration": "Administracija",
@@ -1552,9 +1555,6 @@
         "PrivView": "Vidi",
         "Status": "Status",
         "Username": "Korisničko ime"
-    },
-    "VisitTime": {
-        "NHour": "%s h"
     },
     "WebsiteMeasurable": {
         "Website": "Web stranica"

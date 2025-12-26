@@ -11,6 +11,7 @@ namespace Piwik\Plugins\Installation;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\SettingsServer;
+use Piwik\Config;
 class ServerFilesGenerator
 {
     public static function createFilesForSecurity()
@@ -28,7 +29,13 @@ class ServerFilesGenerator
         $denyAll = self::getDenyAllHtaccessContent();
         $allow = self::getAllowHtaccessContent();
         $allowAny = "# Allow any file in this directory\n" . "<Files \"*\">\n" . "\t" . $allow . "\n" . "</Files>\n";
-        $allowStaticAssets = "# Serve HTML files as text/html mime type - Note: requires mod_mime apache module!\n" . "<IfModule mod_mime.c>\n" . "   AddHandler text/html .html\n" . "   AddHandler text/html .htm\n" . "</IfModule>\n\n" . "# Allow to serve static files which are safe\n" . "<Files ~ \"\\.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2)\$\">\n" . $allow . "\n" . "</Files>\n";
+        $staticFileExtensions = ['gif', 'ico', 'jpg', 'png', 'svg', 'js', 'css', 'htm', 'html', 'mp3', 'mp4', 'wav', 'ogg', 'avi', 'ttf', 'eot', 'woff', 'woff2'];
+        $allowVueSourceMaps = !empty(Config::getInstance()->Development['allow_vue_sourcemaps']);
+        if ($allowVueSourceMaps) {
+            $staticFileExtensions[] = 'map';
+        }
+        $staticFileExtensionsPattern = implode('|', $staticFileExtensions);
+        $allowStaticAssets = "# Serve HTML files as text/html mime type - Note: requires mod_mime apache module!\n" . "<IfModule mod_mime.c>\n" . "   AddHandler text/html .html\n" . "   AddHandler text/html .htm\n" . "</IfModule>\n\n" . "# Allow to serve static files which are safe\n" . "<Files ~ \"\\.(" . $staticFileExtensionsPattern . ")\$\">\n" . $allow . "\n" . "</Files>\n";
         $noCachePreview = "\n# do not cache preview container files\n<Files  ~ \"^container_.*_preview\\.js\$\">\n<IfModule mod_headers.c>\nHeader set Cache-Control \"Cache-Control: private, no-cache, no-store\"\n</IfModule>\n</Files>";
         $allowManifestFile = "# Allow to serve manifest.json\n" . "<Files \"manifest.json\">\n" . $allow . "\n" . "</Files>\n";
         $directoriesToProtect = array('/js' => $allowAny . $noCachePreview, '/libs' => $denyAll . $allowStaticAssets, '/vendor' => $denyAll . $allowStaticAssets, '/plugins' => $denyAll . $allowStaticAssets . $allowManifestFile, '/misc' => $denyAll . $allowStaticAssets, '/node_modules' => $denyAll . $allowStaticAssets);

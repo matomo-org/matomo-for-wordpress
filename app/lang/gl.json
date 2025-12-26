@@ -192,6 +192,9 @@
         "ViewAndAddAnnotations": "Ver y agregar anotaciones para %s…",
         "YouCannotModifyThisNote": "No puede modificar esta anotación porque no la creó usted ni tiene acceso de administrador para este sitio."
     },
+    "BotTracking": {
+        "PageUrl": "URL da páxina"
+    },
     "Contents": {
         "Impressions": "Impresións",
         "ContentName": "Nome do contido",
@@ -1492,11 +1495,7 @@
     },
     "VisitTime": {
         "LocalTime": "Visitas por hora local",
-        "NHour": "%s h",
-        "ServerTime": "Visitas por hora do servidor",
-        "SubmenuTimes": "Tempos",
-        "WidgetLocalTime": "Visitas por hora local",
-        "WidgetServerTime": "Visitas por hora do servidor"
+        "SubmenuTimes": "Tempos"
     },
     "VisitorInterest": {
         "VisitsPerDuration": "Visitas por duración",

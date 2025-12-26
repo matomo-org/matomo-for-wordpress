@@ -155,6 +155,9 @@
     "Annotations": {
         "ClickToEdit": "మార్చడానికి నొక్కండి"
     },
+    "BotTracking": {
+        "PageUrl": "పుట చిరునామా"
+    },
     "CoreAdminHome": {
         "Administration": "నిర్వహణ",
         "Login": "వాడుకరి పేరు",
@@ -1525,8 +1528,7 @@
         "SubmenuFrequency": "తరచుదనం"
     },
     "VisitTime": {
-        "ColumnLocalTime": "స్థానిక సమయం",
-        "NHour": "%sగం"
+        "ColumnLocalTime": "స్థానిక సమయం"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s నిమి",

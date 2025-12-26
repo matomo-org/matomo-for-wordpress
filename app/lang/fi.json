@@ -760,6 +760,9 @@
         "ViewAndAddAnnotations": "Tarkastele ja lisää kommentteja %s:lle…",
         "YouCannotModifyThisNote": "Et voi muokata tätä kommenttia, koska et ole luonut sitä, eikä sinulla ole admin-oikeuksia tällä verkkosivulla."
     },
+    "BotTracking": {
+        "PageUrl": "Sivun URL"
+    },
     "Contents": {
         "Impressions": "Näkymät",
         "ContentInteraction": "Sisällön interaktio",
@@ -4241,19 +4244,13 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Paikallinen aika",
-        "ColumnServerTime": "Palvelimen aika",
         "DayOfWeek": "Viikonpäivä",
         "LocalTime": "Käyntejä (paikallinen aika)",
-        "NHour": "%s h",
         "PluginDescription": "Raportoi paikallisen ajan ja palvelimen ajan, kun kävijät katselevat sivustoasi tai sovellustasi.",
-        "ServerTime": "Käyntejä (palvelimen aika)",
         "SubmenuTimes": "Ajat",
         "VisitsByDayOfWeek": "Käynnit viikonpäivän mukaan",
         "WidgetByDayOfWeekDocumentation": "Tämä kaavio näyttää käyntien määrän toimialueellasi jokaisena viikonpäivänä.",
-        "WidgetLocalTime": "Käyntejä (paikallinen aika)",
-        "WidgetLocalTimeDocumentation": "Tämä kuvaaja näyttää, mikä aika oli %1$s kävijöiden aikavyöhykkeellä %2$s käyntien aikana.",
-        "WidgetServerTime": "Käyntejä (palvelimen aika)",
-        "WidgetServerTimeDocumentation": "Tämä kuvaaja näyttää, mikä aika oli %1$s palvelimen aikavyöhykkeellä %2$s käyntien aikana."
+        "WidgetLocalTimeDocumentation": "Tämä kuvaaja näyttää, mikä aika oli %1$s kävijöiden aikavyöhykkeellä %2$s käyntien aikana."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s–%2$s min",

@@ -213,7 +213,7 @@ class Model
     }
     public static function install()
     {
-        $segmentTable = "`idsegment` INT(11) NOT NULL AUTO_INCREMENT,\n                         `name` VARCHAR(255) NOT NULL,\n                         `definition` TEXT NOT NULL,\n                         `hash` CHAR(32) NULL,\n                         `login` VARCHAR(100) NOT NULL,\n                         `enable_all_users` tinyint(4) NOT NULL default 0,\n                         `enable_only_idsite` INTEGER(11) NULL,\n                         `auto_archive` tinyint(4) NOT NULL default 0,\n                         `ts_created` TIMESTAMP NULL,\n                         `ts_last_edit` TIMESTAMP NULL,\n                         `deleted` tinyint(4) NOT NULL default 0,\n                         PRIMARY KEY (`idsegment`)";
+        $segmentTable = "`idsegment` INT(11) NOT NULL AUTO_INCREMENT,\n                         `name` VARCHAR(255) NOT NULL,\n                         `definition` TEXT NOT NULL,\n                         `hash` CHAR(32) NULL,\n                         `login` VARCHAR(100) NOT NULL,\n                         `enable_all_users` tinyint(4) NOT NULL default 0,\n                         `enable_only_idsite` INTEGER(11) NULL,\n                         `auto_archive` tinyint(4) NOT NULL default 0,\n                         `ts_created` TIMESTAMP NULL,\n                         `ts_last_edit` TIMESTAMP NULL,\n                         `starred` tinyint(4) NOT NULL default 0,\n                         `starred_by` VARCHAR(100) NULL default NULL,\n                         `deleted` tinyint(4) NOT NULL default 0,\n                         PRIMARY KEY (`idsegment`)";
         DbHelper::createTable(self::$rawPrefix, $segmentTable);
     }
 }
