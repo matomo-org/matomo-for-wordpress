@@ -60,6 +60,8 @@ function handle_cli_command() {
     $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
+    . $NVM_DIR/nvm.sh
+    nvm use 16 > /dev/null
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
     ./console $EXECUTE_ARGS
     exit $?
