@@ -1,5 +1,14 @@
 == Changelog ===
 
+= 5.6.0 =
+* Update Matomo core to 5.6.1.
+* Add clear warning message if an adblocker is detected since many adblockers interfere with Matomo's reporting.
+* Slight redesign to Marketplace overview.
+* Ensure matomo language cookie is always set to current user's locale so changes users make to language settings will always be reflected in Matomo.
+* Bug fix: ensure the wp-statistics importer works with the newest version of wp-statistics.
+* Add current user locale to system report.
+* Bug fix: ensure user agents with commas can be excluded from tracking.
+
 = 5.3.3 =
 * Fix regression causing fatal errors when ecommerce tracking is used but WooCommerce is not installed.
 * Workaround infinite recursion problem in Matomo core that occurs when an AJAX method is not authorized to function.

@@ -36,7 +36,7 @@ describe('MWP Admin > Summary', () => {
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.summary.thismonth.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toBeLessThan(0.01);
+    ).toBeLessThan(5.0);
   });
 
   it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {

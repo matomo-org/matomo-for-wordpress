@@ -259,8 +259,8 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 			[
 				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
 				[
-					'method'  => 'GET',
-					'headers' => [
+					'method'   => 'GET',
+					'headers'  => [
 						'User-Agent' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
 					],
 					'blocking' => false,
@@ -302,8 +302,8 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 			[
 				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=&urlref=&recMode=1&http_status=200&pf_srv=22000&source=wordpress&bots=1',
 				[
-					'method'  => 'GET',
-					'headers' => [
+					'method'   => 'GET',
+					'headers'  => [
 						'User-Agent' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
 					],
 					'blocking' => false,

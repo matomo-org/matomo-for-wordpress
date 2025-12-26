@@ -150,7 +150,6 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 <script $script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
 $cdata_end</script>
-
 EOF;
 
 		$this->assertEquals( $expected_code, $tracking_code );
@@ -191,7 +190,6 @@ $cdata_end</script>
 <script $script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","11","24.00",24,"0","0",0]);
 $cdata_end</script>
-
 EOF;
 
 		$this->assertEquals( $expected_code, $tracking_code );
@@ -372,7 +370,9 @@ EOF;
 			}
 
 			// remove script added by woocommerce in wp_footer event
-			$result = preg_replace( '%<script type="application/ld\+json">.*?</script>%', '', $result );
+			$result = preg_replace( '%<script type="application/ld\+json">.*?</script>%s', '', $result );
+			$result = preg_replace( "%<style id='global-styles-inline-css' type='text/css'>.*?</style>%s", '', $result );
+			$result = trim( $result );
 
 			return $result;
 		} finally {

@@ -97,7 +97,7 @@ class AIBotTracking {
 			return;
 		}
 
-		$is_using_esi_to_track = $this->is_using_litespeed_cache() || $this->settings->is_tracking_ai_bots_via_esi_includes();
+		$is_using_esi_to_track = $this->settings->is_tracking_ai_bots_via_esi_includes();
 		if (
 			$is_using_esi_to_track
 			&& empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
@@ -130,7 +130,7 @@ class AIBotTracking {
 			return false;
 		}
 
-		if ( defined( 'DOING_AJAX' )  && DOING_AJAX ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return false;
 		}
 
@@ -153,16 +153,16 @@ class AIBotTracking {
 	}
 
 	private function is_request_for_file( $request_path ) {
-		if ( is_dir( $_SERVER['DOCUMENT_ROOT'] . $request_path ) ) {
+		if (
+			! empty( $_SERVER['DOCUMENT_ROOT'] )
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			&& is_dir( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) . $request_path )
+		) {
 			return false;
 		}
 
 		$extension = pathinfo( $request_path, PATHINFO_EXTENSION );
 		return ! in_array( $extension, self::$extensions_to_track, true );
-	}
-
-	private static function get_current_time_ms() {
-		return (int) ( microtime( true ) * 1000 );
 	}
 
 	public static function set_is_ai_bot_tracked( $is_tracked ) {
@@ -171,10 +171,6 @@ class AIBotTracking {
 
 	public function is_js_execution_detected() {
 		return ! empty( $_COOKIE['matomo_has_js'] )
-			&& $_COOKIE['matomo_has_js'] === '1';
-	}
-
-	public function is_using_litespeed_cache() {
-		return php_sapi_name() === 'litespeed';
+			&& '1' === $_COOKIE['matomo_has_js'];
 	}
 }

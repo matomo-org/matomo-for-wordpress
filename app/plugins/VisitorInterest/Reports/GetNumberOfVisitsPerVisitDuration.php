@@ -26,7 +26,7 @@ class GetNumberOfVisitsPerVisitDuration extends \Piwik\Plugins\VisitorInterest\R
         $this->name = Piwik::translate('VisitorInterest_WidgetLengths');
         $this->documentation = Piwik::translate('VisitorInterest_WidgetLengthsDocumentation') . '<br />' . Piwik::translate('General_ChangeTagCloudView');
         $this->metrics = array('nb_visits');
-        $this->processedMetrics = \false;
+        $this->processedMetrics = [];
         $this->constantRowsCount = \true;
         $this->order = 15;
     }

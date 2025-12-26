@@ -328,12 +328,12 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 			// set cookie via javascript cookie for known AI bots so we can skip tracking server side
 			// for them.
-			$userAgentSubstrings = wp_json_encode( AjaxTracker::AI_BOT_USER_AGENT_SUBSTRINGS );
+			$user_agent_substrings = wp_json_encode( AjaxTracker::AI_BOT_USER_AGENT_SUBSTRINGS );
 			array_unshift(
 				$options,
 				<<<EOF
 _paq.push([ function () {
-  var userAgentSubstrings = $userAgentSubstrings;
+  var userAgentSubstrings = $user_agent_substrings;
   for (var i = 0; i < userAgentSubstrings.length; ++i) {
   	var isAiBotUserAgent = navigator.userAgent.toLowerCase().indexOf(userAgentSubstrings[i].toLowerCase()) !== -1;
   	if (isAiBotUserAgent) {
@@ -353,7 +353,6 @@ _paq.push([ function () {
 } ]);
 EOF
 			);
-
 		}
 
 		$script .= "var _paq = window._paq = window._paq || [];\n";

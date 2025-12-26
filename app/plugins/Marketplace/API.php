@@ -61,8 +61,6 @@ class API extends \Piwik\Plugin\API
         $this->pluginTrialService = $pluginTrialService;
     }
     /**
-     * @param string $pluginName
-     *
      * @return bool
      * @throws Service\Exception If the marketplace request failed
      *

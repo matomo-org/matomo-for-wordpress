@@ -26,7 +26,7 @@ class GetNumberOfVisitsPerPage extends \Piwik\Plugins\VisitorInterest\Reports\Ba
         $this->name = Piwik::translate('VisitorInterest_WidgetPages');
         $this->documentation = Piwik::translate('VisitorInterest_WidgetPagesDocumentation') . '<br />' . Piwik::translate('General_ChangeTagCloudView');
         $this->metrics = array('nb_visits');
-        $this->processedMetrics = \false;
+        $this->processedMetrics = [];
         $this->constantRowsCount = \true;
         $this->order = 20;
     }
