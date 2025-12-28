@@ -37,7 +37,7 @@ function matomo_track_if_ai_bot() {
 
 	// check user agent is AI bot first thing, so if it is a normal request, we do
 	// as little extra work as possible
-	$user_agent = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : false;
+	$user_agent = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	if ( ! MatomoTracker::isUserAgentAIBot( $user_agent ) ) {
 		return;
 	}
