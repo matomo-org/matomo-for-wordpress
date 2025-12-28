@@ -140,7 +140,12 @@ class AjaxTracker extends \MatomoTracker {
 
 		$url = $url . '&bots=1';
 
-		$response = $this->wp_remote_request( $url, $args );
+		try {
+			$response = $this->wp_remote_request( $url, $args );
+		} catch ( \Exception $ex ) {
+			$this->logger->log_exception( 'ajax_tracker', $ex );
+			return '';
+		}
 
 		if ( is_wp_error( $response ) ) {
 			$this->logger->log_exception( 'ajax_tracker', new \Exception( $response->get_error_message() ) );
