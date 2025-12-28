@@ -174,6 +174,7 @@ class Paths {
 			$parent_dir = $path_upload_dir;
 			do {
 				$parent_dir = dirname( $parent_dir );
+				$parent_dir = rtrim( $parent_dir, '/' ) . '/';
 				if ( file_exists( $parent_dir . $file_to_look_for ) ) {
 					return $parent_dir;
 				}
