@@ -175,7 +175,9 @@ class Paths {
 			do {
 				$parent_dir = dirname( $parent_dir );
 				$parent_dir = rtrim( $parent_dir, '/' ) . '/';
-				if ( file_exists( $parent_dir . $file_to_look_for ) ) {
+				// NOTE: file_exists here can trigger an open_basedir warning on some setups
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				if ( @file_exists( $parent_dir . $file_to_look_for ) ) {
 					return $parent_dir;
 				}
 			} while ( strpos( $parent_dir, ABSPATH ) === 0 ); // we don't go outside WP dir
