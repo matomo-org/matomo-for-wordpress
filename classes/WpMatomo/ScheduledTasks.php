@@ -233,7 +233,7 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db( $db_url_override = null, $asn_url_override = null ) {
-		if ( is_multisite() && ! is_main_site() ) {
+		if ( is_multisite() && ! is_main_site() && is_plugin_active_for_network( 'matomo/matomo.php' ) ) {
 			return; // only run this task once per entire WP install
 		}
 
