@@ -359,8 +359,10 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
 		$this->settings->save();
 
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+
 		// ensure last time before cron is empty
-		$tasks  = new ScheduledTasks( $this->settings );
+		$tasks  = new ScheduledTasks( $this->settings, $sync_config );
 		$before = $tasks->get_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
 		$this->assertEmpty( $before );
 
@@ -384,8 +386,10 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
 		$this->settings->save();
 
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+
 		// mark geoip already run
-		$tasks = new ScheduledTasks( $this->settings );
+		$tasks = new ScheduledTasks( $this->settings, $sync_config );
 		$tasks->set_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP, 900 );
 
 		$this->installer->install();

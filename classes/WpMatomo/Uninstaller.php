@@ -11,6 +11,7 @@ namespace WpMatomo;
 
 use Piwik\Config;
 use WpMatomo\Admin\Dashboard;
+use WpMatomo\Site\Sync\SyncConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -54,7 +55,9 @@ class Uninstaller {
 
 		$settings = new Settings();
 
-		$tasks = new ScheduledTasks( $settings );
+		$sync_config = new SyncConfig( $settings );
+
+		$tasks = new ScheduledTasks( $settings, $sync_config );
 		$tasks->uninstall();
 
 		$roles = new Roles( $settings );

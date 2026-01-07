@@ -133,7 +133,8 @@ class SystemReport {
 		) {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
-				$scheduled_tasks = new ScheduledTasks( $this->settings );
+				$sync_config     = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+				$scheduled_tasks = new ScheduledTasks( $this->settings, $sync_config );
 
 				if ( ! defined( 'PIWIK_ARCHIVE_NO_TRUNCATE' ) ) {
 					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
@@ -186,7 +187,8 @@ class SystemReport {
 			}
 
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_UPDATE_GEOIP_DB ] ) ) {
-				$scheduled_tasks = new ScheduledTasks( $this->settings );
+				$sync_config     = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+				$scheduled_tasks = new ScheduledTasks( $this->settings, $sync_config );
 				$scheduled_tasks->update_geo_ip2_db();
 			}
 
@@ -761,7 +763,9 @@ class SystemReport {
 			'section' => 'Crons',
 		];
 
-		$scheduled_tasks = new ScheduledTasks( $this->settings );
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+
+		$scheduled_tasks = new ScheduledTasks( $this->settings, $sync_config );
 		$all_events      = $scheduled_tasks->get_all_events();
 
 		$rows[] = [
