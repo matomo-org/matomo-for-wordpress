@@ -85,6 +85,11 @@ services:
       dockerfile: ./Dockerfile.local
       args:
         BASE_IMAGE: litespeedtech/litespeed:6.3.2-lsphp81
+    ulimits:
+      nofile:
+        soft: 50000
+        hard: 50000
+      nproc: 65535
     environment:
       RUN_AS_USER: "${UID:-1000}"
       DOCUMENT_ROOT: /var/www/vhosts/localhost/html
