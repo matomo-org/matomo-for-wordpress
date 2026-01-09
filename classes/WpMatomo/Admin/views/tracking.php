@@ -381,7 +381,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 					</td>
 				</tr>
 				<?php
-			} elseif ( false === $matomo_is_advanced_cache_used && $matomo_is_track_script_used_in_wp_config ) {
+			} elseif ( $matomo_is_advanced_cache_used && false === $matomo_is_track_script_used_in_wp_config ) {
 				?>
 				<tr>
 					<td></td>
