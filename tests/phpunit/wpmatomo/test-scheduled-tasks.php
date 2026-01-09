@@ -47,6 +47,8 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->settings    = new Settings();
 		$this->site_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
 		$this->tasks       = new ScheduledTasks( $this->settings, $this->site_config );
+
+		$this->site_config->set_config_value( 'General', 'enable_internet_features', '1' );
 		$this->tasks->schedule();
 	}
 
