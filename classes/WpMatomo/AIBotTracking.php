@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use LiteSpeed\ESI;
+
 /**
  * Performs server side tracking for AI bots.
  *
@@ -68,7 +70,16 @@ class AIBotTracking {
 	}
 
 	public function register_hooks() {
+		add_action( 'litespeed_init', [ $this, 'litespeed_init' ] );
 		add_action( 'wp_footer', [ $this, 'do_ai_bot_tracking' ], 999999 );
+	}
+
+	public function litespeed_init() {
+		if ( class_exists( ESI::class )
+			&& $this->settings->is_tracking_ai_bots_via_esi_includes()
+		) {
+			ESI::set_has_esi();
+		}
 	}
 
 	public function do_ai_bot_tracking( $already_elapsed_request_time_ms = 0 ) {
@@ -77,25 +88,6 @@ class AIBotTracking {
 		}
 
 		self::$ai_bot_tracked = true;
-
-		if ( ! $this->should_track_current_page() ) {
-			return;
-		}
-
-		if ( $this->is_js_execution_detected() ) {
-			return;
-		}
-
-		if ( ! AjaxTracker::isUserAgentAIBot( $this->tracker->userAgent ) ) {
-			return;
-		}
-
-		if (
-			! $this->settings->is_ai_bot_tracking_enabled()
-			|| ! $this->settings->is_tracking_enabled()
-		) {
-			return;
-		}
 
 		$is_using_esi_to_track = $this->settings->is_tracking_ai_bots_via_esi_includes();
 		if (
@@ -107,8 +99,12 @@ class AIBotTracking {
 			return;
 		}
 
+		if ( ! $this->is_doing_ai_bot_tracking_this_request() ) {
+			return;
+		}
+
 		$response_code      = http_response_code();
-		$request_elapsed_ms = (int) ( timer_float() * 1000 ) + $already_elapsed_request_time_ms;
+		$request_elapsed_ms = (int) ( timer_float() * 1000 ) + (int) $already_elapsed_request_time_ms;
 
 		if ( empty( $response_code ) ) {
 			$response_code = 200;
@@ -172,5 +168,32 @@ class AIBotTracking {
 	public function is_js_execution_detected() {
 		return ! empty( $_COOKIE['matomo_has_js'] )
 			&& '1' === $_COOKIE['matomo_has_js'];
+	}
+
+	private function is_doing_ai_bot_tracking_this_request() {
+		if ( ! empty( $GLOBALS['MATOMO_IN_AI_ESI'] ) ) {
+			return true;
+		}
+
+		if ( ! $this->should_track_current_page() ) {
+			return false;
+		}
+
+		if ( $this->is_js_execution_detected() ) {
+			return false;
+		}
+
+		if ( ! AjaxTracker::isUserAgentAIBot( $this->tracker->userAgent ) ) {
+			return false;
+		}
+
+		if (
+			! $this->settings->is_ai_bot_tracking_enabled()
+			|| ! $this->settings->is_tracking_enabled()
+		) {
+			return false;
+		}
+
+		return true;
 	}
 }
