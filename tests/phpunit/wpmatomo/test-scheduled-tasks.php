@@ -226,6 +226,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( $blogid1 );
 
+		// install on new site
+		$settings  = new Settings();
+		$installer = new Installer( $settings );
+		$installer->install();
+
 		$this->tasks->update_geo_ip2_db();
 		$this->assertEquals( 1, $this->geoip_update_call_count );
 
