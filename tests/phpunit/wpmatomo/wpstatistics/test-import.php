@@ -164,6 +164,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 		$settings    = new Settings();
 		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $settings );
+		print "enable_internet_features:\n";
+		var_export(gettype($sync_config->get_config_value( 'General', 'enable_internet_features' )));
 
 		$schedule_task = new ScheduledTasks( $settings, $sync_config );
 		$schedule_task->update_geo_ip2_db( $wp_statistics_geoip_url );

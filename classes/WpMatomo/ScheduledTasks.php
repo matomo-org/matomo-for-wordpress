@@ -529,6 +529,6 @@ class ScheduledTasks {
 	}
 
 	private function is_internet_features_enabled() {
-		return $this->site_config->get_config_value( 'General', 'enable_internet_features' ) === '1';
+		return strval( $this->site_config->get_config_value( 'General', 'enable_internet_features' ) ) === '1';
 	}
 }
