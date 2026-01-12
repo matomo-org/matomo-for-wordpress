@@ -78,7 +78,8 @@ class WpMatomo {
 		$compatibility = new \WpMatomo\Compatibility();
 		$compatibility->register_hooks();
 
-		$scheduled_tasks = new ScheduledTasks( self::$settings );
+		$site_config     = new SiteSync\SyncConfig( self::$settings );
+		$scheduled_tasks = new ScheduledTasks( self::$settings, $site_config );
 		$scheduled_tasks->schedule();
 		$scheduled_tasks->register_ajax();
 
