@@ -22,7 +22,6 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
-use WpMatomo\Paths;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -239,12 +238,12 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db( $db_url_override = null, $asn_url_override = null ) {
-		if ( ! $this->is_internet_features_enabled() ) {
-			return;
-		}
-
 		if ( is_multisite() && ! is_main_site() ) {
 			return; // only run this task once per entire WP install
+		}
+
+		if ( ! $this->is_internet_features_enabled() ) {
+			return;
 		}
 
 		$this->remove_task_errors( [ 'update_geoip2' ] );
