@@ -26,6 +26,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	private $tasks;
 
+	/**
+	 * @var \WpMatomo\Site\Sync\SyncConfig
+	 */
+	private $site_config;
+
 	protected $disable_temp_tables = true;
 	/**
 	 * @var Settings
@@ -39,8 +44,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 
 		$this->geoip_update_call_count = 0;
 
-		$this->settings = new Settings();
-		$this->tasks    = new ScheduledTasks( $this->settings );
+		$this->settings    = new Settings();
+		$this->site_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+		$this->tasks       = new ScheduledTasks( $this->settings, $this->site_config );
+
+		$this->site_config->set_config_value( 'General', 'enable_internet_features', '1' );
 		$this->tasks->schedule();
 	}
 
@@ -218,6 +226,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( $blogid1 );
 
+		// install on new site
+		$settings  = new Settings();
+		$installer = new Installer( $settings );
+		$installer->install();
+
 		$this->tasks->update_geo_ip2_db();
 		$this->assertEquals( 1, $this->geoip_update_call_count );
 
@@ -225,6 +238,18 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 
 		$this->tasks->update_geo_ip2_db();
 		$this->assertEquals( 2, $this->geoip_update_call_count );
+	}
+
+	/**
+	 * @provideContainerConfig get_container_config_for_geoip_no_op
+	 */
+	public function test_geoip_update_does_not_run_if_internet_features_disabled() {
+		$site_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+		$site_config->set_config_value( 'General', 'enable_internet_features', '0' );
+		$this->assertEquals( '0', $site_config->get_config_value( 'General', 'enable_internet_features' ) );
+
+		$this->tasks->update_geo_ip2_db();
+		$this->assertEquals( 0, $this->geoip_update_call_count );
 	}
 
 	public function get_container_config_for_geoip_fail() {

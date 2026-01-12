@@ -207,7 +207,8 @@ class Installer {
 			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
 
 			// to set up geoip in the background later... don't want this to influence the install
-			$tasks                      = new ScheduledTasks( $this->settings );
+			$sync_config                = new Sync\SyncConfig( $this->settings );
+			$tasks                      = new ScheduledTasks( $this->settings, $sync_config );
 			$last_geoip_update_run_time = $tasks->get_last_time_before_cron( ScheduledTasks::EVENT_GEOIP );
 			if ( empty( $last_geoip_update_run_time ) ) {
 				wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );

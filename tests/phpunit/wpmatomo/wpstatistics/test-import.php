@@ -162,7 +162,10 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		// wpstatistics fails to download geoip during tests, so we do it ourselves and link it into the wpstatistics directory
 		$wp_statistics_geoip_url = 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz';
 
-		$schedule_task = new ScheduledTasks( new Settings() );
+		$settings    = new Settings();
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $settings );
+
+		$schedule_task = new ScheduledTasks( $settings, $sync_config );
 		$schedule_task->update_geo_ip2_db( $wp_statistics_geoip_url );
 
 		$expected_path = ABSPATH . '/wp-content/uploads/matomo/GeoIP2-City.mmdb';
