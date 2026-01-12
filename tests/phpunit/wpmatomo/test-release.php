@@ -114,6 +114,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/node_modules/jquery.scrollto/jquery.scrollTo.min.js',
 			'matomo/plugins/Morpheus/icons/README.md',
 			'matomo/core/Mail/Transport.php',
+			'matomo/vendor/wikimedia/less.php/lib/Less/.easymin/ignore_prefixes',
 		];
 
 		$ignored_mwp_files = [
