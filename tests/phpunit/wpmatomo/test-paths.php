@@ -244,11 +244,14 @@ class PathsTest extends MatomoUnit_TestCase {
 
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
-		wp_delete_site( $blogid1 );
 
-		$upload_path_base_dir = $this->paths->get_upload_base_dir();
+		try {
+			$upload_path_base_dir = $this->paths->get_upload_base_dir();
 
-		$global_upload_path = $this->paths->get_global_path_upload_dir_if_matches_site_specific_dir( $upload_path_base_dir );
-		$this->assertEquals( ABSPATH . 'wp-content/uploads/', $global_upload_path );
+			$global_upload_path = $this->paths->get_global_path_upload_dir_if_matches_site_specific_dir( $upload_path_base_dir );
+			$this->assertEquals( ABSPATH . 'wp-content/uploads/', $global_upload_path );
+		} finally {
+			wp_delete_site( $blogid1 );
+		}
 	}
 }
