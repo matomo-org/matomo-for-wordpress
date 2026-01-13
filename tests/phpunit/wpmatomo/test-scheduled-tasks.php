@@ -217,6 +217,9 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 			return;
 		}
 
+		// activate plugin sitewide
+		activate_plugin( 'matomo/matomo.php', '', true );
+
 		$main_site = get_current_blog_id();
 		$this->assertNotEmpty( $main_site );
 
