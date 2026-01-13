@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit10e1ddd1c5f155c37495af8596043c9c
+class ComposerStaticInit33a5aa535a07c2fb07dc9e94f81c64e1
 {
     public static $files = array (
         '57561443c5204a2081a57dea43ad4761' => __DIR__ . '/../..' . '/twig/twig/src/Resources/core.php',
@@ -128,6 +128,65 @@ class ComposerStaticInit10e1ddd1c5f155c37495af8596043c9c
         'Matomo\\Dependencies\\Invoker\\ParameterResolver\\ResolverChain' => __DIR__ . '/../..' . '/php-di/invoker/src/ParameterResolver/ResolverChain.php',
         'Matomo\\Dependencies\\Invoker\\ParameterResolver\\TypeHintResolver' => __DIR__ . '/../..' . '/php-di/invoker/src/ParameterResolver/TypeHintResolver.php',
         'Matomo\\Dependencies\\Invoker\\Reflection\\CallableReflection' => __DIR__ . '/../..' . '/php-di/invoker/src/Reflection/CallableReflection.php',
+        'Matomo\\Dependencies\\Less_Autoloader' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Autoloader.php',
+        'Matomo\\Dependencies\\Less_Cache' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Cache.php',
+        'Matomo\\Dependencies\\Less_Colors' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Colors.php',
+        'Matomo\\Dependencies\\Less_Configurable' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Configurable.php',
+        'Matomo\\Dependencies\\Less_Environment' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Environment.php',
+        'Matomo\\Dependencies\\Less_Exception_Chunk' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Exception/Chunk.php',
+        'Matomo\\Dependencies\\Less_Exception_Compiler' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Exception/Compiler.php',
+        'Matomo\\Dependencies\\Less_Exception_Parser' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Exception/Parser.php',
+        'Matomo\\Dependencies\\Less_Functions' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Functions.php',
+        'Matomo\\Dependencies\\Less_Mime' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Mime.php',
+        'Matomo\\Dependencies\\Less_Output' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Output.php',
+        'Matomo\\Dependencies\\Less_Output_Mapped' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Output/Mapped.php',
+        'Matomo\\Dependencies\\Less_Parser' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Parser.php',
+        'Matomo\\Dependencies\\Less_SourceMap_Base64VLQ' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/SourceMap/Base64VLQ.php',
+        'Matomo\\Dependencies\\Less_SourceMap_Generator' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/SourceMap/Generator.php',
+        'Matomo\\Dependencies\\Less_Tree' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree.php',
+        'Matomo\\Dependencies\\Less_Tree_Alpha' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Alpha.php',
+        'Matomo\\Dependencies\\Less_Tree_Anonymous' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Anonymous.php',
+        'Matomo\\Dependencies\\Less_Tree_Assignment' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Assignment.php',
+        'Matomo\\Dependencies\\Less_Tree_Attribute' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Attribute.php',
+        'Matomo\\Dependencies\\Less_Tree_Call' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Call.php',
+        'Matomo\\Dependencies\\Less_Tree_Color' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Color.php',
+        'Matomo\\Dependencies\\Less_Tree_Comment' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Comment.php',
+        'Matomo\\Dependencies\\Less_Tree_Condition' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Condition.php',
+        'Matomo\\Dependencies\\Less_Tree_DefaultFunc' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/DefaultFunc.php',
+        'Matomo\\Dependencies\\Less_Tree_DetachedRuleset' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/DetachedRuleset.php',
+        'Matomo\\Dependencies\\Less_Tree_Dimension' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Dimension.php',
+        'Matomo\\Dependencies\\Less_Tree_Directive' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Directive.php',
+        'Matomo\\Dependencies\\Less_Tree_Element' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Element.php',
+        'Matomo\\Dependencies\\Less_Tree_Expression' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Expression.php',
+        'Matomo\\Dependencies\\Less_Tree_Extend' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Extend.php',
+        'Matomo\\Dependencies\\Less_Tree_Import' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Import.php',
+        'Matomo\\Dependencies\\Less_Tree_Javascript' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Javascript.php',
+        'Matomo\\Dependencies\\Less_Tree_Keyword' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Keyword.php',
+        'Matomo\\Dependencies\\Less_Tree_Media' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Media.php',
+        'Matomo\\Dependencies\\Less_Tree_Mixin_Call' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Mixin/Call.php',
+        'Matomo\\Dependencies\\Less_Tree_Mixin_Definition' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Mixin/Definition.php',
+        'Matomo\\Dependencies\\Less_Tree_NameValue' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/NameValue.php',
+        'Matomo\\Dependencies\\Less_Tree_Negative' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Negative.php',
+        'Matomo\\Dependencies\\Less_Tree_Operation' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Operation.php',
+        'Matomo\\Dependencies\\Less_Tree_Paren' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Paren.php',
+        'Matomo\\Dependencies\\Less_Tree_Quoted' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Quoted.php',
+        'Matomo\\Dependencies\\Less_Tree_Rule' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Rule.php',
+        'Matomo\\Dependencies\\Less_Tree_Ruleset' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Ruleset.php',
+        'Matomo\\Dependencies\\Less_Tree_RulesetCall' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/RulesetCall.php',
+        'Matomo\\Dependencies\\Less_Tree_Selector' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Selector.php',
+        'Matomo\\Dependencies\\Less_Tree_UnicodeDescriptor' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/UnicodeDescriptor.php',
+        'Matomo\\Dependencies\\Less_Tree_Unit' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Unit.php',
+        'Matomo\\Dependencies\\Less_Tree_UnitConversions' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/UnitConversions.php',
+        'Matomo\\Dependencies\\Less_Tree_Url' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Url.php',
+        'Matomo\\Dependencies\\Less_Tree_Value' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Value.php',
+        'Matomo\\Dependencies\\Less_Tree_Variable' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Tree/Variable.php',
+        'Matomo\\Dependencies\\Less_Version' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Version.php',
+        'Matomo\\Dependencies\\Less_Visitor' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Visitor.php',
+        'Matomo\\Dependencies\\Less_VisitorReplacing' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/VisitorReplacing.php',
+        'Matomo\\Dependencies\\Less_Visitor_extendFinder' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Visitor/extendFinder.php',
+        'Matomo\\Dependencies\\Less_Visitor_joinSelector' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Visitor/joinSelector.php',
+        'Matomo\\Dependencies\\Less_Visitor_processExtends' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Visitor/processExtends.php',
+        'Matomo\\Dependencies\\Less_Visitor_toCSS' => __DIR__ . '/../..' . '/wikimedia/less.php/lib/Less/Visitor/toCSS.php',
         'Matomo\\Dependencies\\MaxMind\\Db\\Reader' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader.php',
         'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\Decoder' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Decoder.php',
         'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\InvalidDatabaseException' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/InvalidDatabaseException.php',
@@ -954,13 +1013,14 @@ class ComposerStaticInit10e1ddd1c5f155c37495af8596043c9c
         'Matomo\\Dependencies\\Twig\\Util\\DeprecationCollector' => __DIR__ . '/../..' . '/twig/twig/src/Util/DeprecationCollector.php',
         'Matomo\\Dependencies\\Twig\\Util\\ReflectionCallable' => __DIR__ . '/../..' . '/twig/twig/src/Util/ReflectionCallable.php',
         'Matomo\\Dependencies\\Twig\\Util\\TemplateDirIterator' => __DIR__ . '/../..' . '/twig/twig/src/Util/TemplateDirIterator.php',
+        'Matomo\\Dependencies\\lessc' => __DIR__ . '/../..' . '/wikimedia/less.php/lessc.inc.php',
         'PEAR_PHPTest' => __DIR__ . '/../..' . '/pear/archive_tar/tests/phpt_test.php.inc',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit10e1ddd1c5f155c37495af8596043c9c::$classMap;
+            $loader->classMap = ComposerStaticInit33a5aa535a07c2fb07dc9e94f81c64e1::$classMap;
 
         }, null, ClassLoader::class);
     }
