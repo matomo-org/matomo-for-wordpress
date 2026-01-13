@@ -229,10 +229,29 @@ class PathsTest extends MatomoUnit_TestCase {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
+
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
 		wp_delete_site( $blogid1 );
 		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 
+	public function test_get_global_path_upload_dir_if_matches_site_specific_dir() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blogid1 = self::factory()->blog->create();
+		switch_to_blog( 2 );
+
+		try {
+			$upload_path_base_dir = $this->paths->get_upload_base_dir();
+
+			$global_upload_path = $this->paths->get_global_path_upload_dir_if_matches_site_specific_dir( $upload_path_base_dir );
+			$this->assertEquals( ABSPATH . 'wp-content/uploads/', $global_upload_path );
+		} finally {
+			wp_delete_site( $blogid1 );
+		}
+	}
 }

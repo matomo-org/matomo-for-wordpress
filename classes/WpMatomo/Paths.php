@@ -146,8 +146,9 @@ class Paths {
 			return $path_upload_dir;
 		}
 
-		if ( preg_match( '/sites\/(\d)+$/', $path_upload_dir ) ) {
-			$path_upload_dir = preg_replace( '/sites\/(\d)+$/', '', $path_upload_dir );
+		$global_path_upload_dir = $this->get_global_path_upload_dir_if_matches_site_specific_dir( $path_upload_dir );
+		if ( ! empty( $global_path_upload_dir ) ) {
+			$path_upload_dir = $global_path_upload_dir;
 		} else {
 			// re-implement _wp_upload_dir to find hopefully the upload_dir for the network site
 			$upload_path = trim( get_option( 'upload_path' ) );
@@ -173,7 +174,10 @@ class Paths {
 			$parent_dir = $path_upload_dir;
 			do {
 				$parent_dir = dirname( $parent_dir );
-				if ( file_exists( $parent_dir . $file_to_look_for ) ) {
+				$parent_dir = rtrim( $parent_dir, '/' ) . '/';
+				// NOTE: file_exists here can trigger an open_basedir warning on some setups
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				if ( @file_exists( $parent_dir . $file_to_look_for ) ) {
 					return $parent_dir;
 				}
 			} while ( strpos( $parent_dir, ABSPATH ) === 0 ); // we don't go outside WP dir
@@ -232,5 +236,21 @@ class Paths {
 			&& is_writable( $upload_dir )
 			&& $this->get_host_init_filesystem_succeeded()
 			&& $is_filesystem_direct_available;
+	}
+
+	/**
+	 * public for tests
+	 *
+	 * @param string $path_upload_dir
+	 * @return string|null
+	 */
+	public function get_global_path_upload_dir_if_matches_site_specific_dir( $path_upload_dir ) {
+		$multisite_path_regex = '%sites/(\d)+/' . preg_quote( MATOMO_UPLOAD_DIR, '%' ) . '$%';
+
+		if ( ! preg_match( $multisite_path_regex, $path_upload_dir ) ) {
+			return null;
+		}
+
+		return preg_replace( $multisite_path_regex, '', $path_upload_dir );
 	}
 }

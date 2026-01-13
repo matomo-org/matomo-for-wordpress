@@ -64,7 +64,7 @@ function handle_cli_command() {
     ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
-    cd /var/www/html/matomo-for-wordpress
+    cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo
 
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
