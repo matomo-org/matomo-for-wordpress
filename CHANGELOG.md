@@ -1,5 +1,12 @@
 == Changelog ===
 
+= 5.6.1 =
+* Update Matomo core to 5.6.2.
+* Bug fix: only execute geolocation database update if internet features are enabled. (Add `[General] enable_internet_features=0` to the /path/to/wordpress/wp-content/uploads/matomo/config/config.ini.php file to disable internet features.)
+* Bug fix: avoid autoloading conflicts with the wikimedia/less.php library (fixing display issues when this plugin is used on wordpress.com and with certain other plugins).
+* Bug fix: fix incorrect detection of global upload directory in a multisite installation.
+* Bug fix: allow geolocation database update to also run on multisite installs when the plugin is not network activated.
+
 = 5.6.0 =
 * Update Matomo core to 5.6.1.
 * Add clear warning message if an adblocker is detected since many adblockers interfere with Matomo's reporting.
