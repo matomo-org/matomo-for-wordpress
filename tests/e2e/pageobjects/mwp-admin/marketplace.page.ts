@@ -114,7 +114,7 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async openSubscriptionsTab() {
-    await $('a.nav-tab=Subscriptions').click();
+    await $('a.nav-tab=Premium Features').click();
   }
 
   async setSubscriptionLicense(license: string) {
@@ -124,14 +124,14 @@ class MwpMarketplacePage extends MwpPage {
 
     // just for screenshots, make sure the license does not display
     await browser.execute(() => {
-      window.jQuery('input[name="matomo_license_key"]').attr('type', 'password');
+      window.jQuery('#license-key-input').attr('type', 'password');
     });
 
     await browser.execute((l) => {
-      window.jQuery('input[name="matomo_license_key"]').val(l);
+      window.jQuery('#license-key-input').val(l);
     }, license);
 
-    await $('#wpbody-content .button-primary').click();
+    await $('#wpbody-content .activate-license').click();
 
     await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed({ timeout: 30000 });
   }

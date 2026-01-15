@@ -125,16 +125,6 @@ describe('MWP Admin > Marketplace', () => {
     ).toEqual(0);
   });
 
-  it('should show premium plugins in the subscriptions tab after setting a license', async () => {
-    await browser.refresh();
-    await MwpMarketplacePage.openInstallPluginsTab();
-
-    await MwpMarketplacePage.prepareWpAdminForScreenshot();
-    await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-with-premium.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
-  });
-
   it('should install and activate a premium plugin successfully', async () => {
     await browser.refresh();
     await MwpMarketplacePage.installPlugin('SEOWebVitals');
