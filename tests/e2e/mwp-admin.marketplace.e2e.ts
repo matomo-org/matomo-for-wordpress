@@ -126,7 +126,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should install and activate a premium plugin successfully', async () => {
-    await browser.refresh();
+    await MwpMarketplacePage.openInstallPluginsTab();
     await MwpMarketplacePage.installPlugin('SEOWebVitals');
     await MwpMarketplacePage.activateInstalledPlugin();
 
