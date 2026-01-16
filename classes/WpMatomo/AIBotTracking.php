@@ -82,19 +82,21 @@ class AIBotTracking {
 		}
 	}
 
-	public function do_ai_bot_tracking( $already_elapsed_request_time_ms = 0 ) {
+	public function do_ai_bot_tracking() {
+		// track AI bots only once per request
 		if ( self::$ai_bot_tracked ) {
 			return;
 		}
 
 		self::$ai_bot_tracked = true;
 
+		// if using ESI to track, and not within the track_ai_bot.php script, output the appropriate ESI tag
 		$is_using_esi_to_track = $this->settings->is_tracking_ai_bots_via_esi_includes();
 		if (
 			$is_using_esi_to_track
 			&& empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
 		) {
-			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE ) . '?mtm_elapsed=' . rawurlencode( (int) ( timer_float() * 1000 ) );
+			$track_script_url = plugins_url( '/misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE ) . '?mtm_esi=1';
 			echo '<esi:include src="' . esc_attr( $track_script_url ) . '" cache-control="no-cache" />';
 			return;
 		}
@@ -104,7 +106,11 @@ class AIBotTracking {
 		}
 
 		$response_code      = http_response_code();
-		$request_elapsed_ms = (int) ( timer_float() * 1000 ) + (int) $already_elapsed_request_time_ms;
+		$request_elapsed_ms = null;
+
+		if ( empty( $GLOBALS['MATOMO_IN_AI_ESI'] ) ) {
+			$request_elapsed_ms = (int) ( timer_float() * 1000 );
+		}
 
 		if ( empty( $response_code ) ) {
 			$response_code = 200;
