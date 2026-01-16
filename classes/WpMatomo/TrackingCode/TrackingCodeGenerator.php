@@ -328,6 +328,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 			// set cookie via javascript cookie for known AI bots so we can skip tracking server side
 			// for them.
+			// NOTE: this must be done ONLY for known AI bots to be compliant with privacy regulations.
 			$user_agent_substrings = wp_json_encode( AjaxTracker::AI_BOT_USER_AGENT_SUBSTRINGS );
 			array_unshift(
 				$options,

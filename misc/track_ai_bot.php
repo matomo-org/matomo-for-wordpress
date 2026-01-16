@@ -25,17 +25,17 @@ function matomo_track_if_ai_bot() {
 	if (
 		( ! defined( 'WP_CACHE' ) || ! WP_CACHE )
 		&& empty( $_GET['mtm_esi'] )
-	) {
-		return; // advanced-cache.php not in use
+	) { // advanced-cache.php not in use and we are not tracking via esi:include
+		return;
 	}
 
-	if ( isset( $_GET['mtm_esi'] ) ) {
-		$GLOBALS['MATOMO_IN_AI_ESI'] = true; // executing via esi:include directive
+	if ( isset( $_GET['mtm_esi'] ) ) { // executing via esi:include directive
+		$GLOBALS['MATOMO_IN_AI_ESI'] = true;
 	}
 
 	require_once __DIR__ . '/../app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 
-	// check user agent is AI bot first thing, so if it is a normal request, we do
+	// check user agent is AI bot first thing, so if it is a normal request we do
 	// as little extra work as possible
 	$user_agent = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	if ( ! MatomoTracker::isUserAgentAIBot( $user_agent ) ) {

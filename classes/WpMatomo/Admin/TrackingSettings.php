@@ -82,8 +82,9 @@ class TrackingSettings implements AdminSettingsInterface {
 			return null;
 		}
 
+		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$wp_config_contents = file_get_contents( $wp_config_path );
+		$wp_config_contents = @file_get_contents( $wp_config_path );
 
 		// some systems may disable reading of files outside of wp-content
 		if ( ! is_string( $wp_config_contents ) ) {
