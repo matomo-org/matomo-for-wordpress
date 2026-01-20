@@ -675,7 +675,11 @@ function start_webserver() {
     chmod 777 /usr/local/lsws /tmp -R
     chmod 600 /usr/local/lsws/admin/cgid/secret/cgid.sock
 
-    cp /lstrial.key /usr/local/lsws/conf/trial.key
+    cp /serial.no /usr/local/lsws/conf/serial.no
+
+    cd /usr/local/lsws/conf
+    /usr/local/lsws/bin/lshttpd -r
+    cd "$DOCUMENT_ROOT"
 
     /usr/local/lsws/bin/lswsctrl start
     $@

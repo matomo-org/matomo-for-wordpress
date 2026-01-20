@@ -30,6 +30,7 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
+      - ../wp-matomo:$DOCUMENT_ROOT/6.9/wp-content/plugins/wp-piwik
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
@@ -90,6 +91,10 @@ services:
         soft: 50000
         hard: 50000
       nproc: 65535
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     environment:
       RUN_AS_USER: "${UID:-1000}"
       DOCUMENT_ROOT: /var/www/vhosts/localhost/html
@@ -100,7 +105,8 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
-      - ./lstrial.key:/lstrial.key
+      - ./serial.no:/serial.no
+      - ../wp-matomo:/var/www/vhosts/localhost/html/6.9/wp-content/plugins/wp-piwik
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
