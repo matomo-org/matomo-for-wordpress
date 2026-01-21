@@ -225,4 +225,8 @@ class AjaxTracker extends \MatomoTracker {
 
 		$config->General['proxy_client_headers'] = $proxy_client_headers;
 	}
+
+	public static function getCurrentUrl(): string {
+		return parent::getCurrentUrl();
+	}
 }

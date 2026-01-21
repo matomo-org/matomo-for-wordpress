@@ -7,6 +7,7 @@
  * @package matomo
  */
 
+use WpMatomo\AjaxTracker;
 use WpMatomo\Settings;
 use WpMatomo\AIBotTracking;
 
@@ -32,7 +33,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$_SERVER['REQUEST_URI'] = 'https://mysite.com/some/page';
+		$this->set_current_url( 'https://mysite.com/some/page' );
 
 		$this->settings = $this->make_settings();
 		$this->tracker  = $this->make_mock_tracker();
@@ -64,7 +65,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_should_track_current_page_returns_false_if_no_request_uri_is_set() {
 		$this->enable_ai_bot_tracking();
 
-		unset( $_SERVER['REQUEST_URI'] );
+		$this->unset_current_url();
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
@@ -76,7 +77,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_should_track_current_page_should_return_false_for_non_html_files( $request_uri ) {
 		$this->enable_ai_bot_tracking();
 
-		$_SERVER['REQUEST_URI'] = $request_uri;
+		$this->set_current_url( $request_uri );
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
@@ -94,7 +95,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_should_track_current_page_should_return_false_for_robots_txt() {
 		$this->enable_ai_bot_tracking();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/robots.txt';
+		$this->set_current_url( 'https://somesite.com/robots.txt' );
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
@@ -103,7 +104,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_should_track_current_page_should_return_false_for_sitemap_xml() {
 		$this->enable_ai_bot_tracking();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/sitemap.xml';
+		$this->set_current_url( 'https://somesite.com/folder/sitemap.xml' );
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
@@ -125,7 +126,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->settings->set_global_option( Settings::TRACK_AI_BOTS, false );
 		$this->settings->save();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/';
+		$this->set_current_url( 'https://somesite.com/folder/' );
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
 		$this->assertEmpty( $this->tracker->captured_urls );
@@ -157,7 +158,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->enable_ai_bot_tracking();
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/';
+		$this->set_current_url( 'https://somesite.com/folder/' );
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
 		$this->assertCount( 1, $this->tracker->captured_urls );
@@ -171,7 +172,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->enable_ai_bot_tracking();
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/robots.txt';
+		$this->set_current_url( 'https://somesite.com/robots.txt' );
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
@@ -184,7 +185,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_do_ai_bot_tracking_should_do_nothing_if_current_user_agent_is_not_for_ai_bot() {
 		$this->enable_ai_bot_tracking();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page' );
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
 
@@ -197,7 +198,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page' );
 
 		ob_start();
 		try {
@@ -209,7 +210,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$actual = preg_replace( '/mtm_elapsed=\d+/', 'mtm_elapsed=REMOVED', $actual );
 
-		$expected = '<esi:include src="http://example.org/wp-content/plugins/matomo/misc/track_ai_bot.php?mtm_elapsed=REMOVED" cache-control="no-cache" />';
+		$expected = '<esi:include src="https://example.org/wp-content/plugins/matomo/misc/track_ai_bot.php?mtm_esi=1&amp;mtm_url=https%3A%2F%2Fsomesite.com%2Fsome%2Fpage" cache-control="no-cache" />';
 
 		$this->assertEquals( $expected, $actual );
 	}
@@ -222,7 +223,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page' );
 
 		ob_start();
 		try {
@@ -251,13 +252,13 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->enable_ai_bot_tracking();
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page' );
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
 
 		$expected = [
 			[
-				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://somesite.com/some/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
 				[
 					'method'   => 'GET',
 					'headers'  => [
@@ -281,26 +282,26 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->set_ai_bot_user_agent();
 		$this->set_has_js_cookie();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page' );
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
 
 		$this->assertEmpty( $this->tracker->captured_requests );
 	}
 
-	public function test_do_ai_bot_tracking_adds_already_elapsed_time_to_total_elapsed_before_tracking() {
+	public function test_do_ai_bot_tracking_adds_elapsed_time_tracking_url() {
 		$_SERVER['REQUEST_TIME_FLOAT'] = microtime( true ) - 10;
 
 		$this->enable_ai_bot_tracking();
 		$this->set_ai_bot_user_agent();
 
-		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
+		$this->set_current_url( 'https://somesite.com/some/page2' );
 
-		$this->ai_bot_tracking->do_ai_bot_tracking( 12000 );
+		$this->ai_bot_tracking->do_ai_bot_tracking();
 
 		$expected = [
 			[
-				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=&urlref=&recMode=1&http_status=200&pf_srv=22000&source=wordpress&bots=1',
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://somesite.com/some/page2' ) . '&urlref=&recMode=1&http_status=200&pf_srv=10000&source=wordpress&bots=1',
 				[
 					'method'   => 'GET',
 					'headers'  => [
@@ -313,7 +314,36 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$captured_requests = $this->tracker->captured_requests;
 		foreach ( $captured_requests as &$captured ) {
-			$captured[0] = preg_replace( '/&pf_srv=2200\d/', '&pf_srv=22000', $captured[0] );
+			$captured[0] = preg_replace( '/&pf_srv=1000\d/', '&pf_srv=10000', $captured[0] );
+		}
+
+		$this->assertEquals( $expected, $captured_requests );
+	}
+
+	public function test_do_ai_bot_tracking_uses_custom_url_if_supplied() {
+		$this->enable_ai_bot_tracking();
+		$this->set_ai_bot_user_agent();
+
+		$this->set_current_url( 'https://somesite.com/some/page' );
+
+		$this->ai_bot_tracking->do_ai_bot_tracking( 'https://anothersite.com/page' );
+
+		$expected = [
+			[
+				'https://matomo.mysite.com/matomo.php?idsite=1&rec=1&apiv=1&_idts=&_id=&url=' . rawurlencode( 'https://anothersite.com/page' ) . '&urlref=&recMode=1&http_status=200&pf_srv=REMOVED&source=wordpress&bots=1',
+				[
+					'method'   => 'GET',
+					'headers'  => [
+						'User-Agent' => 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
+					],
+					'blocking' => false,
+				],
+			],
+		];
+
+		$captured_requests = $this->tracker->captured_requests;
+		foreach ( $captured_requests as &$captured ) {
+			$captured[0] = preg_replace( '/&pf_srv=[^&]+/', '&pf_srv=REMOVED', $captured[0] );
 		}
 
 		$this->assertEquals( $expected, $captured_requests );
@@ -346,5 +376,27 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 	private function set_has_js_cookie() {
 		$_COOKIE['matomo_has_js'] = '1';
+	}
+
+	private function set_current_url( $url ) {
+		$url_parts = wp_parse_url( $url );
+
+		$scheme = isset( $url_parts['scheme'] ) ? $url_parts['scheme'] : null;
+		$host   = isset( $url_parts['host'] ) ? $url_parts['host'] : null;
+
+		$_SERVER['HTTPS']        = 'https' === $scheme;
+		$_SERVER['HTTP_HOST']    = $host;
+		$_SERVER['PATH_INFO']    = $url_parts['path'];
+		$_SERVER['QUERY_STRING'] = isset( $url_parts['query'] ) ? $url_parts['query'] : '';
+
+		$_SERVER['REQUEST_URI'] = $url;
+	}
+
+	private function unset_current_url() {
+		unset( $_SERVER['HTTPS'] );
+		unset( $_SERVER['HTTP_HOST'] );
+		unset( $_SERVER['PATH_INFO'] );
+		unset( $_SERVER['QUERY_STRING'] );
+		unset( $_SERVER['REQUEST_URI'] );
 	}
 }

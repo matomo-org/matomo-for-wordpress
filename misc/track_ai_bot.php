@@ -96,9 +96,11 @@ function matomo_track_if_ai_bot() {
 		wp_plugin_directory_constants();
 	}
 
+	$url = !empty( $_REQUEST['mtm_url'] ) ? $_REQUEST['mtm_url'] : null;
+
 	$settings        = new \WpMatomo\Settings();
 	$ai_bot_tracking = new \WpMatomo\AIBotTracking( $settings );
-	$ai_bot_tracking->do_ai_bot_tracking();
+	$ai_bot_tracking->do_ai_bot_tracking( $url );
 }
 
 register_shutdown_function( 'matomo_track_if_ai_bot' );
