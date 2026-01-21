@@ -30,7 +30,6 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
-      - ../wp-matomo:$DOCUMENT_ROOT/6.9/wp-content/plugins/wp-piwik
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
@@ -106,7 +105,6 @@ services:
       - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
       - ./serial.no:/serial.no
-      - ../wp-matomo:/var/www/vhosts/localhost/html/6.9/wp-content/plugins/wp-piwik
     ports:
       - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
