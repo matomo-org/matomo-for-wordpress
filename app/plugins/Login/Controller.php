@@ -273,6 +273,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     public function ajaxNoAccess($errorMessage)
     {
+        http_response_code(401);
         return sprintf('<div class="alert alert-danger">
                 <p><strong>%s:</strong> %s</p>
                 <p><a href="%s">%s</a></p>

@@ -134,11 +134,11 @@
         "ColumnExitPageTitle": "Exit పేజి పేరు",
         "ColumnExitPageURL": "Exit పేజి URL",
         "ColumnPageName": "పుట పేరు",
-        "ColumnPagesPerSearch": "శోధన ఫలితాల పేజీలు",
         "ColumnPageURL": "పుట చిరునామా",
+        "ColumnPagesPerSearch": "శోధన ఫలితాల పేజీలు",
         "ColumnSearchCategory": "శోధన వర్గం",
-        "ColumnSearches": "శోధనలు",
         "ColumnSearchResultsCount": "శోధన ఫలితాల కౌంట్",
+        "ColumnSearches": "శోధనలు",
         "ColumnSiteSearchKeywords": "ప్రత్యేక కీవర్డ్లు",
         "ColumnUniqueClicks": "ప్రత్యేక క్లిక్",
         "ColumnUniqueDownloads": "ప్రత్యేక డౌన్ లోడ్",
@@ -147,13 +147,16 @@
         "ExitPageTitles": "నిష్క్రమణ పేజీ శీర్షికలు",
         "OneSearch": "1 శోధన",
         "PageUrls": "పేజీ URL లు",
+        "SubmenuPageTitles": "పుటల శీర్షికలు",
         "SubmenuPagesEntry": "ప్రవేశ పుటలు",
         "SubmenuPagesExit": "నిష్క్రమణ పుటలు",
-        "SubmenuPageTitles": "పుటల శీర్షికలు",
         "WidgetPageTitles": "పేజీ శీర్షికలు"
     },
     "Annotations": {
         "ClickToEdit": "మార్చడానికి నొక్కండి"
+    },
+    "BotTracking": {
+        "PageUrl": "పుట చిరునామా"
     },
     "CoreAdminHome": {
         "Administration": "నిర్వహణ",
@@ -194,14 +197,14 @@
     "DevicesDetection": {
         "BrowserEngine": "విహారిణి",
         "BrowserFamily": "విహారిణి కుటుంబం",
-        "Browsers": "విహారిణులు",
         "BrowserVersion": "విహారిణి సంచిక",
+        "Browsers": "విహారిణులు",
         "ColumnBrowser": "విహారిణి",
         "ColumnOperatingSystem": "నిర్వాహక వ్యవస్థ",
-        "dataTableLabelTypes": "రకం",
         "OperatingSystemFamily": "నిర్వాహక వ్యవస్థ కుటుంబం",
         "OperatingSystems": "నిర్వాహక వ్యవస్థలు",
-        "WidgetBrowsers": "సందర్శకుల విహారిణులు"
+        "WidgetBrowsers": "సందర్శకుల విహారిణులు",
+        "dataTableLabelTypes": "రకం"
     },
     "Goals": {
         "CategoryTextGeneral_Actions": "పుటలు",
@@ -219,6 +222,7 @@
         "InstallationStatus": "స్థాపన స్థితి",
         "Optional": "ఐచ్చికం",
         "Password": "సంకేతపదం",
+        "PasswordRepeat": "సంకేతపదం (మళ్ళీ)",
         "PercentDone": "%s %% పూర్తి",
         "PleaseFixTheFollowingErrors": "దయచేసి ఈ కింది పొరపాట్లను సరిదిద్దండి",
         "Requirements": "పివిక్ ఆవశ్యకాలు",
@@ -1524,8 +1528,7 @@
         "SubmenuFrequency": "తరచుదనం"
     },
     "VisitTime": {
-        "ColumnLocalTime": "స్థానిక సమయం",
-        "NHour": "%sగం"
+        "ColumnLocalTime": "స్థానిక సమయం"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s నిమి",

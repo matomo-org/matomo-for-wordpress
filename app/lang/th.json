@@ -403,6 +403,9 @@
         "EnterAnnotationText": "กรอกหมายเหตุของคุณ…",
         "LoginToAnnotate": "เข้าสู่ระบบเพื่อสร้างหมายเหตุประกอบ"
     },
+    "BotTracking": {
+        "PageUrl": "URL หน้า"
+    },
     "CoreAdminHome": {
         "Administration": "การจัดการระบบ",
         "EmailServerSettings": "การตั้งค่าเซิร์ฟเวอร์อีเมล์",
@@ -441,9 +444,9 @@
         "Deactivate": "ปิดใช้งาน",
         "Inactive": "ไม่ทำงาน",
         "LicenseHomepage": "หน้าแรกใบอนุญาต",
-        "PluginsExtendPiwik": "อธิบายการใช้งานปลั้กอินและแสดงการทำงานของ Matomo.",
         "OncePluginIsInstalledYouMayActivateHere": "เมื่อปลั๊กอินที่ติดตั้งอยู่คุณสามารถเปิดใช้งานหรือยกเลิกการใช้งานได้ ที่นี่",
         "PluginHomepage": "หน้าหลักของปลั๊กอิน",
+        "PluginsExtendPiwik": "อธิบายการใช้งานปลั้กอินและแสดงการทำงานของ Matomo.",
         "PluginsManagement": "จัดการปลั้กอิน",
         "Status": "สถานะ",
         "Version": "เวอร์ชั่น",
@@ -494,9 +497,9 @@
         "YourDatabaseIsOutOfDate": "ฐานข้อมูล Matomo ของคุณ ล้าสมัย และต้องถูกอัพเกรดก่อนที่คุณสามารถดำเนินการต่อไป"
     },
     "DBStats": {
-        "DatabaseUsage": "การใช้ฐานข้อมูล",
-        "DataSize": "ขนาดข้อมูล",
         "DBSize": "ขนาด DB",
+        "DataSize": "ขนาดข้อมูล",
+        "DatabaseUsage": "การใช้ฐานข้อมูล",
         "IndexSize": "ขนาดของดรรชนี",
         "LearnMore": "เมื่อต้องการเรียนรู้เพิ่มเติมเกี่ยวกับวิธีการประมวลผลข้อมูลของ Matomo และวิธีการทำให้ Matomo ทำงานดีสำหรับเว็บไซต์ขนาดกลาง และจราจรจำนวนสูง อ่านเอกสารการใช้งานได้ที่ %s",
         "MainDescription": "Matomo ได้ทำการเก็บข้อมูลการวิเคราะห์เว็บไซต์ของคุณในฐานข้อมูล MySQL ขณะนี้ตารางฐานข้อมูลของ Matomo มีขนาดทั้งหมด %s",
@@ -536,13 +539,13 @@
     "DevicesDetection": {
         "BrowserEngine": "เบราว์เซอร์",
         "BrowserFamily": "ตระกูลของเบราว์เซอร์",
-        "Browsers": "เบราว์เซอร์",
         "BrowserVersion": "รุ่นของโปรแกรมบราวเซอร์",
+        "Browsers": "เบราว์เซอร์",
         "ColumnBrowser": "เบราว์เซอร์",
         "ColumnOperatingSystem": "ระบบปฏิบัติการ",
-        "dataTableLabelTypes": "รูปแบบ",
         "OperatingSystems": "ระบบปฏิบัติการ",
-        "WidgetBrowsers": "เบราว์เซอร์ของผู้เข้าชม"
+        "WidgetBrowsers": "เบราว์เซอร์ของผู้เข้าชม",
+        "dataTableLabelTypes": "รูปแบบ"
     },
     "Events": {
         "PluginDescription": "ติดตามกิจกรรมและรับรายงานเกี่ยวกับกิจกรรมผู้เยี่ยมชมของคุณ"
@@ -638,6 +641,7 @@
         "Optional": "ตัวเลือก",
         "Password": "รหัสผ่าน",
         "PasswordDoNotMatch": "รหัสผ่านไม่ถูกต้อง",
+        "PasswordRepeat": "รหัสผ่าน (อีกครั้ง)",
         "PercentDone": "ติดตั้งเสร็จไปแล้ว %s %%",
         "PleaseFixTheFollowingErrors": "กรุณาแก้ไขข้อผิดพลาดต่อไปนี้",
         "Requirements": "ความต้องการของ Matomo",
@@ -2079,14 +2083,14 @@
         "City": "เมือง",
         "Continent": "ทวีป",
         "Country": "ประเทศ",
-        "country_a2": "ผู้ให้บริการดาวเทียม",
-        "country_o1": "ประเทศอื่นๆ",
         "DistinctCountries": "%s การเข้าชมตามประเทศ",
         "Latitude": "ละติจูด",
         "Location": "ตำแหน่งที่ตั้ง",
         "Longitude": "ลองจิจูด",
         "Region": "ภูมิภาค",
-        "SubmenuLocations": "ตำแหน่งที่อยู่"
+        "SubmenuLocations": "ตำแหน่งที่อยู่",
+        "country_a2": "ผู้ให้บริการดาวเทียม",
+        "country_o1": "ประเทศอื่นๆ"
     },
     "UserCountryMap": {
         "map": "แผนที่"
@@ -2145,14 +2149,9 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "เวลาของท้องถิ่น",
-        "ColumnServerTime": "เวลาของเซิร์ฟเวอร์",
         "DayOfWeek": "วันในสัปดาห์",
         "LocalTime": "จำนวนผู้ชมต่อเวลาท้องถิ่น",
-        "NHour": "%s ชม.",
-        "ServerTime": "จำนวนผู้ชมต่อเวลาของเซิร์ฟเวอร์",
-        "SubmenuTimes": "เวลา",
-        "WidgetLocalTime": "จำนวนผู้ชมตามเวลาท้องถิ่น",
-        "WidgetServerTime": "จำนวนผู้ชมตามเวลาของเซิร์ฟเวอร์"
+        "SubmenuTimes": "เวลา"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s นาที",

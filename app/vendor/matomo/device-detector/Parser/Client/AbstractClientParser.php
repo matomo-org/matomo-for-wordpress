@@ -24,6 +24,10 @@ abstract class AbstractClientParser extends AbstractParser
     /**
      * Parses the current UA and checks whether it contains any client information
      *
+     * @return array|null
+     *
+     * @throws \Exception
+     *
      * @see $fixtureFile for file with list of detected clients
      *
      * Step 1: Build a big regex containing all regexes and match UA against it
@@ -34,7 +38,6 @@ abstract class AbstractClientParser extends AbstractParser
      *
      * NOTE: Doing the big match before matching every single regex speeds up the detection
      *
-     * @return array|null
      */
     public function parse() : ?array
     {
@@ -59,18 +62,18 @@ abstract class AbstractClientParser extends AbstractParser
      */
     public static function getAvailableClients() : array
     {
-        $instance = new static();
+        $regexes = (new static())->getRegexes();
         // @phpstan-ignore-line
-        $regexes = $instance->getRegexes();
         $names = [];
         foreach ($regexes as $regex) {
-            if (\false !== \strpos($regex['name'], '$1')) {
+            if (\false !== \strpos($regex['name'], '$1') || \false !== \strpos($regex['name'], '$2')) {
                 continue;
             }
             $names[] = $regex['name'];
         }
         if (static::class === \DeviceDetector\Parser\Client\MobileApp::class) {
-            $names = \array_merge($names, [
+            \array_push(
+                $names,
                 // Microsoft Office $1
                 'Microsoft Office Access',
                 'Microsoft Office Excel',
@@ -95,8 +98,8 @@ abstract class AbstractClientParser extends AbstractParser
                 'radio.pl',
                 'radio.pt',
                 'radio.se',
-                'radio.net',
-            ]);
+                'radio.net'
+            );
         }
         \natcasesort($names);
         return \array_unique($names);

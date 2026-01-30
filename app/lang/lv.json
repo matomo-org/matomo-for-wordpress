@@ -685,6 +685,9 @@
         "ViewAndAddAnnotations": "Skatīt un pievienot anotācijas %s…",
         "YouCannotModifyThisNote": "Jūs nevarat mainīt šo anotāciju, jo neesat to izveidojis, un jums nav administratīvās piekļuves šai vietnei."
     },
+    "BotTracking": {
+        "PageUrl": "Lapas URL"
+    },
     "CoreAdminHome": {
         "AcceptInvite": "Pieņemt ielūgumu",
         "AddNewTrustedHost": "Pievienot jaunu uzticamu resursdatoru",
@@ -1064,8 +1067,8 @@
     },
     "CoreUpdater": {
         "DatabaseUpgradeRequired": "Vajadzīgs datubāzes atjauninājums",
-        "DownloadingUpdateFromX": "Notiek atjauninājuma ielāde no %s",
         "DownloadX": "Lejupielādē %s",
+        "DownloadingUpdateFromX": "Notiek atjauninājuma ielāde no %s",
         "EmptyDatabaseError": "Datubāze %s ir tukša. Jums jāizlabo vai jāizdzēš Jūsu Matomo iestatījumu datne.",
         "ErrorDuringPluginsUpdates": "Kļūda atjaunojot spraudņus:",
         "ExceptionAlreadyLatestVersion": "Jūsu Matomo versija %s ir jaunākā pieejamā.",
@@ -1079,12 +1082,12 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo datubāze tiks atjaunināta no %1$s līdz %2$s versijai.",
         "ReadyToGo": "Esat gatavi?",
         "TheFollowingPluginsWillBeUpgradedX": "Sekojošie spraudņi tiks atjaunināti: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "Ir pieejama atjaunināšanai jauna Matomo versija",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Datubāzes atjaunināšana var aizņemt kādu laiku, esiet pacietīgi.",
+        "ThereIsNewVersionAvailableForUpdate": "Ir pieejama atjaunināšanai jauna Matomo versija",
         "UnpackingTheUpdate": "Notiek atjauninājuma atpakošana",
         "UpdateAutomatically": "Atjaunināt automātiski",
-        "UpdateTitle": "Atjaunināt",
         "UpdateSuccessTitle": "Matomo tika veiksmīgi atjaunināts",
+        "UpdateTitle": "Atjaunināt",
         "UpgradeComplete": "Atjaunināšana pabeigta!",
         "UpgradePiwik": "Atjaunināt Matomo",
         "VerifyingUnpackedFiles": "Notiek atpakoto datņu pārbaude",
@@ -1096,8 +1099,8 @@
         "CustomDimensions": "Pielāgoti parametri"
     },
     "DBStats": {
-        "DatabaseUsage": "Datubāzes lietojums",
         "DataSize": "Datu izmērs",
+        "DatabaseUsage": "Datubāzes lietojums",
         "IndexSize": "Indeksa izmērs",
         "LearnMore": "Lai uzzinātu vairāk par to, kā Matomo apstrādā datus un kā Matomo tiek galā ar vidēja un augsta apmeklējuma vietnēm, apskatiet dokumentāciju %s.",
         "MainDescription": "Matomo glabā visus Jūsu tīkla analīzes datus MySQL datubāzē. Pašlaik Matomo tabulas lieto %s.",
@@ -1162,6 +1165,10 @@
         "WidgetBrowserVersionsDocumentation": "Šis ir ziņojums par to, kādus pārlūkus izmanto apmeklētāji. Katra pārlūka versija ir izdalīta atsevišķi.",
         "WidgetBrowsers": "Apmeklētāju pārlūki",
         "dataTableLabelTypes": "Tips"
+    },
+    "Ecommerce": {
+        "AnonymizeOrderIdNote": "Tā kā pasūtījuma ID var saistīt ar citu sistēmu, parasti e-komercijas veikalu, pasūtījuma ID var tikt uzskatīts par personisku informāciju saskaņā ar VDAR. Iespējojot šo opciju, pasūtījuma ID tiks automātiski anonimizēts, lai netiktu izsekota personiskā informācija.",
+        "UseAnonymizeOrderId": "Anonimizēt pasūtījuma ID"
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Vai Jums ir kļūdas ziņojums vai papildus funkcionalitātes pieprasījums?",
@@ -1247,6 +1254,7 @@
         "Optional": "Izvēles",
         "Password": "Parole",
         "PasswordDoNotMatch": "paroles nesakrīt",
+        "PasswordRepeat": "Parole (atkārtoti)",
         "PercentDone": "%s %% pabeigts",
         "PleaseFixTheFollowingErrors": "Lūdzu izlabojiet sekojošās kļūdas",
         "Requirements": "Matomo prasības",
@@ -2569,7 +2577,6 @@
         "AnonymizeIpMaskLength": "%1$s baiti(-s) - piemēram, %2$s",
         "AnonymizeLocation": "Anonimizēt atrašanās vietu",
         "AnonymizeLocationHelp": "Šo darbību nevar atsaukt. Atkārtoti novērtē atrašanās vietu, pamatojoties uz anonimizēto IP (vismaz 2 baiti IP tiks anonimizēti).",
-        "AnonymizeOrderIdNote": "Tā kā pasūtījuma ID var saistīt ar citu sistēmu, parasti e-komercijas veikalu, pasūtījuma ID var tikt uzskatīts par personisku informāciju saskaņā ar VDAR. Iespējojot šo opciju, pasūtījuma ID tiks automātiski anonimizēts, lai netiktu izsekota personiskā informācija.",
         "AnonymizePreviousData": "Anonimizēt iepriekš izsekotus neapstrādātus datus",
         "AnonymizePreviousDataDescription": "Ja esat izsekojis personas datus, piemēram, pilnu apmeklētāja IP, iespējams, vēlēsities šos datus anonimizēt tūlīt, ja jums nav piekrišanas šiem datiem vai vairs nav likumīgu interešu.",
         "AnonymizePreviousDataOnlySuperUser": "Tikai lietotājam ar galvenā lietotāja piekļuvi ir iespējams anonimizēt iepriekš izsekotus neapstrādātus datus.",
@@ -2761,7 +2768,6 @@
         "UnsetVisitColumns": "Noņemt apmeklējumu kolonnas",
         "UnsetVisitColumnsHelp": "Šo darbību nevar atcelt. Datubāzes kolonnu saraksts tvērumā \"apmeklējums\", kuras vēlaties atiestatīt. Katra šīs kolonas vērtība tiks iestatīta uz tās noklusējuma vērtību. Lūdzu, ņemiet vērā, ka, ja tāda pati kolonna pastāv tvērumā \"reklāmguvums\", tad arī šī kolonna tiks dzēsta",
         "UseAnonymizeIp": "Anonimizēt apmeklētāju IP adreses",
-        "UseAnonymizeOrderId": "Anonimizēt pasūtījuma ID",
         "UseAnonymizeTrackingData": "Anonimizēt izsekošanas datus",
         "UseAnonymizeUserId": "Anonimizēt lietotāja ID",
         "UseAnonymizedIpForVisitEnrichment": "Izmantojiet arī anonimizētās IP adreses, papildinot apmeklējumu informāciju.",
@@ -3059,12 +3065,12 @@
     "UserCountry": {
         "Continent": "Kontinents",
         "Country": "Valsts",
+        "Location": "Lokācijas",
+        "SubmenuLocations": "Lokācijas",
         "country_a1": "Anonīms starpniekserveris",
         "country_a2": "Satelītpieslēgums",
         "country_cat": "Katalāņu valodā runājošās kopienas",
-        "country_o1": "Cita valsts",
-        "Location": "Lokācijas",
-        "SubmenuLocations": "Lokācijas"
+        "country_o1": "Cita valsts"
     },
     "UserCountryMap": {
         "AndNOthers": "u.c. %s",
@@ -3164,12 +3170,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokālais laiks",
-        "ColumnServerTime": "Servera laiks",
         "LocalTime": "Apmeklējumi pēc vietējā laika",
-        "NHour": "%s st.",
-        "ServerTime": "Apmeklējumi pēc servera laika",
-        "SubmenuTimes": "Laiki",
-        "WidgetLocalTime": "Apmeklējumi pēc lokālā laika"
+        "SubmenuTimes": "Laiki"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min.",
@@ -3179,11 +3181,11 @@
         "NPages": "%s lapas",
         "OnePage": "1 lapa",
         "VisitNum": "Apmeklējuma numurs",
-        "visitsByVisitCount": "Apmeklējumu pēc apmeklējuma numura",
         "VisitsPerDuration": "Apmeklējumi pēc apmeklējuma ilguma",
         "VisitsPerNbOfPages": "Apmeklējumi pēc lapu skaita",
         "WidgetLengths": "Apmeklējumu garums",
-        "WidgetPages": "Lapas apmeklējumā"
+        "WidgetPages": "Lapas apmeklējumā",
+        "visitsByVisitCount": "Apmeklējumu pēc apmeklējuma numura"
     },
     "VisitsSummary": {
         "AverageGenerationTime": "vidējais ģenerēšanas ilgums",

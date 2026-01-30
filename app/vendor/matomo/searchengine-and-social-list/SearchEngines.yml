@@ -617,6 +617,7 @@ DuckDuckGo:
     urls:
       - duckduckgo.com
       - r.duckduckgo.com
+      - duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion
     params:
       - q
     hiddenkeyword:
@@ -823,6 +824,13 @@ Freenet:
       - query
       - Keywords
     backlink: 'suche/?query={k}'
+Freespoke:
+  -
+    urls:
+      - freespoke.com
+    params:
+      - q
+    backlink: 'search/web?q={k}'
 FriendFeed:
   -
     urls:
@@ -1277,6 +1285,13 @@ Inbox:
     params:
       - q
     backlink: 'search/results1.aspx?q={k}'
+info.com:
+  -
+    urls:
+      - www.info.com
+    params:
+      - q
+    backlink: 'serp?q={k}'
 InfoSpace:
   -
     urls:
@@ -1453,6 +1468,20 @@ K9 Safe Search:
     params:
       - q
     backlink: 'search.jsp?q={k}'
+Kagi:
+  -
+    urls:
+      - kagi.com
+    params:
+      - q
+    backlink: 'search?q={k}'
+KARMA:
+  -
+    urls:
+      - karmasearch.org
+    params:
+      - q
+    backlink: 'search?q={k}'
 Kataweb:
   -
     urls:
@@ -1731,6 +1760,13 @@ Nigma:
     params:
       - s
     backlink: 'index.php?s={k}'
+OceanHero:
+  -
+    urls:
+      - oceanhero.today
+    params:
+      - q
+    backlink: 'web?q={k}'
 Onet.pl:
   -
     urls:
@@ -1837,6 +1873,13 @@ Presearch:
     params:
       - q
     backlink: 'search?q={k}'
+PrivacyWall:
+  -
+    urls:
+      - www.privacywall.org
+    params:
+      - q
+    backlink: 'search/secure?q={k}'
 qip.ru:
   -
     urls:
@@ -1853,6 +1896,13 @@ Qualigo:
       - www.qualigo.nl
     params:
       - q
+Quendu:
+  -
+    urls:
+      - www.quendu.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Qwant:
   -
     urls:
@@ -2125,6 +2175,7 @@ StartPage:
       - s12-eu5.startpage.com
       - s13-eu5.startpage.com
       - s14-eu5.startpage.com
+      - startpagel6srwcjlue4zgq3zevrujfaow726kjytqbbjyrswwmjzcqd.onion
     params:
       - query
     backlink: 'do/asearch?query={k}'
@@ -2300,6 +2351,13 @@ Toppreise.ch:
     backlink: 'index.php?search={k}'
     charsets:
       - ISO-8859-1
+Torry:
+  -
+    urls:
+      - www.torry.io
+    params:
+      - q
+    backlink: 'search/?q={k}'
 TUSK Search:
   -
     urls:
@@ -2402,6 +2460,13 @@ Volny:
     backlink: 'fulltext/?search={k}'
     charsets:
       - windows-1250
+Vuhuv:
+  -
+    urls:
+      - vuhuv.com
+    params:
+      - q
+    backlink: '?q={k}'
 Walhello:
   -
     urls:

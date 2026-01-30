@@ -18,7 +18,7 @@ class GetNameFromCategoryId extends \Piwik\Plugins\Events\Reports\Base
     protected function init()
     {
         $this->categoryId = 'Events_Events';
-        $this->processedMetrics = \false;
+        $this->processedMetrics = [];
         $this->dimension = new EventName();
         $this->name = Piwik::translate('Events_EventNames');
         $this->isSubtableReport = \true;

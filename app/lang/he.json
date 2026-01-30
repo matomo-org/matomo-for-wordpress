@@ -556,14 +556,14 @@
         "ColumnExitPageURL": "כתובת עמוד יציאה",
         "ColumnNoResultKeyword": "מילות מפתח ללא תוצאות חיפוש",
         "ColumnPageName": "שם העמוד",
+        "ColumnPageURL": "כתובת העמוד",
         "ColumnPagesPerSearch": "עמודי תוצאות חיפוש",
         "ColumnPagesPerSearchDocumentation": "מבקרים יחפשו באתרך, ולפעמים ילחצו ״קדימה״ לצפייה בתוצאות נוספות. זהו ממוצע עמודי תוצאות החיפוש שנצפו למילת מפתח זו.",
-        "ColumnPageURL": "כתובת העמוד",
         "ColumnSearchCategory": "קטגורית חיפוש",
-        "ColumnSearches": "חיפושים",
-        "ColumnSearchesDocumentation": "מספר הביקורים שחיפשו אחר מילת מפתח זו במנוע החיפוש של אתרך.",
         "ColumnSearchExitsDocumentation": "אחוז הביקורים שעזבו את האתר אחרי חיפוש מילת מפתח זו במנוע החיפוש של אתרך.",
         "ColumnSearchResultsCount": "מספר תוצאות חיפוש",
+        "ColumnSearches": "חיפושים",
+        "ColumnSearchesDocumentation": "מספר הביקורים שחיפשו אחר מילת מפתח זו במנוע החיפוש של אתרך.",
         "ColumnSiteSearchKeywords": "מילות מפתח ייחודיות",
         "ColumnUniqueClicks": "לחיצות ייחודיות",
         "ColumnUniqueClicksDocumentation": "מספר הביקורים שכללו לחיצה על קישור זה. אם קישור נלחץ יותר מפעם אחת במהלך ביקור, הוא יספר פעם אחת בלבד.",
@@ -577,26 +577,26 @@
         "OneSearch": "חיפוש 1",
         "OutlinkDocumentation": "קישור יוצא הוא קישור שמוביל את המשתמש מחוץ לאתרך (לדומיין אחר).",
         "OutlinksReportDocumentation": "דו״ח זה מציג רשימה היררכית של כתובות שנלחצו על ידי משתמשי אתרך.",
-        "PagesReportDocumentation": "דו״ח זה מכיל מידע אודות כתובת עמודים שבוקרו. %s הטבלה מאורגנת באופן היררכי, הכתובות מוצגות כמבנה תיקיות.",
         "PageTitlesReportDocumentation": "דו״ח זה מכיל מידע אודות כותרות העמודים שבוקרו. %1$s כותרת העמוד היא תגית HTML %2$s שרוב הדפדפנים מציגים בכותרת החלון שלהם.",
         "PageUrls": "כתובות עמוד",
+        "PagesReportDocumentation": "דו״ח זה מכיל מידע אודות כתובת עמודים שבוקרו. %s הטבלה מאורגנת באופן היררכי, הכתובות מוצגות כמבנה תיקיות.",
+        "PagesSubcategoryHelp3": "השתמש בצלמיות הפלוס והמינוס בצד שמאל על מהת לנווט.",
         "SiteSearchCategories1": "דו״ח זה מציג רשימה של קטגוריות שמבקרים בחרו כאשר חיפשו באתרך.",
         "SiteSearchCategories2": "לדוגמה, אתרי מסחר מקוונים מציגים בד״כ בחירת ״קטגוריה״ כדי שהמבקרים יוכלו לצמצם את תוצאות החיפוש למוצרים בקטגוריה מסויימת.",
         "SiteSearchKeyword": "מילת מפתח (חיפוש באתר)",
         "SiteSearchKeywordsDocumentation": "דו״ח זה מציג רשימה של מילות חיפוש שמבקרים חיפשו אחריהן במנוע החיפוש הפנימי של אתרך.",
+        "SubmenuPageTitles": "כותרות עמוד",
         "SubmenuPagesEntry": "עמודי כניסה",
         "SubmenuPagesExit": "עמודי יציאה",
-        "SubmenuPageTitles": "כותרות עמוד",
         "SubmenuSitesearch": "חיפוש באתר",
         "WidgetEntryPageTitles": "כותרות עמוד כניסה",
         "WidgetExitPageTitles": "כותרות עמוד יציאה",
+        "WidgetPageTitles": "כותרות עמוד",
         "WidgetPagesEntry": "עמודי כניסה",
         "WidgetPagesExit": "עמודי יציאה",
-        "WidgetPageTitles": "כותרות עמוד",
         "WidgetSearchCategories": "קטגוריות חיפוש",
         "WidgetSearchKeywords": "מילות חיפוש באתר",
-        "WidgetSearchNoResultKeywords": "מילות חיפוש ללא תוצאות",
-        "PagesSubcategoryHelp3": "השתמש בצלמיות הפלוס והמינוס בצד שמאל על מהת לנווט."
+        "WidgetSearchNoResultKeywords": "מילות חיפוש ללא תוצאות"
     },
     "Annotations": {
         "Annotations": "הערות הסבר",
@@ -610,6 +610,9 @@
         "IconDescHideNotes": "הסתר הערות של טווח תאריכים זה",
         "LoginToAnnotate": "יש להתחבר כדי ליצור הערה.",
         "NoAnnotations": "אין הסברים על טווח תאריכים זה"
+    },
+    "BotTracking": {
+        "PageUrl": "כתובת העמוד"
     },
     "CoreAdminHome": {
         "Administration": "ניהול",
@@ -640,6 +643,7 @@
         "ChangeVisualization": "ערוך תצוגה",
         "CheckForUpdates": "בדוק עדכונים",
         "CheckPiwikOut": "בדוק את מטומו!",
+        "ChooseWebsite": "בחירת אתר",
         "ChooseX": "בחר %1$s",
         "ClickToEditX": "לחץ לעריכה %s",
         "ClickToSeeFullInformation": "לחץ למידע מלא",
@@ -746,8 +750,8 @@
         "YourDatabaseIsOutOfDate": "מסד הנתונים של הMatomo שלך לא בתוקף, חובה לשדרג אותו לפני שנמשיך."
     },
     "DBStats": {
-        "DatabaseUsage": "צריכת מסד נתונים",
         "DataSize": "משקל מידע",
+        "DatabaseUsage": "צריכת מסד נתונים",
         "IndexSize": "משקל מפתח (index)",
         "LearnMore": "בכדי ללמוד עוד אודות כיצד Matomo מעבדת מידע וכיצד לשפר את ביצועיה של Matomo עבור אתרים בעלי תעבורה בינונית עד גבוהה, מומלץ להציץ במדריך %s.",
         "MainDescription": "Matomo מאכסנת את כל המידע אודות ניתוח פעילות הרשת במסד נתונים. כרגע, טבלאות Matomo צורכות %s.",
@@ -776,8 +780,8 @@
     "DevicesDetection": {
         "BrowserEngine": "דפדפן",
         "BrowserFamily": "משפחת דפדפן",
-        "Browsers": "דפדפן",
         "BrowserVersion": "גרסת דפדפן",
+        "Browsers": "דפדפן",
         "ColumnBrowser": "דפדפן"
     },
     "Feedback": {
@@ -810,6 +814,7 @@
         "Optional": "אופציונלי",
         "Password": "סיסמה",
         "PasswordDoNotMatch": "סיסמה לא תואמת",
+        "PasswordRepeat": "סיסמה (שוב)",
         "PercentDone": "%s %% עברו",
         "Requirements": "דרישות Matomo",
         "SetupWebsite": "הגדרת אתר",
@@ -2008,9 +2013,9 @@
         "RememberMe": "זכור אותי"
     },
     "Marketplace": {
-        "ActivateLicenseKey": "הפעל",
         "ActionActivatePlugin": "הפעל תוסף",
         "ActionInstall": "להתקין",
+        "ActivateLicenseKey": "הפעל",
         "Authors": "כותבים",
         "PluginKeywords": "מילות מפתח",
         "PluginVersionInfo": "%1$s מתוך %2$s"
@@ -2081,11 +2086,19 @@
         "CategoryDate": "תאריך",
         "CategoryEmail": "אימייל",
         "CategoryErrors": "שגיאות",
+        "ChooseWebsite": "בחירת אתר",
+        "DiffAdded": "נוסף",
+        "DiffPaused": "הוקפא",
+        "EditTag": "לערוך תגית",
         "EtrackerTagTransactionCurrencyTitle": "מטבע",
+        "Import": "ייבא",
         "InvalidDebugUrlError": "שגיאה",
         "MatomoConfigurationMatomoUserIdTitle": "User ID",
         "MatomoTagEcommerceViewPrice": "מחיר",
         "PageUrlVariableName": "כתובת העמוד",
+        "Priority": "עדיפות",
+        "Tag": "תג",
+        "Unlimited": "ללא הגבלה",
         "Version": "גרסה"
     },
     "Tour": {
@@ -2116,10 +2129,10 @@
     "UserCountryMap": {
         "Cities": "ערים",
         "Countries": "מדינות",
-        "map": "מפה",
         "MinutesAgo": "לפני %s דקות",
         "VisitorMap": "מפת מבקרים",
-        "WorldWide": "כלל-עולמי"
+        "WorldWide": "כלל-עולמי",
+        "map": "מפה"
     },
     "UserId": {
         "UserId": "מזהה משתמש",
@@ -2159,16 +2172,11 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "זמן מקומי",
-        "ColumnServerTime": "זמן שרת",
         "DayOfWeek": "יום בשבוע",
         "LocalTime": "ביקורים לזמן מקומי",
-        "NHour": "שעה %s",
-        "ServerTime": "ביקורים לזמן שרת",
         "SubmenuTimes": "זמנים",
         "VisitsByDayOfWeek": "ביקורים לפי יום בשבוע",
-        "WidgetByDayOfWeekDocumentation": "גרף זה מציג את מספר הביקורים שאתרך קיבל בכל יום בשבוע.",
-        "WidgetLocalTime": "ביקורים לפי זמן מקומי",
-        "WidgetServerTime": "ביקורים לפי זמן שרת"
+        "WidgetByDayOfWeekDocumentation": "גרף זה מציג את מספר הביקורים שאתרך קיבל בכל יום בשבוע."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s דקות",
@@ -2180,12 +2188,12 @@
         "OnePage": "עמוד 1",
         "VisitNum": "מספר ביקור",
         "VisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון",
-        "visitsByVisitCount": "ביקורים לפי מספר ביקור",
         "VisitsPerDuration": "ביקורים למשך ביקור",
         "VisitsPerNbOfPages": "ביקורים למספר עמודים",
         "WidgetLengths": "משך ביקורים",
         "WidgetPages": "עמודים לביקור",
-        "WidgetVisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון"
+        "WidgetVisitsByDaysSinceLast": "ביקורים לפי ימים מאז ביקור אחרון",
+        "visitsByVisitCount": "ביקורים לפי מספר ביקור"
     },
     "VisitsSummary": {
         "GenerateQueries": "%s שאילתות בוצעו",

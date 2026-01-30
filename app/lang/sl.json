@@ -519,8 +519,8 @@
         "ColumnPageName": "Ime spletne strani",
         "ColumnPageURL": "URL spletne strani",
         "ColumnSearchCategory": "Kategorija iskanja",
-        "ColumnSearches": "Iskanja",
         "ColumnSearchResultsCount": "Število zadetkov pri iskanju",
+        "ColumnSearches": "Iskanja",
         "ColumnSiteSearchKeywords": "Unikatnih ključnih besed",
         "ColumnUniqueClicks": "Edinstveni kliki",
         "ColumnUniqueClicksDocumentation": "Število obiskov, ki so vsebovali klik na to povezavo. Če je bilo klikov na isto povezavo več v istem obisku, se to šteje kot en sam klik.",
@@ -534,24 +534,24 @@
         "OneSearch": "Eno iskanje",
         "OutlinkDocumentation": "Zunanja povezava je povezava, ki vodi obiskovalca stran od vaše splete strani (na drugo domeno).",
         "OutlinksReportDocumentation": "To poročilo prikazuje hierarhični seznam URL-jev zunanjih povezav na katere so uporabniki kliknili.",
-        "PagesReportDocumentation": "To poročilo vsebuje informacije o URL-jih strani, ki so bile obiskane. %s Tabela je hierarhično organizirana. URL-ji so prikazani kot struktura mape.",
         "PageTitlesReportDocumentation": "To poročilo vsebuje informacije o nazivih strani, ki so bile obiskane. %1$s Naziv strani je HTML oznaka %2$s Oznaka, ki jo večina brskalnikov prikaže v nazivu okna.",
         "PageUrls": "URL-ji strani",
+        "PagesReportDocumentation": "To poročilo vsebuje informacije o URL-jih strani, ki so bile obiskane. %s Tabela je hierarhično organizirana. URL-ji so prikazani kot struktura mape.",
+        "PagesSubcategoryHelp3": "Za navigacijo uporabite ikoni plus in minus na levi.",
         "SiteSearchKeyword": "Ključna beseda (iskanje po strani)",
+        "SubmenuPageTitles": "Naslovi strani",
         "SubmenuPagesEntry": "Vstopne strani",
         "SubmenuPagesExit": "Izhodne strani",
-        "SubmenuPageTitles": "Naslovi strani",
         "SubmenuSitesearch": "Iskanje po strani",
         "WidgetEntryPageTitles": "Naslovi vstopnih strani",
         "WidgetExitPageTitles": "Naslovi izhodnih strani",
-        "WidgetPagesEntry": "Vstopne strani",
-        "WidgetPagesExit": "Izhodne strani",
         "WidgetPageTitles": "Naslovi strani",
         "WidgetPageUrlsFollowingSearch": "Strani obiskane po iskanju na strani",
+        "WidgetPagesEntry": "Vstopne strani",
+        "WidgetPagesExit": "Izhodne strani",
         "WidgetSearchCategories": "Kategorije za iskanje",
         "WidgetSearchKeywords": "Ključne besede",
-        "WidgetSearchNoResultKeywords": "Ključne besede brez zadetkov",
-        "PagesSubcategoryHelp3": "Za navigacijo uporabite ikoni plus in minus na levi."
+        "WidgetSearchNoResultKeywords": "Ključne besede brez zadetkov"
     },
     "Annotations": {
         "Annotations": "Beležke",
@@ -565,13 +565,16 @@
         "LoginToAnnotate": "Za kreiranje beležke se morate prijaviti.",
         "ViewAndAddAnnotations": "Preglej in dodaj opombe za %s…"
     },
+    "BotTracking": {
+        "PageUrl": "URL spletne strani"
+    },
     "Contents": {
-        "Impressions": "Ogledi",
-        "InteractionRate": "Stopnja interakcij",
         "ContentName": "Ime vsebine",
         "ContentPiece": "Del vsebine",
         "ContentTarget": "Cilj vsebine",
-        "Contents": "Vsebine"
+        "Contents": "Vsebine",
+        "Impressions": "Ogledi",
+        "InteractionRate": "Stopnja interakcij"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Dodajte nov zaupanja vreden strežnik",
@@ -654,9 +657,9 @@
         "Deactivate": "Onemogoči",
         "Inactive": "Neaktivno",
         "LicenseHomepage": "Spletna stran licence",
-        "PluginsExtendPiwik": "Vtičniki razširjajo Matomo-ovo funkcionalnost.",
         "OncePluginIsInstalledYouMayActivateHere": "Ko je vtičnik enkrat nameščen, ga lahko tukaj aktivirate oziroma deaktivirate.",
         "PluginHomepage": "Spletna stran vtičnika",
+        "PluginsExtendPiwik": "Vtičniki razširjajo Matomo-ovo funkcionalnost.",
         "PluginsManagement": "Urejanje Vtičnikov",
         "Status": "Status",
         "Version": "Različica",
@@ -664,8 +667,8 @@
     },
     "CoreUpdater": {
         "DatabaseUpgradeRequired": "Potrebna je nadgraditev baze podatkov",
-        "DownloadingUpdateFromX": "Prenašam posodobitev iz %s",
         "DownloadX": "Prenos %s",
+        "DownloadingUpdateFromX": "Prenašam posodobitev iz %s",
         "EmptyDatabaseError": "Baza podatkov %s je prazna. Urediti ali pa odstraniti morate vašo Matomo-ovo konfiguracijsko datoteko.",
         "ErrorDuringPluginsUpdates": "Napake, do katerih je prišlo med posodabljanjem vtičnikov:",
         "ExceptionAlreadyLatestVersion": "Imate najnovejšo različico Matomo-a (%s)",
@@ -680,13 +683,13 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo-ova podatkovna baza bo nadgrajena iz različice %1$s, na novo različico %2$s.",
         "ReadyToGo": "Ste pripravljeni za začetek?",
         "TheFollowingPluginsWillBeUpgradedX": "Sledeči vtičniki bodo posodobljeni: %s",
-        "ThereIsNewVersionAvailableForUpdate": "Za posodobitev je na voljo nova različica Matomo-a",
         "TheUpgradeProcessMayFailExecuteCommand": "V primeru, da ima vaša Matomo namestitev veliko bazo podatkov je mogoče, da posodabljanje v brskalniku traja zelo dolgo. V tem primeru lahko posodobitve uveljavite preko komandne vrstice: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Proces nadgradnje podatkovne baze lahko traja nekaj časa, zato vas prosimo za potrpežljivost.",
+        "ThereIsNewVersionAvailableForUpdate": "Za posodobitev je na voljo nova različica Matomo-a",
         "UnpackingTheUpdate": "Razpakiram posodobitev",
         "UpdateAutomatically": "Samodejno posodobi",
-        "UpdateTitle": "Posodobitev",
         "UpdateSuccessTitle": "Matomo je bil uspešno posodobljen!",
+        "UpdateTitle": "Posodobitev",
         "UpgradeComplete": "Nadgradnja uspešno zaključena!",
         "UpgradePiwik": "Nadgradi Matomo",
         "VerifyingUnpackedFiles": "Preverjam razpakirane datoteke",
@@ -696,9 +699,9 @@
         "YourDatabaseIsOutOfDate": "Vaša baza podatkov je dotrajana. Preden lahko nadaljujete mora biti nadgrajena."
     },
     "DBStats": {
-        "DatabaseUsage": "Uporaba podatkovne baze",
-        "DataSize": "Velikost podatkov",
         "DBSize": "Velikost podatkovne baze",
+        "DataSize": "Velikost podatkov",
+        "DatabaseUsage": "Uporaba podatkovne baze",
         "EstimatedSize": "Ocenjena velikost",
         "IndexSize": "Velikost indeksa",
         "MainDescription": "Matomo shranjuje vse vaše podatke v MySQL bazo podatkov. Trenutna poraba podatkovne baze je %s.",
@@ -733,19 +736,19 @@
         "BrowserEngine": "Brskalnik",
         "BrowserEngines": "Pogoni brskalnikov",
         "BrowserFamily": "Družina brskalnika",
-        "Browsers": "Brskalniki",
         "BrowserVersion": "Različica brskalnika",
+        "Browsers": "Brskalniki",
         "ColumnBrowser": "Brskalnik",
         "ColumnOperatingSystem": "Operacijski sistem",
-        "dataTableLabelTypes": "Tip",
         "DeviceBrand": "Znamka naprave",
         "DeviceModel": "Model naprave",
-        "DevicesDetection": "Naprave obiskovalcev",
         "DeviceType": "Tip naprave",
+        "Devices": "Naprave",
+        "DevicesDetection": "Naprave obiskovalcev",
         "OperatingSystemFamilies": "Družine operacijskih sistemov",
         "OperatingSystems": "Operacijski sistemi",
-        "Devices": "Naprave",
-        "WidgetBrowsers": "Brskalnik obiskovalca"
+        "WidgetBrowsers": "Brskalnik obiskovalca",
+        "dataTableLabelTypes": "Tip"
     },
     "Events": {
         "Events": "Dogodki",
@@ -753,12 +756,12 @@
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Imate napako ali pa željo, ki nam jo želite sporočiti?",
+        "Forums": "Forumi",
         "IWantTo": "Želim:",
         "LearnWaysToParticipate": "Oglejte si vse načine kako lahko %1$ssodelujete%2$s",
         "ManuallySendEmailTo": "Prosimo, da sporočilo ročno pošljete",
         "SendFeedback": "Pošlji povratno informacijo",
-        "ThankYou": "Hvala, ker nam pomagate izboljšati Matomo!",
-        "Forums": "Forumi"
+        "ThankYou": "Hvala, ker nam pomagate izboljšati Matomo!"
     },
     "Goals": {
         "AbandonedCart": "Opuščen voziček",
@@ -822,6 +825,7 @@
         "Optional": "Izbirno",
         "Password": "Geslo",
         "PasswordDoNotMatch": "gesli se ne ujemata",
+        "PasswordRepeat": "Geslo (ponovno)",
         "PercentDone": "%s %% Končano",
         "PleaseFixTheFollowingErrors": "Prosimo, odpravite sledeče napake",
         "Requirements": "Matomo-ovi minimalni pogoji",
@@ -1895,8 +1899,8 @@
         "RememberMe": "Zapomni si me"
     },
     "Marketplace": {
-        "ActivateLicenseKey": "Omogoči",
         "ActionInstall": "Namesti",
+        "ActivateLicenseKey": "Omogoči",
         "PluginKeywords": "Ključne Besede",
         "PluginVersionInfo": "%1$s from %2$s",
         "SubscriptionType": "Tip"
@@ -2042,8 +2046,8 @@
         "Version": "Različica"
     },
     "Tour": {
-        "Engagement": "Interes",
-        "CompletionTitle": "Dobro opravljeno!"
+        "CompletionTitle": "Dobro opravljeno!",
+        "Engagement": "Interes"
     },
     "Transitions": {
         "BouncesInline": "%s odbojev",
@@ -2059,28 +2063,28 @@
         "ToFollowingPagesInline": "%s na notranje strani",
         "ToFollowingSiteSearches": "Notranja iskanja",
         "ToFollowingSiteSearchesInline": "%s notranjih iskanj",
-        "XOutOfYVisits": "%1$s (od %2$s)",
-        "TransitionsSubcategoryHelp2": "Več podrobnosti"
+        "TransitionsSubcategoryHelp2": "Več podrobnosti",
+        "XOutOfYVisits": "%1$s (od %2$s)"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP naslov %s je lokalen in ne more biti geolociran.",
         "City": "Mesto",
         "Continent": "Kontitent",
         "Country": "Država",
-        "country_a1": "Anonimen Proxy",
-        "country_o1": "Druge države",
         "DistinctCountries": "%s različnih držav",
         "Location": "Lokacija",
         "Region": "Regija",
         "SubmenuLocations": "Lokacije",
-        "WidgetLocation": "Lokacija obiskovalca"
+        "WidgetLocation": "Lokacija obiskovalca",
+        "country_a1": "Anonimen Proxy",
+        "country_o1": "Druge države"
     },
     "UserCountryMap": {
-        "map": "zemljevid",
         "RealTimeMap": "Zemljevid v realnem času",
         "Regions": "Regije",
         "VisitorMap": "Zemljevid obiskovalcev",
-        "WorldWide": "Cel svet"
+        "WorldWide": "Cel svet",
+        "map": "zemljevid"
     },
     "UserId": {
         "UserReportTitle": "Uporabniki"
@@ -2126,13 +2130,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokalni čas",
-        "ColumnServerTime": "Čas na strežniku",
         "LocalTime": "Obiski po lokalnem času",
-        "NHour": "%sh",
-        "ServerTime": "Obiski po času strežnika",
-        "SubmenuTimes": "Časi",
-        "WidgetLocalTime": "Obiski glede na lokalni čas",
-        "WidgetServerTime": "Obiski glede na čas na strežniku"
+        "SubmenuTimes": "Časi"
     },
     "VisitorInterest": {
         "ColumnPagesPerVisit": "Strani na obisk",

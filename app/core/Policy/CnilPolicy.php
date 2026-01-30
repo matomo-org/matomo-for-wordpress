@@ -20,6 +20,10 @@ class CnilPolicy extends \Piwik\Policy\CompliancePolicy
     {
         return Piwik::translate('General_ComplianceCNILDescription');
     }
+    protected static function generateWarnings() : string
+    {
+        return Piwik::translate('General_ComplianceCNILWarning');
+    }
     public static function getTitle() : string
     {
         return Piwik::translate('General_ComplianceCNILTitle');

@@ -13,6 +13,7 @@ use DeviceDetector\DeviceDetector;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugin\ControllerAdmin;
+use Piwik\Request;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\Controller
 {
@@ -22,7 +23,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view = new View('@DevicesDetection/detection');
         $this->setBasicVariablesView($view);
         ControllerAdmin::setBasicVariablesAdminView($view);
-        $userAgent = Common::getRequestVar('ua', $_SERVER['HTTP_USER_AGENT'], 'string');
+        $userAgent = Request::fromPost()->getStringParameter('ua', $_SERVER['HTTP_USER_AGENT']);
         $clientHints = Common::getRequestVar('clienthints', '', 'json');
         $uaParser = new DeviceDetector($userAgent, is_array($clientHints) ? ClientHints::factory($clientHints) : null);
         $uaParser->parse();

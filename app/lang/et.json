@@ -464,10 +464,10 @@
         "PickAnotherRow": "Vali veel üks rida võrdluseks"
     },
     "API": {
+        "Glossary": "Sõnastik",
         "LoadedAPIs": "Edukalt laetud %s API-id",
         "MoreInformation": "Et saada rohkem infot Matomou API-st, vaata %1$sMatomou API tutvustus%2$s ja %3$sMatomou API juhend%4$s.",
-        "UserAuthentication": "Kasutaja autentimine",
-        "Glossary": "Sõnastik"
+        "UserAuthentication": "Kasutaja autentimine"
     },
     "Actions": {
         "AvgGenerationTimeTooltip": "Keskmine, mis baseerub %1$s laadimisel %2$s, %3$s ja %4$s vahel.",
@@ -480,12 +480,12 @@
         "ColumnExitPageURL": "Väljutud lehe URL",
         "ColumnNoResultKeyword": "Ilma tulemusteta võtmesõna",
         "ColumnPageName": "Lehe nimi",
-        "ColumnPagesPerSearch": "Otsingu tulemuste lehed",
         "ColumnPageURL": "Lehe URL",
+        "ColumnPagesPerSearch": "Otsingu tulemuste lehed",
         "ColumnSearchCategory": "Otsingu Kategooria",
+        "ColumnSearchResultsCount": "Otisngutulemuste arv",
         "ColumnSearches": "Otsinguid",
         "ColumnSearchesDocumentation": "Külastuste arv, mille jooksul otsiti antud märksõna veebilehe enda otsingumootoriga.",
-        "ColumnSearchResultsCount": "Otisngutulemuste arv",
         "ColumnSiteSearchKeywords": "Unikaalseid Võtmesõnu",
         "ColumnUniqueClicks": "Unikaalseid Klikke",
         "ColumnUniqueDownloads": "Unikaalseid Allalaadimisi",
@@ -494,22 +494,22 @@
         "ExitPageTitles": "Väljutud lehtede pealkirjad",
         "OneSearch": "1 otsing",
         "PageUrls": "Lehe URL'id",
+        "PagesSubcategoryHelp3": "Kasuta pluss ja miinus ikoone vasakul, et navigeerida",
         "SiteSearchKeyword": "Võtmesõna (lehe otsing)",
+        "SubmenuPageTitles": "Lehe pealkirjad",
         "SubmenuPagesEntry": "Sisenetud lehed",
         "SubmenuPagesExit": "Väljutud lehed",
-        "SubmenuPageTitles": "Lehe pealkirjad",
         "SubmenuSitesearch": "Lehe otsing",
         "WidgetEntryPageTitles": "Sisenetud lehtede pealkirjad",
         "WidgetExitPageTitles": "Väljutud lehtede pealkirjad",
-        "WidgetPagesEntry": "Sisenetud lehed",
-        "WidgetPagesExit": "Lehed kust väljutakse",
         "WidgetPageTitles": "Lehe pealkirjad",
         "WidgetPageTitlesFollowingSearch": "Peale otsingut külastatud lehtede pealkirjad",
         "WidgetPageUrlsFollowingSearch": "Peale otsingut külastatud lehed",
+        "WidgetPagesEntry": "Sisenetud lehed",
+        "WidgetPagesExit": "Lehed kust väljutakse",
         "WidgetSearchCategories": "Otsingu Kategooriad",
         "WidgetSearchKeywords": "Lehe otsingu võtmesõnad",
-        "WidgetSearchNoResultKeywords": "Ilma tulemusteta otsingu võtmesõnad",
-        "PagesSubcategoryHelp3": "Kasuta pluss ja miinus ikoone vasakul, et navigeerida"
+        "WidgetSearchNoResultKeywords": "Ilma tulemusteta otsingu võtmesõnad"
     },
     "Annotations": {
         "AddAnnotationsFor": "Lisa annotatsioon %s'le…",
@@ -528,11 +528,14 @@
         "NoAnnotations": "Antud ajavahemiku kohta puuduvad märkmed.",
         "ViewAndAddAnnotations": "Vaata ja lisa märkmeid %s kohta…"
     },
+    "BotTracking": {
+        "PageUrl": "Lehe URL"
+    },
     "Contents": {
-        "InteractionRate": "Koostoime mõju",
         "ContentName": "Sisu nimi",
         "ContentPiece": "Sisu tükk",
-        "Contents": "Sisud"
+        "Contents": "Sisud",
+        "InteractionRate": "Koostoime mõju"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Lisa uus usaldusväärne host",
@@ -621,15 +624,15 @@
         "InstallNewPlugins": "Paigalda uut lisatarkvara",
         "InstallNewThemes": "Paigalda uusi kujundusi",
         "LicenseHomepage": "Litsentsi koduleht",
-        "PluginsExtendPiwik": "Plugins võimendavad ja suurendavad Matomo-i funktsionaalsust.",
-        "OncePluginIsInstalledYouMayActivateHere": "Kui plugin on installeeritud ja aktiveeritud saad seda sisse ja välja lülitada siin.",
         "MenuPlatform": "Platvorm",
         "NoZipFileSelected": "Palun vali ZIP fail.",
         "NumUpdatesAvailable": "%s uuendus(t) saadaval",
+        "OncePluginIsInstalledYouMayActivateHere": "Kui plugin on installeeritud ja aktiveeritud saad seda sisse ja välja lülitada siin.",
         "Origin": "Päritolu",
         "OriginCore": "Tuumik",
         "OriginThirdParty": "Kolmanda osapoole",
         "PluginHomepage": "Lisatarkvara koduleht",
+        "PluginsExtendPiwik": "Plugins võimendavad ja suurendavad Matomo-i funktsionaalsust.",
         "PluginsManagement": "Lisatarkvara haldus",
         "Status": "Olek",
         "TeaserExtendPiwik": "Laienda Matomout lisatarkvara ja kujunduste abil",
@@ -640,10 +643,11 @@
         "Websites": "Veebilehed"
     },
     "CoreUpdater": {
+        "CloudHosting": "Pilvemajutus",
         "CriticalErrorDuringTheUpgradeProcess": "Kriitiline viga uuendamise protsessi ajal:",
         "DatabaseUpgradeRequired": "Andmebaasi uuendus on vajalik",
-        "DownloadingUpdateFromX": "Laen uuendust %s",
         "DownloadX": "Lae alla %s",
+        "DownloadingUpdateFromX": "Laen uuendust %s",
         "EmptyDatabaseError": "Andmebaas %s on tühi. Sa pead muutma või eemaldama Matomou konfiguratsiooni faili.",
         "ErrorDuringPluginsUpdates": "Viga lisatarkvara uuendamisel:",
         "ExceptionArchiveEmpty": "Tühi arhiiv.",
@@ -662,15 +666,14 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo andmebaas uuendatakse versioonilt %1$s uuele versioonile %2$s.",
         "ReadyToGo": "Valmis jätkamiseks?",
         "TheFollowingPluginsWillBeUpgradedX": "Valitud lisatarkvarad uuendatakse: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "Uus Matomou versioon on saadaval",
         "TheUpgradeProcessMayFailExecuteCommand": "Kui sul on suur Matomou andmebaas, siis uuendused võivad veebisirvikus võtta liiga kaua aega. Sellisel juhul saad uuenduse teha käsurealt: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Andmebaasi uuendamise protsess võtab veidi aega, palun ole kannatlik.",
+        "ThereIsNewVersionAvailableForUpdate": "Uus Matomou versioon on saadaval",
         "UnpackingTheUpdate": "Pakin uuendust lahti",
         "UpdateAutomatically": "Uuenda automaatselt",
-        "UpdateTitle": "Uuendus",
-        "UpdateSuccessTitle": "Matomo edukalt uuendatud!",
         "UpdateErrorTitle": "Uuendamise viga",
-        "CloudHosting": "Pilvemajutus",
+        "UpdateSuccessTitle": "Matomo edukalt uuendatud!",
+        "UpdateTitle": "Uuendus",
         "UpgradeComplete": "Uuendamine lõpuni viidud!",
         "UpgradePiwik": "Uuenda Matomo",
         "VerifyingUnpackedFiles": "Kontrollin lahtipakitud failide terviklikkust",
@@ -683,9 +686,9 @@
         "CustomDimensions": "Kohandatud mõõdud"
     },
     "DBStats": {
-        "DatabaseUsage": "Andmebaasi kasutus",
-        "DataSize": "Andmemaht",
         "DBSize": "Andmebaasi suurus",
+        "DataSize": "Andmemaht",
+        "DatabaseUsage": "Andmebaasi kasutus",
         "EstimatedSize": "Ennustatud maht",
         "IndexSize": "Indeksi maht",
         "LearnMore": "Et saada rohkem infot, kuidas Matomo töötleb andmeid ja kuidas optimeerida Matomout tööks keskmise ja kõrge külastatavusega veebilehtedele, vaata seda dokumentatsiooni: %s.",
@@ -733,39 +736,39 @@
         "BrowserEngine": "Veebisirvija",
         "BrowserEngines": "Veebimootorid",
         "BrowserFamily": "Sirvija tüüp",
-        "Browsers": "Veebisirvijad",
         "BrowserVersion": "Sirvija versioon",
         "BrowserVersions": "Brauseri versioonid",
+        "Browsers": "Veebisirvijad",
         "Camera": "Kaamera",
         "CarBrowser": "Sõiduki sirvik",
-        "Software": "Tarkvara",
         "ColumnBrowser": "Veebisirvija",
         "ColumnOperatingSystem": "Operatsioonisüsteem",
         "ColumnOperatingSystemVersion": "Operatsioonisüsteemi versioon",
         "Console": "Konsool",
-        "dataTableLabelBrands": "Bränd",
-        "dataTableLabelModels": "Mudel",
-        "dataTableLabelSystemVersion": "Operatsioonisüsteemi versioon",
-        "dataTableLabelTypes": "Tüüp",
         "Device": "Seade",
         "DeviceBrand": "Seadme bränd",
         "DeviceDetection": "Seadme tuvastus",
         "DeviceModel": "Seadme mudel",
-        "DevicesDetection": "Külastajate seadmed",
         "DeviceType": "Seadme tüüp",
+        "Devices": "Seadmed",
+        "DevicesDetection": "Külastajate seadmed",
         "FeaturePhone": "Tark telefon",
+        "MobileApp": "Mobiilirakendus",
         "OperatingSystemFamilies": "Operatsioonisüsteemide tüübid",
         "OperatingSystemFamily": "OP-süsteemi tüüp",
-        "OperatingSystems": "Operatsioonisüsteemid",
         "OperatingSystemVersions": "Operatsioonisüsteemide versioonid",
+        "OperatingSystems": "Operatsioonisüsteemid",
         "SmartDisplay": "Nutikas kuvar",
         "Smartphone": "Nutitelefon",
-        "Devices": "Seadmed",
-        "Tablet": "Tahvelarvuti",
+        "Software": "Tarkvara",
         "TV": "Televiisor",
+        "Tablet": "Tahvelarvuti",
         "UserAgent": "Veebisirvija tüüp",
-        "MobileApp": "Mobiilirakendus",
-        "WidgetBrowsers": "Külastajate veebisirvijad"
+        "WidgetBrowsers": "Külastajate veebisirvijad",
+        "dataTableLabelBrands": "Bränd",
+        "dataTableLabelModels": "Mudel",
+        "dataTableLabelSystemVersion": "Operatsioonisüsteemi versioon",
+        "dataTableLabelTypes": "Tüüp"
     },
     "Diagnostics": {
         "ConfigFileTitle": "Seadistuste fail",
@@ -787,16 +790,16 @@
         "Events": "Sündmused"
     },
     "Feedback": {
-        "IWantTo": "Ma tahan:",
-        "SendFeedback": "Saada tagasisidet",
         "CommunityHelp": "Kogukonna abi",
-        "ProfessionalHelp": "Proffesionaalne abi",
         "ContactUs": "Võta meiega ühendust",
-        "Forums": "Foorumid"
+        "Forums": "Foorumid",
+        "IWantTo": "Ma tahan:",
+        "ProfessionalHelp": "Proffesionaalne abi",
+        "SendFeedback": "Saada tagasisidet"
     },
     "GeoIp2": {
-        "DownloadingDb": "Laen alla %s",
         "DownloadNewDatabasesEvery": "Uuenda andmebaasi iga",
+        "DownloadingDb": "Laen alla %s",
         "GeoIPDatabases": "GeoIP andmebaas",
         "ISPDatabase": "ISP andmebaas",
         "LocationDatabase": "Asukoha andmebaas",
@@ -2182,9 +2185,9 @@
         "Keywords": "Võtmesõnad",
         "Referrer": "Viitaja",
         "ReferrerName": "Viitaja nimi",
+        "ReferrerTypes": "Kanali liigid",
         "Referrers": "Viitajad",
         "ReferrersOverview": "Viitajate ülevaade",
-        "ReferrerTypes": "Kanali liigid",
         "SearchEngines": "Otsingumootorid",
         "Socials": "Sotsiaalvõrgustikud",
         "SubmenuSearchEngines": "Otsingumootorid ja võtmesõnad",
@@ -2258,10 +2261,10 @@
         "SaveAndApply": "Salvesta ja rakenda",
         "SegmentDisplayedAllWebsites": "kõik veebilehed",
         "SegmentDisplayedThisWebsiteOnly": "ainult see veebileht",
+        "Test": "Testi",
         "ThisSegmentIsVisibleTo": "Antud segment on nähtav:",
         "VisibleToAllUsers": "kõik kasutajad",
-        "VisibleToMe": "mina",
-        "Test": "Testi"
+        "VisibleToMe": "mina"
     },
     "SitesManager": {
         "AddSite": "Lisa uus veebileht",
@@ -2280,8 +2283,8 @@
         "GlobalListExcludedIps": "Globaalselt väljaarvatud IPd",
         "GlobalWebsitesSettings": "Globaalsed veebilehtede seaded",
         "MainDescription": "Sinu veebianalüütika vajab veebilehti, mida hallata! Lisa, uuenda, kustuta veebilehti, ja näita Javascript koodi mida lisada veebilehtedele.",
-        "NotAnEcommerceSite": "Ei ole e-äri lehekülg",
         "NoWebsites": "Sul pole veebilehti, mida administreerida.",
+        "NotAnEcommerceSite": "Ei ole e-äri lehekülg",
         "PiwikOffersEcommerceAnalytics": "Matomo võimaldab detailsemat e-äri analüüsi ja raporteid. Loe rohkem %1$s e-äri analüüsist%2$s.",
         "SearchCategoryLabel": "Kategooria parameeter",
         "SearchKeywordLabel": "Päringu parameeter",
@@ -2291,9 +2294,9 @@
         "Timezone": "Ajavöönd",
         "TrackingSiteSearch": "Lehe sisemisest otsingust andmete kogumine",
         "TrackingTags": "Jälgimiskood lehele %s",
-        "Urls": "URL-id",
         "Type": "Tüüp",
         "UTCTimeIs": "UTC aeg on %s.",
+        "Urls": "URL-id",
         "WebsitesManagement": "Veebilehe haldamine"
     },
     "TagManager": {
@@ -2328,8 +2331,8 @@
         "Version": "Versioon"
     },
     "Tour": {
-        "Engagement": "Korduvused",
-        "CompletionTitle": "Hästi tehtud!"
+        "CompletionTitle": "Hästi tehtud!",
+        "Engagement": "Korduvused"
     },
     "Transitions": {
         "BouncesInline": "%s põrget",
@@ -2352,19 +2355,15 @@
         "ToFollowingPagesInline": "%s läks sisemistele lehtedele",
         "ToFollowingSiteSearches": "Sisemised otsingud",
         "ToFollowingSiteSearchesInline": "%s sisemist otsingut",
+        "TransitionsSubcategoryHelp2": "Rohkem detaile",
         "XOfAllPageviews": "%s kõigist antud lehe vaatamistest",
-        "XOutOfYVisits": "%1$s (%2$s kõigist)",
-        "TransitionsSubcategoryHelp2": "Rohkem detaile"
+        "XOutOfYVisits": "%1$s (%2$s kõigist)"
     },
     "UserCountry": {
         "City": "Linn",
         "CityAndCountry": "%1$s, %2$s",
         "Continent": "Kontinent",
         "Country": "Riik",
-        "country_a1": "Anonüümne vahendusserver",
-        "country_a2": "Satelliidi pakkuja",
-        "country_cat": "Katalaani kommuunid",
-        "country_o1": "Muu riik",
         "CurrentLocationIntro": "Antud pakkuja andmete alusel on sinu praegune asukoht",
         "DistinctCountries": "%s eri riigist",
         "FromDifferentCities": "erinevad linnad",
@@ -2377,7 +2376,11 @@
         "NoDataForGeoIPReport1": "Antud raporti jaoks puuduvad andmed, kuna Matomo asukoha andmebaas on tühi või külastajate IP aadresse ei ole olnud võimalik kaardil tuvastada.",
         "Region": "Regioon",
         "SubmenuLocations": "Asukohad",
-        "WidgetLocation": "Külastajate asukohad"
+        "WidgetLocation": "Külastajate asukohad",
+        "country_a1": "Anonüümne vahendusserver",
+        "country_a2": "Satelliidi pakkuja",
+        "country_cat": "Katalaani kommuunid",
+        "country_o1": "Muu riik"
     },
     "UserCountryMap": {
         "AndNOthers": "ja %s muud",
@@ -2386,17 +2389,17 @@
         "DaysAgo": "%s päeva tagasi",
         "GoalConversions": "%s tulutoovaid eesmärke",
         "HoursAgo": "%s tundi tagasi",
-        "map": "kaart",
         "MinutesAgo": "%s minutit tagasi",
-        "None": "Mitte ükski",
         "NoVisit": "Külastused puuduvad",
+        "None": "Mitte ükski",
         "RealTimeMap": "Reaalaja kaart",
         "Regions": "Regioonid",
         "Searches": "%s otsingut",
         "SecondsAgo": "%s sekundit tagasi",
         "ShowingVisits": "Tuvastatud asukohaga külastused viimase",
         "VisitorMap": "Külastuste kaart",
-        "WorldWide": "Globaalne"
+        "WorldWide": "Globaalne",
+        "map": "kaart"
     },
     "UserId": {
         "UserId": "KasutajaID",
@@ -2458,23 +2461,18 @@
         "ColumnSumVisitLengthReturning": "Korduvate külastuste kogu lehel viibitud aeg (sek)",
         "ColumnUniqueReturningVisitors": "Unikaalsed korduvkülastajad",
         "ReturnAvgActions": "tegevust korduvatel külastustel",
-        "ReturningVisitsDocumentation": "See on korduvate külastuste ülevaade.",
         "ReturnVisits": "korduvad külastused",
+        "ReturningVisitsDocumentation": "See on korduvate külastuste ülevaade.",
         "SubmenuFrequency": "Sagedus",
         "WidgetGraphReturning": "Korduvate külastuste graafik",
         "WidgetOverview": "Sageduse ülevaade"
     },
     "VisitTime": {
         "ColumnLocalTime": "Lokaalne aeg",
-        "ColumnServerTime": "Serveri aeg",
         "DayOfWeek": "Nädalapäev",
         "LocalTime": "Külastused kohaliku kellaaja järgi",
-        "NHour": "%s",
-        "ServerTime": "Külastused serveri kellaaja järgi",
         "SubmenuTimes": "Külastusajad",
-        "VisitsByDayOfWeek": "Külastused nädalapäeva järgi",
-        "WidgetLocalTime": "Külastused kohaliku kellaaja järgi",
-        "WidgetServerTime": "Külastused serveri kellaaja järgi"
+        "VisitsByDayOfWeek": "Külastused nädalapäeva järgi"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",
@@ -2486,12 +2484,12 @@
         "OnePage": "1 leht",
         "VisitNum": "Külastuste arv",
         "VisitsByDaysSinceLast": "Külastused viimase külastusaja järgi",
-        "visitsByVisitCount": "Külastused külastuste arvu järgi",
         "VisitsPerDuration": "Külastused külastuste pikkuse järgi",
         "VisitsPerNbOfPages": "Külastused külastatud lehtede arvu järgi",
         "WidgetLengths": "Külastuste kestvus",
-        "WidgetPages": "Erinevaid lehti külastuse kohta",
-        "WidgetVisitsByDaysSinceLast": "Külastused viimase külastusaja järgi"
+        "WidgetPages": "Lehekülgi külastuse jooksul",
+        "WidgetVisitsByDaysSinceLast": "Külastused viimase külastusaja järgi",
+        "visitsByVisitCount": "Külastused külastuste arvu järgi"
     },
     "VisitsSummary": {
         "AverageGenerationTime": "Keskmine genereerimise aeg",

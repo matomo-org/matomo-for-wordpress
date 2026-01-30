@@ -10,6 +10,8 @@ namespace Piwik;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\Exception\PluginNotFoundException;
+use Piwik\Http\HttpCodeException;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
@@ -24,7 +26,6 @@ use Piwik\Http\Router;
 use Piwik\Plugins\CoreAdminHome\CustomLogo;
 use Piwik\Session\SessionAuth;
 use Piwik\Session\SessionInitializer;
-use Piwik\SupportedBrowser;
 use Piwik\Log\LoggerInterface;
 /**
  * This singleton dispatches requests to the appropriate plugin Controller.
@@ -67,6 +68,7 @@ class FrontController extends \Piwik\Singleton
     public const DEFAULT_MODULE = 'CoreHome';
     public const DEFAULT_LOGIN = 'anonymous';
     public const DEFAULT_TOKEN_AUTH = 'anonymous';
+    private const SESSION_TIMEOUT_COOKIE_NAME = 'matomo_session_timed_out';
     // public for tests
     public static $requestId = null;
     /**
@@ -104,7 +106,11 @@ class FrontController extends \Piwik\Singleton
      */
     public static function generateSafeModeOutputFromException($e)
     {
-        StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+        if ($e instanceof HttpCodeException && $e->getCode() >= 400 && $e->getCode() < 500) {
+            StaticContainer::get(LoggerInterface::class)->debug('Uncaught client error: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+        } else {
+            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+        }
         $error = array('message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine());
         if (isset(self::$requestId)) {
             $error['request_id'] = self::$requestId;
@@ -329,13 +335,16 @@ class FrontController extends \Piwik\Singleton
         $loggedIn = \false;
         //move this up unsupported Browser do not create session
         if ($this->isSupportedBrowserCheckNeeded()) {
-            SupportedBrowser::checkIfBrowserSupported();
+            \Piwik\SupportedBrowser::checkIfBrowserSupported();
         }
         // don't use sessionauth in cli mode
         // try authenticating w/ session first...
         $sessionAuth = $this->makeSessionAuthenticator();
         if ($sessionAuth) {
             $loggedIn = \Piwik\Access::getInstance()->reloadAccess($sessionAuth);
+            if (!$loggedIn && $sessionAuth->wasSessionExpired()) {
+                \Piwik\Access::getInstance()->setSessionExpired(\true);
+            }
         }
         // ... if session auth fails try normal auth (which will login the anonymous user)
         if (!$loggedIn) {
@@ -351,6 +360,8 @@ class FrontController extends \Piwik\Singleton
             $this->makeAuthenticator($sessionAuth);
             // Piwik\Auth must be set to the correct Login plugin
         }
+        $this->consumeSessionTimeoutCookie();
+        $this->sendSessionTimedOutHeaderIfNeeded();
         // Force the auth to use the token_auth if specified, so that embed dashboard
         // and all other non widgetized controller methods works fine
         if (StaticContainer::get(AuthenticationToken::class)->getAuthToken() !== '' && Request::shouldReloadAuthUsingTokenAuth(null)) {
@@ -391,6 +402,9 @@ class FrontController extends \Piwik\Singleton
         [$module, $action] = Request::getRenamedModuleAndAction($module, $action);
         if (!\Piwik\SettingsPiwik::isInternetEnabled() && \Piwik\Plugin\Manager::getInstance()->doesPluginRequireInternetConnection($module)) {
             throw new PluginRequiresInternetException($module);
+        }
+        if (!\Piwik\Plugin\Manager::getInstance()->isPluginInFilesystem($module)) {
+            throw new PluginNotFoundException($module);
         }
         if (!\Piwik\Plugin\Manager::getInstance()->isPluginActivated($module)) {
             throw new PluginDeactivatedException($module);
@@ -585,7 +599,7 @@ class FrontController extends \Piwik\Singleton
         }
         return null;
     }
-    private function makeAuthenticator(SessionAuth $auth = null)
+    private function makeAuthenticator(?SessionAuth $auth = null)
     {
         /**
          * Triggered before the user is authenticated, when the global authentication object
@@ -630,6 +644,17 @@ class FrontController extends \Piwik\Singleton
         $requestId = self::getUniqueRequestId();
         \Piwik\Common::sendHeader("X-Matomo-Request-Id: {$requestId}");
     }
+    private function consumeSessionTimeoutCookie() : void
+    {
+        $cookie = new \Piwik\Cookie(self::SESSION_TIMEOUT_COOKIE_NAME);
+        if (!$cookie->isCookieFound()) {
+            return;
+        }
+        $cookie->delete();
+        if (\Piwik\Piwik::isUserIsAnonymous()) {
+            \Piwik\Access::getInstance()->setSessionExpired(\true);
+        }
+    }
     private function isSupportedBrowserCheckNeeded()
     {
         if (defined('PIWIK_ENABLE_DISPATCH') && !PIWIK_ENABLE_DISPATCH) {
@@ -660,5 +685,12 @@ class FrontController extends \Piwik\Singleton
             return \true;
         }
         return \false;
+    }
+    private function sendSessionTimedOutHeaderIfNeeded()
+    {
+        if (!\Piwik\Access::getInstance()->wasSessionExpired()) {
+            return;
+        }
+        \Piwik\Common::sendHeader('X-Matomo-Session-Timed-Out: 1');
     }
 }

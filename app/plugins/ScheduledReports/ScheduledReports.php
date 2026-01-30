@@ -45,10 +45,12 @@ class ScheduledReports extends \Piwik\Plugin
     public const EVOLUTION_GRAPH_PARAMETER = 'evolutionGraph';
     public const ADDITIONAL_EMAILS_PARAMETER = 'additionalEmails';
     public const DISPLAY_FORMAT_PARAMETER = 'displayFormat';
+    public const ENFORCE_ORDER_PARAMETER = 'enforceOrder';
     public const EMAIL_ME_PARAMETER_DEFAULT_VALUE = \true;
     public const EVOLUTION_GRAPH_PARAMETER_DEFAULT_VALUE = \false;
+    public const ENFORCE_ORDER_PARAMETER_DEFAULT_VALUE = \false;
     public const EMAIL_TYPE = 'email';
-    private static $availableParameters = array(self::EMAIL_ME_PARAMETER => \false, self::EVOLUTION_GRAPH_PARAMETER => \false, self::ADDITIONAL_EMAILS_PARAMETER => \false, self::DISPLAY_FORMAT_PARAMETER => \true);
+    private static $availableParameters = array(self::EMAIL_ME_PARAMETER => \false, self::EVOLUTION_GRAPH_PARAMETER => \false, self::ADDITIONAL_EMAILS_PARAMETER => \false, self::DISPLAY_FORMAT_PARAMETER => \true, self::ENFORCE_ORDER_PARAMETER => \false);
     private static $managedReportTypes = array(self::EMAIL_TYPE => 'plugins/Morpheus/images/email.png');
     private static $managedReportFormats = array(ReportRenderer::HTML_FORMAT => 'plugins/Morpheus/images/html_icon.png', ReportRenderer::PDF_FORMAT => 'plugins/Morpheus/icons/dist/plugins/pdf.png', ReportRenderer::CSV_FORMAT => 'plugins/Morpheus/images/export.png', ReportRenderer::TSV_FORMAT => 'plugins/Morpheus/images/export.png');
     public const OPTION_KEY_LAST_SENT_DATERANGE = 'report_last_sent_daterange_';
@@ -112,6 +114,12 @@ class ScheduledReports extends \Piwik\Plugin
         $translationKeys[] = 'ScheduledReports_AlsoSendReportToTheseEmails';
         $translationKeys[] = 'ScheduledReports_ReportSchedule';
         $translationKeys[] = 'ScheduledReports_SendingReport';
+        $translationKeys[] = 'ScheduledReports_ManageTooltip';
+        $translationKeys[] = 'ScheduledReports_CreateTooltip';
+        $translationKeys[] = 'CoreHome_LearnMoreFullStop';
+        $translationKeys[] = 'ScheduledReports_SelectedReports';
+        $translationKeys[] = 'ScheduledReports_SelectedReportsHelp';
+        $translationKeys[] = "ScheduledReports_ReportAdded";
     }
     /**
      * Delete reports for the website
@@ -160,6 +168,11 @@ class ScheduledReports extends \Piwik\Plugin
         // additionalEmails is an optional parameter
         if (isset($parameters[self::ADDITIONAL_EMAILS_PARAMETER])) {
             $parameters[self::ADDITIONAL_EMAILS_PARAMETER] = self::checkAdditionalEmails($parameters[self::ADDITIONAL_EMAILS_PARAMETER]);
+        }
+        if (!isset($parameters[self::ENFORCE_ORDER_PARAMETER])) {
+            $parameters[self::ENFORCE_ORDER_PARAMETER] = self::ENFORCE_ORDER_PARAMETER_DEFAULT_VALUE;
+        } else {
+            $parameters[self::ENFORCE_ORDER_PARAMETER] = self::valueIsTrue($parameters[self::ENFORCE_ORDER_PARAMETER]);
         }
     }
     // based on https://www.php.net/manual/en/filter.filters.validate.php -> FILTER_VALIDATE_BOOLEAN
