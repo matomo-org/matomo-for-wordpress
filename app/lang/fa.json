@@ -616,12 +616,12 @@
     },
     "API": {
         "ChangeTokenHint": "برای تغییرات این توکن، لطفا به %1$sصفحه‌ی تنظیمات شخصی%2$s خود مراجعه کنید.",
+        "Glossary": "واژه‌ نامه",
         "KeepTokenSecret": "این token_auth برای رمزعبور و ورود شما مثل یک راز است , %1$s آن را به کسی نگویید %2$s!",
+        "LearnAboutCommonlyUsedTerms2": "برای استفاده‌ی هر چه بیشتر از داده‌های تحلیلی Matomo، درباره‌ی واژه‌های کاربردی مطالعه کنید.",
         "LoadedAPIs": "API های %s با موفقیت بارگزاری شدند",
         "TopLinkTooltip": "با استفاده از یک API ساده به اطلاعات آماری وب خود از طریق کدنویسی در فرمت های json و xml و غیره دسترسی پیدا کنید.",
-        "UserAuthentication": "تأیید هویت کاربر",
-        "Glossary": "واژه‌ نامه",
-        "LearnAboutCommonlyUsedTerms2": "برای استفاده‌ی هر چه بیشتر از داده‌های تحلیلی Matomo، درباره‌ی واژه‌های کاربردی مطالعه کنید."
+        "UserAuthentication": "تأیید هویت کاربر"
     },
     "Actions": {
         "ActionType": "نوع فعالیت",
@@ -719,6 +719,9 @@
         "PluginDescription": "به شما امکان می دهد یادداشت‌هایی را به روزهای مختلف پیوست کنید تا تغییرات ایجاد شده در وب سایت خود را علامت گذاری کنید، تجزیه و تحلیل هایی که در مورد داده‌های خود انجام می دهید ذخیره کنید و اندیشه‌های خود را با همکارانتان به اشتراک بگذارید. با حاشیه نویسی داده های خود، مطمئن خواهید شد که به خاطر می آورید چرا داده های شما به این شکل به نظر می رسد.",
         "ViewAndAddAnnotations": "نمایش و افزودن توضیحات برای %s…",
         "YouCannotModifyThisNote": "شما نمی توانید این توضیح را تغییر دهید , زیرا شما آن را ایجاد نکرده اید و نه اجازه دسترسی مدیر برای این سایت را دارید."
+    },
+    "BotTracking": {
+        "PageUrl": "آدرس صفحه"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "افزودن میزبان مورد اعتماد جدید",
@@ -944,8 +947,8 @@
         "Active": "فعال",
         "Activity": "فعالیت",
         "AuthorHomepage": "صفحه خانگی نویسنده",
-        "Changelog": "لاگ تغییرات",
         "ChangeSettingsPossible": "شما می توانید %1$ssettings%2$s را برای این پلاگین تغییر دهید.",
+        "Changelog": "لاگ تغییرات",
         "CorePluginTooltip": "پلاگین های هسته با برنامه توزیع شده اند",
         "Deactivate": "غیر فعال کردن",
         "DoMoreContactPiwikAdmins": "لطفا برای نصب قالب یا افزونه های جدید با تیم مدیریت پیویک تان در ارتباط باشید.",
@@ -956,17 +959,17 @@
         "InstallNewPlugins": "نصب افزونه های جدید",
         "InstallNewThemes": "نصب قالب های جدید",
         "LicenseHomepage": "صفحه خانگی مجوز",
-        "PluginsExtendPiwik": "افزونه ها عملکرد و کارایی پیویک را گسترش می دهند.",
-        "OncePluginIsInstalledYouMayActivateHere": "هنگامی که یک افزونه نصب شد , شما می توانید آنها را در اینجا فعال یا غیر فعال کنید.",
         "MenuPlatform": "بستر های نرم افزاری",
         "NoZipFileSelected": "لطفا یک فایل Zip را انتخاب کنید.",
         "NumUpdatesAvailable": "%s آپدیت(ها) موجود است",
+        "OncePluginIsInstalledYouMayActivateHere": "هنگامی که یک افزونه نصب شد , شما می توانید آنها را در اینجا فعال یا غیر فعال کنید.",
         "Origin": "مبدا",
         "OriginCore": "هسته",
         "OriginThirdParty": "شخص ثالث",
         "PluginHomepage": "صفحه خانگی افزونه",
         "PluginNotCompatibleWith": "%1$s این پلاگین سازگار نیست با %2$s.",
         "PluginNotWorkingAlternative": "اگر شما از این پلاگین استفاده می نمایید ، می توانید نسخه های جدید آن را در بازار پیدا نمایید. اگر استفاده نمی کنید ، می توانید آن را پاک نمایید.",
+        "PluginsExtendPiwik": "افزونه ها عملکرد و کارایی پیویک را گسترش می دهند.",
         "PluginsManagement": "مدیریت افزونه ها",
         "Status": "وضعیت",
         "SuccessfullyActicated": "شما با موفقیت <strong>%s<\/strong> را فعال کردید.",
@@ -1030,9 +1033,9 @@
         "CustomDimensions": "ابعاد سفارشی"
     },
     "DBStats": {
-        "DatabaseUsage": "پایگاه داده مورد استفاده",
-        "DataSize": "اندازه داده ها",
         "DBSize": "اندازه پایگاه داده",
+        "DataSize": "اندازه داده ها",
+        "DatabaseUsage": "پایگاه داده مورد استفاده",
         "EstimatedSize": "اندازه تخمین زده شده",
         "IndexSize": "اندازه شاخص(ایندکس)",
         "LearnMore": "برای درک بیشتر درباره ی پردازش داده ها توسط پیویک و چگونگی تنظیم پیویک برای عملکرد عالی برای وبسایت های با ترافیک متوسط و بالا , این مستندات را ببینید: %s.",
@@ -1129,23 +1132,24 @@
         "EventAction": "اقدامات رویداد",
         "EventCategory": "دسته رویداد",
         "EventName": "نام رویداد",
-        "Events": "رویداد ها"
+        "Events": "رویداد ها",
+        "PluginDescription": "دنبال کردن رویداد‌ها و بازیابی گزارش‌ها بر اساس فعالیت بازدیدکنندگان شما."
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "آیا شما یک باگ برای گزارش دارید یا درخواستی برای یک ویژگی جدید دارید؟",
+        "Forums": "فرم ها",
         "IWantTo": "من می خواهم به :",
         "LearnWaysToParticipate": "درباره راه هایی که می توانید %1$sمشارکت کنید%2$s بیشتر بدانید.",
         "ManuallySendEmailTo": "لطفا پیام خود را به صورت دستی ارسال کنید به",
         "SendFeedback": "ارسال بازخورد",
         "ThankYou": "از شما برای کمک به بهتر کردن پیویک متشکریم!",
-        "TopLinkTooltip": "به ما بگویید چه می اندیشید یا پشتیبانی حرفه ای درخواست کنید.",
-        "Forums": "فرم ها"
+        "TopLinkTooltip": "به ما بگویید چه می اندیشید یا پشتیبانی حرفه ای درخواست کنید."
     },
     "GeoIp2": {
         "AssumingNonApache": "نمی توان فانکشن apache_get_modules را پیدا نمود, فرض کنید روی وبسرور غیر آپاچی است.",
         "CannotListContent": "مطالب قابل فهرست شدن نمی باشد برای %1$s:%2$s",
-        "DownloadingDb": "در حال بارگزاری %s",
         "DownloadNewDatabasesEvery": "پایگاه های داده را بروزرسانی کن در هر",
+        "DownloadingDb": "در حال بارگزاری %s",
         "FoundApacheModules": "پیویک ماژول های آپاچی زیر را یافت",
         "GeoIPDatabases": "پایگاه های داده GeoIP",
         "HowToInstallApacheModule": "چگونه ماژول GeoIP را برای آپاچی نصب کنم؟",
@@ -2941,6 +2945,7 @@
     },
     "Tour": {
         "AddAnnotation": "افزودن یک توضیح",
+        "AddAnotherWebsite": "افزودن وبسایت دیگر",
         "AddReport": "افزودن گزارش زمانبندی شده",
         "AddSegment": "افزودن یک بخش",
         "BecomeMatomoExpert": "یک متخصص Matomo شوید",
@@ -2988,9 +2993,9 @@
         "ToFollowingPagesInline": "%s به صفحه های داخلی",
         "ToFollowingSiteSearches": "جستجوهای داخلی",
         "ToFollowingSiteSearchesInline": "%s جستجوهای داخلی",
+        "TransitionsSubcategoryHelp2": "جزئیات بیشتر",
         "XOfAllPageviews": "%s از همه ی بازدیدهای این صفحه",
-        "XOutOfYVisits": "%1$s (از %2$s)",
-        "TransitionsSubcategoryHelp2": "جزئیات بیشتر"
+        "XOutOfYVisits": "%1$s (از %2$s)"
     },
     "TwoFactorAuth": {
         "TwoFAShort": "تأیید دو مرحله‌ای (2FA)",
@@ -3032,17 +3037,17 @@
         "DaysAgo": "%s روز پیش",
         "GoalConversions": "%s تبدیل هدف",
         "HoursAgo": "%s ساعت پیش",
-        "map": "نقشه",
         "MinutesAgo": "%s دقیقه پیش",
-        "None": "هیچ",
         "NoVisit": "بدون بازدید",
+        "None": "هیچ",
         "RealTimeMap": "نقشه در همین لحظه",
         "Regions": "منطقه ها",
         "Searches": "%sجستجو",
         "SecondsAgo": "%s ثانیه پیش",
         "ShowingVisits": "مکان اخرین بازدید کنندگان",
         "VisitorMap": "نقشه بازدیدکننده",
-        "WorldWide": "سراسر جهان"
+        "WorldWide": "سراسر جهان",
+        "map": "نقشه"
     },
     "UserId": {
         "UserId": "شناسه کاربر",
@@ -3117,16 +3122,11 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "زمان محلی",
-        "ColumnServerTime": "زمان سرور",
         "DayOfWeek": "روز از هفته",
         "LocalTime": "بازدید ها بر اساس زمان محلی",
-        "NHour": "%sساعت",
-        "ServerTime": "بازدید ها بر اساس زمان سرور",
         "SubmenuTimes": "زمانها",
         "VisitsByDayOfWeek": "بازدیدها براساس روزهای هفته",
-        "WidgetByDayOfWeekDocumentation": "این نمودار تعداد بازدیدهای وبسایت شما را در هر روز از هفته نمایش می دهد.",
-        "WidgetLocalTime": "بازدید ها با زمان محلی",
-        "WidgetServerTime": "بازدید ها با زمان سرور"
+        "WidgetByDayOfWeekDocumentation": "این نمودار تعداد بازدیدهای وبسایت شما را در هر روز از هفته نمایش می دهد."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "بین %1$s-%2$s دقیقه",
@@ -3144,7 +3144,7 @@
         "WidgetLengthsDocumentation": "در این گزارش، شما می توانید ببینید که چگونه بسیاری از بازدیدکننده داشته است به مدت معینی در کل. در ابتدا، این گزارش به عنوان یک ابر برچسب نشان داده شده است، مدت زمان بیشتر رایج است در یک فونت بزرگتر نمایش داده می شود.",
         "WidgetPages": "صفحات در هر نمایش",
         "WidgetPagesDocumentation": "در این گزارش، شما می توانید ببینید که چگونه بسیاری از بازدیدکننده داشته است شامل تعداد معینی از نمایش صفحات. در ابتدا، این گزارش به عنوان یک ابر برچسب نشان داده شده است، تعداد بیشتر رایج است از صفحات در فونت بزرگتر نمایش داده می شود.",
-        "WidgetVisitsByDaysSinceLast": "بازدیدها بر اساس روز از آخرین بازدید",
+        "WidgetVisitsByDaysSinceLast": "مراجعه کننده در روز پس از آخرین بازدید",
         "WidgetVisitsByDaysSinceLastDocumentation": "چه تعداد بازدید از بازدیدکنندگان بازگشتی که آخرین بازدید آنها چند روز پیش بوده است.",
         "WidgetVisitsByNumDocumentation": "در این گزارش، شما می توانید تعداد بار مشاهده شده است که این دیدار n ام، یعنی را ببینید. بازدید کنندگان که حداقل n بار بازدید از وب سایت شما.",
         "visitsByVisitCount": "بازدید تعداد بازدید"

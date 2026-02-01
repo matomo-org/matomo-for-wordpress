@@ -13,6 +13,7 @@ use Piwik\Cache;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Development;
+use Piwik\Exception\ThingNotFoundException;
 use Piwik\Plugin\Manager;
 class PluginUmdAssetFetcher extends UIAssetFetcher
 {
@@ -156,7 +157,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
                 }
             }
             if (!$foundChunk) {
-                throw new \Exception("Could not find chunk {$this->requestedChunk}");
+                throw new ThingNotFoundException('Could not find chunk {$this->requestedChunk}');
             }
             foreach ($foundChunk->getFiles() as $file) {
                 $this->fileLocations[] = $file;

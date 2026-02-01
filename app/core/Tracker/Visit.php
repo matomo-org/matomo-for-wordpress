@@ -8,16 +8,12 @@
  */
 namespace Piwik\Tracker;
 
-use Piwik\Archive\ArchiveInvalidator;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
-use Piwik\Date;
-use Piwik\Exception\UnexpectedWebsiteFoundException;
 use Matomo\Network\IPUtils;
 use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Plugins\Actions\Tracker\ActionsRequestProcessor;
-use Piwik\Plugins\UserCountry\Columns\Base;
 use Piwik\Tracker;
 use Piwik\Tracker\Visit\VisitProperties;
 /**
@@ -34,6 +30,7 @@ use Piwik\Tracker\Visit\VisitProperties;
  */
 class Visit implements \Piwik\Tracker\VisitInterface
 {
+    use \Piwik\Tracker\RequestHandlerTrait;
     public const UNKNOWN_CODE = 'xx';
     /**
      * @var GoalManager
@@ -60,18 +57,12 @@ class Visit implements \Piwik\Tracker\VisitInterface
      * @var VisitProperties
      */
     protected $previousVisitProperties;
-    /**
-     * @var ArchiveInvalidator
-     */
-    private $invalidator;
-    protected $fieldsThatRequireAuth = array('city', 'region', 'country', 'lat', 'long');
     public function __construct()
     {
         $requestProcessors = StaticContainer::get('Piwik\\Plugin\\RequestProcessors');
         $this->requestProcessors = $requestProcessors->getRequestProcessors();
         $this->visitProperties = null;
         $this->userSettings = StaticContainer::get('Piwik\\Tracker\\Settings');
-        $this->invalidator = StaticContainer::get('Piwik\\Archive\\ArchiveInvalidator');
     }
     /**
      * @param Request $request
@@ -79,27 +70,6 @@ class Visit implements \Piwik\Tracker\VisitInterface
     public function setRequest(\Piwik\Tracker\Request $request)
     {
         $this->request = $request;
-    }
-    private function checkSiteExists(\Piwik\Tracker\Request $request)
-    {
-        try {
-            $request->getIdSite();
-        } catch (UnexpectedWebsiteFoundException $e) {
-            // we allow 0... the request will fail anyway as the site won't exist... allowing 0 will help us
-            // reporting this tracking problem as it is a common issue. Otherwise we would not be able to report
-            // this problem in tracking failures
-            StaticContainer::get(\Piwik\Tracker\Failures::class)->logFailure(\Piwik\Tracker\Failures::FAILURE_ID_INVALID_SITE, $request);
-            throw $e;
-        }
-    }
-    private function validateRequest(\Piwik\Tracker\Request $request)
-    {
-        // Check for params that aren't allowed to be included unless the request is authenticated
-        foreach ($this->fieldsThatRequireAuth as $field) {
-            Base::getValueFromUrlParamsIfAllowed($field, $request);
-        }
-        // Special logic for timestamp as some overrides are OK without auth and others aren't
-        $request->getCurrentTimestamp();
     }
     /**
      *    Main algorithm to handle the visit.
@@ -185,7 +155,7 @@ class Visit implements \Piwik\Tracker\VisitInterface
             Common::printDebug("Executing " . get_class($processor) . "::recordLogs()...");
             $processor->recordLogs($this->visitProperties, $this->request);
         }
-        $this->markArchivedReportsAsInvalidIfArchiveAlreadyFinished();
+        $this->markArchivedReportsAsInvalidIfArchiveAlreadyFinished($this->request);
     }
     /**
      * In the case of a known visit, we have to do the following actions:
@@ -308,15 +278,6 @@ class Visit implements \Piwik\Tracker\VisitInterface
     protected function getVisitorIp()
     {
         return $this->visitProperties->getProperty('location_ip');
-    }
-    /**
-     * Gets the UserSettings object
-     *
-     * @return Settings
-     */
-    protected function getSettingsObject()
-    {
-        return $this->userSettings;
     }
     // is the host any of the registered URLs for this website?
     public static function isHostKnownAliasHost($urlHost, $idSite)
@@ -488,35 +449,6 @@ class Visit implements \Piwik\Tracker\VisitInterface
     protected function insertNewVisit($visit)
     {
         return $this->getModel()->createVisit($visit);
-    }
-    private function markArchivedReportsAsInvalidIfArchiveAlreadyFinished()
-    {
-        $idSite = (int) $this->request->getIdSite();
-        $time = $this->request->getCurrentTimestamp();
-        $timezone = $this->getTimezoneForSite($idSite);
-        if (!isset($timezone)) {
-            return;
-        }
-        $date = Date::factory((int) $time, $timezone);
-        // $date->isToday() is buggy when server and website timezones don't match - so we'll do our own checking
-        $startOfToday = Date::factoryInTimezone('yesterday', $timezone)->addDay(1);
-        $isLaterThanYesterday = $date->getTimestamp() >= $startOfToday->getTimestamp();
-        if ($isLaterThanYesterday) {
-            return;
-            // don't try to invalidate archives for today or later
-        }
-        $this->invalidator->rememberToInvalidateArchivedReportsLater($idSite, $date);
-    }
-    private function getTimezoneForSite($idSite)
-    {
-        try {
-            $site = \Piwik\Tracker\Cache::getCacheWebsiteAttributes($idSite);
-        } catch (UnexpectedWebsiteFoundException $e) {
-            return null;
-        }
-        if (!empty($site['timezone'])) {
-            return $site['timezone'];
-        }
     }
     private function makeVisitorFacade()
     {

@@ -362,13 +362,16 @@
         "ExitPageTitlesReportDocumentation": "Denne rapporten inneheld informasjon om sidetittelen til utgangssider gjennom ein oppgjeven periode.",
         "OutlinkDocumentation": "Ein utpeikar er ein peikar som leier vitjarane dine vekk frå nettsida di (til eit anna domene).",
         "OutlinksReportDocumentation": "Denne rapporten viser ei hierarkisk liste av utpeikarar som vitjarane dine klikka på.",
-        "PagesReportDocumentation": "Denne rapporten inneheld informasjon om side-URLar som er vitja. %s Tabellen er organisert hierarkisk, URLane er vist som ein mappestruktur.",
         "PageTitlesReportDocumentation": "Denne rapporten inneheld informasjon om titlane til sidene som er vitja. %1$s Sidetittelen er HTML-entiteten %2$s som dei fleste nettlesarane viser som tittel på vindauget sitt.",
         "PageUrls": "Side-URLar",
-        "SubmenuPagesEntry": "Inngangssider",
-        "SubmenuPagesExit": "Utgangssider",
+        "PagesReportDocumentation": "Denne rapporten inneheld informasjon om side-URLar som er vitja. %s Tabellen er organisert hierarkisk, URLane er vist som ein mappestruktur.",
+        "PagesSubcategoryHelp3": "Bruk pluss- og minusikonane til venstre for å navigera.",
         "SubmenuPageTitles": "Sidetitlar",
-        "PagesSubcategoryHelp3": "Bruk pluss- og minusikonane til venstre for å navigera."
+        "SubmenuPagesEntry": "Inngangssider",
+        "SubmenuPagesExit": "Utgangssider"
+    },
+    "BotTracking": {
+        "PageUrl": "Side-URL"
     },
     "CoreAdminHome": {
         "Administration": "Administrasjon",
@@ -419,9 +422,9 @@
         "Deactivate": "Slå av",
         "Inactive": "Av",
         "LicenseHomepage": "Lisensen til innstikket",
-        "PluginsExtendPiwik": "Innstikk utvidar funksjonane til Matomo.",
         "OncePluginIsInstalledYouMayActivateHere": "Når eit innstikk er lagt til, kan du slå det av og på her.",
         "PluginHomepage": "Nettsida til innstikket",
+        "PluginsExtendPiwik": "Innstikk utvidar funksjonane til Matomo.",
         "PluginsManagement": "Innstikkstyring",
         "Status": "Status",
         "Version": "Versjon",
@@ -430,8 +433,8 @@
     "CoreUpdater": {
         "CriticalErrorDuringTheUpgradeProcess": "Kritisk feil under oppdateringa:",
         "DatabaseUpgradeRequired": "Databaseoppdatering krevst",
-        "DownloadingUpdateFromX": "Lastar ned oppdatering frå %s",
         "DownloadX": "Last ned %s",
+        "DownloadingUpdateFromX": "Lastar ned oppdatering frå %s",
         "EmptyDatabaseError": "Databasen %s er tom. Du må endra eller fjerna konfigurasjonsfila til Matomo.",
         "ErrorDIYHelp": "Viss du er ein avansert brukar og kjem over ein feil under databaseoppdateringa:",
         "ErrorDIYHelp_1": "idenifiser og rett opp feilkjelden (t.d. memory_limit eller max_execution_time)",
@@ -454,13 +457,13 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo-databasa vil bli oppgradert frå versjon %1$s til den nye versjonen %2$s.",
         "ReadyToGo": "Er du klar?",
         "TheFollowingPluginsWillBeUpgradedX": "Dei følgjande innstikka vil bli oppdaterte: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "Ein ny versjon av Matomo er tilgjengeleg for oppdatering",
         "TheUpgradeProcessMayFailExecuteCommand": "Om du har ein stor Matomo-database, kan det hende at oppdateringa tek for lang tid i nettlesaren. Då kan du køyre oppdateringane frå kommandolinja: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Oppdateringa av databasa kan ta litt tid, så ha tolmod.",
+        "ThereIsNewVersionAvailableForUpdate": "Ein ny versjon av Matomo er tilgjengeleg for oppdatering",
         "UnpackingTheUpdate": "Pakkar ut oppdateringa",
         "UpdateAutomatically": "Oppdater automatisk",
-        "UpdateTitle": "Oppdater",
         "UpdateSuccessTitle": "Oppdateringa var vellykka!",
+        "UpdateTitle": "Oppdater",
         "UpgradeComplete": "Oppgradering ferdig!",
         "UpgradePiwik": "Oppdater Matomo",
         "VerifyingUnpackedFiles": "Sjekkar filene",
@@ -473,9 +476,9 @@
         "CustomDimensions": "Tilpassa dimensjon"
     },
     "DBStats": {
-        "DatabaseUsage": "Databasebruk",
-        "DataSize": "Datastorleik",
         "DBSize": "DB-storleik",
+        "DataSize": "Datastorleik",
+        "DatabaseUsage": "Databasebruk",
         "EstimatedSize": "Omlag storleik",
         "IndexSize": "Indeksstorleik",
         "LearnMore": "For å læra meir om korleis Matomo prosesserer data, og korleis gjera at Matomo fungerer bra for nettstader med middels og høg trafikk, sjå dokumentasjonen %s.",
@@ -536,12 +539,12 @@
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Vil du rapportera ein feil eller førespurnad om ein funksjon?",
+        "Forums": "Forums",
         "IWantTo": "Eg ønskjer:",
         "LearnWaysToParticipate": "Lær om korleis du kan %1$s medverka%2$s",
         "ManuallySendEmailTo": "Send meldinga di manuelt til",
         "SendFeedback": "Send attendemelding",
-        "ThankYou": "Takk for at hjelper oss med å forbetra Matomo!",
-        "Forums": "Forums"
+        "ThankYou": "Takk for at hjelper oss med å forbetra Matomo!"
     },
     "Goals": {
         "AddNewGoal": "Legg til eit nytt mål",
@@ -611,6 +614,7 @@
         "Optional": "Valfri",
         "Password": "Passord",
         "PasswordDoNotMatch": "Passorda samsvarer ikkje",
+        "PasswordRepeat": "Passord (gjenta)",
         "PercentDone": "%s %% Ferdig",
         "PleaseFixTheFollowingErrors": "Rett på følgjande feil",
         "Requirements": "Matomo-krav",
@@ -1825,8 +1829,8 @@
         "Version": "Versjon"
     },
     "Tour": {
-        "Engagement": "Engasjement",
-        "CompletionTitle": "Goed gedaan!"
+        "CompletionTitle": "Goed gedaan!",
+        "Engagement": "Engasjement"
     },
     "Transitions": {
         "TransitionsSubcategoryHelp2": "Meer details"
@@ -1838,13 +1842,13 @@
     "UserCountry": {
         "Continent": "Kontinent",
         "Country": "Land",
+        "DistinctCountries": "%s distinkte land",
+        "Location": "Plass",
+        "SubmenuLocations": "Plassar",
         "country_a1": "Anonym mellomtenar",
         "country_a2": "Satelitt-tilbydar",
         "country_cat": "Katalanske område",
-        "country_o1": "Andre land",
-        "DistinctCountries": "%s distinkte land",
-        "Location": "Plass",
-        "SubmenuLocations": "Plassar"
+        "country_o1": "Andre land"
     },
     "UserId": {
         "UserReportTitle": "Brukarar"
@@ -1900,19 +1904,12 @@
         "ColumnLocalMinute": "Lokal tid — minutt (start av besøk)",
         "ColumnLocalTime": "Brukartid",
         "ColumnServerHour": "Tid på tenaren — time",
-        "ColumnServerTime": "Tenartid",
         "ColumnSiteHour": "Nettstadtid — time",
-        "ColumnVisitEndServerHour": "Tenar tid — time (tidspunkt for siste handling)",
-        "ColumnVisitEndServerMinute": "Tenar tid — minutt (tidspunkt for siste handling)",
         "ColumnVisitEndSiteHour": "Nettstad tid — time (tidspunkt for siste handling)",
         "ColumnVisitEndUTCMinute": "Tid i UTC — minutt (tidspunkt for siste handling)",
         "DayOfWeek": "Vekedag",
         "LocalTime": "Vitjingar per brukartid",
-        "NHour": "%st",
-        "ServerTime": "Vitjingar per tenartid",
-        "SubmenuTimes": "Tid",
-        "WidgetLocalTime": "Vitjingar etter brukartid",
-        "WidgetServerTime": "Vitjingar etter tenartid"
+        "SubmenuTimes": "Tid"
     },
     "VisitorInterest": {
         "ColumnPagesPerVisit": "Sider per vitjing",

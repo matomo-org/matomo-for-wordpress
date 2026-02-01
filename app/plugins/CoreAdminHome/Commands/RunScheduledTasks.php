@@ -23,7 +23,7 @@ class RunScheduledTasks extends ConsoleCommand
      * @var Scheduler|null
      */
     private $scheduler = null;
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
         parent::__construct();
         $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);

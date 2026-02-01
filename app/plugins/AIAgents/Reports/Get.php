@@ -27,8 +27,8 @@ class Get extends Report
     {
         parent::init();
         $this->name = Piwik::translate('AIAgents_AIAgentVisits');
-        $this->categoryId = 'AIAgents_AIAssistants';
-        $this->subcategoryId = 'General_Overview';
+        $this->categoryId = 'General_AIAssistants';
+        $this->subcategoryId = 'AIAgents_AIAgentsOverview';
         $this->order = 10;
         $this->processedMetrics = [new AIAgentMetric(new AverageTimeOnSite(), API::AI_AGENT_COLUMN_SUFFIX), new AIAgentMetric(new ActionsPerVisit(), API::AI_AGENT_COLUMN_SUFFIX), new AIAgentMetric(new BounceRate(), API::AI_AGENT_COLUMN_SUFFIX), new AIAgentMetric(new AverageTimeOnSite(), API::HUMAN_COLUMN_SUFFIX), new AIAgentMetric(new ActionsPerVisit(), API::HUMAN_COLUMN_SUFFIX), new AIAgentMetric(new BounceRate(), API::HUMAN_COLUMN_SUFFIX)];
         $this->metrics = ['nb_visits_ai_agent', 'nb_actions_ai_agent', 'nb_uniq_visitors_ai_agent', 'nb_users_ai_agent', 'max_actions_ai_agent', 'nb_visits_human', 'nb_actions_human', 'nb_uniq_visitors_human', 'nb_users_human', 'max_actions_human'];

@@ -19,7 +19,7 @@ class GetDaysToConversionEcommerceOrder extends \Piwik\Plugins\Ecommerce\Reports
         $this->name = Piwik::translate('General_EcommerceOrders') . ' - ' . Piwik::translate('Goals_DaysToConv');
         $this->dimension = new DaysToConversion();
         $this->constantRowsCount = \true;
-        $this->processedMetrics = \false;
+        $this->processedMetrics = [];
         $this->metrics = array('nb_conversions');
         $this->order = 12;
         $this->parameters = array('idGoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER);

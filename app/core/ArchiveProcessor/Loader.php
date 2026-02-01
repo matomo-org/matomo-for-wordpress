@@ -34,6 +34,12 @@ class Loader
 {
     private static $archivingDepth = 0;
     /**
+     * Tracks whether the current prepareArchive run reused an existing archive instead of processing.
+     *
+     * @var boolean
+     */
+    private $didReuseArchive = \false;
+    /**
      * @var Parameters
      */
     protected $params;
@@ -90,6 +96,9 @@ class Loader
         return Context::changeIdSite($this->params->getSite()->getId(), function () use($pluginName) {
             try {
                 ++self::$archivingDepth;
+                if (self::$archivingDepth === 1) {
+                    $this->didReuseArchive = \false;
+                }
                 return $this->prepareArchiveImpl($pluginName);
             } finally {
                 --self::$archivingDepth;
@@ -116,6 +125,7 @@ class Loader
         // load existing data from archive
         $data = $this->loadArchiveData();
         if (sizeof($data) == 2) {
+            $this->didReuseArchive = \true;
             return $data;
         }
         [$idArchives, $visits, $visitsConverted, $foundRecords] = $data;
@@ -129,6 +139,7 @@ class Loader
             try {
                 $data = $this->loadArchiveData();
                 if (sizeof($data) == 2) {
+                    $this->didReuseArchive = \true;
                     return $data;
                 }
                 [$idArchives, $visits, $visitsConverted, $foundRecords] = $data;
@@ -405,6 +416,10 @@ class Loader
             return [\false, 'There are child archives in the period'];
         }
         return [\true, 'Site is using tracker & archiving is not forced when no visits & site has has no visits between start and end date & there are no child archives in the period'];
+    }
+    public function didReuseArchive() : bool
+    {
+        return $this->didReuseArchive;
     }
     private function hasChildArchivesInPeriod($idSite, Period $period) : bool
     {

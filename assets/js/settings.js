@@ -77,10 +77,6 @@ window.jQuery(document).ready(function ($) {
     var target = $(window.location.hash);
     if (target.length) {
       target.closest('.collapsible-settings').addClass('expanded');
-
-      setTimeout(function () {
-        target[0].scrollIntoView();
-      }, 350);
     }
   }
   window.addEventListener('hashchange', onHashChange);

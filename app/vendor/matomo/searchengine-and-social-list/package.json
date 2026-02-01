@@ -3,8 +3,9 @@
   "version": "1.4.1",
   "description": "Search engine and social network definitions used by Matomo (formerly Piwik)",
   "keywords": [
-    "searchengine",
-    "social network"
+    "search engine",
+    "social network",
+    "ai assistant"
   ],
   "main": "SearchEngines.yml",
   "repository": {

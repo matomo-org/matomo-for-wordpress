@@ -501,6 +501,7 @@
         "UserAuthentication": "Felhasználó autentikációja"
     },
     "Actions": {
+        "ActionType": "Akció típusa",
         "ColumnActionURL": "Akció URL",
         "ColumnClicks": "Kattintások",
         "ColumnClicksDocumentation": "Erre a linkre történt kattintások száma.",
@@ -511,9 +512,9 @@
         "ColumnExitPageURL": "Kilépő oldal hivatkozás",
         "ColumnNoResultKeyword": "Kulcszó keresőtalálat nélkül",
         "ColumnPageName": "Weblap címe",
+        "ColumnPageURL": "Weblap URL-je",
         "ColumnPagesPerSearch": "Kereső találati oldalai",
         "ColumnPagesPerSearchDocumentation": "A látogatók keresni fognak az ön weboldalán és néha rákattintanak a \"következő\" gombra a további találatok miatt. Ez az átlagosan megtekintett keresési találatok száma erre a kulcsszóra.",
-        "ColumnPageURL": "Weblap URL-je",
         "ColumnSearchCategory": "Kategória keresés",
         "ColumnSearches": "Keresések",
         "ColumnSiteSearchKeywords": "Egyedi kulcsszavak",
@@ -526,24 +527,26 @@
         "ExitPageTitles": "Kilépő oldal név",
         "ExitPageTitlesReportDocumentation": "Ez a jelentés az adott idő alatt felmerült kilépési oldalak címeit és statisztikáit foglalja össze.",
         "OneSearch": "1 keresés",
-        "PagesReportDocumentation": "Ez a jelentés a megtekintett URL-ekről tartalmaz információkat. %s A tábla hierarchigusan van szervezve, az URL-ek mappaként jelennek meg.",
         "PageTitlesReportDocumentation": "Ez a jelentés a megtekintett oldalak címéről tartalmaz információkat. %1$s Az oldal címe a %2$s HTML Tag, amit a legtöbb bönkésző az ablak címsorában mutat.",
         "PageUrls": "Oldal hivatkozások",
+        "PagesReportDocumentation": "Ez a jelentés a megtekintett URL-ekről tartalmaz információkat. %s A tábla hierarchigusan van szervezve, az URL-ek mappaként jelennek meg.",
+        "PagesSubcategoryHelp3": "Használd a baloldali plusz és mínusz ikonokat a navigációhoz.",
         "SiteSearchKeyword": "Kulcsszó (Oldal keresés)",
+        "SubmenuPageTitles": "Weblapok címei",
         "SubmenuPagesEntry": "Belépési lapok",
         "SubmenuPagesExit": "Kilépési lapok",
-        "SubmenuPageTitles": "Weblapok címei",
         "SubmenuSitesearch": "Oldal keresés",
         "WidgetEntryPageTitles": "Belépési lapok címe",
         "WidgetExitPageTitles": "Kilépési lapok címe",
+        "WidgetPageTitles": "Oldalak címe",
         "WidgetPagesEntry": "Belépési lapok",
         "WidgetPagesExit": "Kilépési lapok",
-        "WidgetPageTitles": "Oldalak címe",
         "WidgetSearchCategories": "Keresés kategóriák",
         "WidgetSearchKeywords": "Oldal keresés kulcsszavak",
-        "WidgetSearchNoResultKeywords": "Kulcsszavak, melyekre nincs találat",
-        "ActionType": "Akció típusa",
-        "PagesSubcategoryHelp3": "Használd a baloldali plusz és mínusz ikonokat a navigációhoz."
+        "WidgetSearchNoResultKeywords": "Kulcsszavak, melyekre nincs találat"
+    },
+    "BotTracking": {
+        "PageUrl": "Weblap URL-je"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Új megbízható host hozzáadása",
@@ -655,9 +658,9 @@
         "Deactivate": "Kikapcsol",
         "Inactive": "Kikapcsolt",
         "LicenseHomepage": "Licencinformációk",
-        "PluginsExtendPiwik": "A bővítmények kiterjesztik a Matomo alapfunkcióit.",
         "OncePluginIsInstalledYouMayActivateHere": "A már telepített bővítményeket itt kapcsolhatod ki vagy be.",
         "PluginHomepage": "Bővítmény honlapja",
+        "PluginsExtendPiwik": "A bővítmények kiterjesztik a Matomo alapfunkcióit.",
         "PluginsManagement": "Bővítménykezelés",
         "Status": "Állapot",
         "Version": "Verzió",
@@ -666,8 +669,8 @@
     "CoreUpdater": {
         "CriticalErrorDuringTheUpgradeProcess": "Kritikus hiba lépett fel a frissítés során:",
         "DatabaseUpgradeRequired": "Adatbázis-frissítés szükséges",
-        "DownloadingUpdateFromX": "Frissítés letöltése innen: %s",
         "DownloadX": "%s letöltése",
+        "DownloadingUpdateFromX": "Frissítés letöltése innen: %s",
         "EmptyDatabaseError": "A(z) %s adatbázis üres. Kérjük szerkessze, vagy törölje a Matomo konfigurációs fájlt.",
         "ErrorDIYHelp": "Ha haladó felhasználó vagy, és hibát tapasztalsz az adatbázis-frissítés végrehajtása során:",
         "ErrorDIYHelp_1": "próbáld azonosítani a hiba tényleges forrását (pl. memory_limit vagy max_execution_time)",
@@ -690,14 +693,14 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo adatbázisa frissülni fog %1$s verzióról az új %2$s verzióra.",
         "ReadyToGo": "Készen áll az indulásra?",
         "TheFollowingPluginsWillBeUpgradedX": "A következő bővítmények kerülnek frissítésre: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "Új Matomo verzió áll rendelkezésre a frissítéshez",
         "TheUpgradeProcessMayFailExecuteCommand": "Ha nagy Matomo adatbázissal rendelkezel, a frissítések lehet, túl sok időt vesznek igénybe a böngészőben futtatáshoz. Ebben az esetben a frissítéseket a parancssorból így lehet végrehajtani: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Az adatbázis frissítése eltart egy ideig. Kérjük, várj türelemmel!",
+        "ThereIsNewVersionAvailableForUpdate": "Új Matomo verzió áll rendelkezésre a frissítéshez",
         "UnpackingTheUpdate": "Frissítés kicsomagolása",
         "UpdateAutomatically": "Automatikus frissítés",
         "UpdateHasBeenCancelledExplanation": "Az Egyklikkes Matomo Frissítés modult törölték. Ha nem tudod kijavítani a fenti hibaüzenetben kapott hibát, akkor a Matomo kézzel történő frissítését ajánljuk. %1$s Kérjük, kezdd a %2$s frissítésről szóló dokumentáció %3$s elolvasásával!",
-        "UpdateTitle": "Frissítés",
         "UpdateSuccessTitle": "A Matomo sikeresen frissült!",
+        "UpdateTitle": "Frissítés",
         "UpgradeComplete": "Frissítés megtörtént!",
         "UpgradePiwik": "Matomo frissítése",
         "VerifyingUnpackedFiles": "Kicsomagolt fájlok ellenőrzése",
@@ -707,8 +710,8 @@
         "YourDatabaseIsOutOfDate": "A Matomo adatbázisod elavult. Frissítened kell, mielőtt folytathatnád!"
     },
     "DBStats": {
-        "DatabaseUsage": "Adatbázis-használat",
         "DataSize": "Adatméret",
+        "DatabaseUsage": "Adatbázis-használat",
         "IndexSize": "Indexméret",
         "LearnMore": "Ha többet szeretnél megtudni arról, hogyan dolgozza fel a Matomo az adatokat, és hogyan lehet mindezt hatékonyan megoldani közepes és nagyobb forgalommal rendelkező weboldalak esetén is, olvasd el a vonatkozó dokumentációt: %s",
         "MainDescription": "A Matomo egy MySQL adatbázisban tárolja a webanalitikai adatokat. Jelenleg a Matomo táblák a következőket használják: %s.",
@@ -736,19 +739,19 @@
         "Browsers": "Böngészők",
         "ColumnBrowser": "Böngésző",
         "ColumnOperatingSystem": "Operációs rendszer",
-        "dataTableLabelTypes": "Típus",
-        "OperatingSystems": "Operációs rendszerek",
         "MobileApp": "Mobil alkalmazás",
-        "WidgetBrowsers": "Látogatók böngészői"
+        "OperatingSystems": "Operációs rendszerek",
+        "WidgetBrowsers": "Látogatók böngészői",
+        "dataTableLabelTypes": "Típus"
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Hibát szeretnél bejelenteni, vagy egy funkció kifejlesztését szeretnéd kérni?",
+        "Forums": "Fórumok",
         "IWantTo": "A következőt szeretném:",
         "LearnWaysToParticipate": "Győződj meg róla, %1$shányféleképpen segíthetsz%2$s",
         "ManuallySendEmailTo": "Kérjük, küldd el manuálisan az üzeneted ide:",
         "SendFeedback": "Visszajelzés elküldése",
-        "ThankYou": "Köszönjük, hogy segítesz jobbá tenni a Matomo-et!",
-        "Forums": "Fórumok"
+        "ThankYou": "Köszönjük, hogy segítesz jobbá tenni a Matomo-et!"
     },
     "Goals": {
         "AbandonedCart": "Elhagyott kosár",
@@ -820,6 +823,7 @@
         "Optional": "Opcionális",
         "Password": "Jelszó",
         "PasswordDoNotMatch": "jelszó nem egyezik",
+        "PasswordRepeat": "Jelszó (ismét)",
         "PercentDone": "%s %% kész",
         "PleaseFixTheFollowingErrors": "Kérjük, javítsd a következő hibákat",
         "Requirements": "Matomo Rendszerkövetelmények",
@@ -1977,8 +1981,8 @@
     },
     "MobileAppMeasurable": {
         "MobileApp": "Mobil alkalmazás",
-        "MobileApps": "Mobil alkalmazások",
-        "MobileAppDescription": "Egy natív mobil alkalmazás iOS, Android vagy egyéb más mobil operációs rendszerekhez."
+        "MobileAppDescription": "Egy natív mobil alkalmazás iOS, Android vagy egyéb más mobil operációs rendszerekhez.",
+        "MobileApps": "Mobil alkalmazások"
     },
     "MultiSites": {
         "AllWebsitesDashboardTitle": "Összes weboldal",
@@ -2115,8 +2119,8 @@
         "Version": "Verzió"
     },
     "Tour": {
-        "Engagement": "Érdeklődés foka",
-        "CompletionTitle": "Szép munka!"
+        "CompletionTitle": "Szép munka!",
+        "Engagement": "Érdeklődés foka"
     },
     "Transitions": {
         "TransitionsSubcategoryHelp2": "több részlet"
@@ -2127,13 +2131,13 @@
     "UserCountry": {
         "Continent": "Kontinens",
         "Country": "Ország",
+        "DistinctCountries": "%s különböző ország",
+        "Location": "Hely",
+        "SubmenuLocations": "Helyek",
         "country_a1": "Anonim proxy",
         "country_a2": "Szatellit szolgáltató",
         "country_cat": "Katalán közösségek",
-        "country_o1": "Egyéb ország",
-        "DistinctCountries": "%s különböző ország",
-        "Location": "Hely",
-        "SubmenuLocations": "Helyek"
+        "country_o1": "Egyéb ország"
     },
     "UserCountryMap": {
         "map": "térkép"
@@ -2204,13 +2208,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Helyi idő",
-        "ColumnServerTime": "Szerveridő",
         "LocalTime": "Látogatások\/helyi idő",
-        "NHour": "%s ó",
-        "ServerTime": "Látogatások\/szerveridő",
-        "SubmenuTimes": "Idő",
-        "WidgetLocalTime": "Látogatások helyi idő szerint",
-        "WidgetServerTime": "Látogatások szerveridő szerint"
+        "SubmenuTimes": "Idő"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s perc",

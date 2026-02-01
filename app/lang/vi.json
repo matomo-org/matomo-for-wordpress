@@ -600,14 +600,17 @@
         "ViewAndAddAnnotations": "Hiện thị và thêm chú thích cho %s…",
         "YouCannotModifyThisNote": "Bạn không thể sửa đổi chú thích này, bởi vì bạn đã không tạo ra nó, bạn cũng không có quyền quản trị trang web này."
     },
+    "BotTracking": {
+        "PageUrl": "URL của trang"
+    },
     "Contents": {
-        "PluginDescription": "Chức năng theo dõi nội dung và banner cho phép bạn đánh giá được hiệu quả (lượt xem, click, CTR) của bất kỳ trang web nào.",
-        "Impressions": "Lượt hiển thị cho người dùng",
-        "InteractionRate": "Tỷ lệ tương tác",
         "ContentName": "Tên nội dung",
         "ContentPiece": "Thành phần nội dung",
         "ContentTarget": "Đối tượng nội dung",
-        "Contents": "Nội dung"
+        "Contents": "Nội dung",
+        "Impressions": "Lượt hiển thị cho người dùng",
+        "InteractionRate": "Tỷ lệ tương tác",
+        "PluginDescription": "Chức năng theo dõi nội dung và banner cho phép bạn đánh giá được hiệu quả (lượt xem, click, CTR) của bất kỳ trang web nào."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Thêm host tin tưởng mới",
@@ -810,9 +813,9 @@
         "YourDatabaseIsOutOfDate": "Cơ sở dữ liệu Matomo của bạn đã lỗi thời, và phải được nâng cấp trước khi bạn có thể tiếp tục."
     },
     "DBStats": {
-        "DatabaseUsage": "Cơ sở dữ liệu đang sử dụng",
-        "DataSize": "kích thước dữ liệu",
         "DBSize": "Kích thước cơ sở dữ liệu",
+        "DataSize": "kích thước dữ liệu",
+        "DatabaseUsage": "Cơ sở dữ liệu đang sử dụng",
         "EstimatedSize": "kích thước đã ước tính",
         "IndexSize": "kích thước chỉ mục",
         "LearnMore": "Để tìm hiểu thêm về cách Matomo xử lý dữ liệu và cách làm cho Matomo làm việc tốt với các trang web có lượng truy cập trung bình và cao, hãy xem tài liệu này: %s.",
@@ -872,41 +875,46 @@
         "BrowserEngine": "Trình duyệt",
         "BrowserEngineDocumentation": "Biểu đồ này cho thấy các trình duyệt khách truy cập của bạn chia thành các họ trình duyệt. %s Thông tin quan trọng nhất đối với nhà phát triển web là loại công cụ rendering nào khách truy cập của họ đang sử dụng. Các nhãn chứa tên của các công cụ tiếp theo của trình duyệt phổ biến nhất đang sử dụng công cụ cho trong giấu ngoặc đơn.",
         "BrowserFamily": "Họ trình duyệt",
-        "Browsers": "Các trình duyệt",
         "BrowserVersion": "Phiên bản trình duyệt",
+        "Browsers": "Các trình duyệt",
         "ColumnBrowser": "Trình duyệt",
         "ColumnOperatingSystem": "Hệ điều hành",
-        "dataTableLabelTypes": "Kiểu",
         "OperatingSystemFamily": "Hệ điều hành gia đình",
         "OperatingSystems": "Các hệ điều hành",
+        "WidgetBrowserVersionsDocumentation": "Báo cáo này chứa thông tin về loại trình duyệt mà khách truy cập của bạn sử dụng. Mỗi phiên bản trình duyệt được liệt kê một cách riêng biệt.",
         "WidgetBrowsers": "Trình duyệt khách truy cập",
-        "WidgetBrowserVersionsDocumentation": "Báo cáo này chứa thông tin về loại trình duyệt mà khách truy cập của bạn sử dụng. Mỗi phiên bản trình duyệt được liệt kê một cách riêng biệt."
+        "dataTableLabelTypes": "Kiểu"
     },
     "Diagnostics": {
         "ConfigFileTitle": "Tập tin cấu hình",
+        "HideUnchanged": "Nếu bạn chỉ muốn xem các giá trị đã được thay đổi, bạn có thể %1$sẩn tất cả các giá trị không thay đổi%2$s.",
         "MysqlMaxPacketSize": "Kích thước gói tối đa",
         "MysqlMaxPacketSizeWarning": "Bạn nên định cấu hình kích thước '%1$smax_allowed_packet%2$s' trong cơ sở dữ liệu MySQL của bạn ít nhất %3$s. Cấu hình hiện tại là %4$s.",
-        "HideUnchanged": "Nếu bạn chỉ muốn xem các giá trị đã được thay đổi, bạn có thể %1$sẩn tất cả các giá trị không thay đổi%2$s.",
         "Sections": "Phân mục"
     },
     "Ecommerce": {
         "PluginDescription": "Thương mại điện tử cho phép bạn theo dõi khi người dùng thêm sản phẩm vào giỏ, và khi họ chuyển đổi để bán hàng thương mại điện tử. Nó cũng theo dõi các sản phẩm và xem các loại sản phẩm và các đơn hàng bị bỏ."
     },
     "Events": {
-        "PluginDescription": "Theo dõi sự kiện và nhận các báo cáo về hoạt động truy cập của bạn.",
         "EventAction": "Hành động sự kiện",
         "EventCategory": "Danh mục sự kiện",
         "EventName": "Tên sự kiện",
-        "Events": "Các sự kiện"
+        "Events": "Các sự kiện",
+        "PluginDescription": "Theo dõi sự kiện và nhận các báo cáo về hoạt động truy cập của bạn."
     },
     "Feedback": {
+        "CommunityHelp": "Trợ giúp cộng đồng",
+        "ContactUs": "Liên hệ chúng tôi",
         "DoYouHaveBugReportOrFeatureRequest": "Bạn đã có lỗi để báo cáo hoặc yêu cầu tính năng?",
+        "Forums": "Các diễn đàn",
         "HowToCreateTicket": "Vui lòng đọc các đề xuất về việc viết một %1$sbáo cáo lỗi%2$s tốt hoặc yêu cầu %3$stính năng%4$s. Sau đó đăng ký hoặc đăng nhập vào %5$strình theo dõi vấn đề%6$s của chúng tôi và %7$stạo một vấn đề mới%8$s.",
         "IWantTo": "Tôi muốn:",
         "LearnWaysToParticipate": "Tìm hiểu về tất cả các cách bạn có thể %1$s tham gia %2$s",
         "ManuallySendEmailTo": "Hãy tự gửi thông điệp của bạn tới",
         "PluginDescription": "Gửi phản hồi của bạn cho nhóm Matomo. Chia sẻ ý tưởng và đề xuất của bạn để biến Matomo thành nền tảng phân tích tốt nhất trên thế giới!",
         "PrivacyClaim": "Matomo tôn trọng %1$squyền riêng tư%2$s của bạn và cung cấp cho bạn toàn quyền kiểm soát dữ liệu của bạn.",
+        "ProfessionalHelp": "Trợ giúp chuyên nghiệp",
+        "ProfessionalServicesOfferIntro": "Những dịch vụ bạn có thể được hưởng lợi từ?",
         "RateFeatureLeaveMessageDislike": "Chúng tôi rất tiếc khi biết bạn không thích nó! Xin vui lòng cho chúng tôi biết làm thế nào chúng ta có thể cải thiện.",
         "RateFeatureLeaveMessageLike": "Chúng tôi rất vui vì bạn thích nó! Vui lòng cho chúng tôi biết những gì bạn thích nhất hoặc nếu bạn có một yêu cầu tính năng.",
         "RateFeatureSendFeedbackInformation": "Nền tảng Matomo của bạn sẽ gửi cho chúng tôi (nhóm Matomo) một email (bao gồm cả địa chỉ email của bạn) để chúng tôi có thể liên hệ với bạn nếu bạn có bất kỳ câu hỏi nào.",
@@ -917,32 +925,27 @@
         "TopLinkTooltip": "Hãy cho chúng tôi những suy nghĩ của bạn, hoặc gửi một yêu cầu \"Hỗ trợ chuyên nghiệp\"",
         "ViewAnswersToFAQ": "Xem câu trả lời cho %1$scác câu hỏi thường gặp%2$s",
         "ViewUserGuides": "Tìm hiểu cách định cấu hình Matomo và cách phân tích hiệu quả dữ liệu của bạn với %1$shướng dẫn%2$s của chúng tôi",
-        "CommunityHelp": "Trợ giúp cộng đồng",
-        "ProfessionalHelp": "Trợ giúp chuyên nghiệp",
-        "ProfessionalServicesOfferIntro": "Những dịch vụ bạn có thể được hưởng lợi từ?",
-        "ContactUs": "Liên hệ chúng tôi",
-        "VisitTheForums": "Truy cập %1$sdiễn đàn%2$s và nhận trợ giúp từ cộng đồng người dùng Matomo",
-        "Forums": "Các diễn đàn"
+        "VisitTheForums": "Truy cập %1$sdiễn đàn%2$s và nhận trợ giúp từ cộng đồng người dùng Matomo"
     },
     "GeoIp2": {
         "AssumingNonApache": "Không thể tìm thấy hàm apache_get_modules, giả sử không có máy chủ web Apache.",
         "CannotFindGeoIPServerVar": "Biến %s không được thiết lập. Máy chủ của bạn có thể không được cấu hình đúng.",
         "CannotListContent": "Không thể liệt kê nội dung cho %1$s: %2$s",
         "CannotUnzipGeoIPFile": "Không thể giải nén tệp GeoIP trong %1$s: %2$s",
-        "DownloadingDb": "Đang tải xuống %s",
         "DownloadNewDatabasesEvery": "Cập nhật tất cả các cơ sở dữ liệu",
+        "DownloadingDb": "Đang tải xuống %s",
         "FoundApacheModules": "Matomo tìm thấy các mô-đun Apache sau",
-        "GeoIPImplHasAccessTo": "GeoIP thực thi này có quyền truy cập vào các kiểu cơ sở dữ liệu sau",
         "GeoIPDatabases": "Cơ sở dữ liệu GeoIP",
+        "GeoIPImplHasAccessTo": "GeoIP thực thi này có quyền truy cập vào các kiểu cơ sở dữ liệu sau",
         "GeoIPLocationProviderDesc_ServerBasedAnonWarn": "Lưu ý: IP anonymization không ảnh hưởng đến các vị trí được báo cáo bởi nhà cung cấp này. Trước khi sử dụng nó với IP anonymization, đảm bảo điều này không vi phạm bất kỳ luật riêng tư nào bạn có thể bị phạt.",
         "GeoIPNoServerVars": "Matomo không thể tìm thấy bất kỳ biến %s Geoip nào.",
         "GeoIPServerVarsFound": "Matomo phát hiện các biến %s Geoip sau đây",
-        "HowToSetupGeoIPIntro": "Bạn không hiển thị để có cài đặt định vị chính xác. Đây là một tính năng hữu ích và không có nó, bạn sẽ không nhìn thấy thông tin vị trí chính xác và đầy đủ cho khách truy cập. Đây là cách bạn có thể nhanh chóng bắt đầu sử dụng nó:",
         "HowToInstallApacheModule": "Làm thế nào để cài đặt các module Geoip cho Apache?",
         "HowToInstallNginxModule": "Làm thế nào để cài đặt module GeoIP cho Nginx?",
+        "HowToSetupGeoIPIntro": "Bạn không hiển thị để có cài đặt định vị chính xác. Đây là một tính năng hữu ích và không có nó, bạn sẽ không nhìn thấy thông tin vị trí chính xác và đầy đủ cho khách truy cập. Đây là cách bạn có thể nhanh chóng bắt đầu sử dụng nó:",
         "HttpServerModule": "Module máy chủ HTTP",
-        "InvalidGeoIPUpdatePeriod": "Thời gian cho GeoIP cập nhật không hợp lệ: %1$s. Giá trị hợp lệ là %2$s.",
         "ISPDatabase": "Cơ sở dữ liệu ISP",
+        "InvalidGeoIPUpdatePeriod": "Thời gian cho GeoIP cập nhật không hợp lệ: %1$s. Giá trị hợp lệ là %2$s.",
         "LocationDatabase": "Cơ sở dữ liệu vị trí",
         "LocationDatabaseHint": "Một cơ sở dữ liệu vị trí là một quốc gia, khu vực hoặc cơ sở dữ liệu thành phố.",
         "UnsupportedArchiveType": "Bắt gặp kiêu lưu trữ %1$s không được hỗ trợ",
@@ -1077,6 +1080,7 @@
         "Optional": "Tùy chọn",
         "Password": "Mật khẩu",
         "PasswordDoNotMatch": "Mật khẩu không phù hợp",
+        "PasswordRepeat": "Mật khẩu (lặp lại)",
         "PercentDone": "%s %% thực hiện",
         "PleaseFixTheFollowingErrors": "Hãy sửa các lỗi sau đây",
         "Requirements": "Matomo yêu cầu",
@@ -2193,17 +2197,17 @@
         "RememberMe": "Nhớ tôi"
     },
     "Marketplace": {
-        "ActivateLicenseKey": "Kích hoạt",
         "ActionActivatePlugin": "Kích hoạt tiện ích",
         "ActionActivateTheme": "Kích hoạt giao diện",
         "ActionInstall": "Cài đặt",
+        "ActivateLicenseKey": "Kích hoạt",
         "AllowedUploadFormats": "Bạn có thể tải tiện ích hoặc giao diện dưới định dạng .zip lên qua trang này",
         "Authors": "Tác giả",
         "BackToMarketplace": "Quay lại Chợ ứng dụng",
         "Developer": "Người phát triển",
-        "Marketplace": "Chợ ứng dụng",
         "InstallingPlugin": "Cài đặt %s",
         "LastUpdated": "Lần cập nhật cuối",
+        "Marketplace": "Chợ ứng dụng",
         "NoPluginsFound": "Tiện ích không tìm thấy",
         "NoThemesFound": "Giao diện không tìm thấy",
         "NumDownloadsLatestVersion": "Phiên bản mới nhất: %s lượt tải",
@@ -2550,8 +2554,8 @@
         "Version": "Phiên bản"
     },
     "Tour": {
-        "Engagement": "Tham gia",
-        "CompletionTitle": "Thực hiện tốt"
+        "CompletionTitle": "Thực hiện tốt",
+        "Engagement": "Tham gia"
     },
     "Transitions": {
         "BouncesInline": "%s bị trả lại",
@@ -2588,10 +2592,6 @@
         "CityAndCountry": "%1$s, %2$s",
         "Continent": "Châu lục",
         "Country": "Quốc gia",
-        "country_a1": "Proxy ẩn danh",
-        "country_a2": "Nhà cung cấp truyền hình vệ tinh",
-        "country_cat": "Cộng đồng nói tiếng Catalan",
-        "country_o1": "Quốc gia khác",
         "CurrentLocationIntro": "Theo nhà cung cấp này, vị trí hiện tại của bạn là",
         "DefaultLocationProviderDesc1": "Nhà cung cấp vị trí mặc định phỏng đoán quốc gia của người truy cập dựa trên ngôn ngữ mà họ sử dụng.",
         "DefaultLocationProviderExplanation": "Bạn đang sử dụng các nhà cung cấp vị trí mặc định, có nghĩa là Matomo sẽ đoán vị trí của khách truy cập dựa trên ngôn ngữ mà họ sử dụng. %1$s đọc %2$s này để tìm hiểu cách thiết lập định vị chính xác hơn.",
@@ -2600,10 +2600,6 @@
         "GeoIPDocumentationSuffix": "Theo thứ tự xem dữ liệu báo cáo này, bạn phải thiết lập GeoIP trong tab quản trị định vị. Cơ sở dữ liệu GeoIP %1$sMaxmind%2$s thương mại chính xác hơn những bản miễn phí. Để xem cách chính xác họ đang có, click %3$s tại đây %4$s.",
         "Geolocation": "Định vị",
         "GeolocationPageDesc": "Trên trang này bạn có thể thay đổi cách Matomo xác định địa điểm khách truy cập.",
-        "getCityDocumentation": "Báo cáo này cho thấy các thành phố khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
-        "getContinentDocumentation": "Báo cáo này cho thấy lục địa khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
-        "getCountryDocumentation": "Báo cáo này cho thấy quốc gia khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
-        "getRegionDocumentation": "Báo cáo này cho thấy vùng miền khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
         "Latitude": "Miền",
         "Location": "Vị trí",
         "LocationProvider": "Nhà cung cấp vị trí",
@@ -2613,7 +2609,15 @@
         "Region": "Vùng",
         "SubmenuLocations": "Các vị trí",
         "ToGeolocateOldVisits": "Để có được dữ liệu vị trí cho các truy cập cũ của bạn, sử dụng đoạn mã được mô tả %1$s tại đây %2$s",
-        "WidgetLocation": "Vị trí khách truy cập"
+        "WidgetLocation": "Vị trí khách truy cập",
+        "country_a1": "Proxy ẩn danh",
+        "country_a2": "Nhà cung cấp truyền hình vệ tinh",
+        "country_cat": "Cộng đồng nói tiếng Catalan",
+        "country_o1": "Quốc gia khác",
+        "getCityDocumentation": "Báo cáo này cho thấy các thành phố khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
+        "getContinentDocumentation": "Báo cáo này cho thấy lục địa khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
+        "getCountryDocumentation": "Báo cáo này cho thấy quốc gia khách truy cập của bạn đã ở khi họ truy cập website của bạn.",
+        "getRegionDocumentation": "Báo cáo này cho thấy vùng miền khách truy cập của bạn đã ở khi họ truy cập website của bạn."
     },
     "UserCountryMap": {
         "AndNOthers": "và %s khác",
@@ -2636,9 +2640,9 @@
         "map": "Bản đồ"
     },
     "UserId": {
+        "PluginDescription": "Hiển thị báo cáo người dùng",
         "UserId": "ID người dùng",
-        "UserReportTitle": "ID người dùng",
-        "PluginDescription": "Hiển thị báo cáo người dùng"
+        "UserReportTitle": "ID người dùng"
     },
     "UserLanguage": {
         "BrowserLanguage": "Ngôn ngữ trình duyệt",
@@ -2716,18 +2720,12 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "Giờ địa phương",
-        "ColumnServerTime": "Giờ máy chủ",
         "DayOfWeek": "Ngày trong tuần",
         "LocalTime": "Lượt truy cập mỗi giờ địa phương",
-        "NHour": "%sh",
-        "ServerTime": "Các lượt truy cập theo mỗi thời gian máy chủ",
         "SubmenuTimes": "Số lần",
         "VisitsByDayOfWeek": "Các lượt truy cập theo ngày trong tuần",
         "WidgetByDayOfWeekDocumentation": "Đồ thị này cho thấy số lần truy cập mà trang web của bạn nhận được mỗi ngày trong tuần.",
-        "WidgetLocalTime": "Các lượt truy cập theo giờ địa phương (Local)",
-        "WidgetLocalTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của khách truy cập %2$s trong các lượt truy cập của họ.",
-        "WidgetServerTime": "Các lượt truy cập bởi giờ Server",
-        "WidgetServerTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của Server %2$s trong các lượt truy cập."
+        "WidgetLocalTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của khách truy cập %2$s trong các lượt truy cập của họ."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s phút",
@@ -2739,16 +2737,16 @@
         "OnePage": "1 trang",
         "VisitNum": "Số truy cập",
         "VisitsByDaysSinceLast": "Các truy cập theo ngày kể từ lượt truy cập cuối cùng",
-        "visitsByVisitCount": "Các lượt truy cập theo số lần truy cập",
         "VisitsPerDuration": "Các lượt truy cập theo mỗi thời hạn truy cập",
         "VisitsPerNbOfPages": "Các lượt truy cập theo mỗi số lượng trang",
         "WidgetLengths": "Thời lượng của các truy cập",
         "WidgetLengthsDocumentation": "Trong báo cáo này, bạn có thể thấy bao nhiêu lượt truy cập trong tổng thời gian nhất định. Ban đầu, báo cáo được trình bày như một Tag Cloud, thời gian phổ biến được hiển thị trong một phông chữ lớn hơn.",
-        "WidgetPages": "Các trang mỗi lượt truy cập",
+        "WidgetPages": "Các trang cho mỗi truy cập",
         "WidgetPagesDocumentation": "Trong báo cáo này, bạn có thể thấy bao nhiêu lượt truy cập liên quan đến một số lượng nhất định của lượt xem trang. Ban đầu, báo cáo được trình bày như một tag cloud, số trang thường dùng được hiển thị trong một phông chữ lớn hơn.",
-        "WidgetVisitsByDaysSinceLast": "Các lượt truy cập theo ngày kể từ lượt truy cập cuối",
+        "WidgetVisitsByDaysSinceLast": "Các truy cập theo ngày kể từ lượt truy cập cuối cùng",
         "WidgetVisitsByDaysSinceLastDocumentation": "Trong báo cáo này, bạn có thể thấy bao nhiêu lượt truy cập từ khách mà lượt truy cập trước đã xảy ra cách đây một số ngày nhất định.",
-        "WidgetVisitsByNumDocumentation": "Trong báo cáo này, bạn có thể thấy số lượng truy cập những người đã truy cập lần thứ N, tức là. Khách truy cập trang web của bạn ít nhất là N lần."
+        "WidgetVisitsByNumDocumentation": "Trong báo cáo này, bạn có thể thấy số lượng truy cập những người đã truy cập lần thứ N, tức là. Khách truy cập trang web của bạn ít nhất là N lần.",
+        "visitsByVisitCount": "Các lượt truy cập theo số lần truy cập"
     },
     "VisitsSummary": {
         "AverageGenerationTime": "Thời gian khởi tạo trung bình",

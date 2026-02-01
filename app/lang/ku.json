@@ -114,10 +114,11 @@
         "ShowAll": "هەموویان نیشان بدە"
     },
     "Actions": {
+        "ActionsInVisit": "چالاکییەکانی سەردان",
         "AvgGenerationTimeTooltip": "مامناوەند بەپێی %1$s کرتە %2$s لەنێوان %3$s و %4$s",
+        "ColumnActionURL": "ناونیشانی چالاکی",
         "ColumnClickedURL": "بەستەری دەرەکی کرتەکراو",
         "ColumnClickedURLs": "بەستەرە دەرەکییە کرتەکراوەکان",
-        "ColumnActionURL": "ناونیشانی چالاکی",
         "ColumnClicks": "کرتەکان",
         "ColumnClicksDocumentation": "ژمارەی ئەو جارانەی ئەم بەستەرە کرتەی لێکراوە",
         "ColumnDownloadURL": "ناونیشانی داگرتن",
@@ -128,25 +129,24 @@
         "ColumnExitPageTitle": "سەردێری لاپەڕەی دەرچوون",
         "ColumnExitPageURL": "ناونیشانی لاپەڕەی دەرچوون",
         "ColumnExitPageURLs": "ناونیشانی لاپەڕەکانی دەرچوون",
+        "ColumnIdPageview": "پێناسەی بینینی پەڕە",
+        "ColumnInteractionPosition": "شوێنی کارلێک",
         "ColumnNoResultKeyword": "کلیلوشە بەبێ ئەنجامی گەڕان",
         "ColumnPageName": "ناوی لاپەڕە",
+        "ColumnPageViewPosition": "شوێنی بینینی پەڕە",
         "ColumnPagesPerSearch": "لاپەڕەکانی ئاکامەکانی گەڕان",
         "ColumnPagesPerSearchDocumentation": "سەردانکەران لە وێبسایتەکەتدا دەگەڕێن، و هەندێک جار کرتە لەسەر \"دواتر\" دەکەن بۆ بینینی ئەنجامی زیاتر. ئەمە تێکڕای ژمارەی لاپەڕەکانی ئەنجامەکانی گەڕانە کە بۆ ئەم کلیلوشە نیشان دراوە.",
         "ColumnSearchCategory": "پۆلی گەڕان",
-        "ColumnSearches": "گەڕانەکان",
-        "ColumnSearchesDocumentation": "ژمارەی ئەو سەردانانە کە بۆ ئەم کلیلوشەیە گەڕاون لە مۆتۆری گەڕانی وێبسایتەکەتدا.",
         "ColumnSearchExits": "%% گەڕان دەرچووە",
         "ColumnSearchExitsDocumentation": "نیسبەتی ئەو سەردانانەی کە دوای گەڕان بەدوای ئەم کلیلوشەیەدا لەسەر مۆتۆری گەڕانی وێبسایتەکەت، وێبسایتەکەیان بەجێ هێشتووە.",
         "ColumnSearchResultsCount": "ژمارەی ئاکامەکانی گەڕان",
+        "ColumnSearches": "گەڕانەکان",
+        "ColumnSearchesDocumentation": "ژمارەی ئەو سەردانانە کە بۆ ئەم کلیلوشەیە گەڕاون لە مۆتۆری گەڕانی وێبسایتەکەتدا.",
         "ColumnSiteSearchKeywords": "کلیلوشە تاقانەکان",
         "ColumnUniqueClicks": "کرتە تاقانەکان",
         "ColumnUniqueClicksDocumentation": "ژمارەی ئەو سەردانانەی کە کرتەیەکی لەسەر ئەم لینکەدا هەیە. ئەگەر بەستەرێ چەند جارێک کرتە کرا بێت لە کاتی یەک سەرداندا، تەنها جارێک دەژمێردرێت.",
         "ColumnUniqueDownloads": "داگرتنە تاقانەکان",
         "ColumnUniqueOutlinks": "بەستەرە دەرەکەییە تاقانەکان",
-        "ColumnIdPageview": "پێناسەی بینینی پەڕە",
-        "ColumnInteractionPosition": "شوێنی کارلێک",
-        "ColumnPageViewPosition": "شوێنی بینینی پەڕە",
-        "ActionsInVisit": "چالاکییەکانی سەردان",
         "DownloadsReportDocumentation": "لەم ڕاپۆرتەدا، دەتوانیت ببینیت سەردانکەران کام فایلانەیان داگرتووە. %s ئەوەی مەتومۆ وەک داگرتن دەیژمێرێت، کرتەکردنە لەسەر لینکی داگرتن. ئەگەرچی داگرتنەکە تەواونەبووە یان لەلایەن مەتۆمۆوە نەزانرابێ.",
         "PagesSubcategoryHelp3": "بۆ گەڕان لە لای چەپەوە ئایکۆنی کۆ و کەمکردن بەکار بێنە."
     },
@@ -1281,17 +1281,17 @@
         "TransitionsSubcategoryHelp2": "وردەکاریی زیاتر"
     },
     "UserId": {
+        "PluginDescription": "ڕاپۆرتەکانی بەکارهێنەر نیشان دەدات",
         "UserId": "پێناسەی بەکارهێنەر",
-        "UserReportTitle": "پێناسەکانی بەکارهێنەر",
         "UserReportDocumentation": "ئەم ڕاپۆرتە سەردان و پێوانە گشتییەکانی تربۆ هەر پێناسەیەکی بەکارهێنەر نیشان دەدات.",
-        "PluginDescription": "ڕاپۆرتەکانی بەکارهێنەر نیشان دەدات"
+        "UserReportTitle": "پێناسەکانی بەکارهێنەر"
     },
     "UserLanguage": {
         "BrowserLanguage": "زمانی وێبگەڕ",
         "LanguageCode": "کۆدی زمان",
         "PluginDescription": "زمانی بەکارهاتووی وێبگەڕی سەردانکەرانتەوە ڕاپۆرت دەکا.",
-        "getLanguageDocumentation": "ئەم ڕاپۆرتە نیشان ئەدا کە وێبگەڕی سەردانکەرەکان چ زمانێک بەکار دێنێ. (بۆ نموونە: \"کوردی\"، \"ئینگلیزی\")",
-        "getLanguageCodeDocumentation": "ئەم ڕاپۆرتە نیشان ئەدا کە وێبگەڕی سەردانکەرەکان ڕێک لەسەر چ کۆدی زمانێک ڕێکخراوە. (\"بۆ نموونە: ئەڵمانی - نەمسا دەبێتە (de-at)\")"
+        "getLanguageCodeDocumentation": "ئەم ڕاپۆرتە نیشان ئەدا کە وێبگەڕی سەردانکەرەکان ڕێک لەسەر چ کۆدی زمانێک ڕێکخراوە. (\"بۆ نموونە: ئەڵمانی - نەمسا دەبێتە (de-at)\")",
+        "getLanguageDocumentation": "ئەم ڕاپۆرتە نیشان ئەدا کە وێبگەڕی سەردانکەرەکان چ زمانێک بەکار دێنێ. (بۆ نموونە: \"کوردی\"، \"ئینگلیزی\")"
     },
     "UsersManager": {
         "MenuUsers": "بەکارهێنەرەکان",
@@ -1300,7 +1300,7 @@
     },
     "WebsiteMeasurable": {
         "Website": "وێبسایت",
-        "Websites": "وێبسایتەکان",
-        "WebsiteDescription": "وێبسایت لە لاپەڕەکانی وێب کە بەشێوەیەکی گشتی لە تاکە دۆمەینێک خزمەت کراوە پێک دێت."
+        "WebsiteDescription": "وێبسایت لە لاپەڕەکانی وێب کە بەشێوەیەکی گشتی لە تاکە دۆمەینێک خزمەت کراوە پێک دێت.",
+        "Websites": "وێبسایتەکان"
     }
 }

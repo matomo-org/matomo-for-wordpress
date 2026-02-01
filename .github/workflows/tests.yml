@@ -91,6 +91,12 @@ jobs:
         run: |
           if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
             sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' composer.json
+            sed -i 's%"phpunit/phpunit": ".*"%"phpunit/phpunit": "^7"%g' composer.json
+
+            NEW_COMPOSER_JSON=$( cat composer.json | jq '.config += { "audit": { "ignore": { "PKSA-z3gr-8qht-p93v": "Only used in CI tests." } } }' )
+            echo "$NEW_COMPOSER_JSON" > composer.json
+
+            cat composer.json
           fi
 
           composer update --with-all-dependencies
@@ -161,8 +167,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        wp-versions: [ 'latest', 'trunk' ]
+        wp-versions: [ 'latest' ]
         php-versions: [ '7.2', '8.1' ]
+        include:
+          - wp-versions: 'trunk'
+            php-versions: '7.4'
+          - wp-versions: 'trunk'
+            php-versions: '8.1'
     permissions:
       contents: read  # <--- allows to read repo
     steps:

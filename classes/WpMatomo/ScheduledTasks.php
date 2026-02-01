@@ -22,7 +22,6 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
-use WpMatomo\Paths;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -50,9 +49,15 @@ class ScheduledTasks {
 	 */
 	private $logger;
 
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
-		$this->logger   = new Logger();
+	/**
+	 * @var SiteSync\SyncConfig
+	 */
+	private $site_config;
+
+	public function __construct( Settings $settings, SiteSync\SyncConfig $site_config ) {
+		$this->settings    = $settings;
+		$this->site_config = $site_config;
+		$this->logger      = new Logger();
 	}
 
 	public function add_monthly_schedule( $schedules ) {
@@ -233,8 +238,12 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db( $db_url_override = null, $asn_url_override = null ) {
-		if ( is_multisite() && ! is_main_site() ) {
+		if ( is_multisite() && ! is_main_site() && is_plugin_active_for_network( 'matomo/matomo.php' ) ) {
 			return; // only run this task once per entire WP install
+		}
+
+		if ( ! $this->is_internet_features_enabled() ) {
+			return;
 		}
 
 		$this->remove_task_errors( [ 'update_geoip2' ] );
@@ -516,5 +525,9 @@ class ScheduledTasks {
 		$this->remove_task_errors( [ $job_id ] );
 
 		wp_send_json( true );
+	}
+
+	private function is_internet_features_enabled() {
+		return strval( $this->site_config->get_config_value( 'General', 'enable_internet_features' ) ) === '1';
 	}
 }

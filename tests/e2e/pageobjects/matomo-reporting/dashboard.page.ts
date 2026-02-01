@@ -36,7 +36,7 @@ class DashboardPage extends MatomoReportingPage {
 
   async normalizeDates() {
     await browser.execute(() => {
-      $('#periodString a#date').text('REMOVED');
+      $('#periodString #date').text('REMOVED');
       $('#widgetVisitsSummarygetEvolutionGraphforceView1viewDataTablegraphEvolution .jqplot-xaxis').hide();
     });
   }

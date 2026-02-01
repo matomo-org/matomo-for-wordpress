@@ -167,7 +167,10 @@ $tokenAuth)
             if ($this->isAuthenticated) {
                 Common::printDebug("token_auth is authenticated!");
             } else {
-                StaticContainer::get('Piwik\\Tracker\\Failures')->logFailure(\Piwik\Tracker\Failures::FAILURE_ID_NOT_AUTHENTICATED, $this);
+                if (preg_match('/^\\w{28,36}$/', $tokenAuth) || empty($tokenAuth)) {
+                    // only log a failure if the token auth looks partial valid or is completely missing
+                    StaticContainer::get('Piwik\\Tracker\\Failures')->logFailure(\Piwik\Tracker\Failures::FAILURE_ID_NOT_AUTHENTICATED, $this);
+                }
             }
         } else {
             $this->isAuthenticated = \true;

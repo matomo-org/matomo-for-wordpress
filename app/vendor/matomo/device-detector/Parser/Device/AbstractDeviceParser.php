@@ -108,6 +108,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         '85' => 'Aiuto',
         'U7' => 'AIDATA',
         'AL1' => 'AileTV',
+        'AL2' => 'AI+',
         'AK' => 'Akai',
         'Q3' => 'AKIRA',
         '1A' => 'Alba',
@@ -218,6 +219,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'XU' => 'AUX',
         'BAC' => 'Backcell',
         'BFF' => 'BAFF',
+        'BNC' => 'BNCF',
         'BO' => 'BangOlufsen',
         'BN' => 'Barnes & Noble',
         'BAR' => 'BARTEC',
@@ -431,6 +433,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'DB' => 'Dbtel',
         'DBP' => 'DbPhone',
         'DCO' => 'Dcode',
+        'DEC' => 'DEC',
         'DL' => 'Dell',
         'DL0' => 'DL',
         'DE' => 'Denver',
@@ -507,6 +510,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'DTE' => 'D-Tech',
         'DLI' => 'D-Link',
         'ENO' => 'eNOVA',
+        'IN4' => 'Inno Hit',
         'IN2' => 'iNOVA',
         'IN3' => 'inovo',
         'INH' => 'Inhon',
@@ -533,6 +537,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'ZZ' => 'ecom',
         'ECS' => 'EcoStar',
         'EDE' => 'Edenwood',
+        'EDX' => 'Edanix',
         'E6' => 'EE',
         'GW' => 'EGL',
         'EGO' => 'EGOTEK',
@@ -658,6 +663,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'FR' => 'Forstar',
         'RF' => 'Fortis',
         'FRT' => 'FortuneShip',
+        'FOX' => 'FOX',
         'FO' => 'Foxconn',
         'FOD' => 'FoxxD',
         'FJ' => 'FOODO',
@@ -681,6 +687,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'FXT' => 'Fxtec',
         'GT' => 'G-TiDE',
         'G9' => 'G-Touch',
+        'GTB' => 'G-Tab',
         'GFO' => 'Gfone',
         'GTM' => 'GTMEDIA',
         'GTX' => 'GTX',
@@ -698,6 +705,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'GEN' => 'Geant',
         'GD' => 'Gemini',
         'GN' => 'General Mobile',
+        'GD1' => 'Genius Devices',
         '2G' => 'Genesis',
         'GEP' => 'Geo Phone',
         'G2' => 'GEOFOX',
@@ -829,6 +837,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'JH' => 'HOTREALS',
         'HW' => 'How',
         'WH' => 'Honeywell',
+        'HNR' => 'Honor',
         'HON' => 'HongTop',
         'HOG' => 'HONKUAHG',
         'HP' => 'HP',
@@ -947,7 +956,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'JA' => 'JAY-Tech',
         'JAM' => 'Jambo',
         'KJ' => 'Jiake',
-        'JD' => 'Jedi',
+        'JD' => 'Jide',
         'JEE' => 'Jeep',
         'J6' => 'Jeka',
         'JF' => 'JFone',
@@ -1169,6 +1178,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'MEO' => 'MEO',
         'MX' => 'MEU',
         'MES' => 'MESWAO',
+        'MII' => 'MIIA',
         'MI' => 'MicroMax',
         'MIP' => 'mipo',
         'MS' => 'Microsoft',
@@ -1439,7 +1449,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'PIX' => 'PIXPRO',
         'QP' => 'Pico',
         'PIR' => 'PIRANHA',
-        'PIN' => 'PINE',
+        'PIN' => 'PINE64',
         '9P' => 'Planet Computers',
         'PLA' => 'Play Now',
         'PY' => 'Ployer',
@@ -1466,7 +1476,8 @@ abstract class AbstractDeviceParser extends AbstractParser
         'PPD' => 'PPDS',
         'P3' => 'PPTV',
         'FP' => 'Premio',
-        'PR1' => 'Premier',
+        'PR2' => 'PREMIER',
+        'PR1' => 'Premier Star',
         'PR' => 'Prestigio',
         'P9' => 'Primepad',
         'PRM' => 'PRIME',
@@ -1720,11 +1731,13 @@ abstract class AbstractDeviceParser extends AbstractParser
         '69' => 'Stylo',
         'STI' => 'Stilevs',
         '9S' => 'Sugar',
+        'SUA' => 'SUAAT',
         'SUR' => 'Surge',
         'SUF' => 'Surfans',
         '06' => 'Subor',
         'SUT' => 'SULPICE TV',
         'SZ' => 'Sumvision',
+        'SNG' => 'SUNGATE',
         '0H' => 'Sunstech',
         'S3' => 'SunVan',
         '5S' => 'Sunvell',
@@ -1748,6 +1761,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         '1W' => 'Swisstone',
         'SWO' => 'SWOFY',
         'SSK' => 'SSKY',
+        'SSM' => 'Ssmart',
         'SYC' => 'Syco',
         'SM' => 'Symphony',
         '4S' => 'Syrox',
@@ -1869,6 +1883,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'TUV' => 'Tuvio',
         'TUC' => 'TUCSON',
         '2U' => 'Türk Telekom',
+        'TUR' => 'Türksat',
         'TV' => 'TVC',
         'TVP' => 'TV+',
         'TW' => 'TWM',
@@ -1999,6 +2014,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'VOR' => 'Vormor',
         'V1' => 'Voto',
         'Z7' => 'VOX',
+        'VOI' => 'VOIX',
         'VO' => 'Voxtel',
         'VY' => 'Voyo',
         'VOL' => 'Völfen',
@@ -2140,6 +2156,7 @@ abstract class AbstractDeviceParser extends AbstractParser
         'ZIK' => 'ZIK',
         'ZKI' => 'Z-Kai',
         'ZIG' => 'Zigo',
+        'ZIM' => 'Zimmer',
         'ZIN' => 'Zinox',
         'ZO' => 'Zonda',
         'ZW' => 'Zonko',
@@ -2203,7 +2220,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      */
     public static function getDeviceName(int $deviceType) : string
     {
-        $deviceName = \array_search($deviceType, self::$deviceTypes);
+        $deviceName = \array_search($deviceType, self::$deviceTypes, \true);
         if (\is_string($deviceName)) {
             return $deviceName;
         }
@@ -2252,7 +2269,7 @@ abstract class AbstractDeviceParser extends AbstractParser
      */
     public static function getShortCode(string $brand) : string
     {
-        return (string) \array_search($brand, self::$deviceBrands) ?: '';
+        return (string) \array_search($brand, self::$deviceBrands, \true) ?: '';
     }
     /**
      * Sets the useragent to be parsed
@@ -2279,24 +2296,24 @@ abstract class AbstractDeviceParser extends AbstractParser
             return $this->getResult();
         }
         $brand = '';
-        $regexes = $this->getRegexes();
-        foreach ($regexes as $brand => $regex) {
+        foreach ($this->getRegexes() as $brand => $regex) {
             $matches = $this->matchUserAgent($regex['regex']);
             if ($matches) {
                 break;
             }
         }
+        $brand = (string) $brand;
         if (empty($matches)) {
             $this->deviceType = $resultClientHint['deviceType'] ?? null;
             return $resultClientHint;
         }
         if ('Unknown' !== $brand) {
-            if (!\in_array($brand, self::$deviceBrands)) {
+            if (!\in_array($brand, self::$deviceBrands, \true)) {
                 // This Exception should never be thrown. If so a defined brand name is missing in $deviceBrands
                 throw new \Exception(\sprintf("The brand with name '%s' should be listed in deviceBrands array. Tried to parse user agent: %s", $brand, $this->userAgent));
                 // @codeCoverageIgnore
             }
-            $this->brand = (string) $brand;
+            $this->brand = $brand;
         }
         if (isset($regex['device']) && \array_key_exists($regex['device'], self::$deviceTypes)) {
             $this->deviceType = self::$deviceTypes[$regex['device']];
@@ -2317,7 +2334,7 @@ abstract class AbstractDeviceParser extends AbstractParser
                 return $this->getResult();
             }
             $this->model = $this->buildModel($modelRegex['model'], $modelMatches);
-            if (isset($modelRegex['brand']) && \in_array($modelRegex['brand'], self::$deviceBrands)) {
+            if (isset($modelRegex['brand']) && \in_array($modelRegex['brand'], self::$deviceBrands, \true)) {
                 $this->brand = (string) $modelRegex['brand'];
             }
             if (isset($modelRegex['device']) && \array_key_exists($modelRegex['device'], self::$deviceTypes)) {
@@ -2351,7 +2368,7 @@ abstract class AbstractDeviceParser extends AbstractParser
             $detectedDeviceType = null;
             $formFactors = $this->clientHints->getFormFactors();
             foreach (self::$clientHintFormFactorsMapping as $formFactor => $deviceType) {
-                if (\in_array($formFactor, $formFactors)) {
+                if (\in_array($formFactor, $formFactors, \true)) {
                     $detectedDeviceType = $deviceType;
                     break;
                 }
