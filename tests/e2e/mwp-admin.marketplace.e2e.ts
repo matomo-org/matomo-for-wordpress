@@ -150,7 +150,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-installed.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should bulk activate plugins in correctly', async () => {

@@ -553,14 +553,17 @@
         "ViewAndAddAnnotations": "%s टिप्पणियां देखें और जोड़…",
         "YouCannotModifyThisNote": "आप इस टिपण्णी में परिवर्तन नहीं कर सकते हैं क्योंकि न तो आपने इसके लेखक हैं और न ही आपके पास इस साइट के लिए एडमिन एक्सेस है।"
     },
+    "BotTracking": {
+        "PageUrl": "पृष्ठ का यू.आर.एल"
+    },
     "Contents": {
-        "PluginDescription": "सामग्री और बैनर पर नज़र रखने से आप किसी भी अपने पृष्ठों पर सामग्री का टुकड़ा (बैनर विज्ञापन, छवि, किसी भी आइटम) का प्रदर्शन (विचारों, क्लिक, CTR) को मापने की सुविधा देता है।",
-        "Impressions": "छापे",
-        "InteractionRate": "सहभागिता दर",
         "ContentName": "सामग्री का नाम",
         "ContentPiece": "सामग्री टुकड़ा",
         "ContentTarget": "सामग्री को लक्षित",
-        "Contents": "अंतर्वस्तु"
+        "Contents": "अंतर्वस्तु",
+        "Impressions": "छापे",
+        "InteractionRate": "सहभागिता दर",
+        "PluginDescription": "सामग्री और बैनर पर नज़र रखने से आप किसी भी अपने पृष्ठों पर सामग्री का टुकड़ा (बैनर विज्ञापन, छवि, किसी भी आइटम) का प्रदर्शन (विचारों, क्लिक, CTR) को मापने की सुविधा देता है।"
     },
     "CoreAdminHome": {
         "Administration": "प्रशासन",
@@ -845,11 +848,10 @@
     },
     "Ecommerce": {
         "Sales": "बिक्री",
-        "SalesBy": "%s द्वारा बिक्री",
-        "SalesAdjective": "बिक्री %s"
+        "SalesAdjective": "बिक्री %s",
+        "SalesBy": "%s द्वारा बिक्री"
     },
     "Events": {
-        "PluginDescription": "घटनाक्रम पर नज़र रखें और अपने दर्शकों के गतिविधि पर रिपोर्ट मिलता है।",
         "AvgEventValue": "औसत इवेंट मूल्य है: %s",
         "AvgValue": "औसत मूल्य",
         "AvgValueDocumentation": "इस घटना के लिए सभी मूल्यों का औसत",
@@ -864,21 +866,22 @@
         "EventsWithValue": "एक मूल्य के साथ घटनाक्रम",
         "EventsWithValueDocumentation": "एक घटना मूल्य निर्धारित किया गया था, जहां घटनाओं की संख्या",
         "MaxValueDocumentation": "इस घटना के लिए अधिकतम मूल्य",
-        "MinValueDocumentation": "इस घटना के लिए न्यूनतम मूल्य"
+        "MinValueDocumentation": "इस घटना के लिए न्यूनतम मूल्य",
+        "PluginDescription": "घटनाक्रम पर नज़र रखें और अपने दर्शकों के गतिविधि पर रिपोर्ट मिलता है।"
     },
     "Feedback": {
+        "CommunityHelp": "समुदाय सहायता",
         "DoYouHaveBugReportOrFeatureRequest": "क्या आपके पास एक बग की रिपोर्ट या एक सुविधा का अनुरोध है?",
+        "Forums": "फ़ड़",
         "IWantTo": "मैं चाहता हूँ:",
         "LearnWaysToParticipate": "सभी तरीकों के बारे में जानें, आप %1$s भाग %2$s ले सकते हैं",
         "ManuallySendEmailTo": "अपने संदेश को स्वेक्षा से भेजने के लिए कृपया",
+        "ProfessionalHelp": "पेशेवर मदद",
         "RateFeatureLeaveMessageDislike": "आप इसे पसंद नहीं करते हम सुनने के लिए खेद है! कृपया हमें बतायें हम कैसे बेहतर कर सकते हैं।",
         "RateFeatureLeaveMessageLike": "आप इसे पसंद हम खुश हैं! हमें आप एक सुविधा का अनुरोध किया है अगर आप सबसे अधिक पसंद है या क्या पता है।",
         "SendFeedback": "प्रतिक्रिया भेजें",
         "ThankYou": "Matomo बेहतर बनाने में हमें मदद करने के लिए आपका शुक्रिया",
-        "TopLinkTooltip": "आप क्या सोचते हैं हमें बताओ,या व्यावसायिक सहायता का अनुरोध करे",
-        "CommunityHelp": "समुदाय सहायता",
-        "ProfessionalHelp": "पेशेवर मदद",
-        "Forums": "फ़ड़"
+        "TopLinkTooltip": "आप क्या सोचते हैं हमें बताओ,या व्यावसायिक सहायता का अनुरोध करे"
     },
     "GeoIp2": {
         "AssumingNonApache": "गैर अपाचे वेबसर्वर मानते हुए, apache_get_modules फ़ंक्शन नहीं मिल सकता है.",
@@ -1061,6 +1064,7 @@
         "Optional": "वैकल्पिक",
         "Password": "पासवर्ड",
         "PasswordDoNotMatch": "पासवर्ड मेल नहीं खाते",
+        "PasswordRepeat": "पासवर्ड (दोहराने)",
         "PercentDone": "%s %% समाप्त",
         "PleaseFixTheFollowingErrors": "निम्न त्रुटियों को ठीक करें",
         "Requirements": "Matomo आवश्यकताएँ",
@@ -2369,10 +2373,10 @@
         "RememberMe": "मुझे याद है"
     },
     "Marketplace": {
-        "ActivateLicenseKey": "सक्रिय करें",
         "ActionActivatePlugin": "प्लगइन सक्रिय",
         "ActionActivateTheme": "विषय को सक्रिय करें",
         "ActionInstall": "स्थापित करें",
+        "ActivateLicenseKey": "सक्रिय करें",
         "AllowedUploadFormats": "आप इस पेज के माध्यम से ज़िप प्रारूप में एक प्लगइन या विषय अपलोड कर सकते हैं ।",
         "Authors": "लेखक",
         "BackToMarketplace": "वापस बाज़ार में",
@@ -2726,8 +2730,8 @@
         "Version": "संस्करण"
     },
     "Tour": {
-        "Engagement": "नियम",
-        "CompletionTitle": "बहुत बढ़िया!"
+        "CompletionTitle": "बहुत बढ़िया!",
+        "Engagement": "नियम"
     },
     "Transitions": {
         "BouncesInline": "%s उछाल",
@@ -2861,16 +2865,11 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "स्थानीय समय",
-        "ColumnServerTime": "सर्वर समय",
         "DayOfWeek": "सप्ताह के दिन",
         "LocalTime": "स्थानीय समय के अनुसार दौरा",
-        "NHour": "%sh",
         "PluginDescription": "स्थानीय समय और अपने आगंतुकों को अपनी वेबसाइट या एप्लिकेशन को देखने जब सर्वर समय रिपोर्ट।",
-        "ServerTime": "सर्वर समय प्रति दौरा",
         "SubmenuTimes": "टाइम्स",
-        "VisitsByDayOfWeek": "सप्ताह के दिन से दौरा",
-        "WidgetLocalTime": "स्थानीय समय से दौरा",
-        "WidgetServerTime": "सर्वर समय से दौरा"
+        "VisitsByDayOfWeek": "सप्ताह के दिन से दौरा"
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s–%2$s मिनट",
@@ -2924,8 +2923,8 @@
     },
     "WebsiteMeasurable": {
         "Website": "वेबसाइट",
-        "Websites": "वेबसाइटें",
-        "WebsiteDescription": "एक वेबसाइट को आम तौर पर एक वेब डोमेन से सेवा की वेब पन्नों के होते हैं।"
+        "WebsiteDescription": "एक वेबसाइट को आम तौर पर एक वेब डोमेन से सेवा की वेब पन्नों के होते हैं।",
+        "Websites": "वेबसाइटें"
     },
     "Widgetize": {
         "OpenInNewWindow": "एक नई विंडो में खोलें",

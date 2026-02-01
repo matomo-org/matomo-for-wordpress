@@ -24,6 +24,9 @@ use Piwik\Plugins\TagManager\Model\Environment;
 use Piwik\Plugins\TagManager\Model\Tag;
 use Piwik\Plugins\TagManager\Model\Trigger;
 use Piwik\Plugins\TagManager\Model\Variable;
+use Piwik\Plugins\TagManager\Template\Tag\TagsProvider;
+use Piwik\Plugins\TagManager\Template\Trigger\TriggersProvider;
+use Piwik\Plugins\TagManager\Template\Variable\VariablesProvider;
 use Piwik\Site;
 use Piwik\Url;
 use Piwik\View;
@@ -194,18 +197,22 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function copyContainer()
     {
-        $this->checkSitePermission();
-        $this->accessValidator->checkWriteCapability($this->idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
-        Nonce::checkNonce(self::COPY_CONTAINER_NONCE);
-        $request = \Piwik\Request::fromRequest();
-        $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
-        // Confirm tha the user has permission to copy to the selected site
-        $this->accessValidator->checkWriteCapability($idDestinationSite);
-        $idContainer = $request->getStringParameter('idContainer');
-        $idContainerNew = $this->container->copyContainer($this->idSite, $idContainer, $idDestinationSite);
-        $url = 'index.php?module=TagManager&action=dashboard&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idContainerNew]);
-        return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        try {
+            $this->checkSitePermission();
+            $this->accessValidator->checkWriteCapability($this->idSite);
+            $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+            Nonce::checkNonce(self::COPY_CONTAINER_NONCE);
+            $request = \Piwik\Request::fromRequest();
+            $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
+            // Confirm tha the user has permission to copy to the selected site
+            $this->accessValidator->checkWriteCapability($idDestinationSite);
+            $idContainer = $request->getStringParameter('idContainer');
+            $idContainerNew = $this->container->copyContainer($this->idSite, $idContainer, $idDestinationSite);
+            $url = 'index.php?module=TagManager&action=dashboard&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idContainerNew]);
+            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        } catch (\Exception $e) {
+            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+        }
     }
     public function copyTagDialog()
     {
@@ -227,20 +234,31 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function copyTag()
     {
-        $this->checkSitePermission();
-        $this->accessValidator->checkWriteCapability($this->idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
-        Nonce::checkNonce(self::COPY_TAG_NONCE);
-        $request = \Piwik\Request::fromRequest();
-        $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
-        $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
-        // Confirm tha the user has permission to copy to the selected site
-        $this->accessValidator->checkWriteCapability($idDestinationSite);
-        $idTag = $request->getIntegerParameter('idTag');
-        $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
-        $idTagNew = StaticContainer::get(Tag::class)->copyTag($this->idSite, $idContainerVersion, $idTag, $idDestinationSite, $idDestinationContainer);
-        $url = 'index.php?module=TagManager&action=manageTags&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTag' => $idTagNew]);
-        return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        try {
+            $this->checkSitePermission();
+            $this->accessValidator->checkWriteCapability($this->idSite);
+            $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+            Nonce::checkNonce(self::COPY_TAG_NONCE);
+            $request = \Piwik\Request::fromRequest();
+            $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
+            $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
+            // Confirm tha the user has permission to copy to the selected site
+            $this->accessValidator->checkWriteCapability($idDestinationSite);
+            $idTag = $request->getIntegerParameter('idTag');
+            $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+            $tagModel = StaticContainer::get(Tag::class);
+            if ($this->idSite !== $idDestinationSite) {
+                $tag = $tagModel->getContainerTag($this->idSite, $idContainerVersion, $idTag);
+                if (!empty($tag) && StaticContainer::get(TagsProvider::class)->isCustomTemplate($tag['type'])) {
+                    $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
+                }
+            }
+            $idTagNew = $tagModel->copyTag($this->idSite, $idContainerVersion, $idTag, $idDestinationSite, $idDestinationContainer);
+            $url = 'index.php?module=TagManager&action=manageTags&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTag' => $idTagNew]);
+            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        } catch (\Exception $e) {
+            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+        }
     }
     public function copyTriggerDialog()
     {
@@ -262,20 +280,31 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function copyTrigger()
     {
-        $this->checkSitePermission();
-        $this->accessValidator->checkWriteCapability($this->idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
-        Nonce::checkNonce(self::COPY_TRIGGER_NONCE);
-        $request = \Piwik\Request::fromRequest();
-        $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
-        $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
-        // Confirm tha the user has permission to copy to the selected site
-        $this->accessValidator->checkWriteCapability($idDestinationSite);
-        $idTrigger = $request->getIntegerParameter('idTrigger');
-        $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
-        $idTriggerNew = StaticContainer::get(Trigger::class)->copyTrigger($this->idSite, $idContainerVersion, $idTrigger, $idDestinationSite, $idDestinationContainer);
-        $url = 'index.php?module=TagManager&action=manageTriggers&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTrigger' => $idTriggerNew]);
-        return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        try {
+            $this->checkSitePermission();
+            $this->accessValidator->checkWriteCapability($this->idSite);
+            $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+            Nonce::checkNonce(self::COPY_TRIGGER_NONCE);
+            $request = \Piwik\Request::fromRequest();
+            $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
+            $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
+            // Confirm tha the user has permission to copy to the selected site
+            $this->accessValidator->checkWriteCapability($idDestinationSite);
+            $idTrigger = $request->getIntegerParameter('idTrigger');
+            $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+            $triggerModel = StaticContainer::get(Trigger::class);
+            if ($this->idSite !== $idDestinationSite) {
+                $trigger = $triggerModel->getContainerTrigger($this->idSite, $idContainerVersion, $idTrigger);
+                if (!empty($trigger) && StaticContainer::get(TriggersProvider::class)->isCustomTemplate($trigger['type'])) {
+                    $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
+                }
+            }
+            $idTriggerNew = $triggerModel->copyTrigger($this->idSite, $idContainerVersion, $idTrigger, $idDestinationSite, $idDestinationContainer);
+            $url = 'index.php?module=TagManager&action=manageTriggers&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTrigger' => $idTriggerNew]);
+            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        } catch (\Exception $e) {
+            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+        }
     }
     public function copyVariableDialog()
     {
@@ -297,20 +326,31 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function copyVariable()
     {
-        $this->checkSitePermission();
-        $this->accessValidator->checkWriteCapability($this->idSite);
-        $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
-        Nonce::checkNonce(self::COPY_VARIABLE_NONCE);
-        $request = \Piwik\Request::fromRequest();
-        $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
-        $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
-        // Confirm tha the user has permission to copy to the selected site
-        $this->accessValidator->checkWriteCapability($idDestinationSite);
-        $idVariable = $request->getIntegerParameter('idVariable');
-        $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
-        $idVariableNew = StaticContainer::get(Variable::class)->copyVariable($this->idSite, $idContainerVersion, $idVariable, $idDestinationSite, $idDestinationContainer);
-        $url = 'index.php?module=TagManager&action=manageVariables&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idVariable' => $idVariableNew]);
-        return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        try {
+            $this->checkSitePermission();
+            $this->accessValidator->checkWriteCapability($this->idSite);
+            $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+            Nonce::checkNonce(self::COPY_VARIABLE_NONCE);
+            $request = \Piwik\Request::fromRequest();
+            $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
+            $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
+            // Confirm tha the user has permission to copy to the selected site
+            $this->accessValidator->checkWriteCapability($idDestinationSite);
+            $idVariable = $request->getIntegerParameter('idVariable');
+            $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+            $variableModel = StaticContainer::get(Variable::class);
+            if ($this->idSite !== $idDestinationSite) {
+                $variable = $variableModel->getContainerVariable($this->idSite, $idContainerVersion, $idVariable);
+                if (!empty($variable) && StaticContainer::get(VariablesProvider::class)->isCustomTemplate($variable['type'])) {
+                    $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
+                }
+            }
+            $idVariableNew = $variableModel->copyVariable($this->idSite, $idContainerVersion, $idVariable, $idDestinationSite, $idDestinationContainer);
+            $url = 'index.php?module=TagManager&action=manageVariables&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idVariable' => $idVariableNew]);
+            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+        } catch (\Exception $e) {
+            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+        }
     }
     protected function renderTemplate($template, array $variables = array())
     {

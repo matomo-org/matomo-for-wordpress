@@ -187,4 +187,4 @@ In this case, a backlink and charset is only defined for the first configuration
 
 # Contribute
 
-We welcome your contributions and Pull requests at [github.com/matomo-org/searchengine-and-social-list](https://github.com/matomo-org/searchengine-and-social-list/edit/master/README.md)! 
+We welcome your contributions and Pull requests at [github.com/matomo-org/searchengine-and-social-list](https://github.com/matomo-org/searchengine-and-social-list#readme)! 

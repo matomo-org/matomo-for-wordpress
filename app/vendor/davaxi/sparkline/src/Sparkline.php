@@ -197,7 +197,7 @@ class Sparkline
     }
     public function destroy()
     {
-        if ($this->file) {
+        if ($this->file && \PHP_VERSION < 80000) {
             imagedestroy($this->file);
         }
         $this->file = null;

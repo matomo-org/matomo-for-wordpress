@@ -780,6 +780,9 @@
         "ViewAndAddAnnotations": "Ver y añadir anotaciones para %s…",
         "YouCannotModifyThisNote": "No puede modificar esta anotación debido a que ni la creó ni posee privilegios de administrador en este sitio."
     },
+    "BotTracking": {
+        "PageUrl": "URL de la página"
+    },
     "Contents": {
         "ContentImpression": "Impresiones de contenido",
         "ContentInteraction": "Interacción con el contenido",
@@ -1005,6 +1008,7 @@
         "ChangeVisualization": "Cambiar visualización",
         "CheckForUpdates": "Comprobar actualizaciones",
         "CheckPiwikOut": "Compruebe Matomo ahora!",
+        "ChooseWebsite": "Elege un sitio de internet",
         "ChooseX": "Elige %1$s",
         "ClickRowToExpandOrContract": "Haga clic en esta fila para expandir o contraer la subtabla.",
         "ClickToEditX": "Clic para editar %s",
@@ -1532,6 +1536,7 @@
         "UrlsAccessibleViaBrowser": "Hemos comprobado que las URL anteriores son accesibles a través del navegador, pero recomendamos que no lo sean. Si es posible, restrinja el acceso a las mismas."
     },
     "Ecommerce": {
+        "AnonymizeOrderIdNote": "Debido a que un ID de pedido puede ser referenciado con otro sistema, generalmente una tienda de comercio electrónico, el ID de pedido puede contar como información personal bajo el GDPR. Cuando habilite esta opción, la identificación del pedido se anonimizará automáticamente, por lo que no se rastreará la información personal.",
         "EcommerceLogSubcategoryHelp1": "El registro de comercio electrónico proporciona datos granulares a nivel de sesión para que pueda ver la sesión completa de cada usuario que haya realizado una compra o haya abandonado su carrito. Esto puede ayudarle a entender lo que los usuarios hacen antes y después de la compra para revelar oportunidades de optimización.",
         "EcommerceLogSubcategoryHelp2": "Los datos de esta página se actualizan en tiempo real.",
         "EcommerceOverviewSubcategoryHelp2": "Haga clic en una métrica individual dentro del gráfico de destellos para centrarse en ella dentro del gráfico de evolución a tamaño completo.",
@@ -1547,6 +1552,7 @@
         "Sales": "Ventas",
         "SalesAdjective": "Ventas %s",
         "SalesBy": "Ventas por %s",
+        "UseAnonymizeOrderId": "Anonimizar ID pedido",
         "VisitorProfileAbandonedCartSummary": "Abandonó %1$s carritos de compra que incluían %2$s artículos por un valor total de %3$s.",
         "VisitorProfileItemsAndOrders": "Compró %1$s artículos en %2$s compras ecommerce.",
         "VisitorProfileLTV": "Generó un Life Time Revenue de %1$s."
@@ -1618,6 +1624,7 @@
         "RateFeatureSendFeedbackInformation": "Su plataforma Matomo nos enviará a nosotros (el Equipo de Matomo) un correo electrónico (incluso su dirección de correo electrónico) para que podamos contactarnos en caso de que tenga preguntas.",
         "RateFeatureThankYouTitle": "¡Gracias por evaluar '%s'!",
         "RateFeatureTitle": "¿Te gusta la función '%s'? Por favor evaluala y deja un comentario",
+        "ReferBannerTitle": "¿Crées en Matomo?",
         "RemindMeLater": "Recordármelo nuevamente",
         "RemoveOtherLabel": "Quiero ver mi información de 'Otros'",
         "SearchHelpResources": "Buscar recursos de ayuda en matomo.org",
@@ -3065,8 +3072,8 @@
     },
     "IntranetMeasurable": {
         "Intranet": "Intranet del sitio web",
-        "Intranets": "Intranet de sitios web",
-        "IntranetDescription": "Una intranet medible es como un sitio web pero alojado en una red interna."
+        "IntranetDescription": "Una intranet medible es como un sitio web pero alojado en una red interna.",
+        "Intranets": "Intranet de sitios web"
     },
     "JsTrackerInstallCheck": {
         "JsTrackingCodeInstallCheckFailureMessage": "Fallo en la verificación del código de seguimiento. Verifica que has instalado el código correctamente. %1$sSaber más%2$s.",
@@ -3383,7 +3390,7 @@
         "EvolutionComparisonDay": "%1$s %2$s este día comparado con %3$s %2$s en el período parcial anterior (%4$s) Evolución: %5$s",
         "EvolutionComparisonIncomplete": "El período de tiempo seleccionado actualmente está %1$s completo.",
         "EvolutionComparisonMonth": "%1$s %2$s este mes comparado con %3$s %2$s en el periodo parcial anterior (%4$s) Evolución: %5$s",
-        "EvolutionComparisonProportional": "Cuando el período anterior también fue %1$s completo, se habría estimado un total de %2$s %3$s\n(de un total de %4$s %3$s en el período anterior).",
+        "EvolutionComparisonProportional": "Cuando el período anterior también fue %1$s completo, se habría estimado un total de %2$s %3$s (de un total de %4$s %3$s en el período anterior).",
         "EvolutionComparisonWeek": "%1$s %2$s esta semana en comparación con %3$s %2$s en el período parcial anterior (%4$s) Evolución: %5$s",
         "EvolutionComparisonYear": "%1$s %2$s este año comparado con %3$s %2$s en el periodo parcial anterior (%4$s) Evolución: %5$s",
         "EvolutionFromPreviousDay": "Desde el día anterior",
@@ -3437,7 +3444,6 @@
         "AnonymizeIpInlineHelp": "Ocultar los últimos bit(s) de la dirección IP del visitante para cumplir con las leyes\/directrices de privacidad de su jurisdicción.",
         "AnonymizeIpMaskLengtDescription": "Seleccione cuantos bytes de las direcciones IP de los visitantes deben ser enmascaradas.",
         "AnonymizeIpMaskLength": "%1$s byte(s) - ej. %2$s",
-        "AnonymizeOrderIdNote": "Debido a que un ID de pedido puede ser referenciado con otro sistema, generalmente una tienda de comercio electrónico, el ID de pedido puede contar como información personal bajo el GDPR. Cuando habilite esta opción, la identificación del pedido se anonimizará automáticamente, por lo que no se rastreará la información personal.",
         "AnonymizeUserId": "Reemplazar ID de usuario con un seudónimo",
         "AskingForConsent": "Pidiendo consentimiento",
         "ClickHereSettings": "Haga clic aquí para acceder a la configuración de %s",
@@ -3514,7 +3520,6 @@
         "TermsAndConditionUrlDescription": "Un enlace a su página de Términos & Condiciones.",
         "TermsAndConditions": "Términos & Condiciones",
         "UseAnonymizeIp": "Hacer anónimas las direcciones IP de los visitantes",
-        "UseAnonymizeOrderId": "Anonimizar ID pedido",
         "UseAnonymizeTrackingData": "Anonimizar datos de seguimiento de datos",
         "UseAnonymizeUserId": "Anonimizar Usuario ID",
         "UseAnonymizedIpForVisitEnrichment": "Usa también direcciones IP anónimas para enriquecer las visitas.",
@@ -4002,6 +4007,7 @@
         "ChooseTriggerToContinue": "Elija un tipo de activador para continuar",
         "ChooseVariable": "Elija una variable",
         "ChooseVariableToContinue": "Elige un tipo de variable para continuar",
+        "ChooseWebsite": "Elege un sitio de internet",
         "ClickClassesVariableDescription": "El valor de todos los nombres de clase CSS de un elemento cuando un clic disparador fue activado.",
         "ClickClassesVariableName": "Clic Clases",
         "ClickDestinationUrlVariableDescription": "El valor de un enlace URL (href) de un elemento cuando un clic disparador fue activado.",
@@ -4080,6 +4086,7 @@
         "CustomHtmlTagHelp": "La etiqueta HTML personalizada le permite incrustar cualquier etiqueta que aún no sea compatible. Las posibilidades con este activador son prácticamente ilimitadas.",
         "CustomHtmlTagHelpText": "%1$sAprender más%2$s",
         "CustomHtmlTagName": "HTML personalizado",
+        "CustomHtmlTagTitle": "HTML personalizado",
         "CustomImageTagDescription": "Le permite incrustar una imagen, por ejemplo un píxel de seguimiento.",
         "CustomImageTagHelp": "Esta etiqueta le permite agregar, por ejemplo, un píxel transparente de seguimiento en su sitio web.",
         "CustomImageTagName": "Imagen personalizada",
@@ -4175,8 +4182,10 @@
         "ErrorXTooLong": "\"%1$s\" es muy largo, un máximo de %2$s caracteres están permitidos.",
         "EtrackerConfigurationVariableCustomDimensionsTitle": "Dimensiones personalizadas",
         "EtrackerTagDescription": "etracker es un sistema web de analíticas, puede elegir enviar una vista de página o un evento.",
+        "EtrackerTagFormNameTitle": "Nombre del formulario",
         "EtrackerTagName": "Análisis web etracker",
         "EtrackerTagTransactionCurrencyTitle": "Moneda",
+        "EventValue": "Valor del evento",
         "Except": "Excluir",
         "ExportDraft": "Exportar boceto",
         "ExportX": "Exportar %s",
@@ -4388,6 +4397,7 @@
         "SettingEnvironmentDescription": "Definir uno o varios entornos adicionales. Tenga en cuenta que si elimina cualquier entorno, los archivos de contenedor generados que ya existen para un entorno específico se eliminarán y dejarán de estar disponibles.",
         "ShareaholicTagDescription": "Plataforma de contenido de mercadotecnia & Herramientas de tráfico de sitios web",
         "ShareaholicTagHelp": "Esta etiqueta le permite agregar los botones de redes social Shareaholic y más a su sitio web.",
+        "ShareaholicTagSiteIdDescription": "Cree un nuevo sitio en Shareaholic y pegue el ID aquí",
         "ShowAdvancedSettings": "Mostrar Configuración avanzada",
         "SiteWithoutDataMtmIntro": "El Administrador de etiquetas de Matomo puede ser una mejor opción que el seguimiento a través del código JavaScript estándar. Le permite administrar y unificar todas sus etiquetas de seguimiento y marketing (también conocidas como \"píxeles\" o \"etiquetas HTML\/JS personalizadas\") en un solo lugar. El uso del Administrador de etiquetas de Matomo facilita su vida cuando desea modificar una de estas etiquetas, ya que ya no necesitará un desarrollador para realizar los cambios necesarios. %1$sMás información%2$s.",
         "SiteWithoutDataMtmStep2": "Si desea personalizar este contenedor, visite el %1$sTablero del contenedor%2$s",
@@ -4409,6 +4419,7 @@
         "ThemeColorTagDescription": "Estilo de la interfaz de usuario de los navegadores compatibles.",
         "ThemeColorTagHelp": "Esta etiqueta es compatible con Chrome en Android y otros navegadores que entienden 'tema-color'.",
         "ThemeColorTagName": "Color del tema",
+        "ThemeColorTagThemeColorTitle": "Color del tema",
         "TimeSinceLoadVariableDescription": "Calcula el tiempo que ha transcurrido desde que la página fue cargada.",
         "TimeSinceLoadVariableName": "Tiempo desde la última carga",
         "TimerTriggerDescription": "Activado durante un intervalo específico, por ejemplo cada 3 segundos.",
@@ -4493,6 +4504,7 @@
     },
     "Tour": {
         "AddAnnotation": "Añadir una anotación",
+        "AddAnotherWebsite": "Agregar otro sitio de internet",
         "AddReport": "Añadir un informe programado",
         "AddSegment": "Agrega un segmento",
         "BecomeMatomoExpert": "Conviértase en un experto en Matomo",
@@ -4710,6 +4722,7 @@
         "2FA": "2FA",
         "Active": "Activo",
         "AddExistingUser": "Agregar un usuario existente",
+        "AddNewUser": "Agregar nuevo usuario",
         "AddSuperuserAccessConfirm": "Dar a un usuario acceso de superusuario permite al usuario en cuestión tener control total sobre Matomo y debe hacerse con cautela.",
         "AddUserNoInitialAccessError": "Los usuarios nuevos deben suministrar acceso al sitio web, por favor configure el parámetro 'initialIdSite'",
         "AllUsersAreSelected": "Todos los usuarios %1$s están seleccionados.",
@@ -4911,22 +4924,13 @@
         "ColumnLocalMinute": "Hora local - minuto (inicio de la visita)",
         "ColumnLocalTime": "Hora local",
         "ColumnServerHour": "Hora del servidor - hora",
-        "ColumnServerMinute": "Hora del servidor - minuto",
-        "ColumnServerTime": "Hora del servidor",
-        "ColumnVisitStartServerHour": "Hora del servidor - hora (inicio de la visita)",
-        "ColumnVisitStartServerMinute": "Hora del servidor - minuto (inicio de la visita)",
         "DayOfWeek": "Día de la semana",
         "LocalTime": "Visitas por hora local",
-        "NHour": "%sh",
         "PluginDescription": "Informa el horario local y el horario del servidor cuando sus visitantes visualizan su sitio de internet o aplicación.",
-        "ServerTime": "Visitas por hora del servidor",
         "SubmenuTimes": "Tiempos",
         "VisitsByDayOfWeek": "Visitas por día de la semana",
         "WidgetByDayOfWeekDocumentation": "Este gráfico muestra el número de visitas que su sitio de internet recibió en cada día de la semana.",
-        "WidgetLocalTime": "Visitas por hora local",
-        "WidgetLocalTimeDocumentation": "Este gráfico muestra qué hora era %1$s,en las zonas horarias de los visitantes %2$s, cuando visitaron el sitio.",
-        "WidgetServerTime": "Visitas por hora del servidor",
-        "WidgetServerTimeDocumentation": "Este gráfico muestra qué hora era %1$s zona horaria del servidor %2$s cuando se visitó el sitio"
+        "WidgetLocalTimeDocumentation": "Este gráfico muestra qué hora era %1$s,en las zonas horarias de los visitantes %2$s, cuando visitaron el sitio."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s–%2$s mínimo",

@@ -118,7 +118,7 @@ abstract class AbstractParser
         $this->setClientHints($clientHints);
     }
     /**
-     * @inheritdoc
+     * Restore useragent from client hints
      */
     public function restoreUserAgentFromClientHints() : void
     {
@@ -146,7 +146,7 @@ abstract class AbstractParser
      */
     public static function setVersionTruncation(int $type) : void
     {
-        if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH])) {
+        if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH], \true)) {
             return;
         }
         static::$maxMinorParts = $type;
@@ -275,6 +275,8 @@ abstract class AbstractParser
      * Returns if the parsed UA contains the 'Windows NT;' or 'X11; Linux x86_64' fragments
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     protected function hasDesktopFragment() : bool
     {
@@ -288,7 +290,11 @@ abstract class AbstractParser
      */
     protected function hasUserAgentClientHintsFragment() : bool
     {
-        return (bool) \preg_match('~Android (?:10[.\\d]*; K(?: Build/|[;)])|1[1-5]\\)) AppleWebKit~i', $this->userAgent);
+        $pattern = '~Android (?:1[0-6][.\\d]*; K(?: Build/|[;)])|1[0-6]\\)) AppleWebKit~i';
+        if (\preg_match($pattern, $this->userAgent)) {
+            return \false === \stripos($this->userAgent, 'Telegram-Android/');
+        }
+        return \false;
     }
     /**
      * Matches the useragent against the given regex
@@ -323,7 +329,8 @@ abstract class AbstractParser
     {
         $search = [];
         $replace = [];
-        for ($nb = 1; $nb <= \count($matches); $nb++) {
+        $count = \count($matches);
+        for ($nb = 1; $nb <= $count; $nb++) {
             $search[] = '$' . $nb;
             $replace[] = $matches[$nb] ?? '';
         }
@@ -362,6 +369,8 @@ abstract class AbstractParser
      * Method can be used to speed up detections by making a big check before doing checks for every single regex
      *
      * @return ?array
+     *
+     * @throws \Exception
      */
     protected function preMatchOverall() : ?array
     {

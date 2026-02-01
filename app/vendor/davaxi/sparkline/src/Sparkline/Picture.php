@@ -123,7 +123,9 @@ class Picture
         imagealphablending($sparkline, \false);
         imagecopyresampled($sparkline, $this->resource, 0, 0, 0, 0, $width, $height, $this->width, $this->height);
         imagesavealpha($sparkline, \true);
-        imagedestroy($this->resource);
+        if (\PHP_VERSION < 80000) {
+            imagedestroy($this->resource);
+        }
         return $sparkline;
     }
 }

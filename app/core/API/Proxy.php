@@ -426,7 +426,7 @@ class Proxy
                     }
                 }
             } catch (Exception $e) {
-                throw new Exception(Piwik::translate('General_PleaseSpecifyValue', array($name)));
+                throw new BadRequestException(Piwik::translate('General_PleaseSpecifyValue', [$name]));
             }
             $finalParameters[$name] = $requestValue;
         }
@@ -479,7 +479,7 @@ class Proxy
                     $requestValue = $request->{$method}($name, $defaultValue);
                 }
             } catch (Exception $e) {
-                throw new Exception(Piwik::translate('General_PleaseSpecifyValue', [$name]));
+                throw new BadRequestException(Piwik::translate('General_PleaseSpecifyValue', [$name]));
             }
             $finalParameters[$name] = $requestValue;
         }

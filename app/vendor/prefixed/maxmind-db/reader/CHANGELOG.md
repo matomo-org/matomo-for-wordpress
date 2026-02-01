@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+1.13.1 (2025-11-21)
+-------------------
+
+* First PIE release. No other changes.
+
+1.13.0 (2025-11-20)
+-------------------
+
+* A redundant `filesize()` call in the reader's constructor was removed.
+  Pull request by Pavel Djundik. GitHub #189.
+
 1.12.1 (2025-05-05)
 -------------------
 

@@ -88,7 +88,7 @@
         "ColumnUniqueDownloads": "ብቸኛ የወረዱ"
     },
     "CoreHome": {
-        "CategoryNoData": "No data in this category. Try to \"Include all population\".",
+        "CategoryNoData": "በዚህ ፈርጅ ምንም ውሂብ የለም. \"ሁሉንም ምድብ\" ለማጠቃለል ይሞክሩ።",
         "ShowJSCode": "ለማስገባት የጃቫ ስክሪፕትን ኮድ አሳይ",
         "SystemSummaryPhpVersion": "የፒ ኤች ፒ ስሪት"
     },
@@ -117,12 +117,12 @@
         "PiwikUpdatedSuccessfully": "የፒዊክ ማላቅ ተሳክቷል!",
         "PiwikWillBeUpgradedFromVersionXToVersionY": "የፒዊክ የውሂብ ጎታዎ ከ %1$sስሪት ወደ %2$sስሪት ይልቃል.",
         "TheFollowingPluginsWillBeUpgradedX": "የሚከተሉት ተሰኪዎችም ይልቃሉ: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "ለማላቅ ዝግጁ የሆነ የፒዊክ ሰሪት አለ",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "የውሂብ ጎታ ማላቅ ሂደቱ ጥቂት ጊዜ ስለሚወስድ እባክዎ በትዕግስት ይጠብቁ",
+        "ThereIsNewVersionAvailableForUpdate": "ለማላቅ ዝግጁ የሆነ የፒዊክ ሰሪት አለ",
         "UpdateAutomatically": "ራስሰር አልቅ",
         "UpdateHasBeenCancelledExplanation": "ፒዊክ አንድ ጠቅ አርግ ማላቅ ተሰርዟል። ከላይ ያለውን የስህተት መልዕክት መጠገን ካልቻልክ ፒዊክን በእጅ እንድታልቅትመከራለህ። %1$s ለመጀመር የ %2$sማላቂያ ስነዳ %3$sተመልከት!",
-        "UpdateTitle": "ፒዊክ › አልቅ",
         "UpdateSuccessTitle": "ፒዊክን ማላቅ በተሳካ ሁኔታ ተጠናቋል!",
+        "UpdateTitle": "ፒዊክ › አልቅ",
         "UpgradeComplete": "ማላቅ ተጠናቋል!",
         "UpgradePiwik": "ፒዊክን አልቅ",
         "VerifyingUnpackedFiles": "የተበተኑትን ፋይሎች በመበተን ላይ",
@@ -132,8 +132,8 @@
         "YourDatabaseIsOutOfDate": "የፒዊክ የውሂብ ጎታዎ ቀኑ ሰላለፈበት ከመቀጠልዎ በፊት ማላቅ ያስፈልገዋል"
     },
     "DBStats": {
-        "DatabaseUsage": "የውሂብ ጎታ አጠቃቀም",
         "DataSize": "የውሂብ መጠን",
+        "DatabaseUsage": "የውሂብ ጎታ አጠቃቀም",
         "IndexSize": "የመረጃ ጠቋሚ መጠን",
         "MainDescription": "ፒዊክ የድር ምዘናዎቹን ውሂብ በመይ ኤስ ኪው ኤል ይውሂብ ጎታ ውስጥ በማከማቸት ላይ ነው። በአሁን ወቅት የፒዊክ ሰንጠረዦች እየተጠቀሙ ያሉት %s።",
         "Table": "ሰንጠረዥ",
@@ -1487,13 +1487,8 @@
     },
     "VisitTime": {
         "ColumnLocalTime": "አካባቢያዊ ሰዓት",
-        "ColumnServerTime": "የአገልጋይ ሰዓት",
         "LocalTime": "ጉብኝቶች ከአካባቢያዊ ሰዓት",
-        "NHour": "%s ሰ",
-        "ServerTime": "ጉብኝቶች ከአገልጋይ ሰዓት",
-        "SubmenuTimes": "ሰዓታት",
-        "WidgetLocalTime": "ጉብኝቶች በአካባቢያዊ ሰዓት",
-        "WidgetServerTime": "ጉብኝቶች በአገልጋይ ሰዓት"
+        "SubmenuTimes": "ሰዓታት"
     },
     "VisitorInterest": {
         "ColumnPagesPerVisit": "ጉብኝት ከገፆች ጋር",

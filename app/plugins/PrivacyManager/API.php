@@ -272,7 +272,9 @@ string $passwordConfirmation = '')
     /**
      * @internal
      */
-    public function setScheduleReportDeletionSettings($deleteLowestInterval = 7, $passwordConfirmation = '')
+    public function setScheduleReportDeletionSettings($deleteLowestInterval = 7,
+#[\SensitiveParameter]
+$passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -281,7 +283,9 @@ string $passwordConfirmation = '')
     /**
      * @internal
      */
-    public function setDeleteLogsSettings($enableDeleteLogs = '0', $deleteLogsOlderThan = 180, $passwordConfirmation = '')
+    public function setDeleteLogsSettings($enableDeleteLogs = '0', $deleteLogsOlderThan = 180,
+#[\SensitiveParameter]
+$passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -385,7 +389,9 @@ $passwordConfirmation)
     /**
      * @internal
      */
-    public function setComplianceStatus(string $idSite, string $complianceType, bool $enforce, string $passwordConfirmation = null) : bool
+    public function setComplianceStatus(string $idSite, string $complianceType, bool $enforce,
+#[\SensitiveParameter]
+?string $passwordConfirmation = null) : bool
     {
         if (!$this->featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
             throw new Exception('Feature not available');

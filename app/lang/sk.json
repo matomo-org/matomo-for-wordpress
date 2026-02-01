@@ -539,12 +539,12 @@
         "ColumnExitPageURL": "URL výstupnej stránky",
         "ColumnNoResultKeyword": "Kľúčové slovo bez výsledku vyhľadávania",
         "ColumnPageName": "Názov stránky",
+        "ColumnPageURL": "Adresa stránky",
         "ColumnPagesPerSearch": "Stránky s výsledkami vyhľadávania",
         "ColumnPagesPerSearchDocumentation": "Návštevníci budú vyhľadávať na Vašich webových stránkach a niekedy klikniknú na \"ďalšie\" pre zobrazenie viac výsledkov. Toto je priemerný počet stránok s výsledkami vyhľadávania zobrazených pre toto kľúčové slovo.",
-        "ColumnPageURL": "Adresa stránky",
         "ColumnSearchCategory": "Kategória vyhľadávania",
-        "ColumnSearches": "Vyhľadávania",
         "ColumnSearchResultsCount": "Počet výsledkov vyhľadávania",
+        "ColumnSearches": "Vyhľadávania",
         "ColumnSiteSearchKeywords": "Unikátne kľúčové slová",
         "ColumnUniqueClicks": "Jedinečné kliknutia",
         "ColumnUniqueDownloads": "Jedinečné sťahovania",
@@ -552,20 +552,20 @@
         "EntryPageTitles": "Titulky vstupnej stránky",
         "ExitPageTitles": "Titulky výstupnej stránky",
         "PageUrls": "URL stránok",
+        "PagesSubcategoryHelp3": "Pre navigáciu použite symboly plus a mínus vľavo.",
         "SiteSearchKeyword": "Kľúčové slovo (vyhľadávanie na stránke)",
+        "SubmenuPageTitles": "Názov stránky",
         "SubmenuPagesEntry": "Vstupné stránky",
         "SubmenuPagesExit": "Výstupné stránky",
-        "SubmenuPageTitles": "Názov stránky",
         "WidgetEntryPageTitles": "Titulky vstupných stránok",
         "WidgetExitPageTitles": "Titulky výstupných stránok",
-        "WidgetPagesEntry": "Vstupné stránky",
-        "WidgetPagesExit": "Výstupné stránky",
         "WidgetPageTitles": "Titulky stránok",
         "WidgetPageTitlesFollowingSearch": "Titulky stránok po vyhľadávaní na stránkach",
         "WidgetPageUrlsFollowingSearch": "Stránky po vyhľadávaní na stránkach",
+        "WidgetPagesEntry": "Vstupné stránky",
+        "WidgetPagesExit": "Výstupné stránky",
         "WidgetSearchCategories": "Kategórie hľadania",
-        "WidgetSearchKeywords": "Kľúčové slová vyhladávania",
-        "PagesSubcategoryHelp3": "Pre navigáciu použite symboly plus a mínus vľavo."
+        "WidgetSearchKeywords": "Kľúčové slová vyhladávania"
     },
     "Annotations": {
         "AddAnnotationsFor": "Pridať anotáciu k %s…",
@@ -586,6 +586,9 @@
         "PluginDescription": "Dovoľuje vám pridať poznámky k jednotlivým dňom na označenie zmien na stránke, zaznamenanie analýz vašich dát a zdieľanie myšlienok s kolegami. Anotovaním vašich dát zaistíte, že v budúcnosti budete vedieť, prečo vaše dáta vyzerajú tak, ako vyzerajú.",
         "ViewAndAddAnnotations": "Zobraziť a pridať anotácie pre %s…",
         "YouCannotModifyThisNote": "Nemôžete upraviť túto anotáciu, pretože ste ju nevytvorili, ani nemáte administrátorský prístup pre túto stránku."
+    },
+    "BotTracking": {
+        "PageUrl": "Adresa stránky"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Pridať nového dôveryhodného hostiteľa",
@@ -751,11 +754,12 @@
         "Websites": "Webstránky"
     },
     "CoreUpdater": {
+        "CloudHosting": "Cloud hosting",
         "CriticalErrorDuringTheUpgradeProcess": "Kritická chyba počas procesu aktualizácie:",
         "DatabaseUpgradeRequired": "Vyžaduje sa aktualizácia databázy",
         "DisablingIncompatiblePlugins": "Vypínanie nekompatibilných pluginov: %s",
-        "DownloadingUpdateFromX": "Sťahovanie aktualizácie z %s",
         "DownloadX": "Stiahnuť %s",
+        "DownloadingUpdateFromX": "Sťahovanie aktualizácie z %s",
         "EmptyDatabaseError": "Databáza %s je prázdna. Musíte editovať alebo odstrániť Matomo-konfiguračný súbor.",
         "ErrorDIYHelp": "Ak ste skúsený užívateľ a narazili ste na chybu pri aktualizácii databázy:",
         "ErrorDIYHelp_1": "identifikujte a opravte zdroj problému (napr. , obmedzenie pamäťe alebo maximálny čas exekúcie)",
@@ -787,42 +791,41 @@
         "PiwikHasBeenSuccessfullyUpgraded": "Matomo bol úspešne zaktualizovaný!",
         "PiwikUpdatedSuccessfully": "Matomo bol úspešne zaktualizovaný!",
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo bude zaktualizovaný z verzie %1$s na verziu %2$s.",
-        "ReadyToGo": "Pripravený?",
-        "TheFollowingPluginsWillBeUpgradedX": "Nasledujúce moduly budú zaktualizované: %s.",
-        "TheFollowingDimensionsWillBeUpgradedX": "Nasledujúce rozmery budú aktualizované: %s.",
-        "ThereIsNewPluginVersionAvailableForUpdate": "Niektoré pluginy, ktoré vidíte, boli aktualizované na trhu:",
-        "ThereIsNewVersionAvailableForUpdate": "Je dostupná nová verzia Matomo na aktualizáciu",
-        "TheUpgradeProcessMayFailExecuteCommand": "Ak máte veľkú Matomo-databázu, aktualizácie cez Váš prehliadač môžu trvať príliš dlho. V tomto prípade môžete vykonať aktualizácie z príkazového riadka: %s",
-        "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Aktualizácia databázy môžte chvíľu trvať, tak buďte prosím trpezlivý.",
-        "UnpackingTheUpdate": "Rozbaľovanie aktualizácie",
-        "UpdateAutomatically": "Automaticky zaktualizovať",
-        "UpdateHasBeenCancelledExplanation": "Matomo aktualizácia „jedným kliknutím“ bola zrušená. Ak neviete vyriešiť uvedené chybové hlásenia, odporúčame Vám urobiť aktualizáciu manuálne. %1$s Pred začiatkom sa pozrite sa do %2$sdokumentácie k aktualizácií%3$s!",
-        "UpdateTitle": "Aktualizácia",
-        "UpdateSuccessTitle": "Matomo bol úspešne zaktualizovaný!",
-        "UpdateErrorTitle": "chyba aktualizácie",
-        "ThankYouUpdatePiwik": "Ďakujeme za to, že používate Matomo a že ho udržiavate aktualizovaný!",
         "PostUpdateMessage": "Matomo bude vždy voľne dostupný na stiahnutie a používanie, ale potrebuje Vašu neustálu podporu, aby rástol a zlepšoval sa.",
         "PostUpdateSupport": "Ak potrebujete pomoc pri používaní projektu Matomo, môžete získať podporu od jeho tvorcov:",
-        "CloudHosting": "Cloud hosting",
-        "Updating": "Aktualizovanie",
+        "ReadyToGo": "Pripravený?",
+        "ThankYouUpdatePiwik": "Ďakujeme za to, že používate Matomo a že ho udržiavate aktualizovaný!",
+        "TheFollowingDimensionsWillBeUpgradedX": "Nasledujúce rozmery budú aktualizované: %s.",
+        "TheFollowingPluginsWillBeUpgradedX": "Nasledujúce moduly budú zaktualizované: %s.",
+        "TheUpgradeProcessMayFailExecuteCommand": "Ak máte veľkú Matomo-databázu, aktualizácie cez Váš prehliadač môžu trvať príliš dlho. V tomto prípade môžete vykonať aktualizácie z príkazového riadka: %s",
+        "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "Aktualizácia databázy môžte chvíľu trvať, tak buďte prosím trpezlivý.",
+        "ThereIsNewPluginVersionAvailableForUpdate": "Niektoré pluginy, ktoré vidíte, boli aktualizované na trhu:",
+        "ThereIsNewVersionAvailableForUpdate": "Je dostupná nová verzia Matomo na aktualizáciu",
+        "UnpackingTheUpdate": "Rozbaľovanie aktualizácie",
+        "UpdateAutomatically": "Automaticky zaktualizovať",
+        "UpdateErrorTitle": "chyba aktualizácie",
+        "UpdateHasBeenCancelledExplanation": "Matomo aktualizácia „jedným kliknutím“ bola zrušená. Ak neviete vyriešiť uvedené chybové hlásenia, odporúčame Vám urobiť aktualizáciu manuálne. %1$s Pred začiatkom sa pozrite sa do %2$sdokumentácie k aktualizácií%3$s!",
+        "UpdateSuccessTitle": "Matomo bol úspešne zaktualizovaný!",
+        "UpdateTitle": "Aktualizácia",
         "UpdateUsingHttpsFailed": "Stiahnutie najnovšej Matomo-verzie cez bezpečné HTTPS spojenie nebolo úspešné kvôli nasledujúcej chybe:",
         "UpdateUsingHttpsFailedHelp": "Prečo bolo prerušené? Stiahnutie najnovšej Matomo-verzie (cez zabezpečné HTTPS spojenie) môže byť prerušené z rôznych dôvodov. Napríklad kvôli chybe siete, pomalej rýchlosti siete alebo chybného nastavenia systému. Môže to taktiež znamenať, že server je cieľom MITM útoku a niekto sa pokúša nahradiť aktualizáciu škodlivou verziou.",
         "UpdateUsingHttpsFailedHelpWhatToDo": "Odporúča sa znovu skúsiť sťahovanie použitím HTTPS spojenia aby sa predišlo MITM útokom.",
-        "UsingHttps": "Použiť bezpečné HTTPS spojenie (odporúča sa)",
-        "UsingHttp": "Použiť málo-bezpečné HTTP spojenie",
+        "Updating": "Aktualizovanie",
         "UpgradeComplete": "Aktualizácia je ukončená!",
         "UpgradePiwik": "Aktualizácia Matomo",
+        "UsingHttp": "Použiť málo-bezpečné HTTP spojenie",
+        "UsingHttps": "Použiť bezpečné HTTPS spojenie (odporúča sa)",
         "VerifyingUnpackedFiles": "Verifikácia rozbalených súborov",
+        "ViewVersionChangelog": "Prezeranie protokolu zmien pre túto verziu:",
         "WarningMessages": "Varovania:",
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "Automaticky sa deaktivovali tieto moduly: %s",
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Aktualizovať na verziu %s môžete automaticky alebo si stiahnite balíček a nainštalujte ho manuálne:",
-        "YourDatabaseIsOutOfDate": "Vaša Matomo databáza je zastaralá a musí byť zaktualizovaná, aby ste mohli pokračovať ďalej.",
-        "ViewVersionChangelog": "Prezeranie protokolu zmien pre túto verziu:"
+        "YourDatabaseIsOutOfDate": "Vaša Matomo databáza je zastaralá a musí byť zaktualizovaná, aby ste mohli pokračovať ďalej."
     },
     "DBStats": {
-        "DatabaseUsage": "Využitie databázy",
-        "DataSize": "Veľkosť dát",
         "DBSize": "Veľkosť databázy",
+        "DataSize": "Veľkosť dát",
+        "DatabaseUsage": "Využitie databázy",
         "EstimatedSize": "Odhadovaná veľkosť",
         "IndexSize": "Veľkosť indexu",
         "MainDescription": "Matomo ukladá všetky vaše web analýzy do Mysql databázy. Aktuálne Matomo tabuľky používajú %s.",
@@ -876,32 +879,32 @@
         "Browsers": "Prehliadače",
         "ColumnBrowser": "Prehliadač",
         "ColumnOperatingSystem": "Operačný systém",
-        "dataTableLabelTypes": "Typ",
-        "OperatingSystems": "Operačný systém",
         "MobileApp": "Mobilná aplikácia",
-        "WidgetBrowsers": "Prehliadače návštevníkov"
+        "OperatingSystems": "Operačný systém",
+        "WidgetBrowsers": "Prehliadače návštevníkov",
+        "dataTableLabelTypes": "Typ"
     },
     "Ecommerce": {
         "Sales": "Predaje",
-        "SalesBy": "Predaje podľa %s",
-        "SalesAdjective": "Predaje %s"
+        "SalesAdjective": "Predaje %s",
+        "SalesBy": "Predaje podľa %s"
     },
     "Events": {
-        "PluginDescription": "Sledovanie Udalostí a získanie reportu ohľadom aktivity vašich návštevníkov.",
         "AvgValue": "Priemerná hodnota",
+        "EventValueTooltip": "Hodnota Udalostí celom je suma %1$s hodnôt udalostí %2$s medzi minimom %3$s a maximom %4$s.",
         "Events": "Udalosti",
         "EventsWithValue": "Udalosti s hodnotou",
         "EventsWithValueDocumentation": "Počet udalostí, kde bola nastavená hodnota Udalosti",
-        "EventValueTooltip": "Hodnota Udalostí celom je suma %1$s hodnôt udalostí %2$s medzi minimom %3$s a maximom %4$s.",
+        "PluginDescription": "Sledovanie Udalostí a získanie reportu ohľadom aktivity vašich návštevníkov.",
         "TopEvents": "Top Udalosti",
         "TotalEvents": "Udalosti celkom",
         "TotalEventsDocumentation": "Celkový počet udalostí",
         "ViewEvents": "Zobraziť udalosti"
     },
     "Feedback": {
+        "Forums": "Fóra",
         "IWantTo": "Chcem:",
-        "SendFeedback": "Odoslať spätnú väzbu",
-        "Forums": "Fóra"
+        "SendFeedback": "Odoslať spätnú väzbu"
     },
     "GeoIp2": {
         "UpdaterWasLastRun": "Aktualizátor bol naposledy spustený %s."
@@ -2303,8 +2306,8 @@
         "Version": "Verzia"
     },
     "Tour": {
-        "Engagement": "Záujem",
-        "CompletionTitle": "Výborne!"
+        "CompletionTitle": "Výborne!",
+        "Engagement": "Záujem"
     },
     "Transitions": {
         "TransitionsSubcategoryHelp2": "Viac informácií"
@@ -2320,16 +2323,16 @@
     "UserCountryMap": {
         "Cities": "Mestá",
         "Countries": "Krajiny",
-        "map": "mapa",
-        "None": "Nič",
         "NoVisit": "Žiadna návšteva",
+        "None": "Nič",
         "RealTimeMap": "Mapa v reálnom čase",
         "Regions": "Regióny",
-        "VisitorMap": "Mapa návštev"
+        "VisitorMap": "Mapa návštev",
+        "map": "mapa"
     },
     "UserId": {
-        "UserId": "UserId",
-        "PluginDescription": "Zobraziť reporty užívateľa"
+        "PluginDescription": "Zobraziť reporty užívateľa",
+        "UserId": "UserId"
     },
     "UserLanguage": {
         "BrowserLanguage": "Jazyk prehliadača",
@@ -2373,37 +2376,31 @@
         "ColumnBounceRateForReturningVisits": "Miera odskočení vracajúcich sa návštev",
         "ColumnMaxActionsInReturningVisit": "Maximum akcií počas jednej vracajúcej sa návštevy",
         "ColumnNbReturningVisitsConverted": "Počet skonvertovaných vracajúcich sa návštev",
+        "ColumnReturningUsers": "Vracajúci sa užívatelia",
         "ColumnReturningVisits": "Vracajúce sa návštevy",
         "ColumnSumVisitLengthReturning": "Celkový čas strávený návštevníkmi (v sekundách)",
         "ColumnUniqueReturningVisitors": "Unikátny vracajúci sa návštevníci",
-        "ColumnReturningUsers": "Vracajúci sa užívatelia",
         "PluginDescription": "Metriky prehľadov o prvých nových návštevníkoch a vracajúcich sa návštevníkoch.",
         "ReturnActions": "akcie vracajúcich sa návštevníkov",
         "ReturnAverageVisitDuration": "priemerná dĺžka návštevy u vracajúcich sa návštevníkov",
         "ReturnAvgActions": "akcie pre vracajúcu sa návštevu",
         "ReturnBounceRate": "vracajúce sa návštevy odskočili (odišli po zobrazení jednej stránky)",
+        "ReturnVisits": "vracajúce sa návštevy",
         "ReturningVisitDocumentation": "Vracajúca sa návšteva je (ako opak novej návštevy) vykonaná niekým, kto už webovú stránku navštívil aspoň raz pred tým.",
         "ReturningVisitsDocumentation": "Toto je prehľad vracajúcich sa návštev.",
-        "ReturnVisits": "vracajúce sa návštevy",
         "SubmenuFrequency": "Frekvencia",
         "WidgetGraphReturning": "Graf vracajúcich sa",
         "WidgetOverview": "Prehľad frekvencií"
     },
     "VisitTime": {
         "ColumnLocalTime": "Miestny čas",
-        "ColumnServerTime": "Serverový čas",
         "DayOfWeek": "Deň v týždni",
         "LocalTime": "Návštevníci podľa lokálneho času",
-        "NHour": "%sh",
         "PluginDescription": "Hlási miestny čas a čas servera, kedy si vaši návštevníci prezerajú vašu stránku alebo aplikáciu.",
-        "ServerTime": "Návštevníci podľa serverového času",
         "SubmenuTimes": "Časy",
         "VisitsByDayOfWeek": "Návštevy podľa dňa v týždni",
         "WidgetByDayOfWeekDocumentation": "Tento graf zobrazuje množstvo návštev, ktoré vaša web stránka prijala v každom dni týždňa.",
-        "WidgetLocalTime": "Návštevníci podľa lokálneho času",
-        "WidgetLocalTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma návštevníka %2$s počas návštevy.",
-        "WidgetServerTime": "Návštevníci podľa serverového času",
-        "WidgetServerTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma servera %2$s počas návštevy."
+        "WidgetLocalTimeDocumentation": "Tento graf zobrazuje koľko hodín bolo %1$s podľa časového pásma návštevníka %2$s počas návštevy."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",
@@ -2415,12 +2412,12 @@
         "OnePage": "1 stránka",
         "VisitNum": "Číslo návštevy",
         "VisitsByDaysSinceLast": "Návštevy v dňoch od poslednej návštevy",
-        "visitsByVisitCount": "Návštevy podľa Čísla Návštevy",
         "VisitsPerDuration": "Návštevy podľa dĺžky trvania návštevy",
         "VisitsPerNbOfPages": "Návštevy na počet stránok",
         "WidgetLengths": "Trvanie návštev",
-        "WidgetPages": "Strany na návštevu",
-        "WidgetVisitsByDaysSinceLast": "Návštevy v dňoch od poslednej návštevy"
+        "WidgetPages": "Stránky na návštevu",
+        "WidgetVisitsByDaysSinceLast": "Návštevy v dňoch od poslednej návštevy",
+        "visitsByVisitCount": "Návštevy podľa Čísla Návštevy"
     },
     "VisitsSummary": {
         "AverageGenerationTime": "priem. čas generovania",

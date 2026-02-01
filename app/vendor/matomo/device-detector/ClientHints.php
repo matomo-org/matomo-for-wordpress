@@ -233,6 +233,10 @@ class ClientHints
             if (empty($value)) {
                 continue;
             }
+            // any kind of html tag is unexpected as part of those headers, so discard values that contain some.
+            if (\is_string($value) && \strip_tags($value) !== $value) {
+                continue;
+            }
             switch (\str_replace('_', '-', \strtolower((string) $name))) {
                 case 'http-sec-ch-ua-arch':
                 case 'sec-ch-ua-arch':
@@ -248,7 +252,7 @@ class ClientHints
                 case 'http-sec-ch-ua-mobile':
                 case 'sec-ch-ua-mobile':
                 case 'mobile':
-                    $mobile = \true === $value || '1' === $value || '?1' === $value;
+                    $mobile = \in_array($value, [\true, '1', '?1'], \true);
                     break;
                 case 'http-sec-ch-ua-model':
                 case 'sec-ch-ua-model':

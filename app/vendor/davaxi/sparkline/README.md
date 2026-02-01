@@ -32,7 +32,7 @@ or
 
 ```json
   "require": {
-    "davaxi/sparkline": "^2.2"
+    "davaxi/sparkline": "^2.3"
   }
 ```
 
@@ -101,7 +101,7 @@ $sparkline->deactivateAllFillColor();
 
 $sparkline->setData(array(.....)); // Set data set
 $sparkline->getData(); // Get seted data
-$sparkline->generate(); // If ou want regenerate picture 
+$sparkline->generate(); // If you want regenerate picture 
 
 // Change base of height value (default max($data))
 $sparkline->setBase(20);
@@ -121,11 +121,11 @@ $sparkline->addPoint(1, 3, '#efefef');
 
 // If display
 $sparkline->setEtag('your hash'); // If you want add ETag header
-$sparkline->setFilename('yourPictureName'); // For filenamen header
+$sparkline->setFilename('yourPictureName'); // For filename header
 $sparkline->setExpire('+1 day'); // If you want add expire header
 // or
 $sparkline->setExpire(strtotime('+1 day'));
-$sparkline->display(); // Display with correctly headers
+$sparkline->display(); // Display with correct headers
 
 // If save
 $sparkline->save('/your/path/to/save/picture');
@@ -153,7 +153,7 @@ $sparkline->setData(
 
 // For add point on series
 $sparkline->addPoint('first', 3, '#efefef', 0); // Add point on series 0
-$sparkline->addPoint('last', 3, '#efefef', 1); // add point on series 1
+$sparkline->addPoint('last', 3, '#efefef', 1); // Add point on series 1
 
 // For fill colors, specify on last argument series index's
 $sparkline->setFillColorHex('#8b1c2b', 0);

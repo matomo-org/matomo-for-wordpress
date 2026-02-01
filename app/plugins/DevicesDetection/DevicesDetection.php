@@ -13,13 +13,15 @@ use Piwik\Plugins\DevicesDetection\Settings\OnlyMajorVersions;
 use Piwik\Plugins\DevicesDetection\Settings\DeviceModelDetectionDisabled;
 use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
+use Piwik\Plugins\SegmentEditor\Settings\LimitSegments;
+use Piwik\Segment\SegmentsList;
 use Piwik\Tracker\Cache as TrackerCache;
 require_once PIWIK_INCLUDE_PATH . '/plugins/DevicesDetection/functions.php';
 class DevicesDetection extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return ['Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles'];
+        return ['Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Segment.filterSegments' => 'filterSegments'];
     }
     public function getClientSideTranslationKeys(&$translations)
     {
@@ -74,5 +76,22 @@ class DevicesDetection extends \Piwik\Plugin
             return ($cache[$cacheKey] ?? \false) === \true;
         }
         return \false;
+    }
+    public function filterSegments(SegmentsList &$list, array $idSites)
+    {
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
+            $limitSegmentsSettingEnabled = \false;
+            if (empty($idSites)) {
+                $limitSegmentsSettingEnabled = LimitSegments::getInstance()->getValue();
+            } else {
+                foreach ($idSites as $idsite) {
+                    $limitSegmentsSettingEnabled |= LimitSegments::getInstance($idsite)->getValue();
+                }
+            }
+            if ($limitSegmentsSettingEnabled) {
+                $list->remove('General_Visitors', 'deviceModel');
+            }
+        }
     }
 }

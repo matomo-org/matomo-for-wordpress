@@ -71,6 +71,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @var PasswordVerifier
      */
     private $passwordVerify;
+    /**
+     * @var array<int, array<string, mixed>>|null
+     */
+    private $paidPlugins;
     public function __construct(\Piwik\Plugins\Marketplace\LicenseKey $licenseKey, \Piwik\Plugins\Marketplace\Plugins $plugins, \Piwik\Plugins\Marketplace\Api\Client $marketplaceApi, \Piwik\Plugins\Marketplace\Consumer $consumer, PluginInstaller $pluginInstaller, \Piwik\Plugins\Marketplace\Environment $environment, PasswordVerifier $passwordVerify)
     {
         $this->licenseKey = $licenseKey;
@@ -81,6 +85,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $this->pluginManager = Plugin\Manager::getInstance();
         $this->environment = $environment;
         $this->passwordVerify = $passwordVerify;
+        $this->paidPlugins = null;
         parent::__construct();
     }
     public function subscriptionOverview()
@@ -191,12 +196,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function overview()
     {
         $view = $this->configureViewAndCheckPermission('@Marketplace/overview');
-        // we're fetching all available plugins to decide which tabs need to be shown in the UI and to know the number
-        // of total available plugins
-        $allPlugins = $this->plugins->getAllPlugins();
-        $allThemes = $this->plugins->getAllThemes();
-        $paidPlugins = $this->plugins->getAllPaidPlugins();
-        $view->numAvailablePluginsByType = ['plugins' => count($allPlugins), 'themes' => count($allThemes), 'premium' => count($paidPlugins)];
         $view->paidPluginsToInstallAtOnce = $this->getAllPaidPluginsToInstallAtOnce();
         $view->isValidConsumer = $this->consumer->isValidConsumer();
         $view->pluginTypeOptions = array('plugins' => Piwik::translate('General_Plugins'), 'premium' => Piwik::translate('Marketplace_PaidPlugins'), 'themes' => Piwik::translate('CorePluginsAdmin_Themes'));
@@ -220,7 +219,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function updateOverview() : string
     {
         Piwik::checkUserIsNotAnonymous();
-        $paidPlugins = $this->plugins->getAllPaidPlugins();
+        $paidPlugins = $this->getPaidPlugins();
         $updateData = ['isValidConsumer' => $this->consumer->isValidConsumer()];
         Json::sendHeaderJSON();
         return json_encode($updateData);
@@ -258,7 +257,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $params = array('module' => 'Marketplace', 'action' => 'installAllPaidPlugins', 'nonce' => Common::getRequestVar('nonce'));
         if ($this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             Nonce::checkNonce(static::INSTALL_NONCE);
-            $paidPlugins = $this->plugins->getAllPaidPlugins();
+            $paidPlugins = $this->getPaidPlugins();
             $hasErrors = \false;
             foreach ($paidPlugins as $paidPlugin) {
                 if (!$this->canPluginBeInstalled($paidPlugin)) {
@@ -427,7 +426,17 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     }
     private function getAllPaidPluginsToInstallAtOnce()
     {
-        $paidPlugins = $this->plugins->getAllPaidPlugins();
+        $paidPlugins = $this->getPaidPlugins();
         return $this->getPaidPluginsToInstallAtOnceData($paidPlugins);
+    }
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getPaidPlugins() : array
+    {
+        if ($this->paidPlugins === null) {
+            $this->paidPlugins = $this->plugins->getAllPaidPlugins();
+        }
+        return $this->paidPlugins;
     }
 }

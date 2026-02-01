@@ -22,6 +22,11 @@ use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Plugins\Goals\RecordBuilders\ProductRecord;
 use Piwik\Tracker\GoalManager;
 use Piwik\Category\Subcategory;
+use Piwik\Container\StaticContainer;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
+use Piwik\Plugins\SegmentEditor\Settings\LimitSegments;
+use Piwik\Segment\SegmentsList;
 /**
  *
  */
@@ -78,7 +83,7 @@ class Goals extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        $hooks = array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => 'fetchGoalsFromDb', 'API.getReportMetadata.end' => 'getReportMetadataEnd', 'SitesManager.deleteSite.end' => 'deleteSiteGoals', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes', 'Category.addSubcategories' => 'addSubcategories', 'Metric.addMetrics' => 'addMetrics', 'Metric.addComputedMetrics' => 'addComputedMetrics', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Archiver.addRecordBuilders' => 'addRecordBuilders');
+        $hooks = array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => 'fetchGoalsFromDb', 'API.getReportMetadata.end' => 'getReportMetadataEnd', 'SitesManager.deleteSite.end' => 'deleteSiteGoals', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes', 'Category.addSubcategories' => 'addSubcategories', 'Metric.addMetrics' => 'addMetrics', 'Metric.addComputedMetrics' => 'addComputedMetrics', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Archiver.addRecordBuilders' => 'addRecordBuilders', 'Segment.filterSegments' => 'filterSegments');
         return $hooks;
     }
     public function addRecordBuilders(array &$recordBuilders) : void
@@ -365,5 +370,25 @@ class Goals extends \Piwik\Plugin
         $translationKeys[] = 'General_Yes';
         $translationKeys[] = 'General_No';
         $translationKeys[] = 'General_OrCancel';
+        $translationKeys[] = 'Goals_GoalCreated';
+        $translationKeys[] = 'Goals_GoalUpdated';
+        $translationKeys[] = 'Goals_ViewGoalReport';
+    }
+    public function filterSegments(SegmentsList &$list, array $idSites)
+    {
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
+            $limitSegmentsSettingEnabled = \false;
+            if (empty($idSites)) {
+                $limitSegmentsSettingEnabled = LimitSegments::getInstance()->getValue();
+            } else {
+                foreach ($idSites as $idsite) {
+                    $limitSegmentsSettingEnabled |= LimitSegments::getInstance($idsite)->getValue();
+                }
+            }
+            if ($limitSegmentsSettingEnabled) {
+                $list->remove('Goals_Conversion', 'orderId');
+            }
+        }
     }
 }

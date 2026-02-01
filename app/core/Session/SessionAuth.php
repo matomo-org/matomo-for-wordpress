@@ -40,6 +40,10 @@ class SessionAuth implements Auth
      */
     private $user;
     private $tokenAuth;
+    /**
+     * @var bool
+     */
+    private $sessionExpired = \false;
     public function __construct(?UsersModel $userModel = null, $shouldDestroySession = \true)
     {
         $this->userModel = $userModel ?: new UsersModel();
@@ -83,6 +87,7 @@ $passwordHash)
     }
     public function authenticate()
     {
+        $this->sessionExpired = \false;
         $sessionFingerprint = new \Piwik\Session\SessionFingerprint();
         $userModel = $this->userModel;
         $this->checkIfSessionFailedToRead();
@@ -187,7 +192,14 @@ $tokenAuth)
             return \true;
         }
         $isExpired = Date::now()->getTimestampUTC() > $expirationTime;
+        if ($isExpired) {
+            $this->sessionExpired = \true;
+        }
         return $isExpired;
+    }
+    public function wasSessionExpired() : bool
+    {
+        return $this->sessionExpired;
     }
     private function checkIfSessionFailedToRead()
     {

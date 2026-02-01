@@ -31,7 +31,7 @@ class Engine extends AbstractClientParser
      *
      * @var array
      */
-    protected static $availableEngines = ['WebKit', 'Blink', 'Trident', 'Text-based', 'Dillo', 'iCab', 'Elektra', 'Presto', 'Clecko', 'Gecko', 'KHTML', 'NetFront', 'Edge', 'NetSurf', 'Servo', 'Goanna', 'EkiohFlow', 'Arachne', 'LibWeb', 'Maple'];
+    protected static $availableEngines = ['WebKit', 'Blink', 'Trident', 'Text-based', 'Dillo', 'iCab', 'Elektra', 'Presto', 'Clecko', 'Gecko', 'KHTML', 'NetFront', 'Edge', 'NetSurf', 'Servo', 'Goanna', 'EkiohFlow', 'Arachne', 'LibWeb', 'Maple', 'ArkWeb'];
     /**
      * Returns list of all available browser engines
      * @return array
