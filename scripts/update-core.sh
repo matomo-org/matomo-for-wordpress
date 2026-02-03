@@ -46,6 +46,8 @@ cp $MATOMO_ROOT/.htaccess .htaccess
 
 cd matomo/
 
+composer install --no-dev -o -q --ignore-platform-reqs
+
 echo -e "Applying patches to Matomo core..."
 for patch in $(ls $SCRIPTPATH/../patches/*.diff);
 do
@@ -64,8 +66,6 @@ done
 # Remove and deactivate the TestRunner plugin in production build
 sed -i '/Plugins\[\] = TestRunner/d' config/global.ini.php
 rm -rf plugins/TestRunner
-
-composer install --no-dev -o -q --ignore-platform-reqs
 
 find . -name .git -exec rm -rf {} +
 cd ..
