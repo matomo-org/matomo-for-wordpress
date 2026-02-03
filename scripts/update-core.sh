@@ -46,8 +46,6 @@ cp $MATOMO_ROOT/.htaccess .htaccess
 
 cd matomo/
 
-composer install --no-dev -o -q --ignore-platform-reqs
-
 echo -e "Applying patches to Matomo core..."
 for patch in $(ls $SCRIPTPATH/../patches/*.diff);
 do
@@ -67,6 +65,8 @@ done
 sed -i '/Plugins\[\] = TestRunner/d' config/global.ini.php
 rm -rf plugins/TestRunner
 
+composer install --no-dev -o -q --ignore-platform-reqs
+
 find . -name .git -exec rm -rf {} +
 cd ..
 
@@ -79,6 +79,13 @@ rm -r matomo/
 echo "Running matomo-scoper..."
 
 php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
+
+echo -e "Applying patches to prefixed Matomo core..."
+for patch in $(ls $SCRIPTPATH/../patches/prefixed/*.diff);
+do
+  echo -e "  applying $patch"
+  git apply "$patch"
+done
 
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js

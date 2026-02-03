@@ -104,7 +104,7 @@ class AjaxTracker extends \MatomoTracker {
 		}
 	}
 
-	protected function sendRequest( string $url, string $method = 'GET', $data = null, bool $force = false ): string {
+	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
 			return ''; // not installed or synced yet
