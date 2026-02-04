@@ -122,8 +122,13 @@ class Woocommerce extends Base {
 		if ( 'pending' === $old_status && 'processing' === $new_status ) {
 			$this->logger->log( sprintf( 'Order ID = %s status changed from pending to processing, attempting to track it', $order_id ) );
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $this->on_order( $order_id );
+			// Prevent echo during REST/AJAX to avoid JSON pollution
+			if ( ! ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $this->on_order( $order_id );
+			} else {
+				$this->logger->log( 'Skipped echoing Matomo script: Request is REST/AJAX' );
+			}
 		}
 	}
 
@@ -158,8 +163,11 @@ class Woocommerce extends Base {
 					$order instanceof WC_Order
 					&& hash_equals( $order->get_order_key(), $order_key )
 				) {
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $this->on_order( $order_id );
+					// Prevent echo during REST/AJAX to avoid JSON pollution
+					if ( ! ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ) {
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $this->on_order( $order_id );
+					}
 				}
 			}
 		}
