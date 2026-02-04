@@ -1,21 +1,29 @@
-diff --git a/vendor/matomo/matomo-php-tracker/MatomoTracker.php b/app/vendor/matomo/matomo-php-tracker/MatomoTracker.php
-index edc858d98..be2708413 100644
---- a/vendor/matomo/matomo-php-tracker/MatomoTracker.php
-+++ b/vendor/matomo/matomo-php-tracker/MatomoTracker.php
-@@ -1,2044 +1,2662 @@
+diff --git a/app/vendor/matomo/matomo-php-tracker/MatomoTracker.php b/app/vendor/matomo/matomo-php-tracker/MatomoTracker.php
+index edc858d98..6079aec6c 100644
+--- a/app/vendor/matomo/matomo-php-tracker/MatomoTracker.php
++++ b/app/vendor/matomo/matomo-php-tracker/MatomoTracker.php
+@@ -1,2044 +1,2650 @@
  <?php
 +/**
-+ * Matomo - free/libre analytics platform
++ * MatomoTracker implements the Matomo Tracking Web API.
 + *
-+ * For more information, see README.md
++ * For more information, see: https://github.com/matomo-org/matomo-php-tracker/
 + *
-+ * @license released under BSD License http://www.opensource.org/licenses/bsd-license.php
-+ * @link https://matomo.org/docs/tracking-api/
-+ *
-+ * @category Matomo
 + * @package MatomoTracker
++ * @api
 + */
- 
++#[AllowDynamicProperties]
++class MatomoTracker
++{
++	/**
++	 * Matomo base URL, for example http://example.org/matomo/
++	 * Must be set before using the class by calling
++	 * MatomoTracker::$URL = 'http://yourwebsite.org/matomo/';
++	 *
++	 * @var string
++	 */
++	static public $URL = '';
+
 -namespace {
 -    /**
 -     * Matomo - free/libre analytics platform
@@ -589,7 +597,7 @@ index edc858d98..be2708413 100644
 -            $this->doBulkRequests = \true;
 -        }
 -        /**
--         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored  
+-         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored
 -         * tracking actions previously as this method won't be sending any previously stored actions before disabling it.
 -         *
 -         */
@@ -681,7 +689,7 @@ index edc858d98..be2708413 100644
 -         * Returns the PageView id. If the id was manually set using `setPageViewId()`, that id will be returned.
 -         * If the id was not set manually, the id that was automatically generated in last `doTrackPageView()` will
 -         * be returned. If there was no last page view, this will be false.
--         * 
+-         *
 -         * @return mixed The PageView id as string or false if there is none yet.
 -         */
 -        public function getPageviewId()
@@ -2057,26 +2065,6 @@ index edc858d98..be2708413 100644
 -    if (!\class_exists('\\PiwikTracker')) {
 -        include_once 'PiwikTracker.php';
 -    }
-+/**
-+ * MatomoTracker implements the Matomo Tracking Web API.
-+ *
-+ * For more information, see: https://github.com/matomo-org/matomo-php-tracker/
-+ *
-+ * @package MatomoTracker
-+ * @api
-+ */
-+#[AllowDynamicProperties]
-+class MatomoTracker
-+{
-+	/**
-+	 * Matomo base URL, for example http://example.org/matomo/
-+	 * Must be set before using the class by calling
-+	 * MatomoTracker::$URL = 'http://yourwebsite.org/matomo/';
-+	 *
-+	 * @var string
-+	 */
-+	static public $URL = '';
-+
 +	public const AI_BOT_USER_AGENT_SUBSTRINGS = [
 +		'GPTBot',
 +		'ChatGPT-User',
@@ -2879,15 +2867,15 @@ index edc858d98..be2708413 100644
 +	 *
 +	 * @return mixed Response string or true if using bulk requests.
 +	 */
-+	public function doTrackPageViewIfAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null)
++	public function doTrackPageViewIfAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = ull)
 +	{
-+		if (!self::isUserAgentAIBot($this->userAgent)) {
-+			return null;
-+		}
++	    if (!self::isUserAgentAIBot($this->userAgent)) {
++		    return null;
++	    }
 +
-+		$url = $this->getUrlTrackAIBot($httpStatus, $responseSizeBytes, $serverTimeMs, $source);
-+		return $this->sendRequest($url);
-+	}
++	    $url = $this->getUrlTrackAIBot($httpStatus, $responseSizeBytes, $serverTimeMs, $source);
++	    return $this->sendRequest($url);
++   }
 +
 +	/**
 +	 * Override PageView id for every use of `doTrackPageView()`. Do not use this if you call `doTrackPageView()`
@@ -2961,7 +2949,7 @@ index edc858d98..be2708413 100644
 +	 * @param string $interaction The name of the interaction with the content. For instance a 'click'
 +	 * @param string $contentName The name of the content. For instance 'Ad Foo Bar'
 +	 * @param string $contentPiece The actual content. For instance the path to an image, video, audio, any text
-+	 * @param string|bool $contentTarget (optional) The target the content leading to when an interaction occurs. For instance the URL of a landing page.
++	+	 * @param string|bool $contentTarget (optional) The target the content leading to when an interaction occurs. For instance the URL of a landing age.
 +	 * @return mixed Response string or true if using bulk requests.
 +	 */
 +	public function doTrackContentInteraction(
@@ -3034,7 +3022,7 @@ index edc858d98..be2708413 100644
 +	 *
 +	 * @param string $sku (required) SKU, Product identifier
 +	 * @param string $name (optional) Product name
-+	 * @param string|array $category (optional) Product category, or array of product categories (up to 5 categories can be specified for a given product)
++	+	 * @param string|array $category (optional) Product category, or array of product categories (up to 5 categories can be specified for a given roduct)
 +	 * @param float|int $price (optional) Individual product price (supports integer and decimal prices)
 +	 * @param int $quantity (optional) Product quantity. If not specified, will default to 1 in the Reports
 +	 * @throws Exception
@@ -3118,7 +3106,7 @@ index edc858d98..be2708413 100644
 +	 *                This will be used to count this order only once in the event the order page is reloaded several times.
 +	 *                orderId must be unique for each transaction, even on different days, or the transaction will not be recorded by Matomo.
 +	 * @param float $grandTotal (required) Grand Total revenue of the transaction (including tax, shipping, etc.)
-+	 * @param float $subTotal (optional) Sub total amount, typically the sum of items prices for all items in this order (before Tax and Shipping costs are applied)
++	+	 * @param float $subTotal (optional) Sub total amount, typically the sum of items prices for all items in this order (before Tax and Shipping osts are applied)
 +	 * @param float $tax (optional) Tax amount for this order
 +	 * @param float $shipping (optional) Shipping amount for this order
 +	 * @param float $discount (optional) Discounted amount in this order
@@ -3277,30 +3265,30 @@ index edc858d98..be2708413 100644
 +	 *
 +	 * @return string
 +	 */
-+	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): string
-+	{
-+		$url = $this->getRequest($this->idSite);
++	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): tring
++   {
++	    $url = $this->getRequest($this->idSite);
 +
-+		$url .= '&recMode=1';
++	    $url .= '&recMode=1';
 +
-+		if (!empty($httpStatus)) {
-+			$url .= '&http_status=' . $httpStatus;
-+		}
++	    if (!empty($httpStatus)) {
++		    $url .= '&http_status=' . $httpStatus;
++	    }
 +
-+		if (!empty($responseSizeBytes)) {
-+			$url .= '&bw_bytes=' . $responseSizeBytes;
-+		}
++	    if (!empty($responseSizeBytes)) {
++		    $url .= '&bw_bytes=' . $responseSizeBytes;
++	    }
 +
-+		if (!empty($serverTimeMs)) {
-+			$url .= '&pf_srv=' . $serverTimeMs;
-+		}
++   	if (!empty($serverTimeMs)) {
++		    $url .= '&pf_srv=' . $serverTimeMs;
++	    }
 +
-+		if (!empty($source)) {
-+			$url .= '&source=' . rawurlencode($source);
-+		}
++	    if (!empty($source)) {
++	    	$url .= '&source=' . rawurlencode($source);
++   	}
 +
-+		return $url;
-+	}
++   	return $url;
++   }
 +
 +	/**
 +	 * Returns URL used to track Ecommerce Cart updates
@@ -3476,7 +3464,7 @@ index edc858d98..be2708413 100644
 +	 * @param string $interaction The name of the interaction with the content. For instance a 'click'
 +	 * @param string $contentName The name of the content. For instance 'Ad Foo Bar'
 +	 * @param string $contentPiece The actual content. For instance the path to an image, video, audio, any text
-+	 * @param string|false $contentTarget (optional) The target the content leading to when an interaction occurs. For instance the URL of a landing page.
++	+	 * @param string|false $contentTarget (optional) The target the content leading to when an interaction occurs. For instance the URL of a landing age.
 +	 * @throws Exception In case $interaction or $contentName is empty
 +	 * @return string URL to matomo.php with all parameters set to track the pageview
 +	 */
@@ -3619,7 +3607,7 @@ index edc858d98..be2708413 100644
 +	 * Allowed only for Admin/Super User, must be used along with setTokenAuth()
 +	 * @see setTokenAuth()
 +	 * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp.
-+	 *               If the datetime is older than one day (default value for tracking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
++	+	 *               If the datetime is older than one day (default value for racking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
 +	 * @return $this
 +	 */
 +	public function setForceVisitDateTime(string $dateTime)
@@ -3663,7 +3651,7 @@ index edc858d98..be2708413 100644
 +	 *
 +	 * A User ID can be a username, UUID or an email address, or any number or string that uniquely identifies a user or client.
 +	 *
-+	 * @param string $userId Any user ID string (eg. email address, ID, username). Must be non empty. Set to false to de-assign a user id previously set.
++	+	 * @param string $userId Any user ID string (eg. email address, ID, username). Must be non empty. Set to false to de-assign a user id previously et.
 +	 * @return $this
 +	 * @throws Exception
 +	 */
@@ -4256,7 +4244,7 @@ index edc858d98..be2708413 100644
 +	/**
 +	 * Returns the base URL for the Matomo server.
 +	 */
-+	protected function getBaseUrl(): string
++	protected function getBaseUrl()
 +	{
 +		if (empty(self::$URL)) {
 +			throw new Exception(
