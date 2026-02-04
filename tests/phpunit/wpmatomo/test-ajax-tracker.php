@@ -3,7 +3,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
 
@@ -84,17 +84,17 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 	}
 
 	public function test_construct_when_referrer_specified() {
-		$_SERVER['HTTP_REFERER'] = 'http://whatever.com/path';
+		$_SERVER['HTTP_REFERER'] = 'https://whatever.com/path';
 
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
-		$this->assertEquals( 'http://whatever.com/path', $tracker->pageUrl );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://whatever.com/path', $tracker->pageUrl );
 	}
 
 	public function test_construct_when_cookies_are_disabled() {
@@ -102,7 +102,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertTrue( $tracker->configCookiesDisabled );
 	}
@@ -113,7 +113,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEquals( $visitor_id, $tracker->cookieVisitorId );
@@ -123,7 +123,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 	public function test_construct_when_cookies_are_enabled_and_cookie_doesnt_exist() {
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEmpty( $tracker->cookieVisitorId );
@@ -138,7 +138,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEmpty( $tracker->cookieVisitorId );
@@ -199,13 +199,13 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			[
 				null,
 				[
-					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
 				],
 			],
 			[
 				'randomvalue',
 				[
-					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
 				],
 			],
 
@@ -282,7 +282,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$expected_requests = [
 			[
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
+				'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
 				[
 					'method'  => 'GET',
 					'headers' => [

@@ -313,8 +313,10 @@ EOF;
 						'method'  => 'GET',
 						'headers' => [
 							\WpMatomo\AjaxTracker::IP_ADDRESS_FORWARDING_HEADER => $ip,
+							'User-Agent' => false,
 						],
 					],
+					'blocking' => false,
 				],
 			],
 			$this->test_tracker->captured_requests

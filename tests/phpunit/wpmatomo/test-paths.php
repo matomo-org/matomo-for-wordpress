@@ -67,7 +67,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_upload_base_url() {
-		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/wp-content/uploads/matomo', $this->paths->get_upload_base_url() );
+		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/wp-content/uploads/matomo', $this->paths->get_upload_base_url() );
 	}
 
 	public function test_get_matomo_js_upload_path() {
@@ -75,19 +75,19 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_tracker_api_rest_api_endpoint() {
-		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/index.php?rest_route=/matomo/v1/hit/', $this->paths->get_tracker_api_rest_api_endpoint() );
+		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/index.php?rest_route=/matomo/v1/hit/', $this->paths->get_tracker_api_rest_api_endpoint() );
 	}
 
 	public function test_get_js_tracker_rest_api_endpoint() {
-		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/index.php?rest_route=/matomo/v1/hit/', $this->paths->get_js_tracker_rest_api_endpoint() );
+		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/index.php?rest_route=/matomo/v1/hit/', $this->paths->get_js_tracker_rest_api_endpoint() );
 	}
 
 	public function test_get_tracker_api_url_in_matomo_dir() {
-		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/wp-content/plugins/matomo/app/matomo.php', $this->paths->get_tracker_api_url_in_matomo_dir() );
+		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/wp-content/plugins/matomo/app/matomo.php', $this->paths->get_tracker_api_url_in_matomo_dir() );
 	}
 
 	public function test_get_js_tracker_url_in_matomo_dir() {
-		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/wp-content/plugins/matomo/app/matomo.js', $this->paths->get_js_tracker_url_in_matomo_dir() );
+		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/wp-content/plugins/matomo/app/matomo.js', $this->paths->get_js_tracker_url_in_matomo_dir() );
 	}
 
 	public function test_get_config_ini_path() {
