@@ -109,7 +109,7 @@ class AIBotTracking {
 		$request_elapsed_ms = null;
 
 		if ( empty( $GLOBALS['MATOMO_IN_AI_ESI'] ) ) {
-			$request_elapsed_ms = (int) ( timer_float() * 1000 );
+			$request_elapsed_ms = (int) ( \timer_float() * 1000 );
 		}
 
 		if ( empty( $response_code ) ) {

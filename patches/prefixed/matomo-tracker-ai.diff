@@ -3265,7 +3265,7 @@ index edc858d98..6079aec6c 100644
 +	 *
 +	 * @return string
 +	 */
-+	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): tring
++	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): string
 +   {
 +	    $url = $this->getRequest($this->idSite);
 +

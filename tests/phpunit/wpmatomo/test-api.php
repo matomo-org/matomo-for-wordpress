@@ -67,7 +67,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	public function test_dispatch_matomo_api_response_when_datatable() {
 		$this->create_set_super_admin();
 
-		$tracker = $this->make_local_tracker( null );
+		$tracker = $this->make_local_tracker( '' );
 		$tracker->setUrl( 'http://whatever.com/a/page' );
 		$this->assert_tracking_response( $tracker->doTrackPageView( 'a page view' ) );
 

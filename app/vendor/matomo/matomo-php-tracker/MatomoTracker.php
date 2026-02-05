@@ -1219,7 +1219,7 @@ class MatomoTracker
 	 *
 	 * @return string
 	 */
-	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): tring
+	public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): string
 	{
 		$url = $this->getRequest($this->idSite);
 
@@ -1561,7 +1561,7 @@ class MatomoTracker
 	 * Allowed only for Admin/Super User, must be used along with setTokenAuth()
 	 * @see setTokenAuth()
 	 * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp.
-	+	 *               If the datetime is older than one day (default value for racking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
+	 *               If the datetime is older than one day (default value for racking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
 	 * @return $this
 	 */
 	public function setForceVisitDateTime(string $dateTime)
