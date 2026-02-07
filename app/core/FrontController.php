@@ -464,6 +464,10 @@ class FrontController extends \Piwik\Singleton
         if (!\Piwik\SettingsPiwik::isHttpsForced()) {
             return;
         }
+        // TODO: remove in Matomo 6 - avoid update redirect loops before proxy_scheme_headers migration runs.
+        if (\Piwik\Piwik::getModule() === 'CoreUpdater' && \Piwik\ProxyHeaders::getProtocolInformation() !== null) {
+            return;
+        }
         \Piwik\Url::redirectToHttps();
     }
     private function closeSessionEarlyForFasterUI()

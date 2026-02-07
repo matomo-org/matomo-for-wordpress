@@ -58,17 +58,16 @@ class API extends \Piwik\Plugin\API
     /**
      * Return a single goal.
      *
-     * @param int $idSite
-     * @param int $idGoal
      * @return ?array An array of goal attributes.
      */
-    public function getGoal($idSite, $idGoal)
+    public function getGoal(int $idSite, int $idGoal) : ?array
     {
         Piwik::checkUserHasViewAccess($idSite);
         $goal = $this->getModel()->getActiveGoal($idSite, $idGoal);
         if (!empty($goal)) {
             return $this->formatGoal($goal);
         }
+        return null;
     }
     /**
      * Returns all Goals for a given website, or list of websites
@@ -92,7 +91,7 @@ class API extends \Piwik\Plugin\API
             // note: the reason this is secure is because the above cache is a static cache and cleared after each request
             // if we were to use a different cache that persists the result, this would not be secure because when a
             // result is in the cache, it would just return the result
-            $idSite = Site::getIdSitesFromIdSitesString($idSite);
+            $idSite = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
             if (empty($idSite)) {
                 return [];
             }
@@ -150,7 +149,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return int ID of the new goal
      */
-    public function addGoal($idSite, $name, $matchAttribute, $pattern, $patternType, $caseSensitive = \false, $revenue = \false, $allowMultipleConversionsPerVisit = \false, $description = '', $useEventValueAsRevenue = \false)
+    public function addGoal(int $idSite, $name, $matchAttribute, $pattern, $patternType, $caseSensitive = \false, $revenue = \false, $allowMultipleConversionsPerVisit = \false, $description = '', $useEventValueAsRevenue = \false)
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $patternType = Common::unsanitizeInputValue($patternType);
@@ -188,7 +187,7 @@ class API extends \Piwik\Plugin\API
      * @return void
      * @see addGoal() for parameters description
      */
-    public function updateGoal($idSite, $idGoal, $name, $matchAttribute, $pattern, $patternType, $caseSensitive = \false, $revenue = \false, $allowMultipleConversionsPerVisit = \false, $description = '', $useEventValueAsRevenue = \false)
+    public function updateGoal(int $idSite, $idGoal, $name, $matchAttribute, $pattern, $patternType, $caseSensitive = \false, $revenue = \false, $allowMultipleConversionsPerVisit = \false, $description = '', $useEventValueAsRevenue = \false)
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $patternType = Common::unsanitizeInputValue($patternType);
@@ -259,7 +258,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return void
      */
-    public function deleteGoal($idSite, $idGoal)
+    public function deleteGoal(int $idSite, $idGoal)
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $this->getModel()->deleteGoal($idSite, $idGoal);

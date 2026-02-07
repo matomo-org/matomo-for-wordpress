@@ -536,10 +536,10 @@ class Access
      */
     protected function getIdSites($idSites)
     {
-        if ($idSites === 'all') {
+        if ($idSites === 'all' || $idSites === ['all']) {
             $idSites = $this->getSitesIdWithAtLeastViewAccess();
         }
-        $idSites = \Piwik\Site::getIdSitesFromIdSitesString($idSites);
+        $idSites = \Piwik\Site::getIdSitesFromIdSitesString($idSites, \false, \true);
         if (empty($idSites)) {
             throw new BadRequestException("The parameter 'idSite=' is missing from the request.");
         }
