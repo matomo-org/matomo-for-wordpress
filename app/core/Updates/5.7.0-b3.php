@@ -24,6 +24,7 @@ class Updates_5_7_0_b3 extends Updates
     }
     public function getMigrations(Updater $updater)
     {
+        $proxyHeaders = ['HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_SCHEME', 'HTTP_X_URL_SCHEME'];
         $config = Config::getInstance();
         $generalLocal = $config->getFromLocalConfig('General');
         if (!is_array($generalLocal)) {
@@ -37,10 +38,19 @@ class Updates_5_7_0_b3 extends Updates
                 break;
             }
         }
-        if (!$hasProxyConfig || array_key_exists('proxy_scheme_headers', $generalLocal)) {
+        if (array_key_exists('proxy_scheme_headers', $generalLocal)) {
+            // already configured
             return [];
         }
-        return [$this->migration->config->set('General', 'proxy_scheme_headers', ['HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_SCHEME', 'HTTP_X_URL_SCHEME'])];
+        if (!$hasProxyConfig) {
+            // if no proxy config is set, check if any header is present in the request
+            foreach ($proxyHeaders as $proxyHeader) {
+                if (!empty($_SERVER[$proxyHeader]) && 'https' === strtolower($_SERVER[$proxyHeader])) {
+                    return [$this->migration->config->set('General', 'proxy_scheme_headers', [$proxyHeader])];
+                }
+            }
+        }
+        return [$this->migration->config->set('General', 'proxy_scheme_headers', $proxyHeaders)];
     }
     public function doUpdate(Updater $updater)
     {

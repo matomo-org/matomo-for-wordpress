@@ -183,7 +183,7 @@ class API extends \Piwik\Plugin\API
     public function getAll(string $idSite, ?string $date = null, string $period = 'day', ?int $lastN = null) : array
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $ids = array_map('intval', Site::getIdSitesFromIdSitesString($idSite));
+        $ids = array_map('intval', Site::getIdSitesFromIdSitesString($idSite, \false, \true));
         $model = new \Piwik\Plugins\Annotations\Model();
         $annotations = [];
         foreach ($ids as $id) {
@@ -224,7 +224,7 @@ class API extends \Piwik\Plugin\API
     public function getAnnotationCountForDates(string $idSite, string $date, string $period, ?int $lastN = null, bool $getAnnotationText = \false) : array
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $siteIds = array_map('intval', Site::getIdSitesFromIdSitesString($idSite));
+        $siteIds = array_map('intval', Site::getIdSitesFromIdSitesString($idSite, \false, \true));
         if (empty($siteIds)) {
             return [];
         }

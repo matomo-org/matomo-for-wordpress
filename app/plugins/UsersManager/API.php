@@ -288,7 +288,7 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
      *                                   Filtering by 'superuser' is only allowed for other superusers.
      * @return array
      */
-    public function getUsersPlusRole($idSite, $limit = null, $offset = 0, $filter_search = null, $filter_access = null, $filter_status = null)
+    public function getUsersPlusRole(int $idSite, $limit = null, $offset = 0, $filter_search = null, $filter_access = null, $filter_status = null)
     {
         if (Piwik::isUserIsAnonymous()) {
             // anonymous user should never see any results.
@@ -447,14 +447,14 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
      *                        ...
      *                    )
      */
-    public function getUsersAccessFromSite($idSite)
+    public function getUsersAccessFromSite(int $idSite)
     {
         Piwik::checkUserHasAdminAccess($idSite);
         $usersAccess = $this->model->getUsersAccessFromSite($idSite);
         $usersAccess = $this->userFilter->filterLoginIndexedArray($usersAccess);
         return $usersAccess;
     }
-    public function getUsersWithSiteAccess($idSite, $access)
+    public function getUsersWithSiteAccess(int $idSite, $access)
     {
         Piwik::checkUserHasAdminAccess($idSite);
         $this->checkAccessType($access);
@@ -1074,7 +1074,7 @@ $passwordConfirmation = null)
             $idSites = \Piwik\Plugins\SitesManager\API::getInstance()->getSitesIdWithAdminAccess();
         } else {
             // in case the idSites is an integer we build an array
-            $idSites = Site::getIdSitesFromIdSitesString($idSites);
+            $idSites = Site::getIdSitesFromIdSitesString($idSites, \false, \true);
         }
         if (empty($idSites)) {
             throw new Exception('Specify at least one website ID in &idSites=');

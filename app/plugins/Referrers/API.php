@@ -139,7 +139,7 @@ class API extends \Piwik\Plugin\API
     }
     private function checkSingleSite($idSite, string $method) : void
     {
-        $idSites = Site::getIdSitesFromIdSitesString($idSite);
+        $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
         if (count($idSites) > 1 || 'all' === $idSite) {
             throw new Exception("Referrers.{$method} with multiple sites is not supported (yet).");
         }
