@@ -792,7 +792,6 @@ class MatomoTracker
 			0,
 			4
 		);
-
 		return self::FIRST_PARTY_COOKIES_PREFIX . $cookieName . '.' . $this->idSite . '.' . $hash;
 	}
 

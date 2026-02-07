@@ -67,7 +67,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_upload_base_url() {
-		$this->assertSame( 'https://' . WP_TESTS_DOMAIN . '/wp-content/uploads/matomo', $this->paths->get_upload_base_url() );
+		$this->assertSame( 'http://' . WP_TESTS_DOMAIN . '/wp-content/uploads/matomo', $this->paths->get_upload_base_url() );
 	}
 
 	public function test_get_matomo_js_upload_path() {

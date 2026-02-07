@@ -13,6 +13,10 @@ use WpMatomo\AIBotTracking;
 
 require_once __DIR__ . '/../framework/mocks/mock-ajax-tracker.php';
 
+/**
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+ */
 class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 	/**
@@ -30,10 +34,24 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	 */
 	private $tracker;
 
+	private $old_https = null;
+
+	private $old_http_host = null;
+
+	private $old_path_info = null;
+
+	private $old_query_string = null;
+
+	private $old_request_uri = null;
+
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->set_current_url( 'https://mysite.com/some/page' );
+		$this->old_https        = isset( $_SERVER['HTTPS'] ) ? $_SERVER['HTTPS'] : null;
+		$this->old_http_host    = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : null;
+		$this->old_path_info    = isset( $_SERVER['PATH_INFO'] ) ? $_SERVER['PATH_INFO'] : null;
+		$this->old_query_string = isset( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : null;
+		$this->old_request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 		$this->settings = $this->make_settings();
 		$this->tracker  = $this->make_mock_tracker();
@@ -50,10 +68,14 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		unset( $GLOBALS['MATOMO_IN_AI_ESI'] );
 		unset( $_COOKIE['matomo_has_js'] );
 
+		$this->unset_current_url();
+
 		parent::tearDown();
 	}
 
 	public function test_should_track_current_page_returns_false_for_admin_pages() {
+		$this->set_current_url( 'https://mysite.com/some/page' );
+
 		$this->enable_ai_bot_tracking();
 
 		$this->assume_admin_page();
@@ -115,6 +137,8 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 		$this->settings->set_global_option( Settings::TRACK_AI_BOTS, true );
 		$this->settings->save();
 
+		$this->set_current_url( 'https://mysite.com/some/page' );
+
 		$_SERVER['REQUEST_URI'] = 'https://somesite.com/folder/';
 
 		$this->ai_bot_tracking->do_ai_bot_tracking();
@@ -136,6 +160,8 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	 * @dataProvider getTestDataForShouldTrackCurrentPageWithWebPages
 	 */
 	public function test_should_track_current_page_should_return_true_for_normal_pages( $request_uri ) {
+		$this->set_current_url( 'https://mysite.com/some/page' );
+
 		$this->enable_ai_bot_tracking();
 
 		$_SERVER['REQUEST_URI'] = $request_uri;
@@ -240,6 +266,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 	public function test_do_ai_bot_tracking_should_do_nothing_if_ai_bot_tracking_is_not_enabled() {
 		$this->set_ai_bot_user_agent();
+		$this->set_current_url( 'https://mysite.com/some/page' );
 
 		$_SERVER['REQUEST_URI'] = 'https://somesite.com/some/page';
 
@@ -393,10 +420,34 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	}
 
 	private function unset_current_url() {
-		unset( $_SERVER['HTTPS'] );
-		unset( $_SERVER['HTTP_HOST'] );
-		unset( $_SERVER['PATH_INFO'] );
-		unset( $_SERVER['QUERY_STRING'] );
-		unset( $_SERVER['REQUEST_URI'] );
+		if ( null === $this->old_https ) {
+			unset( $_SERVER['HTTPS'] );
+		} else {
+			$_SERVER['HTTPS'] = $this->old_https;
+		}
+
+		if ( null === $this->old_http_host ) {
+			unset( $_SERVER['HTTP_HOST'] );
+		} else {
+			$_SERVER['HTTP_HOST'] = $this->old_http_host;
+		}
+
+		if ( null === $this->old_path_info ) {
+			unset( $_SERVER['PATH_INFO'] );
+		} else {
+			$_SERVER['PATH_INFO'] = $this->old_path_info;
+		}
+
+		if ( null === $this->old_query_string ) {
+			unset( $_SERVER['QUERY_STRING'] );
+		} else {
+			$_SERVER['QUERY_STRING'] = $this->old_query_string;
+		}
+
+		if ( null === $this->old_request_uri ) {
+			unset( $_SERVER['REQUEST_URI'] );
+		} else {
+			$_SERVER['REQUEST_URI'] = $this->old_request_uri;
+		}
 	}
 }
