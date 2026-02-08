@@ -84,7 +84,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 				array(
 					'idsite'                         => 1,
 					'name'                           => 'Test Blog',
-					'main_url'                       => 'https://example.org',
+					'main_url'                       => 'http://example.org',
 					'ecommerce'                      => 1,
 					'sitesearch'                     => 1,
 					'sitesearch_keyword_parameters'  => '',

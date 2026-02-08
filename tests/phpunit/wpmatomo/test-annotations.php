@@ -83,7 +83,7 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 					'id'              => 1,
 					'idsite'          => 1,
 					'date'            => gmdate( 'Y-m-d' ),
-					'note'            => 'Published: hello-world - URL: https://example.org/?p=' . $post->ID,
+					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post->ID,
 					'starred'         => 0,
 					'user'            => 'super user was set',
 					'canEditOrDelete' => true,

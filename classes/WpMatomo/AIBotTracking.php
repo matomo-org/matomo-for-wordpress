@@ -142,7 +142,10 @@ class AIBotTracking {
 			return false;
 		}
 
-		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+		if (
+			! array_key_exists( 'REQUEST_URI', $_SERVER )
+			|| null === $_SERVER['REQUEST_URI']
+		) {
 			return false;
 		}
 

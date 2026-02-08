@@ -87,7 +87,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 	public function test_should_track_current_page_returns_false_if_no_request_uri_is_set() {
 		$this->enable_ai_bot_tracking();
 
-		$this->unset_current_url();
+		unset( $_SERVER['REQUEST_URI'] );
 
 		$should_track = $this->ai_bot_tracking->should_track_current_page();
 		$this->assertFalse( $should_track );
