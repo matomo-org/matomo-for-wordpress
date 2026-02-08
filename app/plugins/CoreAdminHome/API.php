@@ -145,7 +145,7 @@ class API extends \Piwik\Plugin\API
      */
     public function invalidateArchivedReports($idSites, $dates, $period = \false, $segment = \false, $cascadeDown = \false, $_forceInvalidateNonexistent = \false)
     {
-        $idSites = Site::getIdSitesFromIdSitesString($idSites);
+        $idSites = Site::getIdSitesFromIdSitesString($idSites, \false, \true);
         if (empty($idSites)) {
             throw new Exception("Specify a value for &idSites= as a comma separated list of website IDs, for which your token_auth has 'admin' permission");
         }
@@ -201,9 +201,8 @@ class API extends \Piwik\Plugin\API
      * @param int $idSite
      * @param int $idFailure
      */
-    public function deleteTrackingFailure($idSite, $idFailure)
+    public function deleteTrackingFailure(int $idSite, $idFailure)
     {
-        $idSite = (int) $idSite;
         Piwik::checkUserHasAdminAccess($idSite);
         $this->trackingFailures->deleteTrackingFailure($idSite, $idFailure);
     }
@@ -235,7 +234,7 @@ class API extends \Piwik\Plugin\API
      * @throws \Piwik\Exception\UnexpectedWebsiteFoundException
      * @internal
      */
-    public function archiveReports($idSite, $period, $date, $segment = \false, $plugin = \false, $report = \false)
+    public function archiveReports(int $idSite, $period, $date, $segment = \false, $plugin = \false, $report = \false)
     {
         if (\Piwik\API\Request::getRootApiRequestMethod() === 'CoreAdminHome.archiveReports') {
             Piwik::checkUserHasSuperUserAccess();

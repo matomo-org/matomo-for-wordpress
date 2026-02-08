@@ -33,7 +33,7 @@ class API extends PluginAPI
     {
         Piwik::checkUserHasViewAccess($idSite);
         $columns = Piwik::getArrayFromApiParameter($columns);
-        if ($idSite === 'all' || count(Site::getIdSitesFromIdSitesString($idSite)) > 1) {
+        if ($idSite === 'all' || count(Site::getIdSitesFromIdSitesString($idSite, \false, \true)) > 1) {
             $resultSet = new DataTable\Map();
             $resultSet->setKeyName('idSite');
         } elseif (Period::isMultiplePeriod($date, $period)) {
