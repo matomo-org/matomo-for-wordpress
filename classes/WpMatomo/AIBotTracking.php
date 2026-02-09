@@ -108,8 +108,13 @@ class AIBotTracking {
 		$response_code      = http_response_code();
 		$request_elapsed_ms = null;
 
-		if ( empty( $GLOBALS['MATOMO_IN_AI_ESI'] ) && function_exists( 'timer_float' ) ) {
-			$request_elapsed_ms = (int) ( \timer_float() * 1000 );
+		if (
+			empty( $GLOBALS['MATOMO_IN_AI_ESI'] )
+			&& array_key_exists( 'REQUEST_TIME_FLOAT', $_SERVER )
+		) {
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$request_elapsed_ms = (int) ( ( microtime( true ) - $_SERVER['REQUEST_TIME_FLOAT'] ) * 1000 );
 		}
 
 		if ( empty( $response_code ) ) {
