@@ -215,3 +215,11 @@ table.matomo-tracking-form th {
     font-weight: bold;
     color: #f77b00;
 }
+
+.matomo-inline-notice {
+    padding: 1em;
+}
+
+.matomo-inline-notice.matomo-warning {
+    background-color: rgba(255, 165, 0, 0.2);
+}

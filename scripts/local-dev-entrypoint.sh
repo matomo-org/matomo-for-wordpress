@@ -4,7 +4,7 @@
 
 set -e
 
-cd /var/www/html
+cd "$DOCUMENT_ROOT"
 
 if [[ "$1" = "bash" ]]; then
   "$@"
@@ -35,11 +35,11 @@ function export_install_dependent() {
 
   export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
-  export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
+  export WP_TESTS_DIR=$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
 }
 
 function init_wpload_dir_file() {
-  echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php || true
+  echo "<?php # $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-load.php" > $DOCUMENT_ROOT/matomo.wpload_dir.php || true
 }
 
 function handle_cli_command() {
@@ -57,14 +57,16 @@ function handle_cli_command() {
   echo
 
   if [[ "$EXECUTE_TARGET" = "wp" ]]; then
-    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
+    $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
-    cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
+    . $NVM_DIR/nvm.sh
+    nvm use 16 > /dev/null
+    cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
     ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
-    cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo
+    cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
 
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
@@ -74,7 +76,7 @@ function handle_cli_command() {
     ./vendor/bin/phpunit $EXECUTE_ARGS
     exit $?
   else
-    cd /var/www/html/matomo-for-wordpress
+    cd $DOCUMENT_ROOT/matomo-for-wordpress
     "$EXECUTE_TARGET" $EXECUTE_ARGS
     exit $?
   fi
@@ -90,20 +92,20 @@ function install_wordpress() {
   init_wpload_dir_file
 
   # install wp-cli.phar
-  if [ ! -f "/var/www/html/wp-cli.phar" ]; then
-    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
+  if [ ! -f "$DOCUMENT_ROOT/wp-cli.phar" ]; then
+    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o $DOCUMENT_ROOT/wp-cli.phar
   fi
-  chmod +x /var/www/html/wp-cli.phar
+  chmod +x $DOCUMENT_ROOT/wp-cli.phar
 
   # TODO: switch download to use wp-cli instead of just curling (also can use wp db create instead of raw php)
   # install wordpress if not present
-  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
+  if [ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" ]; then
     WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.zip"
     if [ "$WORDPRESS_VERSION" = "trunk" ]; then
       WORDPRESS_URL="https://wordpress.org/nightly-builds/wordpress-latest.zip"
     fi
 
-    echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to /var/www/html/$WORDPRESS_FOLDER/... (multisite = $MULTISITE)"
+    echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to $DOCUMENT_ROOT/$WORDPRESS_FOLDER/... (multisite = $MULTISITE)"
 
     curl "$WORDPRESS_URL" > "wordpress-$WORDPRESS_VERSION.zip"
 
@@ -113,7 +115,7 @@ function install_wordpress() {
 
     echo "wordpress installed!"
   else
-    echo "wordpress $WORDPRESS_VERSION already installed at /var/www/html/$WORDPRESS_FOLDER/."
+    echo "wordpress $WORDPRESS_VERSION already installed at $DOCUMENT_ROOT/$WORDPRESS_FOLDER/."
   fi
 
   # if requested, drop the database for a clean install (used mainly for automated tests)
@@ -123,8 +125,8 @@ function install_wordpress() {
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$pdo->exec('DROP DATABASE IF EXISTS \`$WP_DB_NAME\`');"
 
-    rm /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/config/config.ini.php || true
-    rm /var/www/html/$WORDPRESS_FOLDER/apppassword || true
+    rm $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/config/config.ini.php || true
+    rm $DOCUMENT_ROOT/$WORDPRESS_FOLDER/apppassword || true
   fi
 
   # create database if it does not already exist
@@ -133,7 +135,7 @@ function install_wordpress() {
   \$pdo->exec('GRANT ALL PRIVILEGES ON $WP_DB_NAME.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
   # setup wordpress config if not done so
-  if [ ! -f "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" ]; then
+  if [ ! -f "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-config.php" ]; then
     if [[ "$MULTISITE" = "1" ]]; then
       MULTISITE_CONFIG="
   define( 'WP_ALLOW_MULTISITE', true );
@@ -149,12 +151,12 @@ function install_wordpress() {
     WP_DEBUG="${WP_DEBUG:-false}"
     WP_DEBUG_LOG="${WP_DEBUG_LOG:-false}"
     WP_DEBUG_DISPLAY="${WP_DEBUG_DISPLAY:-true}"
-    cat > "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" <<EOF
+    cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-config.php" <<EOF
 <?php
 define( 'DB_NAME', '$WP_DB_NAME' );
 define( 'DB_USER', 'root' );
 define( 'DB_PASSWORD', 'pass' );
-define( 'DB_HOST', getenv('WP_DB_HOST') );
+define( 'DB_HOST', '$WP_DB_HOST' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
@@ -241,9 +243,9 @@ EOF
   # install wordpress
   echo "installing wordpress"
   if [[ "$MULTISITE" = "1" ]]; then
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core multisite-install --url=$HOSTNAME --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url=$HOSTNAME --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
 
-    cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+    cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /$WORDPRESS_FOLDER/
@@ -260,26 +262,26 @@ RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)\$ \$2 [L]
 RewriteRule . index.php [L]
 EOF
 
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
 
     # create test sites
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test2 || true
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test3 || true
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER site create --slug=test2 || true
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER site create --slug=test3 || true
   else
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url="$HOSTNAME" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core install --url="$HOSTNAME" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
 
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
   fi
 
   # set permalink structure to /%postname%/
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER rewrite structure '/%postname%/'
 
   # add .htaccess files required for the above permalink structure change
-  if [[ ! -f "/var/www/html/$WORDPRESS_FOLDER/.htaccess" ]]; then
+  if [[ ! -f "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" ]]; then
     if [[ "$MULTISITE" == "1" ]]; then
-      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+      cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 # BEGIN WordPress Multisite
 # Using subfolder network type: https://wordpress.org/documentation/article/htaccess/#multisite
 
@@ -301,7 +303,7 @@ RewriteRule . $WORDPRESS_FOLDER/index.php [L]
 # END WordPress Multisite
 EOF
     else
-      cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+      cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 # BEGIN WordPress
 
 RewriteEngine On
@@ -319,42 +321,42 @@ EOF
 
   # link matomo for wordpress volume as wordpress plugin
   if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
-    if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
-      ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
+    if [[ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
+      ln -s $DOCUMENT_ROOT/matomo-for-wordpress "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
     fi
   else
     echo "installing latest stable matomo..."
 
-    if [ -L "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
-      rm "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+    if [ -L "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
+      rm "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
     else
-      rm -r "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+      rm -r "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
     fi
 
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
-    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
+    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
   fi
 
   if [[ "$MULTISITE" = "1" ]]; then
     COMMAND_SUFFIX=" --network"
   fi
 
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo install
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo install
 
   # extra actions required during tests
   if [ "$WORDPRESS_FOLDER" = "test" ]; then
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo sync sites
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo sync sites
 
     # update site created date for e2e tests
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
   fi
 
-  # add index.php file listing available installs to root /var/www/html
-  if [ ! -f "/var/www/html/index.php" ]; then
-    cat > "/var/www/html/index.php" <<EOF
+  # add index.php file listing available installs to root $DOCUMENT_ROOT
+  if [ ! -f "$DOCUMENT_ROOT/index.php" ]; then
+    cat > "$DOCUMENT_ROOT/index.php" <<EOF
 <html lang="en">
 <head>
 <style>
@@ -385,25 +387,25 @@ EOF
   fi
 
   if [[ "$WITHOUT_MARKETPLACE" = "1" ]]; then
-    rm -f "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" || true
+    rm -f "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" || true
   else
-    if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
+    if [ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
       echo "installing matomo marketplace"
-      ln -s /var/www/html/matomo-for-wordpress/marketplace "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress"
-      /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+      ln -s $DOCUMENT_ROOT/matomo-for-wordpress/marketplace "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress"
+      $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
     else
-      /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+      $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
     fi
   fi
 
   # other plugins used during tests
-  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ] && php -r "exit('$WORDPRESS_VERSION' === 'trunk' || version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);"; then
+  if [ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/speculation-rules" ] && php -r "exit('$WORDPRESS_VERSION' === 'trunk' || version_compare('$WORDPRESS_VERSION', '6.6', '>=') ? 0 : 1);"; then
     echo "installing speculation-rules"
 
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate speculation-rules
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate speculation-rules
   fi
 
-  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
+  if [ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
     echo "installing wp-statistics"
 
     WP_STATS_VERSION=""
@@ -411,7 +413,7 @@ EOF
       WP_STATS_VERSION="--version=13.2.16"
     fi
 
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate wp-statistics $WP_STATS_VERSION
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate wp-statistics $WP_STATS_VERSION
   fi
 
   # download WP_PLUGINS plugins if not present
@@ -431,7 +433,7 @@ EOF
     fi
 
     echo "installing plugin $PLUGIN $VERSION_ARGUMENT"
-    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate $VERSION_ARGUMENT $PLUGIN || true
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate $VERSION_ARGUMENT $PLUGIN || true
   done
 
   # install oceanwp
@@ -440,11 +442,11 @@ EOF
     OCEANWP_VERSION="--version=3.5.5"
   fi
 
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate $OCEANWP_VERSION
+  $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate $OCEANWP_VERSION
 
   # setup woocommerce if requested
   if [[ "$WOOCOMMERCE" == "1" ]]; then
-    if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
+    if [[ ! -d "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
       echo "setting up woocommerce..."
 
       if php -r 'exit(version_compare(PHP_VERSION, "7.3", "<") ? 0 : 1);'; then
@@ -452,14 +454,14 @@ EOF
       fi
 
       # install woocommerce
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce --activate $WOOCOMMERCE_VERSION
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root plugin install woocommerce --activate $WOOCOMMERCE_VERSION
     else
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root plugin activate woocommerce
     fi
 
     function wc_product_exists() {
       PROD_SKU=$1
-      PROD_COUNT=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product list --sku=$PROD_SKU --format=count )
+      PROD_COUNT=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product list --sku=$PROD_SKU --format=count )
       [ $PROD_COUNT != "0" ]
     }
 
@@ -467,28 +469,28 @@ EOF
     echo "Generating test products..."
 
     if ! wc_product_exists PROD_1; then
-      IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
+      IMAGE_ID=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "$DOCUMENT_ROOT/matomo-for-wordpress/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
     fi
 
     if ! wc_product_exists PROD_2; then
-      IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
+      IMAGE_ID=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "$DOCUMENT_ROOT/matomo-for-wordpress/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
     fi
 
     if ! wc_product_exists PROD_3; then
-      IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
+      IMAGE_ID=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "$DOCUMENT_ROOT/matomo-for-wordpress/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
     fi
 
     if ! wc_product_exists PROD_4; then
-      IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
+      IMAGE_ID=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "$DOCUMENT_ROOT/matomo-for-wordpress/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
     fi
 
     if ! wc_product_exists PROD_5; then
-      IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/matomo-for-wordpress/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
+      IMAGE_ID=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "$DOCUMENT_ROOT/matomo-for-wordpress/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
     fi
   fi
 
@@ -499,20 +501,20 @@ EOF
     WP_MAIL_SMTP_VERSION="--version=4.4.0"
   fi
 
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install --activate $WP_MAIL_SMTP_VERSION wp-mail-smtp
+  $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root plugin install --activate $WP_MAIL_SMTP_VERSION wp-mail-smtp
 
   # create WordPress app password for matomo API
-  if [[ ! -f /var/www/html/$WORDPRESS_FOLDER/apppassword ]]; then
-    if /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
+  if [[ ! -f $DOCUMENT_ROOT/$WORDPRESS_FOLDER/apppassword ]]; then
+    if $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
       echo "removing existing app password..."
 
-      APP_PASSWORD_UUID=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password list root --fields=name,uuid --format=csv | grep wp_rest | awk -F ',' '{ print $2 }')
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password delete root $APP_PASSWORD_UUID
+      APP_PASSWORD_UUID=$($DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password list root --fields=name,uuid --format=csv | grep wp_rest | awk -F ',' '{ print $2 }')
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password delete root $APP_PASSWORD_UUID
     fi
 
     echo "creating new app password..."
-    APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
-    echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
+    APP_PASSWORD=$($DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
+    echo $APP_PASSWORD > $DOCUMENT_ROOT/$WORDPRESS_FOLDER/apppassword
   fi
 
   # add some test pages and posts
@@ -521,7 +523,7 @@ EOF
   function wp_post_exists() {
     POST_TYPE="$1"
     POST_NAME="$2"
-    POST_COUNT=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post list --post_type="$POST_TYPE" | grep "$POST_NAME" | wc -l )
+    POST_COUNT=$( $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post list --post_type="$POST_TYPE" | grep "$POST_NAME" | wc -l )
     [ $POST_COUNT != "0" ]
   }
 
@@ -546,7 +548,7 @@ EOF
     fi
 
     if ! wp_post_exists "$POST_TYPE" "$POST_NAME"; then
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post create --post_type="$POST_TYPE" --post_name="$POST_NAME" --post_title="$POST_TITLE" --post_content="$POST_CONTENT" --post_status=publish
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER post create --post_type="$POST_TYPE" --post_name="$POST_NAME" --post_title="$POST_TITLE" --post_content="$POST_CONTENT" --post_status=publish
     fi
   }
 
@@ -565,8 +567,8 @@ EOF
     USERID="${1//_}user"
     USEREMAIL="${USERID}@nowhere.com"
 
-    if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user exists "$USERID"; then
-      /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user create "$USERID" "$USEREMAIL" --user_pass="$USERID" --role="$ROLE"
+    if ! $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user exists "$USERID"; then
+      $DOCUMENT_ROOT/wp-cli.phar --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user create "$USERID" "$USEREMAIL" --user_pass="$USERID" --role="$ROLE"
     fi
   }
 
@@ -599,7 +601,7 @@ EOF
   if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
     curl https://develop.svn.wordpress.org/$WORDPRESS_SVN_FOLDER/wp-tests-config-sample.php > "$WP_TESTS_DIR"/wp-tests-config.php
     # remove all forward slashes in the end
-    sed -i "s:dirname( __FILE__ ) . '/src/':'/var/www/html/$WORDPRESS_FOLDER/':" "$WP_TESTS_DIR"/wp-tests-config.php
+    sed -i "s:dirname( __FILE__ ) . '/src/':'$DOCUMENT_ROOT/$WORDPRESS_FOLDER/':" "$WP_TESTS_DIR"/wp-tests-config.php
     sed -i "s/youremptytestdbnamehere/${WP_DB_NAME}_test/" "$WP_TESTS_DIR"/wp-tests-config.php
     sed -i "s/yourusernamehere/root/" "$WP_TESTS_DIR"/wp-tests-config.php
     sed -i "s/yourpasswordhere/pass/" "$WP_TESTS_DIR"/wp-tests-config.php
@@ -615,6 +617,7 @@ define( 'WPMS_SMTP_AUTH', false );
 define( 'WPMS_SMTP_AUTOTLS', true );
 define( 'WPMS_SMTP_USER', '' );
 define( 'WPMS_SMTP_PASS', '' );
+
 EOF
   fi
 
@@ -625,21 +628,21 @@ EOF
   \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
   # install GeoLite2 for wp-statisitcs
-  if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb ]; then
+  if [ ! -f $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb ]; then
     echo "downloading GeoLite2-City.mmdb..."
 
-    mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics
-    curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
-    gunzip /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics
+    curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    gunzip $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
   fi
 
   # set allow_wp_app_password_auth tracker config, used in tests
   echo "set allow_wp_app_password_auth config..."
-  php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
+  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
   # add test-utility-plugin used in UI tests
-  mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins
-  cp /var/www/html/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
+  mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins
+  cp $DOCUMENT_ROOT/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
 
   FIlE_OWNER_USERID=$UID
   if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
@@ -648,33 +651,55 @@ EOF
 
   # make sure the files can be edited outside of docker (for easier debugging)
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
-  touch /var/www/html/$WORDPRESS_FOLDER/wp-content/debug.log /var/www/html/matomo.wpload_dir.php
-  mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp
-  chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
-  find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
-  find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-  chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/wp-content/debug.log" /var/www/html/matomo.wpload_dir.php
+  touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log $DOCUMENT_ROOT/matomo.wpload_dir.php
+  mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp
+  chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
+  chmod -R 0777 "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "$DOCUMENT_ROOT/index.php" "/usr/local/etc/php/conf.d" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log" $DOCUMENT_ROOT/matomo.wpload_dir.php
 
   echo "finish wordpress install (multisite = $MULTISITE)"
 }
 
 function start_webserver() {
-  a2enmod rewrite || true
+  # TODO: is it possible to use wp-cli for this?
+  # make sure home url points to 'localhost'
+  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+  \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
-  if ! which apache2-foreground &> /dev/null; then
-    # TODO: is it possible to use wp-cli for this?
-    # make sure home url points to 'nginx' service
-    php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-    \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'localhost\', \'nginx\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
+  if [ -f /usr/local/lsws/bin/lshttpd ]  &> /dev/null; then
+    mkdir -p /usr/local/lsws/logs
+    mkdir -p /tmp/lshttpd
 
+    chown 1000 /usr/local/lsws /tmp -R
+    chmod 777 /usr/local/lsws /tmp -R
+    chmod 600 /usr/local/lsws/admin/cgid/secret/cgid.sock
+
+    cp /serial.no /usr/local/lsws/conf/serial.no
+
+    cd /usr/local/lsws/conf
+    /usr/local/lsws/bin/lshttpd -r
+    cd "$DOCUMENT_ROOT"
+
+    /usr/local/lsws/bin/lswsctrl start
+    $@
+
+    echo "waiting for server start..."
+    while true; do
+      if /usr/local/lsws/bin/lswsctrl status | /usr/bin/grep 'litespeed is running with PID *' > /dev/null; then
+        break
+      fi
+      sleep 1
+    done
+
+    tail -f -n 50 /usr/local/lsws/logs/error.log /usr/local/lsws/logs/stderr.log
+  elif ! which apache2-foreground &> /dev/null; then
     php-fpm "$@"
   else
+    a2enmod rewrite || true
+
     # set port to exposed port so we can make server side requests to localhost
     sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
-
-    # make sure home url points to 'localhost'
-    php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-    \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
     usermod -u "${FIlE_OWNER_USERID:-1000}" www-data
     apache2-foreground "$@"
@@ -702,10 +727,10 @@ wait_for_database
 install_wordpress 0
 install_wordpress 1 -multi
 
-touch /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
-touch /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
-chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE/setup_finished || true
-chmod 777 /var/www/html/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
+touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE/setup_finished || true
+touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
+chmod 777 $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE/setup_finished || true
+chmod 777 $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true
 
 if [[ "$INSTALL_ONLY" != "1" ]]; then
   start_webserver "$@"

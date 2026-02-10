@@ -310,10 +310,12 @@ EOF;
 				[
 					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=' . $tracking_time . '&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=100&ip_nonce=REMOVED&bots=1',
 					[
-						'method'  => 'GET',
-						'headers' => [
+						'method'   => 'GET',
+						'headers'  => [
 							\WpMatomo\AjaxTracker::IP_ADDRESS_FORWARDING_HEADER => $ip,
+							'User-Agent' => false,
 						],
+						'blocking' => false,
 					],
 				],
 			],

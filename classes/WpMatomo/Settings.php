@@ -39,6 +39,8 @@ class Settings {
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
 	const GLOBAL_USER_AGENT_EXCLUSIONS         = 'global_user_agent_exclusions';
+	const TRACK_AI_BOTS                        = 'track_ai_bots';
+	const TRACK_AI_BOTS_USING_ESI              = 'track_ai_bots_using_esi';
 
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
@@ -86,6 +88,8 @@ class Settings {
 		'track_ecommerce'                          => true,
 		'track_search'                             => false,
 		'track_404'                                => false,
+		self::TRACK_AI_BOTS                        => false,
+		self::TRACK_AI_BOTS_USING_ESI              => false,
 		'tagmanger_container_ids'                  => [],
 		'add_post_annotations'                     => [],
 		'add_customvars_box'                       => false,
@@ -504,6 +508,14 @@ class Settings {
 		return (bool) $this->get_global_option( self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME );
 	}
 
+	public function is_ai_bot_tracking_enabled() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS );
+	}
+
+	public function is_tracking_ai_bots_via_esi_includes() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS_USING_ESI );
+	}
+
 	public function get_matomo_major_version() {
 		$core_version = $this->get_global_option( 'core_version' );
 		$core_version = isset( $core_version ) ? $core_version : '';
@@ -534,5 +546,9 @@ class Settings {
 			$user_agents = explode( ',', $user_agents );
 		}
 		return $user_agents;
+	}
+
+	public function is_track_via_esi_enabled() {
+		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
 	}
 }

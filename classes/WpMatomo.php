@@ -138,8 +138,12 @@ class WpMatomo {
 
 		$tracking_code = new TrackingCode( self::$settings );
 		$tracking_code->register_hooks();
+
 		$annotations = new Annotations( self::$settings );
 		$annotations->register_hooks();
+
+		$ai_bot_tracking = new \WpMatomo\AIBotTracking( self::$settings );
+		$ai_bot_tracking->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			new MatomoCommands();

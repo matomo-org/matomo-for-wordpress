@@ -21,7 +21,7 @@
 	</IfModule>
 </IfModule>
 </Files>
-<Files ~ "^((index|piwik|matomo)\.php)$">
+<Files ~ "^((index|piwik|matomo|track_ai_bot)\.php)$">
 <IfModule mod_version.c>
 	<IfVersion < 2.4>
         Order allow,deny

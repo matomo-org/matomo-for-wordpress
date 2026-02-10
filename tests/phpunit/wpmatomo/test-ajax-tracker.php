@@ -3,7 +3,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
 
@@ -34,13 +34,17 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 	private $old_referrer;
 
+	private $old_user_agent;
+
 	public function setUp(): void {
 		parent::setUp();
 
-		$_COOKIE            = [];
-		$this->blogid       = null;
-		$this->old_referrer = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : null;
+		$_COOKIE              = [];
+		$this->blogid         = null;
+		$this->old_referrer   = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : null;
+		$this->old_user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
 		unset( $_SERVER['HTTP_REFERER'] );
+		unset( $_SERVER['HTTP_USER_AGENT'] );
 
 		$this->manually_load_woocommerce();
 		$this->disable_woocommerce_cookies();
@@ -51,6 +55,10 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 	public function tearDown(): void {
 		if ( $this->old_referrer ) {
 			$_SERVER['HTTP_REFERER'] = $this->old_referrer;
+		}
+
+		if ( $this->old_user_agent ) {
+			$_SERVER['HTTP_USER_AGENT'] = $this->old_user_agent;
 		}
 
 		unset( $_SERVER['HTTP_SEC_PURPOSE'] );
@@ -74,6 +82,7 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $idblog );
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
 
 		$this->assertEmpty( $tracker->idSite );
 		$this->assertEmpty( $tracker->pageUrl );
@@ -83,26 +92,32 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$this->settings->set_global_option( 'track_api_endpoint', 'restapi' );
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 	}
 
 	public function test_construct_when_referrer_specified() {
-		$_SERVER['HTTP_REFERER'] = 'http://whatever.com/path';
+		$_SERVER['HTTP_REFERER'] = 'https://whatever.com/path';
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
-		$this->assertEquals( 'http://whatever.com/path', $tracker->pageUrl );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://whatever.com/path', $tracker->pageUrl );
 	}
 
 	public function test_construct_when_cookies_are_disabled() {
 		$this->settings->set_global_option( 'disable_cookies', true );
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertTrue( $tracker->configCookiesDisabled );
 	}
@@ -112,8 +127,10 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEquals( $visitor_id, $tracker->cookieVisitorId );
@@ -122,8 +139,10 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 	public function test_construct_when_cookies_are_enabled_and_cookie_doesnt_exist() {
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEmpty( $tracker->cookieVisitorId );
@@ -137,8 +156,10 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEquals( 1, $tracker->idSite );
-		$this->assertEquals( 'http://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
 		$this->assertEquals( false, $tracker->pageUrl );
 		$this->assertFalse( $tracker->configCookiesDisabled );
 		$this->assertEmpty( $tracker->cookieVisitorId );
@@ -159,6 +180,8 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
 
 		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
 		$this->assertEmpty( $tracker->cookieVisitorId );
 		$this->assertEmpty( $tracker->forcedVisitorId );
 	}
@@ -178,9 +201,11 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
 
 				$this->sent_requests[] = $url;
-				return null;
+				return [ 'body' => '' ];
 			}
 		};
+
+		$this->normalize_tracker_url();
 
 		if ( empty( $header_value ) ) { // test without sec-purpose
 			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
@@ -199,13 +224,13 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 			[
 				null,
 				[
-					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
 				],
 			],
 			[
 				'randomvalue',
 				[
-					'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
 				],
 			],
 
@@ -241,6 +266,8 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 		$tracker = new AjaxTracker( $this->settings );
 		$tracker->set_visitor_id_safe( $visitor_id );
+		$this->normalize_tracker_url();
+
 		$this->assertEmpty( $tracker->forcedVisitorId );
 	}
 
@@ -277,17 +304,21 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 	public function test_ajax_tracker_sends_correct_request_when_custom_ip_is_used() {
 		$tracker = $this->make_mock_tracker();
+		$this->normalize_tracker_url();
+
 		$tracker->setIp( '1.2.3.4' );
 		$tracker->doTrackPageView( 'test page' );
 
 		$expected_requests = [
 			[
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
+				'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
 				[
-					'method'  => 'GET',
-					'headers' => [
+					'method'   => 'GET',
+					'headers'  => [
 						'X-Matomo-Forwarded-Ip' => '1.2.3.4',
+						'User-Agent'            => '',
 					],
+					'blocking' => false,
 				],
 			],
 		];
@@ -301,5 +332,9 @@ class AjaxTrackerTest extends MatomoAnalytics_TestCase {
 
 	private function make_mock_tracker() {
 		return new TestAjaxTracker( $this->settings );
+	}
+
+	private function normalize_tracker_url() {
+		MatomoTracker::$URL = preg_replace( '/^http:/', 'https:', MatomoTracker::$URL );
 	}
 }

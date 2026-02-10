@@ -20,6 +20,7 @@ use WpMatomo\TrackingCode\TrackingCodeGenerator;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
+
 /**
  * TODO: maybe we can move the form data collection to a single class
  * Note: nonce verification exists, but phpcs can't tell since it's in a method
@@ -46,6 +47,68 @@ class TrackingSettings implements AdminSettingsInterface {
 	public function __construct( $settings ) {
 		$this->settings = $settings;
 		$this->add_hooks();
+	}
+
+	/**
+	 * Returns true if WordPress is configured to use the advanced-cache.php
+	 * file, and if such a file exists.
+	 *
+	 * @return bool
+	 */
+	public static function is_advanced_cache_used() {
+		return defined( 'WP_CACHE' )
+			&& WP_CACHE
+			&& is_file( WP_CONTENT_DIR . '/advanced-cache.php' );
+	}
+
+	/**
+	 * To track AI bots when the advanced-cache.php file is in use, a
+	 * special code snippet must be added to a user's wp-config.php.
+	 *
+	 * This function checks if the required snippet has been added to
+	 * this WordPress' wp-config.php file.
+	 *
+	 * @param string $abspath_override only used for tests.
+	 * @return bool|null true if the snippet is detected, false if it is not,
+	 *                   and null if the wp-config.php file cannot be read for
+	 *                   some reason
+	 */
+	public static function is_track_script_used_in_wp_config( $abspath_override = null ) {
+		$abspath_override = ! empty( $abspath_override ) ? $abspath_override : ABSPATH;
+
+		$wp_config_path = $abspath_override . '/wp-config.php';
+
+		if ( ! is_readable( $wp_config_path ) ) {
+			return null;
+		}
+
+		// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$wp_config_contents = @file_get_contents( $wp_config_path );
+
+		// some systems may disable reading of files outside of wp-content
+		if ( ! is_string( $wp_config_contents ) ) {
+			return null;
+		}
+
+		$is_track_ai_bot_script_used = preg_match( '/require_once.*?track_ai_bot\.php/', $wp_config_contents ) === 1;
+
+		return $is_track_ai_bot_script_used;
+	}
+
+	public static function is_htaccess_serving_cache_files() {
+		if ( ! is_file( ABSPATH . '/.htaccess' ) ) {
+			return false;
+		}
+
+		if ( ! function_exists( 'apache_get_modules' ) ) {
+			return false; // not using apache
+		}
+
+		$htaccess_contents     = file_get_contents( ABSPATH . '/.htaccess' );
+		$is_rewrite_rule_found = preg_match( '%RewriteRule.*?/wp-content/cache/%', $htaccess_contents ) === 1;
+
+		return $is_rewrite_rule_found;
 	}
 
 	public function get_title() {
@@ -79,6 +142,8 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_heartbeat',
 			'track_user_id',
 			'track_datacfasync',
+			Settings::TRACK_AI_BOTS,
+			Settings::TRACK_AI_BOTS_USING_ESI,
 			'tagmanger_container_ids',
 			'set_download_extensions',
 			'set_download_classes',
@@ -322,7 +387,6 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<a id="tagmanager-read-more-link" style="display:inline-block" href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
 
-		// /var/www/html/test/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -334,6 +398,17 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		$matomo_exclusion_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=exlusions' );
+
+		$matomo_is_advanced_cache_used            = self::is_advanced_cache_used();
+		$matomo_is_track_script_used_in_wp_config = self::is_track_script_used_in_wp_config();
+		$matomo_is_htaccess_serving_cache_files   = self::is_htaccess_serving_cache_files();
+
+		$matomo_is_track_ai_enabled      = $this->settings->is_ai_bot_tracking_enabled();
+		$matomo_is_track_via_esi_enabled = $this->settings->is_track_via_esi_enabled();
+
+		$matomo_is_using_litespeed          = $this->is_using_litespeed_web_server();
+		$matomo_is_using_litespeed_cache    = $this->is_using_litespeed_cache_plugin();
+		$matomo_is_esi_enabled_in_litespeed = $this->is_litespeed_esi_enabled_in_webserver();
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
@@ -451,5 +526,19 @@ class TrackingSettings implements AdminSettingsInterface {
 		$tracking_code = $generator->prepare_tracking_code( $idsite );
 
 		wp_send_json( $tracking_code );
+	}
+
+	public function is_using_litespeed_web_server() {
+		return php_sapi_name() === 'litespeed';
+	}
+
+	public function is_using_litespeed_cache_plugin() {
+		return is_plugin_active( 'litespeed-cache/litespeed-cache.php' );
+	}
+
+	private function is_litespeed_esi_enabled_in_webserver() {
+		// see https://docs.litespeedtech.com/lscache/lscwp/api/#get-esi-enable-status
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return (bool) apply_filters( 'litespeed_esi_status', false );
 	}
 }

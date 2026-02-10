@@ -107,25 +107,27 @@ class AjaxTracker extends \MatomoTracker {
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
 		if ( ! $this->idSite ) {
 			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
-			return null; // not installed or synced yet
+			return ''; // not installed or synced yet
 		}
 
 		if ( $this->is_prerender() ) {
 			// do not track if for some reason we are prerendering
-			return null;
+			return '';
 		}
 
-		$args = array(
-			'method' => $method,
-		);
+		$args = [
+			'method'   => $method,
+			'headers'  => [
+				'User-Agent' => $this->userAgent,
+			],
+			'blocking' => false,
+		];
 		if ( ! empty( $data ) ) {
 			$args['body'] = $data;
 		}
 
 		if ( ! empty( $this->ip ) ) {
-			$args['headers'] = [
-				self::IP_ADDRESS_FORWARDING_HEADER => $this->ip,
-			];
+			$args['headers'][self::IP_ADDRESS_FORWARDING_HEADER] = $this->ip;
 
 			$ip_nonce = wp_create_nonce( self::IP_ADDRESS_FORWARDING_NONCE_NAME );
 			$url      = $url . '&ip_nonce=' . rawurlencode( $ip_nonce );
@@ -138,13 +140,19 @@ class AjaxTracker extends \MatomoTracker {
 
 		$url = $url . '&bots=1';
 
-		$response = $this->wp_remote_request( $url, $args );
-
-		if (is_wp_error($response)) {
-			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
+		try {
+			$response = $this->wp_remote_request( $url, $args );
+		} catch ( \Exception $ex ) {
+			$this->logger->log_exception( 'ajax_tracker', $ex );
+			return '';
 		}
 
-		return $response;
+		if ( is_wp_error( $response ) ) {
+			$this->logger->log_exception( 'ajax_tracker', new \Exception( $response->get_error_message() ) );
+			return '';
+		}
+
+		return $response['body'];
 	}
 
 	private function is_invalid_visitor_id_error( \Exception $ex ) {
@@ -216,5 +224,9 @@ class AjaxTracker extends \MatomoTracker {
 		$proxy_client_headers[] = self::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME;
 
 		$config->General['proxy_client_headers'] = $proxy_client_headers;
+	}
+
+	public static function getCurrentUrl(): string {
+		return parent::getCurrentUrl();
 	}
 }
