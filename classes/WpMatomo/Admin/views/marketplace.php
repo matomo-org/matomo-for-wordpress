@@ -182,7 +182,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 										?>
 										<span
 											class="dashicons dashicons-cart"
-											<?php if ( version_compare( wp_get_wp_version(), '7', '<' ) ) { ?>
+											<?php if ( ! function_exists( 'wp_get_wp_version' ) || version_compare( wp_get_wp_version(), '7', '<' ) ) { ?>
 												style="vertical-align: middle;"
 											<?php } ?>
 										></span>
