@@ -969,6 +969,32 @@ class SystemReport {
 					];
 				}
 			}
+
+			// check that AI tracking script is accessible
+			if ( $this->settings->is_ai_bot_tracking_enabled() ) {
+				$track_ai_url = plugins_url( 'misc/track_ai_bot.php', MATOMO_ANALYTICS_FILE );
+
+				$result = wp_remote_post(
+					$track_ai_url . '?mtm_check=1',
+					array(
+						'method'    => 'GET',
+						'sslverify' => false,
+						'timeout'   => 2,
+					)
+				);
+
+				if ( is_array( $result ) ) {
+					$response_code = (int) $result['response']['code'];
+					if ( 201 !== $response_code ) {
+						$rows[] = [
+							'name'       => __( 'Standalone AI bot tracking script is not accessible. ', 'matomo' ),
+							'value'      => 'warning',
+							'comment'    => sprintf( __( 'The tracking script located at %s is not accessible from the internet. Your web server configuration should be changed to allow direct HTTP requests to this script. You may need to contact your hosting provider to fix this.', 'matomo' ), $track_ai_url ),
+							'is_warning' => true,
+						];
+					}
+				}
+			}
 		}
 
 		$rows[] = [
