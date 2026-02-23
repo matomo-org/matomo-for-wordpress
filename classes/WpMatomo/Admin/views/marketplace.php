@@ -180,7 +180,12 @@ $matomo_extra_url_params = '&' . http_build_query(
 										esc_html_e( 'Download', 'matomo' );
 									} else {
 										?>
-										<span class="dashicons dashicons-cart" style="vertical-align: middle;"></span>
+										<span
+											class="dashicons dashicons-cart"
+											<?php if ( ! function_exists( 'wp_get_wp_version' ) || version_compare( wp_get_wp_version(), '7', '<' ) ) { ?>
+												style="vertical-align: middle;"
+											<?php } ?>
+										></span>
 										<?php
 										esc_html_e( 'Start free trial...', 'matomo' );
 									}
