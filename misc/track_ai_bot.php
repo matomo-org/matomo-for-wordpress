@@ -103,4 +103,9 @@ function matomo_track_if_ai_bot() {
 	$ai_bot_tracking->do_ai_bot_tracking( $url );
 }
 
+if ( ! empty( $_GET['mtm_check'] ) ) {
+	http_response_code( 201 );
+	die;
+}
+
 register_shutdown_function( 'matomo_track_if_ai_bot' );
