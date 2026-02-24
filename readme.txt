@@ -1,6 +1,6 @@
 === Matomo Analytics - Ethical Stats. Powerful Insights. ===
 Contributors: matomoteam
-Tags: matomo,analytics,statistics,stats,ecommerce
+Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
 Tested up to: 6.9.1
 Stable tag: 5.6.1
