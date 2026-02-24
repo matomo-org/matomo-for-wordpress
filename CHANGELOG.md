@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.7.0 =
+* Update Matomo core to 5.7.1.
+* Change left menu icon and menu item positioning.
+* New feature: server side tracking of AI bots.
+* Bug fix: check that order in query parameters matches current order before tracking an order.
+
 = 5.6.1 =
 * Update Matomo core to 5.6.2.
 * Bug fix: only execute geolocation database update if internet features are enabled. (Add `[General] enable_internet_features=0` to the /path/to/wordpress/wp-content/uploads/matomo/config/config.ini.php file to disable internet features.)
