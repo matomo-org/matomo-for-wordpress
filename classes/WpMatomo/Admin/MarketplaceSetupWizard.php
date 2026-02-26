@@ -43,7 +43,7 @@ class MarketplaceSetupWizard {
 			'matomo-marketplace-setup-wizard',
 			plugins_url( '/assets/js/marketplace_setup_wizard.js', MATOMO_ANALYTICS_FILE ),
 			[ 'jquery' ],
-			'1.0.0',
+			\WpMatomo::VERSION,
 			true
 		);
 

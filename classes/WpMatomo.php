@@ -41,6 +41,8 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
+	const VERSION = '5.7.0';
+
 	/**
 	 * @var Settings
 	 */
