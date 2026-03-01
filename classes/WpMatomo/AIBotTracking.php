@@ -65,8 +65,7 @@ class AIBotTracking {
 	 */
 	public function __construct( $settings, $tracker = null ) {
 		$this->settings = $settings;
-		$this->tracker  = isset( $tracker ) ? $tracker : new AjaxTracker( $settings );
-		$this->tracker->setRequestTimeout( 1 );
+		$this->tracker  = $tracker;
 	}
 
 	public function register_hooks() {
@@ -128,10 +127,11 @@ class AIBotTracking {
 			$url = AjaxTracker::getCurrentUrl();
 		}
 
-		$this->tracker->setUrl( $url );
+		$tracker = $this->get_tracker();
+		$tracker->setUrl( $url );
 
 		// cannot count bytes echo'd so no response size tracked
-		$this->tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
+		$tracker->doTrackPageViewIfAIBot( $response_code, null, $request_elapsed_ms, $source );
 	}
 
 	public function should_track_current_page() {
@@ -203,7 +203,10 @@ class AIBotTracking {
 			return false;
 		}
 
-		if ( ! AjaxTracker::isUserAgentAIBot( $this->tracker->userAgent ) ) {
+		$tracker = $this->get_tracker();
+
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		if ( ! AjaxTracker::isUserAgentAIBot( $tracker->userAgent ) ) {
 			return false;
 		}
 
@@ -215,5 +218,14 @@ class AIBotTracking {
 		}
 
 		return true;
+	}
+
+	private function get_tracker() {
+		if ( empty( $this->tracker ) ) {
+			$this->tracker = new AjaxTracker( $this->settings );
+			$this->tracker->setRequestTimeout( 1 );
+		}
+
+		return $this->tracker;
 	}
 }
