@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test release.
  *
@@ -302,6 +303,11 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$tested_up_to_version = $matches[1];
 
 		$this->assertTrue( $this->compare_version( $latest_version, $tested_up_to_version ), "Tested up to version ($tested_up_to_version) does not match latest version ($latest_version)." );
+	}
+
+	public function test_version_constant_matches_readme_txt() {
+		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE );
+		$this->assertEquals( $plugin_data['Version'], WpMatomo::VERSION );
 	}
 
 	private function get_zip_file_contents( $path_to_zip ) {
