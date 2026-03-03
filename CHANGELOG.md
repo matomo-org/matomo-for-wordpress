@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.7.1 =
+* Bug fix: avoid error in AI bot tracking feature when REST API tracking endpoint is used.
+* Tie asset cache busters to plugin version.
+
 = 5.7.0 =
 * Update Matomo core to 5.7.1.
 * Change left menu icon and menu item positioning.
