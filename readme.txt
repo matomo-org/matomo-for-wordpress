@@ -1,4 +1,4 @@
-=== Matomo Analytics - Ethical Stats. Powerful Insights. ===
+=== Matomo Analytics - Powerful, Privacy-First Insights for WordPress ===
 Contributors: matomoteam
 Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
