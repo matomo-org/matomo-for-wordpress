@@ -54,8 +54,8 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		ob_end_clean();
 
 		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $this->settings->get_global_option( 'track_mode' ) );
-		// still show the get started page
-		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
+		// do not show the get started page
+		$this->assertEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 	}
 
 	public function test_show_settings_does_not_change_any_values_when_not_correct_value() {

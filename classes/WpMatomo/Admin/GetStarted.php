@@ -60,6 +60,12 @@ class GetStarted {
 				 && TrackingSettings::TRACK_MODE_DEFAULT === $_POST[ self::FORM_NAME ]['track_mode'] ) {
 				$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
 
+				$this->settings->apply_changes(
+					[
+						Settings::SHOW_GET_STARTED_PAGE => 0,
+					]
+				);
+
 				return true;
 			}
 		}
