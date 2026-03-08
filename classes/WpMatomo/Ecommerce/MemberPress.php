@@ -96,43 +96,51 @@ class MemberPress extends Base {
 				}
 			}
 
-			if ( $txn && isset( $txn->id ) && $txn->id > 0 ) {
-				if ( $this->has_order_been_tracked_already( $txn->id ) ) {
-					return;
-				}
-				$this->set_order_been_tracked( $txn->id );
-				$transaction       = new MeprTransaction( $txn->id );
-				$order_id_to_track = $txn->trans_num;
-				$product           = $transaction->product();
-
-				$discount = 0;
-
-				if ( $product && $transaction->coupon() ) {
-					$discount = $product->price - $txn->amount;
-				}
-				$tracking_code  = '';
-				$params         = [
-					'addEcommerceItem',
-					'' . $product->ID,
-					$product->post_title,
-					[],
-					$txn->amount,
-					1,
-				];
-				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-				$params         = [
-					'trackEcommerceOrder',
-					'' . $order_id_to_track,
-					$txn->total,
-					$txn->amount,
-					$txn->tax_amount,
-					$shipping = 0,
-					$discount,
-				];
-				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $this->wrap_script( $tracking_code );
+			if ( ! $txn || ! isset( $txn->id ) || $txn->id <= 0 ) {
+				return;
 			}
+
+			$user = $txn->user();
+			if ( ! $user || ! $user->ID || get_current_user_id() !== $user->ID ) {
+				return; // TODO: add debug logging here
+			}
+
+			if ( $this->has_order_been_tracked_already( $txn->id ) ) {
+				return;
+			}
+
+			$this->set_order_been_tracked( $txn->id );
+			$transaction       = new MeprTransaction( $txn->id );
+			$order_id_to_track = $txn->trans_num;
+			$product           = $transaction->product();
+
+			$discount = 0;
+
+			if ( $product && $transaction->coupon() ) {
+				$discount = $product->price - $txn->amount;
+			}
+			$tracking_code  = '';
+			$params         = [
+				'addEcommerceItem',
+				'' . $product->ID,
+				$product->post_title,
+				[],
+				$txn->amount,
+				1,
+			];
+			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
+			$params         = [
+				'trackEcommerceOrder',
+				'' . $order_id_to_track,
+				$txn->total,
+				$txn->amount,
+				$txn->tax_amount,
+				$shipping = 0,
+				$discount,
+			];
+			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->wrap_script( $tracking_code );
 		}
 	}
 }
