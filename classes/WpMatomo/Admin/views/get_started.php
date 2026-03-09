@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $can_user_edit */
 /** @var bool $was_updated */
 /** @var bool $show_this_page */
-/** @var MarketplaceSetupWizardBody $marketplace_setup_wizard_body */
+/** @var MarketplaceSetupWizardBody $matomo_marketplace_setup_wizard_body */
 /** @var bool $matomo_is_marketplace_active */
 
 if ( empty( $show_this_page ) ) {
@@ -112,18 +112,6 @@ if ( empty( $show_this_page ) ) {
 		<p><?php esc_html_e( 'Tracking should be working now and you don\'t have to do anything else to set up tracking.', 'matomo' ); ?>
 			<a href="<?php echo esc_url( AdminSettings::make_url( AdminSettings::TAB_TRACKING ) ); ?>"><?php esc_html_e( 'Click here to optionally configure the tracking code to your liking (not required).', 'matomo' ); ?></a>
 		</p>
-
-		<!-- TODO: remove all
-		<h2>3. <?php esc_html_e( 'Done', 'matomo' ); ?></h2>
-
-		<form method="post">
-			<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
-			<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[show_get_started_page]"
-				   value="no">
-			<input type="submit" class="button-primary"
-				   value="<?php esc_html_e( 'Hide this page', 'matomo' ); ?>">
-		</form>
-		-->
 	<?php } else { ?>
 		<h2>2. <?php esc_html_e( 'Enable tracking', 'matomo' ); ?></h2>
 
@@ -145,7 +133,7 @@ if ( empty( $show_this_page ) ) {
 	</h2>
 
 	<div style="max-width: 700px;">
-		<?php $marketplace_setup_wizard_body->show(); ?>
+		<?php $matomo_marketplace_setup_wizard_body->show(); ?>
 	</div>
 
 	<p>

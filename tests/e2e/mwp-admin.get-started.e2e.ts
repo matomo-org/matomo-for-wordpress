@@ -19,6 +19,12 @@ describe('MWP Admin > Get Started', () => {
     }
 
     await Website.login();
+
+    // TODO: disable tracking
+  });
+
+  after(async () => {
+    // TODO: re-enable tracking
   });
 
   it('should load the page correctly', async () => {

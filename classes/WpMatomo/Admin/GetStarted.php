@@ -69,8 +69,8 @@ class GetStarted {
 		$show_this_page               = $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE );
 		$matomo_is_marketplace_active = $this->is_marketplace_installed_and_active();
 
-		$marketplace_setup_wizard      = new MarketplaceSetupWizard();
-		$marketplace_setup_wizard_body = $marketplace_setup_wizard->get_body( false );
+		$matomo_marketplace_setup_wizard      = new MarketplaceSetupWizard();
+		$matomo_marketplace_setup_wizard_body = $matomo_marketplace_setup_wizard->get_body( false );
 
 		include dirname( __FILE__ ) . '/views/get_started.php';
 	}
