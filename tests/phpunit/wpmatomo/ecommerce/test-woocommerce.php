@@ -220,8 +220,8 @@ EOF;
 
 		$this->assertEquals(
 			[
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&cid=0123456789abcdef&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
 			],
 			$captured_urls
 		);
@@ -266,9 +266,9 @@ EOF;
 		$this->assertEquals(
 			[
 				// ecommerce cart tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ip_nonce=REMOVED&bots=1',
 				// ecommerce order tracking request
-				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24&ec_st=24&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
+				'http://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&cdt=REMOVED&_id=REMOVED&url=&urlref=&idgoal=0&revenue=24.00&ec_st=24.00&ec_items=%5B%5B%2210%22%2C%22a+tiny+hat%22%2C%5B%22Uncategorized%22%5D%2C%2212%22%2C2%5D%5D&ec_id=11&ip_nonce=REMOVED&bots=1',
 			],
 			$captured_urls
 		);
