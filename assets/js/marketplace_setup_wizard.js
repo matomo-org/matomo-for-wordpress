@@ -39,7 +39,7 @@ window.jQuery(document).ready(function ($) {
   }
 
   if (typeof mtmMarketplaceWizardAjax !== 'undefined' && mtmMarketplaceWizardAjax.ajax_url) {
-    $('.matomo-marketplace-wizard .open-plugin-upload').on('click', pollForPluginActivation);
-    $('.matomo-marketplace-wizard .activate-plugin').on('click', activateMarketplace);
+    $('.matomo-marketplace-wizard-body .open-plugin-upload').on('click', pollForPluginActivation);
+    $('.matomo-marketplace-wizard-body .activate-plugin').on('click', activateMarketplace);
   }
 });
