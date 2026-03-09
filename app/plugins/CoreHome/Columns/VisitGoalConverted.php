@@ -37,8 +37,6 @@ class VisitGoalConverted extends VisitDimension
         $metricsList->addMetric($metric);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -47,8 +45,6 @@ class VisitGoalConverted extends VisitDimension
         return 0;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

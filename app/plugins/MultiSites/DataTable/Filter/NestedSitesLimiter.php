@@ -107,9 +107,6 @@ class NestedSitesLimiter extends BaseFilter
             $this->rows[] = $row;
         }
     }
-    /**
-     * @param null|Row $lastGroupFromPreviousPage
-     */
     private function prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows(?Row $lastGroupFromPreviousPage) : void
     {
         if ($lastGroupFromPreviousPage && !empty($this->rows)) {

@@ -78,7 +78,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     public function handleProfileAction($action, &$profile)
     {
-        if ($action['type'] != 'goal') {
+        if (empty($action['type']) || $action['type'] != 'goal') {
             return;
         }
         $idGoal = $action['goalId'];

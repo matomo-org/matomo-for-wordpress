@@ -239,4 +239,8 @@ $tokenAuth)
         }
         return $login;
     }
+    public function deactivate()
+    {
+        Session::destroyAllSessions();
+    }
 }

@@ -159,9 +159,6 @@ class DataComparisonFilter
     {
         return !empty(Common::getRequestVar('compareSegments', [], $type = 'array', $request)) || !empty(Common::getRequestVar('comparePeriods', [], $type = 'array', $request)) || !empty(Common::getRequestVar('compareDates', [], $type = 'array', $request));
     }
-    /**
-     * @param DataTable\DataTableInterface $table
-     */
     public function compare(DataTable\DataTableInterface $table)
     {
         if (empty($this->compareSegments) && empty($this->comparePeriods)) {
@@ -476,7 +473,6 @@ class DataComparisonFilter
      *
      * @see \Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines::render()
      *
-     * @return bool
      * @throws \Exception
      */
     private function shouldIncludeTrendValues() : bool

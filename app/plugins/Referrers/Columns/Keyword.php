@@ -23,8 +23,6 @@ class Keyword extends \Piwik\Plugins\Referrers\Columns\Base
     protected $type = self::TYPE_TEXT;
     protected $category = 'Referrers_Referrers';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -42,8 +40,6 @@ class Keyword extends \Piwik\Plugins\Referrers\Columns\Base
         return \false;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -19,10 +19,7 @@ class RevenueTax extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'General_Tax';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      */

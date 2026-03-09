@@ -24,8 +24,6 @@ class VisitorSecondsSinceOrder extends VisitDimension
     // todo put into ecommerce category?
     protected $type = self::TYPE_NUMBER;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -61,8 +59,6 @@ class VisitorSecondsSinceOrder extends VisitDimension
         return $secondsSinceLastOrder;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

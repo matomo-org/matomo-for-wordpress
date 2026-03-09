@@ -44,8 +44,6 @@ abstract class ActionDimension extends Dimension
      * "onNewAction" the value will be probably overwritten by the other event. So make sure to implement only one of
      * those.
      *
-     * @param Request $request
-     * @param Action $action
      *
      * @return false|mixed
      * @api
@@ -68,9 +66,6 @@ abstract class ActionDimension extends Dimension
      * looked up action so it makes usually no sense to implement both methods but it sometimes does. You can assign
      * any value to the column or return boolan false in case you do not want to save any value.
      *
-     * @param Request $request
-     * @param Visitor $visitor
-     * @param Action $action
      *
      * @return mixed|false
      * @api
@@ -102,7 +97,6 @@ abstract class ActionDimension extends Dimension
     }
     /**
      * Get all action dimensions that are defined by the given plugin.
-     * @param Plugin $plugin
      * @return ActionDimension[]
      * @ignore
      */

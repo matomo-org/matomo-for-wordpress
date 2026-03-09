@@ -243,8 +243,6 @@ class Formatter
         return '/^' . implode('|', $metricsRegexParts) . '$/';
     }
     /**
-     * @param DataTable $dataTable
-     * @param Report $report
      * @return Metric[]
      */
     private function getMetricsToFormat(DataTable $dataTable, ?Report $report = null)

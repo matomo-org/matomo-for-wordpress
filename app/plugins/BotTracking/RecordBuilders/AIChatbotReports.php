@@ -24,12 +24,12 @@ use Piwik\Plugins\BotTracking\Metrics;
 use Piwik\RankingQuery;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
-class AIAssistantReports extends RecordBuilder
+class AIChatbotReports extends RecordBuilder
 {
     /**
      * @var array<string, string>
      */
-    private const ASSISTANT_MAPPING = ['ChatGPT-User' => 'ChatGPT', 'MistralAI-User' => 'Le Chat', 'Gemini-Deep-Research' => 'Gemini', 'Claude-User' => 'Claude', 'Perplexity-User' => 'Perplexity', 'Google-NotebookLM' => 'NotebookLM', 'Devin' => ''];
+    public const CHATBOT_MAPPING = ['ChatGPT-User' => 'ChatGPT', 'MistralAI-User' => 'Le Chat', 'Gemini-Deep-Research' => 'Gemini', 'Claude-User' => 'Claude', 'Perplexity-User' => 'Perplexity', 'Google-NotebookLM' => 'NotebookLM'];
     /**
      * @var int
      */
@@ -41,11 +41,11 @@ class AIAssistantReports extends RecordBuilder
         $this->maxRowsInTable = (int) GeneralConfig::getConfigValue('datatable_archiving_maximum_rows_bots');
         $this->maxRowsInSubtable = (int) GeneralConfig::getConfigValue('datatable_archiving_maximum_rows_subtable_bots');
         $this->rankingQueryLimit = $this->getRankingQueryLimit();
-        $this->columnAggregationOps = [Metrics::METRIC_AI_ASSISTANTS_UNIQUE_PAGE_URLS => 'skip', Metrics::METRIC_AI_ASSISTANTS_UNIQUE_DOCUMENT_URLS => 'skip'];
+        $this->columnAggregationOps = [Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS => 'skip', Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS => 'skip'];
     }
     public function getRecordMetadata(ArchiveProcessor $archiveProcessor) : array
     {
-        return [Record::make(Record::TYPE_BLOB, Archiver::AI_ASSISTANTS_PAGES_RECORD), Record::make(Record::TYPE_BLOB, Archiver::AI_ASSISTANTS_DOCUMENTS_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_UNIQUE_ASSISTANTS)->setIsCountOfBlobRecordRows(Archiver::AI_ASSISTANTS_PAGES_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_ACQUIRED_VISITS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_UNIQUE_PAGE_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_UNIQUE_DOCUMENT_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_NOT_FOUND_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_ASSISTANTS_SERVER_ERROR_REQUESTS)];
+        return [Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_PAGES_RECORD), Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_DOCUMENTS_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_CHATBOTS)->setIsCountOfBlobRecordRows(Archiver::AI_CHATBOTS_PAGES_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS)];
     }
     public function isEnabled(ArchiveProcessor $archiveProcessor) : bool
     {
@@ -54,7 +54,7 @@ class AIAssistantReports extends RecordBuilder
     }
     protected function aggregate(ArchiveProcessor $archiveProcessor) : array
     {
-        $tables = [Archiver::AI_ASSISTANTS_PAGES_RECORD => new DataTable(), Archiver::AI_ASSISTANTS_DOCUMENTS_RECORD => new DataTable()];
+        $tables = [Archiver::AI_CHATBOTS_PAGES_RECORD => new DataTable(), Archiver::AI_CHATBOTS_DOCUMENTS_RECORD => new DataTable()];
         $this->populateTables($archiveProcessor, $tables);
         $this->populateNumerics($archiveProcessor, $tables);
         return $tables;
@@ -65,14 +65,14 @@ class AIAssistantReports extends RecordBuilder
     private function populateTables(ArchiveProcessor $archiveProcessor, array &$tables) : void
     {
         $logAggregator = $archiveProcessor->getLogAggregator();
-        $visits = $this->queryAcquiredVisitsByAIAssistant($logAggregator);
-        $this->populateAssistantTableForActionType($tables, Action::TYPE_PAGE_URL, $logAggregator, $visits);
-        $this->populateAssistantTableForActionType($tables, Action::TYPE_DOWNLOAD, $logAggregator, $visits);
+        $visits = $this->queryAcquiredVisitsByAIChatbot($logAggregator);
+        $this->populateChatbotTableForActionType($tables, Action::TYPE_PAGE_URL, $logAggregator, $visits);
+        $this->populateChatbotTableForActionType($tables, Action::TYPE_DOWNLOAD, $logAggregator, $visits);
     }
     /**
      * @return array<string,int>
      */
-    private function queryAcquiredVisitsByAIAssistant(LogAggregator $logAggregator) : array
+    private function queryAcquiredVisitsByAIChatbot(LogAggregator $logAggregator) : array
     {
         $where = $logAggregator->getWhereStatement('log_visit', 'visit_last_action_time');
         $bindBase = $logAggregator->getGeneralQueryBindParams();
@@ -83,8 +83,8 @@ class AIAssistantReports extends RecordBuilder
             /**
              * @var array{visits: string|int, referer_name: string} $row
              */
-            if (in_array($row['referer_name'], self::ASSISTANT_MAPPING)) {
-                $key = (string) array_search($row['referer_name'], self::ASSISTANT_MAPPING);
+            if (in_array($row['referer_name'], self::CHATBOT_MAPPING)) {
+                $key = (string) array_search($row['referer_name'], self::CHATBOT_MAPPING);
                 $result[$key] = (int) $row['visits'];
             }
         }
@@ -93,9 +93,8 @@ class AIAssistantReports extends RecordBuilder
     /**
      * @param array<string, DataTable> $tables
      * @param array<string, int> $visits
-     * @return void
      */
-    private function populateAssistantTableForActionType(array $tables, int $actionType, LogAggregator $logAggregator, array $visits) : void
+    private function populateChatbotTableForActionType(array $tables, int $actionType, LogAggregator $logAggregator, array $visits) : void
     {
         $resultSet = $this->queryBotRequests($logAggregator, $actionType);
         while ($row = $resultSet->fetch()) {
@@ -111,13 +110,13 @@ class AIAssistantReports extends RecordBuilder
             if ($url === null) {
                 // second-level rollup result
                 $metrics = [Metrics::COLUMN_REQUESTS => $row['requests'], Metrics::COLUMN_DOCUMENT_REQUESTS => $actionType === Action::TYPE_DOWNLOAD ? $row['requests'] : 0, Metrics::COLUMN_PAGE_REQUESTS => $actionType === Action::TYPE_PAGE_URL ? $row['requests'] : 0, Metrics::COLUMN_ACQUIRED_VISITS => $visits[$label] ?? 0];
-                $tables[Archiver::AI_ASSISTANTS_PAGES_RECORD]->sumRowWithLabel($label, $metrics, [Metrics::COLUMN_ACQUIRED_VISITS => 'max']);
-                $tables[Archiver::AI_ASSISTANTS_DOCUMENTS_RECORD]->sumRowWithLabel($label, $metrics, [Metrics::COLUMN_ACQUIRED_VISITS => 'max']);
+                $tables[Archiver::AI_CHATBOTS_PAGES_RECORD]->sumRowWithLabel($label, $metrics, [Metrics::COLUMN_ACQUIRED_VISITS => 'max']);
+                $tables[Archiver::AI_CHATBOTS_DOCUMENTS_RECORD]->sumRowWithLabel($label, $metrics, [Metrics::COLUMN_ACQUIRED_VISITS => 'max']);
                 continue;
             }
-            $table = $tables[Archiver::AI_ASSISTANTS_PAGES_RECORD];
+            $table = $tables[Archiver::AI_CHATBOTS_PAGES_RECORD];
             if ($actionType === Action::TYPE_DOWNLOAD) {
-                $table = $tables[Archiver::AI_ASSISTANTS_DOCUMENTS_RECORD];
+                $table = $tables[Archiver::AI_CHATBOTS_DOCUMENTS_RECORD];
             }
             $tableRow = $table->getRowFromLabel($label);
             if (\false === $tableRow) {
@@ -146,7 +145,7 @@ class AIAssistantReports extends RecordBuilder
             $rankingQuery->addColumn('requests', 'sum');
             $sql = $rankingQuery->generateRankingQuery($sql, \true);
         }
-        return Db::query($sql, array_merge([BotDetector::BOT_TYPE_AI_ASSISTANT], $logAggregator->getGeneralQueryBindParams()));
+        return Db::query($sql, array_merge([BotDetector::BOT_TYPE_AI_CHATBOT], $logAggregator->getGeneralQueryBindParams()));
     }
     private function getRankingQueryLimit() : int
     {
@@ -181,7 +180,7 @@ FROM `{$table}` AS bot
 LEFT JOIN `{$actionTable}` AS log_action ON log_action.idaction = bot.idaction_url
 WHERE bot.bot_type = ? AND {$where}
 SQL;
-        $bind = [Action::TYPE_PAGE_URL, Action::TYPE_DOWNLOAD, BotDetector::BOT_TYPE_AI_ASSISTANT];
+        $bind = [Action::TYPE_PAGE_URL, Action::TYPE_DOWNLOAD, BotDetector::BOT_TYPE_AI_CHATBOT];
         $bind = array_merge($bind, $logAggregator->getGeneralQueryBindParams());
         $row = Db::fetchRow($sql, $bind) ?: [];
         $visitBind = [Common::REFERRER_TYPE_AI_ASSISTANT];
@@ -189,12 +188,12 @@ SQL;
         $where = $logAggregator->getWhereStatement('log_visit', 'visit_last_action_time');
         $visitsSql = sprintf("SELECT COUNT(*) FROM `%s` log_visit WHERE referer_type = ? AND {$where}", $visitTable);
         $acquiredVisits = (int) Db::fetchOne($visitsSql, $visitBind);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_UNIQUE_ASSISTANTS] = (int) ($row['uniq_bots'] ?? 0);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_UNIQUE_PAGE_URLS] = (int) ($row['uniq_pages'] ?? 0);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_UNIQUE_DOCUMENT_URLS] = (int) ($row['uniq_downloads'] ?? 0);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_REQUESTS] = (int) ($row['requests'] ?? 0);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_ACQUIRED_VISITS] = $acquiredVisits;
-        $tables[Metrics::METRIC_AI_ASSISTANTS_NOT_FOUND_REQUESTS] = (int) ($row['not_found_requests'] ?? 0);
-        $tables[Metrics::METRIC_AI_ASSISTANTS_SERVER_ERROR_REQUESTS] = (int) ($row['server_error_requests'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_UNIQUE_CHATBOTS] = (int) ($row['uniq_bots'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS] = (int) ($row['uniq_pages'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS] = (int) ($row['uniq_downloads'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_REQUESTS] = (int) ($row['requests'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS] = $acquiredVisits;
+        $tables[Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS] = (int) ($row['not_found_requests'] ?? 0);
+        $tables[Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS] = (int) ($row['server_error_requests'] ?? 0);
     }
 }

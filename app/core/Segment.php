@@ -159,9 +159,7 @@ class Segment
     /**
      * Checks if the provided segmentCondition is valid and available for the given idSites
      *
-     * @param string $segmentCondition
      * @params array $idSites
-     * @return bool
      * @api since Matomo 5.3.0
      */
     public static function isAvailable(string $segmentCondition, array $idSites) : bool
@@ -486,7 +484,7 @@ class Segment
      *                           A $groupBy value needs to be set for this to work.
      * @param int If set to value >= 1 then the Select query (and All inner queries) will be LIMIT'ed by this value.
      *              Use only when you're not aggregating or it will sample the data.
-     * @return array The entire select query.
+     * @return array{sql: string, bind: array<scalar>} The entire select query.
      */
     public function getSelectQuery($select, $from, $where = \false, $bind = array(), $orderBy = \false, $groupBy = \false, $limit = 0, $offset = 0, $forceGroupBy = \false, bool $withRollup = \false)
     {

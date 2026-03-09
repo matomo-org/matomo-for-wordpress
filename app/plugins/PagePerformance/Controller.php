@@ -11,6 +11,7 @@ namespace Piwik\Plugins\PagePerformance;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\DataTable;
+use Piwik\Exception\InvalidRequestParameterException;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\Controller as PluginController;
@@ -34,6 +35,15 @@ class Controller extends PluginController
         }
         return $view->render();
     }
+    private function validateApiMethod(string $method) : void
+    {
+        $validApis = array_map(function ($method) {
+            return 'Actions.' . $method;
+        }, \Piwik\Plugins\PagePerformance\PagePerformance::$availableForMethods);
+        if (!in_array($method, $validApis, \true)) {
+            throw new InvalidRequestParameterException('Invalid apiMethod provided.');
+        }
+    }
     protected function getEvolutionTable()
     {
         // Note: Using unsanitized request parameters here, as they will be passed through to an API method,
@@ -42,6 +52,7 @@ class Controller extends PluginController
         $apiMethod = $request->getStringParameter('apiMethod');
         $period = $request->getStringParameter('period');
         $date = $request->getStringParameter('date');
+        $this->validateApiMethod($apiMethod);
         $params = ['method' => $apiMethod, 'period' => 'range' === $period ? 'day' : $period, 'label' => $request->getStringParameter('label', ''), 'idSite' => $this->idSite, 'segment' => $request->getStringParameter('segment', ''), 'date' => 'range' === $period ? $date : EvolutionViz::getDateRangeAndLastN($period, $date)[0], 'format' => 'original', 'flat' => $request->getIntegerParameter('flat', 0), 'serialize' => '0'];
         /** @var DataTable $dataTable */
         $dataTable = Request::processRequest($apiMethod, $params, []);
@@ -55,7 +66,8 @@ class Controller extends PluginController
     public function getRowEvolutionGraph($dataTable = null)
     {
         $this->checkSitePermission();
-        $apiMethod = Common::getRequestVar('apiMethod');
+        $apiMethod = \Piwik\Request::fromRequest()->getStringParameter('apiMethod');
+        $this->validateApiMethod($apiMethod);
         if (empty($dataTable)) {
             $dataTable = $this->getEvolutionTable();
         }

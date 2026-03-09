@@ -23,7 +23,6 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     private $config;
     /**
      * @internal
-     * @param Config $config
      */
     public function __construct(Config $config)
     {
@@ -31,8 +30,6 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     }
     /**
      * @internal
-     * @param FeatureFlagInterface $feature
-     * @return bool|null
      */
     public function isFeatureActive(FeatureFlagInterface $feature) : ?bool
     {
@@ -50,8 +47,6 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     }
     /**
      * @internal
-     * @param FeatureFlagInterface $feature
-     * @return void
      */
     public function disableFeatureFlag(FeatureFlagInterface $feature) : void
     {
@@ -63,8 +58,6 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     }
     /**
      * @internal
-     * @param FeatureFlagInterface $feature
-     * @return void
      */
     public function enableFeatureFlag(FeatureFlagInterface $feature) : void
     {
@@ -76,8 +69,6 @@ class ConfigFeatureFlagStorage implements FeatureFlagStorageInterface
     }
     /**
      * @internal
-     * @param string $featureName
-     * @return void
      */
     public function deleteFeatureFlag(string $featureName) : void
     {

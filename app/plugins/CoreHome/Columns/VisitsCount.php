@@ -26,8 +26,6 @@ class VisitsCount extends VisitDimension
         // no metrics for this dimension, it would be rather confusing I think
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -41,8 +39,6 @@ class VisitsCount extends VisitDimension
         return $result;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -10,6 +10,7 @@ declare (strict_types=1);
 namespace Piwik\Plugins\ArchivingMetrics;
 
 use Piwik\ArchiveProcessor\Rules;
+use Piwik\Date;
 use Piwik\Plugins\ArchivingMetrics\Clock\Clock;
 use Piwik\Plugins\ArchivingMetrics\Clock\ClockInterface;
 use Piwik\Plugins\ArchivingMetrics\Writer\DbWriter;
@@ -97,7 +98,13 @@ final class Timer
         /** @var Context $storedContext */
         $storedContext = $this->runs[$key]['context'];
         $archiveName = Rules::getDoneStringFlagFor([$storedContext->idSite], $storedContext->segment, $storedContext->period->getLabel(), $storedContext->plugin);
-        $this->writer->write($storedContext, ['idarchive' => $idArchive, 'archive_name' => $archiveName, 'ts_started' => $this->runs[$key]['ts_started'], 'ts_finished' => $this->runs[$key]['ts_finished'], 'total_time' => (int) round($totalTimeMs * 1000), 'total_time_exclusive' => (int) round($exclusiveTimeMs * 1000)]);
+        $this->writer->write($storedContext, ['idarchive' => $idArchive, 'archive_name' => $archiveName, 'ts_started' => $this->runs[$key]['ts_started'], 'ts_finished' => $this->runs[$key]['ts_finished'], 'total_time' => (int) round($totalTimeMs * 1000), 'total_time_exclusive' => (int) round($exclusiveTimeMs * 1000), 'is_temporary' => $this->isTemporaryArchive($storedContext, (int) $this->runs[$key]['timeStarted'])]);
+    }
+    private function isTemporaryArchive(\Piwik\Plugins\ArchivingMetrics\Context $context, int $archiveStartTimestamp) : int
+    {
+        $archiveStartInSiteTimezone = Date::factory($archiveStartTimestamp, $context->siteTimezone);
+        $periodEndInSiteTimezone = $context->period->getDateTimeEnd()->setTimezone($context->siteTimezone);
+        return (int) $archiveStartInSiteTimezone->isEarlier($periodEndInSiteTimezone);
     }
     private function isApplicableForTiming(\Piwik\Plugins\ArchivingMetrics\Context $context) : bool
     {

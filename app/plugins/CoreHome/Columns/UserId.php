@@ -51,8 +51,6 @@ class UserId extends VisitDimension
         }
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed|false
      */
@@ -65,8 +63,6 @@ class UserId extends VisitDimension
         return $value;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      *
      * @return mixed|false

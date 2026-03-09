@@ -11,6 +11,7 @@ namespace Piwik\Plugins\ArchivingMetrics;
 
 use Piwik\Period;
 use Piwik\Segment;
+use Piwik\Site;
 class ArchivingMetrics extends \Piwik\Plugin
 {
     public function registerEvents()
@@ -34,6 +35,7 @@ class ArchivingMetrics extends \Piwik\Plugin
     }
     private function buildContext(int $idSite, Period $period, Segment $segment, string $plugin, $report) : \Piwik\Plugins\ArchivingMetrics\Context
     {
-        return new \Piwik\Plugins\ArchivingMetrics\Context($idSite, $period, $segment, $plugin, $report);
+        $site = new Site($idSite);
+        return new \Piwik\Plugins\ArchivingMetrics\Context($idSite, $period, $segment, $plugin, $report, $site->getTimezone());
     }
 }

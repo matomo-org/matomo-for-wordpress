@@ -55,7 +55,6 @@ class Csv extends Renderer
     /**
      * Computes the dataTable output and returns the string/binary
      *
-     * @return string
      */
     public function render() : string
     {
@@ -78,7 +77,6 @@ class Csv extends Renderer
     /**
      * Sets the column separator
      *
-     * @param string $separator
      */
     public function setSeparator(string $separator) : void
     {
@@ -89,7 +87,6 @@ class Csv extends Renderer
      *
      * @param DataTable|array $table
      * @param array $allColumns
-     * @return string
      */
     protected function renderTable($table, array &$allColumns = []) : string
     {
@@ -107,9 +104,7 @@ class Csv extends Renderer
     /**
      * Computes the output of the given data table array
      *
-     * @param DataTable\Map $table
      * @param array $allColumns
-     * @return string
      */
     protected function renderDataTableMap(DataTable\Map $table, array &$allColumns = []) : string
     {
@@ -137,7 +132,6 @@ class Csv extends Renderer
      *
      * @param DataTable|Simple $table
      * @param array $allColumns
-     * @return string
      */
     protected function renderDataTable($table, array &$allColumns = []) : string
     {
@@ -160,7 +154,6 @@ class Csv extends Renderer
      * Returns the CSV header line for a set of metrics. Will translate columns if desired.
      *
      * @param array $columnMetrics
-     * @return string
      */
     private function getHeaderLine(array $columnMetrics) : string
     {
@@ -288,7 +281,6 @@ class Csv extends Renderer
     /**
      * @param array $allColumns
      * @param array $csv
-     * @return string
      */
     private function buildCsvString(array $allColumns, array $csv) : string
     {

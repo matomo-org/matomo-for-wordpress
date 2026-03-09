@@ -41,7 +41,6 @@ class Model
     /**
      * Add any new changes for a plugin to the changes table
      *
-     * @param string $pluginName
      *
      * @throws \Exception
      */
@@ -62,7 +61,6 @@ class Model
     /**
      * Remove all changes for a plugin
      *
-     * @param string $pluginName
      */
     public function removeChanges(string $pluginName) : void
     {
@@ -79,7 +77,6 @@ class Model
     /**
      * Add a change item to the database table
      *
-     * @param string $pluginName
      * @param array  $change
      */
     public function addChange(string $pluginName, array $change) : void
@@ -113,7 +110,6 @@ class Model
      *
      * @param int|null $newerThanId     Only count new changes as having a key > than this sequential key
      *
-     * @return int
      */
     public function doChangesExist(?int $newerThanId = null) : int
     {
@@ -139,7 +135,6 @@ class Model
      *
      * @param int|null $newerThanId     Only count new changes as having a key > than this sequential key
      *
-     * @return int
      */
     public function getNewChangesCount(?int $newerThanId = null) : int
     {

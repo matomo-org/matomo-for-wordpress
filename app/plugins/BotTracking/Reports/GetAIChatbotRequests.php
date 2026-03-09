@@ -9,11 +9,10 @@
 declare (strict_types=1);
 namespace Piwik\Plugins\BotTracking\Reports;
 
-use Piwik\API\Request;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\Plugins\BotTracking\Columns\AIAssistantName;
+use Piwik\Plugins\BotTracking\Columns\AIChatbotName;
 use Piwik\Plugins\BotTracking\Columns\Metrics\AcquiredVisits;
 use Piwik\Plugins\BotTracking\Columns\Metrics\DocumentRequests;
 use Piwik\Plugins\BotTracking\Columns\Metrics\PageRequests;
@@ -21,24 +20,25 @@ use Piwik\Plugins\BotTracking\Columns\Metrics\Requests;
 use Piwik\Plugins\BotTracking\Metrics;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
-class GetAIAssistantRequests extends Report
+use Piwik\Plugins\BotTracking\Reports\SegmentNotSupportedMessageHelper;
+class GetAIChatbotRequests extends Report
 {
     protected function init() : void
     {
         parent::init();
-        $this->name = Piwik::translate('BotTracking_AIAssistantsReportTitle');
-        $this->documentation = Piwik::translate('BotTracking_AIAssistantsReportDocumentation');
+        $this->name = Piwik::translate('BotTracking_AIChatbotsReportTitle');
+        $this->documentation = Piwik::translate('BotTracking_AIChatbotsReportDocumentation');
         $this->categoryId = 'General_AIAssistants';
-        $this->subcategoryId = 'BotTracking_AIBotsOverview';
-        $this->dimension = new AIAssistantName();
+        $this->subcategoryId = 'BotTracking_AIChatbotsOverview';
+        $this->dimension = new AIChatbotName();
         $this->metrics = [new Requests(), new PageRequests(), new DocumentRequests(), new AcquiredVisits()];
         $this->processedMetrics = [];
         $this->order = 30;
         $this->defaultSortColumn = Metrics::COLUMN_ACQUIRED_VISITS;
         if (\Piwik\Request::fromRequest()->getStringParameter('secondaryDimension', '') === 'documents') {
-            $this->actionToLoadSubTables = 'getDocumentUrlsForAIAssistant';
+            $this->actionToLoadSubTables = 'getDocumentUrlsForAIChatbot';
         } else {
-            $this->actionToLoadSubTables = 'getPageUrlsForAIAssistant';
+            $this->actionToLoadSubTables = 'getPageUrlsForAIChatbot';
         }
     }
     public function configureView(ViewDataTable $view) : void
@@ -46,11 +46,7 @@ class GetAIAssistantRequests extends Report
         parent::configureView($view);
         $view->config->show_table_all_columns = \false;
         $view->config->show_insights = \false;
-        // Show segment not supported message when a segment is selected
-        if (!empty(Request::getRawSegmentFromRequest())) {
-            $message = '<p style="margin-top:2em;margin-bottom:2em" class=" alert-info alert">' . Piwik::translate('BotTracking_SegmentNotSupported') . '</p>';
-            $view->config->show_header_message = $message;
-        }
+        SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
         $view->config->setDefaultColumnsToDisplay(['label', Metrics::COLUMN_REQUESTS, Metrics::COLUMN_PAGE_REQUESTS, Metrics::COLUMN_DOCUMENT_REQUESTS, Metrics::COLUMN_ACQUIRED_VISITS], \false, \false);
         // only show request count for flat table, as subtable doesn't have other metrics
         if ((int) $view->requestConfig->getRequestParam('flat') === 1) {
