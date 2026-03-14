@@ -45,7 +45,6 @@ class API extends \Piwik\Plugin\API
     /**
      * General method to get transitions for an action
      *
-     * @param string $actionName
      * @param string $actionType "url"|"title"
      * @param $idSite
      * @param $period
@@ -116,8 +115,6 @@ class API extends \Piwik\Plugin\API
     /**
      * Derive the action ID from the request action name and type.
      *
-     * @param string $actionName
-     * @param string $actionType
      *
      * @return array|int|string
      */
@@ -192,7 +189,6 @@ class API extends \Piwik\Plugin\API
      *
      * @param $idaction
      * @param $actionType
-     * @param LogAggregator $logAggregator
      * @param  $limitBeforeGrouping
      * @param $includeLoops
      * @return array(followingPages:DataTable, outlinks:DataTable, downloads:DataTable)
@@ -515,7 +511,6 @@ class API extends \Piwik\Plugin\API
      * @param $period
      * @param $date
      *
-     * @return bool
      */
     public function isPeriodAllowed($idSite, $period, $date) : bool
     {

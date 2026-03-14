@@ -117,7 +117,6 @@ class Setting
     }
     /**
      * @internal
-     * @param Storage $storage
      */
     public function setStorage(Storage $storage)
     {

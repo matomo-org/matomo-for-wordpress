@@ -45,7 +45,6 @@ class CorePluginsAdmin extends Plugin
     /**
      * Retrieve an instantiated ChangesModel object
      *
-     * @return ChangesModel
      */
     private function getChangesModel() : ChangesModel
     {

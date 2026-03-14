@@ -288,7 +288,6 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
      * - **phpIsNewEnough** - Whether the current PHP version is new enough to run Piwik.
      * - **adminMenu** - The result of `MenuAdmin::getInstance()->getMenu()`.
      *
-     * @param View $view
      * @api
      */
     public static function setBasicVariablesAdminView(View $view)

@@ -47,9 +47,6 @@ class InstallPlugin extends ConsoleCommand
         }
         return self::SUCCESS;
     }
-    /**
-     * @param string $pluginName
-     */
     private function installPlugin(string $pluginName) : void
     {
         $pluginInstaller = StaticContainer::get(PluginInstaller::class);

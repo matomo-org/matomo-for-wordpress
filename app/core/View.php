@@ -370,7 +370,6 @@ class View implements ViewInterface
     /**
      * Add form to view
      *
-     * @param QuickForm2 $form
      * @ignore
      */
     public function addForm(\Piwik\QuickForm2 $form)

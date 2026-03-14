@@ -21,7 +21,6 @@ class VisitorProfile
         $this->idSite = $idSite;
     }
     /**
-     * @param DataTable $visits
      * @param $visitorId
      * @param $segment
      * @param $numLastVisits
@@ -60,7 +59,6 @@ class VisitorProfile
         return $this->profile;
     }
     /**
-     * @param DataTable $visits
      * @param           $visitorId
      * @param           $segment
      */

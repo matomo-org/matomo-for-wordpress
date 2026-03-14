@@ -52,7 +52,7 @@ class Controller extends \Piwik\Plugin\Controller
         $token_auth = Piwik::getCurrentUserTokenAuth();
         $view = new View('@UserCountryMap/visitorMap');
         // request visits summary
-        $request = new Request('method=VisitsSummary.get&format=json' . '&idSite=' . $this->idSite . '&period=' . $period . '&date=' . $date . '&segment=' . $segment . '&token_auth=' . $token_auth . '&filter_limit=-1');
+        $request = new Request(['method' => 'VisitsSummary.get', 'format' => 'json', 'idSite' => $this->idSite, 'period' => $period, 'date' => $date, 'segment' => $segment, 'token_auth' => $token_auth, 'filter_limit' => -1]);
         $config = [];
         $config['visitsSummary'] = json_decode($request->process(), \true);
         $config['countryDataUrl'] = $this->report('UserCountry', 'getCountry', $this->idSite, $period, $date, $token_auth, \false, $segment);
@@ -158,7 +158,7 @@ class Controller extends \Piwik\Plugin\Controller
 #[\SensitiveParameter]
 $token_auth)
     {
-        $request = new Request('method=API.getMetadata&format=json' . '&apiModule=UserCountry&apiAction=getCountry' . '&idSite=' . $idSite . '&period=' . $period . '&date=' . $date . '&token_auth=' . $token_auth . '&filter_limit=-1');
+        $request = new Request(['method' => 'API.getMetadata', 'format' => 'json', 'apiModule' => 'UserCountry', 'apiAction' => 'getCountry', 'idSite' => $idSite, 'period' => $period, 'date' => $date, 'token_auth' => $token_auth, 'filter_limit' => -1]);
         $metaData = json_decode($request->process(), \true);
         $metrics = [];
         if (!empty($metaData[0]['metrics']) && is_array($metaData[0]['metrics'])) {

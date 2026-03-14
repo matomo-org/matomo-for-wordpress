@@ -49,11 +49,6 @@ class UserRepository
         $this->allowedEmailDomain = $allowedEmailDomain;
     }
     /**
-     * @param string $userLogin
-     * @param string $email
-     * @param int    $initialIdSite
-     * @param string $password
-     * @param bool   $isPasswordHashed
      * @throws \Exception
      */
     public function create(string $userLogin, string $email, ?int $initialIdSite = null,

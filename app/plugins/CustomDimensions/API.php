@@ -36,7 +36,6 @@ class API extends \Piwik\Plugin\API
      * view access.
      *
      * @param int $idDimension
-     * @param int $idSite
      * @param string $period
      * @param string $date
      * @param bool|false $segment
@@ -156,7 +155,6 @@ class API extends \Piwik\Plugin\API
      * Get a list of all configured CustomDimensions for a given website. Requires at least Admin access for the
      * specified website.
      *
-     * @param int $idSite
      * @return array
      */
     public function getConfiguredCustomDimensions(int $idSite)
@@ -198,7 +196,6 @@ class API extends \Piwik\Plugin\API
      * `CustomDimensions.configureNewCustomDimension`. The response also contains information whether more Custom
      * Dimensions can be created or not. Requires at least Admin access for the specified website.
      *
-     * @param int $idSite
      * @return array
      */
     public function getAvailableScopes(int $idSite)

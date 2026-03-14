@@ -65,9 +65,6 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
         $this->addOptionalValueOption(self::SEGMENT_LIMIT_OPTION, null, 'Number of visits to process at a time.', self::SEGMENT_LIMIT_OPTION_DEFAULT);
         $this->addNoValueOption(self::FORCE_OPTION, null, "Force geolocation, even if the requested provider does not appear to work. It is not " . "recommended to use this option.");
     }
-    /**
-     * @return int
-     */
     protected function doExecute() : int
     {
         $input = $this->getInput();

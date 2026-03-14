@@ -27,8 +27,6 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return Piwik::translate('UserCountry_LatitudeSegmentHelp', '&segment=lat&gt;X;lat&lt;Y;long&gt;M;long&lt;N');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -43,8 +41,6 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $latitude;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -53,8 +49,6 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('lat', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

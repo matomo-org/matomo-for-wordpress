@@ -49,7 +49,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Sends the given message(s) as success message(s) to the output interface (surrounded by empty lines)
      *
      * @param string|string[] $messages
-     * @return void
      */
     public function writeSuccessMessage($messages) : void
     {
@@ -66,7 +65,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Sends the given message(s) as error message(s) to the output interface (surrounded by empty lines)
      *
      * @param string|string[] $messages
-     * @return void
      */
     public function writeErrorMessage($messages) : void
     {
@@ -83,7 +81,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Sends the given messages as comment message to the output interface (surrounded by empty lines)
      *
      * @param string|string[] $messages
-     * @return void
      */
     public function writeComment($messages) : void
     {
@@ -99,7 +96,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Checks if all input options that are marked as requires-value were provided
      *
-     * @return void
      * @throws \InvalidArgumentException
      */
     protected function checkAllRequiredOptionsAreNotEmpty() : void
@@ -125,9 +121,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Method is final to make it impossible to overwrite it in plugin commands
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @return int
      */
     public final function run(InputInterface $input, OutputInterface $output) : int
     {
@@ -188,9 +181,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Adds a negatable option (e.g. --ansi / --no-ansi)
      *
-     * @param string            $name
      * @param array|null|string $shortcut
-     * @param string            $description
      * @param mixed             $default
      * @return ConsoleCommand
      */
@@ -201,11 +192,8 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Adds an option with optional value
      *
-     * @param string            $name
      * @param array|null|string $shortcut
-     * @param string            $description
      * @param mixed             $default
-     * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
     public function addOptionalValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = \false)
@@ -216,9 +204,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Adds a valueless option
      *
-     * @param string            $name
      * @param array|null|string $shortcut
-     * @param string            $description
      * @param mixed             $default
      * @return ConsoleCommand
      */
@@ -229,11 +215,8 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Adds an option with required value
      *
-     * @param string            $name
      * @param array|null|string $shortcut
-     * @param string            $description
      * @param mixed             $default
-     * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
     public function addRequiredValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = \false)
@@ -254,7 +237,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Adds an optional argument to the command
      *
      * @param string $name         Name of the command
-     * @param string $description
      * @param null   $default
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
@@ -267,8 +249,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Adds a required argument to the command
      *
-     * @param string $name
-     * @param string $description
      * @param        $default
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
@@ -312,7 +292,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see parent::interact()
      *
-     * @return void
      */
     protected function doInteract() : void
     {
@@ -333,30 +312,18 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see parent::initialize()
      *
-     * @return void
      */
     protected function doInitialize() : void
     {
     }
-    /**
-     * @return OutputInterface
-     */
     protected function getOutput() : OutputInterface
     {
         return $this->output;
     }
-    /**
-     * @param OutputInterface $output
-     *
-     * @return void
-     */
     protected function setOutput(OutputInterface $output) : void
     {
         $this->output = $output;
     }
-    /**
-     * @return InputInterface
-     */
     protected function getInput() : InputInterface
     {
         return $this->input;
@@ -375,10 +342,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see QuestionHelper
      *
-     * @param string $question
-     * @param bool   $default
-     * @param string $trueAnswerRegex
-     * @return bool
      */
     protected function askForConfirmation(string $question, bool $default = \true, string $trueAnswerRegex = '/^y/i') : bool
     {
@@ -392,8 +355,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see QuestionHelper
      *
-     * @param string        $question
-     * @param callable|null $validator
      * @param mixed|null    $default
      * @param iterable|null $autocompleterValues
      * @return mixed
@@ -412,7 +373,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see QuestionHelper
      *
-     * @param string     $question
      * @param mixed|null $default
      * @return mixed
      */
@@ -427,8 +387,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      *
      * @see ProgressBar
      *
-     * @param int $numChangesToPerform
-     * @return ProgressBar
      */
     protected function initProgressBar(int $numChangesToPerform = 0) : ProgressBar
     {
@@ -438,8 +396,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Starts a previously initialized progress bar
      *
-     * @param int $numChangesToPerform
-     * @return void
      */
     protected function startProgressBar(int $numChangesToPerform = 0) : void
     {
@@ -448,8 +404,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Advances the previously initialized progress bar
      *
-     * @param int $step
-     * @return void
      */
     protected function advanceProgressBar(int $step = 1) : void
     {
@@ -461,7 +415,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Finished the initialized progress bar
      *
-     * @return void
      */
     protected function finishProgressBar() : void
     {
@@ -488,10 +441,7 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     /**
      * Runs a certain command
      *
-     * @param string $command
      * @param array  $arguments
-     * @param bool   $hideOutput
-     * @return int
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     protected function runCommand(string $command, array $arguments, bool $hideOutput = \false) : int

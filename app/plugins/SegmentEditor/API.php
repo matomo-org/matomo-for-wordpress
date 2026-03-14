@@ -161,7 +161,6 @@ class API extends \Piwik\Plugin\API
     /**
      * Deletes a stored segment.
      *
-     * @param int $idSegment
      */
     public function delete(int $idSegment) : void
     {
@@ -263,7 +262,6 @@ class API extends \Piwik\Plugin\API
     /**
      * Stars a stored segment.
      *
-     * @param int $idSegment
      * @return array{result: boolean, starred_by: string}
      * @throws Exception if the user is not logged in or does not have the required permissions.
      */
@@ -280,7 +278,6 @@ class API extends \Piwik\Plugin\API
     /**
      * Unstars a stored segment.
      *
-     * @param int $idSegment
      * @return array{result: boolean}
      * @throws Exception if the user is not logged in or does not have the required permissions.
      */
@@ -296,7 +293,6 @@ class API extends \Piwik\Plugin\API
     /**
      * Returns a stored segment by ID
      *
-     * @param int $idSegment
      * @throws Exception
      * @return array|null
      */
@@ -355,7 +351,6 @@ class API extends \Piwik\Plugin\API
      * Filter out any segments which cannot be initialized due to disable plugins or features
      *
      * @param array<array> $segments
-     * @param null|int $idSite
      *
      * @return array<array>
      */
@@ -427,9 +422,6 @@ class API extends \Piwik\Plugin\API
         }
         return $orderedSegments;
     }
-    /**
-     * @return string
-     */
     private function getMessageCannotEditSegmentCreatedBySuperUser() : string
     {
         return Piwik::translate('SegmentEditor_UpdatingForeignSegmentPermittedToSuperUser');

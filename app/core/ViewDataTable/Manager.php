@@ -68,7 +68,6 @@ class Manager
             return $dataTables;
         }
         $klassToExtend = '\\Piwik\\Plugin\\ViewDataTable';
-        /** @var string[] $visualizations */
         $visualizations = PluginManager::getInstance()->findMultipleComponents('Visualizations', $klassToExtend);
         $result = array();
         foreach ($visualizations as $viz) {

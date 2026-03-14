@@ -111,7 +111,6 @@ $passwordConfirmation = \false)
     }
     /**
      * @internal
-     * @return int
      */
     public function getNumberOfPluginUpdates() : int
     {

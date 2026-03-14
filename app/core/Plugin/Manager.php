@@ -448,8 +448,6 @@ class Manager
     /**
      * Returns the plugin directory path relative to Matomo's root directory.
      *
-     * @param string $pluginName
-     * @return string
      */
     public static function getRelativePluginDirectory(string $pluginName) : string
     {
@@ -515,7 +513,10 @@ class Manager
      *                                  given subclass. If the requested file exists but does not extend this class
      *                                  a warning will be shown to advice a developer to extend this certain class.
      *
-     * @return \stdClass[]
+     * @template T of object
+     * @phpstan-param class-string<T>|''|false|null $expectedSubclass
+     *
+     * @return array<class-string<T>>
      */
     public function findComponents($componentName, $expectedSubclass)
     {
@@ -532,7 +533,7 @@ class Manager
     /**
      * @template T of object
      * @param string $directoryWithinPlugin
-     * @param class-string<T> $expectedSubclass
+     * @param class-string<T>|''|false|null $expectedSubclass
      * @return array<class-string<T>>
      */
     public function findMultipleComponents($directoryWithinPlugin, $expectedSubclass)
@@ -665,7 +666,6 @@ class Manager
      *
      * If no theme is enabled, the **Morpheus** plugin is returned (this is the base and default theme).
      *
-     * @return Plugin|null
      * @api
      */
     public function getThemeEnabled() : ?Plugin
@@ -1128,7 +1128,6 @@ class Manager
     /**
      * Install a specific plugin
      *
-     * @param Plugin $plugin
      * @throws \Piwik\Plugin\PluginException if installation fails
      */
     private function executePluginInstall(Plugin $plugin)
@@ -1143,7 +1142,6 @@ class Manager
      * Add a plugin in the loaded plugins array
      *
      * @param string $pluginName plugin name without prefix (eg. 'UserCountry')
-     * @param Plugin $newPlugin
      * @internal
      */
     public function addLoadedPlugin($pluginName, Plugin $newPlugin)
@@ -1184,7 +1182,6 @@ class Manager
     /**
      * Install a plugin, if necessary
      *
-     * @param Plugin $plugin
      */
     private function installPluginIfNecessary(Plugin $plugin)
     {

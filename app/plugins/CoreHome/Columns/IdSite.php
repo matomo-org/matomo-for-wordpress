@@ -27,8 +27,6 @@ class IdSite extends VisitDimension
     protected $namePlural = 'General_Measurables';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -37,8 +35,6 @@ class IdSite extends VisitDimension
         return $request->getIdSite();
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

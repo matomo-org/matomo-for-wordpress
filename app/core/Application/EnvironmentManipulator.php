@@ -26,7 +26,6 @@ interface EnvironmentManipulator
     /**
      * Create a custom PluginList kernel object, overriding the default behavior.
      *
-     * @param GlobalSettingsProvider $globalSettingsProvider
      * @return PluginList
      */
     public function makePluginList(GlobalSettingsProvider $globalSettingsProvider);

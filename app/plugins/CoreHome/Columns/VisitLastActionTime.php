@@ -73,8 +73,6 @@ class VisitLastActionTime extends VisitDimension
     // INDEX(idsite, config_id, visit_last_action_time) and we maybe not be sure whether idsite already exists at
     // installing point (we do not know whether idsite column will be added first).
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -83,8 +81,6 @@ class VisitLastActionTime extends VisitDimension
         return Date::getDatetimeFromTimestamp($request->getCurrentTimestamp());
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

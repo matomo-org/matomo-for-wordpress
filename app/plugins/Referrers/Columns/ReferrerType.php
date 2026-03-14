@@ -33,8 +33,6 @@ class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
         return array(Common::REFERRER_TYPE_DIRECT_ENTRY => 'direct', Common::REFERRER_TYPE_WEBSITE => 'website', Common::REFERRER_TYPE_SEARCH_ENGINE => 'search', Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social', Common::REFERRER_TYPE_AI_ASSISTANT => 'ai', Common::REFERRER_TYPE_CAMPAIGN => 'campaign');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -52,8 +50,6 @@ class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
         return \false;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

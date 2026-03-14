@@ -87,6 +87,9 @@
         "ColumnUniqueClicks": "ብቸኛ ጠቅአድርጎች",
         "ColumnUniqueDownloads": "ብቸኛ የወረዱ"
     },
+    "BotTracking": {
+        "SiteWithoutDataBackToMatomo": "ወደፒዊክ ተመለስ"
+    },
     "CoreHome": {
         "CategoryNoData": "በዚህ ፈርጅ ምንም ውሂብ የለም. \"ሁሉንም ምድብ\" ለማጠቃለል ይሞክሩ።",
         "ShowJSCode": "ለማስገባት የጃቫ ስክሪፕትን ኮድ አሳይ",
@@ -1352,11 +1355,10 @@
         "Timezone_Pacific_Bougainville": "ቦጌይንቪል",
         "Timezone_Pacific_Chatham": "ቻታም",
         "Timezone_Pacific_Easter": "ፋሲካ",
-        "Timezone_Pacific_Enderbury": "ኢንደርበሪ",
+        "Timezone_Pacific_Enderbury": "ካንቶን",
         "Timezone_Pacific_Galapagos": "ጋላፓጎስ",
         "Timezone_Pacific_Gambier": "ጋምቢየር",
         "Timezone_Pacific_Honolulu": "ሆኖሉሉ",
-        "Timezone_Pacific_Kanton": "ካንቶን",
         "Timezone_Pacific_Kiritimati": "ኪሪቲማቲ",
         "Timezone_Pacific_Kosrae": "ኮስሬ",
         "Timezone_Pacific_Kwajalein": "ክዋጃሊን",

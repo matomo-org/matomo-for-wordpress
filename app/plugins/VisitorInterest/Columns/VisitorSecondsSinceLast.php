@@ -28,8 +28,6 @@ class VisitorSecondsSinceLast extends VisitDimension
         return Piwik::translate('General_SecondsSinceLastVisit');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

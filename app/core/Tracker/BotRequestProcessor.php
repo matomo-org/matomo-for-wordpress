@@ -17,7 +17,6 @@ abstract class BotRequestProcessor
      * Derived classes can use this method to manipulate a bot request before the request
      * is handled. Plugins could change the URL, add custom variables, etc.
      *
-     * @param Request $request
      */
     public function manipulateRequest(\Piwik\Tracker\Request $request) : void
     {
@@ -28,7 +27,6 @@ abstract class BotRequestProcessor
      *
      * Derived classes should use this method to insert log data.
      *
-     * @param Request $request
      * @return bool return true if the processor handled the request, this will automatically trigger archive invalidation
      */
     public function handleRequest(\Piwik\Tracker\Request $request) : bool

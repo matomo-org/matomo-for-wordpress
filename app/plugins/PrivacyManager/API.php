@@ -10,7 +10,6 @@ namespace Piwik\Plugins\PrivacyManager;
 
 use Exception;
 use Piwik\API\Request;
-use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Config as PiwikConfig;
@@ -23,6 +22,7 @@ use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
 use Piwik\Plugins\PrivacyManager\Dao\LogDataAnonymizer;
 use Piwik\Plugins\PrivacyManager\Model\LogDataAnonymizations;
 use Piwik\Plugins\PrivacyManager\Validators\VisitsDataSubject;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Policy\CompliancePolicy;
 use Piwik\Policy\PolicyManager;
 use Piwik\Site;
@@ -400,7 +400,7 @@ $passwordConfirmation)
             throw new Exception('Feature not available');
         }
         Piwik::checkUserHasSuperUserAccess();
-        if (Common::getRequestVar('force_api_session', 0)) {
+        if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
         $policy = PolicyManager::getPolicyByName($complianceType);

@@ -774,7 +774,9 @@
         "YouCannotModifyThisNote": "あなたが生成したアノテーションではないか、このサイトの管理者権限がないため、このアノテーションは変更できません。"
     },
     "BotTracking": {
-        "PageUrl": "ページ URL"
+        "PageUrl": "ページ URL",
+        "NoDataHttpTrackingApi": "HTTPトラッキング API",
+        "SiteWithoutDataBackToMatomo": "Matomo へ戻る"
     },
     "Contents": {
         "ContentImpression": "コンテンツインプレッション",
@@ -3101,6 +3103,7 @@
         "Timezone_America_CiudadJuarez": "シウダー・フアレス",
         "Timezone_America_CoralHarbour": "アティコカン",
         "Timezone_America_Cordoba": "コルドバ",
+        "Timezone_America_Coyhaique": "コジャイケ",
         "Timezone_America_Creston": "クレストン",
         "Timezone_America_Cuiaba": "クイアバ",
         "Timezone_America_Danmarkshavn": "デンマークシャウン",
@@ -3262,11 +3265,10 @@
         "Timezone_Pacific_Bougainville": "ブーゲンビル",
         "Timezone_Pacific_Chatham": "チャタム",
         "Timezone_Pacific_Easter": "イースター島",
-        "Timezone_Pacific_Enderbury": "エンダーベリー島",
+        "Timezone_Pacific_Enderbury": "カントン島",
         "Timezone_Pacific_Galapagos": "ガラパゴス",
         "Timezone_Pacific_Gambier": "ガンビエ諸島",
         "Timezone_Pacific_Honolulu": "ホノルル",
-        "Timezone_Pacific_Kanton": "カントン島",
         "Timezone_Pacific_Kiritimati": "キリスィマスィ島",
         "Timezone_Pacific_Kosrae": "コスラエ",
         "Timezone_Pacific_Kwajalein": "クェゼリン",
@@ -4046,8 +4048,6 @@
         "PleaseFindBelow": "%2$s の %1$s のレポートをお届けします。",
         "PluginDescription": "カスタム レポートを作成し、毎日、毎週、毎月等、 1 つまたは複数の人にメールで送信するようにスケジュールします。サポートされているレポート形式 ( html、pdf、csv、画像)。",
         "ReportFormat": "レポートのフォーマット",
-        "ReportHour": "%s 時にレポートを送信します",
-        "ReportHourWithUTC": "%s 時 UTC",
         "ReportIncludeNWebsites": "このレポートには、少なくとも 1 回のビジット（現在利用可能な %s ウェブサイトから）があるすべてのウェブサイトの主な指標が含まれます。",
         "ReportPeriod": "レポート期間",
         "ReportSent": "送信されたレポート",

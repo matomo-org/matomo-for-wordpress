@@ -243,8 +243,6 @@ class Update extends ConsoleCommand
         $updater->addUpdateObserver(new CliUpdateObserver($this->getOutput(), $migrationQueryCount));
         return $updater;
     }
-    /**
-     */
     protected function writeAlertMessageWhenCommandExecutedWithUnexpectedUser()
     {
         if (SettingsServer::isWindows()) {

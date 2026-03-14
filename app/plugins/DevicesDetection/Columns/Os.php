@@ -62,8 +62,6 @@ class Os extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return Piwik::translate('DevicesDetection_OperatingSystemFamily');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

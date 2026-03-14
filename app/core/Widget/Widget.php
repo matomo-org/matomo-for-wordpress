@@ -20,7 +20,6 @@ use Piwik\View;
 class Widget
 {
     /**
-     * @param WidgetConfig $config
      * @api
      */
     public static function configure(\Piwik\Widget\WidgetConfig $config)

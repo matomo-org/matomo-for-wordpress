@@ -529,7 +529,8 @@
         "ViewAndAddAnnotations": "Vaata ja lisa märkmeid %s kohta…"
     },
     "BotTracking": {
-        "PageUrl": "Lehe URL"
+        "PageUrl": "Lehe URL",
+        "SiteWithoutDataBackToMatomo": "Tagasi Matomosse"
     },
     "Contents": {
         "ContentName": "Sisu nimi",
@@ -1970,6 +1971,7 @@
         "Timezone_America_Mazatlan": "Mazatlán",
         "Timezone_America_Merida": "Mérida",
         "Timezone_America_MexicoCity": "México",
+        "Timezone_America_Noronha": "Fernando de Noronha",
         "Timezone_America_NorthDakota_Beulah": "Beulah, Põhja-Dakota",
         "Timezone_America_NorthDakota_Center": "Center, Põhja-Dakota",
         "Timezone_America_NorthDakota_NewSalem": "New Salem, Põhja-Dakota",
@@ -1977,7 +1979,8 @@
         "Timezone_America_SaoPaulo": "São Paulo",
         "Timezone_America_Scoresbysund": "Ittoqqortoormiit",
         "Timezone_America_StJohns": "Saint John’s",
-        "Timezone_Antarctica_DumontDUrville": "Dumont d’Urville",
+        "Timezone_Antarctica_DumontDUrville": "Dumont-d’Urville",
+        "Timezone_Antarctica_Syowa": "Showa",
         "Timezone_Asia_Almaty": "Almatõ",
         "Timezone_Asia_Anadyr": "Anadõr",
         "Timezone_Asia_Aqtau": "Aktau",
@@ -1985,6 +1988,7 @@
         "Timezone_Asia_Atyrau": "Atõrau",
         "Timezone_Asia_Calcutta": "Kolkata",
         "Timezone_Asia_Chita": "Tšita",
+        "Timezone_Asia_Hovd": "Khovd",
         "Timezone_Asia_Kamchatka": "Kamtšatka",
         "Timezone_Asia_Katmandu": "Katmandu",
         "Timezone_Asia_Khandyga": "Handõga",
@@ -2011,10 +2015,9 @@
         "Timezone_Europe_Moscow": "Moskva",
         "Timezone_Europe_Ulyanovsk": "Uljanovsk",
         "Timezone_Pacific_Easter": "Lihavõttesaar",
-        "Timezone_Pacific_Enderbury": "Enderbury",
+        "Timezone_Pacific_Enderbury": "Abariringa",
         "Timezone_Pacific_Galapagos": "Galápagos",
         "Timezone_Pacific_Honolulu": "Honolulu",
-        "Timezone_Pacific_Kanton": "Abariringa",
         "Timezone_Pacific_Marquesas": "Markiisaared",
         "Timezone_Pacific_Ponape": "Pohnpei",
         "Timezone_Pacific_Truk": "Chuuk",

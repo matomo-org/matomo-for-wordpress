@@ -41,8 +41,6 @@ class VisitTotalActions extends VisitDimension
         $metricsList->addMetric($metric);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -60,8 +58,6 @@ class VisitTotalActions extends VisitDimension
         return 0;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */

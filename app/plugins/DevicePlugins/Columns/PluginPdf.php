@@ -23,8 +23,6 @@ class PluginPdf extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginColumn
         return Piwik::translate('General_Plugin') . ' (PDF)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

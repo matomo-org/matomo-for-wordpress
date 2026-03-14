@@ -103,7 +103,6 @@ class ArchiveWriter
     private $dateStart;
     /**
      * ArchiveWriter constructor.
-     * @param ArchiveProcessor\Parameters $params
      * @throws Exception
      */
     public function __construct(ArchiveProcessor\Parameters $params)

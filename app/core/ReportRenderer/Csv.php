@@ -96,7 +96,6 @@ class Csv extends ReportRenderer
         $this->rendered .= implode('', array($reportName, $csvRenderer->lineEnd, $reportData, $csvRenderer->lineEnd, $csvRenderer->lineEnd));
     }
     /**
-     * @param DataTableInterface $table
      * @param string $uniqueId
      * @return \Piwik\DataTable\Renderer\Csv
      */

@@ -27,8 +27,6 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
         $this->columnType = 'VARCHAR(' . self::MAX_LEN . ') NULL';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
