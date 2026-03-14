@@ -39,9 +39,6 @@ class BotRequest
         $this->botRequestProcessors = $requestProcessors->getBotRequestProcessors();
         $this->logger = $logger;
     }
-    /**
-     * @param Request $request
-     */
     public function setRequest(\Piwik\Tracker\Request $request)
     {
         $this->request = $request;

@@ -17,7 +17,6 @@ interface VisitInterface
     /**
      * Stores the object describing the current tracking request.
      *
-     * @param Request $request
      * @return void
      */
     public function setRequest(\Piwik\Tracker\Request $request);

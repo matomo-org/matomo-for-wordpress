@@ -36,8 +36,6 @@ class VisitFirstActionTime extends VisitDimension
         return \Piwik\Plugins\VisitTime\getTimeLabel($hourInTz);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

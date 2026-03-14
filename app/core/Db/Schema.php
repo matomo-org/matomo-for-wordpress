@@ -28,7 +28,6 @@ class Schema extends Singleton
      * Get schema class name
      *
      * @param string $schemaName
-     * @return string
      */
     private static function getSchemaClassName($schemaName) : string
     {
@@ -42,8 +41,6 @@ class Schema extends Singleton
     /**
      * Return the default port for the provided database schema
      *
-     * @param string $schemaName
-     * @return int
      */
     public static function getDefaultPortForSchema(string $schemaName) : int
     {
@@ -66,7 +63,6 @@ class Schema extends Singleton
     /**
      * Returns an instance that subclasses Schema
      *
-     * @return SchemaInterface
      */
     private function getSchema() : \Piwik\Db\SchemaInterface
     {
@@ -77,7 +73,6 @@ class Schema extends Singleton
     }
     /**
      * Unset schema instance
-     * @return void
      */
     public function unsetSchema() : void
     {
@@ -86,8 +81,6 @@ class Schema extends Singleton
     /**
      * Returns the default collation for a charset.
      *
-     * @param string $charset
-     * @return string
      */
     public function getDefaultCollationForCharset(string $charset) : string
     {
@@ -96,7 +89,6 @@ class Schema extends Singleton
     /**
      * Get the table options to use for a CREATE TABLE statement.
      *
-     * @return string
      */
     public function getTableCreateOptions() : string
     {
@@ -227,7 +219,6 @@ class Schema extends Singleton
      *
      * @param string $sql  query to add hint to
      * @param float $limit  time limit in seconds
-     * @return string
      */
     public function addMaxExecutionTimeHintToQuery(string $sql, float $limit) : string
     {
@@ -236,7 +227,6 @@ class Schema extends Singleton
     /**
      * Returns if the schema support complex column updates
      *
-     * @return bool
      */
     public function supportsComplexColumnUpdates() : bool
     {
@@ -245,7 +235,6 @@ class Schema extends Singleton
     /**
      * Returns if the schema supports `OPTIMIZE TABLE` statements for innodb tables
      *
-     * @return bool
      */
     public function isOptimizeInnoDBSupported() : bool
     {
@@ -260,7 +249,6 @@ class Schema extends Singleton
      * @param string|array $tables The name of the table to optimize or an array of tables to optimize.
      *                             Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
      * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
-     * @return bool
      */
     public function optimizeTables(array $tables, bool $force = \false) : bool
     {
@@ -270,7 +258,6 @@ class Schema extends Singleton
      * Returns if the database engine can provide a rollup ranking query result
      * without needing additional sorting.
      *
-     * @return bool
      */
     public function supportsRankingRollupWithoutExtraSorting() : bool
     {
@@ -279,7 +266,6 @@ class Schema extends Singleton
     /**
      * Returns if the database engine is able to use sorted subqueries
      *
-     * @return bool
      */
     public function supportsSortingInSubquery() : bool
     {
@@ -313,7 +299,6 @@ class Schema extends Singleton
     }
     /**
      * Returns the minimum supported version of the currently used database server
-     * @return string
      */
     public function getMinimumSupportedVersion() : string
     {

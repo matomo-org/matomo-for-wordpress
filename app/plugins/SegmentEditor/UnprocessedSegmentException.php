@@ -24,9 +24,6 @@ class UnprocessedSegmentException extends \Exception
      * @var bool
      */
     private $isSegmentToPreprocess;
-    /**
-     * @param $segment
-     */
     public function __construct(Segment $segment, $isSegmentToPreprocess, ?array $storedSegment = null)
     {
         parent::__construct(self::getErrorMessage($segment, $isSegmentToPreprocess, $storedSegment));

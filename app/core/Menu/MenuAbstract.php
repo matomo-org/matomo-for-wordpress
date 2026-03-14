@@ -117,17 +117,12 @@ abstract class MenuAbstract extends Singleton
     /**
      * Builds a single menu item
      *
-     * @param string $menuName
-     * @param string|null $subMenuName
      * @param string|array $url
-     * @param int $order
      * @param bool|string $tooltip Tooltip to display.
      * @param bool|string $icon
      * @param bool|string $onclick
      * @param bool|string $attribute
      * @param bool|string $help
-     * @param int $badgeCount
-     * @param string $cssClass
      */
     private function buildMenuItem(string $menuName, ?string $subMenuName, $url, int $order = 50, $tooltip = \false, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, int $badgeCount = 0, string $cssClass = '')
     {

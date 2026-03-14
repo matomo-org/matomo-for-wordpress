@@ -38,9 +38,6 @@ class GetUsers extends \Piwik\Plugins\UserId\Reports\Base
     {
         return array();
     }
-    /**
-     * @param ViewDataTable $view
-     */
     public function configureView(ViewDataTable $view)
     {
         $view->config->addTranslation('label', Piwik::translate('General_UserId'));

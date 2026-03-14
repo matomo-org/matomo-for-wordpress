@@ -18,7 +18,6 @@ class IPAnonymizer
     /**
      * Internal function to mask portions of the visitor IP address
      *
-     * @param IP $ip
      * @param int $maskLength Number of octets to reset
      * @return IP
      */

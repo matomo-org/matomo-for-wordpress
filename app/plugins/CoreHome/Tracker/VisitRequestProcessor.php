@@ -141,7 +141,6 @@ class VisitRequestProcessor extends RequestProcessor
      * Note: public only for tests.
      *
      * @param VisitProperties $visitProperties The current visit/visitor information.
-     * @param Request $request
      * @return bool
      */
     public function isVisitNew(VisitProperties $visitProperties, Request $request, $lastKnownVisit)
@@ -188,7 +187,6 @@ class VisitRequestProcessor extends RequestProcessor
     }
     /**
      * Returns true if the last action was not today.
-     * @param VisitProperties $visitProperties
      * @return bool
      */
     private function wasLastActionNotToday(VisitProperties $visitProperties, Request $request, $lastKnownVisit)
@@ -223,7 +221,6 @@ class VisitRequestProcessor extends RequestProcessor
      * Returns the last action time for the last recorded visit of this visitor, or if the visitor is new,
      * the current request's timestamp.
      *
-     * @param VisitProperties $visitProperties
      * @param $lastKnownVisit
      * @return false|int|mixed
      */

@@ -23,8 +23,6 @@ class PluginQuickTime extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginC
         return Piwik::translate('General_Plugin') . ' (QuickTime)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

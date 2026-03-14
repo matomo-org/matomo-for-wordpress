@@ -149,9 +149,6 @@ class ArchiveFilter
     {
         return $this->disableSegmentsArchiving;
     }
-    /**
-     * @param bool $disableSegmentsArchiving
-     */
     public function setDisableSegmentsArchiving(bool $disableSegmentsArchiving)
     {
         $this->disableSegmentsArchiving = $disableSegmentsArchiving;
@@ -188,9 +185,6 @@ class ArchiveFilter
     {
         $this->skipSegmentsForToday = $skipSegmentsForToday;
     }
-    /**
-     * @return bool
-     */
     public function isSkipSegmentsForToday() : bool
     {
         return $this->skipSegmentsForToday;

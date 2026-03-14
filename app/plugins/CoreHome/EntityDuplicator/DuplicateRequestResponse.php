@@ -47,32 +47,18 @@ class DuplicateRequestResponse
         // Save the initial state of the object
         $this->initialState = $this->getCurrentState();
     }
-    /**
-     * @return bool
-     */
     public function isSuccess() : bool
     {
         return $this->success ?? \false;
     }
-    /**
-     * @param bool $success
-     * @return void
-     */
     public function setSuccess(bool $success) : void
     {
         $this->success = $success;
     }
-    /**
-     * @return string
-     */
     public function getMessage() : string
     {
         return $this->message ?? '';
     }
-    /**
-     * @param string $message
-     * @return void
-     */
     public function setMessage(string $message) : void
     {
         $this->message = $message;
@@ -86,15 +72,11 @@ class DuplicateRequestResponse
     }
     /**
      * @param array $additionalData
-     * @return void
      */
     public function setAdditionalData(array $additionalData) : void
     {
         $this->additionalData = $additionalData;
     }
-    /**
-     * @return bool
-     */
     public function hasResponseBeenModified() : bool
     {
         return $this->initialState !== $this->getCurrentState();
@@ -160,7 +142,6 @@ class DuplicateRequestResponse
      *   idSite but also since it doesn't need to be provided if the only destination site is the source site (idSite).
      * @param array|null $additionalData Optional array of additional data relating to the entity being copied.
      *
-     * @return void
      */
     public function setRequestDataForEvent(string $entityTypeTranslation, string $entityName, ?int $idEntity = null, ?int $idSite = null, ?array $idDestinationSites = null, ?array $additionalData = null) : void
     {

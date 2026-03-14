@@ -337,7 +337,6 @@ class PivotByDimension extends BaseFilter
         }
     }
     /**
-     * @param Row $columnRow
      * @param $pivotColumn
      * @return false|mixed
      */
@@ -428,7 +427,6 @@ class PivotByDimension extends BaseFilter
      * Returns true if pivoting by subtable is supported for a report. Will return true if the report
      * has a subtable dimension and if the subtable dimension is different than the report's dimension.
      *
-     * @param Report $report
      * @return bool
      */
     public static function isPivotingReportBySubtableSupported(Report $report)

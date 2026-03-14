@@ -22,8 +22,6 @@ class DeviceModel extends \Piwik\Plugins\DevicesDetection\Columns\Base
     protected $segmentName = 'deviceModel';
     protected $acceptValues = 'iPad, Nexus 5, Galaxy S5, Fire TV, etc.';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return string
      */
@@ -48,8 +46,6 @@ class DeviceModel extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return $genericDevice;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

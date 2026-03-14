@@ -26,7 +26,6 @@ class API extends PluginAPI
     public const HUMAN_COLUMN_SUFFIX = '_human';
     /**
      * @param int|string $idSite
-     * @param string $segment
      * @param string|array<string> $columns
      */
     public function get($idSite, string $period, string $date, string $segment = '', $columns = '') : DataTableInterface

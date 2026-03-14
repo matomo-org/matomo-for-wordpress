@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.7.1',
-        'version' => '5.7.1.0',
-        'reference' => '54b4667ef7e8d6498e27599b3658b486a44e9b71',
+        'pretty_version' => '5.8.0',
+        'version' => '5.8.0.0',
+        'reference' => '61fc6b8b2f32d1b6575ba36ed8d3917637f144d9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.7.1',
-            'version' => '5.7.1.0',
-            'reference' => '54b4667ef7e8d6498e27599b3658b486a44e9b71',
+            'pretty_version' => '5.8.0',
+            'version' => '5.8.0.0',
+            'reference' => '61fc6b8b2f32d1b6575ba36ed8d3917637f144d9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '09bc14923ebac69c00fb928f9a8a5a8563f861a6',
+            'reference' => '3e30189a3243690ee523bb434644029160c1e4d7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -221,8 +221,8 @@
             'dev_requirement' => false,
         ),
         'pear/pear-core-minimal' => array(
-            'pretty_version' => 'v1.10.17',
-            'version' => '1.10.17.0',
+            'pretty_version' => 'v1.10.18',
+            'version' => '1.10.18.0',
             'reference' => 'c7b55789d01de0ce090d289b73f1bbd6a2f113b1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../pear/pear-core-minimal',
@@ -341,7 +341,7 @@
         'rsky/pear-core-min' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v1.10.17',
+                0 => 'v1.10.18',
             ),
         ),
         'symfony/console' => array(
@@ -405,9 +405,9 @@
             'dev_requirement' => false,
         ),
         'symfony/http-kernel' => array(
-            'pretty_version' => 'v5.4.50',
-            'version' => '5.4.50.0',
-            'reference' => '2fe5cf994d7e1e189258b7f7d3395cc5999a9762',
+            'pretty_version' => 'v5.4.51',
+            'version' => '5.4.51.0',
+            'reference' => '85432f7548b2757b8387f7e1a468abd62fc4c9bc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/http-kernel',
             'aliases' => array(),
@@ -495,9 +495,9 @@
             'dev_requirement' => false,
         ),
         'symfony/process' => array(
-            'pretty_version' => 'v5.4.47',
-            'version' => '5.4.47.0',
-            'reference' => '5d1662fb32ebc94f17ddb8d635454a776066733d',
+            'pretty_version' => 'v5.4.51',
+            'version' => '5.4.51.0',
+            'reference' => '467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/process',
             'aliases' => array(),

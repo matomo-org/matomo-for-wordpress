@@ -51,8 +51,8 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     public function renderAction($action, $previousAction, $visitorDetails)
     {
-        if ($action['type'] != 'event') {
-            return;
+        if (empty($action['type']) || $action['type'] != 'event') {
+            return '';
         }
         $view = new View('@Events/_actionEvent.twig');
         $view->sendHeadersWhenRendering = \false;
@@ -67,7 +67,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     public function handleProfileAction($action, &$profile)
     {
-        if ($action['type'] != 'event') {
+        if (empty($action['type']) || $action['type'] != 'event') {
             return;
         }
         $profile['totalEvents']++;

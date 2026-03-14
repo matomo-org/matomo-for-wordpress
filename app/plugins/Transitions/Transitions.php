@@ -64,7 +64,6 @@ class Transitions extends \Piwik\Plugin
      *
      * @param $idSite
      *
-     * @return string
      */
     public static function getPeriodAllowedConfig($idSite) : string
     {

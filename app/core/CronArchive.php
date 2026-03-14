@@ -210,7 +210,6 @@ class CronArchive
     /**
      * Constructor.
      *
-     * @param LoggerInterface|null $logger
      */
     public function __construct(?LoggerInterface $logger = null)
     {
@@ -1163,9 +1162,6 @@ class CronArchive
         }
         return \false;
     }
-    /**
-     * @param ArchiveFilter $archiveFilter
-     */
     public function setArchiveFilter(ArchiveFilter $archiveFilter) : void
     {
         $this->archiveFilter = $archiveFilter;

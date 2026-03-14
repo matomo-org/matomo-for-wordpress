@@ -588,7 +588,8 @@
         "YouCannotModifyThisNote": "Nemôžete upraviť túto anotáciu, pretože ste ju nevytvorili, ani nemáte administrátorský prístup pre túto stránku."
     },
     "BotTracking": {
-        "PageUrl": "Adresa stránky"
+        "PageUrl": "Adresa stránky",
+        "SiteWithoutDataBackToMatomo": "Späť na Matomo"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Pridať nového dôveryhodného hostiteľa",
@@ -2013,6 +2014,9 @@
         "Time_AM": "AM",
         "Time_PM": "PM",
         "Timezone_Africa_Asmera": "Asmara",
+        "Timezone_America_Araguaina": "Araguaína",
+        "Timezone_America_Argentina_RioGallegos": "Río Gallegos",
+        "Timezone_America_Argentina_Tucuman": "Tucumán",
         "Timezone_America_BahiaBanderas": "Bahia Banderas",
         "Timezone_America_Belem": "Belém",
         "Timezone_America_Cancun": "Cancún",
@@ -2034,6 +2038,7 @@
         "Timezone_America_Mazatlan": "Mazatlán",
         "Timezone_America_Merida": "Mérida",
         "Timezone_America_MexicoCity": "México",
+        "Timezone_America_Noronha": "Fernando de Noronha",
         "Timezone_America_NorthDakota_Beulah": "Beulah, Severná Dakota",
         "Timezone_America_NorthDakota_Center": "Center, Severná Dakota",
         "Timezone_America_NorthDakota_NewSalem": "New Salem, Severná Dakota",
@@ -2041,7 +2046,7 @@
         "Timezone_America_SaoPaulo": "São Paulo",
         "Timezone_America_Scoresbysund": "Ittoqqortoormiit",
         "Timezone_America_StJohns": "St. John’s",
-        "Timezone_Antarctica_DumontDUrville": "Dumont d’Urville",
+        "Timezone_Antarctica_DumontDUrville": "Dumont-d’Urville",
         "Timezone_Antarctica_Syowa": "Šówa",
         "Timezone_Asia_Almaty": "Alma‑Ata",
         "Timezone_Asia_Aqtau": "Aktau",
@@ -2080,7 +2085,7 @@
         "Timezone_Europe_Moscow": "Moskva",
         "Timezone_Europe_Ulyanovsk": "Uľjanovsk",
         "Timezone_Pacific_Easter": "Veľkonočný ostrov",
-        "Timezone_Pacific_Enderbury": "Enderbury",
+        "Timezone_Pacific_Enderbury": "Canton",
         "Timezone_Pacific_Galapagos": "Galapágy",
         "Timezone_Pacific_Honolulu": "Honolulu",
         "Timezone_Pacific_Marquesas": "Markézy",

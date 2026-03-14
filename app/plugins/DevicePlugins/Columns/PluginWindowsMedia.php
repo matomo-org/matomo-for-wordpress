@@ -23,8 +23,6 @@ class PluginWindowsMedia extends \Piwik\Plugins\DevicePlugins\Columns\DevicePlug
         return Piwik::translate('General_Plugin') . ' (Windows Media)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -63,11 +63,7 @@ class Controller extends Plugin\ControllerAdmin
     private $passwordVerify;
     /**
      * Controller constructor.
-     * @param Translator $translator
-     * @param Plugin\SettingsProvider $settingsProvider
-     * @param PluginInstaller $pluginInstaller
      * @param Plugins $marketplacePlugins
-     * @param PasswordVerifier $passwordVerify
      */
     public function __construct(Translator $translator, Plugin\SettingsProvider $settingsProvider, \Piwik\Plugins\CorePluginsAdmin\PluginInstaller $pluginInstaller, PasswordVerifier $passwordVerify, $marketplacePlugins = null)
     {

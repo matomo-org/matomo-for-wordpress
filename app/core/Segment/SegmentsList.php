@@ -32,9 +32,6 @@ class SegmentsList
      */
     private $segments = array();
     private $segmentsByNameCache = array();
-    /**
-     * @param Segment $segment
-     */
     public function addSegment(Segment $segment)
     {
         $this->segments[] = $segment;

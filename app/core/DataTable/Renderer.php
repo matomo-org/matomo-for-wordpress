@@ -66,22 +66,15 @@ abstract class Renderer extends BaseFactory
     /**
      * Sets whether to render subtables or not
      *
-     * @param bool $enableRenderSubTable
      */
     public function setRenderSubTables(bool $enableRenderSubTable) : void
     {
         $this->renderSubTables = $enableRenderSubTable;
     }
-    /**
-     * @param bool $hideIdSubDataTable
-     */
     public function setHideIdSubDatableFromResponse(bool $hideIdSubDataTable) : void
     {
         $this->hideIdSubDatatable = $hideIdSubDataTable;
     }
-    /**
-     * @param bool $hideMetadata
-     */
     public function setHideMetadataFromResponse(bool $hideMetadata) : void
     {
         $this->hideMetadata = $hideMetadata;
@@ -89,7 +82,6 @@ abstract class Renderer extends BaseFactory
     /**
      * Returns whether to render subtables or not
      *
-     * @return bool
      */
     protected function isRenderSubtables() : bool
     {
@@ -110,7 +102,6 @@ abstract class Renderer extends BaseFactory
     public abstract function render();
     /**
      * @see render()
-     * @return string
      */
     public function __toString() : string
     {

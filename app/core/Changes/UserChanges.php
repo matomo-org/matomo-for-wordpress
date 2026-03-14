@@ -49,7 +49,6 @@ class UserChanges
     /**
      * Return the key of the last viewed change for the user, if any
      *
-     * @return int
      */
     private function getIdchangeLastViewed() : ?int
     {
@@ -84,7 +83,6 @@ class UserChanges
     /**
      * Record all changes as read
      *
-     * @return void
      * @throws \Piwik\Tracker\Db\DbException
      */
     public function markChangesAsRead() : void

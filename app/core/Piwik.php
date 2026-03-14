@@ -232,7 +232,6 @@ class Piwik
     /**
      * Returns if the given user needs to confirm his password in UI and for certain API methods
      *
-     * @param string $login
      * @return bool
      */
     public static function doesUserRequirePasswordConfirmation(string $login)

@@ -22,8 +22,6 @@ class BrowserVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
     protected $acceptValues = '1.0, 8.0, etc.';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

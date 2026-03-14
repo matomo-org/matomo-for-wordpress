@@ -686,7 +686,9 @@
         "YouCannotModifyThisNote": "Jūs nevarat mainīt šo anotāciju, jo neesat to izveidojis, un jums nav administratīvās piekļuves šai vietnei."
     },
     "BotTracking": {
-        "PageUrl": "Lapas URL"
+        "PageUrl": "Lapas URL",
+        "NoDataHttpTrackingApi": "HTTP izsekošanas API",
+        "SiteWithoutDataBackToMatomo": "Atgriezties uz Matomo"
     },
     "CoreAdminHome": {
         "AcceptInvite": "Pieņemt ielūgumu",
@@ -2284,6 +2286,7 @@
         "Timezone_America_CiudadJuarez": "Huaresa",
         "Timezone_America_CoralHarbour": "Atikokana",
         "Timezone_America_Cordoba": "Kordova",
+        "Timezone_America_Coyhaique": "Kojhaika",
         "Timezone_America_Creston": "Krestona",
         "Timezone_America_Cuiaba": "Kujaba",
         "Timezone_America_Danmarkshavn": "Denmārkšavna",
@@ -2292,6 +2295,7 @@
         "Timezone_America_Denver": "Denvera",
         "Timezone_America_Detroit": "Detroita",
         "Timezone_America_Edmonton": "Edmontona",
+        "Timezone_America_Eirunepe": "Eirunepé",
         "Timezone_America_FortNelson": "Fortnelsona",
         "Timezone_America_GlaceBay": "Gleisbeja",
         "Timezone_America_Godthab": "Nūka",
@@ -2436,11 +2440,10 @@
         "Timezone_Pacific_Bougainville": "Bugenvila sala",
         "Timezone_Pacific_Chatham": "Četema",
         "Timezone_Pacific_Easter": "Lieldienu sala",
-        "Timezone_Pacific_Enderbury": "Enderberija",
+        "Timezone_Pacific_Enderbury": "Kantona",
         "Timezone_Pacific_Galapagos": "Galapagu salas",
         "Timezone_Pacific_Gambier": "Gambjē salas",
         "Timezone_Pacific_Honolulu": "Honolulu",
-        "Timezone_Pacific_Kanton": "Kantona",
         "Timezone_Pacific_Kiritimati": "Kirisimasi",
         "Timezone_Pacific_Kosrae": "Kosraja",
         "Timezone_Pacific_Kwajalein": "Kvadžaleina",
@@ -2895,8 +2898,6 @@
         "PleaseFindBelow": "Jūsu %1$s ziņojums par %2$s skatāms zemāk.",
         "PluginDescription": "Izveidojiet pielāgotas atskaites un ieplānojiet tās nosūtīt pa e-pastu katru dienu, reizi nedēļā vai reizi mēnesī vienai vai vairākām personām. Tiek atbalstīti vairāki atskaišu formāti (HTML, PDF, csv, attēli).",
         "ReportFormat": "Atskaites formāts",
-        "ReportHour": "Nosūtīt ziņojumu plkst. %s",
-        "ReportHourWithUTC": "plkst. %s pēc UTC laika",
         "ReportIncludeNWebsites": "Ziņojumā tiks iekļauti galvenie rādījumi visām vietnēm, kurām ir vismaz viens apmeklējums (no pašlaik pieejamajām %s vietnēm).",
         "ReportPeriod": "Ziņojuma laikposms",
         "ReportSent": "Ziņojums nosūtīts",

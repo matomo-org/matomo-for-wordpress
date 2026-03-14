@@ -38,9 +38,6 @@ abstract class RecordBuilder
      */
     protected $columnToRenameAfterAggregation;
     /**
-     * @param int|null $maxRowsInTable
-     * @param int|null $maxRowsInSubtable
-     * @param string|null $columnToSortByBeforeTruncation
      * @param array|null $columnAggregationOps
      * @param array<string|int,string|int>|null $columnToRenameAfterAggregation
      */
@@ -60,8 +57,6 @@ abstract class RecordBuilder
      * Uses the protected `aggregate()` function to build records by aggregating log table data directly, then
      * inserts them as archive data.
      *
-     * @param ArchiveProcessor $archiveProcessor
-     * @return void
      */
     public function buildFromLogs(ArchiveProcessor $archiveProcessor) : void
     {
@@ -106,8 +101,6 @@ abstract class RecordBuilder
      * Builds records for non-day periods by aggregating day records together, then inserts
      * them as archive data.
      *
-     * @param ArchiveProcessor $archiveProcessor
-     * @return void
      */
     public function buildForNonDayPeriod(ArchiveProcessor $archiveProcessor) : void
     {
@@ -250,7 +243,6 @@ abstract class RecordBuilder
      * Returns an extra hint for LogAggregator to add to log aggregation SQL. Can be overridden if you'd
      * like the origin hint to have more information.
      *
-     * @return string
      */
     public function getQueryOriginHint() : string
     {
@@ -265,7 +257,6 @@ abstract class RecordBuilder
      * @param ArchiveProcessor $archiveProcessor Archiving parameters, like idSite, can influence the list of
      *                                           all records a RecordBuilder produces, so it is required here.
      * @param string[] $requestedReports The list of requested reports to check for.
-     * @return bool
      */
     public function isBuilderForAtLeastOneOf(ArchiveProcessor $archiveProcessor, array $requestedReports) : bool
     {
