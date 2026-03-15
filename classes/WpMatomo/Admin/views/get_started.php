@@ -121,7 +121,7 @@ if ( empty( $show_this_page ) ) {
 			<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
 			<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[track_mode]"
 				   value="<?php echo esc_attr( TrackingSettings::TRACK_MODE_DEFAULT ); ?>">
-			<input type="submit" class="button-primary" value="<?php esc_html_e( 'Enable tracking now', 'matomo' ); ?>">
+			<input type="submit" class="button-primary" id="matomo-enable-tracking" value="<?php esc_html_e( 'Enable tracking now', 'matomo' ); ?>">
 		</form>
 	<?php } ?>
 

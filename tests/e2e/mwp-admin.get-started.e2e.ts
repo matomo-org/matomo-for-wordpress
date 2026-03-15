@@ -6,9 +6,11 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser, $ } from '@wdio/globals';
+import fetch from 'node-fetch';
 import MwpGetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import Website from './website.js';
+import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
 
 describe('MWP Admin > Get Started', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -20,11 +22,16 @@ describe('MWP Admin > Get Started', () => {
 
     await Website.login();
 
-    // TODO: disable tracking
-  });
-
-  after(async () => {
-    // TODO: re-enable tracking
+    await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'matomo_test_show_get_started',
+        date: OverviewPage.getDefaultDate(),
+      }),
+    });
   });
 
   it('should load the page correctly', async () => {
@@ -34,5 +41,10 @@ describe('MWP Admin > Get Started', () => {
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.get-started.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
+  });
+
+  it('should hide the page when both steps are completed', async () => {
+    await MwpGetStartedPage.enableTracking();
+    expect(await $('.matomo-dashboard-container').isExisting()).toBeTruthy();
   });
 });
