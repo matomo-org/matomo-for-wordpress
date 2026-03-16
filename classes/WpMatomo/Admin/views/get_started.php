@@ -12,6 +12,7 @@
  */
 use WpMatomo\Admin\AdminSettings;
 use WpMatomo\Admin\GetStarted;
+use WpMatomo\Admin\MarketplaceSetupWizardBody;
 use WpMatomo\Admin\Menu;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Settings;
@@ -24,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $can_user_edit */
 /** @var bool $was_updated */
 /** @var bool $show_this_page */
+/** @var MarketplaceSetupWizardBody $matomo_marketplace_setup_wizard_body */
+/** @var bool $matomo_is_marketplace_active */
 
 if ( empty( $show_this_page ) ) {
 	echo '<meta http-equiv="refresh" content="0;url=' . esc_attr( menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) . '" />';
@@ -103,21 +106,12 @@ if ( empty( $show_this_page ) ) {
 	</p>
 
 	<?php if ( $settings->is_tracking_enabled() ) { ?>
-		<h2>2. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes"
-																			 style="color: green;"></span></h2>
+		<h2>
+			2. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes" style="color: green;"></span>
+		</h2>
 		<p><?php esc_html_e( 'Tracking should be working now and you don\'t have to do anything else to set up tracking.', 'matomo' ); ?>
 			<a href="<?php echo esc_url( AdminSettings::make_url( AdminSettings::TAB_TRACKING ) ); ?>"><?php esc_html_e( 'Click here to optionally configure the tracking code to your liking (not required).', 'matomo' ); ?></a>
 		</p>
-
-		<h2>3. <?php esc_html_e( 'Done', 'matomo' ); ?></h2>
-
-		<form method="post">
-			<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
-			<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[show_get_started_page]"
-				   value="no">
-			<input type="submit" class="button-primary"
-				   value="<?php esc_html_e( 'Hide this page', 'matomo' ); ?>">
-		</form>
 	<?php } else { ?>
 		<h2>2. <?php esc_html_e( 'Enable tracking', 'matomo' ); ?></h2>
 
@@ -127,9 +121,21 @@ if ( empty( $show_this_page ) ) {
 			<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
 			<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[track_mode]"
 				   value="<?php echo esc_attr( TrackingSettings::TRACK_MODE_DEFAULT ); ?>">
-			<input type="submit" class="button-primary" value="<?php esc_html_e( 'Enable tracking now', 'matomo' ); ?>">
+			<input type="submit" class="button-primary" id="matomo-enable-tracking" value="<?php esc_html_e( 'Enable tracking now', 'matomo' ); ?>">
 		</form>
 	<?php } ?>
+
+	<h2>
+		3. <?php esc_html_e( 'Setup the Matomo Marketplace', 'matomo' ); ?>
+		<?php if ( $matomo_is_marketplace_active ) { ?>
+			<span class="dashicons dashicons-yes" style="color: green;"></span>
+		<?php } ?>
+	</h2>
+
+	<div style="max-width: 700px;">
+		<?php $matomo_marketplace_setup_wizard_body->show(); ?>
+	</div>
+
 	<p>
 		<br/>
 	</p>

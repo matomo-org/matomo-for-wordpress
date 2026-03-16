@@ -65,6 +65,8 @@ class Menu {
 	}
 
 	public function add_menu() {
+		do_action( 'matomo_before_add_menu' );
+
 		$info          = new Info();
 		$get_started   = new GetStarted( $this->settings );
 		$marketplace   = new Marketplace( $this->settings );

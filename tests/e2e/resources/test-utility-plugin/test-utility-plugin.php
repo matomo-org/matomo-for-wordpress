@@ -100,6 +100,17 @@ add_action(
 	}
 );
 
+// ajax method for making sure get started shows
+add_action(
+	'wp_ajax_nopriv_matomo_test_show_get_started',
+	function () {
+		$settings = new WpMatomo\Settings();
+		$settings->set_global_option( 'track_mode', 'disabled' );
+		$settings->set_global_option( \WpMatomo\Settings::SHOW_GET_STARTED_PAGE, 1 );
+		$settings->save();
+	}
+);
+
 function matomo_test_utility_plugin_request_overrides() {
 	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 
