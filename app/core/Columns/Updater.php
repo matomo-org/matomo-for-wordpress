@@ -49,7 +49,6 @@ class Updater extends \Piwik\Updates
         $this->conversionDimensions = $conversionDimensions;
     }
     /**
-     * @param PiwikUpdater $updater
      * @return Migration[]
      * @api
      */
@@ -58,7 +57,6 @@ class Updater extends \Piwik\Updates
         return $this->getMigrationQueries($updater);
     }
     /**
-     * @param PiwikUpdater $updater
      * @return Migration\Db[]
      */
     public function getMigrationQueries(PiwikUpdater $updater)
@@ -188,7 +186,6 @@ class Updater extends \Piwik\Updates
         return $versions;
     }
     /**
-     * @param PiwikUpdater $updater
      * @param Dimension $dimension
      * @param string $componentPrefix
      * @param array $columns

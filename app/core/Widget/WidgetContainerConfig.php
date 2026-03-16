@@ -79,7 +79,6 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     /**
      * Adds a new widget to the container widget.
      *
-     * @param WidgetConfig $widget
      * @return static
      */
     public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)

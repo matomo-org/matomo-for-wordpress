@@ -100,8 +100,6 @@ class GoalManager
      *
      * @param int $idSite
      * @param Action $action
-     * @param VisitProperties $visitor
-     * @param Request $request
      * @throws Exception
      * @return array[] Goals matched
      */
@@ -125,9 +123,6 @@ class GoalManager
      * is returned. Otherwise null is returned.
      *
      * @param array $goal
-     * @param Action $action
-     * @param VisitProperties $visitor
-     * @param Request $request
      * @return bool|null if a goal is matched, a string of the Action URL is returned, or if no goal was matched it returns null
      */
     public function detectGoalMatch($goal, \Piwik\Tracker\Action $action, VisitProperties $visitor, \Piwik\Tracker\Request $request)
@@ -216,8 +211,6 @@ class GoalManager
     /**
      * Records one or several goals matched in this request.
      *
-     * @param VisitProperties $visitProperties
-     * @param Request $request
      */
     public function recordGoals(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
@@ -267,8 +260,6 @@ class GoalManager
      * Records an Ecommerce conversion in the DB. Deals with Items found in the request.
      * Will deal with 2 types of conversions: Ecommerce Order and Ecommerce Cart update (Add to cart, Update Cart etc).
      *
-     * @param VisitProperties $visitProperties
-     * @param Request $request
      * @param array $conversion
      * @param Action|null $action
      */
@@ -559,8 +550,6 @@ class GoalManager
     /**
      * Records a standard non-Ecommerce goal in the DB (URL/Title matching),
      * linking the conversion to the action that triggered it
-     * @param VisitProperties $visitProperties
-     * @param Request $request
      * @param array $goal
      * @param Action|null $action
      */
@@ -606,7 +595,6 @@ class GoalManager
      *
      * @param array $conversion
      * @param array $visitInformation
-     * @param Request $request
      * @param Action|null $action
      * @param int|null $convertedGoal
      * @return bool

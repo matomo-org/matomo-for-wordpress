@@ -14,7 +14,7 @@ use Piwik\Http\HttpCodeException;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Cache;
 use Piwik\Common;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Context;
 use Piwik\DataTable;
@@ -52,8 +52,15 @@ use Piwik\Log\LoggerInterface;
  *
  * **Basic Usage**
  *
- *     $request = new Request('method=UserLanguage.getLanguage&idSite=1&date=yesterday&period=week'
- *                          . '&format=xml&filter_limit=5&filter_offset=0')
+ *     $request = new Request([
+ *         'method' => 'UserLanguage.getLanguage',
+ *         'idSite' => 1,
+ *         'date' => 'yesterday',
+ *         'period' => 'week',
+ *         'format' => 'xml',
+ *         'filter_limit' => 5,
+ *         'filter_offset' => 0,
+ *     ])
  *     $result = $request->process();
  *     echo $result;
  *
@@ -434,15 +441,21 @@ $tokenAuth)
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-        $allowWriteAmin = Config::getInstance()->General['enable_framed_allow_write_admin_token_auth'] == 1;
-        if (Piwik::isUserHasSomeWriteAccess() && !$allowWriteAmin) {
+        $allowWriteAdminModuleActionConfig = StaticContainer::get('token_auth.write_admin_allowed_module_actions');
+        if (!is_array($allowWriteAdminModuleActionConfig)) {
+            $allowWriteAdminModuleActionConfig = [];
+        }
+        $allowWriteAdmin = GeneralConfig::getConfigValue('enable_framed_allow_write_admin_token_auth') == 1;
+        $allowWriteAdminModuleAction = in_array($module . '.' . $action, $allowWriteAdminModuleActionConfig, \true);
+        if (Piwik::isUserHasSomeWriteAccess() && !$allowWriteAdmin && !$allowWriteAdminModuleAction) {
             // we allow UI authentication/ embedding widgets / reports etc only for users that have only view
             // access. it's mostly there to get users to use auth tokens of view users when embedding reports
             // token_auth is fine for API calls since they would be always authenticated later anyway
             // token_auth is also fine in CLI mode as eg doAsSuperUser might be used etc
             //
             // NOTE: this does not apply if the [General] enable_framed_allow_write_admin_token_auth INI
-            // option is set.
+            // option is set, or if the current module/action is allowlisted in the
+            // token_auth.write_admin_allowed_module_actions DI entry.
             $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_ViewAccessRequired', [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/faq_147/') . 'https://matomo.org/faq/troubleshooting/faq_147/</a>']));
             $ex->setIsHtmlMessage();
             throw $ex;
@@ -597,7 +610,7 @@ $tokenAuth)
     /**
      * Returns the segment query parameter from the original request, without modifications.
      *
-     * @return array|bool
+     * @return string|false
      */
     public static function getRawSegmentFromRequest()
     {

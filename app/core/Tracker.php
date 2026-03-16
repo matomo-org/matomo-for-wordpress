@@ -125,7 +125,6 @@ class Tracker
         }
     }
     /**
-     * @param Request $request
      * @return void
      */
     public function trackRequest(Request $request)

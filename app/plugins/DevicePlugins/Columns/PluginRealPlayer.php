@@ -23,8 +23,6 @@ class PluginRealPlayer extends \Piwik\Plugins\DevicePlugins\Columns\DevicePlugin
         return Piwik::translate('General_Plugin') . ' (RealPlayer)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

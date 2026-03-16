@@ -27,7 +27,6 @@ class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
      */
     private $tmpPath;
     /**
-     * @param Translator $translator
      * @param string $tmpPath Path to the temp directory.
      */
     public function __construct(Translator $translator, $tmpPath)

@@ -106,7 +106,6 @@ class VisitorGeolocator
         return $location;
     }
     /**
-     * @param LocationProvider $provider
      * @param array $userInfo
      * @return array|false
      */

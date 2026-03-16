@@ -30,8 +30,6 @@ class Language extends VisitDimension
         return \Piwik\Plugins\UserLanguage\languageTranslateWithCode($value);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

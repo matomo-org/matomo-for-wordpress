@@ -61,8 +61,6 @@ class BrowserName extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return $visitor->getVisitorColumn($this->columnName);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

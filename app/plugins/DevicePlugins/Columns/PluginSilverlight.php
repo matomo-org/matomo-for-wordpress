@@ -23,8 +23,6 @@ class PluginSilverlight extends \Piwik\Plugins\DevicePlugins\Columns\DevicePlugi
         return Piwik::translate('General_Plugin') . ' (Silverlight)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -67,7 +67,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     public function renderAction($action, $previousAction, $visitorDetails)
     {
         if (empty($action['type'])) {
-            return;
+            return '';
         }
         switch ($action['type']) {
             case 'ecommerceOrder':
@@ -76,7 +76,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
                 break;
             case 'goal':
                 if (empty($action['goalName'])) {
-                    return;
+                    return '';
                     // goal deleted
                 }
                 $template = '@Live/_actionGoal.twig';
@@ -89,7 +89,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
                 break;
         }
         if (empty($template)) {
-            return;
+            return '';
         }
         if (isset($action['type']) && in_array($action['type'], ['outlink', 'download']) && isset($action['url'])) {
             $action['url'] = html_entity_decode($action['url'], \ENT_QUOTES, "UTF-8");

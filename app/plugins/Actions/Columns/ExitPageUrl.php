@@ -41,8 +41,6 @@ class ExitPageUrl extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int|bool
      */
@@ -55,8 +53,6 @@ class ExitPageUrl extends VisitDimension
         return (int) $idActionUrl;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */

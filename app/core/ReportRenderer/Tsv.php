@@ -97,7 +97,6 @@ class Tsv extends ReportRenderer
         $this->rendered .= implode('', array($reportName, $tsvRenderer->lineEnd, $reportData, $tsvRenderer->lineEnd, $tsvRenderer->lineEnd));
     }
     /**
-     * @param DataTableInterface $table
      * @param string $uniqueId
      * @return \Piwik\DataTable\Renderer\Tsv
      */

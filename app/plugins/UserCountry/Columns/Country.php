@@ -64,8 +64,6 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return \Piwik\Plugins\UserCountry\countryTranslate($value);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -84,8 +82,6 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return Visit::UNKNOWN_CODE;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -94,8 +90,6 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('country', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

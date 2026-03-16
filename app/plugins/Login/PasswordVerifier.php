@@ -76,7 +76,6 @@ $password)
         unset($sessionNamespace->redirectParams);
     }
     /**
-     * @param Date $now
      * @ignore
      * tests only
      */

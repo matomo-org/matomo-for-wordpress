@@ -103,7 +103,6 @@ class Settings
      * @param $ip
      * @param $browserLang
      * @param $fingerprintHash
-     * @return string
      */
     protected function getConfigHash(\Piwik\Tracker\Request $request, $os, $browserName, $browserVersion, $plugin_Flash, $plugin_Java, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Silverlight, $plugin_Cookie, $ip, $browserLang, $fingerprintHash) : string
     {

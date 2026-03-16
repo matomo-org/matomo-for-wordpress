@@ -62,7 +62,7 @@ class CronArchivingCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagno
             } else {
                 $reasonText = implode(', ', $reasons);
             }
-            $comment .= $this->translator->translate('Installation_NotSupported') . ' ' . $this->translator->translate('Goals_Optional') . ' (' . $this->translator->translate('General_Reasons') . ': ' . $reasonText . ')' . $this->translator->translate('General_LearnMore', [' ' . Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/') . '">', '</a>']);
+            $comment .= $this->translator->translate('Installation_NotSupported') . ' ' . $this->translator->translate('Goals_Optional') . ' (' . $this->translator->translate('General_Reasons') . ': ' . $reasonText . ')' . ' ' . $this->translator->translate('General_LearnMore', [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-to-make-the-diagnostic-managing-processes-via-cli-to-display-ok/'), '</a>']);
             $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_INFORMATIONAL;
         }
         $label = $this->translator->translate('Installation_SystemCheckCronArchiveProcess') . ' - ' . $this->translator->translate('Installation_SystemCheckCronArchiveProcessCLI');

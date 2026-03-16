@@ -6,11 +6,20 @@
  *
  */
 
+import { $ } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpGetStartedPage extends MwpPage {
   async open() {
     return await super.open('/wp-admin/admin.php?page=matomo-get-started');
+  }
+
+  async enableTracking(expectRedirect = true) {
+    await $('#matomo-enable-tracking').click();
+
+    if (expectRedirect) {
+      await $('.postbox').waitForExist({timeout: 30000});
+    }
   }
 }
 

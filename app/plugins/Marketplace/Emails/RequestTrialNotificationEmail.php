@@ -40,16 +40,10 @@ class RequestTrialNotificationEmail extends Mail
         $this->pluginDisplayName = $pluginDisplayName;
         $this->setUpEmail();
     }
-    /**
-     * @return string
-     */
     protected function getDefaultSubject() : string
     {
         return Piwik::translate('Marketplace_RequestTrialNotificationEmailSubject', [$this->pluginDisplayName]);
     }
-    /**
-     * @return View
-     */
     protected function getDefaultBodyView() : View
     {
         $piwikUrl = SettingsPiwik::getPiwikUrl();

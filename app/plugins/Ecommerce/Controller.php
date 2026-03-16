@@ -68,7 +68,7 @@ class Controller extends \Piwik\Plugins\Goals\Controller
      */
     protected function getMetricsForGoal($idGoal, $dataRow = null)
     {
-        $request = new Request("method=Goals.get&format=original&format_metrics=0&idGoal={$idGoal}");
+        $request = new Request(['method' => 'Goals.get', 'format' => 'original', 'format_metrics' => 0, 'idGoal' => $idGoal]);
         $datatable = $request->process();
         $dataRow = $datatable->getFirstRow();
         $return = parent::getMetricsForGoal($idGoal, $dataRow);
@@ -88,10 +88,6 @@ class Controller extends \Piwik\Plugins\Goals\Controller
      *
      * @param array         $return
      * @param string|int    $idGoal
-     * @param string        $date
-     * @param string        $lastPeriodDate
-     * @param DataTable\Row $currentDataRow
-     * @param DataTable\Row $previousDataRow
      *
      * @return array
      */

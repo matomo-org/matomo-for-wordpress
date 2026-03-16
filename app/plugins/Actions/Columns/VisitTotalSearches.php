@@ -25,8 +25,6 @@ class VisitTotalSearches extends VisitDimension
         return Piwik::translate('Actions_SearchesSegmentHelp', '&segment=searches>0');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -38,8 +36,6 @@ class VisitTotalSearches extends VisitDimension
         return 0;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */

@@ -48,7 +48,6 @@ class StaticContainer
     /**
      * Only use this in tests.
      *
-     * @param Container $container
      */
     public static function push(Container $container)
     {

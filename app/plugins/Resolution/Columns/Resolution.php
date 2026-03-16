@@ -23,8 +23,6 @@ class Resolution extends VisitDimension
     protected $namePlural = 'Resolution_Resolutions';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -41,8 +39,6 @@ class Resolution extends VisitDimension
         return $resolution;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

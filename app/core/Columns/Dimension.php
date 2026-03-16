@@ -386,7 +386,6 @@ abstract class Dimension
      *
      * @param mixed $value
      * @param int $idSite
-     * @param Formatter $formatter
      * @return mixed
      * @api since Piwik 3.2.0
      */
@@ -435,8 +434,6 @@ abstract class Dimension
      * $segmentsList->addSegment($segment);
      * ```
      *
-     * @param SegmentsList            $segmentsList
-     * @param DimensionSegmentFactory $dimensionSegmentFactory
      * @throws Exception
      */
     public function configureSegments(SegmentsList $segmentsList, \Piwik\Columns\DimensionSegmentFactory $dimensionSegmentFactory)
@@ -451,8 +448,6 @@ abstract class Dimension
      *
      * For certain dimension types, some metrics will be added automatically.
      *
-     * @param MetricsList $metricsList
-     * @param DimensionMetricFactory $dimensionMetricFactory
      */
     public function configureMetrics(\Piwik\Columns\MetricsList $metricsList, \Piwik\Columns\DimensionMetricFactory $dimensionMetricFactory)
     {

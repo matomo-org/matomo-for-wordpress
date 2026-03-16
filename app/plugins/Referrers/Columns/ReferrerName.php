@@ -23,8 +23,6 @@ class ReferrerName extends \Piwik\Plugins\Referrers\Columns\Base
     protected $acceptValues = 'twitter.com, www.facebook.com, Bing, Google, Yahoo, CampaignName';
     protected $category = 'Referrers_Referrers';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -42,8 +40,6 @@ class ReferrerName extends \Piwik\Plugins\Referrers\Columns\Base
         return \false;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

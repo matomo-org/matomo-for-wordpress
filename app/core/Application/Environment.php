@@ -166,7 +166,6 @@ class Environment
         $validator->validate();
     }
     /**
-     * @param EnvironmentManipulator $manipulator
      * @internal
      */
     public static function setGlobalEnvironmentManipulator(\Piwik\Application\EnvironmentManipulator $manipulator)

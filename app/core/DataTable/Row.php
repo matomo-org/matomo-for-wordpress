@@ -234,7 +234,7 @@ class Row extends \ArrayObject
     /**
      * Returns the associated subtable, if one exists. Returns `false` if none exists.
      *
-     * @return DataTable|bool
+     * @return DataTable|false
      */
     public function getSubtable()
     {
@@ -425,7 +425,7 @@ class Row extends \ArrayObject
      *
      * @param \Piwik\DataTable\Row $rowToSum The row to sum to this row.
      * @param bool $enableCopyMetadata Whether metadata should be copied or not.
-     * @param array|bool $aggregationOperations for columns that should not be summed, determine which
+     * @param array|bool|null $aggregationOperations for columns that should not be summed, determine which
      *                                     aggregation should be used (min, max). format:
      *                                     `array('column name' => 'function name')`
      * @throws Exception
@@ -462,8 +462,6 @@ class Row extends \ArrayObject
             $this->sumRowMetadata($rowToSum, $aggregationOperations);
         }
     }
-    /**
-     */
     private function getColumnValuesMerged($operation, $thisColumnValue, $columnToSumValue, $thisRow, $rowToSum, $columnName = null)
     {
         switch ($operation) {
@@ -581,7 +579,6 @@ class Row extends \ArrayObject
     /**
      * Associates the supplied table with this row as the comparisons table.
      *
-     * @param DataTable $table
      */
     public function setComparisons(DataTable $table)
     {

@@ -15,7 +15,7 @@ use Piwik\ArchiveProcessor\Rules;
 use Piwik\Cache;
 use Piwik\CacheId;
 use Piwik\Common;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\CronArchive\SegmentArchiving;
 use Piwik\DataAccess\ArchiveSelector;
@@ -43,7 +43,7 @@ class SegmentEditor extends \Piwik\Plugin
     {
         return array('Segments.getKnownSegmentsToArchiveForSite' => 'getKnownSegmentsToArchiveForSite', 'Segments.getKnownSegmentsToArchiveAllSites' => 'getKnownSegmentsToArchiveAllSites', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Template.nextToCalendar' => 'getSegmentEditorHtml', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Visualization.onNoData' => 'onNoData', 'Archive.noArchivedData' => 'onNoArchiveData', 'Db.getTablesInstalled' => 'getTablesInstalled', 'SitesManager.deleteSite.end' => 'onDeleteSite', 'UsersManager.deleteUser' => 'onDeleteUser');
     }
-    public function onDeleteSite($idSite)
+    public function onDeleteSite($idSite) : void
     {
         $model = new \Piwik\Plugins\SegmentEditor\Model();
         foreach ($model->getAllSegmentsForAllUsers($idSite) as $segment) {
@@ -56,13 +56,13 @@ class SegmentEditor extends \Piwik\Plugin
     /**
      * Register the new tables, so Matomo knows about them.
      *
-     * @param array $allTablesInstalled
+     * @param array<string> $allTablesInstalled
      */
-    public function getTablesInstalled(&$allTablesInstalled)
+    public function getTablesInstalled(&$allTablesInstalled) : void
     {
         $allTablesInstalled[] = Common::prefixTable('segment');
     }
-    public function addSystemSummaryItems(&$systemSummary)
+    public function addSystemSummaryItems(&$systemSummary) : void
     {
         $storedSegments = StaticContainer::get('Piwik\\Plugins\\SegmentEditor\\Services\\StoredSegmentService');
         $segments = $storedSegments->getAllSegmentsAndIgnoreVisibility();
@@ -84,12 +84,15 @@ class SegmentEditor extends \Piwik\Plugin
         }
         $systemSummary[] = new SystemSummary\Item($key = 'segments', $message, $value = null, $url = null, $icon = 'icon-segment', $order = 6);
     }
-    public function getSegmentEditorHtml(&$out)
+    /**
+     * @param string $out
+     */
+    public function getSegmentEditorHtml(&$out) : void
     {
         $selector = new \Piwik\Plugins\SegmentEditor\SegmentSelectorControl();
         $out .= $selector->render();
     }
-    public function getKnownSegmentsToArchiveAllSites(&$segments)
+    public function getKnownSegmentsToArchiveAllSites(&$segments) : void
     {
         $this->getKnownSegmentsToArchiveForSite($segments, $idSite = \false);
     }
@@ -97,10 +100,10 @@ class SegmentEditor extends \Piwik\Plugin
      * Adds the pre-processed segments to the list of Segments.
      * Used by CronArchive, ArchiveProcessor\Rules, etc.
      *
-     * @param $segments
-     * @param $idSite
+     * @param array<string> $segments
+     * @param int|false $idSite
      */
-    public function getKnownSegmentsToArchiveForSite(&$segments, $idSite)
+    public function getKnownSegmentsToArchiveForSite(&$segments, $idSite) : void
     {
         $model = new \Piwik\Plugins\SegmentEditor\Model();
         $segmentToAutoArchive = $model->getAllSegmentsAndIgnoreVisibility();
@@ -118,11 +121,11 @@ class SegmentEditor extends \Piwik\Plugin
         }
         $segments = array_unique($segments);
     }
-    public function onNoArchiveData()
+    public function onNoArchiveData() : void
     {
         // don't perform this check if the request was triggered by the UI
         if (Common::isXmlHttpRequest()) {
-            return null;
+            return;
         }
         // when browser archiving is enabled, the archiving process can be triggered for an API request.
         // for non-day periods, this means the Archive class will be used for smaller periods to build the
@@ -130,15 +133,15 @@ class SegmentEditor extends \Piwik\Plugin
         // Archive can report there is no data for a day, triggering this event, but there may be data for other
         // days in the week. in this case, we don't want to throw an exception.
         if (PluginsArchiver::isArchivingProcessActive()) {
-            return null;
+            return;
         }
         // don't do check unless this is the root API request and it is an HTTP API request
         if (!Request::isCurrentApiRequestTheRootApiRequest() || !Request::isRootRequestApiRequest()) {
-            return null;
+            return;
         }
         // don't do check during cron archiving
         if (SettingsServer::isArchivePhpTriggered() || Common::isPhpCliMode()) {
-            return null;
+            return;
         }
         $segmentInfo = $this->getSegmentIfIsUnprocessed();
         if (empty($segmentInfo)) {
@@ -147,7 +150,7 @@ class SegmentEditor extends \Piwik\Plugin
         [$segment, $storedSegment, $isSegmentToPreprocess] = $segmentInfo;
         throw new \Piwik\Plugins\SegmentEditor\UnprocessedSegmentException($segment, $isSegmentToPreprocess, $storedSegment);
     }
-    public function onNoData(View $dataTableView)
+    public function onNoData(View $dataTableView) : void
     {
         // if the archiving hasn't run in a while notification is up, don't display this one
         if (isset($dataTableView->notifications[Diagnostics::NO_DATA_ARCHIVING_NOT_RUN_NOTIFICATION_ID])) {
@@ -162,7 +165,7 @@ class SegmentEditor extends \Piwik\Plugin
             return;
             // do not display the notification for custom segments
         }
-        $segmentDisplayName = !empty($storedSegment['name']) ? $storedSegment['name'] : $segment;
+        $segmentDisplayName = !empty($storedSegment['name']) ? $storedSegment['name'] : Common::sanitizeInputValue($segment);
         $view = new View('@SegmentEditor/_unprocessedSegmentMessage.twig');
         $view->isSegmentToPreprocess = $isSegmentToPreprocess;
         $view->segmentName = $segmentDisplayName;
@@ -176,7 +179,10 @@ class SegmentEditor extends \Piwik\Plugin
         $notification->raw = \true;
         $dataTableView->notifications[self::NO_DATA_UNPROCESSED_SEGMENT_ID] = $notification;
     }
-    private function getSegmentIfIsUnprocessed()
+    /**
+     * @return array{0: Segment, 1: array|null, 2: bool, 3: bool}|null
+     */
+    private function getSegmentIfIsUnprocessed() : ?array
     {
         $request = \Piwik\Request::fromRequest();
         $idSite = $request->getIntegerParameter('idSite', -1);
@@ -246,34 +252,31 @@ class SegmentEditor extends \Piwik\Plugin
     {
         \Piwik\Plugins\SegmentEditor\Model::install();
     }
-    public function getJsFiles(&$jsFiles)
+    public function getJsFiles(&$jsFiles) : void
     {
         $jsFiles[] = "plugins/SegmentEditor/javascripts/Segmentation.js";
     }
-    public function getStylesheetFiles(&$stylesheets)
+    public function getStylesheetFiles(&$stylesheets) : void
     {
         $stylesheets[] = "plugins/SegmentEditor/stylesheets/segmentation.less";
         $stylesheets[] = "plugins/SegmentEditor/vue/src/SegmentGenerator/SegmentGenerator.less";
     }
     /**
      * Returns whether adding segments for all websites is enabled or not.
-     *
-     * @return bool
      */
-    public static function isAddingSegmentsForAllWebsitesEnabled()
+    public static function isAddingSegmentsForAllWebsitesEnabled() : bool
     {
-        return Config::getInstance()->General['allow_adding_segments_for_all_websites'] == 1;
+        return GeneralConfig::getConfigValue('allow_adding_segments_for_all_websites') == 1;
     }
     /**
      * Returns whether create realtime segments is enabled or not.
      *
-     * @return bool
      */
     public static function isCreateRealtimeSegmentsEnabled() : bool
     {
-        return Config::getInstance()->General['enable_create_realtime_segments'] == 1;
+        return GeneralConfig::getConfigValue('enable_create_realtime_segments') == 1;
     }
-    public function getClientSideTranslationKeys(&$translationKeys)
+    public function getClientSideTranslationKeys(&$translationKeys) : void
     {
         $translationKeys[] = 'SegmentEditor_CustomSegment';
         $translationKeys[] = 'SegmentEditor_VisibleToSuperUser';
@@ -303,6 +306,10 @@ class SegmentEditor extends \Piwik\Plugin
         $translationKeys[] = 'Live_VisitsLog';
         $translationKeys[] = 'General_MaximumNumberOfSegmentsComparedIs';
     }
+    /**
+     * @param int $idSite
+     * @return array
+     */
     public static function getAllSegmentsForSite($idSite)
     {
         $cache = Cache::getTransientCache();
@@ -314,11 +321,17 @@ class SegmentEditor extends \Piwik\Plugin
         }
         return $segments;
     }
-    public function onDeleteUser($userLogin)
+    /**
+     * @param string $userLogin
+     */
+    public function onDeleteUser($userLogin) : void
     {
         $this->transferAllUserSegmentsToSuperUser($userLogin);
     }
-    public function transferAllUserSegmentsToSuperUser($userLogin)
+    /**
+     * @param string $userLogin
+     */
+    public function transferAllUserSegmentsToSuperUser($userLogin) : void
     {
         /*
          * We need to do that as super user, as the event triggering this method might be initiated without a session

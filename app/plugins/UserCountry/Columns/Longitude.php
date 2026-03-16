@@ -23,8 +23,6 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $nameSingular = 'UserCountry_Longitude';
     protected $namePlural = 'UserCountry_Longitudes';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -39,8 +37,6 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $longitude;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -49,8 +45,6 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('long', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

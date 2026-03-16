@@ -44,8 +44,6 @@ class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
         };
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -55,8 +53,6 @@ class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return $parser->getBrand();
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

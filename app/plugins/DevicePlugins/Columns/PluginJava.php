@@ -23,8 +23,6 @@ class PluginJava extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginColumn
         return Piwik::translate('General_Plugin') . ' (Java)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

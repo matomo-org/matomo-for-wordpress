@@ -21,8 +21,6 @@ class VisitTotalTime extends VisitDimension
     protected $nameSingular = 'General_ColumnVisitDuration';
     protected $type = self::TYPE_DURATION_S;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -33,8 +31,6 @@ class VisitTotalTime extends VisitDimension
         return $totalTime;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -46,8 +42,6 @@ class VisitTotalTime extends VisitDimension
         return $totalTime;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */

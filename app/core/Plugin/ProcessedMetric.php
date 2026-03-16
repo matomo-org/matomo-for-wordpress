@@ -55,7 +55,6 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
      * to skip computing this metric.
      *
      * @param Report $report
-     * @param DataTable $table
      * @return bool Return `true` to compute the metric for the table, `false` to skip computing
      *              this metric.
      */
@@ -64,7 +63,6 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
         return \true;
     }
     /**
-     * @param Row $row
      * @ignore
      */
     public function beforeComputeSubtable(Row $row)
@@ -72,7 +70,6 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
         // empty
     }
     /**
-     * @param Row $row
      * @ignore
      */
     public function afterComputeSubtable(Row $row)

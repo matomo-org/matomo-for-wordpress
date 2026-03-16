@@ -26,7 +26,6 @@ class Html extends Renderer
     /**
      * Sets the table id
      *
-     * @param string $id
      */
     public function setTableId(string $id) : void
     {
@@ -35,7 +34,6 @@ class Html extends Renderer
     /**
      * Computes the dataTable output and returns the string/binary
      *
-     * @return string
      */
     public function render() : string
     {
@@ -48,7 +46,6 @@ class Html extends Renderer
      * Computes the output for the given data table
      *
      * @param DataTableInterface|array $table
-     * @return string
      */
     protected function renderTable($table) : string
     {
@@ -74,7 +71,6 @@ class Html extends Renderer
      * Adds the given data table to the table structure array
      *
      * @param DataTable|DataTable\Map $table
-     * @param null|string $columnToAdd
      * @param null|mixed $valueToAdd
      * @throws Exception
      */
@@ -138,7 +134,6 @@ class Html extends Renderer
     /**
      * Computes the output for the table structure array
      *
-     * @return string
      */
     protected function renderDataTable() : string
     {
