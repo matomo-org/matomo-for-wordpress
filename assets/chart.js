@@ -1,5 +1,6 @@
 jQuery(document).ready(function(){
     jQuery('.matomo-table[data-chart]').each(function() {
+        var LABEL_EVERY_N_TICKS = 2;
         var colors = [
             "#55bae7",
             "#ddb745",
@@ -62,6 +63,18 @@ jQuery(document).ready(function(){
                     }
                 },
                 scales: {
+                    x: {
+                        ticks: {
+                            callback: function (value, index, values) {
+                                if ( index % LABEL_EVERY_N_TICKS !== 0 ) {
+                                    return '';
+                                }
+
+                                return labels[index];
+                            },
+                            maxRotation: 0,
+                        }
+                    },
                     y: {
                         beginAtZero: true
                     }
