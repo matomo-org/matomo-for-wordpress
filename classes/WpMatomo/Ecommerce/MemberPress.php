@@ -86,7 +86,8 @@ class MemberPress extends Base {
 	public function on_order() {
 		if ( isset( $_GET['membership'] )
 			 && ( isset( $_GET['trans_num'] ) || isset( $_GET['transaction_id'] ) )
-			 && class_exists( '\MeprTransaction' ) ) {
+			 && class_exists( '\MeprTransaction' )
+		) {
 			$txn = null;
 			if ( isset( $_GET['trans_num'] ) ) {
 				$txn = MeprTransaction::get_one_by_trans_num( sanitize_text_field( wp_unslash( $_GET['trans_num'] ) ) );
@@ -100,9 +101,15 @@ class MemberPress extends Base {
 				return;
 			}
 
-			$user = $txn->user();
-			if ( ! $user || ! $user->ID || get_current_user_id() !== $user->ID ) {
-				return; // TODO: add debug logging here
+			if ( ! $txn->user_id || get_current_user_id() !== (int) $txn->user_id ) {
+				$this->logger->log(
+					sprintf(
+						'Current user ID = %s did not match MemberPress transaction user ID = %s, not tracking.',
+						get_current_user_id(),
+						$txn->user_id
+					)
+				);
+				return;
 			}
 
 			if ( $this->has_order_been_tracked_already( $txn->id ) ) {
