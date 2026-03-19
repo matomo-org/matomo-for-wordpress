@@ -35,8 +35,6 @@ class ClientType extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return \Piwik\Plugins\DevicesDetection\getClientTypeMapping();
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -47,8 +45,6 @@ class ClientType extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return array_search($parser->getClient('type'), $clientTypes) ?: null;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

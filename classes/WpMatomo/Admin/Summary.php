@@ -42,7 +42,8 @@ class Summary {
 			 && is_admin()
 			 && check_admin_referer( self::NONCE_DASHBOARD )
 			 && is_user_logged_in()
-			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			 && current_user_can( Capabilities::KEY_VIEW )
+		) {
 			$unique_id = sanitize_text_field( wp_unslash( $_GET['report_uniqueid'] ) );
 			$date      = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 			$dashobard = new Dashboard();

@@ -36,7 +36,6 @@ class Updates_4_11_0_rc2 extends PiwikUpdates
         $this->userTable = Common::prefixTable('user');
     }
     /**
-     * @param Updater $updater
      *
      * @return Migration[]
      */

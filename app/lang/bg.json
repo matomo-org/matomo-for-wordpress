@@ -769,7 +769,9 @@
         "YouCannotModifyThisNote": "Вие не можете да променяте тази анотация, защото все още не сте я създали или нямате администраторски права за този сайт."
     },
     "BotTracking": {
-        "PageUrl": "Страница URL"
+        "PageUrl": "Страница URL",
+        "NoDataHttpTrackingApi": "API за проследяване на HTTP",
+        "SiteWithoutDataBackToMatomo": "Върнете се в Matomo"
     },
     "Contents": {
         "ContentImpression": "Импресия на съдържание",
@@ -3082,6 +3084,7 @@
         "Timezone_America_CiudadJuarez": "Сиудад Хуарес",
         "Timezone_America_CoralHarbour": "Атикокан",
         "Timezone_America_Cordoba": "Кордоба",
+        "Timezone_America_Coyhaique": "Койайке",
         "Timezone_America_Creston": "Крестън",
         "Timezone_America_Cuiaba": "Чуяба",
         "Timezone_America_Danmarkshavn": "Данмарксхавн",
@@ -3243,11 +3246,10 @@
         "Timezone_Pacific_Bougainville": "Бугенвил",
         "Timezone_Pacific_Chatham": "Чатам",
         "Timezone_Pacific_Easter": "Великденски остров",
-        "Timezone_Pacific_Enderbury": "Ендърбъри",
+        "Timezone_Pacific_Enderbury": "Кантон",
         "Timezone_Pacific_Galapagos": "Галапагос",
         "Timezone_Pacific_Gambier": "Гамбие",
         "Timezone_Pacific_Honolulu": "Хонолулу",
-        "Timezone_Pacific_Kanton": "Кантон",
         "Timezone_Pacific_Kiritimati": "Киритимати",
         "Timezone_Pacific_Kosrae": "Кошрай",
         "Timezone_Pacific_Kwajalein": "Куаджалин",
@@ -4000,8 +4002,6 @@
         "PleaseFindBelow": "Моля намерете по-долу вашият %1$s отчет за %2$s.",
         "PluginDescription": "Създайте персонализирани отчети и насрочете изпращането им по имейл ежедневно, седмично или месечно до един или няколко души. Поддържат се няколко формата на отчети (html, pdf, csv, изображения).",
         "ReportFormat": "Формат на доклад",
-        "ReportHour": "Изпратете отчет в %s часа",
-        "ReportHourWithUTC": "%s часа UTC",
         "ReportIncludeNWebsites": "Този отчет ще включва главните метрични данни за всички уеб сайтове, които са били посещавани поне веднъж (от %s сайта, които са налични).",
         "ReportPeriod": "Отчетен период",
         "ReportSent": "Отчетът е изпратен",

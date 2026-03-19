@@ -21,7 +21,6 @@ class Tidb extends \Piwik\Db\Schema\Mysql
      * TiDB performs a sanity check before performing e.g. ALTER TABLE statements. If any of the used columns does not
      * exist before the query fails. This also happens if the column would be added in the same query.
      *
-     * @return bool
      */
     public function supportsComplexColumnUpdates() : bool
     {

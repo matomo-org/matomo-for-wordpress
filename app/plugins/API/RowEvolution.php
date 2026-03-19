@@ -27,7 +27,6 @@ use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\Conversions;
 use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\Revenue;
 use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\RevenuePerVisit;
 use Piwik\Site;
-use Piwik\Url;
 /**
  * This class generates a Row evolution dataset, from input request
  *
@@ -313,8 +312,10 @@ class RowEvolution
         if (isset($metadata['metrics']['nb_visits'])) {
             $parameters['filter_add_columns_when_show_all_columns'] = '0';
         }
-        $url = Url::getQueryStringFromParameters($parameters);
-        $request = new Request($url);
+        $parameters = array_filter($parameters, function ($value) {
+            return $value !== null && $value !== \false;
+        });
+        $request = new Request($parameters);
         try {
             $dataTable = $request->process();
         } catch (Exception $e) {

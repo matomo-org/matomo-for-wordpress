@@ -162,6 +162,8 @@ class WpMatomo {
 		// TODO: need better way of doing ajax?
 		MarketplaceSetupWizard::register_ajax();
 		WpMatomo\Admin\TrackingSettings::register_ajax();
+
+		\WpMatomo\Admin\GetStarted::register_hooks();
 	}
 
 	private function check_compatibility() {

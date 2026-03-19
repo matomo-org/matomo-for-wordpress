@@ -84,10 +84,6 @@ class Json extends ApiRenderer
         }
         return $jsonCallback;
     }
-    /**
-     * @param string $str
-     * @return string
-     */
     private function applyJsonpIfNeeded(string $str) : string
     {
         if ($this->isJsonp()) {

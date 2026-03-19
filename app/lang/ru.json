@@ -781,7 +781,9 @@
         "YouCannotModifyThisNote": "Вы не можете изменить это примечание, так как вы не являетесь её автором или у вас нет прав администратора."
     },
     "BotTracking": {
-        "PageUrl": "URL страницы"
+        "PageUrl": "URL страницы",
+        "NoDataHttpTrackingApi": "API отслеживания HTTP",
+        "SiteWithoutDataBackToMatomo": "Вернуться к Matomo"
     },
     "Contents": {
         "ContentImpression": "Показы контента",
@@ -2693,7 +2695,7 @@
         "Format_Date_Long": "EEEE, d MMMM y 'г'.",
         "Format_Date_Short": "d MMM y 'г'.",
         "Format_Hour_12": "h a",
-        "Format_Hour_24": "HH",
+        "Format_Hour_24": "H",
         "Format_Interval_Long_D": "d–d MMMM y 'г'.",
         "Format_Interval_Long_M": "d MMMM – d MMMM y 'г'.",
         "Format_Interval_Long_Y": "d MMMM y 'г'. – d MMMM y 'г'.",
@@ -3071,6 +3073,7 @@
         "Timezone_America_CiudadJuarez": "Сьюдад-Хуарес",
         "Timezone_America_CoralHarbour": "Корал-Харбор",
         "Timezone_America_Cordoba": "Кордова",
+        "Timezone_America_Coyhaique": "Койайке",
         "Timezone_America_Creston": "Крестон",
         "Timezone_America_Cuiaba": "Куяба",
         "Timezone_America_Danmarkshavn": "Денмарксхавн",
@@ -3232,11 +3235,10 @@
         "Timezone_Pacific_Bougainville": "Бугенвиль",
         "Timezone_Pacific_Chatham": "Чатем",
         "Timezone_Pacific_Easter": "о-в Пасхи",
-        "Timezone_Pacific_Enderbury": "о-в Эндербери",
+        "Timezone_Pacific_Enderbury": "о-в Кантон",
         "Timezone_Pacific_Galapagos": "Галапагосские о-ва",
         "Timezone_Pacific_Gambier": "о-ва Гамбье",
         "Timezone_Pacific_Honolulu": "Гонолулу",
-        "Timezone_Pacific_Kanton": "Кантон",
         "Timezone_Pacific_Kiritimati": "Киритимати",
         "Timezone_Pacific_Kosrae": "Косрае",
         "Timezone_Pacific_Kwajalein": "Кваджалейн",
@@ -3834,8 +3836,6 @@
         "PleaseFindBelow": "Ваш отчёт для проекта %2$s за %1$s, пожалуйста.",
         "PluginDescription": "Создаёт пользовательские отчёты и планирует их отправку по почте ежедневно, еженедельно или ежемесячно для одного или нескольких людей. Поддерживает некоторые форматы отчётов (html, pdf, csv, изображения).",
         "ReportFormat": "Формат отчёта",
-        "ReportHour": "Высылать отчёт в %s часов",
-        "ReportHourWithUTC": "%s UTC",
         "ReportIncludeNWebsites": "Отчёт будет содержать основные показатели для всех сайтов, у которых было хотя бы одно посещение (всего сейчас доступно %s сайтов).",
         "ReportPeriod": "Отчетный период",
         "ReportSent": "Отправить отчёт",
@@ -4862,6 +4862,7 @@
         "SuperUserAccessManagementMainDescription": "Суперпользователи имеют самые высокие разрешения. Они могут выполнять все административные задачи, такие как добавление новых сайтов для мониторинга, добавление пользователей, изменение прав доступа пользователей, активации и деактивации плагинов и даже установки новых плагинов из Marketplace.",
         "TheLoginScreen": "Страница входа",
         "ThereAreCurrentlyNRegisteredUsers": "Сейчас насчитывается %s зарегистрированных пользователей.",
+        "TokenRegenerateTitle": "Регенерировать",
         "TwoFactorAuthentication": "Двухфакторная аутентификация",
         "TypeYourPasswordAgain": "Введите ваш новый пароль снова.",
         "User": "Пользователь",

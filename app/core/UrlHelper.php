@@ -16,13 +16,16 @@ use Piwik\Intl\Data\Provider\RegionDataProvider;
  */
 class UrlHelper
 {
+    /**
+     * @var string[]
+     */
     private static $validLinkProtocols = ['http', 'https', 'tel', 'sms', 'mailto', 'callto'];
     /**
      * Checks if a string matches/is equal to one of the patterns/strings.
      *
      * @static
-     * @param $test String to test.
-     * @param $patterns Array of strings or regexs.
+     * @param string $test String to test.
+     * @param string[] $patterns Array of strings or regexs.
      *
      * @return bool true if $test matches or is equal to one of the regex/string in $patterns, false otherwise.
      */
@@ -46,8 +49,8 @@ class UrlHelper
      * Parameters that are in `$parametersToExclude` will not appear in the result.
      *
      * @static
-     * @param $queryParameters Array of query parameters, eg, `array('site' => '0', 'date' => '2012-01-01')`.
-     * @param $parametersToExclude Array of query parameter names that shouldn't be
+     * @param array<string, string|false|array<string|false>> $queryParameters Array of query parameters, eg, `array('site' => '0', 'date' => '2012-01-01')`.
+     * @param string[] $parametersToExclude Array of query parameter names that shouldn't be
      *                             in the result query string, eg, `array('date', 'period')`.
      * @return string A query string, eg, `"?site=0"`.
      * @api
@@ -116,6 +119,10 @@ class UrlHelper
     {
         return $url && preg_match('~^(([[:alpha:]][[:alnum:]+.-]*)?:)?//(.*)$~D', $url, $matches) !== 0 && strlen($matches[3]) > 0 && !preg_match('/^(javascript:|vbscript:|data:)/i', $matches[1]);
     }
+    /**
+     * @param string $url
+     * @return bool
+     */
     public static function isLookLikeSafeUrl($url)
     {
         if (preg_match('/[\\x00-\\x1F\\x7F]/', $url)) {
@@ -125,7 +132,7 @@ class UrlHelper
             return \true;
         }
         $protocol = explode(':', $url, 2)[0];
-        return preg_match('/^(' . implode('|', self::$validLinkProtocols) . ')$/i', $protocol);
+        return (bool) preg_match('/^(' . implode('|', self::$validLinkProtocols) . ')$/i', $protocol);
     }
     /**
      * Returns a URL created from the result of the [parse_url](https://php.net/manual/en/function.parse-url.php)
@@ -293,10 +300,8 @@ class UrlHelper
     /**
      * Add an array of additional parameters to a query string
      *
-     * @param string $query
      * @param array  $additionalParamsToAdd
      *
-     * @return string
      */
     private static function addAdditionalParameters(string $query, array $additionalParamsToAdd) : string
     {
@@ -308,6 +313,10 @@ class UrlHelper
         }
         return $query;
     }
+    /**
+     * @param string $url
+     * @return string|false|null
+     */
     public static function getHostFromUrl($url)
     {
         if (!\Piwik\UrlHelper::isLookLikeUrl($url)) {

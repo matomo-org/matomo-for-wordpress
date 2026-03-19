@@ -9,14 +9,12 @@
 namespace Piwik;
 
 use HTML_QuickForm2;
-use HTML_QuickForm2_InvalidArgumentException;
 use HTML_QuickForm2_Node;
-use HTML_QuickForm2_NotFoundException;
 use HTML_QuickForm2_Renderer;
 /**
  * Manages forms displayed in Twig
  *
- * For an example, @see Piwik\Plugins\Login\FormLogin
+ * For an example, @see \Piwik\Plugins\Login\FormLogin
  *
  * @see                 HTML_QuickForm2, libs/HTML/QuickForm2.php
  * @link https://pear.php.net/package/HTML_QuickForm2/
@@ -57,8 +55,6 @@ abstract class QuickForm2 extends HTML_QuickForm2
      * @param    mixed $attributes Element attributes
      * @param    array $data Element-specific data
      * @return   HTML_QuickForm2_Node     Added element
-     * @throws   HTML_QuickForm2_InvalidArgumentException
-     * @throws   HTML_QuickForm2_NotFoundException
      */
     public function addElement($elementOrType, $name = null, $attributes = null, array $data = array())
     {

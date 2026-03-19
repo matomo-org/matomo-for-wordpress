@@ -27,7 +27,6 @@ class JoinTables extends \ArrayObject
     private $implicitTableDependencies = ['log_link_visit_action' => [], 'log_action' => ['log_link_visit_action', 'log_conversion', 'log_conversion_item', 'log_visit'], 'log_visit' => ['log_link_visit_action', 'log_action'], 'log_conversion' => ['log_link_visit_action', 'log_action', 'log_visit'], 'log_conversion_item' => ['log_link_visit_action', 'log_action', 'log_visit', 'log_conversion']];
     /**
      * Tables constructor.
-     * @param LogTablesProvider $logTablesProvider
      * @param array $tables
      */
     public function __construct(LogTablesProvider $logTablesProvider, $tables)

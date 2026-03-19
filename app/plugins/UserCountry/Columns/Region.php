@@ -27,8 +27,6 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
         return '01, 02, OR, P8,…<br/>' . Piwik::translate('General_ForExampleShort') . ' region=BFC;country=fr';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -43,8 +41,6 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getLocationDetail($userInfo, LocationProvider::REGION_CODE_KEY);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -53,8 +49,6 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('region', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

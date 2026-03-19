@@ -669,7 +669,8 @@
         "YouCannotModifyThisNote": "Ovu belešku ne možete da izmenite zato što je niste vi kreirali i nemate nivo administratorskog pristupa sajtu."
     },
     "BotTracking": {
-        "PageUrl": "Adresa stranice"
+        "PageUrl": "Adresa stranice",
+        "SiteWithoutDataBackToMatomo": "Nazad na Matomo"
     },
     "Contents": {
         "ContentInteraction": "Interakcija sa sadržajem",
@@ -2495,6 +2496,7 @@
         "Timezone_America_CiudadJuarez": "Сиудад Хуарез",
         "Timezone_America_CoralHarbour": "Корал Харбур",
         "Timezone_America_Cordoba": "Кордоба",
+        "Timezone_America_Coyhaique": "Којајке",
         "Timezone_America_Creston": "Крестон",
         "Timezone_America_Cuiaba": "Куиаба",
         "Timezone_America_Danmarkshavn": "Данмарксхаген",
@@ -2656,11 +2658,10 @@
         "Timezone_Pacific_Bougainville": "Буганвил",
         "Timezone_Pacific_Chatham": "Чатам",
         "Timezone_Pacific_Easter": "Ускршње острво",
-        "Timezone_Pacific_Enderbury": "Ендербери",
+        "Timezone_Pacific_Enderbury": "Кантон",
         "Timezone_Pacific_Galapagos": "Галапагос",
         "Timezone_Pacific_Gambier": "Гамбије",
         "Timezone_Pacific_Honolulu": "Хонолулу",
-        "Timezone_Pacific_Kanton": "Кантон",
         "Timezone_Pacific_Kiritimati": "Киритимати",
         "Timezone_Pacific_Kosrae": "Кошре",
         "Timezone_Pacific_Kwajalein": "Кваџалејин",
@@ -3050,8 +3051,6 @@
         "PleaseFindBelow": "u nastavku je vaš %1$s izveštaj za %2$s.",
         "PluginDescription": "Kreirajte sopstvene izveštaje i zakažite njihovo slanje putem elektronske pošte dnevno, nedeljno ili mesečno jednoj ili više osoba. Više različitih formata je podržano (HTML, PDF, CSV, slike).",
         "ReportFormat": "Format izveštaja",
-        "ReportHour": "Pošalji izveštaj u %s",
-        "ReportHourWithUTC": "%s sati UTC",
         "ReportIncludeNWebsites": "Izveštaj će obuhvatiti glavne metrike za sve sajtove koji imaju barem jednu posetu (od ukupno %s sajtova koliko je trenutno dostupno).",
         "ReportSent": "Izveštaj je poslat",
         "ReportType": "Pošalji izveštaj preko",

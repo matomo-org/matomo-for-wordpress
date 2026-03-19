@@ -35,8 +35,6 @@ class EntryPageUrl extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -19,10 +19,7 @@ class RevenueSubtotal extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'General_Subtotal';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      */

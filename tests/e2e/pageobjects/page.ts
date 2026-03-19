@@ -202,9 +202,12 @@ export default class Page {
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
-        return !window.jQuery('#wpadminbar').is(':visible');
+        return !window.jQuery('#wpadminbar').is(':visible')
+          && !window.jQuery('#adminmenumain').is(':visible');
       });
     });
+
+    await browser.pause(250);
   }
 
   async prepareBlogPostPageForScreenshot() {

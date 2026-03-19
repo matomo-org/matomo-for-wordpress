@@ -91,17 +91,27 @@ class VisitorDetails extends VisitorDetailsAbstract
     private function shouldHandleAction($action)
     {
         $actionTypesToHandle = array(Action::TYPE_PAGE_URL, Action::TYPE_PAGE_TITLE, Action::TYPE_SITE_SEARCH, Action::TYPE_EVENT, Action::TYPE_OUTLINK, Action::TYPE_DOWNLOAD);
+        if (empty($action['type'])) {
+            return !empty($action['eventType']);
+        }
         return in_array($action['type'], $actionTypesToHandle) || !empty($action['eventType']);
     }
     private function isPageView($action)
     {
+        if (empty($action['type'])) {
+            return \false;
+        }
         $pageViewTypes = array(Action::TYPE_PAGE_URL, Action::TYPE_PAGE_TITLE);
         return in_array($action['type'], $pageViewTypes);
     }
     public function extendActionDetails(&$action, $nextAction, $visitorDetails)
     {
+        $actionType = '';
+        if (!empty($action['type'])) {
+            $actionType = $action['type'];
+        }
         $formatter = new Formatter();
-        if ($action['type'] == Action::TYPE_SITE_SEARCH) {
+        if ($actionType == Action::TYPE_SITE_SEARCH) {
             // Handle Site Search
             $action['siteSearchKeyword'] = $action['pageTitle'];
             $action['siteSearchCategory'] = $action['search_cat'];
@@ -144,7 +154,7 @@ class VisitorDetails extends VisitorDetailsAbstract
                 $action['url'] = 'https://' . mb_substr($action['url'], 7);
             }
         }
-        switch ($action['type']) {
+        switch ($actionType) {
             case 'goal':
                 $action['icon'] = 'plugins/Morpheus/images/goal.png';
                 $action['iconSVG'] = 'plugins/Morpheus/images/goal.svg';
@@ -156,9 +166,9 @@ class VisitorDetails extends VisitorDetailsAbstract
                 break;
             case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER:
             case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART:
-                $action['icon'] = 'plugins/Morpheus/images/' . $action['type'] . '.png';
-                $action['iconSVG'] = 'plugins/Morpheus/images/' . $action['type'] . '.svg';
-                if ($action['type'] == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
+                $action['icon'] = 'plugins/Morpheus/images/' . $actionType . '.png';
+                $action['iconSVG'] = 'plugins/Morpheus/images/' . $actionType . '.svg';
+                if ($actionType == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
                     $action['title'] = Piwik::translate('CoreHome_VisitStatusOrdered') . ' (' . $action['orderId'] . ')';
                 } else {
                     $action['title'] = Piwik::translate('Goals_AbandonedCart');
@@ -311,7 +321,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfDownloadAction($action, &$profile)
     {
-        if ($action['type'] != 'download') {
+        if (empty($action['type']) || $action['type'] != 'download') {
             return;
         }
         $profile['totalDownloads']++;
@@ -321,7 +331,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfOutlinkAction($action, &$profile)
     {
-        if ($action['type'] != 'outlink') {
+        if (empty($action['type']) || $action['type'] != 'outlink') {
             return;
         }
         $profile['totalOutlinks']++;
@@ -331,7 +341,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfPageViewAction($action, &$profile)
     {
-        if ($action['type'] != 'action') {
+        if (empty($action['type']) || $action['type'] != 'action') {
             return;
         }
         $profile['totalPageViews']++;

@@ -68,7 +68,7 @@ describe('Matomo Reporting > Behaviour', () => {
         return browser.execute(() => {
           return $('.loadingPiwik:visible').length === 0;
         });
-      }, { interval: 1000 });
+      }, { interval: 1000, timeout: 30000 });
     }
 
     await browser.pause(4000);

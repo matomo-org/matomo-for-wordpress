@@ -37,8 +37,6 @@ class DeviceType extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return array_flip($values);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -48,8 +46,6 @@ class DeviceType extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return $parser->getDevice();
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -53,8 +53,6 @@ class VisitorReturning extends VisitDimension
         return array(self::IS_RETURNING_CUSTOMER => 'returningCustomer', self::IS_RETURNING => 'returning', self::IS_NEW => 'new');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -71,8 +69,6 @@ class VisitorReturning extends VisitDimension
         return self::IS_NEW;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

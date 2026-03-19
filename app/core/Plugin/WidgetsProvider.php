@@ -95,7 +95,6 @@ class WidgetsProvider
             // we are not allowed to use possible widgets, plugin is not active
             return;
         }
-        /** @var Widget[] $widgetContainer */
         $widgets = $plugin->findMultipleComponents('Widgets', 'Piwik\\Widget\\Widget');
         foreach ($widgets as $widgetClass) {
             $config = $this->getWidgetConfigForClassName($widgetClass);

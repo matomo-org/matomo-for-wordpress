@@ -73,7 +73,6 @@ abstract class ReleaseChannel
     }
     /**
      * If the channel should be possible to be enabled in the system settings.
-     * @return bool
      */
     public function isSelectableInSettings() : bool
     {

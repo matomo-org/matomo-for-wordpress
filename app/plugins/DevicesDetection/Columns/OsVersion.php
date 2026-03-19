@@ -22,8 +22,6 @@ class OsVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
     protected $acceptValues = 'XP, 7, 2.3, 5.1, ...';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

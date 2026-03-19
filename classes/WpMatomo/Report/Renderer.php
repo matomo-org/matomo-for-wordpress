@@ -43,7 +43,10 @@ class Renderer {
 
 		$data              = new Data();
 		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit );
-		$first_metric_name = 'nb_visits';
+		$matomo_metrics    = [
+			'nb_visits'        => __( 'Visits', 'matomo' ),
+			'nb_uniq_visitors' => __( 'Unique Visitors', 'matomo' ),
+		];
 		$matomo_graph_data = ' data-chart="VisitsSumary"';
 		ob_start();
 

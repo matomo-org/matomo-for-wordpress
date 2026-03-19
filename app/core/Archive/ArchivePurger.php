@@ -157,9 +157,7 @@ class ArchivePurger
         return $this->purge($idArchivesToDelete, $dateStart, 'deleted sites');
     }
     /**
-     * @param Date $dateStart
      * @param array $deletedSegments List of segments whose archives should be purged
-     * @return int
      */
     public function purgeDeletedSegmentArchives(Date $dateStart, array $deletedSegments) : int
     {
@@ -172,9 +170,7 @@ class ArchivePurger
     /**
      * Purge all numeric and blob archives with the given IDs from the database.
      * @param array $idArchivesToDelete
-     * @param Date $dateStart
      * @param string $reason
-     * @return int
      */
     protected function purge(array $idArchivesToDelete, Date $dateStart, $reason) : int
     {
@@ -240,7 +236,6 @@ class ArchivePurger
     /**
      * Deletes by batches Archive IDs in the specified month,
      *
-     * @param Date $date
      * @param $idArchivesToDelete
      * @return int Number of rows deleted from both numeric + blob table.
      */
@@ -279,7 +274,6 @@ class ArchivePurger
     /**
      * For tests.
      *
-     * @param Date $yesterday
      */
     public function setYesterdayDate(Date $yesterday)
     {
@@ -288,7 +282,6 @@ class ArchivePurger
     /**
      * For tests.
      *
-     * @param Date $today
      */
     public function setTodayDate(Date $today)
     {

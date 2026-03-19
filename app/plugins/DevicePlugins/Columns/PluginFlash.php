@@ -23,8 +23,6 @@ class PluginFlash extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginColum
         return Piwik::translate('General_Plugin') . ' (Flash)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

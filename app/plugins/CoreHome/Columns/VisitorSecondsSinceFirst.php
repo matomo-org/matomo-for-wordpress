@@ -23,8 +23,6 @@ class VisitorSecondsSinceFirst extends VisitDimension
     protected $nameSingular = 'General_SecondsSinceFirstVisit';
     protected $type = self::TYPE_NUMBER;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -58,8 +56,6 @@ class VisitorSecondsSinceFirst extends VisitDimension
         return $newVisitorSecondsSinceFirst;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
