@@ -86,7 +86,8 @@ class MemberPress extends Base {
 	public function on_order() {
 		if ( isset( $_GET['membership'] )
 			 && ( isset( $_GET['trans_num'] ) || isset( $_GET['transaction_id'] ) )
-			 && class_exists( '\MeprTransaction' ) ) {
+			 && class_exists( '\MeprTransaction' )
+		) {
 			$txn = null;
 			if ( isset( $_GET['trans_num'] ) ) {
 				$txn = MeprTransaction::get_one_by_trans_num( sanitize_text_field( wp_unslash( $_GET['trans_num'] ) ) );
@@ -96,43 +97,57 @@ class MemberPress extends Base {
 				}
 			}
 
-			if ( $txn && isset( $txn->id ) && $txn->id > 0 ) {
-				if ( $this->has_order_been_tracked_already( $txn->id ) ) {
-					return;
-				}
-				$this->set_order_been_tracked( $txn->id );
-				$transaction       = new MeprTransaction( $txn->id );
-				$order_id_to_track = $txn->trans_num;
-				$product           = $transaction->product();
-
-				$discount = 0;
-
-				if ( $product && $transaction->coupon() ) {
-					$discount = $product->price - $txn->amount;
-				}
-				$tracking_code  = '';
-				$params         = [
-					'addEcommerceItem',
-					'' . $product->ID,
-					$product->post_title,
-					[],
-					$txn->amount,
-					1,
-				];
-				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-				$params         = [
-					'trackEcommerceOrder',
-					'' . $order_id_to_track,
-					$txn->total,
-					$txn->amount,
-					$txn->tax_amount,
-					$shipping = 0,
-					$discount,
-				];
-				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $this->wrap_script( $tracking_code );
+			if ( ! $txn || ! isset( $txn->id ) || $txn->id <= 0 ) {
+				return;
 			}
+
+			if ( ! $txn->user_id || get_current_user_id() !== (int) $txn->user_id ) {
+				$this->logger->log(
+					sprintf(
+						'Current user ID = %s did not match MemberPress transaction user ID = %s, not tracking.',
+						get_current_user_id(),
+						$txn->user_id
+					)
+				);
+				return;
+			}
+
+			if ( $this->has_order_been_tracked_already( $txn->id ) ) {
+				return;
+			}
+
+			$this->set_order_been_tracked( $txn->id );
+			$transaction       = new MeprTransaction( $txn->id );
+			$order_id_to_track = $txn->trans_num;
+			$product           = $transaction->product();
+
+			$discount = 0;
+
+			if ( $product && $transaction->coupon() ) {
+				$discount = $product->price - $txn->amount;
+			}
+			$tracking_code  = '';
+			$params         = [
+				'addEcommerceItem',
+				'' . $product->ID,
+				$product->post_title,
+				[],
+				$txn->amount,
+				1,
+			];
+			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
+			$params         = [
+				'trackEcommerceOrder',
+				'' . $order_id_to_track,
+				$txn->total,
+				$txn->amount,
+				$txn->tax_amount,
+				$shipping = 0,
+				$discount,
+			];
+			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->wrap_script( $tracking_code );
 		}
 	}
 }
