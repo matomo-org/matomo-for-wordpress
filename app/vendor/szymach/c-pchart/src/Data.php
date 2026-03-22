@@ -225,7 +225,7 @@ class Data
      * @param string|array $Series
      * @param boolean $Drawable
      */
-    public function setSerieDrawable($Series, $Drawable = true)
+    public function setSerieDrawable($Series, $Drawable = \true)
     {
         if (!is_array($Series)) {
             $Series = $this->convertToArray($Series);
@@ -356,7 +356,7 @@ class Data
      * @param int $ID
      * @param boolean $Drawable
      */
-    public function setScatterSerieDrawable($ID, $Drawable = true)
+    public function setScatterSerieDrawable($ID, $Drawable = \true)
     {
         if (isset($this->Data["ScatterSeries"][$ID])) {
             $this->Data["ScatterSeries"][$ID]["isDrawable"] = $Drawable;
@@ -411,7 +411,7 @@ class Data
         $GlobalMin = ABSOLUTE_MAX;
         $GlobalMax = ABSOLUTE_MIN;
         foreach (array_keys($this->Data["Series"]) as $Key) {
-            if ($this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] == true) {
+            if ($this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] == \true) {
                 if ($GlobalMin > $this->Data["Series"][$Key]["Min"]) {
                     $GlobalMin = $this->Data["Series"][$Key]["Min"];
                 }
@@ -431,7 +431,7 @@ class Data
     {
         foreach (array_keys($this->Data["Series"]) as $Key) {
             if ($this->Data["Abscissa"] != $Key) {
-                $this->Data["Series"][$Key]["isDrawable"] = true;
+                $this->Data["Series"][$Key]["isDrawable"] = \true;
             }
         }
     }
@@ -566,7 +566,7 @@ class Data
         $Values = isset($Options["Values"]) ? $Options["Values"] : 20;
         $Min = isset($Options["Min"]) ? $Options["Min"] : 0;
         $Max = isset($Options["Max"]) ? $Options["Max"] : 100;
-        $withFloat = isset($Options["withFloat"]) ? $Options["withFloat"] : false;
+        $withFloat = isset($Options["withFloat"]) ? $Options["withFloat"] : \false;
         for ($i = 0; $i <= $Values; $i++) {
             $Value = $withFloat ? rand($Min * 100, $Max * 100) / 100 : rand($Min, $Max);
             $this->addPoints($Value, $SerieName);
@@ -579,11 +579,11 @@ class Data
     public function containsData()
     {
         if (!isset($this->Data["Series"])) {
-            return false;
+            return \false;
         }
         foreach (array_keys($this->Data["Series"]) as $Key) {
-            if ($this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] == true) {
-                return true;
+            if ($this->Data["Abscissa"] != $Key && $this->Data["Series"][$Key]["isDrawable"] == \true) {
+                return \true;
             }
         }
         return null;
@@ -684,10 +684,10 @@ class Data
             }
             $this->Data["Series"][$Serie]["Axis"] = $AxisID;
             /* Cleanup unused axis */
-            $Found = false;
+            $Found = \false;
             foreach ($this->Data["Series"] as $Values) {
                 if ($Values["Axis"] == $PreviousAxis) {
-                    $Found = true;
+                    $Found = \true;
                 }
             }
             if (!$Found) {
@@ -785,7 +785,7 @@ class Data
      * @param boolean $Overwrite
      * @throws Exception
      */
-    public function loadPalette($FileName, $Overwrite = false)
+    public function loadPalette($FileName, $Overwrite = \false)
     {
         $path = file_exists($FileName) ? $FileName : sprintf('%s/../resources/palettes/%s', __DIR__, ltrim($FileName, '/'));
         $fileHandle = @fopen($path, "r");
@@ -797,7 +797,7 @@ class Data
         }
         while (!feof($fileHandle)) {
             $line = fgets($fileHandle, 4096);
-            if (false === $line) {
+            if (\false === $line) {
                 continue;
             }
             $row = explode(',', $line);
@@ -805,7 +805,7 @@ class Data
                 continue;
             }
             if (count($row) !== 4) {
-                throw new RuntimeException(sprintf('A palette row must supply R, G, B and Alpha components, %s given!', var_export($row, true)));
+                throw new RuntimeException(sprintf('A palette row must supply R, G, B and Alpha components, %s given!', var_export($row, \true)));
             }
             list($R, $G, $B, $Alpha) = $row;
             $ID = count($this->Palette);
@@ -836,7 +836,7 @@ class Data
             return null;
         }
         $this->Data["ScatterSeries"][$ID]["Description"] = "Scatter " . $ID;
-        $this->Data["ScatterSeries"][$ID]["isDrawable"] = true;
+        $this->Data["ScatterSeries"][$ID]["isDrawable"] = \true;
         $this->Data["ScatterSeries"][$ID]["Picture"] = null;
         $this->Data["ScatterSeries"][$ID]["Ticks"] = 0;
         $this->Data["ScatterSeries"][$ID]["Weight"] = 0;
@@ -860,7 +860,7 @@ class Data
             $ID = count($this->Data["Series"]);
         }
         $this->Data["Series"][$Serie]["Description"] = $Serie;
-        $this->Data["Series"][$Serie]["isDrawable"] = true;
+        $this->Data["Series"][$Serie]["isDrawable"] = \true;
         $this->Data["Series"][$Serie]["Picture"] = null;
         $this->Data["Series"][$Serie]["Max"] = null;
         $this->Data["Series"][$Serie]["Min"] = null;
@@ -893,7 +893,7 @@ class Data
                 $this->Data["Axis"][$AxisID]["Unit"] = $UnitChange;
             }
             foreach ($this->Data["Series"] as $SerieName => $Serie) {
-                if ($Serie["Axis"] == $AxisID && $Serie["isDrawable"] == true && $SerieName != $Abscissa) {
+                if ($Serie["Axis"] == $AxisID && $Serie["isDrawable"] == \true && $SerieName != $Abscissa) {
                     $SelectedSeries[$SerieName] = $SerieName;
                     if (count($Serie["Data"]) > $MaxVal) {
                         $MaxVal = count($Serie["Data"]);
@@ -936,12 +936,12 @@ class Data
     public function importFromCSV($FileName, array $Options = [])
     {
         $Delimiter = isset($Options["Delimiter"]) ? $Options["Delimiter"] : ",";
-        $GotHeader = isset($Options["GotHeader"]) ? $Options["GotHeader"] : false;
+        $GotHeader = isset($Options["GotHeader"]) ? $Options["GotHeader"] : \false;
         $SkipColumns = isset($Options["SkipColumns"]) ? $Options["SkipColumns"] : [-1];
         $DefaultSerieName = isset($Options["DefaultSerieName"]) ? $Options["DefaultSerieName"] : "Serie";
         $Handle = @fopen($FileName, "r");
         if ($Handle) {
-            $HeaderParsed = false;
+            $HeaderParsed = \false;
             $SerieNames = [];
             while (!feof($Handle)) {
                 $Buffer = fgets($Handle, 4096);
@@ -955,7 +955,7 @@ class Data
                                 $SerieNames[$Key] = $Name;
                             }
                         }
-                        $HeaderParsed = true;
+                        $HeaderParsed = \true;
                     } else {
                         if (!count($SerieNames)) {
                             foreach ($Values as $Key => $Name) {
@@ -988,8 +988,8 @@ class Data
         $MinX = isset($Options["MinX"]) ? $Options["MinX"] : -10;
         $MaxX = isset($Options["MaxX"]) ? $Options["MaxX"] : 10;
         $XStep = isset($Options["XStep"]) ? $Options["XStep"] : 1;
-        $AutoDescription = isset($Options["AutoDescription"]) ? $Options["AutoDescription"] : false;
-        $RecordAbscissa = isset($Options["RecordAbscissa"]) ? $Options["RecordAbscissa"] : false;
+        $AutoDescription = isset($Options["AutoDescription"]) ? $Options["AutoDescription"] : \false;
+        $RecordAbscissa = isset($Options["RecordAbscissa"]) ? $Options["RecordAbscissa"] : \false;
         $AbscissaSerie = isset($Options["AbscissaSerie"]) ? $Options["AbscissaSerie"] : "Abscissa";
         if ($Formula == "") {
             return null;
@@ -998,7 +998,7 @@ class Data
         $Abscissa = [];
         for ($i = $MinX; $i <= $MaxX; $i = $i + $XStep) {
             $Expression = "\$return = '!'.(" . str_replace("z", $i, $Formula) . ");";
-            if (@eval($Expression) === false) {
+            if (@eval($Expression) === \false) {
                 $return = VOID;
             }
             if ($return == "!") {

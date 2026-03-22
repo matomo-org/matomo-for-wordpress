@@ -26,6 +26,8 @@ if (!defined( 'ABSPATH')) {
 
 class SessionAuth extends \Piwik\Session\SessionAuth
 {
+    const MATOMO_UI_NONCE_NAME = 'matomo-ui';
+
     public function authenticate()
     {
         if (function_exists('is_user_logged_in') && is_user_logged_in()) {
@@ -41,12 +43,21 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
             if (!empty($permission)) {
                 $matomo_user = $this->findMatomoUser($user->ID);
-                $token = $this->makeTemporaryToken($matomo_user['login'], $user->user_registered . '' . $user->ID);
+                $token = $this->makeTemporaryToken($user->ID);
 
-                if ($this->getTokenAuth() !== false
+                if (
+                    $this->getTokenAuth() !== false
                     && $this->getTokenAuth() !== null
                     && !Common::hashEquals((string) $token, (string) $this->getTokenAuth()) // note both may be converted to empty string in worst case so still the one below needed
-                    && $token !== $this->getTokenAuth()) {
+                    && $token !== $this->getTokenAuth()
+                    // if multiple pages are opened with the same session simultaneously, a race
+                    // condition may occur, and not all of the pages will end up with the same
+                    // token_auth value. in this case, the token_auth/nonce will not match the
+                    // session value, but will still validate as a WordPress nonce. to handle
+                    // this race condition, we allow values that don't match through, as long as
+                    // they are valid nonces.
+                    && !wp_verify_nonce($this->getTokenAuth(), self::MATOMO_UI_NONCE_NAME)
+                ) {
                     return new AuthResult(AuthResult::FAILURE, $matomo_user['login'], null);
                 }
 
@@ -58,19 +69,31 @@ class SessionAuth extends \Piwik\Session\SessionAuth
         return new AuthResult(AuthResult::FAILURE, $login, $login);
     }
 
-    private function makeTemporaryToken($login, $register_date)
+    private function makeTemporaryToken($userId)
     {
-        $transientKey = md5($login . SettingsPiwik::getSalt() . $register_date);
-
-        $token = get_transient( $transientKey);
-
-        if (!$token) {
-            $token = Common::generateUniqId();
+        $manager = \WP_Session_Tokens::get_instance($userId);
+        if (empty($manager)) {
+            return null;
         }
 
-        set_transient( $transientKey, $token, 3600 ); // extend for one hour each time
+        $sessionToken = wp_get_session_token();
+        if (empty($sessionToken)) {
+            return null;
+        }
 
-        return $token;
+        $session = $manager->get($sessionToken);
+        if (empty($session)) {
+            return null;
+        }
+
+        $matomoToken = $session['matomo-ui-ta'] ?? null;
+        if (!$matomoToken) {
+            $matomoToken = wp_create_nonce(self::MATOMO_UI_NONCE_NAME);
+            $session['matomo-ui-ta'] = $matomoToken;
+            $manager->update($sessionToken, $session);
+        }
+
+        return $matomoToken;
     }
 
     private function findMatomoUser($userId, $syncIfNotFound = true)

@@ -24,7 +24,7 @@ class CacheId
         $cacheId = self::languageAware($cacheId);
         return $cacheId;
     }
-    public static function siteAware($cacheId, array $idSites = null)
+    public static function siteAware($cacheId, ?array $idSites = null)
     {
         if ($idSites === null) {
             $idSites = self::getIdSiteList('idSite');
@@ -38,6 +38,10 @@ class CacheId
             $cacheId .= self::idSiteListCacheKey($idSites);
         }
         return $cacheId;
+    }
+    public static function getIdSiteListFromParams()
+    {
+        return array_merge(self::getIdSiteList('idSite'), self::getIdSiteList('idSites'), self::getIdSiteList('idsite'));
     }
     private static function getIdSiteList($queryParamName)
     {

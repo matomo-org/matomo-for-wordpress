@@ -22,7 +22,7 @@ class Actions extends BaseFilter
      * Constructor.
      *
      * @param DataTable $table The table to eventually filter.
-     * @param bool $isPageTitleType Whether we are handling page title or regular URL
+     * @param int $actionType The action type being processed.
      */
     public function __construct($table, $actionType)
     {
@@ -60,7 +60,7 @@ class Actions extends BaseFilter
                     if ($url) {
                         $row->setMetadata('segmentValue', urlencode($url));
                         if ($site && strpos($url, 'http://') === 0) {
-                            $host = parse_url($url, PHP_URL_HOST);
+                            $host = parse_url($url, \PHP_URL_HOST);
                             if ($host && PageUrl::shouldUseHttpsHost($site->getId(), $host)) {
                                 $row->setMetadata('url', 'https://' . mb_substr($url, 7));
                             }
@@ -79,7 +79,8 @@ class Actions extends BaseFilter
                             $row->setMetadata('segment', 'pageTitle=^' . urlencode(urlencode(trim($label))));
                         } else {
                             if (trim($label) == $notDefinedTitle) {
-                                $row->setMetadata('segmentValue', '');
+                                // segmenting by an "empty" value is currently broken for actions, so we do not set a segment value to hide row actions like segmented visit log
+                                $row->setMetadata('segment', null);
                             } else {
                                 $row->setMetadata('segmentValue', urlencode(trim($label)));
                             }
@@ -87,7 +88,8 @@ class Actions extends BaseFilter
                     } elseif ($this->actionType == Action::TYPE_PAGE_URL && $urlPrefix) {
                         // folder for older data w/ no folder URL metadata
                         if ($label === $notDefinedUrl) {
-                            $row->setMetadata('segmentValue', '');
+                            // segmenting by an "empty" value is currently broken for actions, so we do not set a segment value to hide row actions like segmented visit log
+                            $row->setMetadata('segment', null);
                         } else {
                             $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($urlPrefix . '/' . $label)));
                         }

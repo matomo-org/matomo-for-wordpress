@@ -30,7 +30,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     protected $id = '';
     protected $module = 'CoreHome';
     protected $action = 'renderWidgetContainer';
-    protected $isWidgetizable = false;
+    protected $isWidgetizable = \false;
     /**
      * Sets (overwrites) the id of the widget container.
      *
@@ -79,7 +79,6 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     /**
      * Adds a new widget to the container widget.
      *
-     * @param WidgetConfig $widget
      * @return static
      */
     public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)

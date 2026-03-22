@@ -11,8 +11,10 @@ namespace Piwik\Plugins\TwoFactorAuth;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Exception\NoPrivilegesException;
 use Piwik\FrontController;
 use Piwik\Piwik;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeDao;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Session;
@@ -26,7 +28,7 @@ class TwoFactorAuth extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('Request.dispatch' => array('function' => 'onRequestDispatch', 'after' => true), 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'API.UsersManager.deleteUser.end' => 'deleteRecoveryCodes', 'API.UsersManager.createAppSpecificTokenAuth.end' => 'onCreateAppSpecificTokenAuth', 'Request.dispatch.end' => array('function' => 'onRequestDispatchEnd', 'after' => true), 'Template.userSecurity.afterPassword' => 'render2FaUserSettings', 'Login.authenticate.processSuccessfulSession.end' => 'onSuccessfulSession', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
+        return array('Request.dispatch' => array('function' => 'onRequestDispatch', 'after' => \true), 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'API.UsersManager.deleteUser.end' => 'deleteRecoveryCodes', 'API.UsersManager.createAppSpecificTokenAuth.end' => 'onCreateAppSpecificTokenAuth', 'Request.dispatch.end' => array('function' => 'onRequestDispatchEnd', 'after' => \true), 'Template.userSecurity.afterPassword' => 'render2FaUserSettings', 'Login.authenticate.processSuccessfulSession.end' => 'onSuccessfulSession', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
     }
     public function getClientSideTranslationKeys(&$translations)
     {
@@ -40,6 +42,7 @@ class TwoFactorAuth extends \Piwik\Plugin
         $translations[] = 'General_Download';
         $translations[] = 'General_Print';
         $translations[] = 'General_Copy';
+        $translations[] = 'General_Continue';
         $translations[] = 'TwoFactorAuth_SetupBackupRecoveryCodes';
         $translations[] = 'General_Next';
         $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep1';
@@ -49,7 +52,12 @@ class TwoFactorAuth extends \Piwik\Plugin
         $translations[] = 'TwoFactorAuth_AuthenticationCode';
         $translations[] = 'TwoFactorAuth_VerifyAuthCodeHelp';
         $translations[] = 'General_Confirm';
-        $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2';
+        $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDeviceStep2ShowCodes';
+        $translations[] = 'TwoFactorAuth_ShowCodes';
+        $translations[] = 'TwoFactorAuth_DontHaveOTPApp';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions1';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions2';
+        $translations[] = 'TwoFactorAuth_ShowCodeModalInstructions3';
         $translations[] = 'TwoFactorAuth_SetupAuthenticatorOnDevice';
         $translations[] = 'TwoFactorAuth_TwoFactorAuthentication';
         $translations[] = 'General_Error';
@@ -132,37 +140,47 @@ class TwoFactorAuth extends \Piwik\Plugin
     {
         return StaticContainer::get(\Piwik\Plugins\TwoFactorAuth\Validator::class);
     }
-    private function isValidTokenAuth($tokenAuth)
+    private function isValidTokenAuth(
+#[\SensitiveParameter]
+$tokenAuth)
     {
         $model = new Model();
         $user = $model->getUserByTokenAuth($tokenAuth);
         return !empty($user);
     }
-    public function onCreateAppSpecificTokenAuth($returnedValue, $params)
+    private function getCanonicalLogin(string $userLoginOrEmail) : ?string
+    {
+        $model = new Model();
+        if ($model->userExists($userLoginOrEmail)) {
+            return $userLoginOrEmail;
+        }
+        if ($model->userEmailExists($userLoginOrEmail)) {
+            $user = $model->getUserByEmail($userLoginOrEmail);
+            if (!empty($user['login'])) {
+                return $user['login'];
+            }
+        }
+        return null;
+    }
+    public function onCreateAppSpecificTokenAuth($returnedValue, array $params) : void
     {
         if (!SettingsPiwik::isMatomoInstalled()) {
             return;
         }
         if (!empty($returnedValue) && !empty($params['parameters']['userLogin'])) {
-            $login = $params['parameters']['userLogin'];
+            $login = $this->getCanonicalLogin($params['parameters']['userLogin']);
             $twoFa = $this->getTwoFa();
-            if (\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login) && $this->isValidTokenAuth($returnedValue)) {
-                $authCode = Common::getRequestVar('authCode', '', 'string');
+            if (!empty($login) && \Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login) && $this->isValidTokenAuth($returnedValue)) {
+                $authCode = \Piwik\Request::fromRequest()->getStringParameter('authCode', '');
                 // we only return an error when the login/password combo was correct. otherwise you could brute force
                 // auth tokens
                 if (!$authCode) {
-                    if (!headers_sent()) {
-                        http_response_code(401);
-                    }
-                    throw new Exception(Piwik::translate('TwoFactorAuth_MissingAuthCodeAPI'));
+                    throw new NoPrivilegesException(Piwik::translate('TwoFactorAuth_MissingAuthCodeAPI'));
                 }
                 if (!$twoFa->validateAuthCode($login, $authCode)) {
-                    if (!headers_sent()) {
-                        http_response_code(401);
-                    }
-                    throw new Exception(Piwik::translate('TwoFactorAuth_InvalidAuthCode'));
+                    throw new NoPrivilegesException(Piwik::translate('TwoFactorAuth_InvalidAuthCode'));
                 }
-            } elseif ($twoFa->isUserRequiredToHaveTwoFactorEnabled() && !\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login)) {
+            } elseif ($twoFa->isUserRequiredToHaveTwoFactorEnabled() && (empty($login) || !\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login))) {
                 throw new Exception(Piwik::translate('TwoFactorAuth_RequiredAuthCodeNotConfiguredAPI'));
             }
         }
@@ -174,7 +192,7 @@ class TwoFactorAuth extends \Piwik\Plugin
             return;
         }
         if ($module === 'Proxy') {
-            return false;
+            return \false;
         }
         if (!$this->requiresAuth($module, $action, $parameters)) {
             return;
@@ -187,7 +205,7 @@ class TwoFactorAuth extends \Piwik\Plugin
                 if (!Request::isRootRequestApiRequest()) {
                     $module = 'TwoFactorAuth';
                     $action = 'loginTwoFactorAuth';
-                } elseif (Common::getRequestVar('force_api_session', 0) == 1) {
+                } elseif (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
                     // don't allow API requests with session auth if 2fa code hasn't been verified.
                     throw new Exception(Piwik::translate('General_YourSessionHasExpired'));
                 }
@@ -200,24 +218,24 @@ class TwoFactorAuth extends \Piwik\Plugin
     private function requiresAuth($module, $action, $parameters)
     {
         if ($module === 'TwoFactorAuth' && $action === 'showQrCode') {
-            return false;
+            return \false;
         }
         if ($module === 'CorePluginsAdmin' && strtolower($action) === 'safemode') {
-            return false;
+            return \false;
         }
         if ($module === 'CoreUpdater' && $action !== 'newVersionAvailable' && $action !== 'oneClickUpdate') {
-            return false;
+            return \false;
         }
         if ($module === Piwik::getLoginPluginName() && $action === 'logout') {
-            return false;
+            return \false;
         }
         $auth = StaticContainer::get('Piwik\\Auth');
-        if ($auth && !$auth->getLogin() && method_exists($auth, 'getTokenAuth') && $auth->getTokenAuth()) {
+        if (!$auth->getLogin() && method_exists($auth, 'getTokenAuth') && $auth->getTokenAuth()) {
             // when authenticated by token only, we do not require 2fa
             // needed eg for rendering exported widgets authenticated by token
-            return false;
+            return \false;
         }
-        $requiresAuth = true;
+        $requiresAuth = \true;
         Piwik::postEvent('TwoFactorAuth.requiresTwoFactorAuthentication', array(&$requiresAuth, $module, $action, $parameters));
         return $requiresAuth;
     }

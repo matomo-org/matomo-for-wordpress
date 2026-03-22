@@ -16,7 +16,7 @@ class MultiSites extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor');
+        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor'];
     }
     public function getPagesComparisonsDisabledFor(&$pages)
     {
@@ -25,12 +25,13 @@ class MultiSites extends \Piwik\Plugin
     public function addMetricTranslations(&$translations)
     {
         $appendix = " " . Piwik::translate('MultiSites_Evolution');
-        $metrics = array('visits_evolution' => Piwik::translate('General_ColumnNbVisits') . $appendix, 'actions_evolution' => Piwik::translate('General_ColumnNbActions') . $appendix, 'pageviews_evolution' => Piwik::translate('General_ColumnPageviews') . $appendix, 'revenue_evolution' => Piwik::translate('General_ColumnRevenue') . $appendix, 'nb_conversions_evolution' => Piwik::translate('Goals_ColumnConversions') . $appendix, 'orders_evolution' => Piwik::translate('General_EcommerceOrders') . $appendix, 'ecommerce_revenue_evolution' => Piwik::translate('General_ProductRevenue') . $appendix);
+        $metrics = ['visits_evolution' => Piwik::translate('General_ColumnNbVisits') . $appendix, 'actions_evolution' => Piwik::translate('General_ColumnNbActions') . $appendix, 'pageviews_evolution' => Piwik::translate('General_ColumnPageviews') . $appendix, 'hits_evolution' => Piwik::translate('General_ColumnHits') . $appendix, 'ai_chatbots_requests' => Piwik::translate('MultiSites_AiChatbotsRequests'), 'ai_chatbots_requests_evolution' => Piwik::translate('MultiSites_AiChatbotsRequests') . $appendix, 'revenue_evolution' => Piwik::translate('General_ColumnRevenue') . $appendix, 'nb_conversions_evolution' => Piwik::translate('Goals_ColumnConversions') . $appendix, 'orders_evolution' => Piwik::translate('General_EcommerceOrders') . $appendix, 'ecommerce_revenue_evolution' => Piwik::translate('General_ProductRevenue') . $appendix];
         $translations = array_merge($translations, $metrics);
     }
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'General_Website';
+        $translations[] = 'General_ColumnHits';
         $translations[] = 'General_ColumnNbVisits';
         $translations[] = 'General_ColumnPageviews';
         $translations[] = 'General_ColumnRevenue';
@@ -38,6 +39,7 @@ class MultiSites extends \Piwik\Plugin
         $translations[] = 'General_EvolutionSummaryGeneric';
         $translations[] = 'General_AllWebsitesDashboard';
         $translations[] = 'General_NVisits';
+        $translations[] = 'General_TotalRevenue';
         $translations[] = 'MultiSites_Evolution';
         $translations[] = 'SitesManager_AddSite';
         $translations[] = 'General_Next';
@@ -53,15 +55,38 @@ class MultiSites extends \Piwik\Plugin
         $translations[] = 'General_Faq';
         $translations[] = 'Feedback_CommunityHelp';
         $translations[] = 'Feedback_ProfessionalHelp';
+        $translations[] = 'MultiSites_AllWebsitesDashboardTitle';
         $translations[] = 'MultiSites_EvolutionComparisonIncomplete';
         $translations[] = 'MultiSites_EvolutionComparisonProportional';
         $translations[] = 'MultiSites_EvolutionComparisonDay';
         $translations[] = 'MultiSites_EvolutionComparisonWeek';
         $translations[] = 'MultiSites_EvolutionComparisonMonth';
         $translations[] = 'MultiSites_EvolutionComparisonYear';
+        $translations[] = 'MultiSites_EvolutionFromPreviousDay';
+        $translations[] = 'MultiSites_EvolutionFromPreviousMonth';
+        $translations[] = 'MultiSites_EvolutionFromPreviousPeriod';
+        $translations[] = 'MultiSites_EvolutionFromPreviousWeek';
+        $translations[] = 'MultiSites_EvolutionFromPreviousYear';
+        $translations[] = 'MultiSites_TotalHits';
+        $translations[] = 'MultiSites_TotalAiChatbotsRequests';
+        $translations[] = 'MultiSites_TotalPageviews';
+        $translations[] = 'MultiSites_TotalVisits';
+        $translations[] = 'MultiSites_AllWebsitesDashboardErrorMessage';
+        $translations[] = 'MultiSites_MetricDocumentationWebsite';
+        $translations[] = 'MultiSites_MetricDocumentationVisits';
+        $translations[] = 'MultiSites_MetricDocumentationPageviews';
+        $translations[] = 'MultiSites_MetricDocumentationAiChatbotsRequests';
+        $translations[] = 'MultiSites_MetricDocumentationHits';
+        $translations[] = 'MultiSites_MetricDocumentationHitsIncludingAi';
+        $translations[] = 'MultiSites_MetricDocumentationRevenue';
+        $translations[] = 'MultiSites_MetricDocumentationEvolution';
+        $translations[] = 'MultiSites_AiChatbotsRequests';
+        $translations[] = 'MultiSites_SegmentationNotSupported';
+        $translations[] = 'MultiSites_AiChatbotsSegmentationTooltip';
+        $translations[] = 'MultiSites_TotalHitsIncludingAiTooltip';
     }
     public function getStylesheetFiles(&$stylesheets)
     {
-        $stylesheets[] = "plugins/MultiSites/vue/src/Dashboard/Dashboard.less";
+        $stylesheets[] = "plugins/MultiSites/vue/src/AllWebsitesDashboard/AllWebsitesDashboard.less";
     }
 }

@@ -8,8 +8,10 @@
 
 import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
+import * as path from 'node:path';
+import * as fs from 'node:fs/promises';
 import Website from './website.js';
-import MatomoCli from './apiobjects/matomo.cli.js';
+import GdprToolsPage from './pageobjects/mwp-admin/about.page.js';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -20,7 +22,7 @@ describe('MWP Updating', () => {
 
   // sanity check to make sure we are updating from the latest stable version
   it('should have the latest stable version installed', async () => {
-    const pluginInfo = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
+    const pluginInfo: any = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
@@ -35,30 +37,36 @@ describe('MWP Updating', () => {
   });
 
   it('should succeed when updating to the current code', async () => {
-    const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
+    await Website.updateMatomoToLatest();
 
-    await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
-    await $('a.upload-view-toggle').waitForDisplayed();
+    const wpPluginsDir = path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'plugins');
 
-    await $('a.upload-view-toggle').click();
-    await $('#pluginzip').setValue(pathToRelease);
-    await browser.pause(250);
+    const plugins = await fs.readdir(wpPluginsDir);
+    const matomoPlugins = plugins.filter((p) => /^matomo/.test(p) && p !== 'matomo-marketplace-for-wordpress');
 
-    await $('#install-plugin-submit').waitForClickable();
-    await $('#install-plugin-submit').click();
+    expect(matomoPlugins).toEqual(['matomo']); // ensure there are no duplicate plugins like 'matomo-1'
+  });
 
-    await $('.update-from-upload-overwrite').waitForDisplayed();
+  it('should display whats new notifications on install', async () => {
+    await GdprToolsPage.open();
+
+    await GdprToolsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.whats-new-notifications.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should permanently hide whats new notifications on dismissal', async () => {
     await browser.execute(() => {
-      window.jQuery('.update-from-upload-overwrite')[0].click();
+      window.jQuery('.matomo-whats-new .notice-dismiss').each(function () {
+        this.click();
+      });
     });
 
     await browser.waitUntil(async () => {
-      return await browser.execute(() => {
-        return window.jQuery && (
-          window.jQuery('p:contains(Plugin updated successfully.)').length > 0 ||
-          window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
-        );
-      });
-    }, { timeout: 60000 });
+      return await browser.execute(() => window.jQuery('.matomo-whats-new').length) === 0;
+    }, { timeout: 30000 });
+
+    await browser.pause(1000); // additional wait for ajax methods to complete
   });
 });

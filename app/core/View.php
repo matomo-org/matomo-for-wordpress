@@ -10,6 +10,7 @@ namespace Piwik;
 
 use Exception;
 use Piwik\AssetManager\UIAssetCacheBuster;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\CoreAdminHome\Controller;
 use Piwik\Plugins\CorePluginsAdmin\CorePluginsAdmin;
@@ -23,7 +24,7 @@ if (!defined('PIWIK_USER_PATH')) {
     define('PIWIK_USER_PATH', PIWIK_INCLUDE_PATH);
 }
 /**
- * Encapsulates and manages a [Twig](http://twig.sensiolabs.org/) template.
+ * Encapsulates and manages a [Twig](https://twig.sensiolabs.org/) template.
  *
  * View lets you set properties that will be passed on to a Twig template.
  * View will also set several properties that will be available in all Twig
@@ -117,8 +118,8 @@ class View implements ViewInterface
     protected $templateVars = array();
     private $contentType = 'text/html; charset=utf-8';
     private $xFrameOptions = null;
-    private $enableCacheBuster = true;
-    private $useStrictReferrerPolicy = true;
+    private $enableCacheBuster = \true;
+    private $useStrictReferrerPolicy = \true;
     /**
      * Can be disabled to not send headers when rendering a view. This can be useful if heaps of views are being
      * rendered during one request to possibly prevent a segmentation fault see eg #15307 . It should not be disabled
@@ -126,7 +127,7 @@ class View implements ViewInterface
      * is part of the "main view".
      * @var bool
      */
-    public $sendHeadersWhenRendering = true;
+    public $sendHeadersWhenRendering = \true;
     /**
      * Constructor.
      *
@@ -162,7 +163,7 @@ class View implements ViewInterface
      */
     public function disableCacheBuster()
     {
-        $this->enableCacheBuster = false;
+        $this->enableCacheBuster = \false;
     }
     /**
      * Returns the template filename.
@@ -369,7 +370,6 @@ class View implements ViewInterface
     /**
      * Add form to view
      *
-     * @param QuickForm2 $form
      * @ignore
      */
     public function addForm(\Piwik\QuickForm2 $form)
@@ -405,7 +405,7 @@ class View implements ViewInterface
             // some high performance systems that run many Matomo instances may never want to clear this template cache
             // if they use eg a blue/green deployment
             $templatesCompiledPath = StaticContainer::get('path.tmp.templates');
-            \Piwik\Filesystem::unlinkRecursive($templatesCompiledPath, false);
+            \Piwik\Filesystem::unlinkRecursive($templatesCompiledPath, \false);
         }
     }
     /**
@@ -428,7 +428,7 @@ class View implements ViewInterface
     private function shouldPropagateTokenAuthInAjaxRequests()
     {
         $generalConfig = \Piwik\Config::getInstance()->General;
-        return \Piwik\Common::getRequestVar('module', false) == 'Widgetize' || $generalConfig['enable_framed_pages'] == '1' || $this->validTokenAuthInUrl();
+        return \Piwik\Common::getRequestVar('module', \false) == 'Widgetize' || $generalConfig['enable_framed_pages'] == '1' || $this->validTokenAuthInUrl();
     }
     /**
      * @return bool
@@ -436,8 +436,8 @@ class View implements ViewInterface
      */
     private function validTokenAuthInUrl()
     {
-        $tokenAuth = \Piwik\Common::getRequestVar('token_auth', '', 'string', $_GET);
-        return $tokenAuth && $tokenAuth === \Piwik\Piwik::getCurrentUserTokenAuth();
+        $token = StaticContainer::get(AuthenticationToken::class);
+        return !$token->wasTokenAuthProvidedSecurely() && $token->getAuthToken() === \Piwik\Piwik::getCurrentUserTokenAuth();
     }
     /**
      * Returns whether a strict Referrer-Policy header will be sent. Generally this should be set to 'true'.

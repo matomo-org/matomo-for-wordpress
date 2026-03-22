@@ -57,8 +57,7 @@ class UsersManager extends \Piwik\Plugin
     }
     public function onPlatformInitialized()
     {
-        $lastSeenTimeLogger = new \Piwik\Plugins\UsersManager\LastSeenTimeLogger();
-        $lastSeenTimeLogger->logCurrentUserLastSeenTime();
+        \Piwik\Plugins\UsersManager\LastSeenTimeLogger::logCurrentUserLastSeenTime();
     }
     /**
      * Hooks when a website tracker cache is flushed (website/user updated, cache deleted, or empty cache)
@@ -83,7 +82,9 @@ class UsersManager extends \Piwik\Plugin
             }
         }
     }
-    public static function hashTrackingToken($tokenAuth, $idSite)
+    public static function hashTrackingToken(
+#[\SensitiveParameter]
+$tokenAuth, $idSite)
     {
         return sha1($idSite . $tokenAuth . SettingsPiwik::getSalt());
     }
@@ -103,6 +104,7 @@ class UsersManager extends \Piwik\Plugin
         $stylesheets[] = "plugins/UsersManager/vue/src/UsersManager/UsersManager.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/PagedUsersList/PagedUsersList.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/UserEditForm/UserEditForm.less";
+        $stylesheets[] = "plugins/UsersManager/vue/src/UserInvite/UserInvite.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/UserPermissionsEdit/UserPermissionsEdit.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/CapabilitiesEdit/CapabilitiesEdit.less";
     }
@@ -115,12 +117,14 @@ class UsersManager extends \Piwik\Plugin
     public static function isValidPasswordString($input)
     {
         if (!SettingsPiwik::isUserCredentialsSanityCheckEnabled() && !empty($input)) {
-            return true;
+            return \true;
         }
         $l = strlen($input);
         return $l >= self::PASSWORD_MIN_LENGTH;
     }
-    public static function checkPassword($password)
+    public static function checkPassword(
+#[\SensitiveParameter]
+$password)
     {
         /**
          * Triggered before core password validator check password.
@@ -146,7 +150,9 @@ class UsersManager extends \Piwik\Plugin
             throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidPasswordTooLong', array(self::PASSWORD_MAX_LENGTH)));
         }
     }
-    public static function getPasswordHash($password)
+    public static function getPasswordHash(
+#[\SensitiveParameter]
+$password)
     {
         if (SettingsPiwik::isUserCredentialsSanityCheckEnabled()) {
             self::checkBasicPasswordStrength($password);
@@ -155,7 +161,9 @@ class UsersManager extends \Piwik\Plugin
         // to change how the root pwd is saved in the config file
         return md5($password);
     }
-    public static function checkBasicPasswordStrength($password)
+    public static function checkBasicPasswordStrength(
+#[\SensitiveParameter]
+$password)
     {
         $ex = new \Exception('This password is too weak, please supply another value or reset it.');
         $numDistinctCharacters = strlen(count_chars($password, 3));
@@ -173,7 +181,9 @@ class UsersManager extends \Piwik\Plugin
      * @param string $exceptionMessage Message of the exception thrown.
      * @throws Exception if the password hash length is incorrect.
      */
-    public static function checkPasswordHash($passwordHash, $exceptionMessage)
+    public static function checkPasswordHash(
+#[\SensitiveParameter]
+$passwordHash, $exceptionMessage)
     {
         if (strlen($passwordHash) != 32 || !ctype_xdigit($passwordHash)) {
             // MD5 hash length
@@ -192,6 +202,7 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'General_Done';
         $translationKeys[] = 'General_Language';
         $translationKeys[] = 'General_Never';
+        $translationKeys[] = 'General_NotAvailable';
         $translationKeys[] = 'General_Note';
         $translationKeys[] = 'General_Ok';
         $translationKeys[] = 'General_OrCancel';
@@ -244,6 +255,7 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'UsersManager_ConfirmThisChange';
         $translationKeys[] = 'UsersManager_ConfirmTokenCopied';
         $translationKeys[] = 'UsersManager_ConfirmWithPassword';
+        $translationKeys[] = 'UsersManager_ConfirmWithReAuthentication';
         $translationKeys[] = 'UsersManager_CopyDenied';
         $translationKeys[] = 'UsersManager_CopyDeniedHints';
         $translationKeys[] = 'UsersManager_CopyLink';
@@ -309,6 +321,7 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'UsersManager_NoteNoAnonymousUserAccessSettingsWontBeUsed2';
         $translationKeys[] = 'UsersManager_OrManageIndividually';
         $translationKeys[] = 'UsersManager_PasswordChangeTerminatesOtherSessions';
+        $translationKeys[] = 'UsersManager_PasswordChangeDoesNotRevokeAuthTokens';
         $translationKeys[] = 'UsersManager_Pending';
         $translationKeys[] = 'UsersManager_Permissions';
         $translationKeys[] = 'UsersManager_PersonalSettings';
@@ -355,7 +368,6 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'UsersManager_TheDisplayedWebsitesAreSelected';
         $translationKeys[] = 'UsersManager_TokenAuthIntro';
         $translationKeys[] = 'UsersManager_TokenSuccessfullyGenerated';
-        $translationKeys[] = 'UsersManager_TokensWithExpireDateCreationBySystem';
         $translationKeys[] = 'UsersManager_TwoFactorAuthentication';
         $translationKeys[] = 'UsersManager_TypeYourCurrentPassword';
         $translationKeys[] = 'UsersManager_TypeYourPasswordAgain';
@@ -369,5 +381,13 @@ class UsersManager extends \Piwik\Plugin
         $translationKeys[] = 'UsersManager_YourUsernameCannotBeChanged';
         $translationKeys[] = 'UsersManager_YourVisitsAreIgnoredOnDomain';
         $translationKeys[] = 'UsersManager_YourVisitsAreNotIgnored';
+        $translationKeys[] = 'UsersManager_InviteEmailChange';
+        $translationKeys[] = 'UsersManager_TokenExpireDate';
+        $translationKeys[] = 'UsersManager_TokenExpireDateCheckboxLabel';
+        $translationKeys[] = 'UsersManager_TokenExpireDateCheckboxHelp';
+        $translationKeys[] = 'UsersManager_TokenExpireDateHelpText';
+        $translationKeys[] = 'UsersManager_InvalidTokenExpireDateFormat';
+        $translationKeys[] = 'UsersManager_XAgo';
+        $translationKeys[] = 'UsersManager_CannotRevokeOwnSuperuserAccess';
     }
 }

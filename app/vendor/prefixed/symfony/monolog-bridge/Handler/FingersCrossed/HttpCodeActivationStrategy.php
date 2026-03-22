@@ -61,7 +61,7 @@ class HttpCodeActivationStrategy extends ErrorLevelActivationStrategy implements
                 if (\count($exclusion['urls'])) {
                     return !preg_match('{(' . implode('|', $exclusion['urls']) . ')}i', $request->getPathInfo());
                 }
-                return false;
+                return \false;
             }
         }
         return $isActivated;

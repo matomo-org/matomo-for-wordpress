@@ -102,11 +102,11 @@ class Events extends \Piwik\Plugin
         $apiMethod = $view->requestConfig->getApiMethodToRequest();
         $secondaryDimension = $this->getSecondaryDimensionFromRequest();
         $view->config->subtable_controller_action = \Piwik\Plugins\Events\API::getInstance()->getActionToLoadSubtables($apiMethod, $secondaryDimension);
-        $pivotBy = Common::getRequestVar('pivotBy', false);
+        $pivotBy = Common::getRequestVar('pivotBy', \false);
         if (empty($pivotBy)) {
             $view->config->columns_to_display = array('label', 'nb_events', 'sum_event_value');
         }
-        $view->config->show_flatten_table = true;
+        $view->config->show_flatten_table = \true;
         $view->requestConfig->filter_sort_column = 'nb_events';
         if ($view->isViewDataTableId(AllColumns::ID)) {
             $view->config->filters[] = function (DataTable $table) use($view) {
@@ -123,7 +123,7 @@ class Events extends \Piwik\Plugin
                     $view->requestConfig->filter_sort_column = 'nb_events';
                 }
             };
-            $view->config->show_pivot_by_subtable = false;
+            $view->config->show_pivot_by_subtable = \false;
         }
         $labelTranslation = $this->getColumnTranslation($apiMethod);
         $view->config->addTranslation('label', $labelTranslation);
@@ -140,29 +140,23 @@ class Events extends \Piwik\Plugin
             // eg. Row Evolution
             return;
         }
-        $view->config->show_related_reports = true;
         $apiMethod = $view->requestConfig->getApiMethodToRequest();
         $secondaryDimensions = \Piwik\Plugins\Events\API::getInstance()->getSecondaryDimensions($apiMethod);
         if (empty($secondaryDimensions)) {
             return;
         }
-        $secondaryDimensionTranslation = $this->getDimensionLabel($secondaryDimension);
-        $view->config->related_reports_title = Piwik::translate('Events_SecondaryDimension', $secondaryDimensionTranslation) . "<br/>" . Piwik::translate('Events_SwitchToSecondaryDimension', '');
+        $dimensions = [];
         foreach ($secondaryDimensions as $dimension) {
-            if ($dimension == $secondaryDimension) {
-                // don't show as related report the currently selected dimension
-                continue;
-            }
-            $dimensionTranslation = $this->getDimensionLabel($dimension);
-            $view->config->addRelatedReport($view->requestConfig->apiMethodToRequestDataTable, $dimensionTranslation, array('secondaryDimension' => $dimension));
+            $dimensions[$dimension] = $this->getDimensionLabel($dimension);
         }
+        $view->config->setSecondaryDimensions($dimensions, $secondaryDimension);
     }
     private function addTooltipEventValue(ViewDataTable $view)
     {
         // Creates the tooltip message for Event Value column
         $tooltipCallback = function ($hits, $min, $max, $avg) {
             if (!$hits) {
-                return false;
+                return \false;
             }
             $avg = $avg ?: 0;
             $msgEventMinMax = Piwik::translate("Events_EventValueTooltip", array($hits, "<br />", $min, $max));
@@ -177,7 +171,7 @@ class Events extends \Piwik\Plugin
      */
     public function getSecondaryDimensionFromRequest()
     {
-        return Common::getRequestVar('secondaryDimension', false, 'string');
+        return Common::getRequestVar('secondaryDimension', \false, 'string');
     }
     public function getStylesheetFiles(&$stylesheets)
     {

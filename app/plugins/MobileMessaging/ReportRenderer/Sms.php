@@ -52,7 +52,7 @@ class Sms extends ReportRenderer
         $prettyDate = $processedReport['prettyDate'];
         $reportData = $processedReport['reportData'];
         $evolutionMetrics = [];
-        $multiSitesAPIMetrics = API::getApiMetrics($enhanced = true);
+        $multiSitesAPIMetrics = API::getApiMetrics($enhanced = \true);
         foreach ($multiSitesAPIMetrics as $metricSettings) {
             $evolutionMetrics[] = $metricSettings[API::METRIC_EVOLUTION_COL_NAME_KEY];
         }

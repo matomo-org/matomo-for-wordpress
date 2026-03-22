@@ -22,11 +22,11 @@ class Complianz extends \Piwik\Plugins\SitesManager\SiteContentDetection\Consent
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'complianz-gdpr';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
     public function checkIsConnected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = "if (!cmplz_in_array( 'statistics', consentedCategories )) {\n\t\t_paq.push(['forgetCookieConsentGiven']);";
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

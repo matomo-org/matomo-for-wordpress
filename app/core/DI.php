@@ -25,20 +25,18 @@ class DI
         return PHPDI\value($value);
     }
     /**
-     * @param string|null $className
      * @return Matomo\Dependencies\DI\Definition\Helper\CreateDefinitionHelper
      * @see PHPDI\create()
      */
-    public static function create(string $className = null)
+    public static function create(?string $className = null)
     {
         return PHPDI\create($className);
     }
     /**
-     * @param string|null $className
      * @return Matomo\Dependencies\DI\Definition\Helper\AutowireDefinitionHelper
      * @see PHPDI\autowire()
      */
-    public static function autowire(string $className = null)
+    public static function autowire(?string $className = null)
     {
         return PHPDI\autowire($className);
     }
@@ -61,7 +59,6 @@ class DI
         return PHPDI\decorate($callable);
     }
     /**
-     * @param string $entryName
      * @return Matomo\Dependencies\DI\Definition\Reference
      * @see PHPDI\get()
      */
@@ -70,7 +67,6 @@ class DI
         return PHPDI\get($entryName);
     }
     /**
-     * @param string $variableName
      * @param mixed  $defaultValue
      * @return Matomo\Dependencies\DI\Definition\EnvironmentVariableDefinition
      * @see PHPDI\env()
@@ -89,7 +85,6 @@ class DI
         return PHPDI\add($values);
     }
     /**
-     * @param string $expression
      * @return Matomo\Dependencies\DI\Definition\StringDefinition
      * @see PHPDI\string()
      */

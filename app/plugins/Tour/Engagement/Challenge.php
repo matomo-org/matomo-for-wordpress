@@ -60,7 +60,7 @@ abstract class Challenge
      */
     public function isDisabled()
     {
-        return false;
+        return \false;
     }
     /**
      * A detailed description that describes the value of the action the user needs to complete, or some tips on how
@@ -108,7 +108,6 @@ abstract class Challenge
     /**
      * Skip this challenge.
      * @ignore
-     * @return bool
      */
     public function skipChallenge(string $login)
     {
@@ -116,7 +115,6 @@ abstract class Challenge
     }
     /**
      * Set this challenge was completed successfully by the current user. Only works for a super user.
-     * @return bool
      */
     public function setCompleted(string $login)
     {
@@ -126,9 +124,9 @@ abstract class Challenge
     {
         $settings = $this->getSettings($login);
         if (!empty($settings[$this->getId() . $appendix])) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function storeAttribute(string $login, $appendix)
     {

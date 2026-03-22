@@ -50,28 +50,43 @@ jobs:
           script: |
               core.setFailed('Release password didn\'t match.')
       - name: "Check if user is allowed"
-        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' && github.actor != 'lance-matomo' && github.actor != 'diosmosis' }}
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'diosmosis' }}
         uses: actions/github-script@v3
         with:
           script: |
             core.setFailed('User is not allowed to release.')
+      - run: |
+          sudo apt-get install -y subversion
+          svn --version
       - uses: actions/checkout@v3
         with:
           lfs: true
           fetch-depth: '0'
           token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
           submodules: true
-      - run: git lfs pull
+      - run: |
+          die() {
+            echo "$*" 1>&2 ;
+            exit 1;
+          }
+
+          git lfs fetch --all
+          git lfs pull
+          git lfs checkout
+
+          if grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/af.png; then
+            die "lfs checkout failed"
+          fi
       - name: "Check tag"
         run: |
-            existing_version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
+            existing_version=$(cat matomo.php | grep -oP " * Version: \K(.+)")
 
             if [[ -n "${{ github.event.inputs.version }}" ]]
             then
               version="${{ github.event.inputs.version }}"
 
               if [[ "$existing_version" != "$version" ]]; then
-                echo "Version in readme.txt not set correctly, aborting."
+                echo "Version in matomo.php not set correctly, aborting."
                 exit 1
               fi
             else
@@ -100,7 +115,7 @@ jobs:
       - run: sleep 60 # wait for docker-compose launch to finish
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
       - name: "Build releases"
-        run: npm run compose -- run console wordpress:build-release --name=${{ env.version }} --zip --tgz
+        run: npm run matomo:console -- wordpress:build-release --name=${{ env.version }} --zip --tgz
       - name: "Create release"
         uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
         with:

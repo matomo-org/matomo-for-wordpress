@@ -58,7 +58,6 @@ class Revenue extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
      * @param $valueToMatch
      * @param $sqlField
      * @param $matchType
-     * @param false $cart
      * @return array
      */
     private function getRevenueQuery($valueToMatch, $sqlField, $matchType, $idGoal)
@@ -77,10 +76,7 @@ class Revenue extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
         return ['SQL' => $sql, 'bind' => (float) $valueToMatch];
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      */
@@ -91,10 +87,7 @@ class Revenue extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
         return $this->roundRevenueIfNeeded($revenue);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      */
@@ -105,10 +98,7 @@ class Revenue extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
         return $this->roundRevenueIfNeeded($revenue);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      */

@@ -28,7 +28,7 @@ class AutoSuggest
         $report = Request::processRequest('CustomDimensions.getCustomDimension', array('idDimension' => $dimension['idcustomdimension'], 'idSite' => $idSite, 'filter_offset' => 0, 'filter_limit' => $maxValuesToReturn, 'period' => 'range', 'date' => $date, 'disable_queued_filters' => 1), array());
         $labels = $report->getColumn('label');
         $notDefinedKey = array_search(Archiver::LABEL_CUSTOM_VALUE_NOT_DEFINED, $labels);
-        if ($notDefinedKey !== false) {
+        if ($notDefinedKey !== \false) {
             unset($labels[$notDefinedKey]);
             $labels = array_values($labels);
         }

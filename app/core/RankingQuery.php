@@ -9,6 +9,7 @@
 namespace Piwik;
 
 use Exception;
+use Piwik\Db\Schema;
 /**
  * The ranking query class wraps an arbitrary SQL query with more SQL that limits
  * the number of results while aggregating the rest in an a new "Others" row. It also
@@ -63,12 +64,12 @@ class RankingQuery
      * The name of the columns that marks rows to be excluded from the limit
      * @var string
      */
-    private $columnToMarkExcludedRows = false;
+    private $columnToMarkExcludedRows = \false;
     /**
      * The column that is used to partition the result
      * @var bool|string
      */
-    private $partitionColumn = false;
+    private $partitionColumn = \false;
     /**
      * The possible values for the column $this->partitionColumn
      * @var array
@@ -84,9 +85,9 @@ class RankingQuery
      *
      * @param int|false $limit The result row limit. See {@link setLimit()}.
      */
-    public function __construct($limit = false)
+    public function __construct($limit = \false)
     {
-        if ($limit !== false) {
+        if ($limit !== \false) {
             $this->setLimit($limit);
         }
     }
@@ -122,7 +123,7 @@ class RankingQuery
             }
             return;
         }
-        $this->labelColumns[$labelColumn] = true;
+        $this->labelColumns[$labelColumn] = \true;
     }
     /**
      * @return array
@@ -138,7 +139,7 @@ class RankingQuery
      * @param string|bool $aggregationFunction If set, this function is used to aggregate the values of "Others",
      *                                         eg, `'min'`, `'max'` or `'sum'`.
      */
-    public function addColumn($column, $aggregationFunction = false)
+    public function addColumn($column, $aggregationFunction = \false)
     {
         if (is_array($column)) {
             foreach ($column as $c) {
@@ -159,7 +160,7 @@ class RankingQuery
      */
     public function setColumnToMarkExcludedRows($column)
     {
-        if ($this->columnToMarkExcludedRows !== false) {
+        if ($this->columnToMarkExcludedRows !== \false) {
             throw new Exception("setColumnToMarkExcludedRows can only be used once");
         }
         $this->columnToMarkExcludedRows = $column;
@@ -185,7 +186,7 @@ class RankingQuery
      */
     public function partitionResultIntoMultipleGroups($partitionColumn, $possibleValues)
     {
-        if ($this->partitionColumn !== false) {
+        if ($this->partitionColumn !== \false) {
             throw new Exception("partitionResultIntoMultipleGroups can only be used once");
         }
         $this->partitionColumn = $partitionColumn;
@@ -210,7 +211,7 @@ class RankingQuery
         $query = $this->generateRankingQuery($innerQuery);
         $query = \Piwik\DbHelper::addMaxExecutionTimeHintToQuery($query, $timeLimit);
         $data = \Piwik\Db::getReader()->fetchAll($query, $bind);
-        if ($this->columnToMarkExcludedRows !== false) {
+        if ($this->columnToMarkExcludedRows !== \false) {
             // split the result into the regular result and the rows with special treatment
             $excludedFromLimit = array();
             $result = array();
@@ -223,8 +224,8 @@ class RankingQuery
             }
             $data = array('result' => &$result, 'excludedFromLimit' => &$excludedFromLimit);
         }
-        if ($this->partitionColumn !== false) {
-            if ($this->columnToMarkExcludedRows !== false) {
+        if ($this->partitionColumn !== \false) {
+            if ($this->columnToMarkExcludedRows !== \false) {
                 $data['result'] = $this->splitPartitions($data['result']);
             } else {
                 $data = $this->splitPartitions($data);
@@ -252,18 +253,35 @@ class RankingQuery
      * @param $innerQuery string  The "payload" query that does the actual data aggregation. The ordering
      *                            has to be specified in this query. {@link RankingQuery} cannot apply ordering
      *                            itself.
+     * @param $withRollup bool    A flag which determines whether to generate the SQL query using ROLLUP
      * @return string             The entire ranking query SQL.
      */
-    public function generateRankingQuery($innerQuery)
+    public function generateRankingQuery($innerQuery, bool $withRollup = \false)
     {
         // +1 to include "Others"
         $limit = $this->limit + 1;
-        $counterExpression = $this->getCounterExpression($limit);
+        $counterExpression = $this->getCounterExpression($limit, $withRollup);
         // generate select clauses for label columns
         $labelColumnsString = '`' . implode('`, `', array_keys($this->labelColumns)) . '`';
-        $labelColumnsOthersSwitch = array();
-        foreach ($this->labelColumns as $column => $true) {
-            $labelColumnsOthersSwitch[] = "\n\t\t\t\tCASE\n\t\t\t\t\tWHEN counter = {$limit} THEN '" . $this->othersLabelValue . "'\n\t\t\t\t\tELSE `{$column}`\n\t\t\t\tEND AS `{$column}`\n\t\t\t";
+        $labelColumnsOthersSwitch = [];
+        $withRollupColumns = [];
+        $withRollupOthersGroupBy = [];
+        foreach (array_keys($this->labelColumns) as $column) {
+            if ($withRollup) {
+                if ([] === $withRollupColumns) {
+                    // support "Others" row for first label column
+                    $rollupWhen = "\n                        WHEN counterRollup = {$limit} THEN '" . $this->othersLabelValue . "'\n                        WHEN counterRollup > 0 THEN `{$column}`\n                        WHEN counter = {$limit} AND counterRollup = 0 THEN `{$column}`\n                        WHEN counter = {$limit} THEN '" . $this->othersLabelValue . "'\n                    ";
+                } else {
+                    // support "Others" row for secondary label columns
+                    $rollupWhen = "\n                        WHEN `{$column}` IS NULL THEN NULL\n                        WHEN counter = {$limit} AND counterRollup = 0 THEN '" . $this->othersLabelValue . "'\n                    ";
+                }
+                $switch = "\n                    CASE\n                        {$rollupWhen}\n                        ELSE `{$column}`\n                    END\n                ";
+                $labelColumnsOthersSwitch[] = "{$switch} AS `{$column}`";
+                $withRollupColumns[] = $column;
+                $withRollupOthersGroupBy[] = $switch;
+            } else {
+                $labelColumnsOthersSwitch[] = "\n                    CASE\n                        WHEN counter = {$limit} THEN '" . $this->othersLabelValue . "'\n                        ELSE `{$column}`\n                    END AS `{$column}`\n                ";
+            }
         }
         $labelColumnsOthersSwitch = implode(', ', $labelColumnsOthersSwitch);
         // generate select clauses for additional columns
@@ -271,14 +289,14 @@ class RankingQuery
         $additionalColumnsAggregatedString = '';
         foreach ($this->additionalColumns as $additionalColumn => $aggregation) {
             $additionalColumnsString .= ', `' . $additionalColumn . '`';
-            if ($aggregation !== false) {
+            if ($aggregation !== \false) {
                 $additionalColumnsAggregatedString .= ', ' . $aggregation . '(`' . $additionalColumn . '`) AS `' . $additionalColumn . '`';
             } else {
                 $additionalColumnsAggregatedString .= ', `' . $additionalColumn . '`';
             }
         }
         // initialize the counters
-        if ($this->partitionColumn !== false) {
+        if ($this->partitionColumn !== \false) {
             $initCounter = '';
             foreach ($this->partitionColumnValues as $value) {
                 $initCounter .= '( SELECT @counter' . intval($value) . ':=0 ) initCounter' . intval($value) . ', ';
@@ -286,28 +304,76 @@ class RankingQuery
         } else {
             $initCounter = '( SELECT @counter:=0 ) initCounter,';
         }
+        $counterRollupExpression = '';
+        if ($withRollup) {
+            $initCounter .= ' ( SELECT @counterRollup:=0 ) initCounterRollup,';
+            $counterRollupWhen = '';
+            if (count($withRollupColumns) >= 2) {
+                $counterRollupWhen = "\n                    WHEN `" . implode('` IS NULL AND `', $withRollupColumns) . "` IS NULL THEN -1\n                ";
+            }
+            foreach ($withRollupColumns as $withRollupColumn) {
+                $counterRollupWhen .= "\n                    WHEN `{$withRollupColumn}` IS NULL AND @counterRollup = {$limit} THEN {$limit}\n                    WHEN `{$withRollupColumn}` IS NULL THEN @counterRollup := @counterRollup + 1\n                ";
+            }
+            $counterRollupExpression = "\n                , CASE\n                    {$counterRollupWhen}\n                    ELSE 0\n                END AS counterRollup\n            ";
+        }
+        if (\false === strpos($innerQuery, ' LIMIT ') && !Schema::getInstance()->supportsSortingInSubquery()) {
+            // Setting a limit for the inner query forces the optimizer to use a temporary table, which uses the sorting
+            $innerQuery .= ' LIMIT 18446744073709551615';
+        }
         // add a counter to the query
         // we rely on the sorting of the inner query
-        $withCounter = "\n\t\t\tSELECT\n\t\t\t\t{$labelColumnsString},\n\t\t\t\t{$counterExpression} AS counter\n\t\t\t\t{$additionalColumnsString}\n\t\t\tFROM\n\t\t\t\t{$initCounter}\n\t\t\t\t( {$innerQuery} ) actualQuery\n\t\t";
+        $withCounter = "\n\t\t\tSELECT\n\t\t\t\t{$labelColumnsString},\n\t\t\t\t{$counterExpression} AS counter\n\t\t\t\t{$counterRollupExpression}\n\t\t\t\t{$additionalColumnsString}\n\t\t\tFROM\n\t\t\t\t{$initCounter}\n\t\t\t\t( {$innerQuery} ) actualQuery\n\t\t";
+        if ($withRollup && !Schema::getInstance()->supportsRankingRollupWithoutExtraSorting()) {
+            // MariaDB requires an additional sorting layer to return
+            // the counter/counterRollup values we expect
+            $rollupColumnSorts = [];
+            foreach ($withRollupColumns as $withRollupColumn) {
+                $rollupColumnSorts[] = "`{$withRollupColumn}` IS NULL";
+            }
+            $withCounter .= ' ORDER BY ' . implode(', ', $rollupColumnSorts);
+            $innerQueryOrderBy = \Piwik\DbHelper::extractOrderByFromQuery($innerQuery);
+            if (null !== $innerQueryOrderBy) {
+                // copy ORDER BY from inner query to rollup sorting
+                $withCounter .= ', ' . $innerQueryOrderBy;
+            }
+        }
         // group by the counter - this groups "Others" because the counter stops at $limit
         $groupBy = 'counter';
-        if ($this->partitionColumn !== false) {
+        if ($withRollup) {
+            // group rollups additionally by the rollup counter and the
+            // full "Others" switch to ensure correct secondary level "Others" calculation
+            $groupBy .= ', counterRollup, ' . implode(', ', $withRollupOthersGroupBy);
+        }
+        if ($this->partitionColumn !== \false) {
             $groupBy .= ', `' . $this->partitionColumn . '`';
         }
         $groupOthers = "\n\t\t\tSELECT\n\t\t\t\t{$labelColumnsOthersSwitch}\n\t\t\t\t{$additionalColumnsAggregatedString}\n\t\t\tFROM ( {$withCounter} ) AS withCounter\n\t\t\tGROUP BY {$groupBy}\n\t\t";
+        if ($withRollup) {
+            // Sort the final result if a rollup was used
+            // to ensure rollup values are returned first, and "Others" last
+            $groupOthers .= " ORDER BY counter, counterRollup";
+        } elseif (!Schema::getInstance()->supportsSortingInSubquery()) {
+            // When subqueries aren't sorted, we need to sort the result manually again
+            $groupOthers .= " ORDER BY counter";
+        }
         return $groupOthers;
     }
-    private function getCounterExpression($limit)
+    private function getCounterExpression($limit, bool $withRollup = \false)
     {
         $whens = array();
-        if ($this->columnToMarkExcludedRows !== false) {
+        if ($this->columnToMarkExcludedRows !== \false) {
             // when a row has been specified that marks which records should be excluded
             // from limiting, we don't give those rows the normal counter but -1 times the
             // value they had before. this way, they have a separate number space (i.e. negative
             // integers).
             $whens[] = "WHEN {$this->columnToMarkExcludedRows} != 0 THEN -1 * {$this->columnToMarkExcludedRows}";
         }
-        if ($this->partitionColumn !== false) {
+        if ($withRollup) {
+            foreach (array_keys($this->labelColumns) as $column) {
+                $whens[] = "WHEN `{$column}` IS NULL THEN -1";
+            }
+        }
+        if ($this->partitionColumn !== \false) {
             // partition: one counter per possible value
             foreach ($this->partitionColumnValues as $value) {
                 $isValue = '`' . $this->partitionColumn . '` = ' . intval($value);

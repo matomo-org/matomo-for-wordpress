@@ -50,7 +50,7 @@ class Piwik
      */
     public static function error($message = '')
     {
-        trigger_error($message, E_USER_ERROR);
+        trigger_error($message, \E_USER_ERROR);
     }
     /**
      * Display the message in a nice red font with a nice icon
@@ -224,20 +224,19 @@ class Piwik
     {
         try {
             self::checkUserHasSuperUserAccessOrIsTheUser($theUser);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
      * Returns if the given user needs to confirm his password in UI and for certain API methods
      *
-     * @param string $login
      * @return bool
      */
     public static function doesUserRequirePasswordConfirmation(string $login)
     {
-        $requiresPasswordConfirmation = true;
+        $requiresPasswordConfirmation = \true;
         /**
          * Triggered to check if a password confirmation for a user is required.
          *
@@ -297,7 +296,7 @@ class Piwik
             $user = reset($users);
             $expireDate = \Piwik\Date::now()->addHour($validForHours)->getDatetime();
             $token[$reason] = $model->generateRandomTokenAuth();
-            $model->addTokenAuth($user['login'], $token[$reason], 'System generated ' . $reason, \Piwik\Date::now()->getDatetime(), $expireDate, true);
+            $model->addTokenAuth($user['login'], $token[$reason], 'System generated ' . $reason, \Piwik\Date::now()->getDatetime(), $expireDate, \true);
             return $token[$reason];
         }
     }
@@ -311,22 +310,22 @@ class Piwik
     public static function hasTheUserSuperUserAccess($theUser)
     {
         if (empty($theUser)) {
-            return false;
+            return \false;
         }
         if (\Piwik\Piwik::getCurrentUserLogin() === $theUser && \Piwik\Piwik::hasUserSuperUserAccess()) {
-            return true;
+            return \true;
         }
         try {
             $superUsers = APIUsersManager::getInstance()->getUsersHavingSuperUserAccess();
         } catch (\Exception $e) {
-            return false;
+            return \false;
         }
         foreach ($superUsers as $superUser) {
             if ($theUser === $superUser['login']) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns true if the current user has Super User access.
@@ -340,7 +339,7 @@ class Piwik
             $hasAccess = \Piwik\Access::getInstance()->hasSuperUserAccess();
             return $hasAccess;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -386,9 +385,9 @@ class Piwik
     {
         try {
             self::checkUserHasAdminAccess($idSites);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -452,9 +451,9 @@ class Piwik
     {
         try {
             self::checkUserHasCapability($idSites, $capability);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -478,9 +477,9 @@ class Piwik
     {
         try {
             self::checkUserHasViewAccess($idSites);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -494,15 +493,15 @@ class Piwik
     {
         try {
             self::checkUserHasWriteAccess($idSites);
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
      * Checks that the current user has view access to the requested list of sites
      *
-     * @param int|array $idSites The list of site IDs to check access for.
+     * @param int|array|string $idSites The list of site IDs to check access for.
      * @throws Exception if the current user does not have view access to every site in the list.
      * @api
      */
@@ -531,9 +530,9 @@ class Piwik
     {
         try {
             self::checkUserHasSomeViewAccess();
-            return true;
+            return \true;
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -597,7 +596,7 @@ class Piwik
      * @param array|string $columns
      * @return array
      */
-    public static function getArrayFromApiParameter($columns, $unique = true)
+    public static function getArrayFromApiParameter($columns, $unique = \true)
     {
         if (empty($columns)) {
             return array();
@@ -636,7 +635,7 @@ class Piwik
      */
     public static function isValidEmailString($emailAddress)
     {
-        return filter_var($emailAddress, FILTER_VALIDATE_EMAIL) !== false;
+        return filter_var($emailAddress, \FILTER_VALIDATE_EMAIL) !== \false;
     }
     /**
      * Returns `true` if the login is valid.
@@ -645,9 +644,8 @@ class Piwik
      *
      * @param string $userLogin
      * @throws Exception
-     * @return bool
      */
-    public static function checkValidLoginString($userLogin)
+    public static function checkValidLoginString($userLogin) : void
     {
         if (!\Piwik\SettingsPiwik::isUserCredentialsSanityCheckEnabled() && !empty($userLogin)) {
             return;
@@ -691,20 +689,20 @@ class Piwik
         reset($array);
         if (!is_numeric(key($array)) || key($array) != 0) {
             // first key must be 0
-            return true;
+            return \true;
         }
         // check that each key is == next key - 1 w/o actually indexing the array
-        while (true) {
+        while (\true) {
             $current = key($array);
             next($array);
             $next = key($array);
             if ($next === null) {
                 break;
             } elseif ($current + 1 != $next) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public static function isMultiDimensionalArray($array)
     {
@@ -712,10 +710,10 @@ class Piwik
         foreach ($array as $first) {
             if (is_array($first)) {
                 // Yes, this is a multi dim array
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns the class name of an object without its namespace.
@@ -740,7 +738,7 @@ class Piwik
      *                            plugin observers will be executed.
      * @api
      */
-    public static function postEvent($eventName, $params = array(), $pending = false, $plugins = null)
+    public static function postEvent($eventName, $params = array(), $pending = \false, $plugins = null)
     {
         \Piwik\EventDispatcher::getInstance()->postEvent($eventName, $params, $pending, $plugins);
     }
@@ -762,7 +760,7 @@ class Piwik
      * Posts an event if we are currently running tests. Whether we are running tests is
      * determined by looking for the PIWIK_TEST_MODE constant.
      */
-    public static function postTestEvent($eventName, $params = array(), $pending = false, $plugins = null)
+    public static function postTestEvent($eventName, $params = array(), $pending = \false, $plugins = null)
     {
         if (defined('PIWIK_TEST_MODE')) {
             \Piwik\Piwik::postEvent($eventName, $params, $pending, $plugins);

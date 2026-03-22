@@ -9,6 +9,7 @@
     "Example": "Example",
     "SaveChanges": "Save Changes",
     "MeasurableSettingsNoAccess": "In order to make changes to these settings, you need to be a Matomo administrator for the currently selected site.",
-    "NoMeasurableSettingsAvailable": "No website specific settings for this plugin are currently available. This usually means there are some global settings that must be set for the plugin in the %1$sMatomo Admin%2$s."
+    "NoMeasurableSettingsAvailable": "No website specific settings for this plugin are currently available. This usually means there are some global settings that must be set for the plugin in the %1$sMatomo Admin%2$s.",
+    "AIBotTrackingIsNotEnabled": "AI bot tracking is not currently enabled in Matomo for WordPress. %1$sIt must be enabled before you will see data in these reports.%2$s"
   }
 }

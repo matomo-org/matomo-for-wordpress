@@ -33,7 +33,7 @@ class GithubActionReporter
     }
     public static function isGithubActionEnvironment() : bool
     {
-        return false !== getenv('GITHUB_ACTIONS');
+        return \false !== getenv('GITHUB_ACTIONS');
     }
     /**
      * Output an error using the Github annotations format.

@@ -36,7 +36,7 @@ abstract class LocationProvider
     public const INSTALLED = 1;
     public const BROKEN = 2;
     public const CURRENT_PROVIDER_OPTION_NAME = 'usercountry.location_provider';
-    public const GEOGRAPHIC_COORD_PRECISION = 3;
+    public const GEOGRAPHIC_COORD_PRECISION = 2;
     public const CONTINENT_CODE_KEY = 'continent_code';
     public const CONTINENT_NAME_KEY = 'continent_name';
     public const COUNTRY_CODE_KEY = 'country_code';
@@ -162,12 +162,11 @@ abstract class LocationProvider
      */
     public function isVisible()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns a message that should be shown as diagnostics warning if provider is used
      *
-     * @return null|string
      */
     public function getUsageWarning() : ?string
     {
@@ -194,7 +193,6 @@ abstract class LocationProvider
     /**
      * Get all lo that are defined by the given plugin.
      *
-     * @param Plugin $plugin
      * @return LocationProvider[]
      */
     protected static function getLocationProviders(Plugin $plugin)
@@ -250,25 +248,25 @@ abstract class LocationProvider
      * @param bool $includeExtra Whether to include ISP/Org info in formatted location.
      * @return array
      */
-    public static function getAllProviderInfo($newline = "\n", $includeExtra = false)
+    public static function getAllProviderInfo($newline = "\n", $includeExtra = \false)
     {
         $allInfo = array();
         foreach (self::getAllProviders() as $provider) {
             $info = $provider->getInfo();
             $status = self::INSTALLED;
-            $location = false;
-            $statusMessage = false;
+            $location = \false;
+            $statusMessage = \false;
             $availableOrMessage = $provider->isAvailable();
-            if ($availableOrMessage !== true) {
+            if ($availableOrMessage !== \true) {
                 $status = self::NOT_INSTALLED;
                 if (is_string($availableOrMessage)) {
                     $statusMessage = $availableOrMessage;
                 }
             } else {
                 $workingOrError = $provider->isWorking();
-                if ($workingOrError === true) {
+                if ($workingOrError === \true) {
                     // if the implementation is configured correctly, get the location
-                    $locInfo = array('ip' => IP::getIpFromHeader(), 'lang' => Common::getBrowserLanguage(), 'disable_fallbacks' => true);
+                    $locInfo = array('ip' => IP::getIpFromHeader(), 'lang' => Common::getBrowserLanguage(), 'disable_fallbacks' => \true);
                     $location = $provider->getLocation($locInfo);
                     $location = self::prettyFormatLocation($location, $newline, $includeExtra);
                 } else {
@@ -306,9 +304,9 @@ abstract class LocationProvider
         try {
             $optionValue = Option::get(self::CURRENT_PROVIDER_OPTION_NAME);
         } catch (\Exception $e) {
-            $optionValue = false;
+            $optionValue = \false;
         }
-        return $optionValue === false ? self::getDefaultProviderId() : $optionValue;
+        return $optionValue === \false ? self::getDefaultProviderId() : $optionValue;
     }
     /**
      * Returns the provider instance of the current location provider.
@@ -422,9 +420,9 @@ abstract class LocationProvider
      * @param bool $includeExtra Whether to include ISP/Organization info.
      * @return string
      */
-    public static function prettyFormatLocation($locationInfo, $newline = "\n", $includeExtra = false)
+    public static function prettyFormatLocation($locationInfo, $newline = "\n", $includeExtra = \false)
     {
-        if ($locationInfo === false) {
+        if ($locationInfo === \false) {
             return Piwik::translate('General_Unknown');
         }
         // add latitude/longitude line
@@ -481,5 +479,14 @@ abstract class LocationProvider
         } else {
             return $ip->toString();
         }
+    }
+    /**
+     * Returns true if the location provider can be used for security checks based
+     * on location, such as determining the current country where the user logs in from.
+     *
+     */
+    public function canBeUsedForLocationBasedSecurityChecks() : bool
+    {
+        return \false;
     }
 }

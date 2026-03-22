@@ -24,7 +24,8 @@
       </p>
       <form @submit="edit ? updateVersion() : createVersion()">
         <div>
-          <div v-if="hasPublishCapability()">
+          <div v-if="hasPublishCapability() ||
+          (hasWriteCapability() && hasPublishToLiveCapability())">
             <div>
               <Field
                 uicontrol="text"
@@ -33,8 +34,9 @@
                 :inline-help-bind="{ lastVersion }"
                 :model-value="version.name"
                 @update:model-value="version.name = $event; setValueHasChanged()"
-                :maxlength="30"
+                :maxlength="50"
                 :title="translate('TagManager_VersionName')"
+                :placeholder="translate('TagManager_VersionNamePlaceholder')"
               />
             </div>
             <div>
@@ -43,8 +45,9 @@
                 name="description"
                 :model-value="version.description"
                 @update:model-value="version.description = $event; setValueHasChanged()"
-                :title="translate('TagManager_VersionDescription')"
+                :title="translate('TagManager_VersionDescriptionOptional')"
                 :inline-help="translate('TagManager_VersionDescriptionHelp')"
+                :placeholder="translate('TagManager_VersionDescriptionPlaceholder')"
               />
             </div>
             <SaveButton
@@ -221,12 +224,13 @@ export default defineComponent({
       NotificationsStore.remove(notificationId);
       NotificationsStore.remove('ajaxHelper');
     },
-    showNotification(message: string, context: NotificationType['context']) {
+    showNotification(message: string, context: NotificationType['context'],
+      type: null|NotificationType['type'] = null) {
       const notificationInstanceId = NotificationsStore.show({
         message,
         context,
         id: notificationId,
-        type: 'transient',
+        type: type !== null ? type : 'toast',
       });
       setTimeout(() => {
         NotificationsStore.scrollToNotification(notificationInstanceId);
@@ -257,7 +261,7 @@ export default defineComponent({
         let lastContainerVersion = null;
 
         if (this.create && versions[0]?.name) {
-          this.lastVersion = versions[0].name;
+          this.lastVersion = Matomo.helper.htmlEntities(versions[0].name);
           lastContainerVersion = versions[0].idcontainerversion;
         } else if (this.edit) {
           versions.forEach((v, i) => {
@@ -267,7 +271,7 @@ export default defineComponent({
             }
 
             if (v.idcontainerversion === this.idContainerVersion && versions[i + 1]) {
-              this.lastVersion = versions[i + 1].name;
+              this.lastVersion = Matomo.helper.htmlEntities(versions[i + 1].name);
               lastContainerVersion = versions[i + 1].idcontainerversion;
             }
           });
@@ -358,27 +362,33 @@ export default defineComponent({
           this.$emit('changeVersion', {
             version: this.version,
           });
-          return;
         }
 
         VersionsStore.reload(this.idContainer).then(() => {
-          MatomoUrl.updateHash({
-            ...MatomoUrl.hashParsed.value,
-            idContainerVersion,
-          });
+          if (this.isEmbedded) {
+            MatomoUrl.updateHash({
+              ...MatomoUrl.hashParsed.value,
+            });
+          } else {
+            MatomoUrl.updateHash({
+              ...MatomoUrl.hashParsed.value,
+              idContainerVersion,
+            });
+          }
 
           setTimeout(() => {
             const createdX = translate('TagManager_CreatedX', translate('TagManager_Version'));
-            let wantToRedeploy = '';
             if (this.hasPublishCapability()) {
-              wantToRedeploy = translate(
+              const wantToRedeploy = translate(
                 'TagManager_WantToDeployThisChangeCreateVersion',
                 '<a class="createNewVersionLink">',
                 '</a>',
               );
+              this.showNotification(`${createdX} ${wantToRedeploy}`, 'success', 'transient');
+              return;
             }
 
-            this.showNotification(`${createdX} ${wantToRedeploy}`, 'success');
+            this.showNotification(createdX, 'success');
           }, 200);
         });
       }).finally(() => {
@@ -416,14 +426,18 @@ export default defineComponent({
             this.$emit('changeVersion', {
               version: this.version,
             });
-            return;
           }
-
           VersionsStore.reload(this.idContainer).then(() => {
-            MatomoUrl.updateHash({
-              ...MatomoUrl.hashParsed.value,
-              idContainerVersion,
-            });
+            if (this.isEmbedded) {
+              MatomoUrl.updateHash({
+                ...MatomoUrl.hashParsed.value,
+              });
+            } else {
+              MatomoUrl.updateHash({
+                ...MatomoUrl.hashParsed.value,
+                idContainerVersion,
+              });
+            }
 
             setTimeout(() => {
               this.showNotification(translate('TagManager_VersionPublishSuccess'), 'success');
@@ -483,7 +497,13 @@ export default defineComponent({
       return true;
     },
     hasPublishCapability() {
-      return Matomo.hasUserCapability('tagmanager_write') && Matomo.hasUserCapability('tagmanager_use_custom_templates');
+      return this.hasWriteCapability() && Matomo.hasUserCapability('tagmanager_use_custom_templates');
+    },
+    hasWriteCapability() {
+      return Matomo.hasUserCapability('tagmanager_write');
+    },
+    hasPublishToLiveCapability() {
+      return Matomo.hasUserCapability('tagmanager_publish_live_container');
     },
   },
   computed: {

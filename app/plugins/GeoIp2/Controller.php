@@ -35,13 +35,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkTokenInUrl();
             Json::sendHeaderJSON();
-            $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder('DBIP-City.mmdb.gz', true);
+            $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder('DBIP-City.mmdb.gz', \true);
             try {
-                $result = Http::downloadChunk($url = GeoIp2::getDbIpLiteUrl(), $outputPath, $continue = Common::getRequestVar('continue', true, 'int'));
+                $result = Http::downloadChunk($url = GeoIp2::getDbIpLiteUrl(), $outputPath, $continue = Common::getRequestVar('continue', \true, 'int'));
                 // if the file is done
                 if ($result['current_size'] >= $result['expected_file_size']) {
                     try {
-                        \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::unzipDownloadedFile($outputPath, 'loc', $url, $unlink = true);
+                        \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::unzipDownloadedFile($outputPath, 'loc', $url, $unlink = \true);
                     } catch (\Exception $e) {
                         // remove downloaded file on error
                         unlink($outputPath);
@@ -82,7 +82,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 // if there is a updater URL for a database, but its missing from the misc dir, tell
                 // the browser so it can download it next
                 $info = $this->getNextMissingDbUrlInfoGeoIp2();
-                if ($info !== false) {
+                if ($info !== \false) {
                     return json_encode($info);
                 } else {
                     $view = new View("@GeoIp2/_updaterNextRunTime");
@@ -125,14 +125,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $key = Common::getRequestVar('key', null, 'string');
                 $url = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getConfiguredUrl($key);
                 $filename = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getZippedFilenameToDownloadTo($url, $key, \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getGeoIPUrlExtension($url));
-                $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder($filename, true);
+                $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder($filename, \true);
                 // download part of the file
-                $result = Http::downloadChunk($url, $outputPath, Common::getRequestVar('continue', true, 'int'));
+                $result = Http::downloadChunk($url, $outputPath, Common::getRequestVar('continue', \true, 'int'));
                 // if the file is done
                 if ($result['current_size'] >= $result['expected_file_size']) {
-                    \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::unzipDownloadedFile($outputPath, $key, $url, $unlink = true);
+                    \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::unzipDownloadedFile($outputPath, $key, $url, $unlink = \true);
                     $info = $this->getNextMissingDbUrlInfoGeoIp2();
-                    if ($info !== false) {
+                    if ($info !== \false) {
                         return json_encode($info);
                     }
                 }
@@ -156,7 +156,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $link = '<a href="' . $url . '">' . $url . '</a>';
             return ['to_download' => $missingDbKey, 'to_download_label' => Piwik::translate('GeoIp2_DownloadingDb', $link) . '...'];
         }
-        return false;
+        return \false;
     }
     private function dieIfGeolocationAdminIsDisabled()
     {

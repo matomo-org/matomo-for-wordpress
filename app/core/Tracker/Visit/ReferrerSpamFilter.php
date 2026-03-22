@@ -25,7 +25,6 @@ class ReferrerSpamFilter
     /**
      * Check if the request is from a known spammer host.
      *
-     * @param Request $request
      * @return bool
      */
     public function isSpam(Request $request)
@@ -33,12 +32,12 @@ class ReferrerSpamFilter
         $spammers = $this->getSpammerListFromCache();
         $referrerUrl = $request->getParam('urlref');
         foreach ($spammers as $spammerHost) {
-            if (stripos($referrerUrl, $spammerHost) !== false) {
+            if (stripos($referrerUrl, $spammerHost) !== \false) {
                 Common::printDebug('Referrer URL is a known spam: ' . $spammerHost);
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     private function getSpammerListFromCache()
     {
@@ -68,7 +67,7 @@ class ReferrerSpamFilter
         } else {
             // Fallback to reading the bundled list
             $file = PIWIK_VENDOR_PATH . '/matomo/referrer-spam-list/spammers.txt';
-            $this->spammerList = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $this->spammerList = file($file, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
         }
         return $this->spammerList;
     }

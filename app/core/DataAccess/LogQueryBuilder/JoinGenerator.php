@@ -21,7 +21,7 @@ class JoinGenerator
     /**
      * @var bool
      */
-    private $joinWithSubSelect = false;
+    private $joinWithSubSelect = \false;
     /**
      * @var string
      */
@@ -85,7 +85,7 @@ class JoinGenerator
                     if (isset($this->tables[$j]) && is_array($this->tables[$j]) && !isset($this->tables[$j]['tableAlias'])) {
                         $tableOther = $this->tables[$j];
                         if ($table === $tableOther['table']) {
-                            $message = sprintf('Please reorganize the joined tables as the table %s in %s cannot be joined correctly. We recommend to join tables with arrays first. %s', $table, json_encode($this->tables), json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10)));
+                            $message = sprintf('Please reorganize the joined tables as the table %s in %s cannot be joined correctly. We recommend to join tables with arrays first. %s', $table, json_encode($this->tables), json_encode(debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 10)));
                             throw new Exception($message);
                         }
                     }
@@ -113,14 +113,18 @@ class JoinGenerator
     /**
      * Generate the join sql based on the needed tables
      * @throws Exception if tables can't be joined
-     * @return array
      */
-    public function generate()
+    public function generate() : void
     {
         /** @var LogTable[] $availableLogTables */
         $availableLogTables = array();
         $this->tables->sort();
         foreach ($this->tables as $i => $table) {
+            $useIndex = '';
+            if ($i === 0 && is_array($table)) {
+                $useIndex = $table['useIndex'] ?? '';
+                $table = $table['table'];
+            }
             if (is_array($table)) {
                 // join condition provided
                 $alias = isset($table['tableAlias']) ? $table['tableAlias'] : $table['table'];
@@ -148,6 +152,10 @@ class JoinGenerator
             if ($i == 0) {
                 // first table
                 $this->joinString .= $tableSql;
+                // Force the use of the index if an index was provided
+                if (!empty($useIndex)) {
+                    $this->joinString .= " USE INDEX ({$useIndex})";
+                }
             } else {
                 $join = $this->findJoinCriteriasForTables($logTable, $availableLogTables);
                 if ($join === null) {
@@ -178,7 +186,6 @@ class JoinGenerator
         return $this->joinWithSubSelect;
     }
     /**
-     * @param LogTable $logTable
      * @param LogTable[] $availableLogTables
      * @return string|null   returns null in case the table is already joined, or the join string if the table needs
      *                       to be joined
@@ -194,7 +201,7 @@ class JoinGenerator
                 $join = sprintf("%s.%s = %s.%s", $table, $logTable->getColumnToJoinOnIdVisit(), $availableLogTable->getName(), $availableLogTable->getColumnToJoinOnIdVisit());
                 $alternativeJoin = sprintf("%s.%s = %s.%s", $availableLogTable->getName(), $availableLogTable->getColumnToJoinOnIdVisit(), $table, $logTable->getColumnToJoinOnIdVisit());
                 if ($availableLogTable->shouldJoinWithSubSelect()) {
-                    $this->joinWithSubSelect = true;
+                    $this->joinWithSubSelect = \true;
                 }
                 break;
             }

@@ -24,7 +24,7 @@ class ConsoleCommandProcessor implements EventSubscriberInterface, ResetInterfac
     private $commandData;
     private $includeArguments;
     private $includeOptions;
-    public function __construct(bool $includeArguments = true, bool $includeOptions = false)
+    public function __construct(bool $includeArguments = \true, bool $includeOptions = \false)
     {
         $this->includeArguments = $includeArguments;
         $this->includeOptions = $includeOptions;

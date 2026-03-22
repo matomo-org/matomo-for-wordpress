@@ -21,8 +21,6 @@ class VisitTotalTime extends VisitDimension
     protected $nameSingular = 'General_ColumnVisitDuration';
     protected $type = self::TYPE_DURATION_S;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -33,8 +31,6 @@ class VisitTotalTime extends VisitDimension
         return $totalTime;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -46,15 +42,13 @@ class VisitTotalTime extends VisitDimension
         return $totalTime;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
     public function onConvertedVisit(Request $request, Visitor $visitor, $action)
     {
         if (!$visitor->isVisitorKnown()) {
-            return false;
+            return \false;
         }
         $totalTime = $visitor->getVisitorColumn('visit_total_time');
         // If a pageview and goal conversion in the same second, with previously a goal conversion recorded

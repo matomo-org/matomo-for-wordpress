@@ -44,7 +44,7 @@ class ColumnCallbackReplace extends BaseFilter
      *                                      and then replaced with the callback's result.
      * @param callable $functionToApply The function to execute. Must take the column value as a parameter
      *                                  and return a value that will be used to replace the original.
-     * @param array|null $functionParameters deprecated - use an [anonymous function](http://php.net/manual/en/functions.anonymous.php)
+     * @param array|null $functionParameters deprecated - use an [anonymous function](https://php.net/manual/en/functions.anonymous.php)
      *                                       instead.
      * @param array $extraColumnParameters Extra column values that should be passed to the callback, but
      *                                     shouldn't be replaced.
@@ -75,7 +75,7 @@ class ColumnCallbackReplace extends BaseFilter
             foreach ($this->columnsToFilter as $column) {
                 // when a value is not defined, we set it to zero by default (rather than displaying '-')
                 $value = $this->getElementToReplace($row, $column);
-                if ($value === false) {
+                if ($value === \false) {
                     $value = 0;
                 }
                 $parameters = array_merge(array($value), $extraColumnParameters);

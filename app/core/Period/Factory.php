@@ -89,7 +89,6 @@ abstract class Factory
             case 'year':
                 return new \Piwik\Period\Year($dateObject);
         }
-        /** @var string[] $customPeriodFactories */
         $customPeriodFactories = Plugin\Manager::getInstance()->findComponents('PeriodFactory', self::class);
         foreach ($customPeriodFactories as $customPeriodFactoryClass) {
             $customPeriodFactory = StaticContainer::get($customPeriodFactoryClass);
@@ -191,7 +190,7 @@ abstract class Factory
                 break;
         }
         if ($parentPeriod === null) {
-            return false;
+            return \false;
         }
         return !self::isPeriodEnabledForAPI($parentPeriod) || self::isAnyLowerPeriodDisabledForAPI($parentPeriod);
     }

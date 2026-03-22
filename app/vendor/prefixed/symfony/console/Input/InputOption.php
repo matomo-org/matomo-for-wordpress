@@ -59,7 +59,7 @@ class InputOption
         if (empty($name)) {
             throw new InvalidArgumentException('An option name cannot be empty.');
         }
-        if ('' === $shortcut || [] === $shortcut || false === $shortcut) {
+        if ('' === $shortcut || [] === $shortcut || \false === $shortcut) {
             $shortcut = null;
         }
         if (null !== $shortcut) {
@@ -163,7 +163,7 @@ class InputOption
                 throw new LogicException('A default value for an array option must be an array.');
             }
         }
-        $this->default = $this->acceptValue() || $this->isNegatable() ? $default : false;
+        $this->default = $this->acceptValue() || $this->isNegatable() ? $default : \false;
     }
     /**
      * Returns the default value.

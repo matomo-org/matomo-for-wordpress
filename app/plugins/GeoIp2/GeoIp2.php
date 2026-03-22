@@ -26,7 +26,7 @@ class GeoIp2 extends \Piwik\Plugin
     }
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     public function deactivate()
     {
@@ -69,24 +69,22 @@ class GeoIp2 extends \Piwik\Plugin
     /**
      * Customize the Installation "default settings" form.
      *
-     * @param FormDefaultSettings $form
      */
     public function installationFormInit(FormDefaultSettings $form)
     {
         $form->addElement('checkbox', 'setup_geoip2', null, ['content' => '<div class="form-help">' . Piwik::translate('GeoIp2_AutomaticSetupDescription', ['<a rel="noreferrer noopener" target="_blank" href="https://db-ip.com/db/lite.php?refid=mtm">', '</a>']) . '</div> &nbsp;&nbsp;' . Piwik::translate('GeoIp2_AutomaticSetup')]);
         // default values
-        $form->addDataSource(new \HTML_QuickForm2_DataSource_Array(['setup_geoip2' => true]));
+        $form->addDataSource(new \HTML_QuickForm2_DataSource_Array(['setup_geoip2' => \true]));
     }
     /**
      * Process the submit on the Installation "default settings" form.
      *
-     * @param FormDefaultSettings $form
      */
     public function installationFormSubmit(FormDefaultSettings $form)
     {
         $setupGeoIp2 = (bool) $form->getSubmitValue('setup_geoip2');
         if ($setupGeoIp2) {
-            Option::set(\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::AUTO_SETUP_OPTION_NAME, true);
+            Option::set(\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::AUTO_SETUP_OPTION_NAME, \true);
             \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::setUpdaterOptions(['loc' => \Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2::getDbIpLiteUrl(), 'period' => \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::SCHEDULE_PERIOD_MONTHLY]);
             $cliMulti = new CliMulti();
             // directly trigger the update task if possible

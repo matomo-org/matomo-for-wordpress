@@ -70,7 +70,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
         $this->createFileWithinPluginIfNotExists($pluginName, '/lang/en.json', $this->toJson($defaultLang));
         $langJsonPath = $this->getPluginPath($pluginName) . '/lang/en.json';
         $translations = file_get_contents($langJsonPath);
-        $translations = json_decode($translations, true);
+        $translations = json_decode($translations, \true);
         if (empty($translations[$pluginName])) {
             $translations[$pluginName] = array();
         }
@@ -99,7 +99,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
             return;
         }
         $pluginJson = file_get_contents($pluginJsonPath);
-        $pluginJson = json_decode($pluginJson, true);
+        $pluginJson = json_decode($pluginJson, \true);
         if (empty($pluginJson)) {
             return;
         }
@@ -109,7 +109,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
         $piwikVersion = Version::VERSION;
         $nextMajorVersion = (int) substr($piwikVersion, 0, strpos($piwikVersion, '.')) + 1;
         $secondPartPiwikVersionRequire = ',<' . $nextMajorVersion . '.0.0-b1';
-        if (false === strpos($piwikVersion, '-')) {
+        if (\false === strpos($piwikVersion, '-')) {
             // see https://github.com/composer/composer/issues/4080 we need to specify -stable otherwise it would match
             // $piwikVersion-dev meaning it would also match all pre-released. However, we only want to match a stable
             // release
@@ -136,7 +136,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
                     return;
                 }
             }
-            if (strpos($requiredVersion, '||') !== false || strpos($requiredVersion, ' ') !== false) {
+            if (strpos($requiredVersion, '||') !== \false || strpos($requiredVersion, ' ') !== \false) {
                 // user is using custom piwik version require, we do not overwrite anything.
                 return;
             }
@@ -154,7 +154,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
             $dependency = new Dependency();
             $missingVersion = $dependency->getMissingVersions($piwikVersion, $requiredVersion);
             if (!empty($missingVersion)) {
-                $msg = sprintf('We cannot generate this component as the plugin "%s" requires the Piwik version "%s" in the file "%s". Generating this component requires "%s". If you know your plugin is compatible with your Piwik version remove the required Piwik version in "%s" and try to execute this command again.', $pluginName, $requiredVersion, $relativePluginJson, $newRequiredVersion, $relativePluginJson);
+                $msg = sprintf('We cannot generate this component as the plugin "%s" requires the Piwik version "%s" in the ' . 'file "%s". Generating this component requires "%s". If you know your plugin is compatible with your ' . 'Piwik version remove the required Piwik version in "%s" and try to execute this command again.', $pluginName, $requiredVersion, $relativePluginJson, $newRequiredVersion, $relativePluginJson);
                 throw new \Exception($msg);
             }
             $output->writeln('');
@@ -169,7 +169,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
     private function toJson($value)
     {
         if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($value, JSON_PRETTY_PRINT);
+            return json_encode($value, \JSON_PRETTY_PRINT);
         }
         return json_encode($value);
     }
@@ -239,7 +239,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
      * @param array $whitelistFiles  If not empty, only given files/directories will be copied.
      *                               For instance array('/Controller.php', '/templates', '/templates/index.twig')
      */
-    protected function copyTemplateToPlugin($templateFolder, $pluginName, array $replace = array(), $whitelistFiles = array())
+    protected function copyTemplateToPlugin($templateFolder, $pluginName, array $replace = [], $whitelistFiles = [])
     {
         $replace['PLUGINNAME'] = $pluginName;
         $files = array_merge(
@@ -267,7 +267,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
     {
         $pluginNames = array();
         foreach (Manager::getPluginsDirectories() as $pluginsDir) {
-            $pluginDirs = \_glob($pluginsDir . '*', GLOB_ONLYDIR);
+            $pluginDirs = \_glob($pluginsDir . '*', \GLOB_ONLYDIR);
             foreach ($pluginDirs as $pluginDir) {
                 $pluginNames[] = basename($pluginDir);
             }
@@ -278,7 +278,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
     {
         $pluginNames = array();
         foreach (Manager::getPluginsDirectories() as $pluginsDir) {
-            $pluginDirs = \_glob($pluginsDir . '*', GLOB_ONLYDIR);
+            $pluginDirs = \_glob($pluginsDir . '*', \GLOB_ONLYDIR);
             foreach ($pluginDirs as $pluginDir) {
                 if (!file_exists($pluginDir . '/' . $filename)) {
                     $pluginNames[] = basename($pluginDir);
@@ -302,7 +302,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
         };
         $pluginName = $input->getOption('pluginname');
         if (empty($pluginName)) {
-            $pluginName = $this->askAndValidate('Enter the name of your plugin: ', $validate, false, $pluginNames);
+            $pluginName = $this->askAndValidate('Enter the name of your plugin: ', $validate, \false, $pluginNames);
         } else {
             $validate($pluginName);
         }

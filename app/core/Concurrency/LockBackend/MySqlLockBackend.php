@@ -19,7 +19,7 @@ class MySqlLockBackend implements LockBackend
      */
     public function getKeysMatchingPattern($pattern)
     {
-        $sql = sprintf('SELECT SQL_NO_CACHE distinct `key` FROM %s WHERE `key` like ? and %s', self::getTableName(), $this->getQueryPartExpiryTime());
+        $sql = sprintf('SELECT SQL_NO_CACHE distinct `key` FROM `%s` WHERE `key` like ? and %s', self::getTableName(), $this->getQueryPartExpiryTime());
         $pattern = str_replace('*', '%', $pattern);
         $keys = Db::fetchAll($sql, array($pattern));
         $raw = array_column($keys, 'key');
@@ -37,7 +37,7 @@ class MySqlLockBackend implements LockBackend
         // rather try to get the lock with the insert only because only one job can succeed with this. If below flow with the
         // delete becomes to slow, we may be able to use the INSERT INTO ... ON DUPLICATE UPDATE again.
         if ($this->get($key)) {
-            return false;
+            return \false;
             // a value is set, won't be possible to insert
         }
         $tablePrefixed = self::getTableName();
@@ -46,17 +46,17 @@ class MySqlLockBackend implements LockBackend
         if ($this->keyExists($key)) {
             // most of the time an expired key should not exist... we don't want to lock the row unnecessarily therefore we check first
             // if value exists...
-            $sql = sprintf('DELETE FROM %s WHERE `key` = ? and not (%s)', $tablePrefixed, $this->getQueryPartExpiryTime());
+            $sql = sprintf('DELETE FROM `%s` WHERE `key` = ? and not (%s)', $tablePrefixed, $this->getQueryPartExpiryTime());
             Db::query($sql, array($key));
         }
-        $query = sprintf('INSERT INTO %s (`key`, `value`, `expiry_time`) 
+        $query = sprintf('INSERT INTO `%s` (`key`, `value`, `expiry_time`) 
                                  VALUES (?,?,(UNIX_TIMESTAMP() + ?))', $tablePrefixed);
         // we make sure to update the row if the key is expired and consider it as "deleted"
         try {
             Db::query($query, array($key, $value, (int) $ttlInSeconds));
         } catch (\Exception $e) {
-            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'Duplicate entry') !== false || strpos($e->getMessage(), ' 1062 ') !== false) {
-                return false;
+            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'Duplicate entry') !== \false || strpos($e->getMessage(), ' 1062 ') !== \false) {
+                return \false;
             }
             throw $e;
         }
@@ -65,36 +65,36 @@ class MySqlLockBackend implements LockBackend
     }
     public function get($key)
     {
-        $sql = sprintf('SELECT SQL_NO_CACHE `value` FROM %s WHERE `key` = ? AND %s LIMIT 1', self::getTableName(), $this->getQueryPartExpiryTime());
+        $sql = sprintf('SELECT SQL_NO_CACHE `value` FROM `%s` WHERE `key` = ? AND %s LIMIT 1', self::getTableName(), $this->getQueryPartExpiryTime());
         return Db::fetchOne($sql, array($key));
     }
     public function deleteIfKeyHasValue($key, $value)
     {
         if (empty($value)) {
-            return false;
+            return \false;
         }
-        $sql = sprintf('DELETE FROM %s WHERE `key` = ? and `value` = ?', self::getTableName());
+        $sql = sprintf('DELETE FROM `%s` WHERE `key` = ? and `value` = ?', self::getTableName());
         return $this->queryDidMakeChange($sql, array($key, $value));
     }
     public function expireIfKeyHasValue($key, $value, $ttlInSeconds)
     {
         if (empty($value)) {
-            return false;
+            return \false;
         }
         // we need to use unix_timestamp in mysql and not time() in php since the local time might be different on each server
         // better to rely on one central DB server time only
-        $sql = sprintf('UPDATE %s SET expiry_time = (UNIX_TIMESTAMP() + ?) WHERE `key` = ? and `value` = ?', self::getTableName());
+        $sql = sprintf('UPDATE `%s` SET expiry_time = (UNIX_TIMESTAMP() + ?) WHERE `key` = ? and `value` = ?', self::getTableName());
         $success = $this->queryDidMakeChange($sql, array((int) $ttlInSeconds, $key, $value));
         if (!$success) {
             // the above update did not work because the same time was already set and we just tried to set the same ttl
             // again too fast within one second
             return $value === $this->get($key);
         }
-        return true;
+        return \true;
     }
     public function keyExists($key)
     {
-        $sql = sprintf('SELECT SQL_NO_CACHE 1 FROM %s WHERE `key` = ? LIMIT 1', self::getTableName());
+        $sql = sprintf('SELECT SQL_NO_CACHE 1 FROM `%s` WHERE `key` = ? LIMIT 1', self::getTableName());
         $value = Db::fetchOne($sql, array($key));
         return !empty($value);
     }

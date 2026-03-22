@@ -16,7 +16,7 @@ class Index extends \Piwik\Widget\WidgetContainerConfig
     protected $categoryId = 'General_Visitors';
     protected $name = 'VisitsSummary_WidgetOverviewGraph';
     protected $id = 'VisitOverviewWithGraph';
-    protected $isWidgetizable = true;
+    protected $isWidgetizable = \true;
     public function isEnabled()
     {
         return ReportsProvider::factory('VisitsSummary', 'get')->isEnabled();

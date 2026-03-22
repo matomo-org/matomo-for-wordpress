@@ -56,7 +56,7 @@ class AddSegmentByRangeLabel extends BaseFilter
                 continue;
             }
             // if there's more than one element, handle as a range w/ an upper bound
-            if (strpos($label, "-") !== false) {
+            if (strpos($label, "-") !== \false) {
                 // get the range
                 sscanf($label, "%d - %d", $lowerBound, $upperBound);
                 if ($lowerBound == $upperBound) {

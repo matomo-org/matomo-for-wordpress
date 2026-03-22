@@ -45,10 +45,8 @@ class DuplicateActionRemover
     /**
      * Constructor.
      *
-     * @param TableMetadata $tableMetadataAccess
-     * @param LoggerInterface $logger
      */
-    public function __construct(TableMetadata $tableMetadataAccess = null, LoggerInterface $logger = null)
+    public function __construct(?TableMetadata $tableMetadataAccess = null, ?LoggerInterface $logger = null)
     {
         $this->tableMetadataAccess = $tableMetadataAccess ?: new TableMetadata();
         $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
@@ -125,7 +123,7 @@ class DuplicateActionRemover
         $idactionColumns = $this->getIdActionTableColumnsFromMetadata();
         $idactionColumns = array_values($idactionColumns[$table]);
         $table = Common::prefixTable($table);
-        $sql = "SELECT idsite, DATE(server_time) as server_time FROM {$table} ";
+        $sql = "SELECT idsite, DATE(server_time) as server_time FROM `{$table}` ";
         $sql .= $this->getWhereToGetRowsUsingDuplicateActions($idactionColumns, $duplicateIdActions);
         return Db::fetchAll($sql);
     }

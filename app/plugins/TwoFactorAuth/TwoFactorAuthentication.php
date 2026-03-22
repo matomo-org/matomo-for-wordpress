@@ -63,7 +63,9 @@ class TwoFactorAuthentication
     {
         return strtolower($login) === 'anonymous';
     }
-    public function saveSecret($login, $secret)
+    public function saveSecret($login,
+#[\SensitiveParameter]
+$secret)
     {
         if (self::isAnonymous($login)) {
             throw new Exception('Anonymous cannot use two-factor authentication');
@@ -82,7 +84,7 @@ class TwoFactorAuthentication
     public static function isUserUsingTwoFactorAuthentication($login)
     {
         if (self::isAnonymous($login)) {
-            return false;
+            return \false;
             // not possible to use auth code with anonymous
         }
         $user = self::getUser($login);
@@ -93,32 +95,38 @@ class TwoFactorAuthentication
         $model = self::getUserModel();
         return $model->getUser($login);
     }
-    private function wasTwoFaCodeUsedRecently($login, $authCode)
+    private function wasTwoFaCodeUsedRecently($login,
+#[\SensitiveParameter]
+$authCode)
     {
         $time = Option::get($this->gettwoFaCodeUsedKey($login, $authCode));
         if (empty($time)) {
-            return false;
+            return \false;
         }
         $fiveMinutes = 60 * self::BLOCK_TWOFA_CODE_MINUTES;
         if (time() - $fiveMinutes >= (int) $time) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
-    private function gettwoFaCodeUsedKey($login, $authCode)
+    private function gettwoFaCodeUsedKey($login,
+#[\SensitiveParameter]
+$authCode)
     {
         return self::OPTION_PREFIX_TWO_FA_CODE_USED . md5($login . $authCode . SettingsPiwik::getSalt());
     }
-    private function setTwoFaCodeWasUsed($login, $authCode)
+    private function setTwoFaCodeWasUsed($login,
+#[\SensitiveParameter]
+$authCode)
     {
         $table = Common::prefixTable('option');
         $bind = array($this->gettwoFaCodeUsedKey($login, $authCode), time(), 0);
         try {
             Db::query('INSERT INTO `' . $table . '` (option_name, option_value, autoload) VALUES (?, ?, ?) ', $bind);
-            return true;
+            return \true;
         } catch (Exception $e) {
             // when 2 process try to insert at same time should result in duplicate error
-            return false;
+            return \false;
         }
     }
     public function cleanupTwoFaCodesUsedRecently()
@@ -134,33 +142,42 @@ class TwoFactorAuthentication
             }
         }
     }
-    public function validateAuthCode($login, $authCode)
+    public function validateAuthCode($login,
+#[\SensitiveParameter]
+$authCode)
     {
         if (!self::isUserUsingTwoFactorAuthentication($login)) {
-            return false;
+            return \false;
         }
         $user = self::getUser($login);
+        if (!is_string($authCode)) {
+            return \false;
+        }
         if ($this->wasTwoFaCodeUsedRecently($user['login'], $authCode)) {
-            return false;
+            return \false;
         }
         if (!$this->setTwoFaCodeWasUsed($user['login'], $authCode)) {
-            return false;
+            return \false;
         }
         if (!empty($user['twofactor_secret']) && $this->validateAuthCodeDuringSetup($authCode, $user['twofactor_secret'])) {
-            return true;
+            return \true;
         }
         if ($this->recoveryCodeDao->useRecoveryCode($user['login'], $authCode)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
-    public function validateAuthCodeDuringSetup($authCode, $secret)
+    public function validateAuthCodeDuringSetup(
+#[\SensitiveParameter]
+$authCode,
+#[\SensitiveParameter]
+$secret)
     {
         $twoFactorAuth = $this->makeAuthenticator();
         if (!empty($secret) && $twoFactorAuth->verifyCode($secret, $authCode, 2)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function makeAuthenticator()
     {

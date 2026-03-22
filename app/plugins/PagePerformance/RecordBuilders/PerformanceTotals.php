@@ -46,7 +46,7 @@ class PerformanceTotals extends RecordBuilder
         $selects[] = "count({$table}.idlink_va) as page_load_hits";
         $joinLogActionOnColumn = array('idaction_url');
         $where = sprintf("COALESCE(%s) IS NOT NULL", implode(',', $allColumns));
-        $query = $logAggregator->queryActionsByDimension([], $where, $selects, false, null, $joinLogActionOnColumn, null, -1);
+        $query = $logAggregator->queryActionsByDimension([], $where, $selects, \false, null, $joinLogActionOnColumn, null, -1);
         $result = $query->fetchAll();
         $totals[Archiver::PAGEPERFORMANCE_TOTAL_NETWORK_TIME] = $this->sumMetric($result, 'time_network_total');
         $totals[Archiver::PAGEPERFORMANCE_TOTAL_NETWORK_HITS] = $this->sumMetric($result, 'time_network_hits');

@@ -4,7 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Marketplace\PluginTrial;
 
@@ -34,7 +34,6 @@ class Notification
     /**
      * Dismisses the notification for the current user
      *
-     * @return void
      */
     public function setNotificationDismissed() : void
     {
@@ -44,7 +43,6 @@ class Notification
     /**
      * Creates a plugin trial notification for the current user if needed
      *
-     * @return void
      * @throws Exception
      */
     public function createNotificationIfNeeded() : void
@@ -58,7 +56,7 @@ class Notification
         $message = '<b>' . Piwik::translate('Marketplace_TrialRequestedNotification1', [htmlentities($this->storage->getDisplayName()), $link, '</a>']) . '</b><br><br>';
         $message .= Piwik::translate('Marketplace_TrialRequestedNotification2', [htmlentities($this->storage->getDisplayName()), $link, '</a>']);
         $notification = new MatomoNotification($message);
-        $notification->raw = true;
+        $notification->raw = \true;
         $notification->context = MatomoNotification::CONTEXT_INFO;
         $notification->type = MatomoNotification::TYPE_PERSISTENT;
         MatomoNotification\Manager::cancel($this->getNotificationId());
@@ -67,7 +65,6 @@ class Notification
     /**
      * Removes a notification from current users session
      *
-     * @return void
      */
     public function removeFromSession() : void
     {

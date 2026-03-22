@@ -46,6 +46,7 @@ class LogDataAnonymizer
             return 0;
             // no visit tracked yet, the idsite in() would otherwise fail
         }
+        $idSitesArray = $idSites;
         $idSites = implode(', ', $idSites);
         $numVisitsToUpdate = $this->getNumVisitsInTimeRange($idSites, $startDate, $endDate);
         if (empty($numVisitsToUpdate)) {
@@ -53,7 +54,11 @@ class LogDataAnonymizer
         }
         $privacyConfig = new Config();
         $minimumIpAddressMaskLength = 2;
-        $ipMask = max($minimumIpAddressMaskLength, $privacyConfig->ipAddressMaskLength);
+        $ipMaskPerSite = [];
+        foreach ($idSitesArray as $idSite) {
+            $privacyConfig->setIdSite($idSite);
+            $ipMaskPerSite[$idSite] = max($minimumIpAddressMaskLength, $privacyConfig->ipAddressMaskLength);
+        }
         $numRecordsUpdated = 0;
         $trackerModel = new Model();
         $geolocator = new VisitorGeolocator();
@@ -63,12 +68,12 @@ class LogDataAnonymizer
             if ($offset + $limit > $numVisitsToUpdate) {
                 $limit = $numVisitsToUpdate % $limit;
             }
-            $sql = sprintf('SELECT idsite, idvisit, location_ip, user_id, location_longitude, location_latitude, location_city, location_region, location_country FROM %s WHERE idsite in (%s) and visit_last_action_time >= ? and visit_last_action_time <= ? ORDER BY idsite, visit_last_action_time, idvisit LIMIT %d OFFSET %d', $this->logVisitTable, $idSites, $limit, $offset);
+            $sql = sprintf('SELECT idsite, idvisit, location_ip, user_id, location_longitude, location_latitude, location_city, location_region, location_country FROM `%s` WHERE idsite in (%s) and visit_last_action_time >= ? and visit_last_action_time <= ? ORDER BY idsite, visit_last_action_time, idvisit LIMIT %d OFFSET %d', $this->logVisitTable, $idSites, $limit, $offset);
             $rows = Db::query($sql, array($startDate, $endDate))->fetchAll();
             foreach ($rows as $row) {
                 $ipObject = IP::fromBinaryIP($row['location_ip']);
                 $ipString = $ipObject->toString();
-                $ipAnonymized = IPAnonymizer::applyIPMask($ipObject, $ipMask);
+                $ipAnonymized = IPAnonymizer::applyIPMask($ipObject, $ipMaskPerSite[$row['idsite']]);
                 $update = array();
                 if ($anonymizeIp) {
                     if ($ipString !== $ipAnonymized->toString()) {
@@ -76,7 +81,7 @@ class LogDataAnonymizer
                         $update['location_ip'] = $ipAnonymized->toBinary();
                     }
                 }
-                if ($anonymizeUserId && isset($row['user_id']) && $row['user_id'] !== false && $row['user_id'] !== '') {
+                if ($anonymizeUserId && isset($row['user_id']) && $row['user_id'] !== \false && $row['user_id'] !== '') {
                     $update['user_id'] = RequestProcessor::anonymizeUserId($row['user_id']);
                 }
                 if ($anonimizeLocation) {
@@ -84,7 +89,7 @@ class LogDataAnonymizer
                     $keys = array('location_longitude' => LocationProvider::LONGITUDE_KEY, 'location_latitude' => LocationProvider::LATITUDE_KEY, 'location_city' => LocationProvider::CITY_NAME_KEY, 'location_region' => LocationProvider::REGION_CODE_KEY, 'location_country' => LocationProvider::COUNTRY_CODE_KEY);
                     foreach ($keys as $name => $val) {
                         $newLocationData = null;
-                        if (isset($location[$val]) && $location[$val] !== false) {
+                        if (isset($location[$val]) && $location[$val] !== \false) {
                             $newLocationData = $location[$val];
                         }
                         if ($newLocationData !== $row[$name]) {
@@ -183,12 +188,12 @@ class LogDataAnonymizer
         $col = implode(',', $col);
         $bind[] = $startDate;
         $bind[] = $endDate;
-        $sql = sprintf('UPDATE %s SET %s WHERE idsite in (%s) and %s >= ? and %s <= ?', $table, $col, $idSites, $dateColumn, $dateColumn);
+        $sql = sprintf('UPDATE `%s` SET %s WHERE idsite in (%s) and %s >= ? and %s <= ?', $table, $col, $idSites, $dateColumn, $dateColumn);
         return Db::query($sql, $bind)->rowCount();
     }
     private function getNumVisitsInTimeRange($idSites, $startDate, $endDate)
     {
-        $sql = sprintf('SELECT count(*) FROM %s WHERE idsite in (%s) and visit_last_action_time >= ? and visit_last_action_time <= ?', $this->logVisitTable, $idSites);
+        $sql = sprintf('SELECT count(*) FROM `%s` WHERE idsite in (%s) and visit_last_action_time >= ? and visit_last_action_time <= ?', $this->logVisitTable, $idSites);
         $numVisits = Db::query($sql, array($startDate, $endDate))->fetchColumn();
         return $numVisits;
     }
@@ -198,7 +203,7 @@ class LogDataAnonymizer
         $values = array();
         foreach ($columns as $column => $config) {
             $hasDefaultKey = array_key_exists('Default', $config);
-            if (in_array($column, $this->COLUMNS_BLACKLISTED, true)) {
+            if (in_array($column, $this->COLUMNS_BLACKLISTED, \true)) {
                 continue;
             } elseif (strtoupper($config['Null']) === 'NO' && $hasDefaultKey && $config['Default'] === null) {
                 // we cannot unset this column as it may result in an error or random data
@@ -214,7 +219,7 @@ class LogDataAnonymizer
     private function getAllIdSitesString($table)
     {
         // we need the idSites in order to use the index
-        $sites = Db::query(sprintf('SELECT DISTINCT idsite FROM %s', $table))->fetchAll();
+        $sites = Db::query(sprintf('SELECT DISTINCT idsite FROM `%s`', $table))->fetchAll();
         $idSites = array();
         foreach ($sites as $site) {
             $idSites[] = (int) $site['idsite'];

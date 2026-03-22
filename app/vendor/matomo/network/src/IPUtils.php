@@ -27,18 +27,18 @@ class IPUtils
         $ipString = trim($ipString);
         // CIDR notation, A.B.C.D/E
         $posSlash = strrpos($ipString, '/');
-        if ($posSlash !== false) {
+        if ($posSlash !== \false) {
             $ipString = substr($ipString, 0, $posSlash);
         }
         $posColon = strrpos($ipString, ':');
         $posDot = strrpos($ipString, '.');
-        if ($posColon !== false) {
+        if ($posColon !== \false) {
             // IPv6 address with port, [A:B:C:D:E:F:G:H]:EEEE
             $posRBrac = strrpos($ipString, ']');
-            if ($posRBrac !== false && $ipString[0] == '[') {
+            if ($posRBrac !== \false && $ipString[0] == '[') {
                 $ipString = substr($ipString, 1, $posRBrac - 1);
             }
-            if ($posDot !== false) {
+            if ($posDot !== \false) {
                 // IPv4 address with port, A.B.C.D:EEEE
                 if ($posColon > $posDot) {
                     $ipString = substr($ipString, 0, $posColon);
@@ -74,7 +74,7 @@ class IPUtils
             return null;
         }
         // IP address with wildcards '*'
-        if (strpos($ipRangeString, '*') !== false) {
+        if (strpos($ipRangeString, '*') !== \false) {
             // Disallow prefixed wildcards and anything other than wildcards
             // and separators (including IPv6 zero groups) after first wildcard
             if (preg_match('/[^.:]\\*|\\*.*([^.:*]|::)/', $ipRangeString)) {
@@ -83,7 +83,7 @@ class IPUtils
             $numWildcards = substr_count($ipRangeString, '*');
             $ipRangeString = str_replace('*', '0', $ipRangeString);
             // CIDR
-        } elseif (($pos = strpos($ipRangeString, '/')) !== false) {
+        } elseif (($pos = strpos($ipRangeString, '/')) !== \false) {
             $bits = substr($ipRangeString, $pos + 1);
             $ipRangeString = substr($ipRangeString, 0, $pos);
             if (!is_numeric($bits)) {
@@ -91,7 +91,7 @@ class IPUtils
             }
         }
         // single IP
-        if (($ip = @inet_pton($ipRangeString)) === false) {
+        if (($ip = @inet_pton($ipRangeString)) === \false) {
             return null;
         }
         $maxbits = strlen($ip) * 8;
@@ -116,7 +116,7 @@ class IPUtils
     {
         // use @inet_pton() because it throws an exception and E_WARNING on invalid input
         $ip = @inet_pton($ipString);
-        return $ip === false ? "\x00\x00\x00\x00" : $ip;
+        return $ip === \false ? "\x00\x00\x00\x00" : $ip;
     }
     /**
      * Convert binary/network address format to string/presentation format.
@@ -128,7 +128,7 @@ class IPUtils
     {
         // use @inet_ntop() because it throws an exception and E_WARNING on invalid input
         $ipStr = @inet_ntop($ip);
-        return $ipStr === false ? '0.0.0.0' : $ipStr;
+        return $ipStr === \false ? '0.0.0.0' : $ipStr;
     }
     /**
      * Get low and high IP addresses for a specified IP range.
@@ -139,12 +139,12 @@ class IPUtils
     public static function getIPRangeBounds($ipRange)
     {
         $ipRange = self::sanitizeIpRange($ipRange);
-        if ($ipRange === null || ($pos = strpos($ipRange, '/')) === false || $pos + 1 === strlen($ipRange)) {
+        if ($ipRange === null || ($pos = strpos($ipRange, '/')) === \false || $pos + 1 === strlen($ipRange)) {
             return null;
         }
         $range = substr($ipRange, 0, $pos);
         $high = $low = @inet_pton($range);
-        if ($low === false) {
+        if ($low === \false) {
             return null;
         }
         $addrLen = strlen($low);

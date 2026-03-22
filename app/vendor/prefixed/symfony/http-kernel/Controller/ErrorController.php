@@ -44,7 +44,7 @@ class ErrorController
          * \Symfony\Component\HttpKernel\EventListener\ErrorListener::duplicateRequest, with
          * the additional "showException" flag.
          */
-        $subRequest = $request->duplicate(null, null, ['_controller' => $this->controller, 'exception' => new HttpException($code, 'This is a sample exception.'), 'logger' => null, 'showException' => false]);
+        $subRequest = $request->duplicate(null, null, ['_controller' => $this->controller, 'exception' => new HttpException($code, 'This is a sample exception.'), 'logger' => null, 'showException' => \false]);
         return $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }

@@ -115,18 +115,18 @@ class HeaderBag implements \IteratorAggregate, \Countable
      * @param string|string[]|null $values  The value or an array of values
      * @param bool                 $replace Whether to replace the actual value or not (true by default)
      */
-    public function set(string $key, $values, bool $replace = true)
+    public function set(string $key, $values, bool $replace = \true)
     {
         $key = strtr($key, self::UPPER, self::LOWER);
         if (\is_array($values)) {
             $values = array_values($values);
-            if (true === $replace || !isset($this->headers[$key])) {
+            if (\true === $replace || !isset($this->headers[$key])) {
                 $this->headers[$key] = $values;
             } else {
                 $this->headers[$key] = array_merge($this->headers[$key], $values);
             }
         } else {
-            if (true === $replace || !isset($this->headers[$key])) {
+            if (\true === $replace || !isset($this->headers[$key])) {
                 $this->headers[$key] = [$values];
             } else {
                 $this->headers[$key][] = $values;
@@ -177,7 +177,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
         if (null === ($value = $this->get($key))) {
             return $default;
         }
-        if (false === ($date = \DateTime::createFromFormat(\DATE_RFC2822, $value))) {
+        if (\false === ($date = \DateTime::createFromFormat(\DATE_RFC2822, $value))) {
             throw new \RuntimeException(sprintf('The "%s" HTTP header is not parseable (%s).', $key, $value));
         }
         return $date;
@@ -187,7 +187,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      *
      * @param bool|string $value The Cache-Control directive value
      */
-    public function addCacheControlDirective(string $key, $value = true)
+    public function addCacheControlDirective(string $key, $value = \true)
     {
         $this->cacheControl[$key] = $value;
         $this->set('Cache-Control', $this->getCacheControlHeader());

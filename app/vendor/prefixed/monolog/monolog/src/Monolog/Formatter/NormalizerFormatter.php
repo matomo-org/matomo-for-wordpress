@@ -98,7 +98,7 @@ class NormalizerFormatter implements FormatterInterface
         }
         if (is_object($data)) {
             // TODO 2.0 only check for Throwable
-            if ($data instanceof Exception || PHP_VERSION_ID > 70000 && $data instanceof \Throwable) {
+            if ($data instanceof Exception || \PHP_VERSION_ID > 70000 && $data instanceof \Throwable) {
                 return $this->normalizeException($data);
             }
             // non-serializable objects that implement __toString stringified
@@ -106,7 +106,7 @@ class NormalizerFormatter implements FormatterInterface
                 $value = $data->__toString();
             } else {
                 // the rest is json-serialized in some way
-                $value = $this->toJson($data, true);
+                $value = $this->toJson($data, \true);
             }
             return sprintf("[object] (%s: %s)", Utils::getClass($data), $value);
         }
@@ -133,7 +133,7 @@ class NormalizerFormatter implements FormatterInterface
                 if (is_string($e->detail)) {
                     $data['detail'] = $e->detail;
                 } elseif (is_object($e->detail) || is_array($e->detail)) {
-                    $data['detail'] = $this->toJson($e->detail, true);
+                    $data['detail'] = $this->toJson($e->detail, \true);
                 }
             }
         }
@@ -156,7 +156,7 @@ class NormalizerFormatter implements FormatterInterface
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
-    protected function toJson($data, $ignoreErrors = false)
+    protected function toJson($data, $ignoreErrors = \false)
     {
         return Utils::jsonEncode($data, null, $ignoreErrors);
     }

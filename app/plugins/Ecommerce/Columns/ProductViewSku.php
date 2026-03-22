@@ -43,7 +43,7 @@ class ProductViewSku extends ActionDimension
         if (Manager::getInstance()->isPluginActivated('CustomVariables')) {
             $customVariables = CustomVariablesRequestProcessor::getCustomVariablesInPageScope($request);
             if (isset($customVariables['custom_var_k3']) && $customVariables['custom_var_k3'] === '_pks') {
-                return $customVariables['custom_var_v3'] ?? false;
+                return $customVariables['custom_var_v3'] ?? \false;
             }
         }
         return parent::onLookupAction($request, $action);

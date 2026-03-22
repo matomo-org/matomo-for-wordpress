@@ -35,14 +35,12 @@ class EntryPageTitle extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_TITLE);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionName = false;
+        $idActionName = \false;
         if (!empty($action)) {
             $idActionName = $action->getIdActionNameForEntryAndExitIds();
         }

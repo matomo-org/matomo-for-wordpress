@@ -27,7 +27,6 @@ class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
      */
     private $tmpPath;
     /**
-     * @param Translator $translator
      * @param string $tmpPath Path to the temp directory.
      */
     public function __construct(Translator $translator, $tmpPath)
@@ -40,13 +39,13 @@ class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
         $label = $this->translator->translate('Installation_SystemCheckWriteDirs');
         $result = new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult($label);
         $directories = Filechecks::checkDirectoriesWritable($this->getDirectories());
-        $error = false;
+        $error = \false;
         foreach ($directories as $directory => $isWritable) {
             if ($isWritable) {
                 $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
             } else {
                 $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR;
-                $error = true;
+                $error = \true;
             }
             $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem($status, $directory));
         }
@@ -68,7 +67,7 @@ class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
      */
     private function getDirectories()
     {
-        $directoriesToCheck = array($this->tmpPath, $this->tmpPath . '/assets/', $this->tmpPath . '/cache/', $this->tmpPath . '/climulti/', $this->tmpPath . '/latest/', $this->tmpPath . '/logs/', $this->tmpPath . '/sessions/', $this->tmpPath . '/tcpdf/', StaticContainer::get('path.tmp.templates'));
+        $directoriesToCheck = array($this->tmpPath, $this->tmpPath . '/assets/', $this->tmpPath . '/cache/', $this->tmpPath . '/climulti/', $this->tmpPath . '/latest/', $this->tmpPath . '/logs/', $this->tmpPath . '/logos/', $this->tmpPath . '/sessions/', $this->tmpPath . '/tcpdf/', StaticContainer::get('path.tmp.templates'));
         if (!DbHelper::isInstalled()) {
             // at install, need /config to be writable (so we can create config.ini.php)
             $directoriesToCheck[] = PIWIK_USER_PATH . '/config/';

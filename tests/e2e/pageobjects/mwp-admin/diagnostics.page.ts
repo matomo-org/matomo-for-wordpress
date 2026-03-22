@@ -10,9 +10,22 @@ import { $, browser } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpDiagnosticsPage extends MwpPage {
-  async open() {
-    const result = await super.open('/wp-admin/admin.php?page=matomo-systemreport');
+  async open(overrideUrl?: string) {
+    const result = await super.open(overrideUrl || '/wp-admin/admin.php?page=matomo-systemreport');
+    await $('a.nav-tab').waitForExist();
+    await this.normalizePageContents();
+    return result;
+  }
 
+  async openTroubleshootingTab() {
+    await browser.execute(() => {
+      window.jQuery('a.nav-tab:contains(Troubleshooting)')[0].click();
+    });
+    await $('#matomo_troubleshooting_update_from').waitForExist();
+    await browser.pause(500);
+  }
+
+  private async normalizePageContents() {
     await browser.execute(() => {
       // remove dates from every table cell
       window.jQuery('.matomo-systemreport td').each((i, e) => {
@@ -42,14 +55,11 @@ class MwpDiagnosticsPage extends MwpPage {
       $activePluginsValue.html(
         $activePluginsValue.html().replace(new RegExp('(' + matomoPlugins.join('|') + '):\\d+\\.\\d+\\.\\d+', 'gi'), '$1:')
       );
+
+      window.jQuery('tbody#logs_body > tr').remove();
     });
-
-    return result;
-  }
-
-  async openTroubleshootingTab() {
-    await $('a.nav-tab=Troubleshooting').click();
   }
 }
 
 export default new MwpDiagnosticsPage();
+export { MwpDiagnosticsPage as MwpDiagnosticsPageType };

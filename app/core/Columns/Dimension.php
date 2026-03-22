@@ -138,7 +138,7 @@ abstract class Dimension
      *
      * If the closure returns NULL, then Piwik assumes the segment sub-string will not match any visitor.
      *
-     * @var string|\Closure
+     * @var string|\Closure|callable
      * @api since Piwik 3.2.0
      */
     protected $sqlFilter;
@@ -156,7 +156,7 @@ abstract class Dimension
      * @var bool
      * @api since Piwik 3.2.0
      */
-    protected $allowAnonymous = true;
+    protected $allowAnonymous = \true;
     /**
      * The name of the database table this dimension refers to
      * @var string
@@ -373,6 +373,10 @@ abstract class Dimension
             case \Piwik\Columns\Dimension::TYPE_BOOL:
                 return !empty($value) ? '1' : '0';
             case \Piwik\Columns\Dimension::TYPE_DURATION_MS:
+                if (!is_numeric($value)) {
+                    // This might happen if ranking query has too many results and `__mtm_ranking_query_others__` is returned
+                    return $value;
+                }
                 return round($value / 1000, 2) * 1000;
         }
         return $value;
@@ -382,7 +386,6 @@ abstract class Dimension
      *
      * @param mixed $value
      * @param int $idSite
-     * @param Formatter $formatter
      * @return mixed
      * @api since Piwik 3.2.0
      */
@@ -407,10 +410,10 @@ abstract class Dimension
             case \Piwik\Columns\Dimension::TYPE_NUMBER:
                 return $formatter->getPrettyNumber($value);
             case \Piwik\Columns\Dimension::TYPE_DURATION_S:
-                return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = false);
+                return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = \false);
             case \Piwik\Columns\Dimension::TYPE_DURATION_MS:
                 $val = round($value / 1000, $value / 1000 > 60 ? 0 : 2);
-                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = true);
+                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = \true);
             case \Piwik\Columns\Dimension::TYPE_PERCENT:
                 return $formatter->getPrettyPercentFromQuotient($value);
             case \Piwik\Columns\Dimension::TYPE_BYTE:
@@ -431,8 +434,6 @@ abstract class Dimension
      * $segmentsList->addSegment($segment);
      * ```
      *
-     * @param SegmentsList            $segmentsList
-     * @param DimensionSegmentFactory $dimensionSegmentFactory
      * @throws Exception
      */
     public function configureSegments(SegmentsList $segmentsList, \Piwik\Columns\DimensionSegmentFactory $dimensionSegmentFactory)
@@ -447,8 +448,6 @@ abstract class Dimension
      *
      * For certain dimension types, some metrics will be added automatically.
      *
-     * @param MetricsList $metricsList
-     * @param DimensionMetricFactory $dimensionMetricFactory
      */
     public function configureMetrics(\Piwik\Columns\MetricsList $metricsList, \Piwik\Columns\DimensionMetricFactory $dimensionMetricFactory)
     {
@@ -526,6 +525,7 @@ abstract class Dimension
         if ($this->dbTableName && $this->columnName) {
             return $this->dbTableName . '.' . $this->columnName;
         }
+        return '';
     }
     /**
      * @return null|callable
@@ -549,10 +549,13 @@ abstract class Dimension
      */
     public function getAcceptValues()
     {
+        if (!empty($this->acceptValues) && strpos($this->acceptValues, '_')) {
+            return Piwik::translate($this->acceptValues);
+        }
         return $this->acceptValues;
     }
     /**
-     * @return \Closure|string|null
+     * @return callable|\Closure|string|null
      * @ignore
      */
     public function getSqlFilter()
@@ -733,21 +736,21 @@ abstract class Dimension
         if (!empty($this->columnType)) {
             // best guess
             $type = strtolower($this->columnType);
-            if (strpos($type, 'datetime') !== false) {
+            if (strpos($type, 'datetime') !== \false) {
                 return self::TYPE_DATETIME;
-            } elseif (strpos($type, 'timestamp') !== false) {
+            } elseif (strpos($type, 'timestamp') !== \false) {
                 return self::TYPE_TIMESTAMP;
-            } elseif (strpos($type, 'date') !== false) {
+            } elseif (strpos($type, 'date') !== \false) {
                 return self::TYPE_DATE;
-            } elseif (strpos($type, 'time') !== false) {
+            } elseif (strpos($type, 'time') !== \false) {
                 return self::TYPE_TIME;
-            } elseif (strpos($type, 'float') !== false) {
+            } elseif (strpos($type, 'float') !== \false) {
                 return self::TYPE_FLOAT;
-            } elseif (strpos($type, 'decimal') !== false) {
+            } elseif (strpos($type, 'decimal') !== \false) {
                 return self::TYPE_FLOAT;
-            } elseif (strpos($type, 'int') !== false) {
+            } elseif (strpos($type, 'int') !== \false) {
                 return self::TYPE_NUMBER;
-            } elseif (strpos($type, 'binary') !== false) {
+            } elseif (strpos($type, 'binary') !== \false) {
                 return self::TYPE_BINARY;
             }
         }

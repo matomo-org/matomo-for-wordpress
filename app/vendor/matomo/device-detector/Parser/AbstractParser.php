@@ -118,12 +118,35 @@ abstract class AbstractParser
         $this->setClientHints($clientHints);
     }
     /**
+     * Restore useragent from client hints
+     */
+    public function restoreUserAgentFromClientHints() : void
+    {
+        if (null === $this->clientHints) {
+            return;
+        }
+        $deviceModel = $this->clientHints->getModel();
+        if ('' === $deviceModel) {
+            return;
+        }
+        // Restore Android User Agent
+        if ($this->hasUserAgentClientHintsFragment()) {
+            $osVersion = $this->clientHints->getOperatingSystemVersion();
+            $this->setUserAgent((string) \preg_replace('(Android (?:10[.\\d]*; K|1[1-5]))', \sprintf('Android %s; %s', '' !== $osVersion ? $osVersion : '10', $deviceModel), $this->userAgent));
+        }
+        // Restore Desktop User Agent
+        if (!$this->hasDesktopFragment()) {
+            return;
+        }
+        $this->setUserAgent((string) \preg_replace('(X11; Linux x86_64)', \sprintf('X11; Linux x86_64; %s', $deviceModel), $this->userAgent));
+    }
+    /**
      * Set how DeviceDetector should return versions
      * @param int $type Any of the VERSION_TRUNCATION_* constants
      */
     public static function setVersionTruncation(int $type) : void
     {
-        if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH])) {
+        if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH], \true)) {
             return;
         }
         static::$maxMinorParts = $type;
@@ -212,7 +235,7 @@ abstract class AbstractParser
                 $this->regexList = $cacheContent;
             }
             if (empty($this->regexList)) {
-                $parsedContent = $this->getYamlParser()->parseFile($this->getRegexesDirectory() . DIRECTORY_SEPARATOR . $this->fixtureFile);
+                $parsedContent = $this->getYamlParser()->parseFile($this->getRegexesDirectory() . \DIRECTORY_SEPARATOR . $this->fixtureFile);
                 if (!\is_array($parsedContent)) {
                     $parsedContent = [];
                 }
@@ -249,6 +272,31 @@ abstract class AbstractParser
         return \dirname(__DIR__);
     }
     /**
+     * Returns if the parsed UA contains the 'Windows NT;' or 'X11; Linux x86_64' fragments
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    protected function hasDesktopFragment() : bool
+    {
+        $regexExcludeDesktopFragment = \implode('|', ['CE-HTML', ' Mozilla/|Andr[o0]id|Tablet|Mobile|iPhone|Windows Phone|ricoh|OculusBrowser', 'PicoBrowser|Lenovo|compatible; MSIE|Trident/|Tesla/|XBOX|FBMD/|ARM; ?([^)]+)']);
+        return $this->matchUserAgent('(?:Windows (?:NT|IoT)|X11; Linux x86_64)') && !$this->matchUserAgent($regexExcludeDesktopFragment);
+    }
+    /**
+     * Returns if the parsed UA contains the 'Android 10 K;' or Android 10 K Build/` fragment
+     *
+     * @return bool
+     */
+    protected function hasUserAgentClientHintsFragment() : bool
+    {
+        $pattern = '~Android (?:1[0-6][.\\d]*; K(?: Build/|[;)])|1[0-6]\\)) AppleWebKit~i';
+        if (\preg_match($pattern, $this->userAgent)) {
+            return \false === \stripos($this->userAgent, 'Telegram-Android/');
+        }
+        return \false;
+    }
+    /**
      * Matches the useragent against the given regex
      *
      * @param string $regex
@@ -281,7 +329,8 @@ abstract class AbstractParser
     {
         $search = [];
         $replace = [];
-        for ($nb = 1; $nb <= \count($matches); $nb++) {
+        $count = \count($matches);
+        for ($nb = 1; $nb <= $count; $nb++) {
             $search[] = '$' . $nb;
             $replace[] = $matches[$nb] ?? '';
         }
@@ -320,6 +369,8 @@ abstract class AbstractParser
      * Method can be used to speed up detections by making a big check before doing checks for every single regex
      *
      * @return ?array
+     *
+     * @throws \Exception
      */
     protected function preMatchOverall() : ?array
     {

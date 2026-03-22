@@ -36,7 +36,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
             throw new \RuntimeException(sprintf('Please check your configuration. You are trying to use FileStorage with an invalid dsn "%s". The expected format is "file:/path/to/the/storage/folder".', $dsn));
         }
         $this->folder = substr($dsn, 5);
-        if (!is_dir($this->folder) && false === @mkdir($this->folder, 0777, true) && !is_dir($this->folder)) {
+        if (!is_dir($this->folder) && \false === @mkdir($this->folder, 0777, \true) && !is_dir($this->folder)) {
             throw new \RuntimeException(sprintf('Unable to create the storage directory (%s).', $this->folder));
         }
     }
@@ -53,7 +53,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
         fseek($file, 0, \SEEK_END);
         $result = [];
         while (\count($result) < $limit && ($line = $this->readLineFromFile($file))) {
-            $values = str_getcsv($line);
+            $values = str_getcsv($line, ',', '"', '\\');
             if (7 !== \count($values)) {
                 // skip invalid lines
                 continue;
@@ -109,7 +109,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
         if (!$profileIndexed) {
             // Create directory
             $dir = \dirname($file);
-            if (!is_dir($dir) && false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
+            if (!is_dir($dir) && \false === @mkdir($dir, 0777, \true) && !is_dir($dir)) {
                 throw new \RuntimeException(sprintf('Unable to create the storage directory (%s).', $dir));
             }
         }
@@ -126,18 +126,18 @@ class FileProfilerStorage implements ProfilerStorageInterface
         if (\function_exists('gzencode')) {
             $data = gzencode($data, 3);
         }
-        if (false === file_put_contents($file, $data, \LOCK_EX)) {
-            return false;
+        if (\false === file_put_contents($file, $data, \LOCK_EX)) {
+            return \false;
         }
         if (!$profileIndexed) {
             // Add to index
-            if (false === ($file = fopen($this->getIndexFilename(), 'a'))) {
-                return false;
+            if (\false === ($file = fopen($this->getIndexFilename(), 'a'))) {
+                return \false;
             }
-            fputcsv($file, [$profile->getToken(), $profile->getIp(), $profile->getMethod(), $profile->getUrl(), $profile->getTime(), $profile->getParentToken(), $profile->getStatusCode()]);
+            fputcsv($file, [$profile->getToken(), $profile->getIp(), $profile->getMethod(), $profile->getUrl(), $profile->getTime(), $profile->getParentToken(), $profile->getStatusCode()], ',', '"', '\\');
             fclose($file);
         }
-        return true;
+        return \true;
     }
     /**
      * Gets filename to store data, associated to the token.
@@ -176,7 +176,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
         if (0 === $position) {
             return null;
         }
-        while (true) {
+        while (\true) {
             $chunkSize = min($position, 1024);
             $position -= $chunkSize;
             fseek($file, $position);
@@ -185,7 +185,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
                 break;
             }
             $buffer = fread($file, $chunkSize);
-            if (false === ($upTo = strrpos($buffer, "\n"))) {
+            if (\false === ($upTo = strrpos($buffer, "\n"))) {
                 $line = $buffer . $line;
                 continue;
             }

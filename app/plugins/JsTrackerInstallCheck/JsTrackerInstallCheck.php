@@ -22,7 +22,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
     }
     public function getClientSideTranslationKeys(&$translationKeys)
     {
-        $translationKeys[] = 'JsTrackerInstallCheck_TestInstallationDescription';
+        $translationKeys[] = 'JsTrackerInstallCheck_OptionalTestInstallationDescription';
         $translationKeys[] = 'JsTrackerInstallCheck_TestInstallationBtnText';
         $translationKeys[] = 'JsTrackerInstallCheck_JsTrackingCodeInstallCheckSuccessMessage';
         $translationKeys[] = 'JsTrackerInstallCheck_JsTrackingCodeInstallCheckFailureMessage';
@@ -45,7 +45,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
             return;
         }
         // Make sure that the request is marked as excluded if it isn't already
-        $excluded = true;
+        $excluded = \true;
         StaticContainer::get(LoggerInterface::class)->debug('Excluding visit as JS tracker install test.');
         // If the nonce exists and isn't expired, update it to indicate success
         StaticContainer::get(JsTrackerInstallCheckOption::class)->markNonceAsSuccessFul($request->getIdSite(), $trackerInstallCheckParam);
@@ -55,7 +55,6 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
      * result for the site will be returned. This is determined by whether there's only one previous nonce or if the URL
      * matches the main URL of the site.
      *
-     * @param int $idSite
      * @param string $nonce The unique nonce used to identify the test requests. Optionally can be left empty if simply
      * wanting to check if the site has been successfully tested.
      * @return bool Indicating whether the nonce check was marked as successful
@@ -69,7 +68,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
             return !empty($nonceMap[$nonce]['isSuccessful']);
         }
         if (empty($nonceMap)) {
-            return false;
+            return \false;
         }
         // If there's only one nonce for the site, just use that result
         if (count($nonceMap) === 1) {
@@ -82,13 +81,12 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
                 return !empty($nonceData['isSuccessful']);
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Initiate a test whether the JS tracking code has been successfully installed for a site. It generates a nonce and
      * stores it in the option table so that it can be accessed later during the Tracker.isExcludedVisit event.
      *
-     * @param int $idSite
      * @param string $url Optional URL to append the nonce to. If not provided, it uses the main URL of the site
      * @return array containing the URL constructed using the main URL for the site and the newly created nonce as a
      * query parameter.
@@ -98,11 +96,11 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
     public function initiateJsTrackerInstallTest(int $idSite, string $url = '') : array
     {
         // If the URL wasn't provided or isn't a valid URL, use the main URL configured for the site
-        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+        if (empty($url) || !filter_var($url, \FILTER_VALIDATE_URL)) {
             $url = Site::getMainUrlFor($idSite);
         }
         $nonceString = StaticContainer::get(JsTrackerInstallCheckOption::class)->createNewNonce($idSite, $url);
-        $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . self::QUERY_PARAM_NAME . '=' . $nonceString;
+        $url .= (parse_url($url, \PHP_URL_QUERY) ? '&' : '?') . self::QUERY_PARAM_NAME . '=' . $nonceString;
         return ['url' => $url, 'nonce' => $nonceString];
     }
 }

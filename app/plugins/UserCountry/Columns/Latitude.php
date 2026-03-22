@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\UserCountry\Columns;
 
+use Piwik\Piwik;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
@@ -21,17 +22,18 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $segmentName = 'latitude';
     protected $nameSingular = 'UserCountry_Latitude';
     protected $namePlural = 'UserCountry_Latitudes';
-    protected $acceptValues = '-33.578, 40.830, etc.<br/>You can select visitors within a lat/long range using &segment=lat&gt;X;lat&lt;Y;long&gt;M;long&lt;N.';
+    public function getAcceptValues()
+    {
+        return Piwik::translate('UserCountry_LatitudeSegmentHelp', '&segment=lat&gt;X;lat&lt;Y;long&gt;M;long&lt;N');
+    }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('lat', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             return $value;
         }
         $userInfo = $this->getUserInfo($request, $visitor);
@@ -39,8 +41,6 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $latitude;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -49,8 +49,6 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('lat', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

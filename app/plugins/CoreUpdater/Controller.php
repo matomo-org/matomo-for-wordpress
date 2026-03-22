@@ -29,12 +29,13 @@ use Piwik\SettingsPiwik;
 use Piwik\SettingsServer;
 use Piwik\Updater as DbUpdater;
 use Piwik\Updater\Migration\Db as DbMigration;
+use Piwik\Url;
 use Piwik\Version;
 use Piwik\View;
 use Piwik\View\OneClickDone;
 class Controller extends \Piwik\Plugin\Controller
 {
-    private $coreError = false;
+    private $coreError = \false;
     private $warningMessages = array();
     private $errorMessages = array();
     private $deactivatedPlugins = array();
@@ -46,7 +47,7 @@ class Controller extends \Piwik\Plugin\Controller
      * @var Plugins
      */
     private $marketplacePlugins;
-    public function __construct(\Piwik\Plugins\CoreUpdater\Updater $updater, Plugins $marketplacePlugins = null)
+    public function __construct(\Piwik\Plugins\CoreUpdater\Updater $updater, ?Plugins $marketplacePlugins = null)
     {
         $this->updater = $updater;
         $this->marketplacePlugins = $marketplacePlugins;
@@ -146,7 +147,7 @@ class Controller extends \Piwik\Plugin\Controller
         if (empty($value)) {
             return json_encode(['Invalid token. ' . $task]);
         }
-        $value = json_decode($value, true);
+        $value = json_decode($value, \true);
         if (empty($value['nonce']) || empty($value['ttl']) || time() > (int) $value['ttl'] || $nonce !== $value['nonce']) {
             return json_encode(['Invalid nonce or nonce expired. ' . $task]);
         }
@@ -175,7 +176,13 @@ class Controller extends \Piwik\Plugin\Controller
             $view = new View('@CoreUpdater/updateHttpError');
             $view->error = $error;
         } else {
+            $updateDetailsToken = $this->createUpdateDetailsTokenIfMissing();
+            $runUpdaterUrl = Url::getCurrentUrlWithoutQueryString();
+            if ($updateDetailsToken !== null) {
+                $runUpdaterUrl .= '?module=CoreUpdater&updateDetailsToken=' . urlencode($updateDetailsToken);
+            }
             $view = new View('@CoreUpdater/updateSuccess');
+            $view->runUpdaterUrl = $runUpdaterUrl;
         }
         $messages = safe_unserialize(Request::fromPost()->getStringParameter('messages', ''));
         if (!is_array($messages)) {
@@ -214,6 +221,8 @@ class Controller extends \Piwik\Plugin\Controller
         $updater = new DbUpdater();
         $componentsWithUpdateFile = $updater->getComponentUpdates();
         if (empty($componentsWithUpdateFile)) {
+            // remove token if updater screen is not displayed
+            $this->removeUpdateDetailsToken();
             throw new \Piwik\Plugins\CoreUpdater\NoUpdatesFoundException("Everything is already up to date.");
         }
         SettingsServer::setMaxExecutionTime(0);
@@ -225,7 +234,7 @@ class Controller extends \Piwik\Plugin\Controller
         $viewDone = new View($doneTemplate);
         $this->addCustomLogoInfo($viewDone);
         $this->setBasicVariablesView($viewDone);
-        $doExecuteUpdates = Common::getRequestVar('updateCorePlugins', 0, 'integer') == 1;
+        $doExecuteUpdates = Request::fromRequest()->getBoolParameter('updateCorePlugins', \false);
         if (is_null($doDryRun)) {
             $doDryRun = !$doExecuteUpdates;
         }
@@ -236,13 +245,15 @@ class Controller extends \Piwik\Plugin\Controller
             $viewWelcome->migrations = $migrations;
             $viewWelcome->queryCount = $queryCount;
             $viewWelcome->isMajor = $updater->hasMajorDbUpdate();
+            $viewWelcome->showUpdateDetails = $this->checkUpdateDetailsToken();
             $this->doWelcomeUpdates($viewWelcome, $componentsWithUpdateFile);
             return $viewWelcome->render();
         }
         // Web
         if ($doExecuteUpdates) {
-            $this->warningMessages = array();
+            $this->warningMessages = [];
             $this->doExecuteUpdates($viewDone, $updater, $componentsWithUpdateFile);
+            $this->removeUpdateDetailsToken();
             $this->redirectToDashboardWhenNoError($updater);
             return $viewDone->render();
         }
@@ -272,11 +283,11 @@ class Controller extends \Piwik\Plugin\Controller
         }
         $pluginNamesToUpdate = array();
         $dimensionsToUpdate = array();
-        $coreToUpdate = false;
+        $coreToUpdate = \false;
         // handle case of existing database with no tables
         if (!DbHelper::isInstalled()) {
             $this->errorMessages[] = Piwik::translate('CoreUpdater_EmptyDatabaseError', Config::getInstance()->database['dbname']);
-            $this->coreError = true;
+            $this->coreError = \true;
             $currentVersion = 'N/A';
         } else {
             $this->errorMessages = array();
@@ -287,7 +298,7 @@ class Controller extends \Piwik\Plugin\Controller
             }
             foreach ($componentsWithUpdateFile as $name => $filenames) {
                 if ($name == 'core') {
-                    $coreToUpdate = true;
+                    $coreToUpdate = \true;
                 } elseif (0 === strpos($name, 'log_')) {
                     $dimensionsToUpdate[] = $name;
                 } else {
@@ -328,5 +339,33 @@ class Controller extends \Piwik\Plugin\Controller
     private function getIncompatiblePlugins($piwikVersion)
     {
         return PluginManager::getInstance()->getIncompatiblePlugins($piwikVersion);
+    }
+    private function checkUpdateDetailsToken() : bool
+    {
+        $config = Config::getInstance();
+        if (empty($config->General['update_details_token'])) {
+            return \false;
+        }
+        return $config->General['update_details_token'] === Request::fromRequest()->getStringParameter('updateDetailsToken', '');
+    }
+    private function createUpdateDetailsTokenIfMissing() : ?string
+    {
+        $config = Config::getInstance();
+        if (!empty($config->General['update_details_token'])) {
+            return null;
+        }
+        $token = Common::generateUniqId();
+        $config->General['update_details_token'] = $token;
+        $config->forceSave();
+        return $token;
+    }
+    private function removeUpdateDetailsToken() : void
+    {
+        $config = Config::getInstance();
+        if (empty($config->General['update_details_token'])) {
+            return;
+        }
+        unset($config->General['update_details_token']);
+        $config->forceSave();
     }
 }

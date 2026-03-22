@@ -58,7 +58,6 @@ abstract class SMSProvider
      * @param string $smsText
      * @param string $phoneNumber
      * @param string $from
-     * @return bool true
      */
     public abstract function sendSMS($credentials, $smsText, $phoneNumber, $from);
     /**
@@ -89,7 +88,7 @@ abstract class SMSProvider
      */
     public function isAvailable()
     {
-        return true;
+        return \true;
     }
     /**
      * @param string $provider The name of the string
@@ -113,12 +112,11 @@ abstract class SMSProvider
      */
     public static function findAvailableSmsProviders()
     {
-        /** @var SMSProvider[] $smsProviders */
         $smsProviders = Plugin\Manager::getInstance()->findMultipleComponents('SMSProvider', 'Piwik\\Plugins\\MobileMessaging\\SMSProvider');
         $providers = array();
-        foreach ($smsProviders as $provider) {
+        foreach ($smsProviders as $providerName) {
             /** @var SMSProvider $provider */
-            $provider = StaticContainer::get($provider);
+            $provider = StaticContainer::get($providerName);
             if ($provider->isAvailable()) {
                 $providers[$provider->getId()] = $provider;
             }
@@ -136,11 +134,11 @@ abstract class SMSProvider
     {
         $GSMCharsetAsString = implode(array_keys(\Piwik\Plugins\MobileMessaging\GSMCharset::$GSMCharset));
         foreach (self::mbStrSplit($string) as $char) {
-            if (mb_strpos($GSMCharsetAsString, $char) === false) {
-                return true;
+            if (mb_strpos($GSMCharsetAsString, $char) === \false) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Truncate $string and append $appendedString at the end if $string can not fit the
@@ -176,7 +174,7 @@ abstract class SMSProvider
     }
     private static function mbStrSplit($string)
     {
-        return preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+        return preg_split('//u', $string, -1, \PREG_SPLIT_NO_EMPTY);
     }
     private static function sizeOfSMSContent($smsContent, $containsUCS2Chars)
     {

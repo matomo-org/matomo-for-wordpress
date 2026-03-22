@@ -49,7 +49,6 @@ class UserChanges
     /**
      * Return the key of the last viewed change for the user, if any
      *
-     * @return int
      */
     private function getIdchangeLastViewed() : ?int
     {
@@ -64,7 +63,7 @@ class UserChanges
     {
         $lastShown = isset($this->user['ts_changes_shown']) ? $this->user['ts_changes_shown'] : null;
         if (!$lastShown) {
-            return false;
+            return \false;
             // Never shown
         }
         // Less than 24hrs since last shown
@@ -84,7 +83,6 @@ class UserChanges
     /**
      * Record all changes as read
      *
-     * @return void
      * @throws \Piwik\Tracker\Db\DbException
      */
     public function markChangesAsRead() : void

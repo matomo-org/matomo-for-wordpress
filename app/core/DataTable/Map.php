@@ -37,6 +37,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @var string
      */
     protected $keyName = 'defaultKeyName';
+    protected $isBuiltWithoutArchives = \true;
     /**
      * Returns a string description of the data used to index the DataTables.
      *
@@ -113,7 +114,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * If a key exists in this instance but not in one of the otherTables, $filter will be invoked with null
      * for that parameter.
      *
-     * @param Map[] $otherTables Other tables to invoke $filter with.
+     * @param (Map|null)[] $otherTables Other tables to invoke $filter with.
      * @param callable $filter A function like `function (DataTable $thisTable, $otherTable1, $otherTable2, ...) {}`.
      * @return mixed[] The return value of each `multiFilter()` call made on child tables, indexed by the keys in this Map instance.
      */
@@ -289,7 +290,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @param array $columns The columns to delete.
      * @param bool $deleteRecursiveInSubtables This param is currently not used.
      */
-    public function deleteColumns($columns, $deleteRecursiveInSubtables = false)
+    public function deleteColumns($columns, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteColumns($columns);
@@ -435,7 +436,6 @@ class Map implements \Piwik\DataTable\DataTableInterface
      *
      * See {@link Piwik\DataTable::addDataTable()}.
      *
-     * @param DataTable $tableToSum
      */
     public function addDataTable(DataTable $tableToSum)
     {
@@ -494,7 +494,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @param       $name
      * @param bool $deleteRecursiveInSubtables
      */
-    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = false)
+    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteRowsMetadata($name, $deleteRecursiveInSubtables);
@@ -513,5 +513,13 @@ class Map implements \Piwik\DataTable\DataTableInterface
             }
         }
         return array();
+    }
+    public function setAsBuiltWithoutArchives(bool $flag) : void
+    {
+        $this->isBuiltWithoutArchives = $flag;
+    }
+    public function wasBuiltWithoutArchives() : bool
+    {
+        return $this->isBuiltWithoutArchives;
     }
 }

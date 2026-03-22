@@ -14,13 +14,13 @@ abstract class BasePreConfiguredVariable extends BaseVariable
 {
     public function isPreConfigured()
     {
-        return true;
+        return \true;
     }
     public final function getParameters()
     {
         return [];
     }
-    protected function makeReturnTemplateMethod($js, $skipTemplate = false)
+    protected function makeReturnTemplateMethod($js, $skipTemplate = \false)
     {
         $js = trim($js);
         if (!Common::stringEndsWith($js, ';')) {

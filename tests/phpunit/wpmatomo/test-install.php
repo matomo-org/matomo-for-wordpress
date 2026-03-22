@@ -3,17 +3,21 @@
  * @package matomo
  */
 
-use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager\Model as SitesModel;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
 use WpMatomo\Paths;
+use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
 class InstallTest extends MatomoAnalytics_TestCase {
 
+	/**
+	 * @var Settings
+	 */
+	private $settings;
 	/**
 	 * @var Installer
 	 */
@@ -23,18 +27,35 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 */
 	private $uninstaller;
 
+	/**
+	 * @var array
+	 */
+	private $original_plugins;
+
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->settings    = new Settings();
 		$this->installer   = $this->make_installer();
 		$this->uninstaller = new Uninstaller();
+
+		$this->original_plugins = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
+	}
+
+	public function tearDown(): void {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = $this->original_plugins;
+
+		parent::tearDown();
 	}
 
 	private function make_installer() {
-		return new Installer( new Settings() );
+		return new Installer( $this->settings );
 	}
 
-	public function test_looks_like_it_is_installed_is_intalled_when_installed() {
+	public function test_looks_like_it_is_installed_returns_true_when_installed() {
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'core' => 1 ] ) );
+		$this->settings->save();
+
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 		$this->assertTrue( Installer::is_intalled() );
 	}
@@ -94,17 +115,19 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals(
 			array(
 				array(
-					'login'                => 'admin',
-					'email'                => 'admin@example.org',
-					'twofactor_secret'     => '',
-					'superuser_access'     => '1',
-					'idchange_last_viewed' => null,
-					'invited_by'           => null,
-					'invite_token'         => null,
-					'invite_expired_at'    => null,
-					'invite_accept_at'     => null,
-					'invite_link_token'    => null,
-					'ts_changes_shown'     => null,
+					'login'                  => 'admin',
+					'email'                  => 'admin@example.org',
+					'twofactor_secret'       => '',
+					'superuser_access'       => '1',
+					'idchange_last_viewed'   => null,
+					'invited_by'             => null,
+					'invite_token'           => null,
+					'invite_expired_at'      => null,
+					'invite_accept_at'       => null,
+					'invite_link_token'      => null,
+					'ts_changes_shown'       => null,
+					'ts_last_seen'           => null,
+					'ts_inactivity_notified' => null,
 				),
 			),
 			$all_users
@@ -180,5 +203,231 @@ class InstallTest extends MatomoAnalytics_TestCase {
 
 		$this->assertEquals( 'dummycharset', $db_config['charset'] );
 		$this->assertEquals( 'dummycollate', $db_config['collation'] );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_core_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'SomePlugin' => 1 ] ) );
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_non_core_plugin_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( [ 'core' => 1 ] ) );
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_false_if_some_non_core_plugin_not_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'core'       => 1,
+					'SomePlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_defaults_installed_components_option_to_empty_array() {
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		// sanity check
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$this->assertEmpty( $existing );
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertFalse( $is_installed );
+	}
+
+	public function test_is_current_instance_installed_returns_true_if_core_and_plugins_marked_installed() {
+		$GLOBALS['MATOMO_PLUGIN_FILES'] = [
+			ABSPATH . '/wp-content/plugins/matomo/matomo.php',
+			ABSPATH . '/wp-content/plugins/SomePlugin/SomePlugin.php',
+			ABSPATH . '/wp-content/plugins/AnotherPlugin/AnotherPlugin.php',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'core'          => 1,
+					'SomePlugin'    => 1,
+					'AnotherPlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$is_installed = $this->installer->is_current_instance_installed();
+		$this->assertTrue( $is_installed );
+	}
+
+	public function test_mark_matomo_installed_adds_currently_installed_plugins_when_list_is_empty() {
+		\Piwik\Config::getInstance()->PluginsInstalled['PluginsInstalled'] = [
+			'SomePlugin',
+			'SomeOtherPlugin',
+		];
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$this->installer->mark_matomo_installed();
+
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$existing = json_decode( $existing, true );
+
+		$this->assertEquals(
+			[
+				'core'            => 1,
+				'SomePlugin'      => 1,
+				'SomeOtherPlugin' => 1,
+			],
+			$existing
+		);
+	}
+
+	public function test_mark_matomo_installed_adds_currently_installed_plugins_when_list_is_not_empty() {
+		\Piwik\Config::getInstance()->PluginsInstalled['PluginsInstalled'] = [
+			'SomePlugin',
+			'SomeOtherPlugin',
+		];
+
+		$this->settings->set_option(
+			Settings::INSTANCE_COMPONENTS_INSTALLED,
+			wp_json_encode(
+				[
+					'AnotherPlugin' => 1,
+				]
+			)
+		);
+		$this->settings->save();
+
+		$this->installer->mark_matomo_installed();
+
+		$existing = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		$existing = json_decode( $existing, true );
+
+		$this->assertEquals(
+			[
+				'core'            => 1,
+				'SomePlugin'      => 1,
+				'SomeOtherPlugin' => 1,
+				'AnotherPlugin'   => 1,
+			],
+			$existing
+		);
+	}
+
+	public function test_install_schedules_geoip_if_not_already_ran_once() {
+		// remove existing task if exists
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		if ( ! empty( $next ) ) {
+			wp_unschedule_event( $next, \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+			$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		}
+
+		$this->assertEmpty( $next );
+
+		// mark components not installed
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+
+		// ensure last time before cron is empty
+		$tasks  = new ScheduledTasks( $this->settings, $sync_config );
+		$before = $tasks->get_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $before );
+
+		$this->installer->install();
+
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertNotEmpty( $next );
+	}
+
+	public function test_install_does_not_schedule_geoip_if_already_ran_once() {
+		// remove existing task if exists
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		if ( ! empty( $next ) ) {
+			wp_unschedule_event( $next, \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+			$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		}
+
+		$this->assertEmpty( $next );
+
+		// mark components not installed
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$sync_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
+
+		// mark geoip already run
+		$tasks = new ScheduledTasks( $this->settings, $sync_config );
+		$tasks->set_last_time_before_cron( \WpMatomo\ScheduledTasks::EVENT_GEOIP, 900 );
+
+		$this->installer->install();
+
+		$next = wp_next_scheduled( \WpMatomo\ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $next );
+	}
+
+	public function test_install_runs_if_not_started() {
+		delete_option( Settings::OPTION_PREFIX . 'install-start-time' );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertTrue( $result );
+	}
+
+	public function test_install_does_not_run_if_started_recently() {
+		update_option( Settings::OPTION_PREFIX . 'install-start-time', time() - 10 );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertFalse( $result );
+	}
+
+	public function test_install_runs_if_last_started_more_than_five_minutes_ago() {
+		update_option( Settings::OPTION_PREFIX . 'install-start-time', time() - 310 );
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, '' );
+		$this->settings->save();
+
+		$result = $this->installer->install();
+
+		$this->assertTrue( $result );
 	}
 }

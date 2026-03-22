@@ -36,8 +36,8 @@ class Parameters
     /**
      * @var string Plugin name which triggered this archive processor
      */
-    private $requestedPlugin = false;
-    private $onlyArchiveRequestedPlugin = false;
+    private $requestedPlugin = \false;
+    private $onlyArchiveRequestedPlugin = \false;
     /**
      * @var string
      */
@@ -45,7 +45,7 @@ class Parameters
     /**
      * @var bool
      */
-    private $isArchiveOnlyReportHandled;
+    private $isArchiveOnlyReportHandled = \false;
     /**
      * @var string[]|null
      */
@@ -94,7 +94,7 @@ class Parameters
      */
     public function onlyArchiveRequestedPlugin()
     {
-        $this->onlyArchiveRequestedPlugin = true;
+        $this->onlyArchiveRequestedPlugin = \true;
     }
     /**
      * @ignore
@@ -243,7 +243,10 @@ class Parameters
     {
         if (!$this->getRequestedPlugin()) {
             // sanity check, partial archives are only for single reports
-            return false;
+            return \false;
+        }
+        if (!empty($this->getArchiveOnlyReport())) {
+            return \true;
         }
         return $this->isArchiveOnlyReportHandled;
     }
@@ -253,6 +256,7 @@ class Parameters
      * in an Archiver's __construct method.
      *
      * @param bool $isArchiveOnlyReportHandled
+     * @deprecated use `setArchiveOnlyReport` instead
      */
     public function setIsPartialArchive($isArchiveOnlyReportHandled)
     {

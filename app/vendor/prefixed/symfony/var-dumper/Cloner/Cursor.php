@@ -35,7 +35,7 @@ class Cursor
     public $hashIndex = 0;
     public $hashLength = 0;
     public $hashCut = 0;
-    public $stop = false;
+    public $stop = \false;
     public $attr = [];
-    public $skipChildren = false;
+    public $skipChildren = \false;
 }

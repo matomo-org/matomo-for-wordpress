@@ -15,6 +15,7 @@ use Piwik\DataAccess\ArchiveTableCreator;
 use Piwik\DataAccess\Model;
 use Piwik\Date;
 use Piwik\Piwik;
+use Piwik\Period\Month;
 use Piwik\Log\LoggerInterface;
 /**
  * Service that purges temporary, error-ed, invalid and custom range archives from archive tables.
@@ -62,7 +63,7 @@ class ArchivePurger
      * @var LoggerInterface
      */
     private $logger;
-    public function __construct(Model $model = null, Date $purgeCustomRangesOlderThan = null, LoggerInterface $logger = null)
+    public function __construct(?Model $model = null, ?Date $purgeCustomRangesOlderThan = null, ?LoggerInterface $logger = null)
     {
         $this->model = $model ?: new Model();
         $this->purgeCustomRangesOlderThan = $purgeCustomRangesOlderThan ?: self::getDefaultCustomRangeToPurgeAgeThreshold();
@@ -93,9 +94,11 @@ class ArchivePurger
     }
     /**
      * Removes the outdated archives for the given month.
-     * (meaning they are marked with a done flag of ArchiveWriter::DONE_OK_TEMPORARY or ArchiveWriter::DONE_ERROR)
+     * (meaning they are marked with a done flag of
+     * ArchiveWriter::DONE_OK_TEMPORARY, ArchiveWriter::DONE_ERROR, or ArchiveWriter::DONE_ERROR_INVALIDATED)
      *
      * @param Date $dateStart Only the month will be used
+     *
      * @return int Returns the total number of rows deleted.
      */
     public function purgeOutdatedArchives(Date $dateStart)
@@ -112,6 +115,41 @@ class ArchivePurger
         $this->logger->debug("Purging temporary archives: done [ purged archives older than {date} in {yearMonth} ] [Deleted IDs count: {deletedIds}]", array('date' => $purgeArchivesOlderThan, 'yearMonth' => $dateStart->toString('Y-m'), 'deletedIds' => count($idArchivesToDelete)));
         return $deletedRowCount;
     }
+    /**
+     * Removes the broken archives for the given month
+     * (meaning they are not marked with a Done flag correctly)
+     *
+     * @param Month $startMonth a month period where the purge will begin
+     * @param Month|null $endMonth the final month period to purge from,
+     *                  if not provided then will purge to end of the same month as $startMonth.
+     *                  if $endMonth is in the past relative to $startMonth, it is ignored
+     * @return int Returns the total number of rows deleted.
+     */
+    public function purgeBrokenArchives(Month $startMonth, ?Month $endMonth = null) : int
+    {
+        if (!isset($endMonth) || $startMonth->getDateStart()->isLater($endMonth->getDateEnd())) {
+            $endMonth = $startMonth;
+        }
+        $currentMonth = $startMonth;
+        $currentMonthStart = $currentMonth->getDateStart();
+        $numRowsDeleted = 0;
+        // loop through months and delete from relevant tables
+        do {
+            $idArchivesToDelete = $this->getBrokenArchiveIds($currentMonth);
+            $deletedRowCount = 0;
+            if (!empty($idArchivesToDelete)) {
+                $deletedRowCount = $this->deleteArchiveIds($currentMonthStart, $idArchivesToDelete);
+                $this->logger->info("Deleted {count} rows in archive tables (numeric + blob) for month starting {monthStart}.", ['count' => $deletedRowCount, 'monthStart' => $currentMonthStart->toString('Y-m')]);
+            } else {
+                $this->logger->debug("No broken archives found in archive numeric table for month starting {monthStart}.", ['monthStart' => $currentMonthStart->toString('Y-m')]);
+            }
+            $numRowsDeleted += $deletedRowCount;
+            $this->logger->debug("Purging broken archives: done [ purged archives in {yearMonth} ] [Deleted IDs count: {deletedIds}]", ['yearMonth' => $currentMonthStart->toString('Y-m'), 'deletedIds' => $deletedRowCount]);
+            $currentMonth = new Month($currentMonthStart->addMonth(1));
+            $currentMonthStart = $currentMonth->getDateStart();
+        } while ($endMonth->getDateEnd()->isLater($currentMonthStart));
+        return $numRowsDeleted;
+    }
     public function purgeDeletedSiteArchives(Date $dateStart)
     {
         $archiveTable = ArchiveTableCreator::getNumericTable($dateStart);
@@ -119,25 +157,22 @@ class ArchivePurger
         return $this->purge($idArchivesToDelete, $dateStart, 'deleted sites');
     }
     /**
-     * @param Date $dateStart
      * @param array $deletedSegments List of segments whose archives should be purged
-     * @return int
      */
-    public function purgeDeletedSegmentArchives(Date $dateStart, array $deletedSegments)
+    public function purgeDeletedSegmentArchives(Date $dateStart, array $deletedSegments) : int
     {
         if (count($deletedSegments)) {
             $idArchivesToDelete = $this->getDeletedSegmentArchiveIds($dateStart, $deletedSegments);
             return $this->purge($idArchivesToDelete, $dateStart, 'deleted segments');
         }
+        return 0;
     }
     /**
      * Purge all numeric and blob archives with the given IDs from the database.
      * @param array $idArchivesToDelete
-     * @param Date $dateStart
      * @param string $reason
-     * @return int
      */
-    protected function purge(array $idArchivesToDelete, Date $dateStart, $reason)
+    protected function purge(array $idArchivesToDelete, Date $dateStart, $reason) : int
     {
         $deletedRowCount = 0;
         if (!empty($idArchivesToDelete)) {
@@ -167,6 +202,22 @@ class ArchivePurger
         return $idArchivesToDelete;
     }
     /**
+     * returns the ids of archives which are in a broken state (missing the done flag)
+     * Only searches the archive linked to the date specified in $dateStart
+     *
+     * @param Month $month The month period describing which table to search for broken archives
+     * @return array
+     */
+    private function getBrokenArchiveIds(Month $month) : array
+    {
+        $archiveTable = ArchiveTableCreator::getNumericTable($month->getDateStart());
+        $result = $this->model->getArchivesMissingDoneFlag($archiveTable);
+        if (!empty($result)) {
+            return array_column($result, 'idarchive');
+        }
+        return [];
+    }
+    /**
      * Deleting "Custom Date Range" reports after 1 day, since they can be re-processed and would take up un-necessary space.
      *
      * @param $date Date
@@ -185,11 +236,10 @@ class ArchivePurger
     /**
      * Deletes by batches Archive IDs in the specified month,
      *
-     * @param Date $date
      * @param $idArchivesToDelete
      * @return int Number of rows deleted from both numeric + blob table.
      */
-    protected function deleteArchiveIds(Date $date, $idArchivesToDelete)
+    protected function deleteArchiveIds(Date $date, $idArchivesToDelete) : int
     {
         $batches = array_chunk($idArchivesToDelete, 1000);
         $numericTable = ArchiveTableCreator::getNumericTable($date);
@@ -224,7 +274,6 @@ class ArchivePurger
     /**
      * For tests.
      *
-     * @param Date $yesterday
      */
     public function setYesterdayDate(Date $yesterday)
     {
@@ -233,7 +282,6 @@ class ArchivePurger
     /**
      * For tests.
      *
-     * @param Date $today
      */
     public function setTodayDate(Date $today)
     {

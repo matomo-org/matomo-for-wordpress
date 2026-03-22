@@ -41,7 +41,7 @@ class LogQueryBuilder
     {
         return $this->forcedInnerGroupBy;
     }
-    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset)
+    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
     {
         if (!is_array($from)) {
             $from = array($from);
@@ -53,13 +53,18 @@ class LogQueryBuilder
             $where = $this->getWhereMatchBoth($where, $segmentSql['where']);
             $bind = array_merge($bind, $segmentSql['bind']);
         }
+        // hack to allow db planner and db query optimiser to use an anti-join which results in a lower cost query
+        // and filtering on the log_visit table first when it doesn't need to consider null-extended rows
+        if ($from === ['log_link_visit_action', 'log_visit']) {
+            $from[1] = ['table' => 'log_visit', 'join' => 'INNER JOIN'];
+        }
         $tables = new JoinTables($this->logTableProvider, $from);
         $join = new JoinGenerator($tables);
         $join->generate();
         $from = $join->getJoinString();
         $joinWithSubSelect = $join->shouldJoinWithSelect();
         // hack for https://github.com/piwik/piwik/issues/9194#issuecomment-164321612
-        $useSpecialConversionGroupBy = !empty($segmentSql) && strpos($groupBy, 'log_conversion.idgoal') !== false && $fromInitially == array('log_conversion') && strpos($from, 'log_link_visit_action') !== false;
+        $useSpecialConversionGroupBy = !empty($segmentSql) && strpos($groupBy, 'log_conversion.idgoal') !== \false && $fromInitially == array('log_conversion') && strpos($from, 'log_link_visit_action') !== \false;
         if (!empty($this->forcedInnerGroupBy)) {
             if ($this->forcedInnerGroupBy === self::FORCE_INNER_GROUP_BY_NO_SUBSELECT) {
                 $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
@@ -72,7 +77,7 @@ class LogQueryBuilder
         } elseif ($joinWithSubSelect) {
             $sql = $this->buildWrappedSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $tables);
         } else {
-            $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
+            $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $withRollup);
         }
         return array('sql' => $sql, 'bind' => $bind);
     }
@@ -101,11 +106,11 @@ class LogQueryBuilder
     {
         $matchTables = $this->getKnownTables();
         foreach ($tables as $table) {
-            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = true)) {
+            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = \true)) {
                 $matchTables[] = $table['tableAlias'];
-            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = true)) {
+            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = \true)) {
                 $matchTables[] = $table['table'];
-            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = true)) {
+            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = \true)) {
                 $matchTables[] = $table;
             }
         }
@@ -121,7 +126,7 @@ class LogQueryBuilder
         foreach ($neededFields as &$neededField) {
             $parts = explode('.', $neededField);
             if (count($parts) === 2 && !empty($parts[1])) {
-                if (in_array($parts[1], $fieldNames, $strict = true)) {
+                if (in_array($parts[1], $fieldNames, $strict = \true)) {
                     // eg when selecting 2 dimensions log_action_X.name
                     $columnAs = $parts[1] . md5($neededField);
                     $fieldNames[] = $columnAs;
@@ -150,7 +155,7 @@ class LogQueryBuilder
         }
         if ($innerLimitAndOffset) {
             // When LIMITing, no need to GROUP BY (GROUPing by is done before the LIMIT which is super slow when large amount of rows is matched)
-            $innerGroupBy = false;
+            $innerGroupBy = \false;
         }
         if (!isset($innerGroupBy) && in_array('log_visit', $matchesFrom[1])) {
             $innerGroupBy = "log_visit.idvisit";
@@ -172,7 +177,7 @@ class LogQueryBuilder
         $innerQuery = $this->buildSelectQuery($innerSelect, $innerFrom, $innerWhere, $innerGroupBy, $innerOrderBy, $innerLimitAndOffset);
         $select = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $select);
         $from = "\n        (\n            {$innerQuery}\n        ) AS log_inner";
-        $where = false;
+        $where = \false;
         $orderBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $orderBy);
         $groupBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $groupBy);
         $outerLimitAndOffset = null;
@@ -190,7 +195,7 @@ class LogQueryBuilder
      * @param string|int $limitAndOffset limit by clause eg '5' for Limit 5 Offset 0 or '10, 5' for Limit 5 Offset 10
      * @return string
      */
-    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset)
+    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
     {
         $sql = "\n\t\t\tSELECT\n\t\t\t\t{$select}\n\t\t\tFROM\n\t\t\t\t{$from}";
         if ($where) {
@@ -198,8 +203,14 @@ class LogQueryBuilder
         }
         if ($groupBy) {
             $sql .= "\n\t\t\tGROUP BY\n\t\t\t\t{$groupBy}";
+            if ($withRollup) {
+                $sql .= "\n                    WITH ROLLUP";
+            }
         }
         if ($orderBy) {
+            if ($withRollup) {
+                $sql = "\n                        SELECT * FROM (\n                            {$sql}\n                        ) AS rollupQuery";
+            }
             $sql .= "\n\t\t\tORDER BY\n\t\t\t\t{$orderBy}";
         }
         $sql = $this->appendLimitClauseToQuery($sql, $limitAndOffset);

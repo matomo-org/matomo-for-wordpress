@@ -38,7 +38,7 @@ class XmlDescriptor extends Descriptor
         }
         return $dom;
     }
-    public function getCommandDocument(Command $command, bool $short = false) : \DOMDocument
+    public function getCommandDocument(Command $command, bool $short = \false) : \DOMDocument
     {
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->appendChild($commandXML = $dom->createElement('command'));
@@ -53,7 +53,7 @@ class XmlDescriptor extends Descriptor
                 $usagesXML->appendChild($dom->createElement('usage', $usage));
             }
         } else {
-            $command->mergeApplicationDefinition(false);
+            $command->mergeApplicationDefinition(\false);
             foreach (array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()) as $usage) {
                 $usagesXML->appendChild($dom->createElement('usage', $usage));
             }
@@ -64,7 +64,7 @@ class XmlDescriptor extends Descriptor
         }
         return $dom;
     }
-    public function getApplicationDocument(Application $application, ?string $namespace = null, bool $short = false) : \DOMDocument
+    public function getApplicationDocument(Application $application, ?string $namespace = null, bool $short = \false) : \DOMDocument
     {
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->appendChild($rootXml = $dom->createElement('symfony'));
@@ -75,7 +75,7 @@ class XmlDescriptor extends Descriptor
             }
         }
         $rootXml->appendChild($commandsXML = $dom->createElement('commands'));
-        $description = new ApplicationDescription($application, $namespace, true);
+        $description = new ApplicationDescription($application, $namespace, \true);
         if ($namespace) {
             $commandsXML->setAttribute('namespace', $namespace);
         }
@@ -121,14 +121,14 @@ class XmlDescriptor extends Descriptor
      */
     protected function describeCommand(Command $command, array $options = [])
     {
-        $this->writeDocument($this->getCommandDocument($command, $options['short'] ?? false));
+        $this->writeDocument($this->getCommandDocument($command, $options['short'] ?? \false));
     }
     /**
      * {@inheritdoc}
      */
     protected function describeApplication(Application $application, array $options = [])
     {
-        $this->writeDocument($this->getApplicationDocument($application, $options['namespace'] ?? null, $options['short'] ?? false));
+        $this->writeDocument($this->getApplicationDocument($application, $options['namespace'] ?? null, $options['short'] ?? \false));
     }
     /**
      * Appends document children to parent node.
@@ -136,7 +136,7 @@ class XmlDescriptor extends Descriptor
     private function appendDocument(\DOMNode $parentNode, \DOMNode $importedParent)
     {
         foreach ($importedParent->childNodes as $childNode) {
-            $parentNode->appendChild($parentNode->ownerDocument->importNode($childNode, true));
+            $parentNode->appendChild($parentNode->ownerDocument->importNode($childNode, \true));
         }
     }
     /**
@@ -144,7 +144,7 @@ class XmlDescriptor extends Descriptor
      */
     private function writeDocument(\DOMDocument $dom)
     {
-        $dom->formatOutput = true;
+        $dom->formatOutput = \true;
         $this->write($dom->saveXML());
     }
     private function getInputArgumentDocument(InputArgument $argument) : \DOMDocument
@@ -157,7 +157,7 @@ class XmlDescriptor extends Descriptor
         $objectXML->appendChild($descriptionXML = $dom->createElement('description'));
         $descriptionXML->appendChild($dom->createTextNode($argument->getDescription()));
         $objectXML->appendChild($defaultsXML = $dom->createElement('defaults'));
-        $defaults = \is_array($argument->getDefault()) ? $argument->getDefault() : (\is_bool($argument->getDefault()) ? [var_export($argument->getDefault(), true)] : ($argument->getDefault() ? [$argument->getDefault()] : []));
+        $defaults = \is_array($argument->getDefault()) ? $argument->getDefault() : (\is_bool($argument->getDefault()) ? [var_export($argument->getDefault(), \true)] : ($argument->getDefault() ? [$argument->getDefault()] : []));
         foreach ($defaults as $default) {
             $defaultsXML->appendChild($defaultXML = $dom->createElement('default'));
             $defaultXML->appendChild($dom->createTextNode($default));
@@ -170,7 +170,7 @@ class XmlDescriptor extends Descriptor
         $dom->appendChild($objectXML = $dom->createElement('option'));
         $objectXML->setAttribute('name', '--' . $option->getName());
         $pos = strpos($option->getShortcut() ?? '', '|');
-        if (false !== $pos) {
+        if (\false !== $pos) {
             $objectXML->setAttribute('shortcut', '-' . substr($option->getShortcut(), 0, $pos));
             $objectXML->setAttribute('shortcuts', '-' . str_replace('|', '|-', $option->getShortcut()));
         } else {
@@ -182,7 +182,7 @@ class XmlDescriptor extends Descriptor
         $objectXML->appendChild($descriptionXML = $dom->createElement('description'));
         $descriptionXML->appendChild($dom->createTextNode($option->getDescription()));
         if ($option->acceptValue()) {
-            $defaults = \is_array($option->getDefault()) ? $option->getDefault() : (\is_bool($option->getDefault()) ? [var_export($option->getDefault(), true)] : ($option->getDefault() ? [$option->getDefault()] : []));
+            $defaults = \is_array($option->getDefault()) ? $option->getDefault() : (\is_bool($option->getDefault()) ? [var_export($option->getDefault(), \true)] : ($option->getDefault() ? [$option->getDefault()] : []));
             $objectXML->appendChild($defaultsXML = $dom->createElement('defaults'));
             if (!empty($defaults)) {
                 foreach ($defaults as $default) {

@@ -29,7 +29,7 @@ class SetTranslations extends \Piwik\Plugins\LanguagesManager\Commands\Translati
         $output = $this->getOutput();
         $languageCode = $input->getOption('code');
         $filename = $input->getOption('file');
-        $languageCodes = (new API())->getAvailableLanguages(true);
+        $languageCodes = (new API())->getAvailableLanguages(\true);
         if (empty($languageCode) || !in_array($languageCode, $languageCodes)) {
             $languageCode = $this->askAndValidate('Please provide a valid language code: ', function ($code) use($languageCodes) {
                 if (!in_array($code, array_values($languageCodes))) {
@@ -60,7 +60,7 @@ class SetTranslations extends \Piwik\Plugins\LanguagesManager\Commands\Translati
         $translationWriter->addFilter(new UnnecassaryWhitespaces($baseTranslations));
         $translationWriter->addFilter(new EncodedEntities($baseTranslations));
         $translationData = file_get_contents($filename);
-        $translations = json_decode($translationData, true);
+        $translations = json_decode($translationData, \true);
         $translationWriter->setTranslations($translations);
         if (!$translationWriter->isValid()) {
             $output->writeln("Failed setting translations:" . $translationWriter->getValidationMessage());
@@ -78,11 +78,11 @@ class SetTranslations extends \Piwik\Plugins\LanguagesManager\Commands\Translati
                 $content = "Filtered File: " . ($plugin ?? 'Base') . " / " . $languageCode . "\n";
                 foreach ($filteredData as $filter => $data) {
                     $content .= "- Filtered by: {$filter}\n";
-                    $content .= json_encode($data, JSON_PRETTY_PRINT);
+                    $content .= json_encode($data, \JSON_PRETTY_PRINT);
                     $content .= "\n";
                 }
                 $content .= "\n\n";
-                file_put_contents($input->getOption('validate'), $content, FILE_APPEND);
+                file_put_contents($input->getOption('validate'), $content, \FILE_APPEND);
             }
         } else {
             $translationWriter->save();

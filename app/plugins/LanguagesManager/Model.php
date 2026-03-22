@@ -47,10 +47,10 @@ class Model
         $query = 'INSERT INTO ' . $this->table . ' (login, language) VALUES (?,?) ON DUPLICATE KEY UPDATE language=?';
         $bind = array($login, $languageCode, $languageCode);
         Db::query($query, $bind);
-        return true;
+        return \true;
     }
     /**
-     * Returns whether the given user has chosen to use 12 hour clock
+     * Returns whether the given user has chosen to use 12-hour clock
      *
      * @param $userLogin
      * @return bool
@@ -61,7 +61,7 @@ class Model
         return (bool) Db::fetchOne('SELECT use_12_hour_clock FROM ' . $this->table . ' WHERE login = ? ', array($userLogin));
     }
     /**
-     * Sets whether the given user wants to use 12 hout clock
+     * Sets whether the given user wants to use 12-hour clock
      *
      * @param string $login
      * @param string $use12HourClock
@@ -72,7 +72,7 @@ class Model
         $query = 'INSERT INTO ' . $this->table . ' (login, use_12_hour_clock) VALUES (?,?) ON DUPLICATE KEY UPDATE use_12_hour_clock=?';
         $bind = array($login, $use12HourClock, $use12HourClock);
         Db::query($query, $bind);
-        return true;
+        return \true;
     }
     public static function install()
     {

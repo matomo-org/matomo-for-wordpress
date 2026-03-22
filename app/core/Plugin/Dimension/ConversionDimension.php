@@ -58,7 +58,6 @@ abstract class ConversionDimension extends Dimension
     }
     /**
      * Get all conversion dimensions that are defined by the given plugin.
-     * @param Plugin $plugin
      * @return ConversionDimension[]
      * @ignore
      */
@@ -75,48 +74,39 @@ abstract class ConversionDimension extends Dimension
      * This event is triggered when an ecommerce order is converted. Any returned value will be persist in the database.
      * Return boolean `false` if you do not want to change the value in some cases.
      *
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      * @api
      */
     public function onEcommerceOrderConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
     /**
      * This event is triggered when an ecommerce cart update is converted. Any returned value will be persist in the
      * database. Return boolean `false` if you do not want to change the value in some cases.
      *
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      * @api
      */
     public function onEcommerceCartUpdateConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
     /**
      * This event is triggered when an any custom goal is converted. Any returned value will be persist in the
      * database. Return boolean `false` if you do not want to change the value in some cases.
      *
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
-     * @param GoalManager $goalManager
      *
      * @return mixed|false
      * @api
      */
     public function onGoalConversion(Request $request, Visitor $visitor, $action, GoalManager $goalManager)
     {
-        return false;
+        return \false;
     }
 }

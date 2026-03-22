@@ -26,13 +26,13 @@ abstract class Schedule
     public const PERIOD_YEAR = 'year';
     public const PERIOD_RANGE = 'range';
     /**
-     * @link http://php.net/manual/en/function.date.php, format string : 'G'
+     * @link https://php.net/manual/en/function.date.php, format string : 'G'
      * Defaults to midnight
      * @var integer
      */
     protected $hour = 0;
     /**
-     * For weekly scheduling : http://php.net/manual/en/function.date.php, format string : 'N', defaults to Monday
+     * For weekly scheduling : https://php.net/manual/en/function.date.php, format string : 'N', defaults to Monday
      * For monthly scheduling : day of the month (1 to 31) (note: will be capped at the latest day available the
      * month), defaults to first day of the month
      * @var integer
@@ -164,7 +164,7 @@ abstract class Schedule
      * @throws Exception
      * @api
      */
-    public static function factory($periodType, $periodDay = false)
+    public static function factory($periodType, $periodDay = \false)
     {
         switch ($periodType) {
             case 'hourly':
@@ -173,13 +173,13 @@ abstract class Schedule
                 return new \Piwik\Scheduler\Schedule\Daily();
             case 'weekly':
                 $result = new \Piwik\Scheduler\Schedule\Weekly();
-                if ($periodDay !== false) {
+                if ($periodDay !== \false) {
                     $result->setDay($periodDay);
                 }
                 return $result;
             case 'monthly':
-                $result = new \Piwik\Scheduler\Schedule\Monthly($periodDay);
-                if ($periodDay !== false) {
+                $result = new \Piwik\Scheduler\Schedule\Monthly();
+                if ($periodDay !== \false) {
                     if (is_int($periodDay)) {
                         $result->setDay($periodDay);
                     } else {

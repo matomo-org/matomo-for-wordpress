@@ -41,10 +41,10 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
         $tests = ['/matomo\\.js/i', '/piwik\\.js/i', '/_paq\\.push/i'];
         foreach ($tests as $test) {
             if (preg_match($test, $data) === 1) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
@@ -67,7 +67,7 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     }
     public function isRecommended(SiteContentDetector $detector) : bool
     {
-        return false;
+        return \false;
         // do not recommend this, as it's used as fall back
     }
     public function getRecommendationDetails(SiteContentDetector $detector) : array
@@ -78,21 +78,21 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     }
     private function getConsentManagerNotification(SiteContentDetector $detector) : string
     {
-        $notificationMessage = '';
-        $consentManagerName = null;
         $consentManagers = $detector->getDetectsByType(\Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER);
-        if (!empty($consentManagers)) {
-            $consentManagerId = reset($consentManagers);
-            $consentManager = $detector->getSiteContentDetectionById($consentManagerId);
-            $consentManagerName = $consentManager::getName();
-            $consentManagerUrl = $consentManager::getInstructionUrl();
-            $consentManagerIsConnected = in_array($consentManagerId, $detector->connectedConsentManagers);
+        if (empty($consentManagers)) {
+            return '';
         }
-        if (!empty($consentManagerName)) {
-            $notificationMessage = '<p>' . Piwik::translate('PrivacyManager_ConsentManagerDetected', [$consentManagerName, '<a href="' . $consentManagerUrl . '" target="_blank" rel="noreferrer noopener">', '</a>']) . '</p>';
-            if (!empty($consentManagerIsConnected)) {
-                $notificationMessage .= '<p>' . Piwik::translate('SitesManager_ConsentManagerConnected', [$consentManagerName]) . '</p>';
-            }
+        $consentManagerId = reset($consentManagers);
+        $consentManager = $detector->getSiteContentDetectionById($consentManagerId);
+        if (empty($consentManager)) {
+            return '';
+        }
+        $consentManagerName = $consentManager::getName();
+        $consentManagerUrl = $consentManager::getInstructionUrl();
+        $consentManagerIsConnected = in_array($consentManagerId, $detector->connectedConsentManagers);
+        $notificationMessage = '<p>' . Piwik::translate('PrivacyManager_ConsentManagerDetected', [$consentManagerName, Url::getExternalLinkTag($consentManagerUrl), '</a>']) . '</p>';
+        if (!empty($consentManagerIsConnected)) {
+            $notificationMessage .= '<p>' . Piwik::translate('SitesManager_ConsentManagerConnected', [$consentManagerName]) . '</p>';
         }
         return $notificationMessage;
     }

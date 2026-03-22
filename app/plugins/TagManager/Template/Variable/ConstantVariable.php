@@ -22,6 +22,7 @@ class ConstantVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseV
     {
         return array($this->makeSetting('constantValue', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('General_Value');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_ConstantValuePlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validators[] = new CharacterLength(1, 500);
         }));

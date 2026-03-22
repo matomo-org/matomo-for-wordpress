@@ -35,29 +35,25 @@ class ExitPageTitle extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_TITLE);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int|bool
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionName = false;
+        $idActionName = \false;
         if (!empty($action)) {
             $idActionName = $action->getIdActionNameForEntryAndExitIds();
         }
         return (int) $idActionName;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int|bool
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         return $action->getIdActionNameForEntryAndExitIds();
     }

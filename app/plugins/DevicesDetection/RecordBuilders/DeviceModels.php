@@ -13,6 +13,6 @@ class DeviceModels extends \Piwik\Plugins\DevicesDetection\RecordBuilders\Base
 {
     public function __construct()
     {
-        parent::__construct(Archiver::DEVICE_MODEL_RECORD_NAME, Archiver::DEVICE_MODEL_FIELD, true);
+        parent::__construct(Archiver::DEVICE_MODEL_RECORD_NAME, Archiver::DEVICE_MODEL_FIELD, \true);
     }
 }

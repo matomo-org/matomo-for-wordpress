@@ -34,7 +34,7 @@ abstract class Period
      * @var Period[]
      */
     protected $subperiods = array();
-    protected $subperiodsProcessed = false;
+    protected $subperiodsProcessed = \false;
     /**
      * @var string
      */
@@ -50,7 +50,6 @@ abstract class Period
     /**
      * Constructor.
      *
-     * @param Date $date
      * @ignore
      */
     public function __construct(\Piwik\Date $date)
@@ -189,7 +188,7 @@ abstract class Period
     }
     protected function generate()
     {
-        $this->subperiodsProcessed = true;
+        $this->subperiodsProcessed = \true;
     }
     /**
      * Returns the number of available subperiods.
@@ -217,7 +216,6 @@ abstract class Period
      *
      * Note: the time component of the period's dates and `$date` is ignored.
      *
-     * @param Date $today
      * @return bool
      */
     public function isDateInPeriod(\Piwik\Date $date)
@@ -228,7 +226,6 @@ abstract class Period
     /**
      * Returns whether the given period date range intersects with this one.
      *
-     * @param Period $other
      * @return bool
      */
     public function isPeriodIntersectingWith(\Piwik\Period $other)
@@ -351,7 +348,7 @@ abstract class Period
         $dateEnd = $this->getDateEnd();
         list($formatStart, $formatEnd) = $this->explodeFormat($format);
         $string = $dateStart->getLocalized($formatStart);
-        $string .= $dateEnd->getLocalized($formatEnd, false);
+        $string .= $dateEnd->getLocalized($formatEnd, \false);
         return $string;
     }
     /**
@@ -368,7 +365,7 @@ abstract class Period
         $cleanedFormat = preg_replace_callback('/(\'[^\']+\')/', array($this, 'replaceWithStars'), $format);
         // search for first duplicate date field
         foreach ($intervalTokens as $tokens) {
-            if (preg_match_all('/[' . implode('|', $tokens) . ']+/', $cleanedFormat, $matches, PREG_OFFSET_CAPTURE) && count($matches[0]) > 1 && $offset > $matches[0][1][1]) {
+            if (preg_match_all('/[' . implode('|', $tokens) . ']+/', $cleanedFormat, $matches, \PREG_OFFSET_CAPTURE) && count($matches[0]) > 1 && $offset > $matches[0][1][1]) {
                 $offset = $matches[0][1][1];
             }
         }
@@ -378,7 +375,7 @@ abstract class Period
     {
         return str_repeat("*", strlen($matches[0]));
     }
-    protected function getRangeFormat($short = false)
+    protected function getRangeFormat($short = \false)
     {
         $maxDifference = 'D';
         if ($this->getDateStart()->toString('y') != $this->getDateEnd()->toString('y')) {

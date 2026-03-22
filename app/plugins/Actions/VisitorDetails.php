@@ -82,7 +82,7 @@ class VisitorDetails extends VisitorDetailsAbstract
                 }
             } while (isset($actionDetails[$nextActionId]));
             if (isset($action['timeSpent'])) {
-                $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], true);
+                $action['timeSpentPretty'] = $formatter->getPrettyTimeFromSeconds($action['timeSpent'], \true);
             }
             unset($action['timeSpentRef']);
         }
@@ -91,17 +91,27 @@ class VisitorDetails extends VisitorDetailsAbstract
     private function shouldHandleAction($action)
     {
         $actionTypesToHandle = array(Action::TYPE_PAGE_URL, Action::TYPE_PAGE_TITLE, Action::TYPE_SITE_SEARCH, Action::TYPE_EVENT, Action::TYPE_OUTLINK, Action::TYPE_DOWNLOAD);
+        if (empty($action['type'])) {
+            return !empty($action['eventType']);
+        }
         return in_array($action['type'], $actionTypesToHandle) || !empty($action['eventType']);
     }
     private function isPageView($action)
     {
+        if (empty($action['type'])) {
+            return \false;
+        }
         $pageViewTypes = array(Action::TYPE_PAGE_URL, Action::TYPE_PAGE_TITLE);
         return in_array($action['type'], $pageViewTypes);
     }
     public function extendActionDetails(&$action, $nextAction, $visitorDetails)
     {
+        $actionType = '';
+        if (!empty($action['type'])) {
+            $actionType = $action['type'];
+        }
         $formatter = new Formatter();
-        if ($action['type'] == Action::TYPE_SITE_SEARCH) {
+        if ($actionType == Action::TYPE_SITE_SEARCH) {
             // Handle Site Search
             $action['siteSearchKeyword'] = $action['pageTitle'];
             $action['siteSearchCategory'] = $action['search_cat'];
@@ -113,7 +123,7 @@ class VisitorDetails extends VisitorDetailsAbstract
         // Generation time
         if ($this->shouldHandleAction($action) && empty($action['eventType']) && isset($action['custom_float']) && $action['custom_float'] > 0) {
             $action['generationTimeMilliseconds'] = $action['custom_float'];
-            $action['generationTime'] = $formatter->getPrettyTimeFromSeconds($action['custom_float'] / 1000, true);
+            $action['generationTime'] = $formatter->getPrettyTimeFromSeconds($action['custom_float'] / 1000, \true);
             unset($action['custom_float']);
         }
         if (array_key_exists('custom_float', $action) && is_null($action['custom_float'])) {
@@ -123,7 +133,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             unset($action['pageLoadTime']);
         } else {
             $action['pageLoadTimeMilliseconds'] = $action['pageLoadTime'];
-            $action['pageLoadTime'] = $formatter->getPrettyTimeFromSeconds($action['pageLoadTime'] / 1000, true);
+            $action['pageLoadTime'] = $formatter->getPrettyTimeFromSeconds($action['pageLoadTime'] / 1000, \true);
         }
         if (array_key_exists('pageview_position', $action)) {
             $action['pageviewPosition'] = $action['pageview_position'];
@@ -139,12 +149,12 @@ class VisitorDetails extends VisitorDetailsAbstract
             unset($action['url_prefix']);
         }
         if (!empty($action['url']) && strpos($action['url'], 'http://') === 0) {
-            $host = parse_url($action['url'], PHP_URL_HOST);
+            $host = parse_url($action['url'], \PHP_URL_HOST);
             if ($host && PageUrl::shouldUseHttpsHost($visitorDetails['idSite'], $host)) {
                 $action['url'] = 'https://' . mb_substr($action['url'], 7);
             }
         }
-        switch ($action['type']) {
+        switch ($actionType) {
             case 'goal':
                 $action['icon'] = 'plugins/Morpheus/images/goal.png';
                 $action['iconSVG'] = 'plugins/Morpheus/images/goal.svg';
@@ -156,9 +166,9 @@ class VisitorDetails extends VisitorDetailsAbstract
                 break;
             case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER:
             case Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART:
-                $action['icon'] = 'plugins/Morpheus/images/' . $action['type'] . '.png';
-                $action['iconSVG'] = 'plugins/Morpheus/images/' . $action['type'] . '.svg';
-                if ($action['type'] == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
+                $action['icon'] = 'plugins/Morpheus/images/' . $actionType . '.png';
+                $action['iconSVG'] = 'plugins/Morpheus/images/' . $actionType . '.svg';
+                if ($actionType == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
                     $action['title'] = Piwik::translate('CoreHome_VisitStatusOrdered') . ' (' . $action['orderId'] . ')';
                 } else {
                     $action['title'] = Piwik::translate('Goals_AbandonedCart');
@@ -252,7 +262,7 @@ class VisitorDetails extends VisitorDetailsAbstract
 					log_link_visit_action.time_dom_processing +
 					log_link_visit_action.time_on_load ) AS pageLoadTime,';
         }
-        $sql = "\n\t\t\t\tSELECT\n\t\t\t\t\tlog_link_visit_action.idvisit,\n\t\t\t\t\tCOALESCE(log_action.type, log_action_title.type) AS type,\n\t\t\t\t\tlog_action.name AS url,\n\t\t\t\t\tlog_action.url_prefix,\n\t\t\t\t\tlog_action_title.name AS pageTitle,\n\t\t\t\t\tlog_action.idaction AS pageIdAction,\n\t\t\t\t\tlog_link_visit_action.idpageview,\n\t\t\t\t\tlog_link_visit_action.idlink_va,\n\t\t\t\t\tlog_link_visit_action.server_time as serverTimePretty,\n\t\t\t\t\tlog_link_visit_action.time_spent_ref_action as timeSpentRef,\n\t\t\t\t\tlog_link_visit_action.idlink_va AS pageId,\n\t\t\t\t\tlog_link_visit_action.custom_float,\n\t\t\t\t\t{$pagePerformanceSelect}\n\t\t\t\t\tlog_link_visit_action.pageview_position,\n\t\t\t\t\tlog_link_visit_action.search_cat,\n\t\t\t\t\tlog_link_visit_action.search_count\n\t\t\t\t\t" . $customActionDimensionFields . "\n\t\t\t\tFROM " . Common::prefixTable('log_link_visit_action') . " AS log_link_visit_action\n\t\t\t\t\tLEFT JOIN " . Common::prefixTable('log_action') . " AS log_action\n\t\t\t\t\tON  log_link_visit_action.idaction_url = log_action.idaction\n\t\t\t\t\tLEFT JOIN " . Common::prefixTable('log_action') . " AS log_action_title\n\t\t\t\t\tON  log_link_visit_action.idaction_name = log_action_title.idaction\n\t\t\t\t\t" . implode(" ", $customJoins) . "\n\t\t\t\tWHERE log_link_visit_action.idvisit IN ('" . implode("','", $idVisits) . "')\n\t\t\t\tORDER BY log_link_visit_action.idvisit, server_time ASC\n\t\t\t\t ";
+        $sql = "\n\t\t\t\tSELECT\n\t\t\t\t\tlog_link_visit_action.idvisit,\n\t\t\t\t\tCOALESCE(log_action.type, log_action_title.type) AS type,\n\t\t\t\t\tlog_action.name AS url,\n\t\t\t\t\tlog_action.url_prefix,\n\t\t\t\t\tlog_action_title.name AS pageTitle,\n\t\t\t\t\tlog_action.idaction AS pageIdAction,\n\t\t\t\t\tlog_link_visit_action.idpageview,\n\t\t\t\t\tlog_link_visit_action.idlink_va,\n\t\t\t\t\tlog_link_visit_action.server_time as serverTimePretty,\n\t\t\t\t\tlog_link_visit_action.time_spent_ref_action as timeSpentRef,\n\t\t\t\t\tlog_link_visit_action.idlink_va AS pageId,\n\t\t\t\t\tlog_link_visit_action.custom_float,\n\t\t\t\t\t{$pagePerformanceSelect}\n\t\t\t\t\tlog_link_visit_action.pageview_position,\n\t\t\t\t\tlog_link_visit_action.search_cat,\n\t\t\t\t\tlog_link_visit_action.search_count\n\t\t\t\t\t" . $customActionDimensionFields . "\n\t\t\t\tFROM `" . Common::prefixTable('log_link_visit_action') . "` AS log_link_visit_action\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action\n\t\t\t\t\tON  log_link_visit_action.idaction_url = log_action.idaction\n\t\t\t\t\tLEFT JOIN `" . Common::prefixTable('log_action') . "` AS log_action_title\n\t\t\t\t\tON  log_link_visit_action.idaction_name = log_action_title.idaction\n\t\t\t\t\t" . implode(" ", $customJoins) . "\n\t\t\t\tWHERE log_link_visit_action.idvisit IN ('" . implode("','", $idVisits) . "')\n\t\t\t\tORDER BY log_link_visit_action.idvisit, log_link_visit_action.server_time, log_link_visit_action.idlink_va\n\t\t\t\t ";
         $actionDetails = $this->getDb()->fetchAll($sql);
         return $actionDetails;
     }
@@ -311,7 +321,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfDownloadAction($action, &$profile)
     {
-        if ($action['type'] != 'download') {
+        if (empty($action['type']) || $action['type'] != 'download') {
             return;
         }
         $profile['totalDownloads']++;
@@ -321,7 +331,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfOutlinkAction($action, &$profile)
     {
-        if ($action['type'] != 'outlink') {
+        if (empty($action['type']) || $action['type'] != 'outlink') {
             return;
         }
         $profile['totalOutlinks']++;
@@ -331,7 +341,7 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     private function handleIfPageViewAction($action, &$profile)
     {
-        if ($action['type'] != 'action') {
+        if (empty($action['type']) || $action['type'] != 'action') {
             return;
         }
         $profile['totalPageViews']++;

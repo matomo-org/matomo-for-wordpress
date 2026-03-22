@@ -11,7 +11,7 @@
 namespace Matomo\Dependencies\Symfony\Contracts\Service\Test;
 
 class_alias(ServiceLocatorTestCase::class, ServiceLocatorTest::class);
-if (false) {
+if (\false) {
     /**
      * @deprecated since PHPUnit 9.6
      */

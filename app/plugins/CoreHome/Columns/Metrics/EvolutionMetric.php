@@ -54,7 +54,7 @@ class EvolutionMetric extends ProcessedMetric
      * @var DataTable
      */
     private $currentData;
-    private $isLowerBetter = false;
+    private $isLowerBetter = \false;
     /**
      * The list of labels leading to the current subtable being processed. Used to get the proper subtable in
      * $pastData.
@@ -73,7 +73,7 @@ class EvolutionMetric extends ProcessedMetric
      * @param DataTable|null $currentData The current datatable, optional but required to calculate the proportionate
      *                                    evolution values
      */
-    public function __construct($wrapped, ?DataTable $pastData = null, $evolutionMetricName = false, $quotientPrecision = 0, ?DataTable $currentData = null)
+    public function __construct($wrapped, ?DataTable $pastData = null, $evolutionMetricName = \false, $quotientPrecision = 0, ?DataTable $currentData = null)
     {
         $this->wrapped = $wrapped;
         $this->isLowerBetter = Metrics::isLowerValueBetter($this->wrapped);
@@ -118,15 +118,21 @@ class EvolutionMetric extends ProcessedMetric
         $pastRow = $this->getPastRowFromCurrent($row);
         $currentValue = $this->getMetric($row, $columnName);
         $pastValue = $pastRow ? $this->getMetric($pastRow, $columnName) : 0;
-        // Reduce past value proportionally to match the percent of the current period which is complete, if applicable
-        $ratio = self::getRatio($this->currentData, $this->pastData, $row);
-        $period = $this->pastData->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
-        $row->setMetadata('ratio', $ratio);
-        $row->setMetadata('currencySymbol', $row['label'] !== DataTable::ID_SUMMARY_ROW && $row['label'] !== DataTable::LABEL_TOTALS_ROW ? Site::getCurrencySymbolFor($row['label']) : API::getInstance()->getDefaultCurrency());
+        if ($row->getMetadata('ratio') === \false) {
+            // Reduce past value proportionally to match the percent of the current period which is complete, if applicable
+            $ratio = self::getRatio($this->currentData, $this->pastData, $row);
+            $row->setMetadata('ratio', $ratio);
+        }
+        if ($row->getMetadata('currencySymbol') === \false) {
+            $row->setMetadata('currencySymbol', $row['label'] !== DataTable::ID_SUMMARY_ROW && $row['label'] !== DataTable::LABEL_TOTALS_ROW ? Site::getCurrencySymbolFor($row['label']) : API::getInstance()->getDefaultCurrency());
+        }
         $row->setMetadata('previous_' . $columnName, $pastValue);
-        $row->setMetadata('periodName', $period->getLabel());
-        $row->setMetadata('previousRange', $period->getLocalizedShortString());
-        $pastValue = $pastValue * $ratio;
+        if ($row->getMetadata('previousRange') === \false || $row->getMetadata('periodName') === \false) {
+            $period = $this->pastData->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
+            $row->setMetadata('periodName', $period->getLabel());
+            $row->setMetadata('previousRange', $period->getLocalizedShortString());
+        }
+        $pastValue = $pastValue * $row->getMetadata('ratio');
         $dividend = $currentValue - $pastValue;
         $divisor = $pastValue;
         if ($dividend == 0) {
@@ -193,9 +199,6 @@ class EvolutionMetric extends ProcessedMetric
      *
      * If the current period end is in the past then the ratio will always be 1, since the current period is complete.
      *
-     * @param DataTable|null $currentData
-     * @param DataTable|null $pastData
-     * @param Row $row
      * @return float|int
      * @throws \Exception
      */

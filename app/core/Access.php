@@ -12,6 +12,8 @@ use Exception;
 use Piwik\Access\CapabilitiesProvider;
 use Piwik\API\Request;
 use Piwik\Access\RolesProvider;
+use Piwik\Http\BadRequestException;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\API as SitesManagerApi;
 use Piwik\Session\SessionAuth;
@@ -63,13 +65,17 @@ class Access
      *
      * @var bool
      */
-    protected $hasSuperUserAccess = false;
+    protected $hasSuperUserAccess = \false;
     /**
      * Authentification object (see Auth)
      *
      * @var Auth
      */
     private $auth = null;
+    /**
+     * @var bool
+     */
+    private $sessionExpired = \false;
     /**
      * Gets the singleton instance. Creates it if necessary.
      *
@@ -90,7 +96,7 @@ class Access
     /**
      * Constructor
      */
-    public function __construct(RolesProvider $roleProvider = null, CapabilitiesProvider $capabilityProvider = null)
+    public function __construct(?RolesProvider $roleProvider = null, ?CapabilitiesProvider $capabilityProvider = null)
     {
         if (!isset($roleProvider)) {
             $roleProvider = StaticContainer::get('Piwik\\Access\\RolesProvider');
@@ -117,7 +123,7 @@ class Access
      * @param null|Auth $auth Auth adapter
      * @return bool  true on success, false if reloading access failed (when auth object wasn't specified and user is not enforced to be Super User)
      */
-    public function reloadAccess(\Piwik\Auth $auth = null)
+    public function reloadAccess(?\Piwik\Auth $auth = null)
     {
         $this->resetSites();
         if (isset($auth)) {
@@ -125,23 +131,21 @@ class Access
         }
         if ($this->hasSuperUserAccess()) {
             $this->makeSureLoginNameIsSet();
-            return true;
+            return \true;
         }
         $this->token_auth = null;
         $this->login = null;
         // if the Auth wasn't set, we may be in the special case of setSuperUser(), otherwise we fail TODO: docs + review
         if (!isset($this->auth)) {
-            return false;
+            return \false;
         }
         $result = null;
-        $forceApiSessionPost = \Piwik\Common::getRequestVar('force_api_session', 0, 'int', $_POST);
-        $forceApiSessionGet = \Piwik\Common::getRequestVar('force_api_session', 0, 'int', $_GET);
         $isApiRequest = \Piwik\Piwik::getModule() === 'API' && (\Piwik\Piwik::getAction() === 'index' || !\Piwik\Piwik::getAction());
         $apiMethod = Request::getMethodIfApiRequest(null);
         $isGetApiRequest = !empty($apiMethod) && 1 === substr_count($apiMethod, '.') && strpos($apiMethod, '.get') > 0;
-        if ($forceApiSessionPost && $isApiRequest || $forceApiSessionGet && $isApiRequest && $isGetApiRequest) {
-            $request = $forceApiSessionGet && $isApiRequest && $isGetApiRequest ? $_GET : $_POST;
-            $tokenAuth = \Piwik\Common::getRequestVar('token_auth', '', 'string', $request);
+        $token = StaticContainer::get(AuthenticationToken::class);
+        if ($isApiRequest && $token->isSessionToken() && ($token->wasTokenAuthProvidedSecurely() || $isGetApiRequest)) {
+            $tokenAuth = $token->getAuthToken();
             \Piwik\Session::start();
             $auth = StaticContainer::get(SessionAuth::class);
             $auth->setTokenAuth($tokenAuth);
@@ -159,15 +163,15 @@ class Access
             $result = $this->auth->authenticate();
         }
         if (!$result->wasAuthenticationSuccessful()) {
-            return false;
+            return \false;
         }
         $this->login = $result->getIdentity();
         $this->token_auth = $result->getTokenAuth();
         // case the superUser is logged in
         if ($result->hasSuperUserAccess()) {
-            $this->setSuperUserAccess(true);
+            $this->setSuperUserAccess(\true);
         }
-        return true;
+        return \true;
     }
     public function getRawSitesWithSomeViewAccess($login)
     {
@@ -184,14 +188,12 @@ class Access
     {
         $access = \Piwik\Common::prefixTable('access');
         $siteTable = \Piwik\Common::prefixTable('site');
-        return "SELECT " . $select . " FROM " . $access . " as t1\n\t\t\t\tJOIN " . $siteTable . " as t2 USING (idsite) WHERE login = ?";
+        return "SELECT " . $select . " FROM `" . $access . "` as t1\n\t\t\t\tJOIN `" . $siteTable . "` as t2 USING (idsite) WHERE login = ?";
     }
     /**
      * Make sure a login name is set
-     *
-     * @return true
      */
-    protected function makeSureLoginNameIsSet()
+    protected function makeSureLoginNameIsSet() : void
     {
         if (empty($this->login)) {
             // flag to force non empty login so Super User is not mistaken for anonymous
@@ -267,7 +269,7 @@ class Access
      *
      * @param bool $bool
      */
-    public function setSuperUserAccess($bool = true)
+    public function setSuperUserAccess($bool = \true)
     {
         $this->hasSuperUserAccess = (bool) $bool;
         if ($bool) {
@@ -381,7 +383,7 @@ class Access
     public function isUserHasSomeWriteAccess()
     {
         if ($this->hasSuperUserAccess()) {
-            return true;
+            return \true;
         }
         $idSitesAccessible = $this->getSitesIdWithAtLeastWriteAccess();
         return count($idSitesAccessible) > 0;
@@ -394,7 +396,7 @@ class Access
     public function isUserHasSomeAdminAccess()
     {
         if ($this->hasSuperUserAccess()) {
-            return true;
+            return \true;
         }
         $idSitesAccessible = $this->getSitesIdWithAdminAccess();
         return count($idSitesAccessible) > 0;
@@ -530,16 +532,16 @@ class Access
     /**
      * @param int|array|string $idSites
      * @return array
-     * @throws \Piwik\NoAccessException
+     * @throws BadRequestException
      */
     protected function getIdSites($idSites)
     {
-        if ($idSites === 'all') {
+        if ($idSites === 'all' || $idSites === ['all']) {
             $idSites = $this->getSitesIdWithAtLeastViewAccess();
         }
-        $idSites = \Piwik\Site::getIdSitesFromIdSitesString($idSites);
+        $idSites = \Piwik\Site::getIdSitesFromIdSitesString($idSites, \false, \true);
         if (empty($idSites)) {
-            $this->throwNoAccessException("The parameter 'idSite=' is missing from the request.");
+            throw new BadRequestException("The parameter 'idSite=' is missing from the request.");
         }
         return $idSites;
     }
@@ -547,7 +549,9 @@ class Access
      * Executes a callback with superuser privileges, making sure those privileges are rescinded
      * before this method exits. Privileges will be rescinded even if an exception is thrown.
      *
-     * @param callback $function The callback to execute. Should accept no arguments.
+     * Use this method with care, as it might open up attack vectors
+     *
+     * @param callable $function The callback to execute. Should accept no arguments.
      * @return mixed The result of `$function`.
      * @throws Exception rethrows any exceptions thrown by `$function`.
      * @api
@@ -562,7 +566,7 @@ class Access
         $login = $access->getLogin();
         $shouldResetLogin = empty($login);
         // make sure to reset login if a login was set by "makeSureLoginNameIsSet()"
-        $access->setSuperUserAccess(true);
+        $access->setSuperUserAccess(\true);
         try {
             $result = $function();
         } catch (\Throwable $ex) {
@@ -627,14 +631,19 @@ class Access
     {
         if (\Piwik\Piwik::isUserIsAnonymous() && !Request::isRootRequestApiRequest()) {
             $message = \Piwik\Piwik::translate('General_YouMustBeLoggedIn');
-            // Try to detect whether user was previously logged in so that we can display a different message
-            $referrer = \Piwik\Url::getReferrer();
-            $matomoUrl = \Piwik\SettingsPiwik::getPiwikUrl();
-            if ($referrer && $matomoUrl && \Piwik\Url::isValidHost(\Piwik\Url::getHostFromUrl($referrer)) && strpos($referrer, $matomoUrl) === 0) {
+            if ($this->sessionExpired) {
                 $message = \Piwik\Piwik::translate('General_YourSessionHasExpired');
             }
         }
         throw new \Piwik\NoAccessException($message);
+    }
+    public function setSessionExpired(bool $sessionExpired) : void
+    {
+        $this->sessionExpired = $sessionExpired;
+    }
+    public function wasSessionExpired() : bool
+    {
+        return $this->sessionExpired;
     }
     /**
      * Returns true if the current user is logged in or not.

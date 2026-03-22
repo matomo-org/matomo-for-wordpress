@@ -22,7 +22,7 @@ class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
     protected $nameSingular = 'Referrers_Type';
     protected $namePlural = 'Referrers_ReferrerTypes';
     protected $sqlFilterValue = 'Piwik\\Plugins\\Referrers\\getReferrerTypeFromShortName';
-    protected $acceptValues = 'direct, search, website, campaign';
+    protected $acceptValues = 'direct, search, website, campaign, ai';
     protected $category = 'Referrers_Referrers';
     public function formatValue($value, $idSite, Formatter $formatter)
     {
@@ -30,11 +30,9 @@ class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
     }
     public function getEnumColumnValues()
     {
-        return array(Common::REFERRER_TYPE_DIRECT_ENTRY => 'direct', Common::REFERRER_TYPE_WEBSITE => 'website', Common::REFERRER_TYPE_SEARCH_ENGINE => 'search', Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social', Common::REFERRER_TYPE_CAMPAIGN => 'campaign');
+        return array(Common::REFERRER_TYPE_DIRECT_ENTRY => 'direct', Common::REFERRER_TYPE_WEBSITE => 'website', Common::REFERRER_TYPE_SEARCH_ENGINE => 'search', Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social', Common::REFERRER_TYPE_AI_ASSISTANT => 'ai', Common::REFERRER_TYPE_CAMPAIGN => 'campaign');
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -49,11 +47,9 @@ class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
         if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $information['referer_type'];
         }
-        return false;
+        return \false;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

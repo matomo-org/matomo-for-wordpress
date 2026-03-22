@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\UserCountry\Columns;
 
+use Piwik\Piwik;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
@@ -21,17 +22,18 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $segmentName = 'regionCode';
     protected $nameSingular = 'UserCountry_Region';
     protected $namePlural = 'UserCountryMap_Regions';
-    protected $acceptValues = '01 02, OR, P8, etc.<br/>eg. region=BFC;country=fr';
+    public function getAcceptValues()
+    {
+        return '01, 02, OR, P8,…<br/>' . Piwik::translate('General_ForExampleShort') . ' region=BFC;country=fr';
+    }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('region', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             $value = substr($value, 0, 3);
             return $value;
         }
@@ -39,8 +41,6 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getLocationDetail($userInfo, LocationProvider::REGION_CODE_KEY);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -49,8 +49,6 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('region', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

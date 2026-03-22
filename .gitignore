@@ -12,6 +12,11 @@
 /tests/e2e/diff/
 /tests/e2e/downloads/
 /app/scoper.inc.php
+.e2e-docker-out
+.env.script
+/app/.ddev
+.e2e-test-overrides.json
+.mysql.options
 
 # for local docker dev
 docker

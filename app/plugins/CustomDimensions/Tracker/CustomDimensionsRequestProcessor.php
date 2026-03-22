@@ -61,14 +61,14 @@ class CustomDimensionsRequestProcessor extends RequestProcessor
     {
         $dimensions = self::getCachedCustomDimensions($request);
         if (empty($dimensions)) {
-            return false;
+            return \false;
         }
         foreach ($dimensions as $dimension) {
             if ($dimension['scope'] == CustomDimensions::SCOPE_ACTION) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function onNewVisit(VisitProperties $visitProperties, Request $request)
     {
@@ -97,12 +97,13 @@ class CustomDimensionsRequestProcessor extends RequestProcessor
     {
         $action = $request->getMetadata('Actions', 'action');
         if (empty($action) || !$action instanceof Action) {
-            return;
+            return \false;
         }
         $dimensionsToSet = $this->getCustomDimensionsInScope(CustomDimensions::SCOPE_ACTION, $request);
         foreach ($dimensionsToSet as $field => $value) {
             $action->setCustomField($field, $value);
         }
+        return \false;
     }
     private function getCustomDimensionsInScope($scope, Request $request)
     {
@@ -166,7 +167,6 @@ class CustomDimensionsRequestProcessor extends RequestProcessor
     /**
      * Get Cached Custom Dimensions during tracking. Returns only active custom dimensions.
      *
-     * @param Request $request
      * @return array
      * @throws \Piwik\Exception\UnexpectedWebsiteFoundException
      */

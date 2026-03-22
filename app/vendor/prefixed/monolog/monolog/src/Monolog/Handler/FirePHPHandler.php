@@ -37,13 +37,13 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * Whether or not Wildfire vendor-specific headers have been generated & sent yet
      */
-    protected static $initialized = false;
+    protected static $initialized = \false;
     /**
      * Shared static message index between potentially multiple handlers
      * @var int
      */
     protected static $messageIndex = 1;
-    protected static $sendHeaders = true;
+    protected static $sendHeaders = \true;
     /**
      * Base header creation function used by init headers & record headers
      *
@@ -114,7 +114,7 @@ class FirePHPHandler extends AbstractProcessingHandler
         }
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
-            self::$initialized = true;
+            self::$initialized = \true;
             self::$sendHeaders = $this->headersAccepted();
             if (!self::$sendHeaders) {
                 return;
@@ -136,7 +136,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     protected function headersAccepted()
     {
         if (!empty($_SERVER['HTTP_USER_AGENT']) && preg_match('{\\bFirePHP/\\d+\\.\\d+\\b}', $_SERVER['HTTP_USER_AGENT'])) {
-            return true;
+            return \true;
         }
         return isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
     }

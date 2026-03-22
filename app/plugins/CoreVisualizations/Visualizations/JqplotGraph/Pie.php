@@ -22,14 +22,14 @@ class Pie extends JqplotGraph
     {
         $config = new \Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Config();
         $config->max_graph_elements = 6;
-        $config->allow_multi_select_series_picker = false;
+        $config->allow_multi_select_series_picker = \false;
         return $config;
     }
     public function beforeRender()
     {
         parent::beforeRender();
         $this->checkRequestIsNotForMultiplePeriods();
-        $this->config->show_all_ticks = true;
+        $this->config->show_all_ticks = \true;
         $this->config->datatable_js_type = 'JqplotPieGraphDataTable';
     }
     protected function ensureValidColumnsToDisplay()

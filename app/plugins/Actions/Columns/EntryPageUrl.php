@@ -35,19 +35,17 @@ class EntryPageUrl extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionUrl = false;
+        $idActionUrl = \false;
         if (!empty($action)) {
             $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
         }
-        if ($idActionUrl === false) {
-            return false;
+        if ($idActionUrl === \false) {
+            return \false;
         }
         return (int) $idActionUrl;
     }
@@ -66,6 +64,6 @@ class EntryPageUrl extends VisitDimension
                 return $idAction;
             }
         }
-        return false;
+        return \false;
     }
 }

@@ -14,6 +14,7 @@ use Piwik\Exception\MissingFilePermissionException;
 use Piwik\Plugins\Overlay\Overlay;
 use Piwik\Session\SaveHandler\DbTable;
 use Piwik\Log\LoggerInterface;
+use Piwik\Session\SessionFingerprint;
 use Zend_Session;
 /**
  * Session initialization.
@@ -22,7 +23,7 @@ class Session extends Zend_Session
 {
     public const SESSION_NAME = 'MATOMO_SESSID';
     public static $sessionName = self::SESSION_NAME;
-    protected static $sessionStarted = false;
+    protected static $sessionStarted = \false;
     /**
      * Start the session
      *
@@ -30,12 +31,12 @@ class Session extends Zend_Session
      * @return void
      * @throws Exception if starting a session fails
      */
-    public static function start($options = false)
+    public static function start($options = \false)
     {
-        if (headers_sent() || self::$sessionStarted || defined('PIWIK_ENABLE_SESSION_START') && !PIWIK_ENABLE_SESSION_START || session_status() == PHP_SESSION_ACTIVE) {
+        if (headers_sent() || self::$sessionStarted || defined('PIWIK_ENABLE_SESSION_START') && !PIWIK_ENABLE_SESSION_START || session_status() == \PHP_SESSION_ACTIVE) {
             return;
         }
-        self::$sessionStarted = true;
+        self::$sessionStarted = \true;
         if (defined('PIWIK_SESSION_NAME')) {
             self::$sessionName = PIWIK_SESSION_NAME;
         }
@@ -86,9 +87,9 @@ class Session extends Zend_Session
         @ini_set('session.gc_probability', \Piwik\Config::getInstance()->General['session_gc_probability']);
         try {
             parent::start();
-            register_shutdown_function(array('Zend_Session', 'writeClose'), true);
+            register_shutdown_function(array('Zend_Session', 'writeClose'), \true);
         } catch (Exception $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Unable to start session: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => true]);
+            StaticContainer::get(LoggerInterface::class)->error('Unable to start session: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
             if (\Piwik\SettingsPiwik::isMatomoInstalled()) {
                 $pathToSessions = '';
             } else {
@@ -149,7 +150,7 @@ class Session extends Zend_Session
      * @param string $sameSite
      * @return string
      */
-    public static function writeCookie($name, $value, $expires = 0, $path = '/', $domain = '/', $secure = false, $httpOnly = false, $sameSite = 'lax')
+    public static function writeCookie($name, $value, $expires = 0, $path = '/', $domain = '/', $secure = \false, $httpOnly = \false, $sameSite = 'lax')
     {
         $headerStr = 'Set-Cookie: ' . rawurlencode($name) . '=' . rawurlencode($value);
         if ($expires) {
@@ -173,8 +174,16 @@ class Session extends Zend_Session
         \Piwik\Common::sendHeader($headerStr);
         return $headerStr;
     }
-    public static function getDbTableConfig()
+    public static function getDbTableConfig() : array
     {
         return array('name' => \Piwik\Common::prefixTable(DbTable::TABLE_NAME), 'primary' => 'id', 'modifiedColumn' => 'modified', 'dataColumn' => 'data', 'lifetimeColumn' => 'lifetime');
+    }
+    public static function destroyAllSessions() : void
+    {
+        $config = self::getDbTableConfig();
+        $saveHandler = new DbTable($config);
+        $saveHandler->destroyAll();
+        $fingerprint = new SessionFingerprint();
+        $fingerprint->clear();
     }
 }

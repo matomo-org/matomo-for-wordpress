@@ -55,6 +55,8 @@ class Marketplace {
 			$marketplace_setup_wizard = \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
 		}
 
+		$matomo_currency = $this->get_currency_based_on_timezone();
+
 		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}
 
@@ -80,5 +82,22 @@ class Marketplace {
 
 	private function is_multisite() {
 		return function_exists( 'is_multisite' ) && is_multisite();
+	}
+
+	private function get_currency_based_on_timezone() {
+		if ( ! function_exists( 'wp_timezone' ) ) {
+			return 'EUR';
+		}
+
+		$timezone = \wp_timezone();
+		$now      = new \DateTime( 'now', $timezone );
+		$offset   = $now->getOffset() / 3600;
+
+		// if timezone is not european, use USD
+		if ( $offset >= 0 && $offset <= 4 ) {
+			return 'EUR';
+		} else {
+			return 'USD';
+		}
 	}
 }

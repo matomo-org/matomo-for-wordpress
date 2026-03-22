@@ -17,7 +17,7 @@ use Exception;
 /**
  * This example dimension only defines a name and does not track any data. It's supposed to be only used in reports.
  *
- * See {@link http://developer.piwik.org/api-reference/Piwik/Columns\Dimension} for more information.
+ * See {@link https://developer.matomo.org/api-reference/Piwik/Columns\Dimension} for more information.
  */
 class ActionType extends ActionDimension
 {
@@ -28,9 +28,9 @@ class ActionType extends ActionDimension
     protected $nameSingular = 'Actions_ActionType';
     protected $namePlural = 'Actions_ActionTypes';
     protected $category = 'General_Actions';
-    public function __construct()
+    public function getAcceptValues()
     {
-        $this->acceptValues = 'A type of action, such as: pageviews, contents, sitesearches, events, outlinks, downloads';
+        return Piwik::translate('Actions_ActionTypeSegmentHelp', 'pageviews, contents, sitesearches, events, outlinks, downloads');
     }
     public function getEnumColumnValues()
     {
@@ -57,7 +57,7 @@ class ActionType extends ActionDimension
         $types = [];
         foreach ($availableTypes as $type) {
             if (empty($type['id']) || empty($type['name'])) {
-                throw new Exception("Invalid action added with event `Actions.addActionTypes`: " . var_export($type, true));
+                throw new Exception("Invalid action added with event `Actions.addActionTypes`: " . var_export($type, \true));
             }
             if (Development::isEnabled() && array_key_exists($type['id'], $types)) {
                 throw new Exception(sprintf("Action '%s' with id %s couldn't be added, as '%s' was already added for this id", $type['name'], $type['id'], $types[$type['id']]));

@@ -28,7 +28,7 @@ abstract class Base extends VisitDimension
     }
     public static function getValueFromUrlParamsIfAllowed($urlParamToOverride, Request $request)
     {
-        $value = Common::getRequestVar($urlParamToOverride, false, 'string', $request->getParams());
+        $value = Common::getRequestVar($urlParamToOverride, \false, 'string', $request->getParams());
         if (!empty($value)) {
             if (!$request->isAuthenticated()) {
                 Common::printDebug("WARN: Tracker API '{$urlParamToOverride}' was used with invalid token_auth");
@@ -36,7 +36,7 @@ abstract class Base extends VisitDimension
             }
             return $value;
         }
-        return false;
+        return \false;
     }
     public function getRequiredVisitFields()
     {
@@ -47,7 +47,7 @@ abstract class Base extends VisitDimension
         $useLocationCache = empty($GLOBALS['PIWIK_TRACKER_LOCAL_TRACKING']);
         $location = $this->getVisitorGeolocator()->getLocation($userInfo, $useLocationCache);
         if (!isset($location[$locationKey])) {
-            return false;
+            return \false;
         }
         return $location[$locationKey];
     }

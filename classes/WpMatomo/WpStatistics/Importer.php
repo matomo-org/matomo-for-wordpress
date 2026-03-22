@@ -1,4 +1,11 @@
 <?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
 
 namespace WpMatomo\WpStatistics;
 
@@ -17,8 +24,10 @@ use Piwik\Archive\ArchiveInvalidator;
 use WP_STATISTICS\DB;
 use WpMatomo\Db\Settings;
 use WpMatomo\ScheduledTasks;
+use WpMatomo\Site\Sync\SyncConfig;
 use WpMatomo\WpStatistics\Exceptions\MaxEndDateReachedException;
 use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
+
 /**
  * @package WpMatomo
  * @subpackage WpStatisticsImport
@@ -29,8 +38,10 @@ class Importer {
 
 	const IS_IMPORTED_FROM_WPS_NUMERIC = 'WpStatisticsImporter_isImportedFromWpStatistics';
 
+	const MINIMUM_COMPATIBLE_WP_STATISTICS_VERSION = '14.15.2';
+
 	/**
-	 * @var LoggerInterface
+	 * @var LoggerInterface|null
 	 */
 	private $logger;
 
@@ -51,9 +62,8 @@ class Importer {
 
 	private $should_rethrow = false;
 
-	public function __construct( LoggerInterface $logger ) {
-		$this->logger   = $logger;
-		$this->end_date = $this->get_ending_date();
+	public function __construct( LoggerInterface $logger = null ) {
+		$this->logger = $logger;
 	}
 
 	public function set_should_rethrow( $should_rethrow ) {
@@ -67,6 +77,11 @@ class Importer {
 	 */
 	protected function get_ending_date() {
 		global $wpdb;
+
+		if ( $this->end_date ) {
+			return $this->end_date;
+		}
+
 		$db_settings = new Settings();
 		$table       = $db_settings->prefix_table_name( 'log_visit' );
 		$sql         = <<<SQL
@@ -75,13 +90,16 @@ SQL;
 		try {
 			$row = $wpdb->get_row( $sql, ARRAY_N );
 			if ( ! empty( $row[0] ) ) {
-				return Date::factory( $row[0] );
+				$end_date = Date::factory( $row[0] );
 			} else {
-				return Date::yesterday();
+				$end_date = Date::yesterday();
 			}
 		} catch ( \Exception $e ) {
-			return Date::yesterday();
+			$end_date = Date::yesterday();
 		}
+
+		$this->end_date = $end_date;
+		return $end_date;
 	}
 
 
@@ -93,11 +111,25 @@ SQL;
 	protected function get_started() {
 		global $wpdb;
 		$table = DB::table( 'visit' );
-		$sql   = <<<SQL
+		if ( ! empty( $table ) ) {
+			$sql = <<<SQL
 SELECT min(last_visit) from $table
 SQL;
-		$row   = $wpdb->get_row( $sql, ARRAY_N );
-		return Date::factory( $row[0] );
+		} else {
+			$table = DB::table( 'visitor' );
+
+			$sql = <<<SQL
+SELECT min(last_view) from $table
+SQL;
+		}
+
+		$row  = $wpdb->get_row( $sql, ARRAY_N );
+		$date = $row[0];
+		if ( empty( $date ) ) {
+			return Date::yesterday();
+		}
+
+		return Date::factory( $date );
 	}
 
 	/**
@@ -117,7 +149,14 @@ SQL;
 	}
 
 	public function import( $id_site, $archive = true ) {
-		$end   = $this->end_date;
+		$wp_statistics_version = $this->get_wp_statistics_plugin_version();
+
+		$is_compatible = $this->check_compatible_version( $wp_statistics_version );
+		if ( ! $is_compatible ) {
+			return false;
+		}
+
+		$end   = $this->get_ending_date();
 		$start = $this->get_started();
 
 		$this->adjust_matomo_date( $id_site, $start );
@@ -133,12 +172,14 @@ SQL;
 			$site             = new Site( $id_site );
 			// phpcs:ignore Generic.CodeAnalysis.ForLoopWithTestFunctionCall.NotAllowed
 			for ( $date = $start; $date->getTimestamp() < $end_plus_one->getTimestamp(); $date = $date->addDay( 1 ) ) {
-				$this->logger->notice(
-					'Importing data for date {date}...',
-					[
-						'date' => $date->toString(),
-					]
-				);
+				if ( $this->logger ) {
+					$this->logger->notice(
+						'Importing data for date {date}...',
+						[
+							'date' => $date->toString(),
+						]
+					);
+				}
 
 				try {
 					$this->import_day( $site, $date, $record_importers );
@@ -149,16 +190,23 @@ SQL;
 			}
 			unset( $record_importers );
 		} catch ( MaxEndDateReachedException $ex ) {
-			$this->logger->info( 'Max end date reached. This occurs in Matomo for WordPress installs when the importer tries to import days on or after the day Matomo for WordPress installed.' );
+			if ( $this->logger ) {
+				$this->logger->info( 'Max end date reached. This occurs in Matomo for WordPress installs when the importer tries to import days on or after the day Matomo for WordPress installed.' );
+			}
 
 			if ( true === $archive ) {
 				// by launching the archiver now the weekly, monthly and yearly archives should be generated right away and it won't
 				// take up to an hour. Also by running it on the cli we have less risk that this long running archiving process times out
-				$this->logger->info( 'Matomo Analytics starting the report generation of weekly, monthly and yearly reports. This may take a while.' );
-				$scheduled_tasks = new ScheduledTasks( \WpMatomo::$settings );
+				if ( $this->logger ) {
+					$this->logger->info( 'Matomo Analytics starting the report generation of weekly, monthly and yearly reports. This may take a while.' );
+				}
+				$sync_config     = new SyncConfig( \WpMatomo::$settings );
+				$scheduled_tasks = new ScheduledTasks( \WpMatomo::$settings, $sync_config );
 				$scheduled_tasks->archive();
 			}
-			$this->logger->info( 'Matomo Analytics report generation finished' );
+			if ( $this->logger ) {
+				$this->logger->info( 'Matomo Analytics report generation finished' );
+			}
 
 			return true;
 		} catch ( \Exception $ex ) {
@@ -276,10 +324,38 @@ SQL;
 	}
 
 	private function on_error( \Exception $ex ) {
-		$this->logger->info( 'Unexpected Error: {ex}', [ 'ex' => $ex ] );
+		if ( $this->logger ) {
+			$this->logger->info( 'Unexpected Error: {ex}', [ 'ex' => $ex ] );
+		}
 
 		if ( $this->should_rethrow ) {
 			throw $ex;
 		}
+	}
+
+	public function check_compatible_version( $wp_statistics_version ) {
+		if ( empty( $wp_statistics_version )
+			|| ! version_compare( $wp_statistics_version, self::MINIMUM_COMPATIBLE_WP_STATISTICS_VERSION, '>=' )
+		) {
+			$this->on_error(
+				new IncompatibleWpStatisticsVersion(
+					sprintf(
+						'Incompatible WP Statistics version %1$s. Please update to a version later than %1$s before importing.',
+						$wp_statistics_version,
+						self::MINIMUM_COMPATIBLE_WP_STATISTICS_VERSION
+					)
+				)
+			);
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function get_wp_statistics_plugin_version() {
+		$wp_statistics_plugin_data = get_plugin_data( WP_STATISTICS_MAIN_FILE, false, false );
+		$wp_statistics_version     = trim( $wp_statistics_plugin_data['Version'] );
+		return $wp_statistics_version;
 	}
 }

@@ -115,13 +115,13 @@ class Compiler
         $this->entriesToCompile = new \ArrayIterator($definitionSource->getDefinitions());
         // We use an ArrayIterator so that we can keep adding new items to the list while we compile entries
         foreach ($this->entriesToCompile as $entryName => $definition) {
-            $silenceErrors = false;
+            $silenceErrors = \false;
             // This is an entry found by reference during autowiring
             if (!$definition) {
                 $definition = $definitionSource->getDefinition($entryName);
                 // We silence errors for those entries because type-hints may reference interfaces/abstract classes
                 // which could later be defined, or even not used (we don't want to block the compilation for those)
-                $silenceErrors = true;
+                $silenceErrors = \true;
             }
             if (!$definition) {
                 // We do not throw a `NotFound` exception here because the dependency
@@ -130,7 +130,7 @@ class Compiler
             }
             // Check that the definition can be compiled
             $errorMessage = $this->isCompilable($definition);
-            if ($errorMessage !== true) {
+            if ($errorMessage !== \true) {
                 continue;
             }
             try {
@@ -157,12 +157,12 @@ class Compiler
     private function writeFileAtomic(string $fileName, string $content) : int
     {
         $tmpFile = @tempnam(dirname($fileName), 'swap-compile');
-        if ($tmpFile === false) {
+        if ($tmpFile === \false) {
             throw new InvalidArgumentException(sprintf('Error while creating temporary file in %s', dirname($fileName)));
         }
         @chmod($tmpFile, 0666);
         $written = file_put_contents($tmpFile, $content);
-        if ($written === false) {
+        if ($written === \false) {
             @unlink($tmpFile);
             throw new InvalidArgumentException(sprintf('Error while writing to %s', $tmpFile));
         }
@@ -184,7 +184,7 @@ class Compiler
         // Generate a unique method name
         $methodName = 'get' . ++$this->methodMappingCounter;
         $this->entryToMethodMapping[$entryName] = $methodName;
-        switch (true) {
+        switch (\true) {
             case $definition instanceof ValueDefinition:
                 $value = $definition->getValue();
                 $code = 'return ' . $this->compileValue($value) . ';';
@@ -248,7 +248,7 @@ PHP;
                 if (!empty($definition->getParameters())) {
                     $definitionParameters = ', ' . $this->compileValue($definition->getParameters());
                 }
-                $code = sprintf('return $this->resolveFactory(%s, %s%s);', $this->compileValue($value), var_export($entryName, true), $definitionParameters);
+                $code = sprintf('return $this->resolveFactory(%s, %s%s);', $this->compileValue($value), var_export($entryName, \true), $definitionParameters);
                 break;
             default:
                 // This case should not happen (so it cannot be tested)
@@ -261,7 +261,7 @@ PHP;
     {
         // Check that the value can be compiled
         $errorMessage = $this->isCompilable($value);
-        if ($errorMessage !== true) {
+        if ($errorMessage !== \true) {
             throw new InvalidDefinition($errorMessage);
         }
         if ($value instanceof Definition) {
@@ -275,7 +275,7 @@ PHP;
         if (is_array($value)) {
             $value = array_map(function ($value, $key) {
                 $compiledValue = $this->compileValue($value);
-                $key = var_export($key, true);
+                $key = var_export($key, \true);
                 return "            {$key} => {$compiledValue},\n";
             }, $value, array_keys($value));
             $value = implode('', $value);
@@ -284,11 +284,11 @@ PHP;
         if ($value instanceof \Closure) {
             return $this->compileClosure($value);
         }
-        return var_export($value, true);
+        return var_export($value, \true);
     }
     private function createCompilationDirectory(string $directory)
     {
-        if (!is_dir($directory) && !@mkdir($directory, 0777, true) && !is_dir($directory)) {
+        if (!is_dir($directory) && !@mkdir($directory, 0777, \true) && !is_dir($directory)) {
             throw new InvalidArgumentException(sprintf('Compilation directory does not exist and cannot be created: %s.', $directory));
         }
         if (!is_writable($directory)) {
@@ -310,10 +310,10 @@ PHP;
         }
         // All other definitions are compilable
         if ($value instanceof Definition) {
-            return true;
+            return \true;
         }
         if ($value instanceof \Closure) {
-            return true;
+            return \true;
         }
         if (is_object($value)) {
             return 'An object was found but objects cannot be compiled';
@@ -321,7 +321,7 @@ PHP;
         if (is_resource($value)) {
             return 'A resource was found but resources cannot be compiled';
         }
-        return true;
+        return \true;
     }
     /**
      * @throws \DI\Definition\Exception\InvalidDefinition

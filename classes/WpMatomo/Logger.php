@@ -21,7 +21,13 @@ class Logger {
 	const LEVEL_INFO  = 3;
 	const LEVEL_WARN  = 5;
 
-	private function get_log_level() {
+	private $log_level;
+
+	public function __construct() {
+		$this->log_level = $this->detect_log_level();
+	}
+
+	private function detect_log_level() {
 		if ( defined( 'MATOMO_DEBUG' ) ) {
 			if ( MATOMO_DEBUG ) {
 				return self::LEVEL_DEBUG;
@@ -38,9 +44,7 @@ class Logger {
 	}
 
 	public function log( $message, $mode = 3 ) {
-		$log_level = $this->get_log_level();
-
-		if ( $log_level > $mode ) {
+		if ( $this->log_level > $mode ) {
 			return;
 		}
 

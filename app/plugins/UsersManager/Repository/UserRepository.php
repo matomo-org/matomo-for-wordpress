@@ -11,7 +11,6 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\Emails\UserCreatedEmail;
 use Piwik\Plugins\UsersManager\API;
 use Piwik\Plugins\UsersManager\Emails\UserInviteEmail;
-use Piwik\Plugins\UsersManager\LastSeenTimeLogger;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\UsersManager\UserAccessFilter;
 use Piwik\Plugins\UsersManager\UsersManager;
@@ -50,21 +49,18 @@ class UserRepository
         $this->allowedEmailDomain = $allowedEmailDomain;
     }
     /**
-     * @param string $userLogin
-     * @param string $email
-     * @param int    $initialIdSite
-     * @param string $password
-     * @param bool   $isPasswordHashed
      * @throws \Exception
      */
-    public function create(string $userLogin, string $email, ?int $initialIdSite = null, string $password = '', bool $isPasswordHashed = false) : void
+    public function create(string $userLogin, string $email, ?int $initialIdSite = null,
+#[\SensitiveParameter]
+string $password = '', bool $isPasswordHashed = \false) : void
     {
         if (!Piwik::hasUserSuperUserAccess()) {
             // check if the user has admin access to the site
             Piwik::checkUserHasAdminAccess($initialIdSite);
         }
-        BaseValidator::check(Piwik::translate('General_Username'), $userLogin, [new Login(true)]);
-        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(true), $this->allowedEmailDomain]);
+        BaseValidator::check(Piwik::translate('General_Username'), $userLogin, [new Login(\true)]);
+        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(\true), $this->allowedEmailDomain]);
         if (!empty($password)) {
             if (!$isPasswordHashed) {
                 $passwordTransformed = UsersManager::getPasswordHash($password);
@@ -88,14 +84,14 @@ class UserRepository
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-    public function reInviteUser(string $userLogin, $expiryInDays = null) : void
+    public function reInviteUser(string $userLogin, int $expiryInDays) : void
     {
         $user = $this->model->getUser($userLogin);
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-    public function generateInviteToken(string $userLogin, $expiryInDays = null) : string
+    public function generateInviteToken(string $userLogin, int $expiryInDays) : string
     {
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteLinkToken($userLogin, $generatedToken, $expiryInDays);
@@ -103,7 +99,7 @@ class UserRepository
     }
     protected function sendUserCreationNotification(string $createdUserLogin) : void
     {
-        if (Piwik::getCurrentUserLogin() !== 'anonymous') {
+        if (Piwik::getCurrentUserLogin() !== 'anonymous' && Piwik::getCurrentUserEmail() !== '') {
             $mail = StaticContainer::getContainer()->make(UserCreatedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'userLogin' => $createdUserLogin]);
             $mail->safeSend();
         }
@@ -136,9 +132,13 @@ class UserRepository
         unset($user['ts_changes_shown']);
         unset($user['invite_token']);
         unset($user['invite_link_token']);
-        if ($lastSeen = LastSeenTimeLogger::getLastSeenTimeForUser($user['login'])) {
-            $user['last_seen'] = Date::getDatetimeFromTimestamp($lastSeen);
+        unset($user['ts_inactivity_notified']);
+        if (isset($user['ts_last_seen'])) {
+            $formatter = new Formatter();
+            $user['last_seen'] = $user['ts_last_seen'];
+            $user['last_seen_ago'] = $formatter->getPrettyTimeFromSeconds(time() - Date::factory($user['ts_last_seen'])->getTimestamp());
         }
+        unset($user['ts_last_seen']);
         $user['invite_status'] = 'active';
         if (!empty($user['invite_expired_at'])) {
             $inviteExpireAt = Date::factory($user['invite_expired_at']);
@@ -189,22 +189,6 @@ class UserRepository
         if (!empty($users)) {
             foreach ($users as $index => $user) {
                 $users[$index] = $this->enrichUser($user);
-            }
-        }
-        return $users;
-    }
-    /**
-     * @param array $users
-     * @return mixed
-     */
-    public function enrichUsersWithLastSeen(array $users) : array
-    {
-        $formatter = new Formatter();
-        $lastSeenTimes = LastSeenTimeLogger::getLastSeenTimesForAllUsers();
-        foreach ($users as &$user) {
-            $login = $user['login'];
-            if (isset($lastSeenTimes[$login])) {
-                $user['last_seen'] = $formatter->getPrettyTimeFromSeconds(time() - $lastSeenTimes[$login]);
             }
         }
         return $users;

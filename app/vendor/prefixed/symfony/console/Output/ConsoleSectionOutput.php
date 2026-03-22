@@ -52,7 +52,7 @@ class ConsoleSectionOutput extends StreamOutput
             $this->content = [];
         }
         $this->lines -= $lines;
-        parent::doWrite($this->popStreamContentUntilCurrentSection($lines), false);
+        parent::doWrite($this->popStreamContentUntilCurrentSection($lines), \false);
     }
     /**
      * Overwrites the previous output with a new message.
@@ -90,8 +90,8 @@ class ConsoleSectionOutput extends StreamOutput
         }
         $erasedContent = $this->popStreamContentUntilCurrentSection();
         $this->addContent($message);
-        parent::doWrite($message, true);
-        parent::doWrite($erasedContent, false);
+        parent::doWrite($message, \true);
+        parent::doWrite($erasedContent, \false);
     }
     /**
      * At initial stage, cursor is at the end of stream output. This method makes cursor crawl upwards until it hits
@@ -110,9 +110,9 @@ class ConsoleSectionOutput extends StreamOutput
         }
         if ($numberOfLinesToClear > 0) {
             // move cursor up n lines
-            parent::doWrite(sprintf("\x1b[%dA", $numberOfLinesToClear), false);
+            parent::doWrite(sprintf("\x1b[%dA", $numberOfLinesToClear), \false);
             // erase to end of screen
-            parent::doWrite("\x1b[0J", false);
+            parent::doWrite("\x1b[0J", \false);
         }
         return implode('', array_reverse($erasedContent));
     }

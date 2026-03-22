@@ -61,16 +61,24 @@
 		<exclude name="PHPCompatibility.InitialValue.NewConstantScalarExpressions.constFound"/>
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
 		<exclude name="WordPress.PHP.IniSet.Risky"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.stringFound"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.boolFound"/>
+		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.stringFound"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="matomo,wpmatomo"/>
+			<property name="prefixes" type="array">
+			    <element key="0" value="matomo" />
+			    <element key="1" value="wpmatomo" />
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="matomo"/>
+			<property name="text_domain" type="array">
+			    <element key="0" value="matomo" />
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
@@ -92,6 +100,9 @@
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
     <rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode">
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
 </ruleset>

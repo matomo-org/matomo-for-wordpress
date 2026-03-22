@@ -31,7 +31,6 @@ abstract class Updates
      * of which migrations and database queries an update will run. If you execute migrations directly in `doUpdate()`,
      * they won't be displayed to the user.
      *
-     * @param Updater $updater
      * @return Migration[]
      * @api
      */
@@ -47,7 +46,6 @@ abstract class Updates
      *
      * See {@link \Piwik\Plugins\ExamplePlugin\Updates\Updates_0_0_2} for an example.
      *
-     * @param Updater $updater
      * @api
      */
     public function doUpdate(\Piwik\Updater $updater)
@@ -64,7 +62,7 @@ abstract class Updates
      */
     public static function isMajorUpdate()
     {
-        return false;
+        return \false;
     }
     /**
      * Enables maintenance mode. Should be used for updates where Piwik will be unavailable
@@ -100,12 +98,12 @@ abstract class Updates
         $config = \Piwik\Config::getInstance();
         if (isset($config->Plugins['Plugins'])) {
             $plugins = $config->Plugins['Plugins'];
-            if (($key = array_search($pluginToDelete, $plugins)) !== false) {
+            if (($key = array_search($pluginToDelete, $plugins)) !== \false) {
                 unset($plugins[$key]);
             }
             $config->Plugins['Plugins'] = $plugins;
             $pluginsInstalled = $config->PluginsInstalled['PluginsInstalled'];
-            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== false) {
+            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== \false) {
                 unset($pluginsInstalled[$key]);
             }
             $config->PluginsInstalled = array('PluginsInstalled' => $pluginsInstalled);

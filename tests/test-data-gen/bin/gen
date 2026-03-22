@@ -1,0 +1,11 @@
+#!/usr/bin/env tsx
+
+import generate from '../generate.js';
+
+generate()
+  .then(() => {
+    console.log('Done.');
+  })
+  .catch((e) => {
+    console.log(`Failed: ${e.stack}`);
+  });

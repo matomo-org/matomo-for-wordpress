@@ -97,7 +97,6 @@ class Tsv extends ReportRenderer
         $this->rendered .= implode('', array($reportName, $tsvRenderer->lineEnd, $reportData, $tsvRenderer->lineEnd, $tsvRenderer->lineEnd));
     }
     /**
-     * @param DataTableInterface $table
      * @param string $uniqueId
      * @return \Piwik\DataTable\Renderer\Tsv
      */
@@ -106,7 +105,7 @@ class Tsv extends ReportRenderer
         $tsvRenderer = new TsvDataTableRenderer();
         $tsvRenderer->setIdSite($this->idSite);
         $tsvRenderer->setTable($table);
-        $tsvRenderer->setConvertToUnicode(false);
+        $tsvRenderer->setConvertToUnicode(\false);
         $tsvRenderer->setApiMethod($this->getApiMethodNameFromUniqueId($uniqueId));
         return $tsvRenderer;
     }

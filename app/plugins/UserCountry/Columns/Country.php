@@ -31,7 +31,7 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $nameSingular = 'UserCountry_Country';
     protected $namePlural = 'UserCountryMap_Countries';
     protected $segmentName = 'countryCode';
-    protected $acceptValues = 'ISO 3166-1 alpha-2 country codes (de, us, fr, in, es, etc.)';
+    protected $acceptValues = 'UserCountry_CountrySegmentHelp';
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         $segment = new Segment();
@@ -41,7 +41,7 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         $segment->setSegment('countryName');
         $segment->setName('UserCountry_Country');
         $segment->setAcceptedValues('Germany, France, Spain, ...');
-        $segment->setNeedsMostFrequentValues(false);
+        $segment->setNeedsMostFrequentValues(\false);
         $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
         $countryList = $regionDataProvider->getCountryList();
         array_walk($countryList, function (&$item, $key) {
@@ -49,7 +49,7 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         });
         $segment->setSqlFilterValue(function ($val) use($countryList) {
             $result = array_search($val, $countryList);
-            if ($result === false) {
+            if ($result === \false) {
                 $result = 'UNK';
             }
             return $result;
@@ -64,15 +64,13 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return \Piwik\Plugins\UserCountry\countryTranslate($value);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('country', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             $value = substr($value, 0, 3);
             return $value;
         }
@@ -84,8 +82,6 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return Visit::UNKNOWN_CODE;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -94,15 +90,13 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('country', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onAnyGoalConversion(Request $request, Visitor $visitor, $action)
     {
         $country = $visitor->getVisitorColumn($this->columnName);
-        if (isset($country) && false !== $country) {
+        if (isset($country) && \false !== $country) {
             return $country;
         }
         $browserLanguage = $request->getBrowserLanguage();

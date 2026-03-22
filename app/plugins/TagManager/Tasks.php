@@ -62,9 +62,9 @@ class Tasks extends \Piwik\Plugin\Tasks
     {
         try {
             new Site($idSite);
-            return true;
+            return \true;
         } catch (UnexpectedWebsiteFoundException $ex) {
-            return false;
+            return \false;
         }
     }
 }

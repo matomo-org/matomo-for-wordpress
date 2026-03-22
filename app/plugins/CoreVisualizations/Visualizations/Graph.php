@@ -49,7 +49,7 @@ abstract class Graph extends Visualization
     {
         // TODO: this should not be required here. filter_limit should not be a view property, instead HtmlTable should use 'limit' or something,
         //       and manually set request_parameters_to_modify['filter_limit'] based on that. (same for filter_offset).
-        $this->requestConfig->request_parameters_to_modify['filter_limit'] = false;
+        $this->requestConfig->request_parameters_to_modify['filter_limit'] = \false;
         if ($this->config->max_graph_elements) {
             $this->requestConfig->request_parameters_to_modify['filter_truncate'] = $this->config->max_graph_elements - 1;
         }
@@ -84,7 +84,7 @@ abstract class Graph extends Visualization
      */
     public function determineWhichRowsAreSelectable() : void
     {
-        if ($this->config->row_picker_match_rows_by === false) {
+        if ($this->config->row_picker_match_rows_by === \false) {
             return;
         }
         // collect all selectable rows
@@ -95,7 +95,7 @@ abstract class Graph extends Visualization
             foreach ($dataTable->getRows() as $row) {
                 $rowLabel = $row->getColumn('label');
                 $rowIdentifier = $row->hasColumn($identifier) ? $row->getColumn($identifier) : $row->getMetadata($identifier);
-                if (false === $rowLabel || false === $rowIdentifier) {
+                if (\false === $rowLabel || \false === $rowIdentifier) {
                     continue;
                 }
                 $rowIdentifier = (string) $rowIdentifier;
@@ -109,10 +109,10 @@ abstract class Graph extends Visualization
     }
     public function isRowVisible($rowLabel, $rowIdentifier) : bool
     {
-        if (false !== $this->config->row_picker_match_rows_by) {
+        if (\false !== $this->config->row_picker_match_rows_by) {
             return is_array($this->config->rows_to_display) && (in_array($rowLabel, $this->config->rows_to_display) || in_array($rowIdentifier, $this->config->rows_to_display));
         }
-        return true;
+        return \true;
     }
     /**
      * Defaults the selectable_columns property if it has not been set and then transforms
@@ -123,7 +123,7 @@ abstract class Graph extends Visualization
         $this->determineWhichRowsAreSelectable();
         // set default selectable columns, if none specified
         $selectableColumns = $this->config->selectable_columns;
-        if (false === $selectableColumns) {
+        if (\false === $selectableColumns) {
             $this->generateSelectableColumns();
         }
         $this->ensureValidColumnsToDisplay();
@@ -165,7 +165,7 @@ abstract class Graph extends Visualization
     {
         if (!empty($theArray) && is_array($theArray)) {
             $key = array_search('label', $theArray);
-            if ($key !== false) {
+            if ($key !== \false) {
                 unset($theArray[$key]);
                 $theArray = array_values($theArray);
             }
@@ -208,7 +208,7 @@ abstract class Graph extends Visualization
     }
     private function removeUnavailableMetrics($metrics)
     {
-        $currentPeriod = Common::getRequestVar('period', false);
+        $currentPeriod = Common::getRequestVar('period', \false);
         if (!SettingsPiwik::isUniqueVisitorsEnabled($currentPeriod)) {
             $metrics = array_diff($metrics, ['nb_uniq_visitors', 'nb_users']);
         }

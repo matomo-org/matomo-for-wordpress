@@ -13,6 +13,7 @@ use Piwik\Cache;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Development;
+use Piwik\Exception\ThingNotFoundException;
 use Piwik\Plugin\Manager;
 class PluginUmdAssetFetcher extends UIAssetFetcher
 {
@@ -80,7 +81,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
     {
         $pluginsToLoadOnInit = $this->getPluginsToLoadOnInit();
         $this->checkForMissingPluginDependencies($pluginsToLoadOnInit);
-        $plugins = self::orderPluginsByPluginDependencies($pluginsToLoadOnInit, false);
+        $plugins = self::orderPluginsByPluginDependencies($pluginsToLoadOnInit, \false);
         $allPluginUmds = [];
         foreach ($plugins as $plugin) {
             $pluginDir = self::getRelativePluginDirectory($plugin);
@@ -113,7 +114,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
         $plugins = $this->getPluginsWithUmdsToUse();
         $plugins = array_filter($plugins, function ($pluginName) {
             if ($pluginName === 'Login') {
-                return true;
+                return \true;
             }
             return Manager::getInstance()->isPluginLoaded($pluginName) && !$this->shouldLoadUmdOnDemand($pluginName);
         });
@@ -156,7 +157,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
                 }
             }
             if (!$foundChunk) {
-                throw new \Exception("Could not find chunk {$this->requestedChunk}");
+                throw new ThingNotFoundException('Could not find chunk {$this->requestedChunk}');
             }
             foreach ($foundChunk->getFiles() as $file) {
                 $this->fileLocations[] = $file;
@@ -168,7 +169,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
     }
     private function addUmdFilesIfDetected($plugins)
     {
-        $plugins = self::orderPluginsByPluginDependencies($plugins, false);
+        $plugins = self::orderPluginsByPluginDependencies($plugins, \false);
         foreach ($plugins as $plugin) {
             if (Manager::getInstance()->isPluginLoaded($plugin) && $this->shouldLoadUmdOnDemand($plugin)) {
                 continue;
@@ -195,7 +196,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
         }
         return null;
     }
-    public static function orderPluginsByPluginDependencies($plugins, $keepUnresolved = true)
+    public static function orderPluginsByPluginDependencies($plugins, $keepUnresolved = \true)
     {
         $result = [];
         while (!empty($plugins)) {
@@ -213,7 +214,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
         if (!is_array($pluginDependencies)) {
             $pluginDependencies = [];
             if (is_file($umdMetadata)) {
-                $pluginDependencies = json_decode(file_get_contents($umdMetadata), true);
+                $pluginDependencies = json_decode(file_get_contents($umdMetadata), \true);
                 $pluginDependencies = $pluginDependencies['dependsOn'] ?? [];
             }
             $cache->save($cacheKey, $pluginDependencies);
@@ -224,7 +225,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
     {
         // remove the plugin from the array of plugins to visit
         $index = array_search($plugin, $plugins);
-        if ($index !== false) {
+        if ($index !== \false) {
             unset($plugins[$index]);
         } else {
             return;
@@ -275,7 +276,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
             $pluginsToNotLoadOnDemand = [];
         }
         if (in_array($pluginName, $pluginsToNotLoadOnDemand)) {
-            return false;
+            return \false;
         }
         try {
             $pluginsToLoadOnDemand = StaticContainer::get('plugins.shouldLoadOnDemand');
@@ -284,7 +285,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
             $pluginsToLoadOnDemand = [];
         }
         if (in_array($pluginName, $pluginsToLoadOnDemand)) {
-            return true;
+            return \true;
         }
         // check if method exists before calling since during the update from the previous version to this one,
         // there may be a Plugin instance in memory that does not have this method.

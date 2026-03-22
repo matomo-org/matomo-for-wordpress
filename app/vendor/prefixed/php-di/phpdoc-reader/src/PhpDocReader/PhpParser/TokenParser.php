@@ -58,11 +58,11 @@ class TokenParser
     {
         $statements = [];
         while ($token = $this->next()) {
-            if ($token[0] === T_USE) {
+            if ($token[0] === \T_USE) {
                 $statements = array_merge($statements, $this->parseUseStatement());
                 continue;
             }
-            if ($token[0] !== T_NAMESPACE || $this->parseNamespace() !== $namespaceName) {
+            if ($token[0] !== \T_NAMESPACE || $this->parseNamespace() !== $namespaceName) {
                 continue;
             }
             // Get fresh array for new namespace. This is to prevent the parser to collect the use statements
@@ -80,11 +80,11 @@ class TokenParser
      *
      * @return mixed[]|string|null The token if exists, null otherwise.
      */
-    private function next($docCommentIsComment = true)
+    private function next($docCommentIsComment = \true)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
-            if ($this->tokens[$i][0] === T_WHITESPACE || $this->tokens[$i][0] === T_COMMENT || $docCommentIsComment && $this->tokens[$i][0] === T_DOC_COMMENT) {
+            if ($this->tokens[$i][0] === \T_WHITESPACE || $this->tokens[$i][0] === \T_COMMENT || $docCommentIsComment && $this->tokens[$i][0] === \T_DOC_COMMENT) {
                 continue;
             }
             return $this->tokens[$i];
@@ -102,28 +102,28 @@ class TokenParser
         $class = '';
         $alias = '';
         $statements = [];
-        $explicitAlias = false;
+        $explicitAlias = \false;
         while ($token = $this->next()) {
-            if (!$explicitAlias && $token[0] === T_STRING) {
+            if (!$explicitAlias && $token[0] === \T_STRING) {
                 $class .= $token[1];
                 $alias = $token[1];
-            } elseif ($explicitAlias && $token[0] === T_STRING) {
+            } elseif ($explicitAlias && $token[0] === \T_STRING) {
                 $alias = $token[1];
-            } elseif (PHP_VERSION_ID >= 80000 && ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)) {
+            } elseif (\PHP_VERSION_ID >= 80000 && ($token[0] === \T_NAME_QUALIFIED || $token[0] === \T_NAME_FULLY_QUALIFIED)) {
                 $class .= $token[1];
                 $classSplit = explode('\\', $token[1]);
                 $alias = $classSplit[count($classSplit) - 1];
-            } elseif ($token[0] === T_NS_SEPARATOR) {
+            } elseif ($token[0] === \T_NS_SEPARATOR) {
                 $class .= '\\';
                 $alias = '';
-            } elseif ($token[0] === T_AS) {
-                $explicitAlias = true;
+            } elseif ($token[0] === \T_AS) {
+                $explicitAlias = \true;
                 $alias = '';
             } elseif ($token === ',') {
                 $statements[strtolower($alias)] = $groupRoot . $class;
                 $class = '';
                 $alias = '';
-                $explicitAlias = false;
+                $explicitAlias = \false;
             } elseif ($token === ';') {
                 $statements[strtolower($alias)] = $groupRoot . $class;
                 break;
@@ -146,7 +146,7 @@ class TokenParser
     private function parseNamespace()
     {
         $name = '';
-        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR || PHP_VERSION_ID >= 80000 && ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED))) {
+        while (($token = $this->next()) && ($token[0] === \T_STRING || $token[0] === \T_NS_SEPARATOR || \PHP_VERSION_ID >= 80000 && ($token[0] === \T_NAME_QUALIFIED || $token[0] === \T_NAME_FULLY_QUALIFIED))) {
             $name .= $token[1];
         }
         return $name;

@@ -14,7 +14,7 @@
       update_available: latestVersionAvailable
     }"
   >
-    <Passthrough v-if="latestVersionAvailable && !isPiwikDemo">
+    <Passthrough v-if="latestVersionAvailable">
       <span
         v-if="isMultiServerEnvironment"
         class="title"
@@ -53,7 +53,7 @@
     <div class="dropdown positionInViewport">
       <span v-if="latestVersionAvailable && isSuperUser" v-html="$sanitize(updateNowText)"></span>
       <span
-        v-else-if="latestVersionAvailable && !isPiwikDemo && hasSomeViewAccess && !isAnonymous"
+        v-else-if="latestVersionAvailable && hasSomeViewAccess && !isAnonymous"
         v-html="$sanitize(updateAvailableText)"
       ></span>
 
@@ -74,7 +74,6 @@ export default defineComponent({
     isMultiServerEnvironment: Boolean,
     lastUpdateCheckFailed: Boolean,
     latestVersionAvailable: String,
-    isPiwikDemo: Boolean,
     isSuperUser: Boolean,
     isAdminArea: Boolean,
     isInternetEnabled: Boolean,
@@ -95,7 +94,7 @@ export default defineComponent({
       let text = '';
 
       if (this.isMultiServerEnvironment) {
-        const link = externalRawLink(`https://builds.matomo.org/piwik-${this.latestVersionAvailable}.zip`);
+        const link = externalRawLink(`https://builds.matomo.org/matomo-${this.latestVersionAvailable}.zip`);
         text = translate(
           'CoreHome_OneClickUpdateNotPossibleAsMultiServerEnvironment',
           `<a rel="noreferrer noopener" href="${link}">builds.matomo.org</a>`,

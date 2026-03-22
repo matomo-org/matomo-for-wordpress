@@ -40,7 +40,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @throws \Exception                If a missing directory is not buildable
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
+    public function __construct($stream, $level = Logger::DEBUG, $bubble = \true, $filePermission = null, $useLocking = \false)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
@@ -108,11 +108,11 @@ class StreamHandler extends AbstractProcessingHandler
         }
         if ($this->useLocking) {
             // ignoring errors here, there's not much we can do about them
-            flock($this->stream, LOCK_EX);
+            flock($this->stream, \LOCK_EX);
         }
         $this->streamWrite($this->stream, $record);
         if ($this->useLocking) {
-            flock($this->stream, LOCK_UN);
+            flock($this->stream, \LOCK_UN);
         }
     }
     /**
@@ -126,10 +126,10 @@ class StreamHandler extends AbstractProcessingHandler
     }
     protected function streamSetChunkSize()
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+        if (version_compare(\PHP_VERSION, '5.4.0', '>=')) {
             return stream_set_chunk_size($this->stream, self::CHUNK_SIZE);
         }
-        return false;
+        return \false;
     }
     private function customErrorHandler($code, $msg)
     {
@@ -143,7 +143,7 @@ class StreamHandler extends AbstractProcessingHandler
     private function getDirFromStream($stream)
     {
         $pos = strpos($stream, '://');
-        if ($pos === false) {
+        if ($pos === \false) {
             return dirname($stream);
         }
         if ('file://' === substr($stream, 0, 7)) {
@@ -161,12 +161,12 @@ class StreamHandler extends AbstractProcessingHandler
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
             set_error_handler(array($this, 'customErrorHandler'));
-            $status = mkdir($dir, 0777, true);
+            $status = mkdir($dir, 0777, \true);
             restore_error_handler();
-            if (false === $status && !is_dir($dir)) {
+            if (\false === $status && !is_dir($dir)) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: ' . $this->errorMessage, $dir));
             }
         }
-        $this->dirCreated = true;
+        $this->dirCreated = \true;
     }
 }

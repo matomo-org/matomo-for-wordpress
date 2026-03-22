@@ -90,6 +90,10 @@ class Segment
      */
     private $isSegmentEncoded;
     /**
+     * @var Exception|null
+     */
+    private $missingDatesException = null;
+    /**
      * Truncate the Segments to 8k
      */
     public const SEGMENT_TRUNCATE_LIMIT = 8192;
@@ -111,7 +115,7 @@ class Segment
      * @param Date|null $endDate end date used to limit subqueries
      * @throws
      */
-    public function __construct($segmentCondition, $idSites, \Piwik\Date $startDate = null, \Piwik\Date $endDate = null)
+    public function __construct($segmentCondition, $idSites, ?\Piwik\Date $startDate = null, ?\Piwik\Date $endDate = null)
     {
         $this->segmentQueryBuilder = StaticContainer::get('Piwik\\DataAccess\\LogQueryBuilder');
         $segmentCondition = trim($segmentCondition ?: '');
@@ -146,11 +150,26 @@ class Segment
         }
         if ($subexpressionsRaw > $subexpressionsDecoded) {
             // segment initialized above
-            $this->isSegmentEncoded = false;
+            $this->isSegmentEncoded = \false;
         } else {
             $this->initializeSegment(urldecode($segmentCondition), $idSites);
-            $this->isSegmentEncoded = true;
+            $this->isSegmentEncoded = \true;
         }
+    }
+    /**
+     * Checks if the provided segmentCondition is valid and available for the given idSites
+     *
+     * @params array $idSites
+     * @api since Matomo 5.3.0
+     */
+    public static function isAvailable(string $segmentCondition, array $idSites) : bool
+    {
+        try {
+            new self($segmentCondition, $idSites);
+        } catch (Exception $e) {
+            return \false;
+        }
+        return \true;
     }
     /**
      * Returns the segment expression.
@@ -258,23 +277,22 @@ class Segment
             foreach ($availableSegment['unionOfSegments'] as $segmentNameOfUnion) {
                 $unionSegment = $this->getSegmentByName($segmentNameOfUnion);
                 if (strpos($unionSegment['sqlSegment'], 'log_visit.') === 0) {
-                    return true;
+                    return \true;
                 }
             }
         } elseif (strpos($availableSegment['sqlSegment'], 'log_visit.') === 0) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function doesSegmentNeedSubquery($operator, $segmentName)
     {
         $requiresSubQuery = in_array($operator, [SegmentExpression::MATCH_DOES_NOT_CONTAIN, SegmentExpression::MATCH_NOT_EQUAL]) && !$this->isVisitSegment($segmentName);
         if ($requiresSubQuery && empty($this->startDate) && empty($this->endDate)) {
             if (\Piwik\Development::isEnabled()) {
-                $e = new Exception();
-                \Piwik\Log::warning("Avoiding segment subquery due to missing start date and/or an end date. Please ensure a start date and/or end date is set when initializing a segment if it's used to build a query. Stacktrace:\n" . $e->getTraceAsString());
+                $this->missingDatesException = new Exception();
             }
-            return false;
+            return \false;
         }
         return $requiresSubQuery;
     }
@@ -307,7 +325,7 @@ class Segment
     public function willBeArchived()
     {
         if ($this->isEmpty()) {
-            return true;
+            return \true;
         }
         $idSites = $this->idSites;
         return Rules::isRequestAuthorizedToArchive() || Rules::isBrowserArchivingAvailableForSegments() || Rules::isSegmentPreProcessed($idSites, $this);
@@ -442,7 +460,7 @@ class Segment
             $cacheKeyTemp = self::CACHE_KEY . md5(urlencode($segment['definition']));
             $cache->save($cacheKeyTemp, $segment['hash']);
         }
-        $cache->save(self::SEGMENT_HAS_BUILT_CACHE_KEY, true);
+        $cache->save(self::SEGMENT_HAS_BUILT_CACHE_KEY, \true);
         // if we found the segment, return it's hash, but maybe this
         // segment is not stored in the db, return the default
         if ($cache->contains($cacheKey)) {
@@ -466,10 +484,14 @@ class Segment
      *                           A $groupBy value needs to be set for this to work.
      * @param int If set to value >= 1 then the Select query (and All inner queries) will be LIMIT'ed by this value.
      *              Use only when you're not aggregating or it will sample the data.
-     * @return array The entire select query.
+     * @return array{sql: string, bind: array<scalar>} The entire select query.
      */
-    public function getSelectQuery($select, $from, $where = false, $bind = array(), $orderBy = false, $groupBy = false, $limit = 0, $offset = 0, $forceGroupBy = false)
+    public function getSelectQuery($select, $from, $where = \false, $bind = array(), $orderBy = \false, $groupBy = \false, $limit = 0, $offset = 0, $forceGroupBy = \false, bool $withRollup = \false)
     {
+        if (\Piwik\Development::isEnabled() && !empty($this->missingDatesException)) {
+            $e = new Exception();
+            \Piwik\Log::warning('Avoiding segment subquery due to missing start date and/or an end date. ' . 'Please ensure a start date and/or end date is set when initializing segment: ' . "\n\nCreation stacktrace:\n" . $this->missingDatesException->getTraceAsString() . "\n\nUsage stacktrace:\n" . $e->getTraceAsString());
+        }
         $segmentExpression = $this->segmentExpression;
         $limitAndOffset = null;
         if ($limit > 0) {
@@ -479,7 +501,7 @@ class Segment
             if ($forceGroupBy && $groupBy) {
                 $this->segmentQueryBuilder->forceInnerGroupBySubselect(LogQueryBuilder::FORCE_INNER_GROUP_BY_NO_SUBSELECT);
             }
-            $result = $this->segmentQueryBuilder->getSelectQueryString($segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset);
+            $result = $this->segmentQueryBuilder->getSelectQueryString($segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset, $withRollup);
         } catch (Exception $e) {
             if ($forceGroupBy && $groupBy) {
                 $this->segmentQueryBuilder->forceInnerGroupBySubselect('');
@@ -526,7 +548,7 @@ class Segment
     private static function containsCondition($segment, $operator, $segmentCondition)
     {
         // check when segment/condition are of same encoding
-        return strpos($segment, $operator . $segmentCondition) !== false || strpos($segment, $segmentCondition . $operator) !== false || strpos($segment, urlencode($operator . $segmentCondition)) !== false || strpos($segment, urlencode($segmentCondition . $operator)) !== false || strpos($segment, $operator . urlencode($segmentCondition)) !== false || strpos($segment, urlencode($segmentCondition) . $operator) !== false || strpos($segment, $operator . urldecode($segmentCondition)) !== false || strpos($segment, urldecode($segmentCondition) . $operator) !== false || $segment === $segmentCondition || $segment === urlencode($segmentCondition) || $segment === urldecode($segmentCondition);
+        return strpos($segment, $operator . $segmentCondition) !== \false || strpos($segment, $segmentCondition . $operator) !== \false || strpos($segment, urlencode($operator . $segmentCondition)) !== \false || strpos($segment, urlencode($segmentCondition . $operator)) !== \false || strpos($segment, $operator . urlencode($segmentCondition)) !== \false || strpos($segment, urlencode($segmentCondition) . $operator) !== \false || strpos($segment, $operator . urldecode($segmentCondition)) !== \false || strpos($segment, urldecode($segmentCondition) . $operator) !== \false || $segment === $segmentCondition || $segment === urlencode($segmentCondition) || $segment === urldecode($segmentCondition);
     }
     public function getStoredSegmentName($idSite)
     {
@@ -542,7 +564,8 @@ class Segment
             }
         }
         if (isset($foundStoredSegment)) {
-            return $foundStoredSegment['name'];
+            // segment name is stored sanitized
+            return \Piwik\Common::unsanitizeInputValues($foundStoredSegment['name']);
         }
         return $this->isSegmentEncoded ? urldecode($segment) : $segment;
     }
@@ -567,9 +590,9 @@ class Segment
     private function mergeSubqueryExpressionsInTree(array $tree) : array
     {
         $andExpressions = array_map(function ($orExpressions) {
-            return $this->mergeSubqueryExpressionsInExpr($orExpressions, false);
+            return $this->mergeSubqueryExpressionsInExpr($orExpressions, \false);
         }, $tree);
-        $mappedAndExpressions = $this->mergeSubqueryExpressionsInExpr($andExpressions, true);
+        $mappedAndExpressions = $this->mergeSubqueryExpressionsInExpr($andExpressions, \true);
         return $mappedAndExpressions;
     }
     private function mergeSubqueryExpressionsInExpr(array $expressions, bool $isAndChain) : array

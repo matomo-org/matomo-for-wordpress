@@ -21,14 +21,14 @@ class Question
 {
     private $question;
     private $attempts;
-    private $hidden = false;
-    private $hiddenFallback = true;
+    private $hidden = \false;
+    private $hiddenFallback = \true;
     private $autocompleterCallback;
     private $validator;
     private $default;
     private $normalizer;
-    private $trimmable = true;
-    private $multiline = false;
+    private $trimmable = \true;
+    private $multiline = \false;
     /**
      * @param string                     $question The question to ask to the user
      * @param string|bool|int|float|null $default  The default answer to return if the user enters nothing
@@ -143,7 +143,7 @@ class Question
         } elseif ($values instanceof \Traversable) {
             $valueCache = null;
             $callback = static function () use($values, &$valueCache) {
-                return $valueCache ?? ($valueCache = iterator_to_array($values, false));
+                return $valueCache ?? ($valueCache = iterator_to_array($values, \false));
             };
         } else {
             $callback = null;

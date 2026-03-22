@@ -12,6 +12,10 @@ use Piwik\Cache;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Site;
+use Piwik\Plugins\Live\Settings\VisitorLogDisabled as VisitorLogDisabledSetting;
+use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 /**
  *
  */
@@ -42,19 +46,32 @@ class Live extends \Piwik\Plugin
      */
     public static function checkIsVisitorLogEnabled($idSite = null) : void
     {
-        $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
-        if ($systemSettings->disableVisitorLog->getValue() === true) {
-            throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
+            if (VisitorLogDisabledSetting::getInstance()->getValue() === \true) {
+                throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
+            }
+        } else {
+            $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
+            if ($systemSettings->disableVisitorLog->getValue() === \true) {
+                throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
+            }
         }
         if (empty($idSite)) {
-            $idSite = Common::getRequestVar('idSite', 0, 'int');
+            $idSite = Common::getRequestVar('idSite', '', 'string');
         }
         if (!empty($idSite)) {
-            $idSites = is_array($idSite) ? $idSite : [$idSite];
+            $idSites = Site::getIdSitesFromIdSitesString($idSite);
             foreach ($idSites as $idSite) {
-                $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
-                if ($settings->disableVisitorLog->getValue() === true) {
-                    throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
+                if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
+                    if (VisitorLogDisabledSetting::getInstance($idSite)->getValue() === \true) {
+                        throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
+                    }
+                } else {
+                    $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
+                    if ($settings->disableVisitorLog->getValue() === \true) {
+                        throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
+                    }
                 }
             }
         }
@@ -63,16 +80,15 @@ class Live extends \Piwik\Plugin
      * Returns whether visits log is enabled (for the given site)
      *
      * @param null|int|array $idSite
-     * @return bool
      */
     public static function isVisitorLogEnabled($idSite = null) : bool
     {
         try {
             self::checkIsVisitorLogEnabled($idSite);
         } catch (\Exception $e) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Throws an exception if visitor profile is disabled
@@ -85,17 +101,17 @@ class Live extends \Piwik\Plugin
         self::checkIsVisitorLogEnabled($idSite);
         // visitor log is required for visitor profile
         $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
-        if ($systemSettings->disableVisitorProfile->getValue() === true) {
+        if ($systemSettings->disableVisitorProfile->getValue() === \true) {
             throw new \Exception('Visitor profile is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
         if (empty($idSite)) {
-            $idSite = Common::getRequestVar('idSite', 0, 'int');
+            $idSite = Common::getRequestVar('idSite', '', 'string');
         }
         if (!empty($idSite)) {
-            $idSites = is_array($idSite) ? $idSite : [$idSite];
+            $idSites = Site::getIdSitesFromIdSitesString($idSite);
             foreach ($idSites as $idSite) {
                 $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
-                if ($settings->disableVisitorProfile->getValue() === true) {
+                if ($settings->disableVisitorProfile->getValue() === \true) {
                     throw new \Exception('Visitor profile is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
                 }
             }
@@ -105,16 +121,15 @@ class Live extends \Piwik\Plugin
      * Returns whether visitor profile is enabled (for the given site)
      *
      * @param null|int|array $idSite
-     * @return bool
      */
     public static function isVisitorProfileEnabled($idSite = null) : bool
     {
         try {
             self::checkIsVisitorProfileEnabled($idSite);
         } catch (\Exception $e) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     public function getStylesheetFiles(&$stylesheets)
     {
@@ -154,6 +169,8 @@ class Live extends \Piwik\Plugin
         $translationKeys[] = 'Live_OnClickStart';
         $translationKeys[] = 'Live_LinkVisitorLog';
         $translationKeys[] = 'Live_VisitorLog';
+        $translationKeys[] = 'General_ColumnNbVisitsDocumentation';
+        $translationKeys[] = 'General_ColumnNbActionsDocumentation';
     }
     public function renderAction(&$renderedAction, $action, $previousAction, $visitorDetails)
     {
@@ -216,8 +233,8 @@ class Live extends \Piwik\Plugin
         if (!empty($segment)) {
             $segment = urldecode($segment) . ';';
         }
-        $idVisitor = Common::getRequestVar('visitorId', false);
-        if ($idVisitor === false) {
+        $idVisitor = Common::getRequestVar('visitorId', \false);
+        if ($idVisitor === \false) {
             $idVisitor = Request::processRequest('Live.getMostRecentVisitorId');
         }
         $result = urlencode($segment . 'visitorId==' . $idVisitor);

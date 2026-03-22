@@ -41,7 +41,6 @@ class WidgetsList
      * Adds a new widget to the widget config. Please make sure the widget is enabled before adding a widget as
      * no such checks will be performed.
      *
-     * @param WidgetConfig $widget
      */
     public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)
     {
@@ -100,7 +99,6 @@ class WidgetsList
      * will not be recognized.
      *
      * @param string $containerId  eg 'Products' or 'Contents'. See {@link WidgetContainerConfig::setId}
-     * @param WidgetConfig $widget
      */
     public function addToContainerWidget($containerId, \Piwik\Widget\WidgetConfig $widget)
     {
@@ -121,7 +119,7 @@ class WidgetsList
      * @param string|false $widgetName The name of the widget to remove eg 'VisitTime_ByServerTimeWidgetName'.
      *                                 If not supplied, all widgets within that category will be removed.
      */
-    public function remove($widgetCategoryId, $widgetName = false)
+    public function remove($widgetCategoryId, $widgetName = \false)
     {
         foreach ($this->widgets as $index => $widget) {
             if ($widget->getCategoryId() === $widgetCategoryId) {
@@ -142,10 +140,10 @@ class WidgetsList
     {
         foreach ($this->widgets as $widget) {
             if ($widget->getModule() === $module && $widget->getAction() === $action) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Get all widgets defined in the Piwik platform.

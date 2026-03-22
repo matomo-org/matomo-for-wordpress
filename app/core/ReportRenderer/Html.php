@@ -21,7 +21,7 @@ class Html extends ReportRenderer
     public const HTML_CONTENT_TYPE = 'text/html';
     public const HTML_FILE_EXTENSION = 'html';
     public const UNSUBSCRIBE_LINK_PLACEHOLDER = '__unsubscribeLink__';
-    protected $renderImageInline = false;
+    protected $renderImageInline = \false;
     private $rendering = "";
     public function setLocale($locale)
     {
@@ -94,7 +94,6 @@ class Html extends ReportRenderer
             if ($this->renderImageInline) {
                 $staticGraph = parent::getStaticGraph($reportMetadata, self::IMAGE_GRAPH_WIDTH, self::IMAGE_GRAPH_HEIGHT, $evolutionGraph, $processedReport['segment']);
                 $reportView->assign("generatedImageGraph", base64_encode($staticGraph));
-                unset($generatedImageGraph);
             }
         }
         $this->rendering .= $reportView->render();

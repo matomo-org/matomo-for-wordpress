@@ -6,7 +6,12 @@
  * @package matomo
  */
 
+window.matomoAdminJsLoaded = true;
+
 window.jQuery(document).ready(function ($) {
+  // hide in case it was displayed while this file was loading
+  $('#matomo-adblocker-notice').removeClass('adblocker-found');
+
   // referral notice dismiss
   if (typeof mtmReferralDismissNoticeAjax !== 'undefined' && mtmReferralDismissNoticeAjax.ajax_url) {
     $(document).on( 'click', '#matomo-referral .notice-dismiss', function () {
@@ -44,5 +49,35 @@ window.jQuery(document).ready(function ($) {
         matomo_job_id: $(e.target).closest('.matomo-cron-error').data('job')
       });
     });
+  }
+
+  // whats new notice dismiss
+  if (typeof mtmWhatsNewNotificationAjax !== 'undefined' && mtmWhatsNewNotificationAjax.ajax_url) {
+      $('body').on('click', '.matomo-whats-new .notice-dismiss', function (e) {
+          $.post(mtmWhatsNewNotificationAjax.ajax_url, {
+              _ajax_nonce: mtmWhatsNewNotificationAjax.nonce,
+              action: 'mtm_dismiss_whats_new',
+              matomo_notification: $(e.target).closest('.matomo-whats-new').data('notification-id'),
+          });
+      });
+  }
+
+  // add a notification dot to menu items that need it (see WhatsNewNotification.php)
+  if (typeof mtmUnseenWhatsNewNotifications !== 'undefined' && mtmUnseenWhatsNewNotifications.length) {
+      $('#toplevel_page_matomo a').each(function () {
+          var href = $(this).attr('href');
+
+          var m = href.match(/\?page=(.*?)$/);
+          var page = m && m[1];
+          if (!page) {
+              return;
+          }
+
+          if (!mtmUnseenWhatsNewNotifications.includes(page)) {
+              return;
+          }
+
+          $(this).addClass('matomo-notification-dot');
+      });
   }
 });

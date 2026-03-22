@@ -36,7 +36,7 @@ class Chained implements Backend
     {
         foreach ($this->backends as $key => $backend) {
             $value = $backend->doFetch($id);
-            if ($value !== false) {
+            if ($value !== \false) {
                 // EG If chain is ARRAY => REDIS => DB and we find result in DB we will update REDIS and ARRAY
                 for ($subKey = $key - 1; $subKey >= 0; $subKey--) {
                     $this->backends[$subKey]->doSave($id, $value, 300);
@@ -45,20 +45,20 @@ class Chained implements Backend
                 return $value;
             }
         }
-        return false;
+        return \false;
     }
     public function doContains($id)
     {
         foreach ($this->backends as $backend) {
             if ($backend->doContains($id)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function doSave($id, $data, $lifeTime = 0)
     {
-        $stored = true;
+        $stored = \true;
         foreach ($this->backends as $backend) {
             $stored = $backend->doSave($id, $data, $lifeTime) && $stored;
         }
@@ -72,11 +72,11 @@ class Chained implements Backend
                 $backend->doDelete($id);
             }
         }
-        return true;
+        return \true;
     }
     public function doFlush()
     {
-        $flushed = true;
+        $flushed = \true;
         foreach ($this->backends as $backend) {
             $flushed = $backend->doFlush() && $flushed;
         }

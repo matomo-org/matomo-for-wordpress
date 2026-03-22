@@ -18,17 +18,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class OptOut extends Feature {
+
+	const OPT_OUT_DIV_ID = 'matomo-opt-out-form-embed';
+
 	private $language = null;
 
 	public function register_hooks() {
-		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
+		add_shortcode( 'matomo_opt_out', [ $this, 'show_classic_opt_out' ] );
+		add_shortcode( 'matomo_opt_out_form', [ $this, 'show_opt_out' ] );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 		add_action( 'init', [ $this, 'load_block' ] );
 	}
 
 	public function load_scripts() {
 		if ( ! is_admin() ) {
-			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
+			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], \WpMatomo::VERSION, true );
 		}
 	}
 
@@ -37,15 +41,23 @@ class OptOut extends Feature {
 	}
 
 	public function show_opt_out( $atts ) {
-		$a = shortcode_atts(
-			[
-				'language' => null,
-			],
-			$atts
-		);
-		if ( ! empty( $a['language'] ) && strlen( $a['language'] ) < 6 ) {
-			$this->language = $a['language'];
-		}
+		$this->language = $this->get_language_from_atts( $atts );
+		$this->language = isset( $this->language ) ? $this->language : 'auto';
+
+		$div_id = self::OPT_OUT_DIV_ID;
+
+		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . $div_id . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
+		$url = plugins_url( $url, MATOMO_ANALYTICS_FILE );
+
+		wp_enqueue_script( 'matomo_opt_out_form_js', $url, [], \WpMatomo::VERSION, true ); // output in the footer
+
+		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		$content = "<div id=\"$div_id\"></div>";
+		return $content;
+	}
+
+	public function show_classic_opt_out( $atts ) {
+		$this->language = $this->get_language_from_atts( $atts );
 
 		try {
 			Bootstrap::do_bootstrap();
@@ -113,5 +125,18 @@ class OptOut extends Feature {
 				'editor_script' => 'matomo-opt-out',
 			)
 		);
+	}
+
+	private function get_language_from_atts( $atts ) {
+		$a = shortcode_atts(
+			[
+				'language' => null,
+			],
+			$atts
+		);
+		if ( ! empty( $a['language'] ) && strlen( $a['language'] ) < 6 ) {
+			return $a['language'];
+		}
+		return null;
 	}
 }

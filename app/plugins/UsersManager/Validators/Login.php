@@ -18,7 +18,7 @@ class Login extends BaseValidator
     public const LOGIN_MIN_LENGTH = 2;
     public const LOGIN_MAX_LENGTH = 100;
     private $checkUnique;
-    public function __construct($checkUnique = false)
+    public function __construct($checkUnique = \false)
     {
         $this->checkUnique = $checkUnique;
     }

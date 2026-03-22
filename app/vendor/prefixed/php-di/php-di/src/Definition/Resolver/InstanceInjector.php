@@ -32,6 +32,6 @@ class InstanceInjector extends ObjectCreator
     }
     public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
-        return true;
+        return \true;
     }
 }

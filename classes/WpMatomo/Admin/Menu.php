@@ -65,6 +65,8 @@ class Menu {
 	}
 
 	public function add_menu() {
+		do_action( 'matomo_before_add_menu' );
+
 		$info          = new Info();
 		$get_started   = new GetStarted( $this->settings );
 		$marketplace   = new Marketplace( $this->settings );
@@ -74,7 +76,9 @@ class Menu {
 
 		$admin_settings = new AdminSettings( $this->settings );
 
-		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
+		$matomo_logo_url = plugins_url( 'assets/img/matomo-logo-light-grey.svg', MATOMO_ANALYTICS_FILE );
+
+		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, $matomo_logo_url, 2 );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
 			if ( ! is_multisite() || ! is_network_admin() ) {

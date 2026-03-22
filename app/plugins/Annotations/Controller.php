@@ -11,6 +11,7 @@ namespace Piwik\Plugins\Annotations;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Date;
+use Piwik\Piwik;
 use Piwik\View;
 /**
  * Controller for the Annotations plugin.
@@ -40,17 +41,17 @@ class Controller extends \Piwik\Plugin\Controller
      * @param bool|string $lastN Override for 'lastN' query parameter.
      * @return string|void
      */
-    public function getAnnotationManager($fetch = false, $date = false, $period = false, $lastN = false)
+    public function getAnnotationManager($fetch = \false, $date = \false, $period = \false, $lastN = \false)
     {
         $this->checkSitePermission();
-        if ($date === false) {
-            $date = Common::getRequestVar('date', false);
+        if ($date === \false) {
+            $date = Common::getRequestVar('date', \false);
         }
-        if ($period === false) {
+        if ($period === \false) {
             $period = Common::getRequestVar('period', 'day');
         }
-        if ($lastN === false) {
-            $lastN = Common::getRequestVar('lastN', false);
+        if ($lastN === \false) {
+            $lastN = Common::getRequestVar('lastN', \false);
         }
         // create & render the view
         $view = new View('@Annotations/getAnnotationManager');
@@ -69,7 +70,7 @@ class Controller extends \Piwik\Plugin\Controller
         $dateFormat = Date::DATE_FORMAT_SHORT;
         $view->startDatePretty = $startDate->getLocalized($dateFormat);
         $view->endDatePretty = $endDate->getLocalized($dateFormat);
-        $view->canUserAddNotes = \Piwik\Plugins\Annotations\AnnotationList::canUserAddNotesFor($this->idSite);
+        $view->canUserAddNotes = self::canUserAddNotesFor($this->idSite);
         return $view->render();
     }
     /**
@@ -127,14 +128,14 @@ class Controller extends \Piwik\Plugin\Controller
             // use this date for the new annotation, unless it is a date range, in
             // which case we use the first date of the range.
             $date = Common::getRequestVar('date');
-            if (strpos($date, ',') !== false) {
+            if (strpos($date, ',') !== \false) {
                 $date = reset(explode(',', $date));
             }
             // add the annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.add", array('date' => $date));
-            $managerDate = Common::getRequestVar('managerDate', false);
-            $managerPeriod = Common::getRequestVar('managerPeriod', false);
-            return $this->getAnnotationManager($fetch = true, $managerDate, $managerPeriod);
+            $managerDate = Common::getRequestVar('managerDate', \false);
+            $managerPeriod = Common::getRequestVar('managerPeriod', \false);
+            return $this->getAnnotationManager($fetch = \true, $managerDate, $managerPeriod);
         }
     }
     /**
@@ -160,7 +161,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->checkTokenInUrl();
             // delete annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.delete");
-            return $this->getAnnotationManager($fetch = true);
+            return $this->getAnnotationManager($fetch = \true);
         }
     }
     /**
@@ -190,5 +191,14 @@ class Controller extends \Piwik\Plugin\Controller
         $view->annotationCounts = reset($annotationCounts);
         // only one idSite allowed for this action
         return $view->render();
+    }
+    /**
+     * Returns true if the current user can add notes for a specific site.
+     *
+     * @param int $idSite The site to add notes to.
+     */
+    public static function canUserAddNotesFor(int $idSite) : bool
+    {
+        return Piwik::isUserHasWriteAccess($idSite);
     }
 }

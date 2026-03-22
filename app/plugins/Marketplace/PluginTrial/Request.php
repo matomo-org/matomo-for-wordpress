@@ -4,7 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Marketplace\PluginTrial;
 
@@ -34,8 +34,6 @@ class Request
     /**
      * Creates a trial request and sends a mail to all super users
      *
-     * @param string $displayName
-     * @return void
      */
     public function create(string $pluginDisplayName = '') : void
     {
@@ -49,7 +47,6 @@ class Request
     /**
      * Cancels a trial request
      *
-     * @return void
      */
     public function cancel() : void
     {
@@ -62,7 +59,6 @@ class Request
     /**
      * Returns if a plugin was already requested
      *
-     * @return bool
      */
     public function wasRequested() : bool
     {
@@ -71,7 +67,6 @@ class Request
     /**
      * Send notification email to all super users
      *
-     * @return void
      */
     private function sendEmailToSuperUsers() : void
     {

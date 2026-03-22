@@ -30,7 +30,7 @@ class Model
      */
     public function getAllSegmentsAndIgnoreVisibility()
     {
-        $sql = "SELECT * FROM " . $this->getTable() . " WHERE deleted = 0";
+        $sql = "SELECT * FROM `" . $this->getTable() . "` WHERE deleted = 0";
         $segments = $this->getDb()->fetchAll($sql);
         return $segments;
     }
@@ -41,7 +41,7 @@ class Model
      *                         for all sites. If supplied, must be a valid site ID.
      * @return array
      */
-    public function getSegmentsToAutoArchive($idSite = false)
+    public function getSegmentsToAutoArchive($idSite = \false)
     {
         $bind = array();
         $whereIdSite = '';
@@ -87,7 +87,7 @@ class Model
      * @param $idSite
      * @return array
      */
-    public function getAllSegmentsForAllUsers($idSite = false)
+    public function getAllSegmentsForAllUsers($idSite = \false)
     {
         $bind = array();
         $sqlWhereCondition = '';
@@ -116,7 +116,7 @@ class Model
     public function getSegmentsDeletedSince(Date $date)
     {
         $dateStr = $date->getDatetime();
-        $sql = "SELECT DISTINCT `definition`, `enable_only_idsite`, `hash` FROM " . Common::prefixTable('segment') . " WHERE deleted = 1 AND ts_last_edit >= ?";
+        $sql = "SELECT DISTINCT `definition`, `enable_only_idsite`, `hash` FROM `" . Common::prefixTable('segment') . "`" . " WHERE deleted = 1 AND ts_last_edit >= ?";
         $deletedSegments = Db::fetchAll($sql, array($dateStr));
         if (empty($deletedSegments)) {
             return array();
@@ -166,7 +166,7 @@ class Model
         }
         $whereClauses = implode(' OR ', $whereClauses);
         // Check for any non-deleted segments with the same definition
-        $sql = "SELECT DISTINCT definition, enable_only_idsite FROM " . Common::prefixTable('segment') . " WHERE deleted = 0 AND (" . $whereClauses . ")";
+        $sql = "SELECT DISTINCT definition, enable_only_idsite FROM `" . Common::prefixTable('segment') . "`" . " WHERE deleted = 0 AND (" . $whereClauses . ")";
         return Db::fetchAll($sql, $bind);
     }
     public function deleteSegment($idSegment)
@@ -183,7 +183,7 @@ class Model
         }
         $db = $this->getDb();
         $db->update($this->getTable(), $segment, "idsegment = {$idSegment}");
-        return true;
+        return \true;
     }
     public function createSegment($segment)
     {
@@ -196,7 +196,7 @@ class Model
     public function getSegment($idSegment)
     {
         $db = $this->getDb();
-        $segment = $db->fetchRow("SELECT * FROM " . $this->getTable() . " WHERE idsegment = ?", $idSegment);
+        $segment = $db->fetchRow("SELECT * FROM `" . $this->getTable() . "` WHERE idsegment = ?", $idSegment);
         return $segment;
     }
     private function getDb()
@@ -205,7 +205,7 @@ class Model
     }
     private function buildQuerySortedByName($where)
     {
-        return "SELECT * FROM " . $this->getTable() . " WHERE {$where} ORDER BY name ASC";
+        return "SELECT * FROM `" . $this->getTable() . "` WHERE {$where} ORDER BY name ASC";
     }
     private function createHash($definition)
     {
@@ -213,7 +213,7 @@ class Model
     }
     public static function install()
     {
-        $segmentTable = "`idsegment` INT(11) NOT NULL AUTO_INCREMENT,\n                         `name` VARCHAR(255) NOT NULL,\n                         `definition` TEXT NOT NULL,\n                         `hash` CHAR(32) NULL,\n                         `login` VARCHAR(100) NOT NULL,\n                         `enable_all_users` tinyint(4) NOT NULL default 0,\n                         `enable_only_idsite` INTEGER(11) NULL,\n                         `auto_archive` tinyint(4) NOT NULL default 0,\n                         `ts_created` TIMESTAMP NULL,\n                         `ts_last_edit` TIMESTAMP NULL,\n                         `deleted` tinyint(4) NOT NULL default 0,\n                         PRIMARY KEY (`idsegment`)";
+        $segmentTable = "`idsegment` INT(11) NOT NULL AUTO_INCREMENT,\n                         `name` VARCHAR(255) NOT NULL,\n                         `definition` TEXT NOT NULL,\n                         `hash` CHAR(32) NULL,\n                         `login` VARCHAR(100) NOT NULL,\n                         `enable_all_users` tinyint(4) NOT NULL default 0,\n                         `enable_only_idsite` INTEGER(11) NULL,\n                         `auto_archive` tinyint(4) NOT NULL default 0,\n                         `ts_created` TIMESTAMP NULL,\n                         `ts_last_edit` TIMESTAMP NULL,\n                         `starred` tinyint(4) NOT NULL default 0,\n                         `starred_by` VARCHAR(100) NULL default NULL,\n                         `deleted` tinyint(4) NOT NULL default 0,\n                         PRIMARY KEY (`idsegment`)";
         DbHelper::createTable(self::$rawPrefix, $segmentTable);
     }
 }

@@ -82,11 +82,11 @@ class RequestConfig
     /**
      * The list of request parameters that are 'Client Side Parameters'.
      */
-    public $clientSideParameters = array('filter_excludelowpop', 'filter_excludelowpop_value', 'filter_pattern', 'filter_column', 'filter_offset', 'flat', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
+    public $clientSideParameters = array('filter_excludelowpop', 'filter_excludelowpop_value', 'filter_pattern', 'filter_column', 'filter_offset', 'flat', 'show_dimensions', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
     /**
      * The list of ViewDataTable properties that can be overridden by query parameters.
      */
-    public $overridableProperties = array('filter_sort_column', 'filter_sort_order', 'filter_limit', 'filter_offset', 'filter_pattern', 'filter_column', 'filter_excludelowpop', 'filter_excludelowpop_value', 'disable_generic_filters', 'disable_queued_filters', 'flat', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
+    public $overridableProperties = array('filter_sort_column', 'filter_sort_order', 'filter_limit', 'filter_offset', 'filter_pattern', 'filter_column', 'filter_excludelowpop', 'filter_excludelowpop_value', 'disable_generic_filters', 'disable_queued_filters', 'flat', 'show_dimensions', 'totals', 'expanded', 'pivotBy', 'pivotByColumn', 'pivotByColumnLimit', 'compareSegments', 'comparePeriods', 'compareDates');
     /**
      * Controls which column to sort the DataTable by before truncating and displaying.
      *
@@ -94,7 +94,7 @@ class RequestConfig
      *                displayed column, then the default value is 'nb_uniq_visitors'.
      *                Otherwise, it is 'nb_visits'.
      */
-    public $filter_sort_column = false;
+    public $filter_sort_column = \false;
     /**
      * Controls the sort order. Either 'asc' or 'desc'.
      *
@@ -106,14 +106,20 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $filter_limit = false;
+    public $filter_limit = \false;
     /**
      * If set to true, the returned data will contain the flattened view of the table data set.
      * The children of all first level rows will be aggregated under one row.
      *
      * Default value: false
      */
-    public $flat = false;
+    public $flat = \false;
+    /**
+     * If true, dimensions in flattened reports will be added as separate columns
+     *
+     * Default value: false
+     */
+    public $show_dimensions = \false;
     /**
      * If set to true or "1", the report may calculate totals information and show percentage values for each row in
      * relative to the total value.
@@ -126,7 +132,7 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $expanded = false;
+    public $expanded = \false;
     /**
      * The number of items from the start of the data set that should be ignored.
      *
@@ -140,7 +146,7 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $filter_pattern = false;
+    public $filter_pattern = \false;
     /**
      * The column to apply a filter pattern to.
      *
@@ -148,20 +154,20 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $filter_column = false;
+    public $filter_column = \false;
     /**
      * Stores the column name to filter when filtering out rows with low values.
      *
      * Default value: false
      */
-    public $filter_excludelowpop = false;
+    public $filter_excludelowpop = \false;
     /**
      * Stores the value considered 'low' when filtering out rows w/ low values.
      *
      * Default value: false
      * @var \Closure|string
      */
-    public $filter_excludelowpop_value = false;
+    public $filter_excludelowpop_value = \false;
     /**
      * An array property that contains query parameter name/value overrides for API requests made
      * by ViewDataTable.
@@ -178,7 +184,7 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $disable_generic_filters = false;
+    public $disable_generic_filters = \false;
     /**
      * Whether to run ViewDataTable's list of queued filters or not.
      *
@@ -186,7 +192,7 @@ class RequestConfig
      *
      * Default value: false
      */
-    public $disable_queued_filters = false;
+    public $disable_queued_filters = \false;
     /**
      * returns 'Plugin.apiMethodName' used for this ViewDataTable,
      * eg. 'Actions.getPageUrls'
@@ -199,27 +205,27 @@ class RequestConfig
      *
      * @var bool|int
      */
-    public $idSubtable = false;
+    public $idSubtable = \false;
     /**
      * Dimension ID to pivot by. See {@link Piwik\DataTable\Filter\PivotByDimension} for more info.
      *
      * @var string
      */
-    public $pivotBy = false;
+    public $pivotBy = \false;
     /**
      * The column to display in a pivot table, eg, `'nb_visits'`. See {@link Piwik\DataTable\Filter\PivotByDimension}
      * for more info.
      *
      * @var string
      */
-    public $pivotByColumn = false;
+    public $pivotByColumn = \false;
     /**
      * The maximum number of columns to display in a pivot table. See {@link Piwik\DataTable\Filter\PivotByDimension}
      * for more info.
      *
      * @var int
      */
-    public $pivotByColumnLimit = false;
+    public $pivotByColumnLimit = \false;
     /**
      * List of segments to compare with. Defaults to segments used in `compareSegments[]` query parameter.
      *
@@ -287,18 +293,18 @@ class RequestConfig
     }
     public function getApiModuleToRequest()
     {
-        if (strpos($this->apiMethodToRequestDataTable, '.') === false) {
+        if (strpos($this->apiMethodToRequestDataTable, '.') === \false) {
             return '';
         }
-        list($module, $method) = explode('.', $this->apiMethodToRequestDataTable);
+        [$module, $method] = explode('.', $this->apiMethodToRequestDataTable);
         return $module;
     }
     public function getApiMethodToRequest()
     {
-        if (strpos($this->apiMethodToRequestDataTable, '.') === false) {
+        if (strpos($this->apiMethodToRequestDataTable, '.') === \false) {
             return '';
         }
-        list($module, $method) = explode('.', $this->apiMethodToRequestDataTable);
+        [$module, $method] = explode('.', $this->apiMethodToRequestDataTable);
         return $method;
     }
     public function getRequestParam($paramName)
@@ -306,7 +312,7 @@ class RequestConfig
         if (isset($this->request_parameters_to_modify[$paramName])) {
             return $this->request_parameters_to_modify[$paramName];
         }
-        return Common::getRequestVar($paramName, false);
+        return Common::getRequestVar($paramName, \false);
     }
     /**
      * Override this method if you want to add custom request parameters to the API request based on ViewDataTable

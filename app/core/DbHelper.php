@@ -22,7 +22,7 @@ class DbHelper
      * @param bool $forceReload Invalidate cache
      * @return array  Tables installed
      */
-    public static function getTablesInstalled($forceReload = true)
+    public static function getTablesInstalled($forceReload = \true)
     {
         return Schema::getInstance()->getTablesInstalled($forceReload);
     }
@@ -82,7 +82,7 @@ class DbHelper
         try {
             return Schema::getInstance()->hasTables();
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -121,10 +121,10 @@ class DbHelper
     {
         $installVersion = self::getInstallVersion();
         if (empty($installVersion)) {
-            return true;
+            return \true;
             // we assume yes it was installed
         }
-        return true === version_compare($version, $installVersion, '>');
+        return \true === version_compare($version, $installVersion, '>');
     }
     /**
      * Create all tables
@@ -152,6 +152,7 @@ class DbHelper
      */
     public static function checkDatabaseVersion()
     {
+        Schema::getInstance()->unsetSchema();
         \Piwik\Db::get()->checkServerVersion();
     }
     /**
@@ -181,7 +182,7 @@ class DbHelper
      */
     public static function tableHasIndex($table, $indexName)
     {
-        $result = \Piwik\Db::get()->fetchOne('SHOW INDEX FROM ' . $table . ' WHERE Key_name = ?', [$indexName]);
+        $result = \Piwik\Db::get()->fetchOne('SHOW INDEX FROM `' . $table . '` WHERE Key_name = ?', [$indexName]);
         return !empty($result);
     }
     /**
@@ -189,7 +190,6 @@ class DbHelper
      *
      * Returns utf8mb4 if supported, with fallback to utf8
      *
-     * @return string
      * @throws Tracker\Db\DbException
      */
     public static function getDefaultCharset() : string
@@ -214,9 +214,7 @@ class DbHelper
     /**
      * Returns the default collation for a charset.
      *
-     * @param string $charset
      *
-     * @return string
      * @throws Exception
      */
     public static function getDefaultCollationForCharset(string $charset) : string
@@ -265,14 +263,13 @@ class DbHelper
             \Piwik\Log::debug("Dropping table {$table}");
             \Piwik\Db::query("DROP TABLE IF EXISTS `{$table}`");
         }
-        ArchiveTableCreator::refreshTableList($forceReload = true);
+        ArchiveTableCreator::refreshTableList();
     }
     /**
      * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 0
      *
      * @param string $sql  query to add hint to
      * @param float $limit  time limit in seconds
-     * @return string
      */
     public static function addMaxExecutionTimeHintToQuery(string $sql, float $limit) : string
     {
@@ -323,14 +320,64 @@ class DbHelper
      */
     public static function addJoinPrefixHintToQuery(string $sql, string $prefix) : string
     {
-        if (strpos(trim($sql), '/*+ JOIN_PREFIX(') === false) {
-            $select = 'SELECT';
-            if (0 === strpos(trim($sql), $select)) {
-                $sql = trim($sql);
-                $sql = 'SELECT /*+ JOIN_PREFIX(' . $prefix . ') */' . substr($sql, strlen($select));
+        return self::addOptimizerHintToQuery($sql, 'JOIN_PREFIX(' . $prefix . ')');
+    }
+    /**
+     * Add an optimizer hint to the query.
+     *
+     * Creating and using a "add_x_HintToQuery" functions is preferred
+     * over using this function directly, as some optimizer hints depend
+     * on the database used.
+     *
+     * If an optimizer hint is already present (check is done by name only)
+     * in the query the new value will be silently discarded.
+     *
+     * @param string $sql   SQL query string
+     * @param string $hint  Hint to add
+     *
+     * @return string       Modified query string with hint added
+     */
+    public static function addOptimizerHintToQuery(string $sql, string $hint) : string
+    {
+        $sql = trim($sql);
+        // only apply hints to SELECT queries
+        if (0 !== stripos($sql, 'SELECT')) {
+            return $sql;
+        }
+        $pattern = '@^SELECT\\s+' . '(?:|/\\*[^+]*?\\*/\\s*)' . '(/\\*\\+\\s*(.*?)\\s*\\*/)' . '@is';
+        preg_match($pattern, $sql, $matches);
+        if (empty($matches)) {
+            return 'SELECT /*+ ' . $hint . ' */' . substr($sql, strlen('SELECT'));
+        }
+        $originalComment = $matches[1];
+        $hints = $matches[2];
+        $newHintNameEnd = stripos($hint, '(') ?: strlen($hint);
+        $newHintName = substr($hint, 0, $newHintNameEnd);
+        // only add new hints
+        if (preg_match('/(?:^|\\s)' . preg_quote($newHintName) . '(?:\\(|\\s|$)/i', $hints)) {
+            return $sql;
+        }
+        $hints = trim($hint . ' ' . $hints);
+        return substr_replace($sql, '/*+ ' . $hints . ' */', strpos($sql, $originalComment), strlen($originalComment));
+    }
+    /**
+     * Extracts the "ORDER BY" clause from a query.
+     *
+     * Will return null if no clause found or the extraction failed,
+     * e.g. parentheses in the extracted clause are not balanced.
+     */
+    public static function extractOrderByFromQuery(string $sql) : ?string
+    {
+        $pattern = '/.*ORDER\\s+BY\\s+(.*?)(?:\\s+LIMIT|\\s*;|\\s*$)/is';
+        if (preg_match($pattern, $sql, $matches)) {
+            $orderBy = $matches[1];
+            $openParentheses = substr_count($orderBy, '(');
+            $closeParentheses = substr_count($orderBy, ')');
+            if ($openParentheses === $closeParentheses) {
+                return trim($orderBy);
             }
         }
-        return $sql;
+        return null;
     }
     /**
      * Returns true if the string is a valid database name for MySQL. MySQL allows + in the database names.

@@ -21,20 +21,22 @@ class PasswordVerifier
      * @var Date|null
      */
     private $now;
-    private $enableRedirect = true;
+    private $enableRedirect = \true;
     /**
      * @ignore
      * tests only
      */
     public function setDisableRedirect()
     {
-        $this->enableRedirect = false;
+        $this->enableRedirect = \false;
     }
     private function getLoginSession()
     {
         return new SessionNamespace('Login');
     }
-    public function isPasswordCorrect($userLogin, $password)
+    public function isPasswordCorrect($userLogin,
+#[\SensitiveParameter]
+$password)
     {
         /**
          * @ignore
@@ -51,14 +53,14 @@ class PasswordVerifier
         // ensure authentication happens on password
         $authResult = $authAdapter->authenticate();
         if ($authResult->wasAuthenticationSuccessful()) {
-            return true;
+            return \true;
         }
         /**
          * @ignore
          * @internal
          */
         Piwik::postEvent('Login.recordFailedLoginAttempt');
-        return false;
+        return \false;
     }
     public function hasPasswordVerifyBeenRequested()
     {
@@ -74,7 +76,6 @@ class PasswordVerifier
         unset($sessionNamespace->redirectParams);
     }
     /**
-     * @param Date $now
      * @ignore
      * tests only
      */
@@ -104,9 +105,9 @@ class PasswordVerifier
         $lastAuthValidTo = $this->getPasswordVerifyValidUpToDateIfVerified();
         $now = $this->getNow();
         if ($lastAuthValidTo && $now->isEarlier($lastAuthValidTo)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function getPasswordVerifyValidUpToDateIfVerified()
     {
@@ -121,9 +122,9 @@ class PasswordVerifier
         $lastAuthValidTo = $this->getPasswordVerifyValidUpToDateIfVerified();
         $now = $this->getNow()->addPeriod(self::VERIFY_REVALIDATE_X_MINUTES_LEFT, 'minute');
         if ($lastAuthValidTo && $now->isEarlier($lastAuthValidTo)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Checks if the user has verified the password within the last 15 minutes. If not, the user will be redirected.
@@ -131,13 +132,13 @@ class PasswordVerifier
      * See  {@link requirePasswordVerified}
      *
      * @param $redirectParams
-     * @return true if password has been verified recently, will redirect if not
+     * @return null|true if password has been verified recently, will redirect if not
      * @throws \Zend_Session_Exception
      */
     public function requirePasswordVerifiedRecently($redirectParams)
     {
         if ($this->hasBeenVerifiedAndHalfTimeValid()) {
-            return true;
+            return \true;
         }
         $this->initiatePasswordVerifyRedirect($redirectParams);
     }
@@ -149,13 +150,13 @@ class PasswordVerifier
      * consider using {@link requirePasswordVerifiedRecently}.
      *
      * @param $redirectParams
-     * @return true if password has been verified, will redirect if not
+     * @return null|true if password has been verified, will redirect if not
      * @throws \Zend_Session_Exception
      */
     public function requirePasswordVerified($redirectParams)
     {
         if ($this->hasBeenVerified()) {
-            return true;
+            return \true;
         }
         $this->initiatePasswordVerifyRedirect($redirectParams);
     }

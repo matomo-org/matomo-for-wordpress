@@ -116,27 +116,27 @@ class Report
      * @var bool
      * @api
      */
-    protected $hasGoalMetrics = false;
+    protected $hasGoalMetrics = \false;
     /**
      * Set this property to false in case your report can't/shouldn't be flattened.
      * In this case, flattener won't be applied even if parameter is provided in a request
      * @var bool
      * @api
      */
-    protected $supportsFlatten = true;
+    protected $supportsFlatten = \true;
     /**
      * Set it to boolean `true` if your report always returns a constant count of rows, for instance always 24 rows
      * for 1-24 hours.
      * @var bool
      * @api
      */
-    protected $constantRowsCount = false;
+    protected $constantRowsCount = \false;
     /**
      * Set it to boolean `true` if this report is a subtable report and won't be used as a standalone report.
      * @var bool
      * @api
      */
-    protected $isSubtableReport = false;
+    protected $isSubtableReport = \false;
     /**
      * Some reports may require additional URL parameters that need to be sent when a report is requested. For instance
      * a "goal" report might need a "goalId": `array('idgoal' => 5)`.
@@ -182,7 +182,7 @@ class Report
      *
      * @var bool
      */
-    protected $defaultSortOrderDesc = true;
+    protected $defaultSortOrderDesc = \true;
     /**
      * The column that uniquely identifies a row in this report. Normally
      * this is the 'label' column, but it is sometimes the case that the label column is
@@ -231,7 +231,7 @@ class Report
      */
     public function isEnabled()
     {
-        return true;
+        return \true;
     }
     /**
      * This method checks whether the report is available, see {@isEnabled()}. If not, it triggers an exception
@@ -267,14 +267,13 @@ class Report
      */
     public function alwaysUseDefaultViewDataTable()
     {
-        return false;
+        return \false;
     }
     /**
      * Here you can configure how your report should be displayed and which capabilities your report has. For instance
      * whether your report supports a "search" or not. EG `$view->config->show_search = false`. You can also change the
      * default request config. For instance you can change how many rows are displayed by default:
      * `$view->requestConfig->filter_limit = 10;`. See {@link ViewDataTable} for more information.
-     * @param ViewDataTable $view
      * @api
      */
     public function configureView(\Piwik\Plugin\ViewDataTable $view)
@@ -291,7 +290,7 @@ class Report
      */
     public function render()
     {
-        $viewDataTable = Common::getRequestVar('viewDataTable', false, 'string');
+        $viewDataTable = Common::getRequestVar('viewDataTable', \false, 'string');
         $fixed = Common::getRequestVar('forceView', 0, 'int');
         $module = $this->getModule();
         $action = $this->getAction();
@@ -334,8 +333,6 @@ class Report
      * this:
      * $widgetsList->addToContainerWidget($containerId = 'Products', $factory->createWidget());
      *
-     * @param WidgetsList $widgetsList
-     * @param ReportWidgetFactory $factory
      * @api
      */
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
@@ -560,7 +557,7 @@ class Report
     /**
      * Builts the report metadata for this report. Can be useful in case you want to change the behavior of
      * {@link configureReportMetadata()}.
-     * @return array
+     * @return ?array
      * @ignore
      *
      * TODO we should move this out to API::getReportMetadata
@@ -580,7 +577,7 @@ class Report
         if (!empty($this->onlineGuideUrl)) {
             $report['onlineGuideUrl'] = $this->onlineGuideUrl;
         }
-        if (true === $this->isSubtableReport) {
+        if (\true === $this->isSubtableReport) {
             $report['isSubtableReport'] = $this->isSubtableReport;
         }
         $dimensions = $this->getDimensions();
@@ -597,7 +594,7 @@ class Report
         if (!empty($this->actionToLoadSubTables)) {
             $report['actionToLoadSubTables'] = $this->actionToLoadSubTables;
         }
-        if (true === $this->constantRowsCount) {
+        if (\true === $this->constantRowsCount) {
             $report['constantRowsCount'] = $this->constantRowsCount;
         }
         $relatedReports = $this->getRelatedReports();
@@ -605,7 +602,7 @@ class Report
             $report['relatedReports'] = array();
             foreach ($relatedReports as $relatedReport) {
                 if (!empty($relatedReport)) {
-                    $report['relatedReports'][] = array('name' => $relatedReport->getName(), 'module' => $relatedReport->getModule(), 'action' => $relatedReport->getAction());
+                    $report['relatedReports'][] = ['name' => $relatedReport->getName(), 'module' => $relatedReport->getModule(), 'action' => $relatedReport->getAction()];
                 }
             }
         }
@@ -656,7 +653,7 @@ class Report
      * Get the list of related reports if there are any. They will be displayed for instance below a report as a
      * recommended related report.
      *
-     * @return Report[]
+     * @return (Report|null)[]
      * @api
      */
     public function getRelatedReports()
@@ -713,7 +710,7 @@ class Report
         return $this->subcategoryId;
     }
     /**
-     * @return \Piwik\Columns\Dimension
+     * @return \Piwik\Columns\Dimension|null
      * @ignore
      */
     public function getDimension()
@@ -729,17 +726,20 @@ class Report
     public function getDimensions()
     {
         $dimensions = [];
+        $tableDimensionId = null;
         if (!empty($this->getDimension())) {
-            $dimensionId = str_replace('.', '_', $this->getDimension()->getId());
+            $tableDimensionId = $this->getDimension()->getId();
+            $dimensionId = str_replace('.', '_', $tableDimensionId);
             $dimensions[$dimensionId] = $this->getDimension()->getName();
         }
-        if (!empty($this->getSubtableDimension())) {
-            $subDimensionId = str_replace('.', '_', $this->getSubtableDimension()->getId());
-            $dimensions[$subDimensionId] = $this->getSubtableDimension()->getName();
-        }
-        if (!empty($this->getThirdLeveltableDimension())) {
-            $subDimensionId = str_replace('.', '_', $this->getThirdLeveltableDimension()->getId());
-            $dimensions[$subDimensionId] = $this->getThirdLeveltableDimension()->getName();
+        for ($level = 1; $level <= 100; $level++) {
+            $subDimension = $this->getNthLevelTableDimension($level);
+            if (empty($subDimension) || $tableDimensionId === $subDimension->getId()) {
+                break;
+            }
+            $tableDimensionId = $subDimension->getId();
+            $subDimensionId = str_replace('.', '_', $tableDimensionId);
+            $dimensions[$subDimensionId] = $subDimension->getName();
         }
         return $dimensions;
     }
@@ -770,39 +770,42 @@ class Report
      */
     public function getSubtableDimension()
     {
-        if (empty($this->actionToLoadSubTables)) {
-            return null;
-        }
-        list($subtableReportModule, $subtableReportAction) = $this->getSubtableApiMethod();
-        $subtableReport = \Piwik\Plugin\ReportsProvider::factory($subtableReportModule, $subtableReportAction);
-        if (empty($subtableReport)) {
-            return null;
-        }
-        return $subtableReport->getDimension();
+        return $this->getNthLevelTableDimension($level = 1);
     }
     /**
      * Returns the Dimension instance of the subtable report of this report's subtable report.
      *
      * @return Dimension|null The subtable report's dimension or null if there is no subtable report or
      *                        no dimension for the subtable report.
+     * @deprecated since 5.3.0, use getNthLevelTableDimension(2) instead
      * @api
      */
     public function getThirdLeveltableDimension()
     {
+        return $this->getNthLevelTableDimension($level = 2);
+    }
+    /**
+     * Returns the Dimension instance of the subtable report of this report's subtable report based on level.
+     *
+     * @param int $level The subTable level for which dimension is to be determined, zero-based
+     * @return Dimension|null The subtable report's dimension or null if there is no subtable report or
+     *                        no dimension for the subtable report.
+     * @api
+     */
+    public function getNthLevelTableDimension(int $level) : ?Dimension
+    {
         if (empty($this->actionToLoadSubTables)) {
             return null;
         }
-        list($subtableReportModule, $subtableReportAction) = $this->getSubtableApiMethod();
-        $subtableReport = \Piwik\Plugin\ReportsProvider::factory($subtableReportModule, $subtableReportAction);
-        if (empty($subtableReport) || empty($subtableReport->actionToLoadSubTables)) {
-            return null;
+        $subTableReport = $this;
+        for ($i = 1; $i <= $level; $i++) {
+            [$subTableReportModule, $subTableReportAction] = $subTableReport->getSubtableApiMethod();
+            $subTableReport = \Piwik\Plugin\ReportsProvider::factory($subTableReportModule, $subTableReportAction);
+            if (empty($subTableReport)) {
+                return null;
+            }
         }
-        list($subSubtableReportModule, $subSubtableReportAction) = $subtableReport->getSubtableApiMethod();
-        $subSubtableReport = \Piwik\Plugin\ReportsProvider::factory($subSubtableReportModule, $subSubtableReportAction);
-        if (empty($subSubtableReport)) {
-            return null;
-        }
-        return $subSubtableReport->getDimension();
+        return $subTableReport->getDimension();
     }
     /**
      * Returns true if the report is for another report's subtable, false if otherwise.
@@ -835,7 +838,7 @@ class Report
     public function fetchSubtable($idSubtable, $paramOverride = array())
     {
         $paramOverride = array('idSubtable' => $idSubtable) + $paramOverride;
-        list($module, $action) = $this->getSubtableApiMethod();
+        [$module, $action] = $this->getSubtableApiMethod();
         return Request::processRequest($module . '.' . $action, $paramOverride);
     }
     private function getMetricTranslations($metricsToTranslate)
@@ -856,7 +859,7 @@ class Report
     }
     private function getSubtableApiMethod()
     {
-        if (strpos($this->actionToLoadSubTables, '.') !== false) {
+        if (strpos($this->actionToLoadSubTables, '.') !== \false) {
             return explode('.', $this->actionToLoadSubTables);
         } else {
             return array($this->module, $this->actionToLoadSubTables);
@@ -914,13 +917,11 @@ class Report
      *
      * Includes ProcessedMetrics and Metrics.
      *
-     * @param DataTable $dataTable
-     * @param Report|null $report
      * @param string $baseType The base type each metric class needs to be of.
      * @return Metric[]
      * @api
      */
-    public static function getMetricsForTable(DataTable $dataTable, \Piwik\Plugin\Report $report = null, $baseType = 'Piwik\\Plugin\\Metric')
+    public static function getMetricsForTable(DataTable $dataTable, ?\Piwik\Plugin\Report $report = null, $baseType = 'Piwik\\Plugin\\Metric')
     {
         $metrics = $dataTable->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME) ?: array();
         if (!empty($report)) {
@@ -941,12 +942,10 @@ class Report
      * certain report. The ProcessedMetrics returned are those specified by the Report metadata
      * as well as the DataTable metadata.
      *
-     * @param DataTable $dataTable
-     * @param Report|null $report
      * @return ProcessedMetric[]
      * @api
      */
-    public static function getProcessedMetricsForTable(DataTable $dataTable, \Piwik\Plugin\Report $report = null)
+    public static function getProcessedMetricsForTable(DataTable $dataTable, ?\Piwik\Plugin\Report $report = null)
     {
         /** @var ProcessedMetric[] $metrics */
         $metrics = self::getMetricsForTable($dataTable, $report, 'Piwik\\Plugin\\ProcessedMetric');
@@ -969,7 +968,7 @@ class Report
             if (!empty($visited[$name])) {
                 continue;
             }
-            $visited[$name] = true;
+            $visited[$name] = \true;
             $dependentMetrics = [];
             foreach ($metric->getDependentMetrics() as $metricName) {
                 if (!empty($metrics[$metricName])) {
@@ -984,7 +983,6 @@ class Report
      * Returns the name of the column/metadata that uniquely identifies rows in this report. See
      * {@link self::$rowIdentifier} for more information.
      *
-     * @return string
      */
     public function getRowIdentifier() : string
     {

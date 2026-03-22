@@ -17,10 +17,12 @@ abstract class Base extends \Piwik\Plugin\Report
     protected function init()
     {
         $this->categoryId = 'General_Visitors';
+        $this->subcategoryId = 'UserCountry_SubmenuLocations';
+        $this->hasGoalMetrics = \true;
     }
     protected function getGeoIPReportDocSuffix()
     {
-        return Piwik::translate('UserCountry_GeoIPDocumentationSuffix', array('<a rel="noreferrer noopener" target="_blank" href="http://www.maxmind.com/?rId=piwik">', '</a>', '<a rel="noreferrer noopener" target="_blank" href="http://www.maxmind.com/en/city_accuracy?rId=piwik">', '</a>'));
+        return Piwik::translate('UserCountry_GeoIPDocumentationSuffix', [Url::getExternalLinkTag('http://www.maxmind.com/?rId=piwik'), '</a>', Url::getExternalLinkTag('http://www.maxmind.com/en/city_accuracy?rId=piwik'), '</a>']);
     }
     /**
      * Checks if a datatable for a view is empty and if so, displays a message in the footer
@@ -35,10 +37,10 @@ abstract class Base extends \Piwik\Plugin\Report
                 $userCountry = new UserCountry();
                 // if GeoIP is working, don't display this part of the message
                 if (!$userCountry->isGeoIPWorking()) {
-                    $params = array('module' => 'UserCountry', 'action' => 'adminIndex');
-                    $footerMessage .= ' ' . Piwik::translate('UserCountry_NoDataForGeoIPReport2', array('<a target="_blank" href="' . Url::getCurrentQueryStringWithParametersModified($params) . '">', '</a>', '<a rel="noreferrer noopener" target="_blank" href="https://db-ip.com/?refid=mtm">', '</a>'));
+                    $params = ['module' => 'UserCountry', 'action' => 'adminIndex'];
+                    $footerMessage .= ' ' . Piwik::translate('UserCountry_NoDataForGeoIPReport2', ['<a target="_blank" href="' . Url::getCurrentQueryStringWithParametersModified($params) . '">', '</a>', Url::getExternalLinkTag('https://db-ip.com/?refid=mtm'), '</a>']);
                 } else {
-                    $footerMessage .= ' ' . Piwik::translate('UserCountry_ToGeolocateOldVisits', array('<a rel="noreferrer noopener" target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_167') . '">', '</a>'));
+                    $footerMessage .= ' ' . Piwik::translate('UserCountry_ToGeolocateOldVisits', [Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_167'), '</a>']);
                 }
                 $view->config->show_footer_message = $footerMessage;
             }

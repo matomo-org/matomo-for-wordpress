@@ -9,7 +9,7 @@
 namespace Piwik\Http;
 
 use Matomo\Dependencies\DI\FactoryInterface;
-use Exception;
+use Piwik\Exception\ThingNotFoundException;
 use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugin\WidgetsProvider;
 /**
@@ -36,7 +36,7 @@ class ControllerResolver
      * @param string $module
      * @param string|null $action
      * @param array $parameters
-     * @throws Exception Controller not found.
+     * @throws ThingNotFoundException Controller not found.
      * @return callable The controller is a PHP callable.
      */
     public function getController($module, $action, array &$parameters)
@@ -53,7 +53,7 @@ class ControllerResolver
         if ($controller) {
             return $controller;
         }
-        throw new Exception(sprintf("Action '%s' not found in the module '%s'", $action, $module));
+        throw new ThingNotFoundException(sprintf("Action '%s' not found in the module '%s'", $action, $module));
     }
     private function createPluginController($module, $action)
     {

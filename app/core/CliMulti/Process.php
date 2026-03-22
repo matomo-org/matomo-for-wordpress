@@ -23,7 +23,7 @@ use Piwik\SettingsServer;
  */
 class Process
 {
-    public const PS_COMMAND = 'ps x';
+    public const PS_COMMAND = 'ps wwx';
     public const AWK_COMMAND = 'awk \'! /defunct/ {print $1}\'';
     private $finished = null;
     private $pidFile = '';
@@ -48,7 +48,7 @@ class Process
         try {
             return (bool) StaticContainer::get('test.vars.forceCliMultiViaCurl');
         } catch (\Exception $ex) {
-            return false;
+            return \false;
         }
     }
     public function getPid()
@@ -79,19 +79,19 @@ class Process
         }
         if (!$this->doesPidFileExist($content)) {
             // process is finished, this means there was a start before
-            return true;
+            return \true;
         }
         if ('' === trim($content)) {
             // pid file is overwritten by startProcess()
-            return false;
+            return \false;
         }
         // process is probably running or pid file was not removed
-        return true;
+        return \true;
     }
     public function hasFinished()
     {
         if ($this->finished) {
-            return true;
+            return \true;
         }
         $content = $this->getPidFileContent();
         return !$this->doesPidFileExist($content);
@@ -108,19 +108,19 @@ class Process
     {
         $content = $this->getPidFileContent();
         if (!$this->doesPidFileExist($content)) {
-            return false;
+            return \false;
         }
         if (!$this->pidFileSizeIsNormal($content)) {
             $this->finishProcess();
-            return false;
+            return \false;
         }
         if ($this->isProcessStillRunning($content)) {
-            return true;
+            return \true;
         }
         if ($this->hasStarted($content)) {
             $this->finishProcess();
         }
-        return false;
+        return \false;
     }
     private function pidFileSizeIsNormal($content)
     {
@@ -129,17 +129,17 @@ class Process
     }
     public function finishProcess()
     {
-        $this->finished = true;
+        $this->finished = \true;
         Filesystem::deleteFileIfExists($this->pidFile);
     }
     private function doesPidFileExist($content)
     {
-        return false !== $content;
+        return \false !== $content;
     }
     private function isProcessStillRunning($content)
     {
         if (!self::isSupported()) {
-            return true;
+            return \true;
         }
         $lockedPID = trim($content);
         $runningPIDs = self::getRunningProcesses();
@@ -216,15 +216,15 @@ class Process
         if (empty($uname)) {
             $uname = php_uname();
         }
-        if (strpos($uname, 'synology') !== false) {
-            return true;
+        if (strpos($uname, 'synology') !== \false) {
+            return \true;
         }
-        return false;
+        return \false;
     }
     public static function isMethodDisabled($command)
     {
         if (!function_exists($command)) {
-            return true;
+            return \true;
         }
         $disabled = explode(',', ini_get('disable_functions'));
         $disabled = array_map('trim', $disabled);
@@ -234,8 +234,8 @@ class Process
     {
         $exec = $command . ' > /dev/null 2>&1; echo $?';
         $returnCode = @shell_exec($exec);
-        if (false === $returnCode || null === $returnCode) {
-            return false;
+        if (\false === $returnCode || null === $returnCode) {
+            return \false;
         }
         $returnCode = trim($returnCode);
         return 0 == (int) $returnCode;

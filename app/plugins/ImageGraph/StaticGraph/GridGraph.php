@@ -56,7 +56,7 @@ abstract class GridGraph extends StaticGraph
         }
         $this->initpImage();
         // graph area coordinates
-        $topLeftXValue = $this->getGridLeftMargin($horizontalGraph, $withLabel = true);
+        $topLeftXValue = $this->getGridLeftMargin($horizontalGraph, $withLabel = \true);
         $topLeftYValue = $this->getGridTopMargin($horizontalGraph, $verticalLegend);
         $bottomRightXValue = $this->width - $this->getGridRightMargin($horizontalGraph);
         $bottomRightYValue = $this->getGraphBottom($horizontalGraph);
@@ -254,7 +254,7 @@ abstract class GridGraph extends StaticGraph
     }
     private function getHorizontalLegendHeight()
     {
-        list($maxMetricLegendWidth, $maxMetricLegendHeight) = $this->getMaximumTextWidthHeight(array_values($this->ordinateLabels), $this->legendFontSize);
+        list($maxMetricLegendWidth, $maxMetricLegendHeight) = $this->getMaximumTextWidthHeight(array_values($this->ordinateLabels));
         return $maxMetricLegendHeight + self::HORIZONTAL_LEGEND_BOTTOM_MARGIN + self::HORIZONTAL_LEGEND_TOP_MARGIN;
     }
     protected function getGraphHeight($horizontalGraph, $verticalLegend)
@@ -284,7 +284,7 @@ abstract class GridGraph extends StaticGraph
     {
         return $this->height - $this->getGridBottomMargin($horizontalGraph);
     }
-    protected function truncateLabel($label, $labelWidthLimit, $fontSize = false)
+    protected function truncateLabel($label, $labelWidthLimit, $fontSize = \false)
     {
         list($truncationTextWidth, $truncationTextHeight) = $this->getTextWidthHeight(self::TRUNCATION_TEXT, $fontSize);
         list($labelWidth, $labelHeight) = $this->getTextWidthHeight($label, $fontSize);

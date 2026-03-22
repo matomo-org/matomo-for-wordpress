@@ -31,12 +31,13 @@ class MarketplaceSetupWizard extends Feature {
 		return 'install' === $active_marketplace_tab || 'subscriptions' === $active_marketplace_tab;
 	}
 
+	public function get_body( $show_titles = true ) {
+		return new MarketplaceSetupWizardBody( $show_titles );
+	}
+
 	public function show() {
-		$matomo_logo_big           = plugins_url( 'assets/img/logo-big.png', MATOMO_ANALYTICS_FILE );
-		$user_can_upload_plugins   = current_user_can( 'upload_plugins' );
-		$user_can_activate_plugins = current_user_can( 'activate_plugins' );
-		$is_plugin_installed       = is_file( WP_PLUGIN_DIR . '/' . self::MARKETPLACE_PLUGIN_FILE )
-			|| is_file( WP_CONTENT_DIR . '/mu-plugins/' . self::MARKETPLACE_PLUGIN_FILE );
+		$matomo_logo_big               = plugins_url( 'assets/img/logo-big.png', MATOMO_ANALYTICS_FILE );
+		$marketplace_setup_wizard_body = $this->get_body();
 
 		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard.php';
 	}
@@ -56,7 +57,7 @@ class MarketplaceSetupWizard extends Feature {
 			'matomo-marketplace-setup-wizard',
 			plugins_url( '/assets/js/marketplace_setup_wizard.js', MATOMO_ANALYTICS_FILE ),
 			[ 'jquery' ],
-			'1.0.0',
+			\WpMatomo::VERSION,
 			true
 		);
 
@@ -95,5 +96,10 @@ class MarketplaceSetupWizard extends Feature {
 
 		activate_plugin( self::MARKETPLACE_PLUGIN_FILE );
 		wp_send_json( [] );
+	}
+
+	public static function is_marketplace_installed() {
+		return is_file( WP_PLUGIN_DIR . '/' . self::MARKETPLACE_PLUGIN_FILE )
+			|| is_file( WP_CONTENT_DIR . '/mu-plugins/' . self::MARKETPLACE_PLUGIN_FILE );
 	}
 }

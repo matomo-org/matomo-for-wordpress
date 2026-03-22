@@ -10,7 +10,7 @@ namespace Piwik\Plugins\TagManager\Template\Trigger;
 
 class PageViewTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
-    const ID = 'PageView';
+    public const ID = 'PageView';
     public function getId()
     {
         return self::ID;

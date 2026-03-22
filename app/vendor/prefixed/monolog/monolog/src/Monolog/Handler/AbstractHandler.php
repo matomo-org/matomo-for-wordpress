@@ -22,7 +22,7 @@ use Matomo\Dependencies\Monolog\ResettableInterface;
 abstract class AbstractHandler implements HandlerInterface, ResettableInterface
 {
     protected $level = Logger::DEBUG;
-    protected $bubble = true;
+    protected $bubble = \true;
     /**
      * @var FormatterInterface
      */
@@ -32,7 +32,7 @@ abstract class AbstractHandler implements HandlerInterface, ResettableInterface
      * @param int|string $level  The minimum logging level at which this handler will be triggered
      * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG, $bubble = \true)
     {
         $this->setLevel($level);
         $this->bubble = $bubble;
@@ -67,7 +67,7 @@ abstract class AbstractHandler implements HandlerInterface, ResettableInterface
     public function pushProcessor($callback)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export($callback, true) . ' given');
+            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export($callback, \true) . ' given');
         }
         array_unshift($this->processors, $callback);
         return $this;

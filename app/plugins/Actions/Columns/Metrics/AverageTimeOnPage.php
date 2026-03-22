@@ -38,7 +38,7 @@ class AverageTimeOnPage extends ProcessedMetric
     }
     public function format($value, Formatter $formatter)
     {
-        return $formatter->getPrettyTimeFromSeconds($value, $timeAsSentence = false);
+        return $formatter->getPrettyTimeFromSeconds($value, $timeAsSentence = \false);
     }
     public function getDependentMetrics()
     {

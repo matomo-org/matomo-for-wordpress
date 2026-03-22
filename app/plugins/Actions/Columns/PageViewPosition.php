@@ -18,9 +18,6 @@ class PageViewPosition extends ActionDimension
     protected $nameSingular = 'Actions_ColumnPageViewPosition';
     protected $type = self::TYPE_NUMBER;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
-     * @param Action $action
      *
      * @return mixed|false
      */
@@ -37,6 +34,6 @@ class PageViewPosition extends ActionDimension
         if ($position >= 1) {
             return $position;
         }
-        return false;
+        return \false;
     }
 }

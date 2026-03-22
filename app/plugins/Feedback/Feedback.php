@@ -92,7 +92,7 @@ class Feedback extends \Piwik\Plugin
             return $pageHtml;
         }
         $feedbackQuestionBanner = $this->renderFeedbackQuestion();
-        $matches = preg_split('/(<body.*?>)/i', $pageHtml, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $matches = preg_split('/(<body.*?>)/i', $pageHtml, -1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
         $pageHtml = $matches[0] . $matches[1] . $feedbackQuestionBanner . $matches[2];
     }
     public function renderFeedbackQuestion()
@@ -104,43 +104,43 @@ class Feedback extends \Piwik\Plugin
     public function showQuestionBanner()
     {
         if (Piwik::isUserIsAnonymous()) {
-            return false;
+            return \false;
         }
         // Hide Feedback popup in all tests except if forced
         if ($this->isDisabledInTestMode()) {
-            return false;
+            return \false;
         }
-        $shouldShowQuestionBanner = true;
+        $shouldShowQuestionBanner = \true;
         Piwik::postEvent('Feedback.showQuestionBanner', [&$shouldShowQuestionBanner]);
         if (!$shouldShowQuestionBanner) {
-            return false;
+            return \false;
         }
         $feedbackReminder = new FeedbackReminder();
         $nextReminderDate = $feedbackReminder->getUserOption();
         $now = Date::now()->getTimestamp();
         // If there isn't any reminder date set, or never remind me was selected previously (-1) we determine a new date
-        if ($nextReminderDate === false || $nextReminderDate <= 0) {
+        if ($nextReminderDate === \false || $nextReminderDate <= 0) {
             // if user was created within the last 6 months, we set the date to 6 months after his creation date
             $userCreatedDate = Piwik::getCurrentUserCreationDate();
             if (!empty($userCreatedDate) && Date::factory($userCreatedDate)->addMonth(6)->getTimestamp() > $now) {
                 $nextReminder = Date::factory($userCreatedDate)->addMonth(6)->toString('Y-m-d');
                 $feedbackReminder->setUserOption($nextReminder);
-                return false;
+                return \false;
             }
             // Otherwise we set the date to somewhen within the next 6 months
             $nextReminder = Date::now()->getStartOfDay()->addDay(Common::getRandomInt(1, 6 * 30))->toString('Y-m-d');
             $feedbackReminder->setUserOption($nextReminder);
-            return false;
+            return \false;
         }
         $nextReminderDate = Date::factory($nextReminderDate);
         if ($nextReminderDate->getTimestamp() > $now) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     // needs to be protected not private for testing purpose
     protected function isDisabledInTestMode()
     {
-        return defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE && !Common::getRequestVar('forceFeedbackTest', false);
+        return defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE && !Common::getRequestVar('forceFeedbackTest', \false);
     }
 }

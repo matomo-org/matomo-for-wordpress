@@ -28,7 +28,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         }
         $typeName = strtolower($matches[1]);
         $fullyQualifiedClassName = $matches[2];
-        if (false !== ($namespaceSeparatorIndex = strrpos($fullyQualifiedClassName, '\\'))) {
+        if (\false !== ($namespaceSeparatorIndex = strrpos($fullyQualifiedClassName, '\\'))) {
             $className = substr($fullyQualifiedClassName, $namespaceSeparatorIndex + 1);
             $namespacePrefix = substr($fullyQualifiedClassName, 0, $namespaceSeparatorIndex);
             $message = sprintf('Attempted to load %s "%s" from namespace "%s".', $typeName, $className, $namespacePrefix);
@@ -150,6 +150,6 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     }
     private function classExists(string $class) : bool
     {
-        return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
+        return class_exists($class, \false) || interface_exists($class, \false) || trait_exists($class, \false);
     }
 }

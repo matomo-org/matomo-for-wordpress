@@ -47,7 +47,7 @@ class HtmlTable extends Visualization
                 $this->requestConfig->request_parameters_to_modify['invert_compare_change_compute'] = 1;
             }
             // forward the comparisonIdSubtables var if present so it will be used when next/prev links are clicked
-            $comparisonIdSubtables = Common::getRequestVar('comparisonIdSubtables', false, 'string');
+            $comparisonIdSubtables = Common::getRequestVar('comparisonIdSubtables', \false, 'string');
             if (!empty($comparisonIdSubtables)) {
                 $comparisonIdSubtables = Common::unsanitizeInputValue($comparisonIdSubtables);
                 $this->config->custom_parameters['comparisonIdSubtables'] = $comparisonIdSubtables;
@@ -57,10 +57,10 @@ class HtmlTable extends Visualization
     public function beforeRender()
     {
         if ($this->requestConfig->idSubtable && $this->config->show_embedded_subtable) {
-            $this->config->show_visualization_only = true;
+            $this->config->show_visualization_only = \true;
         }
         if ($this->requestConfig->idSubtable) {
-            $this->config->show_totals_row = false;
+            $this->config->show_totals_row = \false;
         }
         foreach (Metrics::getMetricIdsToProcessReportTotal() as $metricId) {
             $this->config->report_ratio_columns[] = Metrics::getReadableColumnName($metricId);
@@ -86,7 +86,7 @@ class HtmlTable extends Visualization
             $hasMultipleDimensions = is_array($dimensions) && count($dimensions) > 1;
             $this->assignTemplateVar('hasMultipleDimensions', $hasMultipleDimensions);
             if ($hasMultipleDimensions) {
-                if ($this->config->show_dimensions) {
+                if ($this->shouldShowDimensions()) {
                     // ensure first metric translation is used as label if other dimensions are in separate columns
                     $this->config->addTranslation('label', $this->config->translations[reset($dimensions)]);
                 } else {
@@ -97,7 +97,7 @@ class HtmlTable extends Visualization
                     $this->config->addTranslation('label', implode(' - ', $labels));
                 }
             }
-            if ($this->config->show_dimensions && $hasMultipleDimensions) {
+            if ($this->shouldShowDimensions() && $hasMultipleDimensions) {
                 $properties = $this->config;
                 array_shift($dimensions);
                 // shift away first dimension, as that will be shown as label
@@ -109,7 +109,7 @@ class HtmlTable extends Visualization
                         $properties->setDefaultColumnsToDisplay($columns, $hasNbVisits, $hasNbUniqVisitors);
                     }
                     $label = array_search('label', $properties->columns_to_display);
-                    if ($label !== false) {
+                    if ($label !== \false) {
                         unset($properties->columns_to_display[$label]);
                     }
                     foreach (array_reverse($dimensions) as $dimension) {
@@ -143,16 +143,7 @@ class HtmlTable extends Visualization
                     }
                 }
             }
-            if ($this->config->show_dimensions && $hasMultipleDimensions) {
-                $this->dataTable->filter(function ($dataTable) use($dimensions) {
-                    /** @var DataTable $dataTable */
-                    $rows = $dataTable->getRows();
-                    foreach ($rows as $row) {
-                        foreach ($dimensions as $dimension) {
-                            $row->setColumn($dimension, $row->getMetadata($dimension));
-                        }
-                    }
-                });
+            if ($this->shouldShowDimensions() && $hasMultipleDimensions) {
                 # replace original label column with first dimension
                 $firstDimension = array_shift($dimensions);
                 $this->dataTable->filter('ColumnCallbackAddMetadata', array('label', 'combinedLabel', function ($label) {
@@ -211,7 +202,6 @@ class HtmlTable extends Visualization
     /**
      * Override to compute a custom cell HTML attributes (such as style).
      *
-     * @param Row $row
      * @param $column
      * @return array Array of name => value pairs.
      */
@@ -221,11 +211,15 @@ class HtmlTable extends Visualization
     }
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
     protected function isFlattened()
     {
         return $this->requestConfig->flat || Common::getRequestVar('flat', '');
+    }
+    protected function shouldShowDimensions()
+    {
+        return $this->requestConfig->show_dimensions || Common::getRequestVar('show_dimensions', '');
     }
     private function getSiteSummary()
     {

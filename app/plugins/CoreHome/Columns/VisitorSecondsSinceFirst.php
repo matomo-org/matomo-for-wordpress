@@ -23,8 +23,6 @@ class VisitorSecondsSinceFirst extends VisitDimension
     protected $nameSingular = 'General_SecondsSinceFirstVisit';
     protected $type = self::TYPE_NUMBER;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -35,7 +33,7 @@ class VisitorSecondsSinceFirst extends VisitDimension
         }
         $prevSecondsSinceFirst = $visitor->getPreviousVisitColumn('visitor_seconds_since_first');
         // no data for previous visit, we can't calculate for this one
-        if ($prevSecondsSinceFirst === null || $prevSecondsSinceFirst === false || $prevSecondsSinceFirst === '') {
+        if ($prevSecondsSinceFirst === null || $prevSecondsSinceFirst === \false || $prevSecondsSinceFirst === '') {
             return null;
         }
         $prevVisitStart = $visitor->getPreviousVisitColumn('visit_first_action_time');
@@ -58,8 +56,6 @@ class VisitorSecondsSinceFirst extends VisitDimension
         return $newVisitorSecondsSinceFirst;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

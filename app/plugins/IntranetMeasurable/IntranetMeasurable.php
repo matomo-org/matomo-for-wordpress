@@ -12,6 +12,6 @@ class IntranetMeasurable extends \Piwik\Plugin
 {
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
 }

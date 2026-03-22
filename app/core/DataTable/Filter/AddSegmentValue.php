@@ -25,6 +25,6 @@ class AddSegmentValue extends \Piwik\DataTable\Filter\ColumnCallbackAddMetadata
 {
     public function __construct($table, $callback = null)
     {
-        parent::__construct($table, 'label', 'segmentValue', $callback, null, false);
+        parent::__construct($table, 'label', 'segmentValue', $callback, null, \false);
     }
 }

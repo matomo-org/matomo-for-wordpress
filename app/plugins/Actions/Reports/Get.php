@@ -19,6 +19,6 @@ class Get extends \Piwik\Plugins\Actions\Reports\Base
         $this->documentation = Piwik::translate('Actions_MainMetricsReportDocumentation');
         $this->order = 1;
         $this->processedMetrics = array(new AveragePageGenerationTime());
-        $this->metrics = array('nb_pageviews', 'nb_uniq_pageviews', 'nb_downloads', 'nb_uniq_downloads', 'nb_outlinks', 'nb_uniq_outlinks', 'nb_searches', 'nb_keywords');
+        $this->metrics = array('nb_pageviews', 'nb_uniq_pageviews', 'nb_downloads', 'nb_uniq_downloads', 'nb_outlinks', 'nb_uniq_outlinks', 'nb_searches', 'nb_keywords', 'hits');
     }
 }

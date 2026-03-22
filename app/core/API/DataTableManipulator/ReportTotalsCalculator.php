@@ -35,7 +35,7 @@ class ReportTotalsCalculator extends DataTableManipulator
      * @param array $request
      * @param Report $report
      */
-    public function __construct($apiModule = false, $apiMethod = false, $request = array(), $report = null)
+    public function __construct($apiModule = \false, $apiMethod = \false, $request = array(), $report = null)
     {
         parent::__construct($apiModule, $apiMethod, $request);
         $this->report = $report;
@@ -82,14 +82,14 @@ class ReportTotalsCalculator extends DataTableManipulator
         }
         // keeping queued filters would not only add various metadata but also break the totals calculator for some reports
         // eg when needed metadata is missing to get site information (multisites.getall) etc
-        $clone = $firstLevelTable->getEmptyClone($keepFilters = false);
+        $clone = $firstLevelTable->getEmptyClone($keepFilters = \false);
         foreach ($firstLevelTable->getQueuedFilters() as $queuedFilter) {
             if (is_array($queuedFilter) && 'ReplaceColumnNames' === $queuedFilter['className']) {
                 $clone->queueFilter($queuedFilter['className'], $queuedFilter['parameters']);
             }
         }
         $tableMeta = $firstLevelTable->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
-        /** @var DataTable\Row $totalRow */
+        /** @var DataTable\Row|null $totalRow */
         $totalRow = null;
         foreach ($firstLevelTable->getRows() as $row) {
             if (!isset($totalRow)) {
@@ -97,13 +97,13 @@ class ReportTotalsCalculator extends DataTableManipulator
                 $columns['label'] = DataTable::LABEL_TOTALS_ROW;
                 $totalRow = new DataTable\Row(array(DataTable\Row::COLUMNS => $columns));
             } else {
-                $totalRow->sumRow($row, $copyMetadata = false, $tableMeta);
+                $totalRow->sumRow($row, $copyMetadata = \false, $tableMeta);
             }
         }
         $clone->addRow($totalRow);
         if ($this->report && $this->report->getProcessedMetrics() && array_keys($this->report->getProcessedMetrics()) === array('nb_actions_per_visit', 'avg_time_on_site', 'bounce_rate', 'conversion_rate')) {
             // hack for AllColumns table or default processed metrics
-            $clone->filter('AddColumnsProcessedMetrics', array($deleteRowsWithNoVisit = false));
+            $clone->filter('AddColumnsProcessedMetrics', array($deleteRowsWithNoVisit = \false));
         }
         $processor = new DataTablePostProcessor($this->apiModule, $this->apiMethod, $this->request);
         $processor->applyComputeProcessedMetrics($clone);
@@ -130,7 +130,7 @@ class ReportTotalsCalculator extends DataTableManipulator
             $totalRow = $clone->getFirstRow();
         }
         if (isset($totalRow)) {
-            $totals = $row->getColumns();
+            $totals = $totalRow->getColumns();
             unset($totals['label']);
             $dataTable->setMetadata('totals', $totals);
             if (isset($totalRowUnformatted)) {
@@ -139,9 +139,9 @@ class ReportTotalsCalculator extends DataTableManipulator
             }
             if (1 === Common::getRequestVar('keep_totals_row', 0, 'integer', $this->request)) {
                 $totalLabel = Common::getRequestVar('keep_totals_row_label', Piwik::translate('General_Totals'), 'string', $this->request);
-                $row->deleteMetadata(false);
-                $row->setColumn('label', $totalLabel);
-                $dataTable->setTotalsRow($row);
+                $totalRow->deleteMetadata(\false);
+                $totalRow->setColumn('label', $totalLabel);
+                $dataTable->setTotalsRow($totalRow);
             }
         }
         return $dataTable;
@@ -163,7 +163,7 @@ class ReportTotalsCalculator extends DataTableManipulator
         $request = $this->request;
         unset($request['idSubtable']);
         // to make sure we work on first level table
-        /** @var \Piwik\Period $period */
+        /** @var \Piwik\Period|false $period */
         $period = $table->getMetadata('period');
         if (!empty($period)) {
             // we want a dataTable, not a dataTable\map

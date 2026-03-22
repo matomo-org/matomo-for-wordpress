@@ -22,7 +22,7 @@ class Sparkline extends ViewDataTable
     public const ID = 'sparkline';
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
     /**
      * @see ViewDataTable::main()
@@ -53,7 +53,7 @@ class Sparkline extends ViewDataTable
             foreach ($comparisonSeries as $seriesName) {
                 $otherSeries[$seriesName] = [];
             }
-            $this->dataTable->filter(function (DataTable $table) use($comparisonSeries, &$otherSeries, $columnToPlot) {
+            $this->dataTable->filter(function (DataTable $table) use(&$otherSeries, $columnToPlot) {
                 foreach ($table->getRows() as $row) {
                     $comparisons = $row->getComparisons();
                     if (empty($comparisons)) {
@@ -102,7 +102,7 @@ class Sparkline extends ViewDataTable
             }
             $value = 0;
             $onlyRow = $table->getFirstRow();
-            if (false !== $onlyRow) {
+            if (\false !== $onlyRow) {
                 if (!empty($columnToPlot)) {
                     $value = $onlyRow->getColumn($columnToPlot);
                 } else {
@@ -119,7 +119,7 @@ class Sparkline extends ViewDataTable
     private function getColumnToPlot()
     {
         $columns = $this->config->columns_to_display;
-        $columnToPlot = false;
+        $columnToPlot = \false;
         if (!empty($columns)) {
             $columnToPlot = reset($columns);
             if ($columnToPlot == 'label') {

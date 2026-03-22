@@ -324,7 +324,7 @@
               id="last_seen"
               v-if="currentUserRole === 'superuser'"
           >
-            {{ user.last_seen ? `${user.last_seen} ago`:'-' }}
+            {{ user.last_seen_ago ? translate('UsersManager_XAgo', user.last_seen_ago) : '-' }}
           </td>
           <td id="status">
               <span :class="Number.isInteger(user.invite_status)? 'pending':user.invite_status"
@@ -341,7 +341,7 @@
                 v-if="(
                   currentUserRole === 'superuser'
                   || (currentUserRole === 'admin' && user.invited_by === currentUserLogin)
-                ) && user.invite_status!=='active'"
+                ) && user.invite_status !== 'active'"
             >
               <span class="icon-email"/>
             </button>
@@ -360,7 +360,11 @@
                 @click="userToChange = user; showDeleteConfirm()"
                 v-if="(
                   currentUserRole === 'superuser'
-                  || (currentUserRole === 'admin' && user.invited_by === currentUserLogin)
+                  || (
+                    currentUserRole === 'admin'
+                    && user.invited_by === currentUserLogin
+                    && user.invite_status !== 'active'
+                  )
                 ) && user.login !== 'anonymous'"
             >
               <span class="icon-delete"/>

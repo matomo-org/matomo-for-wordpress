@@ -111,15 +111,15 @@ class Error extends \Exception
             $this->line = $this->lineno;
             return;
         }
-        $dot = false;
+        $dot = \false;
         if (str_ends_with($this->message, '.')) {
             $this->message = substr($this->message, 0, -1);
-            $dot = true;
+            $dot = \true;
         }
-        $questionMark = false;
+        $questionMark = \false;
         if (str_ends_with($this->message, '?')) {
             $this->message = substr($this->message, 0, -1);
-            $questionMark = true;
+            $questionMark = \true;
         }
         if ($this->name) {
             if (\is_string($this->name) || \is_object($this->name) && method_exists($this->name, '__toString')) {
@@ -147,7 +147,7 @@ class Error extends \Exception
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
+                $isEmbedContainer = null === $templateClass ? \false : str_starts_with($templateClass, $currentClass);
                 if (null === $this->name || $this->name == $trace['object']->getTemplateName() && !$isEmbedContainer) {
                     $template = $trace['object'];
                     $templateClass = \get_class($trace['object']);

@@ -41,14 +41,12 @@ class VisitTotalActions extends VisitDimension
         $metricsList->addMetric($metric);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $actionType = false;
+        $actionType = \false;
         if ($action) {
             $actionType = $action->getActionType();
         }
@@ -60,19 +58,17 @@ class VisitTotalActions extends VisitDimension
         return 0;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (!$action) {
-            return false;
+            return \false;
         }
         $increment = 'visit_total_actions + 1';
         $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
-        if ($idActionUrl !== false) {
+        if ($idActionUrl !== \false) {
             return $increment;
         }
         $actionType = $action->getActionType();
@@ -80,6 +76,6 @@ class VisitTotalActions extends VisitDimension
         if (in_array($actionType, $types)) {
             return $increment;
         }
-        return false;
+        return \false;
     }
 }

@@ -18,15 +18,15 @@ use Piwik\Piwik;
 abstract class RecordBuilder
 {
     /**
-     * @var int
+     * @var int|null
      */
     protected $maxRowsInTable;
     /**
-     * @var int
+     * @var int|null
      */
     protected $maxRowsInSubtable;
     /**
-     * @var string|null
+     * @var string|int|null
      */
     protected $columnToSortByBeforeTruncation;
     /**
@@ -34,14 +34,12 @@ abstract class RecordBuilder
      */
     protected $columnAggregationOps;
     /**
-     * @var array|null
+     * @var array<string|int,string|int>|null
      */
     protected $columnToRenameAfterAggregation;
     /**
-     * @param int|null $maxRowsInTable
-     * @param int|null $maxRowsInSubtable
-     * @param string|null $columnToSortByBeforeTruncation
      * @param array|null $columnAggregationOps
+     * @param array<string|int,string|int>|null $columnToRenameAfterAggregation
      */
     public function __construct(?int $maxRowsInTable = null, ?int $maxRowsInSubtable = null, ?string $columnToSortByBeforeTruncation = null, ?array $columnAggregationOps = null, ?array $columnToRenameAfterAggregation = null)
     {
@@ -53,14 +51,12 @@ abstract class RecordBuilder
     }
     public function isEnabled(ArchiveProcessor $archiveProcessor) : bool
     {
-        return true;
+        return \true;
     }
     /**
      * Uses the protected `aggregate()` function to build records by aggregating log table data directly, then
      * inserts them as archive data.
      *
-     * @param ArchiveProcessor $archiveProcessor
-     * @return void
      */
     public function buildFromLogs(ArchiveProcessor $archiveProcessor) : void
     {
@@ -105,8 +101,6 @@ abstract class RecordBuilder
      * Builds records for non-day periods by aggregating day records together, then inserts
      * them as archive data.
      *
-     * @param ArchiveProcessor $archiveProcessor
-     * @return void
      */
     public function buildForNonDayPeriod(ArchiveProcessor $archiveProcessor) : void
     {
@@ -135,7 +129,7 @@ abstract class RecordBuilder
             // we need to aggregate the blob record to get the count, so even if it's found, we must re-aggregate it
             // TODO: this could potentially be optimized away, but it would be non-trivial given the current ArchiveProcessor API
             $indexInFoundRecords = array_search($dependentRecordName, $foundRequestedReports);
-            if ($indexInFoundRecords !== false) {
+            if ($indexInFoundRecords !== \false) {
                 unset($foundRequestedReports[$indexInFoundRecords]);
             }
         }
@@ -148,15 +142,19 @@ abstract class RecordBuilder
             $columnToSortByBeforeTruncation = $record->getColumnToSortByBeforeTruncation() ?? $this->columnToSortByBeforeTruncation;
             $columnToRenameAfterAggregation = $record->getColumnToRenameAfterAggregation() ?? $this->columnToRenameAfterAggregation;
             $columnAggregationOps = $record->getBlobColumnAggregationOps() ?? $this->columnAggregationOps;
-            // only do recursive row count if there is a numeric record that depends on it
-            $countRecursiveRows = false;
+            // only do recursive row counts if there is a numeric record that depends on it
+            $countRecursiveRows = $countLeafRows = [];
             foreach ($numericRecords as $numeric) {
-                if ($numeric->getCountOfRecordName() == $record->getName() && $numeric->getCountOfRecordNameIsRecursive()) {
-                    $countRecursiveRows = true;
-                    break;
+                if ($numeric->getCountOfRecordName() == $record->getName()) {
+                    if ($numeric->getCountOfRecordNameIsRecursive()) {
+                        $countRecursiveRows[] = $numeric->getCountOfRecordName();
+                    }
+                    if ($numeric->getCountOfRecordNameIsForLeafs()) {
+                        $countLeafRows[] = $numeric->getCountOfRecordName();
+                    }
                 }
             }
-            $counts = $archiveProcessor->aggregateDataTableRecords($record->getName(), $maxRowsInTable, $maxRowsInSubtable, $columnToSortByBeforeTruncation, $columnAggregationOps, $columnToRenameAfterAggregation, $countRecursiveRows);
+            $counts = $archiveProcessor->aggregateDataTableRecords($record->getName(), $maxRowsInTable, $maxRowsInSubtable, $columnToSortByBeforeTruncation, $columnAggregationOps, $columnToRenameAfterAggregation, $countRecursiveRows, $countLeafRows);
             $aggregatedCounts = array_merge($aggregatedCounts, $counts);
         }
         if (!empty($numericRecords)) {
@@ -188,7 +186,9 @@ abstract class RecordBuilder
                     // dependent record not archived, so skip this metric
                 }
                 $count = $aggregatedCounts[$dependentRecordName];
-                if ($record->getCountOfRecordNameIsRecursive()) {
+                if ($record->getCountOfRecordNameIsForLeafs()) {
+                    $recordCountMetricValues[$record->getName()] = $count['leafs'];
+                } elseif ($record->getCountOfRecordNameIsRecursive()) {
                     $recordCountMetricValues[$record->getName()] = $count['recursive'];
                 } else {
                     $recordCountMetricValues[$record->getName()] = $count['level0'];
@@ -214,7 +214,7 @@ abstract class RecordBuilder
      * Derived classes should define this method to aggregate log data for a single day and return the records
      * to store indexed by record names.
      *
-     * @return (DataTable|int|float|string)[] Record values indexed by their record name, eg, `['MyPlugin_MyRecord' => new DataTable()]`
+     * @return array<string, DataTable|int|float|string> Record values indexed by their record name, eg, `['MyPlugin_MyRecord' => new DataTable()]`
      */
     protected abstract function aggregate(ArchiveProcessor $archiveProcessor) : array;
     protected function insertBlobRecord(ArchiveProcessor $archiveProcessor, string $recordName, DataTable $record, ?int $maxRowsInTable, ?int $maxRowsInSubtable, ?string $columnToSortByBeforeTruncation) : void
@@ -243,7 +243,6 @@ abstract class RecordBuilder
      * Returns an extra hint for LogAggregator to add to log aggregation SQL. Can be overridden if you'd
      * like the origin hint to have more information.
      *
-     * @return string
      */
     public function getQueryOriginHint() : string
     {
@@ -258,16 +257,15 @@ abstract class RecordBuilder
      * @param ArchiveProcessor $archiveProcessor Archiving parameters, like idSite, can influence the list of
      *                                           all records a RecordBuilder produces, so it is required here.
      * @param string[] $requestedReports The list of requested reports to check for.
-     * @return bool
      */
     public function isBuilderForAtLeastOneOf(ArchiveProcessor $archiveProcessor, array $requestedReports) : bool
     {
         $recordMetadata = $this->getRecordMetadata($archiveProcessor);
         foreach ($recordMetadata as $record) {
             if (in_array($record->getName(), $requestedReports)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

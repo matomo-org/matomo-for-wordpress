@@ -42,7 +42,7 @@ class EventCategory extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionEvent) {
-            return false;
+            return \false;
         }
         $eventCategory = $action->getEventCategory();
         $eventCategory = trim($eventCategory);

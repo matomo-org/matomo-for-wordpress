@@ -14,38 +14,43 @@
           {{ translate('UsersManager_ConfirmThisChange') }}
         </h2>
         <h2 v-if="requiresPasswordConfirmation && !slotHasContent">
-          {{ translate('UsersManager_ConfirmWithPassword') }}
+          {{ translate('UsersManager_ConfirmWithReAuthentication') }}
         </h2>
         <div v-if="requiresPasswordConfirmation && slotHasContent">
-          {{ translate('UsersManager_ConfirmWithPassword') }}
+          {{ translate('UsersManager_ConfirmWithReAuthentication') }}
         </div>
       </div>
-      <div v-show="requiresPasswordConfirmation">
+      <div v-show="requiresPasswordConfirmation" class="password-confirmation-div">
         <Field
           v-model="passwordConfirmation"
           :uicontrol="'password'"
           :disabled="!requiresPasswordConfirmation ? 'disabled' : undefined"
           :name="'currentUserPassword'"
+          :id="passwordFieldId"
           :autocomplete="'off'"
           :full-width="true"
           :title="translate('UsersManager_YourCurrentPassword')"
+          v-auto-clear-password
         >
         </Field>
       </div>
     </div>
     <div class="modal-footer">
+      <component
+        v-if="!!alternativeIdentityConfirmationComponent"
+        :is="alternativeIdentityConfirmationComponent"
+        @confirmed="onConfirm"
+      ></component>
       <a
         href=""
-        class="modal-action modal-close btn"
+        class="modal-action modal-close btn confirm-password-btn"
         :disabled="requiresPasswordConfirmation && !passwordConfirmation ? 'disabled' : undefined"
-        @click="$event.preventDefault();
-                $emit('confirmed', passwordConfirmation);
-                passwordConfirmation = ''"
+        @click="onClickConfirm($event)"
       >{{ translate('General_Confirm') }}</a>
       <a
         href=""
         class="modal-action modal-close modal-no btn-flat"
-        @click="$event.preventDefault(); $emit('aborted')"
+        @click="onClickCancel($event)"
       >{{ translate('General_Cancel') }}</a>
     </div>
   </div>
@@ -53,15 +58,21 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Matomo } from 'CoreHome';
+import { Matomo, AutoClearPassword, useExternalPluginComponent } from 'CoreHome';
 import Field from '../Field/Field.vue';
 import KeyPressEvent = JQuery.KeyPressEvent;
 
 const { $ } = window;
 
+interface PluginComponent {
+  plugin: string,
+  component: string,
+}
+
 interface PasswordConfirmationState {
   passwordConfirmation: string;
   slotHasContent: boolean;
+  altIdConfirmComponent: PluginComponent;
 }
 
 export default defineComponent({
@@ -73,14 +84,22 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    passwordFieldId: {
+      type: String,
+      default: () => 'currentUserPassword',
+    },
   },
   data(): PasswordConfirmationState {
     return {
       passwordConfirmation: '',
       slotHasContent: true,
+      altIdConfirmComponent: { plugin: '', component: '' },
     };
   },
   emits: ['confirmed', 'aborted', 'update:modelValue'],
+  directives: {
+    AutoClearPassword,
+  },
   components: {
     Field,
   },
@@ -88,7 +107,29 @@ export default defineComponent({
     this.$emit('update:modelValue', false);
   },
   methods: {
+    onClickConfirm(event: MouseEvent) {
+      event.preventDefault();
+      this.onConfirm(this.passwordConfirmation);
+      this.passwordConfirmation = '';
+    },
+    onConfirm(passwordConfirmation: string) {
+      const root = this.$refs.root as HTMLElement;
+      const $root = $(root);
+      $root.modal('close');
+      this.$emit('confirmed', passwordConfirmation);
+    },
+    onClickCancel(event: MouseEvent) {
+      event.preventDefault();
+      const root = this.$refs.root as HTMLElement;
+      const $root = $(root);
+      $root.modal('close');
+      this.$emit('aborted');
+      this.passwordConfirmation = '';
+    },
     showPasswordConfirmModal() {
+      // done here, as the event might not yet have been subscribed in an earlier phase
+      Matomo.postEvent('PasswordConfirmation.altIdComponent', this.altIdConfirmComponent);
+
       this.slotHasContent = !(this.$refs.content as HTMLElement).matches(':empty');
       const root = this.$refs.root as HTMLElement;
       const $root = $(root);
@@ -104,7 +145,7 @@ export default defineComponent({
       $root.modal({
         dismissible: false,
         onOpenEnd: () => {
-          const passwordField = '.modal.open #currentUserPassword';
+          const passwordField = `.modal.open #${this.passwordFieldId}`;
           $(passwordField).focus();
           $(passwordField).off('keypress').keypress(onEnter);
         },
@@ -117,6 +158,16 @@ export default defineComponent({
   computed: {
     requiresPasswordConfirmation() {
       return !!Matomo.requiresPasswordConfirmation;
+    },
+    alternativeIdentityConfirmationComponent() {
+      if (this.altIdConfirmComponent.plugin && this.altIdConfirmComponent.component) {
+        return useExternalPluginComponent(
+          this.altIdConfirmComponent.plugin,
+          this.altIdConfirmComponent.component,
+        );
+      }
+
+      return null;
     },
   },
   watch: {

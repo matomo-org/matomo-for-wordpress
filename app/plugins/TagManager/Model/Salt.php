@@ -12,9 +12,11 @@ use Piwik\Common;
 use Piwik\Option;
 class Salt
 {
-    const OPTION_TAGMANAGER_SALT = 'tagmanager_salt';
-    const SALT_LENGTH = 40;
-    public function __construct($salt = '')
+    public const OPTION_TAGMANAGER_SALT = 'tagmanager_salt';
+    public const SALT_LENGTH = 40;
+    public function __construct(
+#[\SensitiveParameter]
+$salt = '')
     {
         if ($this->isValidSalt($salt)) {
             // only used for testing
@@ -23,7 +25,9 @@ class Salt
             throw new \Exception('Invalid salt!');
         }
     }
-    private function isValidSalt($salt)
+    private function isValidSalt(
+#[\SensitiveParameter]
+$salt = '')
     {
         return !empty($salt) && strlen($salt) >= self::SALT_LENGTH;
     }

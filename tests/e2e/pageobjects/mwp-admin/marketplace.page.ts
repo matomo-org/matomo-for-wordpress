@@ -19,6 +19,10 @@ const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
 class MwpMarketplaceSetupWizard {
   async downloadPlugin(): Promise<string> {
     const downloadUrl = await browser.execute(() => window.jQuery('.download-plugin').attr('href'));
+    if (!downloadUrl) {
+      throw new Error('could not extract marketplace download URL from page');
+    }
+
     const downloadPath = path.join(DOWNLOADS_DIR, path.basename(downloadUrl));
 
     await $('.download-plugin').click();
@@ -47,7 +51,7 @@ class MwpMarketplaceSetupWizard {
     await $('#pluginzip').setValue(pathToPlugin);
     await browser.pause(500);
     await $('#install-plugin-submit').click();
-    await $('.button=Activate Plugin').waitForDisplayed();
+    await $('.button=Activate Plugin').waitForDisplayed({ timeout: 30000 });
 
     await $('.button=Activate Plugin').click();
     await browser.waitUntil(() => {
@@ -110,7 +114,7 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async openSubscriptionsTab() {
-    await $('a.nav-tab=Subscriptions').click();
+    await $('a.nav-tab=Premium Features').click();
   }
 
   async setSubscriptionLicense(license: string) {
@@ -120,14 +124,14 @@ class MwpMarketplacePage extends MwpPage {
 
     // just for screenshots, make sure the license does not display
     await browser.execute(() => {
-      window.jQuery('input[name="matomo_license_key"]').attr('type', 'password');
+      window.jQuery('#license-key-input').attr('type', 'password');
     });
 
     await browser.execute((l) => {
-      window.jQuery('input[name="matomo_license_key"]').val(l);
+      window.jQuery('#license-key-input').val(l);
     }, license);
 
-    await $('#wpbody-content .button-primary').click();
+    await $('#wpbody-content .activate-license').click();
 
     await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed({ timeout: 30000 });
   }

@@ -20,9 +20,9 @@ class Filechecks
     public static function canAutoUpdate()
     {
         if (!is_writable(PIWIK_INCLUDE_PATH . '/') || !is_writable(PIWIK_DOCUMENT_ROOT . '/index.php') || !is_writable(PIWIK_INCLUDE_PATH . '/core') || !is_writable(PIWIK_DOCUMENT_ROOT . '/config/global.ini.php')) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Checks if directories are writable and create them if they do not exist.
@@ -36,7 +36,7 @@ class Filechecks
         foreach ($directoriesToCheck as $directoryToCheck) {
             \Piwik\Filesystem::mkdir($directoryToCheck);
             $directory = \Piwik\Filesystem::realpath($directoryToCheck);
-            if ($directory !== false) {
+            if ($directory !== \false) {
                 $resultCheck[$directory] = is_writable($directoryToCheck);
             }
         }
@@ -51,13 +51,13 @@ class Filechecks
     public static function dieIfDirectoriesNotWritable($directoriesToCheck = null)
     {
         $resultCheck = self::checkDirectoriesWritable($directoriesToCheck);
-        if (array_search(false, $resultCheck) === false) {
+        if (array_search(\false, $resultCheck) === \false) {
             return;
         }
         $directoryList = '';
         foreach ($resultCheck as $dir => $bool) {
             $realpath = \Piwik\Filesystem::realpath($dir);
-            if (!empty($realpath) && $bool === false) {
+            if (!empty($realpath) && $bool === \false) {
                 $directoryList .= self::getMakeWritableCommand($realpath);
             }
         }

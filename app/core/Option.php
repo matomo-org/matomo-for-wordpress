@@ -64,7 +64,7 @@ class Option
      *
      * @param string $name The option name.
      * @param string $value The value to set the option to.
-     * @param int $autoLoad If set to 1, this option value will be automatically loaded when Piwik is initialized;
+     * @param int|bool $autoload If set to 1, this option value will be automatically loaded when Piwik is initialized;
      *                      should be set to 1 for options that will be used in every Piwik request.
      */
     public static function set($name, $value, $autoload = 0)
@@ -106,7 +106,7 @@ class Option
     public static function clearCache()
     {
         $option = self::getInstance();
-        $option->loaded = false;
+        $option->loaded = \false;
         $option->all = array();
     }
     /**
@@ -116,7 +116,7 @@ class Option
     /**
      * @var bool
      */
-    private $loaded = false;
+    private $loaded = \false;
     /**
      * Singleton instance
      * @var \Piwik\Option
@@ -247,7 +247,7 @@ class Option
         foreach ($all as $option) {
             $this->all[$option['option_name']] = $option['option_value'];
         }
-        $this->loaded = true;
+        $this->loaded = \true;
     }
     private function trimOptionNameIfNeeded($name)
     {

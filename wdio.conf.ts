@@ -13,6 +13,11 @@ if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR);
 }
 
+// check for required environment variables
+if (!process.env.PHP_VERSION) {
+    throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+}
+
 async function saveScreenshotIfError(test, error) {
   if (error && !error.matcherResult) {
     const failureScreenshotName = test.title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '_failure';
@@ -24,9 +29,9 @@ async function saveScreenshotIfError(test, error) {
   }
 }
 
-function checkWpDebugLogsForError() {
-  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.log');
-  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.concat.log');
+function checkWpDebugLogsForError(dirName: string) {
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.log');
+  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', dirName, 'wp-content', 'debug.concat.log');
 
   if (!fs.existsSync(wpDebugLogPath)) {
     return;
@@ -35,19 +40,40 @@ function checkWpDebugLogsForError() {
   try {
     let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8');
 
-    fs.appendFileSync(wpDebugLogConcatPath, contents);
-
-    let lines = contents.split("\n");
-    let matomoErrors = lines.filter((line) => {
-      return /php (notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
+    let lines = contents.split("\n").filter((line) => {
+      // deprecated function warnings from other plugins
+      return !line.includes('_load_textdomain_just_in_time')
+          && !line.includes('print_inline_script');
     });
+
+    let matomoErrors = lines.filter((line) => {
+      line = line.toLowerCase();
+      return /php (notice|warning|error|deprecated):/i.test(line) && line.includes('matomo');
+    });
+
+    fs.appendFileSync(wpDebugLogConcatPath, lines.join("\n"));
 
     if (matomoErrors.length) {
       throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
     }
   } finally {
-    fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
+    try {
+      fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
+    } catch (e) {
+      // ignore
+    }
   }
+}
+
+let capturedLogs: string[] = [];
+
+async function handleConsoleLogs() {
+  await browser.sessionSubscribe({ events: ['log.entryAdded'] });
+
+  browser.on('log.entryAdded', (entryAdded) => {
+    const message = `[${entryAdded.method}] ${entryAdded.text}`;
+    capturedLogs.push(message);
+  });
 }
 
 export const config: Options.Testrunner = {
@@ -91,6 +117,7 @@ export const config: Options.Testrunner = {
     './tests/e2e/tracking.e2e.ts',
     './tests/e2e/tracking.ecommerce.e2e.ts',
     './tests/e2e/tracking.tag-manager.e2e.ts',
+    './tests/e2e/manual-archiving.e2e.ts',
     './tests/e2e/mwp-language.e2e.ts',
   ],
   //
@@ -250,11 +277,15 @@ export const config: Options.Testrunner = {
 
     if (error) {
       await saveScreenshotIfError(test, error);
+
+      error.message = `${error.message}\nCaptured Console Logs:\n${capturedLogs.join('\n')}`;
+
       return;
     }
 
     try {
-      checkWpDebugLogsForError();
+      checkWpDebugLogsForError(WORDPRESS_DIR_NAME);
+      checkWpDebugLogsForError(`${WORDPRESS_DIR_NAME}-multi`);
     } catch (err) {
       await saveScreenshotIfError(test, err);
       throw err;
@@ -317,6 +348,8 @@ export const config: Options.Testrunner = {
    * @param {object}         browser      instance of created browser/device session
    */
   before: async function (capabilities, specs) {
+    await handleConsoleLogs();
+
     // must be run per wdio instance to have the correct test entity IDs
     // the setUp itself should only add entities the first time it's called
     // which happens before any e2e test is run via a wdio.conf.ts hook.
@@ -338,8 +371,9 @@ export const config: Options.Testrunner = {
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (test, context) {
-  // },
+  beforeTest: function (test, context) {
+    capturedLogs = [];
+  },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)
@@ -364,7 +398,6 @@ export const config: Options.Testrunner = {
    */
   // afterTest: function(test, context, { error, result, duration, passed, retries }) {
   // },
-
 
   /**
    * Hook that gets executed after the suite has ended

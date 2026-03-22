@@ -36,7 +36,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
     public const PREG_SPLIT_DELIM_CAPTURE = \PREG_SPLIT_DELIM_CAPTURE;
     public const PREG_SPLIT_OFFSET_CAPTURE = \PREG_SPLIT_OFFSET_CAPTURE;
     protected $string = '';
-    protected $ignoreCase = false;
+    protected $ignoreCase = \false;
     public abstract function __construct(string $string = '');
     /**
      * Unwraps instances of AbstractString back to strings.
@@ -82,7 +82,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
      *
      * @return static
      */
-    public function after($needle, bool $includeNeedle = false, int $offset = 0) : self
+    public function after($needle, bool $includeNeedle = \false, int $offset = 0) : self
     {
         $str = clone $this;
         $i = \PHP_INT_MAX;
@@ -107,7 +107,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
      *
      * @return static
      */
-    public function afterLast($needle, bool $includeNeedle = false, int $offset = 0) : self
+    public function afterLast($needle, bool $includeNeedle = \false, int $offset = 0) : self
     {
         $str = clone $this;
         $i = null;
@@ -136,7 +136,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
      *
      * @return static
      */
-    public function before($needle, bool $includeNeedle = false, int $offset = 0) : self
+    public function before($needle, bool $includeNeedle = \false, int $offset = 0) : self
     {
         $str = clone $this;
         $i = \PHP_INT_MAX;
@@ -161,7 +161,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
      *
      * @return static
      */
-    public function beforeLast($needle, bool $includeNeedle = false, int $offset = 0) : self
+    public function beforeLast($needle, bool $includeNeedle = \false, int $offset = 0) : self
     {
         $str = clone $this;
         $i = null;
@@ -223,10 +223,10 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
         }
         foreach ($suffix as $s) {
             if ($this->endsWith((string) $s)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @return static
@@ -267,10 +267,10 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
         }
         foreach ($string as $s) {
             if ($this->equalsTo((string) $s)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @return static
@@ -282,7 +282,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
     public function ignoreCase() : self
     {
         $str = clone $this;
-        $str->ignoreCase = true;
+        $str->ignoreCase = \true;
         return $str;
     }
     /**
@@ -413,9 +413,9 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
             throw new InvalidArgumentException($m);
         });
         try {
-            if (false === ($chunks = preg_split($delimiter, $this->string, $limit, $flags))) {
+            if (\false === ($chunks = preg_split($delimiter, $this->string, $limit, $flags))) {
                 $lastError = preg_last_error();
-                foreach (get_defined_constants(true)['pcre'] as $k => $v) {
+                foreach (get_defined_constants(\true)['pcre'] as $k => $v) {
                     if ($lastError === $v && '_ERROR' === substr($k, -6)) {
                         throw new RuntimeException('Splitting failed with ' . $k . '.');
                     }
@@ -449,19 +449,19 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
         }
         foreach ($prefix as $prefix) {
             if ($this->startsWith((string) $prefix)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @return static
      */
-    public abstract function title(bool $allWords = false) : self;
+    public abstract function title(bool $allWords = \false) : self;
     public function toByteString(?string $toEncoding = null) : ByteString
     {
         $b = new ByteString();
-        $toEncoding = \in_array($toEncoding, ['utf8', 'utf-8', 'UTF8'], true) ? 'UTF-8' : $toEncoding;
+        $toEncoding = \in_array($toEncoding, ['utf8', 'utf-8', 'UTF8'], \true) ? 'UTF-8' : $toEncoding;
         if (null === $toEncoding || $toEncoding === ($fromEncoding = $this instanceof AbstractUnicodeString || preg_match('//u', $b->string) ? 'UTF-8' : 'Windows-1252')) {
             $b->string = $this->string;
             return $b;
@@ -567,7 +567,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
     /**
      * @return static
      */
-    public function truncate(int $length, string $ellipsis = '', bool $cut = true) : self
+    public function truncate(int $length, string $ellipsis = '', bool $cut = \true) : self
     {
         $stringLength = $this->length();
         if ($stringLength <= $length) {
@@ -593,11 +593,11 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
     /**
      * Returns the printable length on a terminal.
      */
-    public abstract function width(bool $ignoreAnsiDecoration = true) : int;
+    public abstract function width(bool $ignoreAnsiDecoration = \true) : int;
     /**
      * @return static
      */
-    public function wordwrap(int $width = 75, string $break = "\n", bool $cut = false) : self
+    public function wordwrap(int $width = 75, string $break = "\n", bool $cut = \false) : self
     {
         $lines = '' !== $break ? $this->split($break) : [clone $this];
         $chars = [];
@@ -619,7 +619,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
         $j = 0;
         $b = $i = -1;
         $mask = wordwrap($mask, $width, '#', $cut);
-        while (false !== ($b = strpos($mask, '#', $b + 1))) {
+        while (\false !== ($b = strpos($mask, '#', $b + 1))) {
             for (++$i; $i < $b; ++$i) {
                 $string .= $chars[$j];
                 unset($chars[$j++]);
@@ -639,7 +639,7 @@ abstract class AbstractString implements \Stringable, \JsonSerializable
     }
     public function __clone()
     {
-        $this->ignoreCase = false;
+        $this->ignoreCase = \false;
     }
     public function __toString() : string
     {

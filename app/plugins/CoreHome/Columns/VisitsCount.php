@@ -26,23 +26,19 @@ class VisitsCount extends VisitDimension
         // no metrics for this dimension, it would be rather confusing I think
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $previousVisitCount = $visitor->getPreviousVisitColumn($this->columnName);
-        if ($previousVisitCount === false || $previousVisitCount === null || $previousVisitCount === '') {
+        if ($previousVisitCount === \false || $previousVisitCount === null || $previousVisitCount === '') {
             return 1;
         }
         $result = $previousVisitCount + 1;
         return $result;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

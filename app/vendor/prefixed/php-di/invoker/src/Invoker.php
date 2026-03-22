@@ -47,7 +47,7 @@ class Invoker implements InvokerInterface
             $callable = $this->callableResolver->resolve($callable);
         }
         if (!is_callable($callable)) {
-            throw new NotCallableException(sprintf('%s is not a callable', is_object($callable) ? 'Instance of ' . get_class($callable) : var_export($callable, true)));
+            throw new NotCallableException(sprintf('%s is not a callable', is_object($callable) ? 'Instance of ' . get_class($callable) : var_export($callable, \true)));
         }
         $callableReflection = CallableReflection::create($callable);
         $args = $this->parameterResolver->getParameters($callableReflection, $parameters, array());

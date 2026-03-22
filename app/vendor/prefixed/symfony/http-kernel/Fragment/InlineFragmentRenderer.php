@@ -56,7 +56,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
                     $reference->attributes[$key] = $attributes[$key];
                 }
             }
-            $uri = $this->generateFragmentUri($uri, $request, false, false);
+            $uri = $this->generateFragmentUri($uri, $request, \false, \false);
             $reference->attributes = array_merge($attributes, $reference->attributes);
         }
         $subRequest = $this->createSubRequest($uri, $request);
@@ -66,7 +66,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
         }
         $level = ob_get_level();
         try {
-            return SubRequestHandler::handle($this->kernel, $subRequest, HttpKernelInterface::SUB_REQUEST, false);
+            return SubRequestHandler::handle($this->kernel, $subRequest, HttpKernelInterface::SUB_REQUEST, \false);
         } catch (\Exception $e) {
             // we dispatch the exception event to trigger the logging
             // the response that comes back is ignored
@@ -75,7 +75,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
                 $this->dispatcher->dispatch($event, KernelEvents::EXCEPTION);
             }
             // let's clean up the output buffers that were created by the sub-request
-            Response::closeOutputBuffers($level, false);
+            Response::closeOutputBuffers($level, \false);
             if (isset($options['alt'])) {
                 $alt = $options['alt'];
                 unset($options['alt']);

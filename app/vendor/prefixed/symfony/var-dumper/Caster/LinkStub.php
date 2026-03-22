@@ -17,7 +17,7 @@ namespace Matomo\Dependencies\Symfony\Component\VarDumper\Caster;
  */
 class LinkStub extends ConstStub
 {
-    public $inVendor = false;
+    public $inVendor = \false;
     private static $vendorRoots;
     private static $composerRoots;
     public function __construct(string $label, int $line = 0, ?string $href = null)
@@ -71,7 +71,7 @@ class LinkStub extends ConstStub
                 }
             }
         }
-        $inVendor = false;
+        $inVendor = \false;
         if (isset(self::$composerRoots[$dir = \dirname($file)])) {
             return self::$composerRoots[$dir];
         }
@@ -87,7 +87,7 @@ class LinkStub extends ConstStub
                 break;
             }
             if ($parent === \dirname($parent)) {
-                return self::$composerRoots[$dir] = false;
+                return self::$composerRoots[$dir] = \false;
             }
             $parent = \dirname($parent);
         }

@@ -16,7 +16,7 @@ namespace Matomo\Dependencies\Symfony\Component\Console\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsCommand
 {
-    public function __construct(public string $name, public ?string $description = null, array $aliases = [], bool $hidden = false)
+    public function __construct(public string $name, public ?string $description = null, array $aliases = [], bool $hidden = \false)
     {
         if (!$hidden && !$aliases) {
             return;

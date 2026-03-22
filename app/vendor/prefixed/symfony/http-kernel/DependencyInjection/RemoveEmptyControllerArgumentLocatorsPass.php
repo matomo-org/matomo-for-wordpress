@@ -38,7 +38,7 @@ class RemoveEmptyControllerArgumentLocatorsPass implements CompilerPassInterface
                 $reason = sprintf('Removing service-argument resolver for controller "%s": no corresponding services exist for the referenced types.', $controller);
             } else {
                 // any methods listed for call-at-instantiation cannot be actions
-                $reason = false;
+                $reason = \false;
                 [$id, $action] = explode('::', $controller);
                 if ($container->hasAlias($id)) {
                     continue;

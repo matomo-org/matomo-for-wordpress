@@ -57,7 +57,7 @@ class MemoryDataCollector extends DataCollector implements LateDataCollectorInte
     }
     public function updateMemoryUsage()
     {
-        $this->data['memory'] = memory_get_peak_usage(true);
+        $this->data['memory'] = memory_get_peak_usage(\true);
     }
     /**
      * {@inheritdoc}

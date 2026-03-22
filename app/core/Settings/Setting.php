@@ -38,7 +38,7 @@ class Setting
      */
     protected $pluginName;
     /**
-     * @var FieldConfig
+     * @var FieldConfig|null
      */
     protected $config;
     /**
@@ -117,7 +117,6 @@ class Setting
     }
     /**
      * @internal
-     * @param Storage $storage
      */
     public function setStorage(Storage $storage)
     {
@@ -237,7 +236,7 @@ class Setting
                 throw new \Exception($errorMsg);
             }
         } elseif ($this->type === \Piwik\Settings\FieldConfig::TYPE_BOOL) {
-            if (!in_array($value, array(true, false, '0', '1', 0, 1), true)) {
+            if (!in_array($value, array(\true, \false, '0', '1', 0, 1), \true)) {
                 $errorMsg = Piwik::translate('CoreAdminHome_PluginSettingsValueNotAllowed', array(strip_tags($config->title), $this->pluginName));
                 throw new \Exception($errorMsg);
             }

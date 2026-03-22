@@ -26,7 +26,7 @@ final class WithTokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
         $variables = null;
-        $only = false;
+        $only = \false;
         if (!$stream->test(
             /* Token::BLOCK_END_TYPE */
             3
@@ -42,7 +42,7 @@ final class WithTokenParser extends AbstractTokenParser
             /* Token::BLOCK_END_TYPE */
             3
         );
-        $body = $this->parser->subparse([$this, 'decideWithEnd'], true);
+        $body = $this->parser->subparse([$this, 'decideWithEnd'], \true);
         $stream->expect(
             /* Token::BLOCK_END_TYPE */
             3

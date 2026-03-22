@@ -28,16 +28,16 @@ class Password
         $passwordHashAlgorithm = Config::getInstance()->General['password_hash_algorithm'];
         switch ($passwordHashAlgorithm) {
             case "default":
-                return PASSWORD_DEFAULT;
+                return \PASSWORD_DEFAULT;
             case "bcrypt":
-                return PASSWORD_BCRYPT;
+                return \PASSWORD_BCRYPT;
             case "argon2i":
-                return PASSWORD_ARGON2I;
+                return \PASSWORD_ARGON2I;
             case "argon2id":
-                if (version_compare(PHP_VERSION, '7.3.0', '<')) {
+                if (version_compare(\PHP_VERSION, '7.3.0', '<')) {
                     throw new Exception("argon2id needs at leat PHP 7.3.0");
                 }
-                return PASSWORD_ARGON2ID;
+                return \PASSWORD_ARGON2ID;
             default:
                 throw new Exception("invalid password_hash_algorithm");
         }
@@ -68,7 +68,9 @@ class Password
      * @param string $password
      * @return string
      */
-    public function hash($password)
+    public function hash(
+#[\SensitiveParameter]
+$password)
     {
         return password_hash($password, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
@@ -107,7 +109,11 @@ class Password
      * @param string $hash
      * @return boolean
      */
-    public function verify($password, $hash)
+    public function verify(
+#[\SensitiveParameter]
+$password,
+#[\SensitiveParameter]
+$hash)
     {
         return password_verify($password, $hash);
     }

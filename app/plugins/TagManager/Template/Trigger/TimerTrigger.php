@@ -26,6 +26,7 @@ class TimerTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigge
     {
         return array($this->makeSetting('triggerInterval', 3000, FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_TimerTriggerTriggerIntervalTitle');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_TimerTriggerTriggerIntervalPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validators[] = new NumberRange($min = 50);
         }), $this->makeSetting('eventName', 'mtm.Timer', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
@@ -35,6 +36,7 @@ class TimerTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigge
         }), $this->makeSetting('triggerLimit', 0, FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_TimerTriggerTriggerLimitTitle');
             $field->description = Piwik::translate('TagManager_TimerTriggerTriggerLimitDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_PlaceholderZero')];
             $field->validators[] = new NumberRange($min = 0, $max = 900000);
         }));
     }

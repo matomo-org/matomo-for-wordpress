@@ -23,11 +23,11 @@ use Piwik\Segment\SegmentsList;
 class VisitId extends VisitDimension
 {
     protected $columnName = 'idvisit';
-    protected $acceptValues = 'Any integer.';
+    protected $acceptValues = 'General_AnyPositiveInteger';
     protected $nameSingular = 'General_Visit';
     protected $namePlural = 'General_ColumnNbVisits';
     protected $segmentName = 'visitId';
-    protected $allowAnonymous = false;
+    protected $allowAnonymous = \false;
     protected $metricId = 'visits';
     protected $type = self::TYPE_TEXT;
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)

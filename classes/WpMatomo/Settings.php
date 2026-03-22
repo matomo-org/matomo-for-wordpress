@@ -14,6 +14,7 @@
 namespace WpMatomo;
 
 use Piwik\CliMulti\Process;
+use Piwik\Tracker\Cache;
 use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Admin\TrackingSettings;
 
@@ -35,6 +36,15 @@ class Settings {
 	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
+	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
+	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
+	const GLOBAL_USER_AGENT_EXCLUSIONS         = 'global_user_agent_exclusions';
+	const TRACK_AI_BOTS                        = 'track_ai_bots';
+	const TRACK_AI_BOTS_USING_ESI              = 'track_ai_bots_using_esi';
+
+	// NOTE: this is not a setting value, but is stored with setting values to avoid
+	// adding an extra get_option call to every WordPress backoffice request.
+	const INSTANCE_COMPONENTS_INSTALLED = 'instance-components-installed';
 
 	public static $is_doing_action_tracking_related = false;
 	/**
@@ -78,6 +88,8 @@ class Settings {
 		'track_ecommerce'                          => true,
 		'track_search'                             => false,
 		'track_404'                                => false,
+		self::TRACK_AI_BOTS                        => false,
+		self::TRACK_AI_BOTS_USING_ESI              => false,
 		'tagmanger_container_ids'                  => [],
 		'add_post_annotations'                     => [],
 		'add_customvars_box'                       => false,
@@ -112,6 +124,7 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
+		self::GLOBAL_USER_AGENT_EXCLUSIONS         => null,
 	];
 
 	/**
@@ -120,9 +133,11 @@ class Settings {
 	 * @var array
 	 */
 	private $default_blog_settings = [
-		'noscript_code'                        => '',
-		'tracking_code'                        => '',
-		self::OPTION_LAST_TRACKING_CODE_UPDATE => 0,
+		'noscript_code'                          => '',
+		'tracking_code'                          => '',
+		self::OPTION_LAST_TRACKING_CODE_UPDATE   => 0,
+		self::USE_SESSION_VISITOR_ID_OPTION_NAME => false,
+		self::SERVER_SIDE_TRACKING_DELAY_SECS    => 180,
 	];
 
 	private $global_settings = [];
@@ -231,6 +246,11 @@ class Settings {
 		$this->settings_changed = [];
 
 		foreach ( $keys_changed as $key_changed ) {
+			if ( self::GLOBAL_USER_AGENT_EXCLUSIONS === $key_changed ) {
+				Bootstrap::do_bootstrap();
+				Cache::clearCacheGeneral();
+			}
+
 			do_action( 'matomo_setting_change_' . $key_changed );
 		}
 	}
@@ -486,5 +506,49 @@ class Settings {
 
 	public function is_async_archiving_disabled_by_option() {
 		return (bool) $this->get_global_option( self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME );
+	}
+
+	public function is_ai_bot_tracking_enabled() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS );
+	}
+
+	public function is_tracking_ai_bots_via_esi_includes() {
+		return (bool) $this->get_global_option( self::TRACK_AI_BOTS_USING_ESI );
+	}
+
+	public function get_matomo_major_version() {
+		$core_version = $this->get_global_option( 'core_version' );
+		$core_version = isset( $core_version ) ? $core_version : '';
+
+		$parts = explode( '.', $core_version );
+		if ( empty( $parts ) ) {
+			return 0;
+		}
+
+		return (int) $parts[0];
+	}
+
+	public function set_global_user_agent_exclusions( $user_agents ) {
+		$this->set_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
+	}
+
+	public function get_global_user_agent_exclusions() {
+		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		if ( ! is_array( $user_agents ) ) {
+			// only bootstrap if we can't access the SitesManager API.
+			// if we always bootstrap, it is possible to try initializing the FrontController before Matomo
+			// installation completes, which will fail.
+			if ( ! class_exists( \Piwik\Plugins\SitesManager\API::class ) ) {
+				Bootstrap::do_bootstrap();
+			}
+
+			$user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
+			$user_agents = explode( ',', $user_agents );
+		}
+		return $user_agents;
+	}
+
+	public function is_track_via_esi_enabled() {
+		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
 	}
 }

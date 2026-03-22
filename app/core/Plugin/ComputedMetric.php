@@ -142,10 +142,10 @@ class ComputedMetric extends \Piwik\Plugin\ProcessedMetric
                 return $formatter->getPrettyNumber($value, 1);
             // we still need to round to have somewhat more accurate result
             case Dimension::TYPE_DURATION_S:
-                return $formatter->getPrettyTimeFromSeconds(round($value), $displayAsSentence = true);
+                return $formatter->getPrettyTimeFromSeconds(round($value), $displayAsSentence = \true);
             case Dimension::TYPE_DURATION_MS:
                 $val = round($value / 1000, $value / 1000 > 60 ? 0 : 2);
-                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = true);
+                return $formatter->getPrettyTimeFromSeconds($val, $displayAsSentence = \true);
             case Dimension::TYPE_PERCENT:
                 return $formatter->getPrettyPercentFromQuotient($value);
             case Dimension::TYPE_BYTE:

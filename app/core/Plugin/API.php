@@ -44,7 +44,8 @@ use Exception;
 abstract class API
 {
     private static $instances;
-    protected $autoSanitizeInputParams = true;
+    /** @var bool */
+    protected $autoSanitizeInputParams = \true;
     /**
      * Returns the singleton instance for the derived class. If the singleton instance
      * has not been created, this method will create it.
@@ -104,7 +105,9 @@ abstract class API
      * @param $passwordConfirmation
      * @throws Exception
      */
-    protected function confirmCurrentUserPassword($passwordConfirmation)
+    protected function confirmCurrentUserPassword(
+#[\SensitiveParameter]
+$passwordConfirmation)
     {
         $loginCurrentUser = Piwik::getCurrentUserLogin();
         if (!Piwik::doesUserRequirePasswordConfirmation($loginCurrentUser)) {
@@ -112,7 +115,7 @@ abstract class API
             // password confirmation disabled for user
         }
         if (empty($passwordConfirmation)) {
-            throw new Exception(Piwik::translate('UsersManager_ConfirmWithPassword'));
+            throw new Exception(Piwik::translate('UsersManager_ConfirmWithReAuthentication'));
         }
         try {
             if (!StaticContainer::get(PasswordVerifier::class)->isPasswordCorrect($loginCurrentUser, $passwordConfirmation)) {

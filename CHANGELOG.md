@@ -1,5 +1,89 @@
 == Changelog ===
 
+= 5.7.1 =
+* Bug fix: avoid error in AI bot tracking feature when REST API tracking endpoint is used.
+* Tie asset cache busters to plugin version.
+
+= 5.7.0 =
+* Update Matomo core to 5.7.1.
+* Change left menu icon and menu item positioning.
+* New feature: server side tracking of AI bots.
+* Bug fix: check that order in query parameters matches current order before tracking an order.
+
+= 5.6.1 =
+* Update Matomo core to 5.6.2.
+* Bug fix: only execute geolocation database update if internet features are enabled. (Add `[General] enable_internet_features=0` to the /path/to/wordpress/wp-content/uploads/matomo/config/config.ini.php file to disable internet features.)
+* Bug fix: avoid autoloading conflicts with the wikimedia/less.php library (fixing display issues when this plugin is used on wordpress.com and with certain other plugins).
+* Bug fix: fix incorrect detection of global upload directory in a multisite installation.
+* Bug fix: allow geolocation database update to also run on multisite installs when the plugin is not network activated.
+
+= 5.6.0 =
+* Update Matomo core to 5.6.1.
+* Add clear warning message if an adblocker is detected since many adblockers interfere with Matomo's reporting.
+* Slight redesign to Marketplace overview.
+* Ensure matomo language cookie is always set to current user's locale so changes users make to language settings will always be reflected in Matomo.
+* Bug fix: ensure the wp-statistics importer works with the newest version of wp-statistics.
+* Add current user locale to system report.
+* Bug fix: ensure user agents with commas can be excluded from tracking.
+
+= 5.3.3 =
+* Fix regression causing fatal errors when ecommerce tracking is used but WooCommerce is not installed.
+* Workaround infinite recursion problem in Matomo core that occurs when an AJAX method is not authorized to function.
+
+= 5.3.2 =
+* Fix ecommerce tracking issues that occur when WordPress plugins that initiate WooCommerce events from JavaScript hosted on another server, like the Klarna plugin.
+* Fix issue site switching error that occurs during scheduled task execution when resetting the Matomo environment.
+* Fix issue preventing users with Matomo roles only to view the WordPress admin dashboard.
+* Fix image display issue with SearchEngineKeywordsPerformance plugin.
+
+= 5.3.1 =
+* New troubleshooting tool that runs a specific scheduled task.
+* Fix compatibility issue with the All In One SEO plugin that resulted in incorrectly tracking a cart addition on a product view.
+* Use HTTPS link to the marketplace install archive.
+* Add JavaScript opt out code in new shortcode which is now considered the recommended option.
+* Workaround lack of prerendering support in Matomo core JavaScript tracker.
+* Make sure report export and report config buttons in report footers are noticed by screen readers.
+* Update Matomo core to 5.3.2.
+* Fix critical error that can occur if a product cannot be found during tracking.
+* Fix issue causing images in third party Matomo plugins to fail to load.
+
+= 5.3.0 =
+* Update Matomo core to 5.3.1.
+* Allow Matomo API and tracker requests to be authenticated by WordPress App Passwords.
+* Allow direct access to the Matomo API, rather than only through the WordPress REST API.
+* Bug fix: fix session token auth storage issue causing "Oops there was a problem" error messages for some users.
+
+= 5.2.2 =
+* Fix to a random failure in our automated release process that resulted in some broken images.
+* Bug fix: revert change causing REST API methods to be mismatched.
+
+= 5.2.1 =
+* Update Matomo core to 5.2.2.
+* New feature: tracking setting that allows generating a visitor ID server side if no visitor ID cookie exists.
+* Bug fix: fix issue causing errors in archiving for some Matomo premium plugins that include '?' in SQL string literals.
+* Bug fix: in the summary, do not display reports that have nothing but empty rows.
+* Bug fix: only track cart updates after WooCommerce calculates cart totals, since triggering cart total calculation early can interfere with other WooCommerce plugins.
+* Bug fix: make sure to track ecommerce cart updates if the shipping changes in WooCommerce.
+* Bug fix: avoid errors when displaying the summary page without a period and date specified in the URL.
+* Bug fix: fix issue with Matomo for WordPress plugin not being detected properly on Windows systems.
+* Bug fix: when triggering an update manually in the Troubleshooting page, make sure core plugin updates are also executed, rather than just core updates.
+* Bug fix: schedule geolocation db install and other events after an install completes successfully instead of during.
+* Bug fix: do not allow multiple requests to install Matomo at the same time.
+* Bug fix: do not trigger the golocation db install task during install, if it has run at least once before.
+* Bug fix: the normal Matomo site selector should not be displayed on Matomo reporting/admin pages. It is now hidden.
+
+= 5.2.0 =
+* Update Matomo core to 5.2.1.
+* Bug fix: using marketplace plugins in a multisite WordPress install could result in fatal errors on creation of a new blog.
+* Compatibility with the latest wpstatistics version in the wpstatistics importer.
+
+= 5.1.7 =
+* Bug fix: in scheduled report emails, fix the URLs for flag images.
+* Bug fix: use same charset/collate as WordPress.
+* Bug fix: fix General_Confirm shown in some cases when showing the password confirmation modal.
+* Bug fix: fix uninstall script error.
+* Bug fix: more compatibility fixes with wpstatistics in the wpstatistics importer.
+
 = 5.1.6 =
 * Bug fix: the wpstatistics importer failed to import search keywords due to a change in the wpstatistics plugin from over year ago.
 * Bug fix: the wpstatistics importer will now work with the latest wpstatistics version.

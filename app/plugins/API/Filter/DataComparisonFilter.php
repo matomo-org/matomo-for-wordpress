@@ -115,7 +115,7 @@ class DataComparisonFilter
      * @var bool
      */
     private $invertCompareChangeCompute;
-    public function __construct($request, Report $report = null)
+    public function __construct($request, ?Report $report = null)
     {
         $this->request = new \Piwik\Request($request);
         $generalConfig = Config::getInstance()->General;
@@ -125,16 +125,18 @@ class DataComparisonFilter
         $this->checkComparisonLimit($this->periodCompareLimit, 'data_comparison_period_limit');
         $this->segmentName = $this->getSegmentNameFromReport($report);
         $this->compareSegments = self::getCompareSegments();
-        if (count($this->compareSegments) > $this->segmentCompareLimit + 1) {
-            throw new BadRequestException(Piwik::translate('General_MaximumNumberOfSegmentsComparedIs', [$this->segmentCompareLimit]));
+        $segmentCompareLimitPlusMain = $this->segmentCompareLimit + 1;
+        if (count($this->compareSegments) > $segmentCompareLimitPlusMain) {
+            throw new BadRequestException(Piwik::translate('General_MaximumNumberOfSegmentsComparedIs', [$segmentCompareLimitPlusMain]));
         }
         $this->compareDates = self::getCompareDates($request);
         $this->comparePeriods = self::getComparePeriods($request);
         if (count($this->compareDates) !== count($this->comparePeriods)) {
             throw new BadRequestException(Piwik::translate('General_CompareDatesParamMustMatchComparePeriods', ['compareDates', 'comparePeriods']));
         }
-        if (count($this->compareDates) > $this->periodCompareLimit + 1) {
-            throw new BadRequestException(Piwik::translate('General_MaximumNumberOfPeriodsComparedIs', [$this->periodCompareLimit]));
+        $periodCompareLimitPlusMain = $this->periodCompareLimit + 1;
+        if (count($this->compareDates) > $periodCompareLimitPlusMain) {
+            throw new BadRequestException(Piwik::translate('General_MaximumNumberOfPeriodsComparedIs', [$periodCompareLimitPlusMain]));
         }
         if (count($this->compareSegments) == 1 && count($this->comparePeriods) == 1) {
             return;
@@ -157,9 +159,6 @@ class DataComparisonFilter
     {
         return !empty(Common::getRequestVar('compareSegments', [], $type = 'array', $request)) || !empty(Common::getRequestVar('comparePeriods', [], $type = 'array', $request)) || !empty(Common::getRequestVar('compareDates', [], $type = 'array', $request));
     }
-    /**
-     * @param DataTable\DataTableInterface $table
-     */
     public function compare(DataTable\DataTableInterface $table)
     {
         if (empty($this->compareSegments) && empty($this->comparePeriods)) {
@@ -244,7 +243,7 @@ class DataComparisonFilter
         }
         $idSubtable = $this->request->getIntegerParameter('idSubtable', 0);
         if ($idSubtable > 0) {
-            $comparisonIdSubtables = $this->request->getJsonParameter('comparisonIdSubtables', false);
+            $comparisonIdSubtables = $this->request->getJsonParameter('comparisonIdSubtables', \false);
             if (empty($comparisonIdSubtables)) {
                 throw new \Exception("Comparing segments/periods with subtables only works when the comparison idSubtables are supplied as well.");
             }
@@ -318,7 +317,7 @@ class DataComparisonFilter
         $comparisonLabels = array_filter($comparisonLabels);
         return '(' . implode(') (', $comparisonLabels) . ')';
     }
-    private function getSegmentNameFromReport(Report $report = null)
+    private function getSegmentNameFromReport(?Report $report = null)
     {
         if (empty($report)) {
             return null;
@@ -416,7 +415,7 @@ class DataComparisonFilter
         $value = $value ?: 0;
         $valueToCompare = $fromRow ? $fromRow->getColumn($columnName) : 0;
         $valueToCompare = $valueToCompare ?: 0;
-        $change = DataTable\Filter\CalculateEvolutionFilter::calculate($value, $valueToCompare, $precision = 1, true, true);
+        $change = DataTable\Filter\CalculateEvolutionFilter::calculate($value, $valueToCompare, $precision = 1, \true, \true);
         $trend = $value - $valueToCompare < 0 ? -1 : ($value - $valueToCompare > 0 ? 1 : 0);
         return [$change, $trend];
     }
@@ -474,12 +473,11 @@ class DataComparisonFilter
      *
      * @see \Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines::render()
      *
-     * @return bool
      * @throws \Exception
      */
     private function shouldIncludeTrendValues() : bool
     {
-        return $this->request->getBoolParameter('include_trends', false);
+        return $this->request->getBoolParameter('include_trends', \false);
     }
     /**
      * Returns the pretty series label for a specific comparison based on the currently set comparison query parameters.

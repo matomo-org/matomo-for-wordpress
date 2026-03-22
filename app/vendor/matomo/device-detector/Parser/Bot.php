@@ -30,16 +30,20 @@ class Bot extends \DeviceDetector\Parser\AbstractBotParser
     /**
      * @var bool
      */
-    protected $discardDetails = false;
+    protected $discardDetails = \false;
     /**
      * Enables information discarding
      */
     public function discardDetails() : void
     {
-        $this->discardDetails = true;
+        $this->discardDetails = \true;
     }
     /**
      * Parses the current UA and checks whether it contains bot information
+     *
+     * @return array|null
+     *
+     * @throws \Exception
      *
      * @see bots.yml for list of detected bots
      *
@@ -54,22 +58,25 @@ class Bot extends \DeviceDetector\Parser\AbstractBotParser
      *
      * NOTE: Doing the big match before matching every single regex speeds up the detection
      *
-     * @return array|null
      */
     public function parse() : ?array
     {
         $result = null;
         if ($this->preMatchOverall()) {
             if ($this->discardDetails) {
-                return [true];
+                return [\true];
             }
             foreach ($this->getRegexes() as $regex) {
                 $matches = $this->matchUserAgent($regex['regex']);
-                if ($matches) {
-                    unset($regex['regex']);
-                    $result = $regex;
-                    break;
+                if (!$matches) {
+                    continue;
                 }
+                unset($regex['regex']);
+                $result = $regex;
+                if (\array_key_exists('name', $result)) {
+                    $result['name'] = $this->buildByMatch($result['name'], $matches);
+                }
+                break;
             }
         }
         return $result;

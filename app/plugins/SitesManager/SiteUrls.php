@@ -21,7 +21,7 @@ class SiteUrls
     /**
     * Groups all URLs by host, path and idsite.
     *
-    * @param array $urls  An array containing URLs by idsite,
+    * @param array $siteUrls  An array containing URLs by idsite,
     *                     eg array(array($idSite = 1 => array('apache.piwik', 'apache2.piwik'), 2 => array(), ...))
     *                     as returned by {@link getAllCachedSiteUrls()} and {@link getAllSiteUrls}
     * @return array All urls grouped by host => path => idSites. Path having the most '/' will be listed first
@@ -53,10 +53,10 @@ class SiteUrls
         $this->sortUrlsByHost($allUrls);
         return $allUrls;
     }
-    public function addUrlByHost(&$allUrls, $idSite, $url, $addPath = true)
+    public function addUrlByHost(&$allUrls, $idSite, $url, $addPath = \true)
     {
         $urlParsed = @parse_url($url);
-        if ($urlParsed === false || !isset($urlParsed['host'])) {
+        if ($urlParsed === \false || !isset($urlParsed['host'])) {
             return;
         }
         $host = $this->toCanonicalHost($urlParsed['host']);
@@ -164,7 +164,7 @@ class SiteUrls
     {
         $idSite = $request->getIdSite();
         $url = $request->getParam('url');
-        $this->addUrlByHost($allUrls, $idSite, $url, $addPath = false);
+        $this->addUrlByHost($allUrls, $idSite, $url, $addPath = \false);
     }
     private function sortByPathDepth($pathA, $pathB)
     {

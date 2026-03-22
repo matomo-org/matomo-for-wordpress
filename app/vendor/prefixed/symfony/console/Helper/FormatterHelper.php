@@ -34,7 +34,7 @@ class FormatterHelper extends Helper
      *
      * @return string
      */
-    public function formatBlock($messages, string $style, bool $large = false)
+    public function formatBlock($messages, string $style, bool $large = \false)
     {
         if (!\is_array($messages)) {
             $messages = [$messages];

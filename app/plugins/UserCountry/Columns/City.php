@@ -23,15 +23,13 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $acceptValues = 'Sydney, Sao Paolo, Rome, etc.';
     protected $category = 'UserCountry_VisitLocation';
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('city', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             $value = substr($value, 0, 255);
             return $value;
         }
@@ -39,8 +37,6 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getLocationDetail($userInfo, LocationProvider::CITY_NAME_KEY);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -49,8 +45,6 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
         return $this->getUrlOverrideValueIfAllowed('city', $request);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

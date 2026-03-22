@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo\WpStatistics\Importer;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -16,6 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ImportWpStatistics {
 
 	public function show() {
+		$importer                                = new Importer();
+		$matomo_wp_statistics_version            = $importer->get_wp_statistics_plugin_version();
+		$matomo_is_compatible_with_wp_statistics = $importer->check_compatible_version( $matomo_wp_statistics_version );
+
 		include dirname( __FILE__ ) . '/views/import_wp_statistics.php';
 	}
 }

@@ -41,7 +41,7 @@ abstract class DataTableManipulator
      * @param bool $apiMethod
      * @param array $request
      */
-    public function __construct($apiModule = false, $apiMethod = false, $request = array())
+    public function __construct($apiModule = \false, $apiMethod = \false, $request = array())
     {
         $this->apiModule = $apiModule;
         $this->apiMethod = $apiMethod;

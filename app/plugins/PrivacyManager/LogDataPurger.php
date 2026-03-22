@@ -63,7 +63,7 @@ class LogDataPurger
     {
         $dateUpperLimit = Date::factory("today")->subDay($deleteLogsOlderThan);
         $transactionLevel = new TransactionLevel(Db::get());
-        $transactionLevel->setUncommitted();
+        $transactionLevel->setTransactionLevelForNonLockingReads();
         $this->logDeleter->deleteVisitsFor($start = null, $dateUpperLimit->getDatetime());
         $transactionLevel->restorePreviousStatus();
         $logTables = self::getDeleteTableLogTables();
@@ -92,7 +92,7 @@ class LogDataPurger
          */
         Piwik::postEvent('PrivacyManager.deleteLogsOlderThan', array($dateUpperLimit, $deleteLogsOlderThan));
         // optimize table overhead after deletion
-        Db::optimizeTables($logTables);
+        Db\Schema::getInstance()->optimizeTables($logTables);
     }
     /**
      * Returns an array describing what data would be purged if purging were invoked.
@@ -134,18 +134,18 @@ class LogDataPurger
     {
         $logVisit = Common::prefixTable("log_visit");
         // get max idvisit
-        $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM {$logVisit}");
+        $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM `{$logVisit}`");
         if (empty($maxIdVisit)) {
-            return false;
+            return \false;
         }
         // select highest idvisit to delete from
         $dateStart = Date::factory("today")->subDay($deleteLogsOlderThan);
-        $sql = "SELECT idvisit\n\t\t          FROM {$logVisit}\n\t\t         WHERE '" . $dateStart->toString('Y-m-d H:i:s') . "' > visit_last_action_time\n\t\t           AND idvisit <= ?\n\t\t           AND idvisit > ?\n\t\t      ORDER BY idvisit DESC\n\t\t         LIMIT 1";
+        $sql = "SELECT idvisit\n\t\t          FROM `{$logVisit}`\n\t\t         WHERE '" . $dateStart->toString('Y-m-d H:i:s') . "' > visit_last_action_time\n\t\t           AND idvisit <= ?\n\t\t           AND idvisit > ?\n\t\t      ORDER BY idvisit DESC\n\t\t         LIMIT 1";
         return Db::segmentedFetchFirst($sql, $maxIdVisit, 0, -self::$selectSegmentSize);
     }
     private function getLogTableDeleteCount($table, $maxIdVisit)
     {
-        $sql = "SELECT COUNT(*) FROM {$table} WHERE idvisit <= ?";
+        $sql = "SELECT COUNT(*) FROM `{$table}` WHERE idvisit <= ?";
         return (int) Db::fetchOne($sql, array($maxIdVisit));
     }
     // let's hardcode, since these are not dynamically created tables

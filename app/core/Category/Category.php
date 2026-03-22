@@ -37,7 +37,7 @@ class Category
     protected $order = 99;
     /**
      * The icon for this category, eg 'icon-user'
-     * @var int
+     * @var string
      */
     protected $icon = '';
     /**
@@ -121,7 +121,7 @@ class Category
     }
     /**
      * Get the help text (if any) for this category.
-     * @return null
+     * @return null|string
      */
     public function getHelp()
     {

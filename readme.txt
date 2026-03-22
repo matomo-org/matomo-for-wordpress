@@ -1,9 +1,9 @@
-=== Matomo Analytics - Ethical Stats. Powerful Insights. ===
+=== Matomo Analytics - Powerful, Privacy-First Insights for WordPress ===
 Contributors: matomoteam
-Tags: matomo,analytics,statistics,stats,ecommerce
+Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 6.7.1
-Stable tag: 5.1.6
+Tested up to: 6.9.4
+Stable tag: 5.7.1
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -13,8 +13,6 @@ Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analyt
 == Description ==
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
-
-**New in version 5.1.4: fixes for a couple security issues. It is recommended to update to this version.**
 
 [youtube https://www.youtube.com/watch?v=puxi_Ey0iLc]
 

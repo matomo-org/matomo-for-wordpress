@@ -44,9 +44,9 @@ class SlackbotHandler extends AbstractProcessingHandler
      * @param  int    $level     The minimum logging level at which this handler will be triggered
      * @param  bool   $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($slackTeam, $token, $channel, $level = Logger::CRITICAL, $bubble = true)
+    public function __construct($slackTeam, $token, $channel, $level = Logger::CRITICAL, $bubble = \true)
     {
-        @trigger_error('SlackbotHandler is deprecated and will be removed on 2.x', E_USER_DEPRECATED);
+        @trigger_error('SlackbotHandler is deprecated and will be removed on 2.x', \E_USER_DEPRECATED);
         parent::__construct($level, $bubble);
         $this->slackTeam = $slackTeam;
         $this->token = $token;
@@ -61,10 +61,10 @@ class SlackbotHandler extends AbstractProcessingHandler
     {
         $slackbotUrl = sprintf('https://%s.slack.com/services/hooks/slackbot?token=%s&channel=%s', $this->slackTeam, $this->token, $this->channel);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $slackbotUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $record['message']);
+        curl_setopt($ch, \CURLOPT_URL, $slackbotUrl);
+        curl_setopt($ch, \CURLOPT_POST, \true);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, \true);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, $record['message']);
         Curl\Util::execute($ch);
     }
 }

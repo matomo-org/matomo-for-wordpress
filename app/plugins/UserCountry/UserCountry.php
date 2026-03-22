@@ -83,7 +83,7 @@ class UserCountry extends \Piwik\Plugin
     public function isGeoIPWorking()
     {
         $provider = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider();
-        return $provider instanceof GeoIp2 && $provider->isAvailable() === true && $provider->isWorking() === true;
+        return $provider instanceof GeoIp2 && $provider->isAvailable() === \true && $provider->isWorking() === \true;
     }
     public static function isGeoLocationAdminEnabled()
     {

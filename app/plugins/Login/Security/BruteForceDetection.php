@@ -50,7 +50,7 @@ class BruteForceDetection
     {
         $dbSchemaVersion = $this->updater->getCurrentComponentVersion('core');
         if ($dbSchemaVersion && version_compare($dbSchemaVersion, '3.8.0') == -1) {
-            return false;
+            return \false;
             // do not enable brute force detection before the tables exist
         }
         return $this->settings->enableBruteForceDetection->getValue();
@@ -68,21 +68,21 @@ class BruteForceDetection
     public function isAllowedToLogin($ipAddress)
     {
         if ($this->settings->isBlacklistedIp($ipAddress)) {
-            return false;
+            return \false;
         }
         if ($this->settings->isWhitelistedIp($ipAddress)) {
-            return true;
+            return \true;
         }
         $db = Db::get();
         $startTime = $this->getStartTimeRange();
-        $sql = 'SELECT count(*) as numLogins FROM ' . $this->tablePrefixed . ' WHERE ip_address = ? AND attempted_at > ?';
+        $sql = 'SELECT count(*) as numLogins FROM `' . $this->tablePrefixed . '` WHERE ip_address = ? AND attempted_at > ?';
         $numLogins = $db->fetchOne($sql, array($ipAddress, $startTime));
         return empty($numLogins) || $numLogins <= $this->maxLogAttempts;
     }
     public function getCurrentlyBlockedIps()
     {
         $sql = 'SELECT ip_address
-                FROM ' . $this->tablePrefixed . ' 
+                FROM `' . $this->tablePrefixed . '`
                 WHERE attempted_at > ?
                 GROUP BY ip_address 
                 HAVING count(*) > ' . (int) $this->maxLogAttempts;
@@ -99,7 +99,7 @@ class BruteForceDetection
     public function unblockIp($ip)
     {
         // we only delete where attempted_at was recent and keep other IPs for history purposes
-        Db::get()->query('DELETE FROM ' . $this->tablePrefixed . ' WHERE ip_address = ? and attempted_at > ?', array($ip, $this->getStartTimeRange()));
+        Db::get()->query('DELETE FROM `' . $this->tablePrefixed . '` WHERE ip_address = ? and attempted_at > ?', [$ip, $this->getStartTimeRange()]);
     }
     public function cleanupOldEntries()
     {
@@ -107,21 +107,21 @@ class BruteForceDetection
         $minutesAutoDelete = 10080;
         $minutes = max($minutesAutoDelete, $this->minutesTimeRange);
         $deleteOlderDate = $this->getDateTimeSubMinutes($minutes);
-        Db::get()->query('DELETE FROM ' . $this->tablePrefixed . ' WHERE attempted_at < ?', array($deleteOlderDate));
+        Db::get()->query('DELETE FROM `' . $this->tablePrefixed . '` WHERE attempted_at < ?', [$deleteOlderDate]);
     }
     /**
      * @internal tests only
      */
     public function deleteAll()
     {
-        return Db::query('DELETE FROM ' . $this->tablePrefixed);
+        return Db::query('DELETE FROM `' . $this->tablePrefixed . '`');
     }
     /**
      * @internal tests only
      */
     public function getAll()
     {
-        return Db::get()->fetchAll('SELECT * FROM ' . $this->tablePrefixed);
+        return Db::get()->fetchAll('SELECT * FROM `' . $this->tablePrefixed . '`');
     }
     protected function getNow()
     {
@@ -144,12 +144,12 @@ class BruteForceDetection
             $this->ignoreExceptionIfThrownDuringOneClickUpdate($ex);
         }
         if (!$this->hasTooManyTriesOverallInlastHour($count)) {
-            return false;
+            return \false;
         }
         if (!$this->model->hasNotifiedUserAboutSuspiciousLogins($login)) {
             $this->sendSuspiciousLoginsEmailToUser($login, $count);
         }
-        return true;
+        return \true;
     }
     private function hasTooManyTriesOverallInLastHour($count)
     {
@@ -165,7 +165,7 @@ class BruteForceDetection
             $this->model->markSuspiciousLoginsNotifiedEmailSent($login);
         } catch (\Exception $ex) {
             // log if error is not that we can't find a user
-            if (strpos($ex->getMessage(), 'unable to find user to send') === false) {
+            if (strpos($ex->getMessage(), 'unable to find user to send') === \false) {
                 StaticContainer::get(LoggerInterface::class)->info('Error when sending ' . SuspiciousLoginAttemptsInLastHourEmail::class . ' email. User exists but encountered {exception}', ['exception' => $ex]);
             }
         }
@@ -179,8 +179,8 @@ class BruteForceDetection
     private function ignoreExceptionIfThrownDuringOneClickUpdate(\Exception $ex)
     {
         // ignore column not found errors during one click update since the db will not be up to date while new code is being used
-        $module = Common::getRequestVar('module', false);
-        if (strpos($ex->getMessage(), 'Unknown column') === false || $module != 'CoreUpdater') {
+        $module = Common::getRequestVar('module', \false);
+        if (strpos($ex->getMessage(), 'Unknown column') === \false || $module != 'CoreUpdater') {
             throw $ex;
         }
     }

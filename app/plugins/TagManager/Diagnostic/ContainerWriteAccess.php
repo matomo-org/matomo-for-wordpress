@@ -37,13 +37,13 @@ class ContainerWriteAccess implements Diagnostic
         $pathJsDir = TagManager::getAbsolutePathToContainerDirectory();
         $directories = array($pathJsDir);
         $directories = Filechecks::checkDirectoriesWritable($directories);
-        $error = false;
+        $error = \false;
         foreach ($directories as $directory => $isWritable) {
             if ($isWritable) {
                 $status = DiagnosticResult::STATUS_OK;
             } else {
                 $status = DiagnosticResult::STATUS_ERROR;
-                $error = true;
+                $error = \true;
             }
             $result->addItem(new DiagnosticResultItem($status, $directory));
         }

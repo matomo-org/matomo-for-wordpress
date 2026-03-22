@@ -40,8 +40,6 @@ class Response
     /**
      * Echos an error message & other information, then exits.
      *
-     * @param Tracker $tracker
-     * @param Exception $e
      * @param int  $statusCode eg 500
      */
     public function outputException(Tracker $tracker, Exception $e, $statusCode)
@@ -162,9 +160,9 @@ class Response
         if ($img && $size && isset($size['mime']) && in_array($size['mime'], $supportedMimeTypes)) {
             Common::sendHeader('Content-Type: ' . $size['mime']);
             echo $img;
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Gets the error message to output when a tracking request fails.

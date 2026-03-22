@@ -27,21 +27,17 @@ class API extends \Piwik\Plugin\API
     public const RETURNING_COLUMN_SUFFIX = "_returning";
     public const NEW_VISITOR_SEGMENT = 'visitorType%3D%3Dnew';
     public const NEW_COLUMN_SUFFIX = "_new";
+    protected $autoSanitizeInputParams = \false;
     /**
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     * @param bool|array $columns
-     * @return mixed
+     * @param string|int|int[] $idSite
+     * @param null|string|string[] $columns
      */
-    public function get($idSite, $period, $date, $segment = false, $columns = false)
+    public function get($idSite, string $period, string $date, ?string $segment = null, $columns = null) : DataTable\DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
         $visitTypes = array(self::NEW_COLUMN_SUFFIX => self::NEW_VISITOR_SEGMENT, self::RETURNING_COLUMN_SUFFIX => self::RETURNING_VISITOR_SEGMENT);
         $columns = Piwik::getArrayFromApiParameter($columns);
-        /** @var \Piwik\DataTable\DataTableInterface $resultSet */
-        if ($idSite === 'all' || count(Site::getIdSitesFromIdSitesString($idSite)) > 1) {
+        if ($idSite === 'all' || count(Site::getIdSitesFromIdSitesString($idSite, \false, \true)) > 1) {
             $resultSet = new DataTable\Map();
             $resultSet->setKeyName('idSite');
         } elseif (Period::isMultiplePeriod($date, $period)) {
@@ -59,34 +55,34 @@ class API extends \Piwik\Plugin\API
                 continue;
             }
             $params = array('idSite' => $idSite, 'period' => $period, 'date' => $date, 'segment' => $modifiedSegment, 'columns' => implode(',', $columnsForVisitType), 'format' => 'original', 'format_metrics' => 0);
-            /** @var \Piwik\DataTable\Map $response */
+            /** @var DataTable\Map|DataTable $response */
             $response = Request::processRequest('VisitsSummary.get', $params);
-            $this->prefixColumns($response, $period, $columnSuffix);
-            if ($resultSet === null) {
-                $resultSet = $response;
-            } else {
-                $merger = new MergeDataTables();
-                $merger->mergeDataTables($resultSet, $response);
-            }
+            $this->prefixColumns($response, $columnSuffix);
+            $merger = new MergeDataTables();
+            $merger->mergeDataTables($resultSet, $response);
         }
         return $resultSet;
     }
-    protected function unprefixColumns(array $requestedColumns, $suffix)
+    /**
+     * @param string[] $requestedColumns
+     * @return string[]
+     */
+    protected function unprefixColumns(array $requestedColumns, string $suffix) : array
     {
         $result = array();
         foreach ($requestedColumns as $column) {
-            if (strpos($column, $suffix) !== false) {
+            if (strpos($column, $suffix) !== \false) {
                 $result[] = str_replace($suffix, '', $column);
             }
         }
         return $result;
     }
-    protected function prefixColumns($table, $period, $suffix)
+    protected function prefixColumns(DataTable\DataTableInterface $table, string $suffix) : void
     {
         $rename = array();
         foreach ($table->getColumns() as $oldColumn) {
             $rename[$oldColumn] = $oldColumn . $suffix;
         }
-        $table->filter('ReplaceColumnNames', array($rename));
+        $table->filter('ReplaceColumnNames', [$rename]);
     }
 }

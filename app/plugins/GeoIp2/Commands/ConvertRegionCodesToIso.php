@@ -28,9 +28,6 @@ class ConvertRegionCodesToIso extends ConsoleCommand
     {
         return LocationProvider::getCurrentProvider() instanceof GeoIp2;
     }
-    /**
-     * @return int
-     */
     protected function doExecute() : int
     {
         $output = $this->getOutput();
@@ -39,7 +36,7 @@ class ConvertRegionCodesToIso extends ConsoleCommand
             $output->writeln('Converting region codes already done.');
             return self::SUCCESS;
         }
-        $output->setDecorated(true);
+        $output->setDecorated(\true);
         $output->write('Creating mapping table in database');
         Db::query('DROP table if exists ' . self::MAPPING_TABLE_NAME);
         DbHelper::createTable(self::MAPPING_TABLE_NAME, "`country_code` VARCHAR(2) NOT NULL,\n                           `fips_code` VARCHAR(2) NOT NULL,\n                           `iso_code` VARCHAR(4) NULL DEFAULT NULL,\n                           PRIMARY KEY (`country_code`, `fips_code`)");
@@ -65,10 +62,10 @@ class ConvertRegionCodesToIso extends ConsoleCommand
         $activationTime = Option::get(GeoIp2::SWITCH_TO_ISO_REGIONS_OPTION_NAME);
         $activationDateTime = date('Y-m-d H:i:s', $activationTime);
         // fix country and region of tibet so it will be updated correctly afterwards
-        $tibetFixQuery = 'UPDATE %s SET location_country = "cn", location_region = "14" WHERE location_country = "ti"';
+        $tibetFixQuery = 'UPDATE `%s` SET location_country = "cn", location_region = "14" WHERE location_country = "ti"';
         // replace invalid country codes used by GeoIP Legacy
-        $fixInvalidCountriesQuery = 'UPDATE %s SET location_country = "" WHERE location_country IN("AP", "EU", "A1", "A2")';
-        $query = "UPDATE %s INNER JOIN %s ON location_country = country_code AND location_region = fips_code SET location_region = iso_code\n                  WHERE `%s` < ?";
+        $fixInvalidCountriesQuery = 'UPDATE `%s` SET location_country = "" WHERE location_country IN("AP", "EU", "A1", "A2")';
+        $query = "UPDATE `%s` INNER JOIN %s ON location_country = country_code AND location_region = fips_code SET location_region = iso_code\n                  WHERE `%s` < ?";
         $logTables = ['log_visit' => 'visit_first_action_time', 'log_conversion' => 'server_time'];
         foreach ($logTables as $logTable => $dateField) {
             $output->write('- Updating ' . $logTable);
@@ -82,7 +79,7 @@ class ConvertRegionCodesToIso extends ConsoleCommand
         Db::dropTables(Common::prefixTable(self::MAPPING_TABLE_NAME));
         $output->writeln(' <fg=green>✓</>');
         // save option to prevent a second run
-        Option::set(self::OPTION_NAME, true);
+        Option::set(self::OPTION_NAME, \true);
         $output->writeln('All region codes converted.');
         return self::SUCCESS;
     }

@@ -18,7 +18,7 @@ use Piwik\Session\SessionNamespace;
  *
  * Nonces in Piwik are stored as a session variable and have a configurable expiration.
  *
- * Learn more about nonces [here](http://en.wikipedia.org/wiki/Cryptographic_nonce).
+ * Learn more about nonces [here](https://en.wikipedia.org/wiki/Cryptographic_nonce).
  *
  * @api
  */
@@ -93,7 +93,7 @@ class Nonce
         //  The Session cookie is set to a secure cookie, when SSL is mis-configured, it can cause the PHP session cookie ID to change on each page view.
         //  Indicate to user how to solve this particular use case by forcing secure connections.
         if (\Piwik\Url::isSecureConnectionAssumedByPiwikButNotForcedYet()) {
-            $additionalErrors = '<br/><br/>' . \Piwik\Piwik::translate('Login_InvalidNonceSSLMisconfigured', array('<a target="_blank" rel="noreferrer noopener" href="' . \Piwik\Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_91/') . '">', '</a>', 'config/config.ini.php', '<pre>force_ssl=1</pre>', '<pre>[General]</pre>'));
+            $additionalErrors = '<br/><br/>' . \Piwik\Piwik::translate('Login_InvalidNonceSSLMisconfigured', [\Piwik\Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_91/'), '</a>', 'config/config.ini.php', '<pre>force_ssl=1</pre>', '<pre>[General]</pre>']);
         }
         // validate token
         if (empty($cnonce) || $cnonce !== $nonce) {
@@ -104,7 +104,7 @@ class Nonce
         if (!empty($referrer)) {
             // Allow the instance host by default, if no allowedReferrerHost is specified.
             if (empty($allowedReferrerHost) && !\Piwik\Url::isLocalUrl($referrer)) {
-                return \Piwik\Piwik::translate('Login_InvalidNonceReferrer', array('<a target="_blank" rel="noreferrer noopener" href="' . \Piwik\Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-install/faq_98') . '">', '</a>')) . $additionalErrors;
+                return \Piwik\Piwik::translate('Login_InvalidNonceReferrer', [\Piwik\Url::getExternalLinkTag('https://matomo.org/faq/how-to-install/faq_98'), '</a>']) . $additionalErrors;
             }
             // Test that referrer matches what is allowed.
             if (!empty($allowedReferrerHost) && !self::isReferrerHostValid($referrer, $allowedReferrerHost)) {
@@ -122,7 +122,7 @@ class Nonce
     public static function isReferrerHostValid($referrer, $allowedReferrerHost)
     {
         if (empty($referrer)) {
-            return false;
+            return \false;
         }
         $referrerHost = \Piwik\Url::getHostFromUrl($referrer);
         return preg_match('/(^|\\.)' . preg_quote($allowedReferrerHost) . '$/i', $referrerHost);
@@ -147,7 +147,7 @@ class Nonce
         if (!empty($_SERVER['HTTP_ORIGIN'])) {
             return $_SERVER['HTTP_ORIGIN'];
         }
-        return false;
+        return \false;
     }
     /**
      * Returns a list acceptable values for the HTTP **Origin** header.
@@ -190,6 +190,10 @@ class Nonce
             $nonce = \Piwik\Common::getRequestVar('nonce', null, 'string');
         }
         if (!self::verifyNonce($nonceName, $nonce, $allowedReferrerHost)) {
+            if (!empty($nonce)) {
+                self::discardNonce($nonceName);
+                // Invalidate nonce on failed attempts
+            }
             throw new \Exception(\Piwik\Piwik::translate('General_ExceptionSecurityCheckFailed'));
         }
         self::discardNonce($nonceName);

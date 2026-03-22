@@ -57,7 +57,7 @@ class PluginsArchiver
      * @var ArchiveWriter
      */
     private $archiveWriter;
-    public function __construct(\Piwik\ArchiveProcessor\Parameters $params, ArchiveWriter $archiveWriter = null)
+    public function __construct(\Piwik\ArchiveProcessor\Parameters $params, ?ArchiveWriter $archiveWriter = null)
     {
         $this->params = $params;
         $this->archiveWriter = $archiveWriter ?: new ArchiveWriter($this->params);
@@ -92,7 +92,7 @@ class PluginsArchiver
             $metrics = $this->aggregateMultipleVisitsMetrics();
         }
         if (empty($metrics)) {
-            return array('nb_visits' => false, 'nb_visits_converted' => false);
+            return array('nb_visits' => \false, 'nb_visits_converted' => \false);
         }
         return array('nb_visits' => $metrics['nb_visits'], 'nb_visits_converted' => $metrics['nb_visits_converted']);
     }
@@ -100,7 +100,7 @@ class PluginsArchiver
      * Instantiates the Archiver class in each plugin that defines it,
      * and triggers Aggregation processing on these plugins.
      */
-    public function callAggregateAllPlugins($visits, $visitsConverted, $forceArchivingWithoutVisits = false)
+    public function callAggregateAllPlugins($visits, $visitsConverted, $forceArchivingWithoutVisits = \false)
     {
         Log::debug("PluginsArchiver::%s: Initializing archiving process for all plugins [visits = %s, visits converted = %s]", __FUNCTION__, $visits, $visitsConverted);
         /** @var Logger $performanceLogger */
@@ -172,10 +172,10 @@ class PluginsArchiver
         $archivers = static::getPluginArchivers();
         foreach ($archivers as $pluginName => $archiverClass) {
             if ($archiverClass::shouldRunEvenWhenNoVisits()) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Loads Archiver class from any plugin that defines one.
@@ -213,18 +213,18 @@ class PluginsArchiver
     protected function shouldProcessReportsForPlugin($pluginName)
     {
         if ($this->params->getRequestedPlugin() == $pluginName) {
-            return true;
+            return \true;
         }
         if ($this->params->shouldOnlyArchiveRequestedPlugin()) {
-            return false;
+            return \false;
         }
         if (\Piwik\ArchiveProcessor\Rules::shouldProcessReportsAllPlugins([$this->params->getSite()->getId()], $this->params->getSegment(), $this->params->getPeriod()->getLabel())) {
-            return true;
+            return \true;
         }
         if ($this->params->getRequestedPlugin() && !\Piwik\Plugin\Manager::getInstance()->isPluginLoaded($this->params->getRequestedPlugin())) {
-            return false;
+            return \false;
         }
-        return false;
+        return \false;
     }
     protected function aggregateDayVisitsMetrics()
     {
@@ -270,7 +270,7 @@ class PluginsArchiver
          * @param array $this->params Array containing archive parameters (Site, Period, Date and Segment)
          * @param bool false This parameter is deprecated and will be removed.
          */
-        Piwik::postEvent('Archiving.makeNewArchiverObject', array($archiver, $pluginName, $this->params, false));
+        Piwik::postEvent('Archiving.makeNewArchiverObject', array($archiver, $pluginName, $this->params, \false));
         return $archiver;
     }
     public static function isArchivingProcessActive()

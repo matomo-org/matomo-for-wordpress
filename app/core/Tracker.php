@@ -10,8 +10,10 @@ namespace Piwik;
 
 use Exception;
 use Piwik\Container\StaticContainer;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Plugins\BulkTracking\Tracker\Requests;
 use Piwik\Plugins\PrivacyManager\Config as PrivacyManagerConfig;
+use Piwik\Tracker\BotRequest;
 use Piwik\Tracker\Db as TrackerDb;
 use Piwik\Tracker\Db\DbException;
 use Piwik\Tracker\Handler;
@@ -37,7 +39,7 @@ class Tracker
     // We use hex ID that are 16 chars in length, ie. 64 bits IDs
     public const LENGTH_HEX_ID_STRING = 16;
     public const LENGTH_BINARY_ID = 8;
-    public static $initTrackerMode = false;
+    public static $initTrackerMode = \false;
     private $countOfLoggedRequests = 0;
     protected $isInstalled = null;
     /**
@@ -50,7 +52,7 @@ class Tracker
     }
     public function isDebugModeEnabled()
     {
-        return array_key_exists('PIWIK_TRACKER_DEBUG', $GLOBALS) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true;
+        return array_key_exists('PIWIK_TRACKER_DEBUG', $GLOBALS) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === \true;
     }
     public function shouldRecordStatistics()
     {
@@ -77,7 +79,7 @@ class Tracker
         if ($this->isDebugModeEnabled()) {
             \Piwik\ErrorHandler::registerErrorHandler();
             \Piwik\ExceptionHandler::setUp();
-            $this->logger->debug("Debug enabled - Input parameters: {params}", ['params' => var_export($_GET + $_POST, true)]);
+            $this->logger->debug("Debug enabled - Input parameters: {params}", ['params' => var_export($_GET + $_POST, \true)]);
         }
     }
     public function isInstalled()
@@ -123,8 +125,7 @@ class Tracker
         }
     }
     /**
-     * @param Request $request
-     * @return array
+     * @return void
      */
     public function trackRequest(Request $request)
     {
@@ -132,13 +133,44 @@ class Tracker
             $this->logger->debug('The request is empty');
         } else {
             $this->logger->debug('Current datetime: {date}', ['date' => date("Y-m-d H:i:s", $request->getCurrentTimestamp())]);
-            $visit = Visit\Factory::make();
-            $visit->setRequest($request);
-            $visit->handle();
+            $isBot = $this->isBotRequest($request);
+            /**
+             * Allows overwriting the Bot detection done using Device Detector
+             * Use this event if you want to have a request handled as bot request instead of a normal visit
+             *
+             * @param bool &$isBot Indicates if the request should be handled as Bot
+             * @param Request $request current tracking request
+             */
+            \Piwik\Piwik::postEvent('Tracker.isBotRequest', [&$isBot, $request]);
+            $rawParams = $request->getRawParams();
+            /**
+             * The recMode param will for now be used to keep BC.
+             * If it is not set, which is currently the case for all tracking requests, it will be processed as Visit only
+             * When set to 1, only bot tracking will be processed. In case the request is not detected as bot, it will be discarded
+             * Setting it to 2 enables auto mode. Meaning it will be either processed as bot request or visit, depending on the detection
+             *
+             * @deprecated Remove this parameter handling with Matomo 6 and decide the tracking method based on the bot detection only.
+             */
+            $recMode = $rawParams['recMode'] ?? null;
+            if (((int) $recMode === 1 || (int) $recMode === 2) && $isBot) {
+                $botRequest = StaticContainer::get(BotRequest::class);
+                $botRequest->setRequest($request);
+                $botRequest->handle();
+            }
+            if (empty($recMode) || (int) $recMode === 2 && !$isBot) {
+                $visit = Visit\Factory::make();
+                $visit->setRequest($request);
+                $visit->handle();
+            }
         }
         // increment successfully logged request count. make sure to do this after try-catch,
         // since an excluded visit is considered 'successfully logged'
         ++$this->countOfLoggedRequests;
+    }
+    private function isBotRequest(Request $request) : bool
+    {
+        $deviceDetector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance($request->getUserAgent(), $request->getClientHints());
+        return $deviceDetector->isBot();
     }
     /**
      * Used to initialize core Piwik components on a piwik.php request
@@ -146,8 +178,8 @@ class Tracker
      */
     public static function initCorePiwikInTrackerMode()
     {
-        if (\Piwik\SettingsServer::isTrackerApiRequest() && self::$initTrackerMode === false) {
-            self::$initTrackerMode = true;
+        if (\Piwik\SettingsServer::isTrackerApiRequest() && self::$initTrackerMode === \false) {
+            self::$initTrackerMode = \true;
             require_once PIWIK_INCLUDE_PATH . '/core/Option.php';
             \Piwik\Access::getInstance();
             \Piwik\Config::getInstance();
@@ -233,23 +265,23 @@ class Tracker
             TrackerConfig::setConfigValue('tracking_requests_require_authentication', 0);
         }
         // Tests can force the use of 3rd party cookie for ID visitor
-        if (\Piwik\Common::getRequestVar('forceEnableFingerprintingAcrossWebsites', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceEnableFingerprintingAcrossWebsites', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('enable_fingerprinting_across_websites', 1);
         }
         // Tests can simulate the tracker API maintenance mode
-        if (\Piwik\Common::getRequestVar('forceEnableTrackerMaintenanceMode', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceEnableTrackerMaintenanceMode', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('record_statistics', 0);
         }
         // Tests can force the use of 3rd party cookie for ID visitor
-        if (\Piwik\Common::getRequestVar('forceUseThirdPartyCookie', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceUseThirdPartyCookie', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('use_third_party_id_cookie', 1);
         }
         // Tests using window_look_back_for_visitor
-        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', false, null, $args) == 1 || strpos(json_encode($args, true), '"forceLargeWindowLookBackForVisitor":"1"') !== false) {
+        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', \false, null, $args) == 1 || strpos(json_encode($args, \true), '"forceLargeWindowLookBackForVisitor":"1"') !== \false) {
             TrackerConfig::setConfigValue('window_look_back_for_visitor', 2678400);
         }
         // Tests can force the enabling of IP anonymization
-        if (\Piwik\Common::getRequestVar('forceIpAnonymization', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceIpAnonymization', \false, null, $args) == 1) {
             self::getDatabase();
             // make sure db is initialized
             $privacyConfig = new PrivacyManagerConfig();
@@ -259,22 +291,12 @@ class Tracker
             \Piwik\Filesystem::clearPhpCaches();
         }
     }
-    protected function loadTrackerPlugins()
-    {
-        try {
-            $pluginManager = PluginManager::getInstance();
-            $pluginsTracker = $pluginManager->loadTrackerPlugins();
-            $this->logger->debug("Loading plugins: { {plugins} }", ['plugins' => implode(", ", $pluginsTracker)]);
-        } catch (Exception $e) {
-            $this->logger->error('Error loading tracker plugins: {exception}', ['exception' => $e]);
-        }
-    }
     private function handleFatalErrors()
     {
         register_shutdown_function(function () {
             // TODO: add a log here
             $lastError = error_get_last();
-            if (!empty($lastError) && $lastError['type'] == E_ERROR) {
+            if (!empty($lastError) && $lastError['type'] == \E_ERROR) {
                 \Piwik\Common::sendResponseCode(500);
             }
         });
@@ -284,21 +306,21 @@ class Tracker
         try {
             $debug = (bool) TrackerConfig::getConfigValue('debug');
             if ($debug) {
-                return true;
+                return \true;
             }
             $debugOnDemand = (bool) TrackerConfig::getConfigValue('debug_on_demand');
             if ($debugOnDemand) {
-                return (bool) \Piwik\Common::getRequestVar('debug', false);
+                return (bool) \Piwik\Common::getRequestVar('debug', \false);
             }
         } catch (Exception $e) {
         }
-        return false;
+        return \false;
     }
     public function isPreFlightCorsRequest() : bool
     {
         if (isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD']) === 'OPTIONS') {
             return !empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']) || !empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']);
         }
-        return false;
+        return \false;
     }
 }

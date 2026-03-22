@@ -13,10 +13,13 @@ use Piwik\DataTable;
 class SearchQueryConverter extends FilterConverter implements DataConverterInterface {
 
 	public static function convert( array $wp_statistics_data ) {
-		$data = self::filter( $wp_statistics_data, '?s=', 'str_url' );
+		$first_page = reset( $wp_statistics_data );
+		$key        = isset( $first_page['uri'] ) ? 'uri' : 'str_url';
+
+		$data = self::filter( $wp_statistics_data, '?s=', $key );
 		foreach ( $data as $id => $url ) {
 			$matches = [];
-			if ( preg_match( '/\?s=(.+)$/', $url['str_url'], $matches ) ) {
+			if ( preg_match( '/\?s=(.+)$/', $url[ $key ], $matches ) ) {
 				$data[ $id ]['keyword'] = $matches[1];
 			}
 		}

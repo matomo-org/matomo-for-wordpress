@@ -28,7 +28,7 @@ trait ServiceSubscriberTrait
     public static function getSubscribedServices() : array
     {
         $services = method_exists(get_parent_class(self::class) ?: '', __FUNCTION__) ? parent::getSubscribedServices() : [];
-        $attributeOptIn = false;
+        $attributeOptIn = \false;
         if (\PHP_VERSION_ID >= 80000) {
             foreach ((new \ReflectionClass(self::class))->getMethods() as $method) {
                 if (self::class !== $method->getDeclaringClass()->name) {
@@ -48,7 +48,7 @@ trait ServiceSubscriberTrait
                     $serviceId = '?' . $serviceId;
                 }
                 $services[$attribute->newInstance()->key ?? self::class . '::' . $method->name] = $serviceId;
-                $attributeOptIn = true;
+                $attributeOptIn = \true;
             }
         }
         if (!$attributeOptIn) {

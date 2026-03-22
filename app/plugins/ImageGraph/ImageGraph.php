@@ -28,7 +28,7 @@ class ImageGraph extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        $hooks = array('API.getReportMetadata.end' => array('function' => 'getReportMetadata', 'after' => true));
+        $hooks = array('API.getReportMetadata.end' => array('function' => 'getReportMetadata', 'after' => \true));
         return $hooks;
     }
     // Number of periods to plot on an evolution graph
@@ -81,13 +81,12 @@ class ImageGraph extends \Piwik\Plugin
                 $dateForMultiplePeriodGraph = $start . ',' . $end;
             }
         }
-        $token_auth = Common::getRequestVar('token_auth', false);
         $segment = Request::getRawSegmentFromRequest();
         /** @var Scheduler $scheduler */
         $scheduler = StaticContainer::getContainer()->get('Piwik\\Scheduler\\Scheduler');
         $isRunningTask = $scheduler->isRunningTask();
         // add the idSubtable if it exists
-        $idSubtable = Common::getRequestVar('idSubtable', false);
+        $idSubtable = Common::getRequestVar('idSubtable', \false);
         $urlPrefix = "index.php?";
         foreach ($reports as &$report) {
             $reportModule = $report['module'];
@@ -99,9 +98,6 @@ class ImageGraph extends \Piwik\Plugin
             $parameters['idSite'] = $idSite;
             $parameters['apiModule'] = $reportModule;
             $parameters['apiAction'] = $reportAction;
-            if (!empty($token_auth)) {
-                $parameters['token_auth'] = $token_auth;
-            }
             // Forward custom Report parameters to the graph URL
             if (!empty($report['parameters'])) {
                 $parameters = array_merge($parameters, $report['parameters']);
@@ -113,7 +109,7 @@ class ImageGraph extends \Piwik\Plugin
                 $parameters['period'] = $periodForSinglePeriodGraph;
                 $parameters['date'] = $dateForSinglePeriodGraph;
             }
-            if ($idSubtable !== false) {
+            if ($idSubtable !== \false) {
                 $parameters['idSubtable'] = $idSubtable;
             }
             if (!empty($_GET['_restrictSitesToLogin']) && $isRunningTask) {
@@ -125,7 +121,7 @@ class ImageGraph extends \Piwik\Plugin
             $report['imageGraphUrl'] = $urlPrefix . Url::getQueryStringFromParameters($parameters);
             // thanks to API.getRowEvolution, reports with dimensions can now be plotted using an evolution graph
             // however, most reports with a fixed set of dimension values are excluded
-            // this is done so Piwik Mobile and Scheduled Reports do not display them
+            // this is done so Matomo Mobile and Scheduled Reports do not display them
             $reportWithDimensionsSupportsEvolution = empty($report['constantRowsCount']) || in_array($reportUniqueId, self::$CONSTANT_ROW_COUNT_REPORT_EXCEPTIONS);
             $reportSupportsEvolution = !in_array($reportUniqueId, self::$REPORTS_DISABLED_EVOLUTION_GRAPH);
             if ($reportSupportsEvolution && $reportWithDimensionsSupportsEvolution) {

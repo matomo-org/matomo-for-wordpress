@@ -20,6 +20,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
 use Piwik\DataTable\Filter\ColumnDelete;
 use Piwik\Date;
+use Piwik\Http\BadRequestException;
 use Piwik\IP;
 use Piwik\Period;
 use Piwik\Piwik;
@@ -34,7 +35,7 @@ use Piwik\Version;
 use Piwik\Widget\WidgetsList;
 require_once PIWIK_INCLUDE_PATH . '/core/Config.php';
 /**
- * This API is the <a href='http://matomo.org/docs/analytics-api/metadata/' rel='noreferrer' target='_blank'>Metadata API</a>: it gives information about all other available APIs methods, as well as providing
+ * This API is the <a href='https://matomo.org/docs/analytics-api/metadata/' rel='noreferrer' target='_blank'>Metadata API</a>: it gives information about all other available APIs methods, as well as providing
  * human readable and more complete outputs than normal API methods.
  *
  * Some of the information that is returned by the Metadata API:
@@ -47,7 +48,7 @@ require_once PIWIK_INCLUDE_PATH . '/core/Config.php';
  * <li>the method "getSuggestedValuesForSegment" returns top suggested values for a particular segment. It uses the Live.getLastVisitsDetails API to fetch the most recently used values, and will return the most often used values first.</li>
  * </ul>
  * The Metadata API is for example used by the Matomo Mobile App to automatically display all Matomo reports, with translated report & columns names and nicely formatted values.
- * More information on the <a href='http://matomo.org/docs/analytics-api/metadata/' rel='noreferrer' target='_blank'>Metadata API documentation page</a>
+ * More information on the <a href='https://matomo.org/docs/analytics-api/metadata/' rel='noreferrer' target='_blank'>Metadata API documentation page</a>
  *
  * @method static \Piwik\Plugins\API\API getInstance()
  */
@@ -88,7 +89,7 @@ class API extends \Piwik\Plugin\API
     public function getPhpVersion()
     {
         Piwik::checkUserHasSuperUserAccess();
-        return array('version' => PHP_VERSION, 'major' => PHP_MAJOR_VERSION, 'minor' => PHP_MINOR_VERSION, 'release' => PHP_RELEASE_VERSION, 'versionId' => PHP_VERSION_ID, 'extra' => PHP_EXTRA_VERSION);
+        return array('version' => \PHP_VERSION, 'major' => \PHP_MAJOR_VERSION, 'minor' => \PHP_MINOR_VERSION, 'release' => \PHP_RELEASE_VERSION, 'versionId' => \PHP_VERSION_ID, 'extra' => \PHP_EXTRA_VERSION);
     }
     /**
      * Get Matomo version
@@ -113,6 +114,7 @@ class API extends \Piwik\Plugin\API
     /**
      * Returns the section [APISettings] if defined in config.ini.php
      * @return array
+     * @deprecated May be removed in one of the next major releases
      */
     public function getSettings()
     {
@@ -133,16 +135,16 @@ class API extends \Piwik\Plugin\API
         foreach ($types as $type) {
             $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite = 0, $type->getId());
             $settingsMetadata = new SettingsMetadata();
-            $available[] = array('id' => $type->getId(), 'name' => Piwik::translate($type->getName()), 'description' => Piwik::translate($type->getDescription()), 'howToSetupUrl' => $type->getHowToSetupUrl(), 'settings' => $settingsMetadata->formatSettings($measurableSettings));
+            $available[] = array('id' => $type->getId(), 'name' => Piwik::translate($type->getName()), 'description' => Piwik::translate($type->getDescription()), 'longDescription' => Piwik::translate($type->getLongDescription()), 'howToSetupUrl' => $type->getHowToSetupUrl(), 'settings' => $settingsMetadata->formatSettings($measurableSettings));
         }
         return $available;
     }
-    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = true, $_showAllSegments = false)
+    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = \true, $_showAllSegments = \false)
     {
         if (empty($idSites)) {
             Piwik::checkUserHasSomeViewAccess();
         } else {
-            $idSites = Site::getIdSitesFromIdSitesString($idSites);
+            $idSites = Site::getIdSitesFromIdSitesString($idSites, \false, \true);
             Piwik::checkUserHasViewAccess($idSites);
         }
         $isNotAnonymous = !Piwik::isUserIsAnonymous();
@@ -186,7 +188,7 @@ class API extends \Piwik\Plugin\API
      * Loads reports metadata, then return the requested one,
      * matching optional API parameters.
      */
-    public function getMetadata($idSite, $apiModule, $apiAction, $apiParameters = array(), $language = false, $period = false, $date = false, $hideMetricsDoc = false, $showSubtableReports = false)
+    public function getMetadata($idSite, $apiModule, $apiAction, $apiParameters = array(), $language = \false, $period = \false, $date = \false, $hideMetricsDoc = \false, $showSubtableReports = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         if ($language) {
@@ -209,7 +211,7 @@ class API extends \Piwik\Plugin\API
      * @param int $idSite
      * @return array
      */
-    public function getReportMetadata($idSites = '', $period = false, $date = false, $hideMetricsDoc = false, $showSubtableReports = false, $idSite = false)
+    public function getReportMetadata($idSites = '', $period = \false, $date = \false, $hideMetricsDoc = \false, $showSubtableReports = \false, $idSite = \false)
     {
         if (empty($idSite) && !empty($idSites)) {
             if (is_array($idSites)) {
@@ -224,7 +226,7 @@ class API extends \Piwik\Plugin\API
         $metadata = $this->processedReport->getReportMetadata($idSite, $period, $date, $hideMetricsDoc, $showSubtableReports);
         return $metadata;
     }
-    public function getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment = false, $apiParameters = false, $idGoal = false, $language = false, $showTimer = true, $hideMetricsDoc = false, $idSubtable = false, $showRawMetrics = false, $format_metrics = null, $idDimension = false)
+    public function getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment = \false, $apiParameters = \false, $idGoal = \false, $language = \false, $showTimer = \true, $hideMetricsDoc = \false, $idSubtable = \false, $showRawMetrics = \false, $format_metrics = null, $idDimension = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $processed = $this->processedReport->getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment, $apiParameters, $idGoal, $language, $showTimer, $hideMetricsDoc, $idSubtable, $showRawMetrics, $format_metrics, $idDimension);
@@ -262,14 +264,14 @@ class API extends \Piwik\Plugin\API
     /**
      * Get a combined report of the *.get API methods.
      */
-    public function get($idSite, $period, $date, $segment = false, $columns = false)
+    public function get($idSite, $period, $date, $segment = \false, $columns = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $columns = Piwik::getArrayFromApiParameter($columns);
         // build columns map for faster checks later on
         $columnsMap = array();
         foreach ($columns as $column) {
-            $columnsMap[$column] = true;
+            $columnsMap[$column] = \true;
         }
         // find out which columns belong to which plugin
         $columnsByPlugin = array();
@@ -302,12 +304,12 @@ class API extends \Piwik\Plugin\API
             if ($mergedDataTable === null) {
                 $mergedDataTable = $dataTable;
             } else {
-                $merger = new MergeDataTables(true);
+                $merger = new MergeDataTables(\true);
                 $merger->mergeDataTables($mergedDataTable, $dataTable);
             }
         }
         if (!empty($columnsMap) && !empty($mergedDataTable)) {
-            $mergedDataTable->queueFilter('ColumnDelete', array(false, array_keys($columnsMap)));
+            $mergedDataTable->queueFilter('ColumnDelete', array(\false, array_keys($columnsMap)));
         }
         return $mergedDataTable ?? new DataTable();
     }
@@ -333,7 +335,7 @@ class API extends \Piwik\Plugin\API
      * @param string|int $showGoalMetricsForGoal
      * @return array
      */
-    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = false, $segment = false, $column = false, $language = false, $idGoal = false, $legendAppendMetric = true, $labelUseAbsoluteUrl = true, $idDimension = false, $labelSeries = false, $showGoalMetricsForGoal = false)
+    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = \false, $segment = \false, $column = \false, $language = \false, $idGoal = \false, $legendAppendMetric = \true, $labelUseAbsoluteUrl = \true, $idDimension = \false, $labelSeries = \false, $showGoalMetricsForGoal = \false)
     {
         // check if site exists
         $idSite = (int) $idSite;
@@ -371,6 +373,10 @@ class API extends \Piwik\Plugin\API
         if (empty($urls) || !is_array($urls)) {
             return [];
         }
+        $limit = $this->getBulkRequestLimit();
+        if ($limit > -1 && count($urls) > $limit) {
+            throw new BadRequestException(Piwik::translate('General_MaximumNumberOfBulkRequestUrlsIs', [$limit]));
+        }
         $request = \Piwik\Request::fromRequest();
         $queryParameters = $request->getParameters();
         unset($queryParameters['urls']);
@@ -379,13 +385,27 @@ class API extends \Piwik\Plugin\API
             $params = \Piwik\Request::fromQueryString($url)->getParameters();
             $params['format'] = 'json';
             $params += $queryParameters;
-            if (!empty($params['method']) && $params['method'] === 'API.getBulkRequest') {
+            $method = $params['method'] ?? '';
+            if (!empty($method) && is_string($method) && preg_replace('/[^\\w\\.]+/', '', Common::sanitizeInputValue($method)) === 'API.getBulkRequest') {
                 continue;
             }
             $req = new Request($params);
-            $result[] = json_decode($req->process(), true);
+            $result[] = json_decode($req->process(), \true);
         }
         return $result;
+    }
+    private function getBulkRequestLimit() : int
+    {
+        $configLimit = Config::getInstance()->General['API_bulk_request_limit'] ?? -1;
+        $configLimit = (int) $configLimit;
+        if (Piwik::isUserIsAnonymous()) {
+            $defaultLimit = Piwik::isUserHasSomeViewAccess() ? 50 : 10;
+            if ($configLimit > -1) {
+                return min($defaultLimit, $configLimit);
+            }
+            return $defaultLimit;
+        }
+        return $configLimit;
     }
     /**
      * Return true if plugin is activated, false otherwise
@@ -414,9 +434,13 @@ class API extends \Piwik\Plugin\API
         $maxSuggestionsToReturn = 30;
         $segment = $this->findSegment($segmentName, $idSite);
         // if segment has suggested values callback then return result from it instead
-        $suggestedValuesCallbackRequiresTable = false;
+        $suggestedValuesCallbackRequiresTable = \false;
         if (!empty($segment['suggestedValuesApi']) && is_string($segment['suggestedValuesApi']) && !Rules::isBrowserTriggerEnabled()) {
-            $now = Date::now()->setTimezone(Site::getTimezoneFor($idSite));
+            if ($idSite === 'all') {
+                $now = Date::now()->setTimezone(\Piwik\Plugins\SitesManager\API::getInstance()->getDefaultTimezone());
+            } else {
+                $now = Date::now()->setTimezone(Site::getTimezoneFor($idSite));
+            }
             if (self::$_autoSuggestLookBack != 60) {
                 // in Auto suggest tests we need to assume now is in 2018...
                 // we do - 20 to make sure the year is still correct otherwise could end up being 2017-12-31 and the recorded visits are over several days in the tests we make sure to select the last day a visit was recorded
@@ -468,7 +492,7 @@ class API extends \Piwik\Plugin\API
         if (!empty($segment['unionOfSegments'])) {
             $values = array();
             foreach ($segment['unionOfSegments'] as $unionSegmentName) {
-                $unionSegment = $this->findSegment($unionSegmentName, $idSite, $_showAllSegments = true);
+                $unionSegment = $this->findSegment($unionSegmentName, $idSite, $_showAllSegments = \true);
                 try {
                     $result = $this->getSuggestedValuesForSegmentName($idSite, $unionSegment, $maxSuggestionsToReturn);
                     if (!empty($result)) {
@@ -519,10 +543,10 @@ class API extends \Piwik\Plugin\API
         Piwik::postEvent('API.getPagesComparisonsDisabledFor', [&$pages]);
         return $pages;
     }
-    private function findSegment($segmentName, $idSite, $_showAllSegments = false)
+    private function findSegment($segmentName, $idSite, $_showAllSegments = \false)
     {
-        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = false, $_showAllSegments);
-        $segmentFound = false;
+        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = \false, $_showAllSegments);
+        $segmentFound = \false;
         foreach ($segmentsMetadata as $segmentMetadata) {
             if ($segmentMetadata['segment'] == $segmentName) {
                 $segmentFound = $segmentMetadata;
@@ -537,17 +561,17 @@ class API extends \Piwik\Plugin\API
     private function getSuggestedValuesForSegmentName($idSite, $segment, $maxSuggestionsToReturn)
     {
         $startDate = Date::now()->subDay(self::$_autoSuggestLookBack)->toString();
-        $requestLastVisits = "method=Live.getLastVisitsDetails\n        &idSite={$idSite}\n        &period=range\n        &date={$startDate},today\n        &format=original\n        &serialize=0\n        &flat=1";
+        $requestLastVisits = ['method' => 'Live.getLastVisitsDetails', 'idSite' => $idSite, 'period' => 'range', 'date' => $startDate . ',today', 'format' => 'original', 'serialize' => 0, 'flat' => 1];
         $segmentName = $segment['segment'];
         // Select non empty fields only
         // Note: this optimization has only a very minor impact
-        $requestLastVisits .= "&segment={$segmentName}" . urlencode('!=');
+        $requestLastVisits['segment'] = $segmentName . urlencode('!=');
         // By default Live fetches all actions for all visitors, but we'd rather do this only when required
         if ($this->doesSegmentNeedActionsData($segmentName)) {
-            $requestLastVisits .= "&filter_limit=400";
+            $requestLastVisits['filter_limit'] = 400;
         } else {
-            $requestLastVisits .= "&doNotFetchActions=1";
-            $requestLastVisits .= "&filter_limit=800";
+            $requestLastVisits['doNotFetchActions'] = 1;
+            $requestLastVisits['filter_limit'] = 800;
         }
         $request = new Request($requestLastVisits);
         $table = $request->process();
@@ -591,9 +615,9 @@ class API extends \Piwik\Plugin\API
     {
         // If you update this, also update flattenVisitorDetailsArray
         $segmentsNeedActionsInfo = array('visitConvertedGoalId', 'visitConvertedGoalName', 'pageUrl', 'pageTitle', 'siteSearchKeyword', 'siteSearchCategory', 'siteSearchCount', 'entryPageTitle', 'entryPageUrl', 'exitPageTitle', 'exitPageUrl', 'outlinkUrl', 'downloadUrl', 'eventUrl', 'orderId', 'revenueOrder', 'revenueAbandonedCart', 'productViewName', 'productViewSku', 'productViewPrice', 'productViewCategory1', 'productViewCategory2', 'productViewCategory3', 'productViewCategory4', 'productViewCategory5');
-        $isCustomVariablePage = stripos($segmentName, 'customVariablePage') !== false;
-        $isEventSegment = stripos($segmentName, 'event') !== false;
-        $isContentSegment = stripos($segmentName, 'content') !== false;
+        $isCustomVariablePage = stripos($segmentName, 'customVariablePage') !== \false;
+        $isEventSegment = stripos($segmentName, 'event') !== \false;
+        $isContentSegment = stripos($segmentName, 'content') !== \false;
         $doesSegmentNeedActionsInfo = in_array($segmentName, $segmentsNeedActionsInfo) || $isCustomVariablePage || $isEventSegment || $isContentSegment;
         return $doesSegmentNeedActionsInfo;
     }
@@ -629,7 +653,7 @@ class API extends \Piwik\Plugin\API
     }
     private function doesSuggestedValuesCallbackNeedData($suggestedValuesCallback)
     {
-        if (is_string($suggestedValuesCallback) && strpos($suggestedValuesCallback, '::') !== false) {
+        if (is_string($suggestedValuesCallback) && strpos($suggestedValuesCallback, '::') !== \false) {
             $suggestedValuesCallback = explode('::', $suggestedValuesCallback);
         }
         if (is_array($suggestedValuesCallback)) {
@@ -669,7 +693,7 @@ class Plugin extends \Piwik\Plugin
         // Do not perform page comparison check for glossary widget
         // This is performed here and not in Comparison.store.ts, as the widget might be used like on glossary.matomo.org
         // where url parameters are hidden in the request and javascript can't access the current module and action
-        if (Piwik::getModule() === 'API' && Piwik::getAction() === 'glossary' && \Piwik\Request::fromRequest()->getBoolParameter('widget', false)) {
+        if (Piwik::getModule() === 'API' && Piwik::getAction() === 'glossary' && \Piwik\Request::fromRequest()->getBoolParameter('widget', \false)) {
             $out .= "piwik.isPagesComparisonApiDisabled = true;\n";
         }
     }

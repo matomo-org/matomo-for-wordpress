@@ -25,6 +25,10 @@ class Record
      */
     private $name;
     /**
+     * @var string|null
+     */
+    private $plugin = null;
+    /**
      * @var string|int
      */
     private $columnToSortByBeforeTruncation;
@@ -43,7 +47,11 @@ class Record
     /**
      * @var bool
      */
-    private $countOfRecordNameIsRecursive = false;
+    private $countOfRecordNameIsRecursive = \false;
+    /**
+     * @var bool
+     */
+    private $countOfRecordNameIsForLeafs = \false;
     /**
      * @var array|null
      */
@@ -63,19 +71,11 @@ class Record
         $record->setName($name);
         return $record;
     }
-    /**
-     * @param string|null $plugin
-     * @return Record
-     */
     public function setPlugin(?string $plugin) : \Piwik\ArchiveProcessor\Record
     {
         $this->plugin = $plugin;
         return $this;
     }
-    /**
-     * @param string $name
-     * @return Record
-     */
     public function setName(string $name) : \Piwik\ArchiveProcessor\Record
     {
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
@@ -93,34 +93,20 @@ class Record
         $this->columnToSortByBeforeTruncation = $columnToSortByBeforeTruncation;
         return $this;
     }
-    /**
-     * @param int|null $maxRowsInTable
-     * @return Record
-     */
     public function setMaxRowsInTable(?int $maxRowsInTable) : \Piwik\ArchiveProcessor\Record
     {
         $this->maxRowsInTable = $maxRowsInTable;
         return $this;
     }
-    /**
-     * @param int|null $maxRowsInSubtable
-     * @return Record
-     */
     public function setMaxRowsInSubtable(?int $maxRowsInSubtable) : \Piwik\ArchiveProcessor\Record
     {
         $this->maxRowsInSubtable = $maxRowsInSubtable;
         return $this;
     }
-    /**
-     * @return string|null
-     */
     public function getPlugin() : ?string
     {
         return $this->plugin;
     }
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
@@ -132,59 +118,49 @@ class Record
     {
         return $this->columnToSortByBeforeTruncation;
     }
-    /**
-     * @return int|null
-     */
     public function getMaxRowsInTable() : ?int
     {
         return $this->maxRowsInTable;
     }
-    /**
-     * @return int|null
-     */
     public function getMaxRowsInSubtable() : ?int
     {
         return $this->maxRowsInSubtable;
     }
-    /**
-     * @param string $type
-     * @return Record
-     */
     public function setType(string $type) : \Piwik\ArchiveProcessor\Record
     {
         $this->type = $type;
         return $this;
     }
-    /**
-     * @return string
-     */
     public function getType() : string
     {
         return $this->type;
     }
-    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = false) : \Piwik\ArchiveProcessor\Record
+    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = \false) : \Piwik\ArchiveProcessor\Record
     {
         $this->countOfRecordName = $dependentRecordName;
         $this->countOfRecordNameIsRecursive = $isRecursive;
         return $this;
     }
-    /**
-     * @return string|null
-     */
+    public function setIsCountOfBlobRecordLeafRows(string $dependentRecordName) : \Piwik\ArchiveProcessor\Record
+    {
+        $this->countOfRecordName = $dependentRecordName;
+        $this->countOfRecordNameIsForLeafs = \true;
+        return $this;
+    }
     public function getCountOfRecordName() : ?string
     {
         return $this->countOfRecordName;
     }
-    /**
-     * @return bool
-     */
     public function getCountOfRecordNameIsRecursive() : bool
     {
         return $this->countOfRecordNameIsRecursive;
     }
+    public function getCountOfRecordNameIsForLeafs() : bool
+    {
+        return $this->countOfRecordNameIsForLeafs;
+    }
     /**
      * @param array|null $columnToRenameAfterAggregation
-     * @return Record
      */
     public function setColumnToRenameAfterAggregation(?array $columnToRenameAfterAggregation) : \Piwik\ArchiveProcessor\Record
     {
@@ -200,7 +176,6 @@ class Record
     }
     /**
      * @param array|null $blobColumnAggregationOps
-     * @return Record
      */
     public function setBlobColumnAggregationOps(?array $blobColumnAggregationOps) : \Piwik\ArchiveProcessor\Record
     {
@@ -214,18 +189,11 @@ class Record
     {
         return $this->blobColumnAggregationOps;
     }
-    /**
-     * @param ?callable $multiplePeriodTransform
-     * @return Record
-     */
     public function setMultiplePeriodTransform(?callable $multiplePeriodTransform) : \Piwik\ArchiveProcessor\Record
     {
         $this->multiplePeriodTransform = $multiplePeriodTransform;
         return $this;
     }
-    /**
-     * @return callable
-     */
     public function getMultiplePeriodTransform() : ?callable
     {
         return $this->multiplePeriodTransform;

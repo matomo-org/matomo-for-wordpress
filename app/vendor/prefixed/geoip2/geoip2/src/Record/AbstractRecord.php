@@ -30,7 +30,7 @@ abstract class AbstractRecord implements \JsonSerializable
         }
         if ($this->validAttribute($attr)) {
             if (preg_match('/^is_/', $key)) {
-                return false;
+                return \false;
             }
             return null;
         }
@@ -47,7 +47,7 @@ abstract class AbstractRecord implements \JsonSerializable
     private function validAttribute(string $attr) : bool
     {
         // @phpstan-ignore-next-line
-        return \in_array($attr, $this->validAttributes, true);
+        return \in_array($attr, $this->validAttributes, \true);
     }
     public function jsonSerialize() : ?array
     {

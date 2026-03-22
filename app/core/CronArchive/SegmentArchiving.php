@@ -13,10 +13,9 @@ use Matomo\Cache\Transient;
 use Piwik\Access;
 use Piwik\Archive\ArchiveInvalidator;
 use Piwik\ArchiveProcessor\Rules;
-use Piwik\Common;
+use Piwik\Cache as PiwikCache;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
-use Piwik\Db;
 use Piwik\Period\Range;
 use Piwik\Plugins\SegmentEditor\Model;
 use Piwik\Segment;
@@ -58,12 +57,12 @@ class SegmentArchiving
      * @var bool
      */
     private $forceArchiveAllSegments;
-    public function __construct($beginningOfTimeLastNInYears = self::DEFAULT_BEGINNING_OF_TIME_LAST_N_YEARS, Model $segmentEditorModel = null, Cache $segmentListCache = null, Date $now = null, LoggerInterface $logger = null)
+    public function __construct($beginningOfTimeLastNInYears = self::DEFAULT_BEGINNING_OF_TIME_LAST_N_YEARS, ?Model $segmentEditorModel = null, ?Cache $segmentListCache = null, ?Date $now = null, ?LoggerInterface $logger = null)
     {
         $this->processNewSegmentsFrom = StaticContainer::get('ini.General.process_new_segments_from');
         $this->beginningOfTimeLastNInYears = $beginningOfTimeLastNInYears;
         $this->segmentEditorModel = $segmentEditorModel ?: new Model();
-        $this->segmentListCache = $segmentListCache ?: new Transient();
+        $this->segmentListCache = $segmentListCache ?: PiwikCache::getTransientCache();
         $this->now = $now ?: Date::factory('now');
         $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
         $this->forceArchiveAllSegments = self::getShouldForceArchiveAllSegments();
@@ -74,12 +73,11 @@ class SegmentArchiving
             if (!$this->isAutoArchivingEnabledFor($segment) || !self::isSegmentForSite($segment, $idSite)) {
                 continue;
             }
-            try {
-                $segmentObj = new Segment($segment['definition'], [$idSite]);
-            } catch (\Exception $ex) {
+            if (!Segment::isAvailable($segment['definition'], [$idSite])) {
                 $this->logger->debug("Could not process segment {$segment['definition']} for site {$idSite}. Segment should not exist for the site, but does.");
                 continue;
             }
+            $segmentObj = new Segment($segment['definition'], [$idSite]);
             if ($segmentObj->getHash() == $hash) {
                 return $segment;
             }
@@ -88,11 +86,7 @@ class SegmentArchiving
     }
     public function getReArchiveSegmentStartDate($segmentInfo)
     {
-        /**
-         * @var Date $segmentCreatedTime
-         * @var Date $segmentLastEditedTime
-         */
-        list($segmentCreatedTime, $segmentLastEditedTime) = $this->getCreatedTimeOfSegment($segmentInfo);
+        [$segmentCreatedTime, $segmentLastEditedTime] = $this->getCreatedTimeOfSegment($segmentInfo);
         if ($this->processNewSegmentsFrom == \Piwik\CronArchive\SegmentArchiving::CREATION_TIME) {
             if (empty($segmentCreatedTime)) {
                 return null;
@@ -110,7 +104,7 @@ class SegmentArchiving
                 return null;
             }
             $lastN = $matches[1];
-            list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentLastEditedTime, 'day');
+            [$lastDate, $lastPeriod] = Range::getDateXPeriodsAgo($lastN, $segmentLastEditedTime, 'day');
             $result = Date::factory($lastDate);
             $this->logger->debug("process_new_segments_from set to editLast{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
             return $result;
@@ -119,7 +113,7 @@ class SegmentArchiving
                 return null;
             }
             $lastN = $matches[1];
-            list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentCreatedTime, 'day');
+            [$lastDate, $lastPeriod] = Range::getDateXPeriodsAgo($lastN, $segmentCreatedTime, 'day');
             $result = Date::factory($lastDate);
             $this->logger->debug("process_new_segments_from set to last{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
             return $result;
@@ -133,10 +127,6 @@ class SegmentArchiving
                     $result = $siteCreationDate;
                 }
             }
-            $earliestVisitTime = $this->getEarliestVisitTimeFor($idSite);
-            if (!empty($earliestVisitTime) && $result->isEarlier($earliestVisitTime)) {
-                $result = $earliestVisitTime;
-            }
             return $result;
         }
     }
@@ -145,7 +135,7 @@ class SegmentArchiving
      *
      * @param array $storedSegment
      *
-     * @return array
+     * @return array<Date|null>
      */
     private function getCreatedTimeOfSegment(array $storedSegment) : array
     {
@@ -159,22 +149,14 @@ class SegmentArchiving
         $lastEditTime = empty($storedSegment['ts_last_edit']) || $storedSegment['ts_last_edit'] === '0000-00-00 00:00:00' ? null : Date::factory($storedSegment['ts_last_edit']);
         return [$createdTime, $lastEditTime];
     }
-    private function getEarliestVisitTimeFor($idSite)
-    {
-        $earliestIdVisit = Db::fetchOne('SELECT idvisit FROM ' . Common::prefixTable('log_visit') . ' WHERE idsite = ? ORDER BY visit_last_action_time ASC LIMIT 1', [$idSite]);
-        $earliestStartTime = Db::fetchOne('SELECT visit_first_action_time FROM ' . Common::prefixTable('log_visit') . ' WHERE idvisit = ?', [$earliestIdVisit]);
-        if (empty($earliestStartTime)) {
-            return null;
-        }
-        return Date::factory($earliestStartTime);
-    }
     public function getAllSegments()
     {
-        if (!$this->segmentListCache->contains('all')) {
+        $cacheKey = 'SegmentArchiving_AllSegments';
+        if (!$this->segmentListCache->contains($cacheKey)) {
             $segments = $this->segmentEditorModel->getAllSegmentsAndIgnoreVisibility();
-            $this->segmentListCache->save('all', $segments);
+            $this->segmentListCache->save($cacheKey, $segments);
         }
-        return $this->segmentListCache->fetch('all');
+        return $this->segmentListCache->fetch($cacheKey);
     }
     public function getAllSegmentsToArchive($idSite)
     {
@@ -200,6 +182,10 @@ class SegmentArchiving
         }
         $definition = $segmentInfo['definition'];
         $idSite = !empty($segmentInfo['enable_only_idsite']) ? $segmentInfo['enable_only_idsite'] : 'all';
+        /*
+         * Done as super user, to ensure we are able to receive all site ids, even if the current user
+         * does not have access to all of them.
+         */
         $idSites = Access::doAsSuperUser(function () use($idSite) {
             return Site::getIdSitesFromIdSitesString($idSite);
         });

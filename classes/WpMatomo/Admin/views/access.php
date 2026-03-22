@@ -7,7 +7,7 @@
  * @package matomo
  */
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // if accessed directly
 }
 
 use WpMatomo\Access;

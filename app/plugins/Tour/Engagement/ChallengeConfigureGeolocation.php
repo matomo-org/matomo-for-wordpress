@@ -42,6 +42,6 @@ class ChallengeConfigureGeolocation extends \Piwik\Plugins\Tour\Engagement\Chall
     }
     public function getUrl()
     {
-        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'UserCountry', 'action' => 'adminIndex', 'widget' => false));
+        return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'UserCountry', 'action' => 'adminIndex', 'widget' => \false));
     }
 }

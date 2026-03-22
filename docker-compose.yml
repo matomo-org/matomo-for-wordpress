@@ -15,20 +15,20 @@ services:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-apache}"
     environment:
       RUN_AS_USER: "${UID:-1000}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
       - "$PORT:$PORT"
@@ -36,9 +36,6 @@ services:
     depends_on:
       - $BACKEND
       - mailer
-    deploy:
-      restart_policy:
-        condition: on-failure
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -47,31 +44,28 @@ services:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: .
       dockerfile: ./scripts/Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: fpm
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-fpm}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - "$BACKEND"
-    deploy:
-      restart_policy:
-        condition: on-failure
   nginx:
     image: nginx
     volumes:
       - ./scripts/local-dev-nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
     depends_on:
       - fpm
     ports:
@@ -80,22 +74,62 @@ services:
       restart_policy:
         condition: on-failure
 
+  # litespeed enterprise (requires license)
+  litespeed:
+    env_file:
+      - .env.default
+      - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
+    build:
+      context: ./scripts
+      dockerfile: ./Dockerfile.local
+      args:
+        BASE_IMAGE: litespeedtech/litespeed:6.3.2-lsphp81
+    ulimits:
+      nofile:
+        soft: 50000
+        hard: 50000
+      nproc: 65535
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    environment:
+      RUN_AS_USER: "${UID:-1000}"
+      DOCUMENT_ROOT: /var/www/vhosts/localhost/html
+    volumes:
+      - ./docker/wordpress:/var/www/vhosts/localhost/html
+      - .:/var/www/vhosts/localhost/html/matomo-for-wordpress
+      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - ./docker/wp-cli:/.wp-cli
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-gitconfig:/root/.gitconfig
+      - ./serial.no:/serial.no
+    ports:
+      - "$PORT:$PORT"
+    entrypoint: /usr/src/entrypoint.sh
+    depends_on:
+      - $BACKEND
+      - mailer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   # service for running CLI utilities including wp-cli, the matomo console and phpunit
   exec:
     env_file:
       - .env.default
       - .env
+      - ${CUSTOM_ENV_FILE:-/dev/null}
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
       args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
+        BASE_IMAGE: "${BASE_IMAGE:-php:$PHP_VERSION-apache}"
     volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/wordpress:$DOCUMENT_ROOT
+      - .:$DOCUMENT_ROOT/matomo-for-wordpress
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./scripts/local-gitconfig:/.gitconfig
     ports:
@@ -106,6 +140,8 @@ services:
       EXECUTE_CLI: 1
     depends_on:
       - "$BACKEND"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # database service definitions
   mariadb:
@@ -125,6 +161,8 @@ services:
     volumes:
       - ./docker/mysql:/var/lib/mysql:delegated
       - ./docker/container-files/mysql_custom_my.cnf:/etc/mysql/conf.d/mycustom.cnf
+    ports:
+      - "3307:3306"
     deploy:
       restart_policy:
         condition: on-failure

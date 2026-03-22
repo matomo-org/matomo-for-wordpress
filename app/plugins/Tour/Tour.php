@@ -28,7 +28,7 @@ class Tour extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout', 'API.Annotations.add.end' => 'onAnnotationAdded', 'API.Goals.addGoal.end' => 'onGoalAdded', 'UsersManager.inviteUser.end' => 'onUserInvited', 'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution', 'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog', 'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile', 'Controller.Marketplace.overview' => 'onBrowseMarketplace', 'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => true));
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout', 'API.Annotations.add.end' => 'onAnnotationAdded', 'API.Goals.addGoal.end' => 'onGoalAdded', 'UsersManager.inviteUser.end' => 'onUserInvited', 'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution', 'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog', 'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile', 'Controller.Marketplace.overview' => 'onBrowseMarketplace', 'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => \true));
     }
     public function onBrowseMarketplace()
     {
@@ -97,7 +97,7 @@ class Tour extends \Piwik\Plugin
     public function changeDefaultDashboardLayout(&$defaultLayout)
     {
         if (Piwik::hasUserSuperUserAccess()) {
-            $defaultLayout = json_decode($defaultLayout, true);
+            $defaultLayout = json_decode($defaultLayout, \true);
             $engagementWidget = array('uniqueId' => 'widgetTourgetEngagement', 'parameters' => array('module' => 'Tour', 'action' => 'getEngagement'));
             if (is_array($defaultLayout) && isset($defaultLayout[2]) && is_array($defaultLayout[2])) {
                 array_unshift($defaultLayout[2], $engagementWidget);

@@ -9,7 +9,9 @@
 namespace Piwik\Plugins\Widgetize;
 
 use Piwik\API\Request;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Url;
@@ -28,8 +30,7 @@ class Controller extends \Piwik\Plugin\Controller
     public function iframe()
     {
         // also called by FrontController, we call it explicitly as a safety measure in case something changes in the future
-        $token_auth = Common::getRequestVar('token_auth', '', 'string');
-        if (!empty($token_auth)) {
+        if (StaticContainer::get(AuthenticationToken::class)->getAuthToken()) {
             Request::checkTokenAuthIsNotLimited('Widgetize', 'iframe');
         }
         $this->init();
@@ -45,7 +46,7 @@ class Controller extends \Piwik\Plugin\Controller
             $message = 'CoreHome cannot be widgetized. ' . 'You can enable it to be embedded directly into an iframe (passing module=CoreHome instead of module=Widgetize) ' . 'instead by enabling the \'enable_framed_pages\' setting in your config. ' . 'See ' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_193/') . ' for more info.';
             throw new \Exception($message);
         }
-        $shouldEmbedEmpty = false;
+        $shouldEmbedEmpty = \false;
         /**
          * Triggered to detect whether a widgetized report should be wrapped in the widgetized HTML or whether only
          * the rendered output of the controller/action should be printed. Set `$shouldEmbedEmpty` to `true` if

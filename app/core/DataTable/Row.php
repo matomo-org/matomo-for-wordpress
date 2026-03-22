@@ -32,22 +32,22 @@ class Row extends \ArrayObject
      * @var array
      */
     private static $unsummableColumns = array(
-        'label' => true,
-        'full_url' => true,
+        'label' => \true,
+        'full_url' => \true,
         // column used w/ old Piwik versions,
-        DataTable::ARCHIVED_DATE_METADATA_NAME => true,
+        DataTable::ARCHIVED_DATE_METADATA_NAME => \true,
         // date column used in metadata for proportional tooltips
-        DataTable::ARCHIVE_STATE_METADATA_NAME => true,
+        DataTable::ARCHIVE_STATE_METADATA_NAME => \true,
     );
     // @see sumRow - implementation detail
     public $maxVisitsSummed = 0;
     private $metadata = array();
-    private $isSubtableLoaded = false;
+    private $isSubtableLoaded = \false;
     /**
      * @internal
      */
     public $subtableId = null;
-    private $isSummaryRow = false;
+    private $isSummaryRow = \false;
     public const COLUMNS = 0;
     public const METADATA = 1;
     public const DATATABLE_ASSOCIATED = 3;
@@ -102,7 +102,7 @@ class Row extends \ArrayObject
         if ($this->isSubtableLoaded) {
             \Piwik\DataTable\Manager::getInstance()->deleteTable($this->subtableId);
             $this->subtableId = null;
-            $this->isSubtableLoaded = false;
+            $this->isSubtableLoaded = \false;
         }
     }
     /**
@@ -118,7 +118,7 @@ class Row extends \ArrayObject
             if (is_string($value)) {
                 $value = "'{$value}'";
             } elseif (is_array($value)) {
-                $value = var_export($value, true);
+                $value = var_export($value, \true);
             }
             $columns[] = "'{$column}' => {$value}";
         }
@@ -128,7 +128,7 @@ class Row extends \ArrayObject
             if (is_string($value)) {
                 $value = "'{$value}'";
             } elseif (is_array($value)) {
-                $value = var_export($value, true);
+                $value = var_export($value, \true);
             }
             $metadata[] = "'{$name}' => {$value}";
         }
@@ -145,10 +145,10 @@ class Row extends \ArrayObject
     public function deleteColumn($name)
     {
         if (!$this->offsetExists($name)) {
-            return false;
+            return \false;
         }
         unset($this[$name]);
-        return true;
+        return \true;
     }
     /**
      * Renames a column.
@@ -169,13 +169,13 @@ class Row extends \ArrayObject
     /**
      * Returns a column by name.
      *
-     * @param string $name The column name.
+     * @param string|int $name The column name.
      * @return mixed|false  The column value or false if it doesn't exist.
      */
     public function getColumn($name)
     {
         if (!isset($this[$name])) {
-            return false;
+            return \false;
         }
         return $this[$name];
     }
@@ -191,7 +191,7 @@ class Row extends \ArrayObject
             return $this->metadata;
         }
         if (!isset($this->metadata[$name])) {
-            return false;
+            return \false;
         }
         return $this->metadata[$name];
     }
@@ -234,7 +234,7 @@ class Row extends \ArrayObject
     /**
      * Returns the associated subtable, if one exists. Returns `false` if none exists.
      *
-     * @return DataTable|bool
+     * @return DataTable|false
      */
     public function getSubtable()
     {
@@ -245,7 +245,7 @@ class Row extends \ArrayObject
                 // edge case
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @param int $subtableId
@@ -254,7 +254,7 @@ class Row extends \ArrayObject
     public function setNonLoadedSubtableId($subtableId)
     {
         $this->subtableId = $subtableId;
-        $this->isSubtableLoaded = false;
+        $this->isSubtableLoaded = \false;
     }
     /**
      * Sums a DataTable to this row's subtable. If this row has no subtable a new
@@ -287,7 +287,7 @@ class Row extends \ArrayObject
     public function setSubtable(DataTable $subTable)
     {
         $this->subtableId = $subTable->getId();
-        $this->isSubtableLoaded = true;
+        $this->isSubtableLoaded = \true;
         return $subTable;
     }
     /**
@@ -307,7 +307,7 @@ class Row extends \ArrayObject
     public function removeSubtable()
     {
         $this->subtableId = null;
-        $this->isSubtableLoaded = false;
+        $this->isSubtableLoaded = \false;
     }
     /**
      * Set all the columns at once. Overwrites **all** previously set columns.
@@ -353,17 +353,17 @@ class Row extends \ArrayObject
      * @param bool|string $name Metadata name (omit to delete entire metadata).
      * @return bool `true` on success, `false` if the column didn't exist
      */
-    public function deleteMetadata($name = false)
+    public function deleteMetadata($name = \false)
     {
-        if ($name === false) {
+        if ($name === \false) {
             $this->metadata = array();
-            return true;
+            return \true;
         }
         if (!isset($this->metadata[$name])) {
-            return false;
+            return \false;
         }
         unset($this->metadata[$name]);
-        return true;
+        return \true;
     }
     /**
      * Add a new column to the row. If the column already exists, throws an exception.
@@ -425,12 +425,12 @@ class Row extends \ArrayObject
      *
      * @param \Piwik\DataTable\Row $rowToSum The row to sum to this row.
      * @param bool $enableCopyMetadata Whether metadata should be copied or not.
-     * @param array|bool $aggregationOperations for columns that should not be summed, determine which
+     * @param array|bool|null $aggregationOperations for columns that should not be summed, determine which
      *                                     aggregation should be used (min, max). format:
      *                                     `array('column name' => 'function name')`
      * @throws Exception
      */
-    public function sumRow(\Piwik\DataTable\Row $rowToSum, $enableCopyMetadata = true, $aggregationOperations = false)
+    public function sumRow(\Piwik\DataTable\Row $rowToSum, $enableCopyMetadata = \true, $aggregationOperations = \false)
     {
         $operationsIsArray = is_array($aggregationOperations);
         foreach ($rowToSum as $columnToSumName => $columnToSumValue) {
@@ -462,8 +462,6 @@ class Row extends \ArrayObject
             $this->sumRowMetadata($rowToSum, $aggregationOperations);
         }
     }
-    /**
-     */
     private function getColumnValuesMerged($operation, $thisColumnValue, $columnToSumValue, $thisRow, $rowToSum, $columnName = null)
     {
         switch ($operation) {
@@ -471,12 +469,18 @@ class Row extends \ArrayObject
                 $newValue = null;
                 break;
             case 'max':
-                $newValue = max($thisColumnValue, $columnToSumValue);
+                if ($this->isValueConsideredEmpty($thisColumnValue)) {
+                    $newValue = $columnToSumValue;
+                } elseif ($this->isValueConsideredEmpty($columnToSumValue)) {
+                    $newValue = $thisColumnValue;
+                } else {
+                    $newValue = max($thisColumnValue, $columnToSumValue);
+                }
                 break;
             case 'min':
-                if (!$thisColumnValue) {
+                if ($this->isValueConsideredEmpty($thisColumnValue)) {
                     $newValue = $columnToSumValue;
-                } elseif (!$columnToSumValue) {
+                } elseif ($this->isValueConsideredEmpty($columnToSumValue)) {
                     $newValue = $thisColumnValue;
                 } else {
                     $newValue = min($thisColumnValue, $columnToSumValue);
@@ -505,6 +509,10 @@ class Row extends \ArrayObject
         }
         return $newValue;
     }
+    private function isValueConsideredEmpty($value) : bool
+    {
+        return in_array($value, [null, \false, ''], \true);
+    }
     /**
      * Sums the metadata in `$rowToSum` with the metadata in `$this` row.
      *
@@ -520,7 +528,7 @@ class Row extends \ArrayObject
                 foreach ($aggregationOperations as $column => $operation) {
                     $thisMetadata = $this->getMetadata($column);
                     $sumMetadata = $rowToSum->getMetadata($column);
-                    if ($thisMetadata === false && $sumMetadata === false) {
+                    if ($thisMetadata === \false && $sumMetadata === \false) {
                         continue;
                     }
                     $aggregatedMetadata[$column] = $this->getColumnValuesMerged($operation, $thisMetadata, $sumMetadata, $this, $rowToSum, $column);
@@ -553,7 +561,7 @@ class Row extends \ArrayObject
     }
     public function setIsSummaryRow()
     {
-        $this->isSummaryRow = true;
+        $this->isSummaryRow = \true;
     }
     /**
      * Returns the associated comparisons DataTable, if any.
@@ -571,7 +579,6 @@ class Row extends \ArrayObject
     /**
      * Associates the supplied table with this row as the comparisons table.
      *
-     * @param DataTable $table
      */
     public function setComparisons(DataTable $table)
     {
@@ -589,11 +596,11 @@ class Row extends \ArrayObject
      */
     protected function sumRowArray($thisColumnValue, $columnToSumValue, $columnName = null)
     {
-        if ($columnToSumValue === false) {
+        if ($columnToSumValue === \false) {
             return $thisColumnValue;
         }
         if (is_numeric($columnToSumValue)) {
-            if ($thisColumnValue === false) {
+            if ($thisColumnValue === \false) {
                 $thisColumnValue = 0;
             } elseif (!is_numeric($thisColumnValue)) {
                 $label = $this->getColumn('label');
@@ -603,7 +610,7 @@ class Row extends \ArrayObject
             }
             return $thisColumnValue + $columnToSumValue;
         }
-        if ($thisColumnValue === false) {
+        if ($thisColumnValue === \false) {
             return $columnToSumValue;
         }
         if (is_array($columnToSumValue)) {
@@ -613,7 +620,7 @@ class Row extends \ArrayObject
                     continue;
                 }
                 if (!isset($newValue[$arrayIndex])) {
-                    $newValue[$arrayIndex] = false;
+                    $newValue[$arrayIndex] = \false;
                 }
                 $newValue[$arrayIndex] = $this->sumRowArray($newValue[$arrayIndex], $arrayValue, $columnName);
             }
@@ -668,14 +675,14 @@ class Row extends \ArrayObject
         $diff1 = array_udiff($cols1, $cols2, array(__CLASS__, 'compareElements'));
         $diff2 = array_udiff($cols2, $cols1, array(__CLASS__, 'compareElements'));
         if ($diff1 != $diff2) {
-            return false;
+            return \false;
         }
         $dets1 = $row1->getMetadata();
         $dets2 = $row2->getMetadata();
         ksort($dets1);
         ksort($dets2);
         if ($dets1 != $dets2) {
-            return false;
+            return \false;
         }
         // either both are null
         // or both have a value
@@ -683,10 +690,10 @@ class Row extends \ArrayObject
             $subtable1 = $row1->getSubtable();
             $subtable2 = $row2->getSubtable();
             if (!DataTable::isEqual($subtable1, $subtable2)) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     private function warnIfSubtableAlreadyExists(DataTable $subTable)
     {
@@ -728,7 +735,7 @@ class Row extends \ArrayObject
     private function isStartDateLaterThanCloud441DeployDate($period)
     {
         if (empty($period) || !$period instanceof Period) {
-            return true;
+            return \true;
             // sanity check
         }
         $periodStartDate = $period->getDateStart();

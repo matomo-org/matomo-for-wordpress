@@ -89,9 +89,9 @@ class ReportsPurger
      * @param bool $optimize If tables should be optimized after rows are deleted. Normally,
      *                       this is handled by a scheduled task.
      */
-    public function purgeData($optimize = false)
+    public function purgeData($optimize = \false)
     {
-        list($oldNumericTables, $oldBlobTables) = $this->getArchiveTablesToPurge();
+        [$oldNumericTables, $oldBlobTables] = $this->getArchiveTablesToPurge();
         // process blob tables first, since archive status is stored in the numeric archives
         if (!empty($oldBlobTables)) {
             foreach ($oldBlobTables as $table) {
@@ -102,7 +102,7 @@ class ReportsPurger
                 Db::deleteAllRows($table, $where, "idarchive ASC", $this->maxRowsToDeletePerQuery);
             }
             if ($optimize) {
-                Db::optimizeTables($oldBlobTables);
+                Db\Schema::getInstance()->optimizeTables($oldBlobTables);
             }
         }
         $this->segmentArchiveIds = null;
@@ -123,7 +123,7 @@ class ReportsPurger
                 Db::deleteAllRows($table, $where, "idarchive ASC", $this->maxRowsToDeletePerQuery, $bind);
             }
             if ($optimize) {
-                Db::optimizeTables($oldNumericTables);
+                Db\Schema::getInstance()->optimizeTables($oldNumericTables);
             }
         }
     }
@@ -140,7 +140,7 @@ class ReportsPurger
     {
         $result = array();
         // get archive tables that will be purged
-        list($oldNumericTables, $oldBlobTables) = $this->getArchiveTablesToPurge();
+        [$oldNumericTables, $oldBlobTables] = $this->getArchiveTablesToPurge();
         // process blob tables first, since archive status is stored in the numeric archives
         if (empty($this->reportPeriodsToKeep) && !$this->keepSegmentReports) {
             // not keeping any reports, so drop all tables
@@ -191,11 +191,11 @@ class ReportsPurger
         $oldBlobTables = array();
         foreach (DbHelper::getTablesInstalled() as $table) {
             $type = ArchiveTableCreator::getTypeFromTableName($table);
-            if ($type === false) {
+            if ($type === \false) {
                 continue;
             }
             $date = ArchiveTableCreator::getDateFromTableName($table);
-            list($year, $month) = explode('_', $date);
+            [$year, $month] = explode('_', $date);
             if (self::shouldReportBePurged($year, $month, $toRemoveDate)) {
                 if ($type == ArchiveTableCreator::NUMERIC_TABLE) {
                     $oldNumericTables[] = $table;
@@ -222,19 +222,19 @@ class ReportsPurger
     }
     private function getNumericTableDeleteCount($table)
     {
-        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM {$table}");
-        $sql = "SELECT COUNT(*) FROM {$table}\n                 WHERE name NOT IN ('" . implode("','", $this->metricsToKeep) . "')\n                   AND name NOT LIKE 'done%'\n                   AND idarchive >= ?\n                   AND idarchive < ?";
+        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
+        $sql = "SELECT COUNT(*) FROM `{$table}`\n                 WHERE name NOT IN ('" . implode("','", $this->metricsToKeep) . "')\n                   AND name NOT LIKE 'done%'\n                   AND idarchive >= ?\n                   AND idarchive < ?";
         $segments = Db::segmentedFetchOne($sql, 0, $maxIdArchive, self::$selectSegmentSize);
         return array_sum($segments);
     }
     private function getBlobTableDeleteCount($oldNumericTables, $table)
     {
-        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM {$table}");
+        $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
         $blobTableWhere = $this->getBlobTableWhereExpr($oldNumericTables, $table);
         if (empty($blobTableWhere)) {
             return 0;
         }
-        $sql = "SELECT COUNT(*) FROM {$table}\n                 WHERE " . $blobTableWhere . "\n                   AND idarchive >= ?\n                   AND idarchive < ?";
+        $sql = "SELECT COUNT(*) FROM `{$table}`\n                 WHERE " . $blobTableWhere . "\n                   AND idarchive >= ?\n                   AND idarchive < ?";
         $segments = Db::segmentedFetchOne($sql, 0, $maxIdArchive, self::$selectSegmentSize);
         return array_sum($segments);
     }
@@ -269,8 +269,8 @@ class ReportsPurger
         }
         foreach ($numericTables as $table) {
             $tableDate = ArchiveTableCreator::getDateFromTableName($table);
-            $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM {$table}");
-            $sql = "SELECT idarchive FROM {$table}\n                     WHERE name != 'done'\n                       AND name LIKE 'done_%.%'\n                       AND idarchive >= ?\n                       AND idarchive < ?";
+            $maxIdArchive = Db::fetchOne("SELECT MAX(idarchive) FROM `{$table}`");
+            $sql = "SELECT idarchive FROM `{$table}`\n                     WHERE name != 'done'\n                       AND name LIKE 'done_%.%'\n                       AND idarchive >= ?\n                       AND idarchive < ?";
             if (is_null($this->segmentArchiveIds)) {
                 $this->segmentArchiveIds = array();
             }

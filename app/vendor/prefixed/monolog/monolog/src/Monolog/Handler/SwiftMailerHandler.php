@@ -29,7 +29,7 @@ class SwiftMailerHandler extends MailHandler
      * @param int                     $level   The minimum logging level at which this handler will be triggered
      * @param bool                    $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\Matomo\Dependencies\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = true)
+    public function __construct(\Matomo\Dependencies\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->mailer = $mailer;
@@ -89,7 +89,7 @@ class SwiftMailerHandler extends MailHandler
     public function __get($name)
     {
         if ($name === 'message') {
-            trigger_error('SwiftMailerHandler->message is deprecated, use ->buildMessage() instead to retrieve the message', E_USER_DEPRECATED);
+            trigger_error('SwiftMailerHandler->message is deprecated, use ->buildMessage() instead to retrieve the message', \E_USER_DEPRECATED);
             return $this->buildMessage(null, array());
         }
         throw new \InvalidArgumentException('Invalid property ' . $name);

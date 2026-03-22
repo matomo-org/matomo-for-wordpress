@@ -9,7 +9,7 @@
 namespace Piwik\AssetManager\UIAssetMerger;
 
 use Exception;
-use lessc;
+use Matomo\Dependencies\lessc;
 use Piwik\AssetManager\UIAsset;
 use Piwik\AssetManager\UIAssetMerger;
 use Piwik\Common;
@@ -95,7 +95,7 @@ class StylesheetUIAssetMerger extends UIAssetMerger
      */
     private static function getLessCompiler()
     {
-        if (!class_exists("lessc")) {
+        if (!class_exists("\\Matomo\\Dependencies\\lessc")) {
             throw new Exception("Less was added to composer during 2.0. ==> Execute this command to update composer packages: \$ php composer.phar install");
         }
         $less = new lessc();
@@ -173,7 +173,7 @@ class StylesheetUIAssetMerger extends UIAssetMerger
         return function ($matches) use($baseDirectory, $webDirs) {
             $absolutePath = PIWIK_DOCUMENT_ROOT . "/{$baseDirectory}/" . $matches[2];
             // Allow to import extension less file
-            if (strpos($matches[2], '.') === false) {
+            if (strpos($matches[2], '.') === \false) {
                 $absolutePath .= '.less';
             }
             // Prevent from rewriting full path
@@ -220,8 +220,8 @@ class StylesheetUIAssetMerger extends UIAssetMerger
     protected function countDirectoriesInPathToRoot($uiAsset)
     {
         $rootDirectory = realpath($uiAsset->getBaseDirectory());
-        if ($rootDirectory != PATH_SEPARATOR && substr($rootDirectory, -strlen(PATH_SEPARATOR)) !== PATH_SEPARATOR) {
-            $rootDirectory .= PATH_SEPARATOR;
+        if ($rootDirectory != \PATH_SEPARATOR && substr($rootDirectory, -strlen(\PATH_SEPARATOR)) !== \PATH_SEPARATOR) {
+            $rootDirectory .= \PATH_SEPARATOR;
         }
         $rootDirectoryLen = strlen($rootDirectory);
         return $rootDirectoryLen;

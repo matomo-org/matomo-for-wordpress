@@ -19,6 +19,7 @@ describe('Matomo Admin > Diagnostic', () => {
   it('should load the tracking failures page correctly', async () => {
     await TrackingFailuresPage.open();
 
+    await TrackingFailuresPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.diagnostic.tracking-failures')
     ).toEqual(0);
@@ -27,7 +28,7 @@ describe('Matomo Admin > Diagnostic', () => {
   it('should load the device detection page correctly', async () => {
     await DeviceDetectionPage.open();
 
-    await DeviceDetectionPage.disableHoverStyles();
+    await DeviceDetectionPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.diagnostic.device-detection')
     ).toBeLessThanOrEqual(0.01);

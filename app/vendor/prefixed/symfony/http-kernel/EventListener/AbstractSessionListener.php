@@ -51,7 +51,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
     /**
      * @internal
      */
-    public function __construct(?ContainerInterface $container = null, bool $debug = false, array $sessionOptions = [])
+    public function __construct(?ContainerInterface $container = null, bool $debug = \false, array $sessionOptions = [])
     {
         $this->container = $container;
         $this->debug = $debug;
@@ -141,10 +141,10 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
             $sessionOptions = $this->getSessionOptions($this->sessionOptions);
             $sessionCookiePath = $sessionOptions['cookie_path'] ?? '/';
             $sessionCookieDomain = $sessionOptions['cookie_domain'] ?? null;
-            $sessionCookieSecure = $sessionOptions['cookie_secure'] ?? false;
-            $sessionCookieHttpOnly = $sessionOptions['cookie_httponly'] ?? true;
+            $sessionCookieSecure = $sessionOptions['cookie_secure'] ?? \false;
+            $sessionCookieHttpOnly = $sessionOptions['cookie_httponly'] ?? \true;
             $sessionCookieSameSite = $sessionOptions['cookie_samesite'] ?? Cookie::SAMESITE_LAX;
-            $sessionUseCookies = $sessionOptions['use_cookies'] ?? true;
+            $sessionUseCookies = $sessionOptions['use_cookies'] ?? \true;
             SessionUtils::popSessionCookie($sessionName, $sessionId);
             if ($sessionUseCookies) {
                 $request = $event->getRequest();
@@ -164,7 +164,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
                     if ($lifetime) {
                         $expire = time() + $lifetime;
                     }
-                    $response->headers->setCookie(Cookie::create($sessionName, $sessionId, $expire, $sessionCookiePath, $sessionCookieDomain, $sessionCookieSecure, $sessionCookieHttpOnly, false, $sessionCookieSameSite));
+                    $response->headers->setCookie(Cookie::create($sessionName, $sessionId, $expire, $sessionCookiePath, $sessionCookieDomain, $sessionCookieSecure, $sessionCookieHttpOnly, \false, $sessionCookieSameSite));
                 }
             }
         }
@@ -175,7 +175,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
             $maxAge = $response->headers->hasCacheControlDirective('public') ? 0 : (int) $response->getMaxAge();
             $response->setExpires(new \DateTimeImmutable('+' . $maxAge . ' seconds'))->setPrivate()->setMaxAge($maxAge)->headers->addCacheControlDirective('must-revalidate');
         }
-        if (!$event->getRequest()->attributes->get('_stateless', false)) {
+        if (!$event->getRequest()->attributes->get('_stateless', \false)) {
             return;
         }
         if ($this->debug) {
@@ -208,7 +208,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
         if (!($requestStack = $this->container && $this->container->has('request_stack') ? $this->container->get('request_stack') : null)) {
             return;
         }
-        $stateless = false;
+        $stateless = \false;
         $clonedRequestStack = clone $requestStack;
         while (null !== ($request = $clonedRequestStack->pop()) && !$stateless) {
             $stateless = $request->attributes->get('_stateless');

@@ -62,7 +62,7 @@ class SamplingHandler extends AbstractHandler
             }
             $this->getHandler($record)->handle($record);
         }
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * Return the nested handler

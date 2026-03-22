@@ -54,11 +54,11 @@ class DiagnosticResult implements \JsonSerializable
      * @param bool $escapeComment
      * @return DiagnosticResult
      */
-    public static function informationalResult($label, $comment = '', $escapeComment = true)
+    public static function informationalResult($label, $comment = '', $escapeComment = \true)
     {
-        if ($comment === true) {
+        if ($comment === \true) {
             $comment = '1';
-        } elseif ($comment === false) {
+        } elseif ($comment === \false) {
             $comment = '0';
         }
         if ($escapeComment) {

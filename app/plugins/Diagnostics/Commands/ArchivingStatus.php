@@ -39,7 +39,7 @@ class ArchivingStatus extends ConsoleCommand
         $this->outputSectionHeader($output, 'Invalidation Queue');
         $archiveTableDao = StaticContainer::get('Piwik\\DataAccess\\ArchiveTableDao');
         $headers = ['Invalidation', 'Segment', 'Site', 'Period', 'Date', 'Time Queued', 'Waiting', 'Started', 'Processing', 'Status'];
-        $queue = $archiveTableDao->getInvalidationQueueData(true);
+        $queue = $archiveTableDao->getInvalidationQueueData(\true);
         $this->renderTable($headers, $queue);
         // Metrics
         $this->outputSectionHeader($output, 'Archiving Metrics');
@@ -82,9 +82,7 @@ class ArchivingStatus extends ConsoleCommand
      * Output a styled header string
      *
      * @param mixed     $output
-     * @param string    $title
      *
-     * @return void
      */
     private function outputSectionHeader($output, string $title) : void
     {

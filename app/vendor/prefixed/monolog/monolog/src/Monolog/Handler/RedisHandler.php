@@ -35,7 +35,7 @@ class RedisHandler extends AbstractProcessingHandler
      * @param bool                  $bubble  Whether the messages that are handled can bubble up the stack or not
      * @param int|false             $capSize Number of entries to limit list size to
      */
-    public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true, $capSize = false)
+    public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = \true, $capSize = \false)
     {
         if (!($redis instanceof \Predis\Client || $redis instanceof \Redis)) {
             throw new \InvalidArgumentException('Predis\\Client or Redis instance required');

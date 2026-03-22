@@ -14,7 +14,7 @@
     var ARRAY_PARAM_NAMES = ['compareDates', 'comparePeriods', 'compareSegments'];
 
     /**
-     * Base type for Piwik UI controls. Provides functionality that all controls need (such as
+     * Base type for Matomo UI controls. Provides functionality that all controls need (such as
      * cleanup on destruction).
      *
      * @param {Element} element The root element of the control.
@@ -54,7 +54,7 @@
     UIControl._nextControlId = 0;
 
     /**
-     * Utility method that will clean up all piwik UI controls whose elements are not attached
+     * Utility method that will clean up all Matomo UI controls whose elements are not attached
      * to the DOM.
      *
      * TODO: instead of having other pieces of the UI manually calling cleanupUnusedControls,
@@ -112,7 +112,7 @@
          * Handle the widget resize event, if we're currently in a widget.
          *
          * TODO: should use proper resize detection (see
-         * http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/ )
+         * https://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/ )
          * with timeouts (since resizing widgets can be expensive)
          */
         onWidgetResize: function (handler) {

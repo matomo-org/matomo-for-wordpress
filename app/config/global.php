@@ -78,6 +78,20 @@ namespace {
          * here as well.
          */
         'DocumentationGenerator.customParameters' => [],
+        /**
+         * A list of exact (case-sensitive) `Module.Action` pairs where token_auths with write/admin
+         * access are allowed for non-API requests.
+         *
+         * Plugins can register actions in their `config/config.php`:
+         *
+         * return [
+         *     'token_auth.write_admin_allowed_module_actions' => \Piwik\DI::add(['MyPlugin.myAction']),
+         * ];
+         *
+         * @internal
+         */
+        'token_auth.write_admin_allowed_module_actions' => [],
+        \Piwik\Log\Logger::class => \Piwik\DI::create(\Piwik\Log\NullLogger::class),
         \Piwik\Log\LoggerInterface::class => \Piwik\DI::create(\Piwik\Log\NullLogger::class),
         'Piwik\\Translation\\Loader\\LoaderInterface' => \Piwik\DI::autowire('Piwik\\Translation\\Loader\\LoaderCache')->constructorParameter('loader', \Piwik\DI::get('Piwik\\Translation\\Loader\\JsonFileLoader')),
         'DeviceDetector\\Cache\\Cache' => \Piwik\DI::autowire('Piwik\\DeviceDetector\\DeviceDetectorCache')->constructor(86400),
@@ -86,7 +100,7 @@ namespace {
         // allow users to override plugin hardcoded value and avoid loading on demand
         'plugins.shouldNotLoadOnDemand' => [],
         'observers.global' => [],
-        'dev.disable_plugin_update_checks' => \false,
+        'dev.forced_plugin_update_result' => null,
         /**
          * By setting this option to false, the check that the DB schema version matches the version of the source code will
          * be no longer performed. Thus it allows you to execute for example a newer version of Matomo with an older Matomo

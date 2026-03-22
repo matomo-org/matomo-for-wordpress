@@ -14,7 +14,7 @@ namespace {
     use Piwik\API\CORSHandler;
     @\ignore_user_abort(\true);
     // Note: if you wish to debug the Tracking API please see this documentation:
-    // http://developer.piwik.org/api-reference/tracking-api#debugging-the-tracker
+    // https://developer.matomo.org/api-reference/tracking-api#debugging-the-tracker
     if (!\defined('PIWIK_DOCUMENT_ROOT')) {
         \define('PIWIK_DOCUMENT_ROOT', \dirname(__FILE__) == '/' ? '' : \dirname(__FILE__));
     }
@@ -25,6 +25,7 @@ namespace {
         \define('PIWIK_INCLUDE_PATH', \PIWIK_DOCUMENT_ROOT);
     }
     require_once \PIWIK_INCLUDE_PATH . '/core/bootstrap.php';
+    require_once \PIWIK_INCLUDE_PATH . '/core/Request/AuthenticationToken.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Plugin/Controller.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Exception/NotYetInstalledException.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/Plugin/ControllerAdmin.php';

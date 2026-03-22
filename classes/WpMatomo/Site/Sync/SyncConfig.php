@@ -86,14 +86,16 @@ class SyncConfig {
 			if ( isset( $config[ $group ][ $key ] ) ) {
 				return $config[ $group ][ $key ];
 			}
-		} else {
-			Bootstrap::do_bootstrap();
-			$config    = PiwikConfig::getInstance();
-			$the_group = $config->{$group};
-			if ( ! empty( $the_group ) && isset( $the_group[ $key ] ) ) {
-				return $the_group[ $key ];
-			}
 		}
+
+		Bootstrap::do_bootstrap();
+		$config    = PiwikConfig::getInstance();
+		$the_group = $config->{$group};
+		if ( ! empty( $the_group ) && isset( $the_group[ $key ] ) ) {
+			return $the_group[ $key ];
+		}
+
+		return null;
 	}
 
 	public function set_config_value( $group, $key, $value ) {

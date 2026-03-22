@@ -31,6 +31,9 @@ class Installer {
 	const OPTION_NAME_INSTALL_DATE    = 'matomo-install-date';
 	const OPTION_NAME_INSTALL_VERSION = 'matomo-install-version';
 
+	const DEFAULT_DB_CHARSET = 'utf8';
+	const DEFAULT_DB_COLLATE = '';
+
 	/**
 	 * @var Settings
 	 */
@@ -44,6 +47,10 @@ class Installer {
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 		$this->logger   = new Logger();
+	}
+
+	public static function is_file_not_exists_failure( \Exception $ex ) {
+		return preg_match( '/no such file or directory/i', $ex->getMessage() );
 	}
 
 	public function register_hooks() {
@@ -60,7 +67,15 @@ class Installer {
 			wp_mkdir_p( $config_dir );
 		}
 
-		return file_exists( $config_file );
+		if ( ! file_exists( $config_file ) ) {
+			return false;
+		}
+
+		if ( ! $this->is_current_instance_installed() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static function is_intalled() {
@@ -106,27 +121,18 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
+			if ( $this->is_install_in_progress() ) {
+				return false;
+			}
+
+			$this->mark_install_started();
+
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
 
-			// unload plugins since plugin instances may be holding out of date information
-			Manager::getInstance()->unloadPlugins();
-			Manager::getInstance()->loadActivatedPlugins();
-			Manager::getInstance()->installLoadedPlugins();
+			$this->install_plugins_one_at_a_time();
 
 			$this->update_components();
-
-			// we're scheduling another update in case there are some dimensions to be updated or anything
-			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
-			// away but need an actual reload and cache clearance etc
-			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
-
-			// to set up geoip in the background later... don't want this to influence the install
-			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
-
-			// in case something fails with website or user creation
-			// also to set up all the other users
-			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 
 			update_option( self::OPTION_NAME_INSTALL_DATE, time() );
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
@@ -183,9 +189,34 @@ class Installer {
 
 			Singleton::clearAll();
 			PluginApi::unsetAllInstances();
-			Cache::flushAll();
+			try {
+				Cache::flushAll();
+			} catch ( \Exception $ex ) {
+				if ( ! self::is_file_not_exists_failure( $ex ) ) { // ignore errors that involve a directory not existing
+					throw $ex;
+				}
+			}
 
 			$this->logger->log( 'Matomo install finished' );
+
+			$this->mark_matomo_installed();
+
+			// we're scheduling another update in case there are some dimensions to be updated or anything
+			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
+			// away but need an actual reload and cache clearance etc
+			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
+
+			// to set up geoip in the background later... don't want this to influence the install
+			$sync_config                = new Sync\SyncConfig( $this->settings );
+			$tasks                      = new ScheduledTasks( $this->settings, $sync_config );
+			$last_geoip_update_run_time = $tasks->get_last_time_before_cron( ScheduledTasks::EVENT_GEOIP );
+			if ( empty( $last_geoip_update_run_time ) ) {
+				wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
+			}
+
+			// in case something fails with website or user creation
+			// also to set up all the other users
+			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 		}
 
 		return true;
@@ -198,6 +229,7 @@ class Installer {
 
 		$matomo_url  = SettingsPiwik::getPiwikUrl();
 		$plugins_url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
+		$plugins_url = rtrim( $plugins_url, '/' ) . '/';
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
 		if ( $matomo_url
@@ -353,12 +385,12 @@ class Installer {
 			}
 		}
 
-		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
+		$charset = $wpdb->charset ? $wpdb->charset : self::DEFAULT_DB_CHARSET;
 		if ( defined( 'MATOMO_DB_CHARSET' ) && MATOMO_DB_CHARSET ) {
 			$charset = MATOMO_DB_CHARSET;
 		}
 
-		$collation = $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci';
+		$collation = $wpdb->collate ? $wpdb->collate : self::DEFAULT_DB_COLLATE;
 		if ( defined( 'MATOMO_DB_COLLATE' ) && MATOMO_DB_COLLATE ) {
 			$collation = MATOMO_DB_COLLATE;
 		}
@@ -387,5 +419,137 @@ class Installer {
 		Updater::unlock(); // make sure the update can be executed
 		$updater = new Updater( $this->settings );
 		$updater->update();
+	}
+
+	/**
+	 * public for tests
+	 *
+	 * @return bool
+	 */
+	public function is_current_instance_installed() {
+		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( empty( $installed_components ) ) {
+			$installed_components = '[]';
+		}
+		$installed_components = json_decode( $installed_components, true );
+
+		if ( empty( $installed_components['core'] ) ) {
+			return false;
+		}
+
+		// NOTE: this doesn't handle core plugins, but since they are always present during an install, we
+		// shouldn't need to
+		$plugin_files = isset( $GLOBALS['MATOMO_PLUGIN_FILES'] ) ? $GLOBALS['MATOMO_PLUGIN_FILES'] : [];
+		$plugin_files = is_array( $plugin_files ) ? $plugin_files : [];
+
+		foreach ( $plugin_files as $file ) {
+			$plugin_name = basename( dirname( $file ) );
+			if ( 'matomo' === $plugin_name ) {
+				continue;
+			}
+
+			if ( empty( $installed_components[ $plugin_name ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * public for tests
+	 *
+	 * @return void
+	 */
+	public function mark_matomo_installed() {
+		$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( empty( $installed ) ) {
+			$installed = '[]';
+		}
+		$installed = json_decode( $installed, true );
+
+		$installed['core'] = 1;
+		foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
+			$installed[ $plugin_name ] = 1;
+		}
+
+		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
+		$this->settings->save();
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		delete_option( $option_name );
+	}
+
+	private function mark_install_started() {
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		update_option( $option_name, time() );
+	}
+
+	private function is_install_in_progress() {
+		$five_minutes = 5 * 60;
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		$start_time  = get_option( $option_name );
+
+		// install is in progress if there is no last start time, or the last start time is before
+		// five minutes ago (we assume it failed in this case)
+		return ! empty( $start_time ) && $start_time >= time() - $five_minutes;
+	}
+
+	/**
+	 * Install all plugins including core and non-core plugins. Non-core plugins
+	 * are installed one at a time. Uninstalled plugins will not be loaded
+	 * when each non-core plugin is installed.
+	 *
+	 * This works around the core bug where exceptions can be thrown when an
+	 * uninstalled plugin, which is loaded while another plugin is being installed,
+	 * handles the "plugin installed" event.
+	 *
+	 * In a standalone Matomo, this likely won't be an issue, as multiple non-core
+	 * plugins are not usually installed at the same time. In Matomo for WordPress,
+	 * this can happen as a matter of course in Multi Site installs.
+	 *
+	 * If a user creates a new WordPress site with multiple non-core plugins installed,
+	 * by default the Matomo install process will try to install all of them at once,
+	 * causing an error.
+	 *
+	 * @return void
+	 */
+	private function install_plugins_one_at_a_time() {
+		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
+
+		$plugin_names     = array_map(
+			function ( $path ) {
+				return basename( dirname( $path ) );
+			},
+			$GLOBALS['MATOMO_PLUGIN_FILES']
+		);
+		$non_core_plugins = array_filter(
+			$plugin_names,
+			function ( $name ) {
+				return 'matomo' !== $name;
+			}
+		);
+
+		// unload plugins since plugin instances may be holding out of date information
+		$plugin_manager = Manager::getInstance();
+		$plugin_manager->unloadPlugins();
+		$plugin_manager->loadActivatedPlugins();
+
+		// first, install core plugins without non-core plugins loaded
+		foreach ( $non_core_plugins as $plugin ) {
+			$plugin_manager->unloadPlugin( $plugin );
+		}
+
+		$plugin_manager->installLoadedPlugins();
+
+		// then for every non-core plugin, install one at a time
+		foreach ( $non_core_plugins as $plugin ) {
+			$plugin_manager->loadPlugin( $plugin );
+			$plugin_manager->installLoadedPlugins();
+		}
+
+		// reload activated plugins just in case something didn't go right above
+		$plugin_manager->loadActivatedPlugins();
 	}
 }

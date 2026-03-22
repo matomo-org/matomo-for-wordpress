@@ -39,8 +39,8 @@ final class SourceContextProvider implements ContextProviderInterface
         $trace = debug_backtrace(\DEBUG_BACKTRACE_PROVIDE_OBJECT | \DEBUG_BACKTRACE_IGNORE_ARGS, $this->limit);
         $file = $trace[1]['file'];
         $line = $trace[1]['line'];
-        $name = '-' === $file || 'Standard input code' === $file ? 'Standard input code' : false;
-        $fileExcerpt = false;
+        $name = '-' === $file || 'Standard input code' === $file ? 'Standard input code' : \false;
+        $fileExcerpt = \false;
         for ($i = 2; $i < $this->limit; ++$i) {
             if (isset($trace[$i]['class'], $trace[$i]['function']) && 'dump' === $trace[$i]['function'] && VarDumper::class === $trace[$i]['class']) {
                 $file = $trace[$i]['file'] ?? $file;
@@ -53,7 +53,7 @@ final class SourceContextProvider implements ContextProviderInterface
                     } elseif (isset($trace[$i]['object']) && $trace[$i]['object'] instanceof Template) {
                         $template = $trace[$i]['object'];
                         $name = $template->getTemplateName();
-                        $src = method_exists($template, 'getSourceContext') ? $template->getSourceContext()->getCode() : (method_exists($template, 'getSource') ? $template->getSource() : false);
+                        $src = method_exists($template, 'getSourceContext') ? $template->getSourceContext()->getCode() : (method_exists($template, 'getSource') ? $template->getSource() : \false);
                         $info = $template->getDebugInfo();
                         if (isset($info[$trace[$i - 1]['line']])) {
                             $line = $info[$trace[$i - 1]['line']];
@@ -73,7 +73,7 @@ final class SourceContextProvider implements ContextProviderInterface
                 break;
             }
         }
-        if (false === $name) {
+        if (\false === $name) {
             $name = str_replace('\\', '/', $file);
             $name = substr($name, strrpos($name, '/') + 1);
         }

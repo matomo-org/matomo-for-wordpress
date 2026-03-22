@@ -49,13 +49,13 @@ class OrderBy extends BaseFilter
     }
     private function sortVal($valA, $valB)
     {
-        if ((!isset($valA) || $valA === false) && (!isset($valB) || $valB === false)) {
+        if ((!isset($valA) || $valA === \false) && (!isset($valB) || $valB === \false)) {
             return 0;
         }
-        if (!isset($valA) || $valA === false) {
+        if (!isset($valA) || $valA === \false) {
             return 1;
         }
-        if (!isset($valB) || $valB === false) {
+        if (!isset($valB) || $valB === \false) {
             return -1;
         }
         if ($valA === $valB) {

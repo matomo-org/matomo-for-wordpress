@@ -25,7 +25,7 @@ export default class TagManagerPage extends MatomoAdminPage {
 
     await $('.modal .editVersion input').waitForDisplayed();
 
-    await browser.pause(1000);
+    await browser.pause(2000);
   }
 
   async openInstallCodeModal() {

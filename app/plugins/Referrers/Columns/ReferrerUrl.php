@@ -27,8 +27,6 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
         $this->columnType = 'VARCHAR(' . self::MAX_LEN . ') NULL';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -50,6 +48,6 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
         if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $this->trimUrl($information['referer_url']);
         }
-        return false;
+        return \false;
     }
 }

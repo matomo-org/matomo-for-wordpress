@@ -29,7 +29,7 @@ use Piwik\Plugins\CustomDimensions\Tracker\CustomDimensionsRequestProcessor;
 /**
  * This class defines a new report.
  *
- * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
+ * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  */
 class GetCustomDimension extends Report
 {
@@ -59,7 +59,6 @@ class GetCustomDimension extends Report
      * Here you can configure how your report should be displayed. For instance whether your report supports a search
      * etc. You can also change the default request config. For instance change how many rows are displayed by default.
      *
-     * @param ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {
@@ -72,7 +71,7 @@ class GetCustomDimension extends Report
         if ($isWidget && $module !== 'Widgetize' && $view->isViewDataTableId(HtmlTable::ID)) {
             // we disable row evolution as it would not forward the idDimension when requesting the row evolution
             // this is a limitation in row evolution
-            $view->config->disable_row_evolution = true;
+            $view->config->disable_row_evolution = \true;
         }
         $module = $view->requestConfig->getApiModuleToRequest();
         $method = $view->requestConfig->getApiMethodToRequest();
@@ -85,7 +84,7 @@ class GetCustomDimension extends Report
         $view->config->custom_parameters['scopeOfDimension'] = $this->scopeOfDimension;
         if ($this->scopeOfDimension === \Piwik\Plugins\CustomDimensions\CustomDimensions::SCOPE_VISIT) {
             // Goal metrics for each custom dimension  of 'visit' scope is processed in Archiver via aggregateFromConversions
-            $view->config->show_goals = true;
+            $view->config->show_goals = \true;
             $view->config->columns_to_display = array('label', 'nb_visits', 'nb_uniq_visitors', 'nb_users', 'nb_actions', 'nb_actions_per_visit', 'avg_time_on_site', 'bounce_rate');
             if ($view->isViewDataTableId(HtmlTable::ID)) {
                 $view->config->filters[] = function (DataTable $table) use($view) {
@@ -104,13 +103,13 @@ class GetCustomDimension extends Report
             // add avg_generation_time tooltip
             $tooltipCallback = function ($hits, $min, $max) use($formatter) {
                 if (!$hits) {
-                    return false;
+                    return \false;
                 }
-                return Piwik::translate("Actions_AvgGenerationTimeTooltip", array($hits, "<br />", $formatter->getPrettyTimeFromSeconds($min, true), $formatter->getPrettyTimeFromSeconds($max, true)));
+                return Piwik::translate("Actions_AvgGenerationTimeTooltip", array($hits, "<br />", $formatter->getPrettyTimeFromSeconds($min, \true), $formatter->getPrettyTimeFromSeconds($max, \true)));
             };
             $view->config->filters[] = array('ColumnCallbackAddMetadata', array(array('nb_hits_with_time_generation', 'min_time_generation', 'max_time_generation'), 'avg_time_generation_tooltip', $tooltipCallback));
         }
-        $view->config->show_table_all_columns = false;
+        $view->config->show_table_all_columns = \false;
     }
     public function getMetrics()
     {
@@ -160,14 +159,14 @@ class GetCustomDimension extends Report
         } elseif ($this->scopeOfDimension === \Piwik\Plugins\CustomDimensions\CustomDimensions::SCOPE_VISIT) {
             $this->categoryId = 'General_Visitors';
             $this->dimension = new CustomVisitDimension($dimensionField, $this->name, $dimension['idcustomdimension']);
-            $this->metrics = array('nb_visits', 'nb_actions');
+            $this->metrics = ['nb_visits', 'nb_uniq_visitors', 'nb_actions', 'nb_users'];
             $this->processedMetrics = array(new AverageTimeOnSite(), new BounceRate(), new ActionsPerVisit());
         } else {
-            return false;
+            return \false;
         }
         $this->parameters = array('idDimension' => $dimension['idcustomdimension']);
         $this->order = 100 + $dimension['idcustomdimension'];
-        return true;
+        return \true;
     }
     protected function getIdSiteFromInfos($infos)
     {

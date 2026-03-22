@@ -29,7 +29,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable
      */
-    public function getUsers($idSite, $period, $date, $segment = false)
+    public function getUsers($idSite, $period, $date, $segment = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);

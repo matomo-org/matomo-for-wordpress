@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $was_updated */
 /** @var string $matomo_detected_ip */
 /** @var array $matomo_client_headers */
+/** @var int $matomo_server_side_tracking_delay */
 ?>
 
 <?php
@@ -91,6 +92,25 @@ if ( $was_updated ) {
 					? esc_html_e( 'If you are experiencing trouble with archiving (as in, report generation), enabling this option may solve the issue.', 'matomo' )
 					: esc_html_e( 'CLI archiving (aka async archiving) is not supported for your server, so archiving via HTTP requests is always enabled.', 'matomo' );
 				?>
+			</td>
+		</tr>
+		<tr>
+			<th width="20%" scope="row">
+				<label for="matomo_server_side_tracking_delay_secs">
+					<?php esc_html_e( 'Server side tracking delay', 'matomo' ); ?>:
+				</label>
+			</th>
+			<td scope="row">
+				<input id="matomo_server_side_tracking_delay_secs" type="number"
+					   name="matomo[server_side_tracking_delay_secs]"
+					   value="<?php echo esc_attr( $matomo_server_side_tracking_delay ); ?>" />
+			</td>
+			<td width="50%">
+				<?php esc_html_e( 'Number of seconds delay before server side tracking is executed.', 'matomo' ); ?>
+				<br/><br/>
+				<?php esc_html_e( 'When E-commerce events like cart updates and orders occur during AJAX or REST requests they must be tracked using server side tracking.', 'matomo' ); ?>
+				<?php esc_html_e( 'Server side tracking, however, can result in less useful data, so before doing it Matomo will try to use JavaScript tracking on the next pageview.', 'matomo' ); ?>
+				<?php esc_html_e( 'If no page view occurs, then server side tracking is used. This setting controls how long Matomo waits before deciding to do server side tracking.', 'matomo' ); ?>
 			</td>
 		</tr>
 		<tr>

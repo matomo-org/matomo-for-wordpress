@@ -17,7 +17,7 @@ use Matomo\Dependencies\Twig\Error\SyntaxError;
  */
 class Lexer
 {
-    private $isInitialized = false;
+    private $isInitialized = \false;
     private $tokens;
     private $code;
     private $cursor;
@@ -87,7 +87,7 @@ class Lexer
             'interpolation_start' => '{' . preg_quote($this->options['interpolation'][0], '#') . '\\s*}A',
             'interpolation_end' => '{\\s*' . preg_quote($this->options['interpolation'][1], '#') . '}A',
         ];
-        $this->isInitialized = true;
+        $this->isInitialized = \true;
     }
     public function tokenize(Source $source) : TokenStream
     {

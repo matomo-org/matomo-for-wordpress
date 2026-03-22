@@ -20,7 +20,7 @@ use Piwik\Url;
  */
 class FormSuperUser extends QuickForm2
 {
-    function __construct($id = 'generalsetupform', $method = 'post', $attributes = null, $trackSubmit = false)
+    function __construct($id = 'generalsetupform', $method = 'post', $attributes = null, $trackSubmit = \false)
     {
         parent::__construct($id, $method, $attributes = array('autocomplete' => 'off'), $trackSubmit);
     }
@@ -44,7 +44,7 @@ class FormSuperUser extends QuickForm2
         $email->addRule('checkEmail', Piwik::translate('UsersManager_ExceptionInvalidEmail'));
         $this->addElement('checkbox', 'subscribe_newsletter_piwikorg', null, array('content' => '&nbsp;&nbsp;' . Piwik::translate('Installation_PiwikOrgNewsletter')));
         $professionalServicesNewsletter = Piwik::translate('Installation_ProfessionalServicesNewsletter', ["<a href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/support/') . "' style='color:#444;' rel='noreferrer noopener' target='_blank'>", "</a>"]);
-        $privacyNoticeLink = '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/privacy-policy/') . '" target="_blank" rel="noreferrer noopener">';
+        $privacyNoticeLink = Url::getExternalLinkTag('https://matomo.org/privacy-policy/');
         $privacyNotice = '<div class="form-help email-privacy-notice">' . Piwik::translate('Installation_EmailPrivacyNotice', [$privacyNoticeLink, '</a>']) . '</div>';
         $this->addElement('checkbox', 'subscribe_newsletter_professionalservices', null, array('content' => $privacyNotice . '&nbsp;&nbsp;' . $professionalServicesNewsletter));
         $this->addElement('submit', 'submit', array('value' => Piwik::translate('General_Next') . ' »', 'class' => 'btn'));
@@ -67,9 +67,9 @@ class RuleIsValidLoginString extends HTML_QuickForm2_Rule
             }
         } catch (\Exception $e) {
             $this->setMessage($e->getMessage());
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
 }
 /**

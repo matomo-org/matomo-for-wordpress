@@ -19,7 +19,7 @@ class VisitTotalInteractions extends VisitDimension
     protected $type = self::TYPE_NUMBER;
     protected $segmentName = 'interactions';
     protected $nameSingular = 'General_NbInteractions';
-    protected $acceptValues = 'Any positive integer';
+    protected $acceptValues = 'General_AnyPositiveInteger';
     public function __construct()
     {
         $this->suggestedValuesCallback = function ($idSite, $maxValuesToReturn) {
@@ -28,8 +28,6 @@ class VisitTotalInteractions extends VisitDimension
         };
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -41,8 +39,6 @@ class VisitTotalInteractions extends VisitDimension
         return 0;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
@@ -52,7 +48,7 @@ class VisitTotalInteractions extends VisitDimension
         if (self::shouldCountInteraction($action)) {
             return $this->columnName . ' + 1';
         }
-        return false;
+        return \false;
     }
     /**
      * @param Request $request
@@ -79,17 +75,17 @@ class VisitTotalInteractions extends VisitDimension
     public static function shouldCountInteraction($action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
-        if ($idActionUrl !== false) {
-            return true;
+        if ($idActionUrl !== \false) {
+            return \true;
         }
         $actionType = $action->getActionType();
         $types = array(Action::TYPE_SITE_SEARCH);
         if (in_array($actionType, $types)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

@@ -23,7 +23,7 @@ class Storage
      */
     protected $settingsValues = array();
     // for lazy loading of setting values
-    private $settingValuesLoaded = false;
+    private $settingValuesLoaded = \false;
     /**
      * @var Backend\BackendInterface
      */
@@ -32,7 +32,7 @@ class Storage
      * Defines whether a value has changed since the settings were loaded or not.
      * @var bool
      */
-    private $isDirty = false;
+    private $isDirty = \false;
     public function __construct(Backend\BackendInterface $backend)
     {
         $this->backend = $backend;
@@ -52,7 +52,7 @@ class Storage
     {
         if ($this->isDirty) {
             $this->backend->save($this->settingsValues);
-            $this->isDirty = false;
+            $this->isDirty = \false;
             Backend\Cache::clearCache();
         }
     }
@@ -86,7 +86,7 @@ class Storage
     public function setValue($key, $value)
     {
         $this->loadSettingsIfNotDoneYet();
-        $this->isDirty = true;
+        $this->isDirty = \true;
         $this->settingsValues[$key] = $value;
     }
     private function loadSettingsIfNotDoneYet()
@@ -94,7 +94,7 @@ class Storage
         if ($this->settingValuesLoaded) {
             return;
         }
-        $this->settingValuesLoaded = true;
+        $this->settingValuesLoaded = \true;
         $this->settingsValues = $this->backend->load();
     }
 }

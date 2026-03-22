@@ -23,7 +23,7 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Dumper\HtmlDumper;
 class HtmlDescriptor implements DumpDescriptorInterface
 {
     private $dumper;
-    private $initialized = false;
+    private $initialized = \false;
     public function __construct(HtmlDumper $dumper)
     {
         $this->dumper = $dumper;
@@ -34,19 +34,19 @@ class HtmlDescriptor implements DumpDescriptorInterface
             $styles = file_get_contents(__DIR__ . '/../../Resources/css/htmlDescriptor.css');
             $scripts = file_get_contents(__DIR__ . '/../../Resources/js/htmlDescriptor.js');
             $output->writeln("<style>{$styles}</style><script>{$scripts}</script>");
-            $this->initialized = true;
+            $this->initialized = \true;
         }
         $title = '-';
         if (isset($context['request'])) {
             $request = $context['request'];
-            $controller = "<span class='dumped-tag'>{$this->dumper->dump($request['controller'], true, ['maxDepth' => 0])}</span>";
+            $controller = "<span class='dumped-tag'>{$this->dumper->dump($request['controller'], \true, ['maxDepth' => 0])}</span>";
             $title = sprintf('<code>%s</code> <a href="%s">%s</a>', $request['method'], $uri = $request['uri'], $uri);
             $dedupIdentifier = $request['identifier'];
         } elseif (isset($context['cli'])) {
             $title = '<code>$ </code>' . $context['cli']['command_line'];
             $dedupIdentifier = $context['cli']['identifier'];
         } else {
-            $dedupIdentifier = uniqid('', true);
+            $dedupIdentifier = uniqid('', \true);
         }
         $sourceDescription = '';
         if (isset($context['source'])) {
@@ -74,7 +74,7 @@ class HtmlDescriptor implements DumpDescriptorInterface
         <p class="text-small">
             {$sourceDescription}
         </p>
-        {$this->dumper->dump($data, true)}
+        {$this->dumper->dump($data, \true)}
     </section>
 </article>
 HTML

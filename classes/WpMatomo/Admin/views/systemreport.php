@@ -32,6 +32,7 @@ use WpMatomo\Admin\SystemReport;
 /** @var bool $matomo_has_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
+/** @var array $matomo_scheduled_tasks */
 
 if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	function matomo_format_value_text( $value ) {
@@ -145,8 +146,10 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 			echo '<h2>' . esc_html( $matomo_table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
 			foreach ( $matomo_table['rows'] as $matomo_row ) {
 				if ( ! empty( $matomo_row['section'] ) ) {
-					echo '</tbody><thead id="' . esc_attr( preg_replace( '/[^a-zA-Z0-9_-]/', '', strtolower( $matomo_row['section'] ) ) )
-						. '"><tr><th colspan="3" class="section">' . esc_html( $matomo_row['section'] ) . '</th></tr></thead><tbody>';
+					$matomo_section_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', strtolower( $matomo_row['section'] ) );
+					echo '</tbody><thead id="' . esc_attr( $matomo_section_id )
+						. '"><tr><th colspan="3" class="section">' . esc_html( $matomo_row['section'] ) . '</th></tr></thead><tbody id="'
+						. esc_attr( $matomo_section_id . '_body' ) . '">';
 					continue;
 				}
 				$matomo_value = $matomo_row['value'];
@@ -231,7 +234,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_RUN_UPDATER ); ?>" type="submit"
 					   class='button-primary'
 					   title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Run Updater', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Run Updater', 'matomo' ); ?>">
 				<label for="matomo_troubleshooting_update_from">Run updates from version:</label>
 				<input id="matomo_troubleshooting_update_from"
 					   type="text"
@@ -244,13 +247,38 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
 					   class='button-primary'
 					   title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ); ?>" type="submit"
 					   title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
 					   class='button-primary'
-					   value="<?php esc_html_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
+					   value="<?php esc_attr_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
+				<br/><br/>
 			<?php } ?>
+			<input name="<?php echo esc_attr( SystemReport::REGENERATE_TRACKING_CODE ); ?>" type="submit"
+				   class="button-primary"
+				   title="<?php esc_attr_e( 'Force the cached tracking code to be regenerated. The tracking code is usually regenerated on update and after changing tracking settings, or if a Matomo plugin is installed/updated, but if you need to do it manually, you can do it here.', 'matomo' ); ?>"
+				   value="<?php esc_attr_e( 'Regenerate tracking code', 'matomo' ); ?>">
+			<br/>
+			<br/>
+
+			<input name="<?php echo esc_attr( SystemReport::RUN_SCHEDULED_TASK ); ?>" type="submit"
+				   class="button-primary"
+				   title="<?php esc_attr_e( 'Run a scheduled task by name.', 'matomo' ); ?>"
+				   value="<?php esc_attr_e( 'Run scheduled task', 'matomo' ); ?>"
+				   />
+			<label for="matomo_troubleshooting_run_task">Task to run:</label>
+			<select
+				id="matomo_troubleshooting_run_task"
+				name="matomo_troubleshooting_run_task"
+				title="<?php esc_attr_e( 'Pick a task to run', 'matomo' ); ?>"
+			>
+				<?php foreach ( $matomo_scheduled_tasks as $matomo_task ) { ?>
+				<option value="<?php echo esc_attr( $matomo_task ); ?>"><?php echo esc_html( $matomo_task ); ?></option>
+				<?php } ?>
+			</select>
+			<br/>
+			<br/>
 		</form>
 
 		<?php

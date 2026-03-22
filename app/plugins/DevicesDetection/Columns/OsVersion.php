@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\DevicesDetection\Columns;
 
+use Piwik\Plugins\DevicesDetection\DevicesDetection;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
@@ -21,14 +22,16 @@ class OsVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
     protected $acceptValues = 'XP, 7, 2.3, 5.1, ...';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
-        return $parser->getOs('version');
+        $osVersion = $parser->getOs('version');
+        if (DevicesDetection::shouldOnlyStoreMajorVersions($request->getIdSiteIfExists())) {
+            return explode('.', $osVersion, 2)[0];
+        }
+        return $osVersion;
     }
 }

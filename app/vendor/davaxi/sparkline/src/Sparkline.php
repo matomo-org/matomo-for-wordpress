@@ -144,11 +144,11 @@ class Sparkline
         if ($this->eTag && $httpIfNoneMatch) {
             if ($httpIfNoneMatch === $this->eTag) {
                 $serverProtocol = $this->getServerValue('SERVER_PROTOCOL');
-                header($serverProtocol . ' 304 Not Modified', true, 304);
-                return true;
+                header($serverProtocol . ' 304 Not Modified', \true, 304);
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function display()
     {
@@ -197,7 +197,7 @@ class Sparkline
     }
     public function destroy()
     {
-        if ($this->file) {
+        if ($this->file && \PHP_VERSION < 80000) {
             imagedestroy($this->file);
         }
         $this->file = null;

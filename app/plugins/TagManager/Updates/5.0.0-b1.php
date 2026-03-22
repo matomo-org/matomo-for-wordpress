@@ -55,8 +55,8 @@ class Updates_5_0_0_b1 extends PiwikUpdates
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
         // Migrate the MatomoConfiguration type variables to all include the newly configured fields.
-        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'enableFormAnalytics', true);
-        $migrator->addField('enableMediaAnalytics', true);
+        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'enableFormAnalytics', \true);
+        $migrator->addField('enableMediaAnalytics', \true);
         $migrator->migrate();
     }
 }

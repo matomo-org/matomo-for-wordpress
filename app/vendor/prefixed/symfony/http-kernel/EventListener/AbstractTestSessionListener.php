@@ -84,7 +84,7 @@ abstract class AbstractTestSessionListener implements EventSubscriberInterface
                     return;
                 }
             }
-            $event->getResponse()->headers->setCookie(new Cookie($session->getName(), $session->getId(), 0 === $params['lifetime'] ? 0 : time() + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly'], false, $params['samesite'] ?: null));
+            $event->getResponse()->headers->setCookie(new Cookie($session->getName(), $session->getId(), 0 === $params['lifetime'] ? 0 : time() + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly'], \false, $params['samesite'] ?: null));
             $this->sessionId = $session->getId();
         }
     }

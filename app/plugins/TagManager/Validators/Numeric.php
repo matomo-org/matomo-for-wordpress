@@ -25,7 +25,7 @@ class Numeric extends BaseValidator
      * @param bool $isOptional Indicates whether the field is optional or not. The default is false.
      * @param bool $isVariableAllowed Indicates whether variables are allowed. The default is false.
      */
-    public function __construct($isOptional = false, $isVariableAllowed = false)
+    public function __construct($isOptional = \false, $isVariableAllowed = \false)
     {
         $this->isOptional = $isOptional;
         $this->isVariableAllowed = $isVariableAllowed;
@@ -45,7 +45,7 @@ class Numeric extends BaseValidator
         }
         // Since it's not numeric and variables are allowed, check if the value references a variable.
         $posBracket = strpos($value, '{{');
-        if ($posBracket === false || strpos($value, '}}', $posBracket) === false) {
+        if ($posBracket === \false || strpos($value, '}}', $posBracket) === \false) {
             throw new Exception(Piwik::translate('TagManager_ValidatorErrorNotNumericOrVariable'));
         }
     }

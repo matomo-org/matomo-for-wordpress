@@ -25,23 +25,23 @@ class Csv extends ApiRenderer
      */
     public function renderException($message, $exception)
     {
-        Common::sendHeader('Content-Type: text/html; charset=utf-8', true);
+        Common::sendHeader('Content-Type: text/html; charset=utf-8', \true);
         return 'Error: ' . $message;
     }
     public function renderDataTable($dataTable)
     {
-        $convertToUnicode = Common::getRequestVar('convertToUnicode', true, 'int', $this->request);
-        $idSite = Common::getRequestVar('idSite', 0, 'int', $this->request);
+        $convertToUnicode = $this->requestObj->getBoolParameter('convertToUnicode', \true);
+        $idSite = $this->requestObj->getIntegerParameter('idSite', 0);
         if (empty($idSite)) {
             $idSite = 'all';
         }
         /** @var \Piwik\DataTable\Renderer\Csv $tableRenderer */
         $tableRenderer = $this->buildDataTableRenderer($dataTable);
         $tableRenderer->setConvertToUnicode($convertToUnicode);
-        $method = Common::getRequestVar('method', '', 'string', $this->request);
+        $method = Common::sanitizeInputValue($this->requestObj->getStringParameter('method', ''));
         $tableRenderer->setApiMethod($method);
         $tableRenderer->setIdSite($idSite);
-        $tableRenderer->setTranslateColumnNames(Common::getRequestVar('translateColumnNames', false, 'int', $this->request));
+        $tableRenderer->setTranslateColumnNames($this->requestObj->getBoolParameter('translateColumnNames', \false));
         return $tableRenderer->render();
     }
     public function renderArray($array)
@@ -50,7 +50,7 @@ class Csv extends ApiRenderer
     }
     public function sendHeader()
     {
-        Common::sendHeader("Content-Type: application/vnd.ms-excel", true);
+        Common::sendHeader("Content-Type: application/vnd.ms-excel", \true);
         ProxyHttp::overrideCacheControlHeaders();
     }
 }

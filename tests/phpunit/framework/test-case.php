@@ -22,6 +22,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	private $original_wpdb = null;
 
+	protected $overwrite_wpdb = true;
+
 	/**
 	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
 	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
@@ -37,7 +39,11 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->overwrite_wpdb();
+		if ( $this->overwrite_wpdb ) {
+			$this->overwrite_wpdb();
+		}
+
+		$this->set_ajax_die_handler();
 
 		if ( is_multisite() ) {
 			$this->delete_extraneous_blogs();
@@ -54,7 +60,11 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		$this->wordpress_fixture->tear_down();
 
-		$this->restore_wpdb();
+		$this->remove_ajax_die_handler();
+
+		if ( $this->overwrite_wpdb ) {
+			$this->restore_wpdb();
+		}
 
 		parent::tearDown();
 
@@ -159,6 +169,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		$wpdb = new class( $this->original_wpdb ) {
 			private $original_wpdb;
 
+			private $use_mysqli = true; // see class-wpdb.php
+
 			public function __construct( $original_wpdb ) {
 				$this->original_wpdb = $original_wpdb;
 			}
@@ -191,6 +203,9 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			}
 
 			public function &__get( $name ) {
+				if ( 'use_mysqli' === $name ) {
+					return $this->use_mysqli;
+				}
 				return $this->original_wpdb->$name;
 			}
 
@@ -211,5 +226,84 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	private function restore_wpdb() {
 		global $wpdb;
 		$wpdb = $this->original_wpdb;
+	}
+
+	protected function get_hook_count( $hook_name ) {
+		global $wp_filter;
+
+		if ( ! isset( $wp_filter[ $hook_name ] ) ) {
+			return 0;
+		}
+
+		$count = 0;
+		foreach ( $wp_filter[ $hook_name ]->callbacks as $entries_by_priority ) {
+			$count += count( $entries_by_priority );
+		}
+		return $count;
+	}
+
+	private function set_ajax_die_handler() {
+		add_filter( 'wp_die_ajax_handler', [ $this, 'get_wp_die_handler' ], 1, 1 );
+	}
+
+	private function remove_ajax_die_handler() {
+		remove_filter( 'wp_die_ajax_handler', [ $this, 'get_wp_die_handler' ], 1, 1 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	protected function doing_ajax() {
+		add_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	protected function stopped_doing_ajax() {
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	public function assert_event_not_scheduled( $event_name ) {
+		$this->assert_event_scheduled( $event_name, 0 );
+	}
+
+	public function assert_event_scheduled( $event_name, $times = 1 ) {
+		$events = $this->get_events_scheduled( $event_name );
+		$this->assertCount( $times, $events );
+	}
+
+	public function get_events_scheduled( $event_name ) {
+		$result = [];
+
+		$cron = _get_cron_array();
+		foreach ( $cron as $cronhooks ) {
+			if ( isset( $cronhooks[ $event_name ] ) ) {
+				$result = array_merge( $result, $cronhooks[ $event_name ] );
+			}
+		}
+
+		return $result;
+	}
+
+	public function execute_scheduled_event( $event_name, $execute_all = false ) {
+		$events = $this->get_events_scheduled( $event_name );
+
+		if ( ! $execute_all ) {
+			$events         = [ reset( $events ) ];
+			$rest_of_events = array_slice( $events, 1 );
+		} else {
+			$rest_of_events = [];
+		}
+
+		foreach ( $events as $event ) {
+			do_action_ref_array( $event_name, $event['args'] );
+		}
+
+		_set_cron_array( $rest_of_events );
+	}
+
+	protected function is_wordpress_not_using_cdata_tags() {
+		return getenv( 'WORDPRESS_VERSION' )
+			&& (
+				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
+				&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
+				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
+			);
 	}
 }

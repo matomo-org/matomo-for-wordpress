@@ -52,7 +52,7 @@ class EventDispatcher
      */
     private $pluginManager;
     private $pluginHooks = array();
-    public static $_SKIP_EVENTS_IN_TESTS = false;
+    public static $_SKIP_EVENTS_IN_TESTS = \false;
     // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * Constructor.
@@ -77,7 +77,7 @@ class EventDispatcher
      *                            can be either the Plugin objects themselves
      *                            or their string names.
      */
-    public function postEvent($eventName, $params, $pending = false, $plugins = null)
+    public function postEvent($eventName, $params, $pending = \false, $plugins = null)
     {
         if (self::$_SKIP_EVENTS_IN_TESTS) {
             return;
@@ -88,23 +88,27 @@ class EventDispatcher
         $manager = $this->pluginManager;
         if (empty($plugins)) {
             $plugins = $manager->getPluginsLoadedAndActivated();
+        } else {
+            $pluginMap = [];
+            foreach ($plugins as $plugin) {
+                if (is_string($plugin)) {
+                    $plugin = $this->pluginManager->getLoadedPlugin($plugin);
+                }
+                $pluginMap[$plugin->getPluginName()] = $plugin;
+            }
+            $plugins = $pluginMap;
         }
         $callbacks = array();
         // collect all callbacks to execute
-        foreach ($plugins as $pluginName) {
-            if (!is_string($pluginName)) {
-                $pluginName = $pluginName->getPluginName();
-            }
+        foreach ($plugins as $pluginName => $plugin) {
             if (!isset($this->pluginHooks[$pluginName])) {
-                $plugin = $manager->getLoadedPlugin($pluginName);
                 $this->pluginHooks[$pluginName] = $plugin->registerEvents();
             }
             $hooks = $this->pluginHooks[$pluginName];
             if (isset($hooks[$eventName])) {
                 list($pluginFunction, $callbackGroup) = $this->getCallbackFunctionAndGroupNumber($hooks[$eventName]);
                 if (is_string($pluginFunction)) {
-                    $plugin = $manager->getLoadedPlugin($pluginName);
-                    $callbacks[$callbackGroup][] = array($plugin, $pluginFunction);
+                    $callbacks[$callbackGroup][] = [$plugin, $pluginFunction];
                 } else {
                     $callbacks[$callbackGroup][] = $pluginFunction;
                 }
@@ -158,7 +162,7 @@ class EventDispatcher
     {
         foreach ($this->pendingEvents as $eventInfo) {
             [$eventName, $eventParams] = $eventInfo;
-            $this->postEvent($eventName, $eventParams, $pending = false, array($plugin));
+            $this->postEvent($eventName, $eventParams, $pending = \false, array($plugin));
         }
     }
     /**

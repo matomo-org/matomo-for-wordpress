@@ -12,6 +12,7 @@ use Piwik\ArchiveProcessor;
 use Piwik\ArchiveProcessor\Record;
 use Piwik\ArchiveProcessor\RecordBuilder;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\LogAggregator;
 use Piwik\DataTable;
 use Piwik\Metrics;
@@ -19,6 +20,8 @@ use Piwik\Plugins\Actions\Metrics as ActionsMetrics;
 use Piwik\Plugins\CustomDimensions\Archiver;
 use Piwik\Plugins\CustomDimensions\CustomDimensions;
 use Piwik\Plugins\CustomDimensions\Dao\LogTable;
+use Piwik\Plugins\CustomDimensions\FeatureFlags\CustomDimensionReportWithRollUp;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\RankingQuery;
 use Piwik\Tracker;
 class CustomDimension extends RecordBuilder
@@ -71,7 +74,7 @@ class CustomDimension extends RecordBuilder
         if ($this->rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($this->rankingQueryLimit);
             $rankingQuery->addLabelColumn($dimensions[0]);
-            $query = $logAggregator->queryVisitsByDimension($dimensions, $where, [], false, $rankingQuery, false, -1, $rankingQueryGenerate = true);
+            $query = $logAggregator->queryVisitsByDimension($dimensions, $where, [], \false, $rankingQuery, \false, -1, $rankingQueryGenerate = \true);
         } else {
             $query = $logAggregator->queryVisitsByDimension($dimensions, $where);
         }
@@ -91,7 +94,7 @@ class CustomDimension extends RecordBuilder
         if ($this->rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($this->rankingQueryLimit);
             $rankingQuery->addLabelColumn([$dimensions[0], 'idgoal']);
-            $query = $logAggregator->queryConversionsByDimension($dimensions, $where, false, [], $rankingQuery, $rankingQueryGenerate = true);
+            $query = $logAggregator->queryConversionsByDimension($dimensions, $where, \false, [], $rankingQuery, $rankingQueryGenerate = \true);
         } else {
             $query = $logAggregator->queryConversionsByDimension($dimensions, $where);
         }
@@ -110,7 +113,9 @@ class CustomDimension extends RecordBuilder
     protected function aggregateFromActions(DataTable $report, LogAggregator $logAggregator, $valueField) : void
     {
         $metricsConfig = ActionsMetrics::getActionMetrics();
-        $resultSet = $this->queryCustomDimensionActions($metricsConfig, $logAggregator, $valueField);
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        $withRollup = $featureFlagManager->isFeatureActive(CustomDimensionReportWithRollUp::class);
+        $resultSet = $this->queryCustomDimensionActions($metricsConfig, $logAggregator, $valueField, $additionalWhere = '', $withRollup);
         $metricIds = array_keys($metricsConfig);
         $metricIds[] = Metrics::INDEX_PAGE_SUM_TIME_SPENT;
         $metricIds[] = Metrics::INDEX_BOUNCE_COUNT;
@@ -120,15 +125,30 @@ class CustomDimension extends RecordBuilder
                 return;
             }
             $label = $row[$valueField];
-            $label = $this->cleanCustomDimensionValue($label);
+            if ($withRollup && $label === null) {
+                // top-level rollup result
+                continue;
+            }
             $columns = [];
             foreach ($metricIds as $id) {
                 $columns[$id] = (float) ($row[$id] ?? 0);
             }
-            $tableRow = $report->sumRowWithLabel($label, $columns);
+            $label = $this->cleanCustomDimensionValue($label);
             $url = $row['url'];
-            if (empty($url)) {
-                continue;
+            if (!$withRollup) {
+                $tableRow = $report->sumRowWithLabel($label, $columns);
+            } else {
+                if ($url === null) {
+                    // second-level rollup result
+                    $report->sumRowWithLabel($label, $columns);
+                    continue;
+                }
+                $tableRow = $report->getRowFromLabel($label);
+                if (\false === $tableRow) {
+                    // non-rollup row but rollup row is missing
+                    // should not happen, but don't break
+                    continue;
+                }
             }
             // make sure we always work with normalized URL no matter how the individual action stores it
             $normalized = Tracker\PageUrl::normalizeUrl($url);
@@ -136,12 +156,22 @@ class CustomDimension extends RecordBuilder
             if (empty($url)) {
                 continue;
             }
+            if ($withRollup && $url === RankingQuery::LABEL_SUMMARY_ROW && !$tableRow->isSubtableLoaded()) {
+                // skip creating the subtable if:
+                // - we are using rollups
+                // - the only row would be "Others"
+                continue;
+            }
             $tableRow->sumRowWithLabelToSubtable($url, $columns);
         }
     }
-    public function queryCustomDimensionActions(array $metricsConfig, LogAggregator $logAggregator, $valueField, $additionalWhere = '')
+    public function queryCustomDimensionActions(array $metricsConfig, LogAggregator $logAggregator, $valueField, $additionalWhere = '', bool $withRollup = \false)
     {
-        $select = "log_link_visit_action.{$valueField},\n                  log_action.name as url,\n                  sum(log_link_visit_action.time_spent) as `" . Metrics::INDEX_PAGE_SUM_TIME_SPENT . "`,\n                  sum(case log_visit.visit_total_actions when 1 then 1 when 0 then 1 else 0 end) as `" . Metrics::INDEX_BOUNCE_COUNT . "`,\n                  sum(IF(log_visit.last_idlink_va = log_link_visit_action.idlink_va, 1, 0)) as `" . Metrics::INDEX_PAGE_EXIT_NB_VISITS . "`";
+        $logActionNameAlias = 'log_action.name as url,';
+        if ($withRollup) {
+            $logActionNameAlias = "COALESCE(log_action.name, '') as url,";
+        }
+        $select = "log_link_visit_action.{$valueField},\n                  {$logActionNameAlias}\n                  sum(log_link_visit_action.time_spent) as `" . Metrics::INDEX_PAGE_SUM_TIME_SPENT . "`,\n                  sum(case log_visit.visit_total_actions when 1 then 1 when 0 then 1 else 0 end) as `" . Metrics::INDEX_BOUNCE_COUNT . "`,\n                  sum(IF(log_visit.last_idlink_va = log_link_visit_action.idlink_va, 1, 0)) as `" . Metrics::INDEX_PAGE_EXIT_NB_VISITS . "`";
         $select = $this->addMetricsToSelect($select, $metricsConfig);
         $from = ["log_link_visit_action", ["table" => "log_visit", "joinOn" => "log_visit.idvisit = log_link_visit_action.idvisit"], ["table" => "log_action", "joinOn" => "log_link_visit_action.idaction_url = log_action.idaction"]];
         $where = $logAggregator->getWhereStatement('log_link_visit_action', 'server_time');
@@ -152,7 +182,7 @@ class CustomDimension extends RecordBuilder
         $groupBy = "log_link_visit_action.{$valueField}, url";
         $orderBy = "`" . Metrics::INDEX_PAGE_NB_HITS . "` DESC";
         // get query with segmentation
-        $query = $logAggregator->generateQuery($select, $from, $where, $groupBy, $orderBy);
+        $query = $logAggregator->generateQuery($select, $from, $where, $groupBy, $orderBy, $limit = 0, $offset = 0, $withRollup);
         if ($this->rankingQueryLimit > 0) {
             $rankingQuery = new RankingQuery($this->rankingQueryLimit);
             $rankingQuery->addLabelColumn([$valueField, 'url']);
@@ -170,7 +200,7 @@ class CustomDimension extends RecordBuilder
                 }
                 $rankingQuery->addColumn($column, $config['aggregation']);
             }
-            $query['sql'] = $rankingQuery->generateRankingQuery($query['sql']);
+            $query['sql'] = $rankingQuery->generateRankingQuery($query['sql'], $withRollup);
         }
         $db = $logAggregator->getDb();
         $resultSet = $db->query($query['sql'], $query['bind']);

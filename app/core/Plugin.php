@@ -116,7 +116,7 @@ if (!class_exists('Piwik\\Plugin')) {
          * @throws \Exception If plugin metadata is defined in both the getInformation() method
          *                    and the **plugin.json** file.
          */
-        public function __construct($pluginName = false)
+        public function __construct($pluginName = \false)
         {
             if (empty($pluginName)) {
                 $pluginName = explode('\\', get_class($this));
@@ -152,7 +152,7 @@ if (!class_exists('Piwik\\Plugin')) {
             $pluginClassName = get_class($this);
             if ($pluginClassName == $myClassName) {
                 // plugin has not defined its own class
-                return false;
+                return \false;
             }
             $foo = new \ReflectionMethod(get_class($this), 'getInformation');
             $declaringClass = $foo->getDeclaringClass()->getName();
@@ -192,7 +192,7 @@ if (!class_exists('Piwik\\Plugin')) {
          */
         public function shouldLoadUmdOnDemand()
         {
-            return false;
+            return \false;
         }
         /**
          * Returns a list of events with associated event observers.
@@ -221,6 +221,8 @@ if (!class_exists('Piwik\\Plugin')) {
         /**
          * This method is executed after a plugin is loaded and translations are registered.
          * Useful for initialization code that uses translated strings.
+         *
+         * @return void
          */
         public function postLoad()
         {
@@ -235,7 +237,7 @@ if (!class_exists('Piwik\\Plugin')) {
          */
         public function requiresInternetConnection()
         {
-            return false;
+            return \false;
         }
         /**
          * Installs the plugin. Derived classes should implement this class if the plugin
@@ -245,6 +247,7 @@ if (!class_exists('Piwik\\Plugin')) {
          * - update existing tables
          * - etc.
          *
+         * @return void
          * @throws \Exception if installation of fails for some reason.
          */
         public function install()
@@ -258,6 +261,7 @@ if (!class_exists('Piwik\\Plugin')) {
          * In most cases, if you have an {@link install()} method, you should provide
          * an {@link uninstall()} method.
          *
+         * @return void
          * @throws \Exception if uninstallation of fails for some reason.
          */
         public function uninstall()
@@ -266,6 +270,8 @@ if (!class_exists('Piwik\\Plugin')) {
         }
         /**
          * Executed every time the plugin is enabled.
+         *
+         * @return void
          */
         public function activate()
         {
@@ -273,6 +279,8 @@ if (!class_exists('Piwik\\Plugin')) {
         }
         /**
          * Executed every time the plugin is disabled.
+         *
+         * @return void
          */
         public function deactivate()
         {
@@ -320,8 +328,11 @@ if (!class_exists('Piwik\\Plugin')) {
          *                                   given subclass. If the requested file exists but does not extend this class
          *                                   a warning will be shown to advice a developer to extend this certain class.
          *
-         * @return string|null  Null if the requested component does not exist or an instance of the found
-         *                         component.
+         * @template T of object
+         * @phpstan-param class-string<T>|''|false|null $expectedSubclass
+         *
+         * @return class-string<T>|null  Null if the requested component does not exist,
+         *                               or the class string of the found component.
          */
         public function findComponent($componentName, $expectedSubclass)
         {
@@ -339,7 +350,7 @@ if (!class_exists('Piwik\\Plugin')) {
                     include_once $componentFile;
                 }
             } else {
-                $this->cache->save($cacheId, false);
+                $this->cache->save($cacheId, \false);
                 // prevent from trying to load over and over again for instance if there is no Menu for a plugin
                 if (!file_exists($componentFile)) {
                     return null;
@@ -357,6 +368,11 @@ if (!class_exists('Piwik\\Plugin')) {
             }
             return $classname;
         }
+        /**
+         * @template T of object
+         * @param class-string<T>|''|false|null $expectedSubclass
+         * @return array<class-string<T>>
+         */
         public function findMultipleComponents($directoryWithinPlugin, $expectedSubclass)
         {
             $this->createCacheIfNeeded();
@@ -455,7 +471,7 @@ if (!class_exists('Piwik\\Plugin')) {
          * Extracts the plugin name from a backtrace array. Returns `false` if we can't find one.
          *
          * @param array $backtrace The result of {@link debug_backtrace()} or
-         *                         [Exception::getTrace()](http://www.php.net/manual/en/exception.gettrace.php).
+         *                         [Exception::getTrace()](https://www.php.net/manual/en/exception.gettrace.php).
          * @return string|false
          */
         public static function getPluginNameFromBacktrace($backtrace)
@@ -469,7 +485,7 @@ if (!class_exists('Piwik\\Plugin')) {
                     }
                 }
             }
-            return false;
+            return \false;
         }
         /**
          * Extracts the plugin name from a namespace name or a fully qualified class name. Returns `false`
@@ -483,7 +499,7 @@ if (!class_exists('Piwik\\Plugin')) {
             if ($namespaceOrClassName && preg_match("/Piwik\\\\Plugins\\\\([a-zA-Z_0-9]+)\\\\/", $namespaceOrClassName, $matches)) {
                 return $matches[1];
             } else {
-                return false;
+                return \false;
             }
         }
         /**
@@ -497,7 +513,7 @@ if (!class_exists('Piwik\\Plugin')) {
          */
         public function isTrackerPlugin()
         {
-            return false;
+            return \false;
         }
         /**
          * @return Date|null
@@ -526,9 +542,9 @@ if (!class_exists('Piwik\\Plugin')) {
             return \Piwik\Date::factory((int) $time);
         }
         /**
-         * @param $directoryWithinPlugin
-         * @param $expectedSubclass
-         * @return array
+         * @template T of object
+         * @param class-string<T>|''|false|null $expectedSubclass
+         * @return array<class-string<T>>
          */
         private function doFindMultipleComponents($directoryWithinPlugin, $expectedSubclass)
         {
@@ -562,13 +578,13 @@ if (!class_exists('Piwik\\Plugin')) {
         {
             foreach ($components as $file => $klass) {
                 if (!is_readable($file)) {
-                    return false;
+                    return \false;
                 }
             }
             foreach ($components as $file => $klass) {
                 include_once $file;
             }
-            return true;
+            return \true;
         }
         /**
          * @param $piwikVersion
@@ -594,7 +610,7 @@ if (!class_exists('Piwik\\Plugin')) {
             if (file_exists($file)) {
                 $json = file_get_contents($file);
                 if ($json) {
-                    $changes = json_decode($json, true);
+                    $changes = json_decode($json, \true);
                     if ($changes && is_array($changes)) {
                         return array_reverse($changes);
                     }

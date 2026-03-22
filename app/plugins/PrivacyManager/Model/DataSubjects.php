@@ -56,25 +56,42 @@ class DataSubjects
         $idSitesLogConversion = $this->getDistinctIdSitesInTable('log_conversion', $maxIdSite);
         $idSitesUsed = array_unique(array_merge($idSitesLogVisit, $idSitesLogVisitAction, $idSitesLogConversion));
         $idSitesNoLongerExisting = array_diff($idSitesUsed, $allExistingIdSites);
-        if (empty($idSitesNoLongerExisting)) {
-            // nothing to be deleted... if there is no entry for that table in log_visit or log_link_visit_action
-            // then there shouldn't be anything to be deleted in other tables either
-            return [];
-        }
-        $logTables = $this->getLogTablesToDeleteFrom();
-        // It's quicker to call the delete queries one site at a time instead of using the IN operator and potentially
-        // creating a huge result set
-        foreach ($idSitesNoLongerExisting as $idSiteNoLongerExisting) {
-            $r = $this->deleteLogDataFrom($logTables, function ($tableToSelectFrom) use($idSiteNoLongerExisting) {
-                return [$tableToSelectFrom . '.idsite = ' . $idSiteNoLongerExisting, []];
-            });
-            foreach ($r as $k => $v) {
-                if (!array_key_exists($k, $results)) {
-                    $results[$k] = 0;
+        if (!empty($idSitesNoLongerExisting)) {
+            $logTables = $this->getLogTablesToDeleteFrom();
+            // It's quicker to call the delete queries one site at a time instead of using the IN operator and potentially
+            // creating a huge result set
+            foreach ($idSitesNoLongerExisting as $idSiteNoLongerExisting) {
+                $r = $this->deleteLogDataFrom($logTables, function ($tableToSelectFrom) use($idSiteNoLongerExisting) {
+                    return [$tableToSelectFrom . '.idsite = ' . $idSiteNoLongerExisting, []];
+                });
+                foreach ($r as $k => $v) {
+                    if (!array_key_exists($k, $results)) {
+                        $results[$k] = 0;
+                    }
+                    $results[$k] += $v;
                 }
-                $results[$k] += $v;
             }
         }
+        /**
+         * Lets you delete data subjects to make your plugin GDPR compliant.
+         * This can be useful if you have developed a plugin which stores any data for specific sites, not bound to a visit but doesn't
+         * use any core logic to store this data. If core API's are used, for example log tables, then the data may
+         * be deleted automatically.
+         *
+         * **Example**
+         *
+         *     public function deleteDataSubjectsForDeletedSites(&$result)
+         *     {
+         *         $existingSiteIds = SitesManager\API::getInstance()->getAllSitesId();
+         *         $idSitesInTable = $this->>getAllSiteIdsInLogTable();
+         *         $idSitesNoLongerExisting = array_diff($existingSiteIds, $idSitesInTable);
+         *         $numDeletes = $this->deleteDataForSites($idSitesNoLongerExisting);
+         *         $result['myplugin'] = $numDeletes;
+         *     }
+         *
+         * @param array &$results An array storing the result of how much data was deleted for.
+         */
+        Piwik::postEvent('PrivacyManager.deleteDataSubjectsForDeletedSites', [&$results]);
         krsort($results);
         // make sure test results are always in same order
         return $results;
@@ -117,7 +134,7 @@ class DataSubjects
         $invalidator = StaticContainer::get('Piwik\\Archive\\ArchiveInvalidator');
         foreach ($datesToInvalidateByIdSite as $idSite => $visitDates) {
             $idSites = [$idSite];
-            Piwik::postEvent('Archiving.getIdSitesToMarkArchivesAsInvalidated', array(&$idSites, $visitDates, null, null, null, $isPrivacyDeleteData = true));
+            Piwik::postEvent('Archiving.getIdSitesToMarkArchivesAsInvalidated', array(&$idSites, $visitDates, null, null, null, $isPrivacyDeleteData = \true));
             foreach ($visitDates as $dateStr) {
                 $visitDate = Date::factory($dateStr);
                 foreach ($idSites as $siteId) {
@@ -162,7 +179,6 @@ class DataSubjects
     }
     /**
      * @param LogTable[] $logTables
-     * @param callable $generateWhere
      * @throws \Zend_Db_Statement_Exception
      */
     private function deleteLogDataFrom($logTables, callable $generateWhere)
@@ -278,7 +294,7 @@ class DataSubjects
                         break;
                     }
                 }
-                if (!empty($config['Type']) && strpos(strtolower($config['Type']), 'binary') !== false) {
+                if (!empty($config['Type']) && strpos(strtolower($config['Type']), 'binary') !== \false) {
                     $binaryFields[] = $col;
                 }
                 $select[] = sprintf('`%s`.`%s`', $logTableName, $col);
@@ -314,13 +330,13 @@ class DataSubjects
                             $result[$index][$rowColumn] = $dimensionPerCol[$rowColumn]->formatValue($rowValue, $result[$index]['idsite'], new Formatter());
                         } catch (\Exception $e) {
                             // if formatting failes for some reason use the raw value
-                            StaticContainer::get(LoggerInterface::class)->error('Failed to format column {column} with dimension {dimension}: {exception}', ['column' => $rowColumn, 'dimension' => get_class($dimensionPerCol[$rowColumn]), 'exception' => $e, 'ignoreInScreenWriter' => true]);
+                            StaticContainer::get(LoggerInterface::class)->error('Failed to format column {column} with dimension {dimension}: {exception}', ['column' => $rowColumn, 'dimension' => get_class($dimensionPerCol[$rowColumn]), 'exception' => $e, 'ignoreInScreenWriter' => \true]);
                             $result[$index][$rowColumn] = $rowValue;
                         }
                     } elseif (!empty($rowValue)) {
                         // we try to auto detect uncompressed values so plugins have to do less themselves. makes it a bit slower but should be fine
                         $testValue = @gzuncompress($rowValue);
-                        if ($testValue !== false) {
+                        if ($testValue !== \false) {
                             $result[$index][$rowColumn] = $testValue;
                         }
                     }
@@ -350,7 +366,7 @@ class DataSubjects
                         }
                         unset($result[$index]['url_prefix']);
                     }
-                    $result = array_values(array_unique($result, SORT_REGULAR));
+                    $result = array_values(array_unique($result, \SORT_REGULAR));
                     usort($result, function ($a1, $a2) {
                         return $a1['idaction'] > $a2['idaction'] ? 1 : -1;
                     });

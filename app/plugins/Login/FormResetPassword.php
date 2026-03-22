@@ -15,7 +15,7 @@ use Piwik\QuickForm2;
  */
 class FormResetPassword extends QuickForm2
 {
-    public function __construct($id = 'resetpasswordform', $method = 'post', $attributes = null, $trackSubmit = false)
+    public function __construct($id = 'resetpasswordform', $method = 'post', $attributes = null, $trackSubmit = \false)
     {
         parent::__construct($id, $method, $attributes, $trackSubmit);
     }

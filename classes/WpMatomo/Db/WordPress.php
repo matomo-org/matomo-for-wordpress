@@ -257,7 +257,7 @@ class WordPress extends Mysqli {
 			}
 		}
 
-		$sql = str_replace( '?', '%s', $sql );
+		$sql = $this->replace_placeholders( $sql );
 
 		$query = $wpdb->prepare( $sql, $bind );
 
@@ -279,8 +279,11 @@ class WordPress extends Mysqli {
 			$test_sql = trim( $test_sql );
 		}
 
-		if ( preg_match( '/^\s*(select)\s/i', $test_sql ) ) {
-			// WordPress does not fetch any result when doing a select... it's only supposed to be used for things like
+		if (
+			preg_match( '/^\s*(select)\s/i', $test_sql )
+			|| preg_match( '/\sfor select\s/i', $test_sql )
+		) {
+			// WordPress does not fetch any result when doing a query w/ a select... it's only supposed to be used for things like
 			// insert / update / drop ...
 			$result = $this->fetchAll( $sql, $bind );
 		} else {
@@ -501,5 +504,57 @@ class WordPress extends Mysqli {
 		$this->after_execute_query( $wpdb, '' );
 
 		return $update;
+	}
+
+	// public for tests
+	public function replace_placeholders( $sql ) {
+		$replaced = '';
+
+		$i = 0;
+		while ( $i < strlen( $sql ) ) {
+			if ( $this->is_string_literal_start( $sql[$i] ) ) {
+				$quote = $sql[$i];
+
+				$segment_end = $i + 1;
+				while ( $segment_end < strlen( $sql ) ) {
+					if ( $sql[ $segment_end ] === $quote ) {
+						// '' or ""
+						$is_double_quote = $segment_end + 1 < strlen( $sql )
+							&& $sql[ $segment_end + 1 ] === $quote;
+
+						if ( $is_double_quote ) {
+							++$segment_end;
+						} else {
+							break; // not double quote, end of string literal
+						}
+					}
+
+					++$segment_end;
+				}
+
+				++$segment_end; // advance past end quote
+
+				$replaced .= substr( $sql, $i, $segment_end - $i );
+			} else {
+				// advance until string literal or end of string
+				$segment_end = $i + 1;
+				while ( $segment_end < strlen( $sql ) && ! $this->is_string_literal_start( $sql[$segment_end] ) ) {
+					++$segment_end;
+				}
+
+				$segment = substr( $sql, $i, $segment_end - $i );
+				$segment = str_replace( '?', '%s', $segment );
+
+				$replaced .= $segment;
+			}
+
+			$i = $segment_end;
+		}
+
+		return $replaced;
+	}
+
+	private function is_string_literal_start( $s ) {
+		return $s === '\'' || $s === '"';
 	}
 }

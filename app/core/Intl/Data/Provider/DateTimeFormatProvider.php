@@ -25,7 +25,7 @@ class DateTimeFormatProvider
     /**
      * Returns the format pattern for the given format type
      *
-     * @param int $format  one of the format constants
+     * @param int|string $format one of the format constants
      *
      * @return string
      */
@@ -51,7 +51,7 @@ class DateTimeFormatProvider
             case self::TIME_FORMAT:
                 return 'HH:mm:ss';
         }
-        return $format;
+        return (string) $format;
     }
     /**
      * Returns if time is present as 12 hour clock (eg am/pm)
@@ -60,7 +60,7 @@ class DateTimeFormatProvider
      */
     public function uses12HourClock()
     {
-        return false;
+        return \false;
     }
     /**
      * Returns interval format pattern for the given format type
@@ -70,7 +70,7 @@ class DateTimeFormatProvider
      *
      * @return string
      */
-    public function getRangeFormatPattern($short = false, $maxDifference = 'Y')
+    public function getRangeFormatPattern($short = \false, $maxDifference = 'Y')
     {
         if ($short) {
             return 'MMM d, y – MMM d, y';

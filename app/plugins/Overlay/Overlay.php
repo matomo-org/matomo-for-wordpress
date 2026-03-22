@@ -43,9 +43,9 @@ class Overlay extends \Piwik\Plugin
     public static function isOverlayRequest($module, $action, $method, $referer)
     {
         $isOverlay = $module == 'Overlay';
-        $referrerUrlQuery = parse_url($referer ?? '', PHP_URL_QUERY);
+        $referrerUrlQuery = parse_url($referer ?? '', \PHP_URL_QUERY);
         $referrerUrlQueryParams = UrlHelper::getArrayFromQueryString($referrerUrlQuery);
-        $referrerUrlHost = parse_url($referer ?? '', PHP_URL_HOST);
+        $referrerUrlHost = parse_url($referer ?? '', \PHP_URL_HOST);
         $comingFromOverlay = Url::isValidHost($referrerUrlHost) && !empty($referrerUrlQueryParams['module']) && $referrerUrlQueryParams['module'] === 'Overlay';
         $isPossibleOverlayRequest = $module === 'Proxy' || $module === 'API' && 0 === strpos($method, 'Overlay.') || $module === 'CoreHome' && $action === 'getRowEvolutionPopover' || $module === 'CoreHome' && $action === 'getRowEvolutionGraph' || $module === 'CoreHome' && $action === 'saveViewDataTableParameters' || $module === 'Annotations' || $module === 'Transitions' && $action === 'renderPopover' || $module === 'API' && 0 === strpos($method, 'Transitions.') || $module === 'Live' && $action === 'indexVisitorLog' || $module === 'Live' && $action === 'getLastVisitsDetails' || $module === 'Live' && $action === 'getVisitorProfilePopup' || $module === 'Live' && $action === 'getVisitList' || $module === 'UserCountryMap' && $action === 'realtimeMap';
         return $isOverlay || $comingFromOverlay && $isPossibleOverlayRequest;

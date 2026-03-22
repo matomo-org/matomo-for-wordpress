@@ -136,9 +136,9 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
         $namespaceVersion = $this->getNamespaceVersion() + 1;
         if ($this->doSave($namespaceCacheKey, $namespaceVersion)) {
             $this->namespaceVersion = $namespaceVersion;
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Prefixes the passed id with the configured namespace value.
@@ -183,7 +183,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
         $returnValues = [];
         foreach ($keys as $key) {
             $item = $this->doFetch($key);
-            if ($item === false && !$this->doContains($key)) {
+            if ($item === \false && !$this->doContains($key)) {
                 continue;
             }
             $returnValues[$key] = $item;
@@ -217,12 +217,12 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      */
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
-        $success = true;
+        $success = \true;
         foreach ($keysAndValues as $key => $value) {
             if ($this->doSave($key, $value, $lifetime)) {
                 continue;
             }
-            $success = false;
+            $success = \false;
         }
         return $success;
     }
@@ -246,12 +246,12 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      */
     protected function doDeleteMultiple(array $keys)
     {
-        $success = true;
+        $success = \true;
         foreach ($keys as $key) {
             if ($this->doDelete($key)) {
                 continue;
             }
-            $success = false;
+            $success = \false;
         }
         return $success;
     }

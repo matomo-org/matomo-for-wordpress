@@ -45,7 +45,7 @@ class SystemSetting extends Setting
     public function isWritableByCurrentUser()
     {
         if ($this->hasConfigValue()) {
-            return false;
+            return \false;
         }
         if (isset($this->hasWritePermission)) {
             return $this->hasWritePermission;

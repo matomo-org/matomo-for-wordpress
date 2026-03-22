@@ -68,7 +68,6 @@ class Manager
             return $dataTables;
         }
         $klassToExtend = '\\Piwik\\Plugin\\ViewDataTable';
-        /** @var string[] $visualizations */
         $visualizations = PluginManager::getInstance()->findMultipleComponents('Visualizations', $klassToExtend);
         $result = array();
         foreach ($visualizations as $viz) {
@@ -113,7 +112,7 @@ class Manager
     {
         $result = array();
         foreach (static::getAvailableViewDataTables() as $vizId => $vizClass) {
-            if (false === strpos($vizClass, 'Piwik\\Plugins\\CoreVisualizations') && false === strpos($vizClass, 'Piwik\\Plugins\\Goals\\Visualizations\\Goals')) {
+            if (\false === strpos($vizClass, 'Piwik\\Plugins\\CoreVisualizations') && \false === strpos($vizClass, 'Piwik\\Plugins\\Goals\\Visualizations\\Goals')) {
                 $result[$vizId] = $vizClass;
             }
         }
@@ -285,8 +284,8 @@ class Manager
         $report = new Report();
         $viewDataTableType = isset($params['viewDataTable']) ? $params['viewDataTable'] : $report->getDefaultTypeViewDataTable();
         $apiAction = $controllerAction;
-        $loadViewDataTableParametersForUser = false;
-        $viewDataTable = \Piwik\ViewDataTable\Factory::build($viewDataTableType, $apiAction, $controllerAction, $forceDefault = false, $loadViewDataTableParametersForUser);
+        $loadViewDataTableParametersForUser = \false;
+        $viewDataTable = \Piwik\ViewDataTable\Factory::build($viewDataTableType, $apiAction, $controllerAction, $forceDefault = \false, $loadViewDataTableParametersForUser);
         return $viewDataTable;
     }
     private static function getNormalViewIcons(ViewDataTable $view)
@@ -301,7 +300,7 @@ class Manager
         }
         if ($view->config->show_goals) {
             $goalButton = static::getFooterIconFor(Goals::ID);
-            if (Common::getRequestVar('idGoal', false) == 'ecommerceOrder') {
+            if (Common::getRequestVar('idGoal', \false) == 'ecommerceOrder') {
                 $goalButton['icon'] = 'icon-ecommerce-order';
             }
             $normalViewIcons['buttons'][] = $goalButton;

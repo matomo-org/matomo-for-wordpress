@@ -101,7 +101,7 @@ abstract class AbstractCloner implements ClonerInterface
             if ($this->prevErrorHandler) {
                 return ($this->prevErrorHandler)($type, $msg, $file, $line, $context);
             }
-            return false;
+            return \false;
         });
         $this->filter = $filter;
         if ($gc = gc_enabled()) {

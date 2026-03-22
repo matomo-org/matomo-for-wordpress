@@ -27,6 +27,9 @@
     "url": "https://github.com/matomo-org/matomo/issues"
   },
   "homepage": "https://github.com/matomo-org/matomo#readme",
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
+  },
   "dependencies": {
     "@materializecss/materialize": "^1.1.0",
     "@types/jquery": "^3.5.6",
@@ -34,7 +37,7 @@
     "chroma-js": "^0.6.3",
     "core-js": "^3.16.3",
     "css-loader": "^6.2.0",
-    "iframe-resizer": "^4.2.11",
+    "iframe-resizer": "~4.3.11",
     "jquery": "^3.6.3",
     "jquery-mousewheel": "^3.1.13",
     "jquery-ui-dist": "^1.13.1",
@@ -61,9 +64,10 @@
     "@vue/compiler-sfc": "^3.2.6",
     "@vue/eslint-config-airbnb": "^5.3.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.4.6",
     "abortcontroller-polyfill": "^1.7.3",
     "babel-loader": "^8.2.2",
-    "dompurify": "^2.3.3",
+    "dompurify": "^3.2.4",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-vue": "^7.16.0",

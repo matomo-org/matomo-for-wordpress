@@ -14,7 +14,14 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	private $db;
 
 	public function setUp(): void {
+		global $wpdb;
+
+		$this->overwrite_wpdb = false;
+
 		parent::setUp();
+
+		$wpdb->show_errors( false );
+
 		$this->db = new WordPress(
 			array(
 				'enable_ssl'     => false,
@@ -271,6 +278,68 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( $row['message'] );
 	}
 
+	public function test_query_recognizes_mariadb_set_for_queries() {
+		\Piwik\Config::getInstance()->database['schema'] = 'Mariadb';
+		\Piwik\Db\Schema::unsetInstance();
+
+		$params         = new \Piwik\ArchiveProcessor\Parameters(
+			new \Piwik\Site( 1 ),
+			\Piwik\Period\Factory::build( 'day', 'today' ),
+			new \Piwik\Segment( '', [ 1 ] )
+		);
+		$log_aggregator = new \Piwik\DataAccess\LogAggregator( $params );
+
+		$sql = $log_aggregator->getQueryByDimensionSql( [], false, [], false, false, false, 120, false );
+
+		// make sure SQL we're testing has MariaDB specific SQL
+		$this->assertStringContainsString( 'SET STATEMENT max_statement_time', $sql['sql'] );
+
+		// test that the query works in MWP
+		$statement = $log_aggregator->queryVisitsByDimension( [], false, [], false, false, false, 120, false );
+		$row       = $statement->fetch();
+
+		$this->assertIsArray( $row );
+	}
+
+	/**
+	 * @dataProvider get_test_data_for_replace_placeholders
+	 */
+	public function test_replace_placeholders( $sql, $expected ) {
+		$actual = $this->db->replace_placeholders( $sql );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function get_test_data_for_replace_placeholders() {
+		return [
+			[ '', '' ],
+
+			[
+				'SELECT ? FROM ? WHERE ? >= ?',
+				'SELECT %s FROM %s WHERE %s >= %s',
+			],
+			[
+				'SELECT mytable.col, SUBSTRING(mytable.col2, \'\') FROM mytable WHERE mytable.col3 = \'abc\'',
+				'SELECT mytable.col, SUBSTRING(mytable.col2, \'\') FROM mytable WHERE mytable.col3 = \'abc\'',
+			],
+			[
+				"SELECT mytable.col, SOME_FUN('?', ?) FROM mytable WHERE ?.? = 'de?f'''",
+				"SELECT mytable.col, SOME_FUN('?', %s) FROM mytable WHERE %s.%s = 'de?f'''",
+			],
+			[
+				"SELECT '?' FROM mytable WHERE val = ? AND '' = FUN('?', '''?', ?)",
+				"SELECT '?' FROM mytable WHERE val = %s AND '' = FUN('?', '''?', %s)",
+			],
+			[
+				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND """?""" > ?',
+				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND """?""" > %s',
+			],
+			[
+				'SELECT "?", "?.?", ? FROM mytable WHERE ? <> "?""" AND ? <> """?"""',
+				'SELECT "?", "?.?", %s FROM mytable WHERE %s <> "?""" AND %s <> """?"""',
+			],
+		];
+	}
+
 	private function insert_many_values() {
 		$this->insert_access( 'foo', 'view' );
 		$this->insert_access( 'bar', 'write' );
@@ -282,6 +351,4 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 
 		return $this->db->query( sprintf( "insert into %s (login, idsite, access) values('%s', '1', '%s' )", $table, $login, $permission ) );
 	}
-
-
 }

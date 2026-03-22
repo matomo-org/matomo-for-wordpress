@@ -173,6 +173,7 @@ trait FormatTrait
     {
         $step = $this->getStepWidth($count);
         $height = $this->getInnerNormalizedHeight();
+        $width = $this->getInnerNormalizedWidth();
         $normalizedPadding = $this->getNormalizedPadding();
         $data = $this->getDataForChartElements($data, $height);
         $pictureX1 = $pictureX2 = (int) ceil($normalizedPadding['left']);
@@ -186,8 +187,8 @@ trait FormatTrait
         $polygon[] = $pictureX1;
         $polygon[] = $pictureY1;
         for ($i = 1; $i < count($data); ++$i) {
-            $pictureX2 = (int) ceil($pictureX1 + $step);
-            $pictureY2 = (int) ceil($normalizedPadding['top'] + $height - $data[$i]);
+            $pictureX2 = min((int) ceil($pictureX1 + $step), $normalizedPadding['right'] + $width);
+            $pictureY2 = min((int) ceil($normalizedPadding['top'] + $height - $data[$i]), $normalizedPadding['top'] + $height);
             $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
             $polygon[] = $pictureX2;
             $polygon[] = $pictureY2;

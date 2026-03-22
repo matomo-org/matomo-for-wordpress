@@ -10,6 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Exception;
+use Piwik\Access;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Config;
@@ -19,6 +20,7 @@ use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
+use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
 use Piwik\Version;
@@ -72,7 +74,37 @@ class WordPress extends Plugin
             'Visualization.beforeRender' => 'onBeforeRenderView',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
             'Controller.CorePluginsAdmin.safemode.end' => 'modifySafemodeHtml',
+            'Tracker.setTrackerCacheGeneral' => ['function' => 'setTrackerCacheGeneral', 'after' => true],
+            'Platform.initialized' => ['function' => 'onPlatformInitialized', 'before' => true],
+            'Template.jsGlobalVariables' => 'addJsGlobalVariables',
         );
+    }
+
+    public function addJsGlobalVariables(&$output) {
+        $output .= 'piwik.mwpHomeUrl = ' . json_encode(\home_url()) . ";\n";
+
+        $settings = WpMatomo::$settings ?: new Settings();
+        $isAiBotTrackingEnabledInMwp = $settings->is_ai_bot_tracking_enabled();
+        $output .= 'piwik.isAiBotTrackingEnabledInMwp = ' . json_encode($isAiBotTrackingEnabledInMwp) . ";\n";
+    }
+
+    public function onPlatformInitialized()
+    {
+        // set language to WordPress locale
+        if (is_admin()) {
+            $languageCookieName = Config::getInstance()->General['language_cookie_name'];
+
+            $locale = get_user_locale();
+            $_COOKIE[$languageCookieName] = WpMatomo\User\Sync::get_matomo_lang_from_locale($locale);
+        }
+    }
+
+    public function setTrackerCacheGeneral(&$cache)
+    {
+        $settings = WpMatomo::$settings ?: new Settings();
+        Access::doAsSuperUser(function () use(&$cache, $settings) { // see SitesManager::setTrackerCacheGeneral
+            $cache['global_excluded_user_agents'] = $settings->get_global_user_agent_exclusions();
+        });
     }
 
     public function allowUpdateSiteForMeasurableSettings($finalParameters)
@@ -137,6 +169,7 @@ class WordPress extends Plugin
         $translationKeys[] = 'WordPress_SaveChanges';
         $translationKeys[] = 'WordPress_NoMeasurableSettingsAvailable';
         $translationKeys[] = 'General_Confirm'; // this is not loaded client side by default for some reason
+        $translationKeys[] = 'WordPress_AIBotTrackingIsNotEnabled';
 	}
 
     public function modifyTourChallenges(&$challenges)
@@ -355,11 +388,15 @@ class WordPress extends Plugin
         });
     }
 
-    public function onDispatchRequestEnd(&$result, $module, $action, $parameters) {
+    public function onDispatchRequestEnd(&$result, $module, $action, $parameters)
+    {
     	if (!empty($result) && is_string($result)) {
     		// https://wordpress.org/support/topic/bugged-favicon/#post-12995669
     		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
     		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
+
+            $pluginUrlReplacer = new PluginUrlReplacer();
+            $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
 	    }
     }
     public function onDispatchRequest(&$module, &$action, &$parameters)
@@ -375,10 +412,12 @@ class WordPress extends Plugin
         $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
         $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
 
+        $isAppPasswordUsed = !empty($_SERVER['PHP_AUTH_USER']);
         if (!WordPress::$is_archiving
             && !Common::isPhpCliMode()
             && $requestedModule === 'api'
             && (empty($requestedAction) || $requestedAction === 'index')
+            && !$isAppPasswordUsed
         ) {
             $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
             $tokenUser = Piwik::getCurrentUserTokenAuth();
@@ -392,7 +431,7 @@ class WordPress extends Plugin
             }
         }
 
-        if ($requestedModule === 'login') {
+        if (strtolower($requestedModule) === 'login') {
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
                 return; // allowed
             }
@@ -453,9 +492,19 @@ class WordPress extends Plugin
     public function noAccess(Exception $exception)
     {
         if (Common::isXmlHttpRequest()) {
-            $frontController = FrontController::getInstance();
-            echo $frontController->dispatch('Login', 'ajaxNoAccess', array($exception->getMessage()));
-            return;
+            // copied code from Login.ajaxNoAccess to avoid infinite recursion caused by User.isNotAuthorized event
+            $errorMessage = $exception->getMessage();
+            echo sprintf(
+                '<div class="alert alert-danger">
+                    <p><strong>%s:</strong> %s</p>
+                    <p><a href="%s">%s</a></p>
+                </div>',
+                Piwik::translate('General_Error'),
+                htmlentities($errorMessage, Common::HTML_ENCODING_QUOTE_STYLE, 'UTF-8', $doubleEncode = \false),
+                'index.php?module=' . Piwik::getLoginPluginName(),
+                Piwik::translate('Login_LogIn')
+            );
+            exit; // exit required to avoid infinite recursion
         }
 
 	    $redirect_url = WordPress::getWpLoginUrl();

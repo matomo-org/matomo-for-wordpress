@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Report;
 
+use Piwik\DataTable;
+use Piwik\DataTable\DataTableInterface;
 use WpMatomo\Capabilities;
 use WpMatomo\Feature;
 
@@ -42,7 +44,10 @@ class Renderer extends Feature {
 
 		$data              = new Data();
 		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit );
-		$first_metric_name = 'nb_visits';
+		$matomo_metrics    = [
+			'nb_visits'        => __( 'Visits', 'matomo' ),
+			'nb_uniq_visitors' => __( 'Unique Visitors', 'matomo' ),
+		];
 		$matomo_graph_data = ' data-chart="VisitsSumary"';
 		ob_start();
 
@@ -99,7 +104,7 @@ class Renderer extends Feature {
 
 		$report_data     = new Data();
 		$report          = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
-		$has_report_data = ! empty( $report['reportData'] ) && $report['reportData']->getRowsCount();
+		$has_report_data = ! empty( $report['reportData'] ) && $this->has_rows_with_data( $report['reportData'], $first_metric_name );
 
 		ob_start();
 
@@ -112,5 +117,24 @@ class Renderer extends Feature {
 		}
 
 		return ob_get_clean();
+	}
+
+	private function has_rows_with_data( DataTableInterface $table, $first_metric_name ) {
+		$has_data = false;
+		$table->filter(
+			function ( DataTable $table ) use ( &$has_data, $first_metric_name ) {
+				if ( $has_data ) {
+					return;
+				}
+
+				foreach ( $table->getRows() as $row ) {
+					if ( ! empty( $row[ $first_metric_name ] ) ) {
+						$has_data = true;
+						break;
+					}
+				}
+			}
+		);
+		return $has_data;
 	}
 }

@@ -58,7 +58,7 @@ class Tasks
      * @return Schedule
      * @api
      */
-    protected function hourly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function hourly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'hourly', $priority, $ttlInSeconds);
     }
@@ -68,7 +68,7 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function daily($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function daily($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'daily', $priority, $ttlInSeconds);
     }
@@ -78,7 +78,7 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function weekly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function weekly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'weekly', $priority, $ttlInSeconds);
     }
@@ -88,12 +88,12 @@ class Tasks
      * See {@link hourly()}
      * @api
      */
-    protected function monthly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function monthly($methodName, $methodParameter = null, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         return $this->custom($this, $methodName, $methodParameter, 'monthly', $priority, $ttlInSeconds);
     }
     /**
-     * Schedules the given tasks/method to run depending at the given scheduled time. Unlike the convenient methods
+     * Schedules the given tasks/method to run depending on the given scheduled time. Unlike the convenient methods
      * such as {@link hourly()} you need to specify the object on which the given method should be called. This can be
      * either an instance of a class or a class name. For more information about these parameters see {@link hourly()}
      *
@@ -110,7 +110,7 @@ class Tasks
      *
      * @api
      */
-    protected function custom($objectOrClassName, $methodName, $methodParameter, $time, $priority = self::NORMAL_PRIORITY, int $ttlInSeconds = null)
+    protected function custom($objectOrClassName, $methodName, $methodParameter, $time, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         $this->checkIsValidTask($objectOrClassName, $methodName);
         if (is_string($time)) {
@@ -126,7 +126,6 @@ class Tasks
      * In case you need very high flexibility and none of the other convenient methods such as {@link hourly()} or
      * {@link custom()} suit you, you can use this method to add a custom scheduled task.
      *
-     * @param Task $task
      */
     protected function scheduleTask(Task $task)
     {

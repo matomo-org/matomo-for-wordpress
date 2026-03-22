@@ -15,7 +15,7 @@ class ScreenWidthAvailable extends \Piwik\Plugins\TagManager\Template\Variable\P
     {
         return self::CATEGORY_DEVICE;
     }
-    public function loadTemplate($context, $entity, $skipTemplate = false)
+    public function loadTemplate($context, $entity, $skipTemplate = \false)
     {
         switch ($context) {
             case WebContext::ID:

@@ -25,11 +25,11 @@ class Marketplace extends \Piwik\Plugin
     }
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     public function requiresInternetConnection()
     {
-        return true;
+        return \true;
     }
     public function checkForUpdates()
     {
@@ -107,7 +107,7 @@ class Marketplace extends \Piwik\Plugin
         $translationKeys[] = 'Marketplace_OverviewPluginSubscriptions';
         $translationKeys[] = 'Marketplace_OverviewPluginSubscriptionsAllDetails';
         $translationKeys[] = 'Marketplace_OverviewPluginSubscriptionsMissingInfo';
-        $translationKeys[] = 'Marketplace_OverviewPluginSubscriptionsMissingLicense';
+        $translationKeys[] = 'Marketplace_OverviewPluginSubscriptionsMissingLicenseMessage';
         $translationKeys[] = 'Marketplace_PluginSubscriptionsList';
         $translationKeys[] = 'Marketplace_PluginUploadDisabled';
         $translationKeys[] = 'Marketplace_PriceFromPerPeriod';
@@ -168,6 +168,12 @@ class Marketplace extends \Piwik\Plugin
         $translationKeys[] = 'CorePluginsAdmin_Activity';
         $translationKeys[] = 'CorePluginsAdmin_Version';
         $translationKeys[] = 'CorePluginsAdmin_Websites';
+        $translationKeys[] = 'Marketplace_PluginLicenseStatusPending';
+        $translationKeys[] = 'Marketplace_PluginLicenseStatusCancelled';
+        $translationKeys[] = 'Marketplace_PluginDownloadLinkMissingPremium';
+        $translationKeys[] = 'Marketplace_PluginDownloadLinkMissingFree';
+        $translationKeys[] = 'Marketplace_PluginDownloadLinkMissingDescription';
+        $translationKeys[] = 'Marketplace_CreatedBy';
     }
     /**
      * @param WidgetsList $list

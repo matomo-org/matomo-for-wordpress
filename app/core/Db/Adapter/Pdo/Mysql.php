@@ -14,27 +14,25 @@ use PDOException;
 use Piwik\Config;
 use Piwik\Db;
 use Piwik\Db\AdapterInterface;
+use Piwik\Db\Schema;
 use Piwik\Piwik;
 use Zend_Config;
 use Zend_Db_Adapter_Pdo_Mysql;
-use Zend_Db_Select;
-use Zend_Db_Statement_Interface;
 /**
  */
 class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
 {
+    use Db\TransactionalDatabaseDynamicTrait;
     /**
      * Constructor
      *
      * @param array|Zend_Config $config database configuration
      */
-    // this is used for indicate TransactionLevel Cache
-    public $supportsUncommitted;
     public function __construct($config)
     {
         // Enable LOAD DATA INFILE
         if (defined('PDO::MYSQL_ATTR_LOCAL_INFILE')) {
-            $config['driver_options'][PDO::MYSQL_ATTR_LOCAL_INFILE] = true;
+            $config['driver_options'][PDO::MYSQL_ATTR_LOCAL_INFILE] = \true;
         }
         if ($config['enable_ssl']) {
             if (!empty($config['ssl_key'])) {
@@ -53,15 +51,10 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
                 $config['driver_options'][PDO::MYSQL_ATTR_SSL_CIPHER] = $config['ssl_cipher'];
             }
             if (!empty($config['ssl_no_verify']) && defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-                $config['driver_options'][PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+                $config['driver_options'][PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = \false;
             }
         }
         parent::__construct($config);
-    }
-    public function closeConnection()
-    {
-        $this->cachePreparedStatement = [];
-        parent::closeConnection();
     }
     /**
      * Returns connection handle
@@ -77,13 +70,13 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         /**
          * Before MySQL 5.1.17, server-side prepared statements
          * do not use the query cache.
-         * @see http://dev.mysql.com/doc/refman/5.1/en/query-cache-operation.html
+         * @see https://dev.mysql.com/doc/refman/5.1/en/query-cache-operation.html
          *
          * MySQL also does not support preparing certain DDL and SHOW
          * statements.
-         * @see http://framework.zend.com/issues/browse/ZF-1398
+         * @see https://framework.zend.com/issues/browse/ZF-1398
          */
-        $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, \true);
         return $this->_connection;
     }
     protected function _connect()
@@ -133,8 +126,8 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public function checkServerVersion()
     {
+        $requiredVersion = Schema::getInstance()->getMinimumSupportedVersion();
         $serverVersion = $this->getServerVersion();
-        $requiredVersion = Config::getInstance()->General['minimum_mysql_version'];
         if (version_compare($serverVersion, $requiredVersion) === -1) {
             throw new Exception(Piwik::translate('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
         }
@@ -184,7 +177,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public function hasBlobDataType()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns true if this adapter supports bulk loading
@@ -193,7 +186,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public function hasBulkLoader()
     {
-        return true;
+        return \true;
     }
     /**
      * Test error number
@@ -218,7 +211,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         if (preg_match('/(?:\\[|\\s)([0-9]{4})(?:\\]|\\s)/', $e->getMessage(), $match)) {
             return $match[1] == $errno;
         }
-        return false;
+        return \false;
     }
     /**
      * Is the connection character set equal to utf8?
@@ -229,7 +222,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         $charsetInfo = $this->fetchAll('SHOW VARIABLES LIKE ?', array('character_set_connection'));
         if (empty($charsetInfo)) {
-            return false;
+            return \false;
         }
         $charset = $charsetInfo[0]['Value'];
         return strpos($charset, 'utf8') === 0;
@@ -264,38 +257,9 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         return null;
     }
     /**
-     * @var \Zend_Db_Statement_Pdo[]
-     */
-    private $cachePreparedStatement = array();
-    /**
-     * Prepares and executes an SQL statement with bound data.
-     * Caches prepared statements to avoid preparing the same query more than once
-     *
-     * @param string|Zend_Db_Select $sql The SQL statement with placeholders.
-     * @param array $bind An array of data to bind to the placeholders.
-     * @return Zend_Db_Statement_Interface
-     */
-    public function query($sql, $bind = array())
-    {
-        if (!is_string($sql)) {
-            return parent::query($sql, $bind);
-        }
-        if (isset($this->cachePreparedStatement[$sql])) {
-            if (!is_array($bind)) {
-                $bind = array($bind);
-            }
-            $stmt = $this->cachePreparedStatement[$sql];
-            $stmt->execute($bind);
-            return $stmt;
-        }
-        $stmt = parent::query($sql, $bind);
-        $this->cachePreparedStatement[$sql] = $stmt;
-        return $stmt;
-    }
-    /**
      * Override _dsn() to ensure host and port to not be passed along
      * if unix_socket is set since setting both causes unexpected behaviour
-     * @see http://php.net/manual/en/ref.pdo-mysql.connection.php
+     * @see https://php.net/manual/en/ref.pdo-mysql.connection.php
      */
     protected function _dsn()
     {

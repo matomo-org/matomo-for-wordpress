@@ -78,7 +78,7 @@ class Controller extends \Piwik\Plugin\Controller
         $reports = array();
         $reportsById = array();
         if (!Piwik::isUserIsAnonymous()) {
-            $reports = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
+            $reports = Request::processRequest('ScheduledReports.getReports', array('idSite' => $this->idSite, 'ifSuperUserReturnOnlySuperUserReports' => \true, 'filter_limit' => -1), []);
             foreach ($reports as &$report) {
                 $report['evolutionPeriodFor'] = $report['evolution_graph_within_period'] ? 'each' : 'prev';
                 $report['evolutionPeriodN'] = (int) $report['evolution_graph_period_n'] ?: ImageGraph::getDefaultGraphEvolutionLastPeriods();
@@ -95,15 +95,15 @@ class Controller extends \Piwik\Plugin\Controller
         $view->defaultHour = \Piwik\Plugins\ScheduledReports\ScheduledReports::DEFAULT_HOUR;
         $view->periodTranslations = \Piwik\Plugins\ScheduledReports\ScheduledReports::getPeriodFrequencyTranslations();
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
-        $view->segmentEditorActivated = false;
+        $view->segmentEditorActivated = \false;
         if (\Piwik\Plugins\ScheduledReports\API::isSegmentEditorActivated()) {
             $savedSegmentsById = array('' => Piwik::translate('SegmentEditor_DefaultAllVisits'));
             $allSegments = SegmentEditor::getAllSegmentsForSite($this->idSite);
             foreach ($allSegments as $savedSegment) {
-                $savedSegmentsById[$savedSegment['idsegment']] = $savedSegment['name'];
+                $savedSegmentsById[$savedSegment['idsegment']] = Common::unsanitizeInputValue($savedSegment['name']);
             }
             $view->savedSegmentsById = $savedSegmentsById;
-            $view->segmentEditorActivated = true;
+            $view->segmentEditorActivated = \true;
         }
         return $view->render();
     }
@@ -123,17 +123,19 @@ class Controller extends \Piwik\Plugin\Controller
             $view->error = Piwik::translate('ScheduledReports_NoSubscriptionFound');
             return $view->render();
         }
+        /*
+         * Executed as super user, as we need to fetch a scheduled report, without the current user being authenticated.
+         */
         $report = Access::doAsSuperUser(function () use($subscription) {
             $reports = Request::processRequest('ScheduledReports.getReports', ['idReport' => $subscription['idreport']]);
             return reset($reports);
         });
         $confirm = Common::getRequestVar('confirm', '', 'string');
         $view->reportName = $report['description'];
-        $nonce = Common::getRequestVar('nonce', '', 'string');
-        if (!empty($confirm) && Nonce::verifyNonce('Report.Unsubscribe', $nonce)) {
-            Nonce::discardNonce('Report.Unsubscribe');
+        if (!empty($confirm)) {
+            Nonce::checkNonce('Report.Unsubscribe');
             $subscriptionModel->unsubscribe($token);
-            $view->success = true;
+            $view->success = \true;
         } else {
             $view->nonce = Nonce::getNonce('Report.Unsubscribe');
         }

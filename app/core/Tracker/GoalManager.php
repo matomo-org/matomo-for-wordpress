@@ -61,7 +61,7 @@ class GoalManager
     public function detectIsThereExistingCartInVisit($visitInformation)
     {
         if (empty($visitInformation['visit_goal_buyer'])) {
-            return false;
+            return \false;
         }
         $goalBuyer = $visitInformation['visit_goal_buyer'];
         $types = array(\Piwik\Tracker\GoalManager::TYPE_BUYER_OPEN_CART, \Piwik\Tracker\GoalManager::TYPE_BUYER_ORDERED_AND_OPEN_CART);
@@ -100,8 +100,6 @@ class GoalManager
      *
      * @param int $idSite
      * @param Action $action
-     * @param VisitProperties $visitor
-     * @param Request $request
      * @throws Exception
      * @return array[] Goals matched
      */
@@ -125,9 +123,6 @@ class GoalManager
      * is returned. Otherwise null is returned.
      *
      * @param array $goal
-     * @param Action $action
-     * @param VisitProperties $visitor
-     * @param Request $request
      * @return bool|null if a goal is matched, a string of the Action URL is returned, or if no goal was matched it returns null
      */
     public function detectGoalMatch($goal, \Piwik\Tracker\Action $action, VisitProperties $visitor, \Piwik\Tracker\Request $request)
@@ -216,10 +211,6 @@ class GoalManager
     /**
      * Records one or several goals matched in this request.
      *
-     * @param Visitor $visitor
-     * @param array $visitorInformation
-     * @param array $visitCustomVariables
-     * @param Action $action
      */
     public function recordGoals(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
@@ -270,9 +261,7 @@ class GoalManager
      * Will deal with 2 types of conversions: Ecommerce Order and Ecommerce Cart update (Add to cart, Update Cart etc).
      *
      * @param array $conversion
-     * @param Visitor $visitor
-     * @param Action $action
-     * @param array $visitInformation
+     * @param Action|null $action
      */
     protected function recordEcommerceGoal(VisitProperties $visitProperties, \Piwik\Tracker\Request $request, $conversion, $action)
     {
@@ -298,10 +287,10 @@ class GoalManager
             $conversionDimensions = ConversionDimension::getAllDimensions();
             $conversion = $this->triggerHookOnDimensions($request, $conversionDimensions, 'onEcommerceCartUpdateConversion', $visitor, $action, $conversion);
         }
-        Common::printDebug($debugMessage . ':' . var_export($conversion, true));
+        Common::printDebug($debugMessage . ':' . var_export($conversion, \true));
         // INSERT or Sync items in the Cart / Order for this visit & order
         $items = $this->getEcommerceItemsFromRequest($request);
-        if (false === $items) {
+        if (\false === $items) {
             return;
         }
         $itemsCount = 0;
@@ -331,8 +320,8 @@ class GoalManager
             return array();
         }
         if (!is_array($items)) {
-            Common::printDebug("Error while json_decode the Ecommerce items = " . var_export($items, true));
-            return false;
+            Common::printDebug("Error while json_decode the Ecommerce items = " . var_export($items, \true));
+            return \false;
         }
         $items = Common::unsanitizeInputValues($items);
         $cleanedItems = $this->getCleanedEcommerceItems($items);
@@ -344,7 +333,6 @@ class GoalManager
      * @param array $goal
      * @param array $items
      * @throws Exception
-     * @return int Number of items in the cart
      */
     protected function recordEcommerceItems($goal, $items)
     {
@@ -375,7 +363,7 @@ class GoalManager
             $newItem = $this->getItemRowCast($newItem);
             if (count($itemInDb) != count($newItem)) {
                 Common::printDebug("ERROR: Different format in items from cart and DB");
-                throw new Exception(" Item in DB and Item in cart have a different format, this is not expected... " . var_export($itemInDb, true) . var_export($newItem, true));
+                throw new Exception(" Item in DB and Item in cart have a different format, this is not expected... " . var_export($itemInDb, \true) . var_export($newItem, \true));
             }
             Common::printDebug("Item has changed since the last cart. Previous item stored in cart in database:");
             Common::printDebug($itemInDb);
@@ -407,7 +395,7 @@ class GoalManager
         // Clean up the items array
         $cleanedItems = array();
         foreach ($items as $item) {
-            $name = $category = $category2 = $category3 = $category4 = $category5 = false;
+            $name = $category = $category2 = $category3 = $category4 = $category5 = \false;
             $price = 0;
             $quantity = 1;
             // items are passed in the request as an array: ( $sku, $name, $category, $price, $quantity )
@@ -461,7 +449,7 @@ class GoalManager
             }
             // Ensure that each row has the same number of columns, fill in the blanks
             for ($i = count($actionsToLookup); $i < $columnsInEachRow; $i++) {
-                $actionsToLookup[] = array(false, \Piwik\Tracker\Action::TYPE_ECOMMERCE_ITEM_CATEGORY);
+                $actionsToLookup[] = array(\false, \Piwik\Tracker\Action::TYPE_ECOMMERCE_ITEM_CATEGORY);
             }
             $actionsToLookupAllItems = array_merge($actionsToLookupAllItems, $actionsToLookup);
         }
@@ -557,15 +545,13 @@ class GoalManager
         if (array_key_exists($column, $this->currentGoal)) {
             return $this->currentGoal[$column];
         }
-        return false;
+        return \false;
     }
     /**
      * Records a standard non-Ecommerce goal in the DB (URL/Title matching),
      * linking the conversion to the action that triggered it
-     * @param $goal
-     * @param Visitor $visitor
-     * @param Action $action
-     * @param $visitorInformation
+     * @param array $goal
+     * @param Action|null $action
      */
     protected function recordStandardGoals(VisitProperties $visitProperties, \Piwik\Tracker\Request $request, $goal, $action)
     {
@@ -609,7 +595,6 @@ class GoalManager
      *
      * @param array $conversion
      * @param array $visitInformation
-     * @param Request $request
      * @param Action|null $action
      * @param int|null $convertedGoal
      * @return bool
@@ -621,7 +606,7 @@ class GoalManager
          *
          * This event can be used to modify conversion information or to add new information to be persisted.
          *
-         * This event is deprecated, use [Dimensions](http://developer.piwik.org/guides/dimensions) instead.
+         * This event is deprecated, use [Dimensions](https://developer.matomo.org/guides/dimensions) instead.
          *
          * @param array $conversion The conversion entity. Read [this](/guides/persistence-and-the-mysql-backend#conversions)
          *                          to see what it contains.
@@ -645,9 +630,15 @@ class GoalManager
         Common::printDebug($newGoalDebug);
         $idorder = $request->getParam('ec_id');
         $wasInserted = $this->getModel()->createConversion($conversion);
-        if (!$wasInserted && !empty($idorder)) {
-            $idSite = $request->getIdSite();
-            throw new InvalidRequestParameterException("Invalid non-unique idsite/idorder combination ({$idSite}, {$idorder}), conversion was not inserted.");
+        if (!$wasInserted) {
+            if (!empty($idorder)) {
+                $idSite = $request->getIdSite();
+                throw new InvalidRequestParameterException("Invalid non-unique idsite/idorder combination ({$idSite}, {$idorder}), conversion was not inserted.");
+            } elseif ($conversion['buster'] > 0) {
+                // Note: The buster is set to 0 for goals that can only be triggered once per visit.
+                // It's expected behaviour that creating additional conversion fail, so we don't log failures in that case.
+                StaticContainer::get(LoggerInterface::class)->warning("Failed to insert goal due to duplicate idvisit/idgoal/buster combination ({$conversion['idvisit']}, {$conversion['idgoal']}, {$conversion['buster']})");
+            }
         }
         return $wasInserted;
     }
@@ -692,7 +683,7 @@ class GoalManager
     {
         foreach ($dimensions as $dimension) {
             $value = $dimension->{$hook}($request, $visitor, $action, $this);
-            if (false !== $value) {
+            if (\false !== $value) {
                 if (is_float($value)) {
                     $value = Common::forceDotAsSeparatorForDecimalPoint($value);
                 }
@@ -721,7 +712,7 @@ class GoalManager
         $visit = \Piwik\Tracker\Visitor::makeFromVisitProperties($visitProperties, $request);
         foreach ($visitDimensions as $dimension) {
             $value = $dimension->onAnyGoalConversion($request, $visit, $action);
-            if (false !== $value) {
+            if (\false !== $value) {
                 $goal[$dimension->getColumnName()] = $value;
             }
         }
@@ -749,7 +740,7 @@ class GoalManager
                 } else {
                     $matched = stripos($url, $goal['pattern']);
                 }
-                $match = $matched !== false;
+                $match = $matched !== \false;
                 break;
             case 'exact':
                 if ($goal['case_sensitive']) {
@@ -764,7 +755,7 @@ class GoalManager
                     StaticContainer::get(LoggerInterface::class)->warning(Piwik::translate('General_ExceptionInvalidGoalPattern', array($pattern_type)));
                 } catch (\Exception $e) {
                 }
-                $match = false;
+                $match = \false;
                 break;
         }
         return $match;
@@ -777,7 +768,7 @@ class GoalManager
      */
     public static function formatRegex($pattern)
     {
-        if (strpos($pattern, '/') !== false && strpos($pattern, '\\/') === false) {
+        if (strpos($pattern, '/') !== \false && strpos($pattern, '\\/') === \false) {
             $pattern = str_replace('/', '\\/', $pattern);
         }
         return '/' . $pattern . '/';

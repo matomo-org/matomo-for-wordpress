@@ -27,7 +27,7 @@ class DisabledProvider extends LocationProvider
      */
     public function getLocation($info)
     {
-        return false;
+        return \false;
     }
     /**
      * Returns whether this location provider is available.
@@ -38,7 +38,7 @@ class DisabledProvider extends LocationProvider
      */
     public function isAvailable()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns whether this location provider is working correctly.
@@ -49,7 +49,7 @@ class DisabledProvider extends LocationProvider
      */
     public function isWorking()
     {
-        return true;
+        return \true;
     }
     /**
      * Returns an array describing the types of location information this provider will
@@ -80,7 +80,7 @@ class DisabledProvider extends LocationProvider
     public function getUsageWarning() : ?string
     {
         $comment = Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ';
-        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', array('<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/geo-locate/') . '" rel="noreferrer noopener" target="_blank">', '', '', '</a>'));
+        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', array(Url::getExternalLinkTag('https://matomo.org/docs/geo-locate/'), '', '', '</a>'));
         return $comment;
     }
 }

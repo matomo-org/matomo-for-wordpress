@@ -29,7 +29,7 @@ class RssPiwik extends \Piwik\Widget\Widget
     private function getFeed($URL)
     {
         $rss = new RssRenderer($URL);
-        $rss->showDescription(true);
+        $rss->showDescription(\true);
         return $rss->get();
     }
     public function render()

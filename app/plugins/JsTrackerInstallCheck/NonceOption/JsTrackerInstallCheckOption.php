@@ -16,7 +16,6 @@ class JsTrackerInstallCheckOption
     /**
      * Look up a specific nonce for a site. If none exists, an empty array is returned.
      *
-     * @param int $idSite
      * @param string $nonce A MD5 hash to uniquely identify an installation test request
      * @return array The data associated with a specific nonce for a site.
      * E.g. ['time' => 1692920000, 'url' => 'https://some-test-site.local', 'isSuccessful' => true]
@@ -29,8 +28,6 @@ class JsTrackerInstallCheckOption
     /**
      * Find the nonce for a specific site and URL. If none exists, an empty array is returned.
      *
-     * @param int $idSite
-     * @param string $url
      * @return array Collection containing the nonce and it's associated data.
      * E.g. ['some_nonce' => ['time' => 1692920000, 'url' => 'https://some-test-site.local', 'isSuccessful' => true]]
      */
@@ -45,7 +42,6 @@ class JsTrackerInstallCheckOption
      * Get the current list of nonces for a site, excluding expired ones. Optionally filter by URL. There should only be
      * one nonce per URL.
      *
-     * @param int $idSite
      * @param string $url Optionally filter the results to only be the nonce associated with the provided URL
      * @return array Associative array where the nonces are the keys and the value is an array with the nonce data.
      * E.g. ['some_nonce' => ['time' => 1692920000, 'url' => 'https://some-test-site.local', 'isSuccessful' => true]]
@@ -73,7 +69,6 @@ class JsTrackerInstallCheckOption
      * won't filter out expired nonces like getCurrentNonceMap, so this should only be used when looking for past test
      * results.
      *
-     * @param int $idSite
      * @return array Collection of nonces used for a specific site and their associated data.
      * E.g. ['some_nonce' => ['time' => 1692920000, 'url' => 'https://some-test-site.local', 'isSuccessful' => true]]
      */
@@ -83,7 +78,7 @@ class JsTrackerInstallCheckOption
         if (empty($nonceOptionString)) {
             return [];
         }
-        $nonceOptionArray = json_decode($nonceOptionString, true);
+        $nonceOptionArray = json_decode($nonceOptionString, \true);
         // If the option couldn't be decoded or is in the old format, let's ignore it
         if (empty($nonceOptionArray) || key_exists('nonce', $nonceOptionArray)) {
             return [];
@@ -93,26 +88,21 @@ class JsTrackerInstallCheckOption
     /**
      * Update a nonce to indicate that the test was successful.
      *
-     * @param int $idSite
-     * @param string $nonce
      * @return bool Indicates whether the update was successful. The main reason it might fail is if the nonce isn't found
      */
     public function markNonceAsSuccessFul(int $idSite, string $nonce) : bool
     {
         $nonceMap = $this->getCurrentNonceMap($idSite);
         if (empty($nonceMap[$nonce])) {
-            return false;
+            return \false;
         }
-        $nonceMap[$nonce][self::NONCE_DATA_IS_SUCCESS] = true;
+        $nonceMap[$nonce][self::NONCE_DATA_IS_SUCCESS] = \true;
         $this->setNonceOption($idSite, $nonceMap);
-        return true;
+        return \true;
     }
     /**
      * Create a new nonce for the site/URL combination. This checks if a
      *
-     * @param int $idSite
-     * @param string $url
-     * @return string
      */
     public function createNewNonce(int $idSite, string $url) : string
     {
@@ -126,14 +116,13 @@ class JsTrackerInstallCheckOption
             return $existingNonce;
         }
         $nonceString = md5(SettingsPiwik::getSalt() . time() . Common::generateUniqId() . $url);
-        $nonceMap[$nonceString] = ['time' => Date::getNowTimestamp(), 'url' => $url, 'isSuccessful' => false];
+        $nonceMap[$nonceString] = ['time' => Date::getNowTimestamp(), 'url' => $url, 'isSuccessful' => \false];
         $this->setNonceOption($idSite, $nonceMap);
         return $nonceString;
     }
     /**
      * Get the string JSON stored in the option table to track installation checks.
      *
-     * @param int $idSite
      * @return string JSON list of nonces and the data associated with each
      */
     protected function getNonceOption(int $idSite) : string
@@ -143,9 +132,7 @@ class JsTrackerInstallCheckOption
     /**
      * Update the string JSON stored in the option table to track installation checks.
      *
-     * @param int $idSite
      * @param array $nonceMap
-     * @return void
      */
     protected function setNonceOption(int $idSite, array $nonceMap) : void
     {
@@ -155,25 +142,19 @@ class JsTrackerInstallCheckOption
      * Update the time associated with a specific nonce. This is mainly for when a nonce already exists for the
      * site and requested URL. This allows us to bump the time so that we can reuse the nonce for the second test.
      *
-     * @param int $idSite
-     * @param string $nonce
-     * @param int $time
-     * @return bool
      */
     protected function updateNonceTime(int $idSite, string $nonce, int $time) : bool
     {
         $nonceMap = $this->getCurrentNonceMap($idSite);
         if (empty($nonceMap[$nonce])) {
-            return false;
+            return \false;
         }
         $nonceMap[$nonce][self::NONCE_DATA_TIME] = $time;
         $this->setNonceOption($idSite, $nonceMap);
-        return true;
+        return \true;
     }
     /**
      * @param array $nonceMap
-     * @param string $url
-     * @return string
      */
     protected function searchNonceMapForUrl(array $nonceMap, string $url) : string
     {

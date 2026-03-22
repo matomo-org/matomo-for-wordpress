@@ -35,10 +35,7 @@
     <div>
       <div :class="{ hide_only: !isLoading }">
         <div class="loadingPiwik">
-          <img
-            src="plugins/Morpheus/images/loading-blue.gif"
-            :alt="translate('General_LoadingData')"
-          />
+          <MatomoLoader />
           {{ translate('General_LoadingData') }}
         </div>
       </div>
@@ -67,21 +64,29 @@
       <div class="ui-confirm add-site-dialog">
         <div>
           <h2>{{ translate('SitesManager_ChooseMeasurableTypeHeadline') }}</h2>
-
           <div class="center">
-            <p>
+            <p>{{ subheaderText }}</p>
+            <br>
+          </div>
+          <div class="card-row">
+            <ContentBlock
+              v-for="type in availableTypes"
+              :key="type.id"
+              :content-title="type.name"
+            >
+              <p class="center">
+                {{ type.longDescription }}
+              </p>
               <button
                 type="button"
-                v-for="type in availableTypes"
-                :key="type.id"
                 :title="type.description"
-                class="modal-close btn"
-                @click="addSite(type.id);"
+                class="modal-close btn btn-block"
+                @click="addSite(type.id)"
                 aria-disabled="false"
               >
                 <span class="ui-button-text">{{ type.name }}</span>
               </button>
-            </p>
+            </ContentBlock>
           </div>
         </div>
       </div>
@@ -101,8 +106,10 @@
           :timezone-support-enabled="timezoneSupportEnabled"
           :utc-time="utcTime"
           :global-settings="globalSettings"
+          :privacy-manager-enabled="privacyManagerEnabled"
           @edit-site="this.isSiteBeingEdited = true"
           @cancel-edit-site="afterCancelEdit($event)"
+          @cancel-edit-privacy="afterCancelEdit($event)"
           @delete="afterDelete($event)"
           @save="afterSave($event.site, $event.settingValues, index, $event.isNew)"
         />
@@ -134,14 +141,16 @@
 <script lang="ts">
 import { defineComponent, watch } from 'vue';
 import {
-  Matomo,
-  MatomoDialog,
-  Site,
+  translate,
+  AjaxHelper,
+  ContentBlock,
   ContentIntro,
   EnrichedHeadline,
-  AjaxHelper,
+  Matomo,
+  MatomoDialog,
+  MatomoLoader,
   MatomoUrl,
-  translate,
+  Site,
 } from 'CoreHome';
 import { Setting } from 'CorePluginsAdmin';
 import ButtonBar from './ButtonBar.vue';
@@ -166,15 +175,16 @@ interface SitesManagementState {
 
 export default defineComponent({
   props: {
-    // TypeScript can't add state types if there are no properties (probably a bug in Vue)
-    // so we add one dummy property to get the compile to work
-    dummy: String,
+    rollUpEnabled: Boolean,
+    privacyManagerEnabled: Boolean,
   },
   components: {
-    MatomoDialog,
     ButtonBar,
-    SiteFields,
+    ContentBlock,
     EnrichedHeadline,
+    MatomoDialog,
+    MatomoLoader,
+    SiteFields,
   },
   directives: {
     ContentIntro,
@@ -255,6 +265,14 @@ export default defineComponent({
           ? translate('General_Measurables')
           : translate('SitesManager_Sites'),
       );
+    },
+    subheaderText() {
+      const subheader = translate('SitesManager_ChooseMeasurableTypeSubheader');
+      const rollup = this.rollUpEnabled
+        ? translate('SitesManager_ChooseMeasurableTypeSubheaderRollUp')
+        : '';
+
+      return `${subheader} ${rollup}`.trim();
     },
     mainDescription() {
       return translate(

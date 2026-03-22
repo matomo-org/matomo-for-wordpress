@@ -23,7 +23,7 @@ class Aggregator implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     {
         $this->providers = $this->getProviders();
     }
-    public function getMetrics($domain)
+    public function getMetrics(string $domain)
     {
         $metrics = [];
         foreach ($this->providers as $provider) {
@@ -37,7 +37,7 @@ class Aggregator implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     private function getProviders()
     {
         $container = StaticContainer::getContainer();
-        $providers = [$container->get('Piwik\\Plugins\\SEO\\Metric\\Google'), $container->get('Piwik\\Plugins\\SEO\\Metric\\Bing'), $container->get('Piwik\\Plugins\\SEO\\Metric\\DomainAge')];
+        $providers = [$container->get('Piwik\\Plugins\\SEO\\Metric\\Bing'), $container->get('Piwik\\Plugins\\SEO\\Metric\\DomainAge')];
         /**
          * Use this event to register new SEO metrics providers.
          *

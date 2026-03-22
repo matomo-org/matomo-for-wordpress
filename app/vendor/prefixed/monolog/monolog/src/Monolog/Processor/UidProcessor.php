@@ -44,6 +44,6 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
     }
     private function generateUid($length)
     {
-        return substr(hash('md5', uniqid('', true)), 0, $length);
+        return substr(hash('md5', uniqid('', \true)), 0, $length);
     }
 }

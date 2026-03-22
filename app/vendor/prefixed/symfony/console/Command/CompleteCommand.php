@@ -29,7 +29,7 @@ final class CompleteCommand extends Command
     protected static $defaultName = '|_complete';
     protected static $defaultDescription = 'Internal command to provide shell completion suggestions';
     private $completionOutputs;
-    private $isDebug = false;
+    private $isDebug = \false;
     /**
      * @param array<string, class-string<CompletionOutputInterface>> $completionOutputs A list of additional completion outputs, with shell name as key and FQCN as value
      */
@@ -62,7 +62,7 @@ final class CompleteCommand extends Command
             if (!$shell) {
                 throw new \RuntimeException('The "--shell" option must be set.');
             }
-            if (!($completionOutput = $this->completionOutputs[$shell] ?? false)) {
+            if (!($completionOutput = $this->completionOutputs[$shell] ?? \false)) {
                 throw new \RuntimeException(sprintf('Shell completion is not supported for your shell: "%s" (supported: "%s").', $shell, implode('", "', array_keys($this->completionOutputs))));
             }
             $completionInput = $this->createCompletionInput($input);
@@ -72,7 +72,7 @@ final class CompleteCommand extends Command
             if (null === $command) {
                 $this->log('  No command found, completing using the Application class.');
                 $this->getApplication()->complete($completionInput, $suggestions);
-            } elseif ($completionInput->mustSuggestArgumentValuesFor('command') && $command->getName() !== $completionInput->getCompletionValue() && !\in_array($completionInput->getCompletionValue(), $command->getAliases(), true)) {
+            } elseif ($completionInput->mustSuggestArgumentValuesFor('command') && $command->getName() !== $completionInput->getCompletionValue() && !\in_array($completionInput->getCompletionValue(), $command->getAliases(), \true)) {
                 $this->log('  No command found, completing using the Application class.');
                 // expand shortcut names ("cache:cl<TAB>") into their full name ("cache:clear")
                 $suggestions->suggestValues(array_filter(array_merge([$command->getName()], $command->getAliases())));

@@ -29,7 +29,7 @@ class SingleMetricView extends \Piwik\Widget\Widget
         $goalMetrics = [];
         $goals = [];
         $idSite = Common::getRequestVar('idSite');
-        $idGoal = Common::getRequestVar('idGoal', false);
+        $idGoal = Common::getRequestVar('idGoal', \false);
         $reportMetadata = Request::processRequest('API.getMetadata', ['idSites' => $idSite, 'apiModule' => 'API', 'apiAction' => 'get']);
         $reportMetadata = reset($reportMetadata);
         $metricTranslations = array_merge($reportMetadata['metrics'], $reportMetadata['processedMetrics']);
@@ -43,7 +43,7 @@ class SingleMetricView extends \Piwik\Widget\Widget
         }
         return '<div vue-entry="CoreVisualizations.SingleMetricView"
             metric="' . $this->getVueEntryValue($column) . '"
-            id-goal="' . $this->getVueEntryValue($idGoal === false ? null : $idGoal) . '"
+            id-goal="' . $this->getVueEntryValue($idGoal === \false ? null : $idGoal) . '"
             goal-metrics="' . $this->getVueEntryValue($goalMetrics) . '"
             goals="' . $this->getVueEntryValue($goals) . '"
             metric-translations="' . $this->getVueEntryValue($metricTranslations) . '"

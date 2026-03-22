@@ -34,7 +34,7 @@ class ComparisonRowGenerator
         $this->isRequestMultiplePeriod = $isRequestMultiplePeriod;
         $this->columnMappings = $columnMappings;
     }
-    public function compareTables($compareMetadata, DataTableInterface $tables, DataTableInterface $compareTables = null)
+    public function compareTables($compareMetadata, DataTableInterface $tables, ?DataTableInterface $compareTables = null)
     {
         if ($tables instanceof DataTable) {
             $this->compareTable($compareMetadata, $tables, $compareTables, $compareTables);
@@ -75,7 +75,7 @@ class ComparisonRowGenerator
             throw new \Exception("Unexpected DataTable type: " . get_class($tables));
         }
     }
-    private function compareTable($compareMetadata, DataTable $table, DataTable $rootCompareTable = null, DataTable $compareTable = null)
+    private function compareTable($compareMetadata, DataTable $table, ?DataTable $rootCompareTable = null, ?DataTable $compareTable = null)
     {
         // if there are no rows in the table because the metrics are 0, add one so we can still set comparison values
         if ($table->getRowsCount() == 0) {
@@ -107,7 +107,7 @@ class ComparisonRowGenerator
             }
         }
     }
-    private function compareRow(DataTable $table, $compareMetadata, DataTable\Row $row, DataTable\Row $compareRow = null, DataTable $rootTable = null)
+    private function compareRow(DataTable $table, $compareMetadata, DataTable\Row $row, ?DataTable\Row $compareRow = null, ?DataTable $rootTable = null)
     {
         $comparisonDataTable = $row->getComparisons();
         if (empty($comparisonDataTable)) {
@@ -148,7 +148,7 @@ class ComparisonRowGenerator
                 $newSegment = Segment::combine($newRow->getMetadata('compareSegment'), SegmentExpression::AND_DELIMITER, $newSegment);
             }
             $newRow->setMetadata('segment', $newSegment);
-        } elseif ($this->segmentNameForReport && $row->getMetadata('segmentValue') !== false) {
+        } elseif ($this->segmentNameForReport && $row->getMetadata('segmentValue') !== \false) {
             $segmentValue = $row->getMetadata('segmentValue');
             $newRow->setMetadata('segment', sprintf('%s==%s', $this->segmentNameForReport, urlencode($segmentValue)));
         }
@@ -160,7 +160,7 @@ class ComparisonRowGenerator
             $this->compareTable($compareMetadata, $subtable, $rootTable, $compareSubTable);
         }
     }
-    private function addIndividualChildPrettifiedMetadata(array &$metadata, DataTable $parentTable = null)
+    private function addIndividualChildPrettifiedMetadata(array &$metadata, ?DataTable $parentTable = null)
     {
         if ($parentTable && $this->isRequestMultiplePeriod) {
             /** @var Period $period */

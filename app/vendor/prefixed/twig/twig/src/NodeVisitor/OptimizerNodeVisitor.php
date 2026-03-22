@@ -119,7 +119,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             return new TextNode($exprNode->getAttribute('value'), $exprNode->getTemplateLine());
         }
         if ($exprNode instanceof BlockReferenceExpression || $exprNode instanceof ParentExpression) {
-            $exprNode->setAttribute('output', true);
+            $exprNode->setAttribute('output', \true);
             return $exprNode;
         }
         return $node;
@@ -131,7 +131,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     {
         if ($node instanceof ForNode) {
             // disable the loop variable by default
-            $node->setAttribute('with_loop', false);
+            $node->setAttribute('with_loop', \false);
             array_unshift($this->loops, $node);
             array_unshift($this->loopsTargets, $node->getNode('value_target')->getAttribute('name'));
             array_unshift($this->loopsTargets, $node->getNode('key_target')->getAttribute('name'));
@@ -139,17 +139,17 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             // we are outside a loop
             return;
         } elseif ($node instanceof NameExpression && 'loop' === $node->getAttribute('name')) {
-            $node->setAttribute('always_defined', true);
+            $node->setAttribute('always_defined', \true);
             $this->addLoopToCurrent();
         } elseif ($node instanceof NameExpression && \in_array($node->getAttribute('name'), $this->loopsTargets)) {
-            $node->setAttribute('always_defined', true);
+            $node->setAttribute('always_defined', \true);
         } elseif ($node instanceof BlockReferenceNode || $node instanceof BlockReferenceExpression) {
             $this->addLoopToCurrent();
         } elseif ($node instanceof IncludeNode && !$node->getAttribute('only')) {
             $this->addLoopToAll();
-        } elseif ($node instanceof FunctionExpression && 'include' === $node->getAttribute('name') && (!$node->getNode('arguments')->hasNode('with_context') || false !== $node->getNode('arguments')->getNode('with_context')->getAttribute('value'))) {
+        } elseif ($node instanceof FunctionExpression && 'include' === $node->getAttribute('name') && (!$node->getNode('arguments')->hasNode('with_context') || \false !== $node->getNode('arguments')->getNode('with_context')->getAttribute('value'))) {
             $this->addLoopToAll();
-        } elseif ($node instanceof GetAttrExpression && (!$node->getNode('attribute') instanceof ConstantExpression || 'parent' === $node->getNode('attribute')->getAttribute('value')) && (true === $this->loops[0]->getAttribute('with_loop') || $node->getNode('node') instanceof NameExpression && 'loop' === $node->getNode('node')->getAttribute('name'))) {
+        } elseif ($node instanceof GetAttrExpression && (!$node->getNode('attribute') instanceof ConstantExpression || 'parent' === $node->getNode('attribute')->getAttribute('value')) && (\true === $this->loops[0]->getAttribute('with_loop') || $node->getNode('node') instanceof NameExpression && 'loop' === $node->getNode('node')->getAttribute('name'))) {
             $this->addLoopToAll();
         }
     }
@@ -166,12 +166,12 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     }
     private function addLoopToCurrent() : void
     {
-        $this->loops[0]->setAttribute('with_loop', true);
+        $this->loops[0]->setAttribute('with_loop', \true);
     }
     private function addLoopToAll() : void
     {
         foreach ($this->loops as $loop) {
-            $loop->setAttribute('with_loop', true);
+            $loop->setAttribute('with_loop', \true);
         }
     }
     public function getPriority() : int

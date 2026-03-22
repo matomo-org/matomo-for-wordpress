@@ -20,22 +20,22 @@ class Config extends JqplotGraphConfig
      *
      * Default value: true
      */
-    public $show_line_graph = true;
+    public $show_line_graph = \true;
     public function __construct()
     {
         parent::__construct();
-        $this->show_all_views_icons = false;
-        $this->show_table = false;
-        $this->show_table_all_columns = false;
-        $this->hide_annotations_view = false;
-        $this->x_axis_step_size = false;
-        $this->show_line_graph = true;
+        $this->show_all_views_icons = \false;
+        $this->show_table = \false;
+        $this->show_table_all_columns = \false;
+        $this->hide_annotations_view = \false;
+        $this->x_axis_step_size = \false;
+        $this->show_line_graph = \true;
         $this->addPropertiesThatShouldBeAvailableClientSide(array('show_line_graph'));
         $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('show_line_graph'));
         $period = Common::getRequestVar('period');
         if ($period !== 'range') {
-            $this->show_limit_control = true;
-            $this->show_periods = true;
+            $this->show_limit_control = \true;
+            $this->show_periods = \true;
         }
     }
 }

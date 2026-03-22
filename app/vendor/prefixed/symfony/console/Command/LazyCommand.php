@@ -24,7 +24,7 @@ final class LazyCommand extends Command
 {
     private $command;
     private $isEnabled;
-    public function __construct(string $name, array $aliases, string $description, bool $isHidden, \Closure $commandFactory, ?bool $isEnabled = true)
+    public function __construct(string $name, array $aliases, string $description, bool $isHidden, \Closure $commandFactory, ?bool $isEnabled = \true)
     {
         $this->setName($name)->setAliases($aliases)->setHidden($isHidden)->setDescription($description);
         $this->command = $commandFactory;
@@ -71,7 +71,7 @@ final class LazyCommand extends Command
     /**
      * @internal
      */
-    public function mergeApplicationDefinition(bool $mergeArgs = true) : void
+    public function mergeApplicationDefinition(bool $mergeArgs = \true) : void
     {
         $this->getCommand()->mergeApplicationDefinition($mergeArgs);
     }
@@ -131,7 +131,7 @@ final class LazyCommand extends Command
     {
         return $this->getCommand()->getProcessedHelp();
     }
-    public function getSynopsis(bool $short = false) : string
+    public function getSynopsis(bool $short = \false) : string
     {
         return $this->getCommand()->getSynopsis($short);
     }

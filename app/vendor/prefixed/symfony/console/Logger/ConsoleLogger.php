@@ -29,7 +29,7 @@ class ConsoleLogger extends AbstractLogger
     private $output;
     private $verbosityLevelMap = [LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL, LogLevel::ALERT => OutputInterface::VERBOSITY_NORMAL, LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL, LogLevel::ERROR => OutputInterface::VERBOSITY_NORMAL, LogLevel::WARNING => OutputInterface::VERBOSITY_NORMAL, LogLevel::NOTICE => OutputInterface::VERBOSITY_VERBOSE, LogLevel::INFO => OutputInterface::VERBOSITY_VERY_VERBOSE, LogLevel::DEBUG => OutputInterface::VERBOSITY_DEBUG];
     private $formatLevelMap = [LogLevel::EMERGENCY => self::ERROR, LogLevel::ALERT => self::ERROR, LogLevel::CRITICAL => self::ERROR, LogLevel::ERROR => self::ERROR, LogLevel::WARNING => self::INFO, LogLevel::NOTICE => self::INFO, LogLevel::INFO => self::INFO, LogLevel::DEBUG => self::INFO];
-    private $errored = false;
+    private $errored = \false;
     public function __construct(OutputInterface $output, array $verbosityLevelMap = [], array $formatLevelMap = [])
     {
         $this->output = $output;
@@ -52,7 +52,7 @@ class ConsoleLogger extends AbstractLogger
             if ($this->output instanceof ConsoleOutputInterface) {
                 $output = $output->getErrorOutput();
             }
-            $this->errored = true;
+            $this->errored = \true;
         }
         // the if condition check isn't necessary -- it's the same one that $output will do internally anyway.
         // We only do it for efficiency here as the message formatting is relatively expensive.

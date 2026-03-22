@@ -10,6 +10,7 @@
 import jqXHR = JQuery.jqXHR;
 import MatomoUrl from '../MatomoUrl/MatomoUrl';
 import Matomo from '../Matomo/Matomo';
+import { setCookie } from '../CookieHelper/CookieHelper';
 
 export interface AjaxOptions {
   withTokenInUrl?: boolean;
@@ -21,6 +22,7 @@ export interface AjaxOptions {
   returnResponseObject?: boolean;
   errorElement?: HTMLElement|JQuery|string;
   redirectOnSuccess?: QueryParameters|boolean;
+  abortable?: boolean;
 }
 
 interface ErrorResponse {
@@ -174,6 +176,8 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
 
   abortController: AbortController|null = null;
 
+  abortable = true;
+
   defaultParams = ['idSite', 'period', 'date', 'segment'];
 
   resolveWithHelper = false;
@@ -241,6 +245,10 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
 
     if (options.returnResponseObject) {
       helper.resolveWithHelper = true;
+    }
+
+    if (options.abortable === false) {
+      helper.abortable = false;
     }
 
     return helper.send().then((result: R | ErrorResponse | AjaxHelper) => {
@@ -504,7 +512,9 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
     }
 
     this.requestHandle = this.buildAjaxCall();
-    window.globalAjaxQueue.push(this.requestHandle);
+    if (this.abortable) {
+      window.globalAjaxQueue.push(this.requestHandle);
+    }
 
     if (this.abortController) {
       this.abortController.signal.addEventListener('abort', () => {
@@ -531,6 +541,15 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
         }
 
         if (xhr.statusText === 'abort' || xhr.status === 0) {
+          return;
+        }
+
+        const isInApp = !document.querySelector('#login_form');
+        const sessionTimedOut = xhr.getResponseHeader('X-Matomo-Session-Timed-Out') === '1';
+
+        if (sessionTimedOut && isInApp) {
+          setCookie('matomo_session_timed_out', '1', 60 * 1000);
+          Matomo.helper.refreshAfter(0);
           return;
         }
 
@@ -584,7 +603,9 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
       complete: this.completeCallback,
       headers: this.headers ? this.headers : undefined,
       error: function errorCallback(...args: any[]) { // eslint-disable-line
-        window.globalAjaxQueue.active -= 1;
+        if (self.abortable) {
+          window.globalAjaxQueue.active -= 1;
+        }
 
         if (self.errorCallback) {
           self.errorCallback.apply(this, args);
@@ -642,7 +663,9 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
           this.callback(response, status, request);
         }
 
-        window.globalAjaxQueue.active -= 1;
+        if (self.abortable) {
+          window.globalAjaxQueue.active -= 1;
+        }
         if (Matomo.ajaxRequestFinished) {
           Matomo.ajaxRequestFinished();
         }

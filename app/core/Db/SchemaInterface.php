@@ -14,6 +14,10 @@ namespace Piwik\Db;
 interface SchemaInterface
 {
     /**
+     * Returns the type of the current database (e.g. MySQL, MariaDB, ...)
+     */
+    public function getDatabaseType() : string;
+    /**
      * Get the SQL to create a specific Matomo table
      *
      * @param string $tableName
@@ -60,6 +64,15 @@ interface SchemaInterface
      */
     public function getInstallVersion();
     /**
+     * Returns the supported read isolation transaction level
+     *
+     * For example:
+     *      READ COMMITTED
+     *      or
+     *      READ UNCOMMITTED
+     */
+    public function getSupportedReadIsolationTransactionLevel() : string;
+    /**
      * Truncate all tables
      */
     public function truncateAllTables();
@@ -76,7 +89,7 @@ interface SchemaInterface
      * @param bool $forceReload Invalidate cache
      * @return array  installed Tables
      */
-    public function getTablesInstalled($forceReload = true);
+    public function getTablesInstalled($forceReload = \true);
     /**
      * Get list of installed columns in a table
      *
@@ -97,7 +110,6 @@ interface SchemaInterface
      *
      * @param string $sql  query to add hint to
      * @param float $limit  time limit in seconds
-     * @return string
      */
     public function addMaxExecutionTimeHintToQuery(string $sql, float $limit) : string;
     /**
@@ -105,27 +117,61 @@ interface SchemaInterface
      * Some database engines are performing sanity checks for table updates. Those might include checking if all columns used
      * already exist. In such a case queries like this might fail: `ALTER TABLE t ADD COLUMN b, ADD INDEX i (b)`
      *
-     * @return bool
      */
     public function supportsComplexColumnUpdates() : bool;
     /**
      * Returns the default collation for a charset used by this database engine.
      *
-     * @param string $charset
      *
-     * @return string
      */
     public function getDefaultCollationForCharset(string $charset) : string;
     /**
      * Return the default port used by this database engine
      *
-     * @return int
      */
     public function getDefaultPort() : int;
     /**
      * Return the table options to use for a CREATE TABLE statement.
      *
-     * @return string
      */
     public function getTableCreateOptions() : string;
+    /**
+     * Returns if performing on `OPTIMIZE TABLE` is supported for InnoDb tables
+     *
+     */
+    public function isOptimizeInnoDBSupported() : bool;
+    /**
+     * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
+     *
+     * Tables will only be optimized if the `[General] enable_sql_optimize_queries` INI config option is
+     * set to **1**.
+     *
+     * @param array $tables The name of the table to optimize or an array of tables to optimize.
+     *                      Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
+     * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
+     */
+    public function optimizeTables(array $tables, bool $force = \false) : bool;
+    /**
+     * Returns if the database engine can provide a rollup ranking query result
+     * without needing additional sorting.
+     *
+     */
+    public function supportsRankingRollupWithoutExtraSorting() : bool;
+    /**
+     * Returns if the database engine is able to use sorted subqueries
+     *
+     */
+    public function supportsSortingInSubquery() : bool;
+    /**
+     * Returns the version of the database server
+     */
+    public function getVersion() : string;
+    /**
+     * Returns if the used database version has reached its EOL
+     */
+    public function hasReachedEOL() : bool;
+    /**
+     * Returns the minimum supported version set for the schema
+     */
+    public function getMinimumSupportedVersion() : string;
 }

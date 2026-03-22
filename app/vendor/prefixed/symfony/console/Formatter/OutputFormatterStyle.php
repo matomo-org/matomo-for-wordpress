@@ -66,7 +66,7 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     public function unsetOption(string $option)
     {
         $pos = array_search($option, $this->options);
-        if (false !== $pos) {
+        if (\false !== $pos) {
             unset($this->options[$pos]);
         }
         $this->color = new Color($this->foreground, $this->background, $this->options);

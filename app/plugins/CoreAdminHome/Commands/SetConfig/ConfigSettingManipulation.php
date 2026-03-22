@@ -37,7 +37,7 @@ class ConfigSettingManipulation
      * @param string $value
      * @param bool $isArrayAppend
      */
-    public function __construct($sectionName, $name, $value, $isArrayAppend = false)
+    public function __construct($sectionName, $name, $value, $isArrayAppend = \false)
     {
         $this->sectionName = $sectionName;
         $this->name = $name;
@@ -47,7 +47,6 @@ class ConfigSettingManipulation
     /**
      * Performs the INI config manipulation.
      *
-     * @param Config $config
      * @throws \Exception if trying to append to a non-array setting value or if trying to set an
      *                    array value to a non-array setting
      */
@@ -101,7 +100,7 @@ class ConfigSettingManipulation
         $section = $matches[1];
         $name = $matches[2];
         $isAppend = !empty($matches[3]);
-        $value = json_decode($matches[4], $isAssoc = true);
+        $value = json_decode($matches[4], $isAssoc = \true);
         if ($value === null) {
             throw new \InvalidArgumentException("Invalid assignment string '{$assignment}': could not parse value as JSON");
         }

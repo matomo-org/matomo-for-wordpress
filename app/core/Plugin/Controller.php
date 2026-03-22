@@ -12,6 +12,7 @@ use Exception;
 use Piwik\Access;
 use Piwik\API\Proxy;
 use Piwik\API\Request;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Changes\Model as ChangesModel;
 use Piwik\Changes\UserChanges;
 use Piwik\Common;
@@ -131,7 +132,7 @@ abstract class Controller
         $this->securityPolicy = StaticContainer::get(View\SecurityPolicy::class);
         $date = Common::getRequestVar('date', 'yesterday', 'string');
         try {
-            $this->idSite = Common::getRequestVar('idSite', false, 'int');
+            $this->idSite = Common::getRequestVar('idSite', \false, 'int');
             $this->site = new Site($this->idSite);
             $date = $this->getDateParameterInTimezone($date, $this->site->getTimezone());
             $this->setDate($date);
@@ -204,7 +205,7 @@ abstract class Controller
             // Note: plural is not used for date range
             'range' => array('singular' => Piwik::translate('General_DateRangeInPeriodList'), 'plural' => Piwik::translate('General_DateRangeInPeriodList')),
         );
-        $periodNames = array_intersect_key($periodNames, array_fill_keys($availablePeriods, true));
+        $periodNames = array_intersect_key($periodNames, array_fill_keys($availablePeriods, \true));
         return $periodNames;
     }
     /**
@@ -266,7 +267,7 @@ abstract class Controller
      */
     protected function renderTemplateAs($template, array $variables = array(), $viewType = null)
     {
-        if (false === strpos($template, '@') || false === strpos($template, '/')) {
+        if (\false === strpos($template, '@') || \false === strpos($template, '/')) {
             $template = '@' . $this->pluginName . '/' . $template;
         }
         $view = new View($template);
@@ -303,13 +304,12 @@ abstract class Controller
      *                                      an instance of an report.
      * @param bool $controllerAction The name of the Controller action name  that is rendering the report. Defaults
      *                               to the `$apiAction`.
-     * @param bool $fetch If `true`, the rendered string is returned, if `false` it is `echo`'d.
      * @throws \Exception if `$pluginName` is not an existing plugin or if `$apiAction` is not an
      *                    existing method of the plugin's API.
      * @return string|void See `$fetch`.
      * @api
      */
-    protected function renderReport($apiAction, $controllerAction = false)
+    protected function renderReport($apiAction, $controllerAction = \false)
     {
         if (empty($controllerAction) && is_string($apiAction)) {
             $report = \Piwik\Plugin\ReportsProvider::factory($this->pluginName, $apiAction);
@@ -329,7 +329,7 @@ abstract class Controller
             throw new \Exception("Invalid action name '{$apiAction}' for '{$pluginName}' plugin.");
         }
         $apiAction = $apiProxy->buildApiActionName($pluginName, $apiAction);
-        if ($controllerAction !== false) {
+        if ($controllerAction !== \false) {
             $controllerAction = $pluginName . '.' . $controllerAction;
         }
         $view = ViewDataTableFactory::build(null, $apiAction, $controllerAction);
@@ -350,8 +350,8 @@ abstract class Controller
      */
     protected function getLastUnitGraph($currentModuleName, $currentControllerAction, $apiMethod)
     {
-        $view = ViewDataTableFactory::build(Evolution::ID, $apiMethod, $currentModuleName . '.' . $currentControllerAction, $forceDefault = true);
-        $view->config->show_goals = false;
+        $view = ViewDataTableFactory::build(Evolution::ID, $apiMethod, $currentModuleName . '.' . $currentControllerAction, $forceDefault = \true);
+        $view->config->show_goals = \false;
         return $view;
     }
     /**
@@ -371,7 +371,7 @@ abstract class Controller
      * @return ViewDataTable
      * @api
      */
-    protected function getLastUnitGraphAcrossPlugins($currentModuleName, $currentControllerAction, $columnsToDisplay = false, $selectableColumns = array(), $reportDocumentation = false, $apiMethod = 'API.get')
+    protected function getLastUnitGraphAcrossPlugins($currentModuleName, $currentControllerAction, $columnsToDisplay = \false, $selectableColumns = array(), $reportDocumentation = \false, $apiMethod = 'API.get')
     {
         // load translations from meta data
         $idSite = Common::getRequestVar('idSite');
@@ -391,7 +391,7 @@ abstract class Controller
         }
         // initialize the graph and load the data
         $view = $this->getLastUnitGraph($currentModuleName, $currentControllerAction, $apiMethod);
-        if ($columnsToDisplay !== false) {
+        if ($columnsToDisplay !== \false) {
             $view->config->columns_to_display = $columnsToDisplay;
         }
         if (property_exists($view->config, 'selectable_columns')) {
@@ -442,9 +442,9 @@ abstract class Controller
      *
      * @return int|float
      */
-    protected function getNumericValue($methodToCall, $date = false)
+    protected function getNumericValue($methodToCall, $date = \false)
     {
-        $params = $date === false ? array() : array('date' => $date);
+        $params = $date === \false ? array() : array('date' => $date);
         $return = Request::processRequest($methodToCall, $params);
         $columns = $return->getFirstRow()->getColumns();
         return reset($columns);
@@ -524,7 +524,6 @@ abstract class Controller
      * Will exit on error.
      *
      * @param View $view
-     * @param string|null $viewType 'basic' or 'admin'. If null, set based on the type of controller.
      * @return void
      * @api
      */
@@ -613,6 +612,7 @@ abstract class Controller
     {
         $view->clientSideConfig = PiwikConfig::getInstance()->getClientSideOptions();
         $view->isSuperUser = Access::getInstance()->hasSuperUserAccess();
+        $view->userCurrentRole = Access::getInstance()->getRoleForSite($this->idSite);
         $view->hasSomeAdminAccess = Piwik::isUserHasSomeAdminAccess();
         $view->hasSomeViewAccess = Piwik::isUserHasSomeViewAccess();
         $view->isUserIsAnonymous = Piwik::isUserIsAnonymous();
@@ -652,6 +652,9 @@ abstract class Controller
         $view->relativePluginWebDirs = (object) $pluginManager->getWebRootDirectoriesForCustomPluginDirs();
         $view->pluginsToLoadOnDemand = $pluginManager->getPluginUmdsToLoadOnDemand();
         $view->isMultiSitesEnabled = $pluginManager->isPluginActivated('MultiSites');
+        /*
+         * Executed as super user, so we are able to check if there are other sites (the current user might not have access to)
+         */
         $view->isSingleSite = Access::doAsSuperUser(function () {
             $allSites = Request::processRequest('SitesManager.getAllSitesId', [], []);
             return count($allSites) === 1;
@@ -680,7 +683,6 @@ abstract class Controller
      * Also calls {@link setHostValidationVariablesView()}.
      *
      * @param View $view
-     * @param string $viewType 'basic' or 'admin'. Used by ControllerAdmin.
      * @api
      */
     protected function setBasicVariablesView($view)
@@ -698,16 +700,16 @@ abstract class Controller
         $customLogo = new CustomLogo();
         $view->isCustomLogo = $customLogo->isEnabled();
         $view->customFavicon = $customLogo->getPathUserFavicon();
+        $view->hasCustomLogo = CustomLogo::hasUserLogo();
+        $view->hasCustomFavicon = CustomLogo::hasUserFavicon();
     }
     /**
      * Set the template variables to show the what's new popup if appropriate
      *
-     * @param View $view
-     * @return void
      */
     protected function showWhatIsNew(View $view) : void
     {
-        $view->whatisnewShow = false;
+        $view->whatisnewShow = \false;
         if (isset($view->hideWhatIsNew) && $view->hideWhatIsNew) {
             return;
         }
@@ -720,7 +722,7 @@ abstract class Controller
         $newChangesStatus = $userChanges->getNewChangesStatus();
         $shownRecently = $userChanges->shownRecently();
         if ($newChangesStatus == ChangesModel::NEW_CHANGES_EXIST && !$shownRecently) {
-            $view->whatisnewShow = true;
+            $view->whatisnewShow = \true;
         }
     }
     /**
@@ -743,13 +745,13 @@ abstract class Controller
             // invalid host, so display warning to user
             $validHosts = Url::getTrustedHostsFromConfig();
             $validHost = $validHosts[0];
-            $invalidHost = Common::sanitizeInputValue(Url::getHost(false));
+            $invalidHost = Common::sanitizeInputValue(Url::getHost(\false));
             $emailSubject = rawurlencode(Piwik::translate('CoreHome_InjectedHostEmailSubject', $invalidHost));
             $emailBody = rawurlencode(Piwik::translate('CoreHome_InjectedHostEmailBody'));
             $superUserEmail = rawurlencode(implode(',', Piwik::getContactEmailAddresses()));
             $mailToUrl = "mailto:{$superUserEmail}?subject={$emailSubject}&body={$emailBody}";
             $mailLinkStart = "<a href=\"{$mailToUrl}\">";
-            $invalidUrl = Url::getCurrentUrlWithoutQueryString($checkIfTrusted = false);
+            $invalidUrl = Url::getCurrentUrlWithoutQueryString($checkIfTrusted = \false);
             $validUrl = Url::getCurrentScheme() . '://' . $validHost . Url::getCurrentScriptName();
             $invalidUrl = Common::sanitizeInputValue($invalidUrl);
             $validUrl = Common::sanitizeInputValue($validUrl);
@@ -839,7 +841,7 @@ abstract class Controller
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-        echo FrontController::getInstance()->dispatch(Piwik::getLoginPluginName(), false);
+        echo FrontController::getInstance()->dispatch(Piwik::getLoginPluginName(), \false);
         exit;
     }
     /**
@@ -858,7 +860,7 @@ abstract class Controller
      */
     protected function checkTokenInUrl()
     {
-        $tokenRequest = Common::getRequestVar('token_auth', false);
+        $tokenRequest = StaticContainer::get(AuthenticationToken::class)->getAuthToken();
         $tokenUser = Piwik::getCurrentUserTokenAuth();
         if (empty($tokenRequest) && empty($tokenUser)) {
             return;
@@ -917,7 +919,7 @@ abstract class Controller
     {
         $menu = new \Piwik\Plugin\Menu();
         $parameters = array_merge($menu->urlForDefaultUserParams($websiteId, $defaultPeriod, $defaultDate), $parameters);
-        $queryParams = !empty($parameters) ? '&' . Url::getQueryStringFromParameters($parameters) : '';
+        $queryParams = '&' . Url::getQueryStringFromParameters($parameters);
         $url = "index.php?module=%s&action=%s";
         $url = sprintf($url, $moduleToRedirect, $actionToRedirect);
         $url = $url . $queryParams;

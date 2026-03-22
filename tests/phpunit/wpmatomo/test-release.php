@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test release.
  *
@@ -86,7 +87,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$hash_after_generate = md5( $contents );
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
+		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run matomo:console wordpress:generate-core-assets".' );
 	}
 
 	public function test_built_release_has_all_needed_matomo_contents_and_is_not_too_big() {
@@ -114,6 +115,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/node_modules/jquery.scrollto/jquery.scrollTo.min.js',
 			'matomo/plugins/Morpheus/icons/README.md',
 			'matomo/core/Mail/Transport.php',
+			'matomo/vendor/wikimedia/less.php/lib/Less/.easymin/ignore_prefixes',
 		];
 
 		$ignored_mwp_files = [
@@ -135,6 +137,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/vendor/prefixed/twig/twig/src/Node/Expression/Filter/RawFilter.php',
 			'app/vendor/prefixed/twig/twig/src/Node/NameDeprecation.php',
 			'app/vendor/prefixed/twig/twig/src/Util/ReflectionCallable.php',
+
+			// added via patch
+			'app/plugins/CoreHome/stylesheets/a11y.less',
 		];
 
 		try {
@@ -153,6 +158,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$version          = \Piwik\Version::VERSION;
 			$core_release_url = "http://builds.matomo.org/matomo-$version.zip";
 			$core_release_zip = download_url( $core_release_url );
+			if ( is_wp_error( $core_release_zip ) ) {
+				throw new \Error( 'could not download core release: ' . $core_release_zip->get_error_message() );
+			}
 
 			// check release contents
 			$mwp_release_contents = array_flip( $this->get_zip_file_contents( $path_to_zip ) );
@@ -236,7 +244,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			}
 			$this->assertEmpty( $irrelevant_mwp_ignored_files, 'The \$ignored_mwp_files variable has some out of date entries: ' . print_r( $irrelevant_mwp_ignored_files, true ) );
 		} finally {
-			if ( isset( $core_release_zip ) && is_file( $core_release_zip ) ) {
+			if ( isset( $core_release_zip ) && ! is_wp_error( $core_release_zip ) && is_file( $core_release_zip ) ) {
 				unlink( $core_release_zip );
 			}
 
@@ -295,6 +303,11 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$tested_up_to_version = $matches[1];
 
 		$this->assertTrue( $this->compare_version( $latest_version, $tested_up_to_version ), "Tested up to version ($tested_up_to_version) does not match latest version ($latest_version)." );
+	}
+
+	public function test_version_constant_matches_readme_txt() {
+		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE );
+		$this->assertEquals( $plugin_data['Version'], WpMatomo::VERSION );
 	}
 
 	private function get_zip_file_contents( $path_to_zip ) {

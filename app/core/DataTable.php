@@ -8,8 +8,8 @@
  */
 namespace Piwik;
 
-use Closure;
 use Exception;
+use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable\DataTableInterface;
 use Piwik\DataTable\Manager;
 use Piwik\DataTable\Renderer\Html;
@@ -82,7 +82,7 @@ require_once PIWIK_INCLUDE_PATH . "/core/DataTable/Bridges.php";
  *
  * All predefined filters exist in the **Piwik\DataTable\BaseFilter** namespace.
  *
- * _Note: For convenience, [anonymous functions](http://www.php.net/manual/en/functions.anonymous.php)
+ * _Note: For convenience, [anonymous functions](https://www.php.net/manual/en/functions.anonymous.php)
  * can be used as DataTable filters._
  *
  * ### Applying Filters
@@ -158,7 +158,8 @@ require_once PIWIK_INCLUDE_PATH . "/core/DataTable/Bridges.php";
  *         return $dataTable;
  *     }
  *
- *
+ * @implements \IteratorAggregate<int, Row>
+ * @implements \ArrayAccess<int, Row>
  * @api
  */
 class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
@@ -211,12 +212,13 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     public const ROW_IDENTIFIER_METADATA_NAME = 'rowIdentifier';
     /**
      * Maximum nesting level.
+     * @var int
      */
     private static $maximumDepthLevelAllowed = self::MAX_DEPTH_DEFAULT;
     /**
      * Array of Row
      *
-     * @var Row[]
+     * @var Row[]|null
      */
     protected $rows = [];
     /**
@@ -226,18 +228,11 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      */
     protected $currentId;
     /**
-     * Current depth level of this data table
-     * 0 is the parent data table
-     *
-     * @var int
-     */
-    protected $depthLevel = 0;
-    /**
      * This flag is set to false once we modify the table in a way that outdates the index
      *
      * @var bool
      */
-    protected $indexNotUpToDate = true;
+    protected $indexNotUpToDate = \true;
     /**
      * This flag sets the index to be rebuild whenever a new row is added,
      * as opposed to re-building the full index when getRowFromLabel is called.
@@ -246,53 +241,47 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @var bool
      */
-    protected $rebuildIndexContinuously = false;
+    protected $rebuildIndexContinuously = \false;
     /**
      * Column name of last time the table was sorted
      *
-     * @var string
+     * @var string|false
      */
-    protected $tableSortedBy = false;
+    protected $tableSortedBy = \false;
     /**
      * List of BaseFilter queued to this table
      *
-     * @var array
+     * @var array<array{className: string|callable, parameters: array<scalar, mixed>}>
      */
     protected $queuedFilters = array();
     /**
      * List of disabled filter names eg 'Limit' or 'Sort'
      *
-     * @var array
+     * @var String[]
      */
     protected $disabledFilters = array();
-    /**
-     * We keep track of the number of rows before applying the LIMIT filter that deletes some rows
-     *
-     * @var int
-     */
-    protected $rowsCountBeforeLimitFilter = 0;
     /**
      * Defaults to false for performance reasons (most of the time we don't need recursive sorting so we save a looping over the dataTable)
      *
      * @var bool
      */
-    protected $enableRecursiveSort = false;
+    protected $enableRecursiveSort = \false;
     /**
      * When the table and all subtables are loaded, this flag will be set to true to ensure filters are applied to all subtables
      *
      * @var bool
      */
-    protected $enableRecursiveFilters = false;
+    protected $enableRecursiveFilters = \false;
     /**
-     * @var array
+     * @var array<string, int>
      */
     protected $rowsIndexByLabel = array();
     /**
-     * @var \Piwik\DataTable\Row
+     * @var Row|null
      */
     protected $summaryRow = null;
     /**
-     * @var \Piwik\DataTable\Row
+     * @var Row|null
      */
     protected $totalsRow = null;
     /**
@@ -302,7 +291,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * Note: this field is protected so derived classes will serialize it.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $metadata = array();
     /**
@@ -312,6 +301,8 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * @var int
      */
     protected $maximumAllowedRows = 0;
+    /** @var bool */
+    protected $isBuiltWithoutArchives = \true;
     /**
      * Constructor. Creates an empty DataTable.
      */
@@ -349,26 +340,32 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         // registers this instance to the manager
         $this->currentId = Manager::getInstance()->addTable($this);
     }
+    /**
+     * @return void
+     */
     public function setLabelsHaveChanged()
     {
-        $this->indexNotUpToDate = true;
+        $this->indexNotUpToDate = \true;
     }
     /**
-     * @ignore
      * does not update the summary row!
+     * @param Row[]|null $rows
+     * @return void
+     * @ignore
      */
     public function setRows($rows)
     {
         unset($this->rows);
         $this->rows = is_array($rows) ? $rows : [];
-        $this->indexNotUpToDate = true;
+        $this->indexNotUpToDate = \true;
     }
     /**
      * Sorts the DataTable rows using the supplied callback function.
      *
-     * @param string $functionCallback A comparison callback compatible with {@link usort}.
+     * @param callable $functionCallback A comparison callback compatible with {@link usort}.
      * @param string $columnSortedBy The column name `$functionCallback` sorts by. This is stored
      *                               so we can determine how the DataTable was sorted in the future.
+     * @return void
      */
     public function sort($functionCallback, $columnSortedBy)
     {
@@ -384,14 +381,23 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             }
         }
     }
+    /**
+     * @return void
+     */
     public function setTotalsRow(Row $totalsRow)
     {
         $this->totalsRow = $totalsRow;
     }
+    /**
+     * @return Row|null
+     */
     public function getTotalsRow()
     {
         return $this->totalsRow;
     }
+    /**
+     * @return Row|null
+     */
     public function getSummaryRow()
     {
         return $this->summaryRow;
@@ -410,40 +416,46 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Enables recursive sorting. If this method is called {@link sort()} will also sort all
      * subtables.
+     * @return void
      */
     public function enableRecursiveSort()
     {
-        $this->enableRecursiveSort = true;
+        $this->enableRecursiveSort = \true;
     }
     /**
+     * @return bool
      * @ignore
      */
     public function isSortRecursiveEnabled()
     {
-        return $this->enableRecursiveSort === true;
+        return $this->enableRecursiveSort === \true;
     }
     /**
+     * @param string $column
+     * @return void
      * @ignore
      */
     public function setTableSortedBy($column)
     {
-        $this->indexNotUpToDate = true;
+        $this->indexNotUpToDate = \true;
         $this->tableSortedBy = $column;
     }
     /**
      * Enables recursive filtering. If this method is called then the {@link filter()} method
      * will apply filters to every subtable in addition to this instance.
+     * @return void
      */
     public function enableRecursiveFilters()
     {
-        $this->enableRecursiveFilters = true;
+        $this->enableRecursiveFilters = \true;
     }
     /**
+     * @return void
      * @ignore
      */
     public function disableRecursiveFilters()
     {
-        $this->enableRecursiveFilters = false;
+        $this->enableRecursiveFilters = \false;
     }
     /**
      * Applies a filter to this datatable.
@@ -451,10 +463,11 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * If {@link enableRecursiveFilters()} was called, the filter will be applied
      * to all subtables as well.
      *
-     * @param string|Closure $className Class name, eg. `"Sort"` or "Piwik\DataTable\Filters\Sort"`. If no
-     *                                  namespace is supplied, `Piwik\DataTable\BaseFilter` is assumed. This parameter
+     * @param string|callable $className Class name, eg. `"Sort"` or "Piwik\DataTable\Filters\Sort"`. If no
+     *                                  namespace is supplied, `Piwik\DataTable\Filter` is assumed. This parameter
      *                                  can also be a closure that takes a DataTable as its first parameter.
      * @param array $parameters Array of extra parameters to pass to the filter.
+     * @return void
      */
     public function filter($className, $parameters = array())
     {
@@ -463,16 +476,20 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             call_user_func_array($className, $parameters);
             return;
         }
+        if (!is_string($className)) {
+            throw new Exception('Unsupported filter provided');
+        }
         if (in_array($className, $this->disabledFilters)) {
             return;
         }
-        if (!class_exists($className, true)) {
+        if (!class_exists($className, \true)) {
             $className = 'Piwik\\DataTable\\Filter\\' . $className;
         }
         $reflectionObj = new ReflectionClass($className);
         // the first parameter of a filter is the DataTable
         // we add the current datatable as the parameter
         $parameters = array_merge(array($this), $parameters);
+        /** @var BaseFilter $filter */
         $filter = $reflectionObj->newInstanceArgs($parameters);
         $filter->enableRecursive($this->enableRecursiveFilters);
         $filter->filter($this);
@@ -482,10 +499,10 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * This method is used to iterate over multiple DataTable\Map's concurrently.
      *
-     * See {@link \Piwik\DataTable\Map::multiFilter()} for more information.
+     * See {@link Map::multiFilter()} for more information.
      *
      * @param DataTable[] $otherTables
-     * @param callable filter A function like `function (DataTable $thisTable, $otherTable1, $otherTable2) {}`.
+     * @param callable $filter A function like `function (DataTable $thisTable, $otherTable1, $otherTable2) {}`.
      * @return mixed The result of $filter.
      */
     public function multiFilter($otherTables, $filter)
@@ -495,10 +512,11 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Applies a filter to all subtables but not to this datatable.
      *
-     * @param string|Closure $className Class name, eg. `"Sort"` or "Piwik\DataTable\Filters\Sort"`. If no
+     * @param string|callable $className Class name, eg. `"Sort"` or "Piwik\DataTable\Filters\Sort"`. If no
      *                                  namespace is supplied, `Piwik\DataTable\BaseFilter` is assumed. This parameter
      *                                  can also be a closure that takes a DataTable as its first parameter.
      * @param array $parameters Array of extra parameters to pass to the filter.
+     * @return void
      */
     public function filterSubtables($className, $parameters = array())
     {
@@ -517,8 +535,9 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * Filters that prettify the column values or don't need the full set of rows should be queued. This
      * way they will be run after the table is truncated which will result in better performance.
      *
-     * @param string|Closure $className The class name of the filter, eg. `'Limit'`.
+     * @param string|callable $className The class name of the filter, eg. `'Limit'`.
      * @param array $parameters The parameters to give to the filter, eg. `array($offset, $limit)` for the Limit filter.
+     * @return void
      */
     public function queueFilterSubtables($className, $parameters = array())
     {
@@ -537,15 +556,16 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * Filters that prettify the column values or don't need the full set of rows should be queued. This
      * way they will be run after the table is truncated which will result in better performance.
      *
-     * @param string|Closure $className The class name of the filter, eg. `'Limit'`.
+     * @param string|callable $className The class name of the filter, eg. `'Limit'`.
      * @param array $parameters The parameters to give to the filter, eg. `array($offset, $limit)` for the Limit filter.
+     * @return void
      */
     public function queueFilter($className, $parameters = array())
     {
         if (!is_array($parameters)) {
             $parameters = array($parameters);
         }
-        $this->queuedFilters[] = array('className' => $className, 'parameters' => $parameters);
+        $this->queuedFilters[] = ['className' => $className, 'parameters' => $parameters];
     }
     /**
      * Disable a specific filter to run on this DataTable in case you have already applied this filter or if you will
@@ -557,6 +577,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *                           call `->filter('Limit')` this filter won't be executed. If you call
      *                           `->filter('Piwik\DataTable\Filter\Limit')` that filter will be executed. See it as a
      *                           feature.
+     * @return void
      * @ignore
      */
     public function disableFilter($className)
@@ -566,6 +587,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Applies all filters that were previously queued to the table. See {@link queueFilter()}
      * for more information.
+     * @return void
      */
     public function applyQueuedFilters()
     {
@@ -587,7 +609,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * cases, the {@link COLUMN_AGGREGATION_OPS_METADATA_NAME}
      * metadata can be used to specify a different type of operation.
      *
-     * @param \Piwik\DataTable $tableToSum
+     * @return void
      * @throws Exception
      */
     public function addDataTable(\Piwik\DataTable $tableToSum)
@@ -607,7 +629,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             // this takes a lot of time.
             $row = $tableToSum->getRowFromId(\Piwik\DataTable::ID_SUMMARY_ROW);
             if ($row) {
-                $this->aggregateRow($this->summaryRow, $row, $columnAggregationOps, true);
+                $this->aggregateRow($this->summaryRow, $row, $columnAggregationOps, \true);
             }
         }
     }
@@ -632,10 +654,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         if (empty($rowId) && !empty($this->totalsRow) && $label == $this->totalsRow->getColumn('label')) {
             return $this->totalsRow;
         }
-        if ($rowId instanceof Row) {
-            return $rowId;
-        }
-        return false;
+        return \false;
     }
     /**
      * Returns the row id for the row whose `'label'` column is equal to `$label`.
@@ -644,7 +663,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * label => row ID mappings.
      *
      * @param string $label `'label'` column value to look for.
-     * @return int The row ID.
+     * @return int|false The row ID.
      */
     public function getRowIdFromLabel($label)
     {
@@ -658,7 +677,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             if ($label == self::LABEL_SUMMARY_ROW && !is_null($this->summaryRow)) {
                 return self::ID_SUMMARY_ROW;
             }
-            return false;
+            return \false;
         }
         return $this->rowsIndexByLabel[$label];
     }
@@ -668,7 +687,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * @param bool $keepFilters Whether to pass the queued filter list to the new DataTable or not.
      * @return DataTable
      */
-    public function getEmptyClone($keepFilters = true)
+    public function getEmptyClone($keepFilters = \true)
     {
         $clone = new \Piwik\DataTable();
         if ($keepFilters) {
@@ -679,19 +698,20 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     }
     /**
      * Rebuilds the index used to lookup a row by label
+     * @return void
      * @internal
      */
     public function rebuildIndex()
     {
-        $this->rowsIndexByLabel = array();
-        $this->rebuildIndexContinuously = true;
+        $this->rowsIndexByLabel = [];
+        $this->rebuildIndexContinuously = \true;
         foreach ($this->rows as $id => $row) {
             $label = $row->getColumn('label');
-            if ($label !== false) {
+            if ($label !== \false) {
                 $this->rowsIndexByLabel[(string) $label] = $id;
             }
         }
-        $this->indexNotUpToDate = false;
+        $this->indexNotUpToDate = \false;
     }
     /**
      * Returns a row by ID. The ID is either the index of the row or {@link ID_SUMMARY_ROW}.
@@ -705,7 +725,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             return $this->summaryRow;
         }
         if (!isset($this->rows[$id])) {
-            return false;
+            return \false;
         }
         return $this->rows[$id];
     }
@@ -723,7 +743,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                 return $row;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Adds a row to this table.
@@ -732,7 +752,6 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * at the maximum, the new row will be summed to the summary row. If there is no summary row,
      * this row is set as the summary row.
      *
-     * @param Row $row
      * @return Row `$row` or the summary row if we're at the maximum number of rows.
      */
     public function addRow(Row $row)
@@ -745,14 +764,14 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                 $columns = array('label' => self::LABEL_SUMMARY_ROW) + $row->getColumns();
                 $this->addSummaryRow(new Row(array(Row::COLUMNS => $columns)));
             } else {
-                $this->summaryRow->sumRow($row, $enableCopyMetadata = false, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
+                $this->summaryRow->sumRow($row, $enableCopyMetadata = \false, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
             }
             return $this->summaryRow;
         }
         $this->rows[] = $row;
         if (!$this->indexNotUpToDate && $this->rebuildIndexContinuously) {
             $label = $row->getColumn('label');
-            if ($label !== false) {
+            if ($label !== \false) {
                 $this->rowsIndexByLabel[(string) $label] = count($this->rows) - 1;
             }
         }
@@ -763,7 +782,6 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * _Note: A DataTable can have only one summary row._
      *
-     * @param Row $row
      * @return Row Returns `$row`.
      */
     public function addSummaryRow(Row $row)
@@ -789,6 +807,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @param array $row eg. `array(Row::COLUMNS => array('visits' => 13, 'test' => 'toto'),
      *                              Row::METADATA => array('mymetadata' => 'myvalue'))`
+     * @return void
      */
     public function addRowFromArray($row)
     {
@@ -800,6 +819,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * Row metadata cannot be added with this method.
      *
      * @param array $row eg. `array('name' => 'google analytics', 'license' => 'commercial')`
+     * @return void
      */
     public function addRowFromSimpleArray($row)
     {
@@ -822,6 +842,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         }
     }
     /**
+     * @return Row[]
      * @ignore
      */
     public function getRowsWithoutSummaryRow()
@@ -829,6 +850,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         return $this->rows;
     }
     /**
+     * @return int
      * @ignore
      */
     public function getRowsCountWithoutSummaryRow()
@@ -838,7 +860,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Returns an array containing all column values for the requested column.
      *
-     * @param string $name The column name.
+     * @param string|int $name The column name.
      * @return array The array of column values.
      */
     public function getColumn($name)
@@ -912,10 +934,11 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Delete row metadata by name in every row.
      *
-     * @param       $name
+     * @param string $name
      * @param bool $deleteRecursiveInSubtables
+     * @return void
      */
-    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = false)
+    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->rows as $row) {
             $row->deleteMetadata($name);
@@ -955,7 +978,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             if (!is_null($this->summaryRow)) {
                 return $this->summaryRow;
             }
-            return false;
+            return \false;
         }
         return reset($this->rows);
     }
@@ -971,7 +994,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             return $this->summaryRow;
         }
         if (count($this->rows) == 0) {
-            return false;
+            return \false;
         }
         return end($this->rows);
     }
@@ -995,10 +1018,29 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         return $totalCount;
     }
     /**
+     * Returns the number of leaf rows in the entire DataTable hierarchy. Only rows that do not contain a subtables are counted
+     *
+     * @return int
+     */
+    public function getLeafRowsCount()
+    {
+        $totalCount = 0;
+        foreach ($this->rows as $row) {
+            $subTable = $row->getSubtable();
+            if ($subTable) {
+                $totalCount += $subTable->getLeafRowsCount();
+            } else {
+                $totalCount++;
+            }
+        }
+        return $totalCount;
+    }
+    /**
      * Delete a column by name in every row. This change is NOT applied recursively to all
      * subtables.
      *
      * @param string $name Column name to delete.
+     * @return void
      */
     public function deleteColumn($name)
     {
@@ -1013,6 +1055,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @param string $oldName Old column name.
      * @param string $newName New column name.
+     * @return void
      */
     public function renameColumn($oldName, $newName)
     {
@@ -1035,8 +1078,9 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @param array $names List of column names to delete.
      * @param bool $deleteRecursiveInSubtables Whether to apply this change to all subtables or not.
+     * @return void
      */
-    public function deleteColumns($names, $deleteRecursiveInSubtables = false)
+    public function deleteColumns($names, $deleteRecursiveInSubtables = \false)
     {
         foreach ($this->rows as $row) {
             foreach ($names as $name) {
@@ -1062,6 +1106,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * Deletes a row by ID.
      *
      * @param int $id The row ID.
+     * @return void
      * @throws Exception If the row `$id` cannot be found.
      */
     public function deleteRow($id)
@@ -1107,6 +1152,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * Deletes a set of rows by ID.
      *
      * @param array $rowIds The list of row IDs to delete.
+     * @return void
      * @throws Exception If a row ID cannot be found.
      */
     public function deleteRows(array $rowIds)
@@ -1136,8 +1182,6 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * is equal to the row in the other table with the same label. The order
      * of rows is not important.
      *
-     * @param \Piwik\DataTable $table1
-     * @param \Piwik\DataTable $table2
      * @return bool
      */
     public static function isEqual(\Piwik\DataTable $table1, \Piwik\DataTable $table2)
@@ -1145,16 +1189,16 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         $table1->rebuildIndex();
         $table2->rebuildIndex();
         if ($table1->getRowsCount() != $table2->getRowsCount()) {
-            return false;
+            return \false;
         }
         $rows1 = $table1->getRows();
         foreach ($rows1 as $row1) {
             $row2 = $table2->getRowFromLabel($row1->getColumn('label'));
-            if ($row2 === false || !Row::isEqual($row1, $row2)) {
-                return false;
+            if ($row2 === \false || !Row::isEqual($row1, $row2)) {
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     /**
      * Serializes an entire DataTable hierarchy and returns the array of serialized DataTables.
@@ -1201,12 +1245,12 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         // gather metadata before filters are called, so their metadata is not stored in serialized form
         $metadata = $this->getAllTableMetadata();
         foreach ($metadata as $key => $value) {
-            if (!is_scalar($value) && !is_string($value)) {
+            if (!is_scalar($value)) {
                 unset($metadata[$key]);
             }
         }
         if (!is_null($maximumRowsInDataTable)) {
-            $this->filter('Truncate', array($maximumRowsInDataTable - 1, \Piwik\DataTable::LABEL_SUMMARY_ROW, $columnToSortByBeforeTruncation, $filterRecursive = false));
+            $this->filter('Truncate', array($maximumRowsInDataTable - 1, \Piwik\DataTable::LABEL_SUMMARY_ROW, $columnToSortByBeforeTruncation, $filterRecursive = \false));
         }
         $consecutiveSubtableIds = array();
         $forcedId = $subtableId;
@@ -1266,7 +1310,9 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         unset($rows);
         return $aSerializedDataTable;
     }
-    private static $previousRowClasses = array('O:39:"Piwik\\DataTable\\Row\\DataTableSummaryRow"', 'O:19:"Piwik\\DataTable\\Row"', 'O:36:"Piwik_DataTable_Row_DataTableSummary"', 'O:19:"Piwik_DataTable_Row"');
+    /** @var string[] */
+    private static $previousRowClasses = ['O:39:"Piwik\\DataTable\\Row\\DataTableSummaryRow"', 'O:19:"Piwik\\DataTable\\Row"', 'O:36:"Piwik_DataTable_Row_DataTableSummary"', 'O:19:"Piwik_DataTable_Row"'];
+    /** @var string */
     private static $rowClassToUseForUnserialize = 'O:29:"Piwik_DataTable_SerializedRow"';
     /**
      * It is faster to unserialize existing serialized Row instances to "Piwik_DataTable_SerializedRow" and access the
@@ -1282,12 +1328,64 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      */
     private function unserializeRows($serialized)
     {
-        $serialized = str_replace(self::$previousRowClasses, self::$rowClassToUseForUnserialize, $serialized);
-        $rows = \Piwik\Common::safe_unserialize($serialized, [Row::class, DataTableSummaryRow::class, \Piwik_DataTable_SerializedRow::class]);
-        if ($rows === false) {
+        // Current archives only persist row arrays, so do not allow objects in the default path.
+        $rows = \Piwik\Common::safe_unserialize($serialized, []);
+        if (!$this->isValidRowsPayload($rows, $allowLegacySerializedRowObjects = \false)) {
+            $rows = \false;
+        }
+        if ($rows === \false) {
+            // Legacy object payloads are attempted as a fallback for BC.
+            $legacySerialized = str_replace(array_map(function ($class) {
+                return $class . ':';
+            }, self::$previousRowClasses), self::$rowClassToUseForUnserialize . ':', $serialized);
+            $rows = \Piwik\Common::safe_unserialize($legacySerialized, [\Piwik_DataTable_SerializedRow::class]);
+        }
+        if (!$this->isValidRowsPayload($rows, $allowLegacySerializedRowObjects = \true)) {
             throw new Exception("The unserialization has failed!");
         }
         return $rows;
+    }
+    private function isValidRowsPayload($rows, bool $allowLegacySerializedRowObjects) : bool
+    {
+        if (!is_array($rows)) {
+            return \false;
+        }
+        foreach ($rows as $row) {
+            if ($allowLegacySerializedRowObjects && $this->isValidLegacySerializedRowObject($row)) {
+                continue;
+            }
+            if ($this->containsObject($row)) {
+                return \false;
+            }
+        }
+        return \true;
+    }
+    private function isValidLegacySerializedRowObject($row) : bool
+    {
+        if (!$row instanceof \Piwik_DataTable_SerializedRow) {
+            return \false;
+        }
+        return isset($row->c) && is_array($row->c) && !$this->containsObject($row->c);
+    }
+    private function containsObject($value) : bool
+    {
+        if (is_object($value)) {
+            return \true;
+        }
+        if (!is_array($value)) {
+            return \false;
+        }
+        $containsObject = \false;
+        try {
+            array_walk_recursive($value, function ($entry) use(&$containsObject) : void {
+                if (is_object($entry)) {
+                    $containsObject = \true;
+                }
+            });
+        } catch (\Throwable $error) {
+            throw new Exception('The unserialization has failed! Array payload cannot be safely traversed.', 0, $error);
+        }
+        return $containsObject;
     }
     /**
      * Adds a set of rows from a serialized DataTable string.
@@ -1297,7 +1395,8 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * _Note: This function will successfully load DataTables serialized by Piwik 1.X._
      *
      * @param string $serialized A string with the format of a string in the array returned by
-     *                                 {@link serialize()}.
+     *                          {@link serialize()}.
+     * @return void
      * @throws Exception if `$serialized` is invalid.
      */
     public function addRowsFromSerializedArray($serialized)
@@ -1345,6 +1444,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *                             // row2
      *                             array( ... ),
      *                         )
+     * @return void
      */
     public function addRowsFromArray($array)
     {
@@ -1371,6 +1471,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *                             array( col1_name => valueA, col2_name => valueC, ...),
      *                             array( col1_name => valueB, col2_name => valueD, ...),
      *                       )
+     * @return void
      * @throws Exception if `$array` is in an incorrect format.
      */
     public function addRowsFromSimpleArray($array)
@@ -1383,16 +1484,16 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         // array(col1_name => val1, col2_name => val2, etc.)
         // with val* that are never arrays (only strings/numbers/bool/etc.)
         // if we detect such a "simple" data structure we convert it to a row with the correct columns' names
-        $thisIsNotThatSimple = false;
+        $thisIsNotThatSimple = \false;
         foreach ($array as $columnValue) {
             if (is_array($columnValue) || is_object($columnValue)) {
-                $thisIsNotThatSimple = true;
+                $thisIsNotThatSimple = \true;
                 break;
             }
         }
-        if ($thisIsNotThatSimple === false) {
+        if ($thisIsNotThatSimple === \false) {
             // case when the array is indexed by the default numeric index
-            if (array_keys($array) === array_keys(array_fill(0, count($array), true))) {
+            if (array_keys($array) === array_keys(array_fill(0, count($array), \true))) {
                 foreach ($array as $row) {
                     $this->addRow(new Row(array(Row::COLUMNS => array($row))));
                 }
@@ -1416,12 +1517,12 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                 // this key, we throw an explicit exception.
                 if (is_string($key)) {
                     // we define an exception we may throw if at one point we notice that we cannot handle the data structure
-                    throw new Exception(sprintf($exceptionText, sprintf("Only integer keys supported for array columns on base level. Unsupported string '%s' found for row '%s'.", $key, substr(var_export($row, true), 0, 500))));
+                    throw new Exception(sprintf($exceptionText, sprintf("Only integer keys supported for array columns on base level. Unsupported string '%s' found for row '%s'.", $key, substr(var_export($row, \true), 0, 500))));
                 }
                 // if any of the sub elements of row is an array we cannot handle this data structure...
                 foreach ($row as $name => $subRow) {
                     if (is_array($subRow)) {
-                        throw new Exception(sprintf($exceptionText, sprintf("Multidimensional column values not supported. Found unexpected array value for column '%s' in row '%s': '%s'.", $name, $key, substr(var_export($subRow, true), 0, 500))));
+                        throw new Exception(sprintf($exceptionText, sprintf("Multidimensional column values not supported. Found unexpected array value for column '%s' in row '%s': '%s'.", $name, $key, substr(var_export($subRow, \true), 0, 500))));
                     }
                 }
                 $row = new Row(array(Row::COLUMNS => $row));
@@ -1463,7 +1564,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @param array $array Indexed array, two formats supported, see above.
      * @param array|null $subtablePerLabel An array mapping label values with DataTable instances to associate as a subtable.
-     * @return \Piwik\DataTable
+     * @return DataTable
      */
     public static function makeFromIndexedArray($array, $subtablePerLabel = null)
     {
@@ -1497,6 +1598,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * have subtables, but the subtables are not.
      *
      * @param int $atLeastLevel
+     * @return void
      */
     public static function setMaximumDepthLevelAllowedAtLeast($atLeastLevel)
     {
@@ -1514,7 +1616,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     public function getMetadata($name)
     {
         if (!isset($this->metadata[$name])) {
-            return false;
+            return \false;
         }
         return $this->metadata[$name];
     }
@@ -1523,6 +1625,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * @param string $name The metadata name.
      * @param mixed $value
+     * @return void
      */
     public function setMetadata($name, $value)
     {
@@ -1534,22 +1637,22 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * @param bool|string $name The metadata name (omit to delete all metadata)
      * @return bool True if the requested metadata was deleted
      */
-    public function deleteMetadata($name = false) : bool
+    public function deleteMetadata($name = \false) : bool
     {
-        if ($name === false) {
+        if ($name === \false) {
             $this->metadata = [];
-            return true;
+            return \true;
         }
         if (!isset($this->metadata[$name])) {
-            return false;
+            return \false;
         }
         unset($this->metadata[$name]);
-        return true;
+        return \true;
     }
     /**
      * Returns all table metadata.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAllTableMetadata()
     {
@@ -1558,7 +1661,8 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Sets several metadata values by name.
      *
-     * @param array $values Array mapping metadata names with metadata values.
+     * @param array<string, mixed> $values Array mapping metadata names with metadata values.
+     * @return void
      */
     public function setMetadataValues($values)
     {
@@ -1569,7 +1673,8 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     /**
      * Sets metadata, erasing existing values.
      *
-     * @param array $values Array mapping metadata names with metadata values.
+     * @param array $metadata Array mapping metadata names with metadata values.
+     * @return void
      */
     public function setAllTableMetadata($metadata)
     {
@@ -1581,6 +1686,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * rows are summed to the summary row.
      *
      * @param int $maximumAllowedRows If `0`, the maximum number of rows is unset.
+     * @return void
      */
     public function setMaximumAllowedRows($maximumAllowedRows)
     {
@@ -1595,34 +1701,34 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * a subtable is encountered w/o the required label, a new row is created
      * with the label, and a new subtable is added to the row.
      *
-     * Read [http://en.wikipedia.org/wiki/Tree_(data_structure)#Traversal_methods](http://en.wikipedia.org/wiki/Tree_(data_structure)#Traversal_methods)
+     * Read [https://en.wikipedia.org/wiki/Tree_(data_structure)#Traversal_methods](https://en.wikipedia.org/wiki/Tree_(data_structure)#Traversal_methods)
      * for more information about tree walking.
      *
      * @param array $path The path to walk. An array of label values. The first element
      *                    refers to a row in this DataTable, the second in a subtable of
      *                    the first row, the third a subtable of the second row, etc.
-     * @param array|bool $missingRowColumns The default columns to use when creating new rows.
+     * @param array|false $missingRowColumns The default columns to use when creating new rows.
      *                                      If this parameter is supplied, new rows will be
      *                                      created for path labels that cannot be found.
      * @param int $maxSubtableRows The maximum number of allowed rows in new subtables. New
      *                             subtables are only created if `$missingRowColumns` is provided.
-     * @return array First element is the found row or `false`. Second element is
-     *               the number of path segments walked. If a row is found, this
-     *               will be == to `count($path)`. Otherwise, it will be the index
-     *               of the path segment that we could not find.
+     * @return array{0: false|Row, 1: int} First element is the found row or `false`. Second element is
+     *                                     the number of path segments walked. If a row is found, this
+     *                                     will be == to `count($path)`. Otherwise, it will be the index
+     *                                     of the path segment that we could not find.
      */
-    public function walkPath($path, $missingRowColumns = false, $maxSubtableRows = 0)
+    public function walkPath($path, $missingRowColumns = \false, $maxSubtableRows = 0)
     {
-        $pathLength = is_array($path) ? count($path) : 0;
+        $pathLength = count($path);
         $table = $this;
-        $next = false;
+        $next = \false;
         for ($i = 0; $i < $pathLength; ++$i) {
             $segment = $path[$i];
             $next = $table->getRowFromLabel($segment);
-            if ($next === false) {
+            if ($next === \false) {
                 // if there is no table to advance to, and we're not adding missing rows, return false
-                if ($missingRowColumns === false) {
-                    return array(false, $i);
+                if ($missingRowColumns === \false) {
+                    return [\false, $i];
                 } else {
                     // if we're adding missing rows, add a new row
                     $row = new DataTableSummaryRow();
@@ -1632,16 +1738,16 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                         // if the row wasn't added, the table is full
                         // Summary row, has no metadata
                         $next->deleteMetadata();
-                        return array($next, $i);
+                        return [$next, $i];
                     }
                 }
             }
             $table = $next->getSubtable();
-            if ($table === false) {
+            if ($table === \false) {
                 // if the row has no table (and thus no child rows), and we're not adding
                 // missing rows, return false
-                if ($missingRowColumns === false) {
-                    return array(false, $i);
+                if ($missingRowColumns === \false) {
+                    return [\false, $i];
                 } elseif ($i != $pathLength - 1) {
                     // create subtable if missing, but only if not on the last segment
                     $table = new \Piwik\DataTable();
@@ -1653,12 +1759,12 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                 }
             }
         }
-        return array($next, $i);
+        return [$next, $i];
     }
     /**
      * Returns a new DataTable in which the rows of this table are replaced with the aggregatated rows of all its subtables.
      *
-     * @param string|bool $labelColumn If supplied the label of the parent row will be added to
+     * @param string|false $labelColumn If supplied the label of the parent row will be added to
      *                                 a new column in each subtable row.
      *
      *                                 If set to, `'label'` each subtable row's label will be prepended
@@ -1666,15 +1772,15 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *                                 `'parent_label - child_label'`.
      * @param bool $useMetadataColumn If true and if `$labelColumn` is supplied, the parent row's
      *                                label will be added as metadata and not a new column.
-     * @return \Piwik\DataTable
+     * @return DataTable
      */
-    public function mergeSubtables($labelColumn = false, $useMetadataColumn = false)
+    public function mergeSubtables($labelColumn = \false, $useMetadataColumn = \false)
     {
         $result = new \Piwik\DataTable();
         $result->setAllTableMetadata($this->getAllTableMetadata());
         foreach ($this->getRowsWithoutSummaryRow() as $row) {
             $subtable = $row->getSubtable();
-            if ($subtable !== false) {
+            if ($subtable !== \false) {
                 $parentLabel = $row->getColumn('label');
                 // add a copy of each subtable row to the new datatable
                 foreach ($subtable->getRows() as $id => $subRow) {
@@ -1682,13 +1788,13 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                     // if the summary row, add it to the existing summary row (or add a new one)
                     if ($id == self::ID_SUMMARY_ROW) {
                         $existing = $result->getRowFromId(self::ID_SUMMARY_ROW);
-                        if ($existing === false) {
+                        if ($existing === \false) {
                             $result->addSummaryRow($copy);
                         } else {
-                            $existing->sumRow($copy, $copyMeta = true, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
+                            $existing->sumRow($copy, $copyMeta = \true, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
                         }
                     } else {
-                        if ($labelColumn !== false) {
+                        if ($labelColumn !== \false) {
                             // if we're modifying the subtable's rows' label column, then we make
                             // sure to prepend the existing label w/ the parent row's label. otherwise
                             // we're just adding the parent row's label as a new column/metadata.
@@ -1716,7 +1822,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * See {@link addRowsFromSimpleArray()}.
      *
      * @param array $array
-     * @return \Piwik\DataTable
+     * @return DataTable
      */
     public static function makeFromSimpleArray($array)
     {
@@ -1731,7 +1837,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      * for more information on DataTable serialization.
      *
      * @param string $data
-     * @return \Piwik\DataTable
+     * @return DataTable
      */
     public static function fromSerializedArray($data)
     {
@@ -1744,31 +1850,35 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
      *
      * $row must have a column "label". The $row will be summed to this table's row with the same label.
      *
-     * @param $row
-     * @params null|array $columnAggregationOps
+     * @param null|array<string|int, string> $columnAggregationOps
+     * @return void
      * @throws \Exception
      */
     protected function aggregateRowWithLabel(Row $row, $columnAggregationOps)
     {
         $labelToLookFor = $row->getColumn('label');
-        if ($labelToLookFor === false) {
-            $message = sprintf("Label column not found in the table to add in addDataTable(). Row: %s", var_export($row->getColumns(), 1));
+        if ($labelToLookFor === \false) {
+            $message = sprintf("Label column not found in the table to add in addDataTable(). Row: %s", var_export($row->getColumns(), \true));
             throw new Exception($message);
         }
         $rowFound = $this->getRowFromLabel($labelToLookFor);
         // if we find the summary row in the other table, ignore it, since we're aggregating normal rows in this method.
         // the summary row is aggregated explicitly after this method is called.
         if (!empty($rowFound) && $rowFound->isSummaryRow()) {
-            $rowFound = false;
+            $rowFound = \false;
         }
-        $this->aggregateRow($rowFound, $row, $columnAggregationOps, $isSummaryRow = false);
+        $this->aggregateRow($rowFound, $row, $columnAggregationOps, \false);
     }
-    private function aggregateRow($thisRow, Row $otherRow, $columnAggregationOps, $isSummaryRow)
+    /**
+     * @param Row|false|null $thisRow
+     * @param array<string|int, string>|false|null $columnAggregationOps
+     */
+    private function aggregateRow($thisRow, Row $otherRow, $columnAggregationOps, bool $isSummaryRow) : void
     {
         if (empty($thisRow)) {
             $thisRow = new Row();
             $otherRowLabel = $otherRow->getColumn('label');
-            if ($otherRowLabel !== false) {
+            if ($otherRowLabel !== \false) {
                 $thisRow->addColumn('label', $otherRowLabel);
             }
             $thisRow->setAllMetadata($otherRow->getMetadata());
@@ -1778,7 +1888,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
                 $this->addRow($thisRow);
             }
         }
-        $thisRow->sumRow($otherRow, $copyMeta = true, $columnAggregationOps);
+        $thisRow->sumRow($otherRow, $copyMeta = \true, $columnAggregationOps);
         // if the row to add has a subtable whereas the current row doesn't
         // we simply add it (cloning the subtable)
         // if the row has the subtable already
@@ -1790,56 +1900,81 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         }
     }
     /**
-     * @param $row
+     * @param Row|false $row
+     * @return void
      */
     protected function aggregateRowFromSimpleTable($row)
     {
-        if ($row === false) {
+        if ($row === \false) {
             return;
         }
         $thisRow = $this->getFirstRow();
-        if ($thisRow === false) {
+        if ($thisRow === \false) {
             $thisRow = new Row();
             $this->addRow($thisRow);
         }
-        $thisRow->sumRow($row, $copyMeta = true, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
+        $thisRow->sumRow($row, \true, $this->getMetadata(self::COLUMN_AGGREGATION_OPS_METADATA_NAME));
     }
     /**
      * Unsets all queued filters.
+     * @return void
      */
     public function clearQueuedFilters()
     {
-        $this->queuedFilters = array();
+        $this->queuedFilters = [];
     }
+    /**
+     * @return array
+     */
     public function getQueuedFilters()
     {
         return $this->queuedFilters;
     }
     /**
-     * @return \ArrayIterator|Row[]
+     * @return \ArrayIterator<int, Row>
      */
     public function getIterator() : \ArrayIterator
     {
         return new \ArrayIterator($this->getRows());
     }
+    /**
+     * @param int $offset
+     */
     public function offsetExists($offset) : bool
     {
         $row = $this->getRowFromId($offset);
-        return false !== $row;
+        return \false !== $row;
     }
+    /**
+     * @param int $offset
+     */
     public function offsetGet($offset) : Row
     {
         return $this->getRowFromId($offset);
     }
+    /**
+     * @param int $offset
+     * @param Row $value
+     */
     public function offsetSet($offset, $value) : void
     {
         $this->rows[$offset] = $value;
     }
+    /**
+     * @param int $offset
+     * @throws Exception
+     */
     public function offsetUnset($offset) : void
     {
         $this->deleteRow($offset);
     }
-    public function sumRowWithLabel($label, array $columns, ?array $aggregationOps = null) : \Piwik\DataTable\Row
+    /**
+     * @param string|int|null $label
+     * @param array $columns
+     * @param array<string, string>|null $aggregationOps
+     * @throws Exception
+     */
+    public function sumRowWithLabel($label, array $columns, ?array $aggregationOps = null) : Row
     {
         $label = $label ?? '';
         $tableRow = new \Piwik\DataTable\Row([\Piwik\DataTable\Row::COLUMNS => ['label' => $label] + $columns]);
@@ -1856,8 +1991,16 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
             }
             $existingRow = $tableRow;
         } else {
-            $existingRow->sumRow($tableRow, true, $aggregationOps);
+            $existingRow->sumRow($tableRow, \true, $aggregationOps);
         }
         return $existingRow;
+    }
+    public function setAsBuiltWithoutArchives(bool $flag) : void
+    {
+        $this->isBuiltWithoutArchives = $flag;
+    }
+    public function wasBuiltWithoutArchives() : bool
+    {
+        return $this->isBuiltWithoutArchives;
     }
 }

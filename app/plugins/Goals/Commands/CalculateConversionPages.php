@@ -72,14 +72,13 @@ class CalculateConversionPages extends ConsoleCommand
             $totalCalculated += $calcCount;
             $output->write(".");
         }
-        $this->writeSuccessMessage(["Successfully calculated the pages before metric for {$totalCalculated} conversions. <comment>" . $timer . "</comment>"]);
+        $this->writeSuccessMessage("Successfully calculated the pages before metric for {$totalCalculated} conversions. <comment>{$timer}</comment>");
         return self::SUCCESS;
     }
     /**
      * Static method to calculate conversion for today and yesterday, for all sites and goals.
      * Called by the migration updater
      *
-     * @return void
      */
     public static function calculateYesterdayAndToday() : void
     {
@@ -95,7 +94,6 @@ class CalculateConversionPages extends ConsoleCommand
     /**
      * Validate dates parameter
      *
-     * @param string $dates
      * @return Date[]
      */
     private function getDateRangeToCalculate(string $dates) : ?array
@@ -121,7 +119,6 @@ class CalculateConversionPages extends ConsoleCommand
     /**
      * Validate the sites parameter
      *
-     * @return string|null
      */
     private function getSitesToCalculate() : ?string
     {
@@ -143,7 +140,6 @@ class CalculateConversionPages extends ConsoleCommand
     /**
      * Validate the goals parameter
      *
-     * @return string|null
      */
     private function getGoalsToCalculate() : ?string
     {
@@ -153,7 +149,7 @@ class CalculateConversionPages extends ConsoleCommand
         }
         // Only allow the goals parameter to be used if a single site is specified
         $idSite = $this->getInput()->getOption('idsite');
-        if (!is_numeric($idSite) || strpos($idSite, ',') !== false) {
+        if (!is_numeric($idSite) || strpos($idSite, ',') !== \false) {
             throw new \InvalidArgumentException("The goals parameter can only be used when a single website is specified using the idsite parameter", $code = 0);
         }
         $goals = explode(',', $idGoal);
@@ -182,7 +178,7 @@ class CalculateConversionPages extends ConsoleCommand
      *
      * @return array An array of queries and bind arrays   [['sql' => QUERY1, 'bind' => [PARAM1 => VALUE], ...]
      */
-    private static function getQueries(?string $startDatetime, ?string $endDatetime, ?int $lastN = null, ?string $idSite = null, ?string $idGoal = null, ?bool $forceRecalc = false) : array
+    private static function getQueries(?string $startDatetime, ?string $endDatetime, ?int $lastN = null, ?string $idSite = null, ?string $idGoal = null, ?bool $forceRecalc = \false) : array
     {
         // Sites
         if ($idSite === null) {
@@ -197,7 +193,7 @@ class CalculateConversionPages extends ConsoleCommand
             // Since MySQL doesn't support multi-table updates with a LIMIT clause we will find the exact date time of
             // the lastN record and use that as a date range start with the current date time as the date range end
             /** @noinspection SqlResolve SqlUnused */
-            $sql = "\n                    SELECT MIN(s.t) FROM (\n                    SELECT c.server_time AS t\n                    FROM " . Common::prefixTable('log_conversion') . " c                                 \n                    ";
+            $sql = "\n                    SELECT MIN(s.t) FROM (\n                    SELECT c.server_time AS t\n                    FROM `" . Common::prefixTable('log_conversion') . "` c                                 \n                    ";
             $where = '';
             if (!$forceRecalc) {
                 $where .= " AND c.pageviews_before IS NULL";
@@ -231,7 +227,7 @@ class CalculateConversionPages extends ConsoleCommand
             $timezone = Site::getTimezoneFor($site);
             if ($idGoal === null) {
                 // All goals
-                $gids = Db::fetchAll("SELECT idgoal FROM " . Common::prefixTable('goal') . "\n                                        WHERE idsite = ? AND deleted = 0", [$site]);
+                $gids = Db::fetchAll("SELECT idgoal FROM `" . Common::prefixTable('goal') . "`\n                                        WHERE idsite = ? AND deleted = 0", [$site]);
                 $goals = array_column($gids, 'idgoal');
                 // Include ecommerce orders if enabled for the site
                 if (Site::isEcommerceEnabledFor($site)) {
@@ -249,7 +245,7 @@ class CalculateConversionPages extends ConsoleCommand
                 $conversionsStartDate = Date::factory($startDatetime, $timezone)->getDateTime();
                 $conversionsEndDate = Date::factory($endDatetime, $timezone)->getDateTime();
                 $bind = [$site, Date::factory($startDateTimeForActions, $timezone)->getDateTime(), $conversionsEndDate, $site, $goal, $conversionsStartDate, $conversionsEndDate, $site, $goal, $conversionsStartDate, $conversionsEndDate];
-                $sql = "                                \n                UPDATE " . Common::prefixTable('log_conversion') . " c\n                LEFT JOIN (                \n                    SELECT c.idvisit, c.idgoal, COUNT(a.idvisit) AS pagesbefore, c.idlink_va, c.server_time\n                    FROM " . Common::prefixTable('log_conversion') . " c\n                    LEFT JOIN (\n                        SELECT va.idvisit, va.server_time\n                        FROM " . Common::prefixTable('log_link_visit_action') . " va\n                        INNER JOIN " . Common::prefixTable('log_action') . " a ON a.idaction = va.idaction_url\n                        WHERE a.type = 1\n                        AND va.idsite = ?\n                        AND va.server_time >= ?\n                        AND va.server_time <= ?\n                        ORDER BY NULL\n                    ) AS a ON a.idvisit = c.idvisit AND a.server_time <= c.server_time\n                    WHERE c.idsite = ?\n                      AND c.idgoal = ?\n                      AND c.server_time >= ?\n                      AND c.server_time <= ?\n                      " . $where . "                      \n                    GROUP BY a.idvisit\n                    ORDER BY NULL\n                ) AS s ON s.idvisit = c.idvisit AND s.server_time <= c.server_time                \n                SET c.pageviews_before = s.pagesbefore                \n                WHERE c.idsite = ? \n                  AND c.idgoal = ?       \n                  AND c.server_time >= ?\n                  AND c.server_time <= ?     \n                " . $where;
+                $sql = "                                \n                UPDATE " . Common::prefixTable('log_conversion') . " c\n                LEFT JOIN (                \n                    SELECT c.idvisit, c.idgoal, COUNT(a.idvisit) AS pagesbefore, c.idlink_va, c.server_time\n                    FROM `" . Common::prefixTable('log_conversion') . "` c\n                    LEFT JOIN (\n                        SELECT va.idvisit, va.server_time\n                        FROM `" . Common::prefixTable('log_link_visit_action') . "` va\n                        INNER JOIN `" . Common::prefixTable('log_action') . "` a ON a.idaction = va.idaction_url\n                        WHERE a.type = 1\n                        AND va.idsite = ?\n                        AND va.server_time >= ?\n                        AND va.server_time <= ?\n                        ORDER BY NULL\n                    ) AS a ON a.idvisit = c.idvisit AND a.server_time <= c.server_time\n                    WHERE c.idsite = ?\n                      AND c.idgoal = ?\n                      AND c.server_time >= ?\n                      AND c.server_time <= ?\n                      " . $where . "                      \n                    GROUP BY a.idvisit\n                    ORDER BY NULL\n                ) AS s ON s.idvisit = c.idvisit AND s.server_time <= c.server_time                \n                SET c.pageviews_before = s.pagesbefore                \n                WHERE c.idsite = ? \n                  AND c.idgoal = ?       \n                  AND c.server_time >= ?\n                  AND c.server_time <= ?     \n                " . $where;
                 $queries[] = ['sql' => $sql, 'bind' => $bind];
             }
         }

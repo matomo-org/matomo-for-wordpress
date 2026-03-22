@@ -42,12 +42,12 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
         try {
             $document = $this->bucket->get($id);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
-        if ($document instanceof Document && $document->value !== false) {
+        if ($document instanceof Document && $document->value !== \false) {
             return unserialize($document->value);
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -58,12 +58,12 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
         try {
             $document = $this->bucket->get($id);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
         if ($document instanceof Document) {
             return !$document->error;
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -76,12 +76,12 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
             $encoded = serialize($data);
             $document = $this->bucket->upsert($id, $encoded, ['expiry' => (int) $lifeTime]);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
         if ($document instanceof Document) {
             return !$document->error;
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -97,7 +97,7 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
         if ($document instanceof Document) {
             return !$document->error;
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -107,13 +107,13 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
         $manager = $this->bucket->manager();
         // Flush does not return with success or failure, and must be enabled per bucket on the server.
         // Store a marker item so that we will know if it was successful.
-        $this->doSave(__METHOD__, true, 60);
+        $this->doSave(__METHOD__, \true, 60);
         $manager->flush();
         if ($this->doContains(__METHOD__)) {
             $this->doDelete(__METHOD__);
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -130,7 +130,7 @@ final class CouchbaseBucketCache extends \Doctrine\Common\Cache\CacheProvider
     private function normalizeKey(string $id) : string
     {
         $normalized = substr($id, 0, self::MAX_KEY_LENGTH);
-        if ($normalized === false) {
+        if ($normalized === \false) {
             return $id;
         }
         return $normalized;

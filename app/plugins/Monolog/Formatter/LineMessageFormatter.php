@@ -26,7 +26,7 @@ class LineMessageFormatter implements FormatterInterface
      * @param string $logMessageFormat
      * @param bool $allowInlineLineBreaks If disabled, a log message will be created for each line
      */
-    public function __construct($logMessageFormat, $allowInlineLineBreaks = true)
+    public function __construct($logMessageFormat, $allowInlineLineBreaks = \true)
     {
         $this->logMessageFormat = $logMessageFormat;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
@@ -45,6 +45,8 @@ class LineMessageFormatter implements FormatterInterface
         }
         $total = '';
         foreach ($messages as $message) {
+            // escape control characters
+            $message = addcslashes($message, "\x00..\t\v..\x1f");
             $message = $this->prefixMessageWithRequestId($record, $message);
             $total .= $this->formatMessage($class, $message, $date, $record);
         }

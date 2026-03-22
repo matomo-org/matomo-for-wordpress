@@ -40,7 +40,11 @@ class SessionAuth implements Auth
      */
     private $user;
     private $tokenAuth;
-    public function __construct(UsersModel $userModel = null, $shouldDestroySession = true)
+    /**
+     * @var bool
+     */
+    private $sessionExpired = \false;
+    public function __construct(?UsersModel $userModel = null, $shouldDestroySession = \true)
     {
         $this->userModel = $userModel ?: new UsersModel();
         $this->shouldDestroySession = $shouldDestroySession;
@@ -49,7 +53,9 @@ class SessionAuth implements Auth
     {
         // empty
     }
-    public function setTokenAuth($token_auth)
+    public function setTokenAuth(
+#[\SensitiveParameter]
+$token_auth)
     {
         $this->tokenAuth = $token_auth;
     }
@@ -67,16 +73,21 @@ class SessionAuth implements Auth
     {
         // empty
     }
-    public function setPassword($password)
+    public function setPassword(
+#[\SensitiveParameter]
+$password)
     {
         // empty
     }
-    public function setPasswordHash($passwordHash)
+    public function setPasswordHash(
+#[\SensitiveParameter]
+$passwordHash)
     {
         // empty
     }
     public function authenticate()
     {
+        $this->sessionExpired = \false;
         $sessionFingerprint = new \Piwik\Session\SessionFingerprint();
         $userModel = $this->userModel;
         $this->checkIfSessionFailedToRead();
@@ -98,7 +109,7 @@ class SessionAuth implements Auth
             return $this->makeAuthFailure();
         }
         $this->updateSessionExpireTime($sessionFingerprint);
-        if ($this->tokenAuth !== null && $this->tokenAuth !== false && $this->tokenAuth !== $sessionFingerprint->getSessionTokenAuth()) {
+        if ($this->tokenAuth !== null && $this->tokenAuth !== \false && $this->tokenAuth !== $sessionFingerprint->getSessionTokenAuth()) {
             return $this->makeAuthFailure();
         }
         if ($sessionFingerprint->getSessionTokenAuth()) {
@@ -112,12 +123,12 @@ class SessionAuth implements Auth
     {
         // sanity check, make sure users can still login if the ts_password_modified column does not exist
         if ($tsPasswordModified === null) {
-            return false;
+            return \false;
         }
         // if the session start time doesn't exist for some reason, log the user out
         $sessionStartTime = $sessionFingerprint->getSessionStartTime();
         if (empty($sessionStartTime)) {
-            return true;
+            return \true;
         }
         return $sessionStartTime < Date::factory($tsPasswordModified)->getTimestampUTC();
     }
@@ -125,7 +136,9 @@ class SessionAuth implements Auth
     {
         return new AuthResult(AuthResult::FAILURE, null, null);
     }
-    private function makeAuthSuccess($user, $tokenAuth)
+    private function makeAuthSuccess($user,
+#[\SensitiveParameter]
+$tokenAuth)
     {
         $this->user = $user;
         $this->tokenAuth = $tokenAuth;
@@ -176,10 +189,17 @@ class SessionAuth implements Auth
     {
         $expirationTime = $sessionFingerprint->getExpirationTime();
         if (empty($expirationTime)) {
-            return true;
+            return \true;
         }
         $isExpired = Date::now()->getTimestampUTC() > $expirationTime;
+        if ($isExpired) {
+            $this->sessionExpired = \true;
+        }
         return $isExpired;
+    }
+    public function wasSessionExpired() : bool
+    {
+        return $this->sessionExpired;
     }
     private function checkIfSessionFailedToRead()
     {

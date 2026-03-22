@@ -9,7 +9,9 @@
 namespace Piwik\Plugins\DevicesDetection;
 
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
+use Exception;
 use Piwik\Archive;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Piwik;
@@ -45,7 +47,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getType($idSite, $period, $date, $segment = false)
+    public function getType($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_types', $idSite, $period, $date, $segment);
         // ensure all device types are in the list
@@ -82,7 +84,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getBrand($idSite, $period, $date, $segment = false)
+    public function getBrand($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_brands', $idSite, $period, $date, $segment);
         $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getDeviceBrandLabel']);
@@ -98,13 +100,17 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getModel($idSite, $period, $date, $segment = false)
+    public function getModel($idSite, $period, $date, $segment = \false)
     {
+        $translator = StaticContainer::get('Piwik\\Translation\\Translator');
+        if (\Piwik\Plugins\DevicesDetection\DevicesDetection::isDeviceModelDetectionDisabledByCompliancePolicy($idSite)) {
+            throw new Exception($translator->translate('DevicesDetection_DeviceModelReportDisabledByCompliancePolicy'));
+        }
         $dataTable = $this->getDataTable('DevicesDetection_models', $idSite, $period, $date, $segment);
         $dataTable->filter(function (DataTable $table) {
             foreach ($table->getRowsWithoutSummaryRow() as $row) {
                 $label = $row->getColumn('label');
-                if (strpos($label, ';') !== false) {
+                if (strpos($label, ';') !== \false) {
                     list($brand, $model) = explode(';', $label, 2);
                     $brand = getDeviceBrandLabel($brand);
                 } else {
@@ -126,7 +132,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getOsFamilies($idSite, $period, $date, $segment = false)
+    public function getOsFamilies($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_os', $idSite, $period, $date, $segment);
         // handle legacy archives
@@ -148,8 +154,6 @@ class API extends \Piwik\Plugin\API
      * For data archived before DevicesDetection plugin was enabled, those archives do not exist, so we try to calculate
      * them here from the "version-containing" reports if possible.
      *
-     * @param DataTable\DataTableInterface $dataTable
-     * @param DataTable\DataTableInterface $dataTable2
      * @return DataTable\DataTableInterface
      */
     protected function mergeDataTables(DataTable\DataTableInterface $dataTable, DataTable\DataTableInterface $dataTable2)
@@ -188,7 +192,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getOsVersions($idSite, $period, $date, $segment = false)
+    public function getOsVersions($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_osVersions', $idSite, $period, $date, $segment);
         $segments = ['operatingSystemCode', 'operatingSystemVersion'];
@@ -206,13 +210,13 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getBrowsers($idSite, $period, $date, $segment = false)
+    public function getBrowsers($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browsers', $idSite, $period, $date, $segment);
         $availableBrowsers = BrowserParser::getAvailableBrowsers();
         $dataTable->filter('AddSegmentValue', [function ($label) use($availableBrowsers) {
             if (!array_key_exists($label, $availableBrowsers) && $label !== 'UNK') {
-                return false;
+                return \false;
             }
             return $label;
         }]);
@@ -233,7 +237,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getBrowserVersions($idSite, $period, $date, $segment = false)
+    public function getBrowserVersions($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserVersions', $idSite, $period, $date, $segment);
         $segments = ['browserCode', 'browserVersion'];
@@ -250,7 +254,7 @@ class API extends \Piwik\Plugin\API
      * @param bool|string $segment
      * @return DataTable
      */
-    public function getBrowserEngines($idSite, $period, $date, $segment = false)
+    public function getBrowserEngines($idSite, $period, $date, $segment = \false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserEngines', $idSite, $period, $date, $segment);
         $dataTable->filter('AddSegmentValue');

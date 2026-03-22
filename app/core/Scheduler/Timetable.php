@@ -58,7 +58,7 @@ class Timetable
     }
     public function getScheduledTaskTime($taskName)
     {
-        return isset($this->timetable[$taskName]) ? Date::factory($this->timetable[$taskName]) : false;
+        return isset($this->timetable[$taskName]) ? Date::factory($this->timetable[$taskName]) : \false;
     }
     /**
      * Checks if the task should be executed
@@ -75,7 +75,7 @@ class Timetable
     {
         $forceTaskExecution = defined('DEBUG_FORCE_SCHEDULED_TASKS') && DEBUG_FORCE_SCHEDULED_TASKS;
         if ($forceTaskExecution) {
-            return true;
+            return \true;
         }
         return $this->taskHasBeenScheduledOnce($taskName) && time() >= $this->timetable[$taskName];
     }
@@ -125,7 +125,7 @@ class Timetable
     public function getScheduledTimeForMethod($className, $methodName, $methodParameter = null)
     {
         $taskName = \Piwik\Scheduler\Task::getTaskName($className, $methodName, $methodParameter);
-        return $this->taskHasBeenScheduledOnce($taskName) ? $this->timetable[$taskName] : false;
+        return $this->taskHasBeenScheduledOnce($taskName) ? $this->timetable[$taskName] : \false;
     }
     public function taskHasBeenScheduledOnce($taskName)
     {
@@ -136,7 +136,7 @@ class Timetable
         Option::clearCachedOption(self::TIMETABLE_OPTION_STRING);
         $optionData = Option::get(self::TIMETABLE_OPTION_STRING);
         $unserializedTimetable = Common::safe_unserialize($optionData);
-        $this->timetable = $unserializedTimetable === false ? array() : $unserializedTimetable;
+        $this->timetable = $unserializedTimetable === \false ? array() : $unserializedTimetable;
     }
     /**
      * Read the retry list option from the database
@@ -148,7 +148,7 @@ class Timetable
         Option::clearCachedOption(self::RETRY_OPTION_STRING);
         $retryData = Option::get(self::RETRY_OPTION_STRING);
         $unserializedRetryList = Common::safe_unserialize($retryData);
-        $this->retryList = $unserializedRetryList === false ? array() : $unserializedRetryList;
+        $this->retryList = $unserializedRetryList === \false ? array() : $unserializedRetryList;
     }
     /**
      * Save the retry list option to the database
@@ -160,7 +160,6 @@ class Timetable
     /**
      * Remove a task from the retry list
      *
-     * @param string $taskName
      */
     public function clearRetryCount(string $taskName)
     {
@@ -172,7 +171,6 @@ class Timetable
     /**
      * Increment the retry counter for a task
      *
-     * @param string $taskName
      */
     public function incrementRetryCount(string $taskName)
     {
@@ -186,9 +184,7 @@ class Timetable
     /**
      * Return the current number of retries for a task
      *
-     * @param string $taskName
      *
-     * @return int
      */
     public function getRetryCount(string $taskName) : int
     {

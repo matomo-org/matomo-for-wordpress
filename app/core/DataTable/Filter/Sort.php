@@ -15,7 +15,7 @@ use Piwik\Metrics\Sorter;
 /**
  * Sorts a {@link DataTable} based on the value of a specific column.
  *
- * It is possible to specify a natural sorting (see [php.net/natsort](http://php.net/natsort) for details).
+ * It is possible to specify a natural sorting (see [php.net/natsort](https://php.net/natsort) for details).
  *
  * @api
  */
@@ -34,14 +34,14 @@ class Sort extends BaseFilter
      * @param DataTable $table The table to eventually filter.
      * @param string $columnToSort The name of the column to sort by.
      * @param string $order order `'asc'` or `'desc'`.
-     * @param bool $naturalSort Whether to use a natural sort or not (see {@link http://php.net/natsort}).
+     * @param bool $naturalSort Whether to use a natural sort or not (see {@link https://php.net/natsort}).
      * @param bool $recursiveSort Whether to sort all subtables or not.
      * @param bool|callback $doSortBySecondaryColumn If true will sort by a secondary column. The column is automatically
      *                                               detected and will be either nb_visits or label, if possible.
      *                                               If callback given it will sort by the column returned by the callback (if any)
      *                                               callback will be called with 2 parameters: primaryColumnToSort and table
      */
-    public function __construct($table, $columnToSort, $order = 'desc', $naturalSort = true, $recursiveSort = true, $doSortBySecondaryColumn = false)
+    public function __construct($table, $columnToSort, $order = 'desc', $naturalSort = \true, $recursiveSort = \true, $doSortBySecondaryColumn = \false)
     {
         parent::__construct($table);
         if ($recursiveSort) {
@@ -71,7 +71,7 @@ class Sort extends BaseFilter
             return;
         }
         $row = $table->getFirstRow();
-        if ($row === false) {
+        if ($row === \false) {
             return;
         }
         $config = new Sorter\Config();
@@ -88,7 +88,7 @@ class Sort extends BaseFilter
         $config->secondarySortOrder = $sorter->getSecondarySortOrder($this->order, $config->secondaryColumnToSort);
         $config->secondarySortFlags = $sorter->getBestSortFlags($table, $config->secondaryColumnToSort);
         // secondary sort should not be needed for all other sort flags (eg string/natural sort) as label is unique and would make it slower
-        $isSecondaryColumnSortNeeded = $config->primarySortFlags === SORT_NUMERIC;
+        $isSecondaryColumnSortNeeded = $config->primarySortFlags === \SORT_NUMERIC;
         $config->isSecondaryColumnSortEnabled = $this->isSecondaryColumnSortEnabled && $isSecondaryColumnSortNeeded;
         $this->sort($sorter, $table);
     }

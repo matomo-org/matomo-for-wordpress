@@ -11,6 +11,7 @@ namespace Piwik\Plugins\UsersManager;
 use Exception;
 use Piwik\API\Request;
 use Piwik\API\ResponseBuilder;
+use Piwik\Auth\PasswordStrength;
 use Piwik\Common;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
@@ -39,6 +40,7 @@ class Controller extends ControllerAdmin
     public const NONCE_CHANGE_PASSWORD = 'changePasswordNonce';
     public const NONCE_ADD_AUTH_TOKEN = 'addAuthTokenNonce';
     public const NONCE_DELETE_AUTH_TOKEN = 'deleteAuthTokenNonce';
+    public const NONCE_SET_IGNORE_COOKIE = 'setIgnoreCookieNonce';
     /**
      * @var Translator
      */
@@ -55,11 +57,16 @@ class Controller extends ControllerAdmin
      * @var Model
      */
     private $userModel;
-    public function __construct(Translator $translator, PasswordVerifier $passwordVerify, \Piwik\Plugins\UsersManager\Model $userModel)
+    /**
+     * @var PasswordStrength
+     */
+    private $passwordStrength;
+    public function __construct(Translator $translator, PasswordVerifier $passwordVerify, \Piwik\Plugins\UsersManager\Model $userModel, PasswordStrength $passwordStrength)
     {
         $this->translator = $translator;
         $this->passwordVerify = $passwordVerify;
         $this->userModel = $userModel;
+        $this->passwordStrength = $passwordStrength;
         $this->pluginManager = Plugin\Manager::getInstance();
         parent::__construct();
     }
@@ -87,7 +94,7 @@ class Controller extends ControllerAdmin
         $view->idSiteSelected = $idSiteSelected;
         $view->defaultReportSiteName = $defaultReportSiteName;
         $view->currentUserRole = Piwik::hasUserSuperUserAccess() ? 'superuser' : 'admin';
-        $view->accessLevels = [['key' => 'noaccess', 'value' => Piwik::translate('UsersManager_PrivNone'), 'type' => 'role'], ['key' => 'view', 'value' => Piwik::translate('UsersManager_PrivView'), 'type' => 'role'], ['key' => 'write', 'value' => Piwik::translate('UsersManager_PrivWrite'), 'type' => 'role'], ['key' => 'admin', 'value' => Piwik::translate('UsersManager_PrivAdmin'), 'type' => 'role'], ['key' => 'superuser', 'value' => Piwik::translate('Installation_SuperUser'), 'type' => 'role', 'disabled' => true]];
+        $view->accessLevels = [['key' => 'noaccess', 'value' => Piwik::translate('UsersManager_PrivNone'), 'type' => 'role'], ['key' => 'view', 'value' => Piwik::translate('UsersManager_PrivView'), 'type' => 'role'], ['key' => 'write', 'value' => Piwik::translate('UsersManager_PrivWrite'), 'type' => 'role'], ['key' => 'admin', 'value' => Piwik::translate('UsersManager_PrivAdmin'), 'type' => 'role'], ['key' => 'superuser', 'value' => Piwik::translate('Installation_SuperUser'), 'type' => 'role', 'disabled' => \true]];
         $view->filterAccessLevels = [
             ['key' => '', 'value' => '', 'type' => 'role'],
             // show all
@@ -112,6 +119,12 @@ class Controller extends ControllerAdmin
             $view->filterAccessLevels[] = $capabilityEntry;
         }
         $view->activatedPlugins = $this->pluginManager->getActivatedPlugins();
+        /** @var array{'inviteComponent': string, 'resendInviteComponent': string } $inviteVueComponents */
+        $inviteVueComponents = ['inviteComponent' => 'UsersManager.UserInvite', 'resendInviteComponent' => 'UsersManager.ResendInviteModal'];
+        Piwik::postEvent('UsersManager.getInviteVueComponents', [&$inviteVueComponents]);
+        $view->inviteComponent = $inviteVueComponents['inviteComponent'];
+        $view->resendInviteComponent = $inviteVueComponents['resendInviteComponent'];
+        $view->passwordStrengthValidationRules = $this->passwordStrength->getRules();
         $this->setBasicVariablesView($view);
         return $view->render();
     }
@@ -161,15 +174,15 @@ class Controller extends ControllerAdmin
         $view = new View('@UsersManager/userSettings');
         $userLogin = Piwik::getCurrentUserLogin();
         $user = Request::processRequest('UsersManager.getUser', array('userLogin' => $userLogin));
-        $view->userEmail = $user['email'];
+        $view->userEmail = $user['email'] ?? '';
         $view->userTokenAuth = Piwik::getCurrentUserTokenAuth();
-        $view->ignoreSalt = $this->getIgnoreCookieSalt();
+        $view->setIgnoreCookieNonce = Nonce::getNonce(self::NONCE_SET_IGNORE_COOKIE);
         $view->isUsersAdminEnabled = \Piwik\Plugins\UsersManager\UsersManager::isUsersAdminEnabled();
         $newsletterSignupOptionKey = \Piwik\Plugins\UsersManager\NewsletterSignup::NEWSLETTER_SIGNUP_OPTION . $userLogin;
-        $view->showNewsletterSignup = Option::get($newsletterSignupOptionKey) === false && SettingsPiwik::isInternetEnabled();
+        $view->showNewsletterSignup = Option::get($newsletterSignupOptionKey) === \false && SettingsPiwik::isInternetEnabled();
         $userPreferences = new \Piwik\Plugins\UsersManager\UserPreferences();
         $defaultReport = $userPreferences->getDefaultReport();
-        if ($defaultReport === false) {
+        if ($defaultReport === \false) {
             $defaultReport = $userPreferences->getDefaultWebsiteId();
         }
         $view->defaultReport = $defaultReport;
@@ -223,8 +236,7 @@ class Controller extends ControllerAdmin
             unset($token['password']);
             return $token;
         }, $tokens);
-        $hasTokensWithExpireDate = !empty(array_filter(array_column($tokens, 'date_expired')));
-        return $this->renderTemplate('userSecurity', ['isUsersAdminEnabled' => \Piwik\Plugins\UsersManager\UsersManager::isUsersAdminEnabled(), 'changePasswordNonce' => Nonce::getNonce(self::NONCE_CHANGE_PASSWORD), 'deleteTokenNonce' => Nonce::getNonce(self::NONCE_DELETE_AUTH_TOKEN), 'hasTokensWithExpireDate' => $hasTokensWithExpireDate, 'tokens' => $tokens]);
+        return $this->renderTemplate('userSecurity', ['isUsersAdminEnabled' => \Piwik\Plugins\UsersManager\UsersManager::isUsersAdminEnabled(), 'changePasswordNonce' => Nonce::getNonce(self::NONCE_CHANGE_PASSWORD), 'deleteTokenNonce' => Nonce::getNonce(self::NONCE_DELETE_AUTH_TOKEN), 'tokens' => $tokens, 'passwordStrengthValidationRules' => $this->passwordStrength->getRules()]);
     }
     /**
      * The "User Security" admin UI screen view
@@ -245,7 +257,7 @@ class Controller extends ControllerAdmin
                 $notification->context = Notification::CONTEXT_SUCCESS;
                 Notification\Manager::notify('successdeletetokens', $notification);
                 $container = StaticContainer::getContainer();
-                $email = $container->make(TokenAuthDeletedEmail::class, array('login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'tokenDescription' => '', 'all' => true));
+                $email = $container->make(TokenAuthDeletedEmail::class, array('login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'tokenDescription' => '', 'all' => \true));
                 $email->safeSend();
             } elseif (is_numeric($idTokenAuth)) {
                 $description = $this->userModel->getUserTokenDescriptionByIdTokenAuth($idTokenAuth, Piwik::getCurrentUserLogin());
@@ -270,22 +282,37 @@ class Controller extends ControllerAdmin
         if (!$this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             throw new Exception('Not allowed');
         }
-        $noDescription = false;
-        if (!empty($_POST['description'])) {
+        $postRequest = \Piwik\Request::fromPost();
+        $postRequestHasData = count($postRequest->getParameters());
+        $today = Date::factory('now');
+        $tokenExpireDate = $postRequest->getStringParameter('token_expire_date', '');
+        $invalidExpireDate = \true;
+        try {
+            if ($tokenExpireDate && preg_match('/^(\\d{4})-(\\d{2})-(\\d{2})$/', $tokenExpireDate)) {
+                $expireDate = Date::factory($tokenExpireDate);
+                if ($expireDate->isLater($today)) {
+                    $invalidExpireDate = \false;
+                }
+            }
+        } catch (Exception $e) {
+            // nop
+        }
+        $description = $postRequest->getStringParameter('description', '');
+        $noDescription = empty($description);
+        if (\false === $noDescription && \false === $invalidExpireDate) {
             Nonce::checkNonce(self::NONCE_ADD_AUTH_TOKEN);
-            $description = \Piwik\Request::fromRequest()->getStringParameter('description', '');
-            $secureOnly = \Piwik\Request::fromRequest()->getBoolParameter('secure_only', false);
+            $secureOnly = $postRequest->getBoolParameter('secure_only', \false);
+            $hasTokenExpiry = $postRequest->getBoolParameter('has_expiration', \false);
             $login = Piwik::getCurrentUserLogin();
             $generatedToken = $this->userModel->generateRandomTokenAuth();
-            $this->userModel->addTokenAuth($login, $generatedToken, $description, Date::now()->getDatetime(), null, false, $secureOnly);
+            $this->userModel->addTokenAuth($login, $generatedToken, $description, $today->getDatetime(), $hasTokenExpiry ? $tokenExpireDate : null, \false, $secureOnly);
             $container = StaticContainer::getContainer();
             $email = $container->make(TokenAuthCreatedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'tokenDescription' => $description]);
             $email->safeSend();
             return $this->renderTemplate('addNewTokenSuccess', ['generatedToken' => $generatedToken]);
-        } elseif (isset($_POST['description'])) {
-            $noDescription = true;
         }
-        return $this->renderTemplate('addNewToken', ['nonce' => Nonce::getNonce(self::NONCE_ADD_AUTH_TOKEN), 'noDescription' => $noDescription, 'forceSecureOnly' => GeneralConfig::getConfigValue('only_allow_secure_auth_tokens')]);
+        $defaultExpireDays = GeneralConfig::getConfigValue('auth_token_default_expiration_days');
+        return $this->renderTemplate('addNewToken', ['nonce' => Nonce::getNonce(self::NONCE_ADD_AUTH_TOKEN), 'noDescription' => $postRequestHasData && $noDescription, 'invalidExpireDate' => $postRequestHasData && $invalidExpireDate, 'forceSecureOnly' => (bool) GeneralConfig::getConfigValue('only_allow_secure_auth_tokens'), 'initialExpireDate' => $today->addDay($defaultExpireDays)->toString(), 'defaultExpirationDays' => $defaultExpireDays, 'expirationReminderDays' => GeneralConfig::getConfigValue('auth_token_expiration_notification_days')]);
     }
     /**
      * The "Anonymous Settings" admin UI screen view
@@ -303,12 +330,9 @@ class Controller extends ControllerAdmin
     {
         Piwik::checkUserHasSomeViewAccess();
         Piwik::checkUserIsNotAnonymous();
-        $salt = Common::getRequestVar('ignoreSalt', false, 'string');
-        if ($salt !== $this->getIgnoreCookieSalt()) {
-            throw new Exception("Not authorized");
-        }
+        Nonce::checkNonce(self::NONCE_SET_IGNORE_COOKIE);
         IgnoreCookie::setIgnoreCookie();
-        Piwik::redirectToModule('UsersManager', 'userSettings', array('token_auth' => false));
+        Piwik::redirectToModule('UsersManager', 'userSettings', ['nonce' => \false]);
     }
     /**
      * The Super User can modify Anonymous user settings
@@ -337,7 +361,7 @@ class Controller extends ControllerAdmin
         $anonymousDefaultSite = '';
         // Which report is displayed by default to the anonymous user?
         $anonymousDefaultReport = Request::processRequest('UsersManager.getUserPreference', array('userLogin' => $userLogin, 'preferenceName' => APIUsersManager::PREFERENCE_DEFAULT_REPORT));
-        if ($anonymousDefaultReport === false) {
+        if ($anonymousDefaultReport === \false) {
             if (empty($anonymousSites)) {
                 $anonymousDefaultReport = Piwik::getLoginPluginName();
             } else {
@@ -461,6 +485,15 @@ class Controller extends ControllerAdmin
         $passwordCurrent = $request->getStringParameter('passwordConfirmation', '');
         if ($newPassword !== $passwordBis) {
             throw new Exception($this->translator->translate('Login_PasswordsDoNotMatch'));
+        }
+        if ($newPassword === $passwordCurrent) {
+            throw new Exception($this->translator->translate('UsersManager_PasswordAlreadyInUse'));
+        }
+        // check password is sufficiently strong
+        $brokenRules = $this->passwordStrength->validatePasswordStrength($newPassword);
+        if (!empty($brokenRules)) {
+            $errorMsg = $this->passwordStrength->formatValidationFailedMessage($brokenRules);
+            throw new Exception($errorMsg);
         }
         Request::processRequest('UsersManager.updateUser', ['userLogin' => $userLogin, 'password' => $newPassword, 'passwordConfirmation' => $passwordCurrent], $default = []);
         // logs the user in with the new password

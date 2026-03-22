@@ -30,6 +30,40 @@ class RolesTest extends MatomoUnit_TestCase {
 		$this->assertHasMatomoRoles();
 	}
 
+	public function test_on_update_adds_any_missing_capabilities() {
+		$this->assertHasMatomoRoles();
+
+		$wp_roles = wp_roles();
+		$wp_roles->remove_cap( Roles::ROLE_VIEW, 'read' );
+		$wp_roles->add_cap( Roles::ROLE_WRITE, 'read', false );
+		$wp_roles->remove_cap( Roles::ROLE_ADMIN, 'view_admin_dashboard' );
+		$wp_roles->add_cap( Roles::ROLE_SUPERUSER, 'view_admin_dashboard', false );
+
+		// sanity check
+		try {
+			$this->assertHasMatomoRoles();
+			$this->fail( 'test did not succeed in removing capabilities' );
+		} catch ( \Exception $ex ) {
+			// ignore
+		}
+
+		$this->roles->on_update();
+
+		$this->assertHasMatomoRoles();
+	}
+
+	public function test_on_update_installs_roles_if_they_do_not_exist() {
+		$this->assertHasMatomoRoles();
+
+		$this->roles->uninstall();
+
+		$this->assertNotHasMatomoRoles();
+
+		$this->roles->on_update();
+
+		$this->assertHasMatomoRoles();
+	}
+
 	public function test_uninstall() {
 		$this->assertHasMatomoRoles();
 
@@ -55,10 +89,12 @@ class RolesTest extends MatomoUnit_TestCase {
 		$roles = $this->roles->get_available_roles_for_configuration();
 		$this->assertSame(
 			array(
-				'editor'      => 'Editor',
-				'author'      => 'Author',
-				'contributor' => 'Contributor',
-				'subscriber'  => 'Subscriber',
+				'editor'       => 'Editor',
+				'author'       => 'Author',
+				'contributor'  => 'Contributor',
+				'subscriber'   => 'Subscriber',
+				'customer'     => 'Customer',
+				'shop_manager' => 'Shop manager',
 			),
 			$roles
 		);
@@ -92,9 +128,48 @@ class RolesTest extends MatomoUnit_TestCase {
 	}
 
 	private function assertHasMatomoRoles() {
-		$this->assertNotEmpty( get_role( Roles::ROLE_VIEW ) );
-		$this->assertNotEmpty( get_role( Roles::ROLE_WRITE ) );
-		$this->assertNotEmpty( get_role( Roles::ROLE_ADMIN ) );
-		$this->assertNotEmpty( get_role( Roles::ROLE_SUPERUSER ) );
+		$role = get_role( Roles::ROLE_VIEW );
+		$this->assertNotEmpty( $role );
+		$this->assertEquals(
+			[
+				Capabilities::KEY_VIEW => true,
+				'read'                 => true,
+				'view_admin_dashboard' => true,
+			],
+			$role->capabilities
+		);
+
+		$role = get_role( Roles::ROLE_WRITE );
+		$this->assertNotEmpty( $role );
+		$this->assertEquals(
+			[
+				Capabilities::KEY_WRITE => true,
+				'read'                  => true,
+				'view_admin_dashboard'  => true,
+			],
+			$role->capabilities
+		);
+
+		$role = get_role( Roles::ROLE_ADMIN );
+		$this->assertNotEmpty( $role );
+		$this->assertEquals(
+			[
+				Capabilities::KEY_ADMIN => true,
+				'read'                  => true,
+				'view_admin_dashboard'  => true,
+			],
+			$role->capabilities
+		);
+
+		$role = get_role( Roles::ROLE_SUPERUSER );
+		$this->assertNotEmpty( $role );
+		$this->assertEquals(
+			[
+				Capabilities::KEY_SUPERUSER => true,
+				'read'                      => true,
+				'view_admin_dashboard'      => true,
+			],
+			$role->capabilities
+		);
 	}
 }

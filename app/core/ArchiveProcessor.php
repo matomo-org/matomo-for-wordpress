@@ -80,7 +80,7 @@ class ArchiveProcessor
     /**
      * @var bool
      */
-    public static $isRootArchivingRequest = true;
+    public static $isRootArchivingRequest = \true;
     /**
      * @var \Piwik\DataAccess\ArchiveWriter
      */
@@ -100,8 +100,9 @@ class ArchiveProcessor
     /**
      * @var int
      */
-    private $numberOfVisits = false;
-    private $numberOfVisitsConverted = false;
+    private $numberOfVisits = \false;
+    private $numberOfVisitsConverted = \false;
+    private $processedDependentSegments = [];
     public function __construct(Parameters $params, ArchiveWriter $archiveWriter, LogAggregator $logAggregator)
     {
         $this->params = $params;
@@ -170,9 +171,8 @@ class ArchiveProcessor
      * @param array $columnsToRenameAfterAggregation Columns mapped to new names for columns that must change names
      *                                               when summed because they cannot be summed, eg,
      *                                               `array('nb_uniq_visitors' => 'sum_daily_nb_uniq_visitors')`.
-     * @param bool|array $countRowsRecursive if set to true, will calculate the recursive rows count for all record names
-     *                                       which makes it slower. If you only need it for some records pass an array of
-     *                                       recordNames that defines for which ones you need a recursive row count.
+     * @param string[]|bool $countRowsRecursive array of recordNames that defines for which ones you need a recursive row count, or true if it should be done for all
+     * @param string[] $countLeafRows array of recordNames that defines for which ones you need a leaf row count.
      * @return array Returns the row counts of each aggregated report before truncation, eg,
      *
      *                   array(
@@ -184,7 +184,7 @@ class ArchiveProcessor
      *                   )
      * @api
      */
-    public function aggregateDataTableRecords($recordNames, $maximumRowsInDataTableLevelZero = null, $maximumRowsInSubDataTable = null, $defaultColumnToSortByBeforeTruncation = null, &$columnsAggregationOperation = null, $columnsToRenameAfterAggregation = null, $countRowsRecursive = true)
+    public function aggregateDataTableRecords($recordNames, $maximumRowsInDataTableLevelZero = null, $maximumRowsInSubDataTable = null, $defaultColumnToSortByBeforeTruncation = null, &$columnsAggregationOperation = null, $columnsToRenameAfterAggregation = null, $countRowsRecursive = \true, array $countLeafRows = [])
     {
         /** @var LoggerInterface $logger */
         $logger = StaticContainer::get(LoggerInterface::class);
@@ -198,8 +198,11 @@ class ArchiveProcessor
             $logger->debug("aggregating record {record} [archive = {archive}]", ['record' => $recordName, 'archive' => $archiveDescription]);
             $table = $this->aggregateDataTableRecord($recordName, $columnsAggregationOperation, $columnsToRenameAfterAggregation);
             $nameToCount[$recordName]['level0'] = $table->getRowsCount();
-            if ($countRowsRecursive === true || is_array($countRowsRecursive) && in_array($recordName, $countRowsRecursive)) {
+            if ($countRowsRecursive === \true || is_array($countRowsRecursive) && in_array($recordName, $countRowsRecursive)) {
                 $nameToCount[$recordName]['recursive'] = $table->getRowsCountRecursive();
+            }
+            if (in_array($recordName, $countLeafRows)) {
+                $nameToCount[$recordName]['leafs'] = $table->getLeafRowsCount();
             }
             $columnToSortByBeforeTruncation = $defaultColumnToSortByBeforeTruncation;
             if (empty($columnToSortByBeforeTruncation)) {
@@ -223,8 +226,8 @@ class ArchiveProcessor
      * as metrics for the current period.
      *
      * @param array|string $columns Array of metric names to aggregate.
-     * @param bool|string|string[] $operationToApply The operation to apply to the metric. Either `'sum'`, `'max'` or `'min'`.
-     *                                               Can also be an array mapping record names to operations.
+     * @param string|string[]|false $operationsToApply The operation to apply to the metric. Either `'sum'`, `'max'` or `'min'`.
+     *                                                Can also be an array mapping record names to operations.
      * @return array|int Returns the array of aggregate values. If only one metric was aggregated,
      *                   the aggregate value will be returned as is, not in an array.
      *                   For example, if `array('nb_visits', 'nb_hits')` is supplied for `$columns`,
@@ -238,7 +241,7 @@ class ArchiveProcessor
      *                   then `3040` would be returned.
      * @api
      */
-    public function aggregateNumericMetrics($columns, $operationsToApply = false)
+    public function aggregateNumericMetrics($columns, $operationsToApply = \false)
     {
         $metrics = $this->getAggregatedNumericMetrics($columns, $operationsToApply);
         foreach ($metrics as $column => $value) {
@@ -253,7 +256,7 @@ class ArchiveProcessor
     }
     public function getNumberOfVisits()
     {
-        if ($this->numberOfVisits === false) {
+        if ($this->numberOfVisits === \false) {
             throw new Exception("visits should have been set here");
         }
         return $this->numberOfVisits;
@@ -285,7 +288,7 @@ class ArchiveProcessor
      * Numeric values are not inserted if they equal `0`.
      *
      * @param string $name The name of the numeric value, eg, `'Referrers_distinctKeywords'`.
-     * @param float $value The numeric value.
+     * @param float|null $value The numeric value.
      * @api
      */
     public function insertNumericRecord($name, $value)
@@ -345,7 +348,7 @@ class ArchiveProcessor
             $tableId = $archiveDataRow['name'] == $name ? null : $this->getSubtableIdFromBlobName($archiveDataRow['name']);
             $blobTable = \Piwik\DataTable::fromSerializedArray($archiveDataRow['value']);
             // see https://github.com/piwik/piwik/issues/4377
-            $blobTable->filter(function ($table) use($columnsToRenameAfterAggregation, $name) {
+            $blobTable->filter(function ($table) use($columnsToRenameAfterAggregation) {
                 if ($this->areColumnsNotAlreadyRenamed($table)) {
                     /**
                      * This makes archiving and range dates a lot faster. Imagine we archive a week, then we will
@@ -424,7 +427,7 @@ class ArchiveProcessor
     }
     protected function enrichWithUniqueVisitorsMetric(Row $row)
     {
-        if ($row->getColumn('nb_uniq_visitors') === false && $row->getColumn('nb_users') === false) {
+        if ($row->getColumn('nb_uniq_visitors') === \false && $row->getColumn('nb_users') === \false) {
             return;
         }
         $periodLabel = $this->getParams()->getPeriod()->getLabel();
@@ -464,7 +467,7 @@ class ArchiveProcessor
         // there could have been a new visit leading to a higher nb_unique_visitors than nb_visits which is not possible
         // by definition. In this case we simply use the visits metric instead of unique visitors metric.
         $visits = $row->getColumn('nb_visits');
-        if ($visits !== false && $uniques[$uniqueVisitorsMetric] !== false) {
+        if ($visits !== \false && $uniques[$uniqueVisitorsMetric] !== \false) {
             $uniques[$uniqueVisitorsMetric] = min($uniques[$uniqueVisitorsMetric], $visits);
         }
         $row->setColumn('nb_uniq_visitors', $uniques[$uniqueVisitorsMetric]);
@@ -513,7 +516,7 @@ class ArchiveProcessor
         $sitesBackup = $logAggregator->getSites();
         $logAggregator->setSites($sites);
         try {
-            $query = $logAggregator->queryVisitsByDimension(array(), false, array(), $metrics);
+            $query = $logAggregator->queryVisitsByDimension(array(), \false, array(), $metrics);
         } finally {
             $logAggregator->setSites($sitesBackup);
         }
@@ -586,12 +589,15 @@ class ArchiveProcessor
         }
         $operationForColumn = $this->getOperationForColumns($columns, $operationsToApply);
         $dataTable = $this->getArchive()->getDataTableFromNumeric($columns);
+        if ($dataTable->wasBuiltWithoutArchives()) {
+            return (new Row())->getColumns();
+        }
         $results = $this->getAggregatedDataTableMap($dataTable, $operationForColumn);
         if ($results->getRowsCount() > 1) {
-            throw new Exception("A DataTable is an unexpected state:" . var_export($results, true));
+            throw new Exception("A DataTable is an unexpected state:" . var_export($results, \true));
         }
         $rowMetrics = $results->getFirstRow();
-        if ($rowMetrics === false) {
+        if ($rowMetrics === \false) {
             $rowMetrics = new Row();
         }
         $this->enrichWithUniqueVisitorsMetric($rowMetrics);
@@ -646,14 +652,32 @@ class ArchiveProcessor
             // will be processed anyway
             return;
         }
-        self::$isRootArchivingRequest = false;
+        // The below check is meant to avoid archiving the same dependency multiple times.
+        $processedSegmentKey = $params->getSite()->getId() . $params->getPeriod()->getDateStart() . $params->getPeriod()->getLabel() . $newSegment->getOriginalString();
+        if (in_array($processedSegmentKey . $plugin, $this->processedDependentSegments)) {
+            return;
+        }
+        self::$isRootArchivingRequest = \false;
         try {
+            $invalidator = StaticContainer::get('Piwik\\Archive\\ArchiveInvalidator');
+            // Ensure to always invalidate VisitsSummary before any other plugin archive.
+            // Otherwise those archives might get build with outdated VisitsSummary data
+            if ($plugin !== 'VisitsSummary' && !in_array($processedSegmentKey . 'VisitsSummary', $this->processedDependentSegments)) {
+                $invalidator->markArchivesAsInvalidated($idSites, [$params->getPeriod()->getDateStart()], $params->getPeriod()->getLabel(), $newSegment, \false, \false, 'VisitsSummary', \false, \true);
+                $parameters = new \Piwik\ArchiveProcessor\Parameters($params->getSite(), $params->getPeriod(), $newSegment);
+                $parameters->onlyArchiveRequestedPlugin();
+                $archiveLoader = new \Piwik\ArchiveProcessor\Loader($parameters);
+                $archiveLoader->prepareArchive('VisitsSummary');
+                $this->processedDependentSegments[] = $processedSegmentKey . 'VisitsSummary';
+            }
+            $invalidator->markArchivesAsInvalidated($idSites, [$params->getPeriod()->getDateStart()], $params->getPeriod()->getLabel(), $newSegment, \false, \false, $plugin, \false, \true);
             $parameters = new \Piwik\ArchiveProcessor\Parameters($params->getSite(), $params->getPeriod(), $newSegment);
             $parameters->onlyArchiveRequestedPlugin();
             $archiveLoader = new \Piwik\ArchiveProcessor\Loader($parameters);
             $archiveLoader->prepareArchive($plugin);
+            $this->processedDependentSegments[] = $processedSegmentKey . $plugin;
         } finally {
-            self::$isRootArchivingRequest = true;
+            self::$isRootArchivingRequest = \true;
         }
     }
     public function getArchiveWriter()

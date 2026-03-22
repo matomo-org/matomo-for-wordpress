@@ -140,7 +140,7 @@ class PivotByDimension extends BaseFilter
      * @param bool $isFetchingBySegmentEnabled Whether to allow fetching by segment.
      * @throws Exception if pivoting the report by a dimension is unsupported.
      */
-    public function __construct($table, $report, $pivotByDimension, $pivotColumn, $pivotByColumnLimit = false, $isFetchingBySegmentEnabled = true)
+    public function __construct($table, $report, $pivotByDimension, $pivotColumn, $pivotByColumnLimit = \false, $isFetchingBySegmentEnabled = \true)
     {
         parent::__construct($table);
         Log::debug("PivotByDimension::%s: creating with [report = %s, pivotByDimension = %s, pivotColumn = %s, " . "pivotByColumnLimit = %s, isFetchingBySegmentEnabled = %s]", __FUNCTION__, $report, $pivotByDimension, $pivotColumn, $pivotByColumnLimit, $isFetchingBySegmentEnabled);
@@ -233,7 +233,7 @@ class PivotByDimension extends BaseFilter
             $segment = $row->getMetadata('segment');
             if (empty($segment)) {
                 $segmentValue = $row->getMetadata('segmentValue');
-                if ($segmentValue === false) {
+                if ($segmentValue === \false) {
                     $segmentValue = $row->getColumn('label');
                 }
                 $segmentName = $this->thisReportDimensionSegment->getSegment();
@@ -270,7 +270,7 @@ class PivotByDimension extends BaseFilter
     private function fetchIntersectedWithThisBySegment(DataTable $table, $segmentStr)
     {
         // TODO: segment + report API method query params should be stored in DataTable metadata so we don't have to access it here
-        $originalSegment = Common::getRequestVar('segment', false);
+        $originalSegment = Common::getRequestVar('segment', \false);
         if (!empty($originalSegment)) {
             $segmentStr = $originalSegment . ';' . $segmentStr;
         }
@@ -337,7 +337,6 @@ class PivotByDimension extends BaseFilter
         }
     }
     /**
-     * @param Row $columnRow
      * @param $pivotColumn
      * @return false|mixed
      */
@@ -362,12 +361,12 @@ class PivotByDimension extends BaseFilter
     private function getRequestParamOverride(DataTable $table)
     {
         $params = array('pivotBy' => '', 'column' => '', 'flat' => 0, 'totals' => 0, 'disable_queued_filters' => 1, 'disable_generic_filters' => 1, 'showColumns' => '', 'hideColumns' => '');
-        /** @var Site $site */
+        /** @var Site|false $site */
         $site = $table->getMetadata('site');
         if (!empty($site)) {
             $params['idSite'] = $site->getId();
         }
-        /** @var Period $period */
+        /** @var Period|false $period */
         $period = $table->getMetadata('period');
         if (!empty($period)) {
             $params['period'] = $period->getLabel();
@@ -390,22 +389,22 @@ class PivotByDimension extends BaseFilter
         });
         // limit columns if necessary (adding aggregate Others column at end)
         if ($this->pivotByColumnLimit > 0 && count($columnSet) > $this->pivotByColumnLimit) {
-            $columnSet = array_slice($columnSet, 0, $this->pivotByColumnLimit - 1, $preserveKeys = true);
+            $columnSet = array_slice($columnSet, 0, $this->pivotByColumnLimit - 1, $preserveKeys = \true);
             $columnSet[$othersRowLabel] = 0;
         }
         // remove column sums from array so it can be used as a default row
         $columnSet = array_map(function () {
-            return false;
+            return \false;
         }, $columnSet);
         // make sure label column is first
-        $columnSet = array('label' => false) + $columnSet;
+        $columnSet = array('label' => \false) + $columnSet;
         return $columnSet;
     }
     private function getOrderedColumnsWithPrependedNumerals($defaultRow, $othersRowLabel)
     {
-        $flags = ENT_COMPAT;
+        $flags = \ENT_COMPAT;
         if (defined('ENT_HTML401')) {
-            $flags |= ENT_HTML401;
+            $flags |= \ENT_HTML401;
             // part of default flags for 5.4, but not 5.3
         }
         // must use decoded character otherwise sort later will fail
@@ -428,7 +427,6 @@ class PivotByDimension extends BaseFilter
      * Returns true if pivoting by subtable is supported for a report. Will return true if the report
      * has a subtable dimension and if the subtable dimension is different than the report's dimension.
      *
-     * @param Report $report
      * @return bool
      */
     public static function isPivotingReportBySubtableSupported(Report $report)

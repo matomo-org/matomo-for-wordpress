@@ -22,7 +22,7 @@ abstract class BaseActivity extends Activity
             $method = 'TagManager.' . $method;
             return $method === Request::getRootApiRequestMethod();
         }
-        return false;
+        return \false;
     }
     protected function getContainerNameFromActivityData($activityData)
     {

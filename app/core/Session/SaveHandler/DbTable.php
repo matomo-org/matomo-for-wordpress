@@ -14,14 +14,13 @@ use Exception;
 use Piwik\SettingsPiwik;
 use Piwik\Updater\Migration;
 use Zend_Session;
-use Zend_Session_SaveHandler_Interface;
 /**
  * Database-backed session save handler
  *
  */
-class DbTable implements Zend_Session_SaveHandler_Interface
+class DbTable implements \SessionHandlerInterface
 {
-    public static $wasSessionToLargeToRead = false;
+    public static $wasSessionToLargeToRead = \false;
     protected $config;
     protected $maxLifetime;
     public const TABLE_NAME = 'session';
@@ -53,21 +52,19 @@ class DbTable implements Zend_Session_SaveHandler_Interface
      *
      * @param string $save_path
      * @param string $name
-     * @return boolean
      */
-    public function open($save_path, $name)
+    public function open($save_path, $name) : bool
     {
         Db::get()->getConnection();
-        return true;
+        return \true;
     }
     /**
      * Close Session - free resources
      *
-     * @return boolean
      */
-    public function close()
+    public function close() : bool
     {
-        return true;
+        return \true;
     }
     /**
      * Read session data
@@ -75,11 +72,12 @@ class DbTable implements Zend_Session_SaveHandler_Interface
      * @param string $id
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function read($id)
     {
         $id = $this->hashSessionId($id);
-        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?' . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
-        $result = $this->fetchOne($sql, array($id, time()));
+        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM `' . $this->config['name'] . '`' . ' WHERE ' . $this->config['primary'] . ' = ?' . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
+        $result = $this->fetchOne($sql, [$id, time()]);
         if (!$result) {
             $result = '';
         }
@@ -118,28 +116,35 @@ class DbTable implements Zend_Session_SaveHandler_Interface
      *
      * @param string $id
      * @param mixed $data
-     * @return boolean
      */
-    public function write($id, $data)
+    public function write($id, $data) : bool
     {
         $id = $this->hashSessionId($id);
         $sql = 'INSERT INTO ' . $this->config['name'] . ' (' . $this->config['primary'] . ',' . $this->config['modifiedColumn'] . ',' . $this->config['lifetimeColumn'] . ',' . $this->config['dataColumn'] . ')' . ' VALUES (?,?,?,?)' . ' ON DUPLICATE KEY UPDATE ' . $this->config['modifiedColumn'] . ' = ?,' . $this->config['lifetimeColumn'] . ' = ?,' . $this->config['dataColumn'] . ' = ?';
-        $this->query($sql, array($id, time(), $this->maxLifetime, $data, time(), $this->maxLifetime, $data));
-        return true;
+        $this->query($sql, [$id, time(), $this->maxLifetime, $data, time(), $this->maxLifetime, $data]);
+        return \true;
     }
     /**
      * Destroy Session - remove data from resource for
      * given session id
      *
      * @param string $id
-     * @return boolean
      */
-    public function destroy($id)
+    public function destroy($id) : bool
     {
         $id = $this->hashSessionId($id);
-        $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?';
-        $this->query($sql, array($id));
-        return true;
+        $sql = 'DELETE FROM `' . $this->config['name'] . '` WHERE ' . $this->config['primary'] . ' = ?';
+        $this->query($sql, [$id]);
+        return \true;
+    }
+    /**
+     * Destroys all Sessions - removes all rows in Session table
+     */
+    public function destroyAll() : bool
+    {
+        $sql = 'TRUNCATE TABLE `' . $this->config['name'] . '`';
+        $this->query($sql, []);
+        return \true;
     }
     /**
      * Garbage Collection - remove old session data older
@@ -148,11 +153,12 @@ class DbTable implements Zend_Session_SaveHandler_Interface
      * @param int $maxlifetime timestamp in seconds
      * @return bool  always true
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
-        $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
-        $this->query($sql, array(time()));
-        return true;
+        $sql = 'DELETE FROM `' . $this->config['name'] . '`' . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
+        $this->query($sql, [time()]);
+        return \true;
     }
     private function migrateToDbSessionTable()
     {

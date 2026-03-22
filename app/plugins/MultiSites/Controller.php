@@ -12,64 +12,89 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Date;
 use Piwik\Piwik;
+use Piwik\Plugins\BotTracking\Metrics as BotTrackingMetrics;
+use Piwik\Plugins\Goals\API as GoalsAPI;
+use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
+use Piwik\Plugin\Manager;
+use Piwik\Request;
 use Piwik\Translation\Translator;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\Controller
 {
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     private $translator;
     public function __construct(Translator $translator)
     {
         parent::__construct();
         $this->translator = $translator;
     }
-    public function index()
+    public function index() : string
     {
-        return $this->getSitesInfo($isWidgetized = false);
+        return $this->getSitesInfo($isWidgetized = \false);
     }
-    public function standalone()
+    public function standalone() : string
     {
-        return $this->getSitesInfo($isWidgetized = true);
+        return $this->getSitesInfo($isWidgetized = \true);
     }
     /**
      * @throws \Piwik\NoAccessException
      */
-    public function getSitesInfo($isWidgetized = false)
+    protected function getSitesInfo(bool $isWidgetized = \false) : string
     {
         Piwik::checkUserHasSomeViewAccess();
         $date = Piwik::getDate('today');
         $period = Piwik::getPeriod('day');
-        $view = new View("@MultiSites/getSitesInfo");
+        $view = new View('@MultiSites/allWebsitesDashboard');
         $view->isWidgetized = $isWidgetized;
-        $view->displayRevenueColumn = Common::isGoalPluginEnabled();
+        $view->displayRevenueColumn = $this->shouldDisplayRevenueColumn();
         $view->limit = Config::getInstance()->General['all_websites_website_per_page'];
         $view->show_sparklines = Config::getInstance()->General['show_multisites_sparklines'];
+        $view->hasBotTrackingEnabled = Manager::getInstance()->isPluginActivated('BotTracking');
         $view->autoRefreshTodayReport = 0;
         // if the current date is today, or yesterday,
         // in case the website is set to UTC-12), or today in UTC+14, we refresh the page every 5min
-        if (in_array($date, array('today', date('Y-m-d'), 'yesterday', Date::factory('yesterday')->toString('Y-m-d'), Date::factory('now', 'UTC+14')->toString('Y-m-d')))) {
+        if (in_array($date, ['today', date('Y-m-d'), 'yesterday', Date::factory('yesterday')->toString('Y-m-d'), Date::factory('now', 'UTC+14')->toString('Y-m-d')])) {
             $view->autoRefreshTodayReport = Config::getInstance()->General['multisites_refresh_after_seconds'];
         }
-        $paramsToSet = ['period' => $period, 'date' => $date];
-        $params = $this->getGraphParamsModified($paramsToSet);
-        $view->dateSparkline = $period == 'range' ? $date : $params['date'];
         $this->setGeneralVariablesView($view);
         $view->siteName = $this->translator->translate('General_AllWebsitesDashboard');
         return $view->render();
     }
-    public function getEvolutionGraph($columns = false)
+    public function getEvolutionGraph() : ?string
     {
-        if (empty($columns)) {
-            $columns = Common::getRequestVar('columns');
+        $columns = Request::fromRequest()->getStringParameter('columns');
+        $api = 'API.get';
+        if ($columns === 'revenue') {
+            $api = 'Goals.get';
         }
-        $api = "API.get";
-        if ($columns == 'revenue') {
-            $api = "Goals.get";
+        if ($columns === 'ai_chatbots_requests' && Manager::getInstance()->isPluginActivated('BotTracking')) {
+            $api = 'BotTracking.get';
+            $columns = BotTrackingMetrics::METRIC_AI_CHATBOTS_REQUESTS;
         }
         $view = $this->getLastUnitGraph($this->pluginName, __FUNCTION__, $api);
         $view->requestConfig->totals = 0;
+        $view->requestConfig->request_parameters_to_modify['columns'] = $columns;
+        $view->config->columns_to_display = [$columns];
         return $this->renderView($view);
+    }
+    private function shouldDisplayRevenueColumn() : bool
+    {
+        if (!Common::isGoalPluginEnabled()) {
+            return \false;
+        }
+        $sites = SitesManagerAPI::getInstance()->getSitesWithAtLeastViewAccess();
+        foreach ($sites as $site) {
+            if ($site['ecommerce']) {
+                return \true;
+            }
+        }
+        $idSites = array_column($sites, 'idsite');
+        $goals = GoalsAPI::getInstance()->getGoals($idSites);
+        foreach ($goals as $goal) {
+            if (0.0 < $goal['revenue'] || \true === (bool) $goal['event_value_as_revenue']) {
+                return \true;
+            }
+        }
+        return \false;
     }
 }

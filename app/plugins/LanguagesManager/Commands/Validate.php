@@ -22,9 +22,9 @@ class Validate extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
     {
         $input = $this->getInput();
         $output = $this->getOutput();
-        $output->setDecorated(true);
-        $start = microtime(true);
-        $languages = API::getInstance()->getAvailableLanguageNames(true);
+        $output->setDecorated(\true);
+        $start = microtime(\true);
+        $languages = API::getInstance()->getAvailableLanguageNames(\true);
         $languageCodes = array();
         foreach ($languages as $languageInfo) {
             $languageCodes[] = $languageInfo['code'];
@@ -40,7 +40,7 @@ class Validate extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
             $output->writeln("");
             // fetch base or specific plugin
             $this->fetchTranslations($plugin);
-            $files = _glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . DIRECTORY_SEPARATOR . '*.json');
+            $files = _glob(\Piwik\Plugins\LanguagesManager\Commands\FetchTranslations::getDownloadPath() . \DIRECTORY_SEPARATOR . '*.json');
             if (count($files) == 0) {
                 $output->writeln("No translation updates available! Skipped.");
                 continue;
@@ -50,7 +50,7 @@ class Validate extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
             }
             $output->writeln('');
         }
-        $output->writeln("Finished in " . round(microtime(true) - $start, 3) . "s");
+        $output->writeln("Finished in " . round(microtime(\true) - $start, 3) . "s");
         return self::SUCCESS;
     }
     /**

@@ -49,7 +49,7 @@ class GroupBy extends BaseFilter
      * @param string $groupByColumn The column name to reduce.
      * @param callable $reduceFunction The reduce function. This must alter the `$groupByColumn`
      *                                 column in some way. If not set then the filter will group by the raw column value.
-     * @param array $parameters deprecated - use an [anonymous function](http://php.net/manual/en/functions.anonymous.php)
+     * @param array $parameters deprecated - use an [anonymous function](https://php.net/manual/en/functions.anonymous.php)
      *                          instead.
      */
     public function __construct($table, $groupByColumn, $reduceFunction = null, $parameters = array())
@@ -85,7 +85,7 @@ class GroupBy extends BaseFilter
             } else {
                 // if we have already encountered this group by value, we add this row to the
                 // row that will be kept, and mark this one for deletion
-                $groupByRows[$groupByValue]->sumRow($row, $copyMeta = true, $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME));
+                $groupByRows[$groupByValue]->sumRow($row, $copyMeta = \true, $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME));
                 $nonGroupByRowIds[] = $rowId;
             }
         }

@@ -46,6 +46,15 @@
     charsets:
       - UTF-8
       - gb2312
+  -
+    urls:
+      - www.sou.com
+    params:
+      - q
+    backlink: '?q={k}'
+    charsets:
+      - UTF-8
+      - gb2312
 Abacho:
   -
     urls:
@@ -354,12 +363,6 @@ Baidu:
     hiddenkeyword:
       - '/^$/'
       - '/'
-  -
-    urls:
-      - web.gougou.com
-    params:
-      - search
-    backlink: 'search?search={k}'
 Biglobe:
   -
     urls:
@@ -480,6 +483,7 @@ ChatGPT:
   -
     urls:
       - chat.openai.com
+      - chatgpt.com
     params: []
     hiddenkeyword:
       - '/^$/'
@@ -613,6 +617,7 @@ DuckDuckGo:
     urls:
       - duckduckgo.com
       - r.duckduckgo.com
+      - duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion
     params:
       - q
     hiddenkeyword:
@@ -751,9 +756,10 @@ Fireball:
   -
     urls:
       - www.fireball.de
+      - fireball.com
     params:
       - q
-    backlink: 'ajax.asp?q={k}'
+    backlink: 'search/?q={k}'
 Firstsfind:
   -
     urls:
@@ -818,6 +824,13 @@ Freenet:
       - query
       - Keywords
     backlink: 'suche/?query={k}'
+Freespoke:
+  -
+    urls:
+      - freespoke.com
+    params:
+      - q
+    backlink: 'search/web?q={k}'
 FriendFeed:
   -
     urls:
@@ -1272,6 +1285,13 @@ Inbox:
     params:
       - q
     backlink: 'search/results1.aspx?q={k}'
+info.com:
+  -
+    urls:
+      - www.info.com
+    params:
+      - q
+    backlink: 'serp?q={k}'
 InfoSpace:
   -
     urls:
@@ -1427,6 +1447,13 @@ Jungle Spider:
       - www.jungle-spider.de
     params:
       - q
+Junior Safe Search:
+  -
+    urls:
+      - www.juniorsafesearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Jyxo:
   -
     urls:
@@ -1441,6 +1468,20 @@ K9 Safe Search:
     params:
       - q
     backlink: 'search.jsp?q={k}'
+Kagi:
+  -
+    urls:
+      - kagi.com
+    params:
+      - q
+    backlink: 'search?q={k}'
+KARMA:
+  -
+    urls:
+      - karmasearch.org
+    params:
+      - q
+    backlink: 'search?q={k}'
 Kataweb:
   -
     urls:
@@ -1499,6 +1540,13 @@ Lo.st:
     params:
       - x_query
     backlink: 'cgi-bin/eolost.cgi?x_query={k}'
+Local Moxie:
+  -
+    urls:
+      - www.localmoxie.com
+    params:
+      - q
+    backlink: 'serp?q={k}'
 LookAny:
   -
     urls:
@@ -1622,6 +1670,13 @@ mozbot:
     params:
       - q
     backlink: 'results.php?q={k}'
+MyPrivateSearch:
+  -
+    urls:
+      - www.myprivatesearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 MySpace:
   -
     urls:
@@ -1705,6 +1760,13 @@ Nigma:
     params:
       - s
     backlink: 'index.php?s={k}'
+OceanHero:
+  -
+    urls:
+      - oceanhero.today
+    params:
+      - q
+    backlink: 'web?q={k}'
 Onet.pl:
   -
     urls:
@@ -1768,6 +1830,13 @@ PeoplePC:
     params:
       - q
     backlink: 'search?q={k}'
+Perplexity:
+  -
+    urls:
+      - www.perplexity.ai
+    params:
+      - q
+    backlink: 'search?s=o&q={k}'
 Picsearch:
   -
     urls:
@@ -1797,6 +1866,20 @@ Poisk.Ru:
     backlink: 'cgi-bin/poisk?text={k}'
     charsets:
       - windows-1251
+Presearch:
+  -
+    urls:
+      - presearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
+PrivacyWall:
+  -
+    urls:
+      - www.privacywall.org
+    params:
+      - q
+    backlink: 'search/secure?q={k}'
 qip.ru:
   -
     urls:
@@ -1813,6 +1896,13 @@ Qualigo:
       - www.qualigo.nl
     params:
       - q
+Quendu:
+  -
+    urls:
+      - www.quendu.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Qwant:
   -
     urls:
@@ -2085,6 +2175,7 @@ StartPage:
       - s12-eu5.startpage.com
       - s13-eu5.startpage.com
       - s14-eu5.startpage.com
+      - startpagel6srwcjlue4zgq3zevrujfaow726kjytqbbjyrswwmjzcqd.onion
     params:
       - query
     backlink: 'do/asearch?query={k}'
@@ -2110,6 +2201,13 @@ Startsiden:
     params:
       - q
     backlink: 'sok/index.html?q={k}'
+Stract:
+  -
+    urls:
+      - stract.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Suche.info:
   -
     urls:
@@ -2136,6 +2234,20 @@ Surf Canyon:
       - surfcanyon.com
     params:
       - q
+Swiggle:
+  -
+    urls:
+      - swiggle.org.uk
+    params:
+      - q
+    backlink: '?q={k}'
+Swisscows:
+  -
+    urls:
+      - swisscows.com
+    params:
+      - query
+    backlink: 'web?query={k}'
 T-Online:
   -
     urls:
@@ -2239,6 +2351,20 @@ Toppreise.ch:
     backlink: 'index.php?search={k}'
     charsets:
       - ISO-8859-1
+Torry:
+  -
+    urls:
+      - www.torry.io
+    params:
+      - q
+    backlink: 'search/?q={k}'
+TUSK Search:
+  -
+    urls:
+      - tusksearch.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Trouvez.com:
   -
     urls:
@@ -2259,6 +2385,13 @@ Trusted Search:
     params:
       - w
     backlink: 'search?w={k}'
+Trustnav:
+  -
+    urls:
+      - search.trustnav.com
+    params:
+      - q
+    backlink: '?q={k}'
 Twingly:
   -
     urls:
@@ -2327,6 +2460,13 @@ Volny:
     backlink: 'fulltext/?search={k}'
     charsets:
       - windows-1250
+Vuhuv:
+  -
+    urls:
+      - vuhuv.com
+    params:
+      - q
+    backlink: '?q={k}'
 Walhello:
   -
     urls:
@@ -2595,6 +2735,13 @@ Yellowmap:
       - yellowmap.de
     params:
       - ' '
+Yep:
+  -
+    urls:
+      - yep.com
+    params:
+      - q
+    backlink: 'web?q={k}'
 Yippy:
   -
     urls:
@@ -2602,6 +2749,20 @@ Yippy:
     params:
       - query
     backlink: 'search?query={k}'
+Yongzin:
+  -
+    urls:
+      - www.yongzin.com
+    params:
+      - word
+    backlink: 'page/search.do?word={k}'
+You:
+  -
+    urls:
+      - you.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 YouGoo:
   -
     urls:
@@ -2609,22 +2770,17 @@ YouGoo:
     params:
       - q
     backlink: '?cx=search&q={k}'
-Zapmeta:
+ZapMeta:
   -
     urls:
       - www.zapmeta.com
       - 'zapmeta.{}'
-      - uk.zapmeta.com
-      - ar.zapmeta.com
-      - au.zapmeta.com
-      - ca.zapmeta.com
-      - fi.zapmeta.com
-      - no.zapmeta.com
-      - tr.zapmeta.com
+      - '{}.zapmeta.com'
+      - 'www.zapmetasearch.{}'
     params:
       - q
       - query
-    backlink: '?q={k}'
+    backlink: 'search?q={k}'
 Zhongsou:
   -
     urls:

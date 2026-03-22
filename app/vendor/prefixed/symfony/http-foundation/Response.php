@@ -107,7 +107,7 @@ class Response
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
      */
-    private const HTTP_RESPONSE_CACHE_CONTROL_DIRECTIVES = ['must_revalidate' => false, 'no_cache' => false, 'no_store' => false, 'no_transform' => false, 'public' => false, 'private' => false, 'proxy_revalidate' => false, 'max_age' => true, 's_maxage' => true, 'immutable' => false, 'last_modified' => true, 'etag' => true];
+    private const HTTP_RESPONSE_CACHE_CONTROL_DIRECTIVES = ['must_revalidate' => \false, 'no_cache' => \false, 'no_store' => \false, 'no_transform' => \false, 'public' => \false, 'private' => \false, 'proxy_revalidate' => \false, 'max_age' => \true, 's_maxage' => \true, 'immutable' => \false, 'last_modified' => \true, 'etag' => \true];
     /**
      * @var ResponseHeaderBag
      */
@@ -307,7 +307,7 @@ class Response
             $charset = $this->charset ?: 'UTF-8';
             if (!$headers->has('Content-Type')) {
                 $headers->set('Content-Type', 'text/html; charset=' . $charset);
-            } elseif (0 === stripos($headers->get('Content-Type') ?? '', 'text/') && false === stripos($headers->get('Content-Type') ?? '', 'charset')) {
+            } elseif (0 === stripos($headers->get('Content-Type') ?? '', 'text/') && \false === stripos($headers->get('Content-Type') ?? '', 'charset')) {
                 // add the charset
                 $headers->set('Content-Type', $headers->get('Content-Type') . '; charset=' . $charset);
             }
@@ -336,7 +336,7 @@ class Response
         $this->ensureIEOverSSLCompatibility($request);
         if ($request->isSecure()) {
             foreach ($headers->getCookies() as $cookie) {
-                $cookie->setSecureDefault(true);
+                $cookie->setSecureDefault(\true);
             }
         }
         return $this;
@@ -361,10 +361,10 @@ class Response
         }
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
-            header('Set-Cookie: ' . $cookie, false, $this->statusCode);
+            header('Set-Cookie: ' . $cookie, \false, $this->statusCode);
         }
         // status
-        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
+        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), \true, $this->statusCode);
         return $this;
     }
     /**
@@ -390,8 +390,8 @@ class Response
             fastcgi_finish_request();
         } elseif (\function_exists('litespeed_finish_request')) {
             litespeed_finish_request();
-        } elseif (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true)) {
-            static::closeOutputBuffers(0, true);
+        } elseif (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], \true)) {
+            static::closeOutputBuffers(0, \true);
             flush();
         }
         return $this;
@@ -458,7 +458,7 @@ class Response
             $this->statusText = self::$statusTexts[$code] ?? 'unknown status';
             return $this;
         }
-        if (false === $text) {
+        if (\false === $text) {
             $this->statusText = '';
             return $this;
         }
@@ -515,10 +515,10 @@ class Response
     public function isCacheable() : bool
     {
         if (!\in_array($this->statusCode, [200, 203, 300, 301, 302, 404, 410])) {
-            return false;
+            return \false;
         }
         if ($this->headers->hasCacheControlDirective('no-store') || $this->headers->getCacheControlDirective('private')) {
-            return false;
+            return \false;
         }
         return $this->isValidateable() || $this->isFresh();
     }
@@ -582,7 +582,7 @@ class Response
      *
      * @final
      */
-    public function setImmutable(bool $immutable = true) : object
+    public function setImmutable(bool $immutable = \true) : object
     {
         if ($immutable) {
             $this->headers->addCacheControlDirective('immutable');
@@ -849,7 +849,7 @@ class Response
      *
      * @final
      */
-    public function setEtag(?string $etag = null, bool $weak = false) : object
+    public function setEtag(?string $etag = null, bool $weak = \false) : object
     {
         if (null === $etag) {
             $this->headers->remove('Etag');
@@ -857,7 +857,7 @@ class Response
             if (!str_starts_with($etag, '"')) {
                 $etag = '"' . $etag . '"';
             }
-            $this->headers->set('ETag', (true === $weak ? 'W/' : '') . $etag);
+            $this->headers->set('ETag', (\true === $weak ? 'W/' : '') . $etag);
         }
         return $this;
     }
@@ -971,7 +971,7 @@ class Response
      *
      * @final
      */
-    public function setVary($headers, bool $replace = true) : object
+    public function setVary($headers, bool $replace = \true) : object
     {
         $this->headers->set('Vary', $headers, $replace);
         return $this;
@@ -988,9 +988,9 @@ class Response
     public function isNotModified(Request $request) : bool
     {
         if (!$request->isMethodCacheable()) {
-            return false;
+            return \false;
         }
-        $notModified = false;
+        $notModified = \false;
         $lastModified = $this->headers->get('Last-Modified');
         $modifiedSince = $request->headers->get('If-Modified-Since');
         if (($ifNoneMatchEtags = $request->getETags()) && null !== ($etag = $this->getEtag())) {
@@ -1003,7 +1003,7 @@ class Response
                     $ifNoneMatchEtag = substr($ifNoneMatchEtag, 2);
                 }
                 if ($ifNoneMatchEtag === $etag || '*' === $ifNoneMatchEtag) {
-                    $notModified = true;
+                    $notModified = \true;
                     break;
                 }
             }
@@ -1125,7 +1125,7 @@ class Response
      */
     public static function closeOutputBuffers(int $targetLevel, bool $flush) : void
     {
-        $status = ob_get_status(true);
+        $status = ob_get_status(\true);
         $level = \count($status);
         $flags = \PHP_OUTPUT_HANDLER_REMOVABLE | ($flush ? \PHP_OUTPUT_HANDLER_FLUSHABLE : \PHP_OUTPUT_HANDLER_CLEANABLE);
         while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
@@ -1141,14 +1141,14 @@ class Response
      *
      * @see https://tools.ietf.org/html/rfc8674
      */
-    public function setContentSafe(bool $safe = true) : void
+    public function setContentSafe(bool $safe = \true) : void
     {
         if ($safe) {
             $this->headers->set('Preference-Applied', 'safe');
         } elseif ('safe' === $this->headers->get('Preference-Applied')) {
             $this->headers->remove('Preference-Applied');
         }
-        $this->setVary('Prefer', false);
+        $this->setVary('Prefer', \false);
     }
     /**
      * Checks if we need to remove Cache-Control for SSL encrypted downloads when using IE < 9.
@@ -1159,7 +1159,7 @@ class Response
      */
     protected function ensureIEOverSSLCompatibility(Request $request) : void
     {
-        if (false !== stripos($this->headers->get('Content-Disposition') ?? '', 'attachment') && 1 == preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT') ?? '', $match) && true === $request->isSecure()) {
+        if (\false !== stripos($this->headers->get('Content-Disposition') ?? '', 'attachment') && 1 == preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT') ?? '', $match) && \true === $request->isSecure()) {
             if ((int) preg_replace('/(MSIE )(.*?);/', '$2', $match[0]) < 9) {
                 $this->headers->remove('Cache-Control');
             }

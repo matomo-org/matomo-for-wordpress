@@ -12,6 +12,7 @@ namespace WpMatomo;
 use WpMatomo\Ecommerce\EasyDigitalDownloads;
 use WpMatomo\Ecommerce\MemberPress;
 use WpMatomo\Ecommerce\Woocommerce;
+use WpMatomo\Site\Sync\SyncConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -62,13 +63,17 @@ class PluginInit extends Feature {
 		) {
 			$tracker = new AjaxTracker( $this->settings );
 
-			$woocommerce = new Woocommerce( $tracker, $this->settings );
-			$woocommerce->register_hooks();
+			$sync_config = new SyncConfig( $this->settings );
 
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, $this->settings );
+			if ( function_exists( 'WC' ) ) {
+				$woocommerce = new Woocommerce( $tracker, $this->settings, $sync_config );
+				$woocommerce->register_hooks();
+			}
+
+			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, $this->settings, $sync_config );
 			$easy_digital_downloads->register_hooks();
 
-			$member_press = new MemberPress( $tracker, $this->settings );
+			$member_press = new MemberPress( $tracker, $this->settings, $sync_config );
 			$member_press->register_hooks();
 
 			do_action( 'matomo_ecommerce_init', $tracker );

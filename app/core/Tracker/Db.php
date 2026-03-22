@@ -12,6 +12,8 @@ use Exception;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Db\Adapter;
+use Piwik\Db\TransactionalDatabaseInterface;
+use Piwik\Db\TransactionalDatabaseStaticTrait;
 use Piwik\Piwik;
 use Piwik\Timer;
 use Piwik\Tracker\Db\DbException;
@@ -21,13 +23,12 @@ use Piwik\Tracker\Db\DbException;
  * We wrote this simple class
  *
  */
-abstract class Db
+abstract class Db implements TransactionalDatabaseInterface
 {
-    protected static $profiling = false;
+    use TransactionalDatabaseStaticTrait;
+    protected static $profiling = \false;
     protected $queriesProfiling = array();
     protected $connection = null;
-    // this is used for indicate TransactionLevel Cache
-    public $supportsUncommitted = null;
     /**
      * Enables the SQL profiling.
      * For each query, saves in the DB the time spent on this query.
@@ -37,14 +38,14 @@ abstract class Db
      */
     public static function enableProfiling()
     {
-        self::$profiling = true;
+        self::$profiling = \true;
     }
     /**
      * Disables the SQL profiling logging.
      */
     public static function disableProfiling()
     {
-        self::$profiling = false;
+        self::$profiling = \false;
     }
     /**
      * Returns true if the SQL profiler is enabled
@@ -90,7 +91,7 @@ abstract class Db
             return;
         }
         // turn off the profiler so we don't profile the following queries
-        self::$profiling = false;
+        self::$profiling = \false;
         foreach ($this->queriesProfiling as $query => $info) {
             $time = $info['sum_time_ms'];
             $time = Common::forceDotAsSeparatorForDecimalPoint($time);
@@ -99,7 +100,7 @@ abstract class Db
             $this->query($queryProfiling, array($query));
         }
         // turn back on profiling
-        self::$profiling = true;
+        self::$profiling = \true;
     }
     /**
      * Connects to the DB
@@ -156,7 +157,7 @@ abstract class Db
     public function fetchOne($query, $parameters = array())
     {
         $result = $this->fetch($query, $parameters);
-        return is_array($result) && !empty($result) ? reset($result) : false;
+        return is_array($result) && !empty($result) ? reset($result) : \false;
     }
     /**
      * This function is a proxy to fetch(), used to maintain compatibility with Zend_Db + PDO interface

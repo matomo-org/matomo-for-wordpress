@@ -23,8 +23,6 @@ class PluginCookie extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginColu
         return Piwik::translate('General_Plugin') . ' (Cookie)';
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

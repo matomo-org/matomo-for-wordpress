@@ -21,7 +21,6 @@ class ChallengeSetupConsentManager extends \Piwik\Plugins\Tour\Engagement\Challe
      */
     private $detectedContentManager;
     /**
-     * @param SiteContentDetector $siteContentDetector
      * @param array|null         $siteData    String of site content, content of the current site will be retrieved if left blank
      */
     public function __construct(SiteContentDetector $siteContentDetector, ?array $siteData = null)
@@ -61,7 +60,7 @@ class ChallengeSetupConsentManager extends \Piwik\Plugins\Tour\Engagement\Challe
     public function isCompleted(string $login)
     {
         if (empty($this->detectedContentManager)) {
-            return true;
+            return \true;
         }
         return in_array($this->detectedContentManager::getId(), $this->siteContentDetector->connectedConsentManagers);
     }

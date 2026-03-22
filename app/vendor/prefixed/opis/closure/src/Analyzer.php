@@ -25,7 +25,7 @@ class Analyzer extends ClosureAnalyzer
     {
         $reflection = new ReflectionClosure($closure);
         $scope = $reflection->getClosureScopeClass();
-        $data = ['reflection' => $reflection, 'code' => $reflection->getCode(), 'hasThis' => $reflection->isBindingRequired(), 'context' => $reflection->getUseVariables(), 'hasRefs' => false, 'binding' => $reflection->getClosureThis(), 'scope' => $scope ? $scope->getName() : null, 'isStatic' => $reflection->isStatic()];
+        $data = ['reflection' => $reflection, 'code' => $reflection->getCode(), 'hasThis' => $reflection->isBindingRequired(), 'context' => $reflection->getUseVariables(), 'hasRefs' => \false, 'binding' => $reflection->getClosureThis(), 'scope' => $scope ? $scope->getName() : null, 'isStatic' => $reflection->isStatic()];
         return $data;
     }
     /**

@@ -19,6 +19,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 		'wp_version' => ! empty( $GLOBALS['wp_version'] ) ? $GLOBALS['wp_version'] : '',
 	]
 );
+
+/** @var string $matomo_currency */
 ?>
 <div class="wrap">
 
@@ -58,13 +60,15 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 
 	<?php
-	function matomo_show_tables( $matomo_feature_sections, $matomo_version ) {
+	function matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency ) {
 		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 			$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
 			$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
+			$matomo_feature_section_class       = isset( $matomo_feature_section['class'] ) ? $matomo_feature_section['class'] : '';
+			$matomo_extra_card_html             = isset( $matomo_feature_section['extra_card_html'] ) ? $matomo_feature_section['extra_card_html'] : '';
 
 			echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-			echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . '"><div id="the-list">';
+			echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . ' ' . esc_attr( $matomo_feature_section_class ) . '"><div id="the-list">';
 
 			foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
 				$matomo_style        = '';
@@ -144,6 +148,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 								}
 								?>
 									 ">
+							<?php
+							if ( ! empty( $matomo_feature['price'] ) && 'free' !== $matomo_feature['price'] ) {
+								?>
+								<span class="plugin-price"><?php echo esc_html( $matomo_feature['price'] ); ?></span>
+								<?php
+							}
+							?>
 							<p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
 								<?php
 								if ( ! empty( $matomo_feature['video'] ) ) {
@@ -155,24 +166,41 @@ $matomo_extra_url_params = '&' . http_build_query(
 							</p>
 							<?php
 							if ( ! empty( $matomo_feature['price'] ) ) {
+								$matomo_button_url = ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url;
+								if ( 'free' !== $matomo_feature['price'] ) {
+									$matomo_button_url .= '&add-to-cart=ws&currency=' . $matomo_currency;
+								}
 								?>
-								<p class="authors"><a class="button-primary"
-													  rel="noreferrer noopener" target="_blank"
-													  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url ); ?>">
+								<p class="authors">
+									<a class="button-primary"
+										rel="noreferrer noopener" target="_blank"
+										href="<?php echo esc_url( $matomo_button_url ); ?>">
 									<?php
 									if ( 'free' === $matomo_feature['price'] ) {
 										esc_html_e( 'Download', 'matomo' );
 									} else {
-										echo esc_html( $matomo_feature['price'] );
+										?>
+										<span
+											class="dashicons dashicons-cart"
+											<?php if ( ! function_exists( 'wp_get_wp_version' ) || version_compare( wp_get_wp_version(), '7', '<' ) ) { ?>
+												style="vertical-align: middle;"
+											<?php } ?>
+										></span>
+										<?php
+										esc_html_e( 'Start free trial...', 'matomo' );
 									}
 									?>
-								</a>
+									</a>
 								</p>
 								<?php
 							}
 							?>
 						</div>
 					</div>
+					<?php
+						// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $matomo_extra_card_html;
+					?>
 				</div>
 				<?php
 			}
@@ -186,6 +214,21 @@ $matomo_extra_url_params = '&' . http_build_query(
 	}
 
 	$matomo_feature_sections = [
+		[
+			'title'           => 'What\'s New',
+			'class'           => 'matomo-new-plugins',
+			'extra_card_html' => '<span class="matomo-new-marker">' . esc_html__( 'New!', 'matomo' ) . '</span>',
+			'features'        =>
+				[
+					[
+						'name'        => 'Crash Analytics',
+						'description' => 'Detect crashes to improve the user experience, increase conversions and recover revenue. Resolve them with insights to minimise developer hours.',
+						'price'       => '69EUR / 79USD',
+						'url'         => 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
+						'image'       => '',
+					],
+				],
+		],
 		[
 			'title'     => 'Top free plugins',
 			'more_url'  => 'https://plugins.matomo.org/free?wp=1&pk_campaign=WP&pk_source=Plugin',
@@ -213,9 +256,9 @@ $matomo_extra_url_params = '&' . http_build_query(
 	];
 
 	/** @var \WpMatomo\Settings $settings */
-	$matomo_version = (int) explode( '.', $settings->get_global_option( 'core_version' ) )[0];
+	$matomo_version = $settings->get_matomo_major_version();
 
-	matomo_show_tables( $matomo_feature_sections, $matomo_version );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
 
 	echo '<br>';
 
@@ -344,7 +387,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		],
 	];
 
-	matomo_show_tables( $matomo_feature_sections, $matomo_version );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
 
 	?>
 

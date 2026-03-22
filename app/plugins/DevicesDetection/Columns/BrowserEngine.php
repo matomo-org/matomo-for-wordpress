@@ -27,8 +27,6 @@ class BrowserEngine extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return \Piwik\Plugins\DevicesDetection\getBrowserEngineName($value);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

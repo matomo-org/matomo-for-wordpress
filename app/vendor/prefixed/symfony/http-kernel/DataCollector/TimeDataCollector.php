@@ -28,7 +28,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
     {
         $this->kernel = $kernel;
         $this->stopwatch = $stopwatch;
-        $this->data = ['events' => [], 'stopwatch_installed' => false, 'start_time' => 0];
+        $this->data = ['events' => [], 'stopwatch_installed' => \false, 'start_time' => 0];
     }
     /**
      * {@inheritdoc}
@@ -40,14 +40,14 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
         } else {
             $startTime = $request->server->get('REQUEST_TIME_FLOAT');
         }
-        $this->data = ['token' => $request->attributes->get('_stopwatch_token'), 'start_time' => $startTime * 1000, 'events' => [], 'stopwatch_installed' => class_exists(Stopwatch::class, false)];
+        $this->data = ['token' => $request->attributes->get('_stopwatch_token'), 'start_time' => $startTime * 1000, 'events' => [], 'stopwatch_installed' => class_exists(Stopwatch::class, \false)];
     }
     /**
      * {@inheritdoc}
      */
     public function reset()
     {
-        $this->data = ['events' => [], 'stopwatch_installed' => false, 'start_time' => 0];
+        $this->data = ['events' => [], 'stopwatch_installed' => \false, 'start_time' => 0];
         if (null !== $this->stopwatch) {
             $this->stopwatch->reset();
         }

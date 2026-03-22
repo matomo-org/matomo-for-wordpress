@@ -12,6 +12,7 @@ use Piwik\Common;
 use Piwik\DataTable\Renderer;
 use Piwik\DataTable\Simple;
 use Piwik\DataTable;
+use Piwik\Filesystem;
 use Piwik\Period;
 use Piwik\Period\Range;
 use Piwik\Piwik;
@@ -41,58 +42,43 @@ class Csv extends Renderer
      */
     public $lineEnd = "\n";
     /**
-     * 'metadata' columns will be exported, prefixed by 'metadata_'
-     *
-     * @var bool
-     */
-    public $exportMetadata = true;
-    /**
      * Converts the content to unicode so that UTF8 characters (eg. chinese) can be imported in Excel
      *
      * @var bool
      */
-    public $convertToUnicode = true;
-    /**
-     * idSubtable will be exported in a column called 'idsubdatatable'
-     *
-     * @var bool
-     */
-    public $exportIdSubtable = true;
+    public $convertToUnicode = \true;
     /**
      * This string is also hardcoded in archive,sh
      */
     public const NO_DATA_AVAILABLE = 'No data available';
-    private $unsupportedColumns = array();
+    private $unsupportedColumns = [];
     /**
      * Computes the dataTable output and returns the string/binary
      *
-     * @return string
      */
-    public function render()
+    public function render() : string
     {
         $str = $this->renderTable($this->table);
         if (empty($str)) {
             return self::NO_DATA_AVAILABLE;
         }
         $this->renderHeader();
-        $str = $this->convertToUnicode($str);
-        return $str;
+        return $this->convertToUnicode($str);
     }
     /**
      * Enables / Disables unicode converting
      *
      * @param $bool
      */
-    public function setConvertToUnicode($bool)
+    public function setConvertToUnicode(bool $convertToUnicode) : void
     {
-        $this->convertToUnicode = $bool;
+        $this->convertToUnicode = $convertToUnicode;
     }
     /**
      * Sets the column separator
      *
-     * @param $separator
      */
-    public function setSeparator($separator)
+    public function setSeparator(string $separator) : void
     {
         $this->separator = $separator;
     }
@@ -101,9 +87,8 @@ class Csv extends Renderer
      *
      * @param DataTable|array $table
      * @param array $allColumns
-     * @return string
      */
-    protected function renderTable($table, &$allColumns = array())
+    protected function renderTable($table, array &$allColumns = []) : string
     {
         if (is_array($table)) {
             // convert array to DataTable
@@ -119,11 +104,9 @@ class Csv extends Renderer
     /**
      * Computes the output of the given data table array
      *
-     * @param DataTable\Map $table
      * @param array $allColumns
-     * @return string
      */
-    protected function renderDataTableMap($table, &$allColumns = array())
+    protected function renderDataTableMap(DataTable\Map $table, array &$allColumns = []) : string
     {
         $str = '';
         foreach ($table->getDataTables() as $currentLinePrefix => $dataTable) {
@@ -140,44 +123,39 @@ class Csv extends Renderer
             }
         }
         // prepend table key to column list
-        $allColumns = array_merge(array($table->getKeyName() => true), $allColumns);
+        $allColumns = array_merge(array($table->getKeyName() => \true), $allColumns);
         // add header to output string
-        $str = $this->getHeaderLine(array_keys($allColumns)) . $str;
-        return $str;
+        return $this->getHeaderLine(array_keys($allColumns)) . $str;
     }
     /**
      * Converts the output of the given simple data table
      *
      * @param DataTable|Simple $table
      * @param array $allColumns
-     * @return string
      */
-    protected function renderDataTable($table, &$allColumns = array())
+    protected function renderDataTable($table, array &$allColumns = []) : string
     {
         if ($table instanceof Simple) {
             $row = $table->getFirstRow();
-            if ($row !== false) {
+            if ($row !== \false) {
                 $columnNameToValue = $row->getColumns();
                 if (count($columnNameToValue) === 1) {
                     // simple tables should only have one column, the value
-                    $allColumns['value'] = true;
+                    $allColumns['value'] = \true;
                     $value = array_values($columnNameToValue);
-                    $str = 'value' . $this->lineEnd . $this->formatValue($value[0]);
-                    return $str;
+                    return 'value' . $this->lineEnd . $this->formatValue($value[0]);
                 }
             }
         }
         $csv = $this->makeArrayFromDataTable($table, $allColumns);
-        $str = $this->buildCsvString($allColumns, $csv);
-        return $str;
+        return $this->buildCsvString($allColumns, $csv);
     }
     /**
      * Returns the CSV header line for a set of metrics. Will translate columns if desired.
      *
      * @param array $columnMetrics
-     * @return array
      */
-    private function getHeaderLine($columnMetrics)
+    private function getHeaderLine(array $columnMetrics) : string
     {
         foreach ($columnMetrics as $index => $value) {
             if (in_array($value, $this->unsupportedColumns)) {
@@ -201,15 +179,15 @@ class Csv extends Renderer
     public function formatValue($value)
     {
         if (is_string($value) && !is_numeric($value)) {
-            $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-        } elseif ($value === false) {
+            $value = html_entity_decode($value, \ENT_QUOTES, 'UTF-8');
+        } elseif ($value === \false) {
             $value = 0;
         }
         $value = $this->formatFormulas($value);
         if (is_string($value)) {
             $value = str_replace(["\t"], ' ', $value);
             // surround value with double quotes if it contains a double quote or a commonly used separator
-            if (strpos($value, '"') !== false || strpos($value, $this->separator) !== false || strpos($value, ',') !== false || strpos($value, ';') !== false) {
+            if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, $this->lineEnd) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
             }
         }
@@ -226,7 +204,7 @@ class Csv extends Renderer
         // Excel / Libreoffice formulas may start with one of these characters
         $formulaStartsWith = array('=', '+', '-', '@');
         // remove first % sign and if string is still a number, return it as is
-        $valueWithoutFirstPercentSign = $this->removeFirstPercentSign($value);
+        $valueWithoutFirstPercentSign = $this->removeFirstPercentSign((string) $value);
         if (empty($valueWithoutFirstPercentSign) || !is_string($value) || is_numeric($valueWithoutFirstPercentSign)) {
             return $value;
         }
@@ -240,16 +218,16 @@ class Csv extends Renderer
     /**
      * Sends the http headers for csv file
      */
-    protected function renderHeader()
+    protected function renderHeader() : void
     {
         $fileName = Piwik::translate('General_Export');
-        $period = Common::getRequestVar('period', false);
-        $date = Common::getRequestVar('date', false);
+        $period = Common::getRequestVar('period', \false);
+        $date = Common::getRequestVar('date', \false);
         if ($period || $date) {
             // in test cases, there are no request params set
             if ($period === 'range') {
                 $period = new Range($period, $date);
-            } elseif (strpos($date, ',') !== false) {
+            } elseif (strpos($date, ',') !== \false) {
                 $period = new Range('range', $date);
             } else {
                 $period = Period\Factory::build($period, $date);
@@ -259,15 +237,16 @@ class Csv extends Renderer
             $name = !empty($meta['name']) ? $meta['name'] : '';
             $fileName .= ' _ ' . $name . ' _ ' . $prettyDate . '.csv';
         }
+        $fileName = Filesystem::sanitizeFilename($fileName);
         // silent fail otherwise unit tests fail
-        Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), true);
+        Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), \true);
         ProxyHttp::overrideCacheControlHeaders();
     }
     /**
      * Flattens an array of column values so they can be outputted as CSV (which does not support
      * nested structures).
      */
-    private function flattenColumnArray($columns, &$csvRow = array(), $csvColumnNameTemplate = '%s')
+    private function flattenColumnArray(array $columns, array &$csvRow = [], string $csvColumnNameTemplate = '%s') : array
     {
         foreach ($columns as $name => $value) {
             $csvName = sprintf($csvColumnNameTemplate, $this->getCsvColumnName($name));
@@ -291,7 +270,7 @@ class Csv extends Renderer
         }
         return $csvRow;
     }
-    private function getCsvColumnName($name)
+    private function getCsvColumnName(string $name) : string
     {
         if ($this->translateColumnNames) {
             return $this->translateColumnName($name);
@@ -300,11 +279,10 @@ class Csv extends Renderer
         }
     }
     /**
-     * @param $allColumns
-     * @param $csv
-     * @return array
+     * @param array $allColumns
+     * @param array $csv
      */
-    private function buildCsvString($allColumns, $csv)
+    private function buildCsvString(array $allColumns, array $csv) : string
     {
         $str = '';
         // specific case, we have only one column and this column wasn't named properly (indexed by a number)
@@ -325,20 +303,19 @@ class Csv extends Renderer
             $rowStr = substr_replace($rowStr, "", -strlen($this->separator));
             $str .= $rowStr . $this->lineEnd;
         }
-        $str = substr($str, 0, -strlen($this->lineEnd));
-        return $str;
+        return substr($str, 0, -strlen($this->lineEnd));
     }
     /**
      * @param $table
-     * @param $allColumns
+     * @param array $allColumns
      * @return array of csv data
      */
-    private function makeArrayFromDataTable($table, &$allColumns)
+    private function makeArrayFromDataTable($table, array &$allColumns) : array
     {
-        $csv = array();
+        $csv = [];
         foreach ($table->getRows() as $row) {
             $csvRow = $this->flattenColumnArray($row->getColumns());
-            if ($this->exportMetadata) {
+            if (!$this->hideMetadata) {
                 $metadata = $row->getMetadata();
                 foreach ($metadata as $name => $value) {
                     if ($name === 'idsubdatatable_in_db') {
@@ -363,12 +340,12 @@ class Csv extends Renderer
                 if (in_array($name, $this->unsupportedColumns)) {
                     unset($allColumns[$name]);
                 } else {
-                    $allColumns[$name] = true;
+                    $allColumns[$name] = \true;
                 }
             }
-            if ($this->exportIdSubtable) {
+            if (!$this->hideIdSubDatatable && !$this->hideMetadata) {
                 $idsubdatatable = $row->getIdSubDataTable();
-                if ($idsubdatatable !== false && $this->hideIdSubDatatable === false) {
+                if ($idsubdatatable !== \false) {
                     $csvRow['idsubdatatable'] = $idsubdatatable;
                 }
             }
@@ -394,16 +371,16 @@ class Csv extends Renderer
         }
         return $str;
     }
-    /**
-     * @param $value
-     * @return mixed
-     */
-    protected function removeFirstPercentSign($value)
+    protected function removeFirstPercentSign(string $value) : string
     {
-        $needle = '%';
-        $posPercent = strpos($value ?? '', $needle);
-        if ($posPercent !== false) {
-            return substr_replace($value, '', $posPercent, strlen($needle));
+        // remove all null byte chars from the beginning
+        $value = ltrim($value, "\x00");
+        while (0 === strpos($value, '%00')) {
+            $value = ltrim(substr($value, 3), "\x00");
+        }
+        $posPercent = strpos($value, '%');
+        if ($posPercent !== \false) {
+            return substr_replace($value, '', $posPercent, 1);
         }
         return $value;
     }

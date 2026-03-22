@@ -31,6 +31,15 @@ namespace {
          * @var string
          */
         public static $URL = '';
+		public const AI_BOT_USER_AGENT_SUBSTRINGS = [
+			'ChatGPT-User',
+			'MistralAI-User',
+			'Gemini-Deep-Research',
+			'Claude-User',
+			'Perplexity-User',
+			'Google-NotebookLM',
+			'GPTBot',
+	    ];
         /**
          * API Version
          *
@@ -151,7 +160,7 @@ namespace {
             $this->ip = !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : \false;
             $this->acceptLanguage = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : \false;
             $this->userAgent = !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : \false;
-            $this->setClientHints(!empty($_SERVER['HTTP_SEC_CH_UA_MODEL']) ? $_SERVER['HTTP_SEC_CH_UA_MODEL'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION'] : '');
+            $this->setClientHints(!empty($_SERVER['HTTP_SEC_CH_UA_MODEL']) ? $_SERVER['HTTP_SEC_CH_UA_MODEL'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FORM_FACTORS']) ? $_SERVER['HTTP_SEC_CH_UA_FORM_FACTORS'] : '');
             if (!empty($apiUrl)) {
                 self::$URL = $apiUrl;
             }
@@ -469,10 +478,12 @@ namespace {
          *                                      all brands with the structure
          *                                      [['brand' => 'Chrome', 'version' => '10.0.2'], ['brand' => '...]
          * @param string $uaFullVersion  Value of the header 'HTTP_SEC_CH_UA_FULL_VERSION'
+         * @param string|array<string> $formFactors  Value of the header 'HTTP_SEC_CH_UA_FORM_FACTORS'
+         *      or an array containing all form factors with structure ["Desktop", "XR"]
          *
          * @return $this
          */
-        public function setClientHints($model = '', $platform = '', $platformVersion = '', $fullVersionList = '', $uaFullVersion = '')
+        public function setClientHints($model = '', $platform = '', $platformVersion = '', $fullVersionList = '', $uaFullVersion = '', $formFactors = '')
         {
             if (\is_string($fullVersionList)) {
                 $reg = '/^"([^"]+)"; ?v="([^"]+)"(?:, )?/';
@@ -485,7 +496,15 @@ namespace {
             } elseif (!\is_array($fullVersionList)) {
                 $fullVersionList = [];
             }
-            $this->clientHints = \array_filter(['model' => $model, 'platform' => $platform, 'platformVersion' => $platformVersion, 'uaFullVersion' => $uaFullVersion, 'fullVersionList' => $fullVersionList]);
+            if (\is_string($formFactors)) {
+                $formFactors = \explode(',', $formFactors);
+                $formFactors = \array_filter(\array_map(function ($item) {
+                    return \trim($item, '" ');
+                }, $formFactors));
+            } elseif (!\is_array($formFactors)) {
+                $formFactors = [];
+            }
+            $this->clientHints = \array_filter(['model' => $model, 'platform' => $platform, 'platformVersion' => $platformVersion, 'uaFullVersion' => $uaFullVersion, 'fullVersionList' => $fullVersionList, 'formFactors' => $formFactors]);
             return $this;
         }
         /**
@@ -563,7 +582,7 @@ namespace {
             $this->doBulkRequests = \true;
         }
         /**
-         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored  
+         * Disables the bulk request feature. Make sure to call `doBulkTrack()` before disabling it if you have stored
          * tracking actions previously as this method won't be sending any previously stored actions before disabling it.
          *
          */
@@ -640,7 +659,24 @@ namespace {
             $url = $this->getUrlTrackPageView($documentTitle);
             return $this->sendRequest($url);
         }
-        /**
+		/**
+		 * If the current user agent belongs to an AI agent bot, tracks a pageview action.
+		 *
+		 * This method should be used server side to track AI bots that do not execute
+		 * JavaScript.
+		 *
+		 * @return mixed Response string or true if using bulk requests.
+		 */
+		public function doTrackPageViewIfAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null)
+		{
+			if (!self::isUserAgentAIBot($this->userAgent)) {
+				return null;
+			}
+
+			$url = $this->getUrlTrackAIBot($httpStatus, $responseSizeBytes, $serverTimeMs, $source);
+			return $this->sendRequest($url);
+		}
+		/**
          * Override PageView id for every use of `doTrackPageView()`. Do not use this if you call `doTrackPageView()`
          * multiple times during tracking (if, for example, you are tracking a single page application).
          *
@@ -655,7 +691,7 @@ namespace {
          * Returns the PageView id. If the id was manually set using `setPageViewId()`, that id will be returned.
          * If the id was not set manually, the id that was automatically generated in last `doTrackPageView()` will
          * be returned. If there was no last page view, this will be false.
-         * 
+         *
          * @return mixed The PageView id as string or false if there is none yet.
          */
         public function getPageviewId()
@@ -945,6 +981,39 @@ namespace {
             }
             return \str_replace(',', '.', $value);
         }
+		/**
+		 * Builds a URL to track a request from an AI bot.
+		 *
+		 * @param int|null $httpStatus the request's HTTP status code, if it is known.
+		 * @param int|null $responseSizeBytes the size of the response sent to the AI bot, if known.
+		 * @param int|null $serverTimeMs the number of milliseconds it took to process the request, if known.
+		 * @param string|null $source
+		 * @return string
+		 */
+		public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): string
+		{
+			$url = $this->getRequest($this->idSite);
+
+			$url .= '&recMode=1';
+
+			if (!empty($httpStatus)) {
+				$url .= '&http_status=' . $httpStatus;
+			}
+
+			if (!empty($responseSizeBytes)) {
+				$url .= '&bw_bytes=' . $responseSizeBytes;
+			}
+
+			if (!empty($serverTimeMs)) {
+				$url .= '&pf_srv=' . $serverTimeMs;
+			}
+
+			if (!empty($source)) {
+				$url .= '&source=' . rawurlencode($source);
+			}
+
+			return $url;
+		}
         /**
          * Returns URL used to track Ecommerce Cart updates
          * Calling this function will reinitializes the property ecommerceItems to empty array
@@ -1997,7 +2066,26 @@ namespace {
                 }
             }
         }
-    }
+		/**
+		 * Returns true if the given user agent belongs to a known AI bot.
+		 *
+		 * @param string $userAgent
+		 * @return bool
+		 */
+		public static function isUserAgentAIBot(string $userAgent): bool
+		{
+			if (empty($userAgent)) {
+				return false;
+			}
+
+			foreach (self::AI_BOT_USER_AGENT_SUBSTRINGS as $substring) {
+				if (stripos($userAgent, $substring) !== false) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
     /**
      * Helper function to quickly generate the URL to track a page view.
      *

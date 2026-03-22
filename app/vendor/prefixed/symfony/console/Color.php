@@ -25,7 +25,7 @@ final class Color
     public function __construct(string $foreground = '', string $background = '', array $options = [])
     {
         $this->foreground = $this->parseColor($foreground);
-        $this->background = $this->parseColor($background, true);
+        $this->background = $this->parseColor($background, \true);
         foreach ($options as $option) {
             if (!isset(self::AVAILABLE_OPTIONS[$option])) {
                 throw new InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s).', $option, implode(', ', array_keys(self::AVAILABLE_OPTIONS))));
@@ -71,7 +71,7 @@ final class Color
         }
         return sprintf("\x1b[%sm", implode(';', $unsetCodes));
     }
-    private function parseColor(string $color, bool $background = false) : string
+    private function parseColor(string $color, bool $background = \false) : string
     {
         if ('' === $color) {
             return '';

@@ -49,7 +49,9 @@ $GLOBALS['_PEAR_default_error_options'] = \E_USER_NOTICE;
 $GLOBALS['_PEAR_destructor_object_list'] = array();
 $GLOBALS['_PEAR_shutdown_funcs'] = array();
 $GLOBALS['_PEAR_error_handler_stack'] = array();
-@\ini_set('track_errors', \true);
+if (\function_exists('ini_set')) {
+    @\ini_set('track_errors', \true);
+}
 /**
  * Base class for other PEAR classes.  Provides rudimentary
  * emulation of destructors.
@@ -196,14 +198,22 @@ class PEAR
     public function __call($method, $arguments)
     {
         if (!isset(self::$bivalentMethods[$method])) {
-            \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
+            if (\PHP_VERSION_ID < 70000) {
+                \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
+            } else {
+                throw new \Error('Call to undefined method PEAR::' . $method . '()');
+            }
         }
         return \call_user_func_array(array(__CLASS__, '_' . $method), \array_merge(array($this), $arguments));
     }
     public static function __callStatic($method, $arguments)
     {
         if (!isset(self::$bivalentMethods[$method])) {
-            \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
+            if (\PHP_VERSION_ID < 70000) {
+                \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
+            } else {
+                throw new \Error('Call to undefined method PEAR::' . $method . '()');
+            }
         }
         return \call_user_func_array(array(__CLASS__, '_' . $method), \array_merge(array(null), $arguments));
     }

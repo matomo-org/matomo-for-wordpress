@@ -33,7 +33,7 @@ describe('Tracking', () => {
     await BlogPostPage.open();
     await BlogPostPage.waitForTrackingRequest();
 
-    await browser.pause(1500); // just to make sure everything gets tracked
+    await browser.pause(3000); // just to make sure everything gets tracked
 
     const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',

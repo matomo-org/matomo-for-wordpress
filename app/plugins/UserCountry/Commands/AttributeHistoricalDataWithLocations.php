@@ -50,7 +50,7 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
      * @var int
      */
     private $processedPercent = 0;
-    public function __construct(RawLogDao $dao = null)
+    public function __construct(?RawLogDao $dao = null)
     {
         parent::__construct();
         $this->dao = $dao ?: new RawLogDao();
@@ -65,9 +65,6 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
         $this->addOptionalValueOption(self::SEGMENT_LIMIT_OPTION, null, 'Number of visits to process at a time.', self::SEGMENT_LIMIT_OPTION_DEFAULT);
         $this->addNoValueOption(self::FORCE_OPTION, null, "Force geolocation, even if the requested provider does not appear to work. It is not " . "recommended to use this option.");
     }
-    /**
-     * @return int
-     */
     protected function doExecute() : int
     {
         $input = $this->getInput();
@@ -137,7 +134,7 @@ class AttributeHistoricalDataWithLocations extends ConsoleCommand
             throw new \InvalidArgumentException("The provider '{$providerId}' is not currently available, please make sure it is configured correctly.");
         }
         $isWorkingOrErrorMessage = $usedProvider->isWorking();
-        if ($isWorkingOrErrorMessage !== true) {
+        if ($isWorkingOrErrorMessage !== \true) {
             $errorMessage = "The provider '{$providerId}' does not appear to be working correctly. Details: {$isWorkingOrErrorMessage}";
             $forceGeolocation = $input->getOption(self::FORCE_OPTION);
             if ($forceGeolocation) {

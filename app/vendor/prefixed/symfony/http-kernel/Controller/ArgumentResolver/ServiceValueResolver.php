@@ -33,15 +33,15 @@ final class ServiceValueResolver implements ArgumentValueResolverInterface
     public function supports(Request $request, ArgumentMetadata $argument) : bool
     {
         $controller = $request->attributes->get('_controller');
-        if (\is_array($controller) && \is_callable($controller, true) && \is_string($controller[0])) {
+        if (\is_array($controller) && \is_callable($controller, \true) && \is_string($controller[0])) {
             $controller = $controller[0] . '::' . $controller[1];
         } elseif (!\is_string($controller) || '' === $controller) {
-            return false;
+            return \false;
         }
         if ('\\' === $controller[0]) {
             $controller = ltrim($controller, '\\');
         }
-        if (!$this->container->has($controller) && false !== ($i = strrpos($controller, ':'))) {
+        if (!$this->container->has($controller) && \false !== ($i = strrpos($controller, ':'))) {
             $controller = substr($controller, 0, $i) . strtolower(substr($controller, $i));
         }
         return $this->container->has($controller) && $this->container->get($controller)->has($argument->getName());
@@ -70,7 +70,7 @@ final class ServiceValueResolver implements ArgumentValueResolverInterface
                 $message = sprintf('Cannot resolve %s: %s', $what, $message);
             }
             $r = new \ReflectionProperty($e, 'message');
-            $r->setAccessible(true);
+            $r->setAccessible(\true);
             $r->setValue($e, $message);
             throw $e;
         }

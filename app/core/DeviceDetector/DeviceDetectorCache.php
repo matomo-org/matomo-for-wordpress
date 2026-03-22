@@ -35,13 +35,13 @@ class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
     public function fetch($id)
     {
         if (empty($id)) {
-            return false;
+            return \false;
         }
         if (array_key_exists($id, self::$staticCache)) {
             return self::$staticCache[$id];
         }
         if (!$this->cache->contains($id)) {
-            return false;
+            return \false;
         }
         return $this->cache->fetch($id);
     }
@@ -56,7 +56,7 @@ class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
     public function save($id, $content, $ttl = 0) : bool
     {
         if (empty($id)) {
-            return false;
+            return \false;
         }
         self::$staticCache[$id] = $content;
         return (bool) $this->cache->save($id, $content, $this->ttl);
@@ -68,7 +68,7 @@ class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
     public function delete($id) : bool
     {
         if (empty($id)) {
-            return false;
+            return \false;
         }
         unset(self::$staticCache[$id]);
         return (bool) $this->cache->delete($id);

@@ -16,7 +16,7 @@ class JsTestPluginTrackerFiles extends \Piwik\Plugins\CustomJsTracker\TrackingCo
     public function __construct()
     {
         parent::__construct();
-        $this->ignoreMinified = true;
+        $this->ignoreMinified = \true;
     }
     protected function getDirectoriesToLook()
     {
@@ -39,6 +39,6 @@ class JsTestPluginTrackerFiles extends \Piwik\Plugins\CustomJsTracker\TrackingCo
     }
     protected function isPluginActivated($pluginName)
     {
-        return true;
+        return \true;
     }
 }

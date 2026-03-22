@@ -32,7 +32,7 @@ class Factory
      *
      * @param string $section
      * @param string $key
-     * @param string $value
+     * @param scalar|scalar[] $value
      * @return Set
      */
     public function set($section, $key, $value)

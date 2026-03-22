@@ -28,12 +28,14 @@
         v-bind="{
           formField,
           ...formField,
+          id: fieldId,
           modelValue: processedModelValue,
           modelModifiers,
           availableOptions,
           ...extraChildComponentParams,
         }"
         @update:modelValue="onChange($event)"
+        @check:isValid="onCheckIsValid($event)"
       >
       </component>
     </div>
@@ -70,6 +72,15 @@
           <span>{{ defaultValuePrettyTruncated }}</span>
         </span>
       </div>
+      <Notification
+        v-if="isPrivacyPolicyControlled"
+        :noclear="true"
+        context="info"
+      >
+        {{ translate('PrivacyManager_PolicyControlledSetting') }} <a :href="privacyPolicyLink">
+          {{ translate('PrivacyManager_ViewPrivacyComplianceOverview') }}
+        </a>
+      </Notification>
     </div>
   </div>
 </template>
@@ -83,7 +94,7 @@ import {
   Component,
   markRaw,
 } from 'vue';
-import { useExternalPluginComponent } from 'CoreHome';
+import { useExternalPluginComponent, MatomoUrl, Notification } from 'CoreHome';
 import FieldCheckbox from './FieldCheckbox.vue';
 import FieldCheckboxArray from './FieldCheckboxArray.vue';
 import FieldExpandableSelect, {
@@ -104,8 +115,9 @@ import FieldTextArray from './FieldTextArray.vue';
 import FieldTextarea from './FieldTextarea.vue';
 import FieldTextareaArray from './FieldTextareaArray.vue';
 import { processCheckboxAndRadioAvailableValues } from './utilities';
+import FieldPassword from './FieldPassword.vue';
 
-const TEXT_CONTROLS = ['password', 'url', 'search', 'email'];
+const TEXT_CONTROLS = ['url', 'search', 'email'];
 const CONTROLS_SUPPORTING_ARRAY = ['textarea', 'checkbox', 'text'];
 const CONTROL_TO_COMPONENT_MAP: Record<string, string> = {
   checkbox: 'FieldCheckbox',
@@ -116,6 +128,7 @@ const CONTROL_TO_COMPONENT_MAP: Record<string, string> = {
   multiselect: 'FieldSelect',
   multituple: 'FieldMultituple',
   number: 'FieldNumber',
+  password: 'FieldPassword',
   radio: 'FieldRadio',
   select: 'FieldSelect',
   site: 'FieldSite',
@@ -166,8 +179,9 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'check:isValid'],
   components: {
+    Notification,
     FieldCheckbox,
     FieldCheckboxArray,
     FieldExpandableSelect,
@@ -183,6 +197,7 @@ export default defineComponent({
     FieldTextArray,
     FieldTextarea,
     FieldTextareaArray,
+    FieldPassword,
   },
   setup(props) {
     const inlineHelpNode = ref<HTMLElement|null>(null);
@@ -256,7 +271,7 @@ export default defineComponent({
 
       let control = CONTROL_TO_COMPONENT_MAP[uiControl];
       if (TEXT_CONTROLS.indexOf(uiControl) !== -1) {
-        control = 'FieldText'; // we use same template for text and password both
+        control = 'FieldText'; // we use same field for url, email etc.
       }
 
       if (this.formField.type === 'array' && CONTROLS_SUPPORTING_ARRAY.indexOf(uiControl) !== -1) {
@@ -382,10 +397,30 @@ export default defineComponent({
       const inlineHelpSlot = this.$slots['inline-help']();
       return !!inlineHelpSlot?.[0]?.children?.length;
     },
+    fieldId() {
+      return this.formField.id ? this.formField.id : this.formField.name;
+    },
+    getExtraMetadataIdSite() {
+      return this.formField.extraMetadata?.idSite;
+    },
+    isPrivacyPolicyControlled() {
+      return this.formField.extraMetadata?.compliancePolicyControlled !== undefined;
+    },
+    privacyPolicyLink() {
+      return `?${MatomoUrl.stringify({
+        ...MatomoUrl.urlParsed.value,
+        module: 'PrivacyManager',
+        action: 'compliance',
+        idSite: this.getExtraMetadataIdSite ?? 'all',
+      })}`;
+    },
   },
   methods: {
     onChange(newValue: unknown) {
       this.$emit('update:modelValue', newValue);
+    },
+    onCheckIsValid(isValid: boolean) {
+      this.$emit('check:isValid', isValid);
     },
   },
 });

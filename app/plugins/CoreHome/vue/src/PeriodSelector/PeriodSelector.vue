@@ -10,7 +10,11 @@
     ref="root"
     class="periodSelector piwikSelector"
     :class="{'periodSelector-withPrevNext': canShowMovePeriod}"
-    v-expand-on-click="{ expander: 'title' }"
+    v-expand-on-click="{
+      expander: 'title',
+      onExpand: onExpand,
+      onClosed: onClosed,
+    }"
   >
     <button
       v-if="canShowMovePeriod"
@@ -21,16 +25,17 @@
       <span class="icon-chevron-left"></span>
     </button>
 
-    <a
+    <button
       ref="title"
       id="date"
       class="title"
-      tabindex="-1"
+      tabindex="4"
+      v-tooltips
       :title="translate('General_ChooseDate', currentlyViewingText)"
     >
       <span class="icon icon-calendar" />
       {{ currentlyViewingText }}
-    </a>
+    </button>
 
     <div
       id="periodMore"
@@ -196,6 +201,7 @@ import {
   datesAreInTheSamePeriod,
 } from '../Periods';
 import MatomoUrl from '../MatomoUrl/MatomoUrl';
+import Tooltips from '../Tooltips/Tooltips';
 
 const Field = useExternalPluginComponent('CorePluginsAdmin', 'Field');
 
@@ -255,6 +261,7 @@ export default defineComponent({
   },
   directives: {
     ExpandOnClick,
+    Tooltips,
   },
   data(): PeriodSelectorState {
     const selectedPeriod = MatomoUrl.parsed.value.period as string;
@@ -433,6 +440,18 @@ export default defineComponent({
     },
   },
   methods: {
+    onExpand(event: MouseEvent|KeyboardEvent) {
+      const isKeyboardEvent = event.detail === 0;
+      if (isKeyboardEvent) {
+        window.$(this.$refs.root as HTMLElement).find('.ui-datepicker-month').focus();
+      }
+    },
+    onClosed(event: MouseEvent|KeyboardEvent) {
+      const isKeyboardEvent = event.detail === 0;
+      if (isKeyboardEvent) {
+        window.$(this.$refs.title as HTMLElement).focus();
+      }
+    },
     handleZIndexPositionRelativeCompareDropdownIssue() {
       const $element = window.$(this.$refs.root as HTMLElement);
       $element.on('focus', '#comparePeriodToDropdown .select-dropdown', () => {

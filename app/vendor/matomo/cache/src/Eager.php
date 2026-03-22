@@ -33,7 +33,7 @@ class Eager implements \Matomo\Cache\Cache
     private $storage;
     private $storageId;
     private $content = array();
-    private $isDirty = false;
+    private $isDirty = \false;
     /**
      * Loads the cache entries from the given backend using the given storageId.
      *
@@ -84,8 +84,8 @@ class Eager implements \Matomo\Cache\Cache
             // for performance reasons we do currently not recursively search whether any array contains an object.
         }
         $this->content[$id] = $content;
-        $this->isDirty = true;
-        return true;
+        $this->isDirty = \true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -93,11 +93,11 @@ class Eager implements \Matomo\Cache\Cache
     public function delete($id)
     {
         if ($this->contains($id)) {
-            $this->isDirty = true;
+            $this->isDirty = \true;
             unset($this->content[$id]);
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}
@@ -106,8 +106,8 @@ class Eager implements \Matomo\Cache\Cache
     {
         $this->storage->doDelete($this->storageId);
         $this->content = array();
-        $this->isDirty = false;
-        return true;
+        $this->isDirty = \false;
+        return \true;
     }
     /**
      * Will persist all previously made changes if there were any.

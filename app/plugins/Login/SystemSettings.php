@@ -13,6 +13,7 @@ use Piwik\Piwik;
 use Piwik\Settings\Setting;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\IpRanges;
+use Piwik\Auth\PasswordStrength;
 /**
  * Defines Settings for Login.
  */
@@ -28,6 +29,8 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     public $maxFailedLoginsPerMinutes;
     /** @var Setting */
     public $loginAttemptsTimeRange;
+    /** @var Setting */
+    public $enablePasswordStrengthCheck;
     protected function init()
     {
         $this->enableBruteForceDetection = $this->createEnableBruteForceDetection();
@@ -35,10 +38,20 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
         $this->loginAttemptsTimeRange = $this->createLoginAttemptsTimeRange();
         $this->blacklistedBruteForceIps = $this->createBlacklistedBruteForceIps();
         $this->whitelisteBruteForceIps = $this->createWhitelisteBruteForceIps();
+        $this->enablePasswordStrengthCheck = $this->createEnablePasswordStrengthCheck();
+    }
+    private function createEnablePasswordStrengthCheck() : Setting
+    {
+        return $this->makeSetting('enablePasswordStrengthCheck', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $field->title = Piwik::translate('Login_SettingPasswordStrengthCheck');
+            $PasswordStrengthChecker = new PasswordStrength($featureEnabled = \true);
+            $field->inlineHelp = Piwik::translate('Login_SettingPasswordStrengthCheckHelp', [$PasswordStrengthChecker->getRulesAsHtmlList()]);
+            $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
+        });
     }
     private function createEnableBruteForceDetection()
     {
-        return $this->makeSetting('enableBruteForceDetection', $default = true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        return $this->makeSetting('enableBruteForceDetection', $default = \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('Login_SettingBruteForceEnable');
             $field->description = Piwik::translate('Login_SettingBruteForceEnableHelp');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
@@ -107,11 +120,11 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     private function isIpInList($ipAddress, $ips)
     {
         if (empty($ipAddress)) {
-            return false;
+            return \false;
         }
         $ip = IP::fromStringIP($ipAddress);
         if (empty($ips)) {
-            return false;
+            return \false;
         }
         return $ip->isInRanges($ips);
     }

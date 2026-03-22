@@ -43,9 +43,9 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
     public function extract($pathExtracted)
     {
         $file = @gzopen($this->filename, 'r');
-        if ($file === false) {
+        if ($file === \false) {
             $this->error = "gzopen failed";
-            return false;
+            return \false;
         }
         $output = fopen($pathExtracted, 'w');
         while (!feof($file)) {
@@ -53,11 +53,11 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
         }
         fclose($output);
         $success = gzclose($file);
-        if (false === $success) {
+        if (\false === $success) {
             $this->error = "gzclose failed";
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Get error status string for the latest error.

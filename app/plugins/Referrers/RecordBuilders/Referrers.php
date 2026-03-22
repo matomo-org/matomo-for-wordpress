@@ -34,7 +34,7 @@ class Referrers extends RecordBuilder
     }
     public function getRecordMetadata(ArchiveProcessor $archiveProcessor) : array
     {
-        return [Record::make(Record::TYPE_BLOB, Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::REFERRER_TYPE_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_URLS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME, true)->setMultiplePeriodTransform(function (float $value, array $counts) {
+        return [Record::make(Record::TYPE_BLOB, Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_BLOB, Archiver::REFERRER_TYPE_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SEARCH_ENGINES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::SOCIAL_NETWORKS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::KEYWORDS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::CAMPAIGNS_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME), Record::make(Record::TYPE_NUMERIC, Archiver::METRIC_DISTINCT_URLS_RECORD_NAME)->setIsCountOfBlobRecordRows(Archiver::WEBSITES_RECORD_NAME, \true)->setMultiplePeriodTransform(function (float $value, array $counts) {
             return $value - $counts['level0'];
         })];
     }
@@ -49,10 +49,9 @@ class Referrers extends RecordBuilder
         $this->aggregateFromVisits($logAggregator, $records, $distinctUrls, ["referer_type", "referer_name", "referer_keyword", "referer_url"]);
         $this->aggregateFromConversions($logAggregator, $records, ["referer_type", "referer_name", "referer_keyword"]);
         $numericRecords = [Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME => count($records[Archiver::SEARCH_ENGINES_RECORD_NAME]->getRows()), Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME => count($records[Archiver::SOCIAL_NETWORKS_RECORD_NAME]->getRows()), Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME => count($records[Archiver::KEYWORDS_RECORD_NAME]->getRows()), Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME => count($records[Archiver::CAMPAIGNS_RECORD_NAME]->getRows()), Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME => count($records[Archiver::WEBSITES_RECORD_NAME]->getRows()), Archiver::METRIC_DISTINCT_URLS_RECORD_NAME => count($distinctUrls)];
-        $records = array_merge($records, $numericRecords);
-        return $records;
+        return array_merge($records, $numericRecords);
     }
-    protected function getRecordNames()
+    protected function getRecordNames() : array
     {
         return [Archiver::REFERRER_TYPE_RECORD_NAME, Archiver::KEYWORDS_RECORD_NAME, Archiver::SEARCH_ENGINES_RECORD_NAME, Archiver::SOCIAL_NETWORKS_RECORD_NAME, Archiver::WEBSITES_RECORD_NAME, Archiver::CAMPAIGNS_RECORD_NAME];
     }
@@ -92,12 +91,15 @@ class Referrers extends RecordBuilder
                 $topLevelRow = $reports[Archiver::SOCIAL_NETWORKS_RECORD_NAME]->sumRowWithLabel($row['referer_name'], $columns);
                 $topLevelRow->sumRowWithLabelToSubtable($row['referer_url'], $columns);
                 break;
+            case Common::REFERRER_TYPE_AI_ASSISTANT:
+                // Handled in AIReferrers record builder, kept here only for the referrer type report
+                break;
             case Common::REFERRER_TYPE_WEBSITE:
                 $topLevelRow = $reports[Archiver::WEBSITES_RECORD_NAME]->sumRowWithLabel($row['referer_name'], $columns);
                 $topLevelRow->sumRowWithLabelToSubtable($row['referer_url'], $columns);
                 $urlHash = substr(md5($row['referer_url']), 0, 10);
                 if (!isset($distinctUrls[$urlHash])) {
-                    $distinctUrls[$urlHash] = true;
+                    $distinctUrls[$urlHash] = \true;
                 }
                 break;
             case Common::REFERRER_TYPE_CAMPAIGN:
@@ -138,7 +140,7 @@ class Referrers extends RecordBuilder
      */
     protected function aggregateConversionRow(array $row, array $reports, array $columns) : bool
     {
-        $skipAggregateByType = false;
+        $skipAggregateByType = \false;
         switch ($row['referer_type']) {
             case Common::REFERRER_TYPE_SEARCH_ENGINE:
                 if (empty($row['referer_keyword'])) {
@@ -149,6 +151,9 @@ class Referrers extends RecordBuilder
                 break;
             case Common::REFERRER_TYPE_SOCIAL_NETWORK:
                 $reports[Archiver::SOCIAL_NETWORKS_RECORD_NAME]->sumRowWithLabel($row['referer_name'], $columns);
+                break;
+            case Common::REFERRER_TYPE_AI_ASSISTANT:
+                // Handled in AIReferrers record builder
                 break;
             case Common::REFERRER_TYPE_WEBSITE:
                 $reports[Archiver::WEBSITES_RECORD_NAME]->sumRowWithLabel($row['referer_name'], $columns);
@@ -165,7 +170,7 @@ class Referrers extends RecordBuilder
             default:
                 // The referer type is user submitted for goal conversions, we ignore any malformed value
                 // Continue to the next while iteration
-                $skipAggregateByType = true;
+                $skipAggregateByType = \true;
                 break;
         }
         return $skipAggregateByType;

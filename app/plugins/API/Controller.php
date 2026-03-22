@@ -11,8 +11,10 @@ namespace Piwik\Plugins\API;
 use Piwik\API\DocumentationGenerator;
 use Piwik\API\Proxy;
 use Piwik\API\Request;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugins\API\Renderer\Original;
 use Piwik\Url;
@@ -25,10 +27,9 @@ class Controller extends \Piwik\Plugin\Controller
 {
     public function index()
     {
-        $tokenAuth = Common::getRequestVar('token_auth', 'anonymous', 'string');
-        $format = Common::getRequestVar('format', false);
-        $serialize = Common::getRequestVar('serialize', false);
-        $token = 'token_auth=' . $tokenAuth;
+        $tokenAuth = StaticContainer::get(AuthenticationToken::class)->getAuthToken() ?: 'anonymous';
+        $format = Common::getRequestVar('format', \false);
+        $serialize = Common::getRequestVar('serialize', \false);
         // when calling the API through http, we limit the number of returned results
         if (!isset($_GET['filter_limit'])) {
             if (isset($_POST['filter_limit'])) {
@@ -37,13 +38,13 @@ class Controller extends \Piwik\Plugin\Controller
                 $_GET['filter_limit'] = Config::getInstance()->General['API_datatable_default_limit'];
             }
         }
-        $request = new Request($token);
+        $request = new Request(['token_auth' => $tokenAuth]);
         $response = $request->process();
         if (is_array($response)) {
             if ($format == 'original' && $serialize != 1) {
                 Original::sendPlainTextHeader();
             }
-            $response = var_export($response, true);
+            $response = var_export($response, \true);
         }
         return $response;
     }
@@ -51,12 +52,17 @@ class Controller extends \Piwik\Plugin\Controller
     {
         Piwik::checkUserHasSomeViewAccess();
         $ApiDocumentation = new DocumentationGenerator();
-        $prefixUrls = Common::getRequestVar('prefixUrl', 'https://demo.matomo.org/', 'string');
-        $hostname = parse_url($prefixUrls, PHP_URL_HOST);
-        if (empty($hostname) || !UrlHelper::isLookLikeUrl($prefixUrls) || strpos($prefixUrls, 'http') !== 0 || !Url::isValidHost($hostname)) {
+        $prefixUrls = Common::getRequestVar('prefixUrl', 'https://demo.matomo.cloud/', 'string');
+        $parsedUrl = parse_url($prefixUrls);
+        if (empty($parsedUrl['host']) || !UrlHelper::isLookLikeUrl($prefixUrls) || strpos($prefixUrls, 'http') !== 0 || !Url::isValidHost($parsedUrl['host'])) {
             $prefixUrls = '';
+        } else {
+            // We put together the url based on the parsed parameters manually to ensure it might not contain unexpected locations
+            // unescaped slashes in username or password part for example have unexpected results in browsers
+            unset($parsedUrl['query'], $parsedUrl['fragment']);
+            $prefixUrls = UrlHelper::getParseUrlReverse($parsedUrl);
         }
-        return $ApiDocumentation->getApiDocumentationAsStringForDeveloperReference($outputExampleUrls = true, $prefixUrls);
+        return $ApiDocumentation->getApiDocumentationAsStringForDeveloperReference($outputExampleUrls = \true, $prefixUrls);
     }
     public function listAllAPI()
     {

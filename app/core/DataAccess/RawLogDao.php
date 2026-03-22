@@ -28,7 +28,7 @@ class RawLogDao
      * @var LogTablesProvider
      */
     private $logTablesProvider;
-    public function __construct(DimensionMetadataProvider $provider = null, LogTablesProvider $logTablesProvider = null)
+    public function __construct(?DimensionMetadataProvider $provider = null, ?LogTablesProvider $logTablesProvider = null)
     {
         $this->dimensionMetadataProvider = $provider ?: StaticContainer::get('Piwik\\Plugin\\Dimension\\DimensionMetadataProvider');
         $this->logTablesProvider = $logTablesProvider ?: StaticContainer::get('Piwik\\Plugin\\LogTablesProvider');
@@ -58,7 +58,7 @@ class RawLogDao
      */
     public function countVisitsWithDatesLimit($from, $to)
     {
-        $sql = "SELECT COUNT(*) AS num_rows" . " FROM " . Common::prefixTable('log_visit') . " WHERE visit_last_action_time >= ? AND visit_last_action_time < ?";
+        $sql = "SELECT COUNT(*) AS num_rows" . " FROM `" . Common::prefixTable('log_visit') . "`" . " WHERE visit_last_action_time >= ? AND visit_last_action_time < ?";
         $bind = array($from, $to);
         return (int) Db::fetchOne($sql, $bind);
     }
@@ -111,7 +111,7 @@ class RawLogDao
                 return array_merge(array($lastId), $bind);
             };
         }
-        list($query, $bind) = $this->createLogIterationQuery($logTable, $idField, $fields, $conditions, $iterationStep);
+        [$query, $bind] = $this->createLogIterationQuery($logTable, $idField, $fields, $conditions, $iterationStep);
         do {
             $rows = Db::fetchAll($query, call_user_func($bindFunction, $bind, $lastId));
             if (!empty($rows)) {
@@ -153,10 +153,10 @@ class RawLogDao
         $max_rows_per_query = PiwikConfig::getInstance()->Deletelogs['delete_logs_unused_actions_max_rows_per_query'];
         $this->createTempTableForStoringUsedActions();
         // do large insert (inserting everything before maxIds) w/o locking tables...
-        $this->insertActionsToKeep($maxIds, $deleteOlderThanMax = true, $max_rows_per_query);
+        $this->insertActionsToKeep($maxIds, $deleteOlderThanMax = \true, $max_rows_per_query);
         // ... then do small insert w/ locked tables to minimize the amount of time tables are locked.
         $this->lockLogTables();
-        $this->insertActionsToKeep($maxIds, $deleteOlderThanMax = false, $max_rows_per_query);
+        $this->insertActionsToKeep($maxIds, $deleteOlderThanMax = \false, $max_rows_per_query);
         // delete before unlocking tables so there's no chance a new log row that references an
         // unused action will be inserted.
         $this->deleteUnusedActions();
@@ -173,7 +173,7 @@ class RawLogDao
      */
     public function hasSiteVisitsBetweenTimeframe($fromDateTime, $toDateTime, $idSite)
     {
-        $sites = Db::fetchOne("SELECT 1\n                FROM " . Common::prefixTable('log_visit') . "\n                WHERE idsite = ?\n                AND visit_last_action_time >= ?\n                AND visit_last_action_time <= ?\n                LIMIT 1", array($idSite, $fromDateTime, $toDateTime));
+        $sites = Db::fetchOne("SELECT 1\n                FROM `" . Common::prefixTable('log_visit') . "`\n                WHERE idsite = ?\n                AND visit_last_action_time >= ?\n                AND visit_last_action_time <= ?\n                LIMIT 1", array($idSite, $fromDateTime, $toDateTime));
         return (bool) $sites;
     }
     /**
@@ -217,7 +217,7 @@ class RawLogDao
             $parts[] = "{$idField} > ?";
         }
         foreach ($conditions as $condition) {
-            list($column, $operator, $value) = $condition;
+            [$column, $operator, $value] = $condition;
             if (is_array($value)) {
                 $parts[] = "{$column} IN (" . Common::getSqlStringFieldsArray($value) . ")";
                 $bind = array_merge($bind, $value);
@@ -236,10 +236,10 @@ class RawLogDao
     private function getInFieldExpressionWithInts($idVisits)
     {
         $sql = "(";
-        $isFirst = true;
+        $isFirst = \true;
         foreach ($idVisits as $idVisit) {
             if ($isFirst) {
-                $isFirst = false;
+                $isFirst = \false;
             } else {
                 $sql .= ', ';
             }
@@ -255,7 +255,7 @@ class RawLogDao
         $result = array();
         foreach ($tables as $table) {
             $idCol = $idColumns[$table];
-            $result[$table] = Db::fetchOne("SELECT MAX({$idCol}) FROM " . Common::prefixTable($table));
+            $result[$table] = Db::fetchOne("SELECT MAX({$idCol}) FROM `" . Common::prefixTable($table) . "`");
         }
         return $result;
     }
@@ -270,21 +270,21 @@ class RawLogDao
         Db::query($sql);
     }
     // protected for testing purposes
-    protected function insertActionsToKeep($maxIds, $olderThan = true, $insertIntoTempIterationStep = 100000)
+    protected function insertActionsToKeep($maxIds, $olderThan = \true, $insertIntoTempIterationStep = 100000)
     {
         $tempTableName = Common::prefixTable(self::DELETE_UNUSED_ACTIONS_TEMP_TABLE_NAME);
         $idColumns = $this->getTableIdColumns();
         foreach ($this->dimensionMetadataProvider->getActionReferenceColumnsByTable() as $table => $columns) {
             $idCol = $idColumns[$table];
             // Create select query for requesting ALL needed fields at once
-            $sql = "SELECT " . implode(',', $columns) . " FROM " . Common::prefixTable($table) . " WHERE {$idCol} >= ? AND {$idCol} < ?";
+            $sql = "SELECT " . implode(',', $columns) . " FROM `" . Common::prefixTable($table) . "` WHERE {$idCol} >= ? AND {$idCol} < ?";
             if ($olderThan) {
                 // Why start on zero? When running for a couple of months, this will generate about 10000+ queries with zero result. Use the lowest value instead.... saves a LOT of waiting time!
-                $start = (int) Db::fetchOne("SELECT MIN({$idCol}) FROM " . Common::prefixTable($table));
+                $start = (int) Db::fetchOne("SELECT MIN({$idCol}) FROM `" . Common::prefixTable($table) . "`");
                 $finish = $maxIds[$table];
             } else {
                 $start = $maxIds[$table];
-                $finish = (int) Db::fetchOne("SELECT MAX({$idCol}) FROM " . Common::prefixTable($table));
+                $finish = (int) Db::fetchOne("SELECT MAX({$idCol}) FROM `" . Common::prefixTable($table) . "`");
             }
             // Borrowed from Db::segmentedFetchAll
             // Request records per $insertIntoTempIterationStep amount
@@ -326,8 +326,8 @@ class RawLogDao
     }
     private function deleteUnusedActions()
     {
-        list($logActionTable, $tempTableName) = Common::prefixTables("log_action", self::DELETE_UNUSED_ACTIONS_TEMP_TABLE_NAME);
-        $deleteSql = "DELETE LOW_PRIORITY QUICK IGNORE {$logActionTable}\n\t\t\t\t\t\tFROM {$logActionTable}\n\t\t\t\t   LEFT JOIN {$tempTableName} tmp ON tmp.idaction = {$logActionTable}.idaction\n\t\t\t\t\t   WHERE tmp.idaction IS NULL";
+        [$logActionTable, $tempTableName] = Common::prefixTables("log_action", self::DELETE_UNUSED_ACTIONS_TEMP_TABLE_NAME);
+        $deleteSql = "DELETE LOW_PRIORITY QUICK IGNORE `{$logActionTable}`\n\t\t\t\t\t\tFROM `{$logActionTable}`\n\t\t\t\t   LEFT JOIN `{$tempTableName}` tmp ON tmp.idaction = `{$logActionTable}`.idaction\n\t\t\t\t\t   WHERE tmp.idaction IS NULL";
         Db::query($deleteSql);
     }
     protected function getTableIdColumns()

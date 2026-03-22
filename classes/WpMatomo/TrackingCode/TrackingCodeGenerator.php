@@ -12,12 +12,11 @@ namespace WpMatomo\TrackingCode;
 use WP_Query;
 use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\AjaxTracker;
 use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\Settings;
 use WpMatomo\Site;
-// phpcs:ignore PHPCompatibility.UseDeclarations.NewUseConstFunction.Found
-use function is_user_logged_in;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -63,9 +62,12 @@ class TrackingCodeGenerator {
 		add_action( 'matomo_tracking_settings_changed', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
 	}
 
-	public function update_tracking_code() {
-		if ( $this->settings->is_current_tracking_code()
-			 && $this->settings->get_option( 'tracking_code' ) ) {
+	public function update_tracking_code( $force = false ) {
+		if (
+			$this->settings->is_current_tracking_code()
+			&& $this->settings->get_option( 'tracking_code' )
+			&& ! $force
+		) {
 			return false;
 		}
 
@@ -80,7 +82,7 @@ class TrackingCodeGenerator {
 		$idsite  = Site::get_matomo_site_id( $blod_id );
 
 		if ( ! $idsite ) {
-			$this->logger->log( 'Not found related idSite for blog ' . get_current_blog_id() );
+			$this->logger->log( 'Found no related idSite for blog ' . get_current_blog_id() );
 
 			return false;
 		}
@@ -313,7 +315,48 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$data_of_async_option['data-cfasync'] = 'false';
 		}
 
-		$script  = "var _paq = window._paq = window._paq || [];\n";
+		$script = '';
+
+		if ( $this->settings->is_ai_bot_tracking_enabled() ) {
+			// recMode is a temporary parameter introduced in core to conditionally
+			// enable AI bot tracking. if AI bot tracking is enabled in MWP, we set
+			// it to `2` here, to enable "auto" mode when doing JS tracking. in this
+			// mode, tracking requests with AI bot user agents will be tracked as bots
+			// instead of visits, while all other requests will be tracked normally
+			// as visits.
+			$options[] = "_paq.push(['appendToTrackingUrl', 'recMode=2']);";
+
+			// set cookie via javascript cookie for known AI bots so we can skip tracking server side
+			// for them.
+			// NOTE: this must be done ONLY for known AI bots to be compliant with privacy regulations.
+			$user_agent_substrings = wp_json_encode( AjaxTracker::AI_BOT_USER_AGENT_SUBSTRINGS );
+			array_unshift(
+				$options,
+				<<<EOF
+_paq.push([ function () {
+  var userAgentSubstrings = $user_agent_substrings;
+  for (var i = 0; i < userAgentSubstrings.length; ++i) {
+  	var isAiBotUserAgent = navigator.userAgent.toLowerCase().indexOf(userAgentSubstrings[i].toLowerCase()) !== -1;
+  	if (isAiBotUserAgent) {
+      var path = this.getCookiePath();
+      var domain = this.getCookieDomain();
+      var sameSite = 'Lax';
+
+      document.cookie = 'matomo_has_js=1;path=' +
+      	(path || '/') +
+      	(domain ? ';domain=' + domain : '') +
+		';SameSite=' + sameSite
+		;
+
+  	  return;
+  	}
+  }
+} ]);
+EOF
+			);
+		}
+
+		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
 		$script .= "_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);";
@@ -321,6 +364,19 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
+
+		$script = <<<EOF
+(function () {
+function initTracking() {
+$script
+}
+if (document.prerendering) {
+	document.addEventListener('prerenderingchange', initTracking, {once: true});
+} else {
+	initTracking();
+}
+})();
+EOF;
 
 		if ( function_exists( 'wp_get_inline_script_tag' ) ) {
 			$script = wp_get_inline_script_tag(
@@ -387,7 +443,7 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 	private function apply_user_tracking( $tracking_code ) {
 		$user_id_to_track = null;
-		if ( is_user_logged_in() ) {
+		if ( \is_user_logged_in() ) {
 			// Get the User ID Admin option, and the current user's data
 			$uid_from     = $this->settings->get_global_option( 'track_user_id' );
 			$current_user = wp_get_current_user(); // current user

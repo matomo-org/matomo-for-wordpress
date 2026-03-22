@@ -29,7 +29,7 @@ class RevenuePerVisit extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'revenue_per_visit', false);
+        return Goals::makeGoalColumn($this->idGoal, 'revenue_per_visit', \false);
     }
     public function getTranslatedName()
     {
@@ -38,7 +38,7 @@ class RevenuePerVisit extends GoalSpecificProcessedMetric
     public function getDocumentation()
     {
         if ($this->idGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
-            return Piwik::translate('Goals_ColumnAverageOrderRevenueDocumentation', $this->getGoalNameForDocs());
+            return Piwik::translate('Goals_ColumnRevenuePerVisitDocumentation', $this->getGoalNameForDocs());
         }
         return Piwik::translate('Goals_ColumnRevenuePerVisitDocumentation', Piwik::translate('Goals_EcommerceAndGoalsMenu'));
     }

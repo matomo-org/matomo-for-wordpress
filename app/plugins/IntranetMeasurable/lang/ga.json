@@ -1,1 +1,8 @@
-{}
+{
+    "IntranetMeasurable": {
+        "Intranet": "Láithreán Gréasáin Inlíon",
+        "IntranetDescription": "Tá inlíon intomhaiste díreach cosúil le suíomh Gréasáin ach á óstáil ar líonra inmheánach.",
+        "IntranetLongDescription": "Rianaigh suíomhanna inmheánacha nach bhfuil rochtain orthu ach laistigh de líonra d'eagraíochta. Úsáideann Matomo fianáin chéadpháirtí chun cuairteoirí uathúla i dtimpeallachtaí intranet a aithint níos cruinne.",
+        "Intranets": "Suímh Idirlín Inlíon"
+    }
+}

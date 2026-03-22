@@ -24,7 +24,7 @@ class ContentTarget extends ActionDimension
     protected $namePlural = 'Contents_ContentTargets';
     protected $segmentName = 'contentTarget';
     protected $category = 'General_Actions';
-    protected $acceptValues = 'For instance the URL of a landing page: "http://landingpage.example.com"';
+    protected $acceptValues = 'Contents_ContentTargetSegmentHelp';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
     public function getDbColumnJoin()
     {
@@ -41,13 +41,13 @@ class ContentTarget extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionContent) {
-            return false;
+            return \false;
         }
         $contentTarget = $request->getParam('c_t');
         $contentTarget = trim($contentTarget);
         if (strlen($contentTarget) > 0) {
             return $contentTarget;
         }
-        return false;
+        return \false;
     }
 }

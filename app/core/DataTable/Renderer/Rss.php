@@ -26,20 +26,18 @@ class Rss extends Renderer
     /**
      * Computes the dataTable output and returns the string/binary
      *
-     * @return string
      */
-    public function render()
+    public function render() : string
     {
         return $this->renderTable($this->table);
     }
     /**
      * Computes the output for the given data table
      *
-     * @param DataTable $table
-     * @return string
+     * @param DataTable|DataTable\Map $table
      * @throws Exception
      */
-    protected function renderTable($table)
+    protected function renderTable($table) : string
     {
         if (!$table instanceof DataTable\Map || $table->getKeyName() != 'date') {
             throw new Exception("RSS feeds can be generated for one specific website &idSite=X." . "\nPlease specify only one idSite or consider using &format=XML instead.");
@@ -48,7 +46,7 @@ class Rss extends Renderer
         $period = Common::getRequestVar('period');
         $piwikUrl = SettingsPiwik::getPiwikUrl() . "?module=CoreHome&action=index&idSite=" . $idSite . "&period=" . $period;
         $out = "";
-        $moreRecentFirst = array_reverse($table->getDataTables(), true);
+        $moreRecentFirst = array_reverse($table->getDataTables(), \true);
         foreach ($moreRecentFirst as $date => $subtable) {
             /** @var DataTable $subtable */
             $timestamp = $subtable->getMetadata(Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX)->getDateStart()->getTimestamp();
@@ -73,18 +71,16 @@ class Rss extends Renderer
     /**
      * Returns the RSS file footer
      *
-     * @return string
      */
-    protected function getRssFooter()
+    protected function getRssFooter() : string
     {
         return "\t</channel>\n</rss>";
     }
     /**
      * Returns the RSS file header
      *
-     * @return string
      */
-    protected function getRssHeader()
+    protected function getRssHeader() : string
     {
         $generationDate = date('r', Date::getNowTimestamp());
         $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\">\n  <channel>\n    <title>matomo statistics - RSS</title>\n    <link>https://matomo.org</link>\n    <description>Matomo RSS feed</description>\n    <pubDate>{$generationDate}</pubDate>\n    <generator>matomo</generator>\n    <language>en</language>\n    <lastBuildDate>{$generationDate}</lastBuildDate>\n";
@@ -116,7 +112,7 @@ class Rss extends Renderer
                 if (is_array($value) || is_object($value)) {
                     continue;
                 }
-                $allColumns[$column] = true;
+                $allColumns[$column] = \true;
                 $tableStructure[$i][$column] = $value;
             }
             $i++;
@@ -125,7 +121,7 @@ class Rss extends Renderer
         $html .= "<table border=1 width=70%>";
         $html .= "\n<tr>";
         foreach ($allColumns as $name => $toDisplay) {
-            if ($toDisplay !== false) {
+            if ($toDisplay !== \false) {
                 if ($this->translateColumnNames) {
                     $name = $this->translateColumnName($name);
                 }
@@ -136,7 +132,7 @@ class Rss extends Renderer
         foreach ($tableStructure as $row) {
             $html .= "\n\n<tr>";
             foreach ($allColumns as $columnName => $toDisplay) {
-                if ($toDisplay !== false) {
+                if ($toDisplay !== \false) {
                     $value = "-";
                     if (isset($row[$columnName])) {
                         $value = urldecode($row[$columnName]);

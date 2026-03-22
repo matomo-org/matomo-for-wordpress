@@ -50,7 +50,7 @@ class API extends \Piwik\Plugin\API
     /**
      * Gets general database info that is not specific to any table.
      *
-     * @return array See http://dev.mysql.com/doc/refman/5.1/en/show-status.html .
+     * @return array See https://dev.mysql.com/doc/refman/5.1/en/show-status.html .
      */
     public function getDBStatus()
     {
@@ -171,7 +171,7 @@ class API extends \Piwik\Plugin\API
      *                         cache the result.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualReportsSummary($forceCache = false)
+    public function getIndividualReportsSummary($forceCache = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByBlobName($forceCache);
@@ -186,7 +186,7 @@ class API extends \Piwik\Plugin\API
      *                         cache the result.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualMetricsSummary($forceCache = false)
+    public function getIndividualMetricsSummary($forceCache = \false)
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByMetricName($forceCache);

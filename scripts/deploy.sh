@@ -14,6 +14,11 @@ SVN_PASSWORD=$3
 # doesn't match I want to be able to show an error first
 set -eo
 
+die() {
+  echo "$*" 1>&2 ;
+  exit 1;
+}
+
 # Ensure SVN username and password are set
 # IMPORTANT: while secrets are encrypted and not viewable in the GitHub UI,
 # they are by necessity provided as plaintext in the context of the Action,
@@ -75,7 +80,13 @@ echo "➤ Checking out git matomo-for-wordpress repository..."
 git clone --recurse-submodules --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 cd "$GITHUB_WORKSPACE"
+echo "➤ Fetching lfs files..."
+git lfs fetch --all
 git lfs pull
+git lfs checkout
+if grep 'version https' ./app/plugins/Morpheus/icons/dist/flags/*.png; then
+  die "lfs checkout failed"
+fi
 
 echo "➤ Building release..."
 mkdir -p ./docker/wordpress
@@ -84,7 +95,7 @@ UID=$UID
 EOF
 docker compose --env-file .env.default --env-file .env up -d wordpress
 sleep 60 # wait for docker-compose launch to finish
-npm run compose -- run console wordpress:build-release --name=$VERSION --tgz
+npm run matomo:console -- wordpress:build-release --name=$VERSION --tgz
 
 echo "➤ Copying files..."
 tar -xf "matomo-$VERSION.tgz" --directory="$TMP_DIR" # the archive is created via the wordpress:build-release command

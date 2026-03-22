@@ -15,7 +15,7 @@ class PagePathVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreCo
     {
         return self::CATEGORY_PAGE_VARIABLES;
     }
-    public function loadTemplate($context, $entity, $skipTemplate = false)
+    public function loadTemplate($context, $entity, $skipTemplate = \false)
     {
         switch ($context) {
             case WebContext::ID:

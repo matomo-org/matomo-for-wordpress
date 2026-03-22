@@ -37,7 +37,7 @@ class NullCoalesceExpression extends ConditionalExpression
          * as benefits are probably not worth the added complexity.
          */
         if ($this->getNode('expr2') instanceof NameExpression) {
-            $this->getNode('expr2')->setAttribute('always_defined', true);
+            $this->getNode('expr2')->setAttribute('always_defined', \true);
             $compiler->raw('((')->subcompile($this->getNode('expr2'))->raw(') ?? (')->subcompile($this->getNode('expr3'))->raw('))');
         } else {
             parent::compile($compiler);

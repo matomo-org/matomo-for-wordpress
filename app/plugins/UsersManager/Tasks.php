@@ -10,6 +10,8 @@ namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Access;
 use Piwik\Date;
+use Piwik\Plugins\UsersManager\TokenNotifications\TokenNotifierTask;
+use Piwik\Plugins\UsersManager\UserNotifications\UserNotifierTask;
 class Tasks extends \Piwik\Plugin\Tasks
 {
     /**
@@ -30,6 +32,8 @@ class Tasks extends \Piwik\Plugin\Tasks
         $this->daily("cleanupExpiredTokens");
         $this->daily("setUserDefaultReportPreference");
         $this->daily("cleanUpExpiredInvites");
+        $this->scheduleTask(new TokenNotifierTask());
+        $this->scheduleTask(new UserNotifierTask());
     }
     public function cleanupExpiredTokens()
     {
@@ -54,6 +58,9 @@ class Tasks extends \Piwik\Plugin\Tasks
         // getting the user preference can be called quite often when generating links etc (to get defaultWebsiteId).
         $usersModel = $this->usersModel;
         $usersManagerApi = $this->usersManagerApi;
+        /*
+         * Required to be executed as super user, as the API method used requires super user or the user itself.
+         */
         Access::getInstance()->doAsSuperUser(function () use($usersModel, $usersManagerApi) {
             $allUsers = $usersModel->getUsers([]);
             foreach ($allUsers as $user) {

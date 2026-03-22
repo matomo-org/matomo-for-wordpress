@@ -45,7 +45,6 @@ class CorePluginsAdmin extends Plugin
     /**
      * Retrieve an instantiated ChangesModel object
      *
-     * @return ChangesModel
      */
     private function getChangesModel() : ChangesModel
     {
@@ -145,5 +144,13 @@ class CorePluginsAdmin extends Plugin
         $translations[] = 'CorePluginsAdmin_PluginFreeTrialStarted';
         $translations[] = 'CorePluginsAdmin_PluginFreeTrialStartedAccountCreatedMessage';
         $translations[] = 'CorePluginsAdmin_PluginFreeTrialStartedAccountCreatedTitle';
+        $translations[] = 'General_Confirm';
+        $translations[] = 'General_Cancel';
+        $translations[] = 'UsersManager_ConfirmThisChange';
+        $translations[] = 'UsersManager_ConfirmWithPassword';
+        $translations[] = 'UsersManager_ConfirmWithReAuthentication';
+        $translations[] = 'UsersManager_YourCurrentPassword';
+        $translations[] = 'PrivacyManager_PolicyControlledSetting';
+        $translations[] = 'PrivacyManager_ViewPrivacyComplianceOverview';
     }
 }

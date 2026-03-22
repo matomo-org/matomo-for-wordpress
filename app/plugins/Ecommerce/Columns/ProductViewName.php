@@ -43,7 +43,7 @@ class ProductViewName extends ActionDimension
         if (Manager::getInstance()->isPluginActivated('CustomVariables')) {
             $customVariables = CustomVariablesRequestProcessor::getCustomVariablesInPageScope($request);
             if (isset($customVariables['custom_var_k4']) && $customVariables['custom_var_k4'] === '_pkn') {
-                return $customVariables['custom_var_v4'] ?? false;
+                return $customVariables['custom_var_v4'] ?? \false;
             }
         }
         return parent::onLookupAction($request, $action);

@@ -26,13 +26,16 @@ class PhpToken implements \Stringable
      */
     public $text;
     /**
-     * @var int
+     * @var -1|positive-int
      */
     public $line;
     /**
      * @var int
      */
     public $pos;
+    /**
+     * @param -1|positive-int $line
+     */
     public function __construct(int $id, string $text, int $line = -1, int $position = -1)
     {
         $this->id = $id;
@@ -53,22 +56,22 @@ class PhpToken implements \Stringable
     public function is($kind) : bool
     {
         foreach ((array) $kind as $value) {
-            if (\in_array($value, [$this->id, $this->text], true)) {
-                return true;
+            if (\in_array($value, [$this->id, $this->text], \true)) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function isIgnorable() : bool
     {
-        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], true);
+        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], \true);
     }
     public function __toString() : string
     {
         return (string) $this->text;
     }
     /**
-     * @return static[]
+     * @return list<static>
      */
     public static function tokenize(string $code, int $flags = 0) : array
     {

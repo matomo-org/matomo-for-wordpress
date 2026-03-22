@@ -122,10 +122,8 @@ class AssetManager extends \Piwik\Singleton
     /**
      * Return JS file inclusion directive(s) using the markup <script>
      *
-     * @param bool $deferJS
-     * @return string
      */
-    public function getJsInclusionDirective(bool $deferJS = false) : string
+    public function getJsInclusionDirective(bool $deferJS = \false) : string
     {
         $result = "<script type=\"text/javascript\">\n" . StaticContainer::get('Piwik\\Translation\\Translator')->getJavascriptTranslations() . "\n</script>";
         if ($this->isMergedAssetsDisabled()) {
@@ -228,7 +226,7 @@ class AssetManager extends \Piwik\Singleton
     /**
      * Remove previous merged assets
      */
-    public function removeMergedAssets($pluginName = false)
+    public function removeMergedAssets($pluginName = \false)
     {
         $assetsToRemove = array($this->getMergedStylesheetAsset());
         if ($pluginName) {
@@ -241,10 +239,10 @@ class AssetManager extends \Piwik\Singleton
                 $assetFetcher = $this->getPluginUmdJScriptFetcher();
                 foreach ($assetFetcher->getChunkFiles() as $chunk) {
                     $files = $chunk->getFiles();
-                    $foundInChunk = false;
+                    $foundInChunk = \false;
                     foreach ($files as $file) {
-                        if (strpos($file, "/{$pluginName}.umd.") !== false) {
-                            $foundInChunk = true;
+                        if (strpos($file, "/{$pluginName}.umd.") !== \false) {
+                            $foundInChunk = \true;
                         }
                     }
                     if ($foundInChunk) {
@@ -296,12 +294,12 @@ class AssetManager extends \Piwik\Singleton
     public function isMergedAssetsDisabled()
     {
         if (\Piwik\Config::getInstance()->Development['disable_merged_assets'] == 1) {
-            return true;
+            return \true;
         }
         if (isset($_GET['disable_merged_assets']) && $_GET['disable_merged_assets'] == 1) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * @param UIAssetFetcher $assetFetcher
@@ -317,7 +315,6 @@ class AssetManager extends \Piwik\Singleton
     /**
      * Return individual JS file inclusion directive(s) using the markup <script>
      *
-     * @return string
      */
     protected function getIndividualCoreAndNonCoreJsIncludes() : string
     {
@@ -325,7 +322,6 @@ class AssetManager extends \Piwik\Singleton
     }
     /**
      * @param UIAssetFetcher $assetFetcher
-     * @return string
      */
     protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher) : string
     {
@@ -339,11 +335,11 @@ class AssetManager extends \Piwik\Singleton
     }
     private function getCoreJScriptFetcher()
     {
-        return new JScriptUIAssetFetcher($this->getLoadedPlugins(true), $this->theme);
+        return new JScriptUIAssetFetcher($this->getLoadedPlugins(\true), $this->theme);
     }
     protected function getNonCoreJScriptFetcher()
     {
-        return new JScriptUIAssetFetcher($this->getLoadedPlugins(false), $this->theme);
+        return new JScriptUIAssetFetcher($this->getLoadedPlugins(\false), $this->theme);
     }
     protected function getPluginUmdJScriptFetcher($chunk = null)
     {
@@ -361,7 +357,7 @@ class AssetManager extends \Piwik\Singleton
         } catch (\Exception $e) {
             // This can happen when a plugin is not valid (eg. Piwik 1.x format)
             // When posting the event to the plugin, it returns an exception "Plugin has not been loaded"
-            return false;
+            return \false;
         }
         $pluginManager = Manager::getInstance();
         $plugin = null;

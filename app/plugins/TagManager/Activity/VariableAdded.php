@@ -14,7 +14,7 @@ class VariableAdded extends \Piwik\Plugins\TagManager\Activity\VariableBaseActiv
     public function extractParams($eventData)
     {
         if (!$this->hasRequestedApiMethod('addContainerVariable')) {
-            return false;
+            return \false;
         }
         list($idEntity, $finalAPIParameters) = $eventData;
         $idSite = $finalAPIParameters['parameters']['idSite'];

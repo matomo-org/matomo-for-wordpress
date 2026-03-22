@@ -1,0 +1,340 @@
+<?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
+
+use WpMatomo\AjaxTracker;
+use WpMatomo\Settings;
+use Piwik\Container\StaticContainer;
+
+require_once __DIR__ . '/../framework/mocks/mock-ajax-tracker.php';
+
+/**
+ * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+ */
+class AjaxTrackerTest extends MatomoAnalytics_TestCase {
+
+	use MatomoWooCommerceAwareTest;
+
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
+	 * @var null|int
+	 */
+	private $blogid;
+
+	private $old_referrer;
+
+	private $old_user_agent;
+
+	public function setUp(): void {
+		parent::setUp();
+
+		$_COOKIE              = [];
+		$this->blogid         = null;
+		$this->old_referrer   = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : null;
+		$this->old_user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		unset( $_SERVER['HTTP_REFERER'] );
+		unset( $_SERVER['HTTP_USER_AGENT'] );
+
+		$this->manually_load_woocommerce();
+		$this->disable_woocommerce_cookies();
+
+		$this->settings = new Settings();
+	}
+
+	public function tearDown(): void {
+		if ( $this->old_referrer ) {
+			$_SERVER['HTTP_REFERER'] = $this->old_referrer;
+		}
+
+		if ( $this->old_user_agent ) {
+			$_SERVER['HTTP_USER_AGENT'] = $this->old_user_agent;
+		}
+
+		unset( $_SERVER['HTTP_SEC_PURPOSE'] );
+
+		$this->unset_wc_session();
+
+		if ( $this->blogid ) {
+			wpmu_delete_blog( $this->blogid );
+		}
+
+		parent::tearDown();
+	}
+
+	public function test_construct_when_no_matomo_site_id() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'multisite test' );
+			return;
+		}
+
+		$idblog = $this->create_blog();
+		switch_to_blog( $idblog );
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEmpty( $tracker->idSite );
+		$this->assertEmpty( $tracker->pageUrl );
+	}
+
+	public function test_construct_when_using_rest_endpoint() {
+		$this->settings->set_global_option( 'track_api_endpoint', 'restapi' );
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/index.php?rest_route=/matomo/v1/hit/', MatomoTracker::$URL );
+		$this->assertEquals( false, $tracker->pageUrl );
+	}
+
+	public function test_construct_when_referrer_specified() {
+		$_SERVER['HTTP_REFERER'] = 'https://whatever.com/path';
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( 'https://whatever.com/path', $tracker->pageUrl );
+	}
+
+	public function test_construct_when_cookies_are_disabled() {
+		$this->settings->set_global_option( 'disable_cookies', true );
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( false, $tracker->pageUrl );
+		$this->assertTrue( $tracker->configCookiesDisabled );
+	}
+
+	public function test_construct_when_cookies_are_enabled_and_cookie_exists() {
+		$visitor_id               = '0123456789abcdef';
+		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( false, $tracker->pageUrl );
+		$this->assertFalse( $tracker->configCookiesDisabled );
+		$this->assertEquals( $visitor_id, $tracker->cookieVisitorId );
+		$this->assertEquals( $visitor_id, $tracker->forcedVisitorId );
+	}
+
+	public function test_construct_when_cookies_are_enabled_and_cookie_doesnt_exist() {
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( false, $tracker->pageUrl );
+		$this->assertFalse( $tracker->configCookiesDisabled );
+		$this->assertEmpty( $tracker->cookieVisitorId );
+		$this->assertEmpty( $tracker->forcedVisitorId );
+	}
+
+	public function test_construct_when_cookies_are_enabled_and_cookie_is_in_wc_session() {
+		$visitor_id = '2223456789abcdef';
+
+		$this->initialize_wc_session();
+		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEquals( 1, $tracker->idSite );
+		$this->assertEquals( 'https://example.org/wp-content/plugins/matomo/app/matomo.php', MatomoTracker::$URL );
+		$this->assertEquals( false, $tracker->pageUrl );
+		$this->assertFalse( $tracker->configCookiesDisabled );
+		$this->assertEmpty( $tracker->cookieVisitorId );
+		$this->assertEquals( $visitor_id, $tracker->forcedVisitorId );
+	}
+
+	public function test_construct_when_cookies_are_enabled_and_cookie_value_is_invalid() {
+		$visitor_id = 'blah';
+
+		$_COOKIE['_pk_id_1_3678'] = $visitor_id . '.' . time();
+		$tracker                  = new AjaxTracker( $this->settings );
+		$this->assertEmpty( $tracker->cookieVisitorId );
+		$this->assertEmpty( $tracker->forcedVisitorId );
+
+		$_COOKIE = [];
+
+		$this->initialize_wc_session();
+		WC()->session->set( \WpMatomo\Ecommerce\ServerSideVisitorId::VISITOR_ID_SESSION_VAR_NAME, $visitor_id );
+
+		$tracker = new AjaxTracker( $this->settings );
+		$this->normalize_tracker_url();
+
+		$this->assertEmpty( $tracker->cookieVisitorId );
+		$this->assertEmpty( $tracker->forcedVisitorId );
+	}
+
+	/**
+	 * @dataProvider get_sec_purpose_test_values
+	 */
+	public function test_ajax_tracker_with_sec_purpose_header( $header_value, $expected_requests ) {
+		$tracker = new class( $this->settings ) extends AjaxTracker {
+			public $sent_requests = [];
+
+			protected function wp_remote_request( $url, $args ) {
+				// remove random query params
+				$url = preg_replace( '/&_id=[^&]+/', '', $url );
+				$url = preg_replace( '/&r=[^&]+/', '', $url );
+				$url = preg_replace( '/&_idts=[^&]+/', '', $url );
+				$url = preg_replace( '/&pv_id=[^&]+/', '', $url );
+
+				$this->sent_requests[] = $url;
+				return [ 'body' => '' ];
+			}
+		};
+
+		$this->normalize_tracker_url();
+
+		if ( empty( $header_value ) ) { // test without sec-purpose
+			unset( $_SERVER['HTTP_SEC_PURPOSE'] );
+		} else {
+			$_SERVER['HTTP_SEC_PURPOSE'] = $header_value;
+		}
+
+		$tracker->setUrl( 'https://testurl' );
+		$tracker->doTrackPageView( 'test document' );
+
+		$this->assertEquals( $expected_requests, $tracker->sent_requests );
+	}
+
+	public function get_sec_purpose_test_values() {
+		return [
+			[
+				null,
+				[
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+				],
+			],
+			[
+				'randomvalue',
+				[
+					'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&url=https%3A%2F%2Ftesturl&urlref=&action_name=test+document&bots=1',
+				],
+			],
+
+			[
+				'prefetch',
+				[],
+			],
+			[
+				'prefetch;prerender',
+				[],
+			],
+			[
+				'prerender',
+				[],
+			],
+			[
+				'astrangeprefetchvalue',
+				[],
+			],
+		];
+	}
+
+	public function test_set_visitor_id_safe_sets_visitor_id_when_valid() {
+		$visitor_id = '0123456789abcdef';
+
+		$tracker = new AjaxTracker( $this->settings );
+		$tracker->set_visitor_id_safe( $visitor_id );
+		$this->assertEquals( $visitor_id, $tracker->forcedVisitorId );
+	}
+
+	public function test_set_visitor_id_does_not_set_visitorid() {
+		$visitor_id = 'garbagevalue';
+
+		$tracker = new AjaxTracker( $this->settings );
+		$tracker->set_visitor_id_safe( $visitor_id );
+		$this->normalize_tracker_url();
+
+		$this->assertEmpty( $tracker->forcedVisitorId );
+	}
+
+	public function test_add_ip_forward_proxy_header_does_nothing_without_nonce() {
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_add_ip_forward_proxy_header_does_nothing_if_nonce_is_not_valid() {
+		$_REQUEST['ip_nonce'] = 'wrongnonce';
+
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c' ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_add_ip_forward_proxy_header_modifies_config_correctly_when_valid_nonce_exists() {
+		$_REQUEST['ip_nonce'] = wp_create_nonce( AjaxTracker::IP_ADDRESS_FORWARDING_NONCE_NAME );
+
+		$config                                  = StaticContainer::get( \Piwik\Config::class );
+		$config->General['proxy_client_headers'] = [ 'a', 'b', 'c' ];
+
+		AjaxTracker::add_ip_forward_proxy_header_to_config( $config );
+
+		$this->assertEquals( [ 'a', 'b', 'c', AjaxTracker::IP_ADDRESS_FORWARDING_HEADER_SERVER_NAME ], $config->General['proxy_client_headers'] );
+	}
+
+	public function test_ajax_tracker_sends_correct_request_when_custom_ip_is_used() {
+		$tracker = $this->make_mock_tracker();
+		$this->normalize_tracker_url();
+
+		$tracker->setIp( '1.2.3.4' );
+		$tracker->doTrackPageView( 'test page' );
+
+		$expected_requests = [
+			[
+				'https://example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&rec=1&apiv=1&_id=REMOVED&url=&urlref=&action_name=test+page&ip_nonce=REMOVED&bots=1',
+				[
+					'method'   => 'GET',
+					'headers'  => [
+						'X-Matomo-Forwarded-Ip' => '1.2.3.4',
+						'User-Agent'            => '',
+					],
+					'blocking' => false,
+				],
+			],
+		];
+		$this->assertEquals( $expected_requests, $tracker->captured_requests );
+	}
+
+	private function create_blog() {
+		$this->blogid = self::factory()->blog->create();
+		return $this->blogid;
+	}
+
+	private function make_mock_tracker() {
+		return new TestAjaxTracker( $this->settings );
+	}
+
+	private function normalize_tracker_url() {
+		MatomoTracker::$URL = preg_replace( '/^http:/', 'https:', MatomoTracker::$URL );
+	}
+}

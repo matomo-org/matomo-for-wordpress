@@ -28,8 +28,6 @@ class LocalTime extends VisitDimension
         return \Piwik\Plugins\VisitTime\getTimeLabel($value);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

@@ -10,8 +10,8 @@ namespace Piwik\Plugins\Ecommerce\Widgets;
 
 use Piwik\Common;
 use Piwik\Plugins\CoreHome\CoreHome;
-use Piwik\Site;
 use Piwik\Widget\WidgetContainerConfig;
+use Piwik\Site;
 class ProductsByDimension extends WidgetContainerConfig
 {
     protected $layout = CoreHome::WIDGET_CONTAINER_LAYOUT_BY_DIMENSION;
@@ -20,9 +20,9 @@ class ProductsByDimension extends WidgetContainerConfig
     protected $subcategoryId = 'Goals_Products';
     public function isEnabled()
     {
-        $idSite = Common::getRequestVar('idSite', false, 'int');
+        $idSite = Common::getRequestVar('idSite', \false, 'int');
         if (empty($idSite)) {
-            return false;
+            return \false;
         }
         $site = new Site($idSite);
         return $site->isEcommerceEnabled();

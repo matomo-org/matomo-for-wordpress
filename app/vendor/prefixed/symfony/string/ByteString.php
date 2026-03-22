@@ -154,7 +154,7 @@ class ByteString extends AbstractString
             return null;
         }
         $i = $this->ignoreCase ? stripos($this->string, $needle, $offset) : strpos($this->string, $needle, $offset);
-        return false === $i ? null : $i;
+        return \false === $i ? null : $i;
     }
     public function indexOfLast($needle, int $offset = 0) : ?int
     {
@@ -169,7 +169,7 @@ class ByteString extends AbstractString
             return null;
         }
         $i = $this->ignoreCase ? strripos($this->string, $needle, $offset) : strrpos($this->string, $needle, $offset);
-        return false === $i ? null : $i;
+        return \false === $i ? null : $i;
     }
     public function isUtf8() : bool
     {
@@ -202,9 +202,9 @@ class ByteString extends AbstractString
             throw new InvalidArgumentException($m);
         });
         try {
-            if (false === $match($regexp, $this->string, $matches, $flags | \PREG_UNMATCHED_AS_NULL, $offset)) {
+            if (\false === $match($regexp, $this->string, $matches, $flags | \PREG_UNMATCHED_AS_NULL, $offset)) {
                 $lastError = preg_last_error();
-                foreach (get_defined_constants(true)['pcre'] as $k => $v) {
+                foreach (get_defined_constants(\true)['pcre'] as $k => $v) {
                     if ($lastError === $v && '_ERROR' === substr($k, -6)) {
                         throw new RuntimeException('Matching failed with ' . $k . '.');
                     }
@@ -267,7 +267,7 @@ class ByteString extends AbstractString
         try {
             if (null === ($string = $replace($fromRegexp, $to, $this->string))) {
                 $lastError = preg_last_error();
-                foreach (get_defined_constants(true)['pcre'] as $k => $v) {
+                foreach (get_defined_constants(\true)['pcre'] as $k => $v) {
                     if ($lastError === $v && '_ERROR' === substr($k, -6)) {
                         throw new RuntimeException('Matching failed with ' . $k . '.');
                     }
@@ -333,7 +333,7 @@ class ByteString extends AbstractString
         }
         return '' !== $prefix && 0 === ($this->ignoreCase ? strncasecmp($this->string, $prefix, \strlen($prefix)) : strncmp($this->string, $prefix, \strlen($prefix)));
     }
-    public function title(bool $allWords = false) : parent
+    public function title(bool $allWords = \false) : parent
     {
         $str = clone $this;
         $str->string = $allWords ? ucwords($str->string) : ucfirst($str->string);
@@ -346,7 +346,7 @@ class ByteString extends AbstractString
     public function toCodePointString(?string $fromEncoding = null) : CodePointString
     {
         $u = new CodePointString();
-        if (\in_array($fromEncoding, [null, 'utf8', 'utf-8', 'UTF8', 'UTF-8'], true) && preg_match('//u', $this->string)) {
+        if (\in_array($fromEncoding, [null, 'utf8', 'utf-8', 'UTF8', 'UTF-8'], \true) && preg_match('//u', $this->string)) {
             $u->string = $this->string;
             return $u;
         }
@@ -355,7 +355,7 @@ class ByteString extends AbstractString
         });
         try {
             try {
-                $validEncoding = false !== mb_detect_encoding($this->string, $fromEncoding ?? 'Windows-1252', true);
+                $validEncoding = \false !== mb_detect_encoding($this->string, $fromEncoding ?? 'Windows-1252', \true);
             } catch (InvalidArgumentException $e) {
                 if (!\function_exists('iconv')) {
                     throw $e;
@@ -396,7 +396,7 @@ class ByteString extends AbstractString
         $str->string = strtoupper($str->string);
         return $str;
     }
-    public function width(bool $ignoreAnsiDecoration = true) : int
+    public function width(bool $ignoreAnsiDecoration = \true) : int
     {
         $string = preg_match('//u', $this->string) ? $this->string : preg_replace('/[\\x80-\\xFF]/', '?', $this->string);
         return (new CodePointString($string))->width($ignoreAnsiDecoration);

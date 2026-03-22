@@ -19,7 +19,7 @@ class Menu extends \Piwik\Plugin\Menu
     {
         if (Piwik::isUserIsAnonymous() || !SettingsPiwik::isMatomoInstalled()) {
             $langManager = new \Piwik\Plugins\LanguagesManager\LanguagesManager();
-            $menu->addHtml('LanguageSelector', $langManager->getLanguagesSelector(), true, $order = 30, false);
+            $menu->addHtml('LanguageSelector', $langManager->getLanguagesSelector(), \true, $order = 30, \false);
         }
     }
     public function configureAdminMenu(MenuAdmin $menu)

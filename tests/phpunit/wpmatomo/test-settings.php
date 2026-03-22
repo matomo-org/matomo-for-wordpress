@@ -6,7 +6,7 @@
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Settings;
 
-class SettingsTest extends MatomoUnit_TestCase {
+class SettingsTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var Settings
@@ -15,6 +15,8 @@ class SettingsTest extends MatomoUnit_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();
+
+		$this->create_set_super_admin();
 
 		$this->settings = $this->make_settings();
 	}
@@ -324,5 +326,89 @@ class SettingsTest extends MatomoUnit_TestCase {
 		// to be sure we're testing the functionality of noscript correctly we're setting different noscript_code
 		$this->settings->set_option( 'noscript_code', 'baz' );
 		$this->assertSame( $test_value, $this->settings->get_noscript_tracking_code() );
+	}
+
+	/**
+	 * @dataProvider get_test_data_for_get_matomo_major_version
+	 */
+	public function test_get_matomo_major_version( $core_version, $expected_major ) {
+		$this->settings->set_global_option( 'core_version', $core_version );
+
+		$actual = $this->settings->get_matomo_major_version();
+
+		$this->assertEquals( $expected_major, $actual );
+	}
+
+	public function get_test_data_for_get_matomo_major_version() {
+		return [
+			[ '5.1.3', 5 ],
+			[ '4.3.2-b1', 4 ],
+			[ '5.2.0-rc3', 5 ],
+			[ '', 0 ],
+			[ null, 0 ],
+		];
+	}
+
+	public function test_excluded_user_agent_with_comma_can_be_saved_through_mwp() {
+		$user_agent        = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36';
+		$simple_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:128.0) Gecko/20100101 Firefox/128.0';
+
+		$this->settings->set_global_user_agent_exclusions( [ $user_agent, $simple_user_agent ] );
+		$this->settings->save();
+
+		$settings2         = new Settings();
+		$saved_user_agents = $settings2->get_global_user_agent_exclusions();
+		$this->assertEquals( [ $user_agent, $simple_user_agent ], $saved_user_agents );
+	}
+
+	public function test_get_global_user_agent_exclusions_prioritizes_mwp_stored_user_agents() {
+		$user_agents = [ 'testuseragent', 'anothertestuseragent' ];
+		$user_agents = implode( ',', $user_agents );
+
+		\Piwik\Plugins\SitesManager\API::getInstance()->setGlobalExcludedUserAgents( $user_agents );
+
+		$other_user_agents = [ 'someotheruseragent', 'yetanotheruseragent' ];
+		$this->settings->set_global_user_agent_exclusions( $other_user_agents );
+		$this->settings->save();
+
+		$settings          = new Settings();
+		$saved_user_agents = $settings->get_global_user_agent_exclusions();
+
+		$this->assertEquals( $other_user_agents, $saved_user_agents );
+	}
+
+	public function test_get_global_user_agent_exclusions_defaults_to_matomo_stored_user_agents() {
+		$user_agents = [ 'testuseragent', 'anothertestuseragent' ];
+		$user_agents = implode( ',', $user_agents );
+
+		\Piwik\Plugins\SitesManager\API::getInstance()->setGlobalExcludedUserAgents( $user_agents );
+
+		$settings          = new Settings();
+		$saved_user_agents = $settings->get_global_user_agent_exclusions();
+
+		$this->assertEquals( [ 'testuseragent', 'anothertestuseragent' ], $saved_user_agents );
+	}
+
+	public function test_excluded_user_agents_in_mwp_are_added_to_tracker_cache_general() {
+		$user_agents = [ 'testuseragent', 'anothertestuseragent' ];
+		$user_agents = implode( ',', $user_agents );
+
+		\Piwik\Plugins\SitesManager\API::getInstance()->setGlobalExcludedUserAgents( $user_agents );
+
+		$tracker_cache = \Piwik\Tracker\Cache::getCacheGeneral();
+		$this->assertEquals( [ 'testuseragent', 'anothertestuseragent' ], $tracker_cache['global_excluded_user_agents'] );
+
+		$other_user_agents = [ 'someotheruseragent', 'yetanotheruseragent' ];
+		$this->settings->set_global_user_agent_exclusions( $other_user_agents );
+		$this->settings->save();
+
+		WpMatomo::$settings->init_settings(); // force static Settings instance to reload data
+
+		// sanity check
+		$matomo_user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
+		$this->assertEquals( $user_agents, $matomo_user_agents );
+
+		$tracker_cache = \Piwik\Tracker\Cache::getCacheGeneral();
+		$this->assertEquals( $other_user_agents, $tracker_cache['global_excluded_user_agents'] );
 	}
 }

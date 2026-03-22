@@ -20,16 +20,14 @@ class Response extends Tracker\Response
     /**
      * @var bool
      */
-    private $isAuthenticated = false;
+    private $isAuthenticated = \false;
     /**
      * @var bool
      */
-    private $shouldSendResponse = true;
+    private $shouldSendResponse = \true;
     /**
      * Echos an error message & other information, then exits.
      *
-     * @param Tracker $tracker
-     * @param Exception $e
      * @param int  $statusCode eg 500
      */
     public function outputException(Tracker $tracker, Exception $e, $statusCode)

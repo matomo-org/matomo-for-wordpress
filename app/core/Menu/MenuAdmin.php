@@ -27,7 +27,7 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 2.5.0
      */
-    public function addPersonalItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addPersonalItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         $this->addItem('UsersManager_MenuPersonal', $menuName, $url, $order, $tooltip);
     }
@@ -40,7 +40,7 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 2.5.0
      */
-    public function addDevelopmentItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addDevelopmentItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         if (Development::isEnabled()) {
             $this->addItem('CoreAdminHome_MenuDevelopment', $menuName, $url, $order, $tooltip);
@@ -55,7 +55,7 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 2.5.0
      */
-    public function addDiagnosticItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addDiagnosticItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         $this->addItem('CoreAdminHome_MenuDiagnostic', $menuName, $url, $order, $tooltip);
     }
@@ -68,22 +68,20 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 2.5.0
      */
-    public function addPlatformItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addPlatformItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         $this->addItem('CorePluginsAdmin_MenuPlatform', $menuName, $url, $order, $tooltip);
     }
     /**
      * See {@link add()}. Adds a new menu item to the plugins section of the admin menu.
-     * @param string $menuName
      * @param array $url
-     * @param int $order
      * @param bool|string $tooltip
      * @api
      * @since 5.0.0
      */
-    public function addPluginItem(string $menuName, array $url, int $order = 50, $tooltip = false)
+    public function addPluginItem(string $menuName, array $url, int $order = 50, $tooltip = \false, string $cssClass = '')
     {
-        $this->addItem('General_Plugins', $menuName, $url, $order, $tooltip);
+        $this->addItem('General_Plugins', $menuName, $url, $order, $tooltip, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, $badgeCount = 0, $cssClass);
     }
     /**
      * See {@link add()}. Adds a new menu item to the measurable section of the admin menu.
@@ -94,7 +92,7 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 3.0.0
      */
-    public function addMeasurableItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addMeasurableItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         $this->addItem('CoreAdminHome_MenuMeasurables', $menuName, $url, $order, $tooltip);
     }
@@ -107,7 +105,7 @@ class MenuAdmin extends \Piwik\Menu\MenuAbstract
      * @api
      * @since 3.0.0
      */
-    public function addSystemItem($menuName, $url, $order = 50, $tooltip = false)
+    public function addSystemItem($menuName, $url, $order = 50, $tooltip = \false)
     {
         $this->addItem('CoreAdminHome_MenuSystem', $menuName, $url, $order, $tooltip);
     }

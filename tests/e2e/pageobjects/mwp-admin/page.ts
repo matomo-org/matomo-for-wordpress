@@ -13,8 +13,8 @@ export default class MwpPage extends Page {
   async open(url: string) {
     const result = await super.open(url);
 
-    await browser.waitUntil(() => browser.execute(() => !!window.jQuery));
-    await browser.pause(1000);
+    await browser.waitUntil(() => browser.execute(() => !!window.jQuery), { timeout: 30000 });
+    await browser.pause(1500);
 
     return result;
   }

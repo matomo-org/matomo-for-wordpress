@@ -27,7 +27,7 @@ class PredisCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $result = $this->client->get($id);
         if ($result === null) {
-            return false;
+            return \false;
         }
         return unserialize($result);
     }
@@ -45,14 +45,14 @@ class PredisCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
         if ($lifetime) {
-            $success = true;
+            $success = \true;
             // Keys have lifetime, use SETEX for each of them
             foreach ($keysAndValues as $key => $value) {
                 $response = (string) $this->client->setex($key, $lifetime, serialize($value));
                 if ($response == 'OK') {
                     continue;
                 }
-                $success = false;
+                $success = \false;
             }
             return $success;
         }
@@ -80,7 +80,7 @@ class PredisCache extends \Doctrine\Common\Cache\CacheProvider
         } else {
             $response = $this->client->set($id, $data);
         }
-        return $response === true || $response == 'OK';
+        return $response === \true || $response == 'OK';
     }
     /**
      * {@inheritdoc}
@@ -102,7 +102,7 @@ class PredisCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doFlush()
     {
         $response = $this->client->flushdb();
-        return $response === true || $response == 'OK';
+        return $response === \true || $response == 'OK';
     }
     /**
      * {@inheritdoc}
@@ -110,6 +110,6 @@ class PredisCache extends \Doctrine\Common\Cache\CacheProvider
     protected function doGetStats()
     {
         $info = $this->client->info();
-        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['Stats']['keyspace_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['Stats']['keyspace_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['Server']['uptime_in_seconds'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['Memory']['used_memory'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => false];
+        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['Stats']['keyspace_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['Stats']['keyspace_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['Server']['uptime_in_seconds'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['Memory']['used_memory'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => \false];
     }
 }

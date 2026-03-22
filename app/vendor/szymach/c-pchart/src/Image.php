@@ -24,7 +24,7 @@ class Image extends \CpChart\Draw
      * @param Data $DataSet
      * @param boolean $TransparentBackground
      */
-    public function __construct($XSize, $YSize, \CpChart\Data $DataSet = null, $TransparentBackground = false)
+    public function __construct($XSize, $YSize, \CpChart\Data $DataSet = null, $TransparentBackground = \false)
     {
         parent::__construct();
         $this->TransparentBackground = $TransparentBackground;
@@ -33,10 +33,10 @@ class Image extends \CpChart\Draw
         $this->YSize = $YSize;
         $this->Picture = imagecreatetruecolor($XSize, $YSize);
         if ($this->TransparentBackground) {
-            imagealphablending($this->Picture, false);
+            imagealphablending($this->Picture, \false);
             imagefilledrectangle($this->Picture, 0, 0, $XSize, $YSize, imagecolorallocatealpha($this->Picture, 255, 255, 255, 127));
-            imagealphablending($this->Picture, true);
-            imagesavealpha($this->Picture, true);
+            imagealphablending($this->Picture, \true);
+            imagesavealpha($this->Picture, \true);
         } else {
             $C_White = $this->AllocateColor($this->Picture, 255, 255, 255);
             imagefilledrectangle($this->Picture, 0, 0, $XSize, $YSize, $C_White);
@@ -47,7 +47,7 @@ class Image extends \CpChart\Draw
      * @param boolean $Enabled
      * @param array $Format
      */
-    public function setShadow($Enabled = true, array $Format = [])
+    public function setShadow($Enabled = \true, array $Format = [])
     {
         $X = isset($Format["X"]) ? $Format["X"] : 2;
         $Y = isset($Format["Y"]) ? $Format["Y"] : 2;
@@ -108,16 +108,16 @@ class Image extends \CpChart\Draw
     public function render($FileName)
     {
         if ($this->TransparentBackground) {
-            imagealphablending($this->Picture, false);
-            imagesavealpha($this->Picture, true);
+            imagealphablending($this->Picture, \false);
+            imagesavealpha($this->Picture, \true);
         }
         imagepng($this->Picture, $FileName);
     }
     public function __toString()
     {
         if ($this->TransparentBackground) {
-            imagealphablending($this->Picture, false);
-            imagesavealpha($this->Picture, true);
+            imagealphablending($this->Picture, \false);
+            imagesavealpha($this->Picture, \true);
         }
         ob_start();
         imagepng($this->Picture);
@@ -131,11 +131,11 @@ class Image extends \CpChart\Draw
      * Render the picture to a web browser stream
      * @param boolean $BrowserExpire
      */
-    public function stroke($BrowserExpire = false)
+    public function stroke($BrowserExpire = \false)
     {
         if ($this->TransparentBackground) {
-            imagealphablending($this->Picture, false);
-            imagesavealpha($this->Picture, true);
+            imagealphablending($this->Picture, \false);
+            imagesavealpha($this->Picture, \true);
         }
         if ($BrowserExpire) {
             header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -324,15 +324,15 @@ class Image extends \CpChart\Draw
      * @param string $Message
      * @param boolean $HTMLEncode
      */
-    public function addToImageMap($Type, $Plots, $Color = null, $Title = null, $Message = null, $HTMLEncode = false)
+    public function addToImageMap($Type, $Plots, $Color = null, $Title = null, $Message = null, $HTMLEncode = \false)
     {
         if ($this->ImageMapStorageMode == null) {
             $this->initialiseImageMap();
         }
         /* Encode the characters in the imagemap in HTML standards */
-        $Title = htmlentities(str_replace("&#8364;", "\\u20AC", $Title), ENT_QUOTES, "ISO-8859-15");
+        $Title = htmlentities(str_replace("&#8364;", "\\u20AC", $Title), \ENT_QUOTES, "ISO-8859-15");
         if ($HTMLEncode) {
-            $Message = str_replace("&gt;", ">", str_replace("&lt;", "<", htmlentities($Message, ENT_QUOTES, "ISO-8859-15")));
+            $Message = str_replace("&gt;", ">", str_replace("&lt;", "<", htmlentities($Message, \ENT_QUOTES, "ISO-8859-15")));
         }
         if ($this->ImageMapStorageMode == IMAGE_MAP_STORAGE_SESSION) {
             if (!isset($_SESSION)) {
@@ -401,7 +401,7 @@ class Image extends \CpChart\Draw
             $TempArray = [];
             $Handle = $this->openFileHandle();
             if ($Handle) {
-                while (($Buffer = fgets($Handle, 4096)) !== false) {
+                while (($Buffer = fgets($Handle, 4096)) !== \false) {
                     $Fields = preg_split(sprintf("/%s/", IMAGE_MAP_DELIMITER), str_replace([chr(10), chr(13)], "", $Buffer));
                     $TempArray[] = [$Fields[0], $Fields[1], $Fields[2], $Fields[3], $Fields[4]];
                 }
@@ -458,7 +458,7 @@ class Image extends \CpChart\Draw
             $TempArray = [];
             $Handle = $this->openFileHandle();
             if ($Handle) {
-                while (($Buffer = fgets($Handle, 4096)) !== false) {
+                while (($Buffer = fgets($Handle, 4096)) !== \false) {
                     $Fields = preg_split("/" . IMAGE_MAP_DELIMITER . "/", str_replace([chr(10), chr(13)], "", $Buffer));
                     $TempArray[] = [$Fields[0], $Fields[1], $Fields[2], $Fields[3], $Fields[4]];
                 }
@@ -503,7 +503,7 @@ class Image extends \CpChart\Draw
             if (file_exists($StorageFolder . "/" . $UniqueID . ".map")) {
                 $Handle = @fopen($StorageFolder . "/" . $UniqueID . ".map", "r");
                 if ($Handle) {
-                    while (($Buffer = fgets($Handle, 4096)) !== false) {
+                    while (($Buffer = fgets($Handle, 4096)) !== \false) {
                         echo $Buffer;
                     }
                 }

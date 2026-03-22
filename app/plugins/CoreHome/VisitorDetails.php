@@ -93,7 +93,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     protected function getVisitLengthPretty()
     {
         $formatter = new Formatter();
-        return $formatter->getPrettyTimeFromSeconds($this->details['visit_total_time'], true);
+        return $formatter->getPrettyTimeFromSeconds($this->details['visit_total_time'], \true);
     }
     protected function getUserId()
     {

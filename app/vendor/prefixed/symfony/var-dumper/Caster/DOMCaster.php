@@ -20,7 +20,7 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\Stub;
  */
 class DOMCaster
 {
-    private const ERROR_CODES = [\DOM_PHP_ERR => 'DOM_PHP_ERR', \DOM_INDEX_SIZE_ERR => 'DOM_INDEX_SIZE_ERR', \DOMSTRING_SIZE_ERR => 'DOMSTRING_SIZE_ERR', \DOM_HIERARCHY_REQUEST_ERR => 'DOM_HIERARCHY_REQUEST_ERR', \DOM_WRONG_DOCUMENT_ERR => 'DOM_WRONG_DOCUMENT_ERR', \DOM_INVALID_CHARACTER_ERR => 'DOM_INVALID_CHARACTER_ERR', \DOM_NO_DATA_ALLOWED_ERR => 'DOM_NO_DATA_ALLOWED_ERR', \DOM_NO_MODIFICATION_ALLOWED_ERR => 'DOM_NO_MODIFICATION_ALLOWED_ERR', \DOM_NOT_FOUND_ERR => 'DOM_NOT_FOUND_ERR', \DOM_NOT_SUPPORTED_ERR => 'DOM_NOT_SUPPORTED_ERR', \DOM_INUSE_ATTRIBUTE_ERR => 'DOM_INUSE_ATTRIBUTE_ERR', \DOM_INVALID_STATE_ERR => 'DOM_INVALID_STATE_ERR', \DOM_SYNTAX_ERR => 'DOM_SYNTAX_ERR', \DOM_INVALID_MODIFICATION_ERR => 'DOM_INVALID_MODIFICATION_ERR', \DOM_NAMESPACE_ERR => 'DOM_NAMESPACE_ERR', \DOM_INVALID_ACCESS_ERR => 'DOM_INVALID_ACCESS_ERR', \DOM_VALIDATION_ERR => 'DOM_VALIDATION_ERR'];
+    private const ERROR_CODES = [0 => 'DOM_PHP_ERR', \DOM_INDEX_SIZE_ERR => 'DOM_INDEX_SIZE_ERR', \DOMSTRING_SIZE_ERR => 'DOMSTRING_SIZE_ERR', \DOM_HIERARCHY_REQUEST_ERR => 'DOM_HIERARCHY_REQUEST_ERR', \DOM_WRONG_DOCUMENT_ERR => 'DOM_WRONG_DOCUMENT_ERR', \DOM_INVALID_CHARACTER_ERR => 'DOM_INVALID_CHARACTER_ERR', \DOM_NO_DATA_ALLOWED_ERR => 'DOM_NO_DATA_ALLOWED_ERR', \DOM_NO_MODIFICATION_ALLOWED_ERR => 'DOM_NO_MODIFICATION_ALLOWED_ERR', \DOM_NOT_FOUND_ERR => 'DOM_NOT_FOUND_ERR', \DOM_NOT_SUPPORTED_ERR => 'DOM_NOT_SUPPORTED_ERR', \DOM_INUSE_ATTRIBUTE_ERR => 'DOM_INUSE_ATTRIBUTE_ERR', \DOM_INVALID_STATE_ERR => 'DOM_INVALID_STATE_ERR', \DOM_SYNTAX_ERR => 'DOM_SYNTAX_ERR', \DOM_INVALID_MODIFICATION_ERR => 'DOM_INVALID_MODIFICATION_ERR', \DOM_NAMESPACE_ERR => 'DOM_NAMESPACE_ERR', \DOM_INVALID_ACCESS_ERR => 'DOM_INVALID_ACCESS_ERR', \DOM_VALIDATION_ERR => 'DOM_VALIDATION_ERR'];
     private const NODE_TYPES = [\XML_ELEMENT_NODE => 'XML_ELEMENT_NODE', \XML_ATTRIBUTE_NODE => 'XML_ATTRIBUTE_NODE', \XML_TEXT_NODE => 'XML_TEXT_NODE', \XML_CDATA_SECTION_NODE => 'XML_CDATA_SECTION_NODE', \XML_ENTITY_REF_NODE => 'XML_ENTITY_REF_NODE', \XML_ENTITY_NODE => 'XML_ENTITY_NODE', \XML_PI_NODE => 'XML_PI_NODE', \XML_COMMENT_NODE => 'XML_COMMENT_NODE', \XML_DOCUMENT_NODE => 'XML_DOCUMENT_NODE', \XML_DOCUMENT_TYPE_NODE => 'XML_DOCUMENT_TYPE_NODE', \XML_DOCUMENT_FRAG_NODE => 'XML_DOCUMENT_FRAG_NODE', \XML_NOTATION_NODE => 'XML_NOTATION_NODE', \XML_HTML_DOCUMENT_NODE => 'XML_HTML_DOCUMENT_NODE', \XML_DTD_NODE => 'XML_DTD_NODE', \XML_ELEMENT_DECL_NODE => 'XML_ELEMENT_DECL_NODE', \XML_ATTRIBUTE_DECL_NODE => 'XML_ATTRIBUTE_DECL_NODE', \XML_ENTITY_DECL_NODE => 'XML_ENTITY_DECL_NODE', \XML_NAMESPACE_DECL_NODE => 'XML_NAMESPACE_DECL_NODE'];
     public static function castException(\DOMException $e, array $a, Stub $stub, bool $isNested)
     {
@@ -52,10 +52,10 @@ class DOMCaster
     }
     public static function castDocument(\DOMDocument $dom, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
-        $a += ['doctype' => $dom->doctype, 'implementation' => $dom->implementation, 'documentElement' => new CutStub($dom->documentElement), 'actualEncoding' => $dom->actualEncoding, 'encoding' => $dom->encoding, 'xmlEncoding' => $dom->xmlEncoding, 'standalone' => $dom->standalone, 'xmlStandalone' => $dom->xmlStandalone, 'version' => $dom->version, 'xmlVersion' => $dom->xmlVersion, 'strictErrorChecking' => $dom->strictErrorChecking, 'documentURI' => $dom->documentURI ? new LinkStub($dom->documentURI) : $dom->documentURI, 'config' => $dom->config, 'formatOutput' => $dom->formatOutput, 'validateOnParse' => $dom->validateOnParse, 'resolveExternals' => $dom->resolveExternals, 'preserveWhiteSpace' => $dom->preserveWhiteSpace, 'recover' => $dom->recover, 'substituteEntities' => $dom->substituteEntities];
+        $a += ['doctype' => $dom->doctype, 'implementation' => $dom->implementation, 'documentElement' => new CutStub($dom->documentElement), 'encoding' => $dom->encoding, 'xmlEncoding' => $dom->xmlEncoding, 'xmlStandalone' => $dom->xmlStandalone, 'xmlVersion' => $dom->xmlVersion, 'strictErrorChecking' => $dom->strictErrorChecking, 'documentURI' => $dom->documentURI ? new LinkStub($dom->documentURI) : $dom->documentURI, 'formatOutput' => $dom->formatOutput, 'validateOnParse' => $dom->validateOnParse, 'resolveExternals' => $dom->resolveExternals, 'preserveWhiteSpace' => $dom->preserveWhiteSpace, 'recover' => $dom->recover, 'substituteEntities' => $dom->substituteEntities];
         if (!($filter & Caster::EXCLUDE_VERBOSE)) {
             $formatOutput = $dom->formatOutput;
-            $dom->formatOutput = true;
+            $dom->formatOutput = \true;
             $a += [Caster::PREFIX_VIRTUAL . 'xml' => $dom->saveXML()];
             $dom->formatOutput = $formatOutput;
         }
@@ -108,7 +108,7 @@ class DOMCaster
     }
     public static function castEntity(\DOMEntity $dom, array $a, Stub $stub, bool $isNested)
     {
-        $a += ['publicId' => $dom->publicId, 'systemId' => $dom->systemId, 'notationName' => $dom->notationName, 'actualEncoding' => $dom->actualEncoding, 'encoding' => $dom->encoding, 'version' => $dom->version];
+        $a += ['publicId' => $dom->publicId, 'systemId' => $dom->systemId, 'notationName' => $dom->notationName];
         return $a;
     }
     public static function castProcessingInstruction(\DOMProcessingInstruction $dom, array $a, Stub $stub, bool $isNested)

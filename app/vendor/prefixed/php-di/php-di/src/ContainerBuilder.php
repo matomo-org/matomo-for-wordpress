@@ -45,20 +45,20 @@ class ContainerBuilder
     /**
      * @var bool
      */
-    private $useAutowiring = true;
+    private $useAutowiring = \true;
     /**
      * @var bool
      */
-    private $useAnnotations = false;
+    private $useAnnotations = \false;
     /**
      * @var bool
      */
-    private $ignorePhpDocErrors = false;
+    private $ignorePhpDocErrors = \false;
     /**
      * If true, write the proxies to disk to improve performances.
      * @var bool
      */
-    private $writeProxiesToFile = false;
+    private $writeProxiesToFile = \false;
     /**
      * Directory where to write the proxies (if $writeProxiesToFile is enabled).
      * @var string|null
@@ -77,7 +77,7 @@ class ContainerBuilder
      * Whether the container has already been built.
      * @var bool
      */
-    private $locked = false;
+    private $locked = \false;
     /**
      * @var string|null
      */
@@ -85,7 +85,7 @@ class ContainerBuilder
     /**
      * @var bool
      */
-    private $sourceCache = false;
+    private $sourceCache = \false;
     /**
      * @var string
      */
@@ -141,14 +141,14 @@ class ContainerBuilder
             $source = new SourceCache($source, $this->sourceCacheNamespace);
         }
         $proxyFactory = new ProxyFactory($this->writeProxiesToFile, $this->proxyDirectory);
-        $this->locked = true;
+        $this->locked = \true;
         $containerClass = $this->containerClass;
         if ($this->compileToDirectory) {
             $compiler = new Compiler($proxyFactory);
             $compiledContainerFile = $compiler->compile($source, $this->compileToDirectory, $containerClass, $this->containerParentClass, $this->useAutowiring || $this->useAnnotations);
             // Only load the file if it hasn't been already loaded
             // (the container can be created multiple times in the same process)
-            if (!class_exists($containerClass, false)) {
+            if (!class_exists($containerClass, \false)) {
                 require $compiledContainerFile;
             }
         }
@@ -292,7 +292,7 @@ class ContainerBuilder
     public function enableDefinitionCache(string $cacheNamespace = '') : self
     {
         $this->ensureNotLocked();
-        $this->sourceCache = true;
+        $this->sourceCache = \true;
         $this->sourceCacheNamespace = $cacheNamespace;
         return $this;
     }

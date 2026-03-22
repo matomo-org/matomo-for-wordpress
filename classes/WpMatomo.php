@@ -1,4 +1,4 @@
-n<?php
+<?php
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+use WpMatomo\Admin\AdBlockDetector;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Admin\Chart;
 use WpMatomo\Admin\Dashboard;
@@ -40,15 +41,18 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	/**
-	 * @var Settings
-	 */
-	public static $settings;
+	const VERSION = '5.7.1';
 
 	/**
 	 * @var \WpMatomo\Feature[]
 	 */
 	private static $features = [];
+
+
+	/**
+	 * @var Settings
+	 */
+	public static $settings;
 
 	public function __construct() {
 		$this->declare_woocommerce_hpos_compatible();
@@ -61,12 +65,30 @@ class WpMatomo {
 
 		$this->init_features();
 
-		// TODO: this doesn't appear to be necessary or is it just to load the class?
+		$adblock_detector = new AdBlockDetector();
+		$adblock_detector->register_hooks();
+
+		add_action(
+			'init',
+			function () {
+				$whats_new_notifications = new \WpMatomo\Admin\WhatsNewNotifications( self::$settings );
+				if ( $whats_new_notifications->is_active() ) {
+					$whats_new_notifications->register_hooks();
+				}
+				$whats_new_notifications->register_ajax();
+			}
+		);
+
+		$ai_bot_tracking = new \WpMatomo\AIBotTracking( self::$settings );
+		$ai_bot_tracking->register_hooks();
+
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			new MatomoCommands();
 		}
 
+		// TODO: need better way of doing ajax?
 		WpMatomo\Admin\TrackingSettings::register_ajax();
+		\WpMatomo\Admin\GetStarted::register_hooks();
 	}
 
 	private function check_compatibility() {
@@ -145,15 +167,6 @@ class WpMatomo {
 		);
 	}
 
-	public static function is_async_archiving_manually_disabled() {
-		return ( defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) && ! MATOMO_SUPPORT_ASYNC_ARCHIVING )
-			|| self::is_async_archiving_disabled_by_setting();
-	}
-
-	private static function is_async_archiving_disabled_by_setting() {
-		return self::$settings->is_async_archiving_disabled_by_option();
-	}
-
 	private function init_features() {
 		$features = $this->get_all_features();
 
@@ -173,18 +186,24 @@ class WpMatomo {
 
 	private function get_all_features() {
 		if ( self::is_safe_mode() ) {
-			return [
-				new Admin( self::$settings, false ),
-				new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
-			];
+			if ( is_admin() ) {
+				return [
+					new Admin( self::$settings, false ),
+					new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
+				];
+			}
+
+			return [];
 		}
+
+		$site_config = new SiteSync\SyncConfig( self::$settings );
 
 		return [
 			new \WpMatomo\PluginInit( self::$settings ),
 			new Capabilities( self::$settings ),
 			new Roles( self::$settings ),
 			new \WpMatomo\Compatibility(),
-			new ScheduledTasks( self::$settings ),
+			new ScheduledTasks( self::$settings, $site_config ),
 			new OptOut(),
 			new Renderer(),
 			new API(),
@@ -197,8 +216,8 @@ class WpMatomo {
 			new Chart(),
 
 			/*
-			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
-			 */
+			* @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			*/
 			new RedirectOnActivation(),
 
 			new PluginAdminOverrides( self::$settings ),
@@ -212,6 +231,15 @@ class WpMatomo {
 		];
 	}
 
+	public static function is_async_archiving_manually_disabled() {
+		return ( defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) && ! MATOMO_SUPPORT_ASYNC_ARCHIVING )
+			|| self::is_async_archiving_disabled_by_setting();
+	}
+
+	private static function is_async_archiving_disabled_by_setting() {
+		return self::$settings->is_async_archiving_disabled_by_option();
+	}
+
 	/**
 	 * @param string $class_name
 	 * @return \WpMatomo\Feature|null
@@ -220,7 +248,5 @@ class WpMatomo {
 		if ( empty( self::$features[ $class_name ] ) ) {
 			return null;
 		}
-
-		return self::$features[ $class_name ];
 	}
 }

@@ -13,15 +13,18 @@ namespace Piwik\Db\Schema;
  */
 class Tidb extends \Piwik\Db\Schema\Mysql
 {
+    public function getDatabaseType() : string
+    {
+        return 'TiDb';
+    }
     /**
      * TiDB performs a sanity check before performing e.g. ALTER TABLE statements. If any of the used columns does not
      * exist before the query fails. This also happens if the column would be added in the same query.
      *
-     * @return bool
      */
     public function supportsComplexColumnUpdates() : bool
     {
-        return false;
+        return \false;
     }
     public function getDefaultCollationForCharset(string $charset) : string
     {
@@ -53,5 +56,29 @@ class Tidb extends \Piwik\Db\Schema\Mysql
             $options .= " {$rowFormat}";
         }
         return $options;
+    }
+    public function isOptimizeInnoDBSupported() : bool
+    {
+        return \false;
+    }
+    public function optimizeTables(array $tables, bool $force = \false) : bool
+    {
+        // OPTIMIZE TABLE not supported for TiDb
+        return \false;
+    }
+    public function supportsSortingInSubquery() : bool
+    {
+        // TiDb optimizer removes all sorting from subqueries
+        return \false;
+    }
+    public function getSupportedReadIsolationTransactionLevel() : string
+    {
+        // TiDB doesn't support READ UNCOMMITTED
+        return 'READ COMMITTED';
+    }
+    public function hasReachedEOL() : bool
+    {
+        // ignore in EOL checks
+        return \false;
     }
 }

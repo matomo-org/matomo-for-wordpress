@@ -53,7 +53,7 @@ abstract class PieGraph extends StaticGraph
         if ($showLegend) {
             $this->pieChart->drawPieLegend(15, 40, array("Alpha" => 20));
         }
-        $this->pieConfig = array('Radius' => $radius, 'DrawLabels' => true, 'DataGapAngle' => self::SECTOR_GAP, 'DataGapRadius' => self::SECTOR_GAP);
+        $this->pieConfig = array('Radius' => $radius, 'DrawLabels' => \true, 'DataGapAngle' => self::SECTOR_GAP, 'DataGapRadius' => self::SECTOR_GAP);
     }
     /**
      * this method logic is close to Piwik's core filter_truncate.

@@ -24,7 +24,7 @@ class WhitelistedValue extends \Piwik\Validators\BaseValidator
     }
     public function validate($value)
     {
-        if (!in_array($value, $this->whitelisted, true)) {
+        if (!in_array($value, $this->whitelisted, \true)) {
             throw new \Piwik\Validators\Exception(Piwik::translate('General_ValidatorErrorXNotWhitelisted', array($value, implode(', ', $this->whitelisted))));
         }
     }

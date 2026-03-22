@@ -19,9 +19,20 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
     /** @var Setting */
     public $allowedEmailDomains;
+    /** @var Setting */
+    public $enableInactiveUsersNotifications;
     protected function init()
     {
         $this->allowedEmailDomains = $this->createAllowedEmailDomains();
+        $this->enableInactiveUsersNotifications = $this->createEnableInactiveUsersNotifications();
+    }
+    private function createEnableInactiveUsersNotifications() : Setting
+    {
+        return $this->makeSetting('enableInactiveUsersNotifications', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $field->title = Piwik::translate('UsersManager_SettingEnableInactiveUsersNotifications');
+            $field->description = Piwik::translate('UsersManager_SettingEnableInactiveUsersNotificationsHelp');
+            $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
+        });
     }
     private function createAllowedEmailDomains()
     {
@@ -58,7 +69,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 }
                 $domains = array_map(function ($domain) {
                     $domain = trim($domain);
-                    if (mb_strpos($domain, '@') !== false) {
+                    if (mb_strpos($domain, '@') !== \false) {
                         // handle incorrect user input such as leading @ or entered email address
                         $allowedEmailDomains = new AllowedEmailDomain($this);
                         $domain = $allowedEmailDomains->getDomainFromEmail($domain);

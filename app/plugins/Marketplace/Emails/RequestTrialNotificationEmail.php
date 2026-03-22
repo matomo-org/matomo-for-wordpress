@@ -4,7 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 declare (strict_types=1);
 namespace Piwik\Plugins\Marketplace\Emails;
@@ -40,16 +40,10 @@ class RequestTrialNotificationEmail extends Mail
         $this->pluginDisplayName = $pluginDisplayName;
         $this->setUpEmail();
     }
-    /**
-     * @return string
-     */
     protected function getDefaultSubject() : string
     {
         return Piwik::translate('Marketplace_RequestTrialNotificationEmailSubject', [$this->pluginDisplayName]);
     }
-    /**
-     * @return View
-     */
     protected function getDefaultBodyView() : View
     {
         $piwikUrl = SettingsPiwik::getPiwikUrl();

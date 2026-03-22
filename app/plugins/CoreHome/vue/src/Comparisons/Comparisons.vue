@@ -61,10 +61,7 @@
       class="loadingPiwik"
       style="display:none;"
     >
-      <img
-        src="plugins/Morpheus/images/loading-blue.gif"
-        :alt="translate('General_LoadingData')"
-      />
+      <MatomoLoader />
       {{ translate('General_LoadingData') }}
     </div>
   </div>
@@ -77,6 +74,7 @@ import ComparisonsStoreInstance from './Comparisons.store.instance';
 import Matomo from '../Matomo/Matomo';
 import MatomoUrl from '../MatomoUrl/MatomoUrl';
 import AjaxHelper from '../AjaxHelper/AjaxHelper';
+import MatomoLoader from '../MatomoLoader/MatomoLoader';
 import { translate } from '../translate';
 import Tooltips from '../Tooltips/Tooltips';
 
@@ -101,6 +99,9 @@ interface ComparisonState {
 
 export default defineComponent({
   props: {
+  },
+  components: {
+    MatomoLoader,
   },
   directives: {
     Tooltips,
@@ -240,7 +241,7 @@ export default defineComponent({
       visitsPercent = `${visitsPercent}%`;
 
       tooltip += translate('General_ComparisonCardTooltip1', [
-        `'${comparisonRow.compareSegmentPretty}'`,
+        `'${this.htmlentities(comparisonRow.compareSegmentPretty)}'`,
         comparisonRow.comparePeriodPretty,
         visitsPercent,
         comparisonRow.nb_visits.toString(),
@@ -250,7 +251,7 @@ export default defineComponent({
         tooltip += '<br/><br/>';
         tooltip += translate('General_ComparisonCardTooltip2', [
           comparisonRow.nb_visits_change.toString(),
-          firstPeriodRow.compareSegmentPretty,
+          this.htmlentities(firstPeriodRow.compareSegmentPretty),
           firstPeriodRow.comparePeriodPretty,
         ]);
       }

@@ -29,7 +29,7 @@ class ListPlugins extends ConsoleCommand
         $pluginFilter = $this->getInput()->getOption('filter-plugin');
         if (!empty($pluginFilter)) {
             $plugins = array_filter($plugins, function ($pluginName) use($pluginFilter) {
-                return strpos($pluginName, $pluginFilter) !== false;
+                return strpos($pluginName, $pluginFilter) !== \false;
             });
         }
         $verbose = $this->getOutput()->isVerbose();
@@ -46,7 +46,6 @@ class ListPlugins extends ConsoleCommand
                 if (isset($plugin["version"]) && !isset($plugin["activated"])) {
                     $plugin["version"] = '';
                 }
-                $plugin["activated"] = isset($plugin["activated"]);
                 return $plugin;
             }, $plugins);
             // write JSON output

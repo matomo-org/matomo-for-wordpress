@@ -59,14 +59,17 @@ class Forms {
 	 * @param string  $group_name define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
 	 * @param string  $on_change javascript for onchange event (default: empty)
+	 * @param boolean $is_global whether the option is global or blog specific
 	 */
-	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = false, $on_change = '' ) {
+	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = false, $on_change = '', $is_global = true ) {
+		$value = $is_global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+
 		printf(
-			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
+			'<tr id="' . esc_attr( $id ) . '-field" class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
 			. '<th scope="row"><label for="%2$s">%s:</label></th>'
 			. '<td>'
 			. '<label class="matomo-toggle">'
-			. '<input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" />'
+			. '<input type="checkbox" value="1"' . ( $value ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" />'
 			. '<span class="slider"></span>'
 			. '</label>'
 			. '<input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s'
@@ -95,7 +98,7 @@ class Forms {
 	 */
 	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = false, $on_change = '', $is_readonly = false, $global = true, $exclude_name = false ) {
 		printf(
-			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s:</label></th><td><textarea cols="80" rows="' . esc_attr( $rows ) . '" id="%s" ' . ( $exclude_name ? '' : 'name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]' ) . '" onchange="%s" spellcheck="false"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
+			'<tr id="' . esc_attr( $id ) . '-field" class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s:</label></th><td><textarea cols="80" rows="' . esc_attr( $rows ) . '" id="%s" ' . ( $exclude_name ? '' : 'name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]' ) . '" onchange="%s" spellcheck="false"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
 			esc_html( $name ),
 			esc_attr( $id ),
 			$on_change,
@@ -135,7 +138,7 @@ class Forms {
 	 * @param boolean $wide Create a wide box (default: false)
 	 */
 	public function show_input( $id, $name, $description, $is_hidden = false, $group_name = '', $row_name = false, $hide_description = false, $wide = false ) {
-		printf( '<tr class="%s%s"%s><th scope="row"><label for="%5$s">%s:</label></th><td><input ' . ( $wide ? 'class="matomo-wide" ' : '' ) . 'name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%5$s" value="%s" /> %s</td></tr>', $is_hidden ? 'hidden ' : '', $group_name ? $group_name : '', $row_name ? ' id="' . $group_name . '-' . $row_name . '"' : '', esc_html( $name ), esc_attr( $id ), htmlentities( $this->settings->get_global_option( $id ), ENT_QUOTES, 'UTF-8', false ), ! empty( $description ) ? $this->get_description( $id, $description, $hide_description ) : '' );
+		printf( '<tr id="' . esc_attr( $id ) . '-field" class="%s%s"%s><th scope="row"><label for="%5$s">%s:</label></th><td><input ' . ( $wide ? 'class="matomo-wide" ' : '' ) . 'name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%5$s" value="%s" /> %s</td></tr>', $is_hidden ? 'hidden ' : '', $group_name ? $group_name : '', $row_name ? ' id="' . $group_name . '-' . $row_name . '"' : '', esc_html( $name ), esc_attr( $id ), htmlentities( $this->settings->get_global_option( $id ), ENT_QUOTES, 'UTF-8', false ), ! empty( $description ) ? $this->get_description( $id, $description, $hide_description ) : '' );
 	}
 
 	/**
@@ -177,7 +180,7 @@ class Forms {
 			// we make sure it will select the right settings by default
 			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#' . esc_js( $id ) . '").change(); }, 800);</script>';
 		}
-		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
+		printf( '<tr id="' . esc_attr( $id ) . '-field" class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
 	}
 
 	/**
@@ -240,7 +243,7 @@ class Forms {
 			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#' . esc_js( $id ) . '").change(); }, 800);</script>';
 		}
 		printf(
-			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
+			'<tr id="' . esc_attr( $id ) . '-field" class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
 			. '<th scope="row"><label>%s:%s</label></th>'
 			. '<td><div id="%s" style="display:inline-block">%s</div> %s</td>'
 			. '</tr>',

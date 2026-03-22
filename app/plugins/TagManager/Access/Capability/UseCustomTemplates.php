@@ -14,7 +14,7 @@ use Piwik\Access\Role\Admin;
 use Piwik\Piwik;
 class UseCustomTemplates extends Capability
 {
-    const ID = 'tagmanager_use_custom_templates';
+    public const ID = 'tagmanager_use_custom_templates';
     public function getId() : string
     {
         return self::ID;

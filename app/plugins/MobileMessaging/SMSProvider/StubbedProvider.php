@@ -30,7 +30,7 @@ class StubbedProvider extends SMSProvider
     }
     public function verifyCredential($credentials)
     {
-        return true;
+        return \true;
     }
     public function sendSMS($credentials, $smsText, $phoneNumber, $from)
     {

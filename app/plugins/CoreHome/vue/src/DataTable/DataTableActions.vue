@@ -14,10 +14,12 @@
       href
       @click.prevent
       :data-target="`dropdownConfigure${randomIdForDropdown}`"
+      :title="translate('CoreHome_ReportConfigure')"
       style="margin-right:3.5px"
       v-if="hasConfigItems && (isAnyConfigureIconHighlighted || isTableView)"
     >
       <span class="icon-configure"></span>
+      <span class="visually-hidden">{{ translate('CoreHome_ReportConfiguration') }}</span>
     </a>
 
     <a v-if="hasFooterIconsToShow"
@@ -93,7 +95,10 @@
       href=""
       style="margin-right:3.5px"
       @click.prevent
-    ><span class="icon-export"></span></a>
+    >
+      <span class="icon-export"></span>
+      <span class="visually-hidden">{{ translate('General_ExportThisReport') }}</span>
+    </a>
 
     <a
       v-if="showExportAsImageIcon"
@@ -128,7 +133,7 @@
       <span class="icon-search" draggable="false"></span>
       <span class="icon-close" draggable="false" :title="translate('CoreHome_CloseSearch')"></span>
       <input
-        :id="`widgetSearch_${reportId}`"
+        :id="`widgetSearch_${reportId}_${placement}`"
         :title="translate('CoreHome_DataTableHowToSearch')"
         type="text"
         class="dataTableSearchInput"
@@ -327,6 +332,10 @@ export default defineComponent({
       required: true,
     },
     pivotDimensionName: String,
+    placement: {
+      type: String,
+      default: 'footer',
+    },
   },
   components: {
     Passthrough,
@@ -381,13 +390,13 @@ export default defineComponent({
     },
     reportFormats(): Record<string, string> {
       const formats: Record<string, string> = {
-        CSV: 'CSV',
         TSV: 'TSV (Excel)',
-        XML: 'XML',
-        JSON: 'Json',
         HTML: 'HTML',
+        JSON: 'JSON',
+        XML: 'XML',
+        CSV: 'CSV',
+        RSS: 'RSS',
       };
-      formats.RSS = 'RSS';
       return formats;
     },
     showDimensionsConfigItem() {

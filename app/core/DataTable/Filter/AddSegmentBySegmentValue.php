@@ -39,7 +39,6 @@ class AddSegmentBySegmentValue extends BaseFilter
      * See {@link AddSegmentBySegmentValue}.
      *
      * @param DataTable $table
-     * @return int The number of deleted rows.
      */
     public function filter($table)
     {
@@ -54,14 +53,14 @@ class AddSegmentBySegmentValue extends BaseFilter
         if (empty($segments)) {
             return;
         }
-        $this->enableRecursive(true);
+        $this->enableRecursive(\true);
         /** @var \Piwik\Plugin\Segment $segment */
         $segment = reset($segments);
         $segmentName = $segment->getSegment();
         foreach ($table->getRows() as $row) {
             $value = $row->getMetadata('segmentValue');
             $filter = $row->getMetadata('segment');
-            if ($value !== false && $filter === false) {
+            if ($value !== \false && $filter === \false) {
                 $row->setMetadata('segment', sprintf('%s==%s', $segmentName, urlencode($value)));
             }
             $this->filterSubTable($row);

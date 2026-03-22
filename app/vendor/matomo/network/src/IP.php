@@ -113,7 +113,7 @@ abstract class IP
     {
         $ipLen = strlen($this->ip);
         if (empty($this->ip) || empty($ipRange) || $ipLen != 4 && $ipLen != 16) {
-            return false;
+            return \false;
         }
         if (is_array($ipRange)) {
             // already split into low/high IP addresses
@@ -124,18 +124,18 @@ abstract class IP
             $ipRange = \Matomo\Network\IPUtils::getIPRangeBounds($ipRange);
         }
         if ($ipRange === null) {
-            return false;
+            return \false;
         }
         $low = $ipRange[0];
         $high = $ipRange[1];
         if (strlen($low) != $ipLen) {
-            return false;
+            return \false;
         }
         // binary-safe string comparison
         if ($this->ip >= $low && $this->ip <= $high) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Determines if the IP address is in a specified IP address range.
@@ -149,14 +149,14 @@ abstract class IP
     {
         $ipLen = strlen($this->ip);
         if (empty($this->ip) || empty($ipRanges) || $ipLen != 4 && $ipLen != 16) {
-            return false;
+            return \false;
         }
         foreach ($ipRanges as $ipRange) {
             if ($this->isInRange($ipRange)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Returns the IP address as an IPv4 string when possible.

@@ -37,15 +37,13 @@ class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
                 return '';
             }
             $index = array_search(trim(urldecode($brand)), $brands);
-            if ($index === false) {
+            if ($index === \false) {
                 throw new \Exception("deviceBrand segment must be one of: {$brandList}");
             }
             return $index;
         };
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -55,8 +53,6 @@ class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
         return $parser->getBrand();
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */

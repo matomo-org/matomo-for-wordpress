@@ -30,6 +30,10 @@ class Metadata {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
+		$report_dates      = new Dates();
+		$report_date       = $report_dates->get_date_from_query();
+		[ $period, $date ] = $report_dates->detect_period_and_date( $report_date );
+
 		if ( $idsite ) {
 			Bootstrap::do_bootstrap();
 
@@ -38,6 +42,8 @@ class Metadata {
 				[
 					'idSite'       => $idsite,
 					'filter_limit' => - 1,
+					'period'       => $period,
+					'date'         => $date,
 				]
 			);
 			foreach ( $all_reports as $single_report ) {

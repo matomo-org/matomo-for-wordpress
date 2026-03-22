@@ -29,11 +29,11 @@ class API extends \Piwik\Plugin\API
         try {
             $updater = StaticContainer::get('Piwik\\Plugins\\CustomJsTracker\\TrackerUpdater');
             $updater->checkWillSucceed();
-            return true;
+            return \true;
         } catch (AccessDeniedException $e) {
-            return false;
+            return \false;
         } catch (\Exception $e) {
-            return false;
+            return \false;
         }
     }
 }

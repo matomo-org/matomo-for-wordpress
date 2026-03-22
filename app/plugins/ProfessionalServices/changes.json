@@ -1,5 +1,31 @@
 [
   {
+    "title": "New: Share insights directly in Microsoft Teams!",
+    "description": "With the new free Matomo MS Teams plugin you can schedule reports and alerts for automatic delivery to shared MS Teams channels, ensuring critical updates reach the right people without delay. By improving visibility across stakeholders, reducing manual reporting and following performance trends consistently, your teams can respond quickly when metrics change.",
+    "link_name": "Learn more",
+    "link": "https://matomo.org/faq/reports/how-to-integrate-microsoft-teams-and-matomo/",
+    "version": "5.8.0"
+  },
+  {
+    "title": "New: Share insights directly to Slack!",
+    "description": "With the new free Matomo Slack plugin, you can share scheduled reports and custom alerts directly to your favourite Slack channels. Ensure no one misses the data that matters most by setting up automated reports and tailored alerts that go directly to Slack. This keeps your team updated, saves time, and makes it easier to monitor changes and respond promptly.",
+    "link_name": "Learn more",
+    "link": "https://matomo.org/faq/reports/how-to-integrate-slack-and-matomo/",
+    "version": "5.5.0"
+  },
+  {
+    "title": "New Copy function - Custom Reports, Heatmaps, and more",
+    "description": "A new a copy function is available across multiple features to make your setup faster and easier. Simply duplicate an existing item and settings are automatically copied - ready for you to adjust!",
+    "version": "5.5.0"
+  },
+  {
+    "title": "CustomReports - Now supports more than 3 dimensions",
+    "description": "On-Premise Matomo users can now configure the maximum number of dimensions allowed in a custom report at the instance level. For example, you can adjust the maximum number of dimensions from 3 (default) to 6 or 10.",
+    "version": "5.3.3",
+    "link_name": "Click here for more information",
+    "link": "https://matomo.org/faq/on-premise/how-do-i-change-the-number-of-dimensions-shown-in-a-custom-report/?mtm_campaign=in-app-custom-reports-notification&mtm_kwd=customReports&mtm_source=in-app&mtm_medium=notification&mtm_content=customReports-feature-updates&mtm_group=in-app"
+  },
+  {
     "title": "Funnels - Enhanced Analysis and Comparison Capabilities",
     "description": "Funnels now have an improved visualisation that provides a clear breakdown of proceeded visits, new entries, exits, and skipped steps at each stage, making it easier to identify areas for optimisation. The comparison functionality is improved to allow for a more useful analysis of funnel performance across different segments and date ranges.",
     "version": "5.1.0-b5",

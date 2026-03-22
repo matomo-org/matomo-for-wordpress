@@ -46,7 +46,7 @@ class FileExtensionEscapingStrategy
             case 'css':
                 return 'css';
             case 'txt':
-                return false;
+                return \false;
             default:
                 return 'html';
         }

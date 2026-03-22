@@ -8,8 +8,8 @@
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
-use Piwik\Config;
 use Piwik\Filesystem;
+use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 /**
  * Checks if the filesystem Piwik stores sessions in is NFS or not.
@@ -33,8 +33,7 @@ class NfsDiskCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
         if (!Filesystem::checkIfFileSystemIsNFS()) {
             return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK));
         }
-        $isPiwikInstalling = !Config::getInstance()->existsLocalConfig();
-        if ($isPiwikInstalling) {
+        if (!SettingsPiwik::isMatomoInstalled()) {
             $help = 'Installation_NfsFilesystemWarningSuffixInstall';
         } else {
             $help = 'Installation_NfsFilesystemWarningSuffixAdmin';

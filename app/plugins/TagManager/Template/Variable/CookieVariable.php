@@ -22,12 +22,13 @@ class CookieVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVar
     {
         return array($this->makeSetting('cookieName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_CookieVariableCookieNameTitle');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_CookieVariableCookieNamePlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validators[] = new CharacterLength(1, 500);
             $field->transform = function ($value) {
                 return trim($value);
             };
-        }), $this->makeSetting('urlDecode', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('urlDecode', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_CookieVariableUrlDecodeTitle');
             $field->inlineHelp = Piwik::translate('TagManager_CookieVariableUrlDecodeDescription');
         }));

@@ -41,7 +41,6 @@ class Model
     /**
      * Add any new changes for a plugin to the changes table
      *
-     * @param string $pluginName
      *
      * @throws \Exception
      */
@@ -62,13 +61,12 @@ class Model
     /**
      * Remove all changes for a plugin
      *
-     * @param string $pluginName
      */
     public function removeChanges(string $pluginName) : void
     {
         $table = Common::prefixTable('changes');
         try {
-            $this->db->query("DELETE FROM " . $table . " WHERE plugin_name = ?", [$pluginName]);
+            $this->db->query("DELETE FROM `" . $table . "` WHERE plugin_name = ?", [$pluginName]);
         } catch (\Exception $e) {
             if (Db::get()->isErrNo($e, Migration\Db::ERROR_CODE_TABLE_NOT_EXISTS)) {
                 return;
@@ -79,7 +77,6 @@ class Model
     /**
      * Add a change item to the database table
      *
-     * @param string $pluginName
      * @param array  $change
      */
     public function addChange(string $pluginName, array $change) : void
@@ -113,7 +110,6 @@ class Model
      *
      * @param int|null $newerThanId     Only count new changes as having a key > than this sequential key
      *
-     * @return int
      */
     public function doChangesExist(?int $newerThanId = null) : int
     {
@@ -139,7 +135,6 @@ class Model
      *
      * @param int|null $newerThanId     Only count new changes as having a key > than this sequential key
      *
-     * @return int
      */
     public function getNewChangesCount(?int $newerThanId = null) : int
     {
@@ -164,7 +159,7 @@ class Model
             return $this->changeItems;
         }
         $table = Common::prefixTable('changes');
-        $selectSql = "SELECT * FROM " . $table . " WHERE title IS NOT NULL AND created_time > ? ORDER BY idchange DESC";
+        $selectSql = "SELECT * FROM `" . $table . "` WHERE title IS NOT NULL AND created_time > ? ORDER BY idchange DESC";
         try {
             $changes = $this->db->fetchAll($selectSql, [Date::now()->subMonth(6)]);
         } catch (\Exception $e) {

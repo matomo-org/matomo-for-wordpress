@@ -43,7 +43,7 @@ class Factory
      */
     public function sql($sql, $errorCodesToIgnore = array())
     {
-        if ($errorCodesToIgnore === false) {
+        if ($errorCodesToIgnore === \false) {
             $errorCodesToIgnore = array();
         }
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\Sql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore));
@@ -66,7 +66,7 @@ class Factory
      */
     public function boundSql($sql, $bind, $errorCodesToIgnore = array())
     {
-        if ($errorCodesToIgnore === false) {
+        if ($errorCodesToIgnore === \false) {
             $errorCodesToIgnore = array();
         }
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\BoundSql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore, 'bind' => $bind));
@@ -149,7 +149,7 @@ class Factory
      * Drops an existing database table column.
      *
      * @param string $table  Unprefixed database table name, eg 'log_visit'.
-     * @param array $columnName  An array of column names that should be dropped eg ['column1', 'column2'].
+     * @param array $columnNames  An array of column names that should be dropped eg ['column1', 'column2'].
      * @return DropColumns
      */
     public function dropColumns($table, $columnNames)
@@ -268,7 +268,7 @@ class Factory
      * Drops an existing index from a database table.
      *
      * @param string $table  Unprefixed database table name, eg 'log_visit'.
-     * @return DropIndex
+     * @return DropPrimaryKey
      */
     public function dropPrimaryKey($table)
     {
@@ -323,7 +323,7 @@ class Factory
      * @param string $charset The charset to use, defaults to utf8
      * @return BatchInsert
      */
-    public function batchInsert($table, $columnNames, $values, $throwException = false, $charset = 'utf8')
+    public function batchInsert($table, $columnNames, $values, $throwException = \false, $charset = 'utf8')
     {
         $table = $this->prefixTable($table);
         return $this->container->make('Piwik\\Updater\\Migration\\Db\\BatchInsert', array('table' => $table, 'columnNames' => $columnNames, 'values' => $values, 'throwException' => $throwException, 'charset' => $charset));

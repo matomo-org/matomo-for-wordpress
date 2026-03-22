@@ -41,29 +41,25 @@ class ExitPageUrl extends VisitDimension
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int|bool
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionUrl = false;
+        $idActionUrl = \false;
         if (!empty($action)) {
             $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
         }
         return (int) $idActionUrl;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return int
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         $id = $action->getIdActionUrlForEntryAndExitIds();
         if (!empty($id)) {

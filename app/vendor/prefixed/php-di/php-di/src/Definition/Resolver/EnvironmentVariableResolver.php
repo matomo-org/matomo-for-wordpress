@@ -34,7 +34,7 @@ class EnvironmentVariableResolver implements DefinitionResolver
     public function resolve(Definition $definition, array $parameters = [])
     {
         $value = call_user_func($this->variableReader, $definition->getVariableName());
-        if (false !== $value) {
+        if (\false !== $value) {
             return $value;
         }
         if (!$definition->isOptional()) {
@@ -49,7 +49,7 @@ class EnvironmentVariableResolver implements DefinitionResolver
     }
     public function isResolvable(Definition $definition, array $parameters = []) : bool
     {
-        return true;
+        return \true;
     }
     protected function getEnvVariable(string $variableName)
     {

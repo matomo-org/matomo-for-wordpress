@@ -7,6 +7,7 @@
  */
 
 import Page from './page.js';
+import Website from "../website";
 
 class BlogCheckoutPage extends Page {
   async order() {
@@ -32,21 +33,18 @@ class BlogCheckoutPage extends Page {
 
     await browser.pause(1500);
 
-    const numAttempts = 3;
-    for (let i = 0; i < numAttempts; ++i) {
+    await Website.retry(5, async () => {
       await browser.execute(() => {
         window.jQuery('.wc-block-components-checkout-place-order-button,#place_order')[0].click();
       });
 
       try {
-        await $('li.woocommerce-order-overview__order').waitForDisplayed({timeout: 20000});
-        break;
+        await $('li.woocommerce-order-overview__order').waitForDisplayed({timeout: 60000});
       } catch (e) {
-        if (i + 1 >= numAttempts) {
-          throw e;
-        }
+        await browser.refresh();
+        throw e;
       }
-    }
+    });
   }
 }
 

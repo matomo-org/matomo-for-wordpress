@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\Resolution\Columns;
 
+use Piwik\Plugins\Resolution\Resolution as ResolutionPlugin;
 use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
@@ -22,13 +23,15 @@ class Resolution extends VisitDimension
     protected $namePlural = 'Resolution_Resolutions';
     protected $type = self::TYPE_TEXT;
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
+        // in privacy compliance mode, we can't detect screen resolution
+        if (ResolutionPlugin::isScreenResolutionDetectionDisabledByCompliancePolicy($request->getIdSiteIfExists())) {
+            return Request::UNKNOWN_RESOLUTION;
+        }
         $resolution = $request->getParam('res');
         if (!empty($resolution)) {
             return substr($resolution, 0, 9);
@@ -36,8 +39,6 @@ class Resolution extends VisitDimension
         return $resolution;
     }
     /**
-     * @param Request $request
-     * @param Visitor $visitor
      * @param Action|null $action
      * @return mixed
      */
@@ -47,7 +48,7 @@ class Resolution extends VisitDimension
         if ($visitor->getVisitorColumn($this->columnName) === Request::UNKNOWN_RESOLUTION) {
             return $this->onNewVisit($request, $visitor, $action);
         } else {
-            return false;
+            return \false;
         }
     }
 }

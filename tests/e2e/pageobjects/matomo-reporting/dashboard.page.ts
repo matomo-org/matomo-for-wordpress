@@ -12,7 +12,11 @@ import MatomoReportingPage from '../matomo-reporting.page.js';
 class DashboardPage extends MatomoReportingPage {
   async open() {
     const result = await super.open('Dashboard_Dashboard.1');
+    await this.waitForDashboard();
+    return result;
+  }
 
+  async waitForDashboard() {
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
@@ -21,15 +25,20 @@ class DashboardPage extends MatomoReportingPage {
       return loadedWidgetCount >= widgetsCount;
     }, { timeout: 30000 });
     await browser.waitUntil(async () => {
-      return await $('.UserCountryMap_map.kartograph').isDisplayed();
+      return await $('.UserCountryMap_map.kartograph,.mapWidgetStatus .pk-emptyDataTable').isDisplayed();
     }, { timeout: 30000 });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
     });
     await this.addStylesToPage('#visitsLive .realTimeWidget_datetime { display: none !important; }');
     await this.waitForImages();
+  }
 
-    return result;
+  async normalizeDates() {
+    await browser.execute(() => {
+      $('#periodString #date').text('REMOVED');
+      $('#widgetVisitsSummarygetEvolutionGraphforceView1viewDataTablegraphEvolution .jqplot-xaxis').hide();
+    });
   }
 }
 

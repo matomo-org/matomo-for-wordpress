@@ -55,7 +55,7 @@ class Updates_5_0_0_rc5 extends PiwikUpdates
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
         // Migrate the MatomoConfiguration type variables to all include the newly configured fields.
-        $migrator = new NewTagParameterMigrator(MatomoTag::ID, 'isEcommerceView', false);
+        $migrator = new NewTagParameterMigrator(MatomoTag::ID, 'isEcommerceView', \false);
         $migrator->addField('productSKU', '');
         $migrator->addField('productName', '');
         $migrator->addField('categoryName', '');

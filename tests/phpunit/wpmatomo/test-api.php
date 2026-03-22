@@ -67,7 +67,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	public function test_dispatch_matomo_api_response_when_datatable() {
 		$this->create_set_super_admin();
 
-		$tracker = $this->make_local_tracker( null );
+		$tracker = $this->make_local_tracker( '' );
 		$tracker->setUrl( 'http://whatever.com/a/page' );
 		$this->assert_tracking_response( $tracker->doTrackPageView( 'a page view' ) );
 
@@ -128,7 +128,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals(
 			array(
-				'code'    => 'matomo_error',
+				'code'    => 'matomo_http_bad_request_exception',
 				'message' => 'Please specify a value for \'date\'.',
 				'data'    => null,
 			),
@@ -143,7 +143,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals(
 			array(
-				'code'    => 'matomo_error',
+				'code'    => 'matomo_http_bad_request_exception',
 				'message' => 'Please specify a value for \'name\'.',
 				'data'    => null,
 			),
@@ -158,7 +158,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals(
 			array(
-				'code'    => 'matomo_error',
+				'code'    => 'matomo_http_bad_request_exception',
 				'message' => 'Please specify a value for \'idGoal\'.',
 				'data'    => null,
 			),
@@ -173,7 +173,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals(
 			array(
-				'code'    => 'matomo_error',
+				'code'    => 'matomo_http_bad_request_exception',
 				'message' => 'Please specify a value for \'idGoal\'.',
 				'data'    => null,
 			),

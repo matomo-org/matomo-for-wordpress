@@ -18,7 +18,7 @@ use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Translation\Translator;
 /**
- * Informatation about Matomo reports eg tracking or archiving related
+ * Informational about Matomo reports eg tracking or archiving related
  */
 class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
@@ -51,7 +51,7 @@ class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
         $time = Date::now()->subDay($numDays)->getDatetime();
         try {
             $idSites = $this->getImplodedIdSitesSecure();
-            $row = Db::fetchOne('SELECT idsite from ' . $table . ' where idsite in (' . $idSites . ') and visit_last_action_time > ? LIMIT 1', $time);
+            $row = Db::fetchOne('SELECT idsite from `' . $table . '` where idsite in (' . $idSites . ') and visit_last_action_time > ? LIMIT 1', $time);
         } catch (\Exception $e) {
             $row = null;
         }
@@ -68,6 +68,9 @@ class ReportInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagn
     {
         if (empty($this->idSiteCache)) {
             $idSites = null;
+            /*
+             * Performed as super user to ensure we are able to fetch all available site ids.
+             */
             Access::doAsSuperUser(function () use(&$idSites) {
                 $idSites = Site::getIdSitesFromIdSitesString('all');
             });

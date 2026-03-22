@@ -10,6 +10,7 @@
     class="entityAddContainer"
     :content-title="contentTitle"
   >
+    <p>{{ translate('ScheduledReports_CreateTooltip') }}</p>
     <div class="clear" />
     <form
       id="addEditReport"
@@ -33,7 +34,7 @@
           :title="translate('General_Description')"
           :model-value="report.description"
           @update:model-value="$emit('change', { prop: 'description', value: $event })"
-          :inline-help="translate('ScheduledReports_DescriptionOnFirstPage')"
+          :inline-help="translate('ScheduledReports_DescriptionOnFirstPageScheduledReport')"
         >
         </Field>
       </div>
@@ -66,7 +67,7 @@
               prop: 'periodParam',
               value: report.period === 'never' ? null : report.period,
             })"
-          :title="translate('ScheduledReports_EmailSchedule')"
+          :title="translate('ScheduledReports_ReportSchedule')"
           :options="periods"
         >
           <template v-slot:inline-help>
@@ -95,9 +96,9 @@
               id="emailReportPeriodInlineHelp"
               class="inline-help-node"
             >
-              {{ translate('ScheduledReports_ReportPeriodHelp') }}
+              {{ translate('ScheduledReports_ScheduleReportPeriodHelp') }}
               <br /><br />
-              {{ translate('ScheduledReports_ReportPeriodHelp2') }}
+              {{ translate('ScheduledReports_ScheduleReportPeriodHelp2') }}
             </div>
           </template>
         </Field>
@@ -108,7 +109,7 @@
           name="report_hour"
           :model-value="report.hour"
           @update:model-value="$emit('change', { prop: 'hour', value: $event })"
-          :title="translate('ScheduledReports_ReportHour', 'X')"
+          :title="translate('ScheduledReports_ReportHourLocal')"
           :options="reportHours"
         >
           <template v-slot:inline-help>
@@ -117,7 +118,7 @@
               class="inline-help-node"
               v-if="timezoneOffset !== 0 && timezoneOffset !== '0'"
             >
-              <span v-text="reportHourUtc" />
+              <span v-text="reportHourUtcHelpText" />
             </div>
           </template>
         </Field>
@@ -132,7 +133,18 @@
           :title="translate('ScheduledReports_ReportType')"
           :options="reportTypeOptions"
         >
+        <template v-slot:inline-help>
+          <div id="deliveryMediumnInlineHelp" class="inline-help-node">
+          <span
+            v-html="$sanitize(getDeliveryMediumInlineTooltip)"
+          >
+          </span>
+          </div>
+        </template>
         </Field>
+      </div>
+      <div ref="reportParameters">
+        <slot name="report-parameters"></slot>
       </div>
       <div
         v-for="(reportFormats, reportType) in reportFormatsByReportTypeOptions"
@@ -150,15 +162,12 @@
         >
         </Field>
       </div>
-      <div ref="reportParameters">
-        <slot name="report-parameters"></slot>
-      </div>
       <div
-        v-show="report.type === 'email'
-              && report.formatemail !== 'csv'
-              && report.formatemail !== 'tsv'"
+        v-show="report[`format${report.type}`] === 'pdf' ||
+                report[`format${report.type}`] === 'html'
+               "
       >
-        <div class="email">
+        <div :class="report.type">
           <Field
             uicontrol="select"
             name="display_format"
@@ -266,6 +275,11 @@
           </div>
         </div>
       </div>
+      <SelectedReportsList
+        :reports="selectedReportsForCurrentType"
+        :enabled="allowMultipleReportsByReportType[report.type]"
+        @reorder="onSelectedReportsReorder"
+      />
       <SaveButton
         :value="saveButtonTitle"
         @confirm="$emit('submit')"
@@ -291,16 +305,29 @@ import {
   Matomo,
   translate,
   debounce,
+  externalLink,
 } from 'CoreHome';
 import { Field, Form, SaveButton } from 'CorePluginsAdmin';
 import { adjustHourToTimezone } from '../utilities';
+import SelectedReportsList from './SelectedReportsList.vue';
 
 interface Option {
   key: string;
   value: string;
 }
 
-const { $ } = window;
+interface ReportMetadata {
+  uniqueId: string;
+  name: string;
+}
+
+interface ReportsByType {
+  [reportType: string]: Record<string, ReportMetadata[]>;
+}
+
+interface ReportsLookupByType {
+  [reportType: string]: Record<string, ReportMetadata>;
+}
 
 export default defineComponent({
   props: {
@@ -309,6 +336,10 @@ export default defineComponent({
       required: true,
     },
     selectedReports: Object,
+    selectedReportsOrder: {
+      type: Object,
+      default: () => ({}),
+    },
     paramPeriods: {
       type: Object,
       required: true,
@@ -352,11 +383,12 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['submit', 'change', 'toggleSelectedReport'],
+  emits: ['submit', 'change', 'toggleSelectedReport', 'reorderSelectedReports'],
   components: {
     ContentBlock,
     Field,
     SaveButton,
+    SelectedReportsList,
   },
   directives: {
     Form,
@@ -374,6 +406,16 @@ export default defineComponent({
     decode(s: string) {
       // report names can be encoded (mainly goals)
       return Matomo.helper.htmlDecode(s);
+    },
+    onSelectedReportsReorder(order: string[]) {
+      if (!this.report || !this.report.type) {
+        return;
+      }
+
+      this.$emit('reorderSelectedReports', {
+        reportType: this.report.type,
+        order,
+      });
     },
   },
   setup(props, ctx) {
@@ -406,6 +448,90 @@ export default defineComponent({
     Matomo.helper.destroyVueComponent(reportParameters);
   },
   computed: {
+    enforceSelectedReportOrder(): boolean {
+      const parameters = (this.report?.parameters || {}) as { enforceOrder?: boolean };
+      if (typeof parameters.enforceOrder !== 'undefined') {
+        return !!parameters.enforceOrder;
+      }
+
+      return false;
+    },
+
+    /**
+     * Ensures each report type has a flattened order array where every selected report
+     * appears exactly once (ordered first, then any remaining selections).
+     */
+    selectedReportsOrderNormalized(): Record<string, string[]> {
+      const normalized: Record<string, string[]> = {};
+      const allSelectedReports = this.selectedReports || {};
+      Object.keys(allSelectedReports).forEach((reportType) => {
+        const selectedForType = allSelectedReports[reportType] || {};
+        const ordered = ((this.selectedReportsOrder || {})[reportType] || [])
+          .filter((uniqueId: string) => selectedForType[uniqueId]);
+        const remaining = Object.keys(selectedForType).filter(
+          (uniqueId) => selectedForType[uniqueId] && ordered.indexOf(uniqueId) === -1,
+        );
+        normalized[reportType] = ordered.concat(remaining);
+      });
+      return normalized;
+    },
+
+    /**
+     * Flattens the nested report metadata into a two-level lookup so we can access any report
+     * by its type and unique id without re-iterating the category structure.
+     */
+    reportsLookup(): ReportsLookupByType {
+      const reportsByType = this.reportsByCategoryByReportType as ReportsByType;
+      const lookup: ReportsLookupByType = {};
+
+      Object.entries(reportsByType).forEach(([reportType, reportsByCategory]) => {
+        lookup[reportType] = lookup[reportType] || {};
+        Object.values(reportsByCategory).forEach((reports) => {
+          reports.forEach((report) => {
+            lookup[reportType][report.uniqueId] = report;
+          });
+        });
+      });
+
+      return lookup;
+    },
+    selectedReportsForCurrentType(): ReportMetadata[] {
+      const type = this.report?.type as string;
+      if (!type) {
+        return [];
+      }
+
+      const selectedForType = (this.selectedReports || {})[type] || {};
+      let order: string[] = [];
+      if (this.enforceSelectedReportOrder) {
+        order = this.selectedReportsOrderNormalized[type] || [];
+      } else {
+        const reportsByCategory = (this.reportsByCategoryByReportType as ReportsByType)[type] || {};
+        const ordered: string[] = [];
+        Object.values(reportsByCategory).forEach((reports) => {
+          reports.forEach((report) => {
+            if (selectedForType[report.uniqueId]) {
+              ordered.push(report.uniqueId);
+            }
+          });
+        });
+        order = ordered;
+      }
+
+      if (!order.length) {
+        order = Object.keys(selectedForType).filter((uniqueId) => selectedForType[uniqueId]);
+      }
+
+      if (!order.length) {
+        return [];
+      }
+
+      const lookup = this.reportsLookup[type] || {};
+
+      return order
+        .map((uniqueId) => lookup[uniqueId])
+        .filter((report): report is ReportMetadata => !!report);
+    },
     reportsByCategoryByReportTypeInColumns() {
       const reportsByCategoryByReportType = this.reportsByCategoryByReportType as
         Record<string, Record<string, unknown[]>>;
@@ -475,7 +601,7 @@ export default defineComponent({
     },
     reportSegmentInlineHelp() {
       return translate(
-        'ScheduledReports_Segment_Help',
+        'ScheduledReports_Segment_HelpScheduledReport',
         '<a href="./" rel="noreferrer noopener" target="_blank">',
         '</a>',
         translate('SegmentEditor_DefaultAllVisits'),
@@ -490,18 +616,18 @@ export default defineComponent({
     },
     reportHours() {
       const hours: Option[] = [];
+      const fractionalOffset = ((this.timeZoneDifferenceInHours % 1) + 1) % 1;
+      const minutePart = Math.round(fractionalOffset * 60);
+      const minuteLabel = `${minutePart}`.padStart(2, '0');
+
       for (let i = 0; i < 24; i += 1) {
-        if ((this.timeZoneDifferenceInHours * 2) % 2 !== 0) {
-          hours.push({
-            key: `${i}.5`,
-            value: `${i}:30`,
-          });
-        } else {
-          hours.push({
-            key: `${i}`,
-            value: `${i}`,
-          });
-        }
+        const paddedHour = `${i}`.padStart(2, '0');
+        const key = fractionalOffset === 0 ? `${i}` : `${i + fractionalOffset}`;
+        const value = fractionalOffset === 0 ? `${paddedHour}:00` : `${paddedHour}:${minuteLabel}`;
+        hours.push({
+          key,
+          value,
+        });
       }
       return hours;
     },
@@ -510,7 +636,17 @@ export default defineComponent({
         this.report.hour as string,
         -this.timeZoneDifferenceInHours,
       );
-      return translate('ScheduledReports_ReportHourWithUTC', [reportHour]);
+      const normalized = ((parseFloat(reportHour) % 24) + 24) % 24;
+      const roundedHour = Math.round(normalized) % 24;
+      return `${roundedHour}`.padStart(2, '0');
+    },
+    reportHourUtcLabel() {
+      return translate('ScheduledReports_ReportHourWithUtcOnly', [`${this.reportHourUtc}:00`]);
+    },
+    reportHourUtcHelpText() {
+      return `${translate('ScheduledReports_ReportWillBeSentAt')} `
+        + `${translate('ScheduledReports_ReportHourEqualsUtc', [this.reportHourUtcLabel])} `
+        + `${translate('ScheduledReports_NoteDeliveryTime')}`;
     },
     saveButtonTitle() {
       const { ReportPlugin } = window;
@@ -523,6 +659,14 @@ export default defineComponent({
 
       const isEditing = this.report.idreport > 0;
       return isEditing ? ReportPlugin.updateReportString : translate('ScheduledReports_CreateAndScheduleReport');
+    },
+    getDeliveryMediumInlineTooltip(): string {
+      const link = translate(
+        'CoreHome_LearnMoreFullStop',
+        externalLink('https://matomo.org/faq/general/create-and-schedule-a-report/'),
+        '</a>',
+      );
+      return `${translate('ScheduledReports_CreateTooltip')} ${link}`;
     },
   },
 });

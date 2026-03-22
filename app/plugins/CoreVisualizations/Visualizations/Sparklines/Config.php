@@ -36,7 +36,7 @@ class Config extends \Piwik\ViewDataTable\Config
      * If false, will not link them with any evolution graph
      * @var bool
      */
-    private $evolutionGraphLinkable = true;
+    private $evolutionGraphLinkable = \true;
     /**
      * Adds possibility to set html attributes on the sparklines title / headline.
      * @var string
@@ -185,7 +185,7 @@ class Config extends \Piwik\ViewDataTable\Config
      *
      * @param array $requestParamsForSparkline You need to at least set a module / action eg
      *                                         array('columns' => array('nb_visit'), 'module' => '', 'action' => '')
-     * @param int|float|string|array $value Either the metric value or an array of values.
+     * @param int|float|string|array $metricInfos Either the metric value or an array of values.
      * @param string|array $description Either one description or an array of descriptions. If an array, both
      *                                         $value and $description need the same amount of array entries.
      *                                         $description[0] should be the description for $value[0].
@@ -255,7 +255,7 @@ class Config extends \Piwik\ViewDataTable\Config
                 throw new \Exception('In order to show an evolution in the sparklines view a currentValue and pastValue array key needs to be present');
             }
             $evolutionPercent = CalculateEvolutionFilter::calculate($evolution['currentValue'], $evolution['pastValue'], $precision = 1);
-            $sparkline['evolution'] = array('percent' => $evolutionPercent, 'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : false, 'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null, 'trend' => $evolution['currentValue'] - $evolution['pastValue']);
+            $sparkline['evolution'] = array('percent' => $evolutionPercent, 'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : \false, 'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null, 'trend' => $evolution['currentValue'] - $evolution['pastValue']);
         }
         $this->sparklines[] = $sparkline;
     }
@@ -286,7 +286,7 @@ class Config extends \Piwik\ViewDataTable\Config
      */
     public function setNotLinkableWithAnyEvolutionGraph()
     {
-        $this->evolutionGraphLinkable = false;
+        $this->evolutionGraphLinkable = \false;
     }
     /**
      * Detect whether sparklines are linkable with an evolution graph. {@link setNotLinkableWithAnyEvolutionGraph()}

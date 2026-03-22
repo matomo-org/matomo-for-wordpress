@@ -9,6 +9,7 @@ use Piwik\Plugins\Actions\Archiver;
 use Psr\Log\LoggerInterface;
 use WP_STATISTICS\MetaBox\pages;
 use Piwik\Date;
+use WP_Statistics\Service\Admin\Metabox\MetaboxDataProvider;
 use WpMatomo\WpStatistics\Config;
 use WpMatomo\WpStatistics\DataConverters\PagesUrlConverter;
 use WpMatomo\WpStatistics\DataConverters\PagesTitleConverter;
@@ -36,18 +37,41 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		$page  = 0;
 		do {
 			$page ++;
-			$pages_found = pages::get(
-				[
-					'from'     => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
-					'to'       => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
-					'per_page' => $limit,
-					'paged'    => $page,
-				]
-			);
+			if ( class_exists( '\WP_STATISTICS\MetaBox\pages' ) ) {
+				$pages_found = pages::get(
+					[
+						'from'     => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
+						'to'       => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
+						'per_page' => $limit,
+						'paged'    => $page,
+					]
+				);
 
-			$has_no_data_prop     = ( array_key_exists( 'no_data', $pages_found ) && ( 1 === $pages_found['no_data'] ) );
-			$has_empty_pages_prop = ( array_key_exists( 'pages', $pages_found ) && empty( $pages_found['pages'] ) );
-			$no_data              = $has_no_data_prop || $has_empty_pages_prop;
+				$has_no_data_prop     = ( array_key_exists( 'no_data', $pages_found ) && ( 1 === $pages_found['no_data'] ) );
+				$has_empty_pages_prop = ( array_key_exists( 'pages', $pages_found ) && empty( $pages_found['pages'] ) );
+				$no_data              = $has_no_data_prop || $has_empty_pages_prop;
+			} else {
+				$pages_found = $this->get_metabox_data_provider()->getTopPages(
+					[
+						'date'     => [
+							'from' => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
+							'to'   => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
+						],
+						'per_page' => $limit,
+						'page'     => $page,
+						'fields'   => [ 'id', 'uri', 'type', 'SUM(count) as views', 'page_id' ],
+					]
+				);
+
+				$pages_found = array_map(
+					function ( $row_std_class ) {
+						return (array) $row_std_class;
+					},
+					$pages_found
+				);
+
+				$no_data = count( $pages_found ) < 1;
+			}
 
 			if ( ! $no_data ) {
 				$pages = array_merge( $pages, array_key_exists( 'pages', $pages_found ) ? $pages_found['pages'] : $pages_found );
@@ -59,9 +83,12 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		Common::destroy( $search_keywords );
 
 		foreach ( $pages as $id => $page ) {
-			$pos = strpos( $page['str_url'], '?' );
+			$key = isset( $page['uri'] ) ? 'uri' : 'str_url';
+			$uri = $page[ $key ];
+
+			$pos = strpos( $uri, '?' );
 			if ( false !== $pos ) {
-				$pages[ $id ]['str_url'] = substr( $page['str_url'], 0, $pos );
+				$pages[ $id ][ $key ] = substr( $uri, 0, $pos );
 			}
 		}
 		$pages_url = PagesUrlConverter::convert( $pages );
@@ -73,5 +100,9 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		$this->logger->debug( 'Import {nb_pages} page titles...', [ 'nb_pages' => $pages_title->getRowsCount() ] );
 		$this->insert_record( Archiver::PAGE_TITLES_RECORD_NAME, $pages_title, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table, Metrics::INDEX_NB_VISITS );
 		Common::destroy( $pages_title );
+	}
+
+	private function get_metabox_data_provider() {
+		return new MetaboxDataProvider();
 	}
 }

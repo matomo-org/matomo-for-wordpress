@@ -17,15 +17,14 @@ use Piwik\Metrics\Formatter;
 use Piwik\Nonce;
 use Piwik\Option;
 use Piwik\Piwik;
-use Piwik\Plugin\Manager;
-use Piwik\Plugins\CustomJsTracker\File;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\LanguagesManager\API as APILanguagesManager;
+use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\SiteContentDetector;
 use Piwik\Scheduler\Scheduler;
-use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\View;
 /**
  *
@@ -35,16 +34,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public const OPTION_LAST_DELETE_PIWIK_LOGS = "lastDelete_piwik_logs";
     public const ACTIVATE_DNT_NONCE = 'PrivacyManager.activateDnt';
     public const DEACTIVATE_DNT_NONCE = 'PrivacyManager.deactivateDnt';
-    /**
-     * @var ReferrerAnonymizer
-     */
-    private $referrerAnonymizer;
     /** @var SiteContentDetector */
     private $siteContentDetector;
-    public function __construct(\Piwik\Plugins\PrivacyManager\ReferrerAnonymizer $referrerAnonymizer, SiteContentDetector $siteContentDetector)
+    public function __construct(SiteContentDetector $siteContentDetector)
     {
         parent::__construct();
-        $this->referrerAnonymizer = $referrerAnonymizer;
         $this->siteContentDetector = $siteContentDetector;
     }
     private function checkDataPurgeAdminSettingsIsEnabled()
@@ -158,8 +152,20 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@PrivacyManager/getDatabaseSize');
         $forceEstimate = Common::getRequestVar('forceEstimate', 0);
-        $view->dbStats = $this->getDeleteDBSizeEstimate($getSettingsFromQuery = true, $forceEstimate);
+        $view->dbStats = $this->getDeleteDBSizeEstimate($getSettingsFromQuery = \true, $forceEstimate);
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
+        return $view->render();
+    }
+    public function compliance() : string
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        if (!$featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
+            return '';
+        }
+        $view = new View('@PrivacyManager/compliance');
+        $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
+        $this->setBasicVariablesView($view);
         return $view->render();
     }
     public function privacySettings()
@@ -167,25 +173,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@PrivacyManager/privacySettings');
         if (Piwik::hasUserSuperUserAccess()) {
-            $jsCodeGenerator = new TrackerCodeGenerator();
-            $file = new File(PIWIK_DOCUMENT_ROOT . '/' . $jsCodeGenerator->getJsTrackerEndpoint());
-            $filename = $jsCodeGenerator->getJsTrackerEndpoint();
-            if (Manager::getInstance()->isPluginActivated('CustomJsTracker')) {
-                $file = StaticContainer::get('Piwik\\Plugins\\CustomJsTracker\\TrackerUpdater')->getToFile();
-                $filename = $file->getName();
-            }
-            $view->trackerFileName = $filename;
-            $view->trackerWritable = $file->hasWriteAccess();
+            $api = \Piwik\Plugins\PrivacyManager\API::getInstance();
             $view->deleteData = $this->getDeleteDataInfo();
-            $view->anonymizeIP = $this->getAnonymizeIPInfo();
+            $view->anonymisationSettings = $api->getAnonymisationSettings();
             $view->canDeleteLogActions = Db::isLockPrivilegeGranted();
             $view->dbUser = PiwikConfig::getInstance()->database['username'];
             $view->deactivateNonce = Nonce::getNonce(self::DEACTIVATE_DNT_NONCE);
             $view->activateNonce = Nonce::getNonce(self::ACTIVATE_DNT_NONCE);
-            $view->maskLengthOptions = [['key' => '1', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["1", "192.168.100.xxx"]), 'description' => ''], ['key' => '2', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["2", "192.168.xxx.xxx"]), 'description' => Piwik::translate('General_Recommended')], ['key' => '3', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', ["3", "192.xxx.xxx.xxx"]), 'description' => ''], ['key' => '4', 'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskFully'), 'description' => '']];
-            $view->useAnonymizedIpForVisitEnrichmentOptions = [['key' => '1', 'value' => Piwik::translate('General_Yes'), 'description' => Piwik::translate('PrivacyManager_RecommendedForPrivacy')], ['key' => '0', 'value' => Piwik::translate('General_No'), 'description' => '']];
-            $view->scheduleDeletionOptions = [['key' => '1', 'value' => Piwik::translate('Intl_PeriodDay')], ['key' => '7', 'value' => Piwik::translate('Intl_PeriodWeek')], ['key' => '30', 'value' => Piwik::translate('Intl_PeriodMonth')]];
-            $view->referrerAnonymizationOptions = $this->referrerAnonymizer->getAvailableAnonymizationOptions();
+            $view->scheduleDeletionOptions = \Piwik\Plugins\PrivacyManager\PrivacyManager::getScheduleDeletionOptions();
         }
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
         $this->setBasicVariablesView($view);
@@ -193,7 +188,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view->anonymizations = $logDataAnonymizations->getAllEntries();
         return $view->render();
     }
-    private function getDeleteDBSizeEstimate($getSettingsFromQuery = false, $forceEstimate = false)
+    private function getDeleteDBSizeEstimate($getSettingsFromQuery = \false, $forceEstimate = \false)
     {
         $this->checkDataPurgeAdminSettingsIsEnabled();
         // get the purging settings & create two purger instances
@@ -238,23 +233,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         return $result;
     }
-    private function getAnonymizeIPInfo()
-    {
-        Piwik::checkUserHasSuperUserAccess();
-        $anonymizeIP = [];
-        $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
-        $anonymizeIP["enabled"] = \Piwik\Plugins\PrivacyManager\IPAnonymizer::isActive();
-        $anonymizeIP["maskLength"] = $privacyConfig->ipAddressMaskLength;
-        $anonymizeIP["forceCookielessTracking"] = $privacyConfig->forceCookielessTracking;
-        $anonymizeIP["anonymizeOrderId"] = $privacyConfig->anonymizeOrderId;
-        $anonymizeIP["anonymizeUserId"] = $privacyConfig->anonymizeUserId;
-        $anonymizeIP["useAnonymizedIpForVisitEnrichment"] = $privacyConfig->useAnonymizedIpForVisitEnrichment;
-        $anonymizeIP["anonymizeReferrer"] = $privacyConfig->anonymizeReferrer;
-        if (!$anonymizeIP["useAnonymizedIpForVisitEnrichment"]) {
-            $anonymizeIP["useAnonymizedIpForVisitEnrichment"] = '0';
-        }
-        return $anonymizeIP;
-    }
     private function getDeleteDataInfo()
     {
         Piwik::checkUserHasSuperUserAccess();
@@ -274,7 +252,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         //deletion schedule did not run before
         if (empty($optionTable)) {
-            $deleteDataInfos["lastRun"] = false;
+            $deleteDataInfos["lastRun"] = \false;
             //next run ASAP (with next schedule run)
             $date = Date::factory("today");
             $deleteDataInfos["nextScheduleTime"] = $nextPossibleSchedule;

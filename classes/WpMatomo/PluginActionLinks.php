@@ -35,11 +35,10 @@ class PluginActionLinks extends Feature {
 			]
 		);
 	}
-
 	public function add_settings_link( $links ) {
 		$get_started = new \WpMatomo\Admin\GetStarted( $this->settings );
 
-		if ( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
+		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
 			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
 		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';

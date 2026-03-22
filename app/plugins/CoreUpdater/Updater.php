@@ -21,7 +21,7 @@ use Piwik\Option;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Plugin\ReleaseChannels;
 use Piwik\Plugins\CorePluginsAdmin\PluginInstaller;
-use Piwik\Plugins\Marketplace\Api as MarketplaceApi;
+use Piwik\Plugins\Marketplace\API as MarketplaceApi;
 use Piwik\Plugins\Marketplace\Marketplace;
 use Piwik\SettingsServer;
 use Piwik\Translation\Translator;
@@ -76,7 +76,7 @@ class Updater
      * @throws UpdaterException
      * @throws Exception
      */
-    public function updatePiwik($https = true)
+    public function updatePiwik($https = \true)
     {
         if (!$this->isNewVersionAvailable()) {
             throw new Exception($this->translator->translate('CoreUpdater_ExceptionAlreadyLatestVersion', Version::VERSION));
@@ -84,7 +84,10 @@ class Updater
         SettingsServer::setMaxExecutionTime(0);
         $newVersion = $this->getLatestVersion();
         $url = $this->getArchiveUrl($newVersion, $https);
-        $messages = array();
+        $messages = [];
+        $pluginManager = PluginManager::getInstance();
+        $activatedPlugins = $pluginManager->getActivatedPlugins();
+        Option::set('OneClickUpdate_ActivatedPlugins', json_encode($activatedPlugins));
         try {
             $archiveFile = $this->downloadArchive($newVersion, $url);
             $messages[] = $this->translator->translate('CoreUpdater_DownloadingUpdateFromX', $url);
@@ -106,13 +109,13 @@ class Updater
         $responses = $cliMulti->request(['?module=CoreUpdater&action=oneClickUpdatePartTwo&nonce=' . $nonce]);
         if (!empty($responses)) {
             $responseCliMulti = array_shift($responses);
-            $responseCliMulti = @json_decode($responseCliMulti, $assoc = true);
+            $responseCliMulti = @json_decode($responseCliMulti, $assoc = \true);
             if (is_array($responseCliMulti)) {
                 // we expect a json encoded array response from oneClickUpdatePartTwo. Otherwise something went wrong.
                 $messages = array_merge($messages, $responseCliMulti);
             } else {
                 // there was likely an error eg such as an invalid ssl certificate... let's try executing it directly
-                // in case this works. For explample $response is in this case not an array but a string because the "communcation"
+                // in case this works. For example $response is in this case not an array but a string because the "communication"
                 // with the controller went wrong: "Got invalid response from API request: https://ABC/?module=CoreUpdater&action=oneClickUpdatePartTwo&nonce=ABC. Response was \'curl_exec: SSL certificate problem: unable to get local issuer certificate. Hostname requested was: ABC"
                 try {
                     $response = $this->oneClickUpdatePartTwo($newVersion);
@@ -166,6 +169,34 @@ class Updater
                 throw new \Piwik\Plugins\CoreUpdater\UpdaterException($e, $messages);
             }
         }
+        // get a list of previously activated plugins and try to reactivate them if there are no missing requirements
+        $previouslyActivePlugins = Option::get('OneClickUpdate_ActivatedPlugins');
+        if (\false !== $previouslyActivePlugins) {
+            $previouslyActivePlugins = json_decode($previouslyActivePlugins, \true);
+        } else {
+            $previouslyActivePlugins = [];
+        }
+        Option::delete('OneClickUpdate_ActivatedPlugins');
+        $reactivatedPlugins = [];
+        if (!empty($previouslyActivePlugins)) {
+            $pluginManager = PluginManager::getInstance();
+            foreach ($previouslyActivePlugins as $previouslyActivePluginName) {
+                if (!$pluginManager->isPluginActivated($previouslyActivePluginName)) {
+                    try {
+                        $plugin = $pluginManager->loadPlugin($previouslyActivePluginName);
+                        if (empty($plugin->getMissingDependencies($newVersion))) {
+                            $pluginManager->activatePlugin($previouslyActivePluginName);
+                            $reactivatedPlugins[] = $previouslyActivePluginName;
+                        }
+                    } catch (\Throwable $e) {
+                        // noop - we will try to reactivate other plugins in the list.
+                    }
+                }
+            }
+        }
+        if (!empty($reactivatedPlugins)) {
+            $messages[] = $this->translator->translate('CoreUpdater_ReactivatedPlugins', implode(', ', $reactivatedPlugins));
+        }
         try {
             // incompatible plugins may have already been disabled in oneClickUpdatePartTwo
             // if this might have failed we try it here again.
@@ -200,7 +231,7 @@ class Updater
             $extractedArchiveDirectory = $extractionPath . $flavor;
             // Remove previous decompressed archive
             if (file_exists($extractedArchiveDirectory)) {
-                Filesystem::unlinkRecursive($extractedArchiveDirectory, true);
+                Filesystem::unlinkRecursive($extractedArchiveDirectory, \true);
             }
         }
         $archive = Unzip::factory('PclZip', $archiveFile);
@@ -265,16 +296,17 @@ class Updater
          * served directly by the web server.  May be shared.
          */
         if (PIWIK_INCLUDE_PATH !== PIWIK_DOCUMENT_ROOT) {
+            // @phpstan-ignore notIdentical.alwaysFalse
             // Copy PHP files that expect to be in the document root
             $specialCases = array('/index.php', '/piwik.php', '/js/index.php');
             foreach ($specialCases as $file) {
                 Filesystem::copy($extractedArchiveDirectory . $file, PIWIK_DOCUMENT_ROOT . $file);
             }
             // Copy the non-PHP files (e.g., images, css, javascript)
-            Filesystem::copyRecursive($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT, true);
+            Filesystem::copyRecursive($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT, \true);
             $model->removeGoneFiles($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT);
         }
-        Filesystem::unlinkRecursive($extractedArchiveDirectory, true);
+        Filesystem::unlinkRecursive($extractedArchiveDirectory, \true);
         Filesystem::clearPhpCaches();
     }
     /**
@@ -282,7 +314,7 @@ class Updater
      * @param bool $https Whether to use HTTPS if supported of not. If false, will use HTTP.
      * @return string
      */
-    public function getArchiveUrl($version, $https = true)
+    public function getArchiveUrl($version, $https = \true)
     {
         $channel = $this->releaseChannels->getActiveReleaseChannel();
         $url = $channel->getDownloadUrlWithoutScheme($version);
@@ -308,7 +340,7 @@ class Updater
         $wrongPermissionDir = [];
         if (is_dir($source)) {
             $d = dir($source);
-            while (false !== ($entry = $d->read())) {
+            while (\false !== ($entry = $d->read())) {
                 if ($entry == '.' || $entry == '..') {
                     continue;
                 }

@@ -32,7 +32,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
         if (empty($pluginName)) {
             throw new Exception('No plugin name given for PluginSettingsTable backend');
         }
-        if ($userLogin === false || $userLogin === null) {
+        if ($userLogin === \false || $userLogin === null) {
             throw new Exception('Invalid user login name given for PluginSettingsTable backend');
         }
         $this->pluginName = $pluginName;
@@ -83,12 +83,12 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     }
     private function jsonEncodedMissingError(Exception $e)
     {
-        return strpos($e->getMessage(), 'json_encoded') !== false;
+        return strpos($e->getMessage(), 'json_encoded') !== \false;
     }
     public function load()
     {
         $this->initDbIfNeeded();
-        $sql = "SELECT `setting_name`, `setting_value`, `json_encoded` FROM " . $this->getTableName() . " WHERE plugin_name = ? and user_login = ?";
+        $sql = "SELECT `setting_name`, `setting_value`, `json_encoded` FROM `" . $this->getTableName() . "` WHERE plugin_name = ? and user_login = ?";
         $bind = array($this->pluginName, $this->userLogin);
         try {
             $settings = $this->db->fetchAll($sql, $bind);
@@ -96,7 +96,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
             // we catch an exception since json_encoded might not be present before matomo is updated to 3.5.0+ but the updater
             // may run this query
             if ($this->jsonEncodedMissingError($e)) {
-                $sql = "SELECT `setting_name`, `setting_value` FROM " . $this->getTableName() . " WHERE plugin_name = ? and user_login = ?";
+                $sql = "SELECT `setting_name`, `setting_value` FROM `" . $this->getTableName() . "` WHERE plugin_name = ? and user_login = ?";
                 $settings = $this->db->fetchAll($sql, $bind);
             } else {
                 throw $e;
@@ -106,7 +106,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
         foreach ($settings as $setting) {
             $name = $setting['setting_name'];
             if (!empty($setting['json_encoded'])) {
-                $flat[$name] = json_decode($setting['setting_value'], true);
+                $flat[$name] = json_decode($setting['setting_value'], \true);
             } elseif (array_key_exists($name, $flat)) {
                 if (!is_array($flat[$name])) {
                     $flat[$name] = array($flat[$name]);
@@ -126,7 +126,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     {
         $this->initDbIfNeeded();
         $table = $this->getTableName();
-        $sql = "DELETE FROM {$table} WHERE `plugin_name` = ? and `user_login` = ?";
+        $sql = "DELETE FROM `{$table}` WHERE `plugin_name` = ? and `user_login` = ?";
         $bind = array($this->pluginName, $this->userLogin);
         $this->db->query($sql, $bind);
     }
@@ -145,7 +145,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
         }
         try {
             $table = Common::prefixTable('plugin_setting');
-            Db::get()->query(sprintf('DELETE FROM %s WHERE user_login = ?', $table), array($userLogin));
+            Db::get()->query(sprintf('DELETE FROM `%s` WHERE user_login = ?', $table), array($userLogin));
         } catch (Exception $e) {
             if ($e->getCode() != 42) {
                 // ignore table not found error, which might occur when updating from an older version of Piwik
@@ -165,7 +165,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     {
         try {
             $table = Common::prefixTable('plugin_setting');
-            Db::get()->query(sprintf('DELETE FROM %s WHERE plugin_name = ?', $table), array($pluginName));
+            Db::get()->query(sprintf('DELETE FROM `%s` WHERE plugin_name = ?', $table), array($pluginName));
         } catch (Exception $e) {
             if ($e->getCode() != 42) {
                 // ignore table not found error, which might occur when updating from an older version of Piwik

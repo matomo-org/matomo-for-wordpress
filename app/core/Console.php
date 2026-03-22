@@ -28,7 +28,7 @@ class Console extends Application
      * @var Environment
      */
     private $environment;
-    public function __construct(Environment $environment = null)
+    public function __construct(?Environment $environment = null)
     {
         $this->setServerArgsIfPhpCgi();
         parent::__construct('Matomo', \Piwik\Version::VERSION);
@@ -43,10 +43,10 @@ class Console extends Application
     public function renderThrowable(\Throwable $e, OutputInterface $output) : void
     {
         $logHandlers = StaticContainer::get('log.handlers');
-        $hasFingersCrossed = false;
+        $hasFingersCrossed = \false;
         foreach ($logHandlers as $handler) {
             if ($handler instanceof FingersCrossedHandler) {
-                $hasFingersCrossed = true;
+                $hasFingersCrossed = \true;
                 break;
             }
         }
@@ -71,8 +71,6 @@ class Console extends Application
     /**
      * Makes parent doRun method available
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      * @return int
      */
     public function originDoRun(InputInterface $input, OutputInterface $output)
@@ -82,7 +80,7 @@ class Console extends Application
     private function doRunImpl(InputInterface $input, OutputInterface $output)
     {
         if ($input->hasParameterOption('--xhprof')) {
-            \Piwik\Profiler::setupProfilerXHProf(true, true);
+            \Piwik\Profiler::setupProfilerXHProf(\true, \true);
         }
         $this->initMatomoHost($input);
         $this->initEnvironment($output);
@@ -105,6 +103,10 @@ class Console extends Application
         \Piwik\Piwik::postEvent('Console.doRun', [&$exitCode, $input, $output]);
         if ($exitCode === null) {
             $self = $this;
+            /*
+             * Ensure to run console command with super user permission. Otherwise any permission check would fail,
+             * as we do not have any user session or authentication in place.
+             */
             $exitCode = \Piwik\Access::doAsSuperUser(function () use($input, $output, $self) {
                 return call_user_func(array($self, 'originDoRun'), $input, $output);
             });
@@ -207,7 +209,7 @@ class Console extends Application
      * Register the console output into the logger.
      *
      * Ideally, this should be done automatically with events:
-     * @see http://symfony.com/fr/doc/current/components/console/events.html
+     * @see https://symfony.com/fr/doc/current/components/console/events.html
      * @see Symfony\Bridge\Monolog\Handler\ConsoleHandler::onCommand()
      * But it would require to install Symfony's Event Dispatcher.
      */

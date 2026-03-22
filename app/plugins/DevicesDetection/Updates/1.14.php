@@ -27,7 +27,7 @@ class Updates_1_14 extends Updates
     }
     public static function isMajorUpdate()
     {
-        return true;
+        return \true;
     }
     public function doUpdate(Updater $updater)
     {

@@ -11,6 +11,8 @@ namespace WpMatomo\Ecommerce;
 
 use WC_Order;
 use WC_Product;
+use WpMatomo\AjaxTracker;
+use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -21,19 +23,37 @@ if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
 }
 
 class Woocommerce extends Base {
+
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
+
+	private $track_next_totals_change = false;
 
 	public function register_hooks() {
 		parent::register_hooks();
 
+		$use_server_side_id = $this->settings->get_option( Settings::USE_SESSION_VISITOR_ID_OPTION_NAME );
+		if ( $use_server_side_id ) {
+			$server_side_visitor_id = new ServerSideVisitorId( $this->settings, $this->logger );
+			$server_side_visitor_id->register_hooks();
+		}
+
+		// compatibility with the All In One SEO plugin
+		add_filter( 'aioseo_schema_woocommerce_add_to_cart_skip_hooks', [ $this, 'aioseo_add_to_cart_skip' ] );
+
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
 		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
-		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'woocommerce_after_cart_item_quantity_update', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
+		add_action( 'woocommerce_after_calculate_totals', [ $this, 'after_calculate_totals' ], 99999, 0 );
+
+		// NOTE: must be done before the actual AJAX handler since the handler will die at the end.
+		add_action( 'wp_ajax_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'wp_ajax_nopriv_woocommerce_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
+		add_action( 'wc_ajax_update_shipping_method', [ $this, 'on_cart_updated_safe' ], 0, 0 );
 
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -51,8 +71,42 @@ class Woocommerce extends Base {
 			);
 		}
 
-		add_action( 'woocommerce_applied_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+	}
+
+	/**
+	 * The All In One SEO plugin temporarily adds products to the WooCommerce cart, calculates
+	 * some things, then empties the cart. This results in WooCommerce hooks being fired for
+	 * a cart change, even though the user never actually added anything to their cart.
+	 *
+	 * The All In One SEO plugin works around this by removing certain add_to_cart hooks
+	 * then re-adding them. To avoid tracking an ecommerce cart update during this temporary
+	 * cart addition, we have to tell AIOSEO to skip our add_to_cart hook.
+	 *
+	 * Note: this isn't documented in the AIOSEO plugin, so it's possible the way they do
+	 * this can change in the future.
+	 *
+	 * @param array $hooks_to_skip
+	 * @return array
+	 */
+	public function aioseo_add_to_cart_skip( $hooks_to_skip ) {
+		$hooks_to_skip[ __CLASS__ ] = 'on_cart_updated_safe';
+		return $hooks_to_skip;
+	}
+
+	public function after_calculate_totals() {
+		if ( ! $this->track_next_totals_change ) {
+			return;
+		}
+
+		try {
+			$this->on_cart_updated();
+		} catch ( \Exception $e ) {
+			$this->logger->log_exception( 'woo_on_cart_update', $e );
+		} finally {
+			$this->track_next_totals_change = false;
+		}
 	}
 
 	public function on_order_status_change( $order_id, $old_status, $new_status ) {
@@ -91,53 +145,35 @@ class Woocommerce extends Base {
 	}
 
 	public function maybe_track_order_complete() {
-		global $wp;
-
 		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
-			$order_id = isset( $wp->query_vars['order-received'] ) ? $wp->query_vars['order-received'] : 0;
-			if ( ! empty( $order_id ) && $order_id > 0 ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $this->on_order( $order_id );
+			$order_id = isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$order_key = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : '';
+
+			if ( $order_id > 0 ) {
+				$order = wc_get_order( $order_id );
+
+				if (
+					$order instanceof WC_Order
+					&& hash_equals( $order->get_order_key(), $order_key )
+				) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $this->on_order( $order_id );
+				}
 			}
 		}
 	}
 
-	public function on_coupon_updated_safe() {
-		try {
-			$val = null;
-			$val = $this->on_cart_updated( $val, true );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
+	public function on_cart_updated_safe() {
+		$this->track_next_totals_change = true;
 	}
 
-	public function on_cart_updated_safe( $val = null ) {
-		try {
-			$val = $this->on_cart_updated( $val );
-		} catch ( \Exception $e ) {
-			$this->logger->log_exception( 'woo_on_cart_update', $e );
-		}
-
-		return $val;
-	}
-
-	/**
-	 * @param null $val needed for woocommerce_update_cart_action_cart_updated filter
-	 * @param bool $is_coupon_update set to true if cart was updated because of a coupon
-	 *
-	 * @return mixed
-	 */
-	public function on_cart_updated( $val = null, $is_coupon_update = false ) {
+	private function on_cart_updated() {
 		global $woocommerce;
 
 		/** @var \WC_Cart $cart */
-		$cart = $woocommerce->cart;
-		if ( ! $is_coupon_update ) {
-			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
-			$cart->calculate_totals();
-		}
+		$cart         = $woocommerce->cart;
 		$cart_content = $cart->get_cart();
 
 		$tracking_code = '';
@@ -161,6 +197,7 @@ class Woocommerce extends Base {
 			}
 
 			if ( empty( $product_or_variation ) ) {
+				$this->logger->log( sprintf( 'could not find product or variation with ID = %s', $item['product_id'] ) );
 				continue;
 			}
 
@@ -190,8 +227,6 @@ class Woocommerce extends Base {
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
-
-		return $val;
 	}
 
 	public function on_order( $order_id ) {
@@ -265,13 +300,6 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->save_order_metadata(
-			$order,
-			[
-				$this->key_order_tracked => 1,
-			]
-		);
-
 		return $this->wrap_script( $tracking_code );
 	}
 
@@ -339,6 +367,11 @@ class Woocommerce extends Base {
 		}
 
 		$product = wc_get_product( $product_id );
+		if ( ! is_object( $product ) ) {
+			$order_id = $order ? $this->get_order_id( $order ) : 'unspecified';
+			$this->logger->log( "Failed to get product for product ID = $product_id (order ID = $order_id)." );
+			return;
+		}
 
 		$pr         = $product_or_variation ? $product_or_variation : $product;
 		$sku        = $this->get_sku( $pr );
@@ -417,11 +450,27 @@ class Woocommerce extends Base {
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		throw new \Exception( 'has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead' );
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return false;
+		}
+
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		return $this->get_order_meta( $order, $this->key_order_tracked ) == 1;
 	}
 
 	protected function set_order_been_tracked( $order_id ) {
-		throw new \Exception( 'set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead' );
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		$this->save_order_metadata(
+			$order,
+			[
+				$this->key_order_tracked => 1,
+			]
+		);
 	}
 
 	/**
@@ -433,7 +482,7 @@ class Woocommerce extends Base {
 		if ( method_exists( $order, 'get_meta' ) ) {
 			return $order->get_meta( $name );
 		} else {
-			$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+			$id = $this->get_order_id( $order );
 			return get_post_meta( $id, $name, true );
 		}
 	}
@@ -448,7 +497,7 @@ class Woocommerce extends Base {
 			if ( method_exists( $order, 'update_meta_data' ) ) {
 				$order->update_meta_data( $name, $value );
 			} else {
-				$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+				$id = $this->get_order_id( $order );
 				update_post_meta( $id, $name, $value );
 			}
 		}
@@ -456,5 +505,40 @@ class Woocommerce extends Base {
 		if ( method_exists( $order, 'save' ) ) {
 			$order->save();
 		}
+	}
+
+	private function get_order_id( $order ) {
+		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+	}
+
+	protected function add_tracking_calls_to_session( $data ) {
+		if ( ! empty( WC()->session ) ) {
+			$queue   = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+			$queue[] = $data;
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, $queue );
+		}
+	}
+
+	protected function remove_tracking_calls_in_session() {
+		if ( ! empty( WC()->session ) ) {
+			WC()->session->set( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY, [] );
+		}
+	}
+
+	protected function get_tracking_calls_in_session() {
+		if ( empty( WC()->session ) ) {
+			return [];
+		}
+
+		$calls = WC()->session->get( self::DELAYED_SERVER_SIDE_TRACKING_SESSION_KEY );
+		if ( ! is_array( $calls ) ) {
+			return [];
+		}
+
+		return $calls;
+	}
+
+	protected function supports_delayed_tracking() {
+		return true;
 	}
 }

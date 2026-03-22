@@ -10,9 +10,11 @@ namespace Piwik\API;
 
 use Exception;
 use Piwik\Access;
+use Piwik\Http\HttpCodeException;
+use Piwik\Request\AuthenticationToken;
 use Piwik\Cache;
 use Piwik\Common;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Context;
 use Piwik\DataTable;
@@ -50,8 +52,15 @@ use Piwik\Log\LoggerInterface;
  *
  * **Basic Usage**
  *
- *     $request = new Request('method=UserLanguage.getLanguage&idSite=1&date=yesterday&period=week'
- *                          . '&format=xml&filter_limit=5&filter_offset=0')
+ *     $request = new Request([
+ *         'method' => 'UserLanguage.getLanguage',
+ *         'idSite' => 1,
+ *         'date' => 'yesterday',
+ *         'period' => 'week',
+ *         'format' => 'xml',
+ *         'filter_limit' => 5,
+ *         'filter_offset' => 0,
+ *     ])
  *     $result = $request->process();
  *     echo $result;
  *
@@ -69,7 +78,7 @@ use Piwik\Log\LoggerInterface;
  *     ));
  *     echo "This DataTable has " . $dataTable->getRowsCount() . " rows.";
  *
- * @see http://piwik.org/docs/analytics-api
+ * @see https://piwik.org/docs/analytics-api
  * @api
  */
 class Request
@@ -199,7 +208,9 @@ class Request
      */
     public function process()
     {
-        $shouldReloadAuth = false;
+        $shouldReloadAuth = \false;
+        $hadSuperUserAccess = \false;
+        $tokenAuthToRestore = null;
         try {
             ++self::$nestedApiInvocationCount;
             // read the format requested for the output data
@@ -217,7 +228,7 @@ class Request
             }
             $corsHandler = new \Piwik\API\CORSHandler();
             $corsHandler->handle();
-            $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $this->request);
+            $tokenAuth = StaticContainer::get(AuthenticationToken::class)->getAuthToken($this->request);
             // IP check is needed here as we cannot listen to API.Request.authenticate as it would then not return proper API format response.
             // We can also not do it by listening to API.Request.dispatch as by then the user is already authenticated and we want to make sure
             // to not expose any information in case the IP is not allowed.
@@ -247,7 +258,11 @@ class Request
                 return $response->getResponse($returnedValue, $module, $method);
             });
         } catch (Exception $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => true]);
+            if ($e instanceof HttpCodeException && $e->getCode() >= 400 && $e->getCode() < 500) {
+                StaticContainer::get(LoggerInterface::class)->debug('Uncaught client error in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+            } else {
+                StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+            }
             if (empty($response)) {
                 $response = new \Piwik\API\ResponseBuilder('console', $this->request);
             }
@@ -260,17 +275,19 @@ class Request
         }
         return $toReturn;
     }
-    private function restoreAuthUsingTokenAuth($tokenToRestore, $hadSuperUserAccess)
+    private function restoreAuthUsingTokenAuth(
+#[\SensitiveParameter]
+$tokenToRestore, $hadSuperUserAccess)
     {
         // if we would not make sure to unset super user access, the tokenAuth would be not authenticated and any
         // token would just keep super user access (eg if the token that was reloaded before had super user access)
-        Access::getInstance()->setSuperUserAccess(false);
+        Access::getInstance()->setSuperUserAccess(\false);
         // we need to restore by reloading the tokenAuth as some permissions could have been removed in the API
         // request etc. Otherwise we could just store a clone of Access::getInstance() and restore here
         self::forceReloadAuthUsingTokenAuth($tokenToRestore);
         if ($hadSuperUserAccess && !Access::getInstance()->hasSuperUserAccess()) {
             // we are in context of `doAsSuperUser()` and need to restore this behaviour
-            Access::getInstance()->setSuperUserAccess(true);
+            Access::getInstance()->setSuperUserAccess(\true);
         }
     }
     /**
@@ -368,7 +385,7 @@ class Request
     public static function reloadAuthUsingTokenAuth($request = null)
     {
         // if a token_auth is specified in the API request, we load the right permissions
-        $token_auth = Common::getRequestVar('token_auth', '', 'string', $request);
+        $token_auth = StaticContainer::get(AuthenticationToken::class)->getAuthToken($request);
         if (self::shouldReloadAuthUsingTokenAuth($request)) {
             self::forceReloadAuthUsingTokenAuth($token_auth);
         }
@@ -380,7 +397,9 @@ class Request
      * @param string $tokenAuth
      * @return void
      */
-    private static function forceReloadAuthUsingTokenAuth($tokenAuth)
+    private static function forceReloadAuthUsingTokenAuth(
+#[\SensitiveParameter]
+$tokenAuth)
     {
         /**
          * Triggered when authenticating an API request, but only if the **token_auth**
@@ -418,20 +437,26 @@ class Request
             return;
         }
         if (Access::getInstance()->hasSuperUserAccess()) {
-            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/') . '" rel="noreferrer noopener">', '</a>']));
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/faq_147/'), '</a>']));
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-        $allowWriteAmin = Config::getInstance()->General['enable_framed_allow_write_admin_token_auth'] == 1;
-        if (Piwik::isUserHasSomeWriteAccess() && !$allowWriteAmin) {
+        $allowWriteAdminModuleActionConfig = StaticContainer::get('token_auth.write_admin_allowed_module_actions');
+        if (!is_array($allowWriteAdminModuleActionConfig)) {
+            $allowWriteAdminModuleActionConfig = [];
+        }
+        $allowWriteAdmin = GeneralConfig::getConfigValue('enable_framed_allow_write_admin_token_auth') == 1;
+        $allowWriteAdminModuleAction = in_array($module . '.' . $action, $allowWriteAdminModuleActionConfig, \true);
+        if (Piwik::isUserHasSomeWriteAccess() && !$allowWriteAdmin && !$allowWriteAdminModuleAction) {
             // we allow UI authentication/ embedding widgets / reports etc only for users that have only view
             // access. it's mostly there to get users to use auth tokens of view users when embedding reports
             // token_auth is fine for API calls since they would be always authenticated later anyway
             // token_auth is also fine in CLI mode as eg doAsSuperUser might be used etc
             //
             // NOTE: this does not apply if the [General] enable_framed_allow_write_admin_token_auth INI
-            // option is set.
-            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_ViewAccessRequired', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/') . '" rel="noreferrer noopener">https://matomo.org/faq/troubleshooting/faq_147/</a>']));
+            // option is set, or if the current module/action is allowlisted in the
+            // token_auth.write_admin_allowed_module_actions DI entry.
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_ViewAccessRequired', [Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/faq_147/') . 'https://matomo.org/faq/troubleshooting/faq_147/</a>']));
             $ex->setIsHtmlMessage();
             throw $ex;
         }
@@ -446,11 +471,11 @@ class Request
     public static function shouldReloadAuthUsingTokenAuth($request)
     {
         if (is_null($request)) {
-            $request = self::getDefaultRequest();
+            return StaticContainer::get(AuthenticationToken::class)->getAuthToken() != Access::getInstance()->getTokenAuth();
         }
         if (!isset($request['token_auth'])) {
             // no token is given so we just keep the current loaded user
-            return false;
+            return \false;
         }
         // a token is specified, we need to reload auth in case it is different than the current one, even if it is empty
         $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $request);
@@ -464,10 +489,11 @@ class Request
      * and bearer tokens might be used as well.
      *
      * @return bool True if token was supplied in a secure way
+     * @deprecated will be removed in Matomo 6
      */
     public static function isTokenAuthProvidedSecurely() : bool
     {
-        return \Piwik\Request::fromGet()->getStringParameter('token_auth', '') === '' && \Piwik\Request::fromPost()->getStringParameter('token_auth', '') !== '';
+        return StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely();
     }
     /**
      * Returns array($class, $method) from the given string $class.$method
@@ -572,24 +598,24 @@ class Request
     {
         // if filter_column_recursive & filter_pattern_recursive are supplied, and flat isn't supplied
         // we have to load all the child subtables.
-        return Common::getRequestVar('filter_column_recursive', false) !== false && Common::getRequestVar('filter_pattern_recursive', false) !== false && !self::shouldLoadFlatten();
+        return Common::getRequestVar('filter_column_recursive', \false) !== \false && Common::getRequestVar('filter_pattern_recursive', \false) !== \false && !self::shouldLoadFlatten();
     }
     /**
      * @return bool
      */
     public static function shouldLoadFlatten()
     {
-        return Common::getRequestVar('flat', false) == 1;
+        return Common::getRequestVar('flat', \false) == 1;
     }
     /**
      * Returns the segment query parameter from the original request, without modifications.
      *
-     * @return array|bool
+     * @return string|false
      */
     public static function getRawSegmentFromRequest()
     {
         // we need the URL encoded segment parameter, we fetch it from _SERVER['QUERY_STRING'] instead of default URL decoded _GET
-        $segmentRaw = false;
+        $segmentRaw = \false;
         $segment = Common::getRequestVar('segment', '', 'string');
         if (!empty($segment)) {
             $request = \Piwik\API\Request::getRequestParametersGET();
@@ -618,7 +644,7 @@ class Request
     }
     private function shouldDisablePostProcessing()
     {
-        $shouldDisable = false;
+        $shouldDisable = \false;
         /**
          * After an API method returns a value, the value is post processed (eg, rows are sorted
          * based on the `filter_sort_column` query parameter, rows are truncated based on the

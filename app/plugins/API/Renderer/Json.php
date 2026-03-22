@@ -34,7 +34,7 @@ class Json extends ApiRenderer
         $exceptionMessage = str_replace(array("\r\n", "\n"), " ", $message);
         $data = array('result' => 'error', 'message' => $exceptionMessage);
         if ($this->shouldSendBacktrace()) {
-            $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, true);
+            $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, \true);
         }
         $result = json_encode($data);
         return $this->applyJsonpIfNeeded($result);
@@ -68,30 +68,26 @@ class Json extends ApiRenderer
         }
         ProxyHttp::overrideCacheControlHeaders();
     }
-    private function isJsonp()
+    private function isJsonp() : bool
     {
         $callback = $this->getJsonpCallback();
-        if (false === $callback) {
-            return false;
+        if (\false === $callback) {
+            return \false;
         }
         return preg_match('/^[0-9a-zA-Z_.]*$/D', $callback) > 0;
     }
     private function getJsonpCallback()
     {
-        $jsonCallback = Common::getRequestVar('callback', false, null, $this->request);
-        if ($jsonCallback === false) {
-            $jsonCallback = Common::getRequestVar('jsoncallback', false, null, $this->request);
+        $jsonCallback = $this->requestObj->getParameter('callback', \false);
+        if ($jsonCallback === \false) {
+            $jsonCallback = $this->requestObj->getParameter('jsoncallback', \false);
         }
         return $jsonCallback;
     }
-    /**
-     * @param $str
-     * @return string
-     */
-    private function applyJsonpIfNeeded($str)
+    private function applyJsonpIfNeeded(string $str) : string
     {
         if ($this->isJsonp()) {
-            $jsonCallback = $this->getJsonpCallback();
+            $jsonCallback = Common::sanitizeInputValue($this->getJsonpCallback());
             $str = $jsonCallback . "(" . $str . ")";
         }
         return $str;

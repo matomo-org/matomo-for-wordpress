@@ -225,7 +225,7 @@ if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_t
 $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 	$plugins = $settings['Plugins'];
 	if (is_array($settings['Plugins'])) {
-		$pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Monolog', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'ProfessionalServices', 'MobileAppMeasurable', 'CustomPiwikJs');
+		$pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'ProfessionalServices', 'MobileAppMeasurable', 'CustomPiwikJs');
 		foreach ($pluginsToRemove as $pluginToRemove) {
 			// Marketplace => this is instead done in wordpress
 			// MultiSites => doesn't really make sense since we have only one website per installation

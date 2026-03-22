@@ -37,7 +37,7 @@ class DebugFormatterHelper extends Helper
      *
      * @return string
      */
-    public function progress(string $id, string $buffer, bool $error = false, string $prefix = 'OUT', string $errorPrefix = 'ERR')
+    public function progress(string $id, string $buffer, bool $error = \false, string $prefix = 'OUT', string $errorPrefix = 'ERR')
     {
         $message = '';
         if ($error) {
@@ -47,7 +47,7 @@ class DebugFormatterHelper extends Helper
             }
             if (!isset($this->started[$id]['err'])) {
                 $message .= sprintf('%s<bg=red;fg=white> %s </> ', $this->getBorder($id), $errorPrefix);
-                $this->started[$id]['err'] = true;
+                $this->started[$id]['err'] = \true;
             }
             $message .= str_replace("\n", sprintf("\n%s<bg=red;fg=white> %s </> ", $this->getBorder($id), $errorPrefix), $buffer);
         } else {
@@ -57,7 +57,7 @@ class DebugFormatterHelper extends Helper
             }
             if (!isset($this->started[$id]['out'])) {
                 $message .= sprintf('%s<bg=green;fg=white> %s </> ', $this->getBorder($id), $prefix);
-                $this->started[$id]['out'] = true;
+                $this->started[$id]['out'] = \true;
             }
             $message .= str_replace("\n", sprintf("\n%s<bg=green;fg=white> %s </> ", $this->getBorder($id), $prefix), $buffer);
         }

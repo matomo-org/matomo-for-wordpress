@@ -11,7 +11,7 @@ namespace Piwik\Db;
 use Exception;
 /**
  */
-interface AdapterInterface
+interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
 {
     /**
      * Reset the configuration variables in this adapter.
@@ -52,7 +52,7 @@ interface AdapterInterface
      * Test error number
      *
      * @param Exception $e
-     * @param string $errno
+     * @param string|int $errno
      * @return bool
      */
     public function isErrNo($e, $errno);

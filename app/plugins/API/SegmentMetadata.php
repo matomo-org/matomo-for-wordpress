@@ -19,7 +19,7 @@ class SegmentMetadata
      * @var array
      */
     private $categoryOrder = array();
-    public function getSegmentsMetadata($idSites, $_hideImplementationData, $isRegisteredUser, $_showAllSegments = false)
+    public function getSegmentsMetadata($idSites, $_hideImplementationData, $isRegisteredUser, $_showAllSegments = \false)
     {
         /** @var Segment[] $dimensionSegments */
         $dimensionSegments = SegmentsList::get()->getSegments();

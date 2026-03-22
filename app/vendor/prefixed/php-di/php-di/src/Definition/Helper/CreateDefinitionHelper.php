@@ -58,7 +58,7 @@ class CreateDefinitionHelper implements DefinitionHelper
      */
     public function lazy()
     {
-        $this->lazy = true;
+        $this->lazy = \true;
         return $this;
     }
     /**

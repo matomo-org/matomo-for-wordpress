@@ -22,6 +22,6 @@ class PurchaseType
     private function isValidPurchaseType(string $type) : bool
     {
         $valid = [self::TYPE_ALL, self::TYPE_FREE, self::TYPE_PAID];
-        return in_array($type, $valid, $strict = true);
+        return in_array($type, $valid, $strict = \true);
     }
 }

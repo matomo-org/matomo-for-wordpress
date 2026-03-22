@@ -47,11 +47,11 @@ class Command
     private $processTitle;
     private $aliases = [];
     private $definition;
-    private $hidden = false;
+    private $hidden = \false;
     private $help = '';
     private $description = '';
     private $fullDefinition;
-    private $ignoreValidationErrors = false;
+    private $ignoreValidationErrors = \false;
     private $code;
     private $synopsis = [];
     private $usages = [];
@@ -88,7 +88,7 @@ class Command
         if (null === $name && null !== ($name = static::getDefaultName())) {
             $aliases = explode('|', $name);
             if ('' === ($name = array_shift($aliases))) {
-                $this->setHidden(true);
+                $this->setHidden(\true);
                 $name = array_shift($aliases);
             }
             $this->setAliases($aliases);
@@ -108,7 +108,7 @@ class Command
      */
     public function ignoreValidationErrors()
     {
-        $this->ignoreValidationErrors = true;
+        $this->ignoreValidationErrors = \true;
     }
     public function setApplication(?Application $application = null)
     {
@@ -152,7 +152,7 @@ class Command
      */
     public function isEnabled()
     {
-        return true;
+        return \true;
     }
     /**
      * Configures the current command.
@@ -311,7 +311,7 @@ class Command
      *
      * @internal
      */
-    public function mergeApplicationDefinition(bool $mergeArgs = true)
+    public function mergeApplicationDefinition(bool $mergeArgs = \true)
     {
         if (null === $this->application) {
             return;
@@ -553,7 +553,7 @@ class Command
      *
      * @return string
      */
-    public function getSynopsis(bool $short = false)
+    public function getSynopsis(bool $short = \false)
     {
         $key = $short ? 'short' : 'long';
         if (!isset($this->synopsis[$key])) {

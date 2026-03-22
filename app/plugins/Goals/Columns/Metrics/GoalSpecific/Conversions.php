@@ -22,11 +22,18 @@ class Conversions extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions', false);
+        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions', \false);
     }
     public function getTranslatedName()
     {
         return Piwik::translate('Goals_Conversions', $this->getGoalNameForDocs());
+    }
+    public function getDocumentation()
+    {
+        if ($this->idGoal < 1) {
+            return Piwik::translate('Goals_ColumnEcommerceOrdersDocumentation');
+        }
+        return Piwik::translate('Goals_ColumnConversionsDocumentation', $this->getGoalNameForDocs());
     }
     public function getDependentMetrics()
     {

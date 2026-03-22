@@ -70,7 +70,7 @@ class ConfigReader
     {
         $category = strtolower($category);
         if ($category === 'database' || $category === 'database_reader') {
-            return true;
+            return \true;
         }
         $developmentOnlySections = array('database_tests', 'tests', 'debugtests');
         return !Development::isEnabled() && in_array($category, $developmentOnlySections);
@@ -92,14 +92,14 @@ class ConfigReader
         $key = strtolower($key);
         $passwordFields = array('password', 'secret', 'apikey', 'privatekey', 'admin_pass', 'md5', 'sha1');
         foreach ($passwordFields as $value) {
-            if (strpos($key, $value) !== false) {
-                return true;
+            if (strpos($key, $value) !== \false) {
+                return \true;
             }
         }
         if ($key === 'salt') {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Adds config values that can be used to overwrite a plugin system setting and adds a description + default value
@@ -139,12 +139,11 @@ class ConfigReader
                 if (isset($configValues[$configSection][$name])) {
                     $configValues[$configSection][$name]['defaultValue'] = $setting->getDefaultValue();
                     $configValues[$configSection][$name]['description'] = trim($description);
-                    if ($config->uiControl === PiwikSettings\FieldConfig::UI_CONTROL_PASSWORD) {
-                        $configValues[$configSection][$name]['value'] = $this->getMaskedPassword();
-                    }
                 } else {
-                    $defaultValue = $setting->getValue();
-                    $configValues[$configSection][$name] = array('value' => null, 'description' => trim($description), 'isCustomValue' => false, 'defaultValue' => $defaultValue);
+                    $configValues[$configSection][$name] = array('value' => $setting->getValue() != $setting->getDefaultValue() ? $setting->getValue() : null, 'description' => trim($description), 'isCustomValue' => $setting->getValue() != $setting->getDefaultValue(), 'defaultValue' => $setting->getDefaultValue());
+                }
+                if (!empty($configValues[$configSection][$name]['value']) && $config->uiControl === PiwikSettings\FieldConfig::UI_CONTROL_PASSWORD) {
+                    $configValues[$configSection][$name]['value'] = $this->getMaskedPassword();
                 }
             }
             if (empty($configValues[$pluginName])) {

@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\MultiSites\Reports;
 
+use Piwik\Columns\Dimension;
 use Piwik\Piwik;
 use Piwik\Plugins\MultiSites\API;
 abstract class Base extends \Piwik\Plugin\Report
@@ -15,14 +16,20 @@ abstract class Base extends \Piwik\Plugin\Report
     protected function init()
     {
         $this->categoryId = 'General_MultiSitesSummary';
-        $allMetricsInfo = API::getApiMetrics($enhanced = true);
-        $metadataMetrics = array();
-        $processedMetricsMetadata = array();
+        $allMetricsInfo = API::getApiMetrics($enhanced = \true);
+        $metadataMetrics = [];
+        $processedMetricsMetadata = [];
         foreach ($allMetricsInfo as $metricName => $metricSettings) {
             $metadataMetrics[$metricName] = Piwik::translate($metricSettings[API::METRIC_TRANSLATION_KEY]);
             $processedMetricsMetadata[$metricSettings[API::METRIC_EVOLUTION_COL_NAME_KEY]] = Piwik::translate($metricSettings[API::METRIC_TRANSLATION_KEY]) . " " . Piwik::translate('MultiSites_Evolution');
         }
         $this->metrics = array_keys($metadataMetrics);
         $this->processedMetrics = array_keys($processedMetricsMetadata);
+    }
+    public function getMetricSemanticTypes() : array
+    {
+        $metricTypes = parent::getMetricSemanticTypes();
+        $metricTypes['ai_chatbots_requests'] = Dimension::TYPE_NUMBER;
+        return $metricTypes;
     }
 }

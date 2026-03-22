@@ -16,7 +16,7 @@ use Piwik\Url;
  */
 class RequiredPrivateDirectories extends \Piwik\Plugins\Diagnostics\Diagnostic\AbstractPrivateDirectories
 {
-    private $configIniAccessible = false;
+    private $configIniAccessible = \false;
     protected $privatePaths = ['tmp/cache/tracker/matomocache_general.php', '.git', '.git/config'];
     protected function addError(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult &$result)
     {
@@ -24,7 +24,7 @@ class RequiredPrivateDirectories extends \Piwik\Plugins\Diagnostics\Diagnostic\A
         if ($this->configIniAccessible) {
             $pathIsAccessible .= '<br/><br/>' . $this->translator->translate('Diagnostics_ConfigIniAccessible');
         }
-        $pathIsAccessible .= '<br/><br/><a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/how-do-i-fix-the-error-private-directories-are-accessible/') . '" target="_blank" rel="noopener noreferrer">' . $this->translator->translate('General_ReadThisToLearnMore', ['', '']) . '</a>';
+        $pathIsAccessible .= '<br/><br/>' . Url::getExternalLinkTag('https://matomo.org/faq/troubleshooting/how-do-i-fix-the-error-private-directories-are-accessible/') . $this->translator->translate('General_ReadThisToLearnMore', ['', '']) . '</a>';
         $result->setLongErrorMessage($pathIsAccessible);
     }
     protected function computeAccessiblePaths(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult &$result, $baseUrl, array $testUrls) : bool

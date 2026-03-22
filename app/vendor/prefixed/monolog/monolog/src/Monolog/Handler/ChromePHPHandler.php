@@ -34,7 +34,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
     const USER_AGENT_REGEX = '{\\b(?:Chrome/\\d+(?:\\.\\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\\d|\\d{3,})(?:\\.\\d)*)\\b}';
-    protected static $initialized = false;
+    protected static $initialized = \false;
     /**
      * Tracks whether we sent too much data
      *
@@ -42,14 +42,14 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @var bool
      */
-    protected static $overflowed = false;
+    protected static $overflowed = \false;
     protected static $json = array('version' => self::VERSION, 'columns' => array('label', 'log', 'backtrace', 'type'), 'rows' => array());
-    protected static $sendHeaders = true;
+    protected static $sendHeaders = \true;
     /**
      * @param int  $level  The minimum logging level at which this handler will be triggered
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG, $bubble = \true)
     {
         parent::__construct($level, $bubble);
         if (!function_exists('json_encode')) {
@@ -104,20 +104,20 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return;
         }
         if (!self::$initialized) {
-            self::$initialized = true;
+            self::$initialized = \true;
             self::$sendHeaders = $this->headersAccepted();
             if (!self::$sendHeaders) {
                 return;
             }
             self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         }
-        $json = Utils::jsonEncode(self::$json, null, true);
+        $json = Utils::jsonEncode(self::$json, null, \true);
         $data = base64_encode(utf8_encode($json));
         if (strlen($data) > 3 * 1024) {
-            self::$overflowed = true;
+            self::$overflowed = \true;
             $record = array('message' => 'Incomplete logs, chrome header size limit reached', 'context' => array(), 'level' => Logger::WARNING, 'level_name' => Logger::getLevelName(Logger::WARNING), 'channel' => 'monolog', 'datetime' => new \DateTime(), 'extra' => array());
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = Utils::jsonEncode(self::$json, null, true);
+            $json = Utils::jsonEncode(self::$json, null, \true);
             $data = base64_encode(utf8_encode($json));
         }
         if (trim($data) !== '') {
@@ -144,7 +144,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected function headersAccepted()
     {
         if (empty($_SERVER['HTTP_USER_AGENT'])) {
-            return false;
+            return \false;
         }
         return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']);
     }
