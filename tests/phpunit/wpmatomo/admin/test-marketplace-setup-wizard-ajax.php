@@ -8,7 +8,7 @@ use WpMatomo\Admin\MarketplaceSetupWizard;
 class MarketplaceSetupWizardAjaxTest extends MatomoAnalytics_Ajax_TestCase {
 	public function setUp(): void {
 		parent::setUp();
-		MarketplaceSetupWizard::register_ajax();
+		( new MarketplaceSetupWizard() )->register_ajax();
 		$this->wordpress_fixture->switch_to_admin_page();
 
 		// create dummy marketplace plugin
