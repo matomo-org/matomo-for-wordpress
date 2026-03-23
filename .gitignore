@@ -1,5 +1,6 @@
 .DS_Store
 /vendor/
+!/vendor/innocraft/php-experiments/
 .php-cs-fixer.cache
 .*~
 *~

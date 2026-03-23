@@ -294,6 +294,10 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	);
 }
 
+function matomo_decorate_goal_url( $url ) {
+	return \WpMatomo\AbTest\UrlDecorator::decorate( $url );
+}
+
 if ( matomo_is_app_request() || ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) ) {
 	// prevent layout being broken when thegem theme is used. their lazy items class causes the reporting UI to not appear
 	// because it creates a JS error because of escaping " too often. only breaks when " Activate image loading optimization (for desktops)"

@@ -1,6 +1,7 @@
 {
   "require": {
-    "php": ">=7.2.5"
+    "php": ">=7.2.5",
+    "innocraft/php-experiments": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7.21 || ^6.5 || ^7 || ^8 || ^9.2 || ^9.6",
