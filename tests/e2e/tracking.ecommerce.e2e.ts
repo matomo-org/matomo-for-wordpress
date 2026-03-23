@@ -44,7 +44,7 @@ describe('Tracking (Ecommerce)', function() {
     await BlogCheckoutPage.order(); // redirects to order received
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 
-    await browser.pause(3000); // just to make sure everything gets tracked
+    await browser.pause(5000); // just to make sure everything gets tracked
 
     const visitsAfter = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
@@ -144,7 +144,7 @@ describe('Tracking (Ecommerce)', function() {
       await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
       await checkPageHasForcedVisitorId();
 
-      await browser.pause(1000);
+      await browser.pause(5000);
 
       // ensure we are doing cookieless tracking
       const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
