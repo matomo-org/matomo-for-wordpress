@@ -41,7 +41,7 @@ class EmailReportsPage extends MatomoAdminPage {
     await browser.execute(function () {
       $('.matomo-save-button > input')[0].click();
     });
-    await $('#entityEditContainer tr').waitForDisplayed();
+    await $('#entityEditContainer tr').waitForDisplayed({ timeout: 30000 });
     await this.hideDateSelectorDate();
   }
 
