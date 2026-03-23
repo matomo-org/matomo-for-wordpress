@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.8.0 =
+* Display unique visitors along with visits in Visits Over Time graph on Summary page.
+* Add marketplace install steps to Get Started page.
+* Re-word Get Started page to provide better information on respecting user privacy.
+* Upgrade Matomo core to 5.8.0.
+
 = 5.7.1 =
 * Bug fix: avoid error in AI bot tracking feature when REST API tracking endpoint is used.
 * Tie asset cache busters to plugin version.
