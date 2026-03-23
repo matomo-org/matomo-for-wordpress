@@ -167,6 +167,7 @@ describe('Tracking (Ecommerce)', function() {
       }));
 
       expect(visits.length).toBeGreaterThan(1);
+      console.log(visits);
       expect(parseInt(visits[0].totalAbandonedCartsRevenue, 10)).toBeGreaterThan(0);
       expect(parseInt(visits[0].totalAbandonedCarts, 10)).toEqual(1);
       expect(parseInt(visits[0].totalAbandonedCartsItems, 10)).toEqual(1);
