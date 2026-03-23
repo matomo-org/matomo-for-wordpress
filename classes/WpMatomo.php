@@ -248,5 +248,6 @@ class WpMatomo {
 		if ( empty( self::$features[ $class_name ] ) ) {
 			return null;
 		}
+		return self::$features[ $class_name ];
 	}
 }

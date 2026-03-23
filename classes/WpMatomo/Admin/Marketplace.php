@@ -33,11 +33,11 @@ class Marketplace {
 
 		$valid_tabs = $this->get_valid_tabs();
 
-		if ( isset( $_GET['tab'] )
-			&& in_array( $_GET['tab'], $valid_tabs, true )
+		if ( isset( $_REQUEST['tab'] )
+			&& in_array( wp_unslash( $_REQUEST['tab'] ), $valid_tabs, true )
 		) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$active_tab = wp_unslash( $_GET['tab'] );
+			$active_tab = wp_unslash( $_REQUEST['tab'] );
 		}
 
 		return $active_tab;

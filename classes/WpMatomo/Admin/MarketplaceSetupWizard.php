@@ -10,6 +10,7 @@
 namespace WpMatomo\Admin;
 
 use WpMatomo\Feature;
+use WpMatomo\Settings;
 
 class MarketplaceSetupWizard extends Feature {
 	const MARKETPLACE_PLUGIN_FILE   = 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php';
@@ -21,14 +22,16 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
-		// TODO: probably better to use a filter in Marketplace, and a hook here rather than this
-		$marketplace = \WpMatomo::get_active_feature( Marketplace::class );
-		if ( empty( $marketplace ) ) {
+		if (
+			empty( $_REQUEST['page'] )
+			|| Menu::SLUG_MARKETPLACE !== $_REQUEST['page']
+		) {
 			return false;
 		}
 
-		$active_marketplace_tab = $marketplace->get_active_tab();
-		return 'install' === $active_marketplace_tab || 'subscriptions' === $active_marketplace_tab;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$tab = isset( $_REQUEST['tab'] ) ? wp_unslash( $_REQUEST['tab'] ) : '';
+		return 'install' === $tab || 'subscriptions' === $tab;
 	}
 
 	public function get_body( $show_titles = true ) {
@@ -43,16 +46,10 @@ class MarketplaceSetupWizard extends Feature {
 	}
 
 	public function register_hooks() {
-		if ( ! current_user_can( 'upload_plugins' )
-			|| ! current_user_can( 'activate_plugins' )
-		) {
-			return;
-		}
-
-		$this->enqueue_scripts();
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
-	private function enqueue_scripts() {
+	public function enqueue_scripts() {
 		wp_enqueue_script(
 			'matomo-marketplace-setup-wizard',
 			plugins_url( '/assets/js/marketplace_setup_wizard.js', MATOMO_ANALYTICS_FILE ),
