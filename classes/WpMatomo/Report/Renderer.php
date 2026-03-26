@@ -42,7 +42,7 @@ class Renderer {
 		];
 
 		$data              = new Data();
-		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit );
+		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit, [ 'forceShortDate' => '1' ] );
 		$matomo_metrics    = [
 			'nb_visits'        => __( 'Visits', 'matomo' ),
 			'nb_uniq_visitors' => __( 'Unique Visitors', 'matomo' ),

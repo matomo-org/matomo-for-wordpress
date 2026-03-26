@@ -14,6 +14,7 @@ use Piwik\Access;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Piwik;
@@ -21,6 +22,8 @@ use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
+use Piwik\Plugins\WordPress\Workaround\ProcessedReportForceShortDateFormat;
+use Piwik\Plugins\WordPress\Workaround\ProcessedReportInnerCallHooks;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
 use Piwik\Version;
@@ -77,7 +80,22 @@ class WordPress extends Plugin
             'Tracker.setTrackerCacheGeneral' => ['function' => 'setTrackerCacheGeneral', 'after' => true],
             'Platform.initialized' => ['function' => 'onPlatformInitialized', 'before' => true],
             'Template.jsGlobalVariables' => 'addJsGlobalVariables',
+            'API.Request.dispatch' => 'onApiRequestDispatch',
+            'API.Request.dispatch.end' => 'onApiRequestDispatchEnd',
+            ProcessedReportInnerCallHooks::PROCESSED_REPORT_INNER_END_EVENT => 'afterProcessedReportInner',
         );
+    }
+
+    public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {
+        StaticContainer::get(ProcessedReportInnerCallHooks::class)->onDispatchStart($finalParameters, $pluginName, $methodName);
+    }
+
+    public function onApiRequestDispatchEnd(&$returnedValue, $extraInfo) {
+        StaticContainer::get(ProcessedReportInnerCallHooks::class)->onDispatchEnd($returnedValue, $extraInfo);
+    }
+
+    public function afterProcessedReportInner(&$returnedValue, $extraInfo) {
+        StaticContainer::get(ProcessedReportForceShortDateFormat::class)->replacePeriodsUsingCustomDateFormatIfRequested($returnedValue);
     }
 
     public function addJsGlobalVariables(&$output) {
