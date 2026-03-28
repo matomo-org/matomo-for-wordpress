@@ -17,12 +17,14 @@ class GdprToolsPage extends MatomoAdminPage {
     await browser.waitUntil(async () => {
       return browser.execute(() => !$('.loadingPiwik').is(':visible'));
     }, { timeout: 20000 });
-    await browser.pause(500);
 
     // if the wait above doesn't work, just hide the gif
-    await browser.execute(() => {
+    const c = await browser.execute(() => {
       $('.loadingPiwik').hide();
+      return $('.loadingPiwik').length;
     });
+    console.log('LOADING PIWIK COUNT: ' + console.log(c));
+    await browser.pause(500);
 
     return result;
   }

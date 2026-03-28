@@ -22,6 +22,14 @@ describe('Matomo Reporting > Ecommerce', () => {
     await OverviewPage.open();
     await browser.pause(500);
 
+    const tags = await browser.execute(() => {
+      var tags = [];
+      $('.enrichedHeadline>.title').each(function () {
+        tags.push(this.tagName);
+      });
+    });
+    console.log('TAG NAMES ARE: ' + JSON.stringify(tags));
+
     await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.overview')

@@ -57,6 +57,29 @@ class MwpDiagnosticsPage extends MwpPage {
       );
 
       window.jQuery('tbody#logs_body > tr').remove();
+
+      var versionRows = [
+        'matomoinstallversion',
+        'matomopluginversion',
+        'versionhistory',
+        'coreversion',
+        'matomoanalytics-ethicalstatspowerfulinsights',
+        'activeplugins',
+      ];
+      var currentVersion = window.jQuery('tr#matomo-diagnostic-matomopluginversion>td:nth-child(2)').text().trim();
+      versionRows.forEach((id) => {
+        const $cell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
+        $cell.html($cell.html().replaceAll(currentVersion, 'CURRENT_VERSION'));
+      });
+
+      var $coreVersionCell = window.jQuery('tr#matomo-diagnostic-matomoversion>td:nth-child(2)');
+      $coreVersionCell.html($coreVersionCell.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_CORE_VERSION'));
+
+      window.jQuery('#matomo_system_report_info').val(
+        window.jQuery('#matomo_system_report_info')
+          .val()
+          .replace(/Matomo Plugin Version: \d+\.\d+\.\d+/g, 'Matomo Plugin Version: CURRENT_CORE_VERSION')
+      );
     });
   }
 }

@@ -26,7 +26,7 @@ class BlogProductPage extends Page {
   async addToCart() {
     await $('button[name="add-to-cart"]').waitForExist();
     await browser.execute(() => {
-      window.jQuery('button[name="add-to-cart"]').click();
+      window.jQuery('button[name="add-to-cart"]')[0].click();
     });
     await browser.waitUntil(async () => {
       const exists = await browser.execute(() => {
