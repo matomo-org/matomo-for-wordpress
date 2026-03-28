@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { browser, $ } from '@wdio/globals';
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class DeviceDetectionPage extends MatomoAdminPage {
@@ -14,6 +14,14 @@ class DeviceDetectionPage extends MatomoAdminPage {
     const result = await super.open('DevicesDetection.detection');
 
     await $('textarea').waitForDisplayed();
+    await browser.execute(() => {
+      $('textarea').val(
+        $('textarea')
+          .val()
+          .replace(/rv:\d+\.\d+/, 'rv:REMOVED')
+          .replace(/\/\d+\.\d+/, '/REMOVED')
+      );
+    });
 
     return result;
   }

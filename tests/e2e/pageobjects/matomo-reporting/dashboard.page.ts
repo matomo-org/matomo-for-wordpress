@@ -13,6 +13,10 @@ class DashboardPage extends MatomoReportingPage {
   async open() {
     const result = await super.open('Dashboard_Dashboard.1');
     await this.waitForDashboard();
+    // promo video thumbnail does not render consistently
+    await browser.execute(() => {
+      $('#piwik-promo-video').hide();
+    });
     return result;
   }
 
