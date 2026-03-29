@@ -35,7 +35,10 @@ class BlogCheckoutPage extends Page {
 
     await Website.retry(5, async () => {
       await browser.execute(() => {
-        window.jQuery('.wc-block-components-checkout-place-order-button,#place_order')[0].click();
+        var $order = window.jQuery('.wc-block-components-checkout-place-order-button,#place_order');
+        if ($order.length) {
+          $order[0].click();
+        }
       });
 
       try {
