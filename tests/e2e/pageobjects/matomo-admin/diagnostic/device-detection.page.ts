@@ -18,8 +18,8 @@ class DeviceDetectionPage extends MatomoAdminPage {
       $('textarea').val(
         $('textarea')
           .val()
-          .replace(/rv:\d+\.\d+/, 'rv:REMOVED')
-          .replace(/\/\d+\.\d+/, '/REMOVED')
+          .replace(/rv:\d+\.\d+/g, 'rv:REMOVED')
+          .replace(/\/\d+\.\d+/g, '/REMOVED')
       );
     });
 

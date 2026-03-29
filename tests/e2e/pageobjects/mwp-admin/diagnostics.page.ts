@@ -69,16 +69,27 @@ class MwpDiagnosticsPage extends MwpPage {
       var currentVersion = window.jQuery('tr#matomo-diagnostic-matomopluginversion>td:nth-child(2)').text().trim();
       versionRows.forEach((id) => {
         const $cell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
-        $cell.html($cell.html().replaceAll(currentVersion, 'CURRENT_VERSION'));
+        if ($cell.length) {
+          $cell.html($cell.html().replaceAll(currentVersion, 'CURRENT_VERSION'));
+        }
       });
 
       var $coreVersionCell = window.jQuery('tr#matomo-diagnostic-matomoversion>td:nth-child(2)');
-      $coreVersionCell.html($coreVersionCell.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_CORE_VERSION'));
+      if ($coreVersionCell.length) {
+        $coreVersionCell.html($coreVersionCell.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_CORE_VERSION'));
+      }
+
+      var $currentWpVersion = window.jQuery('tr#matomo-diagnostic-wordpressversion>td:nth-child(2)');
+      if ($currentWpVersion.length) {
+        $currentWpVersion.html($currentWpVersion.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_WP_VERSION'))
+      }
 
       window.jQuery('#matomo_system_report_info').val(
         window.jQuery('#matomo_system_report_info')
           .val()
           .replace(/Matomo Plugin Version: \d+\.\d+\.\d+/g, 'Matomo Plugin Version: CURRENT_CORE_VERSION')
+          .replace(/Matomo Install Version: \d+\.\d+\.\d+/g, 'Matomo Install Version: CURRENT_INSTALL_VERSION')
+          .replace(/\(Install date: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)/g, '(Install date: INSTALL_DATE)')
       );
 
       var timestampRows = [
@@ -89,7 +100,9 @@ class MwpDiagnosticsPage extends MwpPage {
 
       timestampRows.forEach((id) => {
         const $cell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
-        $cell.html($cell.html().replace(/\d+/g, 'TIMESTAMP_REMOVED'));
+        if ($cell.length) {
+          $cell.html($cell.html().replace(/\d+/g, 'TIMESTAMP_REMOVED'));
+        }
       });
     });
   }

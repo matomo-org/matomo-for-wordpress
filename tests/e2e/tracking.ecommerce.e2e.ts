@@ -30,17 +30,22 @@ describe('Tracking (Ecommerce)', function() {
   it('should track ecommerce events and orders using the JS client', async () => {
     // TODO: these tests are not particularly great atm. there's no way to get the number of orders
     // overall or number of conversions overall without initiating archiving
+    console.log('set up woocommerce');
     await Website.setUpWooCommerce();
 
+    console.log('open product page');
     await BlogProductPage.open();
     await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
 
+    console.log('add to cart');
     await BlogProductPage.addToCart(); // tracked server side
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview refresh + product update
 
+    console.log('checkout');
     await BlogProductPage.checkout(); // redirects to checkout
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 
+    console.log('order');
     await BlogCheckoutPage.order(); // redirects to order received
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 

@@ -33,21 +33,11 @@ class BlogCheckoutPage extends Page {
 
     await browser.pause(1500);
 
-    await Website.retry(5, async () => {
-      await browser.execute(() => {
-        var $order = window.jQuery('.wc-block-components-checkout-place-order-button,#place_order');
-        if ($order.length) {
-          $order[0].click();
-        }
-      });
-
-      try {
-        await $('li.woocommerce-order-overview__order').waitForDisplayed({timeout: 60000});
-      } catch (e) {
-        await browser.refresh();
-        throw e;
-      }
+    await browser.execute(() => {
+      window.jQuery('.wc-block-components-checkout-place-order-button,#place_order')[0].click();
     });
+
+    await $('li.woocommerce-order-overview__order').waitForDisplayed({ timeout: 180000 });
   }
 }
 

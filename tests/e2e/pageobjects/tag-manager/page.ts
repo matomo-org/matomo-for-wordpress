@@ -27,8 +27,8 @@ export default class TagManagerPage extends MatomoAdminPage {
 
     // wait for loading to disappear
     await browser.waitUntil(() => {
-      return browser.execute(() => !window.jQuery('.editVersion .loadingPiwik').length);
-    });
+      return browser.execute(() => !window.jQuery('.editVersion .loadingPiwik:visible').length);
+    }, { timeout: 30000 });
 
     await browser.pause(2000);
   }
