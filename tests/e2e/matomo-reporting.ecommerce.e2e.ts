@@ -22,11 +22,23 @@ describe('Matomo Reporting > Ecommerce', () => {
     await OverviewPage.open();
     await browser.pause(500);
 
-    const tags = await browser.execute(() => {
+    let tags = await browser.execute(() => {
       var tags = [];
       $('.enrichedHeadline>.title').each(function () {
         tags.push(this.tagName);
       });
+      return tags;
+    });
+    console.log('TAG NAMES ARE: ' + JSON.stringify(tags));
+
+    await browser.pause(10000);
+
+    let tags = await browser.execute(() => {
+      var tags = [];
+      $('.enrichedHeadline>.title').each(function () {
+        tags.push(this.tagName);
+      });
+      return tags;
     });
     console.log('TAG NAMES ARE: ' + JSON.stringify(tags));
 

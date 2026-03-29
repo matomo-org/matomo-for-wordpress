@@ -19,11 +19,11 @@ class GdprToolsPage extends MatomoAdminPage {
     }, { timeout: 20000 });
 
     // if the wait above doesn't work, just hide the gif
-    const c = await browser.execute(() => {
-      $('.loadingPiwik').hide();
-      return $('.loadingPiwik').length;
-    });
-    console.log('LOADING PIWIK COUNT: ' + console.log(c));
+    this.addStylesToPage(`
+      .segment-loading > .matomo-loader {
+        display: none !important;
+      }
+    `);
     await browser.pause(500);
 
     return result;

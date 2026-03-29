@@ -80,6 +80,17 @@ class MwpDiagnosticsPage extends MwpPage {
           .val()
           .replace(/Matomo Plugin Version: \d+\.\d+\.\d+/g, 'Matomo Plugin Version: CURRENT_CORE_VERSION')
       );
+
+      var timestampRows = [
+        'lastsettingsupdate',
+        'lasttrackingsettingsupdate',
+        'time',
+      ];
+
+      timestampRows.forEach((id) => {
+        const $cell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
+        $cell.html($cell.html().replace(/\d+/g, 'TIMESTAMP_REMOVED'));
+      });
     });
   }
 }

@@ -25,6 +25,11 @@ export default class TagManagerPage extends MatomoAdminPage {
 
     await $('.modal .editVersion input').waitForDisplayed();
 
+    // wait for loading to disappear
+    await browser.waitUntil(() => {
+      return browser.execute(() => !window.jQuery('.editVersion .loadingPiwik').length);
+    });
+
     await browser.pause(2000);
   }
 

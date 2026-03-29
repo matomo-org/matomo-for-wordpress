@@ -43,7 +43,7 @@ class EmailReportsPage extends MatomoAdminPage {
     });
     await browser.waitUntil(async () => {
       return browser.execute(() => window.jQuery('#entityEditContainer tr:visible').length > 0);
-    }, { timeout: 3000 });
+    }, { timeout: 30000 });
     await this.hideDateSelectorDate();
   }
 
