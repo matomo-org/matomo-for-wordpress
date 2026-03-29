@@ -37,7 +37,7 @@ describe('Tracking (Ecommerce)', function() {
 
     await BlogProductPage.addToCart(); // tracked server side
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview refresh + product update
-
+throw new Error('force');
     await BlogProductPage.checkout(); // redirects to checkout
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 
