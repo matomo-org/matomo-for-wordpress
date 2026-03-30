@@ -46,8 +46,18 @@ export default class Page {
     Page.interceptorSetup = true;
   }
 
+  async setupUncaughtExceptionHandler() {
+    await browser.addInitScript(function () {
+      addEventListener('unhandledrejection', (event) => {
+        const reasonText = event.reason ? (event.reason.stack || event.reason.message || JSON.stringify(event.reason)) : 'null';
+        console.log(`uncaught exception: ${reasonText}`);
+      })
+    });
+  }
+
   async open(path: string) {
     await this.setupInterceptor();
+    await this.setupUncaughtExceptionHandler();
 
     const baseUrl = await Website.baseUrl();
 
@@ -168,23 +178,28 @@ export default class Page {
   // for wp themes/plugins that use react
   // see https://github.com/facebook/react/issues/10135#issuecomment-314441175 for details on method
   async setReactInputValue(selector, value) {
-    await browser.execute((s, v) => {
-      const element = window.jQuery(s)[0];
-      const prototype = Object.getPrototypeOf(element);
+    const e = await browser.execute((s, v) => {
+      try {
+        const element = window.jQuery(s)[0];
+        const prototype = Object.getPrototypeOf(element);
 
-      const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
-      const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
+        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
 
-      if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
-        prototypeValueSetter.call(element, v);
-      } else if (valueSetter) {
-        valueSetter.call(element, v);
-      } else {
-        element.value = value;
+        if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+          prototypeValueSetter.call(element, v);
+        } else if (valueSetter) {
+          valueSetter.call(element, v);
+        } else {
+          element.value = value;
+        }
+
+        element.dispatchEvent(new Event('input', {bubbles: true}));
+      } catch (e) {
+        return e.message || JSON.stringify(e);
       }
-
-      element.dispatchEvent(new Event('input', { bubbles: true }));
     }, selector, value);
+    console.log('setReactInputValue error: ', e);
   }
 
   async prepareWpAdminForScreenshot() {
