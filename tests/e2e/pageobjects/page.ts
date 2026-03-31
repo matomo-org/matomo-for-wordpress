@@ -74,6 +74,17 @@ export default class Page {
         await Website.login(); // logged out for some reason
         throw new Error('force retry');
       }
+
+      // sometimes files fail to include on github actions resulting in a random
+      // fatal error
+      const hasCriticalError = await browser.execute(
+        () => document.documentElement.innerHTML
+          .includes('There has been a critical error on this website')
+      );
+      if (hasCriticalError) {
+        throw new Error('force retry');
+      }
+
       return r;
     });
 
@@ -178,28 +189,23 @@ export default class Page {
   // for wp themes/plugins that use react
   // see https://github.com/facebook/react/issues/10135#issuecomment-314441175 for details on method
   async setReactInputValue(selector, value) {
-    const e = await browser.execute((s, v) => {
-      try {
-        const element = window.jQuery(s)[0];
-        const prototype = Object.getPrototypeOf(element);
+    await browser.execute((s, v) => {
+      const element = window.jQuery(s)[0];
+      const prototype = Object.getPrototypeOf(element);
 
-        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
-        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+      const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
+      const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
 
-        if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
-          prototypeValueSetter.call(element, v);
-        } else if (valueSetter) {
-          valueSetter.call(element, v);
-        } else {
-          element.value = value;
-        }
-
-        element.dispatchEvent(new Event('input', {bubbles: true}));
-      } catch (e) {
-        return e.message || JSON.stringify(e);
+      if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+        prototypeValueSetter.call(element, v);
+      } else if (valueSetter) {
+        valueSetter.call(element, v);
+      } else {
+        element.value = value;
       }
+
+      element.dispatchEvent(new Event('input', {bubbles: true}));
     }, selector, value);
-    console.log('setReactInputValue error: ', e);
   }
 
   async prepareWpAdminForScreenshot() {

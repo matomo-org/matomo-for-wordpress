@@ -33,7 +33,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await browser.pause(10000);
 
-    let tags = await browser.execute(() => {
+    tags = await browser.execute(() => {
       var tags = [];
       $('.enrichedHeadline>.title').each(function () {
         tags.push(this.tagName);

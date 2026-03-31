@@ -81,7 +81,7 @@ class MwpDiagnosticsPage extends MwpPage {
 
       var $currentWpVersion = window.jQuery('tr#matomo-diagnostic-wordpressversion>td:nth-child(2)');
       if ($currentWpVersion.length) {
-        $currentWpVersion.html($currentWpVersion.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_WP_VERSION'))
+        $currentWpVersion.html($currentWpVersion.html().replace(/[\da-zA-Z._-]+/g, 'CURRENT_WP_VERSION'));
       }
 
       window.jQuery('#matomo_system_report_info').val(
