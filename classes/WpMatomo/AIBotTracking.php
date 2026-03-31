@@ -195,6 +195,15 @@ class AIBotTracking {
 			return true;
 		}
 
+		// Check settings early to avoid calling methods that may not exist
+		// in the bundled MatomoTracker library (e.g. isUserAgentAIBot).
+		if (
+			! $this->settings->is_ai_bot_tracking_enabled()
+			|| ! $this->settings->is_tracking_enabled()
+		) {
+			return false;
+		}
+
 		if ( ! $this->should_track_current_page() ) {
 			return false;
 		}
@@ -206,13 +215,8 @@ class AIBotTracking {
 		$tracker = $this->get_tracker();
 
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		if ( ! AjaxTracker::isUserAgentAIBot( $tracker->userAgent ) ) {
-			return false;
-		}
-
-		if (
-			! $this->settings->is_ai_bot_tracking_enabled()
-			|| ! $this->settings->is_tracking_enabled()
+		if ( ! method_exists( AjaxTracker::class, 'isUserAgentAIBot' )
+			|| ! AjaxTracker::isUserAgentAIBot( $tracker->userAgent )
 		) {
 			return false;
 		}
