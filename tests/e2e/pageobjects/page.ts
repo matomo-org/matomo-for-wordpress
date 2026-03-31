@@ -191,6 +191,10 @@ export default class Page {
   async setReactInputValue(selector, value) {
     await browser.execute((s, v) => {
       const element = window.jQuery(s)[0];
+      if (!element) {
+        return;
+      }
+
       const prototype = Object.getPrototypeOf(element);
 
       const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
