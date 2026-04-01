@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoAdminPage from '../matomo-admin.page.js';
 
 class AdminHomePage extends MatomoAdminPage {
@@ -15,6 +15,9 @@ class AdminHomePage extends MatomoAdminPage {
 
     await $('.theWidgetContent').waitForDisplayed();
     await $('ul.rss').waitForDisplayed();
+    await browser.waitUntil(() => {
+      return browser.execute(() => !window.jQuery('.loadingPiwik:visible').length);
+    });
     await browser.pause(1000);
 
     return result;

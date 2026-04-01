@@ -46,8 +46,18 @@ export default class Page {
     Page.interceptorSetup = true;
   }
 
+  async setupUncaughtExceptionHandler() {
+    await browser.addInitScript(function () {
+      addEventListener('unhandledrejection', (event) => {
+        const reasonText = event.reason ? (event.reason.stack || event.reason.message || JSON.stringify(event.reason)) : 'null';
+        console.log(`uncaught exception: ${reasonText}`);
+      })
+    });
+  }
+
   async open(path: string) {
     await this.setupInterceptor();
+    await this.setupUncaughtExceptionHandler();
 
     const baseUrl = await Website.baseUrl();
 
@@ -64,6 +74,17 @@ export default class Page {
         await Website.login(); // logged out for some reason
         throw new Error('force retry');
       }
+
+      // sometimes files fail to include on github actions resulting in a random
+      // fatal error
+      const hasCriticalError = await browser.execute(
+        () => document.documentElement.innerHTML
+          .includes('There has been a critical error on this website')
+      );
+      if (hasCriticalError) {
+        throw new Error('force retry');
+      }
+
       return r;
     });
 
@@ -170,6 +191,10 @@ export default class Page {
   async setReactInputValue(selector, value) {
     await browser.execute((s, v) => {
       const element = window.jQuery(s)[0];
+      if (!element) {
+        return;
+      }
+
       const prototype = Object.getPrototypeOf(element);
 
       const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
@@ -183,7 +208,7 @@ export default class Page {
         element.value = value;
       }
 
-      element.dispatchEvent(new Event('input', { bubbles: true }));
+      element.dispatchEvent(new Event('input', {bubbles: true}));
     }, selector, value);
   }
 

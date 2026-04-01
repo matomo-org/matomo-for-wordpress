@@ -6,6 +6,7 @@
  *
  */
 
+import { browser, $ } from '@wdio/globals';
 import Website from '../website.js';
 import Page from './page.js';
 
@@ -24,20 +25,20 @@ class BlogProductPage extends Page {
   }
 
   async addToCart() {
-    await $('button[name="add-to-cart"]').waitForExist();
+    await $('.single_add_to_cart_button').waitForExist();
     await browser.execute(() => {
-      window.jQuery('button[name="add-to-cart"]').click();
-    });
-    await browser.waitUntil(async () => {
-      const exists = await browser.execute(() => {
-        return window.jQuery && window.jQuery('a:contains("View cart")').length > 0;
-      });
-      return exists;
+      window.jQuery('.single_add_to_cart_button')[0].click();
     });
 
-    let checkoutPage = await Website.retry(3, async () => {
+    await browser.waitUntil(async () => {
+      return browser.execute(() => {
+        return window.jQuery && window.jQuery('a:contains("View cart"):visible').length > 0;
+      });
+    });
+
+    await Website.retry(3, async () => {
       let cp = await browser.execute(() => {
-        return window.jQuery ? window.jQuery('a:contains("View cart")').attr('href') : null;
+        return window.jQuery ? window.jQuery('a:contains("View cart"):visible').attr('href') : null;
       });
 
       if (!cp) {
@@ -46,7 +47,10 @@ class BlogProductPage extends Page {
 
       return cp;
     }, 500);
-    await browser.url(checkoutPage);
+
+    await browser.execute(() => {
+      window.jQuery('a:contains("View cart"):visible')[0].click();
+    });
 
     await browser.waitUntil(() => {
       return browser.execute(() => {
@@ -70,13 +74,17 @@ class BlogProductPage extends Page {
   }
 
   async checkout() {
-    await Website.retry(3, async () => {
-      await browser.execute(() => {
-        window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
-      });
+    await browser.waitUntil(() => {
+      return browser.execute(() => window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0);
+    }, { timeout: 60000 });
 
-      return $('input#email,#billing_email').waitForExist({ timeout: 60000 });
+    await browser.execute(() => {
+      window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
     });
+
+    browser.waitUntil(() => {
+      return browser.execute(() => window.jQuery('input#email,#billing_email').length > 0);
+    }, { timeout: 60000 });
   }
 }
 

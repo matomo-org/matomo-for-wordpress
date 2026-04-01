@@ -147,6 +147,13 @@ describe('MWP Admin > Marketplace', () => {
       return browser.execute(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
     }, { timeout: 120000 });
 
+    // remove WP version parameter that changes based on tested against WP version
+    await browser.execute(() => {
+      window.jQuery('span.code.pre').each(function () {
+        window.jQuery(this).text(window.jQuery(this).text().replace(/wp_version=[\d.a-zA-Z-]+/g, 'wp_version='));
+      })
+    });
+
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-installed.${process.env.PHP_VERSION}${trunkSuffix}`)
