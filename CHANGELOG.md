@@ -1,6 +1,9 @@
 == Changelog ===
 
 = 5.8.0 =
+* Bug fix: shortened date labels in Visits Over Time graph were not correct.
+
+= 5.8.0 =
 * Display unique visitors along with visits in Visits Over Time graph on Summary page.
 * Add marketplace install steps to Get Started page.
 * Re-word Get Started page to provide better information on respecting user privacy.
