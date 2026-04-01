@@ -37,6 +37,11 @@ export default class MatomoReportingPage extends MatomoPage {
     await browser.pause(500);
     await this.waitForImages();
 
+    // hide video thumbnail since it renders differently randomly
+    await browser.execute(() => {
+      window.jQuery('#piwik-promo-thumbnail').hide();
+    });
+
     await this.unfocus();
 
     return result;

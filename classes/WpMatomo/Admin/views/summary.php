@@ -87,7 +87,8 @@ if ( $matomo_is_version_pre55 ) {
 							<div class="postbox-header">
 								<h2 class="hndle ui-sortable-handle"
 									style="cursor: help;"
-									title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( esc_html( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>">
+									title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( esc_html( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
+								>
 									<?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>
 								<div class="handle-actions hide-if-no-js">
 									<?php if ( ! empty( $matomo_report_meta['page'] ) ) { ?>
@@ -150,7 +151,7 @@ if ( $matomo_is_version_pre55 ) {
 
 								</div>
 							</div>
-							<div>
+							<div id="matomo-report-<?php echo esc_attr( sanitize_key( $matomo_report_meta['name'] ) ); ?>">
 								<?php echo do_shortcode( $shortcode ); ?>
 							</div>
 						</div>

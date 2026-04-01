@@ -32,7 +32,6 @@ endif;
 		$matomo_report_metadata = $report['reportMetadata'];
 		$matomo_tables          = $report['reportData']->getDataTables();
 		foreach ( array_reverse( $matomo_tables, true ) as $matomo_report_date => $matomo_report_table ) {
-			$matomo_report_date = gmdate( 'D, M n', strtotime( $matomo_report_date ) );
 			/** @var Simple $matomo_report_table */
 			echo '<tr><td width="75%">' . esc_html( $matomo_report_date ) . '</td>';
 			foreach ( $matomo_metrics as $matomo_metric => $matomo_metric_title ) {

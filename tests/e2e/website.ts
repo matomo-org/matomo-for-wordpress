@@ -81,17 +81,19 @@ class Website {
     await this.retry(3, async () => {
       await browser.url(`${baseUrl}/wp-login.php`);
 
-      await $('#user_login').waitForExist();
+      await $('#user_login,#wpbody').waitForExist();
 
-      await browser.execute(
-        (l, p) => {
-          window.jQuery('#user_login').val(l);
-          window.jQuery('#user_pass').val(p);
-        },
-        user || process.env.WORDPRESS_USER_LOGIN || 'root',
-        pass || process.env.WORDPRESS_USER_PASS || 'pass'
-      );
-      await $('#wp-submit').click();
+      if (await $('#user_login').isExisting()) {
+        await browser.execute(
+          (l, p) => {
+            window.jQuery('#user_login').val(l);
+            window.jQuery('#user_pass').val(p);
+          },
+          user || process.env.WORDPRESS_USER_LOGIN || 'root',
+          pass || process.env.WORDPRESS_USER_PASS || 'pass'
+        );
+        await $('#wp-submit').click();
+      }
 
       await browser.waitUntil(async function () {
         return !!(await browser.execute(function () {
@@ -433,7 +435,7 @@ class Website {
       window.jQuery('a.upload-view-toggle')[0].click();
     });
     await browser.pause(250);
-    await $('#pluginzip').waitForClickable();
+    await $('#pluginzip').waitForExist({ timeout: 10000 });
 
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);

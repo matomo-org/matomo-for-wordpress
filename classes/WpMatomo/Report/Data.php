@@ -28,7 +28,7 @@ class Data {
 	 *
 	 * @return array  An array containing reportData, metrics, columns, ...
 	 */
-	public function fetch_report( $report_metadata, $period, $date, $sort_by_column, $filter_limit ) {
+	public function fetch_report( $report_metadata, $period, $date, $sort_by_column, $filter_limit, $extra_params = [] ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -47,6 +47,7 @@ class Data {
 			'date'               => $date,
 			'idSite'             => $idsite,
 		];
+		$params = array_merge( $params, $extra_params );
 		if ( ! empty( $report_metadata['parameters'] ) ) {
 			$params = array_merge( $params, $report_metadata['parameters'] );
 		}

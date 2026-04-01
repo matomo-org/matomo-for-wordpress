@@ -341,7 +341,7 @@ class AIBotTrackingTest extends \MatomoUnit_TestCase {
 
 		$captured_requests = $this->tracker->captured_requests;
 		foreach ( $captured_requests as &$captured ) {
-			$captured[0] = preg_replace( '/&pf_srv=1000\d/', '&pf_srv=10000', $captured[0] );
+			$captured[0] = preg_replace( '/&pf_srv=100\d+/', '&pf_srv=10000', $captured[0] );
 		}
 
 		$this->assertEquals( $expected, $captured_requests );
