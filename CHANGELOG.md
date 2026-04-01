@@ -1,7 +1,8 @@
 == Changelog ===
 
-= 5.8.0 =
+= 5.8.1 =
 * Bug fix: shortened date labels in Visits Over Time graph were not correct.
+* Bug fix: premium plugin prices were not accurate.
 
 = 5.8.0 =
 * Display unique visitors along with visits in Visits Over Time graph on Summary page.
