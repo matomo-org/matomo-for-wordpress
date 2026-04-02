@@ -77,6 +77,8 @@ class Website {
       return;
     }
 
+    await browser.setWindowSize(1366, 994);
+
     const baseUrl = await this.baseUrl();
     await this.retry(3, async () => {
       await browser.url(`${baseUrl}/wp-login.php`);
