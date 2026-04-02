@@ -6,6 +6,7 @@
  *
  */
 
+import { browser, $ } from '@wdio/globals';
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class GdprToolsPage extends MatomoAdminPage {
@@ -14,8 +15,15 @@ class GdprToolsPage extends MatomoAdminPage {
 
     await $('.segment-generator').waitForDisplayed();
     await browser.waitUntil(async () => {
-      return !(await $('.loadingPiwik').isDisplayed());
+      return browser.execute(() => !$('.loadingPiwik').is(':visible'));
     }, { timeout: 20000 });
+
+    // if the wait above doesn't work, just hide the gif
+    this.addStylesToPage(`
+      .segment-loading > .matomo-loader {
+        display: none !important;
+      }
+    `);
     await browser.pause(500);
 
     return result;

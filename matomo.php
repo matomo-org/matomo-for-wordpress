@@ -4,10 +4,10 @@
  * Description: Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analytics alternative that gives you control of your data. Free and secure.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 5.8.0
+ * Version: 5.8.1
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 10.6.1
+ * WC tested up to: 10.6.2
  *
  * Matomo - free/libre analytics platform
  *

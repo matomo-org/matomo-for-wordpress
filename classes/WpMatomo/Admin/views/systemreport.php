@@ -164,7 +164,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				} elseif ( ! empty( $matomo_row['is_warning'] ) ) {
 					$matomo_class = 'warning';
 				}
-				echo "<tr class='" . esc_attr( $matomo_class ) . "'>";
+				echo "<tr class='" . esc_attr( $matomo_class ) . "'" . ( isset( $matomo_row['name'] ) ? ' id="matomo-diagnostic-' . esc_attr( sanitize_key( $matomo_row['name'] ) ) : '' ) . '">';
 				echo "<td width='30%'>" . esc_html( $matomo_row['name'] ) . '</td>';
 				echo "<td width='" . ( ! empty( $matomo_table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $matomo_value ) . '</td>';
 				if ( ! empty( $matomo_table['has_comments'] ) ) {

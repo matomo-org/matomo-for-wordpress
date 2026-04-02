@@ -11,4 +11,6 @@ return [
             }
         })],
     ]),
+
+    'DocumentationGenerator.customParameters' => \Piwik\DI::add([ 'forceShortDate' ]),
 ];
