@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Marketplace {
+class Marketplace implements MatomoPageContent {
 
 	/**
 	 * @var Settings
@@ -99,5 +99,9 @@ class Marketplace {
 		} else {
 			return 'USD';
 		}
+	}
+
+	public function get_title() {
+		return null;
 	}
 }

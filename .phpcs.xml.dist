@@ -64,6 +64,7 @@
 		<exclude name="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.stringFound"/>
 		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.boolFound"/>
 		<exclude name="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.stringFound"/>
+		<exclude name="PHPCompatibility.InitialValue.NewConstantArraysUsingConst.Found" />
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>

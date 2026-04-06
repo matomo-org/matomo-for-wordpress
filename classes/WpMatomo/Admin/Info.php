@@ -15,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Info {
+class Info implements MatomoPageContent {
+
 	const NONCE_NAME = 'matomo_newsletter';
 	const FORM_NAME  = 'matomo_newsletter_signup';
 
@@ -66,5 +67,9 @@ class Info {
 		$show_newsletter     = $this->show_newsletter_signup();
 
 		include dirname( __FILE__ ) . '/views/' . $template . '.php';
+	}
+
+	public function get_title() {
+		return __( 'How can we help?', 'matomo' );
 	}
 }

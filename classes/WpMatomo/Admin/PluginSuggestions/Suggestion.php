@@ -9,7 +9,21 @@
 
 namespace WpMatomo\Admin\PluginSuggestions;
 
+use WpMatomo\Admin\Menu;
+use WpMatomo\Report\Data;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
+
 abstract class Suggestion {
+
+	const PAST_DATA_DAY_COUNT = 30;
+
+	/**
+	 * @var string
+	 */
+	protected $plugin_slug = '';
 
 	/**
 	 * @var string
@@ -47,9 +61,56 @@ abstract class Suggestion {
 	/**
 	 * @return bool
 	 */
-	abstract public function check();
+	abstract public function should_trigger();
 
 	abstract public function init();
+
+	public function is_suggestion_applicable() {
+		return $this->is_plugin_installed( $this->plugin_slug );
+	}
+
+	public function get_explore_url() {
+		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		return 'https://plugins.matomo.org/' . $this->plugin_slug . '?wp=1&source=wordpress';
+	}
+
+	public function get_unlock_url() {
+		return home_url( '/wp-admin/admin.php?page=' . Menu::SLUG_MARKETPLACE . '&tab=install&search=' . rawurlencode( $this->plugin_name ) );
+	}
+
+	/**
+	 * @param string $method
+	 * @param int    $filter_limit
+	 * @param string $sort_by_column
+	 * @param array  $extra_params
+	 * @return array|mixed|\Piwik\DataTable|string
+	 */
+	protected function get_last_month_data( $method, $filter_limit = 500, $sort_by_column = 'label', $extra_params = [] ) {
+		$data_query  = new Data();
+		$report_data = $data_query->fetch_raw_report(
+			$method,
+			'range',
+			'previous' . self::PAST_DATA_DAY_COUNT,
+			$sort_by_column,
+			$filter_limit,
+			array_merge(
+				[
+					'format_metrics' => 0,
+				],
+				$extra_params
+			)
+		);
+		return $report_data;
+	}
+
+	protected function is_plugin_installed( $plugin_slug ) {
+		return is_file( WP_PLUGIN_DIR . '/' . $plugin_slug . '/plugin.json' )
+			|| is_file( WPMU_PLUGIN_DIR . '/' . $plugin_slug . '/plugin.json' );
+	}
+
+	public function get_plugin_slug() {
+		return $this->plugin_slug;
+	}
 
 	public function get_plugin_name() {
 		return $this->plugin_name;
@@ -69,5 +130,12 @@ abstract class Suggestion {
 
 	public function get_plugin_desc_long() {
 		return $this->plugin_desc_long;
+	}
+
+	public function get_short_id() {
+		$id = get_class( $this );
+		$id = explode( '\\', $id );
+		$id = end( $id );
+		return $id;
 	}
 }

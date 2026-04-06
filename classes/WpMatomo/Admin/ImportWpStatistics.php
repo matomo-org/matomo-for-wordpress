@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class ImportWpStatistics {
+class ImportWpStatistics implements MatomoPageContent {
 
 	public function show() {
 		$importer                                = new Importer();
@@ -23,5 +23,9 @@ class ImportWpStatistics {
 		$matomo_is_compatible_with_wp_statistics = $importer->check_compatible_version( $matomo_wp_statistics_version );
 
 		include dirname( __FILE__ ) . '/views/import_wp_statistics.php';
+	}
+
+	public function get_title() {
+		return __( 'Import your WP Statistics data into Matomo', 'matomo' );
 	}
 }
