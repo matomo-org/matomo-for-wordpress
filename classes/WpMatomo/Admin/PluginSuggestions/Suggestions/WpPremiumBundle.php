@@ -66,19 +66,19 @@ class WpPremiumBundle extends Suggestion {
 			return true;
 		}
 
+		// if the user does not have three premium plugins installed, we don't need
+		// to check with the marketplace API if the WP premium bundle is available,
+		// since we won't display the suggestion anyway.
+		if ( ! $this->should_trigger() ) {
+			return false;
+		}
+
 		// if the license is not set in the marketplace, we still do the check for
 		// the same reason as above
 		$marketplace_api = new \MatomoMarketplaceApi();
 		$license_key     = $marketplace_api->get_license_key();
 		if ( empty( $license_key ) ) {
 			return true;
-		}
-
-		// if the user does not have three premium plugins installed, we don't need
-		// to check with the marketplace API if the WP premium bundle is available,
-		// since we won't display the suggestion anyway.
-		if ( ! $this->should_trigger() ) {
-			return false;
 		}
 
 		// makes an HTTP request to the marketplace API

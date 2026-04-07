@@ -66,7 +66,11 @@ abstract class Suggestion {
 	abstract public function init();
 
 	public function is_suggestion_applicable() {
-		return $this->is_plugin_installed( $this->plugin_slug );
+		return ! $this->is_plugin_installed( $this->plugin_slug );
+	}
+
+	public function register_hooks() {
+		// empty
 	}
 
 	public function get_explore_url() {
@@ -104,8 +108,8 @@ abstract class Suggestion {
 	}
 
 	protected function is_plugin_installed( $plugin_slug ) {
-		return is_file( WP_PLUGIN_DIR . '/' . $plugin_slug . '/plugin.json' )
-			|| is_file( WPMU_PLUGIN_DIR . '/' . $plugin_slug . '/plugin.json' );
+		return is_dir( WP_PLUGIN_DIR . '/' . $plugin_slug )
+			|| is_dir( WPMU_PLUGIN_DIR . '/' . $plugin_slug );
 	}
 
 	public function get_plugin_slug() {

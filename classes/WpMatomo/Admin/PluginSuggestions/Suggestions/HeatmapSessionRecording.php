@@ -22,8 +22,23 @@ class HeatmapSessionRecording extends Suggestion {
 	 */
 	private $bounce_rate;
 
+	/**
+	 * @var int
+	 */
+	private $nb_visits;
+
+	/**
+	 * @var int
+	 */
+	private $nb_visits_threshold;
+
+	public function __construct( $nb_visits_threshold = 100 ) {
+		$this->nb_visits_threshold = $nb_visits_threshold;
+	}
+
 	public function should_trigger() {
-		return $this->get_bounce_rate() > 0.65;
+		$this->get_bounce_rate();
+		return $this->nb_visits > $this->nb_visits_threshold && $this->bounce_rate > 0.65;
 	}
 
 	public function get_trigger_desc_long() {
@@ -43,11 +58,14 @@ class HeatmapSessionRecording extends Suggestion {
 		if ( ! isset( $this->bounce_rate ) ) {
 			$data = $this->get_last_month_data( 'VisitsSummary.get' );
 			$row  = $data->getFirstRow();
-			if ( empty( $row ) ) {
-				$this->bounce_rate = 0;
-			}
 
-			$this->bounce_rate = $row->getColumn( 'bounce_rate' );
+			$this->bounce_rate = 0;
+			$this->nb_visits   = 0;
+
+			if ( ! empty( $row ) ) {
+				$this->bounce_rate = $row->getColumn( 'bounce_rate' );
+				$this->nb_visits   = $row->getColumn( 'nb_visits' );
+			}
 		}
 		return $this->bounce_rate;
 	}

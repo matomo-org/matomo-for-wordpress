@@ -13,17 +13,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+use Piwik\Common;
 use Piwik\DataTable;
 use WpMatomo\Admin\PluginSuggestions\Suggestion;
+use WpMatomo\Bootstrap;
 
 class SearchEngineKeywordsPerformance extends Suggestion {
 
 	public function should_trigger() {
-		// TODO: test with another language set in WordPress
+		Bootstrap::do_bootstrap();
 
 		/** @var DataTable $data */
-		$data           = $this->get_last_month_data( 'Referrers.getReferrerType' );
-		$search_engines = $data->getRowFromLabel( 'Search Engines' );
+		$data           = $this->get_last_month_data(
+			'Referrers.getReferrerType',
+			500,
+			'label',
+			[ '_setReferrerTypeLabel' => 0 ]
+		);
+		$search_engines = $data->getRowFromLabel( Common::REFERRER_TYPE_SEARCH_ENGINE );
 
 		if ( empty( $search_engines ) ) {
 			return false;
@@ -34,8 +41,12 @@ class SearchEngineKeywordsPerformance extends Suggestion {
 			return false;
 		}
 
-		$total                       = array_sum( $data->getColumn( 'nb_visits' ) );
-		$percent_from_search_engines = $visits_from_search_engines / $total;
+		$total = array_sum( $data->getColumn( 'nb_visits' ) );
+		if ( empty( $total ) ) {
+			return false;
+		}
+
+		$percent_from_search_engines = (float) $visits_from_search_engines / (float) $total;
 
 		return $percent_from_search_engines > 0.40;
 	}

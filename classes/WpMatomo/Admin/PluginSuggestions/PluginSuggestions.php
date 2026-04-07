@@ -35,6 +35,10 @@ class PluginSuggestions extends Feature {
 		add_action( 'matomo_page_content_before', [ $this, 'show' ] );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
+
+		foreach ( $this->get_suggestions() as $suggestion ) {
+			$suggestion->register_hooks();
+		}
 	}
 
 	public function register_ajax() {
@@ -113,6 +117,7 @@ class PluginSuggestions extends Feature {
 		}
 
 		$dismissed_suggestions[] = get_class( $suggestion );
+		$dismissed_suggestions   = array_unique( $dismissed_suggestions );
 
 		update_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME, $dismissed_suggestions );
 	}

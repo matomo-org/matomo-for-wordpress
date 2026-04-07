@@ -20,7 +20,13 @@ class UsersFlow extends Suggestion {
 	const UNIQUE_PAGE_THRESHOLD = 20;
 
 	public function should_trigger() {
-		return wp_count_posts() > self::UNIQUE_PAGE_THRESHOLD;
+		$post_count = wp_count_posts();
+		$page_count = wp_count_posts( 'page' );
+
+		$total_count = ( isset( $post_count->publish ) ? $post_count->publish : 0 )
+			+ ( isset( $page_count->publish ) ? $page_count->publish : 0 );
+
+		return $total_count > self::UNIQUE_PAGE_THRESHOLD;
 	}
 
 	public function init() {

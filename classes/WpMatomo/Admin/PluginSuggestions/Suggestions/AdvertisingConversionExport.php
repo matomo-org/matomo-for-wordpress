@@ -13,10 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+use Piwik\Common;
 use Piwik\DataTable;
+use Piwik\Tracker\Request;
 use WpMatomo\Admin\PluginSuggestions\Suggestion;
 
 class AdvertisingConversionExport extends Suggestion {
+
+	const LAST_CLICK_ID_OCCURRENCE_OPTION_NAME = 'matomo_last_click_id_occurrence';
 
 	const CLICK_IDS = [
 		'msclkid',
@@ -27,25 +31,17 @@ class AdvertisingConversionExport extends Suggestion {
 	];
 
 	public function should_trigger() {
-		// check for advertising service click IDs in tracked URLs
-		$data = $this->get_last_month_data( 'Actions.getPageUrls', 1000 );
-
-		$click_id_regex = array_map( 'preg_quote', self::CLICK_IDS );
-		$click_id_regex = '(' . implode( '|', $click_id_regex ) . ')';
-		$click_id_regex = '/[&?]' . $click_id_regex . '/i';
-
-		foreach ( $data->getRows() as $row ) {
-			$label = $row->getColumn( 'label' );
-			if ( empty( $label ) ) {
-				continue;
-			}
-
-			if ( preg_match( $click_id_regex, $label ) ) {
-				return true;
-			}
+		// check that the last detected click ID for advertising services occurred less than one month ago
+		$last_click_id_occurrence = get_option( self::LAST_CLICK_ID_OCCURRENCE_OPTION_NAME );
+		if (
+			empty( $last_click_id_occurrence )
+			|| ! is_numeric( $last_click_id_occurrence )
+		) {
+			return false;
 		}
 
-		return false;
+		$thirty_days_secs = 30 * 24 * 60 * 60;
+		return $last_click_id_occurrence > time() - $thirty_days_secs;
 	}
 
 	public function init() {
@@ -55,5 +51,25 @@ class AdvertisingConversionExport extends Suggestion {
 		$this->plugin_desc_short  = __( 'Integrate your Matomo conversion data with top ad platforms', 'matomo' );
 		$this->trigger_desc_short = __( 'Paid Traffic', 'matomo' );
 		$this->trigger_desc_long  = __( 'Paid traffic detected', 'matomo' );
+	}
+
+	public function register_hooks() {
+		add_action( 'matomo_tracker_manipulate_request', [ $this, 'detect_click_id_occurrence' ] );
+	}
+
+	public function detect_click_id_occurrence( Request $request ) {
+		if ( $this->is_plugin_installed( 'AdvertisingConversionExport' ) ) {
+			return;
+		}
+
+		$url = Common::unsanitizeInputValue( $request->getParam( 'url' ) );
+
+		$click_id_regex = array_map( 'preg_quote', self::CLICK_IDS );
+		$click_id_regex = '(' . implode( '|', $click_id_regex ) . ')';
+		$click_id_regex = '/[&?]' . $click_id_regex . '/i';
+
+		if ( preg_match( $click_id_regex, $url ) ) {
+			update_option( self::LAST_CLICK_ID_OCCURRENCE_OPTION_NAME, $request->getCurrentTimestamp() );
+		}
 	}
 }

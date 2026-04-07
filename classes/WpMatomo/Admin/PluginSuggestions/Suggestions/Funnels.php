@@ -19,7 +19,7 @@ class Funnels extends Suggestion {
 
 	public function should_trigger() {
 		$goals = $this->get_last_month_data( 'Goals.getGoals' );
-		return count( $goals ) > 1;
+		return count( $goals ) > 0;
 	}
 
 	public function init() {
