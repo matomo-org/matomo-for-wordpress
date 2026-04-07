@@ -65,6 +65,10 @@ class WpMatomo {
 
 		$this->init_features();
 
+		if ( self::is_safe_mode() ) {
+			return;
+		}
+
 		$adblock_detector = new AdBlockDetector();
 		$adblock_detector->register_hooks();
 
