@@ -22,10 +22,15 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
-		if (
-			empty( $_REQUEST['page'] )
-			|| Menu::SLUG_MARKETPLACE !== $_REQUEST['page']
-		) {
+		if ( empty( $_REQUEST['page'] ) ) {
+			return false;
+		}
+
+		if ( Menu::SLUG_GET_STARTED === $_REQUEST['page'] ) {
+			return true;
+		}
+
+		if ( Menu::SLUG_MARKETPLACE !== $_REQUEST['page'] ) {
 			return false;
 		}
 
