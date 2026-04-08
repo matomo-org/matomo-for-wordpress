@@ -97,10 +97,6 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( [ AdvertisingConversionExport::class, HeatmapSessionRecording::class ], $dismissed_suggestions );
 	}
 
-	public function test_workflow() {
-		// TODO
-	}
-
 	private function create_goal() {
 		\Piwik\Plugins\Goals\API::getInstance()->addGoal( 1, 'test goal', 'url', 'http', 'contains' );
 	}
