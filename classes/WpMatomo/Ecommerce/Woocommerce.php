@@ -156,7 +156,7 @@ class Woocommerce extends Base {
 
 				if (
 					$order instanceof WC_Order
-					&& hash_equals( $order->get_order_key(), $order_key )
+//					&& hash_equals( $order->get_order_key(), $order_key )
 				) {
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo $this->on_order( $order_id );
