@@ -256,9 +256,10 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 			$response_data        = $response->get_data();
 			$application_password = $response_data['password'];
+
+			$this->application_password = $application_password;
 		}
 
-		$this->tracker_user         = $user_login;
-		$this->application_password = $application_password;
+		$this->tracker_user = $user_login;
 	}
 }
