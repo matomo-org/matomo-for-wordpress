@@ -49,14 +49,9 @@ class SuggestionTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $suggestion->is_suggestion_applicable() );
 	}
 
-	public function test_get_explore_url_returns_correct_default_url() {
-		$suggestion = new TestSuggestion( 'UsersFlow' );
-		$this->assertEquals( 'https://plugins.matomo.org/UsersFlow?wp=1&source=wordpress', $suggestion->get_explore_url() );
-	}
-
 	public function test_get_unlock_url_returns_correct_default_url() {
 		$suggestion = new TestSuggestion( 'UsersFlow', 'Users Flow' );
-		$this->assertEquals( 'http://example.org/wp-admin/admin.php?page=matomo-marketplace&tab=install&search=' . rawurlencode( 'Users Flow' ), $suggestion->get_unlock_url() );
+		$this->assertEquals( 'https://matomo.org/get/matomo-for-wordpress-users-flow/?source=wordpress', $suggestion->get_unlock_url() );
 	}
 
 	public function test_get_last_month_data_fetches_the_specified_report_data_for_the_last_30_days() {

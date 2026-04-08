@@ -73,13 +73,9 @@ abstract class Suggestion {
 		// empty
 	}
 
-	public function get_explore_url() {
-		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		return 'https://plugins.matomo.org/' . $this->plugin_slug . '?wp=1&source=wordpress';
-	}
-
 	public function get_unlock_url() {
-		return home_url( '/wp-admin/admin.php?page=' . Menu::SLUG_MARKETPLACE . '&tab=install&search=' . rawurlencode( $this->plugin_name ) );
+		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		return 'https://matomo.org/get/matomo-for-wordpress-' . $this->to_snake_case( $this->plugin_slug ) . '/?source=wordpress';
 	}
 
 	/**
@@ -141,5 +137,9 @@ abstract class Suggestion {
 		$id = explode( '\\', $id );
 		$id = end( $id );
 		return $id;
+	}
+
+	private function to_snake_case( $value ) {
+		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $value ) );
 	}
 }

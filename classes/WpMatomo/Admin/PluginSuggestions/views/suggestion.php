@@ -180,14 +180,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 		<div class="matomo-plugin-suggestion-cta">
-			<a rel="noreferrer noopener" target="_blank" href="<?php echo esc_attr( $matomo_suggestion_to_show->get_explore_url() ); ?>">
+			<a rel="noreferrer noopener" target="_blank" href="<?php echo esc_attr( $matomo_suggestion_to_show->get_unlock_url() ); ?>">
 				<button class="button-primary">
-					<?php esc_html_e( 'Explore', 'matomo' ); ?>
-				</button>
-			</a>
-
-			<a target="_blank" href="<?php echo esc_attr( $matomo_suggestion_to_show->get_unlock_url() ); ?>">
-				<button class="button-secondary">
 					<?php esc_html_e( 'Unlock', 'matomo' ); ?>
 				</button>
 			</a>
