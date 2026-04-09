@@ -31,6 +31,14 @@
   "dependencies": {
     "chart.js": "^3.4.1"
   },
+  "overrides": {
+    "mocha": {
+      "serialize-javascript": "7.0.5"
+    },
+    "@mapbox/node-pre-gyp": {
+      "tar": "7.5.13"
+    }
+  },
   "pre-commit": [
     "phpcs"
   ]
