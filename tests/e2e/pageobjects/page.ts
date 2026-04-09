@@ -279,6 +279,7 @@ export default class Page {
 
           // if node contains node we want to screenshot, recurse
           if (window.jQuery(n).find(s).length > 0) {
+            window.jQuery(n).css({ 'margin': '0', 'padding': '0' });
             for (let i = 0; i < n.children.length; ++i) {
               const child = n.children.item(i);
               if (child instanceof HTMLElement) {
@@ -295,5 +296,23 @@ export default class Page {
         visitNode(document.documentElement);
       })();
     }, selector);
+  }
+
+  async checkElement(selector: string, tag: string) {
+    const originalSize = await browser.getWindowSize();
+    try {
+      await this.hideAllButElement(selector);
+
+      const elementRect = await browser.execute((s) => {
+        const rect = window.jQuery(s)[0].getBoundingClientRect();
+        return { right: rect.right, bottom: rect.bottom };
+      }, selector);
+
+      await browser.setWindowSize(elementRect.right, elementRect.bottom);
+
+      return await browser.checkFullPageScreen(tag);
+    } finally {
+      await browser.setWindowSize(originalSize.width, originalSize.height);
+    }
   }
 }
