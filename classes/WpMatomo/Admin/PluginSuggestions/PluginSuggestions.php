@@ -65,7 +65,7 @@ class PluginSuggestions extends Feature {
 		} else {
 			$matomo_suggestion_to_show = get_option( self::SUGGESTION_TRIGGERED_OPTION_NAME );
 		}
-error_log( "SUGGESTION TO SHOW: " . var_export( $matomo_suggestion_to_show, true ) );
+
 		$matomo_suggestion_to_show = $this->find_suggestion_by_class( $matomo_suggestion_to_show );
 
 		if ( empty( $matomo_suggestion_to_show ) ) {
@@ -80,7 +80,6 @@ error_log( "SUGGESTION TO SHOW: " . var_export( $matomo_suggestion_to_show, true
 	}
 
 	public function check() {
-		error_log( 'running check' );
 		$suggestion_to_trigger = null;
 
 		foreach ( $this->get_suggestions() as $suggestion ) {
