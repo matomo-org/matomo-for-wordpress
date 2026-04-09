@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Roles {
+class Roles extends Feature {
 	const OPTION_SETUP_NAME = 'roles-setup';
 	const ROLE_PREFIX       = 'matomo_';
 	const ROLE_VIEW         = 'matomo_view_role';

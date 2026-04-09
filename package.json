@@ -2,6 +2,7 @@
   "name": "matomo-for-wordpress",
   "type": "module",
   "devDependencies": {
+    "@fastify/pre-commit": "^2.2.1",
     "@wdio/cli": "^9.9.1",
     "@wdio/local-runner": "^9.9.1",
     "@wdio/mocha-framework": "^9.9.0",
@@ -9,7 +10,6 @@
     "ini": "^5.0.0",
     "minimist": "^1.2.8",
     "node-fetch": "^3.3.2",
-    "pre-commit": "^1.2.2",
     "ts-node": "^10.9.1",
     "tsx": "^4.20.5",
     "typescript": "^5.2.2",

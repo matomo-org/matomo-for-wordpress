@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Capabilities {
+class Capabilities extends Feature {
 
 	const KEY_NONE = 'none_matomo';
 

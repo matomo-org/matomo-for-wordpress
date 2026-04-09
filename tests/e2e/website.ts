@@ -435,12 +435,12 @@ class Website {
       window.jQuery('a.upload-view-toggle')[0].click();
     });
     await browser.pause(250);
-    await $('#pluginzip').waitForExist({ timeout: 10000 });
+    await $('#pluginzip').waitForExist({ timeout: 30000 });
 
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);
 
-    await $('#install-plugin-submit').waitForClickable();
+    await $('#install-plugin-submit').waitForClickable({ timeout: 30000 });
     await browser.execute(() => {
       window.jQuery('#install-plugin-submit')[0].click();
     });

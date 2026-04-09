@@ -12,7 +12,7 @@ namespace WpMatomo;
 /**
  * Customizations for the WordPress plugins page.
  */
-class PluginAdminOverrides {
+class PluginAdminOverrides extends Feature {
 	/**
 	 * @var Settings
 	 */
@@ -20,6 +20,10 @@ class PluginAdminOverrides {
 
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+	}
+
+	public function is_active() {
+		return is_admin();
 	}
 
 	public function register_hooks() {

@@ -11,6 +11,7 @@ namespace WpMatomo\Admin;
 
 use Exception;
 use WpMatomo\Capabilities;
+use WpMatomo\Feature;
 use WpMatomo\Logger;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;
@@ -21,8 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Dashboard {
+class Dashboard extends Feature {
 	const DASHBOARD_USER_OPTION = 'matomo_dashboard_widgets';
+
+	public function is_active() {
+		return is_admin();
+	}
 
 	public function register_hooks() {
 		add_action( 'wp_dashboard_setup', [ $this, 'add_dashboard_widgets' ] );

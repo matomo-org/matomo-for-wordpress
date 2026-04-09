@@ -9,13 +9,34 @@
 
 namespace WpMatomo\Admin;
 
-class MarketplaceSetupWizard {
+use WpMatomo\Feature;
+use WpMatomo\Settings;
+
+class MarketplaceSetupWizard extends Feature {
 	const MARKETPLACE_PLUGIN_FILE   = 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php';
 	const AJAX_IS_ACTIVE_NONCE_NAME = 'matomo-marketplace-setup-wizard-is-active';
 	const AJAX_ACTIVATE_NONCE_NAME  = 'matomo-marketplace-setup-wizard-activate';
 
-	public function __construct() {
-		$this->add_hooks();
+	public function is_active() {
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		if ( empty( $_REQUEST['page'] ) ) {
+			return false;
+		}
+
+		if ( Menu::SLUG_GET_STARTED === $_REQUEST['page'] ) {
+			return true;
+		}
+
+		if ( Menu::SLUG_MARKETPLACE !== $_REQUEST['page'] ) {
+			return false;
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$tab = isset( $_REQUEST['tab'] ) ? wp_unslash( $_REQUEST['tab'] ) : '';
+		return 'install' === $tab || 'subscriptions' === $tab;
 	}
 
 	public function get_body( $show_titles = true ) {
@@ -29,17 +50,11 @@ class MarketplaceSetupWizard {
 		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard.php';
 	}
 
-	private function add_hooks() {
-		if ( ! current_user_can( 'upload_plugins' )
-			|| ! current_user_can( 'activate_plugins' )
-		) {
-			return;
-		}
-
-		$this->enqueue_scripts();
+	public function register_hooks() {
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
-	private function enqueue_scripts() {
+	public function enqueue_scripts() {
 		wp_enqueue_script(
 			'matomo-marketplace-setup-wizard',
 			plugins_url( '/assets/js/marketplace_setup_wizard.js', MATOMO_ANALYTICS_FILE ),
@@ -59,7 +74,7 @@ class MarketplaceSetupWizard {
 		);
 	}
 
-	public static function register_ajax() {
+	public function register_ajax() {
 		add_action( 'wp_ajax_matomo_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
 		add_action( 'wp_ajax_matomo_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
 	}

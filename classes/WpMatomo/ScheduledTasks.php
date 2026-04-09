@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class ScheduledTasks {
+class ScheduledTasks extends Feature {
 	const EVENT_SYNC               = 'matomo_scheduled_sync';
 	const EVENT_DISABLE_ADDHANDLER = 'matomo_scheduled_disable_addhandler';
 	const EVENT_ARCHIVE            = 'matomo_scheduled_archive';
@@ -67,6 +67,11 @@ class ScheduledTasks {
 		];
 
 		return $schedules;
+	}
+
+	public function register_hooks() {
+		$this->schedule();
+		$this->show_errors_if_admin();
 	}
 
 	public function schedule() {

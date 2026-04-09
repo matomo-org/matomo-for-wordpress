@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class SafeModeMenu {
+class SafeModeMenu extends WpMatomo\Feature {
 	/**
 	 * @var Settings
 	 */
@@ -29,6 +29,13 @@ class SafeModeMenu {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+	}
+
+	public function is_active() {
+		return is_admin();
+	}
+
+	public function register_hooks() {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'network_admin_menu', [ $this, 'add_menu' ] );
 	}

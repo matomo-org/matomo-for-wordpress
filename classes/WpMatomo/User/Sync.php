@@ -24,6 +24,7 @@ use Piwik\Plugins\UsersManager\Model;
 use WP_User;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
+use WpMatomo\Feature;
 use WpMatomo\Logger;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Site;
@@ -33,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Sync {
+class Sync extends Feature {
 
 	/**
 	 * actually allowed is 100 characters...
@@ -48,6 +49,10 @@ class Sync {
 
 	public function __construct() {
 		$this->logger = new Logger();
+	}
+
+	public function is_active() {
+		return is_admin();
 	}
 
 	public function register_hooks() {

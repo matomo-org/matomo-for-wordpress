@@ -62,7 +62,6 @@ class MwpDiagnosticsPage extends MwpPage {
         'matomoinstallversion',
         'matomopluginversion',
         'versionhistory',
-        'coreversion',
         'matomoanalytics-ethicalstatspowerfulinsights',
         'activeplugins',
       ];
@@ -74,10 +73,16 @@ class MwpDiagnosticsPage extends MwpPage {
         }
       });
 
-      var $coreVersionCell = window.jQuery('tr#matomo-diagnostic-matomoversion>td:nth-child(2)');
-      if ($coreVersionCell.length) {
-        $coreVersionCell.html($coreVersionCell.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_CORE_VERSION'));
-      }
+      var coreVersionRows = [
+        'coreversion',
+        'matomoversion',
+      ]
+      coreVersionRows.forEach((id) => {
+        var $coreVersionCell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
+        if ($coreVersionCell.length) {
+          $coreVersionCell.html($coreVersionCell.html().replace(/\d+\.\d+\.\d+/g, 'CURRENT_CORE_VERSION'));
+        }
+      });
 
       var $currentWpVersion = window.jQuery('tr#matomo-diagnostic-wordpressversion>td:nth-child(2)');
       if ($currentWpVersion.length) {

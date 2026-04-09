@@ -17,7 +17,7 @@ use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 use WpMatomo\Settings;
 
-class TrackingCode {
+class TrackingCode extends Feature {
 
 	/**
 	 * @var Settings

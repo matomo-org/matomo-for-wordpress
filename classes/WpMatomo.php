@@ -44,6 +44,12 @@ class WpMatomo {
 	const VERSION = '5.8.1';
 
 	/**
+	 * @var \WpMatomo\Feature[]
+	 */
+	private static $features = [];
+
+
+	/**
 	 * @var Settings
 	 */
 	public static $settings;
@@ -57,75 +63,14 @@ class WpMatomo {
 
 		self::$settings = new Settings();
 
-		if ( self::is_safe_mode() ) {
-			if ( is_admin() ) {
-				new Admin( self::$settings, false );
-				new \WpMatomo\Admin\SafeModeMenu( self::$settings );
-			}
+		$this->init_features();
 
+		if ( self::is_safe_mode() ) {
 			return;
 		}
 
-		add_action( 'init', [ $this, 'init_plugin' ] );
-
 		$adblock_detector = new AdBlockDetector();
 		$adblock_detector->register_hooks();
-
-		$capabilities = new Capabilities( self::$settings );
-		$capabilities->register_hooks();
-
-		$roles = new Roles( self::$settings );
-		$roles->register_hooks();
-
-		$compatibility = new \WpMatomo\Compatibility();
-		$compatibility->register_hooks();
-
-		$site_config     = new SiteSync\SyncConfig( self::$settings );
-		$scheduled_tasks = new ScheduledTasks( self::$settings, $site_config );
-		$scheduled_tasks->schedule();
-		$scheduled_tasks->register_ajax();
-
-		$privacy_badge = new OptOut();
-		$privacy_badge->register_hooks();
-
-		$renderer = new Renderer();
-		$renderer->register_hooks();
-
-		$api = new API();
-		$api->register_hooks();
-
-		if ( is_admin() ) {
-			new Admin( self::$settings );
-			$scheduled_tasks->show_errors_if_admin();
-
-			$dashboard = new Dashboard();
-			$dashboard->register_hooks();
-
-			$site_sync = new SiteSync( self::$settings );
-			$site_sync->register_hooks();
-			$user_sync = new UserSync();
-			$user_sync->register_hooks();
-
-			$referral = new \WpMatomo\Referral();
-			if ( $referral->should_show() ) {
-				$referral->register_hooks();
-			}
-
-			$error_notice = new \WpMatomo\ErrorNotice( self::$settings );
-			$error_notice->register_hooks();
-
-			$chart = new Chart();
-			$chart->register_hooks();
-
-			/*
-			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
-			 */
-			$redirect = new RedirectOnActivation( $this );
-			$redirect->register_hooks();
-
-			$plugin_admin_overrides = new PluginAdminOverrides( self::$settings );
-			$plugin_admin_overrides->register_hooks();
-		}
 
 		add_action(
 			'init',
@@ -138,12 +83,6 @@ class WpMatomo {
 			}
 		);
 
-		$tracking_code = new TrackingCode( self::$settings );
-		$tracking_code->register_hooks();
-
-		$annotations = new Annotations( self::$settings );
-		$annotations->register_hooks();
-
 		$ai_bot_tracking = new \WpMatomo\AIBotTracking( self::$settings );
 		$ai_bot_tracking->register_hooks();
 
@@ -151,18 +90,8 @@ class WpMatomo {
 			new MatomoCommands();
 		}
 
-		add_filter(
-			'plugin_action_links_' . plugin_basename( MATOMO_ANALYTICS_FILE ),
-			[
-				$this,
-				'add_settings_link',
-			]
-		);
-
 		// TODO: need better way of doing ajax?
-		MarketplaceSetupWizard::register_ajax();
 		WpMatomo\Admin\TrackingSettings::register_ajax();
-
 		\WpMatomo\Admin\GetStarted::register_hooks();
 	}
 
@@ -231,62 +160,6 @@ class WpMatomo {
 		return defined( 'MATOMO_DISABLE_ADDHANDLER' ) && MATOMO_DISABLE_ADDHANDLER;
 	}
 
-	public function add_settings_link( $links ) {
-		$get_started = new \WpMatomo\Admin\GetStarted( self::$settings );
-
-		if ( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
-		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';
-		}
-
-		return $links;
-	}
-
-	public function init_plugin() {
-		if ( ( is_admin() || matomo_is_app_request() ) && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$installer = new Installer( self::$settings );
-			$installer->register_hooks();
-			if ( $installer->looks_like_it_is_installed() ) {
-				if ( is_admin() && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
-					$updater = new Updater( self::$settings );
-					$updater->update_if_needed();
-				}
-			} else {
-				if ( matomo_is_app_request() ) {
-					// we can't install if matomo is requested... there's some circular reference
-					wp_safe_redirect( admin_url() );
-					exit;
-				} else {
-					if ( $installer->can_be_installed() ) {
-						$installer->install();
-					}
-				}
-			}
-		}
-		$tracking_code = new TrackingCode( self::$settings );
-		if ( self::$settings->is_tracking_enabled()
-			&& self::$settings->get_global_option( 'track_ecommerce' )
-			&& ! $tracking_code->is_hidden_user() ) {
-			$tracker = new AjaxTracker( self::$settings );
-
-			$sync_config = new SiteSync\SyncConfig( self::$settings );
-
-			if ( function_exists( 'WC' ) ) {
-				$woocommerce = new Woocommerce( $tracker, self::$settings, $sync_config );
-				$woocommerce->register_hooks();
-			}
-
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings, $sync_config );
-			$easy_digital_downloads->register_hooks();
-
-			$member_press = new MemberPress( $tracker, self::$settings, $sync_config );
-			$member_press->register_hooks();
-
-			do_action( 'matomo_ecommerce_init', $tracker );
-		}
-	}
-
 	private function declare_woocommerce_hpos_compatible() {
 		add_action(
 			'before_woocommerce_init',
@@ -298,6 +171,70 @@ class WpMatomo {
 		);
 	}
 
+	private function init_features() {
+		$features = $this->get_all_features();
+
+		self::$features = [];
+		foreach ( $features as $feature ) {
+			if ( $feature->is_active() ) {
+				self::$features[ get_class( $feature ) ] = $feature;
+
+				$feature->register_hooks();
+			}
+
+			// ajax methods must be present even if other hooks should not be added,
+			// since ajax requests go through admin-ajax.php
+			$feature->register_ajax();
+		}
+	}
+
+	private function get_all_features() {
+		if ( self::is_safe_mode() ) {
+			if ( is_admin() ) {
+				return [
+					new Admin( self::$settings, false ),
+					new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
+				];
+			}
+
+			return [];
+		}
+
+		$site_config = new SiteSync\SyncConfig( self::$settings );
+
+		return [
+			new \WpMatomo\PluginInit( self::$settings ),
+			new Capabilities( self::$settings ),
+			new Roles( self::$settings ),
+			new \WpMatomo\Compatibility(),
+			new ScheduledTasks( self::$settings, $site_config ),
+			new OptOut(),
+			new Renderer(),
+			new API(),
+			new Admin( self::$settings ),
+			new Dashboard(),
+			new SiteSync( self::$settings ),
+			new UserSync(),
+			new \WpMatomo\Referral(),
+			new \WpMatomo\ErrorNotice( self::$settings ),
+			new Chart(),
+
+			/*
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			 */
+			new RedirectOnActivation(),
+
+			new PluginAdminOverrides( self::$settings ),
+
+			new TrackingCode( self::$settings ),
+			new Annotations( self::$settings ),
+
+			new \WpMatomo\PluginActionLinks( self::$settings ),
+
+			new MarketplaceSetupWizard(),
+		];
+	}
+
 	public static function is_async_archiving_manually_disabled() {
 		return ( defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) && ! MATOMO_SUPPORT_ASYNC_ARCHIVING )
 			|| self::is_async_archiving_disabled_by_setting();
@@ -305,5 +242,16 @@ class WpMatomo {
 
 	private static function is_async_archiving_disabled_by_setting() {
 		return self::$settings->is_async_archiving_disabled_by_option();
+	}
+
+	/**
+	 * @param string $class_name
+	 * @return \WpMatomo\Feature|null
+	 */
+	public static function get_active_feature( $class_name ) {
+		if ( empty( self::$features[ $class_name ] ) ) {
+			return null;
+		}
+		return self::$features[ $class_name ];
 	}
 }

@@ -11,7 +11,7 @@ namespace WpMatomo;
 
 use WpMatomo\Admin\TrackingSettings;
 
-class RedirectOnActivation {
+class RedirectOnActivation extends Feature {
 	/**
 	 * @var Settings
 	 */
@@ -19,6 +19,10 @@ class RedirectOnActivation {
 
 	public function __construct() {
 		self::$settings = new Settings();
+	}
+
+	public function is_active() {
+		return is_admin();
 	}
 
 	public function register_hooks() {

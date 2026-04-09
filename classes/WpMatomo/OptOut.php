@@ -17,7 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class OptOut {
+class OptOut extends Feature {
+
 	const OPT_OUT_DIV_ID = 'matomo-opt-out-form-embed';
 
 	private $language = null;
