@@ -51,6 +51,7 @@ class AdvertisingConversionExport extends Suggestion {
 		$this->plugin_desc_short  = __( 'Integrate your Matomo conversion data with top ad platforms', 'matomo' );
 		$this->trigger_desc_short = __( 'Paid Traffic', 'matomo' );
 		$this->trigger_desc_long  = __( 'Paid traffic detected', 'matomo' );
+		$this->image_file         = 'advertising-conversion-export.webp';
 	}
 
 	public function register_hooks() {

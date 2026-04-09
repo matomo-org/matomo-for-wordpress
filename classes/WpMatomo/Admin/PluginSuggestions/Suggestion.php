@@ -50,6 +50,11 @@ abstract class Suggestion {
 	 */
 	protected $plugin_desc_long = '';
 
+	/**
+	 * @var string|null
+	 */
+	protected $image_file = null;
+
 	public function __construct() {
 		$this->init();
 
@@ -106,6 +111,14 @@ abstract class Suggestion {
 	protected function is_plugin_installed( $plugin_slug ) {
 		return is_dir( WP_PLUGIN_DIR . '/' . $plugin_slug )
 			|| is_dir( WPMU_PLUGIN_DIR . '/' . $plugin_slug );
+	}
+
+	public function get_image_url() {
+		if ( ! $this->image_file ) {
+			return null;
+		}
+
+		return plugins_url( '/assets/img/suggestions/' . $this->image_file, MATOMO_ANALYTICS_FILE );
 	}
 
 	public function get_plugin_slug() {
