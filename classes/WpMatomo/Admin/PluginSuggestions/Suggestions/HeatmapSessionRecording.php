@@ -52,6 +52,7 @@ class HeatmapSessionRecording extends Suggestion {
 		$this->plugin_desc_short  = __( 'Dive deep into your visitors\' behaviour', 'matomo' );
 		$this->trigger_desc_short = __( 'High bounce rate', 'matomo' );
 		$this->trigger_desc_long  = __( 'Bounce rate is %1$s%% — above average', 'matomo' );
+		$this->image_file         = 'heatmap-session-recording.webp';
 	}
 
 	private function get_bounce_rate() {

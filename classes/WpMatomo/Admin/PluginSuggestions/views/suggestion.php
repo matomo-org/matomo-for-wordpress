@@ -156,7 +156,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	.matomo-plugin-suggestion-img {
 		background-repeat: no-repeat;
-		background-size: cover;
+		background-size: contain;
+		margin-top: 1em;
+		margin-bottom: 1em;
+		background-position: center;
+	}
+
+	@media (max-width: 640px) {
+		.matomo-plugin-suggestion-img {
+			display: none;
+		}
 	}
 </style>
 <div class="matomo-plugin-suggestion">
@@ -182,13 +191,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="matomo-plugin-suggestion-body">
 				<div class="matomo-plugin-suggestion-text">
 					<div>
-						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_name() ); ?>
-						&mdash;
-						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_desc_short() ); ?>
+						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_desc_long() ); ?>
 					</div>
 
 					<div>
-						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_desc_long() ); ?>
+						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_name() ); ?>
+						&mdash;
+						<?php echo esc_html( $matomo_suggestion_to_show->get_plugin_desc_short() ); ?>
 					</div>
 				</div>
 			</div>

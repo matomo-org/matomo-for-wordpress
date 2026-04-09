@@ -58,5 +58,6 @@ class SearchEngineKeywordsPerformance extends Suggestion {
 		$this->plugin_desc_short  = __( 'Uncover the keywords people use to find your site', 'matomo' );
 		$this->trigger_desc_short = __( 'Search engine traffic', 'matomo' );
 		$this->trigger_desc_long  = __( 'High traffic from search engines', 'matomo' );
+		$this->image_file         = 'search-engine-keywords-performance.webp';
 	}
 }

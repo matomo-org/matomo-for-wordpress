@@ -56,6 +56,7 @@ class WpPremiumBundle extends Suggestion {
 		$this->plugin_desc_short  = __( 'All premium features in one bundle', 'matomo' );
 		$this->trigger_desc_short = __( 'Premium Plugins', 'matomo' );
 		$this->trigger_desc_long  = __( 'Premium features activated', 'matomo' );
+		$this->image_file         = 'matomo-wordpress-premium-bundle.png';
 	}
 
 	public function is_suggestion_applicable() {

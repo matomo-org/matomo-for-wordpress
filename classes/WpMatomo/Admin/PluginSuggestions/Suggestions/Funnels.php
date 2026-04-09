@@ -29,5 +29,6 @@ class Funnels extends Suggestion {
 		$this->plugin_desc_short  = __( 'See how your audience flows through your marketing funnels', 'matomo' );
 		$this->trigger_desc_short = __( 'Goal Detected', 'matomo' );
 		$this->trigger_desc_long  = '';
+		$this->image_file         = 'funnel.png';
 	}
 }

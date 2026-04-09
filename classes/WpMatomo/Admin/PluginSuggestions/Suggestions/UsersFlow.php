@@ -36,5 +36,6 @@ class UsersFlow extends Suggestion {
 		$this->plugin_desc_short  = __( 'Map the paths your users take', 'matomo' );
 		$this->trigger_desc_short = __( 'Unique pages', 'matomo' );
 		$this->trigger_desc_long  = __( 'High count of unique page URLs', 'matomo' );
+		$this->image_file         = 'users-flow.webp';
 	}
 }
