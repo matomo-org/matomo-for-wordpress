@@ -36,12 +36,9 @@ describe('MWP Admin > Summary - Plugin Suggestions', () => {
     it(`should display the ${suggestionId} plugin suggestion correctly`, async () => {
       await SummaryPage.forceShowSuggestion(suggestionId);
 
-      await MwpSummaryPage.prepareWpAdminForScreenshot();
+      await MwpSummaryPage.hideAllButElement('.matomo-plugin-suggestion'); // TODO
       await expect(
-        await browser.checkElement(
-          '.matomo-plugin-suggestion',
-          `mwp-admin.suggestion.${suggestionId}.${process.env.PHP_VERSION}${trunkSuffix}`
-        )
+        await browser.checkFullPageScreen(`mwp-admin.suggestion.${suggestionId}.${process.env.PHP_VERSION}${trunkSuffix}`)
       ).toBeLessThan(0.1);
     });
   });

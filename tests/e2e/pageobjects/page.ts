@@ -259,4 +259,41 @@ export default class Page {
     const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');
     fs.writeFileSync(overrideFile, JSON.stringify(overrides));
   }
+
+  /**
+   * webdriverio's checkElement method (in the image comparison service) does not work.
+   * so if we want to take a screenshot of a specific element, it can't be used. this
+   * function is a workaround that will hide everything but the elements referenced by
+   * the selector.
+   *
+   * @param selector
+   */
+  async hideAllButElement( selector: string ) {
+    await browser.execute((s) => {
+      (function () {
+        function visitNode(n: HTMLElement) {
+          const isSelectedNode = window.jQuery(n).is(s);
+          if (isSelectedNode) {
+            return; // if node is one we want to screenshot, do nothing
+          }
+
+          // if node contains node we want to screenshot, recurse
+          if (window.jQuery(n).find(s).length > 0) {
+            for (let i = 0; i < n.children.length; ++i) {
+              const child = n.children.item(i);
+              if (child instanceof HTMLElement) {
+                visitNode(child);
+              }
+            }
+            return;
+          }
+
+          // if node does not contain node we want to screenshot, hide
+          window.jQuery(n).hide();
+        }
+
+        visitNode(document.documentElement);
+      })();
+    }, selector);
+  }
 }
