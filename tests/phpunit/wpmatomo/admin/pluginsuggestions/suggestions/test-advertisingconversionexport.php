@@ -11,6 +11,12 @@ use WpMatomo\Admin\PluginSuggestions\Suggestions\AdvertisingConversionExport;
 
 class AdvertisingConversionExportTest extends MatomoAnalytics_TestCase {
 
+	public function setUp(): void {
+		parent::setUp();
+
+		$this->skip_if_old_wordpress();
+	}
+
 	public function test_should_trigger_returns_false_when_no_tracked_url_has_a_clickid() {
 		\Piwik\Config::getInstance()->General['enable_browser_archiving_triggering'] = 1;
 

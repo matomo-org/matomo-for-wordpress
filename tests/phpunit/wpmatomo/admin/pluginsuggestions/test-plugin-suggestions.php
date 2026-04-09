@@ -17,6 +17,8 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->skip_if_old_wordpress();
+
 		\Piwik\Config::getInstance()->General['enable_browser_archiving_triggering'] = 1;
 		$this->create_set_super_admin();
 	}

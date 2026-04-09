@@ -262,4 +262,10 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 		$this->tracker_user = $user_login;
 	}
+
+	protected function skip_if_old_wordpress() {
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.6', '<' ) ) {
+			$this->markTestSkipped( 'WordPress version does not support application passwords.' );
+		}
+	}
 }

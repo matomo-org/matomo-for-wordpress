@@ -15,6 +15,7 @@ class FunnelsTest extends MatomoAnalytics_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->skip_if_old_wordpress();
 		$this->create_set_super_admin();
 	}
 

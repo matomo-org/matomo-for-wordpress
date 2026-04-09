@@ -55,6 +55,8 @@ class SuggestionTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_get_last_month_data_fetches_the_specified_report_data_for_the_last_30_days() {
+		$this->skip_if_old_wordpress();
+
 		\Piwik\Config::getInstance()->General['enable_browser_archiving_triggering'] = 1;
 
 		$tracker = $this->make_local_tracker( ( new DateTime() )->sub( DateInterval::createFromDateString( '2 days' ) )->format( 'Y-m-d H:i:s' ), true );
