@@ -32,15 +32,15 @@ describe('MWP Admin > Summary - Plugin Suggestions', () => {
     'Funnels',
   ];
 
-  SUGGESTIONS_TO_TEST.forEach((suggestion_id) => {
-    it(`should display the ${suggestion_id} plugin suggestion correctly`, async () => {
-      await SummaryPage.forceShowSuggestion(suggestion_id);
+  SUGGESTIONS_TO_TEST.forEach((suggestionId) => {
+    it(`should display the ${suggestionId} plugin suggestion correctly`, async () => {
+      await SummaryPage.forceShowSuggestion(suggestionId);
 
       await MwpSummaryPage.prepareWpAdminForScreenshot();
       await expect(
         await browser.checkElement(
           '.matomo-plugin-suggestion',
-          `mwp-admin.suggestion.${suggestion_id}.${process.env.PHP_VERSION}${trunkSuffix}`
+          `mwp-admin.suggestion.${suggestionId}.${process.env.PHP_VERSION}${trunkSuffix}`
         )
       ).toBeLessThan(0.1);
     });
