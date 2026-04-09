@@ -221,8 +221,8 @@ class WpMatomo {
 			new Chart(),
 
 			/*
-			* @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
-			*/
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			 */
 			new RedirectOnActivation(),
 
 			new PluginAdminOverrides( self::$settings ),

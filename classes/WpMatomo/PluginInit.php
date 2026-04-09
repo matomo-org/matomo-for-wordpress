@@ -34,7 +34,7 @@ class PluginInit extends Feature {
 	}
 
 	public function init_plugin() {
-		if ( ( is_admin() || matomo_is_app_request() ) && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+		if ( ( is_admin() || matomo_is_app_request() ) && ! wp_doing_ajax() ) {
 			$installer = new Installer( $this->settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {

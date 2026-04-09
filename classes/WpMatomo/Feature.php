@@ -34,7 +34,7 @@ abstract class Feature {
 
 	/**
 	 * Register hooks for this feature. AJAX actions should not be
-	 * added herel
+	 * added here.
 	 *
 	 * @return void
 	 */
