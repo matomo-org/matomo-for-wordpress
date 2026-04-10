@@ -70,7 +70,11 @@ class AdvertisingConversionExport extends Suggestion {
 		$click_id_regex = '/[&?]' . $click_id_regex . '/i';
 
 		if ( preg_match( $click_id_regex, $url ) ) {
-			update_option( self::LAST_CLICK_ID_OCCURRENCE_OPTION_NAME, $request->getCurrentTimestamp() );
+			$existing_occurrence = get_option( self::LAST_CLICK_ID_OCCURRENCE_OPTION_NAME );
+			if ( ! is_numeric( $existing_occurrence ) ) {
+				$existing_occurrence = 0;
+			}
+			update_option( self::LAST_CLICK_ID_OCCURRENCE_OPTION_NAME, max( $existing_occurrence, $request->getCurrentTimestamp() ) );
 		}
 	}
 }
