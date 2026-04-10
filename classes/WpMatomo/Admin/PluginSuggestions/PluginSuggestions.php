@@ -114,15 +114,17 @@ class PluginSuggestions extends Feature {
 			return;
 		}
 
-		$dismissed_suggestions = get_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME, $suggestion_id );
+		$dismissed_suggestions = get_user_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME );
 		if ( ! is_array( $dismissed_suggestions ) ) {
 			$dismissed_suggestions = [];
 		}
 
+		// user metadata is unslashed when saving, but is not re-slashed when getting
 		$dismissed_suggestions[] = get_class( $suggestion );
-		$dismissed_suggestions   = array_unique( $dismissed_suggestions );
+		$dismissed_suggestions   = array_map( 'wp_slash', $dismissed_suggestions );
+		$dismissed_suggestions   = array_values( array_unique( $dismissed_suggestions ) );
 
-		update_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME, $dismissed_suggestions );
+		update_user_option( get_current_user_id(), self::DISMISSED_SUGGESTIONS_OPTION_NAME, $dismissed_suggestions );
 	}
 
 	public function dismiss_suggestion_ajax() {
@@ -174,7 +176,7 @@ class PluginSuggestions extends Feature {
 	}
 
 	private function is_suggestion_dismissed( Suggestion $suggestion ) {
-		$dismissed_suggestions = get_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME );
+		$dismissed_suggestions = get_user_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME );
 		if ( ! is_array( $dismissed_suggestions ) ) {
 			$dismissed_suggestions = [];
 		}

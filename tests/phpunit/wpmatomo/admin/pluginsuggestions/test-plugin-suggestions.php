@@ -12,6 +12,9 @@ use WpMatomo\Admin\PluginSuggestions\Suggestions\AdvertisingConversionExport;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\Funnels;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\HeatmapSessionRecording;
 
+/**
+ * @group only
+ */
 class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 
 	public function setUp(): void {
@@ -28,10 +31,11 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$this->track_paid_traffic(); // for AdvertisingConversionExport function
 
 		// set AdvertisingConversionExport as dismissed
-		update_option(
+		update_user_option(
+			get_current_user_id(),
 			PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME,
 			[
-				AdvertisingConversionExport::class,
+				wp_slash( AdvertisingConversionExport::class ),
 			]
 		);
 
@@ -55,11 +59,12 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$this->track_paid_traffic(); // for AdvertisingConversionExport function
 
 		// set AdvertisingConversionExport as dismissed
-		update_option(
+		update_user_option(
+			get_current_user_id(),
 			PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME,
 			[
-				AdvertisingConversionExport::class,
-				Funnels::class,
+				wp_slash( AdvertisingConversionExport::class ),
+				wp_slash( Funnels::class ),
 			]
 		);
 
@@ -74,7 +79,7 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$plugin_suggestions = new PluginSuggestions();
 		$plugin_suggestions->dismiss_suggestion( 'invalidsuggestion' );
 
-		$dismissed_suggestions = get_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
+		$dismissed_suggestions = get_user_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
 		$this->assertEmpty( $dismissed_suggestions );
 	}
 
@@ -83,7 +88,7 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$plugin_suggestions->dismiss_suggestion( 'AdvertisingConversionExport' );
 		$plugin_suggestions->dismiss_suggestion( 'HeatmapSessionRecording' );
 
-		$dismissed_suggestions = get_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
+		$dismissed_suggestions = get_user_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
 		$this->assertEquals( [ AdvertisingConversionExport::class, HeatmapSessionRecording::class ], $dismissed_suggestions );
 	}
 
@@ -95,7 +100,7 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$plugin_suggestions->dismiss_suggestion( 'AdvertisingConversionExport' );
 		$plugin_suggestions->dismiss_suggestion( 'HeatmapSessionRecording' );
 
-		$dismissed_suggestions = get_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
+		$dismissed_suggestions = get_user_option( PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME );
 		$this->assertEquals( [ AdvertisingConversionExport::class, HeatmapSessionRecording::class ], $dismissed_suggestions );
 	}
 
