@@ -45,7 +45,7 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 		$this->info->show_multisite();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertStringContainsString( 'Multi Site mode', $output );
+		$this->assertStringContainsString( 'Matomo is network enabled', $output );
 	}
 
 }
