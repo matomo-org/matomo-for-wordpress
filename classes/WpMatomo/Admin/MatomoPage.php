@@ -16,8 +16,14 @@ class MatomoPage {
 	 */
 	private $content;
 
-	public function __construct( MatomoPageContent $content ) {
-		$this->content = $content;
+	/**
+	 * @var string
+	 */
+	private $content_show_method;
+
+	public function __construct( MatomoPageContent $content, $content_show_method = 'show' ) {
+		$this->content             = $content;
+		$this->content_show_method = $content_show_method;
 	}
 
 	public function show() {
@@ -32,7 +38,7 @@ class MatomoPage {
 
 		do_action( 'matomo_page_content_before' );
 
-		$this->content->show();
+		call_user_func( [ $this->content, $this->content_show_method ] );
 
 		do_action( 'matomo_page_content_after' );
 		?>

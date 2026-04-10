@@ -20,6 +20,15 @@ class Info implements MatomoPageContent {
 	const NONCE_NAME = 'matomo_newsletter';
 	const FORM_NAME  = 'matomo_newsletter_signup';
 
+	/**
+	 * @var bool
+	 */
+	private $is_multisite;
+
+	public function __construct( $is_multisite = false ) {
+		$this->is_multisite = $is_multisite;
+	}
+
 	private function update_if_submitted() {
 		if ( isset( $_POST )
 			 && ! empty( $_POST[ self::FORM_NAME ] )
@@ -70,6 +79,8 @@ class Info implements MatomoPageContent {
 	}
 
 	public function get_title() {
-		return __( 'How can we help?', 'matomo' );
+		return $this->is_multisite
+			? __( 'Matomo Analytics in Multi Site mode', 'matomo' )
+			: __( 'How can we help?', 'matomo' );
 	}
 }

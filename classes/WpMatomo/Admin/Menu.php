@@ -95,6 +95,8 @@ class Menu {
 		}
 
 		if ( is_network_admin() ) {
+			$info_multisite = new MatomoPage( new Info( true ), 'show_multisite' );
+
 			add_submenu_page(
 				self::$parent_slug,
 				__( 'Multi Site', 'matomo' ),
@@ -102,8 +104,8 @@ class Menu {
 				Capabilities::KEY_SUPERUSER,
 				'matomo-multisite',
 				[
-					$info,
-					'show_multisite',
+					$info_multisite,
+					'show',
 				]
 			);
 		} else {
