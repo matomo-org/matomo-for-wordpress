@@ -55,12 +55,14 @@ abstract class Suggestion {
 	 */
 	protected $image_file = null;
 
-	public function __construct() {
-		$this->init();
+	/**
+	 * @var bool
+	 */
+	private $is_initialized = false;
 
-		if ( empty( $this->plugin_name ) ) {
-			throw new \Exception( 'SuggestionTrigger implementation must define a plugin.' );
-		}
+	public function __construct() {
+		// Intentionally empty: translated labels are initialized lazily so we
+		// don't trigger WordPress textdomain loading before init.
 	}
 
 	/**
@@ -71,6 +73,8 @@ abstract class Suggestion {
 	abstract public function init();
 
 	public function is_suggestion_applicable() {
+		$this->ensure_initialized();
+
 		return ! $this->is_plugin_installed( $this->plugin_slug );
 	}
 
@@ -79,6 +83,8 @@ abstract class Suggestion {
 	}
 
 	public function get_unlock_url() {
+		$this->ensure_initialized();
+
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
 		return 'https://matomo.org/get/matomo-for-wordpress-' . $this->to_snake_case( $this->plugin_slug ) . '/?source=wordpress';
 	}
@@ -114,6 +120,8 @@ abstract class Suggestion {
 	}
 
 	public function get_image_url() {
+		$this->ensure_initialized();
+
 		if ( ! $this->image_file ) {
 			return null;
 		}
@@ -122,26 +130,38 @@ abstract class Suggestion {
 	}
 
 	public function get_plugin_slug() {
+		$this->ensure_initialized();
+
 		return $this->plugin_slug;
 	}
 
 	public function get_plugin_name() {
+		$this->ensure_initialized();
+
 		return $this->plugin_name;
 	}
 
 	public function get_trigger_desc_short() {
+		$this->ensure_initialized();
+
 		return $this->trigger_desc_short;
 	}
 
 	public function get_trigger_desc_long() {
+		$this->ensure_initialized();
+
 		return $this->trigger_desc_long;
 	}
 
 	public function get_plugin_desc_short() {
+		$this->ensure_initialized();
+
 		return $this->plugin_desc_short;
 	}
 
 	public function get_plugin_desc_long() {
+		$this->ensure_initialized();
+
 		return $this->plugin_desc_long;
 	}
 
@@ -154,5 +174,19 @@ abstract class Suggestion {
 
 	private function to_snake_case( $value ) {
 		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $value ) );
+	}
+
+	protected function ensure_initialized() {
+		if ( $this->is_initialized ) {
+			return;
+		}
+
+		$this->init();
+
+		if ( empty( $this->plugin_name ) ) {
+			throw new \Exception( 'SuggestionTrigger implementation must define a plugin.' );
+		}
+
+		$this->is_initialized = true;
 	}
 }

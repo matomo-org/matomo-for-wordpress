@@ -143,7 +143,7 @@ class PluginSuggestions extends Feature {
 	 */
 	private function get_suggestions() {
 		// ordered by priority to show
-		$suggestions = [
+		return  [
 			new HeatmapSessionRecording(),
 			new SearchEngineKeywordsPerformance(),
 			new AdvertisingConversionExport(),
@@ -151,12 +151,6 @@ class PluginSuggestions extends Feature {
 			new UsersFlow(),
 			new Funnels(),
 		];
-
-		foreach ( $suggestions as $suggestion ) {
-			$suggestion->init();
-		}
-
-		return $suggestions;
 	}
 
 	private function find_suggestion_by_class( $suggestion_to_show ) {

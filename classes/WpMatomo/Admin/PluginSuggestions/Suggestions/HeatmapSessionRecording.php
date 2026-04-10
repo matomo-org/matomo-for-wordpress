@@ -42,6 +42,8 @@ class HeatmapSessionRecording extends Suggestion {
 	}
 
 	public function get_trigger_desc_long() {
+		$this->ensure_initialized();
+
 		return sprintf( $this->trigger_desc_long, round( $this->get_bounce_rate() * 100 ) );
 	}
 
