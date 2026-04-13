@@ -102,7 +102,7 @@ class Forms {
 			esc_html( $name ),
 			esc_attr( $id ),
 			$on_change,
-			( $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id ) ),
+			esc_textarea( $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id ) ),
 			$this->get_description( $id, $description, $hide_description )
 		);
 	}
