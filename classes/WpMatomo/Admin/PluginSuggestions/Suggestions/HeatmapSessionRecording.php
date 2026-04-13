@@ -38,7 +38,7 @@ class HeatmapSessionRecording extends Suggestion {
 
 	public function should_trigger() {
 		$this->get_bounce_rate();
-		return $this->nb_visits > $this->nb_visits_threshold && $this->bounce_rate > 0.65;
+		return $this->nb_visits >= $this->nb_visits_threshold && $this->bounce_rate > 0.65;
 	}
 
 	public function get_trigger_desc_long() {

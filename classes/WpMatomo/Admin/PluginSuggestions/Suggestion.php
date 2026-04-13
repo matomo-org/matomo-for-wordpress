@@ -64,6 +64,9 @@ abstract class Suggestion {
 	}
 
 	/**
+	 * Note: this function will be run with temporary superuser access during cron.
+	 * It should not be run at any other time.
+	 *
 	 * @return bool
 	 */
 	abstract public function should_trigger();

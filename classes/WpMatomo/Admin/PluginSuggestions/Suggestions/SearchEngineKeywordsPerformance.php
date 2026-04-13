@@ -20,6 +20,12 @@ use WpMatomo\Bootstrap;
 
 class SearchEngineKeywordsPerformance extends Suggestion {
 
+	private $visits_threshold;
+
+	public function __construct( $visits_threshold = 100 ) {
+		$this->visits_threshold = $visits_threshold;
+	}
+
 	public function should_trigger() {
 		Bootstrap::do_bootstrap();
 
@@ -48,7 +54,7 @@ class SearchEngineKeywordsPerformance extends Suggestion {
 
 		$percent_from_search_engines = (float) $visits_from_search_engines / (float) $total;
 
-		return $percent_from_search_engines > 0.40;
+		return $total >= $this->visits_threshold && $percent_from_search_engines > 0.40;
 	}
 
 	public function init() {

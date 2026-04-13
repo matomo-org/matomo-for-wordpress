@@ -15,6 +15,7 @@ use WpMatomo\Admin\PluginSuggestions\Suggestions\HeatmapSessionRecording;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\SearchEngineKeywordsPerformance;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\UsersFlow;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\WpPremiumBundle;
+use WpMatomo\Bootstrap;
 use WpMatomo\Feature;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -63,7 +64,7 @@ class PluginSuggestions extends Feature {
 		if ( ! empty( $_REQUEST[ self::FORCE_SUGGESTION_QUERY_PARAM_NAME ] ) ) {
 			$matomo_suggestion_to_show = sanitize_text_field( wp_unslash( $_REQUEST[ self::FORCE_SUGGESTION_QUERY_PARAM_NAME ] ) );
 		} else {
-			$matomo_suggestion_to_show = get_option( self::SUGGESTION_TRIGGERED_OPTION_NAME );
+			$matomo_suggestion_to_show = get_user_option( self::SUGGESTION_TRIGGERED_OPTION_NAME );
 		}
 
 		$matomo_suggestion_to_show = $this->find_suggestion_by_class( $matomo_suggestion_to_show );
@@ -80,27 +81,39 @@ class PluginSuggestions extends Feature {
 	}
 
 	public function check() {
-		$suggestion_to_trigger = null;
+		Bootstrap::do_bootstrap();
+
+		$triggered_suggestions = [];
 
 		foreach ( $this->get_suggestions() as $suggestion ) {
-			if ( $this->is_suggestion_dismissed( $suggestion ) ) {
-				continue;
-			}
-
 			if ( ! $suggestion->is_suggestion_applicable() ) {
 				continue;
 			}
 
-			if ( ! $suggestion->should_trigger() ) {
+			$should_trigger = \Piwik\Access::doAsSuperUser(
+				function () use ( $suggestion ) {
+					return $suggestion->should_trigger();
+				}
+			);
+			if ( ! $should_trigger ) {
 				continue;
 			}
 
-			$suggestion_to_trigger = $suggestion;
-			break;
+			$triggered_suggestions[] = $suggestion;
 		}
 
-		if ( $suggestion_to_trigger ) {
-			update_option( self::SUGGESTION_TRIGGERED_OPTION_NAME, get_class( $suggestion ) );
+		$users = get_users( [ 'fields' => 'ID' ] );
+		foreach ( $users as $user_id ) {
+			delete_user_option( $user_id, self::SUGGESTION_TRIGGERED_OPTION_NAME );
+
+			foreach ( $triggered_suggestions as $suggestion ) {
+				if ( $this->is_suggestion_dismissed( $suggestion, $user_id ) ) {
+					continue;
+				}
+
+				update_user_option( $user_id, self::SUGGESTION_TRIGGERED_OPTION_NAME, wp_slash( get_class( $suggestion ) ) );
+				break;
+			}
 		}
 	}
 
@@ -175,8 +188,8 @@ class PluginSuggestions extends Feature {
 		return null;
 	}
 
-	private function is_suggestion_dismissed( Suggestion $suggestion ) {
-		$dismissed_suggestions = get_user_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME );
+	private function is_suggestion_dismissed( Suggestion $suggestion, $user = 0 ) {
+		$dismissed_suggestions = get_user_option( self::DISMISSED_SUGGESTIONS_OPTION_NAME, $user );
 		if ( ! is_array( $dismissed_suggestions ) ) {
 			$dismissed_suggestions = [];
 		}

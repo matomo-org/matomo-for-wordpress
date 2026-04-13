@@ -24,19 +24,26 @@ class SearchEngineKeywordsPerformanceTest extends MatomoAnalytics_TestCase {
 	public function test_should_trigger_returns_true_if_visits_from_search_engines_is_high_enough() {
 		$this->track_data( 4, 3 );
 
-		$suggestion = new SearchEngineKeywordsPerformance();
+		$suggestion = new SearchEngineKeywordsPerformance( 1 );
 		$this->assertTrue( $suggestion->should_trigger() );
 	}
 
 	public function test_should_trigger_returns_false_if_visits_from_search_engines_is_low() {
 		$this->track_data( 1, 3 );
 
-		$suggestion = new SearchEngineKeywordsPerformance();
+		$suggestion = new SearchEngineKeywordsPerformance( 1 );
 		$this->assertFalse( $suggestion->should_trigger() );
 	}
 
 	public function test_should_trigger_returns_false_if_no_data() {
 		$this->assertEquals( 0, Piwik\Db::fetchOne( 'SELECT COUNT(*) FROM ' . Common::prefixTable( 'log_visit' ) ) );
+
+		$suggestion = new SearchEngineKeywordsPerformance( 1 );
+		$this->assertFalse( $suggestion->should_trigger() );
+	}
+
+	public function test_should_trigger_returns_false_if_visits_under_visit_threshold() {
+		$this->track_data( 4, 3 );
 
 		$suggestion = new SearchEngineKeywordsPerformance();
 		$this->assertFalse( $suggestion->should_trigger() );

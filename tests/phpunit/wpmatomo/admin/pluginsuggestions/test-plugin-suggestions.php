@@ -23,6 +23,16 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$this->create_set_super_admin();
 	}
 
+	public function test_check_removes_existing_suggestion_if_nothing_matches() {
+		update_user_option( get_current_user_id(), PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME, wp_slash( Funnels::class ) );
+
+		$plugin_suggestions = new PluginSuggestions();
+		$plugin_suggestions->check();
+
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
+		$this->assertFalse( $triggered_suggestion );
+	}
+
 	public function test_check_finds_the_first_applicable_suggestion_that_has_not_been_dismissed() {
 		$this->create_goal(); // for Funnels suggestion
 		$this->track_paid_traffic(); // for AdvertisingConversionExport function
@@ -39,15 +49,41 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$plugin_suggestions = new PluginSuggestions();
 		$plugin_suggestions->check();
 
-		$triggered_suggestion = get_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
 		$this->assertEquals( Funnels::class, $triggered_suggestion );
+	}
+
+	public function test_check_adds_suggestions_to_show_for_every_user() {
+		$current_user_id = get_current_user_id();
+		$user_id         = self::factory()->user->create();
+
+		$this->create_goal(); // for Funnels suggestion
+		$this->track_paid_traffic(); // for AdvertisingConversionExport function
+
+		// set AdvertisingConversionExport as dismissed for one user
+		update_user_option(
+			$current_user_id,
+			PluginSuggestions::DISMISSED_SUGGESTIONS_OPTION_NAME,
+			[
+				wp_slash( AdvertisingConversionExport::class ),
+			]
+		);
+
+		$plugin_suggestions = new PluginSuggestions();
+		$plugin_suggestions->check();
+
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME, $current_user_id );
+		$this->assertEquals( Funnels::class, $triggered_suggestion );
+
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME, $user_id );
+		$this->assertEquals( AdvertisingConversionExport::class, $triggered_suggestion );
 	}
 
 	public function test_check_does_nothing_if_no_suggestion_is_applicable_or_should_trigger() {
 		$plugin_suggestions = new PluginSuggestions();
 		$plugin_suggestions->check();
 
-		$triggered_suggestion = get_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
 		$this->assertEmpty( $triggered_suggestion );
 	}
 
@@ -68,7 +104,7 @@ class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
 		$plugin_suggestions = new PluginSuggestions();
 		$plugin_suggestions->check();
 
-		$triggered_suggestion = get_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
+		$triggered_suggestion = get_user_option( PluginSuggestions::SUGGESTION_TRIGGERED_OPTION_NAME );
 		$this->assertEmpty( $triggered_suggestion );
 	}
 
