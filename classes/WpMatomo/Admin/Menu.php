@@ -67,20 +67,18 @@ class Menu {
 	public function add_menu() {
 		do_action( 'matomo_before_add_menu' );
 
-		$info          = new Info();
-		$get_started   = new GetStarted( $this->settings );
-		$marketplace   = new Marketplace( $this->settings );
-		$system_report = new SystemReport( $this->settings );
-		$summary       = new Summary( $this->settings );
-		$import_wp_s   = new ImportWpStatistics();
-
-		$admin_settings = new AdminSettings( $this->settings );
+		$info           = new MatomoPage( new Info() );
+		$get_started    = new MatomoPage( new GetStarted( $this->settings ) );
+		$marketplace    = new MatomoPage( new Marketplace( $this->settings ) );
+		$summary        = new MatomoPage( new Summary( $this->settings ) );
+		$import_wp_s    = new MatomoPage( new ImportWpStatistics() );
+		$admin_settings = new MatomoPage( new AdminSettings( $this->settings ) );
 
 		$matomo_logo_url = plugins_url( 'assets/img/matomo-logo-light-grey.svg', MATOMO_ANALYTICS_FILE );
 
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, $matomo_logo_url, 2 );
 
-		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
+		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->get_content()->can_user_manage() ) {
 			if ( ! is_multisite() || ! is_network_admin() ) {
 				add_submenu_page(
 					self::$parent_slug,
@@ -97,6 +95,8 @@ class Menu {
 		}
 
 		if ( is_network_admin() ) {
+			$info_multisite = new MatomoPage( new Info( true ), 'show_multisite' );
+
 			add_submenu_page(
 				self::$parent_slug,
 				__( 'Multi Site', 'matomo' ),
@@ -104,8 +104,8 @@ class Menu {
 				Capabilities::KEY_SUPERUSER,
 				'matomo-multisite',
 				[
-					$info,
-					'show_multisite',
+					$info_multisite,
+					'show',
 				]
 			);
 		} else {
@@ -181,10 +181,11 @@ class Menu {
 		}
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
+			$system_report = new MatomoPage( new SystemReport( $this->settings ) );
+
 			$warning = '';
 			if ( Admin::is_matomo_admin() ) {
-				$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
-				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->errors_present() ) {
+				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->get_content()->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
 			}

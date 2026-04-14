@@ -261,52 +261,8 @@ class WhatsNewNotifications {
 	 */
 	protected function get_current_notifications() {
 		return [
-			// crash analytics
-			'crash-analytics-promo' => [
-				'notification_marker_page' => 'matomo-marketplace',
-				'message'                  => $this->get_crash_analytics_promo_message(),
-				'show_on'                  => self::SHOW_ON_ALL_PAGES,
-				'show_if'                  => current_user_can( 'install_plugins' ),
-			],
+			// nothing to show
 		];
-	}
-
-	private function get_crash_analytics_promo_message() {
-		$matomo_version = $this->settings->get_matomo_major_version();
-		$screenshot_url = plugins_url( 'assets/img/crash_analytics_screenshot.png', MATOMO_ANALYTICS_FILE );
-		$plugin_url     = 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin&matomoversion=' . $matomo_version;
-
-		ob_start();
-		?>
-<div style="display: flex; flex-direction: row; align-items: stretch; justify-content: space-evenly;">
-	<div style="flex: 1;display:flex;flex-direction: column;justify-content: space-between;">
-		<div style="margin-right: 8px;">
-			<h6><?php esc_html_e( 'New Premium Plugin', 'matomo' ); ?>!</h6>
-			<h3><?php esc_html_e( 'Crash Analytics', 'matomo' ); ?></h3>
-			<p><em><?php esc_html_e( 'Uncover Errors and Elevate Your Site’s Performance', 'matomo' ); ?></em></p>
-			<p>
-			<?php esc_html_e( 'Broken carts, glitchy checkouts, unresponsive contact forms – they\'re not just annoyances; they\'re revenue pitfalls waiting to happen.', 'matomo' ); ?>
-			</p>
-			<p>
-			<?php esc_html_e( 'With Crash Analytics, you can improve user experience, boost conversion rates and grow revenue with 100% website reliability.', 'matomo' ); ?>
-			</p>
-		</div>
-		<div>
-			<p>
-				<a href="<?php echo esc_attr( $plugin_url ); ?>" rel="noreferrer noopener" target="_blank">
-					<button class="button-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
-				</a>
-			</p>
-		</div>
-	</div>
-	<div style="flex: 1; position: relative; height: 240px;">
-		<div style="position: absolute; background-image: url(<?php echo esc_attr( $screenshot_url ); ?>); top: 10px; bottom: 10px; left: 0; right: 0; background-size: 100% auto; background-position: top -140px left;"></div>
-	</div>
-</div>
-		<?php
-
-		$text = ob_get_clean();
-		return $text;
 	}
 
 	private function get_notification_status_option_name() {

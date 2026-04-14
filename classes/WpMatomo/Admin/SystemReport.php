@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  */
-class SystemReport {
+class SystemReport implements MatomoPageContent {
 	const NONCE_NAME                      = 'matomo_troubleshooting';
 	const TROUBLESHOOT_SYNC_USERS         = 'matomo_troubleshooting_action_site_users';
 	const TROUBLESHOOT_SYNC_ALL_USERS     = 'matomo_troubleshooting_action_all_users';
@@ -2166,5 +2166,9 @@ class SystemReport {
 
 	private function get_errors_present_cache_key() {
 		return 'matomo_system_report_has_errors';
+	}
+
+	public function get_title() {
+		return __( 'Diagnostics', 'matomo' );
 	}
 }

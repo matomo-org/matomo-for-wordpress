@@ -17,6 +17,7 @@ use WpMatomo\Admin\Chart;
 use WpMatomo\Admin\Dashboard;
 use WpMatomo\Admin\MarketplaceSetupWizard;
 use WpMatomo\Admin\Menu;
+use WpMatomo\Admin\PluginSuggestions\PluginSuggestions;
 use WpMatomo\AjaxTracker;
 use WpMatomo\Annotations;
 use WpMatomo\API;
@@ -232,6 +233,8 @@ class WpMatomo {
 			new \WpMatomo\PluginActionLinks( self::$settings ),
 
 			new MarketplaceSetupWizard(),
+
+			new PluginSuggestions(),
 		];
 	}
 

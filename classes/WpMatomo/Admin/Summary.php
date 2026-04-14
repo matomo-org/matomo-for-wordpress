@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Summary {
+class Summary implements MatomoPageContent {
 	const NONCE_DASHBOARD = 'matomo_pin_dashboard';
 
 	/**
@@ -125,5 +125,9 @@ class Summary {
 		}
 
 		return $report_metadata;
+	}
+
+	public function get_title() {
+		return __( 'Summary', 'matomo' );
 	}
 }

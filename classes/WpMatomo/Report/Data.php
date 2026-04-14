@@ -32,11 +32,11 @@ class Data {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
-		Bootstrap::do_bootstrap();
-
 		if ( empty( $idsite ) ) {
 			return [];
 		}
+
+		Bootstrap::do_bootstrap();
 
 		$params = [
 			'apiModule'          => $report_metadata['module'],
@@ -53,6 +53,30 @@ class Data {
 		}
 
 		$report = Request::processRequest( 'API.getProcessedReport', $params );
+
+		return $report;
+	}
+
+	public function fetch_raw_report( $method, $period, $date, $sort_by_column, $filter_limit, $extra_params = [] ) {
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		if ( empty( $idsite ) ) {
+			return [];
+		}
+
+		Bootstrap::do_bootstrap();
+
+		$params = [
+			'filter_limit'       => $filter_limit,
+			'filter_sort_column' => $sort_by_column,
+			'period'             => $period,
+			'date'               => $date,
+			'idSite'             => $idsite,
+		];
+		$params = array_merge( $params, $extra_params );
+
+		$report = Request::processRequest( $method, $params );
 
 		return $report;
 	}

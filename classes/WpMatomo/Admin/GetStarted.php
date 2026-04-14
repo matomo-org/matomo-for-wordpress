@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class GetStarted {
+class GetStarted implements MatomoPageContent {
 	const NONCE_NAME = 'matomo_enable_tracking';
 	const FORM_NAME  = 'matomo';
 
@@ -118,5 +118,9 @@ class GetStarted {
 		$tracking_settings = new TrackingSettings( $this->settings );
 
 		return $tracking_settings->can_user_manage();
+	}
+
+	public function get_title() {
+		return __( 'Start getting a full picture of your visitors', 'matomo' );
 	}
 }

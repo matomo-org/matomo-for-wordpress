@@ -37,6 +37,10 @@ class MwpSummaryPage extends MwpPage {
       return await browser.execute(async () => window.jQuery('.notice.notice-success:contains(Dashboard updated.)').length);
     });
   }
+
+  async forceShowSuggestion(suggestionId: string) {
+    await this.openWith({ mtm_force_suggestion: suggestionId });
+  }
 }
 
 export default new MwpSummaryPage();

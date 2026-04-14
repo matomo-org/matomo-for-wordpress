@@ -15,9 +15,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Info {
+class Info implements MatomoPageContent {
+
 	const NONCE_NAME = 'matomo_newsletter';
 	const FORM_NAME  = 'matomo_newsletter_signup';
+
+	/**
+	 * @var bool
+	 */
+	private $is_multisite;
+
+	public function __construct( $is_multisite = false ) {
+		$this->is_multisite = $is_multisite;
+	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
@@ -66,5 +76,11 @@ class Info {
 		$show_newsletter     = $this->show_newsletter_signup();
 
 		include dirname( __FILE__ ) . '/views/' . $template . '.php';
+	}
+
+	public function get_title() {
+		return $this->is_multisite
+			? __( 'Matomo Analytics in Multi Site mode', 'matomo' )
+			: __( 'How can we help?', 'matomo' );
 	}
 }
