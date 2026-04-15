@@ -42,7 +42,7 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.8.1';
+	const VERSION = '5.8.2';
 
 	/**
 	 * @var \WpMatomo\Feature[]

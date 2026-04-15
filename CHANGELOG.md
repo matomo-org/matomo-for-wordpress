@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.8.2 =
+* New feature: behaviour based plugin suggestions to connect users with potentially useful premium features.
+
 = 5.8.1 =
 * Bug fix: shortened date labels in Visits Over Time graph were not correct.
 * Bug fix: premium plugin prices were not accurate.
