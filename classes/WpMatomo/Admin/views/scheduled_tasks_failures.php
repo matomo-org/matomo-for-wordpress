@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php foreach ( $matomo_task_failures as $matomo_job_id => $matomo_task_failure_message ) { ?>
-<div class="notice notice-error is-dismissible matomo-cron-error" data-job="<?php echo esc_attr( $matomo_job_id ); ?>">
+<div class="matomo-notice notice notice-error is-dismissible matomo-cron-error" data-job="<?php echo esc_attr( $matomo_job_id ); ?>">
 	<p>
 		<strong><?php esc_html_e( 'Matomo Cron Error', 'matomo' ); ?>:</strong>
 		<?php echo esc_html( $matomo_task_failure_message ); ?>

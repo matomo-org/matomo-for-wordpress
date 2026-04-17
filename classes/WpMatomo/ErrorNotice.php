@@ -42,7 +42,7 @@ class ErrorNotice extends Feature {
 		) {
 			$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
 			if ( ! get_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->errors_present() ) {
-				echo '<div class="notice notice-warning is-dismissible" id="matomo-systemreporterrors"><p>'
+				echo '<div class="matomo-notice notice notice-warning is-dismissible" id="matomo-systemreporterrors"><p>'
 					. sprintf(
 						esc_html__( 'There are some errors in the %1$sMatomo Diagnostics System report%2$s that may prevent the plugin for working normally.', 'matomo' ),
 						'<a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">',

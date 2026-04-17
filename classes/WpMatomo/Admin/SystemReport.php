@@ -164,7 +164,7 @@ class SystemReport implements MatomoPageContent {
 				}
 
 				if ( ! empty( $errors ) ) {
-					echo '<div class="notice notice-warning"><p>Matomo Archive Warnings: ';
+					echo '<div class="matomo-notice notice notice-warning"><p>Matomo Archive Warnings: ';
 					foreach ( $errors as $error ) {
 						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
 						echo nl2br( esc_html( matomo_anonymize_value( var_export( $error, 1 ) ) ) );
@@ -172,7 +172,7 @@ class SystemReport implements MatomoPageContent {
 					}
 					echo '</p></div>';
 				} else {
-					echo '<div class="notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
+					echo '<div class="matomo-notice notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
 				}
 			}
 
@@ -254,7 +254,7 @@ class SystemReport implements MatomoPageContent {
 
 					$tracking_code_generator->update_tracking_code( true );
 
-					echo '<div class="notice notice-success"><p>' . esc_html__( 'JavaScript tracking code regenerated successfully.', 'matomo' ) . '</p></div>';
+					echo '<div class="matomo-notice notice notice-success"><p>' . esc_html__( 'JavaScript tracking code regenerated successfully.', 'matomo' ) . '</p></div>';
 				} catch ( \Exception $ex ) {
 					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
 				}
@@ -273,7 +273,7 @@ class SystemReport implements MatomoPageContent {
 					$scheduler = StaticContainer::get( Scheduler::class );
 					$message   = $scheduler->runTaskNow( $task_to_run );
 
-					echo '<div class="notice notice-success"><p>' . esc_html__( 'Task ran successfully', 'matomo' ) . ': ' . esc_html( $message ) . '</p></div>';
+					echo '<div class="matomo-notice notice notice-success"><p>' . esc_html__( 'Task ran successfully', 'matomo' ) . ': ' . esc_html( $message ) . '</p></div>';
 				} catch ( \Exception $e ) {
 					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
 				}

@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 if ( ! $matomo_is_compatible_with_wp_statistics ) {
 	?>
-<div class="notice notice-warning is-dismissible">
+<div class="matomo-notice notice notice-warning is-dismissible">
 	<p>
 		<?php
 		echo esc_html(

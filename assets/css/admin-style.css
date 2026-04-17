@@ -307,3 +307,8 @@ table.matomo-tracking-form th {
     font-size: 0.9em;
     margin-top: 24px;
 }
+
+/* by default hide MWP notices. only display them on MWP pages. */
+.matomo-notice {
+    display: none;
+}

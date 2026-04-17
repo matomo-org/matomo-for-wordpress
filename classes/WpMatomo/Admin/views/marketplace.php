@@ -45,7 +45,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php } ?>
 
 	<?php if ( $settings->is_network_enabled() && ! is_network_admin() && is_super_admin() ) { ?>
-		<div class="updated notice">
+		<div class="matomo-notice updated notice">
 			<p><?php esc_html_e( 'Only WordPress network admins can see this page', 'matomo' ); ?></p>
 		</div>
 	<?php } ?>

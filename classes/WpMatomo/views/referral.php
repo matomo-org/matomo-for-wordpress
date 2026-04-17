@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div class="notice notice-info is-dismissible" id="matomo-referral">
+<div class="matomo-notice notice notice-info is-dismissible" id="matomo-referral">
 	<p>
 		<?php esc_html_e( 'Like Matomo? We would really appreciate if you took 1 minute to rate us.', 'matomo' ); ?>
 
