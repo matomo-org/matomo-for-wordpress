@@ -145,6 +145,8 @@ jobs:
           [ -e /tmp/file.txt ] && echo File exists || echo Timeout
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
         if: always()
+      - run: cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.log file does not exist"
+        if: always()
 
       - name: Run unit tests
         shell: bash
