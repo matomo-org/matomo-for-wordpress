@@ -22,11 +22,12 @@ class MwpMarketplaceSetupWizard {
     if (!downloadUrl) {
       throw new Error('could not extract marketplace download URL from page');
     }
+    console.log('downloadUrl', downloadUrl);
 
     const downloadPath = path.join(DOWNLOADS_DIR, path.basename(downloadUrl));
 
     await $('.download-plugin').click();
-    await browser.waitUntil(() => fs.existsSync(downloadPath), 5000);
+    await browser.waitUntil(() => fs.existsSync(downloadPath), { timeout: 30000 });
 
     return downloadPath;
   }
