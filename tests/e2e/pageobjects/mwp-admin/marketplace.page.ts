@@ -6,11 +6,12 @@
  *
  */
 
-import { $, browser } from '@wdio/globals';
+import { $, browser, expect } from '@wdio/globals';
 import * as fs from 'fs';
 import * as path from 'path';
-import MwpPage from './page.js';
 import * as url from 'url';
+import fetch from 'node-fetch';
+import MwpPage from './page.js';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -63,7 +64,7 @@ class MwpMarketplaceSetupWizard {
   }
 
   async waitForReload(): Promise<void> {
-    await $('#tgmpa-plugins .install').waitForDisplayed({ timeout: 30000 });
+    await $('.matomo-plugin-card').waitForDisplayed({ timeout: 120000 });
   }
 }
 
@@ -77,40 +78,24 @@ class MwpMarketplacePage extends MwpPage {
   async openInstallPluginsTab() {
     await $('a.nav-tab=Install Plugins').click();
 
-    await $('td.column-version,.matomo-marketplace-wizard').waitForExist({ timeout: 30000 });
+    await $('.matomo-plugin-card,.matomo-marketplace-wizard').waitForExist({ timeout: 120000 });
 
-    if (await $('td.column-version').isExisting()) {
+    if (await $('.matomo-plugin-card').isExisting()) {
       // remove most plugins so the screenshot will stay the same over time
       await this.removeThirdPartyPlugins();
-
-      // remove version strings so test will pass when plugin requirements
-      // change
-      await this.removeVersionStrings();
-
-      await this.removePluginCounts();
     }
   }
 
-  async removePluginCounts() {
-    // remove number of plugins so test will pass when new plugins are released/
-    // other plugins are removed
-    await browser.execute(() => {
-      window.jQuery('.subsubsub .count').each((i, e) => {
-        window.jQuery(e).text('()');
-      });
-    });
-  }
-
   async removeThirdPartyPlugins() {
-    await browser.execute(() => {
-      window.jQuery('tbody#the-list > tr').each((i, e) => {
-        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org'
-          || window.jQuery('td[data-colname="Plugin"]>strong>a', e).text() === 'Force SSL' // test environment does not use ssl
-        ) {
-          window.jQuery(e).remove();
-        }
-      });
-    });
+    await this.addStylesToPage(`
+      .matomo-plugin-card[data-plugin-slug="Force SSL"] {
+        display: none !important;
+      }
+
+      .matomo-plugin-card:not([data-developer="matomo-org"]) {
+        display: none !important;
+      }
+    `);
   }
 
   async openSubscriptionsTab() {
@@ -133,12 +118,12 @@ class MwpMarketplacePage extends MwpPage {
 
     await $('#wpbody-content .activate-license').click();
 
-    await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed({ timeout: 30000 });
+    await $('#wpbody-content .matomo-marketplace-install-plugins').waitForDisplayed({ timeout: 120000 });
   }
 
   async installPlugin(plugin: string) {
     await browser.execute((p) => {
-      window.jQuery(`.check-column input[value="${p}"]`).closest('tr').find('span.install > a')[0].click();
+      window.jQuery('.matomo-plugin-card[data-plugin-slug="SEOWebVitals"] .cta-container button')[0].click();
     }, plugin);
 
     await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
@@ -154,14 +139,95 @@ class MwpMarketplacePage extends MwpPage {
     await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
   }
 
-  async removeVersionStrings() {
-    await browser.execute(() => {
-      window.jQuery('td.column-version').each((i, e) => {
-        window.jQuery(e).html(
-          window.jQuery(e).html().replace(/\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?/g, '-')
-        );
-      });
+  async bulkInstallMatomoPlugins() {
+    await $('[bulk-install-nonce]').waitForExist();
+
+    const matomoPlugins = await browser.execute(() => {
+      return [...window.jQuery('.matomo-plugin-card[data-developer="matomo-org"]')]
+        .map((e) => ({
+          slug: e.getAttribute('data-plugin-slug'),
+          name: window.jQuery(e).find('.card-title').text().replace('›', '').trim(),
+        }));
     });
+
+    const currentPageUrl = await browser.execute(() => window.location.pathname);
+
+    const nonce = await browser.execute(() => {
+      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-install-nonce');
+    });
+
+    const body = new URLSearchParams({
+      'tgmpa-page': 'matomo-marketplace',
+      plugin_status: 'all',
+      _wpnonce: nonce,
+      _wp_http_referer: currentPageUrl,
+      action: 'tgmpa-bulk-install',
+      bulk_action: 'Apply',
+      action2: 'tgmpa-bulk-install',
+    });
+    matomoPlugins.forEach((p) => {
+      body.append('plugin[]', p.slug);
+    });
+
+    const response = await fetch('http://localhost/6.9.4/wp-admin/admin.php?page=matomo-marketplace&tab=install', {
+      method: 'POST',
+      body,
+    });
+
+    const responseBody = await response.text();
+    const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)].map(g => g[1]);
+    installedPlugins.sort();
+
+    const allPluginsName = matomoPlugins.map(p => p.name);
+    allPluginsName.sort();
+
+    expect(installedPlugins).toEqual(allPluginsName);
+
+    await browser.refresh(); // for new nonce values
+
+    return matomoPlugins;
+  }
+
+  async bulkActivateMatomoPlugins(installedPlugins: { name: string, slug: string }[]) {
+    const currentPageUrl = await browser.execute(() => window.location.pathname);
+
+    await $('[bulk-activate-nonce]').waitForExist();
+
+    const nonce = await browser.execute(() => {
+      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-activate-nonce');
+    });
+
+    const body = new URLSearchParams({
+      'tgmpa-page': 'matomo-marketplace',
+      plugin_status: 'all',
+      _wpnonce: nonce,
+      _wp_http_referer: currentPageUrl,
+      action: 'tgmpa-bulk-activate',
+      bulk_action: 'Apply',
+      action2: 'tgmpa-bulk-activate',
+    });
+    installedPlugins.forEach((p) => {
+      body.append('plugin[]', p.slug);
+    });
+
+    const response = await fetch('http://localhost/6.9.4/wp-admin/admin.php?page=matomo-marketplace&tab=install', {
+      method: 'POST',
+      body,
+    });
+
+    const responseBody = await response.text();
+    let activatedPlugins = (/<p>\s*The following plugins were activated successfully: (.*?)\.\s*<\/p>/g.exec(responseBody) || ['', ''])[1]
+      .replace(/<\/?strong>/g, '')
+      .split(/\band\b/g)
+      .map(p => p.trim());
+    activatedPlugins.sort();
+
+    const allPluginsName = installedPlugins.map(p => p.name);
+    allPluginsName.sort();
+
+    expect(activatedPlugins).toEqual(allPluginsName);
+
+    await browser.refresh(); // for new nonce values
   }
 }
 
