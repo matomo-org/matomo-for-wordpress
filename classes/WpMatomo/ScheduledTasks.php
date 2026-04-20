@@ -341,8 +341,11 @@ class ScheduledTasks extends Feature {
 		$this->logger->log( 'Scheduled tasks archive data' );
 
 		try {
+			error_log( 'Starting bootstrap' );
 			Bootstrap::do_bootstrap();
+			error_log( 'Finished bootstrap' );
 		} catch ( Exception $e ) {
+			error_log( 'Boostrap failed ' . $e->getMessage() . "\n" . $e->getTraceAsString() );
 			if ( $should_rethrow_exception || $force ) {
 				$this->logger->log_exception( 'archive_bootstrap', $e );
 
@@ -377,16 +380,21 @@ class ScheduledTasks extends Feature {
 			}
 		}
 
+		error_log('starting archiving');
 		if ( is_multisite() ) {
+			error_log('is multisite');
 			if ( is_network_admin() ) {
+				error_log('is network admin - skipping archiving');
 				return; // nothing to archive
 			} else {
+				error_log('not network admin');
 				$blog_id = get_current_blog_id();
 				$idsite  = Site::get_matomo_site_id( $blog_id );
 				if ( ! empty( $idsite ) ) {
 					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					$archiver->shouldArchiveSpecifiedSites = [ $idsite ];
 				} else {
+					error_log('no site found for blog id ' . $blog_id);
 					// there is no site mapped to it so there's no point in archiving it
 					return;
 				}
@@ -394,10 +402,13 @@ class ScheduledTasks extends Feature {
 		}
 
 		try {
+			error_log('archive main');
 			$archiver->main();
 
 			$archive_errors = $archiver->getErrors();
+			error_log('archive errors: ' . count($archive_errors));
 		} catch ( Exception $e ) {
+			error_log('archive failed: ' . $e->getMessage() . "\n" . $e->getTraceAsString() );
 			$this->on_task_fail( 'archive_main', $e, 'An error occurred during Matomo archiving.' );
 
 			$archive_errors = $archiver->getErrors();
@@ -422,6 +433,7 @@ class ScheduledTasks extends Feature {
 			}
 		}
 
+		error_log('done');
 		return $archive_errors;
 	}
 
