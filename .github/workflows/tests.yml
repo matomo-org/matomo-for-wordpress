@@ -230,7 +230,7 @@ jobs:
           WP_DEBUG=true
           WP_DEBUG_LOG=true
           WP_DEBUG_DISPLAY=false
-          MATOMO_MARKETPLACE_ZIP_URL="http://localhost/$WORDPRESS_VERSION/wp-content/plugins/matomo/marketplace/matomo-marketplace-for-wordpress.test.zip"
+          MATOMO_MARKETPLACE_ZIP_URL="http://localhost/matomo-for-wordpress/marketplace/matomo-marketplace-for-wordpress.test.zip"
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}

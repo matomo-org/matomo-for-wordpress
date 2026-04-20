@@ -426,6 +426,8 @@ class Website {
   }
 
   async updateMatomoToLatest() {
+    await MatomoCli.buildMarketplaceRelease();
+
     const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
 
     await browser.url(`${await this.baseUrl()}/wp-admin/plugin-install.php`);
