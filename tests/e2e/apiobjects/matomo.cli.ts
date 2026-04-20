@@ -33,7 +33,7 @@ class MatomoCli {
     }
 
     const command = 'RELEASE_NAME=test npm run release:build';
-    execSync(command, { cwd: path.join(process.cwd(), 'marketplace') });
+    const o = execSync(command, { cwd: path.join(process.cwd(), 'marketplace') });
 
     if (!fs.existsSync(pathToRelease)) {
       throw new Error(`Could not find built release at ${pathToRelease}.`);

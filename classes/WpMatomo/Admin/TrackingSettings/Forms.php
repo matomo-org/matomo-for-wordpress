@@ -97,12 +97,15 @@ class Forms {
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
 	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = false, $on_change = '', $is_readonly = false, $global = true, $exclude_name = false ) {
+		$value = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+		$value = $value ? $value : '';
+
 		printf(
 			'<tr id="' . esc_attr( $id ) . '-field" class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s:</label></th><td><textarea cols="80" rows="' . esc_attr( $rows ) . '" id="%s" ' . ( $exclude_name ? '' : 'name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]' ) . '" onchange="%s" spellcheck="false"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
 			esc_html( $name ),
 			esc_attr( $id ),
 			$on_change,
-			esc_textarea( $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id ) ),
+			esc_textarea( $value ),
 			$this->get_description( $id, $description, $hide_description )
 		);
 	}

@@ -22,7 +22,6 @@ class MwpMarketplaceSetupWizard {
     if (!downloadUrl) {
       throw new Error('could not extract marketplace download URL from page');
     }
-    console.log('downloadUrl', downloadUrl);
 
     const downloadPath = path.join(DOWNLOADS_DIR, path.basename(downloadUrl));
 
