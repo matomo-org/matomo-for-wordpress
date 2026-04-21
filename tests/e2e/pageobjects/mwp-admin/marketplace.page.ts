@@ -140,7 +140,7 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async bulkInstallMatomoPlugins() {
-    await $('[bulk-install-nonce]').waitForExist();
+    await $('[data-bulk-install-nonce]').waitForExist();
 
     const matomoPlugins = await browser.execute(() => {
       return [...window.jQuery('.matomo-plugin-card[data-developer="matomo-org"]')]
@@ -191,7 +191,7 @@ class MwpMarketplacePage extends MwpPage {
   async bulkActivateMatomoPlugins(installedPlugins: { name: string, slug: string }[]) {
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
-    await $('[bulk-activate-nonce]').waitForExist();
+    await $('[data-bulk-activate-nonce]').waitForExist();
 
     const nonce = await browser.execute(() => {
       return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-activate-nonce');
