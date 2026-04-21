@@ -12,6 +12,7 @@ import * as path from 'path';
 import * as url from 'url';
 import fetch from 'node-fetch';
 import MwpPage from './page.js';
+import Website from '../../website.js';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -123,7 +124,7 @@ class MwpMarketplacePage extends MwpPage {
 
   async installPlugin(plugin: string) {
     await browser.execute((p) => {
-      window.jQuery('.matomo-plugin-card[data-plugin-slug="SEOWebVitals"] .cta-container button')[0].click();
+      window.jQuery(`.matomo-plugin-card[data-plugin-slug="${p}"] .cta-container button`)[0].click();
     }, plugin);
 
     await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
@@ -132,11 +133,6 @@ class MwpMarketplacePage extends MwpPage {
   async activateInstalledPlugin() {
     await $('#wpbody-content p a.button-primary').click();
     await $('table.plugins').waitForDisplayed({ timeout: 30000 });
-  }
-
-  async showToActivatePlugins() {
-    await $('.subsubsub li.activate > a').click();
-    await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
   }
 
   async bulkInstallMatomoPlugins() {
@@ -169,12 +165,15 @@ class MwpMarketplacePage extends MwpPage {
       body.append('plugin[]', p.slug);
     });
 
-    const response = await fetch('http://localhost/6.9.4/wp-admin/admin.php?page=matomo-marketplace&tab=install', {
+    const baseUrl = await Website.baseUrl();
+    const response = await fetch(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
       method: 'POST',
       body,
     });
 
     const responseBody = await response.text();
+    console.log(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`);
+    console.log(responseBody);
     const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)].map(g => g[1]);
     installedPlugins.sort();
 
@@ -210,7 +209,8 @@ class MwpMarketplacePage extends MwpPage {
       body.append('plugin[]', p.slug);
     });
 
-    const response = await fetch('http://localhost/6.9.4/wp-admin/admin.php?page=matomo-marketplace&tab=install', {
+    const baseUrl = await Website.baseUrl();
+    const response = await fetch(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
       method: 'POST',
       body,
     });
