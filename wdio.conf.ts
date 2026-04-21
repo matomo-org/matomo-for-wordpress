@@ -144,18 +144,27 @@ export const config: Options.Testrunner = {
   //
   capabilities: [
     {
-      browserName: 'firefox',
-      "moz:debuggerAddress": true,
-      "moz:firefoxOptions": {
-        args: ['-headless'],
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: ['--headless=new', 'disable-gpu'],
         prefs: {
-          "browser.download.dir": DOWNLOADS_DIR,
-          "browser.download.folderList": 2,
-          "browser.download.manager.showWhenStarting": false,
-          "browser.helperApps.neverAsk.saveToDisk": "*/*"
-        }
+          "download.default_directory": DOWNLOADS_DIR,
+        },
       }
     } as any,
+    // {
+    //   browserName: 'firefox',
+    //   "moz:debuggerAddress": true,
+    //   "moz:firefoxOptions": {
+    //     args: ['-headless'],
+    //     prefs: {
+    //       "browser.download.dir": DOWNLOADS_DIR,
+    //       "browser.download.folderList": 2,
+    //       "browser.download.manager.showWhenStarting": false,
+    //       "browser.helperApps.neverAsk.saveToDisk": "*/*"
+    //     }
+    //   }
+    // } as any,
   ],
 
   //
