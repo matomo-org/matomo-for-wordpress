@@ -272,6 +272,7 @@ class FrontController extends \Piwik\Singleton
         $this->handleSSLRedirection();
         \Piwik\Plugin\Manager::getInstance()->loadPluginTranslations();
         \Piwik\Plugin\Manager::getInstance()->loadActivatedPlugins();
+		error_log('plugins loaded: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
         // try to connect to the database
         try {
             \Piwik\Db::createDatabaseObject();
@@ -377,6 +378,7 @@ class FrontController extends \Piwik\Singleton
          * Piwik uses this event to check for updates to Piwik.
          */
         \Piwik\Piwik::postEvent('Platform.initialized');
+		error_log('front controller init done');
     }
     protected function prepareDispatch($module, $action, $parameters)
     {

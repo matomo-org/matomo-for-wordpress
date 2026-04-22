@@ -98,7 +98,9 @@ class Manager
      */
     public function loadActivatedPlugins()
     {
+		error_log('matomo debug: loading activated plugins');
         $pluginsToLoad = $this->getActivatedPluginsFromConfig();
+		error_log('matomo debug: plugins to load, ' . var_export($pluginsToLoad, true));
         if (!SettingsPiwik::isInternetEnabled()) {
             $pluginsToLoad = array_filter($pluginsToLoad, function ($name) {
                 $plugin = \Piwik\Plugin\Manager::makePluginClass($name);
@@ -929,8 +931,10 @@ class Manager
      */
     private function reloadActivatedPlugins()
     {
+		error_log('matomo debug: reloadActivatedPlugins');
         $pluginsToPostPendingEventsTo = array();
         foreach ($this->pluginsToLoad as $pluginName) {
+			error_log('matomo debug: reload plugin ' . $pluginName);
             $pluginsToPostPendingEventsTo = $this->reloadActivatedPlugin($pluginName, $pluginsToPostPendingEventsTo);
         }
         // post pending events after all plugins are successfully loaded
@@ -941,6 +945,9 @@ class Manager
     private function reloadActivatedPlugin($pluginName, $pluginsToPostPendingEventsTo)
     {
         if ($this->isPluginLoaded($pluginName) || $this->isPluginThirdPartyAndBogus($pluginName)) {
+			if ($this->isPluginThirdPartyAndBogus($pluginName)) {
+				error_log($pluginName . ' is blogus');
+			}
             return $pluginsToPostPendingEventsTo;
         }
         $newPlugin = $this->loadPlugin($pluginName);

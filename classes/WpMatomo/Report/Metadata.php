@@ -35,6 +35,7 @@ class Metadata {
 		[ $period, $date ] = $report_dates->detect_period_and_date( $report_date );
 
 		if ( $idsite ) {
+			error_log('do_bootstrap before');
 			Bootstrap::do_bootstrap();
 
 			$all_reports = Request::processRequest(

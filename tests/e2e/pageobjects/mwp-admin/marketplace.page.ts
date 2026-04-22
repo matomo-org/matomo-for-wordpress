@@ -10,7 +10,6 @@ import { $, browser, expect } from '@wdio/globals';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-import fetch from 'node-fetch';
 import MwpPage from './page.js';
 import Website from '../../website.js';
 
@@ -119,7 +118,7 @@ class MwpMarketplacePage extends MwpPage {
 
     await $('#wpbody-content .activate-license').click();
 
-    await $('#wpbody-content .matomo-marketplace-install-plugins').waitForDisplayed({ timeout: 120000 });
+    await $('#wpbody-content #matomo-licenses').waitForDisplayed({ timeout: 120000 });
   }
 
   async installPlugin(plugin: string) {
@@ -136,10 +135,11 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async bulkInstallMatomoPlugins() {
-    await $('[data-bulk-install-nonce]').waitForExist();
+    await $('[data-bulk-plugins-nonce]').waitForExist();
 
     const matomoPlugins = await browser.execute(() => {
       return [...window.jQuery('.matomo-plugin-card[data-developer="matomo-org"]')]
+        .filter(e => e.querySelector('.cta-container button[disabled]') === null)
         .map((e) => ({
           slug: e.getAttribute('data-plugin-slug'),
           name: window.jQuery(e).find('.card-title').text().replace('›', '').trim(),
@@ -149,7 +149,7 @@ class MwpMarketplacePage extends MwpPage {
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
     const nonce = await browser.execute(() => {
-      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-install-nonce');
+      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
     });
 
     const body = new URLSearchParams({
@@ -166,20 +166,28 @@ class MwpMarketplacePage extends MwpPage {
     });
 
     const baseUrl = await Website.baseUrl();
-    const response = await fetch(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-      method: 'POST',
-      body,
-    });
+    const responseBody = await browser.execute((bu, b) => {
+      return new Promise((resolve, reject) => {
+        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+          method: 'POST',
+          data: b,
+          dataType: 'html',
+          complete: resolve,
+          error: function (jqxhr, textStatus, errorThrown) {
+            reject(errorThrown || textStatus);
+          }
+        });
+      });
+    }, baseUrl, body.toString()) as string;
 
-    const responseBody = await response.text();
-    console.log(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`);
-    console.log(responseBody);
-    const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)].map(g => g[1]);
+    const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
+      .map(g => g[1].replaceAll('&amp;', '&'));
     installedPlugins.sort();
 
     const allPluginsName = matomoPlugins.map(p => p.name);
     allPluginsName.sort();
 
+    console.log(installedPlugins);
     expect(installedPlugins).toEqual(allPluginsName);
 
     await browser.refresh(); // for new nonce values
@@ -190,10 +198,10 @@ class MwpMarketplacePage extends MwpPage {
   async bulkActivateMatomoPlugins(installedPlugins: { name: string, slug: string }[]) {
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
-    await $('[data-bulk-activate-nonce]').waitForExist();
+    await $('[data-bulk-plugins-nonce]').waitForExist();
 
     const nonce = await browser.execute(() => {
-      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-activate-nonce');
+      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
     });
 
     const body = new URLSearchParams({
@@ -210,16 +218,24 @@ class MwpMarketplacePage extends MwpPage {
     });
 
     const baseUrl = await Website.baseUrl();
-    const response = await fetch(`${baseUrl}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-      method: 'POST',
-      body,
-    });
+    const responseBody = await browser.execute((bu, b) => {
+      return new Promise((resolve, reject) => {
+        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+          method: 'POST',
+          data: b,
+          dataType: 'html',
+          complete: resolve,
+          error: function (jqxhr, textStatus, errorThrown) {
+            reject(errorThrown || textStatus);
+          }
+        });
+      });
+    }, baseUrl, body.toString()) as string;
 
-    const responseBody = await response.text();
     let activatedPlugins = (/<p>\s*The following plugins were activated successfully: (.*?)\.\s*<\/p>/g.exec(responseBody) || ['', ''])[1]
       .replace(/<\/?strong>/g, '')
-      .split(/\band\b/g)
-      .map(p => p.trim());
+      .split(/(?:\band\b)|,/g)
+      .map(p => p.trim().replaceAll('&amp;', '&'));
     activatedPlugins.sort();
 
     const allPluginsName = installedPlugins.map(p => p.name);
