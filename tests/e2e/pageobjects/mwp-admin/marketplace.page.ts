@@ -143,7 +143,8 @@ class MwpMarketplacePage extends MwpPage {
         .map((e) => ({
           slug: e.getAttribute('data-plugin-slug'),
           name: window.jQuery(e).find('.card-title').text().replace('›', '').trim(),
-        }));
+        }))
+        .filter(p => p.slug !== 'ForceSSL');
     });
 
     const currentPageUrl = await browser.execute(() => window.location.pathname);

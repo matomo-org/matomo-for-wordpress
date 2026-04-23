@@ -13,6 +13,7 @@ use Exception;
 use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Container\ContainerDoesNotExistException;
 use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
@@ -112,6 +113,7 @@ class Installer {
 			}
 
 			Bootstrap::bootstrap_environment();
+			error_log('install 0: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
 				throw new NotYetInstalledException( 'Not yet installed' );
@@ -121,18 +123,24 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
+			error_log('install 1: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 			if ( $this->is_install_in_progress() ) {
+				error_log((new \Exception())->getTraceAsString());
 				return false;
 			}
+			error_log('install 2: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			$this->mark_install_started();
 
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
+			error_log('install 3: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			$this->install_plugins_one_at_a_time();
+			error_log('install 4: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			$this->update_components();
+			error_log('install 5: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			update_option( self::OPTION_NAME_INSTALL_DATE, time() );
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
@@ -140,18 +148,26 @@ class Installer {
 				update_option( self::OPTION_NAME_INSTALL_VERSION, $plugin_data['Version'] );
 			}
 
+			error_log('install 6: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 			$this->create_website();
+			error_log('install 7: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 			$this->create_user(); // we sync users as early as possible to make sure things are set up correctly
+			error_log('install 8: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 			$this->install_tracker();
+			error_log('install 9: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
-			try {
-				$this->logger->log( 'Matomo will now init the environment' );
-				$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
-				$environment->init();
-			} catch ( Exception $e ) {
-				$this->logger->log( 'Ignoring error environment init' );
-				$this->logger->log_exception( 'install_env_init', $e );
+			if ( ! $this->is_environment_set_up() ) {
+				try {
+					$this->logger->log( 'Matomo will now init the environment' );
+					$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
+					$environment->init();
+				} catch ( Exception $e ) {
+					$this->logger->log( 'Ignoring error environment init' );
+					$this->logger->log_exception( 'install_env_init', $e );
+				}
 			}
+
+			error_log('install 10: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			try {
 				// should load and install plugins
@@ -160,9 +176,11 @@ class Installer {
 				$controller = \Piwik\FrontController::getInstance();
 				$controller->init();
 			} catch ( Exception $e ) {
+				error_log('frontcontroller init exception: ' . $e->getTraceAsString());
 				$this->logger->log( 'Ignoring error frontcontroller init' );
 				$this->logger->log_exception( 'install_front_init', $e );
 			}
+			error_log('install 11: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			try {
 				// sync user now again after installing plugins...
@@ -171,6 +189,7 @@ class Installer {
 			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_create_user', $e );
 			}
+			error_log('install 12: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			try {
 				// update plugins if there are any
@@ -178,6 +197,7 @@ class Installer {
 			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_update_comp', $e );
 			}
+			error_log('install 13: ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			$this->logger->log( 'Recording version and url' );
 
@@ -518,6 +538,7 @@ class Installer {
 	private function install_plugins_one_at_a_time() {
 		Config::getInstance()->PluginsInstalled = [ 'PluginsInstalled' => [] ];
 
+		error_log('install plugins 0');
 		$plugin_names     = array_map(
 			function ( $path ) {
 				return basename( dirname( $path ) );
@@ -531,25 +552,42 @@ class Installer {
 			}
 		);
 
+		error_log('install plugins 1');
 		// unload plugins since plugin instances may be holding out of date information
 		$plugin_manager = Manager::getInstance();
 		$plugin_manager->unloadPlugins();
 		$plugin_manager->loadActivatedPlugins();
+		error_log('install plugins 2');
 
 		// first, install core plugins without non-core plugins loaded
 		foreach ( $non_core_plugins as $plugin ) {
 			$plugin_manager->unloadPlugin( $plugin );
 		}
+		error_log('install plugins 3');
 
 		$plugin_manager->installLoadedPlugins();
+		error_log('install plugins 4');
 
 		// then for every non-core plugin, install one at a time
 		foreach ( $non_core_plugins as $plugin ) {
+			error_log('install plugins 5: ' . $plugin);
 			$plugin_manager->loadPlugin( $plugin );
 			$plugin_manager->installLoadedPlugins();
 		}
 
+		error_log('install plugins 6');
 		// reload activated plugins just in case something didn't go right above
 		$plugin_manager->loadActivatedPlugins();
+		error_log('install plugins 7');
+	}
+
+	private function is_environment_set_up() {
+		try {
+			StaticContainer::getContainer();
+			return true;
+		} catch ( ContainerDoesNotExistException $ex ) {
+			return false;
+		}
+		// getContainer
 	}
 }

@@ -115,11 +115,6 @@ class Bootstrap {
 
 	public function bootstrap() {
 		if ( self::is_bootstrapped() ) {
-			if (self::$saved_trace) {
-				error_log('bootstrapped first at: '.self::$saved_trace->getTraceAsString());
-			} else {
-				error_log('no saved log ' . count(Manager::getInstance()->getLoadedPluginsName()));
-			}
 			return;
 		}
 
