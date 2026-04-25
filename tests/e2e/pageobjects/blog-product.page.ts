@@ -27,7 +27,7 @@ class BlogProductPage extends Page {
   async addToCart() {
     await $('.single_add_to_cart_button').waitForExist();
     await browser.execute(() => {
-      window.jQuery('.single_add_to_cart_button')[0].click();
+      window.jQuery('.single_add_to_cart_button:visible')[0].click();
     });
 
     await browser.waitUntil(async () => {
@@ -52,7 +52,9 @@ class BlogProductPage extends Page {
       window.jQuery('a:contains("View cart"):visible')[0].click();
     });
 
-    await browser.waitUntil(() => {
+    await browser.waitUntil(async () => {
+      console.log('cookies');
+      console.log(await browser.getCookies());
       return browser.execute(() => {
         // the checkout button can have different classes when run locally vs. CI
         return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;

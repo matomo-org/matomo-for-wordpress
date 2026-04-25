@@ -81,9 +81,29 @@ add_action(
 	function () {
 		$use_different_user_agent = get_option( 'matomo_test_user_agent' );
 		if ( $use_different_user_agent ) {
-			$user_agent_str = wp_json_encode( 'ua=' . rawurlencode( $use_different_user_agent ) );
+			$user_agent_str = wp_json_encode( 'ua=' . rawurlencode( $use_different_user_agent ) . '&unsetch=1' );
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo "<script>window._paq = window._paq || []; _paq.push(['appendToTrackingUrl', $user_agent_str])</script>";
+		}
+	}
+);
+add_action(
+	'plugins_loaded',
+	function () {
+		// unset client hints so only custom user agent is used
+		if ( ! empty( $_REQUEST['unsetch'] ) ) {
+			foreach ($_SERVER as $key => $value) {
+				if (
+					0 === strpos( strtolower( $key ), strtolower( 'HTTP_SEC_CH_UA' ) )
+					|| 'X_HTTP_REQUESTED_WITH' === strtoupper( $key )
+				) {
+					unset( $_SERVER[$key] );
+				}
+			}
+
+			unset($_GET['uadata']);
+			unset($_POST['uadata']);
+			unset($_REQUEST['uadata']);
 		}
 	}
 );

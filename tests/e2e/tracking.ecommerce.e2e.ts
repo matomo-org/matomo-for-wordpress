@@ -90,7 +90,9 @@ describe('Tracking (Ecommerce)', function() {
     }
 
     before(async () => {
-      const newUserAgent = 'Mozilla/5.0 (PlayStation; PlayStation 5/10.01) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
+      // user agent must be for a different browser than browser being used by webdriverio
+      // otherwise matomo which match to the visitor in the previous test due to config ID matching.
+      const newUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0';
       await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
         method: 'POST',
         headers:{
@@ -126,18 +128,10 @@ describe('Tracking (Ecommerce)', function() {
         idSite: '1',
         lastMinutes: '60',
       }));
-      console.log('countersBefore');
-      console.log(countersBefore);
 
       // set new visitor
-      let cookies = await browser.getCookies();
-      for (let name in cookies) {
-        if (/^_pk_/.test(name)) {
-          await browser.deleteCookie(name);
-        }
-      }
+      await browser.deleteCookies();
 
-      fs.appendFileSync(process.cwd() + '/docker/wordpress/test/wp-content/debug.log', "[ECOMMERCE TRACKING START]\n");
       await BlogHomepagePage.open();
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
       await checkPageHasForcedVisitorId();
@@ -161,8 +155,6 @@ describe('Tracking (Ecommerce)', function() {
         idSite: '1',
         lastMinutes: '60',
       }));
-      console.log('counters');
-      console.log(counters);
 
       expect(counters).toHaveLength(1);
       expect(parseInt(counters[0].visits, 10)).toEqual(parseInt(countersBefore[0].visits, 10) + 1);
