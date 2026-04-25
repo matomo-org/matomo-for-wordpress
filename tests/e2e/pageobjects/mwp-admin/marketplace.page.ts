@@ -188,7 +188,6 @@ class MwpMarketplacePage extends MwpPage {
     const allPluginsName = matomoPlugins.map(p => p.name);
     allPluginsName.sort();
 
-    console.log(installedPlugins);
     expect(installedPlugins).toEqual(allPluginsName);
 
     await browser.refresh(); // for new nonce values

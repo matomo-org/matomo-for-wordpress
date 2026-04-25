@@ -125,6 +125,8 @@ describe('Tracking (Ecommerce)', function() {
         idSite: '1',
         lastMinutes: '60',
       }));
+      console.log('countersBefore');
+      console.log(countersBefore);
 
       // set new visitor
       let cookies = await browser.getCookies();
@@ -157,6 +159,8 @@ describe('Tracking (Ecommerce)', function() {
         idSite: '1',
         lastMinutes: '60',
       }));
+      console.log('counters');
+      console.log(counters);
 
       expect(counters).toHaveLength(1);
       expect(parseInt(counters[0].visits, 10)).toEqual(parseInt(countersBefore[0].visits, 10) + 1);
