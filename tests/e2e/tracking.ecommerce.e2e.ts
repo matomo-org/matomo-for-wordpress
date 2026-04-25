@@ -15,6 +15,7 @@ import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
+import * as fs from "node:fs";
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
@@ -59,7 +60,7 @@ describe('Tracking (Ecommerce)', function() {
     );
 
     // even checking for ordered or abandonedCart, still fails randomly
-    // expect(visitsWithEcommerceOrder.length).toEqual(1);
+    expect(visitsWithEcommerceOrder.length).toEqual(1);
   });
 
   describe('cookieless', () => {
@@ -89,7 +90,7 @@ describe('Tracking (Ecommerce)', function() {
     }
 
     before(async () => {
-      const newUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.1958';
+      const newUserAgent = 'Mozilla/5.0 (PlayStation; PlayStation 5/10.01) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
       await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
         method: 'POST',
         headers:{
@@ -136,6 +137,7 @@ describe('Tracking (Ecommerce)', function() {
         }
       }
 
+      fs.appendFileSync(process.cwd() + '/docker/wordpress/test/wp-content/debug.log', "[ECOMMERCE TRACKING START]\n");
       await BlogHomepagePage.open();
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
       await checkPageHasForcedVisitorId();

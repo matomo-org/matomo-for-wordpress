@@ -1055,8 +1055,10 @@ class Common
         $logger = StaticContainer::get(LoggerInterface::class);
         if (is_array($info) || is_object($info)) {
             $out = var_export($info, \true);
+			error_log($out);
             $logger->debug($out);
         } else {
+			error_log($info);
             $logger->debug($info);
         }
     }
