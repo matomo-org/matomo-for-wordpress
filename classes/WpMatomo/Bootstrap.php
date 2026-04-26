@@ -75,7 +75,6 @@ class Bootstrap {
 			return;
 		}
 
-		error_log('bootstrap_environment before');
 		self::$saved_trace = new \Exception();
 		if ( ! self::$are_incompatible_plugins_filtered ) {
 			matomo_filter_incompatible_plugins( $GLOBALS['MATOMO_PLUGINS_ENABLED'] );
@@ -125,7 +124,6 @@ class Bootstrap {
 
 		FrontController::unsetInstance();
 		$controller = FrontController::getInstance();
-		error_log('front controller init');
 		$controller->init();
 
 		add_action(

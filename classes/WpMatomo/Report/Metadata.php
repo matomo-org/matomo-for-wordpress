@@ -35,9 +35,7 @@ class Metadata {
 		[ $period, $date ] = $report_dates->detect_period_and_date( $report_date );
 
 		if ( $idsite ) {
-			error_log('do_bootstrap before (metadata class): ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 			Bootstrap::do_bootstrap();
-			error_log('plugins loaded (metadata class): ' . count(\Piwik\Plugin\Manager::getInstance()->getLoadedPluginsName()));
 
 			$all_reports = Request::processRequest(
 				'API.getReportMetadata',

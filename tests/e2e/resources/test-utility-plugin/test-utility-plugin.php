@@ -92,18 +92,19 @@ add_action(
 	function () {
 		// unset client hints so only custom user agent is used
 		if ( ! empty( $_REQUEST['unsetch'] ) ) {
-			foreach ($_SERVER as $key => $value) {
+			foreach ( $_SERVER as $key => $value ) {
 				if (
 					0 === strpos( strtolower( $key ), strtolower( 'HTTP_SEC_CH_UA' ) )
 					|| 'X_HTTP_REQUESTED_WITH' === strtoupper( $key )
 				) {
-					unset( $_SERVER[$key] );
+					unset( $_SERVER[ $key ] );
 				}
 			}
 
-			unset($_GET['uadata']);
-			unset($_POST['uadata']);
-			unset($_REQUEST['uadata']);
+			unset( $_GET['uadata'] );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			unset( $_POST['uadata'] );
+			unset( $_REQUEST['uadata'] );
 		}
 	}
 );
