@@ -52,6 +52,7 @@ class BlogProductPage extends Page {
       window.jQuery('a:contains("View cart"):visible')[0].click();
     });
 
+    console.log('checking');
     await browser.waitUntil(async () => {
       console.log('cookies');
       console.log(await browser.getCookies());
