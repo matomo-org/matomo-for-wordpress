@@ -131,6 +131,7 @@ describe('Tracking (Ecommerce)', function() {
 
       // set new visitor
       await browser.deleteCookies();
+      await Website.login();
 
       await BlogHomepagePage.open();
       await BlogHomepagePage.waitForTrackingRequest(1); // pageview + product view in one request
