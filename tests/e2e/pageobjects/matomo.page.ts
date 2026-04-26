@@ -52,6 +52,21 @@ export default class MatomoPage extends Page {
       $('nav .badge-menu-item-container').closest('li').remove();
     });
     await this.disableHoverStyles();
+
+    // on chrome table cell borders can sometimes fail to render. to workaround this,
+    // we add a style disabling the border and remove the style soon after to force
+    // a re-render of the rows
+    await this.addStylesToPage(`
+      table.dataTable tr:not(.subDataTableContainer) td {
+        border-bottom: none !important;
+      }
+    `, 'temp-reset-row-borders');
+
+    await browser.pause(500);
+
+    await browser.execute(() => {
+      $('style#temp-reset-row-borders').remove();
+    });
     await browser.pause(500);
   }
 

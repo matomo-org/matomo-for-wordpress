@@ -163,10 +163,11 @@ export default class Page {
     await browser.pause(500); // wait for matomo to process the tracking requests
   }
 
-  async addStylesToPage(css: string) {
-    await browser.execute(function (c) {
-      document.head.insertAdjacentHTML('beforeend', `<style>${c}</style>`);
-    } as any, css);
+  async addStylesToPage(css: string, elementId: string|null = null) {
+    await $('head').waitForExist();
+    await browser.execute(function (c, id) {
+      document.head.insertAdjacentHTML('beforeend', `<style${id ? ` id="${id}"` : ''}>${c}</style>`);
+    } as any, css, elementId);
     await browser.pause(500); // wait for the browser to finish rendering
   }
 
