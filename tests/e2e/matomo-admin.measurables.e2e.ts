@@ -21,7 +21,7 @@ describe('Matomo Admin > Measurables', () => {
 
     await GoalsAdminPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.measurables.goals')
+      await browser.checkFullPageScreen(`matomo-admin.measurables.goals.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
@@ -30,7 +30,7 @@ describe('Matomo Admin > Measurables', () => {
 
     await CustomDimensionsAdminPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.measurables.custom-dimensions')
+      await browser.checkFullPageScreen(`matomo-admin.measurables.custom-dimensions.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 });

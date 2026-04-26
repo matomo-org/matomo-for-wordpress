@@ -52,11 +52,7 @@ class BlogProductPage extends Page {
       window.jQuery('a:contains("View cart"):visible')[0].click();
     });
 
-    console.log('checking');
-    console.log((new Error()).stack);
     await browser.waitUntil(async () => {
-      console.log('cookies');
-      console.log((await browser.getCookies()).map(c => c.name));
       return browser.execute(() => {
         // the checkout button can have different classes when run locally vs. CI
         return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;

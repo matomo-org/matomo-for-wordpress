@@ -24,7 +24,7 @@ describe('Matomo Admin > Home', () => {
 
     await MatomoHomePage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.home')
+      await browser.checkFullPageScreen(`matomo-admin.home.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 });
