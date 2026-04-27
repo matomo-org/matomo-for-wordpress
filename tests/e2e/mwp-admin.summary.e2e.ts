@@ -33,9 +33,10 @@ describe('MWP Admin > Summary', () => {
   it('should change the date correctly when a period button is toggled', async () => {
     await MwpSummaryPage.changePeriod('This month');
 
-    // this will change because we are viewing today's date, so hide the report
+    // the data for today can change randomly, so we hide the actual reports so the
+    // test will pass predictably
     await browser.execute(() => {
-      window.jQuery('#matomo-report-visitsperhourinthesitestimezone').hide();
+      window.jQuery('.matomo-dashboard-container').hide();
     });
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();

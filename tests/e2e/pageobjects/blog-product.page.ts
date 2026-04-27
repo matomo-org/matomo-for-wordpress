@@ -52,12 +52,17 @@ class BlogProductPage extends Page {
       window.jQuery('a:contains("View cart"):visible')[0].click();
     });
 
-    await browser.waitUntil(async () => {
-      return browser.execute(() => {
-        // the checkout button can have different classes when run locally vs. CI
-        return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
-      });
-    }, { timeout: 60000 });
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(() => {
+          // the checkout button can have different classes when run locally vs. CI
+          return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
+        });
+      }, { timeout: 60000 });
+    } catch (e) {
+      console.log('cookies found:', (await browser.getCookies()).map(c => c.name));
+      throw e;
+    }
   }
 
   async searchProducts(searchText: string) {

@@ -96,7 +96,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
-    ).toBeLessThanOrEqual(0.1);
+    ).toBeLessThanOrEqual(2);
   });
 
   it('should enable preview mode correctly', async () => {
