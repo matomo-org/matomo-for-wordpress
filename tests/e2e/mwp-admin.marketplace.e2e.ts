@@ -76,6 +76,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.setupWizard.uploadPluginAndActivate(pathToPlugin);
     await MwpMarketplacePage.setupWizard.waitForReload();
 
+    await MwpMarketplacePage.sortPluginsAlphabetically();
     await MwpMarketplacePage.removeThirdPartyPlugins();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(

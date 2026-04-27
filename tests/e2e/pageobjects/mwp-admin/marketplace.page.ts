@@ -81,9 +81,26 @@ class MwpMarketplacePage extends MwpPage {
     await $('.matomo-plugin-card,.matomo-marketplace-wizard').waitForExist({ timeout: 120000 });
 
     if (await $('.matomo-plugin-card').isExisting()) {
+      // change sort to alphabetical
+      await this.sortPluginsAlphabetically();
+
       // remove most plugins so the screenshot will stay the same over time
       await this.removeThirdPartyPlugins();
     }
+  }
+
+  async sortPluginsAlphabetically() {
+    await browser.execute(() => {
+      const element = document.querySelector('.matomo-plugin-filters > select');
+
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+      setter.call(element, 'displayName');
+
+      const event = new Event('change', { bubbles: true });
+      element.dispatchEvent(event);
+    });
+    await browser.pause(1000);
+    await $('.matomo-plugin-card').waitForExist({ timeout: 120000 });
   }
 
   async removeThirdPartyPlugins() {
