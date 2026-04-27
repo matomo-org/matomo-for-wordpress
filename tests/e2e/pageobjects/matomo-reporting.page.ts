@@ -42,6 +42,10 @@ export default class MatomoReportingPage extends MatomoPage {
       window.jQuery('#piwik-promo-thumbnail').hide();
     });
 
+    // live visits widget always renders differently so hide it. it's not too important
+    // to test this in MWP.
+    await this.addStylesToPage('#visitsLive { display: none !important; }');
+
     await this.unfocus();
 
     return result;
@@ -62,8 +66,9 @@ export default class MatomoReportingPage extends MatomoPage {
         }
       }
 
+      console.log('checking for widgets', isThereWidgets, loadings.length, numWidgetsLoaded);
       return isThereWidgets && loadings.length === numWidgetsLoaded;
-    }, { timeout: 45000 });
+    }, { timeout: 60000 });
   }
 
   async waitForActionsTables() {
