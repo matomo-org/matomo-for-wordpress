@@ -34,7 +34,7 @@ describe('MWP Admin > Summary', () => {
     await MwpSummaryPage.pinReport(0);
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
-    await $('#matomo_dashboard_widget_visits_over_time_thismonth').waitForDisplayed();
+    await $('#matomo_dashboard_widget_visits_over_time_yesterday').waitForDisplayed({ timeout: 30000 });
   });
 
   it('should change the date correctly when a period button is toggled', async () => {

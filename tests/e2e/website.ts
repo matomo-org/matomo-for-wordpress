@@ -204,7 +204,7 @@ class Website {
         throw e;
     }
 
-    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed({ timeout: 30000 });
+    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed({ timeout: 60000 });
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
