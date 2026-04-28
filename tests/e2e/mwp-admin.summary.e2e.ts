@@ -30,6 +30,13 @@ describe('MWP Admin > Summary', () => {
     ).toBeLessThan(0.01);
   });
 
+  it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {
+    await MwpSummaryPage.pinReport(0);
+
+    await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
+    await $('#matomo_dashboard_widget_visits_over_time_thismonth').waitForDisplayed();
+  });
+
   it('should change the date correctly when a period button is toggled', async () => {
     await MwpSummaryPage.changePeriod('This month');
 
@@ -43,12 +50,5 @@ describe('MWP Admin > Summary', () => {
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.summary.thismonth.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(5.0);
-  });
-
-  it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {
-    await MwpSummaryPage.pinReport(0);
-
-    await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
-    await $('#matomo_dashboard_widget_visits_over_time_thismonth').waitForDisplayed();
   });
 });

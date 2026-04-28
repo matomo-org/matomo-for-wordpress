@@ -29,9 +29,9 @@ class MwpSummaryPage extends MwpPage {
   }
 
   async pinReport(index: number) {
-    const boxes = await $$('.postbox');
-    const pin = await boxes[index].$('button.handlediv');
-    await pin.click();
+    await browser.execute((i) => {
+      window.jQuery('.postbox button.handlediv')[i].click();
+    }, index);
 
     await browser.waitUntil(async () => {
       return await browser.execute(async () => window.jQuery('.notice.notice-success:contains(Dashboard updated.)').length);

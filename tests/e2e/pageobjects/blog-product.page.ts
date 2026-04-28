@@ -32,13 +32,13 @@ class BlogProductPage extends Page {
 
     await browser.waitUntil(async () => {
       return browser.execute(() => {
-        return window.jQuery && window.jQuery('a:contains("View cart"):visible').length > 0;
+        return window.jQuery && window.jQuery('.woocommerce-message a:contains("View cart"):visible').length > 0;
       });
     });
 
     await Website.retry(3, async () => {
       let cp = await browser.execute(() => {
-        return window.jQuery ? window.jQuery('a:contains("View cart"):visible').attr('href') : null;
+        return window.jQuery ? window.jQuery('.woocommerce-message a:contains("View cart"):visible').attr('href') : null;
       });
 
       if (!cp) {
@@ -49,7 +49,7 @@ class BlogProductPage extends Page {
     }, 500);
 
     await browser.execute(() => {
-      window.jQuery('a:contains("View cart"):visible')[0].click();
+      window.jQuery('.woocommerce-message a:contains("View cart"):visible')[0].click();
     });
 
     try {
