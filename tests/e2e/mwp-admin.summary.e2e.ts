@@ -38,6 +38,7 @@ describe('MWP Admin > Summary', () => {
   });
 
   it('should change the date correctly when a period button is toggled', async () => {
+    await MwpSummaryPage.open();
     await MwpSummaryPage.changePeriod('This month');
 
     // the data for today can change randomly, so we hide the actual reports so the
