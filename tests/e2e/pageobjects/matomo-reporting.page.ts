@@ -66,7 +66,6 @@ export default class MatomoReportingPage extends MatomoPage {
         }
       }
 
-      console.log('checking for widgets', isThereWidgets, loadings.length, numWidgetsLoaded);
       return isThereWidgets && loadings.length === numWidgetsLoaded;
     }, { timeout: 60000 });
   }

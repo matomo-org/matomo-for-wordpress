@@ -30,7 +30,7 @@ class MwpSummaryPage extends MwpPage {
 
   async pinReport(index: number) {
     await browser.execute((i) => {
-      window.jQuery('.postbox button.handlediv')[i].click();
+      window.jQuery('.postbox button.handlediv a')[i].click();
     }, index);
 
     await browser.waitUntil(async () => {

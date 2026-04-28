@@ -24,6 +24,11 @@ describe('MWP Admin > Settings', () => {
   it('should load the tracking tab correctly', async () => {
     await MwpSettingsPage.open();
 
+    // sometimes it loads deselected
+    await browser.execute(() => {
+      window.jQuery('#track_mode_default')[0].click();
+    });
+
     await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
