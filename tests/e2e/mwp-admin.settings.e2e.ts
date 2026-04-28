@@ -25,9 +25,7 @@ describe('MWP Admin > Settings', () => {
     await MwpSettingsPage.open();
 
     // sometimes it loads deselected
-    await browser.execute(() => {
-      window.jQuery('#track_mode_default')[0].click();
-    });
+    await MwpSettingsPage.selectTrackMode('default');
 
     await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();

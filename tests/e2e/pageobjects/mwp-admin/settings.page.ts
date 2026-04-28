@@ -106,6 +106,7 @@ class MwpSettingsPage extends MwpPage {
         return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
       });
     });
+    await browser.pause(500);
   }
 
   async removeTagManagerContainerIds() {
