@@ -86,6 +86,8 @@ class MwpMarketplacePage extends MwpPage {
 
       // remove most plugins so the screenshot will stay the same over time
       await this.removeThirdPartyPlugins();
+
+      await this.waitForImages();
     }
   }
 
