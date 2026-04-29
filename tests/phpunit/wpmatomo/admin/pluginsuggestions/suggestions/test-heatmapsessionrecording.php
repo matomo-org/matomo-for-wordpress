@@ -34,9 +34,6 @@ class HeatmapSessionRecordingTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $suggestion->should_trigger() );
 	}
 
-	/**
-	 * @group only
-	 */
 	public function test_get_trigger_desc_long_includes_bounce_rate_in_text() {
 		$this->track_test_data();
 
