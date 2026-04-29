@@ -35,6 +35,7 @@ export default class MatomoReportingPage extends MatomoPage {
 
     await this.waitForPageWidgets();
     await browser.pause(500);
+    await this.waitForEvolutionAnnotations();
     await this.waitForImages();
 
     // hide video thumbnail since it renders differently randomly
@@ -49,6 +50,16 @@ export default class MatomoReportingPage extends MatomoPage {
     await this.unfocus();
 
     return result;
+  }
+
+  async waitForEvolutionAnnotations() {
+    await browser.waitUntil(async () => {
+      const isEvolutionAnnotationsLoaded = await browser.execute(
+        () => $('.dataTableVizEvolution').length === $('.evolution-annotations').length
+      );
+
+      return isEvolutionAnnotationsLoaded;
+    }, { timeout: 30000 });
   }
 
   async waitForPageWidgets() {

@@ -74,15 +74,7 @@ export default class MatomoPage extends Page {
     try {
       await browser.waitUntil(async () => {
         const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
-        if ( loadingGifs !== 0 ) {
-          return false;
-        }
-
-        const isEvolutionAnnotationsLoaded = await browser.execute(
-          () => $('.dataTableVizEvolution').length === $('.evolution-annotations').length
-        );
-
-        return isEvolutionAnnotationsLoaded;
+        return loadingGifs !== 0;
       }, { timeout: 30000 });
     } catch (e: any) {
       if (!/condition timed out/i.test(e.message)) { // don't fail the whole test if this times out for some reason
