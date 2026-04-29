@@ -4,6 +4,7 @@
  */
 
 use WpMatomo\Report\Dates;
+use WpMatomo\User;
 
 class ReportDatesTest extends MatomoAnalytics_TestCase {
 
@@ -12,10 +13,13 @@ class ReportDatesTest extends MatomoAnalytics_TestCase {
 	 */
 	private $dates;
 
+	private $user_id;
+
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->dates = new Dates();
+		$this->dates   = new Dates();
+		$this->user_id = $this->create_set_super_admin();
 	}
 
 	public function test_get_supported_dates() {
@@ -54,7 +58,7 @@ class ReportDatesTest extends MatomoAnalytics_TestCase {
 	public function test_get_date_from_query( $query, $default_date, $expected ) {
 		$_REQUEST = $query;
 
-		wp_set_current_user( 1 );
+		wp_set_current_user( $this->user_id );
 		\Piwik\Access::getInstance()->reloadAccess( new \Piwik\Plugins\WordPress\SessionAuth() );
 
 		$login = \Piwik\Access::getInstance()->getLogin();
