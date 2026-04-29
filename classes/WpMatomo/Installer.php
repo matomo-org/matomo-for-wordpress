@@ -563,6 +563,5 @@ class Installer {
 		} catch ( ContainerDoesNotExistException $ex ) {
 			return false;
 		}
-		// getContainer
 	}
 }
