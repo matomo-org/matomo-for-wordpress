@@ -55,7 +55,7 @@ export default class MatomoReportingPage extends MatomoPage {
   async waitForEvolutionAnnotations() {
     await browser.waitUntil(async () => {
       const isEvolutionAnnotationsLoaded = await browser.execute(
-        () => $('.dataTableVizEvolution').length === $('.evolution-annotations').length
+        () => $('.dataTableVizEvolution,.dataTableVizStackedBarEvolution').length === $('.evolution-annotations').length
       );
 
       return isEvolutionAnnotationsLoaded;
