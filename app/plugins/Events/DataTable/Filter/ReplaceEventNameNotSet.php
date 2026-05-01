@@ -15,8 +15,6 @@ use Piwik\Plugins\Events\Archiver;
 class ReplaceEventNameNotSet extends BaseFilter
 {
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      */
     public function __construct($table)

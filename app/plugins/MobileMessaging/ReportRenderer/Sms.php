@@ -13,9 +13,6 @@ use Piwik\Plugins\MultiSites\API;
 use Piwik\ReportRenderer;
 use Piwik\Site;
 use Piwik\View;
-/**
- *
- */
 class Sms extends ReportRenderer
 {
     public const FLOAT_REGEXP = '/[-+]?[0-9]*[\\.,]?[0-9]+/';

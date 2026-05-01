@@ -28,8 +28,6 @@ class MetadataCallbackAddMetadata extends BaseFilter
     private $metadataToAdd;
     private $applyToSummaryRow;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The DataTable that will eventually be filtered.
      * @param string|array $metadataToRead The metadata to read from each row and pass to the callback.
      * @param string $metadataToAdd The name of the metadata to add.

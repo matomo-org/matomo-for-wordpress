@@ -311,6 +311,11 @@ class ArchivingHelper
                 foreach (\Piwik\Plugins\Actions\Metrics::$columnsToDeleteAfterAggregation as $name) {
                     $row->deleteColumn($name);
                 }
+                if ($idSubtable !== null) {
+                    foreach (array_values(\Piwik\Plugins\Actions\Metrics::$columnsToRenameAfterAggregation) as $name) {
+                        $row->deleteColumn($name);
+                    }
+                }
             }
         }
         // And this as well

@@ -166,7 +166,6 @@ abstract class LocationProvider
     }
     /**
      * Returns a message that should be shown as diagnostics warning if provider is used
-     *
      */
     public function getUsageWarning() : ?string
     {
@@ -483,7 +482,6 @@ abstract class LocationProvider
     /**
      * Returns true if the location provider can be used for security checks based
      * on location, such as determining the current country where the user logs in from.
-     *
      */
     public function canBeUsedForLocationBasedSecurityChecks() : bool
     {

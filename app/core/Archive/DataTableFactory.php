@@ -76,9 +76,6 @@ class DataTableFactory
     private $defaultRow;
     public const TABLE_METADATA_SITE_INDEX = 'site';
     public const TABLE_METADATA_PERIOD_INDEX = 'period';
-    /**
-     * Constructor.
-     */
     public function __construct($dataNames, $dataType, $sitesId, $periods, Segment $segment, $defaultRow)
     {
         $this->dataNames = $dataNames;

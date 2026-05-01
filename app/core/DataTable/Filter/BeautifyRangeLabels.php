@@ -48,8 +48,6 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
      */
     protected $labelPlural;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The DataTable that will be filtered.
      * @param string $labelSingular The string to use when the range being beautified
      *                              is equal to '1-1 units', eg `"1 visit"`.

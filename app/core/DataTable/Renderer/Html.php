@@ -25,7 +25,6 @@ class Html extends Renderer
     protected $i;
     /**
      * Sets the table id
-     *
      */
     public function setTableId(string $id) : void
     {
@@ -33,7 +32,6 @@ class Html extends Renderer
     }
     /**
      * Computes the dataTable output and returns the string/binary
-     *
      */
     public function render() : string
     {
@@ -133,7 +131,6 @@ class Html extends Renderer
     }
     /**
      * Computes the output for the table structure array
-     *
      */
     protected function renderDataTable() : string
     {
@@ -146,7 +143,7 @@ class Html extends Renderer
                 if ($this->translateColumnNames) {
                     $name = $this->translateColumnName($name);
                 }
-                $html .= "\t\t<th>{$name}</th>\n";
+                $html .= "\t\t<th>" . self::formatValueXml($name) . "</th>\n";
             }
         }
         $html .= "\t</tr>\n</thead>\n<tbody>\n";

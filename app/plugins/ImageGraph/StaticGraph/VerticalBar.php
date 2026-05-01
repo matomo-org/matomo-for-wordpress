@@ -8,9 +8,6 @@
  */
 namespace Piwik\Plugins\ImageGraph\StaticGraph;
 
-/**
- *
- */
 class VerticalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
 {
     public const INTERLEAVE = 0.1;

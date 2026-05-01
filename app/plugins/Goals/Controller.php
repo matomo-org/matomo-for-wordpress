@@ -26,9 +26,6 @@ use Piwik\Translation\Translator;
 use Piwik\View;
 use Piwik\ViewDataTable\Factory as ViewDataTableFactory;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
-/**
- *
- */
 class Controller extends \Piwik\Plugin\Controller
 {
     /**
@@ -280,6 +277,7 @@ class Controller extends \Piwik\Plugin\Controller
                 $requestParams['flat'] = 1;
             }
             $request = new Request($requestParams);
+            /** @var DataTable $datatable */
             $datatable = $request->process();
             $formatter = new Formatter();
             $topDimension = array();
@@ -299,6 +297,7 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if (!$dataRow) {
             $request = new Request(['method' => 'Goals.get', 'format' => 'original', 'idGoal' => $idGoal]);
+            /** @var DataTable $datatable */
             $datatable = $request->process();
             $dataRow = $datatable->getFirstRow();
         }

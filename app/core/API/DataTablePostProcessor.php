@@ -23,6 +23,7 @@ use Piwik\Plugin\Report;
 use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugins\API\Filter\DataComparisonFilter;
 use Piwik\Plugins\CoreHome\Columns\Metrics\EvolutionMetric;
+use Piwik\Plugins\PrivacyManager\DataRounding;
 use Piwik\Request;
 /**
  * Processes DataTables that should be served through Piwik's APIs. This processing handles
@@ -58,9 +59,6 @@ class DataTablePostProcessor
     private $formatter;
     private $callbackBeforeGenericFilters;
     private $callbackAfterGenericFilters;
-    /**
-     * Constructor.
-     */
     public function __construct($apiModule, $apiMethod, $request)
     {
         $this->apiModule = $apiModule;
@@ -116,6 +114,7 @@ class DataTablePostProcessor
         $dataTable = $this->applyQueuedFilters($dataTable);
         $dataTable = $this->applyRequestedColumnDeletion($dataTable);
         $dataTable = $this->applyLabelFilter($dataTable);
+        DataRounding::roundCountMetricsForRequest($dataTable, $this->request, $this->report);
         $dataTable = $this->applyMetricsFormatting($dataTable);
         return $dataTable;
     }

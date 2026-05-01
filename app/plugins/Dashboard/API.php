@@ -126,7 +126,6 @@ class API extends \Piwik\Plugin\API
      * Note: Only a super user is able to reset dashboards for other users
      * @param int $idDashboard dashboard id
      * @param string $login user the dashboard belongs
-     *
      */
     public function resetDashboardLayout($idDashboard, $login = '')
     {

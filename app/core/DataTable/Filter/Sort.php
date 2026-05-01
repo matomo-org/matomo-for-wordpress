@@ -29,8 +29,6 @@ class Sort extends BaseFilter
     public const ORDER_DESC = 'desc';
     public const ORDER_ASC = 'asc';
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      * @param string $columnToSort The name of the column to sort by.
      * @param string $order order `'asc'` or `'desc'`.

@@ -54,7 +54,6 @@ class Csv extends Renderer
     private $unsupportedColumns = [];
     /**
      * Computes the dataTable output and returns the string/binary
-     *
      */
     public function render() : string
     {
@@ -76,7 +75,6 @@ class Csv extends Renderer
     }
     /**
      * Sets the column separator
-     *
      */
     public function setSeparator(string $separator) : void
     {

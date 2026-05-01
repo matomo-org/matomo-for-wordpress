@@ -19,7 +19,7 @@ class Menu extends \Piwik\Plugin\Menu
         $userPreferences = new UserPreferences();
         $idSite = $this->getIdSite($userPreferences->getDefaultWebsiteId());
         if (Piwik::isUserHasWriteAccess($idSite)) {
-            $menu->addMeasurableItem('Goals_Goals', $this->urlForAction('manage', array('idSite' => $idSite)), 40);
+            $menu->addMeasurableItem('Goals_Goals', $this->urlForAction('manage', array('idSite' => $idSite)), 15);
         }
     }
     private function getIdSite($default = null)

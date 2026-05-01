@@ -15,8 +15,6 @@ use Piwik\Piwik;
 use Piwik\Category\Subcategory;
 use Piwik\Widget\WidgetConfig;
 use Piwik\Plugin;
-/**
- */
 class Dashboard extends \Piwik\Plugin
 {
     /**
@@ -269,6 +267,7 @@ class Dashboard extends \Piwik\Plugin
         $translationKeys[] = 'General_HelpResources';
         $translationKeys[] = 'General_Refresh';
         $translationKeys[] = 'Dashboard_ManageDashboard';
+        $translationKeys[] = 'Dashboard_ExportThisDashboard';
         $translationKeys[] = 'Dashboard_AddAWidget';
         $translationKeys[] = 'Dashboard_ResetDashboard';
         $translationKeys[] = 'Dashboard_ChangeDashboardLayout';

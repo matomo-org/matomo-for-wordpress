@@ -9,9 +9,6 @@
 namespace Piwik;
 
 use Piwik\Metrics\Formatter;
-/**
- *
- */
 class Timer
 {
     private $timerStart;

@@ -12,13 +12,8 @@ use Piwik\Cache;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Site;
 use Piwik\Plugins\Live\Settings\VisitorLogDisabled as VisitorLogDisabledSetting;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
-/**
- *
- */
 class Live extends \Piwik\Plugin
 {
     /**
@@ -46,16 +41,8 @@ class Live extends \Piwik\Plugin
      */
     public static function checkIsVisitorLogEnabled($idSite = null) : void
     {
-        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            if (VisitorLogDisabledSetting::getInstance()->getValue() === \true) {
-                throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
-            }
-        } else {
-            $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
-            if ($systemSettings->disableVisitorLog->getValue() === \true) {
-                throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
-            }
+        if (VisitorLogDisabledSetting::getInstance()->getValue() === \true) {
+            throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
         if (empty($idSite)) {
             $idSite = Common::getRequestVar('idSite', '', 'string');
@@ -63,15 +50,8 @@ class Live extends \Piwik\Plugin
         if (!empty($idSite)) {
             $idSites = Site::getIdSitesFromIdSitesString($idSite);
             foreach ($idSites as $idSite) {
-                if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-                    if (VisitorLogDisabledSetting::getInstance($idSite)->getValue() === \true) {
-                        throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
-                    }
-                } else {
-                    $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
-                    if ($settings->disableVisitorLog->getValue() === \true) {
-                        throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
-                    }
+                if (VisitorLogDisabledSetting::getInstance($idSite)->getValue() === \true) {
+                    throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
                 }
             }
         }
@@ -171,6 +151,17 @@ class Live extends \Piwik\Plugin
         $translationKeys[] = 'Live_VisitorLog';
         $translationKeys[] = 'General_ColumnNbVisitsDocumentation';
         $translationKeys[] = 'General_ColumnNbActionsDocumentation';
+        $translationKeys[] = 'Live_RealTimeVisitorCount';
+        $translationKeys[] = 'Live_NbVisitor';
+        $translationKeys[] = 'Live_NbVisitors';
+        $translationKeys[] = 'General_OneVisit';
+        $translationKeys[] = 'General_NVisits';
+        $translationKeys[] = 'General_OneAction';
+        $translationKeys[] = 'VisitsSummary_NbActionsDescription';
+        $translationKeys[] = 'Intl_OneMinute';
+        $translationKeys[] = 'Intl_NMinutes';
+        $translationKeys[] = 'Live_SimpleRealTimeWidget_Message';
+        $translationKeys[] = 'Live_QueryMaxExecutionTimeExceeded';
     }
     public function renderAction(&$renderedAction, $action, $previousAction, $visitorDetails)
     {

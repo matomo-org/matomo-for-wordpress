@@ -8,8 +8,6 @@
  */
 namespace Piwik\Plugins\Marketplace\Api\Service;
 
-/**
- */
 class Exception extends \Exception
 {
     public const HTTP_ERROR = 100;

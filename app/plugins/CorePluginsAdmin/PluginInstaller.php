@@ -20,9 +20,6 @@ use Piwik\Plugins\Marketplace\Environment;
 use Piwik\Plugins\Marketplace\Marketplace;
 use Piwik\Unzip;
 use Piwik\Plugins\Marketplace\Api\Client;
-/**
- *
- */
 class PluginInstaller
 {
     public const PATH_TO_DOWNLOAD = '/latest/plugins/';

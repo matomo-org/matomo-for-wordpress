@@ -159,7 +159,6 @@ class DataArray
         return array(\Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS => 0, \Piwik\Metrics::INDEX_GOAL_NB_VISITS_CONVERTED => 0, \Piwik\Metrics::INDEX_GOAL_REVENUE => 0, \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_ITEMS => 0);
     }
     /**
-     *
      * @param $newRowToAdd
      * @param $oldRowToUpdate
      */

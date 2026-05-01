@@ -21,7 +21,6 @@ class IdPageview extends ActionDimension
     protected $type = self::TYPE_TEXT;
     protected $nameSingular = 'Actions_ColumnIdPageview';
     /**
-     *
      * @return mixed|false
      * @api
      */

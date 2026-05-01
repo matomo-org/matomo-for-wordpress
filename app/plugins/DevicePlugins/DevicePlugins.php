@@ -13,9 +13,6 @@ use Piwik\CacheId;
 use Piwik\Columns\Dimension;
 use Piwik\Piwik;
 use Piwik\Plugin;
-/**
- *
- */
 class DevicePlugins extends \Piwik\Plugin
 {
     /**

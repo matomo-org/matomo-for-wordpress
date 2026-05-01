@@ -30,8 +30,6 @@ class DataTableGenericFilter
      */
     private $request;
     /**
-     * Constructor
-     *
      * @param $request
      */
     public function __construct($request, $report)

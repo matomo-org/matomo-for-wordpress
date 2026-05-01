@@ -23,6 +23,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\BotTracking\Metrics as BotTrackingMetrics;
 use Piwik\Plugins\CoreHome\Columns\Metrics\EvolutionMetric;
+use Piwik\Plugins\PrivacyManager\DataRounding;
 use Piwik\Plugins\Goals\Archiver;
 use Piwik\Plugins\MultiSites\Columns\Metrics\EcommerceOnlyEvolutionMetric;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
@@ -275,6 +276,8 @@ class API extends \Piwik\Plugin\API
             $dataTable->addRow($simpleTable->getFirstRow());
             unset($simpleTable);
         }
+        $roundingRequest = ['idSite' => implode(',', $idSites), 'segment' => $segment ?? ''];
+        DataRounding::roundCountMetricsForRequest($dataTable, $roundingRequest);
         return $dataTable;
     }
     /**

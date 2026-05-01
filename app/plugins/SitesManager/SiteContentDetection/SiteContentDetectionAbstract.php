@@ -23,7 +23,6 @@ abstract class SiteContentDetectionAbstract
     }
     /**
      * Returns the ID of the current detection. Automatically built from the class name (without namespace)
-     *
      */
     public static function getId() : string
     {
@@ -32,12 +31,10 @@ abstract class SiteContentDetectionAbstract
     }
     /**
      * Returns the Name of this detection (e.g. name of CMS, Framework, ...)
-     *
      */
     public static abstract function getName() : string;
     /**
      * Returns the location of the icon of this detection
-     *
      */
     public static function getIcon() : string
     {
@@ -46,12 +43,10 @@ abstract class SiteContentDetectionAbstract
     /**
      * Returns the content type this detection provides
      * May be one of TYPE_TRACKER, TYPE_CMS, TYPE_JS_FRAMEWORK, TYPE_CONSENT_MANAGER
-     *
      */
     public static abstract function getContentType() : int;
     /**
      * Returns the URL to the instruction FAQ on how to integrate Matomo (if applicable)
-     *
      */
     public static function getInstructionUrl() : ?string
     {
@@ -59,7 +54,6 @@ abstract class SiteContentDetectionAbstract
     }
     /**
      * Returns the priority the tab should be displayed with.
-     *
      */
     public static function getPriority() : int
     {
@@ -73,7 +67,6 @@ abstract class SiteContentDetectionAbstract
     public abstract function isDetected(?string $data = null, ?array $headers = null) : bool;
     /**
      * Returns the content that should be rendered into a new Tab on the no data page
-     *
      */
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
@@ -81,7 +74,6 @@ abstract class SiteContentDetectionAbstract
     }
     /**
      * Returns the content that should be displayed in the Others tab on the no data page
-     *
      */
     public function renderOthersInstruction(SiteContentDetector $detector) : string
     {
@@ -89,7 +81,6 @@ abstract class SiteContentDetectionAbstract
     }
     /**
      * Returns if the method should be recommended. Returns true if the method was detected
-     *
      */
     public function isRecommended(SiteContentDetector $detector) : bool
     {

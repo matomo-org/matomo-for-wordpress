@@ -287,7 +287,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
      *
      * See {@link DataTable::deleteColumns()}.
      *
-     * @param array $columns The columns to delete.
+     * @param list<string|int> $columns The columns to delete.
      * @param bool $deleteRecursiveInSubtables This param is currently not used.
      */
     public function deleteColumns($columns, $deleteRecursiveInSubtables = \false)
@@ -308,8 +308,8 @@ class Map implements \Piwik\DataTable\DataTableInterface
     /**
      * Deletes the given column in every contained {@link DataTable}.
      *
+     * @param string|int $name
      * @see DataTable::deleteColumn
-     * @param string $name
      */
     public function deleteColumn($name)
     {
@@ -435,7 +435,6 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * _Note: Will only add `$tableToSum` if the childTable has some rows._
      *
      * See {@link Piwik\DataTable::addDataTable()}.
-     *
      */
     public function addDataTable(DataTable $tableToSum)
     {

@@ -258,7 +258,7 @@ class API extends \Piwik\Plugin\API
      */
     public function getFirstVisitForVisitorId($idSite, $visitorId)
     {
-        Piwik::checkUserHasSomeViewAccess();
+        Piwik::checkUserHasViewAccess($idSite);
         \Piwik\Plugins\Live\Live::checkIsVisitorProfileEnabled($idSite);
         if (empty($visitorId)) {
             return new DataTable();

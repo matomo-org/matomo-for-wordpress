@@ -29,8 +29,6 @@ class MeasurableProperty extends \Piwik\Settings\Setting
     private $idSite = 0;
     private $allowedNames = array('ecommerce', 'sitesearch', 'sitesearch_keyword_parameters', 'sitesearch_category_parameters', 'excluded_referrers', 'exclude_unknown_urls', 'excluded_ips', 'excluded_parameters', 'excluded_user_agents', 'keep_url_fragment', 'urls', 'group');
     /**
-     * Constructor.
-     *
      * @param string $name The persisted name of the setting.
      * @param mixed $defaultValue  Default value for this setting if no value was specified.
      * @param string $type Eg an array, int, ... see TYPE_* constants

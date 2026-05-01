@@ -15,10 +15,14 @@ use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Db;
+use Piwik\Log\LoggerInterface;
 use Piwik\Option;
 use Piwik\Piwik;
+use Piwik\Plugins\MobileMessaging\MobileMessaging;
 use Piwik\Plugins\UsersManager\Sql\SiteAccessFilter;
 use Piwik\Plugins\UsersManager\Sql\UserTableFilter;
+use Piwik\Session\SessionFingerprint;
+use Piwik\Settings\Storage\Backend\PluginSettingsTable;
 use Piwik\SettingsPiwik;
 use Piwik\Validators\BaseValidator;
 use Piwik\Validators\CharacterLength;
@@ -423,7 +427,6 @@ $tokenAuth)
     /**
      * Get an array of user data using the supplied token
      *
-     *
      * @return array|null
      * @throws \Exception
      */
@@ -534,8 +537,39 @@ $hashedPassword, $email)
     public function deleteUser($userLogin) : void
     {
         $this->deleteUserOnly($userLogin);
+        PluginSettingsTable::removeAllUserSettingsForUser($userLogin);
         $this->deleteUserOptions($userLogin);
         $this->deleteUserAccess($userLogin);
+    }
+    /**
+     * Deletes all active sessions for the given user from the session table.
+     * This effectively signs the user out of all devices. It does not delete any token_auths.
+     */
+    public function deleteUserSessions(string $userLogin) : void
+    {
+        $userMarker = strlen(SessionFingerprint::USER_NAME_SESSION_VAR_NAME) . ':"';
+        $userMarker .= SessionFingerprint::USER_NAME_SESSION_VAR_NAME . '";s:' . strlen($userLogin);
+        $userMarker .= ':"' . $userLogin . '"';
+        $numCharactersToAdd = strlen($userMarker) % 3;
+        // ensure we work with a string length divisible by 3
+        if ($numCharactersToAdd === 1) {
+            $userMarker = 's:' . $userMarker;
+        } elseif ($numCharactersToAdd === 2) {
+            $userMarker = ':' . $userMarker;
+        }
+        // base64 encodes 3 input bytes → 4 characters. Test for different combinations as we don't know which
+        // 3 bytes were included originally. See also Zend_Session::buildSessionData()
+        $variations = [
+            '%' . base64_encode($userMarker) . '%',
+            '%' . base64_encode(substr($userMarker, 1) . ';') . '%',
+            '%' . base64_encode(substr($userMarker, 2) . ';s') . '%',
+            // in case string follows
+            '%' . base64_encode(substr($userMarker, 2) . ';i') . '%',
+        ];
+        $db = $this->getDb();
+        $sessionTable = Common::prefixTable('session');
+        $sql = 'DELETE FROM `' . $sessionTable . '`' . ' WHERE `data` LIKE ? or `data` LIKE ? or `data` LIKE ? or `data` LIKE ?';
+        $db->query($sql, $variations);
     }
     /**
      * @param string $userLogin
@@ -553,11 +587,31 @@ $hashedPassword, $email)
          *
          * @param string $userLogins The login handle of the deleted user.
          */
-        Piwik::postEvent('UsersManager.deleteUser', array($userLogin));
+        try {
+            Piwik::postEvent('UsersManager.deleteUser', array($userLogin));
+        } catch (\Throwable $e) {
+            StaticContainer::get(LoggerInterface::class)->error('Error while processing event UsersManager.deleteUser', ['exception' => $e]);
+        }
     }
     public function deleteUserOptions($userLogin)
     {
+        // @todo Remove legacy option cleanup with Matomo 6 once user-scoped settings no longer use Option keys.
         Option::deleteLike('UsersManager.%.' . $userLogin);
+        Option::delete('Feedback.nextFeedbackReminder.' . $userLogin);
+        Option::delete($userLogin . MobileMessaging::USER_SETTINGS_POSTFIX_OPTION);
+        Option::deleteLike('ProfessionalServices.DismissedWidget.%.' . $userLogin);
+        $preferences = [\Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT, \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT_DATE, 'isLDAPUser', 'hideSegmentDefinitionChangeMessage'];
+        $customPreferences = StaticContainer::get('usersmanager.user_preference_names');
+        if (empty($customPreferences)) {
+            $customPreferences = [];
+        } elseif (!is_array($customPreferences)) {
+            $customPreferences = [$customPreferences];
+        }
+        $preferences = array_merge($preferences, $customPreferences);
+        // @todo remove with matomo 6
+        foreach ($preferences as $preference) {
+            Option::delete($userLogin . \Piwik\Plugins\UsersManager\API::OPTION_NAME_PREFERENCE_SEPARATOR . $preference);
+        }
     }
     /**
      * @param string $userLogin

@@ -9,8 +9,6 @@
 namespace Piwik\Plugins\LanguagesManager\Commands;
 
 use Piwik\Plugins\LanguagesManager\API;
-/**
- */
 class LanguageInfo extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
 {
     protected function configure()
@@ -19,7 +17,7 @@ class LanguageInfo extends \Piwik\Plugins\LanguagesManager\Commands\TranslationB
     }
     protected function doExecute() : int
     {
-        $languages = API::getInstance()->getAvailableLanguagesInfo(\true, $this->getInput()->getOption('all'));
+        $languages = API::getInstance()->getAvailableLanguagesInfo(\true, (bool) $this->getInput()->getOption('all'));
         foreach ($languages as $languageInfo) {
             $this->getOutput()->writeln($languageInfo['code'] . '|' . $languageInfo['english_name'] . '|' . $languageInfo['percentage_complete']);
         }

@@ -45,9 +45,6 @@ class GeoIP2AutoUpdater extends Task
     public const LAST_RUN_TIME_OPTION_NAME = 'geoip2.updater_last_run_time';
     public const AUTO_SETUP_OPTION_NAME = 'geoip2.autosetup';
     private static $urlOptions = array('loc' => self::LOC_URL_OPTION_NAME, 'isp' => self::ISP_URL_OPTION_NAME);
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $logger = StaticContainer::get(LoggerInterface::class);

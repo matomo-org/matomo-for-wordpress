@@ -79,6 +79,7 @@
         "ColumnPageviewsDocumentation": "تعداد دفعاتی که از این صفحه بازدید شده",
         "ColumnPercentageVisits": "%%بازدید",
         "ColumnRevenue": "درآمد",
+        "ColumnSegment": "سگمنت",
         "ColumnSumTimeOnSite": "مجموع زمان سپری شده روی وبسایت",
         "ColumnSumVisitLength": "کل زمان سپری شده به وسیله بازدید کننده ها (بر اساس ثانیه)",
         "ColumnTotalPageviews": "تمام بازدیدصفحه ها",
@@ -725,6 +726,9 @@
         "NoDataHttpTrackingApi": "API ردیابی HTTP",
         "SiteWithoutDataBackToMatomo": "بازگشت به Matomo"
     },
+    "Contents": {
+        "Contents": "محتوا"
+    },
     "CoreAdminHome": {
         "AddNewTrustedHost": "افزودن میزبان مورد اعتماد جدید",
         "Administration": "مدیریت",
@@ -906,6 +910,8 @@
         "PageUpShortcutDescription": "برای رفتن به ابتدای صفحه",
         "PeriodRange": "بازه",
         "PivotBySubtable": "این گزارش نچرخیده است %1$s انجام دهید %2$s",
+        "PresetDateToday": "امروز",
+        "PresetDateYesterday": "دیروز",
         "RemoveTotalsRowDataTable": "این گزارش مجموع ردیف‌ها را نمایش می‌دهد %s حذف کنید",
         "ReportGeneratedOn": "گزارش تولید شده است در %s",
         "ReportGeneratedXAgo": "گزارش %s قبل تولید شده است",
@@ -2574,6 +2580,7 @@
     },
     "Login": {
         "BruteForceLog": "گزارش بررسی همه حالات",
+        "ChangeYourPassword": "گذرواژه خود را تغییر دهید",
         "ExceptionPasswordMD5HashExpected": "پارامتر رمز عبور انتظار می رود به یک رشته هش MD5 از رمز عبور است.",
         "InvalidOrExpiredToken": "رمز نامعتبر است و یا تمام شده است.",
         "InvalidUsernameEmail": "نام کاربری نامعتبر و \/ یا آدرس پست الکترونیکی",

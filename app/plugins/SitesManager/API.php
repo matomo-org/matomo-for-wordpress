@@ -27,8 +27,6 @@ use Piwik\Piwik;
 use Piwik\Plugin\SettingsProvider;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Plugins\CorePluginsAdmin\SettingsMetadata;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\SitesManager\Settings\FilterPIIParameters;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
@@ -382,7 +380,7 @@ class API extends \Piwik\Plugin\API
      * For the superUser it returns all the websites in the database.
      *
      * @param bool|int $limit Specify max number of sites to return
-     * @param bool|string $_restrictSitesToLogin Hack necessary when running scheduled tasks, where "Super User" is forced, but sometimes not desired, see #3017
+     * @param string|null|false $_restrictSitesToLogin Hack necessary when running scheduled tasks, where "Super User" is forced, but sometimes not desired, see #3017
      * @return array array for each site, an array of information (idsite, name, main_url, etc.)
      */
     public function getSitesWithAtLeastViewAccess($limit = \false, $_restrictSitesToLogin = \false)
@@ -425,7 +423,7 @@ class API extends \Piwik\Plugin\API
      * Returns the list of websites ID with the 'view' or 'admin' access for the current user.
      * For the superUser it returns all the websites in the database.
      *
-     * @param bool $_restrictSitesToLogin
+     * @param string|null|false $_restrictSitesToLogin
      * @return array list of websites ID
      */
     public function getSitesIdWithAtLeastViewAccess($_restrictSitesToLogin = \false)
@@ -643,7 +641,10 @@ class API extends \Piwik\Plugin\API
         Piwik::postEvent('SitesManager.addSite.end', [$idSite]);
         return (int) $idSite;
     }
-    private function setSettingValue($fieldName, $value, $coreProperties, $settingValues)
+    /**
+     * @param string|int|float|bool|array|null $value
+     */
+    private function setSettingValue(string $fieldName, $value, array $coreProperties, array $settingValues) : array
     {
         $pluginName = 'WebsiteMeasurable';
         if (isset($value)) {
@@ -668,7 +669,7 @@ class API extends \Piwik\Plugin\API
     public function getSiteSettings(int $idSite)
     {
         Piwik::checkUserHasAdminAccess($idSite);
-        $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite, $idMeasurableType = \false);
+        $measurableSettings = $this->settingsProvider->getAllMeasurableSettings($idSite);
         return $this->settingsMetadata->formatSettings($measurableSettings, $idSite);
     }
     private function setAndValidateMeasurableSettings($idSite, $idType, $settingValues)
@@ -698,7 +699,7 @@ class API extends \Piwik\Plugin\API
      *
      * Requires Super User access.
      *
-     * @param string $passwordConfirmation the current user's password, only required when the request is authenticated with session token auth
+     * @param string|null $passwordConfirmation the current user's password, only required when the request is authenticated with session token auth
      * @throws Exception
      */
     public function deleteSite(int $idSite,
@@ -1168,16 +1169,11 @@ $passwordConfirmation = null)
     /**
      * Gets the exclusion type, if the option is not present in the store then it infers the type based on if there are
      * custom exclusions already defined.
-     *
      */
     public function getExclusionTypeForQueryParams(?int $idSite = null) : string
     {
         Piwik::checkUserHasSomeViewAccess();
-        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            return FilterPIIParameters::getInstance($idSite)->getValue();
-        }
-        $result = Option::get(self::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL);
+        $result = FilterPIIParameters::getInstance($idSite)->getValue();
         if (!empty($result)) {
             return $result;
         }
@@ -1194,8 +1190,8 @@ $passwordConfirmation = null)
      *
      * @param int $idSite website ID defining the website to edit
      * @param string $siteName website name
-     * @param string|array $urls the website URLs
-     *                           When calling API via HTTP specify multiple URLs via `&urls[]=http...&urls[]=http...`.
+     * @param string|string[] $urls the website URLs
+     *                              When calling API via HTTP specify multiple URLs via `&urls[]=http...&urls[]=http...`.
      * @param int $ecommerce Whether Ecommerce is enabled, 0 or 1
      * @param null|int $siteSearch Whether site search is enabled, 0 or 1
      * @param string $searchKeywordParameters Comma separated list of search keyword parameter names
@@ -1236,8 +1232,8 @@ $passwordConfirmation = null)
         }
         $coreProperties = [];
         $coreProperties = $this->setSettingValue('urls', $urls, $coreProperties, $settingValues);
-        $coreProperties = $this->setSettingValue('group', $group, $coreProperties, $settingValues);
         $coreProperties = $this->setSettingValue('ecommerce', $ecommerce, $coreProperties, $settingValues);
+        $coreProperties = $this->setSettingValue('group', $group, $coreProperties, $settingValues);
         $coreProperties = $this->setSettingValue('sitesearch', $siteSearch, $coreProperties, $settingValues);
         $coreProperties = $this->setSettingValue('sitesearch_keyword_parameters', explode(',', $searchKeywordParameters ?? ''), $coreProperties, $settingValues);
         $coreProperties = $this->setSettingValue('sitesearch_category_parameters', explode(',', $searchCategoryParameters ?? ''), $coreProperties, $settingValues);
@@ -1287,7 +1283,7 @@ $passwordConfirmation = null)
     /**
      * Updates the field ts_created for the specified websites.
      *
-     * @param $idSites int Id Site to update ts_created
+     * @param $idSites int|string|array<string|int> Id Site(s) to update ts_created
      * @param $minDate Date to set as creation date. To play it safe it will subtract one more day.
      *
      * @ignore
@@ -1313,8 +1309,8 @@ $passwordConfirmation = null)
     }
     /**
      * Returns the list of supported currencies
+     * @return array<string, string> (currencyId => currencyName)
      * @see getCurrencySymbols()
-     * @return array ( currencyId => currencyName)
      */
     public function getCurrencyList()
     {
@@ -1330,8 +1326,8 @@ $passwordConfirmation = null)
     }
     /**
      * Returns the list of currency symbols
+     * @return array<string, string> (currencyId => currencySymbol)
      * @see getCurrencyList()
-     * @return array( currencyId => currencySymbol )
      */
     public function getCurrencySymbols()
     {
@@ -1345,9 +1341,8 @@ $passwordConfirmation = null)
     /**
      * Return true if Timezone support is enabled on server
      *
-     * @return bool
      */
-    public function isTimezoneSupportEnabled()
+    public function isTimezoneSupportEnabled() : bool
     {
         Piwik::checkUserHasSomeViewAccess();
         return SettingsServer::isTimezoneSupportEnabled();
@@ -1473,16 +1468,6 @@ $passwordConfirmation = null)
         return $url;
     }
     /**
-     * Tests if the URL is a valid URL
-     *
-     * @param string $url
-     * @return bool
-     */
-    private function isValidUrl($url)
-    {
-        return UrlHelper::isLookLikeUrl($url);
-    }
-    /**
      * Tests if the IP is a valid IP, allowing wildcards, except in the first octet.
      * Wildcards can only be used from right to left, ie. 1.1.*.* is allowed, but 1.1.*.1 is not.
      *
@@ -1496,10 +1481,9 @@ $passwordConfirmation = null)
     /**
      * Check that the website name has a correct format.
      *
-     * @param $siteName
-     * @throws Exception
+     * @param string $siteName
      */
-    private function checkName($siteName)
+    private function checkName($siteName) : void
     {
         if (empty($siteName)) {
             throw new Exception($this->translator->translate("SitesManager_ExceptionEmptyName"));
@@ -1526,7 +1510,7 @@ $passwordConfirmation = null)
      *
      * @param string $pattern
      * @param int|false $limit
-     * @param []|int[] $sitesToExclude optional array of Integer IDs of sites to exclude from the result.
+     * @param int[] $sitesToExclude optional array of Integer IDs of sites to exclude from the result.
      * @return array
      */
     public function getPatternMatchSites($pattern, $limit = \false, $sitesToExclude = [])

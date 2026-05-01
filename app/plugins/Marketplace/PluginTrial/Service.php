@@ -19,7 +19,6 @@ final class Service
     }
     /**
      * Creates a trial request (and sends a mail to all super users)
-     *
      */
     public function request(string $pluginName, string $pluginDisplayName) : void
     {
@@ -31,7 +30,6 @@ final class Service
     }
     /**
      * Returns if a plugin was already requested
-     *
      */
     public function wasRequested(string $pluginName) : bool
     {

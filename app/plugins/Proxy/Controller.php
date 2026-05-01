@@ -10,21 +10,23 @@ namespace Piwik\Plugins\Proxy;
 
 use Piwik\AssetManager;
 use Piwik\AssetManager\UIAsset;
-use Piwik\Common;
 use Piwik\Exception\StylesheetLessCompileException;
+use Piwik\Exception\ThingNotFoundException;
 use Piwik\Plugin\Manager;
 use Piwik\ProxyHttp;
+use Piwik\Request;
 /**
  * Controller for proxy services
  *
  */
 class Controller extends \Piwik\Plugin\Controller
 {
-    public const JS_MIME_TYPE = "application/javascript; charset=UTF-8";
+    public const JS_MIME_TYPE = 'application/javascript; charset=UTF-8';
     /**
      * Output the merged CSS file.
      * This method is called when the asset manager is enabled.
      *
+     * @return void
      * @see core/AssetManager.php
      */
     public function getCss()
@@ -34,12 +36,13 @@ class Controller extends \Piwik\Plugin\Controller
         } catch (StylesheetLessCompileException $exception) {
             $cssMergedFile = AssetManager::getInstance()->getMergedStylesheet();
         }
-        ProxyHttp::serverStaticFile($cssMergedFile->getAbsoluteLocation(), "text/css");
+        ProxyHttp::serverStaticFile($cssMergedFile->getAbsoluteLocation(), 'text/css');
     }
     /**
      * Output the merged core JavaScript file.
      * This method is called when the asset manager is enabled.
      *
+     * @return void
      * @see core/AssetManager.php
      */
     public function getCoreJs()
@@ -51,6 +54,7 @@ class Controller extends \Piwik\Plugin\Controller
      * Output the merged non core JavaScript file.
      * This method is called when the asset manager is enabled.
      *
+     * @return void
      * @see core/AssetManager.php
      */
     public function getNonCoreJs()
@@ -62,11 +66,15 @@ class Controller extends \Piwik\Plugin\Controller
      * Output a UMD merged chunk JavaScript file.
      * This method is called when the asset manager is enabled.
      *
+     * @return void
      * @see core/AssetManager.php
      */
     public function getUmdJs()
     {
-        $chunk = Common::getRequestVar('chunk');
+        $chunk = Request::fromRequest()->getStringParameter('chunk', '');
+        if ($chunk === '') {
+            throw new ThingNotFoundException('Invalid chunk requested');
+        }
         $chunkFile = AssetManager::getInstance()->getMergedJavaScriptChunk($chunk);
         $this->serveJsFile($chunkFile);
     }
@@ -76,18 +84,17 @@ class Controller extends \Piwik\Plugin\Controller
      * to be loaded on demand.
      *
      * @return void
-     * @throws \Exception
      */
     public function getPluginUmdJs()
     {
-        $plugin = Common::getRequestVar('plugin');
-        $pluginUmdPath = Manager::getPluginDirectory($plugin) . "/vue/dist/{$plugin}.umd.min.js";
+        $plugin = Request::fromRequest()->getStringParameter('plugin', '');
+        $pluginUmdPath = '';
+        if (Manager::getInstance()->isValidPluginName($plugin)) {
+            $pluginUmdPath = Manager::getPluginDirectory($plugin) . "/vue/dist/{$plugin}.umd.min.js";
+        }
         ProxyHttp::serverStaticFile($pluginUmdPath, self::JS_MIME_TYPE);
     }
-    /**
-     * @param UIAsset $uiAsset
-     */
-    private function serveJsFile($uiAsset)
+    private function serveJsFile(UIAsset $uiAsset) : void
     {
         ProxyHttp::serverStaticFile($uiAsset->getAbsoluteLocation(), self::JS_MIME_TYPE);
     }

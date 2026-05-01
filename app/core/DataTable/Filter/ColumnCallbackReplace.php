@@ -37,8 +37,6 @@ class ColumnCallbackReplace extends BaseFilter
     private $functionParameters;
     private $extraColumnParameters;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The DataTable to filter.
      * @param array|string $columnsToFilter The columns whose values should be passed to the callback
      *                                      and then replaced with the callback's result.

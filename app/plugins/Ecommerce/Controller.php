@@ -69,11 +69,12 @@ class Controller extends \Piwik\Plugins\Goals\Controller
     protected function getMetricsForGoal($idGoal, $dataRow = null)
     {
         $request = new Request(['method' => 'Goals.get', 'format' => 'original', 'format_metrics' => 0, 'idGoal' => $idGoal]);
+        /** @var DataTable $datatable */
         $datatable = $request->process();
         $dataRow = $datatable->getFirstRow();
         $return = parent::getMetricsForGoal($idGoal, $dataRow);
         // Previous period data for evolution
-        list($lastPeriodDate, $ignore) = Range::getLastDate();
+        [$lastPeriodDate, $ignore] = Range::getLastDate();
         if ($lastPeriodDate !== \false) {
             $date = Common::getRequestVar('date');
             /** @var DataTable $previousData */

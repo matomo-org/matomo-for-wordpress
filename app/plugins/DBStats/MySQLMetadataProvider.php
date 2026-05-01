@@ -31,9 +31,6 @@ class MySQLMetadataProvider
      * Data access object.
      */
     public $dataAccess = null;
-    /**
-     * Constructor.
-     */
     public function __construct(\Piwik\Plugins\DBStats\MySQLMetadataDataAccess $dataAccess)
     {
         $this->dataAccess = $dataAccess;

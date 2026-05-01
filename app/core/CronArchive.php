@@ -207,10 +207,6 @@ class CronArchive
     private const STEP_ARCHIVING = 2;
     private const STEP_SCHEDULED_TASKS = 3;
     private const STEP_FINISH = 4;
-    /**
-     * Constructor.
-     *
-     */
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
@@ -460,7 +456,8 @@ class CronArchive
                 continue;
             }
             $visitsForPeriod = $this->getVisitsFromApiResponse($stats);
-            $this->logArchiveJobFinished($url, $timers[$index], $visitsForPeriod, $archivesBeingQueried[$index]['plugin'], $archivesBeingQueried[$index]['report'], !$checkInvalid);
+            $peakMemory = $this->getPeakMemoryFromApiResponse($stats);
+            $this->logArchiveJobFinished($url, $timers[$index], $visitsForPeriod, $archivesBeingQueried[$index]['plugin'], $archivesBeingQueried[$index]['report'], !$checkInvalid, $peakMemory);
             $this->deleteInvalidatedArchives($archivesBeingQueried[$index]);
             $this->repairInvalidationsIfNeeded($archivesBeingQueried[$index]);
             ++$successCount;
@@ -500,12 +497,13 @@ class CronArchive
         }
         return [$url, $segment, $plugin];
     }
-    private function logArchiveJobFinished($url, $timer, $visits, $plugin = null, $report = null, $wasSkipped = null)
+    private function logArchiveJobFinished($url, $timer, $visits, $plugin = null, $report = null, $wasSkipped = null, $peakMemory = null)
     {
         $params = \Piwik\UrlHelper::getArrayFromQueryString($url);
         $visits = (int) $visits;
         $message = $wasSkipped ? "Skipped Archiving website" : "Archived website";
-        $this->logger->info($message . " id {$params['idSite']}, period = {$params['period']}, date = " . "{$params['date']}, segment = '" . (isset($params['segment']) ? urldecode(urldecode($params['segment'])) : '') . "', " . ($plugin ? "plugin = {$plugin}, " : "") . ($report ? "report = {$report}, " : "") . "{$visits} visits found. {$timer}");
+        $peakMemoryPart = $peakMemory ? ", Peak memory: {$peakMemory}" : "";
+        $this->logger->info($message . " id {$params['idSite']}, period = {$params['period']}, date = " . "{$params['date']}, segment = '" . (isset($params['segment']) ? urldecode(urldecode($params['segment'])) : '') . "', " . ($plugin ? "plugin = {$plugin}, " : "") . ($report ? "report = {$report}, " : "") . "{$visits} visits found. {$timer}{$peakMemoryPart}");
     }
     public function getErrors()
     {
@@ -655,7 +653,6 @@ class CronArchive
     }
     /**
      * Initializes the various parameters to the script, based on input parameters.
-     *
      */
     private function initStateFromParameters()
     {
@@ -991,6 +988,13 @@ class CronArchive
             return 0;
         }
         return (int) $stats['nb_visits'];
+    }
+    private function getPeakMemoryFromApiResponse($stats) : ?string
+    {
+        if (empty($stats['peak_memory_usage_pretty'])) {
+            return null;
+        }
+        return (string) $stats['peak_memory_usage_pretty'];
     }
     /**
      * @return int

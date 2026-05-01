@@ -11,8 +11,6 @@ namespace Piwik\Plugins\DBStats;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\View;
-/**
- */
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     /**

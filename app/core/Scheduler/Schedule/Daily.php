@@ -19,7 +19,6 @@ class Daily extends \Piwik\Scheduler\Schedule\Schedule
     /**
      * @see ScheduledTime::getRescheduledTime
      * @return int
-     *
      */
     public function getRescheduledTime()
     {

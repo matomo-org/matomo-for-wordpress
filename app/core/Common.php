@@ -14,8 +14,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\LanguageDataProvider;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
 use Piwik\Log\LoggerInterface;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\PrivacyManager\Settings\CampaignTrackingParametersDisabled;
 use Piwik\Tracker\Cache as TrackerCache;
 /**
@@ -897,13 +895,10 @@ class Common
     public static function getCampaignParameters(?int $idSite = null, bool $skipCompliancePolicyCheck = \false)
     {
         if (!$skipCompliancePolicyCheck) {
-            $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-            if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-                $cache = TrackerCache::getCacheWebsiteAttributes($idSite);
-                $cacheKey = CampaignTrackingParametersDisabled::class;
-                if (($cache[$cacheKey] ?? \false) === \true) {
-                    return [[], []];
-                }
+            $cache = TrackerCache::getCacheWebsiteAttributes($idSite);
+            $cacheKey = CampaignTrackingParametersDisabled::class;
+            if (($cache[$cacheKey] ?? \false) === \true) {
+                return [[], []];
             }
         }
         $return = array(\Piwik\Config::getInstance()->Tracker['campaign_var_name'], \Piwik\Config::getInstance()->Tracker['campaign_keyword_var_name']);

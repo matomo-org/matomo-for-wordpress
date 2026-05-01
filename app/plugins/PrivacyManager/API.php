@@ -15,9 +15,7 @@ use Piwik\Piwik;
 use Piwik\Config as PiwikConfig;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomJsTracker\File;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\Live\Live;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
 use Piwik\Plugins\PrivacyManager\Dao\LogDataAnonymizer;
 use Piwik\Plugins\PrivacyManager\Model\LogDataAnonymizations;
@@ -47,16 +45,11 @@ class API extends \Piwik\Plugin\API
      * @var LogDataAnonymizer
      */
     private $logDataAnonymizer;
-    /**
-     * @var FeatureFlagManager
-     */
-    private $featureFlagManager;
-    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer, FeatureFlagManager $featureFlagManager)
+    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer)
     {
         $this->gdpr = $gdpr;
         $this->logDataAnonymizations = $logDataAnonymizations;
         $this->logDataAnonymizer = $logDataAnonymizer;
-        $this->featureFlagManager = $featureFlagManager;
     }
     private function checkDataSubjectVisits($visits)
     {
@@ -369,9 +362,6 @@ $passwordConfirmation)
         } else {
             $idSite = intval($idSite);
         }
-        if (\false === $this->featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            throw new Exception('Feature not available');
-        }
         Piwik::checkUserHasSuperUserAccess();
         $policy = PolicyManager::getPolicyByName($complianceType);
         if (is_null($policy)) {
@@ -396,9 +386,6 @@ $passwordConfirmation)
 #[\SensitiveParameter]
 ?string $passwordConfirmation = null) : bool
     {
-        if (!$this->featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            throw new Exception('Feature not available');
-        }
         Piwik::checkUserHasSuperUserAccess();
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);

@@ -34,8 +34,6 @@ class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabel
      */
     protected $labelSecondsPlural;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The DataTable this filter will run over.
      * @param string $labelSecondsPlural A string to use when beautifying range labels
      *                                   whose lower bound is between 0 and 60. Must be

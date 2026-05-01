@@ -159,7 +159,6 @@ class Timetable
     }
     /**
      * Remove a task from the retry list
-     *
      */
     public function clearRetryCount(string $taskName)
     {
@@ -170,7 +169,6 @@ class Timetable
     }
     /**
      * Increment the retry counter for a task
-     *
      */
     public function incrementRetryCount(string $taskName)
     {
@@ -183,8 +181,6 @@ class Timetable
     }
     /**
      * Return the current number of retries for a task
-     *
-     *
      */
     public function getRetryCount(string $taskName) : int
     {

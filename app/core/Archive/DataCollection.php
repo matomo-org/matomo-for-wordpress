@@ -95,8 +95,6 @@ class DataCollection
     private $segment;
     private $isBuiltWithoutArchives = \true;
     /**
-     * Constructor.
-     *
      * @param array $dataNames @see $this->dataNames
      * @param string $dataType @see $this->dataType
      * @param array $sitesId @see $this->sitesId

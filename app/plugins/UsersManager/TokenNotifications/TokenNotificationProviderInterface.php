@@ -19,7 +19,6 @@ interface TokenNotificationProviderInterface
     public function getTokenNotificationsForDispatch() : array;
     /**
      * Sets information that a notification for a given token has been dispatched
-     *
      */
     public function setTokenNotificationDispatched(string $tokenId) : void;
 }

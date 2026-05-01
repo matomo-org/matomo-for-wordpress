@@ -16,9 +16,6 @@ use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Url;
 use Piwik\View;
-/**
- *
- */
 class Controller extends \Piwik\Plugin\Controller
 {
     public function index()

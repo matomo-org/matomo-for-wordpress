@@ -11,8 +11,6 @@ namespace Piwik\Plugins\Marketplace\Input;
 use Piwik\Common;
 use Piwik\Plugin;
 use Exception;
-/**
- */
 class PluginName
 {
     private $requestParam = '';

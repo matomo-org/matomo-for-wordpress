@@ -62,7 +62,6 @@ class SiteContentDetector
     }
     /**
      * Returns the site content detection object with the provided id, or null if it can't be found
-     *
      */
     public function getSiteContentDetectionById(string $id) : ?SiteContentDetectionAbstract
     {
@@ -83,7 +82,6 @@ class SiteContentDetector
     }
     /**
      * Reset the detections
-     *
      */
     private function resetDetections() : void
     {
@@ -149,7 +147,6 @@ class SiteContentDetector
      * Returns if the detection with the provided id was detected or not
      *
      * Note: self::detectContent needs to be called before.
-     *
      */
     public function wasDetected(string $detectionClassId) : bool
     {
@@ -181,7 +178,6 @@ class SiteContentDetector
      *
      * @param array $detectContent
      * @param array $cache
-     *
      */
     private function checkCacheHasRequiredProperties(array $detectContent, array $cache) : bool
     {
@@ -221,8 +217,6 @@ class SiteContentDetector
     }
     /**
      * Save data to the cache
-     *
-     *
      */
     private function saveToCache(string $cacheKey, int $cacheLife) : void
     {
@@ -249,7 +243,6 @@ class SiteContentDetector
      * Run various detection checks for site content
      *
      * @param array $detectContent    Array of detection types used to filter the checks that are run
-     *
      */
     private function detectionChecks(array $detectContent) : void
     {
@@ -271,7 +264,6 @@ class SiteContentDetector
     }
     /**
      * Retrieve data from the specified site using an HTTP request
-     *
      *
      * @return array
      */

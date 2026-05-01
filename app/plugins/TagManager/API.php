@@ -341,7 +341,7 @@ class API extends \Piwik\Plugin\API
      *
      * Note: If the current site already has a default container, another default container will be created.
      *
-     * @param int $idSite
+     * @param int $idSite The id of the site that the container will be created for
      * @return string The ID of the created container.
      */
     public function createDefaultContainerForSite($idSite)
@@ -361,6 +361,7 @@ class API extends \Piwik\Plugin\API
                 if ($e->getCode() !== ContainersDao::ERROR_NAME_IN_USE || $loop === 50) {
                     throw $e;
                 }
+                $loop++;
             }
         }
         $draftVersion = $this->getContainerDraftVersion($idSite, $idContainer);
@@ -389,6 +390,7 @@ class API extends \Piwik\Plugin\API
      * @param null|string $startDate     Optional, a start date to ensure the tag will be only executed after this date. Please provide the date in UTC.
      * @param null|string $endDate       Optional, an end date to ensure the tag will not be executed after this date. Please provide the date in UTC.
      * @param null|string $description   Optional description
+     * @param string $status Optional status to set when creating the tag.
      *
      * @return int The ID of the created tag.
      */
@@ -453,7 +455,11 @@ class API extends \Piwik\Plugin\API
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)) {
+        $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
+        if ($tag) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+            }
             $this->tags->deleteContainerTag($idSite, $idContainerVersion, $idTag);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.deleteContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
@@ -473,7 +479,11 @@ class API extends \Piwik\Plugin\API
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)) {
+        $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
+        if ($tag) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+            }
             $this->tags->pauseContainerTag($idSite, $idContainerVersion, $idTag);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.pauseContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
@@ -495,7 +505,11 @@ class API extends \Piwik\Plugin\API
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)) {
+        $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
+        if ($tag) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+            }
             $this->tags->resumeContainerTag($idSite, $idContainerVersion, $idTag);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.resumeContainerTag.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTag' => $idTag)));
@@ -563,7 +577,7 @@ class API extends \Piwik\Plugin\API
      * @param int $idContainerVersion The ID of the container version, a container may have multiple versions and
      *                                the list of triggers will be different per container. Therefore you need to provide
      *                                the ID of the version you are referring to.
-     * @param int $type The type of trigger you want create, for example "AllElements".
+     * @param string $type The type of trigger you want create, for example "AllElements".
      * @param string $name   The name this trigger should have
      * @param array $parameters  A key/value pair to define values for specific parameters. For example array('parameterName' => 'value')
      * @param array[] $conditions An array containing one or multiple conditions to filter when a trigger will be triggered. For example:
@@ -602,6 +616,7 @@ class API extends \Piwik\Plugin\API
      *                            array(array('actual' => 'VARIABLENAME', 'comparison' => 'equals', 'expected' => 'expectedValue'))
      *                           To get a list of available comparisons, call {@link TagManager.getAvailableComparisons}
      * @param null|string $description   Optional description
+     * @return null
      */
     public function updateContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger, $name, $parameters = [], $conditions = [], $description = '')
     {
@@ -627,12 +642,17 @@ class API extends \Piwik\Plugin\API
      *                                the list of trigger will be different per container. Therefore you need to provide
      *                                the ID of the version you are referring to.
      * @param int $idTrigger The id of the trigger you want to delete.
+     * @return void
      */
     public function deleteContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger)
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->getContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger)) {
+        $trigger = $this->getContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger);
+        if ($trigger) {
+            if ($this->triggersProvider->isCustomTemplate($trigger['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+            }
             $this->triggers->deleteContainerTrigger($idSite, $idContainerVersion, $idTrigger);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.deleteContainerTrigger.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idTrigger' => $idTrigger)));
@@ -730,7 +750,7 @@ class API extends \Piwik\Plugin\API
      * @param string $type        The type of variable you want to create.
      * @param string $name   The name this variable should have
      * @param array $parameters  A key/value pair to define values for specific parameters. For example array('parameterName' => 'value')
-     * @param null|string $defaultValue   Optionally a default value
+     * @param false|null|string $defaultValue Optionally a default value.
      * @param array[] $lookupTable An array containing one or multiple lookup configurations. For example:
      *                             array(array('match_value' => 'inval', 'comparison' => 'equals', 'out_value' => 'outval'))
      *                             For a list of available comparisons see {@link TagManager.getAvailableComparisons}
@@ -782,6 +802,7 @@ class API extends \Piwik\Plugin\API
      *                             array(array('match_value' => 'inval', 'comparison' => 'equals', 'out_value' => 'outval'))
      *                             For a list of available comparisons see {@link TagManager.getAvailableComparisons}
      * @param null|string $description   Optional description
+     * @return null
      */
     public function updateContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable, $name, $parameters = [], $defaultValue = null, $lookupTable = [], $description = '')
     {
@@ -801,7 +822,7 @@ class API extends \Piwik\Plugin\API
         } catch (EntityRecursionException $e) {
             // we need to restore the original value.... we first have to save update the original variable
             // in order to be able to check for recursion by simulating the container... if it fails we restore original value
-            $this->variables->updateContainerVariable($variable['idsite'], $variable['idcontainerversion'], $variable['idvariable'], $variable['name'], $variable['parameters'], $variable['default_value'], $variable['lookup_table']);
+            $this->variables->updateContainerVariable($variable['idsite'], $variable['idcontainerversion'], $variable['idvariable'], $variable['name'], $variable['parameters'], $variable['default_value'], $variable['lookup_table'], $variable['description']);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             throw $e;
         }
@@ -816,12 +837,17 @@ class API extends \Piwik\Plugin\API
      *                                the list of variable will be different per container. Therefore you need to provide
      *                                the ID of the version you are referring to.
      * @param int $idVariable The id of the variable you want to delete.
+     * @return void
      */
     public function deleteContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable)
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
-        if ($this->getContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable)) {
+        $variable = $this->getContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable);
+        if ($variable) {
+            if ($this->variablesProvider->isCustomTemplate($variable['type'])) {
+                $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
+            }
             $this->variables->deleteContainerVariable($idSite, $idContainerVersion, $idVariable);
             $this->updateContainerPreviewRelease($idSite, $idContainer);
             Piwik::postEvent('TagManager.deleteContainerVariable.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion, 'idVariable' => $idVariable)));
@@ -901,8 +927,8 @@ class API extends \Piwik\Plugin\API
      * @param string $idContainer  The id of a container, for example "6OMh6taM"
      * @param string $name   The name this version should have
      * @param string $description Optionally the description this version should have
-     * @param null $idContainerVersion By default a new version based on the current draft version will be created. However,
-     *                                 You can also create a new version from a previously created version.
+     * @param int|null $idContainerVersion By default, a new version based on the current draft version will be created.
+     *                                     You can also create a new version from a previously created version.
      * @return int  The ID of the created version.
      */
     public function createContainerVersion($idSite, $idContainer, $name, $description = '', $idContainerVersion = null)
@@ -1074,8 +1100,12 @@ class API extends \Piwik\Plugin\API
      *
      * @param int $idSite The id of the site the given container belongs to
      * @param string $idContainer  The id of a container, for example "6OMh6taM"
+     * @param int $idContainerVersion The ID of the container version, a container may have multiple versions and
+     *                                 the list of variable will be different per container. Therefore you need to provide
+     *                                 the ID of the version you are referring to. If no value is provided, the preview
+     *                                 mode will be enabled for the current "draft" version.
      */
-    public function disablePreviewMode($idSite, $idContainer)
+    public function disablePreviewMode($idSite, $idContainer, $idContainerVersion = null)
     {
         $this->accessValidator->checkWriteCapability($idSite);
         $this->containers->checkContainerExists($idSite, $idContainer);
@@ -1095,7 +1125,6 @@ class API extends \Piwik\Plugin\API
      * Updates the debug siteurl cookie
      *
      * @param int $idSite The id of the site the given container belongs to
-     * @param string $idContainer  The id of a container, for example "6OMh6taM"
      * @param string $url  The url to enable debug
      */
     public function changeDebugUrl($idSite, $url)
@@ -1144,7 +1173,7 @@ class API extends \Piwik\Plugin\API
      * @param string $idContainer  The id of a container, for example "6OMh6taM"
      * @param string $backupName   If specified, a backup of the current draft will be created under this version name.
      * @param bool $_isDraftRestoreCall A boolean parameter to specify, if its a backup restore call to avoid nesting exception if backup version has errors
-     * @return array
+     * @return void
      */
     public function importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName = '', bool $_isDraftRestoreCall = \false)
     {

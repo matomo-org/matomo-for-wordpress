@@ -35,6 +35,9 @@ class FeatureFlagManager
         if ($featureFlagObj === null) {
             return \false;
         }
+        if ($featureFlagObj instanceof \Piwik\Plugins\FeatureFlags\ForcedFeatureFlagStateInterface) {
+            return $featureFlagObj->getForcedFeatureFlagState();
+        }
         $featureActive = \false;
         foreach ($this->storages as $storage) {
             $isActive = $storage->isFeatureActive($featureFlagObj);

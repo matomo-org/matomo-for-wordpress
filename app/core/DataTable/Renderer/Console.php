@@ -23,7 +23,6 @@ class Console extends Renderer
     protected $prefixRows = '#';
     /**
      * Computes the dataTable output and returns the string/binary
-     *
      */
     public function render() : string
     {

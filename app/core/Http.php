@@ -10,6 +10,7 @@ namespace Piwik;
 
 use Composer\CaBundle\CaBundle;
 use Exception;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 /**
  * Contains HTTP client related helper methods that can retrieve content from remote servers
@@ -40,10 +41,16 @@ class Http
         }
         return $method;
     }
+    /**
+     * @return bool
+     */
     protected static function isSocketEnabled()
     {
         return function_exists('fsockopen');
     }
+    /**
+     * @return bool
+     */
     protected static function isCurlEnabled()
     {
         return function_exists('curl_init') && function_exists('curl_exec');
@@ -87,8 +94,13 @@ class Http
         // create output file
         $file = self::ensureDestinationDirectoryExists($destinationPath);
         $acceptLanguage = $acceptLanguage ? 'Accept-Language: ' . $acceptLanguage : '';
-        return self::sendHttpRequestBy(self::getTransportMethod(), $aUrl, $timeout, $userAgent, $destinationPath, $file, $followDepth, $acceptLanguage, $acceptInvalidSslCertificate = \false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, null, [], null, $checkHostIsAllowed);
+        return self::sendHttpRequestBy(self::getTransportMethod(), $aUrl, $timeout, $userAgent, $destinationPath, $file, $followDepth ?? 0, $acceptLanguage, $acceptInvalidSslCertificate = \false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, null, [], null, $checkHostIsAllowed);
     }
+    /**
+     * @param string|null $destinationPath
+     * @return resource|null
+     * @throws Exception
+     */
     public static function ensureDestinationDirectoryExists($destinationPath)
     {
         if ($destinationPath) {
@@ -100,7 +112,7 @@ class Http
         }
         return null;
     }
-    private static function convertWildcardToPattern($wildcardHost)
+    private static function convertWildcardToPattern(string $wildcardHost) : string
     {
         $flexibleStart = $flexibleEnd = \false;
         if (strpos($wildcardHost, '*.') === 0) {
@@ -123,16 +135,16 @@ class Http
     /**
      * Sends an HTTP request using the specified transport method.
      *
-     * @param string $method
+     * @param string|null $method
      * @param string $aUrl
      * @param int $timeout in seconds
      * @param string $userAgent
      * @param string $destinationPath
      * @param resource $file
      * @param int $followDepth
-     * @param bool|string $acceptLanguage Accept-language header
+     * @param string|false $acceptLanguage Accept-language header
      * @param bool $acceptInvalidSslCertificate Only used with $method == 'curl'. If set to true (NOT recommended!) the SSL certificate will not be checked
-     * @param array|bool $byteRange For Range: header. Should be two element array of bytes, eg, array(0, 1024)
+     * @param array|false $byteRange For Range: header. Should be two element array of bytes, eg, array(0, 1024)
      *                                                  Doesn't work w/ fopen method.
      * @param bool $getExtendedInfo True to return status code, headers & response, false if just response.
      * @param string $httpMethod The HTTP method to use. Defaults to `'GET'`.
@@ -156,7 +168,7 @@ class Http
         if (empty($parsedUrl['scheme'])) {
             throw new Exception('Missing scheme in given url');
         }
-        $allowedProtocols = \Piwik\Config::getInstance()->General['allowed_outgoing_protocols'];
+        $allowedProtocols = GeneralConfig::getConfigValue('allowed_outgoing_protocols');
         $isAllowed = \false;
         foreach (explode(',', $allowedProtocols) as $protocol) {
             if (strtolower($parsedUrl['scheme']) === strtolower(trim($protocol))) {
@@ -204,9 +216,11 @@ class Http
             $rangeHeader = 'Range: bytes=' . $rangeBytes . "\r\n";
         }
         [$proxyHost, $proxyPort, $proxyUser, $proxyPassword] = self::getProxyConfiguration($aUrl);
-        // other result data
+        /** @var int|null $status */
         $status = null;
+        /** @var array<string, string> $headers */
         $headers = array();
+        /** @var string|null $response */
         $response = null;
         $httpAuthIsUsed = !empty($httpUsername) || !empty($httpPassword);
         $httpAuth = '';
@@ -405,7 +419,7 @@ class Http
             // we create a stream_context (works in php >= 5.2.1)
             // we also set the socket_timeout (for php < 5.2.1)
             $default_socket_timeout = @ini_get('default_socket_timeout');
-            @ini_set('default_socket_timeout', $timeout);
+            @ini_set('default_socket_timeout', (string) $timeout);
             $ctx = null;
             if (function_exists('stream_context_create')) {
                 $stream_options = array('http' => array(
@@ -446,7 +460,7 @@ class Http
                     $http_response_header = http_get_last_response_headers();
                 }
             } else {
-                $response = @file_get_contents($aUrl, 0, $ctx);
+                $response = @file_get_contents($aUrl, \false, $ctx);
                 if (function_exists('http_get_last_response_headers')) {
                     $http_response_header = http_get_last_response_headers();
                 }
@@ -617,7 +631,7 @@ class Http
     {
         return http_build_query($params, '', '&');
     }
-    private static function buildHeadersForPost($requestBody)
+    private static function buildHeadersForPost(string $requestBody) : string
     {
         $postHeader = "Content-Type: application/x-www-form-urlencoded\r\n";
         $postHeader .= "Content-Length: " . strlen($requestBody) . "\r\n";
@@ -697,13 +711,14 @@ class Http
                 \Piwik\Log::info("HEAD request for '%s' failed, got following: %s", $url, print_r($expectedFileSizeResult, \true));
                 throw new Exception(\Piwik\Piwik::translate('General_DownloadFail_HttpRequestFail'));
             }
-            \Piwik\Option::set($downloadOption, $expectedFileSize);
+            \Piwik\Option::set($downloadOption, (string) $expectedFileSize);
         } else {
-            $expectedFileSize = (int) \Piwik\Option::get($downloadOption);
+            $expectedFileSize = \Piwik\Option::get($downloadOption);
             if ($expectedFileSize === \false) {
                 // sanity check
                 throw new Exception("Trying to continue a download that never started?! That's not supposed to happen...");
             }
+            $expectedFileSize = (int) $expectedFileSize;
         }
         // if existing file is already big enough, then fail so we don't accidentally overwrite
         // existing DB
@@ -731,10 +746,8 @@ class Http
      */
     public static function configCurlCertificate(&$ch)
     {
-        $general = \Piwik\Config::getInstance()->General;
-        if (!empty($general['custom_cacert_pem'])) {
-            $cacertPath = $general['custom_cacert_pem'];
-        } else {
+        $cacertPath = GeneralConfig::getConfigValue('custom_cacert_pem');
+        if (empty($cacertPath)) {
             $cacertPath = CaBundle::getBundledCaBundlePath();
         }
         @curl_setopt($ch, \CURLOPT_CAINFO, $cacertPath);
@@ -780,7 +793,7 @@ class Http
      * @param array $headers
      * @param string $line
      */
-    private static function parseHeaderLine(&$headers, $line)
+    private static function parseHeaderLine(&$headers, $line) : void
     {
         $parts = explode(':', $line, 2);
         if (count($parts) == 1) {
@@ -793,12 +806,9 @@ class Http
          * With HTTP/2 Cloudflare is passing headers in lowercase (e.g. 'content-type' instead of 'Content-Type')
          * which breaks any code which uses the header data.
          */
-        if (version_compare(\PHP_VERSION, '5.5.16', '>=')) {
-            // Passing a second arg to ucwords is not supported by older versions of PHP
-            $camelName = ucwords($name, '-');
-            if ($camelName !== $name) {
-                $headers[$camelName] = trim($value);
-            }
+        $camelName = ucwords($name, '-');
+        if ($camelName !== $name) {
+            $headers[$camelName] = trim($value);
         }
     }
     /**
@@ -837,13 +847,13 @@ class Http
      * Returns Proxy to use for connecting via HTTP to given URL
      *
      * @param string $url
-     * @return array
+     * @return array{0: string|null, 1: string|null, 2: string|null, 3: string|null}
      */
-    private static function getProxyConfiguration($url)
+    private static function getProxyConfiguration($url) : array
     {
         $hostname = \Piwik\UrlHelper::getHostFromUrl($url);
         if (\Piwik\Url::isLocalHost($hostname)) {
-            return array(null, null, null, null);
+            return [null, null, null, null];
         }
         // proxy configuration
         $proxyHost = \Piwik\Config::getInstance()->proxy['host'];
@@ -856,7 +866,7 @@ class Http
             $excludes = array_map('trim', $excludes);
             $excludes = array_filter($excludes);
             if (in_array($hostname, $excludes)) {
-                return array(null, null, null, null);
+                return [null, null, null, null];
             }
         }
         return array($proxyHost, $proxyPort, $proxyUser, $proxyPassword);

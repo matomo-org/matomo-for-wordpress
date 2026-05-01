@@ -35,7 +35,6 @@ class SettingsProvider
         $this->pluginManager = $pluginManager;
     }
     /**
-     *
      * Get user settings implemented by a specific plugin (if implemented by this plugin).
      */
     public function getSystemSettings(string $pluginName) : ?SystemSettings

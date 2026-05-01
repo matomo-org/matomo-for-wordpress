@@ -8,9 +8,6 @@
  */
 namespace Piwik\Plugins\ImageGraph\StaticGraph;
 
-/**
- *
- */
 class Evolution extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
 {
     public function renderGraph()

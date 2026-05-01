@@ -26,8 +26,6 @@ class VisitsPercent extends ProcessedMetric
     private $cachedTotalVisits = null;
     private $forceTotalVisits = null;
     /**
-     * Constructor.
-     *
      * @param int|null $totalVisits The forced value of total visits to use.
      */
     public function __construct($totalVisits = null)

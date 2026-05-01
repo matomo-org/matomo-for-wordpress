@@ -11,9 +11,6 @@ namespace Piwik\Plugins\Login;
 use HTML_QuickForm2_DataSource_Array;
 use Piwik\Piwik;
 use Piwik\QuickForm2;
-/**
- *
- */
 class FormLogin extends QuickForm2
 {
     public function __construct($id = 'login_form', $method = 'post', $attributes = null, $trackSubmit = \false)

@@ -40,7 +40,6 @@ class Schema extends Singleton
     }
     /**
      * Return the default port for the provided database schema
-     *
      */
     public static function getDefaultPortForSchema(string $schemaName) : int
     {
@@ -62,7 +61,6 @@ class Schema extends Singleton
     }
     /**
      * Returns an instance that subclasses Schema
-     *
      */
     private function getSchema() : \Piwik\Db\SchemaInterface
     {
@@ -80,7 +78,6 @@ class Schema extends Singleton
     }
     /**
      * Returns the default collation for a charset.
-     *
      */
     public function getDefaultCollationForCharset(string $charset) : string
     {
@@ -88,7 +85,6 @@ class Schema extends Singleton
     }
     /**
      * Get the table options to use for a CREATE TABLE statement.
-     *
      */
     public function getTableCreateOptions() : string
     {
@@ -226,7 +222,6 @@ class Schema extends Singleton
     }
     /**
      * Returns if the schema support complex column updates
-     *
      */
     public function supportsComplexColumnUpdates() : bool
     {
@@ -234,7 +229,6 @@ class Schema extends Singleton
     }
     /**
      * Returns if the schema supports `OPTIMIZE TABLE` statements for innodb tables
-     *
      */
     public function isOptimizeInnoDBSupported() : bool
     {
@@ -257,7 +251,6 @@ class Schema extends Singleton
     /**
      * Returns if the database engine can provide a rollup ranking query result
      * without needing additional sorting.
-     *
      */
     public function supportsRankingRollupWithoutExtraSorting() : bool
     {
@@ -265,7 +258,6 @@ class Schema extends Singleton
     }
     /**
      * Returns if the database engine is able to use sorted subqueries
-     *
      */
     public function supportsSortingInSubquery() : bool
     {

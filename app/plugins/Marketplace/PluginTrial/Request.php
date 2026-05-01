@@ -33,7 +33,6 @@ class Request
     }
     /**
      * Creates a trial request and sends a mail to all super users
-     *
      */
     public function create(string $pluginDisplayName = '') : void
     {
@@ -46,7 +45,6 @@ class Request
     }
     /**
      * Cancels a trial request
-     *
      */
     public function cancel() : void
     {
@@ -58,7 +56,6 @@ class Request
     }
     /**
      * Returns if a plugin was already requested
-     *
      */
     public function wasRequested() : bool
     {
@@ -66,7 +63,6 @@ class Request
     }
     /**
      * Send notification email to all super users
-     *
      */
     private function sendEmailToSuperUsers() : void
     {

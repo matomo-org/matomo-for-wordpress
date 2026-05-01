@@ -22,8 +22,6 @@ class SearchEnginesFromKeywordId extends BaseFilter
      */
     private $idSubtable;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      */
     public function __construct($table, $firstLevelKeywordTable, $idSubtable = null)

@@ -8,8 +8,6 @@
  */
 namespace Piwik\Plugins\Marketplace\Api;
 
-/**
- */
 class Exception extends \Exception
 {
 }
