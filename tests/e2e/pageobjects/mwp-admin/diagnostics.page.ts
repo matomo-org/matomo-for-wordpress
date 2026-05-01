@@ -94,6 +94,7 @@ class MwpDiagnosticsPage extends MwpPage {
           .val()
           .replace(/Matomo Plugin Version: \d+\.\d+\.\d+/g, 'Matomo Plugin Version: CURRENT_CORE_VERSION')
           .replace(/Matomo Install Version: \d+\.\d+\.\d+/g, 'Matomo Install Version: CURRENT_INSTALL_VERSION')
+          .replace(/Matomo Version: \d+\.\d+\.\d+/g, 'Matomo Version: CURRENT_MATOMO_VERSION')
           .replace(/\(Install date: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)/g, '(Install date: INSTALL_DATE)')
       );
 
