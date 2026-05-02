@@ -19,9 +19,6 @@ use Piwik\Plugin;
 use Piwik\Plugins\Marketplace\Environment;
 use Piwik\SettingsServer;
 use Piwik\Log\LoggerInterface;
-/**
- *
- */
 class Client
 {
     public const CACHE_TIMEOUT_IN_SECONDS = 3600;
@@ -267,7 +264,6 @@ class Client
     }
     /**
      * Return the api.matomo.org URL with the correct protocol prefix
-     *
      */
     public static function getApiServiceUrl() : ?string
     {

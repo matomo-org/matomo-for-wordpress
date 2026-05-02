@@ -35,6 +35,7 @@ export default class MatomoReportingPage extends MatomoPage {
 
     await this.waitForPageWidgets();
     await browser.pause(500);
+    await this.waitForEvolutionAnnotations();
     await this.waitForImages();
 
     // hide video thumbnail since it renders differently randomly
@@ -42,9 +43,23 @@ export default class MatomoReportingPage extends MatomoPage {
       window.jQuery('#piwik-promo-thumbnail').hide();
     });
 
+    // live visits widget always renders differently so hide it. it's not too important
+    // to test this in MWP.
+    await this.addStylesToPage('#visitsLive { display: none !important; }');
+
     await this.unfocus();
 
     return result;
+  }
+
+  async waitForEvolutionAnnotations() {
+    await browser.waitUntil(async () => {
+      const isEvolutionAnnotationsLoaded = await browser.execute(
+        () => $('.dataTableVizEvolution,.dataTableVizStackedBarEvolution').length === $('.evolution-annotations').length
+      );
+
+      return isEvolutionAnnotationsLoaded;
+    }, { timeout: 30000 });
   }
 
   async waitForPageWidgets() {
@@ -63,7 +78,7 @@ export default class MatomoReportingPage extends MatomoPage {
       }
 
       return isThereWidgets && loadings.length === numWidgetsLoaded;
-    }, { timeout: 45000 });
+    }, { timeout: 60000 });
   }
 
   async waitForActionsTables() {

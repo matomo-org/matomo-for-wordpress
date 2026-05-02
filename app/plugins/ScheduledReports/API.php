@@ -17,12 +17,14 @@ use Piwik\Context;
 use Piwik\Date;
 use Piwik\Db;
 use Piwik\Development;
+use Piwik\Exception\InvalidRequestParameterException;
 use Piwik\Filesystem;
 use Piwik\Http;
 use Piwik\Log;
 use Piwik\NoAccessException;
 use Piwik\Period;
 use Piwik\Piwik;
+use Piwik\Plugins\Dashboard\Dashboard;
 use Piwik\Plugins\ImageGraph\ImageGraph;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\SegmentEditor\API as APISegmentEditor;
@@ -30,6 +32,7 @@ use Piwik\Plugins\SitesManager\API as SitesManagerApi;
 use Piwik\ReportRenderer;
 use Piwik\Scheduler\RetryableException;
 use Piwik\Scheduler\Schedule\Schedule;
+use Piwik\Segment;
 use Piwik\Site;
 use Piwik\Translation\Translator;
 use Piwik\Log\LoggerInterface;
@@ -42,6 +45,26 @@ use Piwik\Log\LoggerInterface;
  * You can also get the list of all existing reports via "getReports", create new reports via "addReport",
  * or manage existing reports with "updateReport" and "deleteReport".
  * See also the documentation about <a href='https://matomo.org/docs/email-reports/' rel='noreferrer' target='_blank'>Scheduled Email reports</a> in Matomo.
+ *
+ * @phpstan-type ScheduledReport array{
+ *     idreport: int|string,
+ *     idsite: int|string,
+ *     login: string,
+ *     description: string,
+ *     idsegment: int|string|null,
+ *     period: 'day'|'week'|'month'|'never',
+ *     period_param: 'day'|'week'|'month'|'year'|null,
+ *     hour: int|string,
+ *     type: string,
+ *     format: string,
+ *     reports: list<string>,
+ *     parameters: array<string, mixed>,
+ *     ts_created: string|null,
+ *     ts_last_sent: string|null,
+ *     deleted: int|string,
+ *     evolution_graph_within_period: bool|int|string,
+ *     evolution_graph_period_n: int|string
+ * }
  *
  * @method static \Piwik\Plugins\ScheduledReports\API getInstance()
  */
@@ -62,8 +85,15 @@ class API extends \Piwik\Plugin\API
     public const OUTPUT_SAVE_ON_DISK = 2;
     public const OUTPUT_INLINE = 3;
     public const OUTPUT_RETURN = 4;
+    /**
+     * @var bool
+     */
     private $enableSaveReportOnDisk = \false;
-    // static cache storing reports
+    /**
+     * static cache storing reports
+     *
+     * @var array<string, list<ScheduledReport>>
+     */
     public static $cache = [];
     /**
      * @var LoggerInterface
@@ -74,23 +104,23 @@ class API extends \Piwik\Plugin\API
         $this->logger = $logger;
     }
     /**
-     * Creates a new report and schedules it.
+     * Creates and schedules a new report.
      *
-     * @param int $idSite
-     * @param string $description Report description
-     * @param string $period Schedule frequency: day, week or month
-     * @param int $hour Hour (0-23) when the report should be sent
-     * @param string $reportType 'email' or any other format provided via the ScheduledReports.getReportTypes hook
-     * @param string $reportFormat 'pdf', 'html' or any other format provided via the ScheduledReports.getReportFormats hook
-     * @param array $reports array of reports
-     * @param array $parameters array of parameters
-     * @param bool|int $idSegment Segment Identifier
-     * @param string $evolutionPeriodFor If set to 'each', the evolution graphs cover each day within the period. If set to 'prev',
-     *                                   evolution graphs cover the previous N periods.
-     * @param int|null $evolutionPeriodN The previous N periods to query in evolution graphs if $evolutionPeriodFor is 'each'.
-     * @param string $periodParam the period for the report, eg 'day', 'week', 'month', 'year'.
-     *
-     * @return int idReport generated
+     * @param int $idSite The numeric ID of the website to report on.
+     * @param string $description The report title shown in the UI and used in generated filenames.
+     * @param 'day'|'week'|'month'|'never' $period The delivery schedule for the report.
+     * @param int $hour The hour of day in 24-hour format when the report should be sent.
+     * @param string $reportType The transport medium identifier, such as `email`.
+     * @param string $reportFormat The output format identifier, such as `pdf` or `html`.
+     * @param array $reports The report unique IDs to include in the scheduled report.
+     * @param array $parameters The transport-specific parameters to store with the report.
+     * @param int|false $idSegment The saved segment ID to apply, or `false` to send the report without a segment.
+     * @param 'prev'|'each' $evolutionPeriodFor Whether evolution graphs compare previous periods or each day within
+     *                                          the selected period.
+     * @param int|null $evolutionPeriodN The number of previous periods to include when `$evolutionPeriodFor` is
+     *                                   `prev`.
+     * @param 'day'|'week'|'month'|'year'|null $periodParam The data period generated for each scheduled send.
+     * @return int The created scheduled report ID.
      */
     public function addReport($idSite, $description, $period, $hour, $reportType, $reportFormat, $reports, $parameters, $idSegment = \false, $evolutionPeriodFor = 'prev', $evolutionPeriodN = null, $periodParam = null)
     {
@@ -109,7 +139,10 @@ class API extends \Piwik\Plugin\API
         $idReport = $this->getModel()->createReport(['idsite' => $idSite, 'login' => $currentUser, 'description' => $description, 'idsegment' => $idSegment, 'period' => $period, 'period_param' => $periodParam, 'hour' => $hour, 'type' => $reportType, 'format' => $reportFormat, 'parameters' => $parameters, 'reports' => $reports, 'ts_created' => Date::now()->getDatetime(), 'deleted' => 0, 'evolution_graph_within_period' => $evolutionPeriodFor == 'each', 'evolution_graph_period_n' => $evolutionPeriodN ?: ImageGraph::getDefaultGraphEvolutionLastPeriods()]);
         return $idReport;
     }
-    private static function ensureLanguageSetForUser($currentUser)
+    /**
+     * @param string $currentUser
+     */
+    private static function ensureLanguageSetForUser($currentUser) : void
     {
         $lang = Request::processRequest('LanguagesManager.getLanguageForUser', ['login' => $currentUser]);
         if (empty($lang)) {
@@ -119,6 +152,22 @@ class API extends \Piwik\Plugin\API
     /**
      * Updates an existing report.
      *
+     * @param int $idReport The scheduled report ID to update.
+     * @param int $idSite The numeric ID of the website the report belongs to.
+     * @param string $description The report title shown in the UI and used in generated filenames.
+     * @param 'day'|'week'|'month'|'never' $period The delivery schedule for the report.
+     * @param int $hour The hour of day in 24-hour format when the report should be sent.
+     * @param string $reportType The transport medium identifier, such as `email`.
+     * @param string $reportFormat The output format identifier, such as `pdf` or `html`.
+     * @param array<string> $reports The report unique IDs to include in the scheduled report.
+     * @param array $parameters The transport-specific parameters to store with the report.
+     * @param int|false $idSegment The saved segment ID to apply, or `false` to send the report without a segment.
+     * @param 'prev'|'each' $evolutionPeriodFor Whether evolution graphs compare previous periods or each day within
+     *                                          the selected period.
+     * @param int|null $evolutionPeriodN The number of previous periods to include when `$evolutionPeriodFor` is
+     *                                   `prev`.
+     * @param 'day'|'week'|'month'|'year'|null $periodParam The data period generated for each scheduled send.
+     * @return void
      * @see addReport()
      */
     public function updateReport($idReport, $idSite, $description, $period, $hour, $reportType, $reportFormat, $reports, $parameters, $idSegment = \false, $evolutionPeriodFor = 'prev', $evolutionPeriodN = null, $periodParam = null)
@@ -127,6 +176,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasViewAccess($idSite);
         $scheduledReports = $this->getReports($idSite, $periodSearch = \false, $idReport);
         $report = reset($scheduledReports);
+        /** @var ScheduledReport $report */
         $idReport = $report['idreport'];
         $currentUser = Piwik::getCurrentUserLogin();
         self::ensureLanguageSetForUser($currentUser);
@@ -142,28 +192,127 @@ class API extends \Piwik\Plugin\API
         self::$cache = [];
     }
     /**
-     * Deletes a specific report
+     * Marks a scheduled report as deleted.
      *
-     * @param int $idReport
+     * @param int $idReport The scheduled report ID to delete.
+     * @return void
      */
     public function deleteReport($idReport)
     {
         $APIScheduledReports = $this->getReports($idSite = \false, $periodSearch = \false, $idReport);
         $report = reset($APIScheduledReports);
+        /** @var ScheduledReport $report */
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($report['login']);
         $this->getModel()->updateReport($idReport, ['deleted' => 1]);
         self::$cache = [];
     }
     /**
-     * Returns the list of reports matching the passed parameters
+     * Builds the report selection payload for a dashboard export.
      *
-     * @param bool|int $idSite If specified, will filter reports that belong to a specific idsite
-     * @param bool|string $period If specified, will filter reports that are scheduled for this period (day,week,month)
-     * @param bool|int $idReport If specified, will filter the report that has the given idReport
-     * @param bool $ifSuperUserReturnOnlySuperUserReports
-     * @param bool|int $idSegment If specified, will filter the report that has the given idSegment
-     * @throws Exception
-     * @return array
+     * @param int $dashId The dashboard ID to inspect.
+     * @param int $idSite The numeric ID of the website the dashboard is being exported for.
+     * @param string $segment Custom segment to match against saved segments.
+     * @return array{dashboardName: string, email: array<string, bool>, idSegment: int|null, unmappedWidgets: string[]}
+     *         The dashboard name, selected report IDs, resolved segment ID, and unmapped widget names.
+     * @internal
+     */
+    public function getWidgetReportMap(int $dashId, int $idSite, string $segment = '') : array
+    {
+        $dashId = $this->validatePositiveIntegerParameter($dashId, 'dashId');
+        $idSite = $this->validatePositiveIntegerParameter($idSite, 'idSite');
+        $segment = trim($segment);
+        Piwik::checkUserHasViewAccess($idSite);
+        $idSegment = $this->findIdSegmentForDefinition($segment, $idSite);
+        $dashboardInfo = $this->getDashboardNameAndLayout($dashId);
+        if ($dashboardInfo) {
+            $layout = $dashboardInfo['layout'];
+            $dashboardName = $dashboardInfo['name'];
+            if (empty($layout)) {
+                return ['dashboardName' => $dashboardName, 'email' => [], 'idSegment' => $idSegment, 'unmappedWidgets' => []];
+            }
+            $mapper = new \Piwik\Plugins\ScheduledReports\WidgetReportMapper();
+            $widgetIds = $mapper->extractWidgetIdsFromLayout($layout);
+            $widgetReportMapping = $mapper->getMappingForSite((string) $idSite);
+            $reportMapping = [];
+            $unmappedWidgets = [];
+            $widgetNamesById = $mapper->getWidgetNamesById($widgetIds);
+            foreach ($widgetIds as $widgetId) {
+                $reportKey = $widgetReportMapping[$widgetId] ?? null;
+                if ($reportKey) {
+                    $reportMapping[$reportKey] = \true;
+                } elseif (isset($widgetNamesById[$widgetId]) && $widgetNamesById[$widgetId]) {
+                    $unmappedWidgets[] = $widgetNamesById[$widgetId];
+                }
+            }
+            return ['dashboardName' => $dashboardName, 'email' => $reportMapping, 'idSegment' => $idSegment, 'unmappedWidgets' => $unmappedWidgets];
+        }
+        return ['dashboardName' => '', 'email' => [], 'idSegment' => $idSegment, 'unmappedWidgets' => []];
+    }
+    /**
+     * Returns the current user's dashboard name and layout.
+     *
+     * @return array{name: string, layout: mixed}|null
+     */
+    private function getDashboardNameAndLayout(int $dashId) : ?array
+    {
+        if (Piwik::isUserIsAnonymous()) {
+            return null;
+        }
+        $dashboard = new Dashboard();
+        $login = Piwik::getCurrentUserLogin();
+        $allDashboards = $dashboard->getAllDashboards($login);
+        $name = $layout = '';
+        $dashboardFound = \false;
+        foreach ($allDashboards as $dashbrd) {
+            if ((int) $dashbrd['iddashboard'] === $dashId) {
+                $dashboardFound = \true;
+                $layout = $dashbrd['layout'];
+                $name = $dashbrd['name'];
+                break;
+            }
+        }
+        if ($dashId === 1 && !$dashboardFound) {
+            $layout = $dashboard->decodeLayout($dashboard->getDefaultLayout());
+            $name = Piwik::translate('Dashboard_Dashboard');
+        }
+        return ['name' => $name, 'layout' => $layout];
+    }
+    /**
+     * @param string $parameterName Name used in the exception message.
+     */
+    private function validatePositiveIntegerParameter(int $value, string $parameterName) : int
+    {
+        if ($value < 1) {
+            throw new InvalidRequestParameterException("The parameter '{$parameterName}' contains an invalid value.");
+        }
+        return $value;
+    }
+    private function findIdSegmentForDefinition(string $segmentDefinition, int $idSite) : ?int
+    {
+        if ($segmentDefinition === '' || !self::isSegmentEditorActivated()) {
+            return null;
+        }
+        $segmentHash = (new Segment($segmentDefinition, [$idSite]))->getHash();
+        $segments = APISegmentEditor::getInstance()->getAll($idSite);
+        foreach ($segments as $segment) {
+            // SegmentEditor::getAll() is expected to always include a precomputed hash.
+            if ($segment['hash'] === $segmentHash) {
+                return (int) $segment['idsegment'];
+            }
+        }
+        return null;
+    }
+    /**
+     * Returns scheduled reports that match the supplied filters.
+     *
+     * @param int|false $idSite Filters reports to a specific website when provided.
+     * @param 'day'|'week'|'month'|'never'|false $period Filters reports by delivery schedule when provided.
+     * @param int|false $idReport Filters to a single scheduled report when provided.
+     * @param bool $ifSuperUserReturnOnlySuperUserReports If `true`, super users only receive their own reports.
+     * @param int|false $idSegment Filters reports to a specific saved segment when provided.
+     * @return array<int, array<string, mixed>> The matching scheduled reports with decoded `parameters` and `reports`
+     *                                          fields.
+     * @phpstan-return list<ScheduledReport>
      */
     public function getReports($idSite = \false, $period = \false, $idReport = \false, $ifSuperUserReturnOnlySuperUserReports = \false, $idSegment = \false)
     {
@@ -225,16 +374,25 @@ class API extends \Piwik\Plugin\API
         return $reports;
     }
     /**
-     * Generates a report file.
+     * Generates a scheduled report in the requested output mode.
      *
-     * @param int $idReport ID of the report to generate.
-     * @param string $date YYYY-MM-DD
-     * @param bool|false|string $language If not passed, will use default language.
-     * @param bool|false|int $outputType 1 = download report, 3 = output report in browser, 4 = return report content to caller, defaults to download
-     * @param bool|false|string $period If not specified, will default to the report's period set when creating the report
-     * @param bool|false|string $reportFormat 'pdf', 'html' or any other format provided via the ScheduledReports.getReportFormats hook
-     * @param bool|false|array $parameters array of parameters
-     * @return array|void
+     * @param int $idReport The scheduled report ID to generate.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|false $language The language code to render the report in, or `false` to use the default
+     *                               language.
+     * @param int|false $outputType The output mode. Use `OUTPUT_DOWNLOAD`, `OUTPUT_SAVE_ON_DISK`,
+     *                              `OUTPUT_INLINE`, or `OUTPUT_RETURN`.
+     * @param 'day'|'week'|'month'|'year'|'range'|null|false $period The data period to generate, or `false` to use the
+     *                                                               report's stored period.
+     * @param string|false $reportFormat The output format identifier, such as `pdf` or `html`, or `false` to use the
+     *                                   stored format.
+     * @param array|false $parameters Transport-specific parameters to override for this generation, or `false` to use
+     *                                the stored parameters.
+     * @return array{0: string, 1: string|null, 2: string, 3: string, 4: array<int, mixed>}|string|void The saved file
+     *         metadata when writing to disk, the rendered report contents when using `OUTPUT_RETURN`, or no value when
+     *         streaming the report to the browser.
      */
     public function generateReport($idReport, $date, $language = \false, $outputType = \false, $period = \false, $reportFormat = \false, $parameters = \false)
     {
@@ -251,6 +409,7 @@ class API extends \Piwik\Plugin\API
         $translator->setCurrentLanguage($language);
         $reports = $this->getReports($idSite = \false, $_period = \false, $idReport);
         $report = reset($reports);
+        /** @var ScheduledReport $report */
         $idReport = $report['idreport'];
         $idSite = $report['idsite'];
         $login = $report['login'];
@@ -269,9 +428,12 @@ class API extends \Piwik\Plugin\API
             $reportFormat = $report['format'];
         }
         // override and/or validate report parameters
-        $report['parameters'] = json_decode(self::validateReportParameters($reportType, empty($parameters) ? $report['parameters'] : $parameters), \true);
-        $parameters = $report['parameters'];
-        $enforceCustomOrder = is_array($parameters) && array_key_exists(self::ENFORCE_ORDER_PARAMETER, $parameters) && !empty($parameters[self::ENFORCE_ORDER_PARAMETER]);
+        $parameters = json_decode(self::validateReportParameters($reportType, empty($parameters) ? $report['parameters'] : $parameters), \true);
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
+        $report['parameters'] = $parameters;
+        $enforceCustomOrder = array_key_exists(self::ENFORCE_ORDER_PARAMETER, $parameters) && !empty($parameters[self::ENFORCE_ORDER_PARAMETER]);
         $originalShowEvolutionWithinSelectedPeriod = Config::getInstance()->General['graphs_show_evolution_within_selected_period'];
         $originalDefaultEvolutionGraphLastPeriodsAmount = Config::getInstance()->General['graphs_default_evolution_graph_last_days_amount'];
         $initialFilterTruncate = Common::getRequestVar('filter_truncate', \false);
@@ -347,7 +509,7 @@ class API extends \Piwik\Plugin\API
                 }
                 $processedReport['segment'] = $segment;
                 // TODO add static method getPrettyDate($period, $date) in Period
-                $prettyDate = $processedReport['prettyDate'];
+                $prettyDate = (string) $processedReport['prettyDate'];
                 if ($mustRestoreGET) {
                     $_GET = $mustRestoreGET;
                 }
@@ -379,6 +541,7 @@ class API extends \Piwik\Plugin\API
          *                      generated.
          */
         Piwik::postEvent(self::PROCESS_REPORTS_EVENT, [&$processedReports, $reportType, $outputType, $report]);
+        /** @var ReportRenderer|null $reportRenderer */
         $reportRenderer = null;
         /**
          * Triggered when obtaining a renderer instance based on the scheduled report output format.
@@ -421,24 +584,31 @@ class API extends \Piwik\Plugin\API
                 $outputFilename = $reportRenderer->sendToDisk($outputFilename);
                 $additionalFiles = $this->getAttachments($reportRenderer, $report, $processedReports, $prettyDate);
                 return [$outputFilename, $prettyDate, $reportSubject, $reportTitle, $additionalFiles];
-                break;
             case self::OUTPUT_INLINE:
                 $reportRenderer->sendToBrowserInline($filename);
                 break;
             case self::OUTPUT_RETURN:
                 return $reportRenderer->getRenderedReport();
-                break;
             default:
             case self::OUTPUT_DOWNLOAD:
                 $reportRenderer->sendToBrowserDownload($filename);
                 break;
         }
     }
-    public function sendReport($idReport, $period = \false, $date = \false, $force = \false)
+    /**
+     * Sends a scheduled report immediately.
+     *
+     * @param int $idReport The scheduled report ID to send.
+     * @param 'day'|'week'|'month'|'year'|null|false $period The data period to send, or `false` to use the stored period.
+     * @param string|false $date The date to generate the report for, or `false` to use the previous scheduled period.
+     * @param bool $force Whether to send the report even if it has already been sent for the same period.
+     */
+    public function sendReport($idReport, $period = \false, $date = \false, $force = \false) : void
     {
         Piwik::checkUserIsNotAnonymous();
         $reports = $this->getReports($idSite = \false, \false, $idReport);
         $report = reset($reports);
+        /** @var ScheduledReport $report */
         if (!empty($period)) {
             self::validatePeriodParam($period);
             $report['period_param'] = $period;
@@ -493,8 +663,8 @@ class API extends \Piwik\Plugin\API
                  * @param array $additionalFiles The list of additional files that should be
                  *                               sent with this report.
                  * @param \Piwik\Period $period The period for which the report has been generated.
-                 * @param boolean $force A report can only be sent once per period. Setting this to true
-                 *                       will force to send the report even if it has already been sent.
+                 * @param bool $force A report can only be sent once per period. Setting this to true
+                 *                    will force to send the report even if it has already been sent.
                  */
                 Piwik::postEvent(self::SEND_REPORT_EVENT, [&$reportType, $report, $contents, $filename = basename($outputFilename), $prettyDate, $reportSubject, $reportTitle, $additionalFiles, \Piwik\Period\Factory::build($report['period_param'], $date), $force]);
                 // Update flag in DB
@@ -508,11 +678,16 @@ class API extends \Piwik\Plugin\API
             }
         });
     }
-    private function getModel()
+    private function getModel() : \Piwik\Plugins\ScheduledReports\Model
     {
         return new \Piwik\Plugins\ScheduledReports\Model();
     }
-    private static function getReportSubjectAndReportTitle($websiteName, $reports)
+    /**
+     * @param string $websiteName
+     * @param array<int, string> $reports
+     * @return array{0: string, 1: string}
+     */
+    private static function getReportSubjectAndReportTitle($websiteName, $reports) : array
     {
         // if the only report is "All websites", we don't display the site name
         $reportTitle = $websiteName;
@@ -523,9 +698,14 @@ class API extends \Piwik\Plugin\API
         }
         return [$reportSubject, $reportTitle];
     }
+    /**
+     * @param string $reportType
+     * @param array $parameters
+     * @return string
+     */
     private static function validateReportParameters($reportType, $parameters)
     {
-        // get list of valid parameters
+        /** @var array<string, bool> $availableParameters */
         $availableParameters = [];
         /**
          * Triggered when gathering the available parameters for a scheduled report type.
@@ -566,10 +746,19 @@ class API extends \Piwik\Plugin\API
         Piwik::postEvent(self::VALIDATE_PARAMETERS_EVENT, [&$parameters, $reportType]);
         return json_encode($parameters);
     }
-    private static function validateAndTruncateDescription(&$description)
+    /**
+     * @param string $description Truncated in place to 250 characters.
+     */
+    private static function validateAndTruncateDescription(&$description) : void
     {
         $description = substr($description, 0, 250);
     }
+    /**
+     * @param int|string $idSite
+     * @param string $reportType
+     * @param array<string> $requestedReports
+     * @return string
+     */
     private static function validateRequestedReports($idSite, $reportType, $requestedReports)
     {
         if (!self::allowMultipleReports($reportType)) {
@@ -589,7 +778,17 @@ class API extends \Piwik\Plugin\API
         }
         return json_encode($requestedReports);
     }
-    private static function validateCommonReportAttributes($period, $hour, &$description, &$idSegment, $reportType, $reportFormat, $evolutionPeriodFor, $evolutionPeriodN)
+    /**
+     * @param string $period
+     * @param int|string $hour
+     * @param string $description Truncated in place to 250 characters.
+     * @param int|false|null $idSegment Normalized in place to `null` when empty.
+     * @param string $reportType
+     * @param string $reportFormat
+     * @param string $evolutionPeriodFor
+     * @param int|string|null $evolutionPeriodN
+     */
+    private static function validateCommonReportAttributes($period, $hour, &$description, &$idSegment, $reportType, $reportFormat, $evolutionPeriodFor, $evolutionPeriodN) : void
     {
         self::validateReportPeriod($period);
         self::validateReportHour($hour);
@@ -599,14 +798,14 @@ class API extends \Piwik\Plugin\API
         self::validateReportFormat($reportType, $reportFormat);
         self::validateEvolutionPeriod($evolutionPeriodFor, $evolutionPeriodN);
     }
-    private static function validateReportPeriod($period)
+    private static function validateReportPeriod(string $period) : void
     {
         $availablePeriods = ['day', 'week', 'month', 'never'];
         if (!in_array($period, $availablePeriods)) {
             throw new Exception('Period schedule must be one of the following: ' . implode(', ', $availablePeriods) . ' (got ' . $period . ')');
         }
     }
-    private static function validatePeriodParam($period)
+    private static function validatePeriodParam(string $period) : void
     {
         $periodValidator = new Period\PeriodValidator();
         $allowedPeriods = array_flip($periodValidator->getPeriodsAllowedForAPI());
@@ -615,13 +814,19 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Report period must be one of the following: ' . implode(', ', array_keys($allowedPeriods)) . ' (got ' . $period . ')');
         }
     }
-    private static function validateReportHour($hour)
+    /**
+     * @param int|string $hour
+     */
+    private static function validateReportHour($hour) : void
     {
         if (!is_numeric($hour) || $hour < 0 || $hour > 23) {
             throw new Exception('Invalid hour schedule. Should be anything from 0 to 23 inclusive.');
         }
     }
-    private static function validateIdSegment(&$idSegment)
+    /**
+     * @param int|string|false|null $idSegment Normalized in place to `null` when empty.
+     */
+    private static function validateIdSegment(&$idSegment) : void
     {
         if (empty($idSegment) || is_numeric($idSegment) && $idSegment == 0) {
             $idSegment = null;
@@ -631,21 +836,25 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Segment with id ' . $idSegment . ' does not exist or SegmentEditor is not activated.');
         }
     }
-    private static function validateReportType($reportType)
+    private static function validateReportType(string $reportType) : void
     {
         $reportTypes = array_keys(self::getReportTypes());
         if (!in_array($reportType, $reportTypes)) {
             throw new Exception('Report type \'' . $reportType . '\' not valid. Try one of the following ' . implode(', ', $reportTypes));
         }
     }
-    private static function validateReportFormat($reportType, $reportFormat)
+    private static function validateReportFormat(string $reportType, string $reportFormat) : void
     {
         $reportFormats = array_keys(self::getReportFormats($reportType));
         if (!in_array($reportFormat, $reportFormats)) {
             throw new Exception(Piwik::translate('General_ExceptionInvalidReportRendererFormat', [$reportFormat, implode(', ', $reportFormats)]));
         }
     }
-    private static function validateEvolutionPeriod($evolutionPeriodFor, $evolutionPeriodN)
+    /**
+     * @param int|string|null $evolutionPeriodN
+     * @return void
+     */
+    private static function validateEvolutionPeriod(string $evolutionPeriodFor, $evolutionPeriodN)
     {
         if ($evolutionPeriodFor !== 'prev' && $evolutionPeriodFor !== 'each') {
             throw new \Exception('Invalid evolutionPeriodFor value, can only be "prev" or "each" (got ' . $evolutionPeriodFor . ').');
@@ -658,6 +867,9 @@ class API extends \Piwik\Plugin\API
         }
     }
     /**
+     * @param int $idSite
+     * @param string $reportType
+     * @return array<int, array<string, mixed>>
      * @ignore
      */
     public static function getReportMetadata($idSite, $reportType)
@@ -681,6 +893,8 @@ class API extends \Piwik\Plugin\API
         return $availableReportMetadata;
     }
     /**
+     * @param string $reportType
+     * @return bool|null
      * @ignore
      */
     public static function allowMultipleReports($reportType)
@@ -703,6 +917,7 @@ class API extends \Piwik\Plugin\API
         return $allowMultipleReports;
     }
     /**
+     * @return array<string, string>
      * @ignore
      */
     public static function getReportTypes()
@@ -721,6 +936,8 @@ class API extends \Piwik\Plugin\API
         return $reportTypes;
     }
     /**
+     * @param string $reportType
+     * @return array<string, string>
      * @ignore
      */
     public static function getReportFormats($reportType)
@@ -742,6 +959,8 @@ class API extends \Piwik\Plugin\API
         return $reportFormats;
     }
     /**
+     * @param ScheduledReport $report
+     * @return array<int, string>
      * @ignore
      */
     public static function getReportRecipients($report)
@@ -767,6 +986,8 @@ class API extends \Piwik\Plugin\API
         return $recipients;
     }
     /**
+     * @param int|string|false|null $idSegment
+     * @return array<string, mixed>|null
      * @ignore
      */
     public static function getSegment($idSegment)
@@ -782,17 +1003,26 @@ class API extends \Piwik\Plugin\API
         return null;
     }
     /**
+     * @return bool
      * @ignore
      */
     public static function isSegmentEditorActivated()
     {
         return \Piwik\Plugin\Manager::getInstance()->isPluginActivated('SegmentEditor');
     }
-    private function getAttachments($reportRenderer, $report, $processedReports, $prettyDate)
+    /**
+     * @param ScheduledReport $report
+     * @param array<int, array<string, mixed>> $processedReports
+     * @return array<int, mixed>
+     */
+    private function getAttachments(ReportRenderer $reportRenderer, array $report, array $processedReports, ?string $prettyDate)
     {
         return $reportRenderer->getAttachments($report, $processedReports, $prettyDate);
     }
-    private function checkUserHasViewPermission($login, $idSite)
+    /**
+     * @param int|string|null $idSite
+     */
+    private function checkUserHasViewPermission(string $login, $idSite) : void
     {
         if (empty($idSite)) {
             return;
@@ -802,7 +1032,7 @@ class API extends \Piwik\Plugin\API
             throw new NoAccessException(Piwik::translate('General_ExceptionPrivilege', ["'view'"]));
         }
     }
-    private function checkDateAndPeriodCombination($date, $period) : void
+    private function checkDateAndPeriodCombination(string $date, string $period) : void
     {
         if ('range' === $period) {
             Period::checkDateFormat($date);

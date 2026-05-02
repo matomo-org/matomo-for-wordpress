@@ -78,7 +78,6 @@ class CalculateConversionPages extends ConsoleCommand
     /**
      * Static method to calculate conversion for today and yesterday, for all sites and goals.
      * Called by the migration updater
-     *
      */
     public static function calculateYesterdayAndToday() : void
     {
@@ -118,7 +117,6 @@ class CalculateConversionPages extends ConsoleCommand
     }
     /**
      * Validate the sites parameter
-     *
      */
     private function getSitesToCalculate() : ?string
     {
@@ -139,7 +137,6 @@ class CalculateConversionPages extends ConsoleCommand
     }
     /**
      * Validate the goals parameter
-     *
      */
     private function getGoalsToCalculate() : ?string
     {

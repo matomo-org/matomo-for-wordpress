@@ -89,6 +89,8 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     public abstract function sendToBrowserInline($filename);
     /**
      * Get rendered report
+     *
+     * @return string
      */
     public abstract function getRenderedReport();
     /**

@@ -273,7 +273,6 @@ class ArchivePurger
     }
     /**
      * For tests.
-     *
      */
     public function setYesterdayDate(Date $yesterday)
     {
@@ -281,7 +280,6 @@ class ArchivePurger
     }
     /**
      * For tests.
-     *
      */
     public function setTodayDate(Date $today)
     {

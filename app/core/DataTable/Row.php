@@ -52,8 +52,6 @@ class Row extends \ArrayObject
     public const METADATA = 1;
     public const DATATABLE_ASSOCIATED = 3;
     /**
-     * Constructor.
-     *
      * @param array $row An array with the following structure:
      *
      *                       array(
@@ -199,7 +197,7 @@ class Row extends \ArrayObject
      * Returns true if a column having the given name is already registered. The value will not be evaluated, it will
      * just check whether a column exists independent of its value.
      *
-     * @param string $name
+     * @param string|int $name
      * @return bool
      */
     public function hasColumn($name)
@@ -578,7 +576,6 @@ class Row extends \ArrayObject
     }
     /**
      * Associates the supplied table with this row as the comparisons table.
-     *
      */
     public function setComparisons(DataTable $table)
     {

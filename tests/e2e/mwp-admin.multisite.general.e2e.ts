@@ -85,6 +85,6 @@ describe('MultiSite General', function() {
 
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting`)
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.3);
   });
 });

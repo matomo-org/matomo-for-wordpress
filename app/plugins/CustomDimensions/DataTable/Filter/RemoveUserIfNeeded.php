@@ -18,8 +18,6 @@ class RemoveUserIfNeeded extends BaseFilter
     private $period;
     private $date;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      */
     public function __construct($table, $idSite, $period, $date)

@@ -389,5 +389,8 @@ $passwordHash, $exceptionMessage)
         $translationKeys[] = 'UsersManager_InvalidTokenExpireDateFormat';
         $translationKeys[] = 'UsersManager_XAgo';
         $translationKeys[] = 'UsersManager_CannotRevokeOwnSuperuserAccess';
+        $translationKeys[] = 'UsersManager_SignOutUser';
+        $translationKeys[] = 'UsersManager_SignOutUserConfirm';
+        $translationKeys[] = 'UsersManager_SignOutUserSuccess';
     }
 }

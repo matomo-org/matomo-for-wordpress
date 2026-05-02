@@ -21,7 +21,7 @@ describe('Matomo Admin > System', () => {
 
     await GeneralSettingsPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.system.general-settings')
+      await browser.checkFullPageScreen(`matomo-admin.system.general-settings.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
@@ -30,7 +30,7 @@ describe('Matomo Admin > System', () => {
 
     await MobileMessagingPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.system.mobile-messaging')
+      await browser.checkFullPageScreen(`matomo-admin.system.mobile-messaging.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 });

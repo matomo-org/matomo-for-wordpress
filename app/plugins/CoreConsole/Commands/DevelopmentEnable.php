@@ -12,8 +12,6 @@ use Piwik\Config;
 use Piwik\Filesystem;
 use Piwik\SettingsPiwik;
 use Piwik\Plugin\ConsoleCommand;
-/**
- */
 class DevelopmentEnable extends ConsoleCommand
 {
     protected function configure()

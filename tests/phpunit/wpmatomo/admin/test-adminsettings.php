@@ -6,7 +6,10 @@
 use WpMatomo\Admin\AdminSettings;
 use WpMatomo\Settings;
 
-class AdminSettingsTest extends MatomoUnit_TestCase {
+/**
+ * @group only
+ */
+class AdminSettingsTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var AdminSettings

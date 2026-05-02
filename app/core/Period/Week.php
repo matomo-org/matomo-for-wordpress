@@ -9,8 +9,6 @@
 namespace Piwik\Period;
 
 use Piwik\Period;
-/**
- */
 class Week extends Period
 {
     public const PERIOD_ID = 2;

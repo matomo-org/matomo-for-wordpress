@@ -21,8 +21,6 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomVariables\CustomVariables;
 use Piwik\Plugins\Events\Actions\ActionEvent;
 use Piwik\Tracker\Visit\VisitProperties;
-/**
- */
 class GoalManager
 {
     // log_visit.visit_goal_buyer
@@ -210,7 +208,6 @@ class GoalManager
     }
     /**
      * Records one or several goals matched in this request.
-     *
      */
     public function recordGoals(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {

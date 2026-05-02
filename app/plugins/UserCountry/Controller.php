@@ -17,9 +17,6 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\UserCountry\LocationProvider\DefaultProvider;
 use Piwik\Plugins\UserCountry\LocationProvider\DisabledProvider;
 use Piwik\View;
-/**
- *
- */
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     public function getDistinctCountries()

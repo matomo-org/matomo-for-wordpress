@@ -37,7 +37,6 @@ class Updates_5_4_0_b4 extends PiwikUpdates
         $this->optionTable = Common::prefixTable('option');
     }
     /**
-     *
      * @return Migration[]
      */
     public function getMigrations(Updater $updater)

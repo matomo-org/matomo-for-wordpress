@@ -31,11 +31,13 @@ use Piwik\Plugins\UsersManager\Repository\UserRepository;
 use Piwik\Plugins\UsersManager\Validators\AllowedEmailDomain;
 use Piwik\Plugins\UsersManager\Validators\Email;
 use Piwik\Request\AuthenticationToken;
+use Piwik\Settings\Storage\UserScopedSettingsAccessManager;
 use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Tracker\Cache;
 use Piwik\Url;
 use Piwik\Validators\BaseValidator;
+use Piwik\Validators\NotEmpty;
 /**
  * The UsersManager API lets you Manage Users and their permissions to access specific websites.
  *
@@ -177,8 +179,16 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         if ($userLogin === 'anonymous') {
             Piwik::checkUserHasSuperUserAccess();
         }
-        $nameIfSupported = $this->getPreferenceId($userLogin, $preferenceName);
-        Option::set($nameIfSupported, $preferenceValue);
+        $this->assertPreferenceNameIsSupported($preferenceName);
+        $this->getUserSettingsAccessManager()->set('UsersManager', $userLogin, $preferenceName, $preferenceValue);
+        /**
+         * Keep legacy option key for compatibility with older LoginLdap versions.
+         * @deprecated - This should be removed with Matomo 6, LoginLdap should be updated
+         *               to not rely on Option storage for this setting
+         */
+        if ($preferenceName === 'isLDAPUser') {
+            Option::set($userLogin . self::OPTION_NAME_PREFERENCE_SEPARATOR . $preferenceName, $preferenceValue);
+        }
     }
     /**
      * Gets a user preference
@@ -227,20 +237,15 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
     public function getAllUsersPreferences(array $preferenceNames)
     {
         Piwik::checkUserHasSuperUserAccess();
-        $userPreferences = [];
+        $supportedPreferenceNames = [];
         foreach ($preferenceNames as $preferenceName) {
-            $optionNameMatchAllUsers = $this->getPreferenceId('%', $preferenceName);
-            $preferences = Option::getLike($optionNameMatchAllUsers);
-            foreach ($preferences as $optionName => $optionValue) {
-                $lastUnderscore = strrpos($optionName, self::OPTION_NAME_PREFERENCE_SEPARATOR);
-                $userName = substr($optionName, 0, $lastUnderscore);
-                $preference = substr($optionName, $lastUnderscore + 1);
-                $userPreferences[$userName][$preference] = $optionValue;
-            }
+            $this->assertPreferenceNameIsSupported($preferenceName);
+            $supportedPreferenceNames[] = $preferenceName;
         }
+        $userPreferences = $this->getUserSettingsAccessManager()->getValuesForAllUsers('UsersManager', $supportedPreferenceNames);
         return $userPreferences;
     }
-    private function getPreferenceId($login, $preference)
+    private function assertPreferenceNameIsSupported($preference) : void
     {
         if (\false !== strpos($preference, self::OPTION_NAME_PREFERENCE_SEPARATOR)) {
             throw new Exception("Preference name cannot contain underscores.");
@@ -256,11 +261,11 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         if (!in_array($preference, $names, \true) && !in_array($preference, $customPreferences, \true)) {
             throw new Exception('Not supported preference name: ' . $preference);
         }
-        return $login . self::OPTION_NAME_PREFERENCE_SEPARATOR . $preference;
     }
     private function getPreferenceValue($userLogin, $preferenceName)
     {
-        return Option::get($this->getPreferenceId($userLogin, $preferenceName));
+        $this->assertPreferenceNameIsSupported($preferenceName);
+        return $this->getUserSettingsAccessManager()->get('UsersManager', $userLogin, $preferenceName, \false);
     }
     private function getDefaultUserPreference($preferenceName, $login)
     {
@@ -276,6 +281,10 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
             default:
                 return \false;
         }
+    }
+    private function getUserSettingsAccessManager() : UserScopedSettingsAccessManager
+    {
+        return StaticContainer::get(UserScopedSettingsAccessManager::class);
     }
     /**
      * Returns all users with their role for $idSite.
@@ -795,7 +804,6 @@ $passwordConfirmation = \false)
      * @param string $passwordConfirmation the currents users password, only required when request is authenticated with session token auth
      *
      * @throws Exception if the user doesn't exist or if deleting the users would leave no superusers.
-     *
      */
     public function deleteUser($userLogin,
 #[\SensitiveParameter]
@@ -824,6 +832,27 @@ $passwordConfirmation = null)
         $email = $container->make(UserDeletedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'userLogin' => $userLogin]);
         $email->safeSend();
         Cache::deleteTrackerCache();
+    }
+    /**
+     * Signs a user out of all active sessions. Requires super user access.
+     * Use this for security purposes, e.g., if a device was lost or compromised.
+     *
+     * @param string $userLogin The login of the user to sign out
+     * @param string | null $passwordConfirmation the current user's password, only required when request is authenticated with session token auth
+     * @throws Exception if the user does not exist or is the anonymous user
+     */
+    public function logoutUser(string $userLogin,
+#[\SensitiveParameter]
+?string $passwordConfirmation = null) : void
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
+            $this->confirmCurrentUserPassword($passwordConfirmation);
+        }
+        BaseValidator::check('userlogin', $userLogin, [new NotEmpty()]);
+        $this->checkUserIsNotAnonymous($userLogin);
+        $this->checkUserExist($userLogin);
+        $this->model->deleteUserSessions($userLogin);
     }
     /**
      * Returns true if the given userLogin is known in the database

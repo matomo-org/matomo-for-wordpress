@@ -13,6 +13,7 @@ use Exception;
 use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Container\ContainerDoesNotExistException;
 use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
@@ -144,13 +145,15 @@ class Installer {
 			$this->create_user(); // we sync users as early as possible to make sure things are set up correctly
 			$this->install_tracker();
 
-			try {
-				$this->logger->log( 'Matomo will now init the environment' );
-				$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
-				$environment->init();
-			} catch ( Exception $e ) {
-				$this->logger->log( 'Ignoring error environment init' );
-				$this->logger->log_exception( 'install_env_init', $e );
+			if ( ! $this->is_environment_set_up() ) {
+				try {
+					$this->logger->log( 'Matomo will now init the environment' );
+					$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
+					$environment->init();
+				} catch ( Exception $e ) {
+					$this->logger->log( 'Ignoring error environment init' );
+					$this->logger->log_exception( 'install_env_init', $e );
+				}
 			}
 
 			try {
@@ -551,5 +554,14 @@ class Installer {
 
 		// reload activated plugins just in case something didn't go right above
 		$plugin_manager->loadActivatedPlugins();
+	}
+
+	private function is_environment_set_up() {
+		try {
+			StaticContainer::getContainer();
+			return true;
+		} catch ( ContainerDoesNotExistException $ex ) {
+			return false;
+		}
 	}
 }

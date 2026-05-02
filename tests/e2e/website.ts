@@ -77,6 +77,8 @@ class Website {
       return;
     }
 
+    await browser.setWindowSize(1366, 994);
+
     const baseUrl = await this.baseUrl();
     await this.retry(3, async () => {
       await browser.url(`${baseUrl}/wp-login.php`);
@@ -202,7 +204,7 @@ class Website {
         throw e;
     }
 
-    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
+    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForExist({ timeout: 60000 });
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
@@ -426,6 +428,8 @@ class Website {
   }
 
   async updateMatomoToLatest() {
+    await MatomoCli.buildMarketplaceRelease();
+
     const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
 
     await browser.url(`${await this.baseUrl()}/wp-admin/plugin-install.php`);

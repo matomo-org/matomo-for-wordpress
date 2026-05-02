@@ -9,8 +9,8 @@
 namespace Piwik\Plugins\LanguagesManager;
 
 use Piwik\Container\StaticContainer;
-use Piwik\Plugins\UsersManager\Model as UserModel;
 use Piwik\Plugins\LanguagesManager\Model as LangModel;
+use Piwik\Plugins\UsersManager\UserLoginHelper;
 use Piwik\Translation\Translator;
 /**
  * Helper class allowing to run a callback function with the given user's preferred language
@@ -25,20 +25,9 @@ use Piwik\Translation\Translator;
  */
 class LanguagesHelper
 {
-    private static function getUserFromEmailOrLogin(string $emailOrLogin) : ?array
-    {
-        $userModel = new UserModel();
-        $user = null;
-        if ($userModel->userExists($emailOrLogin)) {
-            $user = $userModel->getUser($emailOrLogin);
-        } elseif ($userModel->userEmailExists($emailOrLogin)) {
-            $user = $userModel->getUserByEmail($emailOrLogin);
-        }
-        return $user;
-    }
     public static function doWithUserLanguage(string $emailOrLogin, callable $callback)
     {
-        $user = self::getUserFromEmailOrLogin($emailOrLogin);
+        $user = UserLoginHelper::findUserByLoginOrEmail($emailOrLogin);
         if (!$user) {
             return $callback();
         }

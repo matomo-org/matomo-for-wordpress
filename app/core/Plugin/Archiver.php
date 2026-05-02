@@ -78,8 +78,6 @@ class Archiver
      */
     private $pluginName = null;
     /**
-     * Constructor.
-     *
      * @param ArchiveProcessor $processor The ArchiveProcessor instance to use when persisting archive
      *                                    data.
      */

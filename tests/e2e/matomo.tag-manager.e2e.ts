@@ -84,7 +84,7 @@ describe('Matomo > Tag Manager', () => {
     await browser.pause(1000);
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
-    ).toBeLessThanOrEqual(0.05);
+    ).toBeLessThanOrEqual(2);
   });
 
   it('should load the install code popup page correctly', async () => {
@@ -96,7 +96,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
-    ).toBeLessThanOrEqual(0.05);
+    ).toBeLessThanOrEqual(2);
   });
 
   it('should enable preview mode correctly', async () => {

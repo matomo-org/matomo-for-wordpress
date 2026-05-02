@@ -52,8 +52,6 @@ class Php extends GeoIp2
      */
     private $customDbNames;
     /**
-     * Constructor.
-     *
      * @param array|bool $customDbNames The possible filenames for each type of GeoIP database.
      *                                   eg array(
      *                                       'loc' => array('GeoLite2-City.mmdb'),

@@ -12,8 +12,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Widget\WidgetsList;
-/**
- */
 class GenerateWidget extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginBase
 {
     protected function configure()

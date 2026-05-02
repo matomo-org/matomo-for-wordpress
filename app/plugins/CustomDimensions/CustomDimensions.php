@@ -26,9 +26,6 @@ class CustomDimensions extends Plugin
      * @var Configuration
      */
     private $configuration;
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         parent::__construct();

@@ -33,7 +33,6 @@ class Notification
     }
     /**
      * Dismisses the notification for the current user
-     *
      */
     public function setNotificationDismissed() : void
     {
@@ -64,7 +63,6 @@ class Notification
     }
     /**
      * Removes a notification from current users session
-     *
      */
     public function removeFromSession() : void
     {

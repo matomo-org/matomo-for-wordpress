@@ -116,28 +116,22 @@ interface SchemaInterface
      * Returns if the database supports column updates in table updates.
      * Some database engines are performing sanity checks for table updates. Those might include checking if all columns used
      * already exist. In such a case queries like this might fail: `ALTER TABLE t ADD COLUMN b, ADD INDEX i (b)`
-     *
      */
     public function supportsComplexColumnUpdates() : bool;
     /**
      * Returns the default collation for a charset used by this database engine.
-     *
-     *
      */
     public function getDefaultCollationForCharset(string $charset) : string;
     /**
      * Return the default port used by this database engine
-     *
      */
     public function getDefaultPort() : int;
     /**
      * Return the table options to use for a CREATE TABLE statement.
-     *
      */
     public function getTableCreateOptions() : string;
     /**
      * Returns if performing on `OPTIMIZE TABLE` is supported for InnoDb tables
-     *
      */
     public function isOptimizeInnoDBSupported() : bool;
     /**
@@ -154,12 +148,10 @@ interface SchemaInterface
     /**
      * Returns if the database engine can provide a rollup ranking query result
      * without needing additional sorting.
-     *
      */
     public function supportsRankingRollupWithoutExtraSorting() : bool;
     /**
      * Returns if the database engine is able to use sorted subqueries
-     *
      */
     public function supportsSortingInSubquery() : bool;
     /**

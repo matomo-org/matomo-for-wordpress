@@ -7,9 +7,9 @@ namespace {
     // Begin       : 2013-05-16
     // Last Update : 2025-04-18
     // Authors     : Nicola Asuni - Tecnick.com LTD - www.tecnick.com - info@tecnick.com
-    // License     : GNU-LGPL v3 (http://www.gnu.org/copyleft/lesser.html)
+    // License     : GNU-LGPL v3 (https://www.gnu.org/copyleft/lesser.html)
     // -------------------------------------------------------------------
-    // Copyright (C) 2011-2025 Nicola Asuni - Tecnick.com LTD
+    // Copyright (C) 2011-2026 Nicola Asuni - Tecnick.com LTD
     //
     // This file is part of TCPDF software library.
     //
@@ -139,7 +139,7 @@ namespace {
         \define('PDF_HEADER_TITLE', 'TCPDF Example');
     }
     if (!\defined('PDF_HEADER_STRING')) {
-        \define('PDF_HEADER_STRING', "by Nicola Asuni - Tecnick.com\nwww.tcpdf.org");
+        \define('PDF_HEADER_STRING', "by2026 Nicola Asuni - Tecnick.com\nwww.tcpdf.org");
     }
     if (!\defined('PDF_UNIT')) {
         \define('PDF_UNIT', 'mm');
@@ -178,7 +178,7 @@ namespace {
         \define('PDF_FONT_MONOSPACED', 'courier');
     }
     if (!\defined('PDF_IMAGE_SCALE_RATIO')) {
-        \define('PDF_IMAGE_SCALE_RATIO', 1.25);
+        \define('PDF_IMAGE_SCALE_RATIO', 96 / 72);
     }
     if (!\defined('HEAD_MAGNIFICATION')) {
         \define('HEAD_MAGNIFICATION', 1.1);

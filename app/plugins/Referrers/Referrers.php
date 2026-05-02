@@ -16,8 +16,6 @@ use Piwik\Plugins\SitesManager\SiteUrls;
  * @see plugins/Referrers/functions.php
  */
 require_once PIWIK_INCLUDE_PATH . '/plugins/Referrers/functions.php';
-/**
- */
 class Referrers extends \Piwik\Plugin
 {
     /**

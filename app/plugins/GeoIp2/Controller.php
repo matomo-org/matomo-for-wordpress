@@ -5,12 +5,14 @@ namespace Piwik\Plugins\GeoIp2;
 use Piwik\Common;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Http;
+use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\UserCountry\UserCountry;
 use Piwik\View;
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
+    private const DOWNLOAD_URL_OPTION_PREFIX = 'geoip2.download_url.';
     /**
      * Starts or continues download of DBIP-City.mmdb.
      *
@@ -27,6 +29,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *   'expected_file_size' - The expected finished file size as returned by the HTTP server.
      *   'next_screen' - When the download finishes, this is the next screen that should be shown.
      *   'error' - When an error occurs, the message is returned in this property.
+     *
+     * @return string
      */
     public function downloadFreeDBIPLiteDB()
     {
@@ -51,11 +55,12 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                     \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::setUpdaterOptions(array('loc' => GeoIp2::getDbIpLiteUrl(), 'period' => \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::SCHEDULE_PERIOD_MONTHLY));
                     $result['settings'] = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getConfiguredUrls();
                 }
-                return json_encode($result);
+                return (string) json_encode($result);
             } catch (\Exception $ex) {
-                return json_encode(array('error' => $ex->getMessage()));
+                return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
+        return '';
     }
     /**
      * Sets the URLs used to download new versions of the installed GeoIP databases.
@@ -69,6 +74,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * Output (json):
      *   'error' - if an error occurs its message is set as the resulting JSON object's
      *             'error' property.
+     *
+     * @return string
      */
     public function updateGeoIPLinks()
     {
@@ -83,17 +90,18 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 // the browser so it can download it next
                 $info = $this->getNextMissingDbUrlInfoGeoIp2();
                 if ($info !== \false) {
-                    return json_encode($info);
+                    return (string) json_encode($info);
                 } else {
                     $view = new View("@GeoIp2/_updaterNextRunTime");
                     $view->nextRunTime = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getNextRunTime();
                     $nextRunTimeHtml = $view->render();
-                    return json_encode(array('nextRunTime' => $nextRunTimeHtml));
+                    return (string) json_encode(array('nextRunTime' => $nextRunTimeHtml));
                 }
             } catch (\Exception $ex) {
-                return json_encode(array('error' => $ex->getMessage()));
+                return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
+        return '';
     }
     /**
      * Starts or continues a download for a missing GeoIP database. A database is missing if
@@ -111,6 +119,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *                         downloading.
      *   'current_size' - Size of the current file on disk.
      *   'expected_file_size' - Size of the completely downloaded file.
+     *
+     * @return string
      */
     public function downloadMissingGeoIpDb()
     {
@@ -123,29 +133,98 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 // based on the database type (provided by the 'key' query param) determine the
                 // url & output file name
                 $key = Common::getRequestVar('key', null, 'string');
+                $isContinuation = Common::getRequestVar('continue', \true, 'int');
                 $url = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getConfiguredUrl($key);
+                if (!is_string($url) || $url === '') {
+                    throw new \Exception(Piwik::translate('General_DownloadFail_HttpRequestFail'));
+                }
+                $this->trackOrValidateConfiguredDownloadUrl($key, $url, $isContinuation);
                 $filename = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getZippedFilenameToDownloadTo($url, $key, \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getGeoIPUrlExtension($url));
                 $outputPath = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder($filename, \true);
                 // download part of the file
-                $result = Http::downloadChunk($url, $outputPath, Common::getRequestVar('continue', \true, 'int'));
+                $result = Http::downloadChunk($url, $outputPath, $isContinuation);
                 // if the file is done
                 if ($result['current_size'] >= $result['expected_file_size']) {
+                    $this->assertConfiguredUrlDidNotChangeDuringDownload($key, $url);
                     \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::unzipDownloadedFile($outputPath, $key, $url, $unlink = \true);
+                    $this->deleteTrackedDownloadUrl($key);
                     $info = $this->getNextMissingDbUrlInfoGeoIp2();
                     if ($info !== \false) {
-                        return json_encode($info);
+                        return (string) json_encode($info);
                     }
                 }
-                return json_encode($result);
+                return (string) json_encode($result);
             } catch (\Exception $ex) {
-                return json_encode(array('error' => $ex->getMessage()));
+                return (string) json_encode(array('error' => $ex->getMessage()));
             }
         }
+        return '';
+    }
+    private function trackOrValidateConfiguredDownloadUrl(string $key, string $configuredUrl, int $isContinuation) : void
+    {
+        $optionName = $this->getDownloadUrlOptionName($key);
+        $expectedUrl = Option::get($optionName);
+        if (!$isContinuation || empty($expectedUrl)) {
+            Option::set($optionName, (string) $configuredUrl);
+            return;
+        }
+        if ((string) $expectedUrl !== (string) $configuredUrl) {
+            $this->abortDownloadForChangedConfiguredUrl($key, (string) $expectedUrl, $configuredUrl);
+        }
+    }
+    private function assertConfiguredUrlDidNotChangeDuringDownload(string $key, string $expectedUrl) : void
+    {
+        $configuredUrl = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getConfiguredUrl($key);
+        if ((string) $configuredUrl !== (string) $expectedUrl) {
+            $this->abortDownloadForChangedConfiguredUrl($key, $expectedUrl, (string) $configuredUrl);
+        }
+    }
+    private function abortDownloadForChangedConfiguredUrl(string $key, string $expectedUrl, string $configuredUrl) : void
+    {
+        $this->deleteDownloadedChunksForType($key, $expectedUrl, $configuredUrl);
+        $this->deleteTrackedDownloadUrl($key);
+        throw new \Exception(Piwik::translate('General_DownloadFail_HttpRequestFail'));
+    }
+    private function deleteDownloadedChunksForType(string $key, string $expectedUrl, string $configuredUrl) : void
+    {
+        $pathsToDelete = [];
+        $expectedOutputPath = $this->getDownloadOutputPath($key, $expectedUrl);
+        if (!empty($expectedOutputPath)) {
+            $pathsToDelete[] = $expectedOutputPath;
+        }
+        $configuredOutputPath = $this->getDownloadOutputPath($key, $configuredUrl);
+        if (!empty($configuredOutputPath)) {
+            $pathsToDelete[] = $configuredOutputPath;
+        }
+        foreach (array_unique($pathsToDelete) as $downloadPath) {
+            if (!is_file($downloadPath)) {
+                continue;
+            }
+            @unlink($downloadPath);
+            Option::delete($downloadPath . '_expectedDownloadSize');
+        }
+    }
+    private function getDownloadOutputPath(string $key, string $url) : ?string
+    {
+        try {
+            $filename = \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getZippedFilenameToDownloadTo($url, $key, \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getGeoIPUrlExtension($url));
+            return \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::getTemporaryFolder($filename, \true);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+    private function getDownloadUrlOptionName(string $key) : string
+    {
+        return self::DOWNLOAD_URL_OPTION_PREFIX . $key;
+    }
+    private function deleteTrackedDownloadUrl(string $key) : void
+    {
+        Option::delete($this->getDownloadUrlOptionName($key));
     }
     /**
      * Gets information for the first missing GeoIP2 database (if any).
      *
-     * @return array|bool
+     * @return array<string, string>|false
      */
     private function getNextMissingDbUrlInfoGeoIp2()
     {
@@ -158,7 +237,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         return \false;
     }
-    private function dieIfGeolocationAdminIsDisabled()
+    private function dieIfGeolocationAdminIsDisabled() : void
     {
         if (!UserCountry::isGeoLocationAdminEnabled()) {
             throw new \Exception('Geo location setting page has been disabled.');

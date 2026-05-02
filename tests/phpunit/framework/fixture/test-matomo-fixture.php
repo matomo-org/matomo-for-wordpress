@@ -139,6 +139,8 @@ class MatomoUnit_Matomo_Fixture {
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();
+
+		Bootstrap::destroy_bootstrapped_environment();
 	}
 
 	public function reset_config_for_install() {
@@ -148,8 +150,20 @@ class MatomoUnit_Matomo_Fixture {
 			unlink( $local_path );
 		}
 
-		if ( class_exists( '\Piwik\Container\StaticContainer' ) ) {
+		if ( $this->container_exists() ) {
 			\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+		}
+	}
+
+	private function container_exists() {
+		if ( ! class_exists( \Piwik\Container\StaticContainer::class ) ) {
+			return false;
+		}
+
+		try {
+			\Piwik\Container\StaticContainer::getContainer();
+		} catch ( \Piwik\Container\ContainerDoesNotExistException $ex ) {
+			return false;
 		}
 	}
 

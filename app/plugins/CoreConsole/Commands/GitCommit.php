@@ -11,8 +11,6 @@ namespace Piwik\Plugins\CoreConsole\Commands;
 use Piwik\Development;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\SettingsPiwik;
-/**
- */
 class GitCommit extends ConsoleCommand
 {
     public function isEnabled()

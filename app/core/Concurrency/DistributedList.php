@@ -33,8 +33,6 @@ class DistributedList
      */
     private $logger;
     /**
-     * Constructor.
-     *
      * @param string $optionName
      */
     public function __construct($optionName, ?LoggerInterface $logger = null)

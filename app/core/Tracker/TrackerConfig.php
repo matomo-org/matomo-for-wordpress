@@ -9,9 +9,6 @@
 namespace Piwik\Tracker;
 
 use Piwik\Config;
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Tracker\Config\ThirdPartyCookies;
 class TrackerConfig
 {
@@ -30,10 +27,7 @@ class TrackerConfig
     public static function getConfigValue($name, $idSite = null)
     {
         if ($name === 'use_third_party_id_cookie') {
-            $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-            if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-                return ThirdPartyCookies::getInstance($idSite)->getValue();
-            }
+            return ThirdPartyCookies::getInstance($idSite)->getValue();
         }
         $config = self::getConfig();
         if (!empty($idSite)) {

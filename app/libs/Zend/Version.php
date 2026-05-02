@@ -48,7 +48,6 @@ namespace {
          * @return int           -1 if the $version is older,
          *                           0 if they are the same,
          *                           and +1 if $version is newer.
-         *
          */
         public static function compareVersion($version)
         {

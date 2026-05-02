@@ -12,9 +12,6 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
-/**
- *
- */
 class UserCountry extends \Piwik\Plugin
 {
     /**

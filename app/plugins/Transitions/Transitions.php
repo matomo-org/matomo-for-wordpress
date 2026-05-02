@@ -10,8 +10,6 @@ namespace Piwik\Plugins\Transitions;
 
 use Piwik\Common;
 use Piwik\Config;
-/**
- */
 class Transitions extends \Piwik\Plugin
 {
     /**
@@ -63,7 +61,6 @@ class Transitions extends \Piwik\Plugin
      * Retrieve the period allowed config setting for a site or all sites if null
      *
      * @param $idSite
-     *
      */
     public static function getPeriodAllowedConfig($idSite) : string
     {

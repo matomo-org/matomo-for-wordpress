@@ -54,9 +54,6 @@ class EventDispatcher
     private $pluginHooks = array();
     public static $_SKIP_EVENTS_IN_TESTS = \false;
     // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    /**
-     * Constructor.
-     */
     public function __construct(\Piwik\Plugin\Manager $pluginManager, array $observers = array())
     {
         $this->pluginManager = $pluginManager;

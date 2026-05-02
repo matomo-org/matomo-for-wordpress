@@ -21,16 +21,11 @@ use Piwik\Piwik;
 use Piwik\Plugin\ArchivedMetric;
 use Piwik\Plugin\ComputedMetric;
 use Piwik\Plugin\ThemeStyles;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\SegmentEditor\Settings\LimitSegments;
 use Piwik\Segment\SegmentsList;
 use Piwik\SettingsPiwik;
 use Piwik\SettingsServer;
 use Piwik\Tracker\Model as TrackerModel;
-/**
- *
- */
 class CoreHome extends \Piwik\Plugin
 {
     /**
@@ -317,8 +312,22 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_DateRangeTo';
         $translationKeys[] = 'General_DoubleClickToChangePeriod';
         $translationKeys[] = 'General_Apply';
+        $translationKeys[] = 'General_ChoosePeriod';
         $translationKeys[] = 'General_Period';
         $translationKeys[] = 'General_CompareTo';
+        $translationKeys[] = 'CoreHome_PresetDateToday';
+        $translationKeys[] = 'CoreHome_PresetDateYesterday';
+        $translationKeys[] = 'CoreHome_PresetDateLast7Days';
+        $translationKeys[] = 'CoreHome_PresetDateLast30Days';
+        $translationKeys[] = 'CoreHome_PresetDateLast90Days';
+        $translationKeys[] = 'CoreHome_PresetDateLastWeekMonSun';
+        $translationKeys[] = 'CoreHome_PresetDateLastMonth';
+        $translationKeys[] = 'CoreHome_PresetDateLastQuarter';
+        $translationKeys[] = 'CoreHome_PresetDateLastYear';
+        $translationKeys[] = 'CoreHome_PresetDateThisWeekMonToday';
+        $translationKeys[] = 'CoreHome_PresetDateThisMonth';
+        $translationKeys[] = 'CoreHome_PresetDateThisQuarter';
+        $translationKeys[] = 'CoreHome_PresetDateThisYear';
         $translationKeys[] = 'CoreHome_DateInvalid';
         $translationKeys[] = 'CoreHome_EnterZenMode';
         $translationKeys[] = 'CoreHome_ExitZenMode';
@@ -405,31 +414,28 @@ class CoreHome extends \Piwik\Plugin
     }
     public function filterSegments(SegmentsList &$list, array $idSites)
     {
-        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-        if ($featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            $limitSegmentsSettingEnabled = \false;
-            if (empty($idSites)) {
-                $limitSegmentsSettingEnabled = LimitSegments::getInstance()->getValue();
-            } else {
-                foreach ($idSites as $idsite) {
-                    $limitSegmentsSettingEnabled |= LimitSegments::getInstance($idsite)->getValue();
-                }
+        $limitSegmentsSettingEnabled = \false;
+        if (empty($idSites)) {
+            $limitSegmentsSettingEnabled = LimitSegments::getInstance()->getValue();
+        } else {
+            foreach ($idSites as $idsite) {
+                $limitSegmentsSettingEnabled |= LimitSegments::getInstance($idsite)->getValue();
             }
-            if ($limitSegmentsSettingEnabled) {
-                $list->remove('General_Visitors', 'userId');
-                $list->remove('General_Visitors', 'visitIp');
-                $list->remove('General_Visitors', 'visitId');
-                $list->remove('General_Visitors', 'visitorId');
-                $list->remove('General_Visitors', 'fingerprint');
-                $list->remove('Referrers_Referrers', 'campaignId');
-                $list->remove('General_Actions', 'actionServerHour');
-                $list->remove('General_Actions', 'actionServerMinute');
-                $list->remove('General_Visitors', 'visitServerHour');
-                $list->remove('General_Visitors', 'visitEndServerMinute');
-                $list->remove('General_Visitors', 'visitEndServerSecond');
-                $list->remove('General_Visitors', 'visitStartServerHour');
-                $list->remove('General_Visitors', 'visitStartServerMinute');
-            }
+        }
+        if ($limitSegmentsSettingEnabled) {
+            $list->remove('General_Visitors', 'userId');
+            $list->remove('General_Visitors', 'visitIp');
+            $list->remove('General_Visitors', 'visitId');
+            $list->remove('General_Visitors', 'visitorId');
+            $list->remove('General_Visitors', 'fingerprint');
+            $list->remove('Referrers_Referrers', 'campaignId');
+            $list->remove('General_Actions', 'actionServerHour');
+            $list->remove('General_Actions', 'actionServerMinute');
+            $list->remove('General_Visitors', 'visitServerHour');
+            $list->remove('General_Visitors', 'visitEndServerMinute');
+            $list->remove('General_Visitors', 'visitEndServerSecond');
+            $list->remove('General_Visitors', 'visitStartServerHour');
+            $list->remove('General_Visitors', 'visitStartServerMinute');
         }
     }
 }

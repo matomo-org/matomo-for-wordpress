@@ -12,11 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @var bool $user_can_upload_plugins
- * @var bool $user_can_activate_plugins
- * @var bool $is_plugin_installed
- * @var bool $matomo_show_title
- * @var bool $matomo_is_plugin_active
+ * @var bool   $user_can_upload_plugins
+ * @var bool   $user_can_activate_plugins
+ * @var bool   $is_plugin_installed
+ * @var bool   $matomo_show_title
+ * @var bool   $matomo_is_plugin_active
+ * @var string $matomo_marketplace_url
  */
 ?>
 <div class="matomo-marketplace-wizard-body">
@@ -35,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<p><?php echo sprintf( esc_html__( 'Download the %1$sMatomo Marketplace for WordPress%2$s plugin.', 'matomo' ), '<em>', '</em>' ); ?></p>
 
-				<a class="button-primary download-plugin" rel="noreferrer noopener" target="_blank" href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip">
+				<a class="button-primary download-plugin" rel="noreferrer noopener" target="_blank" href="<?php echo esc_attr( $matomo_marketplace_url ); ?>">
 					<?php esc_html_e( 'Download', 'matomo' ); ?>
 				</a>
 			</div>

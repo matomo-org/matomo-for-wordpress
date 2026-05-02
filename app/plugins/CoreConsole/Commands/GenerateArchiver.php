@@ -9,8 +9,6 @@
 namespace Piwik\Plugins\CoreConsole\Commands;
 
 use Piwik\Plugin\Manager;
-/**
- */
 class GenerateArchiver extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginBase
 {
     protected function configure()

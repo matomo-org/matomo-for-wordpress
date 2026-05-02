@@ -470,9 +470,6 @@ class Config
      * @ignore
      */
     public $controllerAction;
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->translations = array_merge(Metrics::getDefaultMetrics(), Metrics::getDefaultProcessedMetrics());

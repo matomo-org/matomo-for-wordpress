@@ -28,9 +28,6 @@ use Piwik\Session\SessionNamespace;
 use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Url;
 use Piwik\View;
-/**
- *
- */
 class SitesManager extends \Piwik\Plugin
 {
     public const KEEP_URL_FRAGMENT_USE_DEFAULT = 0;

@@ -10,8 +10,6 @@ namespace Piwik\Plugins\CoreConsole\Commands;
 
 use Piwik\Filesystem;
 use Piwik\Plugin\ConsoleCommand;
-/**
- */
 class ClearCaches extends ConsoleCommand
 {
     protected function configure()

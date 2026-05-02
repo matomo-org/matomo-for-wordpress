@@ -11,8 +11,6 @@ namespace Piwik\Plugins\PagePerformance;
 use Piwik\DataTable;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
-/**
- */
 class PagePerformance extends \Piwik\Plugin
 {
     public static $availableForMethods = ['getPageUrls', 'getEntryPageUrls', 'getExitPageUrls', 'getPageUrlsFollowingSiteSearch', 'getPageTitles', 'getEntryPageTitles', 'getExitPageTitles', 'getPageTitlesFollowingSiteSearch'];

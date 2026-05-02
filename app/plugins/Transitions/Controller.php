@@ -10,8 +10,6 @@ namespace Piwik\Plugins\Transitions;
 
 use Piwik\Piwik;
 use Piwik\View;
-/**
- */
 class Controller extends \Piwik\Plugin\Controller
 {
     /**

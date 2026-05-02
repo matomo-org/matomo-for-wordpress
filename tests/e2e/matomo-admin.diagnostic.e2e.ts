@@ -21,7 +21,7 @@ describe('Matomo Admin > Diagnostic', () => {
 
     await TrackingFailuresPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.diagnostic.tracking-failures')
+      await browser.checkFullPageScreen(`matomo-admin.diagnostic.tracking-failures.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
@@ -30,7 +30,7 @@ describe('Matomo Admin > Diagnostic', () => {
 
     await DeviceDetectionPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.diagnostic.device-detection')
+      await browser.checkFullPageScreen(`matomo-admin.diagnostic.device-detection.${process.env.PHP_VERSION}`)
     ).toBeLessThanOrEqual(0.01);
   });
 });

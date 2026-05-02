@@ -84,7 +84,6 @@ abstract class Metric
      * tracks.
      *
      * See {@link \Piwik\Columns\Dimension} for the list of available semantic types.
-     *
      */
     public function getSemanticType() : ?string
     {

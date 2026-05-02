@@ -29,7 +29,6 @@ class UnexpectedFiles extends ConsoleCommand
     }
     /**
      * Execute the command
-     *
      */
     protected function doExecute() : int
     {
@@ -60,8 +59,6 @@ class UnexpectedFiles extends ConsoleCommand
     }
     /**
      * Handle unexpected files command options
-     *
-     *
      */
     private function runUnexpectedFiles(bool $delete = \false) : int
     {
@@ -107,7 +104,6 @@ class UnexpectedFiles extends ConsoleCommand
     }
     /**
      * Interact with the user to confirm the deletion
-     *
      */
     private function askForDeleteConfirmation() : bool
     {

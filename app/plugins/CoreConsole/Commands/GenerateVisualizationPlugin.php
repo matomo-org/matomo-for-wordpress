@@ -9,8 +9,6 @@
 namespace Piwik\Plugins\CoreConsole\Commands;
 
 use Piwik\Plugin\Manager;
-/**
- */
 class GenerateVisualizationPlugin extends \Piwik\Plugins\CoreConsole\Commands\GeneratePlugin
 {
     protected function configure()

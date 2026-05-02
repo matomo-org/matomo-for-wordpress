@@ -21,7 +21,7 @@ describe('Matomo Admin > Personal', () => {
 
     await PersonalSettingsPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.personal.settings')
+      await browser.checkFullPageScreen(`matomo-admin.personal.settings.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
@@ -30,7 +30,7 @@ describe('Matomo Admin > Personal', () => {
 
     await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.personal.email-reports')
+      await browser.checkFullPageScreen(`matomo-admin.personal.email-reports.${process.env.PHP_VERSION}`)
     ).toBeLessThanOrEqual(0.02);
   });
 
@@ -42,7 +42,7 @@ describe('Matomo Admin > Personal', () => {
 
     await EmailReportsPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.personal.email-reports.create')
+      await browser.checkFullPageScreen(`matomo-admin.personal.email-reports.create.${process.env.PHP_VERSION}`)
     ).toBeLessThanOrEqual(0.02);
   });
 
@@ -53,7 +53,7 @@ describe('Matomo Admin > Personal', () => {
 
     try {
       await expect(
-        await browser.checkFullPageScreen('matomo-admin.personal.email-reports.download')
+        await browser.checkFullPageScreen(`matomo-admin.personal.email-reports.download.${process.env.PHP_VERSION}`)
       ).toEqual(0);
     } finally {
       await browser.closeWindow(); // downloading an html report should create a new tab

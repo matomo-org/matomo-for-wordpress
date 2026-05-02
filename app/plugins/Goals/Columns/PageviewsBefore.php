@@ -22,7 +22,6 @@ class PageviewsBefore extends ConversionDimension
     protected $category = 'Goals_Goals';
     protected $nameSingular = 'Goals_PageviewsBefore';
     /**
-     *
      * @param Action|null $action
      *
      * @return int
@@ -32,7 +31,6 @@ class PageviewsBefore extends ConversionDimension
         return $this->onGoalConversion($request, $visitor, $action, $goalManager);
     }
     /**
-     *
      * @param Action|null $action
      *
      * @return int

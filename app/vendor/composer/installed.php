@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.8.0',
-        'version' => '5.8.0.0',
-        'reference' => '61fc6b8b2f32d1b6575ba36ed8d3917637f144d9',
+        'pretty_version' => '5.9.0',
+        'version' => '5.9.0.0',
+        'reference' => '6fd1ae3212cc7b6ffc799a5341c701bb9c364b2e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.10',
-            'version' => '1.5.10.0',
-            'reference' => '961a5e4056dd2e4a2eedcac7576075947c28bf63',
+            'pretty_version' => '1.5.11',
+            'version' => '1.5.11.0',
+            'reference' => '68ff39175e8e94a4bb1d259407ce51a6a60f09e6',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.8.0',
-            'version' => '5.8.0.0',
-            'reference' => '61fc6b8b2f32d1b6575ba36ed8d3917637f144d9',
+            'pretty_version' => '5.9.0',
+            'version' => '5.9.0.0',
+            'reference' => '6fd1ae3212cc7b6ffc799a5341c701bb9c364b2e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3e30189a3243690ee523bb434644029160c1e4d7',
+            'reference' => 'c90010ca223946419c4fa383ede07442a073173b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -540,9 +540,9 @@
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.10.1',
-            'version' => '6.10.1.0',
-            'reference' => '7a2701251e5d52fc3d508fd71704683eb54f5939',
+            'pretty_version' => '6.11.2',
+            'version' => '6.11.2.0',
+            'reference' => 'e1e2ade18e574e963473f53271591edd8c0033ec',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),
