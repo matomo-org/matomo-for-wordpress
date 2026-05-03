@@ -165,6 +165,8 @@ class MatomoUnit_Matomo_Fixture {
 		} catch ( \Piwik\Container\ContainerDoesNotExistException $ex ) {
 			return false;
 		}
+
+		return true;
 	}
 
 	private function uninstall_matomo() {
