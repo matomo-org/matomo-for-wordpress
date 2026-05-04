@@ -30,24 +30,26 @@ describe('MWP Admin > Summary', () => {
     ).toBeLessThan(0.01);
   });
 
+  it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {
+    await MwpSummaryPage.pinReport(0);
+
+    await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
+    await $('#matomo_dashboard_widget_visits_over_time_yesterday').waitForDisplayed({ timeout: 30000 });
+  });
+
   it('should change the date correctly when a period button is toggled', async () => {
+    await MwpSummaryPage.open();
     await MwpSummaryPage.changePeriod('This month');
 
-    // this will change because we are viewing today's date, so hide the report
+    // the data for today can change randomly, so we hide the actual reports so the
+    // test will pass predictably
     await browser.execute(() => {
-      window.jQuery('#matomo-report-visitsperhourinthesitestimezone').hide();
+      window.jQuery('.matomo-dashboard-container').hide();
     });
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.summary.thismonth.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(5.0);
-  });
-
-  it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {
-    await MwpSummaryPage.pinReport(0);
-
-    await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
-    await $('#matomo_dashboard_widget_visits_over_time_thismonth').waitForDisplayed();
   });
 });

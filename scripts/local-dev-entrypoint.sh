@@ -187,6 +187,10 @@ define( 'NONCE_SALT',       'put your unique phrase here' );
 define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
+if ( getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) ) {
+  define( 'MATOMO_MARKETPLACE_ZIP_URL', getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) );
+}
+
 # mail settings
 define( 'WPMS_ON', true );
 define( 'WPMS_MAILER', 'smtp' );

@@ -20,7 +20,7 @@ describe('Matomo Plugins > SearchEngineKeywordsPerformance', () => {
 
         await SearchPerformancePage.prepareMatomoPageForScreenshot();
         await expect(
-            await browser.checkFullPageScreen('matomo.searchenginekeywordsperformance.admin')
+            await browser.checkFullPageScreen(`matomo.searchenginekeywordsperformance.admin.${process.env.PHP_VERSION}`)
         ).toEqual(0);
     });
 });

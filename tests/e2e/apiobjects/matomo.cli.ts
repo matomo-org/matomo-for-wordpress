@@ -26,6 +26,22 @@ class MatomoCli {
     return renamedPath;
   }
 
+  buildMarketplaceRelease() {
+    const pathToRelease = path.join(process.cwd(), 'marketplace', 'matomo-marketplace-for-wordpress.test.zip');
+    if (fs.existsSync(pathToRelease)) {
+      fs.unlinkSync(pathToRelease);
+    }
+
+    const command = 'RELEASE_NAME=test npm run release:build';
+    execSync(command, { cwd: path.join(process.cwd(), 'marketplace') });
+
+    if (!fs.existsSync(pathToRelease)) {
+      throw new Error(`Could not find built release at ${pathToRelease}.`);
+    }
+
+    return pathToRelease;
+  }
+
   async call(commandName: string, params: Record<string, string>) {
     let command = commandName;
     for (let name of Object.keys(params)) {

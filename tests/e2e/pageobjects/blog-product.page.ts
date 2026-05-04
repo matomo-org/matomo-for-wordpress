@@ -27,18 +27,18 @@ class BlogProductPage extends Page {
   async addToCart() {
     await $('.single_add_to_cart_button').waitForExist();
     await browser.execute(() => {
-      window.jQuery('.single_add_to_cart_button')[0].click();
+      window.jQuery('.single_add_to_cart_button:visible')[0].click();
     });
 
     await browser.waitUntil(async () => {
       return browser.execute(() => {
-        return window.jQuery && window.jQuery('a:contains("View cart"):visible').length > 0;
+        return window.jQuery && window.jQuery('.woocommerce-message a:contains("View cart"):visible').length > 0;
       });
     });
 
     await Website.retry(3, async () => {
       let cp = await browser.execute(() => {
-        return window.jQuery ? window.jQuery('a:contains("View cart"):visible').attr('href') : null;
+        return window.jQuery ? window.jQuery('.woocommerce-message a:contains("View cart"):visible').attr('href') : null;
       });
 
       if (!cp) {
@@ -49,15 +49,20 @@ class BlogProductPage extends Page {
     }, 500);
 
     await browser.execute(() => {
-      window.jQuery('a:contains("View cart"):visible')[0].click();
+      window.jQuery('.woocommerce-message a:contains("View cart"):visible')[0].click();
     });
 
-    await browser.waitUntil(() => {
-      return browser.execute(() => {
-        // the checkout button can have different classes when run locally vs. CI
-        return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
-      });
-    }, { timeout: 60000 });
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(() => {
+          // the checkout button can have different classes when run locally vs. CI
+          return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
+        });
+      }, { timeout: 60000 });
+    } catch (e) {
+      console.log('cookies found:', (await browser.getCookies()).map(c => c.name));
+      throw e;
+    }
   }
 
   async searchProducts(searchText: string) {

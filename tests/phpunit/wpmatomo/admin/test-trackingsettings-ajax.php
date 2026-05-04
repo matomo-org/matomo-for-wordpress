@@ -10,6 +10,12 @@ use WpMatomo\Settings;
 use WpMatomo\Site;
 
 class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
+
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
 	public function setUp(): void {
 		parent::setUp();
 		TrackingSettings::register_ajax();

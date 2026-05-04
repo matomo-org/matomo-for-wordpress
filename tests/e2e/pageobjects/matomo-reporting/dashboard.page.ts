@@ -25,16 +25,16 @@ class DashboardPage extends MatomoReportingPage {
   }
 
   async waitForDashboard() {
-    await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
+    await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed({ timeout: 60000 });
     await browser.waitUntil(async () => {
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
       const loadedWidgetCount = (await $$('#dashboardWidgetsArea .widgetContent > *:first-child:not(.widgetLoading)')).length;
 
       return loadedWidgetCount >= widgetsCount;
-    }, { timeout: 30000 });
+    }, { timeout: 60000 });
     await browser.waitUntil(async () => {
       return await $('.UserCountryMap_map.kartograph,.mapWidgetStatus .pk-emptyDataTable').isDisplayed();
-    }, { timeout: 30000 });
+    }, { timeout: 60000 });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
     });

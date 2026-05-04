@@ -32,7 +32,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await AnonymizeDataPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
+      await browser.checkFullPageScreen(`matomo-admin.privacy.anonymize-data.${process.env.PHP_VERSION}`)
     ).toEqual(0)
   });
 
@@ -41,7 +41,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await UsersOptOutPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.privacy.users-opt-out')
+      await browser.checkFullPageScreen(`matomo-admin.privacy.users-opt-out.${process.env.PHP_VERSION}`)
     ).toEqual(0)
   });
 
@@ -50,7 +50,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await AskingForConsentPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.privacy.asking-for-consent')
+      await browser.checkFullPageScreen(`matomo-admin.privacy.asking-for-consent.${process.env.PHP_VERSION}`)
     ).toEqual(0)
   });
 
@@ -59,7 +59,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await GdprOverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-overview')
+      await browser.checkFullPageScreen(`matomo-admin.privacy.gdpr-overview.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
@@ -68,7 +68,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await GdprToolsPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-tools')
+      await browser.checkFullPageScreen(`matomo-admin.privacy.gdpr-tools.${process.env.PHP_VERSION}`)
     ).toBeLessThan(0.015);
   });
 });
