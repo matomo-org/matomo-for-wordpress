@@ -12,6 +12,7 @@ use Exception;
 use Piwik\Access;
 use Piwik\API\Proxy;
 use Piwik\API\Request;
+use Piwik\Plugins\UsersManager\UserPreferences;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Changes\Model as ChangesModel;
 use Piwik\Changes\UserChanges;
@@ -639,7 +640,8 @@ abstract class Controller
         $view->logoSVG = $customLogo->getSVGLogoUrl();
         $view->hasSVGLogo = $customLogo->hasSVGLogo();
         $view->contactEmail = implode(',', Piwik::getContactEmailAddresses());
-        $view->themeStyles = \Piwik\Plugin\ThemeStyles::get();
+        $themeMode = (new UserPreferences())->getThemeMode();
+        $view->themeStyles = \Piwik\Plugin\ThemeStyles::get($themeMode);
         $general = PiwikConfig::getInstance()->General;
         $view->enableFrames = $general['enable_framed_pages'] || isset($general['enable_framed_logins']) && $general['enable_framed_logins'];
         $embeddedAsIframe = Common::getRequestVar('module', '', 'string') === 'Widgetize';

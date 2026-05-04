@@ -73,7 +73,7 @@ class PluginList
      * at this stage.
      *
      * @params string[] $plugins
-     * @return \string[]
+     * @return list<string>
      */
     public function sortPlugins(array $plugins)
     {

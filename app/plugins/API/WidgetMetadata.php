@@ -83,6 +83,14 @@ class WidgetMetadata
         if (!empty($middleware)) {
             $item['middlewareParameters'] = $middleware;
         }
+        $clientComponent = $widget->getClientSideComponent();
+        if (!empty($clientComponent)) {
+            $item['clientComponent'] = $clientComponent;
+            $clientProps = $widget->getClientSideProps();
+            if (!empty($clientProps)) {
+                $item['clientComponent']['props'] = $clientProps;
+            }
+        }
         if ($widget instanceof ReportWidgetConfig) {
             $item['viewDataTable'] = $widget->getViewDataTable();
             $item['isReport'] = \true;

@@ -290,11 +290,11 @@ class ArchiveWriter
         if ($this->isRecordNumeric($value)) {
             return $this->getTableNumeric();
         }
-        return \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($this->dateStart);
+        return \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($this->dateStart, \true);
     }
     protected function getTableNumeric()
     {
-        return \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($this->dateStart);
+        return \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($this->dateStart, \true);
     }
     protected function getInsertFields()
     {

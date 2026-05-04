@@ -15,6 +15,6 @@ class NoRecentRequests extends Widget
 {
     public static function configure(WidgetConfig $config)
     {
-        $config->setName('BotTracking_NoRecentRequestsWidgetTitle')->setCategoryId('General_AIAssistants')->setSubcategoryId('BotTracking_AIChatbotsOverview')->setModule('BotTracking')->setAction('noRecentRequestsMessage')->setMiddlewareParameters(['module' => 'BotTracking', 'action' => 'showNoRecentRequestsMessage'])->setIsWide()->setOrder(0)->setIsNotWidgetizable();
+        $config->setName('BotTracking_NoRecentRequestsWidgetTitle')->setCategoryId('General_AIAssistants')->setSubcategoryId('BotTracking_AIChatbotsOverview')->setModule('BotTracking')->setAction('noRecentRequestsMessage')->setClientSideComponent('BotTracking', 'NoRecentRequestsWidget')->setMiddlewareParameters(['module' => 'BotTracking', 'action' => 'showNoRecentRequestsMessage'])->setIsWide()->setOrder(0)->setIsNotWidgetizable();
     }
 }

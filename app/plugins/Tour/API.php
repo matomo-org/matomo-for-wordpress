@@ -12,7 +12,7 @@ use Piwik\Piwik;
 use Piwik\Plugins\Tour\Engagement\Levels;
 use Piwik\Plugins\Tour\Engagement\Challenges;
 /**
- * API for Tour plugin which helps you getting familiar with Matomo.
+ * Provides API methods for Tour challenges and engagement levels.
  *
  * @method static \Piwik\Plugins\Tour\API getInstance()
  */
@@ -23,7 +23,7 @@ class API extends \Piwik\Plugin\API
      */
     private $challenges;
     /**
-     * Levels
+     * @var Levels
      */
     private $levels;
     public function __construct(Challenges $challenges, Levels $levels)
@@ -32,14 +32,21 @@ class API extends \Piwik\Plugin\API
         $this->levels = $levels;
     }
     /**
-     * Get all challenges that can be completed by a super user.
+     * Returns the available Tour challenges for the current super user.
      *
-     * @return array[]
+     * @return list<array{
+     *     id: string,
+     *     name: string,
+     *     description: string,
+     *     isCompleted: bool,
+     *     isSkipped: bool,
+     *     url: string
+     * }> Tour challenge metadata including completion and skip state.
      */
-    public function getChallenges()
+    public function getChallenges() : array
     {
         Piwik::checkUserHasSuperUserAccess();
-        $challenges = array();
+        $challenges = [];
         $login = Piwik::getCurrentUserLogin();
         foreach ($this->challenges->getChallenges() as $challenge) {
             if ($challenge->isDisabled()) {
@@ -50,13 +57,12 @@ class API extends \Piwik\Plugin\API
         return $challenges;
     }
     /**
-     * Skip a specific challenge.
+     * Marks the specified Tour challenge as skipped for the current super user.
      *
-     * @param string $id
-     * @return bool
-     * @throws \Exception
+     * @param string $id The challenge ID to skip.
+     * @return true Returns `true` when the challenge was skipped successfully.
      */
-    public function skipChallenge($id)
+    public function skipChallenge(string $id) : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $login = Piwik::getCurrentUserLogin();
@@ -72,12 +78,20 @@ class API extends \Piwik\Plugin\API
         throw new \Exception('Challenge not found');
     }
     /**
-     * Get details about the current level this user has progressed to.
-     * @return array
+     * Returns the current Tour level details for the current super user.
+     *
+     * @return array{
+     *     description: string,
+     *     currentLevel: int,
+     *     currentLevelName: string,
+     *     nextLevelName: string|null,
+     *     numLevelsTotal: int,
+     *     challengesNeededForNextLevel: int
+     * } Tour level details including the current and next level names.
      */
-    public function getLevel()
+    public function getLevel() : array
     {
         Piwik::checkUserHasSuperUserAccess();
-        return array('description' => $this->levels->getCurrentDescription(), 'currentLevel' => $this->levels->getCurrentLevel(), 'currentLevelName' => $this->levels->getCurrentLevelName(), 'nextLevelName' => $this->levels->getNextLevelName(), 'numLevelsTotal' => $this->levels->getNumLevels(), 'challengesNeededForNextLevel' => $this->levels->getNumChallengesNeededToNextLevel());
+        return ['description' => $this->levels->getCurrentDescription(), 'currentLevel' => $this->levels->getCurrentLevel(), 'currentLevelName' => $this->levels->getCurrentLevelName(), 'nextLevelName' => $this->levels->getNextLevelName(), 'numLevelsTotal' => $this->levels->getNumLevels(), 'challengesNeededForNextLevel' => $this->levels->getNumChallengesNeededToNextLevel()];
     }
 }

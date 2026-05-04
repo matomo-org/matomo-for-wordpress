@@ -93,7 +93,7 @@ final class Iconv
         }
         // Load charset maps
         if ('utf-8' !== $inCharset && !self::loadMap('from.', $inCharset, $inMap) || 'utf-8' !== $outCharset && !self::loadMap('to.', $outCharset, $outMap)) {
-            trigger_error(sprintf(self::ERROR_WRONG_CHARSET, $inCharset, $outCharset));
+            trigger_error(\sprintf(self::ERROR_WRONG_CHARSET, $inCharset, $outCharset));
             return \false;
         }
         if ('utf-8' !== $inCharset) {

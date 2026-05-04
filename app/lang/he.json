@@ -2092,6 +2092,7 @@
         "Timezone": "אזור זמן"
     },
     "TagManager": {
+        "BingUETTagIdTitle": "מזהה",
         "CategoryClicks": "לחיצות",
         "CategoryDate": "תאריך",
         "CategoryEmail": "אימייל",

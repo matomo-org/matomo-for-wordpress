@@ -102,22 +102,6 @@ class Controller extends \Piwik\Plugin\Controller
         SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
         return $this->renderView($view);
     }
-    public function noRecentRequestsMessage() : string
-    {
-        $this->checkSitePermission();
-        $request = Request::fromRequest();
-        $period = $request->getStringParameter('period', '');
-        $date = $request->getStringParameter('date', '');
-        $noDataParams = ['module' => 'BotTracking', 'action' => 'siteWithoutData', 'idSite' => $this->idSite];
-        if ($period !== '') {
-            $noDataParams['period'] = $period;
-        }
-        if ($date !== '') {
-            $noDataParams['date'] = $date;
-        }
-        $noDataUrl = 'index.php?' . Url::getQueryStringFromParameters($noDataParams);
-        return $this->renderTemplate('noRecentRequestsMessage', ['noDataUrl' => $noDataUrl]);
-    }
     public function showNoRecentRequestsMessage() : string
     {
         $this->checkSitePermission();
