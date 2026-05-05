@@ -7,7 +7,7 @@
 
     {# conditional iframe buster #}
     <script type="text/javascript">
-      if (top.location.pathname !== {{ adminPhpUrl|json_encode }}) {
+      if (top.location.href.split('?')[0] !== {{ adminPhpUrl|json_encode|raw }}) {
         document.head.remove();
         window.addEventListener('DOMContentLoaded', function () {
           document.body.style.display = 'none';
@@ -15,6 +15,20 @@
         });
       }
     </script>
+
+    <style>
+        body {
+            padding: 0 !important;
+        }
+
+        #root {
+            margin-bottom: 0 !important;
+        }
+
+        #color-manager ~ div[style*="clear"] {
+            display: none !important;
+        }
+    </style>
 
     {% include "_jsGlobalVariables.twig" %}
     {% include "_jsCssIncludes.twig" %}
