@@ -103,7 +103,6 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/js/piwik.js',
 			'matomo/libs/jqplot/excanvas.min.js',
 			'matomo/libs/jqplot/build_minified_script.sh',
-			'matomo/plugins/Morpheus/fonts/selection.json',
 			'matomo/node_modules/visibilityjs/lib/visibility.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.fallback.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.core.js',
