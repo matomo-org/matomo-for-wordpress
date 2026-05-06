@@ -81,9 +81,12 @@ export default class MatomoReportingPage extends MatomoPage {
           }
         }
 
+        console.log('waiting', numLoadingsFound, numWidgetsLoaded, numLoadingsFound > 0, numLoadingsFound === numWidgetsLoaded);
         return numLoadingsFound > 0 && numLoadingsFound === numWidgetsLoaded;
       }, { timeout: 90000 });
     } catch (e) {
+      console.log('numLoadingsFound > 0: ', numLoadingsFound > 0);
+      console.log('numLoadingsFound === numWidgetsLoaded', numLoadingsFound === numWidgetsLoaded);
       console.log(`waitForPageWidgets failed, numLoadingsFound = ${numLoadingsFound}, numWidgetsLoaded = ${numWidgetsLoaded}`);
       throw e;
     }

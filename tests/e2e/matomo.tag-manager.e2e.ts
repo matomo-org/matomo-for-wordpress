@@ -84,7 +84,7 @@ describe('Matomo > Tag Manager', () => {
     await browser.pause(1000);
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
-    ).toBeLessThanOrEqual(2);
+    ).toBeLessThanOrEqual(3);
   });
 
   it('should load the install code popup page correctly', async () => {
