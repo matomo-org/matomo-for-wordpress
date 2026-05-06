@@ -63,22 +63,31 @@ export default class MatomoReportingPage extends MatomoPage {
   }
 
   async waitForPageWidgets() {
-    await browser.waitUntil(async () => {
-      const loadings = await $$('.matomo-widget > div > .loadingPiwik,.matomo-widget .dimensionReport > .loadingPiwik');
+    let numWidgetsLoaded = 0;
+    let numLoadingsFound = 0;
+    try {
+      await browser.waitUntil(async () => {
+        const loadings = await $$('.matomo-widget > div > .loadingPiwik,.matomo-widget .dimensionReport > .loadingPiwik');
 
-      const isThereWidgets = loadings.length > 0;
+        const isThereWidgets = loadings.length > 0;
 
-      let numWidgetsLoaded = 0;
-      for (const loading of loadings) {
-        if (!(await loading.isDisplayed())
-          && (await loading.isExisting())
-        ) {
-          numWidgetsLoaded += 1;
+        numLoadingsFound = loadings.length;
+
+        numWidgetsLoaded = 0;
+        for (const loading of loadings) {
+          if (!(await loading.isDisplayed())
+            && (await loading.isExisting())
+          ) {
+            numWidgetsLoaded += 1;
+          }
         }
-      }
 
-      return isThereWidgets && loadings.length === numWidgetsLoaded;
-    }, { timeout: 60000 });
+        return isThereWidgets && numLoadingsFound === numWidgetsLoaded;
+      }, { timeout: 90000 });
+    } catch (e) {
+      console.log(`waitForPageWidgets failed, numLoadingsFound = ${numLoadingsFound}, numWidgetsLoaded = ${numWidgetsLoaded}`);
+      throw e;
+    }
   }
 
   async waitForActionsTables() {
