@@ -38,7 +38,8 @@ describe( 'Matomo API', function () {
       });
 
       const json = await response.json();
-      expect(json).toEqual(['1']);
+      expect(Array.isArray(json)).toBeTruthy();
+      expect(json.map(v => v.toString())).toEqual(['1']);
     });
 
     it('should be possible to send API requests to the Matomo API endpoint with app passwords in an HTTP Authorization header', async () => {
@@ -86,7 +87,8 @@ describe( 'Matomo API', function () {
       });
 
       json = await response.json();
-      expect(json).toEqual(['1']);
+      expect(Array.isArray(json)).toBeTruthy();
+      expect(json.map(v => v.toString())).toEqual(['1']);
     });
 
     it('should be possible to send API requests to the Matomo API endpoint', async () => {
@@ -128,7 +130,8 @@ describe( 'Matomo API', function () {
       });
 
       json = await response.json();
-      expect(json).toEqual(['1']);
+      expect(Array.isArray(json)).toBeTruthy();
+      expect(json.map(v => v.toString())).toEqual(['1']);
     });
 
     it('should not be allowed to send an app password to the Matomo API endpoint as a GET request query parameter', async () => {

@@ -3,7 +3,7 @@
 namespace {
     //============================================================+
     // File name   : tcpdf.php
-    // Version     : 6.11.2
+    // Version     : 6.11.3
     // Begin       : 2002-08-03
     // Last Update : 2026-03-03
     // Author      : Nicola Asuni - Tecnick.com LTD - www.tecnick.com - info@tecnick.com
@@ -105,7 +105,7 @@ namespace {
      * Tools to encode your unicode fonts are on fonts/utils directory.</p>
      * @package com.tecnick.tcpdf
      * @author Nicola Asuni
-     * @version 6.11.2
+     * @version 6.11.3
      */
     // TCPDF configuration
     require_once \dirname(__FILE__) . '/tcpdf_autoconfig.php';
@@ -126,7 +126,7 @@ namespace {
      * TCPDF project (http://www.tcpdf.org) has been originally derived in 2002 from the Public Domain FPDF class by Olivier Plathey (http://www.fpdf.org), but now is almost entirely rewritten.<br>
      * @package com.tecnick.tcpdf
      * @brief PHP class for generating PDF documents without requiring external extensions.
-     * @version 6.11.2
+     * @version 6.11.3
      * @author Nicola Asuni - info@tecnick.com
      * @IgnoreAnnotation("protected")
      * @IgnoreAnnotation("public")

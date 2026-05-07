@@ -91,7 +91,6 @@ find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js
 rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
-rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
 rm -r $MATOMO_ROOT/plugins/Example*
 rm -r $MATOMO_ROOT/plugins/*/tests

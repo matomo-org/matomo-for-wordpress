@@ -165,7 +165,7 @@ class VisitRequestProcessor extends RequestProcessor
             return \true;
         }
         $wasLastActionYesterday = $this->wasLastActionNotToday($visitProperties, $request, $lastKnownVisit);
-        $forceNewVisitAtMidnight = (bool) TrackerConfig::getConfigValue('create_new_visit_after_midnight', $request->getIdSiteIfExists());
+        $forceNewVisitAtMidnight = TrackerConfig::getBoolConfigValue('create_new_visit_after_midnight', \false, $request->getIdSiteIfExists());
         if ($wasLastActionYesterday && $forceNewVisitAtMidnight) {
             Common::printDebug("Visitor detected, but last action was yesterday...");
             return \true;

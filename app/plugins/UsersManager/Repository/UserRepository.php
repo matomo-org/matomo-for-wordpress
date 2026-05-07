@@ -118,7 +118,6 @@ string $password = '', bool $isPasswordHashed = \false) : void
     /**
      * @param array $user
      * @return array
-     * @throws \Exception
      */
     public function enrichUser(array $user) : array
     {

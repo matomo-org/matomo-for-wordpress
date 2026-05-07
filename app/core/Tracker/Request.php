@@ -81,7 +81,7 @@ $tokenAuth = '')
         }
         // check for 4byte utf8 characters in all tracking params and replace them with � if not support by database
         $this->params = $this->replaceUnsupportedUtf8Chars($this->params);
-        $this->customTimestampDoesNotRequireTokenauthWhenNewerThan = (int) \Piwik\Tracker\TrackerConfig::getConfigValue('tracking_requests_require_authentication_when_custom_timestamp_newer_than', $this->getIdSiteIfExists());
+        $this->customTimestampDoesNotRequireTokenauthWhenNewerThan = \Piwik\Tracker\TrackerConfig::getIntegerConfigValue('tracking_requests_require_authentication_when_custom_timestamp_newer_than', 0, $this->getIdSiteIfExists());
     }
     protected function replaceUnsupportedUtf8Chars($value, $key = \false)
     {

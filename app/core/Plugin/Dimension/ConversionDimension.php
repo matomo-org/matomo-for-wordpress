@@ -38,6 +38,7 @@ abstract class ConversionDimension extends Dimension
     protected $category = 'Goals_Conversion';
     /**
      * Get all conversion dimensions that are defined by all activated plugins.
+     * @return ConversionDimension[]
      * @ignore
      */
     public static function getAllDimensions()

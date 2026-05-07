@@ -208,7 +208,7 @@ class Login extends \Piwik\Plugin
         }
         // for performance reasons we make sure to execute it only once per request
         $this->hasPerformedBruteForceCheck = \true;
-        if (empty($login) || $login === 'anonymous') {
+        if (empty($login) || strtolower($login) === 'anonymous') {
             return;
             // can't do the check if we don't know the login
         }
