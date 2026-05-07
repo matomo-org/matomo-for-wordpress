@@ -12,8 +12,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\Exception\AuthenticationFailedException;
 use Piwik\Plugins\LanguagesManager\API as LanguagesManagerApi;
 use Piwik\Translation\Weblate\API;
-/**
- */
 class FetchTranslations extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
 {
     public const DOWNLOAD_PATH = '/weblate';

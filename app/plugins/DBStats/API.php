@@ -19,7 +19,7 @@ use Piwik\Piwik;
 class API extends \Piwik\Plugin\API
 {
     /**
-     * The MySQLMetadataProvider instance that fetches table/db status information.
+     * @var MySQLMetadataProvider
      */
     private $metadataProvider;
     public function __construct(\Piwik\Plugins\DBStats\MySQLMetadataProvider $metadataProvider)
@@ -30,10 +30,9 @@ class API extends \Piwik\Plugin\API
      * Gets some general information about this Matomo installation, including the count of
      * websites tracked, the count of users and the total space used by the database.
      *
-     *
-     * @return array Contains the website count, user count and total space used by the database.
+     * @return array{0:int|float|string, 1:int|float|string, 2:int|float|string} Website count, user count, and total database size.
      */
-    public function getGeneralInformation()
+    public function getGeneralInformation() : array
     {
         Piwik::checkUserHasSuperUserAccess();
         // calculate total size
@@ -50,9 +49,11 @@ class API extends \Piwik\Plugin\API
     /**
      * Gets general database info that is not specific to any table.
      *
-     * @return array See https://dev.mysql.com/doc/refman/5.1/en/show-status.html .
+     * See https://dev.mysql.com/doc/refman/5.1/en/show-status.html
+     *
+     * @return array<int, array<string, mixed>> Database status rows returned by the metadata provider.
      */
-    public function getDBStatus()
+    public function getDBStatus() : array
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getDBStatus();
@@ -65,7 +66,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getDatabaseUsageSummary()
+    public function getDatabaseUsageSummary() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         $emptyRow = array('data_size' => 0, 'index_size' => 0, 'row_count' => 0);
@@ -91,7 +92,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getTrackerDataSummary()
+    public function getTrackerDataSummary() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllLogTableStatus());
@@ -102,7 +103,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getMetricDataSummary()
+    public function getMetricDataSummary() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllNumericArchiveStatus());
@@ -113,7 +114,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getMetricDataSummaryByYear()
+    public function getMetricDataSummaryByYear() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         $dataTable = $this->getMetricDataSummary();
@@ -128,7 +129,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getReportDataSummary()
+    public function getReportDataSummary() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllBlobArchiveStatus());
@@ -139,7 +140,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getReportDataSummaryByYear()
+    public function getReportDataSummaryByYear() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         $dataTable = $this->getReportDataSummary();
@@ -156,7 +157,7 @@ class API extends \Piwik\Plugin\API
      *
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getAdminDataSummary()
+    public function getAdminDataSummary() : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllAdminTableStatus());
@@ -167,11 +168,10 @@ class API extends \Piwik\Plugin\API
      *
      * Goal reports and reports of the format .*_[0-9]+ are grouped together.
      *
-     * @param bool $forceCache false to use the cached result, true to run the queries again and
-     *                         cache the result.
+     * @param bool $forceCache Whether to bypass the cache and recalculate the summary.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualReportsSummary($forceCache = \false)
+    public function getIndividualReportsSummary(bool $forceCache = \false) : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByBlobName($forceCache);
@@ -182,22 +182,18 @@ class API extends \Piwik\Plugin\API
      *
      * Goal metrics, metrics of the format .*_[0-9]+ and 'done...' metrics are grouped together.
      *
-     * @param bool $forceCache false to use the cached result, true to run the queries again and
-     *                         cache the result.
+     * @param bool $forceCache Whether to bypass the cache and recalculate the summary.
      * @return DataTable A datatable with three columns: 'data_size', 'index_size', 'row_count'.
      */
-    public function getIndividualMetricsSummary($forceCache = \false)
+    public function getIndividualMetricsSummary(bool $forceCache = \false) : DataTable
     {
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByMetricName($forceCache);
     }
     /**
-     * Returns a datatable representation of a set of table statuses.
-     *
-     * @param array $statuses The table statuses to summarize.
-     * @return DataTable
+     * @param array<int, array{Name:string, Data_length:int|float|string, Index_length:int|float|string, Rows:int|float|string}> $statuses
      */
-    private function getTablesSummary($statuses)
+    private function getTablesSummary($statuses) : DataTable
     {
         $dataTable = new DataTable();
         foreach ($statuses as $status) {
@@ -205,33 +201,24 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTable;
     }
-    /** Returns true if $name is the name of a numeric archive table, false if otherwise. */
-    private function isNumericArchiveTable($name)
+    private function isNumericArchiveTable(string $name) : bool
     {
         return strpos($name, Common::prefixTable('archive_numeric_')) === 0;
     }
-    /** Returns true if $name is the name of a blob archive table, false if otherwise. */
-    private function isBlobArchiveTable($name)
+    private function isBlobArchiveTable(string $name) : bool
     {
         return strpos($name, Common::prefixTable('archive_blob_')) === 0;
     }
-    /** Returns true if $name is the name of a log table, false if otherwise. */
-    private function isTrackerTable($name)
+    private function isTrackerTable(string $name) : bool
     {
         return strpos($name, Common::prefixTable('log_')) === 0;
     }
     /**
      * Gets the year of an archive table from its name.
-     *
-     * @param string $tableName
-     *
-     * @return string  the year
      */
-    private function getArchiveTableYear($tableName)
+    private function getArchiveTableYear(string $tableName) : string
     {
-        if (preg_match("/archive_(?:numeric|blob)_([0-9]+)_/", $tableName, $matches) === 0) {
-            return '';
-        }
-        return $matches[1];
+        preg_match("/archive_(?:numeric|blob)_([0-9]+)_/", $tableName, $matches);
+        return $matches[1] ?? '';
     }
 }

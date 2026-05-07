@@ -17,6 +17,7 @@ use Piwik\Piwik;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeDao;
 use Piwik\Plugins\UsersManager\Model;
+use Piwik\Plugins\UsersManager\UserLoginHelper;
 use Piwik\Session;
 use Piwik\Session\SessionFingerprint;
 use Exception;
@@ -145,22 +146,8 @@ class TwoFactorAuth extends \Piwik\Plugin
 $tokenAuth)
     {
         $model = new Model();
-        $user = $model->getUserByTokenAuth($tokenAuth);
+        $user = $model->getUserByTokenAuth($tokenAuth, \true);
         return !empty($user);
-    }
-    private function getCanonicalLogin(string $userLoginOrEmail) : ?string
-    {
-        $model = new Model();
-        if ($model->userExists($userLoginOrEmail)) {
-            return $userLoginOrEmail;
-        }
-        if ($model->userEmailExists($userLoginOrEmail)) {
-            $user = $model->getUserByEmail($userLoginOrEmail);
-            if (!empty($user['login'])) {
-                return $user['login'];
-            }
-        }
-        return null;
     }
     public function onCreateAppSpecificTokenAuth($returnedValue, array $params) : void
     {
@@ -168,7 +155,7 @@ $tokenAuth)
             return;
         }
         if (!empty($returnedValue) && !empty($params['parameters']['userLogin'])) {
-            $login = $this->getCanonicalLogin($params['parameters']['userLogin']);
+            $login = UserLoginHelper::findCanonicalLoginByLoginOrEmail($params['parameters']['userLogin']);
             $twoFa = $this->getTwoFa();
             if (!empty($login) && \Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login) && $this->isValidTokenAuth($returnedValue)) {
                 $authCode = \Piwik\Request::fromRequest()->getStringParameter('authCode', '');

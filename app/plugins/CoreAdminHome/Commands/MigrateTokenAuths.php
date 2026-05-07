@@ -39,6 +39,7 @@ class MigrateTokenAuths extends ConsoleCommand
         $migrations[] = $migration->db->dropIndex('user', 'uniq_keytoken');
         $userModel = new Model();
         foreach ($userModel->getUsers(array()) as $user) {
+            /** @var array{login:string, token_auth:string} $user */
             if (!empty($user['token_auth'])) {
                 $migrations[] = $migration->db->insert('user_token_auth', array('login' => $user['login'], 'description' => 'Created by Matomo 4 migration', 'password' => $userModel->hashTokenAuth($user['token_auth']), 'date_created' => Date::now()->getDatetime(), 'hash_algo' => 'sha512'));
             }

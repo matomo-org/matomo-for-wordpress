@@ -90,13 +90,11 @@ class Model
         }
         return $archiveIds;
     }
-    public function updateArchiveAsInvalidated($archiveTable, $idSites, $allPeriodsToInvalidate, ?Segment $segment = null, bool $forceInvalidateNonexistentRanges = \false, ?string $name = null, bool $doNotCreateInvalidations = \false)
+    public function updateArchiveAsInvalidated(?string $archiveTable, $idSites, $allPeriodsToInvalidate, ?Segment $segment = null, bool $forceInvalidateNonexistentRanges = \false, ?string $name = null, bool $doNotCreateInvalidations = \false)
     {
         if (empty($idSites)) {
             return 0;
         }
-        // select all idarchive/name pairs we want to invalidate
-        $sql = "SELECT idarchive, idsite, period, date1, date2, `name`, `value`\n                  FROM `{$archiveTable}`\n                 WHERE idsite IN (" . implode(',', $idSites) . ") AND value <> " . \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL;
         $periodCondition = '';
         if (!empty($allPeriodsToInvalidate)) {
             $periodCondition .= " AND (";
@@ -117,7 +115,6 @@ class Model
             }
             $periodCondition .= ")";
         }
-        $sql .= $periodCondition;
         if (!empty($name)) {
             if (strpos($name, '.') !== \false) {
                 [$plugin, $name] = explode('.', $name, 2);
@@ -144,12 +141,13 @@ class Model
                 // invalidate specific segment for specific plugin only
             }
         }
-        $sql .= " AND {$nameCondition}";
         $idArchives = [];
         $archivesToInvalidate = [];
         // update each archive as invalidated (but only for full archives or plugin archives, not for partial archives.
         // DONE_INVALIDATED also implies that an archive is whole and not partial, and we want to avoid that.)
-        if (empty($name)) {
+        if (!empty($archiveTable) && empty($name)) {
+            // select all idarchive/name pairs we want to invalidate
+            $sql = "SELECT idarchive, idsite, period, date1, date2, `name`, `value`\n                      FROM `{$archiveTable}`\n                     WHERE idsite IN (" . implode(',', $idSites) . ") AND value <> " . \Piwik\DataAccess\ArchiveWriter::DONE_PARTIAL . $periodCondition . " AND {$nameCondition}";
             $archivesToInvalidate = Db::fetchAll($sql);
             $idArchives = array_column($archivesToInvalidate, 'idarchive');
             if (!empty($idArchives)) {
@@ -298,7 +296,7 @@ class Model
         $query = "SELECT DISTINCT idarchive\n                    FROM `{$archiveTable}`\n                    WHERE idarchive NOT IN (\n                            SELECT DISTINCT idarchive\n                            FROM `{$archiveTable}`\n                            WHERE name LIKE 'done%'\n                        )";
         return Db::fetchAll($query);
     }
-    public function deleteArchivesWithPeriod($numericTable, $blobTable, $period, $date)
+    public function deleteArchivesWithPeriod($numericTable, ?string $blobTable, $period, $date)
     {
         if (SettingsServer::isArchivePhpTriggered()) {
             StaticContainer::get(LoggerInterface::class)->info('deleteArchivesWithPeriod: ' . $numericTable . ' with period = ' . $period . ' and date = ' . $date);
@@ -307,28 +305,32 @@ class Model
         $bind = array($period, $date);
         $queryObj = Db::query(sprintf($query, $numericTable), $bind);
         $deletedRows = $queryObj->rowCount();
-        try {
-            $queryObj = Db::query(sprintf($query, $blobTable), $bind);
-            $deletedRows += $queryObj->rowCount();
-        } catch (Exception $e) {
-            // Individual blob tables could be missing
-            $this->logger->debug("Unable to delete archives by period from {blobTable}.", array('blobTable' => $blobTable, 'exception' => $e));
+        if (!empty($blobTable)) {
+            try {
+                $queryObj = Db::query(sprintf($query, $blobTable), $bind);
+                $deletedRows += $queryObj->rowCount();
+            } catch (Exception $e) {
+                // Individual blob tables could be missing
+                $this->logger->debug("Unable to delete archives by period from {blobTable}.", array('blobTable' => $blobTable, 'exception' => $e));
+            }
         }
         return $deletedRows;
     }
-    public function deleteArchiveIds($numericTable, $blobTable, $idsToDelete)
+    public function deleteArchiveIds($numericTable, ?string $blobTable, $idsToDelete)
     {
         $idsToDelete = array_values($idsToDelete);
         $idsToDelete = array_map('intval', $idsToDelete);
         $query = "DELETE FROM `%s` WHERE idarchive IN (" . implode(',', $idsToDelete) . ")";
         $queryObj = Db::query(sprintf($query, $numericTable), array());
         $deletedRows = $queryObj->rowCount();
-        try {
-            $queryObj = Db::query(sprintf($query, $blobTable), array());
-            $deletedRows += $queryObj->rowCount();
-        } catch (Exception $e) {
-            // Individual blob tables could be missing
-            $this->logger->debug("Unable to delete archive IDs from {blobTable}.", array('blobTable' => $blobTable, 'exception' => $e));
+        if (!empty($blobTable)) {
+            try {
+                $queryObj = Db::query(sprintf($query, $blobTable), array());
+                $deletedRows += $queryObj->rowCount();
+            } catch (Exception $e) {
+                // Individual blob tables could be missing
+                $this->logger->debug("Unable to delete archive IDs from {blobTable}.", array('blobTable' => $blobTable, 'exception' => $e));
+            }
         }
         return $deletedRows;
     }
@@ -336,8 +338,11 @@ class Model
     {
         $dateStart = $params->getPeriod()->getDateStart();
         $dateEnd = $params->getPeriod()->getDateEnd();
-        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($dateStart);
-        $blobTable = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($dateStart);
+        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($dateStart, \false);
+        if (empty($numericTable)) {
+            return;
+        }
+        $blobTable = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($dateStart, \false);
         $sql = "SELECT idarchive FROM `{$numericTable}` WHERE idsite = ? AND date1 = ? AND date2 = ? AND period = ? AND name = ? AND ts_archived <= ? AND idarchive < ?";
         $idArchives = Db::fetchAll($sql, [$params->getSite()->getId(), $dateStart->getDatetime(), $dateEnd->getDatetime(), $params->getPeriod()->getId(), $name, $tsArchived, $idArchive]);
         $idArchives = array_column($idArchives, 'idarchive');
@@ -651,7 +656,12 @@ class Model
     {
         $date = $period->getDateStart();
         while ($date->isEarlier($period->getDateEnd()->addPeriod(1, 'month'))) {
-            $archiveTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($date);
+            $archiveTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($date, \false);
+            if (empty($archiveTable)) {
+                $date = $date->addPeriod(1, 'month');
+                // move to next archive table
+                continue;
+            }
             // we look for any archive that can be used to compute this one. this includes invalidated archives, since it is possible
             // under certain circumstances for them to exist, when archiving a higher period that includes them. the main example being
             // the GoogleAnalyticsImporter which disallows the recomputation of invalidated archives for imported data, since that would
@@ -790,8 +800,8 @@ class Model
         $requestedRecords = is_string($requestedRecords) ? [$requestedRecords] : $requestedRecords;
         $placeholders = Common::getSqlStringFieldsArray($requestedRecords);
         $countSql = "SELECT DISTINCT name FROM `%s` WHERE idarchive IN ({$idArchives}) AND name IN ({$placeholders}) LIMIT " . count($requestedRecords);
-        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($archiveStartDate);
-        $blobTable = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($archiveStartDate);
+        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($archiveStartDate, \false);
+        $blobTable = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($archiveStartDate, \false);
         // if the requested metrics look numeric, prioritize the numeric table, otherwise the blob table. this way, if all the metrics are
         // found in this table (which will be most of the time), we don't have to query the other table
         if ($this->doRequestedRecordsLookNumeric($requestedRecords)) {
@@ -801,6 +811,9 @@ class Model
         }
         $existingRecords = [];
         foreach ($tablesToSearch as $tableName) {
+            if (empty($tableName)) {
+                continue;
+            }
             $sql = sprintf($countSql, $tableName);
             $rows = Db::fetchAll($sql, $requestedRecords);
             $existingRecords = array_merge($existingRecords, array_column($rows, 'name'));

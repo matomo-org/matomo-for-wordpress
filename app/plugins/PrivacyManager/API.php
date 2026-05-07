@@ -11,13 +11,12 @@ namespace Piwik\Plugins\PrivacyManager;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Container\StaticContainer;
+use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Config as PiwikConfig;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomJsTracker\File;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\Live\Live;
-use Piwik\Plugins\PrivacyManager\FeatureFlags\PrivacyCompliance;
 use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
 use Piwik\Plugins\PrivacyManager\Dao\LogDataAnonymizer;
 use Piwik\Plugins\PrivacyManager\Model\LogDataAnonymizations;
@@ -29,7 +28,10 @@ use Piwik\Site;
 use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Validators\BaseValidator;
 /**
- * API for plugin PrivacyManager
+ * The PrivacyManager API lets you manage GDPR workflows, anonymization settings, and privacy compliance controls.
+ *
+ * @phpstan-type VisitDescriptor array{idsite: int, idvisit: int}
+ * @phpstan-type AnonymizableColumn array{column_name: string, default_value: mixed}
  *
  * @method static \Piwik\Plugins\PrivacyManager\API getInstance()
  */
@@ -47,39 +49,64 @@ class API extends \Piwik\Plugin\API
      * @var LogDataAnonymizer
      */
     private $logDataAnonymizer;
-    /**
-     * @var FeatureFlagManager
-     */
-    private $featureFlagManager;
-    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer, FeatureFlagManager $featureFlagManager)
+    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer)
     {
         $this->gdpr = $gdpr;
         $this->logDataAnonymizations = $logDataAnonymizations;
         $this->logDataAnonymizer = $logDataAnonymizer;
-        $this->featureFlagManager = $featureFlagManager;
     }
-    private function checkDataSubjectVisits($visits)
+    /**
+     * @param array<int, VisitDescriptor> $visits
+     */
+    private function checkDataSubjectVisits(array $visits) : void
     {
         BaseValidator::check('visits', $visits, [new VisitsDataSubject()]);
         $idSites = [];
-        foreach ($visits as $index => $visit) {
+        foreach ($visits as $visit) {
             $idSites[] = $visit['idsite'];
         }
         Piwik::checkUserHasAdminAccess($idSites);
     }
-    public function deleteDataSubjects($visits)
+    /**
+     * Deletes the requested data subjects from the stored visit data.
+     *
+     * @param array<int, VisitDescriptor> $visits Data subject visit descriptors to delete.
+     *                                            Each entry must contain `idsite` and `idvisit`.
+     * @return array<string, int> Deletion counts keyed by storage area (e.g. log table or plugin name).
+     */
+    public function deleteDataSubjects(array $visits) : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $this->checkDataSubjectVisits($visits);
         return $this->gdpr->deleteDataSubjects($visits);
     }
-    public function exportDataSubjects($visits)
+    /**
+     * Exports the requested data subjects from the stored visit data.
+     *
+     * @param array<int, VisitDescriptor> $visits Data subject visit descriptors to export.
+     *                                            Each entry must contain `idsite` and `idvisit`.
+     * @return array<string, array<int, array<string, mixed>>> Export payload grouped by log table name, each
+     *                                                         containing an array of row data.
+     */
+    public function exportDataSubjects(array $visits) : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $this->checkDataSubjectVisits($visits);
         return $this->gdpr->exportDataSubjects($visits);
     }
-    public function findDataSubjects($idSite, $segment)
+    /**
+     * Finds data subjects matching a segment across the requested websites. Only returns results for sites
+     * that have visitor logs or profiles enabled. Returns at most 401 matching visits.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                                 Accepts comma-separated IDs, "all", numeric IDs as strings, or ["all"].
+     * @param string $segment Segment expression identifying the data subjects to find.
+     *                        Example: "referrerName==example.com"
+     *                        Supports AND (;) and OR (,) operators.
+     * @return array{}|DataTable Matching visitor details with a reduced column set (identity, device,
+     *                           location, and browser info). Returns an empty array when no sites qualify.
+     */
+    public function findDataSubjects($idSite, string $segment)
     {
         Piwik::checkUserHasSomeAdminAccess();
         if (!Manager::getInstance()->isPluginActivated('Live')) {
@@ -104,6 +131,7 @@ class API extends \Piwik\Plugin\API
         if (empty($siteIdsWithVisitorLogsOrProfilesEnabled)) {
             return [];
         }
+        /** @var DataTable $result */
         $result = Request::processRequest('Live.getLastVisitsDetails', ['segment' => $segment, 'idSite' => $siteIdsWithVisitorLogsOrProfilesEnabled, 'period' => 'range', 'date' => '1998-01-01,today', 'filter_limit' => 401, 'doNotFetchActions' => 1]);
         $columnsToKeep = ['lastActionDateTime', 'idVisit', 'idSite', 'siteName', 'visitorId', 'visitIp', 'userId', 'deviceType', 'deviceModel', 'deviceTypeIcon', 'operatingSystem', 'operatingSystemIcon', 'browser', 'browserFamilyDescription', 'browserIcon', 'country', 'region', 'countryFlag'];
         foreach ($result->getColumns() as $column) {
@@ -114,9 +142,28 @@ class API extends \Piwik\Plugin\API
         // Note: Datatable PostProcessor is disabled for this method in PrivacyManager::shouldDisablePostProcessing
         return $result;
     }
-    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [],
+    /**
+     * Schedules anonymization of selected raw visit data. The anonymization is queued and processed
+     * asynchronously by a scheduled task.
+     *
+     * @param int|string|int[] $idSites Website ID(s) to anonymize.
+     *                                 - Single site ID (e.g. 1)
+     *                                 - Multiple site IDs (e.g. [1, 4, 5])
+     *                                 - Comma-separated list ("1,4,5")
+     *                                 An empty value or "all" schedules anonymization for all websites.
+     * @param string $date Date or date range to anonymize.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param bool $anonymizeIp `true` to anonymize visitor IP addresses.
+     * @param bool $anonymizeLocation `true` to anonymize stored location data.
+     * @param bool $anonymizeUserId `true` to anonymize stored user IDs.
+     * @param string[] $unsetVisitColumns Visit column names to clear during anonymization.
+     * @param string[] $unsetLinkVisitActionColumns Link-visit-action column names to clear during anonymization.
+     * @param string $passwordConfirmation Current user password confirmation.
+     */
+    public function anonymizeSomeRawData($idSites, string $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [],
 #[\SensitiveParameter]
-$passwordConfirmation = '')
+string $passwordConfirmation = '') : void
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -129,24 +176,38 @@ $passwordConfirmation = '')
         $requester = Piwik::getCurrentUserLogin();
         $this->logDataAnonymizations->scheduleEntry($requester, $idSites, $date, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $unsetVisitColumns, $unsetLinkVisitActionColumns);
     }
-    public function getAvailableVisitColumnsToAnonymize()
+    /**
+     * Returns visit-log columns that can be anonymized manually.
+     *
+     * @return AnonymizableColumn[] Available visit columns and their default replacement values.
+     */
+    public function getAvailableVisitColumnsToAnonymize() : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $columns = $this->logDataAnonymizer->getAvailableVisitColumnsToAnonymize();
         return $this->formatAvailableColumnsToAnonymize($columns);
     }
-    public function getAvailableLinkVisitActionColumnsToAnonymize()
+    /**
+     * Returns link-visit-action columns that can be anonymized manually.
+     *
+     * @return AnonymizableColumn[] Available link-visit-action columns and their default replacement values.
+     */
+    public function getAvailableLinkVisitActionColumnsToAnonymize() : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $columns = $this->logDataAnonymizer->getAvailableLinkVisitActionColumnsToAnonymize();
         return $this->formatAvailableColumnsToAnonymize($columns);
     }
-    private function formatAvailableColumnsToAnonymize($columns)
+    /**
+     * @param array<string, mixed> $columns
+     * @return AnonymizableColumn[]
+     */
+    private function formatAvailableColumnsToAnonymize(array $columns) : array
     {
         ksort($columns);
-        $formatted = array();
+        $formatted = [];
         foreach ($columns as $column => $default) {
-            $formatted[] = array('column_name' => $column, 'default_value' => $default);
+            $formatted[] = ['column_name' => $column, 'default_value' => $default];
         }
         return $formatted;
     }
@@ -170,9 +231,13 @@ $passwordConfirmation = '')
         return ['', \false];
     }
     /**
-     * Provide anonymisation settings to Matomo UI only
+     * Returns the current anonymization and privacy settings.
      *
+     * @param int|null $idSiteSpecific Specific site ID to load settings for, or `null` for global settings.
+     * @return array<string, mixed> Anonymization settings including mask length options,
+     *                              referrer anonymization options, and tracker file details.
      * @internal
+     *
      */
     public function getAnonymisationSettings(?int $idSiteSpecific = null) : array
     {
@@ -206,10 +271,29 @@ $passwordConfirmation = '')
     }
     /**
      * @internal
+     *
+     * Applies IP anonymization settings globally or for a specific website.
+     *
+     * @param bool $anonymizeIPEnable `true` to enable IP anonymization.
+     * @param int $ipAddressMaskLength Number of bytes to mask in stored IP addresses.
+     * @param bool $useAnonymizedIpForVisitEnrichment `true` to use anonymized IPs for visit enrichment.
+     * @param bool $anonymizeUserId `true` to anonymize stored user IDs.
+     * @param bool $anonymizeOrderId `true` to anonymize stored ecommerce order IDs.
+     * @param string $anonymizeReferrer Referrer anonymization mode.
+     * @param bool $forceCookielessTracking `true` to force cookieless tracking instance-wide. Ignored for
+     *                                      site-specific settings.
+     * @param bool $randomizeConfigId `true` to randomize visitor config IDs.
+     * @param int|null $idSiteSpecific Specific site ID to update, or `null` for global settings.
+     * @param bool $useSiteSpecificSettings `true` to keep site-specific settings enabled. If `false` for a
+     *                                      site-specific request, the site override is removed and the method returns
+     *                                      immediately.
+     * @param string $passwordConfirmation Current user password confirmation. Only required when
+     *                                     `$randomizeConfigId` is enabled.
+     * @return bool `true` after the settings have been updated or the site override has been removed.
      */
     public function setAnonymizeIpSettings(bool $anonymizeIPEnable, int $ipAddressMaskLength, bool $useAnonymizedIpForVisitEnrichment, bool $anonymizeUserId = \false, bool $anonymizeOrderId = \false, string $anonymizeReferrer = '', bool $forceCookielessTracking = \false, bool $randomizeConfigId = \false, ?int $idSiteSpecific = null, bool $useSiteSpecificSettings = \false,
 #[\SensitiveParameter]
-string $passwordConfirmation = '')
+string $passwordConfirmation = '') : bool
     {
         if (null !== $idSiteSpecific) {
             $idSite = $idSiteSpecific;
@@ -254,8 +338,12 @@ string $passwordConfirmation = '')
     }
     /**
      * @internal
+     *
+     * Disables support for the Do Not Track browser header.
+     *
+     * @return bool `true` after Do Not Track support has been disabled.
      */
-    public function deactivateDoNotTrack()
+    public function deactivateDoNotTrack() : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $dntChecker = new \Piwik\Plugins\PrivacyManager\DoNotTrackHeaderChecker();
@@ -264,8 +352,12 @@ string $passwordConfirmation = '')
     }
     /**
      * @internal
+     *
+     * Enables support for the Do Not Track browser header.
+     *
+     * @return bool `true` after Do Not Track support has been enabled.
      */
-    public function activateDoNotTrack()
+    public function activateDoNotTrack() : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $dntChecker = new \Piwik\Plugins\PrivacyManager\DoNotTrackHeaderChecker();
@@ -273,22 +365,35 @@ string $passwordConfirmation = '')
         return \true;
     }
     /**
+     * Configures the minimum interval between scheduled data deletion runs.
+     *
+     * @param int $deleteLowestInterval Minimum number of days between scheduled deletion runs.
+     * @param string $passwordConfirmation Current user password confirmation.
+     * @return bool `true` after the settings have been saved.
      * @internal
+     *
      */
     public function setScheduleReportDeletionSettings($deleteLowestInterval = 7,
 #[\SensitiveParameter]
-$passwordConfirmation = '')
+string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
-        return $this->savePurgeDataSettings(array('delete_logs_schedule_lowest_interval' => (int) $deleteLowestInterval));
+        return $this->savePurgeDataSettings(['delete_logs_schedule_lowest_interval' => (int) $deleteLowestInterval]);
     }
     /**
+     * Configures automatic raw log deletion settings.
+     *
+     * @param int|string $enableDeleteLogs Flag enabling raw log deletion.
+     * @param int $deleteLogsOlderThan Delete logs older than this many days. Values below `1` are normalized to `1`.
+     * @param string $passwordConfirmation Current user password confirmation.
+     * @return bool `true` after the settings have been saved.
      * @internal
+     *
      */
     public function setDeleteLogsSettings($enableDeleteLogs = '0', $deleteLogsOlderThan = 180,
 #[\SensitiveParameter]
-$passwordConfirmation = '')
+string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -296,14 +401,29 @@ $passwordConfirmation = '')
         if ($deleteLogsOlderThan < 1) {
             $deleteLogsOlderThan = 1;
         }
-        return $this->savePurgeDataSettings(array('delete_logs_enable' => !empty($enableDeleteLogs), 'delete_logs_older_than' => $deleteLogsOlderThan));
+        return $this->savePurgeDataSettings(['delete_logs_enable' => !empty($enableDeleteLogs), 'delete_logs_older_than' => $deleteLogsOlderThan]);
     }
     /**
+     * Configures automatic report deletion settings.
+     *
+     * @param int|string $enableDeleteReports Flag enabling report deletion.
+     * @param int $deleteReportsOlderThan Delete reports older than this many periods. Values below `2` are
+     *                                    normalized to `2`.
+     * @param int $keepBasic Whether to keep basic metrics.
+     * @param int $keepDay Whether to keep day reports.
+     * @param int $keepWeek Whether to keep week reports.
+     * @param int $keepMonth Whether to keep month reports.
+     * @param int $keepYear Whether to keep year reports.
+     * @param int $keepRange Whether to keep range reports.
+     * @param int $keepSegments Whether to keep segmented reports.
+     * @param string $passwordConfirmation Current user password confirmation.
+     * @return bool `true` after the settings have been saved.
      * @internal
+     *
      */
     public function setDeleteReportsSettings($enableDeleteReports = 0, $deleteReportsOlderThan = 3, $keepBasic = 0, $keepDay = 0, $keepWeek = 0, $keepMonth = 0, $keepYear = 0, $keepRange = 0, $keepSegments = 0,
 #[\SensitiveParameter]
-$passwordConfirmation = '')
+string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -330,10 +450,11 @@ $passwordConfirmation = '')
      * Executes a data purge, deleting raw data and report data using the current config options.
      *
      * @internal
+     * @param string $passwordConfirmation Current user password confirmation.
      */
     public function executeDataPurge(
 #[\SensitiveParameter]
-$passwordConfirmation)
+string $passwordConfirmation) : void
     {
         $this->confirmCurrentUserPassword($passwordConfirmation);
         Piwik::checkUserHasSuperUserAccess();
@@ -350,17 +471,25 @@ $passwordConfirmation)
         }
     }
     /**
+     * Returns the available compliance policies.
+     *
+     * @return array<int, array<string, string>> List of compliance policy details.
      * @internal
-     * @return array<array<string,string>>
+     *
      */
     public function getCompliancePolicies() : array
     {
         return PolicyManager::getAllPoliciesDetails();
     }
     /**
+     * Returns the compliance status for a given policy and site.
+     *
+     * @param int|string $idSite Site ID to inspect, or `all` for global compliance status.
+     * @param string $complianceType Compliance policy name to inspect.
+     * @return array<string, bool|array<int, array<string, string>>> Compliance status including enforcement state,
+     *                                                               config control flag, and requirement details.
      * @internal
-     * @param int|string $idSite
-     * @return array<string,bool|array<int, array<string,string>>>
+     *
      */
     public function getComplianceStatus($idSite, string $complianceType) : array
     {
@@ -368,9 +497,6 @@ $passwordConfirmation)
             $idSite = null;
         } else {
             $idSite = intval($idSite);
-        }
-        if (\false === $this->featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            throw new Exception('Feature not available');
         }
         Piwik::checkUserHasSuperUserAccess();
         $policy = PolicyManager::getPolicyByName($complianceType);
@@ -390,15 +516,20 @@ $passwordConfirmation)
         return $payload;
     }
     /**
+     * Enables or disables enforcement of a compliance policy.
+     *
+     * @param string $idSite Site ID to update, or `all` for global compliance status.
+     * @param string $complianceType Compliance policy name to update.
+     * @param bool $enforce `true` to enforce the selected policy, `false` to disable enforcement.
+     * @param string|null $passwordConfirmation Current user password confirmation when required.
+     * @return bool `true` if the policy is enabled after the update, `false` otherwise.
      * @internal
+     *
      */
     public function setComplianceStatus(string $idSite, string $complianceType, bool $enforce,
 #[\SensitiveParameter]
 ?string $passwordConfirmation = null) : bool
     {
-        if (!$this->featureFlagManager->isFeatureActive(PrivacyCompliance::class)) {
-            throw new Exception('Feature not available');
-        }
         Piwik::checkUserHasSuperUserAccess();
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -415,14 +546,17 @@ $passwordConfirmation)
         PolicyManager::setPolicyActiveStatus($policy, $enforce, $idSite);
         return $enforce;
     }
-    private function savePurgeDataSettings($settings)
+    /**
+     * @param array<string, mixed> $settings
+     */
+    private function savePurgeDataSettings(array $settings) : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->checkDataPurgeAdminSettingsIsEnabled();
         \Piwik\Plugins\PrivacyManager\PrivacyManager::savePurgeDataSettings($settings);
         return \true;
     }
-    private function checkDataPurgeAdminSettingsIsEnabled()
+    private function checkDataPurgeAdminSettingsIsEnabled() : void
     {
         if (!\Piwik\Plugins\PrivacyManager\Controller::isDataPurgeSettingsEnabled()) {
             throw new \Exception("Configuring deleting raw data and report data has been disabled by Matomo admins.");

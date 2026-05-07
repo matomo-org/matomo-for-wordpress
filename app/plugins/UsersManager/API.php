@@ -17,12 +17,13 @@ use Piwik\Auth\Password;
 use Piwik\Common;
 use Piwik\Concurrency\Lock;
 use Piwik\Concurrency\LockBackend;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\NoAccessException;
 use Piwik\Option;
 use Piwik\Piwik;
+use Piwik\Plugin\ThemeStyles;
 use Piwik\Plugins\CoreAdminHome\Emails\AnonymousAccessEnabledEmail;
 use Piwik\Plugins\CoreAdminHome\Emails\UserDeletedEmail;
 use Piwik\Plugins\Login\PasswordVerifier;
@@ -31,11 +32,13 @@ use Piwik\Plugins\UsersManager\Repository\UserRepository;
 use Piwik\Plugins\UsersManager\Validators\AllowedEmailDomain;
 use Piwik\Plugins\UsersManager\Validators\Email;
 use Piwik\Request\AuthenticationToken;
+use Piwik\Settings\Storage\UserScopedSettingsAccessManager;
 use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Tracker\Cache;
 use Piwik\Url;
 use Piwik\Validators\BaseValidator;
+use Piwik\Validators\NotEmpty;
 /**
  * The UsersManager API lets you Manage Users and their permissions to access specific websites.
  *
@@ -47,11 +50,19 @@ use Piwik\Validators\BaseValidator;
  * or you can list all users and websites for a given permission via "getUsersSitesFromAccess". Permissions are set and updated
  * via the method "setUserAccess".
  * See also the documentation about <a href='https://matomo.org/docs/manage-users/' rel='noreferrer' target='_blank'>Managing Users</a> in Matomo.
+ *
+ * @phpstan-import-type UserRow from Model
  */
 class API extends \Piwik\Plugin\API
 {
     public const OPTION_NAME_PREFERENCE_SEPARATOR = '_';
+    /**
+     * @var bool
+     */
     public static $UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \true;
+    /**
+     * @var bool
+     */
     public static $SET_SUPERUSER_ACCESS_REQUIRE_PASSWORD_CONFIRMATION = \true;
     /**
      * @var Model
@@ -70,11 +81,11 @@ class API extends \Piwik\Plugin\API
      */
     private $access;
     /**
-     * @var Access\RolesProvider
+     * @var RolesProvider
      */
     private $roleProvider;
     /**
-     * @var Access\CapabilitiesProvider
+     * @var CapabilitiesProvider
      */
     private $capabilityProvider;
     /**
@@ -85,9 +96,17 @@ class API extends \Piwik\Plugin\API
      * @var AllowedEmailDomain
      */
     private $allowedEmailDomain;
+    /**
+     * @var UserRepository
+     */
     private $userRepository;
+    public const PREFERENCE_THEME_MODE = 'themeMode';
+    public const PREFERENCE_DEFAULT_THEME_MODE = ThemeStyles::LIGHT_MODE;
     public const PREFERENCE_DEFAULT_REPORT = 'defaultReport';
     public const PREFERENCE_DEFAULT_REPORT_DATE = 'defaultReportDate';
+    /**
+     * @var API|null
+     */
     private static $instance = null;
     public function __construct(\Piwik\Plugins\UsersManager\Model $model, \Piwik\Plugins\UsersManager\UserAccessFilter $filter,
 #[\SensitiveParameter]
@@ -110,8 +129,7 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
      *
      * StaticContainer::getContainer()->set('UsersManager_API', \Piwik\Plugins\MyCustomUsersManager\API::getInstance());
      *
-     * @return \Piwik\Plugins\UsersManager\API
-     * @throws Exception
+     * @return API
      */
     public static function getInstance()
     {
@@ -130,10 +148,11 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
     }
     /**
      * Get the list of all available roles.
-     * It does not return the super user role, and neither the "noaccess" role.
-     * @return array[]  Returns an array containing information about each role
+     * It does not return the `superuser` or `noaccess` roles.
+     *
+     * @return list<array{id: string, name: string, description: string, helpUrl: string}> List of available roles.
      */
-    public function getAvailableRoles()
+    public function getAvailableRoles() : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $response = [];
@@ -144,9 +163,10 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
     }
     /**
      * Get the list of all available capabilities.
-     * @return array[]  Returns an array containing information about each capability
+     *
+     * @return list<array{id: string, name: string, description: string, helpUrl: string, includedInRoles: list<string>, category: string}> List of available capabilities.
      */
-    public function getAvailableCapabilities()
+    public function getAvailableCapabilities() : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $response = [];
@@ -156,37 +176,46 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $response;
     }
     /**
-     * Sets a user preference. Plugins can add custom preference names by declaring them in their plugin config/config.php
-     * like this:
+     * Sets a supported UsersManager preference for a user.
+     *
+     * Plugins can add custom preference names by declaring them in their `config/config.php` like this:
      *
      * ```php
      * return array('usersmanager.user_preference_names' => \Piwik\DI::add(array('preference_name_1', 'preference_name_2')));
      * ```
      *
-     * @param string $userLogin
-     * @param string $preferenceName
-     * @param string $preferenceValue
-     * @return void
+     * @param string $userLogin Login of the user whose preference should be updated.
+     * @param string $preferenceName Preference name registered by UsersManager or plugin configuration.
+     * @param mixed $preferenceValue Value to store for the preference.
      */
-    public function setUserPreference($userLogin, $preferenceName, $preferenceValue)
+    public function setUserPreference(string $userLogin, string $preferenceName, $preferenceValue) : void
     {
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($userLogin);
         if (!$this->model->userExists($userLogin)) {
             throw new Exception('User does not exist: ' . $userLogin);
         }
-        if ($userLogin === 'anonymous') {
+        if (strtolower($userLogin) === 'anonymous') {
             Piwik::checkUserHasSuperUserAccess();
         }
-        $nameIfSupported = $this->getPreferenceId($userLogin, $preferenceName);
-        Option::set($nameIfSupported, $preferenceValue);
+        $this->assertPreferenceNameIsSupported($preferenceName);
+        $this->getUserSettingsAccessManager()->set('UsersManager', $userLogin, $preferenceName, $preferenceValue);
+        /**
+         * Keep legacy option key for compatibility with older LoginLdap versions.
+         * @deprecated - This should be removed with Matomo 6, LoginLdap should be updated
+         *               to not rely on Option storage for this setting
+         */
+        if ($preferenceName === 'isLDAPUser') {
+            Option::set($userLogin . self::OPTION_NAME_PREFERENCE_SEPARATOR . $preferenceName, $preferenceValue);
+        }
     }
     /**
-     * Gets a user preference
-     * @param string $preferenceName
-     * @param string|bool $userLogin Optional, defaults to current user log in when set to false.
-     * @return bool|string
+     * Returns a supported UsersManager preference for a user.
+     *
+     * @param string $preferenceName Preference name registered by UsersManager or plugin configuration.
+     * @param string|null|false $userLogin User login to read. Use `false` to read the current user.
+     * @return mixed Stored preference value, or the default value when none was saved yet.
      */
-    public function getUserPreference($preferenceName, $userLogin = \false)
+    public function getUserPreference(string $preferenceName, $userLogin = \false)
     {
         if ($userLogin === \false) {
             // the default value for first parameter is there to have it an optional parameter in the HTTP API
@@ -202,12 +231,9 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $this->getDefaultUserPreference($preferenceName, $userLogin);
     }
     /**
-     * Sets a user preference in the DB using the preference's default value.
-     * @param string $userLogin
-     * @param string $preferenceName
      * @ignore
      */
-    public function initUserPreferenceWithDefault($userLogin, $preferenceName)
+    public function initUserPreferenceWithDefault(string $userLogin, string $preferenceName) : void
     {
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($userLogin);
         $optionValue = $this->getPreferenceValue($userLogin, $preferenceName);
@@ -219,52 +245,56 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         }
     }
     /**
-     * Returns an array of Preferences
-     * @param $preferenceNames array of preference names
-     * @return array
+     * @param string[] $preferenceNames
+     * @return array<string, array<string, mixed>>
      * @ignore
      */
-    public function getAllUsersPreferences(array $preferenceNames)
+    public function getAllUsersPreferences(array $preferenceNames) : array
     {
         Piwik::checkUserHasSuperUserAccess();
-        $userPreferences = [];
+        $supportedPreferenceNames = [];
         foreach ($preferenceNames as $preferenceName) {
-            $optionNameMatchAllUsers = $this->getPreferenceId('%', $preferenceName);
-            $preferences = Option::getLike($optionNameMatchAllUsers);
-            foreach ($preferences as $optionName => $optionValue) {
-                $lastUnderscore = strrpos($optionName, self::OPTION_NAME_PREFERENCE_SEPARATOR);
-                $userName = substr($optionName, 0, $lastUnderscore);
-                $preference = substr($optionName, $lastUnderscore + 1);
-                $userPreferences[$userName][$preference] = $optionValue;
-            }
+            $this->assertPreferenceNameIsSupported($preferenceName);
+            $supportedPreferenceNames[] = $preferenceName;
         }
+        $userPreferences = $this->getUserSettingsAccessManager()->getValuesForAllUsers('UsersManager', $supportedPreferenceNames);
         return $userPreferences;
     }
-    private function getPreferenceId($login, $preference)
+    private function assertPreferenceNameIsSupported(string $preference) : void
     {
         if (\false !== strpos($preference, self::OPTION_NAME_PREFERENCE_SEPARATOR)) {
             throw new Exception("Preference name cannot contain underscores.");
         }
         $names = [
+            self::PREFERENCE_THEME_MODE,
             self::PREFERENCE_DEFAULT_REPORT,
             self::PREFERENCE_DEFAULT_REPORT_DATE,
             'isLDAPUser',
             // used in loginldap
             'hideSegmentDefinitionChangeMessage',
         ];
+        /** @var list<string> $customPreferences */
         $customPreferences = StaticContainer::get('usersmanager.user_preference_names');
         if (!in_array($preference, $names, \true) && !in_array($preference, $customPreferences, \true)) {
             throw new Exception('Not supported preference name: ' . $preference);
         }
-        return $login . self::OPTION_NAME_PREFERENCE_SEPARATOR . $preference;
     }
-    private function getPreferenceValue($userLogin, $preferenceName)
+    /**
+     * @return mixed
+     */
+    private function getPreferenceValue(string $userLogin, string $preferenceName)
     {
-        return Option::get($this->getPreferenceId($userLogin, $preferenceName));
+        $this->assertPreferenceNameIsSupported($preferenceName);
+        return $this->getUserSettingsAccessManager()->get('UsersManager', $userLogin, $preferenceName, \false);
     }
-    private function getDefaultUserPreference($preferenceName, $login)
+    /**
+     * @return int|string|false
+     */
+    private function getDefaultUserPreference(string $preferenceName, string $login)
     {
         switch ($preferenceName) {
+            case self::PREFERENCE_THEME_MODE:
+                return self::PREFERENCE_DEFAULT_THEME_MODE;
             case self::PREFERENCE_DEFAULT_REPORT:
                 $viewableSiteIds = \Piwik\Plugins\SitesManager\API::getInstance()->getSitesIdWithAtLeastViewAccess($login);
                 if (!empty($viewableSiteIds)) {
@@ -272,22 +302,30 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
                 }
                 return \false;
             case self::PREFERENCE_DEFAULT_REPORT_DATE:
-                return Config::getInstance()->General['default_day'];
+                return GeneralConfig::getStringConfigValue('default_day', '');
             default:
                 return \false;
         }
     }
+    private function getUserSettingsAccessManager() : UserScopedSettingsAccessManager
+    {
+        return StaticContainer::get(UserScopedSettingsAccessManager::class);
+    }
     /**
      * Returns all users with their role for $idSite.
      *
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param string|null $filter_search text to search for in the user's login and email (if any)
-     * @param string|null $filter_access only select users with this access to $idSite. can be 'noaccess', 'some', 'view', 'admin', 'superuser'
-     *                                   Filtering by 'superuser' is only allowed for other superusers.
-     * @return array
+     * @param int $idSite The numeric ID of the website to inspect.
+     * @param int|null $limit Maximum number of users to return.
+     * @param int|null $offset Zero-based result offset.
+     * @param string|null $filter_search Text to search for in user login or email.
+     * @param string|null $filter_access Access filter for the site. Accepted values are `noaccess`, `some`, `view`,
+     *                                   `write`, `admin`, and `superuser`. Filtering by `superuser` is only allowed
+     *                                   for super users.
+     * @param string|null $filter_status Invite status filter.
+     * @return list<array<string, mixed>> Users visible to the current requester, enriched with role and capabilities
+     *                                    for the site.
      */
-    public function getUsersPlusRole(int $idSite, $limit = null, $offset = 0, $filter_search = null, $filter_access = null, $filter_status = null)
+    public function getUsersPlusRole(int $idSite, $limit = null, $offset = 0, $filter_search = null, $filter_access = null, $filter_status = null) : array
     {
         if (Piwik::isUserIsAnonymous()) {
             // anonymous user should never see any results.
@@ -347,17 +385,14 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $users;
     }
     /**
-     * Returns the list of all the users
+     * Returns users visible to the current requester.
      *
-     * @param string $userLogins Comma separated list of users to select. If not specified, will return all users
-     * @return array the list of all the users
+     * @param string $userLogins Comma-separated list of user logins to fetch. Leave empty to return every visible user.
+     * @return list<array<string, mixed>> Matching users enriched with invite and access metadata.
      */
-    public function getUsers($userLogins = '')
+    public function getUsers(string $userLogins = '') : array
     {
         Piwik::checkUserHasSomeAdminAccess();
-        if (!is_string($userLogins)) {
-            throw new \Exception('Parameter userLogins needs to be a string containing a comma separated list of users');
-        }
         $logins = [];
         if (!empty($userLogins)) {
             $logins = explode(',', $userLogins);
@@ -367,11 +402,11 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $this->userRepository->enrichUsers($users);
     }
     /**
-     * Returns the list of all the users login
+     * Returns the login names of all users visible to the current requester.
      *
-     * @return array the list of all the users login
+     * @return string[] Matching user logins.
      */
-    public function getUsersLogin()
+    public function getUsersLogin() : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $logins = $this->model->getUsersLogin();
@@ -379,20 +414,14 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $logins;
     }
     /**
-     * For each user, returns the list of website IDs where the user has the supplied $access level.
-     * If a user doesn't have the given $access to any website IDs,
-     * the user will not be in the returned array.
+     * Returns the site IDs where each user has the requested access entry.
      *
-     * @param string Access can have the following values : 'view' or 'admin'
+     * Users without that access entry are omitted from the result.
      *
-     * @return array    The returned array has the format
-     *                    array(
-     *                        login1 => array ( idsite1,idsite2),
-     *                        login2 => array(idsite2),
-     *                        ...
-     *                    )
+     * @param string $access Access entry to match, for example a role or capability ID.
+     * @return array<string, list<int|string>> Mapping of user login to site IDs where that access entry is assigned.
      */
-    public function getUsersSitesFromAccess($access)
+    public function getUsersSitesFromAccess(string $access) : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->checkAccessType($access);
@@ -401,12 +430,9 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $userSites;
     }
     /**
-     * Throws an exception if one of the given access types does not exists.
-     *
-     * @param string|array $access
-     * @throws Exception
+     * @param string|string[] $access
      */
-    private function checkAccessType($access)
+    private function checkAccessType($access) : void
     {
         $access = (array) $access;
         foreach ($access as $entry) {
@@ -415,45 +441,42 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
             }
         }
     }
-    /**
-     * returns if the given access type exists
-     *
-     * @param string $access
-     * @return bool
-     */
-    private function isValidAccessType($access)
+    private function isValidAccessType(string $access) : bool
     {
         return in_array($access, $this->getAllRolesAndCapabilities(), \true);
     }
-    private function getAllRolesAndCapabilities()
+    /**
+     * @return list<string>
+     */
+    private function getAllRolesAndCapabilities() : array
     {
         $roles = $this->roleProvider->getAllRoleIds();
         $capabilities = $this->capabilityProvider->getAllCapabilityIds();
         return array_merge($roles, $capabilities);
     }
     /**
-     * For each user, returns their access level for the given $idSite.
-     * If a user doesn't have any access to the $idSite ('noaccess'),
-     * the user will not be in the returned array.
+     * Returns one access entry per visible user for the requested site.
      *
-     * @param int $idSite website ID
+     * Users with no access to the site are omitted.
      *
-     * @return array    The returned array has the format
-     *                    array(
-     *                        login1 => 'view',
-     *                        login2 => 'admin',
-     *                        login3 => 'view',
-     *                        ...
-     *                    )
+     * @param int $idSite Numeric site ID.
+     * @return array<string, string> Mapping of user login to access entry.
      */
-    public function getUsersAccessFromSite(int $idSite)
+    public function getUsersAccessFromSite(int $idSite) : array
     {
         Piwik::checkUserHasAdminAccess($idSite);
         $usersAccess = $this->model->getUsersAccessFromSite($idSite);
         $usersAccess = $this->userFilter->filterLoginIndexedArray($usersAccess);
         return $usersAccess;
     }
-    public function getUsersWithSiteAccess(int $idSite, $access)
+    /**
+     * Returns users who have the requested access entry for a website.
+     *
+     * @param int $idSite The numeric ID of the website to inspect.
+     * @param string $access Access entry to match, for example a role or capability ID.
+     * @return list<array<string, mixed>> Matching users enriched with user metadata.
+     */
+    public function getUsersWithSiteAccess(int $idSite, string $access) : array
     {
         Piwik::checkUserHasAdminAccess($idSite);
         $this->checkAccessType($access);
@@ -466,22 +489,14 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $this->getUsers($logins);
     }
     /**
-     * For each website ID, returns the access level of the given $userLogin.
-     * If the user doesn't have any access to a website ('noaccess'),
-     * this website will not be in the returned array.
-     * If the user doesn't have any access, the returned array will be an empty array.
+     * Returns the raw site access entries assigned to a user.
      *
-     * @param string $userLogin User that has to be valid
+     * Super users receive every existing site with `admin` access.
      *
-     * @return array    The returned array has the format
-     *                    array(
-     *                        idsite1 => 'view',
-     *                        idsite2 => 'admin',
-     *                        idsite3 => 'view',
-     *                        ...
-     *                    )
+     * @param string $userLogin Existing user login to inspect.
+     * @return list<array{site: int|string, access: string}> Site access rows for the user.
      */
-    public function getSitesAccessFromUser($userLogin)
+    public function getSitesAccessFromUser(string $userLogin) : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->checkUserExists($userLogin);
@@ -498,26 +513,19 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $this->model->getSitesAccessFromUser($userLogin);
     }
     /**
-     * For each website ID, returns the access level of the given $userLogin (if the user is not a superuser).
-     * If the user doesn't have any access to a website ('noaccess'),
-     * this website will not be in the returned array.
-     * If the user doesn't have any access, the returned array will be an empty array.
+     * Returns site access rows for a non-superuser, with filtering and pagination.
      *
-     * @param string $userLogin User that has to be valid
+     * This method rejects super users. It sends `X-Matomo-Total-Results` and, when applicable, `X-Matomo-Has-Some`
+     * response headers for pagination metadata.
      *
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param string|null $filter_search text to search for in site name, URLs, or group.
-     * @param string|null $filter_access access level to select for, can be 'some', 'view' or 'admin' (by default 'some')
-     * @return array    The returned array has the format
-     *                    array(
-     *                        ['idsite' => 1, 'site_name' => 'the site', 'access' => 'admin'],
-     *                        ['idsite' => 2, 'site_name' => 'the other site', 'access' => 'view'],
-     *                        ...
-     *                    )
-     * @throws Exception
+     * @param string $userLogin Existing non-superuser login to inspect.
+     * @param int|null $limit Maximum number of sites to return.
+     * @param int|null $offset Zero-based result offset.
+     * @param string|null $filter_search Text to search in site names, URLs, or groups.
+     * @param string|null $filter_access Access filter. Accepted values are `some`, `view`, `write`, or `admin`.
+     * @return list<array{idsite: int|string, site_name: string, role: string, capabilities: list<string>}> Site access rows including role and explicit capabilities for each returned site.
      */
-    public function getSitesAccessForUser($userLogin, $limit = null, $offset = 0, $filter_search = null, $filter_access = null)
+    public function getSitesAccessForUser(string $userLogin, $limit = null, $offset = 0, $filter_search = null, $filter_access = null) : array
     {
         Piwik::checkUserHasSomeAdminAccess();
         $this->checkUserExists($userLogin);
@@ -546,31 +554,29 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $sites;
     }
     /**
-     * Returns the user information (login, password hash, email, date_registered, etc.)
+     * Returns one user's metadata as visible to the requester.
      *
-     * @param string $userLogin the user login
-     *
-     * @return array the user information
+     * @param string $userLogin Existing user login to fetch.
+     * @return array<string, mixed> Enriched user data, or an empty array when no user record is returned.
      */
-    public function getUser($userLogin)
+    public function getUser(string $userLogin) : array
     {
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($userLogin);
         $this->checkUserExists($userLogin);
         $user = $this->model->getUser($userLogin);
-        if (empty($user) || !is_array($user)) {
+        if (empty($user)) {
             return [];
         }
         $user = $this->userFilter->filterUser($user);
         return $this->userRepository->enrichUser($user);
     }
     /**
-     * Returns the user information (login, password hash, email, date_registered, etc.)
+     * Returns one user's metadata for the given email address.
      *
-     * @param string $userEmail the user email
-     *
-     * @return array the user information
+     * @param string $userEmail Existing email address to look up.
+     * @return array<string, mixed> Enriched user data, or an empty array when no user record is returned.
      */
-    public function getUserByEmail($userEmail)
+    public function getUserByEmail(string $userEmail) : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->checkUserEmailExists($userEmail);
@@ -582,24 +588,20 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
         return $this->userRepository->enrichUser($user);
     }
     /**
-     * Add a user in the database.
-     * A user is defined by
-     * - a login that has to be unique and valid
-     * - a password that has to be valid
-     * - an email that has to be in a correct format
+     * Creates a new user account.
      *
-     * @throws Exception in case of an invalid parameter
-     * @see isValidLoginString()
-     * @see isValidPasswordString()
-     * @see isValidEmailString()
-     *
-     * @see userExists()
+     * @param string $userLogin Login name for the new user.
+     * @param string $password Password for the new user.
+     * @param string $email Email address for the new user.
+     * @param bool $_isPasswordHashed `true` if `$password` is already pre-hashed for storage.
+     * @param int|null $initialIdSite Initial site to grant `view` access to. Required for non-superusers.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function addUser($userLogin,
+    public function addUser(string $userLogin,
 #[\SensitiveParameter]
-$password, $email, $_isPasswordHashed = \false, $initialIdSite = null,
+string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = null,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -615,7 +617,7 @@ $passwordConfirmation = null)
                 throw new \Exception(Piwik::translate("UsersManager_AddUserNoInitialAccessError"));
             }
         }
-        $this->userRepository->create((string) $userLogin, (string) $email, $initialIdSite, (string) $password, (bool) $_isPasswordHashed);
+        $this->userRepository->create($userLogin, $email, $initialIdSite, $password, (bool) $_isPasswordHashed);
         /**
          * Triggered after a new user is created.
          *
@@ -626,11 +628,17 @@ $passwordConfirmation = null)
         Piwik::postEvent('UsersManager.addUser.end', [$userLogin, $email, Piwik::getCurrentUserLogin()]);
     }
     /**
-     * @throws Exception
+     * Invites a new user by email and grants initial access to a website.
+     *
+     * @param string $userLogin Login name for the invited user.
+     * @param string $email Email address for the invited user.
+     * @param int|null $initialIdSite Initial site to grant `view` access to.
+     * @param int|null $expiryInDays Number of days before the invite expires. Uses the configured default when empty.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function inviteUser($userLogin, $email, $initialIdSite = null, $expiryInDays = null,
+    public function inviteUser(string $userLogin, string $email, $initialIdSite = null, $expiryInDays = null,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -639,7 +647,7 @@ $passwordConfirmation = null)
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
         if (empty($expiryInDays)) {
-            $expiryInDays = Config\GeneralConfig::getConfigValue('default_invite_user_token_expiry_days');
+            $expiryInDays = GeneralConfig::getConfigValue('default_invite_user_token_expiry_days');
         }
         if (empty($initialIdSite)) {
             throw new \Exception(Piwik::translate("UsersManager_AddUserNoInitialAccessError"));
@@ -660,16 +668,13 @@ $passwordConfirmation = null)
      * Enable or disable Super user access to the given user login. Note: When granting Super User access all previous
      * permissions of the user will be removed as the user gains access to everything.
      *
-     * @param string $userLogin the user login.
-     * @param bool|int $hasSuperUserAccess true or '1' to grant Super User access, false or '0' to remove Super User
-     *                                     access.
-     * @param string $passwordConfirmation the current user's password. For security purposes, this value should be
-     *                                     sent as a POST parameter.
-     * @throws \Exception
+     * @param string $userLogin User login to update.
+     * @param bool|int|string $hasSuperUserAccess `true` or `1` to grant super user access, `false` or `0` to remove it.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required.
      */
-    public function setSuperUserAccess($userLogin, $hasSuperUserAccess,
+    public function setSuperUserAccess(string $userLogin, $hasSuperUserAccess,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : void
     {
         $this->executeConcurrencySafe($userLogin, function () use($userLogin, $hasSuperUserAccess, $passwordConfirmation) {
             Piwik::checkUserHasSuperUserAccess();
@@ -694,18 +699,18 @@ $passwordConfirmation = null)
     /**
      * Detect whether the current user has super user access or not.
      *
-     * @return bool
+     * @return bool `true` if the current user has super user access.
      */
-    public function hasSuperUserAccess()
+    public function hasSuperUserAccess() : bool
     {
         return Piwik::hasUserSuperUserAccess();
     }
     /**
-     * Returns a list of all Super Users containing there userLogin and email address.
+     * Returns all users that currently have super user access.
      *
-     * @return array
+     * @return list<array<string, mixed>> Super user records enriched with invite metadata.
      */
-    public function getUsersHavingSuperUserAccess()
+    public function getUsersHavingSuperUserAccess() : array
     {
         Piwik::checkUserIsNotAnonymous();
         $users = $this->model->getUsersHavingSuperUserAccess();
@@ -715,27 +720,31 @@ $passwordConfirmation = null)
     }
     /**
      * Updates a user in the database.
-     * Only login and password are required (case when we update the password).
      *
-     * If password or email changes, it is required to also specify the password of the current user needs to be specified
-     * to confirm this change.
+     * If the password or email changes, the current user's password confirmation is required when that confirmation
+     * check is enabled.
      *
-     * @see addUser() for all the parameters
+     * @param string $userLogin Login name of the user to update.
+     * @param string|false $password New password to set, or `false` to keep the current password.
+     * @param string|false $email New email address to set, or `false` to keep the current email.
+     * @param bool $_isPasswordHashed `true` if `$password` is already pre-hashed for storage.
+     * @param string|false $passwordConfirmation Current user's password confirmation when required.
      */
-    public function updateUser($userLogin,
+    public function updateUser(string $userLogin,
 #[\SensitiveParameter]
 $password = \false, $email = \false, $_isPasswordHashed = \false,
 #[\SensitiveParameter]
-$passwordConfirmation = \false)
+$passwordConfirmation = \false) : void
     {
         $email = Common::unsanitizeInputValue($email);
         $requirePasswordConfirmation = self::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION;
         self::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION = \true;
-        $isEmailNotificationOnInConfig = Config::getInstance()->General['enable_update_users_email'];
+        $isEmailNotificationOnInConfig = GeneralConfig::getConfigValue('enable_update_users_email');
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($userLogin);
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
         $this->checkUserIsNotAnonymous($userLogin);
         $this->checkUserExists($userLogin);
+        /** @phpstan-var UserRow $userInfo */
         $userInfo = $this->model->getUser($userLogin);
         $changeShouldRequirePasswordConfirmation = \false;
         $passwordHasBeenUpdated = \false;
@@ -772,7 +781,7 @@ $passwordConfirmation = \false)
             // If the email of a user is changed, who was invited and did not yet accept the invitation
             // we send a new invite to the new address.
             // this will indirectly invalidate the invitation sent to the previous address
-            $this->userRepository->reInviteUser($userLogin, (int) Config\GeneralConfig::getConfigValue('default_invite_user_token_expiry_days'));
+            $this->userRepository->reInviteUser($userLogin, GeneralConfig::getIntegerConfigValue('default_invite_user_token_expiry_days', 0));
         } elseif ($hasEmailChanged && $isEmailNotificationOnInConfig) {
             $this->sendEmailChangedEmail($userInfo, $email);
         }
@@ -789,17 +798,15 @@ $passwordConfirmation = \false)
         Piwik::postEvent('UsersManager.updateUser.end', [$userLogin, $passwordHasBeenUpdated, $email, $password]);
     }
     /**
-     * Delete one or more users and all its access, given its login.
+     * Deletes a user account and all of its access assignments.
      *
-     * @param string $userLogin the user login(s).
-     * @param string $passwordConfirmation the currents users password, only required when request is authenticated with session token auth
-     *
-     * @throws Exception if the user doesn't exist or if deleting the users would leave no superusers.
-     *
+     * @param string $userLogin Existing user login to delete.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
+     * @return void
      */
-    public function deleteUser($userLogin,
+    public function deleteUser(string $userLogin,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null)
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -807,6 +814,8 @@ $passwordConfirmation = null)
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
+        $this->checkUserExist($userLogin);
+        /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
         // If user is not a super user check if the user was invited by the current user
         if (!Piwik::hasUserSuperUserAccess()) {
@@ -814,7 +823,6 @@ $passwordConfirmation = null)
                 throw new NoAccessException(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
             }
         }
-        $this->checkUserExist($userLogin);
         if ($this->isUserTheOnlyUserHavingSuperUserAccess($userLogin)) {
             $message = Piwik::translate("UsersManager_ExceptionDeleteOnlyUserWithSuperUserAccess", $userLogin) . " " . Piwik::translate("UsersManager_ExceptionYouMustGrantSuperUserAccessFirst");
             throw new Exception($message);
@@ -826,70 +834,92 @@ $passwordConfirmation = null)
         Cache::deleteTrackerCache();
     }
     /**
-     * Returns true if the given userLogin is known in the database
+     * Signs a user out of all active sessions. Requires super user access.
+     * Use this for security purposes, e.g., if a device was lost or compromised.
      *
-     * @param string $userLogin
-     * @return bool true if the user is known
+     * @param string $userLogin Login of the user to sign out.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function userExists($userLogin)
+    public function logoutUser(string $userLogin,
+#[\SensitiveParameter]
+?string $passwordConfirmation = null) : void
     {
-        if ($userLogin == 'anonymous') {
+        Piwik::checkUserHasSuperUserAccess();
+        if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
+            $this->confirmCurrentUserPassword($passwordConfirmation);
+        }
+        BaseValidator::check('userlogin', $userLogin, [new NotEmpty()]);
+        $this->checkUserIsNotAnonymous($userLogin);
+        $this->checkUserExist($userLogin);
+        $this->model->deleteUserSessions($userLogin);
+    }
+    /**
+     * Returns whether the given login exists.
+     *
+     * The anonymous login is always treated as existing.
+     *
+     * @param string $userLogin Login to check.
+     * @return bool `true` if the login exists.
+     */
+    public function userExists(string $userLogin) : bool
+    {
+        if (strtolower($userLogin) === 'anonymous') {
             return \true;
         }
         Piwik::checkUserIsNotAnonymous();
         Piwik::checkUserHasSomeViewAccess();
-        if ($userLogin == Piwik::getCurrentUserLogin()) {
+        if ($userLogin === Piwik::getCurrentUserLogin()) {
             return \true;
         }
         return $this->model->userExists($userLogin);
     }
     /**
-     * Returns true if user with given email (userEmail) is known in the database, or the Super User
+     * Returns whether a user with the given email exists.
      *
-     * @param string $userEmail
-     * @return bool true if the user is known
+     * @param string $userEmail Email address to check.
+     * @return bool `true` if the email exists.
      */
-    public function userEmailExists($userEmail)
+    public function userEmailExists(string $userEmail) : bool
     {
         Piwik::checkUserIsNotAnonymous();
         Piwik::checkUserHasSomeViewAccess();
         return $this->model->userEmailExists($userEmail);
     }
     /**
-     * Returns the first login name of an existing user that has the given email address. If no user can be found for
-     * this user an error will be returned.
+     * Returns the login name for an existing user with the given email address.
      *
-     * @param string $userEmail
-     * @return bool true if the user is known
+     * @param string $userEmail Email address to look up.
+     * @return string Login name of the matched user.
      */
-    public function getUserLoginFromUserEmail($userEmail)
+    public function getUserLoginFromUserEmail(string $userEmail) : string
     {
         Piwik::checkUserIsNotAnonymous();
         Piwik::checkUserHasSomeAdminAccess();
         $this->checkUserEmailExists($userEmail);
+        /** @phpstan-var UserRow $user */
         $user = $this->model->getUserByEmail($userEmail);
         // any user with some admin access is allowed to find any user by email, no need to filter by access here
         return $user['login'];
     }
     /**
-     * Set an access level to a given user for a list of websites ID.
+     * Sets access entries for a user across one or more websites.
      *
-     * If access = 'noaccess' the current access (if any) will be deleted.
-     * If access = 'view' or 'admin' the current access level is deleted and updated with the new value.
+     * If `$access` is `noaccess`, any existing access entries for the selected sites are removed. Otherwise any
+     * existing entries are replaced with one role plus optional capabilities.
      *
-     * @param string $userLogin The user login
-     * @param string|array $access Access to grant. Must have one of the following value : noaccess, view, write, admin.
-     *                              May also be an array to sent additional capabilities
-     * @param int|array $idSites The array of idSites on which to apply the access level for the user.
-     *       If the value is "all" then we apply the access level to all the websites ID for which the current authentificated user has an 'admin' access.
-     * @param string $passwordConfirmation password confirmation. only required when setting view access for anonymous user through session auth
-     * @throws Exception if the user doesn't exist
-     * @throws Exception if the access parameter doesn't have a correct value
-     * @throws Exception if any of the given website ID doesn't exist
+     * @param string $userLogin User login to update.
+     * @param string|list<string> $access Access entries to grant. Use `noaccess` to remove access, or provide one
+     *                                    role plus optional capabilities.
+     * @param string|int|int[] $idSites Website ID(s) to update.
+     *                                  - Single site ID (e.g. 1)
+     *                                  - Multiple site IDs (e.g. [1, 4, 5])
+     *                                  - Comma-separated list ("1,4,5") or "all"
+     * @param string|null $passwordConfirmation Current user's password confirmation. Only required when granting
+     *                                          anonymous `view` access through session auth.
      */
-    public function setUserAccess($userLogin, $access, $idSites,
+    public function setUserAccess(string $userLogin, $access, $idSites,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : void
     {
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
         if ($access != 'noaccess') {
@@ -897,10 +927,10 @@ $passwordConfirmation = null)
         }
         $idSites = $this->getIdSitesCheckAdminAccess($idSites);
         // check password confirmation only when using session auth and setting view access for anonymous user
-        if ($userLogin === 'anonymous' && StaticContainer::get(AuthenticationToken::class)->isSessionToken() && $access === 'view') {
+        if (strtolower($userLogin) === 'anonymous' && StaticContainer::get(AuthenticationToken::class)->isSessionToken() && $access === 'view') {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
-        if ($userLogin === 'anonymous' && (is_array($access) || !in_array($access, ['view', 'noaccess'], \true))) {
+        if (strtolower($userLogin) === 'anonymous' && (is_array($access) || !in_array($access, ['view', 'noaccess'], \true))) {
             throw new Exception(Piwik::translate("UsersManager_ExceptionAnonymousAccessNotPossible", ['noaccess', 'view']));
         }
         $roles = [];
@@ -940,7 +970,7 @@ $passwordConfirmation = null)
                 $this->addCapabilitesToUser($userLogin, $capabilities, $idSites);
             }
             // Send notification to all super users if anonymous access is set for a site
-            if ($userLogin === 'anonymous' && $access === 'view') {
+            if (strtolower($userLogin) === 'anonymous' && $access === 'view') {
                 $container = StaticContainer::getContainer();
                 $siteNames = [];
                 foreach ($idSites as $idSite) {
@@ -958,21 +988,20 @@ $passwordConfirmation = null)
     }
     /**
      * Adds the given capabilities to the given user for the given sites.
-     * The capability will be added only when the user also has access to a site, for example View, Write, or Admin.
-     * Note: You can neither add any capability to a super user, nor to the anonymous user.
-     * Note: If the user has assigned a role which already grants the given capability, the capability will not be added in
-     * the backend.
      *
-     * @param string $userLogin The user login
-     * @param string|string[] $capabilities To fetch a list of available capabilities call "UsersManager.getAvailableCapabilities".
-     * @param int|int[] $idSites
-     * @throws Exception
+     * Capabilities can only be added on sites where the user already has a role. You cannot add capabilities to the
+     * anonymous user or to a super user. If the assigned role already includes a capability, no separate access row is
+     * added for it.
+     *
+     * @param string $userLogin User login to update.
+     * @param string|string[] $capabilities Capability IDs to add.
+     * @param int|int[]|string $idSites Website ID or IDs to update.
      */
-    public function addCapabilities($userLogin, $capabilities, $idSites)
+    public function addCapabilities(string $userLogin, $capabilities, $idSites) : void
     {
         $this->executeConcurrencySafe($userLogin, function () use($userLogin, $capabilities, $idSites) {
             $idSites = $this->getIdSitesCheckAdminAccess($idSites);
-            if ($userLogin == 'anonymous') {
+            if (strtolower($userLogin) === 'anonymous') {
                 throw new Exception(Piwik::translate("UsersManager_ExceptionAnonymousNoCapabilities"));
             }
             $this->checkUserExists($userLogin);
@@ -988,7 +1017,11 @@ $passwordConfirmation = null)
             $this->reloadPermissions();
         });
     }
-    private function addCapabilitesToUser(string $userLogin, array $capabilities, $idSites)
+    /**
+     * @param list<string> $capabilities
+     * @param list<int> $idSites
+     */
+    private function addCapabilitesToUser(string $userLogin, array $capabilities, array $idSites) : void
     {
         [$sitesIdWithRole, $sitesIdWithCapability] = $this->getRolesAndCapabilitiesForLogin($userLogin);
         foreach ($idSites as $idSite) {
@@ -998,6 +1031,9 @@ $passwordConfirmation = null)
         }
         foreach ($capabilities as $entry) {
             $cap = $this->capabilityProvider->getCapability($entry);
+            if ($cap === null) {
+                continue;
+            }
             foreach ($idSites as $idSite) {
                 $hasCapabilityAlready = array_key_exists($idSite, $sitesIdWithCapability) && in_array($entry, $sitesIdWithCapability[$idSite], \true);
                 if (!$hasCapabilityAlready) {
@@ -1012,7 +1048,10 @@ $passwordConfirmation = null)
             }
         }
     }
-    private function getRolesAndCapabilitiesForLogin($userLogin)
+    /**
+     * @return array{0: array<int, string>, 1: array<int, list<string>>}
+     */
+    private function getRolesAndCapabilitiesForLogin(string $userLogin) : array
     {
         $sites = $this->model->getSitesAccessFromUser($userLogin);
         $roleIds = $this->roleProvider->getAllRoleIds();
@@ -1032,16 +1071,14 @@ $passwordConfirmation = null)
     }
     /**
      * Removes the given capabilities from the given user for the given sites.
-     * The capability will be only removed if it is actually granted as a separate capability. If the user has a role
-     * that includes a specific capability, for example "Admin", then the capability will not be removed because the
-     * assigned role will always include this capability.
      *
-     * @param string $userLogin The user login
-     * @param string|string[] $capabilities To fetch a list of available capabilities call "UsersManager.getAvailableCapabilities".
-     * @param int|int[] $idSites
-     * @throws Exception
+     * Only separately granted capability rows are removed. Capabilities implied by an assigned role remain effective.
+     *
+     * @param string $userLogin User login to update.
+     * @param string|string[] $capabilities Capability IDs to remove.
+     * @param int|int[]|string $idSites Website ID or IDs to update.
      */
-    public function removeCapabilities($userLogin, $capabilities, $idSites)
+    public function removeCapabilities(string $userLogin, $capabilities, $idSites) : void
     {
         $this->executeConcurrencySafe($userLogin, function () use($userLogin, $capabilities, $idSites) {
             $idSites = $this->getIdSitesCheckAdminAccess($idSites);
@@ -1059,12 +1096,16 @@ $passwordConfirmation = null)
             $this->reloadPermissions();
         });
     }
-    private function reloadPermissions()
+    private function reloadPermissions() : void
     {
         Access::getInstance()->reloadAccess();
         Cache::deleteTrackerCache();
     }
-    private function getIdSitesCheckAdminAccess($idSites)
+    /**
+     * @param int|list<int>|string $idSites
+     * @return list<int>
+     */
+    private function getIdSitesCheckAdminAccess($idSites) : array
     {
         // reload access to ensure we're not working with cached entries that might have been changed in between
         Access::getInstance()->reloadAccess();
@@ -1086,37 +1127,28 @@ $passwordConfirmation = null)
         }
         return $idSites;
     }
-    /**
-     * Throws an exception is the user login doesn't exist
-     *
-     * @param string $userLogin user login
-     * @throws Exception if the user doesn't exist
-     */
-    private function checkUserExists($userLogin)
+    private function checkUserExists(string $userLogin) : void
     {
         if (!$this->userExists($userLogin)) {
             throw new Exception(Piwik::translate("UsersManager_ExceptionUserDoesNotExist", $userLogin));
         }
     }
-    /**
-     * Throws an exception is the user email cannot be found
-     *
-     * @param string $userEmail user email
-     * @throws Exception if the user doesn't exist
-     */
-    private function checkUserEmailExists($userEmail)
+    private function checkUserEmailExists(string $userEmail) : void
     {
         if (!$this->userEmailExists($userEmail)) {
             throw new Exception(Piwik::translate("UsersManager_ExceptionUserDoesNotExist", $userEmail));
         }
     }
-    private function checkUserIsNotAnonymous($userLogin)
+    private function checkUserIsNotAnonymous(string $userLogin) : void
     {
-        if ($userLogin == 'anonymous') {
+        if (strtolower($userLogin) === 'anonymous') {
             throw new Exception(Piwik::translate("UsersManager_ExceptionEditAnonymous"));
         }
     }
-    private function checkUsersHasNotSuperUserAccess($userLogins)
+    /**
+     * @param string|list<string> $userLogins
+     */
+    private function checkUsersHasNotSuperUserAccess($userLogins) : void
     {
         $userLogins = (array) $userLogins;
         $superusers = $this->getUsersHavingSuperUserAccess();
@@ -1128,10 +1160,9 @@ $passwordConfirmation = null)
         }
     }
     /**
-     * @param string|string[] $userLogin
-     * @return bool
+     * @param string|list<string> $userLogin
      */
-    private function isUserTheOnlyUserHavingSuperUserAccess($userLogin)
+    private function isUserTheOnlyUserHavingSuperUserAccess($userLogin) : bool
     {
         if (!is_array($userLogin)) {
             $userLogin = [$userLogin];
@@ -1144,21 +1175,16 @@ $passwordConfirmation = null)
         return empty($superusersByLogin);
     }
     /**
-     * Generates an app specific API token every time you call this method. You should ideally store this token securely
-     * in your app and not generate a new token every time.
+     * Generates a new app-specific API token for a user.
      *
-     * If the username/password combination is incorrect an invalid token will be returned.
-     *
-     * @param string $userLogin Login or Email address
-     * @param string $passwordConfirmation the current user's password. For security purposes, this value should be
-     *                                     sent as a POST parameter.
-     * @param string $description The description for this app specific password, for example your app name. Max 100 characters are allowed
-     * @param string $expireDate Optionally a date when the token should expire
-     * @param string $expireHours Optionally number of hours for how long the token should be valid before it expires.
-     *                            If expireDate is set and expireHours, then expireDate will be used.
-     *                            If expireDate is set and expireHours, then expireDate will be used.
-     * @param bool $secureOnly Defines if the token can be used securely only (if true, token can't be provided as param in GET requests)
-     * @return string
+     * @param string $userLogin Login name or email address for the user.
+     * @param string $passwordConfirmation The user's current password.
+     * @param string $description Description for the app-specific token, for example an app name.
+     * @param string|null $expireDate Optional expiry date for the token.
+     * @param int|string $expireHours Optional number of hours before the token expires. Ignored when `$expireDate` is
+     *                                set.
+     * @param bool $secureOnly `true` if the token must not be accepted in GET requests.
+     * @return string Newly generated app-specific token.
      */
     public function createAppSpecificTokenAuth(string $userLogin,
 #[\SensitiveParameter]
@@ -1190,7 +1216,12 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         $this->model->addTokenAuth($userLogin, $generatedToken, $description, Date::now()->getDatetime(), $expireDate, \false, $secureOnly);
         return $generatedToken;
     }
-    public function newsletterSignup()
+    /**
+     * Signs the current user up for the Matomo newsletter.
+     *
+     * @return array{success?: true, error?: true} Signup result payload.
+     */
+    public function newsletterSignup() : array
     {
         Piwik::checkUserIsNotAnonymous();
         $userLogin = Piwik::getCurrentUserLogin();
@@ -1199,7 +1230,7 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         $result = $success ? ['success' => \true] : ['error' => \true];
         return $result;
     }
-    private function isUserHasAdminAccessTo($idSite)
+    private function isUserHasAdminAccessTo(int $idSite) : bool
     {
         try {
             Piwik::checkUserHasAdminAccess([$idSite]);
@@ -1208,14 +1239,18 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
             return \false;
         }
     }
-    private function checkUserExist($userLogin)
+    private function checkUserExist(string $userLogin) : void
     {
         $userExists = $this->model->userExists($userLogin);
         if (!$userExists) {
             throw new Exception(Piwik::translate("UsersManager_ExceptionUserDoesNotExist", $userLogin));
         }
     }
-    private function getRoleAndCapabilitiesFromAccess($access)
+    /**
+     * @param string[] $access
+     * @return array{0: list<string>, 1: list<string>}
+     */
+    private function getRoleAndCapabilitiesFromAccess(array $access) : array
     {
         $roles = [];
         $capabilities = [];
@@ -1231,14 +1266,20 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         }
         return [$roles, $capabilities];
     }
-    private function sendEmailChangedEmail($user, $newEmail)
+    /**
+     * @param array{email: string, login: string} $user
+     */
+    private function sendEmailChangedEmail(array $user, string $newEmail) : void
     {
         // send the mail to both the old email and the new email
         foreach ([$newEmail, $user['email']] as $emailTo) {
             $this->sendUserInfoChangedEmail('email', $user, $newEmail, $emailTo, 'UsersManager_EmailChangeNotificationSubject');
         }
     }
-    private function sendUserInfoChangedEmail($type, $user, $newValue, $emailTo, $subject)
+    /**
+     * @param array{login: string} $user
+     */
+    private function sendUserInfoChangedEmail(string $type, array $user, ?string $newValue, string $emailTo, string $subject) : void
     {
         $deviceDescription = $this->getDeviceDescription();
         $mail = new UserInfoChangedEmail($type, $newValue, $deviceDescription, $user['login']);
@@ -1246,11 +1287,14 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         $mail->setSubject(Piwik::translate($subject));
         $mail->send();
     }
-    private function sendPasswordChangedEmail($user)
+    /**
+     * @param array{email: string, login: string} $user
+     */
+    private function sendPasswordChangedEmail(array $user) : void
     {
         $this->sendUserInfoChangedEmail('password', $user, null, $user['email'], 'UsersManager_PasswordChangeNotificationSubject');
     }
-    private function getDeviceDescription()
+    private function getDeviceDescription() : string
     {
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         $uaParser = new DeviceDetector($userAgent);
@@ -1270,16 +1314,15 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         return $description;
     }
     /**
-     * resend the invite email to user
+     * Resends an existing user invitation email.
      *
-     * @param string $userLogin
-     * @param int $expiryInDays
-     * @param string | null $passwordConfirmation
-     * @throws NoAccessException
+     * @param string $userLogin Login name of the invited user.
+     * @param int $expiryInDays Number of days before the regenerated invite expires.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function resendInvite($userLogin, $expiryInDays = 7,
+    public function resendInvite(string $userLogin, $expiryInDays = 7,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         // check password confirmation only when using session auth
@@ -1289,6 +1332,7 @@ $passwordConfirmation = null)
         if (!$this->model->isPendingUser($userLogin)) {
             throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
         }
+        /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
         // If user is not a super user check if the user was invited by the current user
         if (!Piwik::hasUserSuperUserAccess()) {
@@ -1296,25 +1340,25 @@ $passwordConfirmation = null)
                 throw new NoAccessException(Piwik::translate('UsersManager_ExceptionResendInviteDenied', $userLogin));
             }
         }
-        $token = $this->userRepository->reInviteUser($userLogin, (int) $expiryInDays);
+        $this->userRepository->reInviteUser($userLogin, (int) $expiryInDays);
         /**
          * Triggered after a new user was invited.
          *
          * @param string $userLogin The new user's login.
          */
         Piwik::postEvent('UsersManager.inviteUser.resendInvite', [$userLogin, $user['email']]);
-        return $token;
     }
     /**
-     * @param $userLogin
-     * @param int $expiryInDays
-     * @param string | null $passwordConfirmation
-     * @return string
-     * @throws NoAccessException
+     * Generates a fresh invitation link for an existing pending user.
+     *
+     * @param string $userLogin Login name of the invited user.
+     * @param int $expiryInDays Number of days before the generated invite expires.
+     * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
+     * @return string Generated invitation URL.
      */
-    public function generateInviteLink($userLogin, $expiryInDays = 7,
+    public function generateInviteLink(string $userLogin, $expiryInDays = 7,
 #[\SensitiveParameter]
-$passwordConfirmation = null)
+?string $passwordConfirmation = null) : string
     {
         Piwik::checkUserHasSomeAdminAccess();
         // check password confirmation only when using session auth
@@ -1324,6 +1368,7 @@ $passwordConfirmation = null)
         if (!$this->model->isPendingUser($userLogin)) {
             throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
         }
+        /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
         // If user is not a super user check if the user was invited by the current user
         if (!Piwik::hasUserSuperUserAccess()) {

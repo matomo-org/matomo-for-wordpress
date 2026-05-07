@@ -99,7 +99,10 @@ class Metrics
     public const INDEX_GOAL_REVENUE_ATTRIB = 15;
     public const INDEX_GOAL_NB_CONVERSIONS_ENTRY = 16;
     public const INDEX_GOAL_REVENUE_ENTRY = 17;
-    public static $mappingFromIdToName = array(
+    /**
+     * @var string[]
+     */
+    public static $mappingFromIdToName = [
         \Piwik\Metrics::INDEX_NB_UNIQ_VISITORS => 'nb_uniq_visitors',
         \Piwik\Metrics::INDEX_NB_UNIQ_FINGERPRINTS => 'nb_uniq_fingerprints',
         \Piwik\Metrics::INDEX_NB_VISITS => 'nb_visits',
@@ -147,13 +150,23 @@ class Metrics
         // Contents
         \Piwik\Metrics::INDEX_CONTENT_NB_IMPRESSIONS => 'nb_impressions',
         \Piwik\Metrics::INDEX_CONTENT_NB_INTERACTIONS => 'nb_interactions',
-    );
-    public static $mappingFromIdToNameGoal = array(\Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS => 'nb_conversions', \Piwik\Metrics::INDEX_GOAL_NB_VISITS_CONVERTED => 'nb_visits_converted', \Piwik\Metrics::INDEX_GOAL_REVENUE => 'revenue', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL => 'revenue_subtotal', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX => 'revenue_tax', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING => 'revenue_shipping', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT => 'revenue_discount', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_ITEMS => 'items', \Piwik\Metrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE => 'nb_conv_pages_before', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB => 'nb_conversions_attrib', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_RATE => 'nb_conversions_page_rate', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ => 'nb_conversions_page_uniq', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE => 'nb_conversions_entry_rate', \Piwik\Metrics::INDEX_GOAL_REVENUE_PER_ENTRY => 'revenue_per_entry', \Piwik\Metrics::INDEX_GOAL_REVENUE_ATTRIB => 'revenue_attrib', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY => 'nb_conversions_entry', \Piwik\Metrics::INDEX_GOAL_REVENUE_ENTRY => 'revenue_entry');
-    protected static $metricsAggregatedFromLogs = array(\Piwik\Metrics::INDEX_NB_UNIQ_VISITORS, \Piwik\Metrics::INDEX_NB_VISITS, \Piwik\Metrics::INDEX_NB_ACTIONS, \Piwik\Metrics::INDEX_NB_USERS, \Piwik\Metrics::INDEX_MAX_ACTIONS, \Piwik\Metrics::INDEX_SUM_VISIT_LENGTH, \Piwik\Metrics::INDEX_BOUNCE_COUNT, \Piwik\Metrics::INDEX_NB_VISITS_CONVERTED);
+    ];
+    /**
+     * @var string[]
+     */
+    public static $mappingFromIdToNameGoal = [\Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS => 'nb_conversions', \Piwik\Metrics::INDEX_GOAL_NB_VISITS_CONVERTED => 'nb_visits_converted', \Piwik\Metrics::INDEX_GOAL_REVENUE => 'revenue', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL => 'revenue_subtotal', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX => 'revenue_tax', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING => 'revenue_shipping', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT => 'revenue_discount', \Piwik\Metrics::INDEX_GOAL_ECOMMERCE_ITEMS => 'items', \Piwik\Metrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE => 'nb_conv_pages_before', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB => 'nb_conversions_attrib', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_RATE => 'nb_conversions_page_rate', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ => 'nb_conversions_page_uniq', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE => 'nb_conversions_entry_rate', \Piwik\Metrics::INDEX_GOAL_REVENUE_PER_ENTRY => 'revenue_per_entry', \Piwik\Metrics::INDEX_GOAL_REVENUE_ATTRIB => 'revenue_attrib', \Piwik\Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY => 'nb_conversions_entry', \Piwik\Metrics::INDEX_GOAL_REVENUE_ENTRY => 'revenue_entry'];
+    /**
+     * @var int[]
+     */
+    protected static $metricsAggregatedFromLogs = [\Piwik\Metrics::INDEX_NB_UNIQ_VISITORS, \Piwik\Metrics::INDEX_NB_VISITS, \Piwik\Metrics::INDEX_NB_ACTIONS, \Piwik\Metrics::INDEX_NB_USERS, \Piwik\Metrics::INDEX_MAX_ACTIONS, \Piwik\Metrics::INDEX_SUM_VISIT_LENGTH, \Piwik\Metrics::INDEX_BOUNCE_COUNT, \Piwik\Metrics::INDEX_NB_VISITS_CONVERTED];
+    /**
+     * @return array<int, string>
+     */
     public static function getMappingFromIdToName()
     {
         $cache = PiwikCache::getTransientCache();
         $cacheKey = \Piwik\CacheId::siteAware(\Piwik\CacheId::pluginAware('Metrics.mappingFromIdToName'));
+        /** @var array<int, string>|false $value */
         $value = $cache->fetch($cacheKey);
         if (empty($value)) {
             $value = self::$mappingFromIdToName;
@@ -176,14 +189,20 @@ class Metrics
         }
         return $value;
     }
+    /**
+     * @return array<int, string>
+     */
     public static function getVisitsMetricNames()
     {
-        $names = array();
+        $names = [];
         foreach (self::$metricsAggregatedFromLogs as $metricId) {
             $names[$metricId] = self::$mappingFromIdToName[$metricId];
         }
         return $names;
     }
+    /**
+     * @return array<string, int>
+     */
     public static function getMappingFromNameToId()
     {
         static $nameToId = null;
@@ -192,6 +211,9 @@ class Metrics
         }
         return $nameToId;
     }
+    /**
+     * @return array<string, int>
+     */
     public static function getMappingFromNameToIdGoal()
     {
         static $nameToId = null;
@@ -202,7 +224,7 @@ class Metrics
     }
     /**
      * Is a lower value for a given column better?
-     * @param $column
+     * @param string $column
      * @return bool
      *
      * @ignore
@@ -239,14 +261,15 @@ class Metrics
     }
     /**
      * Derive the unit name from a column name
-     * @param $column
-     * @param $idSite
+     * @param string $column
+     * @param string|int $idSite
      * @return string
      * @ignore
      */
     public static function getUnit($column, $idSite)
     {
-        $nameToUnit = array('_rate' => '%', 'revenue' => \Piwik\Site::getCurrencySymbolFor($idSite), '_time_' => 's');
+        $nameToUnit = array('_rate' => '%', 'revenue' => \Piwik\Site::getCurrencySymbolFor((int) $idSite), '_time_' => 's');
+        /** @var string|null $unit */
         $unit = null;
         /**
          * Use this event to define units for custom metrics used in evolution graphs and row evolution only.
@@ -266,10 +289,14 @@ class Metrics
         }
         return '';
     }
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultMetricSemanticTypes() : array
     {
         $cacheId = \Piwik\CacheId::pluginAware('DefaultMetricSemanticTypes');
         $cache = PiwikCache::getTransientCache();
+        /** @var array<string, string>|false $types */
         $types = $cache->fetch($cacheId);
         if (empty($types)) {
             $types = ['nb_visits' => Dimension::TYPE_NUMBER, 'nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'nb_actions' => Dimension::TYPE_NUMBER, 'nb_users' => Dimension::TYPE_NUMBER, 'avg_time_on_page' => Dimension::TYPE_DURATION_S, 'sum_time_spent' => Dimension::TYPE_DURATION_S, 'sum_visit_length' => Dimension::TYPE_DURATION_S, 'bounce_count' => Dimension::TYPE_NUMBER, 'bounce_count_returning' => Dimension::TYPE_NUMBER, 'max_actions' => Dimension::TYPE_NUMBER, 'max_actions_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted_returning' => Dimension::TYPE_NUMBER, 'sum_visit_length_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted' => Dimension::TYPE_NUMBER, 'nb_conversions' => Dimension::TYPE_NUMBER, 'revenue' => Dimension::TYPE_MONEY, 'nb_hits' => Dimension::TYPE_NUMBER, 'hits' => Dimension::TYPE_NUMBER, 'entry_nb_visits' => Dimension::TYPE_NUMBER, 'entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'exit_nb_visits' => Dimension::TYPE_NUMBER, 'exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_bounce_count' => Dimension::TYPE_NUMBER, 'exit_bounce_count' => Dimension::TYPE_NUMBER, 'exit_rate' => Dimension::TYPE_PERCENT, 'sum_daily_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_nb_users' => Dimension::TYPE_NUMBER, 'sum_daily_entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_nb_actions' => Dimension::TYPE_NUMBER, 'entry_sum_visit_length' => Dimension::TYPE_NUMBER, 'nb_actions_per_visit' => Dimension::TYPE_NUMBER, 'avg_time_on_site' => Dimension::TYPE_DURATION_S, 'bounce_rate' => Dimension::TYPE_PERCENT, 'conversion_rate' => Dimension::TYPE_PERCENT];
@@ -293,11 +320,15 @@ class Metrics
         }
         return $types;
     }
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultMetricTranslations()
     {
         $cacheId = \Piwik\CacheId::pluginAware('DefaultMetricTranslations');
         $cache = PiwikCache::getTransientCache();
         if ($cache->contains($cacheId)) {
+            /** @var array<string, string> */
             return $cache->fetch($cacheId);
         }
         $translations = array('label' => 'General_ColumnLabel', 'date' => 'General_Date', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPage', 'sum_time_spent' => 'General_ColumnSumVisitLength', 'sum_visit_length' => 'General_ColumnSumVisitLength', 'bounce_count' => 'General_ColumnBounces', 'bounce_count_returning' => 'VisitFrequency_ColumnBounceCountForReturningVisits', 'max_actions' => 'General_ColumnMaxActions', 'max_actions_returning' => 'VisitFrequency_ColumnMaxActionsInReturningVisit', 'nb_visits_converted_returning' => 'VisitFrequency_ColumnNbReturningVisitsConverted', 'sum_visit_length_returning' => 'VisitFrequency_ColumnSumVisitLengthReturning', 'nb_visits_converted' => 'General_ColumnVisitsWithConversions', 'nb_conversions' => 'Goals_ColumnConversions', 'revenue' => 'General_ColumnRevenue', 'nb_hits' => 'General_ColumnPageviews', 'hits' => 'General_ColumnHits', 'entry_nb_visits' => 'General_ColumnEntrances', 'entry_nb_uniq_visitors' => 'General_ColumnUniqueEntrances', 'exit_nb_visits' => 'General_ColumnExits', 'exit_nb_uniq_visitors' => 'General_ColumnUniqueExits', 'entry_bounce_count' => 'General_ColumnBounces', 'exit_bounce_count' => 'General_ColumnBounces', 'exit_rate' => 'General_ColumnExitRate');
@@ -320,11 +351,15 @@ class Metrics
         $cache->save($cacheId, $translations);
         return $translations;
     }
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultMetrics()
     {
         $cacheId = \Piwik\CacheId::languageAware('DefaultMetrics');
         $cache = PiwikCache::getTransientCache();
         if ($cache->contains($cacheId)) {
+            /** @var array<string, string> */
             return $cache->fetch($cacheId);
         }
         $translations = array('nb_visits' => 'General_ColumnNbVisits', 'nb_uniq_visitors' => 'General_ColumnNbUniqVisitors', 'nb_actions' => 'General_ColumnNbActions', 'nb_users' => 'General_ColumnNbUsers');
@@ -332,11 +367,15 @@ class Metrics
         $cache->save($cacheId, $translations);
         return $translations;
     }
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultProcessedMetrics()
     {
         $cacheId = \Piwik\CacheId::languageAware('DefaultProcessedMetrics');
         $cache = PiwikCache::getTransientCache();
         if ($cache->contains($cacheId)) {
+            /** @var array<string, string> */
             return $cache->fetch($cacheId);
         }
         $translations = array(
@@ -350,6 +389,10 @@ class Metrics
         $cache->save($cacheId, $translations);
         return $translations;
     }
+    /**
+     * @param int|string $columnIdRaw
+     * @return int|string
+     */
     public static function getReadableColumnName($columnIdRaw)
     {
         $mappingIdToName = self::$mappingFromIdToName;
@@ -358,15 +401,22 @@ class Metrics
         }
         return $columnIdRaw;
     }
+    /**
+     * @return int[]
+     */
     public static function getMetricIdsToProcessReportTotal()
     {
-        return array(self::INDEX_NB_VISITS, self::INDEX_NB_UNIQ_VISITORS, self::INDEX_NB_ACTIONS, self::INDEX_NB_HITS, self::INDEX_PAGE_NB_HITS, self::INDEX_NB_VISITS_CONVERTED, self::INDEX_NB_CONVERSIONS, self::INDEX_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_NB_VISITS, self::INDEX_PAGE_ENTRY_NB_ACTIONS, self::INDEX_PAGE_EXIT_NB_VISITS, self::INDEX_PAGE_EXIT_NB_UNIQ_VISITORS, self::INDEX_REVENUE);
+        return [self::INDEX_NB_VISITS, self::INDEX_NB_UNIQ_VISITORS, self::INDEX_NB_ACTIONS, self::INDEX_NB_HITS, self::INDEX_PAGE_NB_HITS, self::INDEX_NB_VISITS_CONVERTED, self::INDEX_NB_CONVERSIONS, self::INDEX_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_NB_VISITS, self::INDEX_PAGE_ENTRY_NB_ACTIONS, self::INDEX_PAGE_EXIT_NB_VISITS, self::INDEX_PAGE_EXIT_NB_UNIQ_VISITORS, self::INDEX_REVENUE];
     }
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultMetricsDocumentation()
     {
         $cacheId = \Piwik\CacheId::pluginAware('DefaultMetricsDocumentation');
         $cache = PiwikCache::getTransientCache();
         if ($cache->contains($cacheId)) {
+            /** @var array<string, string> */
             return $cache->fetch($cacheId);
         }
         $translations = array('nb_visits' => 'General_ColumnNbVisitsDocumentation', 'nb_uniq_visitors' => 'General_ColumnNbUniqVisitorsDocumentation', 'nb_actions' => 'General_ColumnNbActionsDocumentation', 'nb_users' => 'General_ColumnNbUsersDocumentation', 'nb_actions_per_visit' => 'General_ColumnActionsPerVisitDocumentation', 'avg_time_on_site' => 'General_ColumnAvgTimeOnSiteDocumentation', 'bounce_rate' => 'General_ColumnBounceRateDocumentation', 'conversion_rate' => 'General_ColumnConversionRateDocumentation', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPageDocumentation', 'nb_hits' => 'General_ColumnPageviewsDocumentation', 'hits' => 'General_ColumnHitsDocumentation', 'exit_rate' => 'General_ColumnExitRateDocumentation', 'nb_visits_converted' => 'General_VisitConvertedGoalDocumentation');
@@ -380,10 +430,12 @@ class Metrics
         $cache->save($cacheId, $translations);
         return $translations;
     }
+    /**
+     * @return string
+     */
     public static function getPercentVisitColumn()
     {
-        $percentVisitsLabel = str_replace(' ', '&nbsp;', \Piwik\Piwik::translate('General_ColumnPercentageVisits'));
-        return $percentVisitsLabel;
+        return str_replace(' ', '&nbsp;', \Piwik\Piwik::translate('General_ColumnPercentageVisits'));
     }
     /**
      * This is a utility method used when building records through log aggregation.
@@ -408,8 +460,8 @@ class Metrics
      *
      * The goal metrics returned will differ based on whether the goal is user defined or an ecommerce goal.
      *
-     * @param array $goalsMetrics
-     * @return array
+     * @param array<int, int|float> $goalsMetrics
+     * @return array<int, float>
      */
     public static function makeGoalColumnsRow(int $idGoal, array $goalsMetrics) : array
     {

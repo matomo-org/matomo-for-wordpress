@@ -42,10 +42,6 @@ class DuplicateActionRemover
      * @var string[]
      */
     private $idactionColumns = null;
-    /**
-     * Constructor.
-     *
-     */
     public function __construct(?TableMetadata $tableMetadataAccess = null, ?LoggerInterface $logger = null)
     {
         $this->tableMetadataAccess = $tableMetadataAccess ?: new TableMetadata();

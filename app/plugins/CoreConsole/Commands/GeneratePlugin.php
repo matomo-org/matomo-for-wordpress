@@ -12,8 +12,6 @@ use Piwik\Filesystem;
 use Piwik\Plugins\ExamplePlugin\ExamplePlugin;
 use Piwik\Plugin;
 use Piwik\Version;
-/**
- */
 class GeneratePlugin extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginBase
 {
     protected function configure()

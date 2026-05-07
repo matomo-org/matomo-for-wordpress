@@ -14,9 +14,6 @@ use Piwik\Common;
  */
 class JsonFileLoader implements \Piwik\Translation\Loader\LoaderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load($language, array $directories)
     {
         if (empty($language)) {
@@ -32,7 +29,10 @@ class JsonFileLoader implements \Piwik\Translation\Loader\LoaderInterface
         }
         return $translations;
     }
-    private function loadFile($filename)
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private function loadFile(string $filename) : array
     {
         $data = file_get_contents($filename);
         $translations = json_decode($data, \true);
@@ -40,7 +40,7 @@ class JsonFileLoader implements \Piwik\Translation\Loader\LoaderInterface
             throw new \Exception(sprintf('Not able to load translation file %s: %s', $filename, Common::getLastJsonError()));
         }
         if (!is_array($translations)) {
-            return array();
+            return [];
         }
         return $translations;
     }

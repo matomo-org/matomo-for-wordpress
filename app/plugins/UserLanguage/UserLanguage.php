@@ -8,9 +8,6 @@
  */
 namespace Piwik\Plugins\UserLanguage;
 
-/**
- *
- */
 class UserLanguage extends \Piwik\Plugin
 {
 }

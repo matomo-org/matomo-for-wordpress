@@ -12,7 +12,7 @@ use Exception;
 use Piwik\API\Request;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
 use Piwik\IP;
@@ -20,22 +20,29 @@ use Piwik\NoAccessException;
 use Piwik\Piwik;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
 use Piwik\Plugins\Login\Security\LoginFromDifferentCountryDetection;
+use Piwik\Plugins\UsersManager\UserLoginHelper;
 use Piwik\Session;
 use Piwik\SettingsServer;
-/**
- *
- */
 class Login extends \Piwik\Plugin
 {
+    /**
+     * @var bool
+     */
     private $hasAddedFailedAttempt = \false;
+    /**
+     * @var bool
+     */
     private $hasPerformedBruteForceCheck = \false;
+    /**
+     * @var bool
+     */
     private $hasPerformedBruteForceCheckForUserPwdLogin = \false;
     /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
     {
-        $hooks = array(
+        $hooks = [
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'User.isNotAuthorized' => 'noAccess',
             'API.Request.authenticate' => 'apiRequestAuthenticate',
@@ -44,7 +51,7 @@ class Login extends \Piwik\Plugin
             'Session.beforeSessionStart' => 'beforeSessionStart',
             // for brute force prevention of all tracking + reporting api requests
             'Request.initAuthenticationObject' => 'onInitAuthenticationObject',
-            'API.UsersManager.createAppSpecificTokenAuth' => 'beforeLoginCheckBruteForce',
+            'API.UsersManager.createAppSpecificTokenAuth' => 'beforeCreateAppSpecificTokenAuthCheckBruteForce',
             // doesn't require auth but can be used to authenticate
             // for brute force prevention of all UI requests
             'Controller.Login.logme' => 'beforeLoginCheckBruteForce',
@@ -69,7 +76,7 @@ class Login extends \Piwik\Plugin
             // record any failed attempt in Tracker API
             // for 'Login from a different country' notification
             'Login.authenticate.processSuccessfulSession.end' => 'checkLoginFromAnotherCountry',
-        );
+        ];
         $loginPlugin = Piwik::getLoginPluginName();
         if ($loginPlugin && $loginPlugin !== 'Login') {
             $hooks['Controller.' . $loginPlugin . '.logme'] = 'beforeLoginCheckBruteForce';
@@ -82,6 +89,10 @@ class Login extends \Piwik\Plugin
         }
         return $hooks;
     }
+    /**
+     * @param string[] $translations
+     * @return void
+     */
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'Login_CurrentlyBlockedIPs';
@@ -90,10 +101,16 @@ class Login extends \Piwik\Plugin
         $translations[] = 'Login_CurrentlyBlockedIPsUnblockConfirm';
         $translations[] = 'Login_IPsAlwaysBlocked';
     }
+    /**
+     * @return true
+     */
     public function isTrackerPlugin()
     {
         return \true;
     }
+    /**
+     * @return void
+     */
     public function onInitAuthenticationObject()
     {
         if (SettingsServer::isTrackerApiRequest() || Request::isRootRequestApiRequest()) {
@@ -105,6 +122,9 @@ class Login extends \Piwik\Plugin
             $this->beforeLoginCheckBruteForce();
         }
     }
+    /**
+     * @return void
+     */
     public function onFailedLoginRecordAttempt()
     {
         // we're always making sure on any success or failed login to check if user is actually allowed to log in
@@ -123,6 +143,9 @@ class Login extends \Piwik\Plugin
             $this->hasAddedFailedAttempt = \true;
         }
     }
+    /**
+     * @return void
+     */
     public function onFailedAPILogin()
     {
         $this->onFailedLoginRecordAttempt();
@@ -136,6 +159,10 @@ class Login extends \Piwik\Plugin
             }
         }
     }
+    /**
+     * @param string $login
+     * @return void
+     */
     public function checkLoginFromAnotherCountry($login)
     {
         if ('anonymous' === $login) {
@@ -147,51 +174,89 @@ class Login extends \Piwik\Plugin
             $loginFromDifferentCountryDetection->check($login);
         }
     }
+    /**
+     * @return void
+     */
     public function beforeLoginCheckBruteForce()
     {
+        $this->performBruteForceCheck($this->getUsernameUsedInPasswordLogin());
+    }
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function beforeCreateAppSpecificTokenAuthCheckBruteForce(array $params) : void
+    {
+        $userLogin = $params['userLogin'] ?? '';
+        if (!is_string($userLogin)) {
+            $userLogin = '';
+        }
+        $this->performBruteForceCheck($this->normalizeUserLogin($userLogin));
+    }
+    private function normalizeUserLogin(string $userLogin) : string
+    {
+        return UserLoginHelper::normalizeLoginOrEmailToLogin($userLogin);
+    }
+    private function performBruteForceCheck(?string $login) : void
+    {
+        /** @var BruteForceDetection $bruteForce */
         $bruteForce = StaticContainer::get('Piwik\\Plugins\\Login\\Security\\BruteForceDetection');
-        if (!$this->hasPerformedBruteForceCheck && $bruteForce->isEnabled() && !$bruteForce->isAllowedToLogin(IP::getIpFromHeader())) {
+        if (!$bruteForce->isEnabled()) {
+            return;
+        }
+        if (!$this->hasPerformedBruteForceCheck && !$bruteForce->isAllowedToLogin(IP::getIpFromHeader())) {
             throw new Exception(Piwik::translate('Login_LoginNotAllowedBecauseBlocked'));
         }
         // for performance reasons we make sure to execute it only once per request
         $this->hasPerformedBruteForceCheck = \true;
-        // now check that user login (from any ip) is not blocked
-        $login = $this->getUsernameUsedInPasswordLogin();
-        if (empty($login) || $login == 'anonymous') {
+        if (empty($login) || strtolower($login) === 'anonymous') {
             return;
             // can't do the check if we don't know the login
         }
-        /** @var BruteForceDetection $bruteForce */
-        $bruteForce = StaticContainer::get('Piwik\\Plugins\\Login\\Security\\BruteForceDetection');
-        if (!$this->hasPerformedBruteForceCheckForUserPwdLogin && $bruteForce->isEnabled() && $bruteForce->isUserLoginBlocked($login)) {
+        if (!$this->hasPerformedBruteForceCheckForUserPwdLogin && $bruteForce->isUserLoginBlocked($login)) {
             $ex = new NoAccessException(Piwik::translate('Login_LoginNotAllowedBecauseUserLoginBlocked'), 403);
             throw $ex;
         }
         // for performance reasons we make sure to execute it only once per request
         $this->hasPerformedBruteForceCheckForUserPwdLogin = \true;
     }
+    /**
+     * @param string[] $jsFiles
+     * @return void
+     */
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Login/javascripts/login.js";
         $jsFiles[] = "plugins/Login/javascripts/bruteforcelog.js";
     }
+    /**
+     * @param string[] $stylesheetFiles
+     * @return void
+     */
     public function getStylesheetFiles(&$stylesheetFiles)
     {
         $stylesheetFiles[] = "plugins/Login/stylesheets/login.less";
         $stylesheetFiles[] = "plugins/Login/stylesheets/variables.less";
     }
+    /**
+     * @return void
+     */
     public function beforeSessionStart()
     {
         if (!$this->shouldHandleRememberMe()) {
             return;
         }
         // if this is a login request & form_rememberme was set, change the session cookie expire time before starting the session
-        $rememberMe = isset($_POST['form_rememberme']) ? $_POST['form_rememberme'] : null;
-        if ($rememberMe == '1') {
-            Session::rememberMe(Config::getInstance()->General['login_cookie_expire']);
+        if (\Piwik\Request::fromPost()->getBoolParameter('form_rememberme', \false)) {
+            $loginCookieExpire = GeneralConfig::getConfigValue('login_cookie_expire');
+            if (!is_numeric($loginCookieExpire)) {
+                $loginCookieExpire = null;
+            } else {
+                $loginCookieExpire = (int) $loginCookieExpire;
+            }
+            Session::rememberMe($loginCookieExpire);
         }
     }
-    private function shouldHandleRememberMe()
+    private function shouldHandleRememberMe() : bool
     {
         $module = Piwik::getModule();
         $action = Piwik::getAction();
@@ -200,19 +265,26 @@ class Login extends \Piwik\Plugin
     /**
      * Redirects to Login form with error message.
      * Listens to User.isNotAuthorized hook.
+     *
+     * @return void
      */
     public function noAccess(Exception $exception)
     {
         $frontController = FrontController::getInstance();
         if (Common::isXmlHttpRequest()) {
-            echo $frontController->dispatch(Piwik::getLoginPluginName(), 'ajaxNoAccess', array($exception->getMessage()));
+            $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'ajaxNoAccess', [$exception->getMessage()]);
+            echo is_string($response) ? $response : '';
             return;
         }
-        echo $frontController->dispatch(Piwik::getLoginPluginName(), 'login', array($exception->getMessage()));
+        $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'login', [$exception->getMessage()]);
+        echo is_string($response) ? $response : '';
     }
     /**
      * Set login name and authentication token for API request.
      * Listens to API.Request.authenticate hook.
+     *
+     * @param string $tokenAuth
+     * @return void
      */
     public function apiRequestAuthenticate(
 #[\SensitiveParameter]
@@ -224,21 +296,27 @@ $tokenAuth)
         $auth->setLogin($login = null);
         $auth->setTokenAuth($tokenAuth);
     }
+    /**
+     * @return bool
+     */
     protected static function isModuleIsAPI()
     {
-        return Piwik::getModule() === 'API' && (Piwik::getAction() == '' || Piwik::getAction() == 'index');
+        return Piwik::getModule() === 'API' && (Piwik::getAction() == '' || Piwik::getAction() === 'index');
     }
-    private function getUsernameUsedInPasswordLogin()
+    private function getUsernameUsedInPasswordLogin() : string
     {
         $login = StaticContainer::get(\Piwik\Auth::class)->getLogin();
-        if (empty($login) || $login == 'anonymous') {
+        if (empty($login) || $login === 'anonymous') {
             $login = \Piwik\Request::fromRequest()->getStringParameter('form_login', '');
             if (Piwik::getAction() === 'logme') {
                 $login = \Piwik\Request::fromRequest()->getStringParameter('login', $login);
             }
         }
-        return $login;
+        return $this->normalizeUserLogin($login);
     }
+    /**
+     * @return void
+     */
     public function deactivate()
     {
         Session::destroyAllSessions();

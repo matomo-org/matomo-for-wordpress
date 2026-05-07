@@ -281,8 +281,6 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
     }
     /**
      * Add goals data for each combination of url / title and pageviews / entries
-     *
-     *
      */
     protected function archiveDayActionsGoals(ArchiveProcessor $archiveProcessor, int $rankingQueryLimit) : void
     {
@@ -323,7 +321,6 @@ class ActionReports extends ArchiveProcessor\RecordBuilder
     }
     /**
      * Get a list of goal ids for a site
-     *
      *
      * @return array
      */

@@ -48,7 +48,6 @@ class UserChanges
     }
     /**
      * Return the key of the last viewed change for the user, if any
-     *
      */
     private function getIdchangeLastViewed() : ?int
     {

@@ -54,8 +54,6 @@ class NestedSitesLimiter extends BaseFilter
     /** @var Row[] */
     private $rows = [];
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      */
     public function __construct(DataTable $table, int $offset, int $limit)

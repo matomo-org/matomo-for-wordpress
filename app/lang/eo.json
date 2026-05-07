@@ -425,7 +425,9 @@
         "SettingsSaveSuccess": "Agordoj ĝisdatigitaj"
     },
     "CoreHome": {
-        "ChooseWebsite": "Elekti retpaĝon"
+        "ChooseWebsite": "Elekti retpaĝon",
+        "PresetDateToday": "Today",
+        "PresetDateYesterday": "Yesterday"
     },
     "CustomJsTracker": {
         "DiagnosticPiwikJsMakeWritable": "Ni rekomendas fari %1$sskribebla per funkciado de ĉi tiu komando: %2$s",

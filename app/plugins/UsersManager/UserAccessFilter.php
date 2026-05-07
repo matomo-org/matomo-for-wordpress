@@ -101,13 +101,14 @@ class UserAccessFilter
     /**
      * Returns the given user only if the current user has permission to see the given user
      * @param array $user An array containing a key 'login'
-     * @return array|null
+     * @return array
      */
     public function filterUser($user)
     {
         if ($this->access->hasSuperUserAccess() || !empty($user['login']) && $this->isNonSuperUserAllowedToSeeThisLogin($user['login'])) {
             return $user;
         }
+        return [];
     }
     /**
      * Removes all logins from the list of logins where the current user has no permission to see them.

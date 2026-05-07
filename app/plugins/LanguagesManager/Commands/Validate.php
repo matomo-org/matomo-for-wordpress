@@ -10,8 +10,6 @@ namespace Piwik\Plugins\LanguagesManager\Commands;
 
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\LanguagesManager\API;
-/**
- */
 class Validate extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
 {
     protected function configure()

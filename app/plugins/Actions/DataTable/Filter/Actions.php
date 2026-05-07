@@ -19,8 +19,6 @@ class Actions extends BaseFilter
 {
     private $actionType;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      * @param int $actionType The action type being processed.
      */
@@ -85,12 +83,12 @@ class Actions extends BaseFilter
                                 $row->setMetadata('segmentValue', urlencode(trim($label)));
                             }
                         }
-                    } elseif ($this->actionType == Action::TYPE_PAGE_URL && $urlPrefix) {
+                    } elseif ($this->actionType == Action::TYPE_PAGE_URL) {
                         // folder for older data w/ no folder URL metadata
                         if ($label === $notDefinedUrl) {
                             // segmenting by an "empty" value is currently broken for actions, so we do not set a segment value to hide row actions like segmented visit log
                             $row->setMetadata('segment', null);
-                        } else {
+                        } elseif ($urlPrefix) {
                             $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($urlPrefix . '/' . $label)));
                         }
                     }

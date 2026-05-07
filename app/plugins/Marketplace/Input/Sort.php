@@ -8,8 +8,6 @@
  */
 namespace Piwik\Plugins\Marketplace\Input;
 
-/**
- */
 class Sort
 {
     public const METHOD_POPULAR = 'popular';

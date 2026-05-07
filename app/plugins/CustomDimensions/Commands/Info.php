@@ -11,8 +11,6 @@ namespace Piwik\Plugins\CustomDimensions\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\CustomDimensions\CustomDimensions;
 use Piwik\Plugins\CustomDimensions\Dao\LogTable;
-/**
- */
 class Info extends ConsoleCommand
 {
     protected function configure()

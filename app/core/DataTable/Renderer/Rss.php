@@ -25,7 +25,6 @@ class Rss extends Renderer
 {
     /**
      * Computes the dataTable output and returns the string/binary
-     *
      */
     public function render() : string
     {
@@ -70,7 +69,6 @@ class Rss extends Renderer
     }
     /**
      * Returns the RSS file footer
-     *
      */
     protected function getRssFooter() : string
     {
@@ -78,7 +76,6 @@ class Rss extends Renderer
     }
     /**
      * Returns the RSS file header
-     *
      */
     protected function getRssHeader() : string
     {

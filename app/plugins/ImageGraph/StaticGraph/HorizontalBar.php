@@ -9,9 +9,6 @@
 namespace Piwik\Plugins\ImageGraph\StaticGraph;
 
 use Piwik\Piwik;
-/**
- *
- */
 class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
 {
     public const INTERLEAVE = 0.3;

@@ -120,7 +120,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     }
     /**
      * Method is final to make it impossible to overwrite it in plugin commands
-     *
      */
     public final function run(InputInterface $input, OutputInterface $output) : int
     {
@@ -291,7 +290,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Can be overwritten by plugin command
      *
      * @see parent::interact()
-     *
      */
     protected function doInteract() : void
     {
@@ -311,7 +309,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Can be overwritten by plugin command
      *
      * @see parent::initialize()
-     *
      */
     protected function doInitialize() : void
     {
@@ -341,7 +338,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Helper method to ask the user for confirmation
      *
      * @see QuestionHelper
-     *
      */
     protected function askForConfirmation(string $question, bool $default = \true, string $trueAnswerRegex = '/^y/i') : bool
     {
@@ -386,7 +382,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
      * Note: Only one progress bar can be used at a time
      *
      * @see ProgressBar
-     *
      */
     protected function initProgressBar(int $numChangesToPerform = 0) : ProgressBar
     {
@@ -395,7 +390,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     }
     /**
      * Starts a previously initialized progress bar
-     *
      */
     protected function startProgressBar(int $numChangesToPerform = 0) : void
     {
@@ -403,7 +397,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     }
     /**
      * Advances the previously initialized progress bar
-     *
      */
     protected function advanceProgressBar(int $step = 1) : void
     {
@@ -414,7 +407,6 @@ class ConsoleCommand extends SymfonyCommand implements SignalableCommandInterfac
     }
     /**
      * Finished the initialized progress bar
-     *
      */
     protected function finishProgressBar() : void
     {

@@ -60,7 +60,6 @@ class DbTable implements \SessionHandlerInterface
     }
     /**
      * Close Session - free resources
-     *
      */
     public function close() : bool
     {

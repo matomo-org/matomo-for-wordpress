@@ -48,8 +48,6 @@ abstract class Period
      */
     protected $translator;
     /**
-     * Constructor.
-     *
      * @ignore
      */
     public function __construct(\Piwik\Date $date)

@@ -15,9 +15,6 @@ use Piwik\Plugins\Marketplace\Api\Client;
 use Piwik\Plugins\Marketplace\Plugins;
 use Piwik\Translation\Translator;
 use Piwik\Url;
-/**
- *
- */
 class InvalidLicenses
 {
     /**
@@ -39,7 +36,7 @@ class InvalidLicenses
     /**
      * @var array
      */
-    private $activatedPluginNames = array();
+    private $activatedPluginNames = [];
     private $plugins;
     private $cacheKey = 'Marketplace_ExpiredPlugins';
     public function __construct(Client $client, Eager $cache, Translator $translator, Plugins $plugins)

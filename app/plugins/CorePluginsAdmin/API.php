@@ -17,7 +17,7 @@ use Piwik\Plugins\CoreAdminHome\Emails\SettingsChangedEmail;
 use Piwik\Plugins\CoreAdminHome\Emails\SecurityNotificationEmail;
 use Piwik\Plugins\Marketplace\Marketplace;
 /**
- * API for plugin CorePluginsAdmin
+ * Provides API methods for reading and updating plugin settings.
  *
  * @method static \Piwik\Plugins\CorePluginsAdmin\API getInstance()
  */
@@ -38,12 +38,12 @@ class API extends \Piwik\Plugin\API
     }
     /**
      * @internal
-     * @param array $settingValues Format: array('PluginName' => array(array('name' => 'SettingName1', 'value' => 'SettingValue1), ..))
-     * @throws Exception
+     * @param array<string, array<int, array{name:string, value?:mixed}>> $settingValues
+     * @param string|false $passwordConfirmation
      */
     public function setSystemSettings($settingValues,
 #[\SensitiveParameter]
-$passwordConfirmation = \false)
+$passwordConfirmation = \false) : void
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -69,10 +69,9 @@ $passwordConfirmation = \false)
     }
     /**
      * @internal
-     * @param array $settingValues  Format: array('PluginName' => array(array('name' => 'SettingName1', 'value' => 'SettingValue1), ..))
-     * @throws Exception
+     * @param array<string, array<int, array{name:string, value?:mixed}>> $settingValues
      */
-    public function setUserSettings($settingValues)
+    public function setUserSettings($settingValues) : void
     {
         Piwik::checkUserIsNotAnonymous();
         $pluginsSettings = $this->settingsProvider->getAllUserSettings();
@@ -89,8 +88,7 @@ $passwordConfirmation = \false)
     }
     /**
      * @internal
-     * @return array
-     * @throws \Piwik\NoAccessException
+     * @return array<int, array<string, mixed>>
      */
     public function getSystemSettings()
     {
@@ -100,8 +98,7 @@ $passwordConfirmation = \false)
     }
     /**
      * @internal
-     * @return array
-     * @throws \Piwik\NoAccessException
+     * @return array<int, array<string, mixed>>
      */
     public function getUserSettings()
     {
@@ -132,7 +129,10 @@ $passwordConfirmation = \false)
             return 0;
         }
     }
-    private function sendNotificationEmails($sendSettingsChangedNotificationEmailPlugins)
+    /**
+     * @param string[] $sendSettingsChangedNotificationEmailPlugins
+     */
+    private function sendNotificationEmails(array $sendSettingsChangedNotificationEmailPlugins) : void
     {
         $pluginNames = [];
         foreach ($sendSettingsChangedNotificationEmailPlugins as $plugin) {

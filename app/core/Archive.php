@@ -34,7 +34,7 @@ use Piwik\Plugins\VisitFrequency;
  *
  * You can search for metrics (such as `nb_visits`) using the {@link getNumeric()} and
  * {@link getDataTableFromNumeric()} methods. You can search for
- * reports using the {@link getBlob()}, {@link getDataTable()} and {@link getDataTableExpanded()} methods.
+ * reports using the {@link getDataTable()} and {@link getDataTableExpanded()} methods.
  *
  * If you're creating an API that returns report data, you may want to use the
  * {@link createDataTableFromArchive()} helper function.
@@ -140,7 +140,7 @@ class Archive implements ArchiveQuery
      *     )
      * )
      *
-     * @var array
+     * @var array<string, array<string, list<int>>>
      */
     private $idarchives = [];
     /**
@@ -158,18 +158,18 @@ class Archive implements ArchiveQuery
      *     )
      *  )
      *
-     * @var array
+     * @var array<int, array<string, array<string, array<int, int>>>>
      */
     private $idarchiveStates = [];
     /**
-     * If set to true, the result of all get functions (ie, getNumeric, getBlob, etc.)
+     * If set to true, the result of all get functions (ie, getNumeric, getDataTable, etc.)
      * will be indexed by the site ID, even if we're only querying data for one site.
      *
      * @var bool
      */
     private $forceIndexedBySite;
     /**
-     * If set to true, the result of all get functions (ie, getNumeric, getBlob, etc.)
+     * If set to true, the result of all get functions (ie, getNumeric, getDataTable, etc.)
      * will be indexed by the period, even if we're only querying data for one period.
      *
      * @var bool
@@ -179,10 +179,6 @@ class Archive implements ArchiveQuery
      * @var Parameters
      */
     private $params;
-    /**
-     * @var \Matomo\Cache\Cache
-     */
-    private static $cache;
     /**
      * If true, this Archive instance will not launch the archiving process, even if the current request
      * is authorized to.
@@ -215,8 +211,8 @@ class Archive implements ArchiveQuery
      * @param string $period 'day', `'week'`, `'month'`, `'year'` or `'range'`
      * @param Date|string $strDate 'YYYY-MM-DD', magic keywords (ie, 'today'; {@link Date::factory()}
      *                             or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD').
-     * @param bool|false|string $segment Segment definition or false if no segment should be used. {@link Piwik\Segment}
-     * @param bool|false|string $_restrictSitesToLogin Used only when running as a scheduled task.
+     * @param string|null|false $segment Segment definition or false if no segment should be used. {@link Piwik\Segment}
+     * @param string|null|false $_restrictSitesToLogin Used only when running as a scheduled task.
      * @return ArchiveQuery
      */
     public static function build($idSites, $period, $strDate, $segment = \false, $_restrictSitesToLogin = \false)
@@ -249,6 +245,9 @@ class Archive implements ArchiveQuery
     {
         return StaticContainer::get(ArchiveQueryFactory::class)->factory($segment, $periods, $idSites, $idSiteIsAll, $isMultipleDate);
     }
+    /**
+     * @return bool
+     */
     public static function shouldSkipArchiveIfSkippingSegmentArchiveForToday(\Piwik\Site $site, \Piwik\Period $period, \Piwik\Segment $segment)
     {
         $now = \Piwik\Date::factory('now', $site->getTimezone());
@@ -266,9 +265,9 @@ class Archive implements ArchiveQuery
      * The site ID index is always first, so if multiple sites & periods were requested, the result
      * will be indexed by site ID first, then period.
      *
-     * @param string|array $names One or more archive names, eg, `'nb_visits'`, `'Referrers_distinctKeywords'`,
+     * @param string|string[] $names One or more archive names, eg, `'nb_visits'`, `'Referrers_distinctKeywords'`,
      *                            etc.
-     * @return false|integer|array `false` if there is no data to return, a single numeric value if we're not querying
+     * @return float|array `false` if there is no data to return, a single numeric value if we're not querying
      *                             for multiple sites/periods, or an array if multiple sites, periods or names are
      *                             queried for.
      */
@@ -290,9 +289,11 @@ class Archive implements ArchiveQuery
      * Unlike other methods, this returns a DataCollection instance directly. Use it to directly access
      * and process blob data.
      *
-     * @param string|string[] $names One or more archive names, eg, `'nb_visits'`, `'Referrers_distinctKeywords'`,
-     *                            etc.
+     * @param string|string[] $names One or more archive names, eg, `'nb_visits'`, `'Referrers_distinctKeywords'`, etc.
+     * @param int|string|null $idSubtable
      * @return DataCollection the queried data.
+     *
+     * @deprecated remove with Matomo 6
      */
     public function getBlob($names, $idSubtable = null)
     {
@@ -344,6 +345,7 @@ class Archive implements ArchiveQuery
      *
      * This is the same as doing `$this->getDataTableFromNumeric()->mergeChildren()` but this way it is much faster.
      *
+     * @param string[] $names
      * @return DataTable|DataTable\Map
      *
      * @internal Currently only used by MultiSites.getAll plugin. Feel free to remove internal tag if needed somewhere
@@ -412,7 +414,7 @@ class Archive implements ArchiveQuery
     /**
      * Returns the given reports grouped by the plugin name that archives them.
      *
-     * @param array $archiveNames
+     * @param string[] $archiveNames
      * @return array `['MyPlugin' => ['MyPlugin_metric1', 'MyPlugin_report1'], ...]`
      */
     private function getRequestedPlugins($archiveNames)
@@ -442,10 +444,10 @@ class Archive implements ArchiveQuery
      * @param int|string|array $idSite @see {@link build()}
      * @param string $period @see {@link build()}
      * @param string $date @see {@link build()}
-     * @param string $segment @see {@link build()}
+     * @param string|null $segment @see {@link build()}
      * @param bool $expanded If true, loads all subtables. See {@link getDataTableExpanded()}
      * @param bool $flat If true, loads all subtables and disabled all recursive filters.
-     * @param int|null|string $idSubtable See {@link getDataTableExpanded()}
+     * @param int|string|null|false $idSubtable See {@link getDataTableExpanded()}
      * @param int|null $depth See {@link getDataTableExpanded()}
      * @return DataTable|DataTable\Map
      */
@@ -480,8 +482,8 @@ class Archive implements ArchiveQuery
     /**
      * Queries archive tables for data and returns the result.
      * @param array|string $archiveNames
-     * @param $archiveDataType
-     * @param null|int $idSubtable
+     * @param 'blob'|'numeric' $archiveDataType
+     * @param null|int|string $idSubtable
      * @return Archive\DataCollection
      */
     protected function get($archiveNames, $archiveDataType, $idSubtable = null)
@@ -522,6 +524,15 @@ class Archive implements ArchiveQuery
         }
         $result->setAsBuiltWithoutArchives(\false);
         $archiveData = ArchiveSelector::getArchiveData($archiveIds, $archiveNames, $archiveDataType, $idSubtable);
+        if (empty($archiveData)) {
+            // Archive IDs are cached in-memory. During nested archiving, older archives can be pruned,
+            // so cached IDs might become stale. Retry once with refreshed cache.
+            $this->clearArchiveIdCache();
+            [$archiveIds, $archiveStates] = $this->getArchiveIdsAndStates($archiveNames);
+            if (!empty($archiveIds)) {
+                $archiveData = ArchiveSelector::getArchiveData($archiveIds, $archiveNames, $archiveDataType, $idSubtable);
+            }
+        }
         $archiveState = new ArchiveState();
         $this->addDataToResultCollection($result, $archiveData, $archiveDataType);
         $archiveState->addMetadataToResultCollection($result, $archiveData, $archiveIds, $archiveStates);
@@ -592,7 +603,7 @@ class Archive implements ArchiveQuery
      *
      * @param array $archiveNamesByPlugin @see getRequestedPlugins
      */
-    private function cacheArchiveIdsAfterLaunching($archiveNamesByPlugin)
+    private function cacheArchiveIdsAfterLaunching($archiveNamesByPlugin) : void
     {
         foreach ($this->params->getPeriods() as $period) {
             $twoDaysAfterPeriod = $period->getDateEnd()->addDay(2);
@@ -627,7 +638,7 @@ class Archive implements ArchiveQuery
      *
      * @param array $plugins List of plugin names from which data is being requested.
      */
-    private function cacheArchiveIdsWithoutLaunching($plugins)
+    private function cacheArchiveIdsWithoutLaunching($plugins) : void
     {
         [$idarchivesByReport, $idarchiveStatesByReport] = ArchiveSelector::getArchiveIdsAndStates($this->params->getIdSites(), $this->params->getPeriods(), $this->params->getSegment(), $plugins);
         // initialize archive ID cache for each report
@@ -659,9 +670,9 @@ class Archive implements ArchiveQuery
     /**
      * Returns the done string flag for a plugin using this instance's segment & periods.
      * @param string $plugin
-     * @return string
+     * @param array $idSites
      */
-    private function getDoneStringForPlugin($plugin, $idSites)
+    private function getDoneStringForPlugin($plugin, $idSites) : string
     {
         $requestedReport = $this->getRequestedReport();
         $shouldOnlyProcessRequestedArchives = empty($requestedReport) && Rules::shouldProcessOnlyReportsRequestedInArchiveQuery($this->getPeriodLabel());
@@ -670,7 +681,7 @@ class Archive implements ArchiveQuery
         }
         return Rules::getDoneStringFlagFor($idSites, $this->params->getSegment(), $this->getPeriodLabel(), $plugin);
     }
-    private function getPeriodLabel()
+    private function getPeriodLabel() : string
     {
         $periods = $this->params->getPeriods();
         return reset($periods)->getLabel();
@@ -692,14 +703,18 @@ class Archive implements ArchiveQuery
         }
         return $indices;
     }
+    /**
+     * @param string|int|float|false $value
+     * @return float|int
+     */
     private function formatNumericValue($value)
     {
+        if ($value === \false) {
+            return 0;
+        }
         // If there is no dot, we return as is
         // Note: this could be an integer bigger than 32 bits
-        if (strpos($value, '.') === \false) {
-            if ($value === \false) {
-                return 0;
-            }
+        if (strpos((string) $value, '.') === \false) {
             return (float) $value;
         }
         // Round up the value with 2 decimals
@@ -717,13 +732,17 @@ class Archive implements ArchiveQuery
      * If this  function is not called, then periods with no visits will not add
      * entries to the cache. If the archive is used again, SQL will be executed to
      * try and find the archive IDs even though we know there are none.
-     *
      */
-    private function initializeArchiveIdCache(string $doneFlag)
+    private function initializeArchiveIdCache(string $doneFlag) : void
     {
         if (!isset($this->idarchives[$doneFlag])) {
             $this->idarchives[$doneFlag] = [];
         }
+    }
+    private function clearArchiveIdCache() : void
+    {
+        $this->idarchives = [];
+        $this->idarchiveStates = [];
     }
     /**
      * Returns the archiving group identifier given a plugin.
@@ -736,6 +755,9 @@ class Archive implements ArchiveQuery
      * If the period isn't a range, then all plugins' archiving code is executed.
      * If the period is a range, then archiving code is executed individually for
      * each plugin.
+     *
+     * @param string $plugin
+     * @return string
      */
     private function getArchiveGroupOfPlugin($plugin)
     {
@@ -769,13 +791,18 @@ class Archive implements ArchiveQuery
             // HACK
             $report = 'AIAgents_Metrics';
         }
-        $plugin = substr($report, 0, strpos($report, '_'));
+        $pluginSeparatorPos = strpos($report, '_');
+        if ($pluginSeparatorPos === \false) {
+            $plugin = '';
+        } else {
+            $plugin = substr($report, 0, $pluginSeparatorPos);
+        }
         if (empty($plugin) || !\Piwik\Plugin\Manager::getInstance()->isPluginActivated($plugin)) {
             throw new \Exception("Error: The report '{$report}' was requested but it is not available at this stage." . " (Plugin '{$plugin}' is not activated.)");
         }
         return $plugin;
     }
-    private function prepareArchive(array $archiveNamesByPlugin, \Piwik\Site $site, \Piwik\Period $period)
+    private function prepareArchive(array $archiveNamesByPlugin, \Piwik\Site $site, \Piwik\Period $period) : void
     {
         $coreAdminHomeApi = API::getInstance();
         $requestedReport = $this->getRequestedReport();
@@ -801,7 +828,11 @@ class Archive implements ArchiveQuery
             }
         }
     }
-    private function getArchiveIdsAndStatesByMonth($doneFlags)
+    /**
+     * @param array $doneFlags
+     * @return array{0: array, 1: array}
+     */
+    private function getArchiveIdsAndStatesByMonth($doneFlags) : array
     {
         // order idarchives by the table month they belong to
         $archiveIdsByMonth = [];
@@ -827,12 +858,16 @@ class Archive implements ArchiveQuery
         return [$archiveIdsByMonth, $archiveStatesByMonth];
     }
     /**
-     * @internal
+     * Only kept for BC
+     * @return void
+     * @deprecated Remove with Matomo 6
      */
     public static function clearStaticCache()
     {
-        self::$cache = null;
     }
+    /**
+     * @return void
+     */
     public function forceFetchingWithoutLaunchingArchiving()
     {
         $this->forceFetchingWithoutLaunchingArchiving = \true;

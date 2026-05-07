@@ -11,8 +11,6 @@ namespace Piwik\Period;
 use Exception;
 use Piwik\Date;
 use Piwik\Period;
-/**
- */
 class Day extends Period
 {
     public const PERIOD_ID = 1;

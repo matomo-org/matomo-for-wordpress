@@ -11,8 +11,6 @@ namespace Piwik\Plugins\LanguagesManager\Commands;
 use Piwik\Cache;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\LanguagesManager\API;
-/**
- */
 class Update extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
 {
     protected function configure()

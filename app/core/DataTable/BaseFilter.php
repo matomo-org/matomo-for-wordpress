@@ -32,10 +32,6 @@ abstract class BaseFilter
      * @var bool
      */
     protected $enableRecursive = \false;
-    /**
-     * Constructor.
-     *
-     */
     public function __construct(DataTable $table)
     {
         // empty
@@ -44,6 +40,7 @@ abstract class BaseFilter
      * Manipulates a {@link DataTable} in some way.
      *
      * @param DataTable $table
+     * @return void
      */
     public abstract function filter($table);
     /**
@@ -51,6 +48,7 @@ abstract class BaseFilter
      * is up to the derived BaseFilter class.
      *
      * @param bool $enable
+     * @return void
      */
     public function enableRecursive($enable)
     {
@@ -60,6 +58,7 @@ abstract class BaseFilter
      * Filters a row's subtable, if one exists and is loaded in memory.
      *
      * @param Row $row The row whose subtable should be filter.
+     * @return void
      */
     public function filterSubTable(\Piwik\DataTable\Row $row)
     {

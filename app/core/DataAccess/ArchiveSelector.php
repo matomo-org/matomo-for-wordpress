@@ -61,7 +61,10 @@ class ArchiveSelector
         $dateStart = $params->getPeriod()->getDateStart();
         $dateStartIso = $dateStart->toString('Y-m-d');
         $dateEndIso = $params->getPeriod()->getDateEnd()->toString('Y-m-d');
-        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($dateStart);
+        $numericTable = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($dateStart, \false);
+        if (empty($numericTable)) {
+            return self::archiveInfoBcResult(['idArchives' => \false, 'visits' => \false, 'visitsConverted' => \false, 'archiveExists' => \false, 'tsArchived' => \false, 'doneFlagValue' => \false, 'existingRecords' => null]);
+        }
         $requestedPlugin = $params->getRequestedPlugin();
         $requestedReport = $params->getArchiveOnlyReport();
         $segment = $params->getSegment();
@@ -192,7 +195,10 @@ class ArchiveSelector
                 continue;
                 // avoid creating any archive tables in the future
             }
-            $table = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($period->getDateStart());
+            $table = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($period->getDateStart(), \false);
+            if (empty($table)) {
+                continue;
+            }
             $monthToPeriods[$table][] = $period;
         }
         $db = Db::get();
@@ -279,9 +285,12 @@ class ArchiveSelector
             $date = Date::factory($yearMonth . '-01');
             $isNumeric = $archiveDataType === 'numeric';
             if ($isNumeric) {
-                $table = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($date);
+                $table = \Piwik\DataAccess\ArchiveTableCreator::getNumericTable($date, \false);
             } else {
-                $table = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($date);
+                $table = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($date, \false);
+            }
+            if (empty($table)) {
+                continue;
             }
             $ids = array_map('intval', $ids);
             $sql = sprintf($getValuesSql, $table, implode(',', $ids));
@@ -442,7 +451,10 @@ class ArchiveSelector
         // $yearMonth = "2022-11",
         foreach ($archiveIdsPerMonth as $yearMonth => $ids) {
             $date = Date::factory($yearMonth . '-01');
-            $table = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($date);
+            $table = \Piwik\DataAccess\ArchiveTableCreator::getBlobTable($date, \false);
+            if (empty($table)) {
+                continue;
+            }
             $ids = array_map('intval', $ids);
             $sql = sprintf($getValuesSql, $table, implode(',', $ids));
             $cursor = Db::get()->query($sql, $bind);
@@ -476,6 +488,7 @@ class ArchiveSelector
                     // $rawName = eg 'PluginName_ArchiveName'
                     $rawName = $chunk->getRecordNameWithoutChunkAppendix($row['name']);
                     foreach ($blobs as $subtableId => $blob) {
+                        unset($blobs[$subtableId]);
                         (yield array_merge($row, ['value' => $blob, 'name' => \Piwik\DataAccess\ArchiveSelector::appendIdSubtable($rawName, $subtableId)]));
                     }
                 } else {

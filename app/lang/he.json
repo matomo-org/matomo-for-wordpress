@@ -75,6 +75,7 @@
         "ColumnPageviewsDocumentation": "מספר הפעמים שביקרו בדף זה.",
         "ColumnPercentageVisits": "%% ביקורים",
         "ColumnRevenue": "רווח",
+        "ColumnSegment": "מקטע",
         "ColumnSumTimeOnSite": "סה\"כ זמן באתר",
         "ColumnSumVisitLength": "הזמן הכולל שהשקיעו המבקרים (שניות)",
         "ColumnTotalPageviews": "סך כל הצפיות בדפים",
@@ -631,6 +632,7 @@
         "MenuDiagnostic": "אבחון",
         "MenuGeneralSettings": "הגדרות כלליות",
         "MenuMeasurables": "מדידים",
+        "MenuSystem": "כללי",
         "OptOutForYourVisitors": "התחמקות מ-Matomo עבור גולשיך",
         "PiwikIsInstalledAt": "Matomo מותקן ב",
         "TrackAGoal": "עקיבה אחר יעד",
@@ -663,6 +665,8 @@
         "MainNavigation": "ניווט מרכזי",
         "Menu": "תפריט",
         "PeriodRange": "טווח",
+        "PresetDateToday": "היום",
+        "PresetDateYesterday": "אתמול",
         "SharePiwikShort": "Matomo! ניתוח רשת חינמי ופתוח. שליטה בנתונים של עצמך.",
         "ShareThis": "שתף את זה",
         "ShortcutCalendar": "לפתיחת לוח שנה (d מסמל תאריך (Date))",
@@ -2088,6 +2092,7 @@
         "Timezone": "אזור זמן"
     },
     "TagManager": {
+        "BingUETTagIdTitle": "מזהה",
         "CategoryClicks": "לחיצות",
         "CategoryDate": "תאריך",
         "CategoryEmail": "אימייל",

@@ -12,9 +12,6 @@ use Composer\Semver\VersionParser;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Plugins\Marketplace\Environment;
 use Piwik\Version;
-/**
- *
- */
 class Dependency
 {
     private $piwikVersion;

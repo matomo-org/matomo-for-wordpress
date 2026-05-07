@@ -11,7 +11,7 @@ namespace Piwik\Plugins\Login;
 use Piwik\Piwik;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
 /**
- * API for plugin Login
+ * Provides API methods for login-related administration tasks.
  *
  * @method static \Piwik\Plugins\Login\API getInstance()
  */
@@ -25,6 +25,11 @@ class API extends \Piwik\Plugin\API
     {
         $this->bruteForceDetection = $bruteForceDetection;
     }
+    /**
+     * Removes all currently blocked brute-force protection IP addresses.
+     *
+     * @return void
+     */
     public function unblockBruteForceIPs()
     {
         Piwik::checkUserHasSuperUserAccess();

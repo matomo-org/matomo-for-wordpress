@@ -30,9 +30,6 @@ class SecurityPolicy
     private $policies = array();
     private $cspEnabled;
     private $reportOnly;
-    /**
-     * Constructor.
-     */
     public function __construct(Config $config)
     {
         $this->policies['default-src'] = self::RULE_DEFAULT;

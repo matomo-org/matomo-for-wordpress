@@ -68,6 +68,7 @@ if (!function_exists('get_print_class')) { function get_print_class() { return \
 if (!function_exists('get_resource_id')) { function get_resource_id() { return \Matomo\Dependencies\get_resource_id(...func_get_args()); } }
 if (!function_exists('get_tooltip_attributes')) { function get_tooltip_attributes() { return \Matomo\Dependencies\get_tooltip_attributes(...func_get_args()); } }
 if (!function_exists('grapheme_extract')) { function grapheme_extract() { return \Matomo\Dependencies\grapheme_extract(...func_get_args()); } }
+if (!function_exists('grapheme_levenshtein')) { function grapheme_levenshtein() { return \Matomo\Dependencies\grapheme_levenshtein(...func_get_args()); } }
 if (!function_exists('grapheme_str_split')) { function grapheme_str_split() { return \Matomo\Dependencies\grapheme_str_split(...func_get_args()); } }
 if (!function_exists('grapheme_stripos')) { function grapheme_stripos() { return \Matomo\Dependencies\grapheme_stripos(...func_get_args()); } }
 if (!function_exists('grapheme_stristr')) { function grapheme_stristr() { return \Matomo\Dependencies\grapheme_stristr(...func_get_args()); } }

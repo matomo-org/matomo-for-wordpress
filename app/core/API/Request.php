@@ -133,8 +133,6 @@ class Request
         return $requestArray;
     }
     /**
-     * Constructor.
-     *
      * @param string|array $request Query string that defines the API call (must at least contain a **method** parameter),
      *                              eg, `'method=UserLanguage.getLanguage&idSite=1&date=yesterday&period=week&format=xml'`
      *                              If a request is not provided, then we use the values in the `$_GET` and `$_POST`
@@ -200,11 +198,11 @@ class Request
      * If `'original'` is supplied for the output format, the result is returned as a PHP
      * object.
      *
-     * @throws PluginDeactivatedException if the module plugin is not activated.
+     * @return DataTable|DataTable\Map|scalar|array|object|resource|null The data resulting from the API call.
      * @throws Exception if the requested API method cannot be called, if required parameters for the
      *                   API method are missing or if the API method throws an exception and the **format**
      *                   query parameter is **original**.
-     * @return DataTable|Map|string The data resulting from the API call.
+     * @throws PluginDeactivatedException if the module plugin is not activated.
      */
     public function process()
     {
@@ -362,7 +360,7 @@ $tokenToRestore, $hadSuperUserAccess)
     /**
      * Returns the current API method being executed, if the current request is an API request.
      *
-     * @param array $request  eg array('module' => 'API', 'method' => 'Test.getMethod')
+     * @param array|null $request  eg array('module' => 'API', 'method' => 'Test.getMethod')
      * @return string|null
      * @throws Exception
      */

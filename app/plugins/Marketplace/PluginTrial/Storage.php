@@ -30,7 +30,6 @@ class Storage
     }
     /**
      * Creates a trial request for the current user
-     *
      */
     public function setRequested(string $pluginDisplayName = '') : void
     {
@@ -39,14 +38,13 @@ class Storage
     }
     /**
      * Returns if a plugin was already requested
-     *
      */
     public function wasRequested() : bool
     {
         if (empty($this->storage)) {
             return \false;
         }
-        $expirationTime = (int) GeneralConfig::getConfigValue('plugin_trial_request_expiration_in_days');
+        $expirationTime = GeneralConfig::getIntegerConfigValue('plugin_trial_request_expiration_in_days', 0);
         if ($this->storage['requestTime'] < time() - $expirationTime * 24 * 3600) {
             $this->clearStorage();
             // remove outdated request
@@ -56,7 +54,6 @@ class Storage
     }
     /**
      * Dismisses the trial request for the current user
-     *
      */
     public function setNotificationDismissed() : void
     {
@@ -65,7 +62,6 @@ class Storage
     }
     /**
      * Returns the display name for the plugin stored when requesting the trial
-     *
      */
     public function getDisplayName() : string
     {
@@ -73,7 +69,6 @@ class Storage
     }
     /**
      * Returns if the current user has dismissed the trial request
-     *
      */
     public function isNotificationDismissed() : bool
     {
@@ -81,7 +76,6 @@ class Storage
     }
     /**
      * Removes the trial request from storage
-     *
      */
     public function clearStorage() : void
     {

@@ -19,9 +19,6 @@ use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\SegmentEditor\SegmentEditor;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\View;
-/**
- *
- */
 class Controller extends \Piwik\Plugin\Controller
 {
     public const DEFAULT_REPORT_TYPE = \Piwik\Plugins\ScheduledReports\ScheduledReports::EMAIL_TYPE;

@@ -34,8 +34,6 @@ class SetGetReferrerTypeSubtables extends DataTable\BaseFilter
     /** @var bool */
     private $expanded;
     /**
-     * Constructor.
-     *
      * @param DataTable $table The table to eventually filter.
      * @param int $idSite
      * @param string $period

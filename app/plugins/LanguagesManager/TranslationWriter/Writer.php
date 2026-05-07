@@ -241,7 +241,6 @@ class Writer
     }
     /**
      * Adds an validator to check before saving
-     *
      */
     public function addValidator(ValidateAbstract $validator)
     {

@@ -85,7 +85,6 @@ class UpdateCheck
     }
     /**
      * Returns whether the last update check was flagged as having failed or not.
-     *
      */
     public static function hasLastCheckFailed() : bool
     {

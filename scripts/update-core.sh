@@ -91,7 +91,6 @@ find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js
 rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
-rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
 rm -r $MATOMO_ROOT/plugins/Example*
 rm -r $MATOMO_ROOT/plugins/*/tests
@@ -219,6 +218,11 @@ sed -i -e 's/!\/node_modules\/@materializecss\/materialize/!\/node_modules\/@mat
 
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
+
+npm run matomo:console development:enable || echo -e "${RED}Failed to set development mode prior to rebuilding vue files.${NO_COLOR}"
+
+cd $MATOMO_ROOT && npm install && cd $SCRIPTPATH
+npm run matomo:console vue:build || echo -e "${RED}Failed to rebuild vue files.${NO_COLOR}"
 
 npm run matomo:console development:disable || echo -e "${RED}Failed to unset development mode prior to asset preparation.${NO_COLOR}"
 npm run matomo:console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"

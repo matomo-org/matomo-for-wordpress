@@ -447,7 +447,6 @@ abstract class Dimension
      * Configures metrics for this dimension.
      *
      * For certain dimension types, some metrics will be added automatically.
-     *
      */
     public function configureMetrics(\Piwik\Columns\MetricsList $metricsList, \Piwik\Columns\DimensionMetricFactory $dimensionMetricFactory)
     {

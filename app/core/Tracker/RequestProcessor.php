@@ -80,7 +80,6 @@ abstract class RequestProcessor
      *
      * Derived classes can use this method to manipulate a tracker request before the request
      * is handled. Plugins could change the URL, add custom variables, etc.
-     *
      */
     public function manipulateRequest(\Piwik\Tracker\Request $request)
     {
@@ -125,7 +124,6 @@ abstract class RequestProcessor
      * Only implement this method if you cannot use a Dimension for the same thing.
      *
      * Please note that the `onNewAction` hook in an action dimension is executed after this method.
-     *
      */
     public function onNewVisit(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
@@ -152,7 +150,6 @@ abstract class RequestProcessor
      * When this method is called, you can assume all request metadata have their final values. Also,
      * `$visitProperties->visitorInfo` will contain the properties of the visitor's current visit (in
      * other words, the values in the array were persisted to the DB before this method was called).
-     *
      */
     public function recordLogs(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {

@@ -109,7 +109,7 @@ if (!class_exists('Piwik\\Plugin')) {
          */
         private $cache;
         /**
-         * Constructor.
+         *
          *
          * @param string|bool $pluginName A plugin name to force. If not supplied, it is set
          *                                to the last part of the class name.
@@ -212,6 +212,7 @@ if (!class_exists('Piwik\\Plugin')) {
          *                                                      'before'   => true // execute before callbacks w/o ordering
          *                                                  )
          *                   )
+         * @phpstan-return array<string, string|array{function: string, after?: bool, before?: bool}>
          * @since 2.15.0
          */
         public function registerEvents()
@@ -392,7 +393,7 @@ if (!class_exists('Piwik\\Plugin')) {
         /**
          * Detect whether there are any missing dependencies.
          *
-         * @param null $piwikVersion Defaults to the current Piwik version
+         * @param string|null $piwikVersion Defaults to the current Piwik version
          * @return bool
          */
         public function hasMissingDependencies($piwikVersion = null)

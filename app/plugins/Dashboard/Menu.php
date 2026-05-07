@@ -13,8 +13,6 @@ use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
 use Piwik\Plugins\UsersManager\UserPreferences;
 use Piwik\Site;
-/**
- */
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureTopMenu(MenuTop $menu)

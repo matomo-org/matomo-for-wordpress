@@ -11,10 +11,12 @@ namespace Piwik\Plugins\MultiSites;
 use Piwik\API\DataTablePostProcessor;
 use Piwik\API\Request;
 use Piwik\API\ResponseBuilder;
+use Piwik\Columns\Dimension;
 use Piwik\NumberFormatter;
 use Piwik\DataTable;
 use Piwik\DataTable\Row\DataTableSummaryRow;
 use Piwik\Period;
+use Piwik\Plugins\PrivacyManager\DataRounding;
 use Piwik\Site;
 /**
  * Fetches and formats the response of `MultiSites.getAll` in a way that it can be used by the All Websites
@@ -26,6 +28,8 @@ class Dashboard
     private $sitesByGroup;
     /** @var int */
     private $numSites = 0;
+    /** @var bool */
+    private $isSegmented = \false;
     /**
      * Array of metrics that will be displayed and will be number formatted
      * @var array<string>
@@ -38,6 +42,7 @@ class Dashboard
             // so throw a proper exception instead of running into PHP errors
             throw new \Exception('Multiple periods are not supported');
         }
+        $this->isSegmented = !empty($segment);
         /** @var DataTable $sites */
         $sites = Request::processRequest('MultiSites.getAll', [
             'period' => $period,
@@ -88,14 +93,35 @@ class Dashboard
         $request['filter_offset'] = isset($request['filter_offset']) ? (int) $request['filter_offset'] : 0;
         $this->makeSitesFlatAndApplyGenericFilters($this->sitesByGroup, $request);
         $sites = $this->convertDataTableToArrayAndApplyQueuedFilters($this->sitesByGroup, $request);
+        if ($this->isSegmented) {
+            $sites = $this->roundReturnedSites($sites);
+        }
         $sites = $this->enrichValues($sites);
         return $sites;
     }
     public function getTotals() : array
     {
         $totals = ['nb_pageviews' => $this->sitesByGroup->getMetadata('total_nb_pageviews'), 'nb_visits' => $this->sitesByGroup->getMetadata('total_nb_visits'), 'hits' => $this->sitesByGroup->getMetadata('total_hits'), 'nb_actions' => $this->sitesByGroup->getMetadata('total_nb_actions'), 'revenue' => $this->sitesByGroup->getMetadata('total_revenue'), 'previous_nb_pageviews' => $this->sitesByGroup->getMetadata('previous_total_nb_pageviews'), 'previous_nb_visits' => $this->sitesByGroup->getMetadata('previous_total_nb_visits'), 'previous_hits' => $this->sitesByGroup->getMetadata('previous_total_hits'), 'previous_nb_actions' => $this->sitesByGroup->getMetadata('previous_total_nb_actions'), 'previous_revenue' => $this->sitesByGroup->getMetadata('previous_total_revenue'), 'ai_chatbots_requests' => $this->sitesByGroup->getMetadata('total_ai_chatbots_requests') ?? 0, 'previous_ai_chatbots_requests' => $this->sitesByGroup->getMetadata('previous_total_ai_chatbots_requests') ?? 0];
+        if ($this->isSegmented && DataRounding::isDataRoundingEnabledForAnySites($this->getReturnedSiteIds())) {
+            $totals = DataRounding::roundCountArrayValues($totals, $this->getDisplayedMetricSemanticTypes($totals));
+        }
         $this->formatMetrics($totals);
         return $totals;
+    }
+    /**
+     * @param array<string, mixed> $metrics
+     * @return array<string, string>
+     */
+    private function getDisplayedMetricSemanticTypes(array $metrics) : array
+    {
+        $metricTypes = [];
+        foreach (array_keys($metrics) as $metricName) {
+            if (!in_array($metricName, $this->displayedMetricColumns, \true)) {
+                continue;
+            }
+            $metricTypes[$metricName] = strpos($metricName, 'revenue') !== \false ? Dimension::TYPE_MONEY : Dimension::TYPE_NUMBER;
+        }
+        return $metricTypes;
     }
     private function formatMetrics(array &$metrics) : void
     {
@@ -273,5 +299,63 @@ class Dashboard
             $this->formatMetrics($site);
         }
         return $sites;
+    }
+    /**
+     * @param array<int, array<string, mixed>> $sites
+     * @return array<int, array<string, mixed>>
+     */
+    private function roundReturnedSites(array $sites) : array
+    {
+        $groupSiteIds = [];
+        foreach ($sites as $site) {
+            if (empty($site['group']) || empty($site['idsite']) || !is_numeric($site['idsite'])) {
+                continue;
+            }
+            $groupLabel = (string) $site['group'];
+            $groupSiteIds[$groupLabel][] = (int) $site['idsite'];
+        }
+        foreach ($sites as &$site) {
+            if (!is_array($site)) {
+                continue;
+            }
+            if (!empty($site['idsite']) && is_numeric($site['idsite'])) {
+                if (DataRounding::isDataRoundingEnabledForAnySites([(int) $site['idsite']])) {
+                    $site = DataRounding::roundCountArrayValues($site, $this->getDisplayedMetricSemanticTypes($site));
+                }
+                continue;
+            }
+            if (!empty($site['isGroup']) && !empty($site['label'])) {
+                $siteIds = $groupSiteIds[(string) $site['label']] ?? [];
+                if (DataRounding::isDataRoundingEnabledForAnySites($siteIds)) {
+                    $site = DataRounding::roundCountArrayValues($site, $this->getDisplayedMetricSemanticTypes($site));
+                }
+            }
+        }
+        return $sites;
+    }
+    /**
+     * @return int[]
+     */
+    private function getReturnedSiteIds() : array
+    {
+        return $this->collectSiteIdsRecursively($this->sitesByGroup);
+    }
+    /**
+     * @return int[]
+     */
+    private function collectSiteIdsRecursively(DataTable $table) : array
+    {
+        $siteIds = [];
+        foreach ($table->getRows() as $row) {
+            $siteId = $row->getMetadata('idsite');
+            if (is_numeric($siteId)) {
+                $siteIds[] = (int) $siteId;
+            }
+            $subtable = $row->getSubtable();
+            if ($subtable instanceof DataTable) {
+                $siteIds = array_merge($siteIds, $this->collectSiteIdsRecursively($subtable));
+            }
+        }
+        return array_values(array_unique($siteIds));
     }
 }

@@ -598,13 +598,17 @@ namespace {
             }
             if (isset($_SESSION)) {
                 $sessionBkp = $_SESSION;
-                $_SESSION = array('data' => \base64_encode(\serialize($_SESSION)));
+                $_SESSION = self::buildSessionData($_SESSION);
             }
             \session_write_close();
             self::$_writeClosed = \true;
             if (isset($sessionBkp)) {
                 $_SESSION = $sessionBkp;
             }
+        }
+        public static function buildSessionData(array $data) : array
+        {
+            return ['data' => \base64_encode(\serialize($data))];
         }
         /**
          * destroy() - This is used to destroy session data, and optionally, the session cookie itself

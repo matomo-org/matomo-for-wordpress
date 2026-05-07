@@ -10,8 +10,6 @@ namespace Piwik\Plugins\CoreConsole\Commands;
 
 use Piwik\Common;
 use Piwik\Plugin\Manager;
-/**
- */
 class GenerateTest extends \Piwik\Plugins\CoreConsole\Commands\GeneratePluginBase
 {
     protected function configure()

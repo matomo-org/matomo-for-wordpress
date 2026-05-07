@@ -9,16 +9,13 @@
 namespace Piwik\Plugins\Live;
 
 use Piwik\API\Request;
-use Piwik\Common;
-use Piwik\Config;
+use Piwik\Config\GeneralConfig;
 use Piwik\Piwik;
 use Piwik\DataTable;
 use Piwik\Plugins\Live\Exception\MaxExecutionTimeExceededException;
 use Piwik\Plugins\Live\Visualizations\VisitorLog;
 use Piwik\Url;
 use Piwik\View;
-/**
- */
 class Controller extends \Piwik\Plugin\Controller
 {
     public const SIMPLE_VISIT_COUNT_WIDGET_LAST_MINUTES_CONFIG_KEY = 'live_widget_visitor_count_last_minutes';
@@ -38,12 +35,8 @@ class Controller extends \Piwik\Plugin\Controller
         \Piwik\Plugins\Live\Live::checkIsVisitorLogEnabled($this->idSite);
         $view = new View('@Live/index');
         $view->idSite = $this->idSite;
-        $view->isWidgetized = Common::getRequestVar('widget', 0, 'int');
-        $view = $this->setCounters($view);
-        $view->liveRefreshAfterMs = (int) Config::getInstance()->General['live_widget_refresh_after_seconds'] * 1000;
-        $view->visitors = $this->getLastVisitsStart();
-        $view->initialTotalVisitors = $this->ajaxTotalVisitors();
-        $view->liveTokenAuth = Piwik::getCurrentUserTokenAuth();
+        $view->isWidgetized = \Piwik\Request::fromRequest()->getIntegerParameter('widget', 0);
+        $view->liveRefreshAfterMs = GeneralConfig::getIntegerConfigValue('live_widget_refresh_after_seconds', 0, $this->idSite) * 1000;
         return $this->render($view);
     }
     public function ajaxTotalVisitors()
@@ -168,9 +161,9 @@ class Controller extends \Piwik\Plugin\Controller
     {
         $this->checkSitePermission();
         Piwik::checkUserHasViewAccess($this->idSite);
-        $filterLimit = Common::getRequestVar('filter_offset', 0, 'int');
-        $startCounter = Common::getRequestVar('start_number', 0, 'int');
-        $limit = Config::getInstance()->General['live_visitor_profile_max_visits_to_aggregate'];
+        $filterLimit = \Piwik\Request::fromRequest()->getIntegerParameter('filter_offset', 0);
+        $startCounter = \Piwik\Request::fromRequest()->getIntegerParameter('start_number', 0);
+        $limit = GeneralConfig::getIntegerConfigValue('live_visitor_profile_max_visits_to_aggregate', 0, $this->idSite);
         if ($startCounter >= $limit) {
             return '';
             // do not return more visits than configured for profile

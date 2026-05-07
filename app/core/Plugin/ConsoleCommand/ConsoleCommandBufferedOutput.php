@@ -14,5 +14,4 @@ use Matomo\Dependencies\Symfony\Component\Console\Output\BufferedOutput;
  */
 class ConsoleCommandBufferedOutput extends BufferedOutput
 {
-    //
 }

@@ -20,6 +20,7 @@ use Piwik\Plugins\Login\Emails\PasswordResetEmail;
 use Piwik\Plugins\Login\Emails\PasswordResetCancelEmail;
 use Piwik\Plugins\UsersManager\API as UsersManagerAPI;
 use Piwik\Plugins\UsersManager\Model;
+use Piwik\Plugins\UsersManager\UserLoginHelper;
 use Piwik\Plugins\UsersManager\UsersManager;
 use Piwik\Plugins\UsersManager\UserUpdater;
 use Piwik\SettingsPiwik;
@@ -106,8 +107,6 @@ class PasswordResetter
      */
     private $emailFromAddress;
     /**
-     * Constructor.
-     *
      * @param UsersManagerAPI|null $usersManagerApi
      * @param string|null $confirmPasswordModule
      * @param string|null $confirmPasswordAction
@@ -185,7 +184,7 @@ class PasswordResetter
     {
         $this->checkNewPassword($newPassword);
         // 'anonymous' has no password and cannot be reset
-        if ($loginOrEmail === 'anonymous') {
+        if (strtolower($loginOrEmail) === 'anonymous') {
             throw new Exception(Piwik::translate('Login_InvalidUsernameEmail'));
         }
         // get the user's login
@@ -396,7 +395,7 @@ $newPassword)
      * Derived classes can override this method to provide custom user querying logic.
      *
      * @param string $loginOrMail user login or email address
-     * @return array `array("login" => '...', "email" => '...', "password" => '...')` or null, if user not found.
+     * @return array<string, mixed>|null `array("login" => '...', "email" => '...', "password" => '...')` or null, if user not found.
      */
     protected function getUserInformation($loginOrMail)
     {
@@ -404,13 +403,7 @@ $newPassword)
         if ($userModel->isPendingUser($loginOrMail)) {
             return null;
         }
-        $user = null;
-        if ($userModel->userExists($loginOrMail)) {
-            $user = $userModel->getUser($loginOrMail);
-        } elseif ($userModel->userEmailExists($loginOrMail)) {
-            $user = $userModel->getUserByEmail($loginOrMail);
-        }
-        return $user;
+        return UserLoginHelper::findUserByLoginOrEmail($loginOrMail);
     }
     /**
      * Checks the password hash that was retrieved from the Option table. Used as a sanity check

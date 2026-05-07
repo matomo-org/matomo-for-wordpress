@@ -166,7 +166,6 @@ abstract class LocationProvider
     }
     /**
      * Returns a message that should be shown as diagnostics warning if provider is used
-     *
      */
     public function getUsageWarning() : ?string
     {
@@ -323,7 +322,7 @@ abstract class LocationProvider
      * Sets the provider to use when tracking.
      *
      * @param string $providerId The ID of the provider to use.
-     * @return \Piwik\Plugins\UserCountry\LocationProvider The new current provider.
+     * @return LocationProvider The new current provider.
      * @throws Exception If the provider ID is invalid.
      */
     public static function setCurrentProvider($providerId)
@@ -344,7 +343,7 @@ abstract class LocationProvider
      */
     public static function getDefaultProviderId()
     {
-        if (!!TrackerConfig::getConfigValue('enable_default_location_provider')) {
+        if (TrackerConfig::getBoolConfigValue('enable_default_location_provider', \false)) {
             return DefaultProvider::ID;
         }
         return DisabledProvider::ID;
@@ -483,7 +482,6 @@ abstract class LocationProvider
     /**
      * Returns true if the location provider can be used for security checks based
      * on location, such as determining the current country where the user logs in from.
-     *
      */
     public function canBeUsedForLocationBasedSecurityChecks() : bool
     {

@@ -44,7 +44,6 @@ namespace {
         const INSERT = 4;
         /**
          * Updating existing information in the database, such as SQL's UPDATE.
-         *
          */
         const UPDATE = 8;
         /**

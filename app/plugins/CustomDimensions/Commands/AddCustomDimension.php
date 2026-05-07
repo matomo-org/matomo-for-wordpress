@@ -12,8 +12,6 @@ use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\CustomDimensions\CustomDimensions;
 use Piwik\Plugins\CustomDimensions\Dao\LogTable;
 use Piwik\Tracker\Cache;
-/**
- */
 class AddCustomDimension extends ConsoleCommand
 {
     protected function configure()

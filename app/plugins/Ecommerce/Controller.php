@@ -69,19 +69,36 @@ class Controller extends \Piwik\Plugins\Goals\Controller
     protected function getMetricsForGoal($idGoal, $dataRow = null)
     {
         $request = new Request(['method' => 'Goals.get', 'format' => 'original', 'format_metrics' => 0, 'idGoal' => $idGoal]);
+        /** @var DataTable $datatable */
         $datatable = $request->process();
         $dataRow = $datatable->getFirstRow();
         $return = parent::getMetricsForGoal($idGoal, $dataRow);
-        // Previous period data for evolution
-        list($lastPeriodDate, $ignore) = Range::getLastDate();
-        if ($lastPeriodDate !== \false) {
-            $date = Common::getRequestVar('date');
+        $currentDate = Common::getRequestVar('date');
+        $currentPeriod = Piwik::getPeriod();
+        [$comparisonDate, $comparisonPeriod] = $this->getComparisonPeriodAndDate($currentDate, $currentPeriod);
+        if ($comparisonDate !== \false) {
             /** @var DataTable $previousData */
-            $previousData = Request::processRequest('Goals.get', ['date' => $lastPeriodDate, 'format_metrics' => 0, 'idGoal' => $idGoal]);
+            $previousData = Request::processRequest('Goals.get', ['period' => $comparisonPeriod, 'date' => $comparisonDate, 'format_metrics' => 0, 'idGoal' => $idGoal]);
             $previousDataRow = $previousData->getFirstRow();
-            $return = $this->addSparklineEvolutionValues($return, $idGoal, $date, $lastPeriodDate, $dataRow, $previousDataRow);
+            $return = $this->addSparklineEvolutionValues($return, $idGoal, $currentDate, $currentPeriod, $comparisonDate, $comparisonPeriod, $dataRow, $previousDataRow);
         }
         return $return;
+    }
+    /**
+     * Returns the explicitly selected comparison period/date when present,
+     * otherwise falls back to the previous period for backwards compatibility.
+     *
+     * @return array{0: string|false, 1: string}
+     */
+    private function getComparisonPeriodAndDate(string $currentDate, string $currentPeriod) : array
+    {
+        $compareDates = Common::getRequestVar('compareDates', [], 'array');
+        $comparePeriods = Common::getRequestVar('comparePeriods', [], 'array');
+        if (!empty($compareDates[0]) && !empty($comparePeriods[0])) {
+            return [$compareDates[0], $comparePeriods[0]];
+        }
+        [$lastPeriodDate, $ignore] = Range::getLastDate($currentDate, $currentPeriod);
+        return [$lastPeriodDate, $currentPeriod];
     }
     /**
      * Add sparkline evolution figures to the metrics in the supplied array
@@ -91,7 +108,7 @@ class Controller extends \Piwik\Plugins\Goals\Controller
      *
      * @return array
      */
-    private function addSparklineEvolutionValues(array $return, $idGoal, string $date, string $lastPeriodDate, DataTable\Row $currentDataRow, DataTable\Row $previousDataRow) : array
+    private function addSparklineEvolutionValues(array $return, $idGoal, string $date, string $period, string $comparisonDate, string $comparisonPeriod, DataTable\Row $currentDataRow, DataTable\Row $previousDataRow) : array
     {
         $metrics = ['nb_conversions' => Piwik::translate('General_EcommerceOrders'), 'nb_visits_converted' => Piwik::translate('General_NVisits'), 'conversion_rate' => Piwik::translate('Goals_ConversionRate', Piwik::translate('General_EcommerceOrders')), 'revenue' => Piwik::translate('General_TotalRevenue')];
         if ($idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
@@ -104,10 +121,10 @@ class Controller extends \Piwik\Plugins\Goals\Controller
             $metrics['revenue'] = Piwik::translate('Ecommerce_RevenueLeftInCart', Piwik::translate('General_ColumnRevenue'));
             unset($metrics['nb_visits_converted']);
         }
-        $currentPeriod = PeriodFactory::build(Piwik::getPeriod(), $date);
+        $currentPeriod = PeriodFactory::build($period, $date);
         $currentPrettyDate = $currentPeriod instanceof Month ? $currentPeriod->getLocalizedLongString() : $currentPeriod->getPrettyString();
-        $lastPeriod = PeriodFactory::build(Piwik::getPeriod(), $lastPeriodDate);
-        $lastPrettyDate = $currentPeriod instanceof Month ? $lastPeriod->getLocalizedLongString() : $lastPeriod->getPrettyString();
+        $lastPeriod = PeriodFactory::build($comparisonPeriod, $comparisonDate);
+        $lastPrettyDate = $lastPeriod instanceof Month ? $lastPeriod->getLocalizedLongString() : $lastPeriod->getPrettyString();
         $formatter = new Metrics\Formatter();
         foreach ($return as $columnName => $value) {
             if (array_key_exists($columnName, $metrics) && array_key_exists($columnName, $return)) {

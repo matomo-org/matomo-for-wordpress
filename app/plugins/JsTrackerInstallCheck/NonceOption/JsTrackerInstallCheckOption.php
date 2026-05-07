@@ -102,7 +102,6 @@ class JsTrackerInstallCheckOption
     }
     /**
      * Create a new nonce for the site/URL combination. This checks if a
-     *
      */
     public function createNewNonce(int $idSite, string $url) : string
     {
@@ -141,7 +140,6 @@ class JsTrackerInstallCheckOption
     /**
      * Update the time associated with a specific nonce. This is mainly for when a nonce already exists for the
      * site and requested URL. This allows us to bump the time so that we can reuse the nonce for the second test.
-     *
      */
     protected function updateNonceTime(int $idSite, string $nonce, int $time) : bool
     {

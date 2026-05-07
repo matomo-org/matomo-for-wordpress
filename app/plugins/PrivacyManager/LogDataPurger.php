@@ -38,9 +38,6 @@ class LogDataPurger
      * @var RawLogDao
      */
     private $rawLogDao;
-    /**
-     * Constructor.
-     */
     public function __construct(LogDeleter $logDeleter, RawLogDao $rawLogDao)
     {
         $this->logDeleter = $logDeleter;

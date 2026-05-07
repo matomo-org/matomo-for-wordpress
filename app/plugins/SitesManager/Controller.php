@@ -23,9 +23,6 @@ use Piwik\Session;
 use Piwik\SettingsPiwik;
 use Piwik\Url;
 use Piwik\View;
-/**
- *
- */
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     /** @var SiteContentDetector */

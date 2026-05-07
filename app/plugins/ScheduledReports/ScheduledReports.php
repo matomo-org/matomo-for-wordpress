@@ -24,9 +24,6 @@ use Piwik\Scheduler\Schedule\Schedule;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker;
 use Piwik\View;
-/**
- *
- */
 class ScheduledReports extends \Piwik\Plugin
 {
     public const DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS = 1;
@@ -108,7 +105,7 @@ class ScheduledReports extends \Piwik\Plugin
         $translationKeys[] = 'ScheduledReports_ReportIncludeNWebsites';
         $translationKeys[] = 'SegmentEditor_LoadingSegmentedDataMayTakeSomeTime';
         $translationKeys[] = 'General_Download';
-        $translationKeys[] = 'ScheduledReports_Segment_HelpScheduledReport';
+        $translationKeys[] = 'ScheduledReports_HelpSegmentManagement';
         $translationKeys[] = 'SegmentEditor_AddNewSegment';
         $translationKeys[] = 'ScheduledReports_SentToMe';
         $translationKeys[] = 'ScheduledReports_AlsoSendReportToTheseEmails';
@@ -123,6 +120,15 @@ class ScheduledReports extends \Piwik\Plugin
         $translationKeys[] = "ScheduledReports_ReportWillBeSentAt";
         $translationKeys[] = "ScheduledReports_ReportHourEqualsUtc";
         $translationKeys[] = "ScheduledReports_NoteDeliveryTime";
+        $translationKeys[] = 'ScheduledReports_WidgetsNotMappedToReports';
+        $translationKeys[] = "ScheduledReports_ExportDashboardTitle";
+        $translationKeys[] = "ScheduledReports_ExportDashboardPrepare";
+        $translationKeys[] = "ScheduledReports_ExportDashboardWidgetsConvertedAutomatically";
+        $translationKeys[] = "ScheduledReports_ExportDashboardEmailEnabledByDefault";
+        $translationKeys[] = "ScheduledReports_ExportDashboardDownload";
+        $translationKeys[] = "ScheduledReports_ExportDashboardReportDescription";
+        $translationKeys[] = "ScheduledReports_ExportDashboardInvalidDashboard";
+        $translationKeys[] = "General_Never";
     }
     /**
      * Delete reports for the website
