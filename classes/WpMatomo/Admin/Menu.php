@@ -68,7 +68,7 @@ class Menu {
 	public function hide_non_matomo_notifications() {
 		// only hide for matomo- pages
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$page = isset( $_REQUEST['page'] ) ? wp_unslash( $_REQUEST['page'] ) : null;
+		$page = isset( $_REQUEST['page'] ) ? wp_unslash( $_REQUEST['page'] ) : '';
 		if ( strpos( $page, 'matomo-' ) !== 0 ) {
 			return;
 		}
