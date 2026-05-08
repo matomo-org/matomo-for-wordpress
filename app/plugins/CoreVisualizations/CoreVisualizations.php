@@ -32,7 +32,7 @@ class CoreVisualizations extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SeriesPicker/SeriesPicker.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SingleMetricView/SingleMetricView.less";
         $stylesheets[] = "plugins/CoreVisualizations/stylesheets/dataTableVisualizations.less";
-        $stylesheets[] = "plugins/CoreVisualizations/stylesheets/jqplot.css";
+        $stylesheets[] = "plugins/CoreVisualizations/stylesheets/jqplot.less";
     }
     public function getJsFiles(&$jsFiles)
     {

@@ -25,7 +25,7 @@ class DashboardPage extends MatomoReportingPage {
   }
 
   async waitForDashboard() {
-    await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed({ timeout: 60000 });
+    await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed({ timeout: 120000 });
     await browser.waitUntil(async () => {
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
       const loadedWidgetCount = (await $$('#dashboardWidgetsArea .widgetContent > *:first-child:not(.widgetLoading)')).length;

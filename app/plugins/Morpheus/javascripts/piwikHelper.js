@@ -281,8 +281,8 @@ window.piwikHelper = {
         // template that references the root component and wraps the vue-entry component's html.
         // this allows using slots in twig.
         var app = createVueApp({
-          name: componentName+'Entry',
-          template: '<root ' + paramsStr + '>' + this.innerHTML.replace('{{', '{&lbrace;') + '</root>',
+          name: entry,
+          template: '<root ' + paramsStr + '>' + this.innerHTML.replaceAll('{{', '{&lbrace;') + '</root>',
           data: function () {
             return componentParams;
           },
@@ -505,6 +505,11 @@ window.piwikHelper = {
             // if given, the modal will be shown larger than usual and almost consume the full width.
             $content.addClass('modal-extra-wide');
             delete options.extraWide;
+        }
+
+        // add custom css classes to dialog
+        if (options && options.classes) {
+          $content.addClass(options.classes);
         }
 
         if (options && !options.onOpenEnd) {

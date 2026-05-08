@@ -333,7 +333,7 @@ class Less_Tree_Ruleset extends Less_Tree
         $rulesetNodes = [];
         foreach ($this->rules as $rule) {
             $class = \get_class($rule);
-            if ($class === 'Less_Tree_Media' || $class === 'Less_Tree_Directive' || $this->root && $class === 'Less_Tree_Comment' || $rule instanceof Less_Tree_Ruleset && $rule->rules) {
+            if ($class === 'Matomo\Dependencies\Less_Tree_Media' || $class === 'Matomo\Dependencies\Less_Tree_Directive' || $this->root && $class === 'Matomo\Dependencies\Less_Tree_Comment' || $rule instanceof Less_Tree_Ruleset && $rule->rules) {
                 $rulesetNodes[] = $rule;
             } else {
                 $ruleNodes[] = $rule;

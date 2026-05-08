@@ -8,7 +8,6 @@
  */
 namespace Piwik\Plugins\UsersManager;
 
-use Piwik\Auth\Password;
 use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
 use Piwik\Config\GeneralConfig;
@@ -38,6 +37,25 @@ use Piwik\Validators\NotEmpty;
  * or you can list all users and websites for a given permission via "getUsersSitesFromAccess". Permissions are set and updated
  * via the method "setUserAccess".
  * See also the documentation about <a href='https://matomo.org/docs/manage-users/' rel='noreferrer' target='_blank'>Managing Users</a> in Piwik.
+ *
+ * @phpstan-type UserRow array{
+ *     login: string,
+ *     password: string,
+ *     email: string,
+ *     twofactor_secret: string,
+ *     superuser_access: int|string,
+ *     date_registered: string|null,
+ *     ts_password_modified: string|null,
+ *     idchange_last_viewed: int|string|null,
+ *     invited_by: string|null,
+ *     invite_token: string|null,
+ *     invite_link_token: string|null,
+ *     invite_expired_at: string|null,
+ *     invite_accept_at: string|null,
+ *     ts_changes_shown: string|null,
+ *     ts_last_seen: string|null,
+ *     ts_inactivity_notified: string|null
+ * }
  */
 class Model
 {
@@ -46,13 +64,8 @@ class Model
     private static $rawPrefix = 'user';
     private $userTable;
     private $tokenTable;
-    /**
-     * @var Password
-     */
-    private $passwordHelper;
     public function __construct()
     {
-        $this->passwordHelper = new Password();
         $this->userTable = Common::prefixTable(self::$rawPrefix);
         $this->tokenTable = Common::prefixTable('user_token_auth');
     }
@@ -61,6 +74,7 @@ class Model
      *
      * @param string[] $userLogins List of users to select. If empty, will return all users
      * @return array the list of all the users
+     * @phpstan-return list<UserRow>
      */
     public function getUsers(array $userLogins)
     {
@@ -191,6 +205,11 @@ class Model
         $sites = array_column($sites, 'idsite');
         return $sites;
     }
+    /**
+     * @param string $userLogin
+     * @return array
+     * @phpstan-return UserRow|array{}
+     */
     public function getUser($userLogin) : array
     {
         $db = $this->getDb();
@@ -332,6 +351,11 @@ $tokenAuth)
         $db = $this->getDb();
         return $db->query("DELETE FROM " . $this->tokenTable . " WHERE `date_expired` is not null and date_expired < ?", $expiredSince);
     }
+    /**
+     * @param string $expiredSince
+     * @return array
+     * @phpstan-return list<UserRow>
+     */
     public function getExpiredInvites($expiredSince)
     {
         $db = $this->getDb();
@@ -409,11 +433,21 @@ $tokenAuth, $dateLastUsed)
         $db = $this->getDb();
         $db->query(sprintf('UPDATE `%s` SET %s WHERE `idusertokenauth` = ?', $this->tokenTable, implode(', ', $set)), $bind);
     }
+    /**
+     * @param string $userEmail
+     * @return array
+     * @phpstan-return UserRow|array{}
+     */
     public function getUserByEmail($userEmail)
     {
         $db = $this->getDb();
         return $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE email = ?", $userEmail);
     }
+    /**
+     * @param string $tokenAuth
+     * @return array|null
+     * @phpstan-return UserRow|null
+     */
     public function getUserByInviteToken(
 #[\SensitiveParameter]
 $tokenAuth)
@@ -423,22 +457,23 @@ $tokenAuth)
             $db = $this->getDb();
             return $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE `invite_token` = ? or `invite_link_token` = ?", [$token, $token]);
         }
+        return null;
     }
     /**
      * Get an array of user data using the supplied token
      *
      * @return array|null
-     * @throws \Exception
+     * @phpstan-return UserRow|null
      */
     public function getUserByTokenAuth(
 #[\SensitiveParameter]
-?string $tokenAuth) : ?array
+?string $tokenAuth, bool $doNotCheckSecurity = \false) : ?array
     {
         if ($tokenAuth === 'anonymous') {
             $row = $this->getUser('anonymous');
             return !empty($row) ? $row : null;
         }
-        $isTokenProvidedSecurely = StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely();
+        $isTokenProvidedSecurely = $doNotCheckSecurity || StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely();
         $token = $this->getTokenByTokenAuthIfNotExpired($tokenAuth, $isTokenProvidedSecurely);
         if (!empty($token)) {
             $db = $this->getDb();

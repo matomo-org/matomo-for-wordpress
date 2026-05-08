@@ -92,7 +92,7 @@ class DefaultProvider extends LocationProvider
      */
     public function isAvailable()
     {
-        return !!TrackerConfig::getConfigValue('enable_default_location_provider');
+        return TrackerConfig::getBoolConfigValue('enable_default_location_provider', \false);
     }
     /**
      * Returns whether this location provider is visible.
@@ -101,7 +101,7 @@ class DefaultProvider extends LocationProvider
      */
     public function isVisible()
     {
-        return !!TrackerConfig::getConfigValue('enable_default_location_provider');
+        return TrackerConfig::getBoolConfigValue('enable_default_location_provider', \false);
     }
     /**
      * Returns whether this location provider is working correctly.

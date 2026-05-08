@@ -22,10 +22,12 @@ use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\ControllerAdmin;
+use Piwik\Plugin\ThemeStyles;
 use Piwik\Plugins\LanguagesManager\API as APILanguagesManager;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\Login\PasswordVerifier;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
+use Piwik\Settings\Storage\UserScopedSettingsAccessManager;
 use Piwik\SettingsPiwik;
 use Piwik\Site;
 use Piwik\Tracker\IgnoreCookie;
@@ -181,7 +183,14 @@ class Controller extends ControllerAdmin
         $newsletterSignupOptionKey = \Piwik\Plugins\UsersManager\NewsletterSignup::NEWSLETTER_SIGNUP_OPTION . $userLogin;
         $view->showNewsletterSignup = Option::get($newsletterSignupOptionKey) === \false && SettingsPiwik::isInternetEnabled();
         $userPreferences = new \Piwik\Plugins\UsersManager\UserPreferences();
+        $view->themeMode = $userPreferences->getThemeMode();
+        $view->themeModeOptions = array(array('key' => ThemeStyles::LIGHT_MODE, 'value' => Piwik::translate('UsersManager_ThemeModeLightDefault')), array('key' => ThemeStyles::DARK_MODE, 'value' => Piwik::translate('UsersManager_ThemeModeDark')), array('key' => ThemeStyles::AUTO_MODE, 'value' => Piwik::translate('UsersManager_ThemeModeMatchBrowser')));
+        $storedDefaultReport = $this->getStoredDefaultReportForUser($userLogin);
         $defaultReport = $userPreferences->getDefaultReport();
+        if (is_numeric($storedDefaultReport) && $defaultReport === \false) {
+            $defaultReport = $userPreferences->getDefaultWebsiteId();
+            $this->persistDefaultReportForUser($userLogin, $defaultReport);
+        }
         if ($defaultReport === \false) {
             $defaultReport = $userPreferences->getDefaultWebsiteId();
         }
@@ -217,6 +226,25 @@ class Controller extends ControllerAdmin
         $this->setBasicVariablesView($view);
         $view->timeFormats = array('1' => Piwik::translate('General_12HourClock'), '0' => Piwik::translate('General_24HourClock'));
         return $view->render();
+    }
+    /**
+     * @return false|int|string
+     */
+    private function getStoredDefaultReportForUser(string $userLogin)
+    {
+        return StaticContainer::get(UserScopedSettingsAccessManager::class)->get('UsersManager', $userLogin, APIUsersManager::PREFERENCE_DEFAULT_REPORT, \false);
+    }
+    /**
+     * @param false|int $defaultReport
+     */
+    private function persistDefaultReportForUser(string $userLogin, $defaultReport) : void
+    {
+        $store = StaticContainer::get(UserScopedSettingsAccessManager::class);
+        if ($defaultReport === \false) {
+            $store->delete('UsersManager', $userLogin, APIUsersManager::PREFERENCE_DEFAULT_REPORT);
+            return;
+        }
+        $store->set('UsersManager', $userLogin, APIUsersManager::PREFERENCE_DEFAULT_REPORT, $defaultReport);
     }
     /**
      * The "User Security" admin UI screen view
@@ -312,7 +340,7 @@ class Controller extends ControllerAdmin
             return $this->renderTemplate('addNewTokenSuccess', ['generatedToken' => $generatedToken]);
         }
         $defaultExpireDays = GeneralConfig::getConfigValue('auth_token_default_expiration_days');
-        return $this->renderTemplate('addNewToken', ['nonce' => Nonce::getNonce(self::NONCE_ADD_AUTH_TOKEN), 'noDescription' => $postRequestHasData && $noDescription, 'invalidExpireDate' => $postRequestHasData && $invalidExpireDate, 'forceSecureOnly' => (bool) GeneralConfig::getConfigValue('only_allow_secure_auth_tokens'), 'initialExpireDate' => $today->addDay($defaultExpireDays)->toString(), 'defaultExpirationDays' => $defaultExpireDays, 'expirationReminderDays' => GeneralConfig::getConfigValue('auth_token_expiration_notification_days')]);
+        return $this->renderTemplate('addNewToken', ['nonce' => Nonce::getNonce(self::NONCE_ADD_AUTH_TOKEN), 'noDescription' => $postRequestHasData && $noDescription, 'invalidExpireDate' => $postRequestHasData && $invalidExpireDate, 'forceSecureOnly' => GeneralConfig::getBoolConfigValue('only_allow_secure_auth_tokens', \false), 'initialExpireDate' => $today->addDay($defaultExpireDays)->toString(), 'defaultExpirationDays' => $defaultExpireDays, 'expirationReminderDays' => GeneralConfig::getConfigValue('auth_token_expiration_notification_days')]);
     }
     /**
      * The "Anonymous Settings" admin UI screen view
@@ -414,6 +442,7 @@ class Controller extends ControllerAdmin
         $response = new ResponseBuilder(Common::getRequestVar('format'));
         try {
             $this->checkTokenInUrl();
+            $themeMode = $this->getValidatedThemeMode(Common::getRequestVar('themeMode'));
             $defaultReport = Common::getRequestVar('defaultReport');
             $defaultDate = Common::getRequestVar('defaultDate');
             $language = Common::getRequestVar('language');
@@ -424,6 +453,10 @@ class Controller extends ControllerAdmin
             LanguagesManager::setLanguageForSession($language);
             Request::processRequest('LanguagesManager.setLanguageForUser', ['login' => $userLogin, 'languageCode' => $language]);
             Request::processRequest('LanguagesManager.set12HourClockForUser', ['login' => $userLogin, 'use12HourClock' => $timeFormat]);
+            $currentThemeMode = (new \Piwik\Plugins\UsersManager\UserPreferences())->getThemeMode();
+            if ($currentThemeMode !== $themeMode) {
+                APIUsersManager::getInstance()->setUserPreference($userLogin, APIUsersManager::PREFERENCE_THEME_MODE, $themeMode);
+            }
             APIUsersManager::getInstance()->setUserPreference($userLogin, APIUsersManager::PREFERENCE_DEFAULT_REPORT, $defaultReport);
             APIUsersManager::getInstance()->setUserPreference($userLogin, APIUsersManager::PREFERENCE_DEFAULT_REPORT_DATE, $defaultDate);
             $toReturn = $response->getResponse();
@@ -431,6 +464,14 @@ class Controller extends ControllerAdmin
             $toReturn = $response->getResponseException($e);
         }
         return $toReturn;
+    }
+    private function getValidatedThemeMode(string $themeMode) : string
+    {
+        $allowedThemeModes = [ThemeStyles::AUTO_MODE, ThemeStyles::LIGHT_MODE, ThemeStyles::DARK_MODE];
+        if (!in_array($themeMode, $allowedThemeModes, \true)) {
+            throw new Exception('Invalid theme mode');
+        }
+        return $themeMode;
     }
     /**
      * Records settings from the "User Settings" page

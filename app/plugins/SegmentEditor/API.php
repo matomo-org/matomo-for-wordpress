@@ -511,12 +511,12 @@ class API extends \Piwik\Plugin\API
     private function getEvolutionIcon(string $direction) : string
     {
         if ($direction === 'positive') {
-            return 'plugins/MultiSites/images/arrow_up.png';
+            return 'plugins/MultiSites/images/arrow_up.svg';
         }
         if ($direction === 'negative') {
-            return 'plugins/MultiSites/images/arrow_down.png';
+            return 'plugins/MultiSites/images/arrow_down.svg';
         }
-        return 'plugins/MultiSites/images/stop.png';
+        return 'plugins/MultiSites/images/stop.svg';
     }
     /**
      * Throw an exception if the segment is not pre-processed.

@@ -304,11 +304,11 @@ class Tracker
     private static function isDebugEnabled()
     {
         try {
-            $debug = (bool) TrackerConfig::getConfigValue('debug');
+            $debug = TrackerConfig::getBoolConfigValue('debug', \false);
             if ($debug) {
                 return \true;
             }
-            $debugOnDemand = (bool) TrackerConfig::getConfigValue('debug_on_demand');
+            $debugOnDemand = TrackerConfig::getBoolConfigValue('debug_on_demand', \false);
             if ($debugOnDemand) {
                 return (bool) \Piwik\Common::getRequestVar('debug', \false);
             }

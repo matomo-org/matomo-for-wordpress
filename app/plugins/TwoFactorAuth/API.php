@@ -9,6 +9,11 @@
 namespace Piwik\Plugins\TwoFactorAuth;
 
 use Piwik\Piwik;
+/**
+ * Provides API methods for managing two-factor authentication.
+ *
+ * @method static \Piwik\Plugins\TwoFactorAuth\API getInstance()
+ */
 class API extends \Piwik\Plugin\API
 {
     /**
@@ -19,9 +24,16 @@ class API extends \Piwik\Plugin\API
     {
         $this->twoFa = $twoFa;
     }
-    public function resetTwoFactorAuth($userLogin,
+    /**
+     * Disables two-factor authentication for the specified user.
+     *
+     * @param string $userLogin The login of the user whose two-factor authentication should be reset.
+     * @param string $passwordConfirmation The current superuser's password confirmation.
+     * @return void
+     */
+    public function resetTwoFactorAuth(string $userLogin,
 #[\SensitiveParameter]
-$passwordConfirmation = '')
+string $passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

@@ -15,21 +15,39 @@ use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Piwik;
+use Piwik\Plugin\ProcessedMetric;
 use Piwik\Plugins\Actions\ArchivingHelper;
 use Piwik\Plugins\Referrers\Columns\Metrics\VisitorsFromReferrerPercent;
 use Piwik\Plugins\Referrers\DataTable\Filter\GroupDifferentSocialWritings;
 use Piwik\Site;
 use Piwik\Tracker\Action;
 /**
- * The Referrers API lets you access reports about Websites, Search engines, Keywords, Campaigns used to access your website.
+ * The Referrers API lets you access reports about websites, search engines, keywords, social networks,
+ * AI assistants, and campaigns used to access your website.
  *
  * For example, "getKeywords" returns all search engine keywords (with <a href='https://developer.matomo.org/api-reference/reporting-api#api-response-metric-definitions' rel='noreferrer' target='_blank'>general analytics metrics</a> for each keyword), "getWebsites" returns referrer websites (along with the full Referrer URL if the parameter &expanded=1 is set).
  * "getReferrerType" returns the Referrer overview report. "getCampaigns" returns the list of all campaigns (and all campaign keywords if the parameter &expanded=1 is set).
+ * "getSocials" returns social network referrers, and "getAIAssistants" returns AI assistant referrers.
  *
  * @method static \Piwik\Plugins\Referrers\API getInstance()
  */
 class API extends \Piwik\Plugin\API
 {
+    /**
+     * Returns the referrer overview report with distinct referrer counts and percentage metrics.
+     *
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param string|string[]|false $columns Specific columns to include, or `false` to return all columns.
+     * @return DataTable Referrer overview rows with summary counts and processed percentage metrics.
+     */
     public function get($idSite, string $period, string $date, ?string $segment = null, $columns = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -40,6 +58,7 @@ class API extends \Piwik\Plugin\API
         $this->mergeNumericArchives($dataTable, $numericArchives);
         $totalVisits = array_sum($dataTableReferrersType->getColumn(Metrics::INDEX_NB_VISITS));
         $dataTable->filter(function (DataTable $table) use($totalVisits) {
+            /** @var ProcessedMetric[] $processedMetrics */
             $processedMetrics = $table->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME) ?: [];
             $percentColumns = ['Referrers_visitorsFromDirectEntry', 'Referrers_visitorsFromSearchEngines', 'Referrers_visitorsFromAIAssistants', 'Referrers_visitorsFromCampaigns', 'Referrers_visitorsFromSocialNetworks', 'Referrers_visitorsFromWebsites'];
             foreach ($percentColumns as $column) {
@@ -54,7 +73,7 @@ class API extends \Piwik\Plugin\API
         return $dataTable;
     }
     /**
-     * @param int|string $idSite
+     * @param int|string|int[] $idSite
      * @return DataTable|DataTable\Map
      */
     protected function getDataTable(string $name, $idSite, string $period, string $date, ?string $segment, bool $expanded = \false, ?int $idSubtable = null)
@@ -65,21 +84,22 @@ class API extends \Piwik\Plugin\API
      * Returns a report describing visit information for each possible referrer type. The
      * result is a datatable whose subtables are the reports for each parent row's referrer type.
      *
-     * The subtable reports are: 'getKeywords' (for search engine referrer type), 'getWebsites',
-     * and 'getCampaigns'.
+     * The subtable reports include keywords, social networks, AI assistants, websites, and campaigns.
      *
-     * @param string $idSite The site ID.
-     * @param string $period The period to get data for, either 'day', 'week', 'month', 'year',
-     *                       or 'range'.
-     * @param string $date The date of the period.
-     * @param null|string $segment The segment to use.
-     * @param bool|int $typeReferrer (deprecated) If you want to get data only for a specific referrer
-     *                         type, supply a type for this parameter.
-     * @param null|int $idSubtable For this report this value is a referrer type ID and not an actual
-     *                        subtable ID. The result when using this parameter will be the
-     *                        specific report for the given referrer type.
-     * @param bool $expanded Whether to get report w/ subtables loaded or not.
-     * @return DataTable
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool|int|string $typeReferrer Deprecated referrer type filter to restrict the returned rows.
+     * @param int|null $idSubtable Referrer type ID to load directly instead of the overview report.
+     * @param bool $expanded `true` to load subtables eagerly, `false` to return only top-level rows.
+     * @param bool $_setReferrerTypeLabel `true` to replace referrer type IDs with human-readable labels.
+     * @return DataTable|DataTable\Map Report rows for each referrer type, or the selected referrer-type subreport.
      */
     public function getReferrerType($idSite, string $period, string $date, ?string $segment = null, $typeReferrer = \false, ?int $idSubtable = null, bool $expanded = \false, bool $_setReferrerTypeLabel = \true)
     {
@@ -109,8 +129,9 @@ class API extends \Piwik\Plugin\API
                     break;
             }
             if ($result) {
+                // Remove subtable IDs to avoid infinite recursion: the grandchildren would be
+                // the original getReferrerType report again, looping when requesting a flat report.
                 return $this->removeSubtableIds($result);
-                // this report won't return subtables of individual reports
             }
         }
         // get visits by referrer type
@@ -131,6 +152,9 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTable;
     }
+    /**
+     * @param int|string|int[] $idSite
+     */
     private function checkSingleSite($idSite, string $method) : void
     {
         $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
@@ -139,12 +163,24 @@ class API extends \Piwik\Plugin\API
         }
     }
     /**
-     * Returns a report that shows
+     * Returns a flattened report containing all referrer subtables merged into one table.
+     *
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable Flattened referrer report with subtables merged into the main table.
      */
     public function getAll($idSite, string $period, string $date, ?string $segment = null)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $this->checkSingleSite($idSite, 'getAll');
+        /** @var DataTable|DataTable\Map $dataTable */
         $dataTable = Request::processRequest('Referrers.getReferrerType', ['idSite' => $idSite, 'period' => $period, 'date' => $date, 'segment' => $segment, 'expanded' => \true, 'disable_generic_filters' => \true, 'disable_queued_filters' => \true, '_setReferrerTypeLabel' => 0], []);
         if ($dataTable instanceof DataTable\Map) {
             throw new Exception("Referrers.getAll with multiple sites or dates is not supported (yet).");
@@ -154,6 +190,25 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         return $dataTable;
     }
+    /**
+     * Returns search keywords that brought visits to the requested website.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load keyword subtables eagerly.
+     * @param bool $flat `true` to flatten subtables into the main table.
+     * @return DataTable|DataTable\Map Search keyword rows for the requested period.
+     */
     public function getKeywords($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false, bool $flat = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -182,6 +237,21 @@ class API extends \Piwik\Plugin\API
     {
         return $label == self::LABEL_KEYWORD_NOT_DEFINED ? self::getKeywordNotDefinedString() : $label;
     }
+    /**
+     * Returns the search engines associated with a specific keyword subtable.
+     *
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param int $idSubtable Keyword subtable ID to expand.
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Search engine rows for the selected keyword.
+     */
     public function getSearchEnginesFromKeywordId($idSite, string $period, string $date, int $idSubtable, ?string $segment = null)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -193,6 +263,25 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('PrependSegment', ['referrerKeyword==' . $keyword . ';referrerType==search;']);
         return $dataTable;
     }
+    /**
+     * Returns search engines that referred visits to the requested website.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load keyword subtables eagerly.
+     * @param bool $flat `true` to flatten subtables into the main table.
+     * @return DataTable|DataTable\Map Search engine rows for the requested period.
+     */
     public function getSearchEngines($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false, bool $flat = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -217,6 +306,21 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTable;
     }
+    /**
+     * Returns keywords for a specific search engine subtable.
+     *
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param int $idSubtable Search engine subtable ID to expand.
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Keyword rows for the selected search engine.
+     */
     public function getKeywordsFromSearchEngineId($idSite, string $period, string $date, int $idSubtable, ?string $segment = null)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -233,6 +337,24 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTable;
     }
+    /**
+     * Returns campaigns that referred visits to the requested website.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load campaign keyword subtables eagerly.
+     * @return DataTable|DataTable\Map Campaign rows for the requested period.
+     */
     public function getCampaigns($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -241,6 +363,21 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('PrependSegment', ['referrerType==campaign;']);
         return $dataTable;
     }
+    /**
+     * Returns campaign keywords for a specific campaign subtable.
+     *
+     * @param int|string $idSite The site ID to query.
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param int $idSubtable Campaign subtable ID to expand.
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Campaign keyword rows for the selected campaign.
+     */
     public function getKeywordsFromCampaignId($idSite, string $period, string $date, int $idSubtable, ?string $segment = null)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -253,6 +390,25 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('PrependSegment', ['referrerName==' . $campaign . ';referrerType==campaign;']);
         return $dataTable;
     }
+    /**
+     * Returns referring websites for the requested website.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load URL subtables eagerly.
+     * @param bool $flat `true` to flatten subtables into the main table.
+     * @return DataTable|DataTable\Map Referring website rows for the requested period.
+     */
     public function getWebsites($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false, bool $flat = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -264,6 +420,24 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTable;
     }
+    /**
+     * Returns individual referrer URLs for a specific website subtable.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param int $idSubtable Website subtable ID to expand.
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Referrer URL rows for the selected website.
+     */
     public function getUrlsFromWebsiteId($idSite, string $period, string $date, int $idSubtable, ?string $segment = null)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -275,11 +449,24 @@ class API extends \Piwik\Plugin\API
         return $dataTable;
     }
     /**
-     * Returns report comparing the number of visits (and other info) for social network referrers.
-     * This is a view of the getWebsites report.
+     * Returns report comparing the number of visits and related metrics for social network referrers.
+     * It uses the dedicated social archive and backfills missing rows from website referrer data when needed.
      *
-     * @param string $idSite
-     * @return DataTable|DataTable\Map
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load URL subtables eagerly.
+     * @param bool $flat `true` to flatten subtables into the main table.
+     * @return DataTable|DataTable\Map Social network referrer rows for the requested period.
      */
     public function getSocials($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false, bool $flat = \false)
     {
@@ -298,12 +485,26 @@ class API extends \Piwik\Plugin\API
         return $dataTable;
     }
     /**
-     * Returns report comparing the number of visits (and other info) for AI assistant referrers.
-     * This is a view of the getWebsites report.
+     * Returns report comparing the number of visits and related metrics for AI assistant referrers.
+     * It uses the dedicated AI assistant archive and backfills missing rows from website referrer data when needed.
      *
-     * @param string|int|int[] $idSite
-     * @param 'entryPageTitle'|'entryPageUrl'|null $secondaryDimension defaults to entryPageUrl if not provided
-     * @return DataTable|DataTable\Map
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param bool $expanded `true` to load secondary-dimension subtables eagerly.
+     * @param bool $flat `true` to flatten subtables into the main table.
+     * @param 'entryPageTitle'|'entryPageUrl'|null $secondaryDimension Secondary dimension to group AI assistant
+     *                                                                 rows by. Defaults to `entryPageUrl`.
+     * @return DataTable|DataTable\Map AI assistant referrer rows for the requested period.
      */
     public function getAIAssistants($idSite, string $period, string $date, ?string $segment = null, bool $expanded = \false, bool $flat = \false, ?string $secondaryDimension = null)
     {
@@ -330,6 +531,11 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('PrependSegment', ['referrerType==ai;']);
         return $dataTable;
     }
+    /**
+     * @param DataTable|DataTable\Map $dataTable
+     * @param int|string|int[] $idSite
+     * @return DataTable|DataTable\Map
+     */
     private function completeSocialTablesWithOldReports($dataTable, $idSite, string $period, string $date, ?string $segment, bool $expanded, bool $flat)
     {
         return $this->combineDataTables($dataTable, function () use($idSite, $period, $date, $segment, $expanded, $flat) {
@@ -338,6 +544,11 @@ class API extends \Piwik\Plugin\API
             return $dataTableFiltered;
         });
     }
+    /**
+     * @param DataTable|DataTable\Map $dataTable
+     * @param int|string|int[] $idSite
+     * @return DataTable|DataTable\Map
+     */
     private function completeAIAssistantTablesWithOldReports($dataTable, $idSite, string $period, string $date, ?string $segment, bool $expanded)
     {
         return $this->combineDataTables($dataTable, function () use($idSite, $period, $date, $segment, $expanded) {
@@ -383,7 +594,7 @@ class API extends \Piwik\Plugin\API
     }
     /**
      * @param DataTable|DataTable\Map $dataTable
-     * @param int|string $idSite
+     * @param int|string|int[] $idSite
      */
     protected function filterWebsitesForSocials($dataTable, $idSite, string $period, string $date, ?string $segment, bool $expanded, bool $flat) : void
     {
@@ -422,12 +633,23 @@ class API extends \Piwik\Plugin\API
      * Returns report containing individual referrer URLs for a specific social networking
      * site.
      *
-     * @param string $idSite
-     * @param null|int $idSubtable This ID does not reference a real DataTable record. Instead, it
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param int|null $idSubtable This ID does not reference a real DataTable record. Instead, it
      *                             is the array index of an item in the Socials list file.
      *                             The urls are filtered by the social network at this index.
-     *                             If false, no filtering is done and every social URL is returned.
-     * @return DataTable|DataTable\Map
+     *                             If null, no filtering is done and every social URL is returned.
+     * @return DataTable|DataTable\Map Social referrer URL rows for the selected social network.
      */
     public function getUrlsForSocial($idSite, string $period, string $date, ?string $segment = null, ?int $idSubtable = null)
     {
@@ -454,12 +676,23 @@ class API extends \Piwik\Plugin\API
     /**
      * Returns report containing individual entry page URLs for a specific AI assistant.
      *
-     * @param string|int|int[] $idSite
-     * @param null|int $idSubtable This ID does not reference a real DataTable record. Instead, it
-     *                             is the array index of an item in the AI list file.
-     *                             The urls are filtered by the AI at this index.
-     *                             If false, no filtering is done and every AI assistant URL is returned.
-     * @return DataTable|DataTable\Map
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param int|null $idSubtable This ID does not reference a real DataTable record. Instead, it
+     *                             is the array index of an item in the AI assistant list file.
+     *                             The urls are filtered by the AI assistant at this index.
+     *                             If null, no filtering is done and every AI assistant URL is returned.
+     * @return DataTable|DataTable\Map Entry page URL rows for the selected AI assistant.
      */
     public function getEntryPageUrlsForAIAssistant($idSite, string $period, string $date, ?string $segment = null, ?int $idSubtable = null)
     {
@@ -481,12 +714,23 @@ class API extends \Piwik\Plugin\API
     /**
      * Returns report containing individual entry page names for a specific AI assistant.
      *
-     * @param string|int|int[] $idSite
-     * @param null|int $idSubtable This ID does not reference a real DataTable record. Instead, it
-     *                              is the array index of an item in the AI list file.
-     *                              The urls are filtered by the AI at this index.
-     *                              If false, no filtering is done and every AI assistant URL is returned.
-     * @return DataTable
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @param int|null $idSubtable This ID does not reference a real DataTable record. Instead, it
+     *                              is the array index of an item in the AI assistant list file.
+     *                              The titles are filtered by the AI assistant at this index.
+     *                              If null, no filtering is done and every AI assistant title is returned.
+     * @return DataTable|DataTable\Map Entry page title rows for the selected AI assistant.
      */
     public function getEntryPageTitlesForAIAssistant($idSite, string $period, string $date, ?string $segment = null, ?int $idSubtable = null)
     {
@@ -510,34 +754,157 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceColumnNames');
         return $dataTable;
     }
+    /**
+     * Returns the number of distinct search engines in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct search engines.
+     */
     public function getNumberOfDistinctSearchEngines($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct social networks in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct social networks.
+     */
     public function getNumberOfDistinctSocialNetworks($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct search keywords in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct keywords.
+     */
     public function getNumberOfDistinctKeywords($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct campaigns in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct campaigns.
+     */
     public function getNumberOfDistinctCampaigns($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct referring websites in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct referring websites.
+     */
     public function getNumberOfDistinctWebsites($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct AI assistants in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct AI assistants.
+     */
     public function getNumberOfDistinctAIAssistants($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_AI_ASSISTANT_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * Returns the number of distinct referrer URLs in the requested period.
+     *
+     * @param int|string|int[] $idSite Website ID(s) to query.
+     *                         - Single site ID (e.g. 1)
+     *                         - Multiple site IDs (e.g. [1, 4, 5])
+     *                         - Comma-separated list ("1,4,5") or "all"
+     * @param 'day'|'week'|'month'|'year'|'range' $period The period to process, processes data for the period
+     *                                                   containing the specified date.
+     * @param string $date The date or date range to process.
+     *                     'YYYY-MM-DD', magic keywords (today, yesterday, lastWeek, lastMonth, lastYear),
+     *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
+     * @param string|null $segment Custom segment to filter the report.
+     *                             Example: "referrerName==example.com"
+     *                             Supports AND (;) and OR (,) operators.
+     * @return DataTable|DataTable\Map Numeric archive result containing the number of distinct referrer URLs.
+     */
     public function getNumberOfDistinctWebsitesUrls($idSite, string $period, string $date, ?string $segment = null)
     {
         return $this->getNumeric(\Piwik\Plugins\Referrers\Archiver::METRIC_DISTINCT_URLS_RECORD_NAME, $idSite, $period, $date, $segment);
     }
+    /**
+     * @param int|string|int[] $idSite
+     * @return DataTable|DataTable\Map
+     */
     private function getNumeric(string $name, $idSite, string $period, string $date, ?string $segment)
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -545,9 +912,6 @@ class API extends \Piwik\Plugin\API
         return $archive->getDataTableFromNumeric($name);
     }
     /**
-     * Removes idsubdatatable_in_db metadata from a DataTable. Used by Social tables since
-     * they use fake subtable IDs.
-     *
      * @param DataTable|DataTable\Map $dataTable
      */
     private function removeSubtableMetadata($dataTable) : void
@@ -559,10 +923,6 @@ class API extends \Piwik\Plugin\API
         });
     }
     /**
-     * Sets the subtable IDs for the DataTable returned by getSocial.
-     *
-     * The IDs are int indexes into the array in of defined socials.
-     *
      * @param DataTable|DataTable\Map $dataTable
      */
     private function setSocialIdSubtables($dataTable) : void
@@ -583,13 +943,8 @@ class API extends \Piwik\Plugin\API
         });
     }
     /**
-     * Utility function that removes the subtable IDs for the subtables of the
-     * getReferrerType report. This avoids infinite recursion in said report (ie,
-     * the grandchildren of the report will be the original report, and it will
-     * recurse when trying to get a flat report).
-     *
      * @param DataTable|DataTable\Map $dataTable
-     * @return DataTable|DataTable\Map Returns $table for convenience.
+     * @return DataTable|DataTable\Map
      */
     private function removeSubtableIds($dataTable)
     {
@@ -601,10 +956,10 @@ class API extends \Piwik\Plugin\API
         return $dataTable;
     }
     /**
-     * @param int $idSite
+     * @param int|string|int[] $idSite
      * @param DataTable|DataTable\Map $dataTable
      */
-    private function buildExpandedTableForFlattenGetSocials($idSite, string $period, string $date, ?string $segment, bool $expanded, $dataTable)
+    private function buildExpandedTableForFlattenGetSocials($idSite, string $period, string $date, ?string $segment, bool $expanded, $dataTable) : void
     {
         $urlsTable = Archive::createDataTableFromArchive(\Piwik\Plugins\Referrers\Archiver::WEBSITES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded, \true);
         $urlsTable->filter('ColumnCallbackDeleteRow', ['label', function ($url) {
@@ -613,6 +968,7 @@ class API extends \Piwik\Plugin\API
         $urlsTable = $urlsTable->mergeSubtables();
         if ($dataTable instanceof DataTable\Map) {
             $dataTables = $dataTable->getDataTables();
+            /** @var DataTable\Map $urlsTable */
             $urlsTables = $urlsTable->getDataTables();
         } else {
             $dataTables = [$dataTable];
@@ -685,6 +1041,7 @@ class API extends \Piwik\Plugin\API
             return;
         }
         if ($table instanceof DataTable) {
+            /** @var DataTable $numericArchives */
             $table->setAllTableMetadata($numericArchives->getAllTableMetadata());
             if ($numericArchives->getRowsCount() == 0) {
                 return;
@@ -698,6 +1055,7 @@ class API extends \Piwik\Plugin\API
             }
         } elseif ($table instanceof DataTable\Map) {
             foreach ($table->getDataTables() as $label => $childTable) {
+                /** @var DataTable\Map $numericArchives */
                 $numericArchiveChildTable = $numericArchives->getTable($label);
                 $this->mergeNumericArchives($childTable, $numericArchiveChildTable);
             }

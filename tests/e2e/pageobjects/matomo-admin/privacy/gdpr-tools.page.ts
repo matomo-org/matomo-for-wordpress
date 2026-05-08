@@ -13,7 +13,7 @@ class GdprToolsPage extends MatomoAdminPage {
   async open() {
     const result = super.open('PrivacyManager.gdprTools');
 
-    await $('.segment-generator').waitForDisplayed();
+    await $('.segment-generator').waitForDisplayed({ timeout: 30000 });
     await browser.waitUntil(async () => {
       return browser.execute(() => !$('.loadingPiwik').is(':visible'));
     }, { timeout: 20000 });

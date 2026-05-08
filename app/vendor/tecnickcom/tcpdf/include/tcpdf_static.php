@@ -55,7 +55,7 @@ namespace {
          * Current TCPDF version.
          * @private static
          */
-        private static $tcpdf_version = '6.11.2';
+        private static $tcpdf_version = '6.11.3';
         /**
          * String alias for total number of pages.
          * @public static
