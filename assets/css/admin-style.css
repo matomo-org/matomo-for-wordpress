@@ -267,6 +267,7 @@ table.matomo-tracking-form th {
 
 .matomo-marketplace-wizard-logo img {
     width: 64px;
+    border-radius: 50%;
 }
 
 .matomo-marketplace-wizard-body .wizard-steps-header {
