@@ -478,8 +478,13 @@ class Website {
     }
 
     const activateButtonExists = await $('.button=Activate Plugin').isExisting();
-    if (activateButtonExists) {
-      await $('.button=Activate Plugin').click();
+    const networkActivateButtonExists = await $('.button=Network Activate').isExisting();
+    if (activateButtonExists || networkActivateButtonExists) {
+      if ( activateButtonExists ) {
+        await $('.button=Activate Plugin').click();
+      } else {
+        await $('.button=Network Activate').click();
+      }
 
       await browser.waitUntil(async () => {
         return await browser.execute(() => {
