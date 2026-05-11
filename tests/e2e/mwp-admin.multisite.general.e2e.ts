@@ -38,6 +38,7 @@ describe('MultiSite General', function() {
 
   it('should succeed when updating to the current code', async () => {
     await Website.updateMatomoToLatest();
+    throw new Error('forced');
   });
 
   it('should display the MWP admin pages for a single site correctly', async () => {

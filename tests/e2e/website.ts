@@ -491,6 +491,8 @@ class Website {
           return window.jQuery && window.jQuery('p:contains(Plugin activated.)').length > 0;
         });
       }, { timeout: 120000 });
+    } else {
+      console.log('No activate button found.');
     }
   }
 
