@@ -104,11 +104,13 @@ function matomo_has_compatible_content_dir() {
 }
 
 function matomo_header_icon( $full = false ) {
-	$file = 'logo';
+	$class = 'matomo-header-icon';
+	$file  = 'logo.png';
 	if ( $full ) {
-		$file = 'logo-full';
+		$file   = 'logo-full.png';
+		$class .= '-full';
 	}
-	echo '<img height="32" src="' . esc_url( plugins_url( 'assets/img/' . $file . '.png', MATOMO_ANALYTICS_FILE ) ) . '" class="matomo-header-icon">';
+	echo '<img height="32" src="' . esc_url( plugins_url( 'assets/img/' . $file, MATOMO_ANALYTICS_FILE ) ) . '" class="' . esc_attr( $class ) . '">';
 }
 
 function matomo_is_app_request() {
