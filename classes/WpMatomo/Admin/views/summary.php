@@ -53,7 +53,9 @@ if ( Dates::TODAY === $report_date ) {
 }
 ?>
 <p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
-	<a href="<?php echo esc_url( add_query_arg( [ 'report_date' => $report_date ], menu_page_url( Menu::SLUG_REPORTING, false ) ) ); ?>"
+	<a
+		href="<?php echo esc_url( add_query_arg( [ 'report_date' => $report_date ], menu_page_url( Menu::SLUG_REPORTING, false ) ) ); ?>"
+		target="_blank"
 	><?php esc_html_e( 'View full reporting', 'matomo' ); ?></a>
 	<br/><br/>
 	<?php esc_html_e( 'Change date:', 'matomo' ); ?>

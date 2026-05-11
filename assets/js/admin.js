@@ -93,4 +93,9 @@ window.jQuery(document).ready(function ($) {
       $(e.target).closest('.matomo-plugin-suggestion').remove();
     });
   }
+
+  // force external matomo menu links to load in a new tab
+  $('#toplevel_page_matomo span.dashicons-external').each(function () {
+    $(this).closest('a').attr('target', '_blank');
+  });
 });

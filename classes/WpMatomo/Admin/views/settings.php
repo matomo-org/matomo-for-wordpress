@@ -41,7 +41,7 @@ if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
 	if ( current_user_can( Capabilities::KEY_SUPERUSER )
 		 && ! is_network_admin() ) {
 		?>
-		<a href="<?php echo esc_url( Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) ); ?>" class="nav-tab"
+		<a href="<?php echo esc_url( Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) ); ?>" target="_blank" class="nav-tab"
 		><?php esc_html_e( 'Matomo Admin', 'matomo' ); ?> <span class="dashicons-before dashicons-external"></span></a>
 
 		<?php
