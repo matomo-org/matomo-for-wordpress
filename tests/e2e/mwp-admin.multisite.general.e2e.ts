@@ -71,7 +71,7 @@ describe('MultiSite General', function() {
     await $('#toplevel_page_matomo a').waitForExist();
 
     await browser.execute(() => {
-      window.jQuery('#toplevel_page_matomo a[href*="matomo-reporting"]')[0].click();
+      window.jQuery('#toplevel_page_matomo a[href*="matomo-reporting"]').removeAttr('target')[0].click();
     });
 
     await DashboardPage.waitForPageWidgets();
