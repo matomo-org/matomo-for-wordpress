@@ -132,28 +132,14 @@ add_action(
 	}
 );
 
-// add random number to asset version hash to force reload
-// only used for tests
-add_filter(
-	'activate_matomo',
-	function () {
-		// not the best way to tell if we are in an e2e test, but
-		// best option right now
-		if ( getenv( 'GITHUB_SHA' ) ) {
-			if ( is_multisite() ) {
-				update_site_option( 'matomo_test_cb', wp_rand( 0, 1000 ) );
-			} else {
-				update_option( 'matomo_test_cb', wp_rand( 0, 1000 ) );
-			}
-		}
-	}
-);
+// add filemtime of matomo.php to asset version cache buster so
+// it will reload if modifed (eg, after matomo is updated during
+// e2e tests)
 add_filter(
 	'matomo_asset_version',
 	function ( $version ) {
-		$cb_extra = is_multisite() ? get_site_option( 'matomo_test_cb' ) : get_option( 'matomo_test_cb' );
-		if ( isset( $cb_extra ) ) {
-			$version .= $cb_extra;
+		if ( getenv( 'MATOMO_IN_E2E' ) ) {
+			$version .= filemtime( MATOMO_ANALYTICS_FILE );
 		}
 		return $version;
 	}
