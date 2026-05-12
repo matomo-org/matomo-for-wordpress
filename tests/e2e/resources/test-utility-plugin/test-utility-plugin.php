@@ -132,6 +132,33 @@ add_action(
 	}
 );
 
+// add random number to asset version hash to force reload
+// only used for tests
+add_filter(
+	'activate_matomo',
+	function () {
+		// not the best way to tell if we are in an e2e test, but
+		// best option right now
+		if ( getenv( 'GITHUB_SHA' ) ) {
+			if ( is_multisite() ) {
+				update_site_option( 'matomo_test_cb', wp_rand( 0, 1000 ) );
+			} else {
+				update_option( 'matomo_test_cb', wp_rand( 0, 1000 ) );
+			}
+		}
+	}
+);
+add_filter(
+	'matomo_asset_version',
+	function ( $version ) {
+		$cb_extra = is_multisite() ? get_site_option( 'matomo_test_cb' ) : get_option( 'matomo_test_cb' );
+		if ( isset( $cb_extra ) ) {
+			$version .= $cb_extra;
+		}
+		return $version;
+	}
+);
+
 function matomo_test_utility_plugin_request_overrides() {
 	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 

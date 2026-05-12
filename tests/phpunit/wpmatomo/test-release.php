@@ -306,7 +306,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	public function test_version_constant_matches_readme_txt() {
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE );
-		$this->assertEquals( $plugin_data['Version'], WpMatomo::VERSION );
+		$this->assertEquals( $plugin_data['Version'], WpMatomo::get_asset_version() );
 	}
 
 	private function get_zip_file_contents( $path_to_zip ) {

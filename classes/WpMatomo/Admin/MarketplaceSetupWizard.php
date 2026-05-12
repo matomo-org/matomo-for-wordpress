@@ -59,7 +59,7 @@ class MarketplaceSetupWizard extends Feature {
 			'matomo-marketplace-setup-wizard',
 			plugins_url( '/assets/js/marketplace_setup_wizard.js', MATOMO_ANALYTICS_FILE ),
 			[ 'jquery' ],
-			\WpMatomo::VERSION,
+			\WpMatomo::get_asset_version(),
 			true
 		);
 

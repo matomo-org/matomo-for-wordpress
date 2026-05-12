@@ -42,7 +42,7 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.10.0';
+	const VERSION = '5.8.2';
 
 	/**
 	 * @var \WpMatomo\Feature[]
@@ -256,5 +256,11 @@ class WpMatomo {
 			return null;
 		}
 		return self::$features[ $class_name ];
+	}
+
+	public static function get_asset_version() {
+		$version = self::VERSION;
+		$version = apply_filters( 'matomo_asset_version', $version );
+		return $version;
 	}
 }
