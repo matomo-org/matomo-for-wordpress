@@ -110,7 +110,7 @@ function matomo_header_icon( $full = false ) {
 		$file   = 'logo-full.png';
 		$class .= '-full';
 	}
-	echo '<img height="32" src="' . esc_url( plugins_url( 'assets/img/' . $file, MATOMO_ANALYTICS_FILE ) ) . '" class="' . esc_attr( $class ) . '">';
+	echo '<img height="32" src="' . esc_url( plugins_url( 'assets/img/' . $file, MATOMO_ANALYTICS_FILE ) . '?v=' . rawurlencode( matomo_get_asset_version() ) ) . '" class="' . esc_attr( $class ) . '">';
 }
 
 function matomo_is_app_request() {
@@ -294,6 +294,12 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 		'pluginsPathAbsolute'        => $root_dir,
 		'webrootDirRelativeToMatomo' => $webroot_dir,
 	);
+}
+
+function matomo_get_asset_version() {
+	$version = \WpMatomo::VERSION;
+	$version = apply_filters( 'matomo_asset_version', $version );
+	return $version;
 }
 
 if ( matomo_is_app_request() || ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) ) {

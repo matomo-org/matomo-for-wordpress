@@ -257,10 +257,4 @@ class WpMatomo {
 		}
 		return self::$features[ $class_name ];
 	}
-
-	public static function get_asset_version() {
-		$version = self::VERSION;
-		$version = apply_filters( 'matomo_asset_version', $version );
-		return $version;
-	}
 }
