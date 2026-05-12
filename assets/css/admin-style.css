@@ -65,10 +65,14 @@ ol.matomo-list {
     margin: 0 20px 10px;
 }
 
-.matomo-header-icon {
+.matomo-header-icon-full, .matomo-header-icon {
     height: 32px;
     vertical-align: top;
     margin-right: 8px;
+}
+
+.matomo-header-icon {
+    border-radius: 50%;
 }
 
 .matomo-footer ul a {
@@ -263,6 +267,7 @@ table.matomo-tracking-form th {
 
 .matomo-marketplace-wizard-logo img {
     width: 64px;
+    border-radius: 50%;
 }
 
 .matomo-marketplace-wizard-body .wizard-steps-header {

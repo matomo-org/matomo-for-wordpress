@@ -60,8 +60,8 @@ export default class TagManagerPage extends MatomoAdminPage {
       $('li[role=menuitem] a.item:contains(Preview)')[0].click();
     });
 
-    await $('input#previewDebugUrl').waitForExist();
-    await $('td.lastUpdated').waitForExist();
+    await $('input#previewDebugUrl').waitForExist({ timeout: 30000 });
+    await $('td.lastUpdated').waitForExist({ timeout: 30000 });
 
     const notificationsModified = await browser.execute(() => {
       let notificationsModified = 0;

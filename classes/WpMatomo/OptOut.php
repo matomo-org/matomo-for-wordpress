@@ -32,7 +32,7 @@ class OptOut extends Feature {
 
 	public function load_scripts() {
 		if ( ! is_admin() ) {
-			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], \WpMatomo::VERSION, true );
+			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], matomo_get_asset_version(), true );
 		}
 	}
 
@@ -49,7 +49,7 @@ class OptOut extends Feature {
 		$url = 'app/index.php?module=CoreAdminHome&action=optOutJS&divId=' . $div_id . '&language=' . rawurlencode( $this->language ) . '&showIntro=1';
 		$url = plugins_url( $url, MATOMO_ANALYTICS_FILE );
 
-		wp_enqueue_script( 'matomo_opt_out_form_js', $url, [], \WpMatomo::VERSION, true ); // output in the footer
+		wp_enqueue_script( 'matomo_opt_out_form_js', $url, [], matomo_get_asset_version(), true ); // output in the footer
 
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
 		$content = "<div id=\"$div_id\"></div>";

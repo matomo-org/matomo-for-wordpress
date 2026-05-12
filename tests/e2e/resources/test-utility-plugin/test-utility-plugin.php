@@ -132,6 +132,19 @@ add_action(
 	}
 );
 
+// add filemtime of matomo.php to asset version cache buster so
+// it will reload if modifed (eg, after matomo is updated during
+// e2e tests)
+add_filter(
+	'matomo_asset_version',
+	function ( $version ) {
+		if ( getenv( 'MATOMO_IN_E2E' ) ) {
+			$version .= filemtime( MATOMO_ANALYTICS_FILE );
+		}
+		return $version;
+	}
+);
+
 function matomo_test_utility_plugin_request_overrides() {
 	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 

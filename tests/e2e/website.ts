@@ -478,14 +478,21 @@ class Website {
     }
 
     const activateButtonExists = await $('.button=Activate Plugin').isExisting();
-    if (activateButtonExists) {
-      await $('.button=Activate Plugin').click();
+    const networkActivateButtonExists = await $('.button=Network Activate').isExisting();
+    if (activateButtonExists || networkActivateButtonExists) {
+      if ( activateButtonExists ) {
+        await $('.button=Activate Plugin').click();
+      } else {
+        await $('.button=Network Activate').click();
+      }
 
       await browser.waitUntil(async () => {
         return await browser.execute(() => {
           return window.jQuery && window.jQuery('p:contains(Plugin activated.)').length > 0;
         });
       }, { timeout: 120000 });
+    } else {
+      console.log('No activate button found.');
     }
   }
 

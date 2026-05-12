@@ -471,7 +471,7 @@ class TrackingSettings implements AdminSettingsInterface {
 					'matomo-tracking-settings',
 					plugins_url( '/assets/js/settings.js', MATOMO_ANALYTICS_FILE ),
 					[ 'jquery' ],
-					\WpMatomo::VERSION,
+					matomo_get_asset_version(),
 					true
 				);
 

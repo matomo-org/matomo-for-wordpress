@@ -54,14 +54,14 @@ class Admin extends Feature {
 	}
 
 	public function load_scripts() {
-		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, \WpMatomo::VERSION );
-		wp_enqueue_script( 'matomo_iframe_resizer', plugins_url( 'assets/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ), [], \WpMatomo::VERSION, [ 'defer', false ] );
+		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, matomo_get_asset_version() );
+		wp_enqueue_script( 'matomo_iframe_resizer', plugins_url( 'assets/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ), [], matomo_get_asset_version(), [ 'defer', false ] );
 
 		wp_enqueue_script(
 			'matomo-admin-js',
 			plugins_url( '/assets/js/admin.js', MATOMO_ANALYTICS_FILE ),
 			[ 'jquery' ],
-			\WpMatomo::VERSION,
+			matomo_get_asset_version(),
 			true
 		);
 		wp_localize_script(
