@@ -71,14 +71,14 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	<?php
 	if ( $matomo_has_warning_and_no_errors ) {
 		?>
-		<div class="notice notice-warning">
+		<div class="notice notice-warning matomo-notice">
 			<p><?php esc_html_e( 'There are some issues with your system. Matomo will run, but you might experience some minor problems. See below for more information.', 'matomo' ); ?></p>
 		</div>
 		<?php
 	}
 	?>
 	<?php if ( $settings->is_network_enabled() && ! is_network_admin() && is_super_admin() ) { ?>
-		<div class="updated notice">
+		<div class="updated notice matomo-notice">
 			<p><?php esc_html_e( 'Only you are seeing this page as you are the super admin', 'matomo' ); ?></p>
 		</div>
 	<?php } ?>

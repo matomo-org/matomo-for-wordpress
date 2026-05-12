@@ -56,12 +56,35 @@ class Menu {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'network_admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_head', [ $this, 'menu_external_icons' ] );
+		add_action( 'admin_head', [ $this, 'hide_non_matomo_notifications' ], 99999 );
 
 		// as we are redirecting we need to perform the redirect as soon as possible before WP has eg echoed the header
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, [ $this, 'reporting' ] );
 		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_REPORTING, [ $this, 'reporting' ] );
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
 		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
+	}
+
+	public function hide_non_matomo_notifications() {
+		// only hide for matomo- pages
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$page = isset( $_REQUEST['page'] ) ? wp_unslash( $_REQUEST['page'] ) : '';
+		if ( strpos( $page, 'matomo-' ) !== 0 ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo <<<EOF
+<style>
+.matomo-notice {
+    display: block;
+}
+
+.notice:not(.matomo-notice) {
+    display: none;
+}
+</style>
+EOF;
 	}
 
 	public function add_menu() {

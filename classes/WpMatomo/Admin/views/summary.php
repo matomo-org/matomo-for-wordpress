@@ -35,21 +35,21 @@ $matomo_dashboard_nonce = wp_create_nonce( Summary::NONCE_DASHBOARD );
 ?>
 <?php
 if ( $matomo_pinned ) {
-	echo '<div class="notice notice-success"><p>' . esc_html__( 'Dashboard updated.', 'matomo' ) . '</p></div>';
+	echo '<div class="matomo-notice notice notice-success"><p>' . esc_html__( 'Dashboard updated.', 'matomo' ) . '</p></div>';
 }
 if ( $matomo_is_version_pre55 ) {
 	echo '<style type="text/css">.handle-actions { position: absolute; right: 0;top: 0;}</style>';
 }
 ?>
 <?php if ( ! $is_tracking ) { ?>
-	<div class="notice notice-warning">
+	<div class="matomo-notice notice notice-warning">
 		<p><?php esc_html_e( 'Matomo Tracking is not enabled. If you have added the Matomo tracking code in a different way, for example using a consent plugin, then you can ignore this message.', 'matomo' ); ?></p>
 	</div>
 	<?php
 }
 
 if ( Dates::TODAY === $report_date ) {
-	echo '<div class="notice notice-info" style="padding:8px;">' . esc_html__( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
+	echo '<div class="matomo-notice notice notice-info" style="padding:8px;">' . esc_html__( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
 }
 ?>
 <p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>

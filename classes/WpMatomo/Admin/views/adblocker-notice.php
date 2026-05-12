@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	} );
 </script>
 
-<div id="matomo-adblocker-notice" class="notice notice-error">
+<div id="matomo-adblocker-notice" class="matomo-notice notice notice-error">
 	<p>
 		<strong><?php esc_html_e( 'Error', 'matomo' ); ?>:</strong>
 		<?php esc_html_e( 'In case you are using an ad blocker, please disable it for this site to make sure Matomo works without any issues.', 'matomo' ); ?>

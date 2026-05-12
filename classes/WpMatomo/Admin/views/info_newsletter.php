@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( $signedup_newsletter ) {
 	?>
-	<div class="notice notice-success is-dismissible">
+	<div class="matomo-notice notice notice-success is-dismissible">
 		<p><?php esc_html_e( 'Thank you for signing up to our newsletter.', 'matomo' ); ?></p>
 	</div>
 	<?php
@@ -28,7 +28,7 @@ if ( ! $show_newsletter ) {
 }
 ?>
 
-<div class="notice notice-success">
+<div class="matomo-notice notice notice-success">
 	<h2><?php esc_html_e( 'Newsletter', 'matomo' ); ?></h2>
 	<form method="post">
 		<p>
