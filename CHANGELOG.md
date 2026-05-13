@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.10.0 =
+* Update embedded Matomo to version 5.10.0.
+* Open Matomo Admin and Reporting pages in a new tab.
+* Hide 3rd party notices on MWP pages to allow for a clutter free experience.
+* Update Matomo logo for rebrand.
+
 = 5.8.2 =
 * New feature: behaviour based plugin suggestions to connect users with potentially useful premium features.
 
