@@ -21,11 +21,23 @@ class PromoCustomizer
 
     private function replaceUrlsHrefs($promoContents)
     {
+        $matchNumber = 0;
+
         $promoContents = preg_replace_callback(
             '/\\?module=Marketplace&action=overview#\\?showPlugin=(.+?)"/',
-            function ($matches) {
-                $pluginKebabCase = $this->asKebabCase($matches[1]);
-                return 'https://matomo.org/get/matomo-for-wordpress-full-reporting-' . $pluginKebabCase . '/" target="_blank"';
+            function ($matches) use (&$matchNumber) {
+                if ($matchNumber === 0) { // unlock button
+                    if (!$this->isMwpMarketplaceInstalled()) {
+                        $replacement = esc_attr( home_url( '/wp-admin/admin.php?page=matomo-marketplace&tab=install' ) ) . '"';
+                    } else {
+                        $replacement = esc_attr( 'https://plugins.matomo.org/' . $matches[1] . '?add-to-cart=ws&currency=EUR&wp=1' ) . '" target="_blank"';
+                    }
+                } else { // learn more link
+                    $replacement = esc_attr( 'https://plugins.matomo.org/' . $matches[1] . '?currency=EUR&wp=1' ) . '" target="_blank"';
+                }
+
+                ++$matchNumber;
+                return $replacement;
             },
             $promoContents
         );
@@ -42,9 +54,8 @@ class PromoCustomizer
         return $promoContents;
     }
 
-    private function asKebabCase($pluginName)
+    private function isMwpMarketplaceInstalled()
     {
-        return strtolower( substr( $pluginName, 0, 1 ) )
-            . strtolower( preg_replace( '/[A-Z]/', '-$0', $pluginName ) );
+        return is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME );
     }
 }
