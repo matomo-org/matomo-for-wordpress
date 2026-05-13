@@ -22,6 +22,7 @@ use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
+use Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoCustomizer;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportForceShortDateFormat;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportInnerCallHooks;
 use Piwik\Scheduler\Task;
@@ -415,8 +416,14 @@ class WordPress extends Plugin
 
             $pluginUrlReplacer = new PluginUrlReplacer();
             $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
-	    }
+
+            if ($module === 'ProfessionalServices') {
+                $promoCustomizer = new PromoCustomizer();
+                $result = $promoCustomizer->customizePromoHtml($result);
+            }
+        }
     }
+
     public function onDispatchRequest(&$module, &$action, &$parameters)
     {
         if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {

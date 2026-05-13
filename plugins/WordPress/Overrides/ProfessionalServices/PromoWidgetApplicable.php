@@ -8,8 +8,24 @@
 
 namespace Piwik\Plugins\WordPress\Overrides\ProfessionalServices;
 
+use Piwik\Config;
+use Piwik\Plugin\Manager;
+use Piwik\Plugins\ProfessionalServices\PromoWidgetDismissal;
+
 class PromoWidgetApplicable extends \Piwik\Plugins\ProfessionalServices\PromoWidgetApplicable
 {
+    private $promoWidgetDismissalAccessible;
+
+    private $managerAccessible;
+
+    public function __construct(Manager $manager, Config $config, PromoWidgetDismissal $promoWidgetDismissal)
+    {
+        parent::__construct($manager, $config, $promoWidgetDismissal);
+
+        $this->promoWidgetDismissalAccessible = $promoWidgetDismissal;
+        $this->managerAccessible = $manager;
+    }
+
     public function check(string $pluginName, string $widgetName): bool
     {
         $enabledPlugins = [
@@ -19,6 +35,14 @@ class PromoWidgetApplicable extends \Piwik\Plugins\ProfessionalServices\PromoWid
             'UsersFlow',
         ];
 
-        return in_array( $pluginName, $enabledPlugins, true );
+        if ( ! in_array( $pluginName, $enabledPlugins, true ) ) {
+            return false;
+        }
+
+        if ($this->promoWidgetDismissalAccessible->isPromoWidgetDismissedForCurrentUser($widgetName)) {
+            return \false;
+        }
+
+        return $this->managerAccessible->isPluginActivated($pluginName) === \false;
     }
 }
