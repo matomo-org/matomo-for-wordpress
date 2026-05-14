@@ -43,6 +43,11 @@ class PromoWidgetApplicable extends \Piwik\Plugins\ProfessionalServices\PromoWid
             return \false;
         }
 
-        return $this->managerAccessible->isPluginActivated($pluginName) === \false;
+        return !$this->isMatomoPluginActivated($pluginName);
+    }
+
+    protected function isMatomoPluginActivated($pluginName)
+    {
+        return $this->managerAccessible->isPluginActivated($pluginName);
     }
 }

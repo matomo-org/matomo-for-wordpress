@@ -196,29 +196,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function create_set_super_admin() {
-		$logger = new Logger();
-		$logger->log( 'creating super admin' );
-		$id = self::factory()->user->create();
-
-		$sync = new User\Sync();
-		$sync->sync_current_users();
-
-		wp_set_current_user( $id );
-		$user = wp_get_current_user();
-
-		if ( is_multisite() ) {
-			grant_super_admin( $id );
-			$user->add_cap( Capabilities::KEY_SUPERUSER );
-		} else {
-			$user->add_role( 'administrator' );
-			$user->add_role( Roles::ROLE_SUPERUSER );
-			$user->add_cap( Capabilities::KEY_SUPERUSER );
-		}
-
-		$sync = new User\Sync();
-		$sync->sync_current_users();
-
-		return $id;
+		return $this->matomo_fixture->create_set_super_admin();
 	}
 
 	protected function create_user_for_tracker() {

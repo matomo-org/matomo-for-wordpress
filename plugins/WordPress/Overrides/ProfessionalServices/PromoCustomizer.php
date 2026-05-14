@@ -54,7 +54,7 @@ class PromoCustomizer
         return $promoContents;
     }
 
-    private function isMwpMarketplaceInstalled()
+    protected function isMwpMarketplaceInstalled()
     {
         return is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME );
     }
