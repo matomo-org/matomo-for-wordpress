@@ -28,14 +28,11 @@ class PromoWidgetApplicable extends \Piwik\Plugins\ProfessionalServices\PromoWid
 
     public function check(string $pluginName, string $widgetName): bool
     {
-        $enabledPlugins = [
-            'Funnels',
-            'HeatmapSessionRecording',
-            'SearchEngineKeywordsPerformance',
-            'UsersFlow',
+        $disabledPlugins = [
+            'AbTesting',
         ];
 
-        if ( ! in_array( $pluginName, $enabledPlugins, true ) ) {
+        if ( in_array( $pluginName, $disabledPlugins, true ) ) {
             return false;
         }
 
@@ -43,7 +40,11 @@ class PromoWidgetApplicable extends \Piwik\Plugins\ProfessionalServices\PromoWid
             return \false;
         }
 
-        return !$this->isMatomoPluginActivated($pluginName);
+        if ( ! empty( $_REQUEST['force_promo'] ) ) {
+            return true;
+        }
+
+        return ! $this->isMatomoPluginActivated($pluginName);
     }
 
     protected function isMatomoPluginActivated($pluginName)
