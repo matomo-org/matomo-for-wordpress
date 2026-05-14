@@ -196,7 +196,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function create_set_super_admin() {
-		return $this->matomo_fixture->create_set_super_admin();
+		return $this->matomo_fixture->create_set_super_admin( self::factory() );
 	}
 
 	protected function create_user_for_tracker() {
