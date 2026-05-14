@@ -113,12 +113,10 @@ describe('MWP Admin > Marketplace', () => {
 
   it('should dismiss the promo when the hide link is clicked', async () => {
     await MatomoPromoPage.open('Funnels');
-    await MatomoPromoPage.dismiss(); // hides dashboard after redirect for cleaner screenshot
+    await MatomoPromoPage.dismiss();
 
-    await MatomoPromoPage.prepareMatomoPageForScreenshot();
-    await expect(
-      await browser.checkFullPageScreen(`matomo-reporting.promo.dismissed`)
-    ).toBeLessThanOrEqual(0.05);
+    expect(await $('.reportingMenu .menuTab').isExisting()).toBeTruthy();
+    expect(await $('.menuTab[data-category-id="ProfessionalServices_PromoFunnels"]').isExisting()).toBeFalsy();
   });
 
   it('should load the overview tab correctly when the marketplace plugin is installed', async () => {

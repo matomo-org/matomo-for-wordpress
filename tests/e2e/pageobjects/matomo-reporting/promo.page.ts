@@ -33,10 +33,11 @@ class PromoPage extends MatomoReportingPage {
       $('.promo-dismiss > a')[0].click();
     });
 
-    await DashboardPage.waitForDashboard();
-
-    // hide dashboard, we don't need to test this content
-    await this.addStylesToPage(`#dashboardWidgetsArea { display: none !important; }`);
+    await browser.waitUntil(() => {
+      return browser.execute(() => {
+        return $('.notification-body:contains(menu will no longer be shown)').length > 0;
+      })
+    });
   }
 }
 
