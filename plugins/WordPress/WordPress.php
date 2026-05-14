@@ -556,5 +556,6 @@ class WordPress extends Plugin
         $files[] = "../plugins/WordPress/stylesheets/export.css";
         $files[] = "../plugins/WordPress/stylesheets/blogselection.css";
         $files[] = "../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.less";
+        $files[] = "../plugins/WordPress/stylesheets/overrides.css";
     }
 }
