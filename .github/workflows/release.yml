@@ -41,7 +41,7 @@ env:
 
 jobs:
   release:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - name: "Check release password"
         if: ${{ github.event.inputs.password != env.RELEASE_PASSWORD }}
