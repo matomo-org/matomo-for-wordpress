@@ -15,11 +15,17 @@ const promos = {
   SessionRecording: 'ProfessionalServices_PromoSessionRecording.ProfessionalServices_PromoManage',
   CrashAnalytics: 'ProfessionalServices_PromoCrashAnalytics.ProfessionalServices_PromoOverview',
   CustomReports: 'ProfessionalServices_PromoCustomReports.ProfessionalServices_PromoManage',
+  MediaAnalytics: 'ProfessionalServices_PromoMediaAnalytics.ProfessionalServices_PromoOverview',
+  FormAnalytics: 'ProfessionalServices_PromoFormAnalytics.ProfessionalServices_PromoOverview',
 }
 
 class PromoPage extends MatomoReportingPage {
-  async open(pluginName: string) {
-    await super.open(promos[pluginName], { force_promo: '1' });
+  async open(promoName: string) {
+    if (!promos[promoName]) {
+      throw new Error(`unknown promo: ${promoName}`);
+    }
+
+    await super.open(promos[promoName], { force_promo: '1' });
   }
 
   async dismiss() {
