@@ -295,6 +295,7 @@ class WordPress extends Plugin
         $list->remove('About Matomo', 'CoreAdminHome_TrackingFailures');
         $list->remove('About Matomo', 'CoreHome_SystemSummaryWidget');
         $list->remove('About Matomo', 'CoreHome_QuickLinks');
+        $list->remove('About Matomo', 'ProfessionalServices_WidgetPremiumServicesForPiwik');
     }
 
     public function isTrackerPlugin() {

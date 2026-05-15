@@ -47,8 +47,6 @@ export default class MatomoReportingPage extends MatomoPage {
     // to test this in MWP.
     await this.addStylesToPage('#visitsLive { display: none !important; }');
 
-    await this.addStylesToPage('#widgetProfessionalServicespromoServices .promo { display: none !important; }');
-
     await this.unfocus();
 
     return result;
