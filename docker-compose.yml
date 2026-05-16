@@ -143,6 +143,14 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  # selenium for e2e tests
+  selenium:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+
   # database service definitions
   mariadb:
     image: mariadb:lts

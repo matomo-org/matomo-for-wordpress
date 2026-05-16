@@ -154,6 +154,9 @@ export const config: Options.Testrunner = {
     } as any,
   ],
 
+  hostname: process.env['SELENIUM_HOSTNAME'] || '127.0.0.1',
+  port: parseInt(process.env['SELENIUM_PORT'] || '', 10) || 4444,
+
   //
   // ===================
   // Test Configurations

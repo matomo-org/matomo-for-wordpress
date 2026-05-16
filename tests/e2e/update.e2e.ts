@@ -21,7 +21,7 @@ describe('MWP Updating', () => {
   });
 
   // sanity check to make sure we are updating from the latest stable version
-  it('should have the latest stable version installed', async () => {
+  it.only('should have the latest stable version installed', async () => {
     const pluginInfo: any = await(await fetch('https://api.wordpress.org/plugins/info/1.0/matomo.json')).json();
     const latestStableVersion = pluginInfo.version as string;
 

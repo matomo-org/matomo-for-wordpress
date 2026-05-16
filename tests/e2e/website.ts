@@ -34,7 +34,7 @@ class Website {
   private wordPressFolderOverride: string|null = null;
 
   rootUrl() {
-    let defaultHostname = 'localhost';
+    let defaultHostname = 'wordpress';
     if (process.env.PORT && process.env.PORT !== '80') {
       defaultHostname = `${defaultHostname}:${process.env.PORT}`;
     }

@@ -20,7 +20,7 @@ function docker_compose_up() {
   FOLDER=$1
 
   rm -rf ./docker/wordpress/$FOLDER/setup_finished
-  CUSTOM_ENV_FILE=.env.script npm run compose up wordpress &>> .e2e-docker-out &
+  CUSTOM_ENV_FILE=.env.script npm run compose up wordpress selenium &>> .e2e-docker-out &
   wait_for_docker_compose_up $FOLDER
 }
 
