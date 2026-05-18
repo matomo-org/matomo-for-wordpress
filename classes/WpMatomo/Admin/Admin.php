@@ -43,6 +43,7 @@ class Admin extends Feature {
 		}
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
+		add_filter( 'admin_body_class', [ $this, 'on_admin_body_class' ], 9999 );
 	}
 
 	public static function is_matomo_admin() {
@@ -80,5 +81,21 @@ class Admin extends Feature {
 				'nonce'    => wp_create_nonce( 'matomo-referral-notice-dismiss' ),
 			]
 		);
+	}
+
+	public function on_admin_body_class( $classes ) {
+		$raw_version = get_bloginfo( 'version' );
+		if ( ! $raw_version ) {
+			return $classes;
+		}
+
+		$version_parts = explode( '-', $raw_version );
+		$version       = count( $version_parts ) > 1 ? $version_parts[0] : $raw_version;
+
+		if ( version_compare( $version, '7.0', '>=' ) ) {
+			$classes .= 'mtm-wp-gte-7';
+		}
+
+		return $classes;
 	}
 }
