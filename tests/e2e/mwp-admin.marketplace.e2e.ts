@@ -14,6 +14,7 @@ import MwpMarketplacePage from './pageobjects/mwp-admin/marketplace.page.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
 import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
+import MatomoPromoPage from './pageobjects/matomo-reporting/promo.page.js';
 
 describe('MWP Admin > Marketplace', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -82,6 +83,40 @@ describe('MWP Admin > Marketplace', () => {
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
+  });
+
+  const PROMOS = [
+    'Funnels',
+    'Heatmaps',
+    'SessionRecording',
+    'CrashAnalytics',
+    'CustomReports',
+    'MediaAnalytics',
+    'FormAnalytics',
+  ];
+  PROMOS.forEach((promo) => {
+    it(`should display the ${promo} promo correctly`, async () => {
+      await MatomoPromoPage.open(promo);
+
+      const plugin = promo === 'Heatmaps' || promo === 'SessionRecording' ? 'HeatmapSessionRecording' : promo;
+
+      // no screenshot testing since we depend on what is in core
+      expect(await $('.pluginPromo').isExisting()).toBeTruthy();
+
+      const unlockUrl = await browser.execute(() => $('.pluginPromo .promo-actions a:not(.learn-more)').attr('href'));
+      expect(unlockUrl).toEqual(`https://plugins.matomo.org/${plugin}?add-to-cart=ws&currency=EUR&wp=1`);
+
+      const learnMoreUrl = await browser.execute(() => $('.pluginPromo .promo-actions a.learn-more').attr('href'));
+      expect(learnMoreUrl).toEqual(`https://plugins.matomo.org/${plugin}?currency=EUR&wp=1`);
+    });
+  });
+
+  it('should dismiss the promo when the hide link is clicked', async () => {
+    await MatomoPromoPage.open('Funnels');
+    await MatomoPromoPage.dismiss();
+
+    expect(await $('.reportingMenu .menuTab').isExisting()).toBeTruthy();
+    expect(await $('.menuTab[data-category-id="ProfessionalServices_PromoFunnels"]').isExisting()).toBeFalsy();
   });
 
   it('should load the overview tab correctly when the marketplace plugin is installed', async () => {

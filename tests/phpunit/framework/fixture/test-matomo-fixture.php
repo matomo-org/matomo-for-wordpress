@@ -8,7 +8,6 @@
 use Piwik\Archive;
 use Piwik\ArchiveProcessor\PluginsArchiver;
 use Piwik\Cache;
-use Piwik\Config;
 use Piwik\DataAccess\ArchiveTableCreator;
 use Piwik\DataTable\Manager;
 use Piwik\Date;
@@ -17,11 +16,14 @@ use Piwik\Option;
 use Piwik\Plugin\API;
 use Piwik\Site;
 use WpMatomo\Bootstrap;
+use WpMatomo\Capabilities;
 use WpMatomo\Installer;
+use WpMatomo\Logger;
 use WpMatomo\Report\Metadata;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
+use WpMatomo\User;
 
 /**
  * @package matomo
@@ -30,13 +32,15 @@ use WpMatomo\Uninstaller;
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
  */
 class MatomoUnit_Matomo_Fixture {
-	public function set_up( $test_case ) {
-		$test_class_name  = get_class( $test_case );
-		$test_method_name = $test_case->getName();
+	public function set_up( $test_case = null ) {
+		if ( $test_case ) {
+			$test_class_name  = get_class( $test_case );
+			$test_method_name = $test_case->getName();
 
-		unset( $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] );
+			unset( $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] );
 
-		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
+			$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
+		}
 
 		if (
 			empty( $annotations['method']['noTestMode'] )
@@ -182,5 +186,35 @@ class MatomoUnit_Matomo_Fixture {
 		} catch ( \Exception $ex ) {
 			// ignore
 		}
+	}
+
+	/**
+	 * @param mixed $wp_factory WP_UnitTestCase::factory() instance
+	 * @return mixed
+	 */
+	public function create_set_super_admin( $wp_factory ) {
+		$logger = new Logger();
+		$logger->log( 'creating super admin' );
+		$id = $wp_factory->user->create();
+
+		$sync = new User\Sync();
+		$sync->sync_current_users();
+
+		wp_set_current_user( $id );
+		$user = wp_get_current_user();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $id );
+			$user->add_cap( Capabilities::KEY_SUPERUSER );
+		} else {
+			$user->add_role( 'administrator' );
+			$user->add_role( Roles::ROLE_SUPERUSER );
+			$user->add_cap( Capabilities::KEY_SUPERUSER );
+		}
+
+		$sync = new User\Sync();
+		$sync->sync_current_users();
+
+		return $id;
 	}
 }

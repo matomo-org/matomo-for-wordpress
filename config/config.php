@@ -194,4 +194,8 @@ return array(
 		})),
 	)),
 
+	\Piwik\Plugins\ProfessionalServices\PromoWidgetApplicable::class =>
+		\Piwik\DI::get( \Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoWidgetApplicable::class ),
+
+	\Piwik\Plugins\Marketplace\Api\Service::class => \Piwik\DI::autowire()->constructor( 'https://plugins.matomo.org' ),
 );
