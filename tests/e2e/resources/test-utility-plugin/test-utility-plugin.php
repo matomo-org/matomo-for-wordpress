@@ -139,7 +139,10 @@ add_filter(
 	'matomo_asset_version',
 	function ( $version ) {
 		if ( getenv( 'MATOMO_IN_E2E' ) ) {
-			$version .= filemtime( MATOMO_ANALYTICS_FILE );
+			$mtime = @filemtime( MATOMO_ANALYTICS_FILE );
+			if ( $mtime ) {
+				$version .= $mtime;
+			}
 		}
 		return $version;
 	}
