@@ -22,6 +22,7 @@ use Piwik\Plugin;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
+use Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoCustomizer;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportForceShortDateFormat;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportInnerCallHooks;
 use Piwik\Scheduler\Task;
@@ -294,6 +295,7 @@ class WordPress extends Plugin
         $list->remove('About Matomo', 'CoreAdminHome_TrackingFailures');
         $list->remove('About Matomo', 'CoreHome_SystemSummaryWidget');
         $list->remove('About Matomo', 'CoreHome_QuickLinks');
+        $list->remove('About Matomo', 'ProfessionalServices_WidgetPremiumServicesForPiwik');
     }
 
     public function isTrackerPlugin() {
@@ -415,8 +417,14 @@ class WordPress extends Plugin
 
             $pluginUrlReplacer = new PluginUrlReplacer();
             $result = $pluginUrlReplacer->replaceThirdPartyPluginUrls( $result );
-	    }
+
+            if ($module === 'ProfessionalServices') {
+                $promoCustomizer = new PromoCustomizer();
+                $result = $promoCustomizer->customizePromoHtml($result);
+            }
+        }
     }
+
     public function onDispatchRequest(&$module, &$action, &$parameters)
     {
         if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {
@@ -549,5 +557,6 @@ class WordPress extends Plugin
         $files[] = "../plugins/WordPress/stylesheets/export.css";
         $files[] = "../plugins/WordPress/stylesheets/blogselection.css";
         $files[] = "../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.less";
+        $files[] = "../plugins/WordPress/stylesheets/overrides.css";
     }
 }

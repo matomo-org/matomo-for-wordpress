@@ -139,7 +139,11 @@ add_filter(
 	'matomo_asset_version',
 	function ( $version ) {
 		if ( getenv( 'MATOMO_IN_E2E' ) ) {
-			$version .= filemtime( MATOMO_ANALYTICS_FILE );
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$mtime = @filemtime( MATOMO_ANALYTICS_FILE );
+			if ( $mtime ) {
+				$version .= $mtime;
+			}
 		}
 		return $version;
 	}

@@ -1,9 +1,15 @@
 <?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
 
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 
 /**
- * @package matomo
  * phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
  * phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
  */
