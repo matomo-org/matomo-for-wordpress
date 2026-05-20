@@ -123,6 +123,12 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		line-height: 1.4em;
 	}
 
+	#matomo-for-marketplace-welcome h1 + p {
+		max-width: 700px;
+		margin-top: .25em;
+		margin-bottom: 2em;
+	}
+
 	.step-number {
 		margin-right: 8px;
 		font-size: 14px;
@@ -140,12 +146,28 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		background-color: #2271b1;
 	}
 
+	.plugin-activation-status {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		border-radius: 16px;
+		border: solid 1px #deecfe;
+		padding: 6px 15px;
+		font-size: 14px;
+	}
+
+	.plugin-activation-status > svg {
+		width: 16px;
+		height: 16px;
+		margin-right: 4px;
+	}
+
 	/** TODO: responsiveness */
 </style>
 <div id="matomo-for-marketplace-welcome">
 	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'What is the Matomo for WordPress Marketplace', 'matomo' ); ?></h1>
 
-	<p style="max-width: 700px; margin-top: .25em; margin-bottom: 2em;">
+	<p>
 		<?php esc_html_e( 'Matomo for WordPress includes Matomo core analytics.', 'matomo' ); ?>
 		<?php esc_html_e( 'You started there but now you are getting stronger and more advanced! Congrats!', 'matomo' ); ?>
 		<?php esc_html_e( 'You can extend it with additional Matomo Analytics modules.', 'matomo' ); ?>
@@ -172,6 +194,8 @@ if ( isset( $marketplace_setup_wizard ) ) {
 			</p>
 			<div>
 				<div class="plugin-activation-status">
+					<svg fill="hsl(228, 97%, 42%)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
+
 					<?php esc_html_e( 'Waiting for plugin activation', 'matomo' ); ?>...
 				</div>
 			</div>
@@ -200,6 +224,20 @@ if ( isset( $marketplace_setup_wizard ) ) {
 				<button class="button-secondary"><?php esc_html_e( 'Go to Plugins', 'matomo' ); ?></button>
 			</div>
 		</div>
+	</div>
+
+	<h1 style="margin-top: 1em;"><?php esc_html_e( 'Most popular features', 'matomo' ); ?></h1>
+	<p><?php esc_html_e( 'Developed by Matomo and partners, install these on top of your Matomo plugin for more advanced analytics.', 'matomo' ); ?></p>
+
+	<div class="matomo-popular-feature">
+		<div class="description">
+			<h2><?php esc_html_e( 'Marketing Campaigns Reporting', 'matomo' ); ?></h2>
+			<p><?php esc_html_e( 'Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo' ); ?></p>
+		</div>
+
+		<a href="/">
+			<button class="btn-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
+		</a>
 	</div>
 </div>
 
