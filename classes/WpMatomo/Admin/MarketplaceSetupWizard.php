@@ -22,6 +22,10 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
+		if ( $this->is_plugin_install_page() ) {
+			return true;
+		}
+
 		if ( empty( $_REQUEST['page'] ) ) {
 			return false;
 		}
@@ -50,6 +54,20 @@ class MarketplaceSetupWizard extends Feature {
 
 	public function register_hooks() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+	}
+
+	public function admin_notices() {
+		if ( ! $this->is_plugin_install_page() ) {
+			return;
+		}
+		?>
+		<div class="notice notice-info">
+			<p>
+				<?php esc_html_e( 'You are almost there! Upload the .zip file below to install the Marketplace and start exploring advanced analytics features.', 'matomo' ); ?>
+			</p>
+		</div>
+		<?php
 	}
 
 	public function enqueue_scripts() {
@@ -107,5 +125,26 @@ class MarketplaceSetupWizard extends Feature {
 	public static function is_marketplace_installed() {
 		return is_file( WP_PLUGIN_DIR . '/' . self::MARKETPLACE_PLUGIN_FILE )
 			|| is_file( WP_CONTENT_DIR . '/mu-plugins/' . self::MARKETPLACE_PLUGIN_FILE );
+	}
+
+	private function is_plugin_install_page() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+
+		$request_path = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		if ( ! preg_match( '%/wp-admin/plugin-install\\.php$%', $request_path ) ) {
+			return false;
+		}
+
+		if (
+			empty( $_REQUEST['tab'] )
+			|| wp_unslash( $_REQUEST['tab'] ) !== 'upload'
+			|| empty( $_REQUEST['mtm_marketplace_install'] )
+		) {
+			return false;
+		}
+
+		return true;
 	}
 }

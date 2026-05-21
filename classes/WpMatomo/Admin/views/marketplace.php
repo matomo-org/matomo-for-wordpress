@@ -298,7 +298,7 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 				<?php esc_html_e( 'Go to your WordPress plugins admin page. Upload and install the plugin you just downloaded.', 'matomo' ); ?>
 			</p>
 			<div>
-				<a class="open-plugin-upload button-secondary" href="plugin-install.php?tab=upload" target="_blank">
+				<a class="open-plugin-upload button-secondary" href="plugin-install.php?tab=upload&mtm_marketplace_install=1" target="_blank">
 					<?php esc_html_e( 'Go to Plugins', 'matomo' ); ?>
 				</a>
 			</div>
