@@ -187,7 +187,8 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 		border-radius: 6px;
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		justify-content: space-between;
+		align-items: stretch;
 		padding: 1.6em 1.5em;
 		margin-bottom: 20px;
 	}
@@ -198,13 +199,27 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 		font-size: 17px;
 	}
 
+	.matomo-popular-feature .description {
+		flex: 6;
+	}
+
 	.matomo-popular-feature p {
 		margin-bottom: 0;
 		max-width: 700px;
 	}
 
-	.matomo-popular-feature .description {
+	.matomo-popular-feature > .learn-more {
 		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.matomo-popular-feature .cover-image {
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		flex: 3;
 	}
 
 	.matomo-price {
@@ -331,40 +346,48 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 		'MarketingCampaignsReporting'     => [
 			'name' => __( 'Marketing Campaigns Reporting', 'matomo' ),
 			'desc' => __( "Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo'", 'matomo' ),
+			'img'  => 'marketing-campaign-analytics.png',
 		],
 		'SearchEngineKeywordsPerformance' => [
 			'name'  => __( 'Search Engine Keywords Performance', 'matomo' ),
 			'desc'  => __( 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.', 'matomo' ),
 			'price' => '79EUR / 89USD',
+			'img'   => 'search-engine-keywords-performance.webp',
 		],
 		'HeatmapSessionRecording'         => [
 			'name'  => __( 'Heatmap & Session Recording', 'matomo' ),
 			'desc'  => __( 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.', 'matomo' ),
 			'price' => '109EUR / 129USD',
+			'img'   => 'heatmap-session-recording.webp',
 		],
 		'CustomAlerts'                    => [
 			'name' => __( 'Custom Alerts', 'matomo' ),
 			'desc' => __( 'Create custom Alerts to be notified of important changes on your website or app!', 'matomo' ),
+			'img'  => 'custom-alerts.png',
 		],
 		'MediaAnalytics'                  => [
 			'name'  => __( 'Media Analytics', 'matomo' ),
 			'desc'  => __( 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.', 'matomo' ),
 			'price' => '89EUR / 99USD',
+			'img'   => 'media-analytics.jpg',
 		],
 		'CustomReports'                   => [
 			'name'  => __( 'Custom Reports', 'matomo' ),
 			'desc'  => __( 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.', 'matomo' ),
 			'price' => '109EUR / 129USD',
+			'img'   => 'custom-reports.png',
 		],
 		'WpPremiumBundle'                 => [
 			'name'  => __( 'WordPress Premium Bundle', 'matomo' ),
 			'desc'  => __( 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of up to 25%!', 'matomo' ),
 			'price' => '549EUR / 639USD',
+			'img'   => 'matomo-wordpress-premium-bundle.png',
 		],
 		'UsersFlow'                       => [
 			'name'  => __( 'Users Flow', 'matomo' ),
 			'desc'  => __( 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.', 'matomo' ),
 			'price' => '49EUR / 59USD',
+			'img'   => 'users-flow.webp',
 		],
 	];
 	?>
@@ -381,7 +404,15 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 			<p><?php echo esc_html( $matomo_feature_info['desc'] ); ?></p>
 		</div>
 
-		<a href="<?php echo esc_attr( 'https://plugins.matomo.org/' . $matomo_feature_slug . '?wp=1' ); ?>" target="_blank">
+		<?php if ( isset( $matomo_feature_info['img'] ) ) { ?>
+		<div
+			class="cover-image"
+			style="background-image: url(<?php echo esc_attr( plugins_url( 'assets/img/suggestions/' . $matomo_feature_info['img'], MATOMO_ANALYTICS_FILE ) ); ?>)"
+		>
+		</div>
+		<?php } ?>
+
+		<a class="learn-more" href="<?php echo esc_attr( 'https://plugins.matomo.org/' . $matomo_feature_slug . '?wp=1' ); ?>" target="_blank">
 			<button class="button-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
 		</a>
 	</div>
