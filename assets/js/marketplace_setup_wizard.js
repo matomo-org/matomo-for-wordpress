@@ -22,10 +22,17 @@ window.jQuery(document).ready(function ($) {
         if (data.active) {
           if (!setActiveClass) {
             $('.wizard-waiting-for').hide();
-            $('.wizard-reloading').show();
+          } else {
+            $('.wizard-waiting-for .waiting-for-activation').hide();
           }
 
-          window.location.reload();
+          $('.wizard-reloading').show();
+
+          // reload after the dom has had a chance to update
+          setTimeout(function () {
+            window.location.reload();
+          });
+
           clearInterval(interval);
         } else if (data.installed && setActiveClass) {
           $('.wizard-waiting-for .waiting-for-install').hide();

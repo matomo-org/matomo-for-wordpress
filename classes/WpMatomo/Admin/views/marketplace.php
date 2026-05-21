@@ -33,7 +33,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php if ( in_array( 'install', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=install"
 		   class="nav-tab <?php echo ( 'install' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
-		><?php esc_html_e( 'Install Plugins', 'matomo' ); ?></a>
+		><?php esc_html_e( 'Marketplace', 'matomo' ); ?></a>
 	<?php } ?>
 	<?php if ( in_array( 'subscriptions', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=subscriptions"
@@ -49,7 +49,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 <?php } ?>
 
 <?php
-if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
+if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 	$marketplace_setup_wizard->show();
 	return;
 }
@@ -152,7 +152,9 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 	}
 
 	.wizard-waiting-for {
-		display: inline-block;
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
 		border-radius: 16px;
 		border: solid 1px #deecfe;
 		padding: 6px 15px;
@@ -162,12 +164,6 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 
 	.wizard-waiting-for.active {
 		visibility: visible;
-	}
-
-	.wizard-waiting-for > span {
-		display: inline-flex;
-		flex-direction: row;
-		align-items: center;
 	}
 
 	.wizard-waiting-for svg {
@@ -252,25 +248,26 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 
 			<div class="matomo-setup-divider"></div>
 			<p class="matomo-smaller-text">
-				<?php echo sprintf(
+				<?php
+				echo sprintf(
 					esc_html__( 'Don\'t want to use the plugin? Download directly %1$son our marketplace,%2$s but keep in mind, you won\'t receive automatic updates unless you use the Matomo Marketplace plugin.', 'matomo' ),
 					'<a href="https://plugins.matomo.org/?wp=1" target="_blank" rel="noreferrer noopener">',
 					'</a>'
-				); ?>
+				);
+				?>
 			</p>
 			<div>
 				<div class="wizard-waiting-for matomo-primary-color-fg">
+					<!-- TODO: change to css animation -->
+					<svg class="matomo-primary-color-fill" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
 					<span class="waiting-for-install" style="display: none;">
-						<!-- TODO: change to css animation -->
-						<svg class="matomo-primary-color-fill" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
-
-						<?php esc_html_e( 'Waiting for plugin installation', 'matomo' ); ?>
+						<?php esc_html_e( 'Waiting for plugin installation', 'matomo' ); ?>...
 					</span>
 					<span class="waiting-for-activation" style="display: none;">
-						<!-- TODO: change to css animation -->
-						<svg class="matomo-primary-color-fill" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
-
 						<?php esc_html_e( 'Waiting for plugin activation', 'matomo' ); ?>...
+					</span>
+					<span class="wizard-reloading" style="display: none;">
+						<?php esc_html_e( 'Reloading page', 'matomo' ); ?>...
 					</span>
 				</div>
 			</div>
@@ -284,7 +281,7 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 				<?php esc_html_e( 'Download the Matomo Marketplace for WordPress plugin as a .zip file to your computer.', 'matomo' ); ?>
 			</p>
 			<div>
-				<a href="<?php echo esc_attr( $matomo_marketplace_url ); ?>" target="_blank" rel="noreferrer noopener" class="download-plugin">
+				<a href="<?php echo esc_attr( $matomo_marketplace_url ); ?>" rel="noreferrer noopener" class="download-plugin">
 					<button class="button-primary"><?php esc_html_e( 'Download .zip', 'matomo' ); ?></button>
 				</a>
 			</div>
@@ -310,7 +307,7 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 
 	<?php
 	$matomo_popular_features = [
-		'MarketingCampaignsReporting' => [
+		'MarketingCampaignsReporting'     => [
 			'name' => __( 'Marketing Campaigns Reporting', 'matomo' ),
 			'desc' => __( "Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo'", 'matomo' ),
 		],
@@ -319,31 +316,31 @@ if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 			'desc'  => __( 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.', 'matomo' ),
 			'price' => '79EUR / 89USD',
 		],
-		'HeatmapSessionRecording' => [
+		'HeatmapSessionRecording'         => [
 			'name'  => __( 'Heatmap & Session Recording', 'matomo' ),
 			'desc'  => __( 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.', 'matomo' ),
 			'price' => '109EUR / 129USD',
 		],
-		'CustomAlerts' => [
-			'name'  => __( 'Custom Alerts', 'matomo' ),
-			'desc'  => __( 'Create custom Alerts to be notified of important changes on your website or app!', 'matomo' ),
+		'CustomAlerts'                    => [
+			'name' => __( 'Custom Alerts', 'matomo' ),
+			'desc' => __( 'Create custom Alerts to be notified of important changes on your website or app!', 'matomo' ),
 		],
-		'MediaAnalytics' => [
+		'MediaAnalytics'                  => [
 			'name'  => __( 'Media Analytics', 'matomo' ),
 			'desc'  => __( 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.', 'matomo' ),
 			'price' => '89EUR / 99USD',
 		],
-		'CustomReports' => [
+		'CustomReports'                   => [
 			'name'  => __( 'Custom Reports', 'matomo' ),
 			'desc'  => __( 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.', 'matomo' ),
 			'price' => '109EUR / 129USD',
 		],
-		'WpPremiumBundle' => [
+		'WpPremiumBundle'                 => [
 			'name'  => __( 'WordPress Premium Bundle', 'matomo' ),
 			'desc'  => __( 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of up to 25%!', 'matomo' ),
 			'price' => '549EUR / 639USD',
 		],
-		'UsersFlow' => [
+		'UsersFlow'                       => [
 			'name'  => __( 'Users Flow', 'matomo' ),
 			'desc'  => __( 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.', 'matomo' ),
 			'price' => '49EUR / 59USD',

@@ -22,7 +22,10 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
-		if ( $this->is_plugin_install_page() ) {
+		if (
+			$this->is_plugin_install_page()
+			|| $this->is_plugin_activation_request()
+		) {
 			return true;
 		}
 
@@ -55,6 +58,35 @@ class MarketplaceSetupWizard extends Feature {
 	public function register_hooks() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
+		add_action( 'activated_plugin', [ $this, 'on_plugin_activated' ] );
+		add_action( 'admin_footer', [ $this, 'on_admin_footer' ] );
+	}
+
+	public function on_plugin_activated( $plugin ) {
+		if ( 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' !== $plugin ) {
+			return;
+		}
+
+		if (
+			empty( $_SERVER['HTTP_REFERER'] )
+			|| false === strpos( esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ), 'mtm_marketplace_install' )
+		) {
+			return;
+		}
+
+		// if we are in the marketplace install workflow, and the plugin has been
+		// activated, close the current window to go back to the marketplace setup
+		?>
+		<html>
+		<head></head>
+		<body>
+			<script>
+				window.close();
+			</script>
+		</body>
+		</html>
+		<?php
+		wp_die();
 	}
 
 	public function admin_notices() {
@@ -64,9 +96,25 @@ class MarketplaceSetupWizard extends Feature {
 		?>
 		<div class="notice notice-info">
 			<p>
-				<?php esc_html_e( 'You are almost there! Upload the .zip file below to install the Marketplace and start exploring advanced analytics features.', 'matomo' ); ?>
+				<?php esc_html_e( 'You\'re almost there! Upload the .zip file below to install the Marketplace and start exploring advanced analytics features.', 'matomo' ); ?>
 			</p>
 		</div>
+		<?php
+	}
+
+	public function on_admin_footer() {
+		if ( ! $this->is_plugin_install_page() ) {
+			return;
+		}
+
+		// add script to add query param to plugin upload form submit URL
+		?>
+		<script>
+			window.jQuery(document).ready(function ($) {
+				var $form = $('.wp-upload-form');
+				$form.attr('action', $form.attr('action') + '&mtm_marketplace_install=1');
+			});
+		</script>
 		<?php
 	}
 
@@ -86,7 +134,12 @@ class MarketplaceSetupWizard extends Feature {
 				'ajax_url'        => admin_url( 'admin-ajax.php' ),
 				'is_active_nonce' => wp_create_nonce( self::AJAX_IS_ACTIVE_NONCE_NAME ),
 				'activate_nonce'  => wp_create_nonce( self::AJAX_ACTIVATE_NONCE_NAME ),
-				'is_welcome_page' => wp_unslash( $_REQUEST['page'] ) === Menu::SLUG_MARKETPLACE && wp_unslash( $_REQUEST['tab'] ) === 'marketplace',
+				'is_welcome_page' => isset( $_REQUEST['page'] )
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					&& Menu::SLUG_MARKETPLACE === wp_unslash( $_REQUEST['page'] )
+					&& isset( $_REQUEST['tab'] )
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					&& 'marketplace' === wp_unslash( $_REQUEST['tab'] ),
 			]
 		);
 	}
@@ -132,15 +185,40 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
-		$request_path = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		$request_path = wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( ! preg_match( '%/wp-admin/plugin-install\\.php$%', $request_path ) ) {
 			return false;
 		}
 
 		if (
 			empty( $_REQUEST['tab'] )
-			|| wp_unslash( $_REQUEST['tab'] ) !== 'upload'
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			|| 'upload' !== wp_unslash( $_REQUEST['tab'] )
 			|| empty( $_REQUEST['mtm_marketplace_install'] )
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function is_plugin_activation_request() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+
+		$request_path = wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+		if ( ! preg_match( '%/wp-admin/plugins\\.php$%', $request_path ) ) {
+			return false;
+		}
+
+		if (
+			empty( $_REQUEST['action'] )
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			|| 'activate' !== wp_unslash( $_REQUEST['action'] )
+			|| empty( $_REQUEST['plugin'] )
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			|| 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' !== wp_unslash( $_REQUEST['plugin'] )
 		) {
 			return false;
 		}
