@@ -34,9 +34,7 @@ class MarketplaceSetupWizard extends Feature {
 			return false;
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$tab = isset( $_REQUEST['tab'] ) ? wp_unslash( $_REQUEST['tab'] ) : '';
-		return 'install' === $tab || 'subscriptions' === $tab;
+		return true; // displayed in some manner on all tabs
 	}
 
 	public function get_body( $show_titles = true ) {
@@ -70,6 +68,7 @@ class MarketplaceSetupWizard extends Feature {
 				'ajax_url'        => admin_url( 'admin-ajax.php' ),
 				'is_active_nonce' => wp_create_nonce( self::AJAX_IS_ACTIVE_NONCE_NAME ),
 				'activate_nonce'  => wp_create_nonce( self::AJAX_ACTIVATE_NONCE_NAME ),
+				'is_welcome_page' => wp_unslash( $_REQUEST['page'] ) === Menu::SLUG_MARKETPLACE && wp_unslash( $_REQUEST['tab'] ) === 'marketplace',
 			]
 		);
 	}
@@ -86,7 +85,12 @@ class MarketplaceSetupWizard extends Feature {
 			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
 		}
 
-		wp_send_json( [ 'active' => is_plugin_active( self::MARKETPLACE_PLUGIN_FILE ) ] );
+		wp_send_json(
+			[
+				'installed' => self::is_marketplace_installed(),
+				'active'    => is_plugin_active( self::MARKETPLACE_PLUGIN_FILE ),
+			]
+		);
 	}
 
 	public static function activate_marketplace_plugin() {

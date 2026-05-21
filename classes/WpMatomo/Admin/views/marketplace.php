@@ -21,13 +21,14 @@ $matomo_extra_url_params = '&' . http_build_query(
 );
 
 /** @var string $matomo_currency */
+/** @var string $matomo_marketplace_url */
 ?>
 <?php if ( ! empty( $valid_tabs ) ) { ?>
 <h2 class="nav-tab-wrapper" style="margin-bottom:1em;">
 	<?php if ( in_array( 'marketplace', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=marketplace"
 		   class="nav-tab <?php echo ( 'marketplace' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
-		><?php esc_html_e( 'Overview', 'matomo' ); ?></a>
+		><?php esc_html_e( 'Welcome', 'matomo' ); ?></a>
 	<?php } ?>
 	<?php if ( in_array( 'install', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=install"
@@ -48,7 +49,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 <?php } ?>
 
 <?php
-if ( isset( $marketplace_setup_wizard ) ) {
+if ( isset( $marketplace_setup_wizard ) && $active_tab !== 'marketplace' ) {
 	$marketplace_setup_wizard->show();
 	return;
 }
@@ -60,6 +61,10 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		margin-left: 8px;
 	}
 
+	#matomo-for-marketplace-welcome > h1:first-child {
+		margin-top: 20px;
+	}
+
 	#matomo-welcome-marketplace-setup {
 		display: flex;
 		flex-direction: row;
@@ -68,6 +73,7 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		padding: 2em 1.5em;
 		border-radius: 6px;
 		background-color: white;
+		margin-top: 2em;
 	}
 
 	#matomo-setup-preface {
@@ -123,10 +129,10 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		line-height: 1.4em;
 	}
 
-	#matomo-for-marketplace-welcome h1 + p {
-		max-width: 700px;
+	#matomo-for-marketplace-welcome > p {
 		margin-top: .25em;
-		margin-bottom: 2em;
+		margin-bottom: .5em;
+		max-width: 700px;
 	}
 
 	.step-number {
@@ -139,41 +145,94 @@ if ( isset( $marketplace_setup_wizard ) ) {
 		align-items: center;
 		justify-content: center;
 		color: white;
+	}
+
+	.step-number:not(.current) {
 		background-color: #777;
 	}
 
-	.step-number.current {
-		background-color: #2271b1;
-	}
-
-	.plugin-activation-status {
-		display: inline-flex;
-		flex-direction: row;
-		align-items: center;
+	.wizard-waiting-for {
+		display: inline-block;
 		border-radius: 16px;
 		border: solid 1px #deecfe;
 		padding: 6px 15px;
 		font-size: 14px;
+		visibility: hidden;
 	}
 
-	.plugin-activation-status > svg {
+	.wizard-waiting-for.active {
+		visibility: visible;
+	}
+
+	.wizard-waiting-for > span {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.wizard-waiting-for svg {
 		width: 16px;
 		height: 16px;
 		margin-right: 4px;
 	}
 
+	.matomo-popular-feature {
+		background-color: white;
+		border-radius: 6px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 1.6em 1.5em;
+		margin-bottom: 20px;
+	}
+
+	.matomo-popular-feature h3 {
+		margin: 0;
+		font-weight: 500;
+		font-size: 17px;
+	}
+
+	.matomo-popular-feature p {
+		margin-bottom: 0;
+		max-width: 700px;
+	}
+
+	.matomo-popular-feature .description {
+		flex: 1;
+	}
 	/** TODO: responsiveness */
 </style>
+<script>
+	window.jQuery(document).ready(function ($) {
+		$('body').on('click', '.download-plugin', function (e) {
+			if ($(e.target).is('.button-secondary')) {
+				return;
+			}
+
+			var step = $(e.target).closest('#matomo-step1');
+			step.find('.step-number').removeClass('current').removeClass('matomo-primary-color-bg');
+			step.find('.button-primary').removeClass('button-primary').addClass('button-secondary');
+
+			var step2 = step.siblings('#matomo-step2');
+			step2.find('.step-number').addClass('current').addClass('matomo-primary-color-bg');
+			step2.find('.button-secondary').removeClass('button-secondary').addClass('button-primary');
+		});
+	});
+</script>
 <div id="matomo-for-marketplace-welcome">
 	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'What is the Matomo for WordPress Marketplace', 'matomo' ); ?></h1>
 
 	<p>
-		<?php esc_html_e( 'Matomo for WordPress includes Matomo core analytics.', 'matomo' ); ?>
-		<?php esc_html_e( 'You started there but now you are getting stronger and more advanced! Congrats!', 'matomo' ); ?>
-		<?php esc_html_e( 'You can extend it with additional Matomo Analytics modules.', 'matomo' ); ?>
+		<?php esc_html_e( 'Matomo for WordPress includes core analytics to understand your visitors, behaviour, acquisition and ecommerce performance.', 'matomo' ); ?>
+	</p>
+	<p>
+		<?php esc_html_e( 'As your needs grow, you can extend your analytics with additional Matomo features.', 'matomo' ); ?>
+	</p>
+	<p>
+		<?php esc_html_e( 'The Marketplace lets you discover and install these features directly in Matomo for WordPress, so you can unlock more advanced insights when you need them.', 'matomo' ); ?>
 	</p>
 
-	<div id="matomo-welcome-marketplace-setup">
+	<div id="matomo-welcome-marketplace-setup" class="matomo-marketplace-wizard-body">
 		<div id="matomo-setup-preface">
 			<div id="matomo-setup-preface-title">
 				<img src="<?php echo esc_attr( plugins_url( '/assets/img/logo.png', MATOMO_ANALYTICS_FILE ) ); ?>" alt="Matomo Logo" />
@@ -182,34 +241,52 @@ if ( isset( $marketplace_setup_wizard ) ) {
 				</h2>
 			</div>
 			<p>
-				<?php esc_html_e( 'Follow these simple steps to install extensions and enhance your analytics capabilities.', 'matomo' ); ?>
+				<?php esc_html_e( 'Discover more than 100 advanced analytics features built by Matomo and its community.', 'matomo' ); ?>
 			</p>
+			<p>
+				<?php esc_html_e( 'Install and manage these features directly in Matomo for WordPress to extend your analytics as your needs grow.', 'matomo' ); ?>
+			</p>
+			<p>
+				<?php esc_html_e( 'Follow these steps to install the Marketplace and start unlocking additional capabilities.', 'matomo' ); ?>
+			</p>
+
 			<div class="matomo-setup-divider"></div>
 			<p class="matomo-smaller-text">
 				<?php echo sprintf(
 					esc_html__( 'Don\'t want to use the plugin? Download directly %1$son our marketplace,%2$s but keep in mind, you won\'t receive automatic updates unless you use the Matomo Marketplace plugin.', 'matomo' ),
-					'<a href="https://plugins.matomo.org/?wp=1" target="_blank">',
+					'<a href="https://plugins.matomo.org/?wp=1" target="_blank" rel="noreferrer noopener">',
 					'</a>'
 				); ?>
 			</p>
 			<div>
-				<div class="plugin-activation-status">
-					<svg fill="hsl(228, 97%, 42%)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
+				<div class="wizard-waiting-for matomo-primary-color-fg">
+					<span class="waiting-for-install" style="display: none;">
+						<!-- TODO: change to css animation -->
+						<svg class="matomo-primary-color-fill" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
 
-					<?php esc_html_e( 'Waiting for plugin activation', 'matomo' ); ?>...
+						<?php esc_html_e( 'Waiting for plugin installation', 'matomo' ); ?>
+					</span>
+					<span class="waiting-for-activation" style="display: none;">
+						<!-- TODO: change to css animation -->
+						<svg class="matomo-primary-color-fill" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/></path></svg>
+
+						<?php esc_html_e( 'Waiting for plugin activation', 'matomo' ); ?>...
+					</span>
 				</div>
 			</div>
 		</div>
 		<div id="matomo-step1">
 			<div>
-				<span class="step-number current">1</span>
+				<span class="step-number current matomo-primary-color-bg">1</span>
 				<span><?php esc_html_e( 'Download Plugin', 'matomo' ); ?></span>
 			</div>
 			<p>
 				<?php esc_html_e( 'Download the Matomo Marketplace for WordPress plugin as a .zip file to your computer.', 'matomo' ); ?>
 			</p>
 			<div>
-				<button class="button-primary"><?php esc_html_e( 'Download .zip', 'matomo' ); ?></button>
+				<a href="<?php echo esc_attr( $matomo_marketplace_url ); ?>" target="_blank" rel="noreferrer noopener" class="download-plugin">
+					<button class="button-primary"><?php esc_html_e( 'Download .zip', 'matomo' ); ?></button>
+				</a>
 			</div>
 		</div>
 		<div id="matomo-step2">
@@ -221,354 +298,69 @@ if ( isset( $marketplace_setup_wizard ) ) {
 				<?php esc_html_e( 'Go to your WordPress plugins admin page. Upload and install the plugin you just downloaded.', 'matomo' ); ?>
 			</p>
 			<div>
-				<button class="button-secondary"><?php esc_html_e( 'Go to Plugins', 'matomo' ); ?></button>
+				<a class="open-plugin-upload button-secondary" href="plugin-install.php?tab=upload" target="_blank">
+					<?php esc_html_e( 'Go to Plugins', 'matomo' ); ?>
+				</a>
 			</div>
 		</div>
 	</div>
 
 	<h1 style="margin-top: 1em;"><?php esc_html_e( 'Most popular features', 'matomo' ); ?></h1>
-	<p><?php esc_html_e( 'Developed by Matomo and partners, install these on top of your Matomo plugin for more advanced analytics.', 'matomo' ); ?></p>
+	<p style="margin-bottom: 20px;"><?php esc_html_e( 'Developed by Matomo and partners, install these on top of your Matomo plugin for more advanced analytics.', 'matomo' ); ?></p>
 
+	<?php
+	$matomo_popular_features = [
+		'MarketingCampaignsReporting' => [
+			'name' => __( 'Marketing Campaigns Reporting', 'matomo' ),
+			'desc' => __( "Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo'", 'matomo' ),
+		],
+		'SearchEngineKeywordsPerformance' => [
+			'name'  => __( 'Search Engine Keywords Performance', 'matomo' ),
+			'desc'  => __( 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.', 'matomo' ),
+			'price' => '79EUR / 89USD',
+		],
+		'HeatmapSessionRecording' => [
+			'name'  => __( 'Heatmap & Session Recording', 'matomo' ),
+			'desc'  => __( 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.', 'matomo' ),
+			'price' => '109EUR / 129USD',
+		],
+		'CustomAlerts' => [
+			'name'  => __( 'Custom Alerts', 'matomo' ),
+			'desc'  => __( 'Create custom Alerts to be notified of important changes on your website or app!', 'matomo' ),
+		],
+		'MediaAnalytics' => [
+			'name'  => __( 'Media Analytics', 'matomo' ),
+			'desc'  => __( 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.', 'matomo' ),
+			'price' => '89EUR / 99USD',
+		],
+		'CustomReports' => [
+			'name'  => __( 'Custom Reports', 'matomo' ),
+			'desc'  => __( 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.', 'matomo' ),
+			'price' => '109EUR / 129USD',
+		],
+		'WpPremiumBundle' => [
+			'name'  => __( 'WordPress Premium Bundle', 'matomo' ),
+			'desc'  => __( 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of up to 25%!', 'matomo' ),
+			'price' => '549EUR / 639USD',
+		],
+		'UsersFlow' => [
+			'name'  => __( 'Users Flow', 'matomo' ),
+			'desc'  => __( 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.', 'matomo' ),
+			'price' => '49EUR / 59USD',
+		],
+	];
+	?>
+
+	<?php foreach ( $matomo_popular_features as $matomo_feature_slug => $matomo_feature_info ) { ?>
 	<div class="matomo-popular-feature">
 		<div class="description">
-			<h2><?php esc_html_e( 'Marketing Campaigns Reporting', 'matomo' ); ?></h2>
-			<p><?php esc_html_e( 'Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo' ); ?></p>
+			<h3 class="matomo-primary-color-fg"><?php echo esc_html( $matomo_feature_info['name'] ); ?></h3>
+			<p><?php echo esc_html( $matomo_feature_info['desc'] ); ?></p>
 		</div>
 
-		<a href="/">
-			<button class="btn-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
+		<a href="<?php echo esc_attr( 'https://plugins.matomo.org/' . $matomo_feature_slug . '?wp=1' ); ?>" target="_blank">
+			<button class="button-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
 		</a>
 	</div>
+	<?php } ?>
 </div>
-
-<?php
-function matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency ) {
-	foreach ( $matomo_feature_sections as $matomo_feature_section ) {
-		$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
-		$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
-		$matomo_feature_section_class       = isset( $matomo_feature_section['class'] ) ? $matomo_feature_section['class'] : '';
-		$matomo_extra_card_html             = isset( $matomo_feature_section['extra_card_html'] ) ? $matomo_feature_section['extra_card_html'] : '';
-
-		echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-		echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . ' ' . esc_attr( $matomo_feature_section_class ) . '"><div id="the-list">';
-
-		foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
-			$matomo_style        = '';
-			$matomo_is_3_columns = 3 === $matomo_num_features_in_block;
-			if ( $matomo_is_3_columns ) {
-				$matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
-				if ( 2 === $matomo_index % 3 ) {
-					$matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
-				}
-			}
-			$plugin_url = empty( $matomo_feature['url'] ) ? null : $matomo_feature['url'] . '&matomoversion=' . $matomo_version;
-			?>
-			<div class="plugin-card" style="<?php echo esc_attr( $matomo_style ); ?>">
-				<?php
-				if ( $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
-					?>
-				<a
-						href="<?php echo esc_url( $plugin_url ); ?>"
-						rel="noreferrer noopener" target="_blank"
-						class="thickbox open-plugin-details-modal"><img
-							src="<?php echo esc_url( $matomo_feature['image'] ); ?>"
-							style="height: 80px;width:100%;object-fit: cover;" alt=""></a>
-							<?php
-				}
-				?>
-
-				<div class="plugin-card-top">
-					<div class="
-				<?php
-				if ( ! $matomo_is_3_columns ) {
-					?>
-					name column-name
-					<?php
-				}
-				?>
-					" style="margin-right: 0;
-					<?php
-					if ( empty( $matomo_feature['image'] ) ) {
-						echo 'margin-left: 0;';
-					}
-					?>
-							">
-						<h3>
-							<a href="<?php echo esc_url( ! empty( $matomo_feature['video'] ) ? $matomo_feature['video'] : $plugin_url ); ?>"
-							   rel="noreferrer noopener" target="_blank"
-							   class="thickbox open-plugin-details-modal">
-								<?php echo esc_html( $matomo_feature['name'] ); ?>
-							</a>
-							<?php
-							if ( ! $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
-								?>
-							<a
-									href="<?php echo esc_url( $plugin_url ); ?>"
-									rel="noreferrer noopener" target="_blank"
-									class="thickbox open-plugin-details-modal"><img
-										src="<?php echo esc_url( $matomo_feature['image'] ); ?>" class="plugin-icon"
-										style="object-fit: cover;"
-										alt=""></a>
-										<?php
-							}
-							?>
-						</h3>
-					</div>
-					<div class="
-				<?php
-				if ( ! $matomo_is_3_columns ) {
-					?>
-					desc column-description
-					<?php
-				}
-				?>
-					"
-						 style="margin-right: 0;
-						 <?php
-							if ( empty( $matomo_feature['image'] ) ) {
-								echo 'margin-left: 0;';
-							}
-							?>
-								 ">
-						<?php
-						if ( ! empty( $matomo_feature['price'] ) && 'free' !== $matomo_feature['price'] ) {
-							?>
-							<span class="plugin-price"><?php echo esc_html( $matomo_feature['price'] ); ?></span>
-							<?php
-						}
-						?>
-						<p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
-							<?php
-							if ( ! empty( $matomo_feature['video'] ) ) {
-								echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $matomo_feature['video'] ) . '"><span class="dashicons dashicons-video-alt3"></span> ' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
-							} elseif ( ! empty( $matomo_feature['url'] ) ) {
-								echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $plugin_url ) . '">' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
-							}
-							?>
-						</p>
-						<?php
-						if ( ! empty( $matomo_feature['price'] ) ) {
-							$matomo_button_url = ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url;
-							if ( 'free' !== $matomo_feature['price'] ) {
-								$matomo_button_url .= '&add-to-cart=ws&currency=' . $matomo_currency;
-							}
-							?>
-							<p class="authors">
-								<a class="button-primary"
-									rel="noreferrer noopener" target="_blank"
-									href="<?php echo esc_url( $matomo_button_url ); ?>">
-								<?php
-								if ( 'free' === $matomo_feature['price'] ) {
-									esc_html_e( 'Download', 'matomo' );
-								} else {
-									?>
-									<span
-										class="dashicons dashicons-cart"
-										<?php if ( ! function_exists( 'wp_get_wp_version' ) || version_compare( wp_get_wp_version(), '7', '<' ) ) { ?>
-											style="vertical-align: middle;"
-										<?php } ?>
-									></span>
-									<?php
-									esc_html_e( 'Start free trial...', 'matomo' );
-								}
-								?>
-								</a>
-							</p>
-							<?php
-						}
-						?>
-					</div>
-				</div>
-				<?php
-					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $matomo_extra_card_html;
-				?>
-			</div>
-			<?php
-		}
-		echo '';
-		echo '</div><div style="clear: both"></div>';
-		if ( ! empty( $matomo_feature_section['more_url'] ) ) {
-			echo '<a target="_blank" rel="noreferrer noopener" href="' . esc_attr( $matomo_feature_section['more_url'] ) . '"><span class="dashicons dashicons-arrow-right-alt2"></span>' . esc_html( $matomo_feature_section['more_text'] ) . '</a>';
-		}
-		echo '</div>';
-	}
-}
-
-$matomo_feature_sections = [
-	[
-		'title'           => 'What\'s New',
-		'class'           => 'matomo-new-plugins',
-		'extra_card_html' => '<span class="matomo-new-marker">' . esc_html__( 'New!', 'matomo' ) . '</span>',
-		'features'        =>
-			[
-				[
-					'name'        => 'Crash Analytics',
-					'description' => 'Detect crashes to improve the user experience, increase conversions and recover revenue. Resolve them with insights to minimise developer hours.',
-					'price'       => '79EUR / 89USD',
-					'url'         => 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-	[
-		'title'     => 'Top free plugins',
-		'more_url'  => 'https://plugins.matomo.org/free?wp=1&pk_campaign=WP&pk_source=Plugin',
-		'more_text' => 'Browse all free plugins',
-		'features'  =>
-			[
-				[
-					'name'         => 'Marketing Campaigns Reporting',
-					'description'  => 'Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.',
-					'price'        => 'free',
-					'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/MarketingCampaignsReporting/download/latest?wp=1' . $matomo_extra_url_params,
-					'url'          => 'https://plugins.matomo.org/MarketingCampaignsReporting?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'        => '',
-				],
-				[
-					'name'         => 'Custom Alerts',
-					'description'  => 'Create custom Alerts to be notified of important changes on your website or app!',
-					'price'        => 'free',
-					'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1' . $matomo_extra_url_params,
-					'url'          => 'https://plugins.matomo.org/CustomAlerts?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'        => '',
-				],
-			],
-	],
-];
-
-/** @var \WpMatomo\Settings $settings */
-$matomo_version = $settings->get_matomo_major_version();
-
-matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
-
-echo '<br>';
-
-$matomo_feature_sections = [
-	[
-		'title'    => 'Most popular premium features',
-		'features' =>
-			[
-				[
-					'name'        => 'Heatmap & Session Recording',
-					'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
-					'price'       => '109EUR / 129USD',
-					'url'         => 'https://plugins.matomo.org/HeatmapSessionRecording?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Custom Reports',
-					'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
-					'price'       => '109EUR / 129USD',
-					'url'         => 'https://plugins.matomo.org/CustomReports?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-
-				[
-					'name'        => 'Premium Bundle',
-					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 25%!',
-					'price'       => '549EUR / 639USD',
-					'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-	[
-		'title'    => 'Most popular content engagement',
-		'features' =>
-			[
-				[
-					'name'        => 'Form Analytics',
-					'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms.',
-					'price'       => '89EUR / 99USD',
-					'url'         => 'https://plugins.matomo.org/FormAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Video & Audio Analytics',
-					'description' => 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.',
-					'price'       => '89EUR / 99USD',
-					'url'         => 'https://plugins.matomo.org/MediaAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Users Flow',
-					'description' => 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.',
-					'price'       => '49EUR / 59USD',
-					'url'         => 'https://plugins.matomo.org/UsersFlow?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-	[
-		'title'    => 'Most popular acquisition & SEO features',
-		'features' =>
-			[
-				[
-					'name'        => 'Search Engine Keywords Performance',
-					'description' => 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.',
-					'price'       => '79EUR / 89USD',
-					'url'         => 'https://plugins.matomo.org/SearchEngineKeywordsPerformance?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'SEO Web Vitals',
-					'description' => 'Improve your website performance, rank higher in search results and optimise your visitor experience with SEO Web Vitals.',
-					'price'       => '49EUR / 59USD',
-					'url'         => 'https://plugins.matomo.org/SEOWebVitals?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-	[
-		'title'    => '',
-		'features' =>
-			[
-				[
-					'name'        => 'Advertising Conversion Export',
-					'description' => 'Provides an export of attributed goal conversions for usage in ad networks like Google Ads so you no longer need a conversion pixel.',
-					'price'       => '89EUR / 99USD',
-					'url'         => 'https://plugins.matomo.org/AdvertisingConversionExport?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Multi Attribution',
-					'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
-					'price'       => '49EUR / 59USD',
-					'url'         => 'https://plugins.matomo.org/MultiChannelConversionAttribution?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-	[
-		'title'    => 'Other premium features',
-		'features' =>
-			[
-				[
-					'name'        => 'Funnels',
-					'description' => 'Identify and understand where your visitors drop off to increase your conversions, sales and revenue with your existing traffic.',
-					'price'       => '99EUR / 119USD',
-					'url'         => 'https://plugins.matomo.org/Funnels?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Cohorts',
-					'description' => 'Track your retention efforts over time and keep your visitors engaged and coming back for more.',
-					'price'       => '49EUR / 59USD',
-					'url'         => 'https://plugins.matomo.org/Cohorts?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-				[
-					'name'        => 'Crash Analytics',
-					'description' => 'Detect crashes to improve the user experience, increase conversions and recover revenue. Resolve them with insights to minimise developer hours.',
-					'price'       => '79EUR / 89USD',
-					'url'         => 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
-					'image'       => '',
-				],
-			],
-	],
-];
-
-matomo_show_tables( $matomo_feature_sections, $matomo_version, $matomo_currency );
-
-?>

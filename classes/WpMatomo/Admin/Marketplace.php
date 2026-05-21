@@ -53,6 +53,7 @@ class Marketplace implements MatomoPageContent {
 			$valid_tabs = $this->get_valid_tabs();
 
 			$marketplace_setup_wizard = \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
+			$matomo_marketplace_url    = MarketplaceSetupWizardBody::get_marketplace_zip_url();
 		}
 
 		$matomo_currency = $this->get_currency_based_on_timezone();

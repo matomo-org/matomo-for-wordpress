@@ -22,7 +22,7 @@ ol.matomo-list {
 
 .matomo-plugin-list .plugin-card-top {
     min-height: auto;
-
+}
 
 .matomo-plugin-list .plugin-card-top .matomo-description {
     min-height: 80px;
@@ -317,6 +317,10 @@ table.matomo-tracking-form th {
     color: #2271b1;
 }
 
+.matomo-primary-color-fill {
+    fill: #2271b1;
+}
+
 .matomo-secondary-color-fg {
     color: #f6f7f7;
 }
@@ -331,6 +335,10 @@ table.matomo-tracking-form th {
 
 .mtm-wp-gte-7 .matomo-primary-color-fg {
     color: var(--wp-admin-theme-color, #3858e9);
+}
+
+.mtm-wp-gte-7 .matomo-primary-color-fill {
+    fill: var(--wp-admin-theme-color, #3858e9);
 }
 
 .mtm-wp-gte-7 .matomo-secondary-color-fg {

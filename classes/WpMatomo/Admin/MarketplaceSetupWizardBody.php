@@ -26,12 +26,12 @@ class MarketplaceSetupWizardBody {
 		$is_plugin_installed       = MarketplaceSetupWizard::is_marketplace_installed();
 		$matomo_show_title         = $this->matomo_show_title;
 		$matomo_is_plugin_active   = is_plugin_active( MarketplaceSetupWizard::MARKETPLACE_PLUGIN_FILE );
-		$matomo_marketplace_url    = $this->get_marketplace_zip_url();
+		$matomo_marketplace_url    = self::get_marketplace_zip_url();
 
 		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body.php';
 	}
 
-	private function get_marketplace_zip_url() {
+	public static function get_marketplace_zip_url() {
 		if ( defined( 'MATOMO_MARKETPLACE_ZIP_URL' ) && MATOMO_MARKETPLACE_ZIP_URL ) {
 			return MATOMO_MARKETPLACE_ZIP_URL;
 		}
