@@ -38,7 +38,7 @@ class MwpMarketplaceSetupWizard {
     await browser.waitUntil(async () => {
       await browser.pause(2000);
       try {
-        await browser.switchWindow(/\/wp-admin\/plugin-install\.php\?tab=upload/);
+        await browser.switchWindow(/\/wp-admin\/plugin-install\.php\?tab=upload&mtm_marketplace_install=1/);
         return true;
       } catch (e) {
         return false;

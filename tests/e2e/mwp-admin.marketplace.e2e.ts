@@ -72,6 +72,9 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {
+    await MwpMarketplacePage.open();
+
+    // TODO: see if this still applies
     const pathToPlugin = await MwpMarketplacePage.setupWizard.downloadPlugin();
     await MwpMarketplacePage.setupWizard.goToPluginsAdmin();
     await MwpMarketplacePage.setupWizard.uploadPluginAndActivate(pathToPlugin);

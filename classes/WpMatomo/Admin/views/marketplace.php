@@ -74,11 +74,21 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 		border-radius: 6px;
 		background-color: white;
 		margin-top: 2em;
+		position: relative;
+	}
+
+	#matomo-steps {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		flex: 5;
+		align-items: stretch;
 	}
 
 	#matomo-setup-preface {
 		padding-right: 32px;
 		border-right: solid 2px #eee;
+		flex: 5;
 	}
 
 	#matomo-setup-preface-title {
@@ -233,7 +243,54 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 		vertical-align: bottom;
 	}
 
-	/** TODO: responsiveness */
+	@media (max-width: 1278px) {
+		#matomo-welcome-marketplace-setup {
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+
+		#matomo-setup-preface {
+			border-right: 0px;
+		}
+
+		#matomo-step1 {
+			margin-left: 0;
+		}
+
+		#matomo-step1, #matomo-step2 {
+			width: auto;
+		}
+
+		#matomo-steps {
+			justify-content: space-between;
+		}
+
+		#matomo-steps {
+			padding-top: 1em;
+			padding-bottom: 2em;
+			border-top: 1px solid #eee;
+		}
+
+		.wizard-waiting-for {
+			position: absolute;
+			bottom: 16px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.matomo-popular-feature .cover-image {
+			display: none;
+		}
+
+		#matomo-steps {
+			flex-direction: column;
+		}
+
+		#matomo-step2 {
+			margin-top: 2em;
+			margin-left: 0;
+		}
+	}
 </style>
 <script>
 	window.jQuery(document).ready(function ($) {
@@ -308,32 +365,34 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 				</div>
 			</div>
 		</div>
-		<div id="matomo-step1">
-			<div>
-				<span class="step-number current matomo-primary-color-bg">1</span>
-				<span><?php esc_html_e( 'Download Plugin', 'matomo' ); ?></span>
+		<div id="matomo-steps">
+			<div id="matomo-step1">
+				<div>
+					<span class="step-number current matomo-primary-color-bg">1</span>
+					<span><?php esc_html_e( 'Download Plugin', 'matomo' ); ?></span>
+				</div>
+				<p>
+					<?php esc_html_e( 'Download the Matomo Marketplace for WordPress plugin as a .zip file to your computer.', 'matomo' ); ?>
+				</p>
+				<div>
+					<a href="<?php echo esc_attr( $matomo_marketplace_url ); ?>" rel="noreferrer noopener" class="download-plugin">
+						<button class="button-primary"><?php esc_html_e( 'Download .zip', 'matomo' ); ?></button>
+					</a>
+				</div>
 			</div>
-			<p>
-				<?php esc_html_e( 'Download the Matomo Marketplace for WordPress plugin as a .zip file to your computer.', 'matomo' ); ?>
-			</p>
-			<div>
-				<a href="<?php echo esc_attr( $matomo_marketplace_url ); ?>" rel="noreferrer noopener" class="download-plugin">
-					<button class="button-primary"><?php esc_html_e( 'Download .zip', 'matomo' ); ?></button>
-				</a>
-			</div>
-		</div>
-		<div id="matomo-step2">
-			<div>
-				<span class="step-number">2</span>
-				<span><?php esc_html_e( 'Upload & Install', 'matomo' ); ?></span>
-			</div>
-			<p>
-				<?php esc_html_e( 'Go to your WordPress plugins admin page. Upload and install the plugin you just downloaded.', 'matomo' ); ?>
-			</p>
-			<div>
-				<a class="open-plugin-upload button-secondary" href="plugin-install.php?tab=upload&mtm_marketplace_install=1" target="_blank">
-					<?php esc_html_e( 'Go to Plugins', 'matomo' ); ?>
-				</a>
+			<div id="matomo-step2">
+				<div>
+					<span class="step-number">2</span>
+					<span><?php esc_html_e( 'Upload & Install', 'matomo' ); ?></span>
+				</div>
+				<p>
+					<?php esc_html_e( 'Go to your WordPress plugins admin page. Upload and install the plugin you just downloaded.', 'matomo' ); ?>
+				</p>
+				<div>
+					<a class="open-plugin-upload button-secondary" href="plugin-install.php?tab=upload&mtm_marketplace_install=1" target="_blank">
+						<?php esc_html_e( 'Go to Plugins', 'matomo' ); ?>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
