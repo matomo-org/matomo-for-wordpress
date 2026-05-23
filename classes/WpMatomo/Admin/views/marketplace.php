@@ -290,6 +290,22 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 			margin-top: 2em;
 			margin-left: 0;
 		}
+
+		.matomo-price {
+			display: inline-block;
+			margin-left: 0;
+			margin-top: 8px;
+		}
+
+		.matomo-feature-header {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.matomo-popular-feature .description > p {
+			margin-right: 8px;
+		}
 	}
 </style>
 <script>
@@ -454,8 +470,8 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 	<?php foreach ( $matomo_popular_features as $matomo_feature_slug => $matomo_feature_info ) { ?>
 	<div class="matomo-popular-feature">
 		<div class="description">
-			<h3 class="matomo-primary-color-fg">
-				<?php echo esc_html( $matomo_feature_info['name'] ); ?>
+			<h3 class="matomo-feature-header matomo-primary-color-fg">
+				<span><?php echo esc_html( $matomo_feature_info['name'] ); ?></span>
 				<?php if ( ! empty( $matomo_feature_info['price'] ) ) { ?>
 				<span class="matomo-price"><?php echo esc_html( $matomo_feature_info['price'] ); ?></span>
 				<?php } ?>
