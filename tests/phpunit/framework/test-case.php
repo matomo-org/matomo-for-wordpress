@@ -116,7 +116,6 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 * @return string
 	 */
 	protected function get_type_attribute() {
-		$type = '';
 		if (
 			function_exists( 'wp_get_inline_script_tag' )
 			&& ! is_admin()
@@ -124,9 +123,18 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
 			&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
 		) {
-			$type = ' type="text/javascript"';
+			return ' type="text/javascript"';
 		}
-		return $type;
+
+		if (
+			getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
+			&& getenv( 'WORDPRESS_VERSION' ) !== 'latest'
+			&& version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' )
+		) {
+			return ' '; // in these versions, there is a space before the end of the tag, ie, '<script >'
+		}
+
+		return '';
 	}
 
 	private function snapshot_db_data() {
@@ -306,9 +314,6 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	protected function is_wordpress_not_using_cdata_tags() {
 		return getenv( 'WORDPRESS_VERSION' )
-			&& (
-				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
-				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
-			);
+			&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' );
 	}
 }

@@ -59,7 +59,6 @@ class MwpMarketplaceSetupWizard {
       return browser.execute(() => /\/wp-admin\/plugins\.php$/.test(window.location.pathname));
     });
 
-    await browser.closeWindow();
     await browser.switchWindow(/page=matomo-marketplace/);
   }
 
