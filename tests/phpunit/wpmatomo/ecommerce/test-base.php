@@ -93,7 +93,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		}
 
 		$this->assertSame(
-			'<script ' . $this->get_type_attribute() . ">\n$cdata_start" .
+			'<script' . $this->get_type_attribute() . ">\n$cdata_start" .
 			'window._paq = window._paq || []; window._paq.push(["setEcommerceView","sku","product-title",[],50]);' . PHP_EOL .
 			"$cdata_end</script>" . PHP_EOL,
 			$this->base->wrap_script( $this->base->make_matomo_js_tracker_call( $params ) )
@@ -125,7 +125,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		}
 
 		$this->assertSame(
-			'<script ' . $this->get_type_attribute() . ">\n$cdata_start" .
+			'<script' . $this->get_type_attribute() . ">\n$cdata_start" .
 			'window._paq = window._paq || []; if (!window._paq.find || !window._paq.find(function (m) { return m[0] === "disableCookies"; })) {
 	window._paq.push(["disableCookies"]);
 } window._paq.push(["setEcommerceView","sku","product-title",[],50]);' . PHP_EOL .
@@ -156,7 +156,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		$script_type = $this->get_type_attribute();
 
 		$expected = <<<EOF
-<script $script_type>$cdata_start
+<script$script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate",400]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","orderid",300,200,40,60,0]);
 $cdata_end</script>
 
@@ -404,7 +404,7 @@ EOF;
 		$script_type = $this->get_type_attribute();
 
 		$expected_tracking_code = <<<EOF
-<script $script_type>$cdata_start
+<script$script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate",100]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","orderid",300,200,40,60,0]);
 $cdata_end</script>
 

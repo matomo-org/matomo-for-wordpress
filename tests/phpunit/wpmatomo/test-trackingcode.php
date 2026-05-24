@@ -94,7 +94,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertStringNotContainsString( 'idsite', $header );
-		$this->assertStringContainsString( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $footer );
+		$this->assertStringContainsString( '<!-- Matomo --><script' . $this->get_type_attribute() . ">\n", $footer );
 		$this->assertStringContainsString( 'var _paq = window._paq = window._paq || [];', $footer );
 		$this->assertStringContainsString( '_paq.push([\'setSiteId\', \'23\'])', $footer );
 	}
@@ -117,7 +117,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertStringNotContainsString( 'idsite', $footer );
-		$this->assertStringContainsString( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $header );
+		$this->assertStringContainsString( '<!-- Matomo --><script' . $this->get_type_attribute() . ">\n", $header );
 		$this->assertStringContainsString( 'var _paq = window._paq = window._paq || [];', $header );
 		$this->assertStringContainsString( '_paq.push([\'setSiteId\', \'23\'])', $header );
 	}

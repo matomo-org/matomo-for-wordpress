@@ -75,8 +75,8 @@ class MwpMarketplacePage extends MwpPage {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }
 
-  async openInstallPluginsTab() {
-    await $('a.nav-tab=Install Plugins').click();
+  async openMarketplacePluginsTab() {
+    await $('a.nav-tab=Marketplace').click();
 
     await $('.matomo-plugin-card,.matomo-marketplace-wizard').waitForExist({ timeout: 120000 });
 

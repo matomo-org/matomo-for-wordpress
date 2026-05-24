@@ -117,8 +117,14 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 */
 	protected function get_type_attribute() {
 		$type = '';
-		if ( function_exists( 'wp_get_inline_script_tag' ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
-			$type = 'type="text/javascript"';
+		if (
+			function_exists( 'wp_get_inline_script_tag' )
+			&& ! is_admin()
+			&& ! current_theme_supports( 'html5', 'script' )
+			&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
+			&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
+		) {
+			$type = ' type="text/javascript"';
 		}
 		return $type;
 	}
@@ -302,7 +308,6 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		return getenv( 'WORDPRESS_VERSION' )
 			&& (
 				getenv( 'WORDPRESS_VERSION' ) !== 'latest'
-				&& getenv( 'WORDPRESS_VERSION' ) !== 'trunk'
 				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' )
 			);
 	}
