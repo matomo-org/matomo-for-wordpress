@@ -56,7 +56,7 @@ class MwpMarketplaceSetupWizard {
 
     await $('.button=Activate Plugin').click();
     await browser.waitUntil(() => {
-      return browser.execute(() => /\/wp-admin\/plugins\.php$/.test(window.location.pathname));
+      return browser.execute(() => /page=matomo-marketplace/.test(window.location.pathname));
     }, { timeout: 30000 });
 
     await browser.switchWindow(/page=matomo-marketplace/);

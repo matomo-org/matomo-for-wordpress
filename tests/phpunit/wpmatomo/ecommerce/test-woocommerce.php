@@ -371,7 +371,7 @@ EOF;
 
 			// remove script added by woocommerce in wp_footer event
 			$result = preg_replace( '%<script type="application/ld\+json">.*?</script>%s', '', $result );
-			$result = preg_replace( "%<style id='global-styles-inline-css' type='text/css'>.*?</style>%s", '', $result );
+			$result = preg_replace( "%<style id='global-styles-inline-css'.*?</style>%s", '', $result );
 			$result = trim( $result );
 
 			return $result;

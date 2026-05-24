@@ -119,7 +119,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+		if ( $this->is_wordpress_not_using_cdata_tags() ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
