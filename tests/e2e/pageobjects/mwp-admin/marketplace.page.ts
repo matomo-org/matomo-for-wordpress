@@ -55,9 +55,14 @@ class MwpMarketplaceSetupWizard {
     await $('.button=Activate Plugin').waitForDisplayed({ timeout: 30000 });
 
     await $('.button=Activate Plugin').click();
-    await browser.waitUntil(() => {
-      return browser.execute(() => /page=matomo-marketplace/.test(window.location.pathname));
-    }, { timeout: 30000 });
+    try {
+      await browser.waitUntil(() => {
+        return browser.execute(() => /page=matomo-marketplace/.test(window.location.pathname));
+      }, {timeout: 30000});
+    } catch (e) {
+      console.log(await browser.execute(() => window.location.pathname));
+      throw e;
+    }
 
     await browser.switchWindow(/page=matomo-marketplace/);
   }
