@@ -76,7 +76,7 @@ class Menu extends Feature {
 	public function enqueue_scripts() {
 		if (
 			! empty( $_REQUEST['page'] )
-			&& $_REQUEST['page'] === self::SLUG_MARKETPLACE
+			&& self::SLUG_MARKETPLACE === $_REQUEST['page']
 		) {
 			wp_enqueue_style( 'matomo_marketplace_css', plugins_url( 'assets/css/marketplace-style.css', MATOMO_ANALYTICS_FILE ), false, matomo_get_asset_version() );
 		}

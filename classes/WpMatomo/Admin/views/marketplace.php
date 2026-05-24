@@ -130,8 +130,8 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 				</div>
 			</div>
 		</div>
-		<div id="matomo-steps">
-			<div id="matomo-step1">
+		<div class="matomo-steps">
+			<div id="matomo-step1" class="matomo-step">
 				<div>
 					<span class="step-number current matomo-primary-color-bg">1</span>
 					<span><?php esc_html_e( 'Download Plugin', 'matomo' ); ?></span>
@@ -145,7 +145,7 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 					</a>
 				</div>
 			</div>
-			<div id="matomo-step2">
+			<div id="matomo-step2" class="matomo-step">
 				<div>
 					<span class="step-number">2</span>
 					<span><?php esc_html_e( 'Upload & Install', 'matomo' ); ?></span>
@@ -166,6 +166,6 @@ if ( isset( $marketplace_setup_wizard ) && 'marketplace' !== $active_tab ) {
 	<p style="margin-bottom: 20px;"><?php esc_html_e( 'Developed by Matomo and partners, install these on top of your Matomo plugin for more advanced analytics.', 'matomo' ); ?></p>
 
 	<?php
-	(new PopularFeatures())->show();
+	( new PopularFeatures() )->show();
 	?>
 </div>

@@ -19,7 +19,7 @@
     position: relative;
 }
 
-#matomo-steps {
+.matomo-steps {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -59,14 +59,14 @@
     font-size: 15px;
 }
 
-#matomo-step1, #matomo-step2 {
+.matomo-step {
     width: 40%;
     margin-left: 32px;
     display: flex;
     flex-direction: column;
 }
 
-#matomo-step1 p, #matomo-step2 p {
+.matomo-step p {
     flex: 1;
 }
 
@@ -195,19 +195,19 @@
         border-right: 0px;
     }
 
-    #matomo-step1 {
+    .matomo-step:first-child {
         margin-left: 0;
     }
 
-    #matomo-step1, #matomo-step2 {
+    .matomo-step {
         width: auto;
     }
 
-    #matomo-steps {
+    .matomo-steps {
         justify-content: space-between;
     }
 
-    #matomo-steps {
+    .matomo-steps {
         padding-top: 1em;
         padding-bottom: 2em;
         border-top: 1px solid #eee;
@@ -224,11 +224,11 @@
         display: none;
     }
 
-    #matomo-steps {
+    .matomo-steps {
         flex-direction: column;
     }
 
-    #matomo-step2 {
+    .matomo-step:not(:first-child) {
         margin-top: 2em;
         margin-left: 0;
     }

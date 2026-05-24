@@ -20,7 +20,7 @@ class PopularFeatures {
 		return [
 			'MarketingCampaignsReporting'     => [
 				'name' => __( 'Marketing Campaigns Reporting', 'matomo' ),
-				'desc' => __( "Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.', 'matomo'", 'matomo' ),
+				'desc' => __( "Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.'", 'matomo' ),
 				'img'  => 'marketing-campaign-analytics.png',
 			],
 			'SearchEngineKeywordsPerformance' => [

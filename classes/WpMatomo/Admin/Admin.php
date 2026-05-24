@@ -27,7 +27,7 @@ class Admin extends Feature {
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings ) {
-		$this->settings  = $settings;
+		$this->settings = $settings;
 	}
 
 	public function is_active() {
