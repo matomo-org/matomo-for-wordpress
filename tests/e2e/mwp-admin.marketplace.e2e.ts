@@ -74,23 +74,15 @@ describe('MWP Admin > Marketplace', () => {
   it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {
     await MwpMarketplacePage.open();
 
-    // TODO: see if this still applies
     const pathToPlugin = await MwpMarketplacePage.setupWizard.downloadPlugin();
-    console.log('install 1');
     await MwpMarketplacePage.setupWizard.goToPluginsAdmin();
-    console.log('install 2');
     await MwpMarketplacePage.setupWizard.uploadPluginAndActivate(pathToPlugin);
-    console.log('install 3');
     await MwpMarketplacePage.setupWizard.waitForReload();
-    console.log('install 4');
 
     await MwpMarketplacePage.sortPluginsAlphabetically();
-    console.log('install 5');
     await MwpMarketplacePage.removeThirdPartyPlugins();
-    console.log('install 6');
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
-    console.log('install 7');
-    await expect(
+   await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
