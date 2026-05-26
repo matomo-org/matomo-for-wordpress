@@ -63,7 +63,7 @@ describe('MWP Admin > Marketplace', () => {
 
   it('should show the marketplace setup wizard when the marketplace plugins is not installed', async () => {
     await browser.refresh();
-    await MwpMarketplacePage.openInstallPluginsTab();
+    await MwpMarketplacePage.openMarketplacePluginsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
@@ -72,6 +72,8 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {
+    await MwpMarketplacePage.open();
+
     const pathToPlugin = await MwpMarketplacePage.setupWizard.downloadPlugin();
     await MwpMarketplacePage.setupWizard.goToPluginsAdmin();
     await MwpMarketplacePage.setupWizard.uploadPluginAndActivate(pathToPlugin);
@@ -80,7 +82,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.sortPluginsAlphabetically();
     await MwpMarketplacePage.removeThirdPartyPlugins();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
-    await expect(
+   await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
@@ -130,7 +132,7 @@ describe('MWP Admin > Marketplace', () => {
 
   it('should load the install plugins tab correctly', async () => {
     await browser.refresh();
-    await MwpMarketplacePage.openInstallPluginsTab();
+    await MwpMarketplacePage.openMarketplacePluginsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
@@ -160,7 +162,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should install and activate a premium plugin successfully', async () => {
-    await MwpMarketplacePage.openInstallPluginsTab();
+    await MwpMarketplacePage.openMarketplacePluginsTab();
     await MwpMarketplacePage.installPlugin('SEOWebVitals');
     await MwpMarketplacePage.activateInstalledPlugin();
 
@@ -169,7 +171,7 @@ describe('MWP Admin > Marketplace', () => {
 
   it('should bulk install and activate plugins correctly', async () => {
     await MwpMarketplacePage.open();
-    await MwpMarketplacePage.openInstallPluginsTab();
+    await MwpMarketplacePage.openMarketplacePluginsTab();
     const installedPlugins = await MwpMarketplacePage.bulkInstallMatomoPlugins();
     await MwpMarketplacePage.bulkActivateMatomoPlugins(installedPlugins);
   });

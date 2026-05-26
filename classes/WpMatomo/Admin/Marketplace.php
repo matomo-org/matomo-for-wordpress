@@ -53,6 +53,9 @@ class Marketplace implements MatomoPageContent {
 			$valid_tabs = $this->get_valid_tabs();
 
 			$marketplace_setup_wizard = \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
+			$matomo_marketplace_url   = MarketplaceSetupWizardBody::get_marketplace_zip_url();
+		} else {
+			wp_safe_redirect( admin_url( 'admin.php?page=matomo-marketplace&tab=install' ) );
 		}
 
 		$matomo_currency = $this->get_currency_based_on_timezone();
@@ -61,7 +64,14 @@ class Marketplace implements MatomoPageContent {
 	}
 
 	private function get_valid_tabs() {
-		$valid_tabs = [ 'marketplace' ];
+		$valid_tabs = [];
+		if (
+			! MarketplaceSetupWizard::is_marketplace_installed()
+			|| ! is_plugin_active( MarketplaceSetupWizard::MARKETPLACE_PLUGIN_FILE )
+		) {
+			$valid_tabs[] = 'marketplace';
+		}
+
 		if ( $this->can_user_manage() ) {
 			if ( current_user_can( 'install_plugins' ) ) {
 				$valid_tabs[] = 'install';

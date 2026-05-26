@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="step">
 				<p><?php esc_html_e( 'Upload and install the plugin.', 'matomo' ); ?></p>
 
-				<a class="button-primary open-plugin-upload" target="_blank" href="plugin-install.php?tab=upload">
+				<a class="button-primary open-plugin-upload" target="_blank" href="plugin-install.php?tab=upload&mtm_marketplace_install=1">
 					<?php esc_html_e( 'Go to plugins admin', 'matomo' ); ?> →
 				</a>
 			</div>

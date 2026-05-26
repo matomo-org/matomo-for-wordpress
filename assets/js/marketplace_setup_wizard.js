@@ -7,8 +7,12 @@
  */
 
 window.jQuery(document).ready(function ($) {
-  function pollForPluginActivation() {
-    $('.wizard-waiting-for').show();
+  function pollForPluginActivation(setActiveClass) {
+    if (setActiveClass) {
+      $('.wizard-waiting-for').addClass('active').find('.waiting-for-install').show();
+    } else {
+      $('.wizard-waiting-for').show();
+    }
 
     var interval = setInterval(function () {
       $.post(mtmMarketplaceWizardAjax.ajax_url, {
@@ -16,11 +20,23 @@ window.jQuery(document).ready(function ($) {
         action: 'matomo_is_marketplace_active',
       }, function (data) {
         if (data.active) {
-          $('.wizard-waiting-for').hide();
+          if (!setActiveClass) {
+            $('.wizard-waiting-for').hide();
+          } else {
+            $('.wizard-waiting-for .waiting-for-activation').hide();
+          }
+
           $('.wizard-reloading').show();
 
-          window.location.reload();
+          // reload after the dom has had a chance to update
+          setTimeout(function () {
+            window.location.reload();
+          });
+
           clearInterval(interval);
+        } else if (data.installed && setActiveClass) {
+          $('.wizard-waiting-for .waiting-for-install').hide();
+          $('.wizard-waiting-for .waiting-for-activation').show();
         }
       });
     }, 2000);
@@ -35,11 +51,18 @@ window.jQuery(document).ready(function ($) {
     $.post(mtmMarketplaceWizardAjax.ajax_url, {
       _ajax_nonce: mtmMarketplaceWizardAjax.activate_nonce,
       action: 'matomo_activate_marketplace',
-    }, pollForPluginActivation);
+    }, pollForPluginActivation.bind(null, false));
   }
 
   if (typeof mtmMarketplaceWizardAjax !== 'undefined' && mtmMarketplaceWizardAjax.ajax_url) {
-    $('.matomo-marketplace-wizard-body .open-plugin-upload').on('click', pollForPluginActivation);
-    $('.matomo-marketplace-wizard-body .activate-plugin').on('click', activateMarketplace);
+    var pollFn = pollForPluginActivation;
+    var activateFn = activateMarketplace;
+    if (mtmMarketplaceWizardAjax.is_welcome_page) {
+      pollFn = pollForPluginActivation.bind(null, true);
+      activateFn = activateMarketplace.bind(null, true);
+    }
+
+    $('.matomo-marketplace-wizard-body .open-plugin-upload').on('click', pollFn);
+    $('.matomo-marketplace-wizard-body .activate-plugin').on('click', activateFn);
   }
 });

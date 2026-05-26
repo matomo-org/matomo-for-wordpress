@@ -38,7 +38,7 @@ class MwpMarketplaceSetupWizard {
     await browser.waitUntil(async () => {
       await browser.pause(2000);
       try {
-        await browser.switchWindow(/\/wp-admin\/plugin-install\.php\?tab=upload/);
+        await browser.switchWindow(/\/wp-admin\/plugin-install\.php\?tab=upload&mtm_marketplace_install=1/);
         return true;
       } catch (e) {
         return false;
@@ -56,10 +56,9 @@ class MwpMarketplaceSetupWizard {
 
     await $('.button=Activate Plugin').click();
     await browser.waitUntil(() => {
-      return browser.execute(() => /\/wp-admin\/plugins\.php$/.test(window.location.pathname));
-    });
+      return browser.execute(() => /page=matomo-marketplace/.test(window.location.href));
+    }, {timeout: 30000});
 
-    await browser.closeWindow();
     await browser.switchWindow(/page=matomo-marketplace/);
   }
 
@@ -75,8 +74,8 @@ class MwpMarketplacePage extends MwpPage {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }
 
-  async openInstallPluginsTab() {
-    await $('a.nav-tab=Install Plugins').click();
+  async openMarketplacePluginsTab() {
+    await $('a.nav-tab=Marketplace').click();
 
     await $('.matomo-plugin-card,.matomo-marketplace-wizard').waitForExist({ timeout: 120000 });
 

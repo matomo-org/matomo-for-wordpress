@@ -23,14 +23,11 @@ class Admin extends Feature {
 	 */
 	private $settings;
 
-	private $init_menu;
-
 	/**
 	 * @param Settings $settings
 	 */
-	public function __construct( $settings, $init_menu = true ) {
-		$this->settings  = $settings;
-		$this->init_menu = $init_menu;
+	public function __construct( $settings ) {
+		$this->settings = $settings;
 	}
 
 	public function is_active() {
@@ -38,10 +35,6 @@ class Admin extends Feature {
 	}
 
 	public function register_hooks() {
-		if ( $this->init_menu ) {
-			new Menu( $this->settings );
-		}
-
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
 		add_filter( 'admin_body_class', [ $this, 'on_admin_body_class' ], 9999 );
 	}

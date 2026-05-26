@@ -147,7 +147,7 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 		$script_type = $this->get_type_attribute();
 
 		$expected_code = <<<EOF
-<script $script_type>$cdata_start
+<script$script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
 $cdata_end</script>
 EOF;
@@ -184,10 +184,10 @@ EOF;
 		$script_type = $this->get_type_attribute();
 
 		$expected_code = <<<EOF
-<script $script_type>$cdata_start
+<script$script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceCartUpdate","24.00"]);
 $cdata_end</script>
-<script $script_type>$cdata_start
+<script$script_type>$cdata_start
 window._paq = window._paq || []; window._paq.push(["addEcommerceItem","10","a tiny hat",["Uncategorized"],12,2]);window._paq = window._paq || []; window._paq.push(["trackEcommerceOrder","11","24.00",24,"0","0",0]);
 $cdata_end</script>
 EOF;
@@ -371,7 +371,7 @@ EOF;
 
 			// remove script added by woocommerce in wp_footer event
 			$result = preg_replace( '%<script type="application/ld\+json">.*?</script>%s', '', $result );
-			$result = preg_replace( "%<style id='global-styles-inline-css' type='text/css'>.*?</style>%s", '', $result );
+			$result = preg_replace( "%<style id=[\"']global-styles-inline-css[\"'].*?</style>%s", '', $result );
 			$result = trim( $result );
 
 			return $result;
@@ -440,16 +440,5 @@ EOF;
 
 		$this->test_instance->setTracker( $this->tracker );
 		$this->assertEquals( $visitor_id, $this->test_instance->getTracker()->forcedVisitorId );
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function get_type_attribute() {
-		$type = '';
-		if ( function_exists( 'wp_get_inline_script_tag' ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
-			$type = 'type="text/javascript"';
-		}
-		return $type;
 	}
 }
