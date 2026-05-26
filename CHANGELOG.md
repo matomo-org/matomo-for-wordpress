@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.10.1 =
+* Enable dismissible premium plugin promotional content in the main reporting menu.
+* Bug fix: missing global declaration breaks woocommerce order tracking for some users.
+* Redesign marketplace overview.
+* Some minor UX tweaks to better match WordPress 7's look and feel.
+
 = 5.10.0 =
 * Update embedded Matomo to version 5.10.0.
 * Open Matomo Admin and Reporting pages in a new tab.
