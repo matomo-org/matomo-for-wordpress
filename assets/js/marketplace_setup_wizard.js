@@ -51,7 +51,7 @@ window.jQuery(document).ready(function ($) {
     $.post(mtmMarketplaceWizardAjax.ajax_url, {
       _ajax_nonce: mtmMarketplaceWizardAjax.activate_nonce,
       action: 'matomo_activate_marketplace',
-    }, pollForPluginActivation);
+    }, pollForPluginActivation.bind(null, false));
   }
 
   if (typeof mtmMarketplaceWizardAjax !== 'undefined' && mtmMarketplaceWizardAjax.ajax_url) {
