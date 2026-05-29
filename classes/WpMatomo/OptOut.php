@@ -123,6 +123,7 @@ class OptOut extends Feature {
 			'matomo/matomo-opt-out',
 			array(
 				'editor_script' => 'matomo-opt-out',
+				'api_version'   => 3,
 			)
 		);
 	}
