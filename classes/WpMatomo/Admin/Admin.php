@@ -86,7 +86,7 @@ class Admin extends Feature {
 		$version       = count( $version_parts ) > 1 ? $version_parts[0] : $raw_version;
 
 		if ( version_compare( $version, '7.0', '>=' ) ) {
-			$classes .= 'mtm-wp-gte-7';
+			$classes .= ' mtm-wp-gte-7';
 		}
 
 		return $classes;
