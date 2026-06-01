@@ -26,6 +26,7 @@ function export_global() {
   fi
 
   export WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
+  export WORDPRESS_HOST=${WORDPRESS_HOST:-localhost}
   export WORDPRESS_FOLDER_BASE=$WORDPRESS_FOLDER
 }
 
@@ -141,7 +142,7 @@ function install_wordpress() {
   define( 'WP_ALLOW_MULTISITE', true );
   define( 'MULTISITE', true );
   define( 'SUBDOMAIN_INSTALL', false );
-  define( 'DOMAIN_CURRENT_SITE', 'localhost' . ($PORT === 80 ? '' : ':$PORT') );
+  define( 'DOMAIN_CURRENT_SITE', getenv( 'WORDPRESS_HOST' ) . ($PORT === 80 ? '' : ':$PORT') );
   define( 'PATH_CURRENT_SITE', '/$WORDPRESS_FOLDER/' );
   define( 'SITE_ID_CURRENT_SITE', 1 );
   define( 'BLOG_ID_CURRENT_SITE', 1 );
@@ -208,13 +209,11 @@ define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 if ( ! empty( \$_SERVER['HTTP_HOST'] )
   && preg_match( '/\.ngrok-free\.app$/', \$_SERVER['HTTP_HOST'] )
 ) {
-  \$folder = basename( __DIR__ );
-  define('WP_HOME', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . \$folder );
-  define('WP_SITEURL', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . \$folder );
+  define('WP_HOME', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . basename( __DIR__ ) );
+  define('WP_SITEURL', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . basename( __DIR__ ) );
 } else {
-  \$folder = basename( __DIR__ );
-  define('WP_HOME', 'http://localhost/' . \$folder);
-  define('WP_SITEURL', 'http://localhost/' . \$folder);
+  define('WP_HOME', 'http://' . ( getenv( 'WORDPRESS_HOST' ) ?: 'localhost' ) . '/' . basename( __DIR__ ) );
+  define('WP_SITEURL', 'http://' . ( getenv( 'WORDPRESS_HOST' ) ?: 'localhost' ) . '/' . basename( __DIR__ ) );
 }
 
 if ( isset( \$_SERVER['HTTP_X_FORWARDED_PROTO'] )
@@ -239,7 +238,7 @@ EOF
     echo "setup wp-config.php!"
   fi
 
-  HOSTNAME=localhost
+  HOSTNAME=$WORDPRESS_HOST
   if [[ $PORT != "80" ]]; then
     HOSTNAME="$HOSTNAME:$PORT"
   fi
@@ -667,9 +666,9 @@ EOF
 
 function start_webserver() {
   # TODO: is it possible to use wp-cli for this?
-  # make sure home url points to 'localhost'
+  # make sure home url points to $WORDPRESS_HOST
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-  \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
+  \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'$WORDPRESS_HOST\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
   if [ -f /usr/local/lsws/bin/lshttpd ]  &> /dev/null; then
     mkdir -p /usr/local/lsws/logs

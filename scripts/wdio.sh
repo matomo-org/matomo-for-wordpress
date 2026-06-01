@@ -39,6 +39,7 @@ WP_DEBUG=true
 WP_DEBUG_LOG=true
 WP_DEBUG_DISPLAY=false
 RESET_DATABASE=1
+WORDPRESS_HOST=wordpress
 EOF
 
 docker_compose_up test
