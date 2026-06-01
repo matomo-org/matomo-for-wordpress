@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Piwik\Plugins\UsersManager\UserPreferences;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
+use WpMatomo\Feature;
 use WpMatomo\Report\Dates;
 use WpMatomo\Settings;
 use WpMatomo\Site;
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Menu {
+class Menu extends Feature {
 	/**
 	 * @var Settings
 	 */
@@ -52,6 +53,11 @@ class Menu {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+	}
+
+	public function register_hooks() {
+		parent::register_hooks();
+
 		// Hook for adding admin menus
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'network_admin_menu', [ $this, 'add_menu' ] );
@@ -63,6 +69,17 @@ class Menu {
 		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_REPORTING, [ $this, 'reporting' ] );
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
 		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
+
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	}
+
+	public function enqueue_scripts() {
+		if (
+			! empty( $_REQUEST['page'] )
+			&& self::SLUG_MARKETPLACE === $_REQUEST['page']
+		) {
+			wp_enqueue_style( 'matomo_marketplace_css', plugins_url( 'assets/css/marketplace-style.css', MATOMO_ANALYTICS_FILE ), false, matomo_get_asset_version() );
+		}
 	}
 
 	public function hide_non_matomo_notifications() {

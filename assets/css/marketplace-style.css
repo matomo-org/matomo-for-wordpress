@@ -1,0 +1,251 @@
+#matomo-for-marketplace-welcome {
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+#matomo-for-marketplace-welcome > h1:first-child {
+    margin-top: 20px;
+}
+
+#matomo-welcome-marketplace-setup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 2em 1.5em;
+    border-radius: 6px;
+    background-color: white;
+    margin-top: 2em;
+    position: relative;
+}
+
+.matomo-steps {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 5;
+    align-items: stretch;
+}
+
+#matomo-setup-preface {
+    padding-right: 32px;
+    border-right: solid 2px #eee;
+    flex: 5;
+}
+
+#matomo-setup-preface-title {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#matomo-setup-preface-title h2 {
+    flex: 1;
+    margin: 0 0 0 4px;
+    font-weight: 500;
+}
+
+#matomo-setup-preface-title img {
+    height: 42px;
+    width: 42px;
+    margin-left: -6px;
+    margin-top: -16px;
+    margin-bottom: -16px;
+}
+
+#matomo-for-marketplace-welcome p {
+    color: #6a6a6a;
+    font-size: 15px;
+}
+
+.matomo-step {
+    width: 40%;
+    margin-left: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.matomo-step p {
+    flex: 1;
+}
+
+.matomo-setup-divider {
+    height: 1px;
+    width: 100%;
+    background-color: #eee;
+}
+
+#matomo-for-marketplace-welcome p.matomo-smaller-text {
+    font-size: 13px;
+    line-height: 1.4em;
+}
+
+#matomo-for-marketplace-welcome > p {
+    margin-top: .25em;
+    margin-bottom: .5em;
+    max-width: 700px;
+}
+
+.step-number {
+    margin-right: 8px;
+    font-size: 14px;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.step-number:not(.current) {
+    background-color: #777;
+}
+
+.wizard-waiting-for {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 16px;
+    border: solid 1px #deecfe;
+    padding: 6px 15px;
+    font-size: 14px;
+    visibility: hidden;
+}
+
+.wizard-waiting-for.active {
+    visibility: visible;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.wizard-waiting-for svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    animation: rotate .75s linear infinite;
+}
+
+.matomo-popular-feature {
+    background-color: white;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 1.6em 1.5em;
+    margin-bottom: 20px;
+}
+
+.matomo-popular-feature h3 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 17px;
+}
+
+.matomo-popular-feature .description {
+    flex: 6;
+}
+
+.matomo-popular-feature p {
+    margin-bottom: 0;
+    max-width: 700px;
+}
+
+.matomo-popular-feature > .learn-more {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.matomo-popular-feature .cover-image {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    flex: 3;
+}
+
+.matomo-price {
+    color: indianred;
+    font-size: 13px;
+    border-radius: 12px;
+    background-color: rgba(255, 0, 0, .05);
+    padding: 4px 8px 3px;
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: bottom;
+}
+
+@media (max-width: 1278px) {
+    #matomo-welcome-marketplace-setup {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    #matomo-setup-preface {
+        border-right: 0px;
+    }
+
+    .matomo-step:first-child {
+        margin-left: 0;
+    }
+
+    .matomo-step {
+        width: auto;
+    }
+
+    .matomo-steps {
+        justify-content: space-between;
+    }
+
+    .matomo-steps {
+        padding-top: 1em;
+        padding-bottom: 2em;
+        border-top: 1px solid #eee;
+    }
+
+    .wizard-waiting-for {
+        position: absolute;
+        bottom: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .matomo-popular-feature .cover-image {
+        display: none;
+    }
+
+    .matomo-steps {
+        flex-direction: column;
+    }
+
+    .matomo-step:not(:first-child) {
+        margin-top: 2em;
+        margin-left: 0;
+    }
+
+    .matomo-price {
+        display: inline-block;
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .matomo-feature-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .matomo-popular-feature .description > p {
+        margin-right: 8px;
+    }
+}

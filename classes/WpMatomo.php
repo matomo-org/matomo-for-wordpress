@@ -42,7 +42,7 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.10.0';
+	const VERSION = '5.10.1';
 
 	/**
 	 * @var \WpMatomo\Feature[]
@@ -193,7 +193,7 @@ class WpMatomo {
 		if ( self::is_safe_mode() ) {
 			if ( is_admin() ) {
 				return [
-					new Admin( self::$settings, false ),
+					new Admin( self::$settings ),
 					new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
 				];
 			}
@@ -213,6 +213,7 @@ class WpMatomo {
 			new Renderer(),
 			new API(),
 			new Admin( self::$settings ),
+			new Menu( self::$settings ),
 			new Dashboard(),
 			new SiteSync( self::$settings ),
 			new UserSync(),

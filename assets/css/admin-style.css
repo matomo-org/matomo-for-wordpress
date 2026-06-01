@@ -312,3 +312,47 @@ table.matomo-tracking-form th {
     font-size: 0.9em;
     margin-top: 24px;
 }
+
+.matomo-primary-color-fg {
+    color: #2271b1;
+}
+
+.matomo-primary-color-fill {
+    fill: #2271b1;
+}
+
+.matomo-secondary-color-fg {
+    color: #f6f7f7;
+}
+
+.matomo-primary-color-bg {
+    background-color: #2271b1;
+}
+
+.matomo-secondary-color-bg {
+    background-color: #f6f7f7;
+}
+
+.mtm-wp-gte-7 .matomo-primary-color-fg {
+    color: var(--wp-admin-theme-color, #3858e9);
+}
+
+.mtm-wp-gte-7 .matomo-primary-color-fill {
+    fill: var(--wp-admin-theme-color, #3858e9);
+}
+
+.mtm-wp-gte-7 .matomo-secondary-color-fg {
+    color: white;
+}
+
+.mtm-wp-gte-7 .matomo-primary-color-bg {
+    background-color: var(--wp-admin-theme-color, #3858e9);
+}
+
+.mtm-wp-gte-7 .matomo-secondary-color-bg {
+    background-color: white;
+}
+
+.mtm-wp-gte-7 .matomo-toggle input:checked + .slider {
+    background-color: var(--wp-admin-theme-color, #3858e9);
+}

@@ -145,6 +145,8 @@ class Woocommerce extends Base {
 	}
 
 	public function maybe_track_order_complete() {
+		global $wp;
+
 		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
 			$order_id = isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
 
