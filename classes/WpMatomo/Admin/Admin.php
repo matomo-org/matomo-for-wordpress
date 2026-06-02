@@ -49,7 +49,16 @@ class Admin extends Feature {
 
 	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, matomo_get_asset_version() );
-		wp_enqueue_script( 'matomo_iframe_resizer', plugins_url( 'assets/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ), [], matomo_get_asset_version(), [ 'defer', false ] );
+		wp_enqueue_script(
+			'matomo_iframe_resizer',
+			plugins_url( 'assets/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ),
+			[],
+			matomo_get_asset_version(),
+			[
+				'strategy'  => 'defer',
+				'in_footer' => false,
+			]
+		);
 
 		wp_enqueue_script(
 			'matomo-admin-js',
