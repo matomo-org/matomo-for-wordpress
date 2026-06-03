@@ -259,7 +259,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			throw new \Exception( 'getLatestVersion request failed: ' . $response->get_error_message() );
 		}
 
-		$this->assertEquals( $response['body'], \Piwik\Version::VERSION );
+		$this->assertEquals( \Piwik\Version::VERSION, $response['body'] );
 	}
 
 	public function test_wordpress_tested_up_to_is_latest() {
