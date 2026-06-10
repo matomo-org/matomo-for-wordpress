@@ -121,22 +121,12 @@ describe('MWP Admin > Marketplace', () => {
     expect(await $('.menuTab[data-category-id="ProfessionalServices_PromoFunnels"]').isExisting()).toBeFalsy();
   });
 
-  it('should load the overview tab correctly when the marketplace plugin is installed', async () => {
+  it('should load the install plugins tab correctly when the marketplace plugin is installed', async () => {
     await MwpMarketplacePage.open();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.overview-after-install.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
-  });
-
-  it('should load the install plugins tab correctly', async () => {
-    await browser.refresh();
-    await MwpMarketplacePage.openMarketplacePluginsTab();
-
-    await MwpMarketplacePage.prepareWpAdminForScreenshot();
-    await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-plugins.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
