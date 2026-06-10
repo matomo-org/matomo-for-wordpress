@@ -123,6 +123,7 @@ describe('MWP Admin > Marketplace', () => {
 
   it('should load the install plugins tab correctly when the marketplace plugin is installed', async () => {
     await MwpMarketplacePage.open();
+    await MwpMarketplacePage.waitForMarketplaceTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
