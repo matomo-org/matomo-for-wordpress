@@ -86,6 +86,10 @@ class MwpMarketplacePage extends MwpPage {
   async openMarketplacePluginsTab() {
     await $('a.nav-tab=Marketplace').click();
 
+    await this.waitForMarketplaceTab();
+  }
+
+  async waitForMarketplaceTab() {
     await waitForPluginCardsOrMarketplace();
 
     if (await $('.matomo-plugin-card').isExisting()) {

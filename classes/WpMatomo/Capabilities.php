@@ -69,8 +69,9 @@ class Capabilities extends Feature {
 
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
 		if ( self::KEY_STEALTH === $cap ) {
+			// in multisite prevent super admin from having their tracking being filtered
 			// a super admin is usually allowed all actions... unless we add do_not_allow
-			if ( is_multisite() && is_super_admin() ) {
+			if ( is_multisite() && is_super_admin( $user_id ) ) {
 				$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
 				if ( ! empty( $stealth['administrator'] ) ) {
 					$caps[] = 'do_not_allow';
@@ -80,7 +81,7 @@ class Capabilities extends Feature {
 
 		if ( Menu::CAP_NOT_EXISTS === $cap
 			 && is_multisite()
-			 && is_super_admin() ) {
+			 && is_super_admin( $user_id ) ) {
 			$caps[] = 'do_not_allow'; // prevent matomo-analytics submenu to be shown
 		}
 
@@ -93,7 +94,7 @@ class Capabilities extends Feature {
 			switch ( $cap_request ) {
 				// ensure the Matomo capability inheritcance always works
 				case self::KEY_SUPERUSER:
-					if ( $this->has_super_user_capability( $allcaps ) ) {
+					if ( $this->has_super_user_capability( $allcaps, $user ) ) {
 						$allcaps[ $cap_request ] = true;
 					}
 					break;
@@ -105,7 +106,7 @@ class Capabilities extends Feature {
 						// when user has the above permission we also make sure to add all capabilites below... eg
 						// when user has write... then we ensure the user also has the view capability
 						if ( $this->has_any_higher_permission( $cap_request, $allcaps )
-							 || $this->has_super_user_capability( $allcaps ) ) {
+							 || $this->has_super_user_capability( $allcaps, $user ) ) {
 							$allcaps[ $cap_request ] = true;
 						}
 					}
@@ -117,13 +118,13 @@ class Capabilities extends Feature {
 		return $allcaps;
 	}
 
-	private function has_super_user_capability( $allcaps ) {
+	private function has_super_user_capability( $allcaps, $user ) {
 		if ( is_multisite() && $this->settings->is_network_enabled() ) {
-			if ( is_super_admin() ) {
+			if ( is_super_admin( $user->ID ) ) {
 				// only network manager can be super user in this case
 				return true;
 			}
-		} elseif ( ! empty( $allcaps['administrator'] ) || ( is_multisite() && is_super_admin() ) ) {
+		} elseif ( ! empty( $allcaps['administrator'] ) || ( is_multisite() && is_super_admin( $user->ID ) ) ) {
 			return true;
 		}
 
