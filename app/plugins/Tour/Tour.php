@@ -28,7 +28,7 @@ class Tour extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout', 'API.Annotations.add.end' => 'onAnnotationAdded', 'API.Goals.addGoal.end' => 'onGoalAdded', 'UsersManager.inviteUser.end' => 'onUserInvited', 'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution', 'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog', 'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile', 'Controller.Marketplace.overview' => 'onBrowseMarketplace', 'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => \true));
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout', 'API.Annotations.add.end' => 'onAnnotationAdded', 'API.Goals.addGoal.end' => 'onGoalAdded', 'UsersManager.inviteUser.end' => 'onUserInvited', 'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution', 'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog', 'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile', 'Controller.Marketplace.overview' => 'onBrowseMarketplace', 'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => \true));
     }
     public function onBrowseMarketplace()
     {
@@ -109,8 +109,20 @@ class Tour extends \Piwik\Plugin
     {
         $stylesheets[] = "plugins/Tour/stylesheets/engagement.less";
     }
-    public function getJsFiles(&$jsFiles)
+    public function getClientSideTranslationKeys(&$translationKeys)
     {
-        $jsFiles[] = "plugins/Tour/javascripts/engagement.js";
+        $translationKeys[] = 'Tour_CompletionTitle';
+        $translationKeys[] = 'Tour_CompletionMessage';
+        $translationKeys[] = 'Tour_YouCanCallYourselfExpert';
+        $translationKeys[] = 'Tour_ShareYourAchievementOn';
+        $translationKeys[] = 'Tour_ShareAllChallengesCompleted';
+        $translationKeys[] = 'Tour_StatusLevel';
+        $translationKeys[] = 'Tour_ChallengeCompleted';
+        $translationKeys[] = 'Tour_SkipThisChallenge';
+        $translationKeys[] = 'Tour_PreviousChallenges';
+        $translationKeys[] = 'Tour_NextChallenges';
+        $translationKeys[] = 'Tour_OnlyVisibleToSuperUser';
+        $translationKeys[] = 'General_Previous';
+        $translationKeys[] = 'General_Next';
     }
 }

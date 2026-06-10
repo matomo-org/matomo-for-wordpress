@@ -22,6 +22,12 @@ namespace {
             return p\Grapheme::grapheme_levenshtein($string1, $string2, $insertion_cost, $replacement_cost, $deletion_cost);
         }
     }
+    if (!\function_exists('grapheme_strrev')) {
+        function grapheme_strrev(string $string) : string|false
+        {
+            return p\Grapheme::grapheme_strrev($string);
+        }
+    }
     if (\extension_loaded('intl')) {
         return;
     }
@@ -39,6 +45,9 @@ namespace {
         {
             return p\Grapheme::grapheme_extract((string) $haystack, (int) $size, (int) $type, (int) $offset, $next);
         }
+    }
+    if (\PHP_VERSION_ID >= 80500) {
+        return require __DIR__ . '/bootstrap85.php';
     }
     if (!\function_exists('grapheme_stripos')) {
         function grapheme_stripos(?string $haystack, ?string $needle, ?int $offset = 0) : int|false

@@ -23,22 +23,22 @@ class Configuration
     {
         return Db::get();
     }
-    public function configureNewDimension($idSite, $name, $scope, $index, $active, $extractions, $caseSensitive)
+    public function configureNewDimension($idSite, $name, $scope, $index, $active, $extractions, $caseSensitive, $description = '')
     {
         $extractions = $this->encodeExtractions($extractions);
         $active = $active ? '1' : '0';
         $caseSensitive = $caseSensitive ? '1' : '0';
         $id = $this->getNextCustomDimensionIdForSite($idSite);
-        $config = array('idcustomdimension' => $id, 'idsite' => $idSite, 'index' => $index, 'scope' => $scope, 'name' => $name, 'active' => $active, 'extractions' => $extractions, 'case_sensitive' => $caseSensitive);
+        $config = array('idcustomdimension' => $id, 'idsite' => $idSite, 'index' => $index, 'scope' => $scope, 'name' => $name, 'description' => (string) $description, 'active' => $active, 'extractions' => $extractions, 'case_sensitive' => $caseSensitive);
         $this->getDb()->insert($this->tableNamePrefixed, $config);
         return $id;
     }
-    public function configureExistingDimension($idCustomDimension, $idSite, $name, $active, $extractions, $caseSensitive)
+    public function configureExistingDimension($idCustomDimension, $idSite, $name, $active, $extractions, $caseSensitive, $description = '')
     {
         $extractions = $this->encodeExtractions($extractions);
         $active = $active ? '1' : '0';
         $caseSensitive = $caseSensitive ? '1' : '0';
-        $this->getDb()->update($this->tableNamePrefixed, array('name' => $name, 'active' => $active, 'extractions' => $extractions, 'case_sensitive' => $caseSensitive), "idcustomdimension = " . (int) $idCustomDimension . " and idsite = " . (int) $idSite);
+        $this->getDb()->update($this->tableNamePrefixed, array('name' => $name, 'description' => (string) $description, 'active' => $active, 'extractions' => $extractions, 'case_sensitive' => $caseSensitive), "idcustomdimension = " . (int) $idCustomDimension . " and idsite = " . (int) $idSite);
     }
     public function getCustomDimensionsForSite($idSite)
     {
@@ -90,6 +90,7 @@ class Configuration
         $dimension['idcustomdimension'] = (string) $dimension['idcustomdimension'];
         $dimension['idsite'] = (string) $dimension['idsite'];
         $dimension['index'] = (string) $dimension['index'];
+        $dimension['description'] = isset($dimension['description']) ? (string) $dimension['description'] : '';
         $dimension['extractions'] = $this->decodeExtractions($dimension['extractions']);
         $dimension['active'] = (bool) $dimension['active'];
         $dimension['case_sensitive'] = (bool) $dimension['case_sensitive'];
@@ -107,7 +108,7 @@ class Configuration
     }
     public function install()
     {
-        $table = "`idcustomdimension` BIGINT UNSIGNED NOT NULL,\n                  `idsite` BIGINT UNSIGNED NOT NULL ,\n                  `name` VARCHAR(100) NOT NULL ,\n                  `index` SMALLINT UNSIGNED NOT NULL ,\n                  `scope` VARCHAR(10) NOT NULL ,\n                  `active` TINYINT UNSIGNED NOT NULL DEFAULT 0,\n                  `extractions` TEXT NOT NULL DEFAULT '',\n                  `case_sensitive` TINYINT UNSIGNED NOT NULL DEFAULT 1,\n                  PRIMARY KEY (`idcustomdimension`, `idsite`),\n                  UNIQUE KEY uniq_hash(idsite, `scope`, `index`)";
+        $table = "`idcustomdimension` BIGINT UNSIGNED NOT NULL,\n                  `idsite` BIGINT UNSIGNED NOT NULL ,\n                  `name` VARCHAR(100) NOT NULL ,\n                  `description` VARCHAR(1000) NOT NULL DEFAULT '',\n                  `index` SMALLINT UNSIGNED NOT NULL ,\n                  `scope` VARCHAR(10) NOT NULL ,\n                  `active` TINYINT UNSIGNED NOT NULL DEFAULT 0,\n                  `extractions` TEXT NOT NULL DEFAULT '',\n                  `case_sensitive` TINYINT UNSIGNED NOT NULL DEFAULT 1,\n                  PRIMARY KEY (`idcustomdimension`, `idsite`),\n                  UNIQUE KEY uniq_hash(idsite, `scope`, `index`)";
         DbHelper::createTable($this->tableName, $table);
     }
     public function uninstall()
