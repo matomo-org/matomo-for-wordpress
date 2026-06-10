@@ -73,7 +73,14 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
-	public function test_add_capabilities_to_user_and_add_capabilities_to_roles() {
+	/**
+	 * @dataProvider get_test_data_for_network_enabled_test
+	 */
+	public function test_add_capabilities_to_user_and_add_capabilities_to_roles( $assume_network_enabled ) {
+		$this->settings->set_assume_is_network_enabled_in_tests( $assume_network_enabled );
+
+		$this->matomo_fixture->create_set_super_admin( self::factory() );
+
 		$id1 = self::factory()->user->create( array( 'role' => 'editor' ) );
 		$id2 = self::factory()->user->create( array( 'role' => 'author' ) );
 		$id3 = self::factory()->user->create( array( 'role' => 'contributor' ) );
@@ -82,6 +89,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 			$this->assertFalse( user_can( $user_id, Capabilities::KEY_ADMIN ) );
 			$this->assertFalse( user_can( $user_id, Capabilities::KEY_WRITE ) );
 			$this->assertFalse( user_can( $user_id, Capabilities::KEY_VIEW ) );
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
 		}
 
 		$access = new Access( $this->settings );
@@ -111,6 +119,13 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( user_can( $id3, Capabilities::KEY_ADMIN ) );
 		$this->assertFalse( user_can( $id3, Capabilities::KEY_WRITE ) );
 		$this->assertTrue( user_can( $id3, Capabilities::KEY_VIEW ) );
+	}
+
+	public function get_test_data_for_network_enabled_test() {
+		return [
+			[ true ],
+			[ false ],
+		];
 	}
 
 	private function make_all_caps( $caps_to_set ) {
