@@ -73,6 +73,9 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
+	/**
+	 * @dataProvider get_test_data_for_network_enabled_test
+	 */
 	public function test_add_capabilities_to_user_and_add_capabilities_to_roles( $assume_network_enabled ) {
 		$this->settings->set_assume_is_network_enabled_in_tests( $assume_network_enabled );
 
