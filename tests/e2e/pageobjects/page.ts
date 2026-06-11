@@ -225,6 +225,12 @@ export default class Page {
       window.jQuery('#wpadminbar,#adminmenumain').hide();
       window.jQuery('#footer-upgrade').hide();
       window.jQuery('#wpfooter > #footer-left').remove();
+
+      // remove empty div at end of the page that sometimes adds 4px to page height
+      const emptyDiv = window.jQuery('body').children().toArray().findLast((e) => e.outerHTML === '<div></div>');
+      if (emptyDiv) {
+        emptyDiv.remove();
+      }
     });
 
     await browser.waitUntil(async () => {

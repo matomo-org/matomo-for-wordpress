@@ -103,7 +103,7 @@ describe('MWP Admin > Marketplace', () => {
       const plugin = promo === 'Heatmaps' || promo === 'SessionRecording' ? 'HeatmapSessionRecording' : promo;
 
       // no screenshot testing since we depend on what is in core
-      expect(await $('.pluginPromo').isExisting()).toBeTruthy();
+      await $('.pluginPromo').waitForExist({ timeout: 30000 });
 
       const unlockUrl = await browser.execute(() => $('.pluginPromo .promo-actions a:not(.learn-more)').attr('href'));
       expect(unlockUrl).toEqual(`https://plugins.matomo.org/${plugin}?add-to-cart=ws&currency=EUR&wp=1`);

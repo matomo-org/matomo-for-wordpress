@@ -18,8 +18,6 @@ class ContainerVersionsPage extends TagManagerPage {
 
     await $('.tagManagerVersionList td.description').waitForDisplayed();
 
-    await this.normalizeContainerSelector();
-
     await browser.execute(() => {
       $('td.created').each((i, e) => $(e).html('REMOVED'));
     });

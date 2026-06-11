@@ -77,7 +77,7 @@ class MwpMarketplaceSetupWizard {
         await waitForPluginCardsOrMarketplace();
       } catch (e) {
         await browser.refresh();
-        await $('#matomo-marketplace-for-wordpress').waitForExisting({ timeout: 30000 });
+        await $('#matomo-marketplace-for-wordpress').waitForExist({ timeout: 30000 });
         throw e;
       }
     });
