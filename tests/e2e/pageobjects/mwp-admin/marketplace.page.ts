@@ -18,12 +18,20 @@ const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
 
 async function waitForPluginCardsOrMarketplace() {
-  await browser.waitUntil(async () => {
-    return browser.execute(
-      () => window.jQuery('.matomo-plugin-card:visible').length > 0
-        || window.jQuery('.matomo-marketplace-wizard:visible').length > 0
-    );
-  }, { timeout: 120000 });
+  await Website.retry(3, async () => {
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(
+          () => window.jQuery('.matomo-plugin-card:visible').length > 0
+            || window.jQuery('.matomo-marketplace-wizard:visible').length > 0
+        );
+      }, { timeout: 120000 });
+    } catch (e) {
+      await browser.refresh();
+      await $('#matomo-marketplace-for-wordpress').waitForExist({ timeout: 30000 });
+      throw e;
+    }
+  });
 }
 
 class MwpMarketplaceSetupWizard {
@@ -72,15 +80,7 @@ class MwpMarketplaceSetupWizard {
   }
 
   async waitForReload(): Promise<void> {
-    await Website.retry(3, async () => {
-      try {
-        await waitForPluginCardsOrMarketplace();
-      } catch (e) {
-        await browser.refresh();
-        await $('#matomo-marketplace-for-wordpress').waitForExist({ timeout: 30000 });
-        throw e;
-      }
-    });
+    await waitForPluginCardsOrMarketplace();
   }
 }
 

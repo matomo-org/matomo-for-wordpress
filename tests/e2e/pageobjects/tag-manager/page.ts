@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoAdminPage from '../matomo-admin.page.js';
 
 export default class TagManagerPage extends MatomoAdminPage {
@@ -70,8 +70,6 @@ export default class TagManagerPage extends MatomoAdminPage {
     if (!notificationsModified) {
       throw new Error('did not modify preview notification');
     }
-
-    await this.normalizeContainerSelector();
 
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
