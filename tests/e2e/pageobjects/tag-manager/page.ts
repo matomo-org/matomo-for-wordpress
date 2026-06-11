@@ -10,14 +10,6 @@ import { $ } from '@wdio/globals';
 import MatomoAdminPage from '../matomo-admin.page.js';
 
 export default class TagManagerPage extends MatomoAdminPage {
-  async normalizeContainerSelector() {
-    await browser.execute(() => {
-      $('.tagContainerSelector a.title').html(
-        $('.tagContainerSelector a.title').html().replace(/\([A-Za-z0-9]+\)/g, '')
-      );
-    });
-  }
-
   async openPublishModal() {
     await browser.execute(() => {
       $('li[role=menuitem] a.item:contains(Publish)')[0].click();

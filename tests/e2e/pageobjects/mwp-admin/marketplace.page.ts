@@ -72,7 +72,15 @@ class MwpMarketplaceSetupWizard {
   }
 
   async waitForReload(): Promise<void> {
-    await waitForPluginCardsOrMarketplace();
+    await Website.retry(3, async () => {
+      try {
+        await waitForPluginCardsOrMarketplace();
+      } catch (e) {
+        await browser.refresh();
+        await $('#matomo-marketplace-for-wordpress').waitForExisting({ timeout: 30000 });
+        throw e;
+      }
+    });
   }
 }
 
@@ -197,22 +205,31 @@ class MwpMarketplacePage extends MwpPage {
       body.append('plugin[]', p.slug);
     });
 
-    await browser.setTimeout({ script: 180000 });
-
     const baseUrl = await Website.baseUrl();
-    const responseBody = await browser.execute((bu, b) => {
-      return new Promise((resolve, reject) => {
-        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-          method: 'POST',
-          data: b,
-          dataType: 'html',
-          complete: resolve,
-          error: function (jqxhr, textStatus, errorThrown) {
-            reject(errorThrown || textStatus);
-          }
-        });
+    await browser.execute((bu, b) => {
+      window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+        method: 'POST',
+        data: b,
+        dataType: 'html',
+        complete: function (r) {
+          (window as any).bulkInstallResponse = r;
+        },
+        error: function (jqxhr, textStatus, errorThrown) {
+          (window as any).bulkInstallError = errorThrown || textStatus;
+        }
       });
-    }, baseUrl, body.toString()) as string;
+    }, baseUrl, body.toString());
+
+    await browser.waitUntil(() => {
+      return browser.execute(() => !!(window.bulkInstallResponse || window.bulkInstallError));
+    }, { timeout: 300000 });
+
+    const bulkInstallError = await browser.execute(() => window.bulkInstallError);
+    if (bulkInstallError) {
+      throw new Error(bulkInstallError);
+    }
+
+    const responseBody = await browser.execute(() => window.bulkInstallResponse);
 
     const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
       .map(g => g[1].replaceAll('&amp;', '&'));
