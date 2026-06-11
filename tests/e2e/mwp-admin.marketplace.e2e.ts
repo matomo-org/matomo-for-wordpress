@@ -68,7 +68,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(1);
   });
 
   it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {

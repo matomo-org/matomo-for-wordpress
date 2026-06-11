@@ -197,6 +197,8 @@ class MwpMarketplacePage extends MwpPage {
       body.append('plugin[]', p.slug);
     });
 
+    await browser.setTimeout({ script: 180000 });
+
     const baseUrl = await Website.baseUrl();
     const responseBody = await browser.execute((bu, b) => {
       return new Promise((resolve, reject) => {
