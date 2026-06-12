@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class MinimumRequirementsNotice extends Feature {
 	const OPTION_NAME_MINIMUM_REQUIREMENTS_DISMISSED = 'matomo_minimum_requirements_notice_dismissed';
 	const DISMISS_NONCE_NAME                         = 'matomo-minimum-requirements-notice-dismiss';
+	const FORCE_MINIMUM_REQUIREMENTS_NOTICE          = 'matomo-force-mrn';
 
 	const REQUIRED_PHP_VERSION     = '8.1';
 	const REQUIRED_MYSQL_VERSION   = '8.0';
@@ -78,7 +79,10 @@ class MinimumRequirementsNotice extends Feature {
 		}
 
 		$unmet = $this->get_unmet_requirements();
-		if ( empty( $unmet ) ) {
+		if (
+			empty( $unmet )
+			|| ! empty( $_REQUEST[ self::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] )
+		) {
 			return;
 		}
 
