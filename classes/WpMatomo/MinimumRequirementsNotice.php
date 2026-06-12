@@ -105,14 +105,14 @@ class MinimumRequirementsNotice extends Feature {
 			. '</p></div>';
 	}
 
-	public function get_unmet_requirements() {
+	public function get_unmet_requirements( $php_version = PHP_VERSION ) {
 		$unmet = [];
 
-		if ( version_compare( PHP_VERSION, self::REQUIRED_PHP_VERSION, '<' ) ) {
+		if ( version_compare( $php_version, self::REQUIRED_PHP_VERSION, '<' ) ) {
 			$unmet[] = sprintf(
 				esc_html__( 'PHP %1$s or higher is required (you are currently using PHP %2$s).', 'matomo' ),
 				self::REQUIRED_PHP_VERSION,
-				PHP_VERSION
+				$php_version
 			);
 		}
 
@@ -138,7 +138,10 @@ class MinimumRequirementsNotice extends Feature {
 		return $unmet;
 	}
 
-	private function get_db_server() {
+	/**
+	 * Public for tests.
+	 */
+	public function get_db_server() {
 		global $wpdb;
 
 		if ( empty( $wpdb ) || empty( $wpdb->is_mysql ) ) {
