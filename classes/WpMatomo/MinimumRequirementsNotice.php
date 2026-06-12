@@ -9,6 +9,9 @@
 
 namespace WpMatomo;
 
+use WpMatomo;
+use WpMatomo\Admin\Admin;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -22,7 +25,7 @@ class MinimumRequirementsNotice extends Feature {
 	const REQUIRED_MARIADB_VERSION = '10.6';
 
 	public function is_active() {
-		return is_admin() && \WpMatomo::is_admin_user();
+		return is_admin();
 	}
 
 	public function register_hooks() {
@@ -55,7 +58,22 @@ class MinimumRequirementsNotice extends Feature {
 	}
 
 	public function check_requirements() {
-		if ( get_user_meta( get_current_user_id(), self::OPTION_NAME_MINIMUM_REQUIREMENTS_DISMISSED ) ) {
+		if ( ! \WpMatomo::is_admin_user() ) {
+			return;
+		}
+
+		$is_plugins_admin_page = $this->is_plugins_admin_page();
+		$is_matomo_page        = Admin::is_matomo_admin();
+
+		// only display on matomo admin pages and the plugins admin page
+		if ( ! $is_plugins_admin_page && ! $is_matomo_page ) {
+			return;
+		}
+
+		if (
+			$is_plugins_admin_page
+			&& get_user_meta( get_current_user_id(), self::OPTION_NAME_MINIMUM_REQUIREMENTS_DISMISSED )
+		) {
 			return;
 		}
 
@@ -64,7 +82,9 @@ class MinimumRequirementsNotice extends Feature {
 			return;
 		}
 
-		echo '<div class="matomo-notice notice notice-warning is-dismissible" id="matomo-minimumrequirements"><p>'
+		$dismissible = $is_plugins_admin_page ? 'dismissible' : '';
+
+		echo '<div class="matomo-notice notice notice-warning ' . esc_attr( $dismissible ) . '" id="matomo-minimumrequirements"><p>'
 			. sprintf(
 				esc_html__( '%1$sHeads up%2$s: a future version of Matomo Analytics will require a newer environment. You will not be able to update the plugin to that version until your server meets the new minimum requirements:', 'matomo' ),
 				'<strong>',
@@ -138,5 +158,10 @@ class MinimumRequirementsNotice extends Feature {
 			'is_mariadb' => $is_mariadb,
 			'version'    => $version,
 		];
+	}
+
+	private function is_plugins_admin_page() {
+		$screen = get_current_screen();
+		return ! empty( $screen ) && 'plugins' === $screen->id;
 	}
 }
