@@ -17,6 +17,9 @@ if (\PHP_VERSION_ID >= 80100) {
 if (\defined('MYSQLI_REFRESH_SLAVE') && !\defined('MYSQLI_REFRESH_REPLICA')) {
     \define('MYSQLI_REFRESH_REPLICA', 64);
 }
+if (\extension_loaded('curl') && !\defined('CURLOPT_ISSUERCERT_BLOB') && \curl_version()['version_number'] >= 0x74700) {
+    \define('CURLOPT_ISSUERCERT_BLOB', 40295);
+}
 if (!\function_exists('array_is_list')) {
     function array_is_list(array $array) : bool
     {

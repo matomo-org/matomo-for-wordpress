@@ -117,6 +117,7 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/vue/src/EnrichedHeadline/EnrichedHeadline.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Notification/Notification.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/QuickAccess/QuickAccess.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/SearchInput/SearchInput.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/selector.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/ReportingPage/ReportingPage.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/ReportExport/ReportExport.less";
@@ -126,6 +127,7 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/vue/src/PeriodSelector/PeriodSelector.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/MultiPairField/MultiPairField.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/DropdownMenu/DropdownMenu.less";
+        $stylesheets[] = "plugins/CoreHome/vue/src/DraggableList/DraggableList.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Sparkline/Sparkline.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/FieldArray/FieldArray.less";
         $stylesheets[] = "plugins/CoreHome/vue/src/Comparisons/Comparisons.less";
@@ -370,6 +372,7 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreHome_TechDeprecationWarning';
         $translationKeys[] = 'CoreHome_StartDate';
         $translationKeys[] = 'CoreHome_EndDate';
+        $translationKeys[] = 'CoreHome_InvalidComparisonDateRange';
         $translationKeys[] = 'CoreHome_DataForThisReportHasBeenDisabled';
         $translationKeys[] = 'CoreHome_ChangeVisualization';
         $translationKeys[] = 'CoreHome_ReportConfigure';

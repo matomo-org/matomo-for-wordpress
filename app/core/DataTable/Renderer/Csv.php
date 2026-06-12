@@ -17,6 +17,7 @@ use Piwik\Period;
 use Piwik\Period\Range;
 use Piwik\Piwik;
 use Piwik\ProxyHttp;
+use Piwik\Request;
 /**
  * CSV export
  *
@@ -51,6 +52,9 @@ class Csv extends Renderer
      * This string is also hardcoded in archive,sh
      */
     public const NO_DATA_AVAILABLE = 'No data available';
+    /**
+     * @var string[]
+     */
     private $unsupportedColumns = [];
     /**
      * Computes the dataTable output and returns the string/binary
@@ -66,8 +70,6 @@ class Csv extends Renderer
     }
     /**
      * Enables / Disables unicode converting
-     *
-     * @param $bool
      */
     public function setConvertToUnicode(bool $convertToUnicode) : void
     {
@@ -83,7 +85,7 @@ class Csv extends Renderer
     /**
      * Computes the output of the given data table
      *
-     * @param DataTable|array $table
+     * @param DataTable|DataTable\Map|array $table
      * @param array $allColumns
      */
     protected function renderTable($table, array &$allColumns = []) : string
@@ -183,7 +185,7 @@ class Csv extends Renderer
         }
         $value = $this->formatFormulas($value);
         if (is_string($value)) {
-            $value = str_replace(["\t"], ' ', $value);
+            $value = str_replace(["\t", "\r"], ' ', $value);
             // surround value with double quotes if it contains a double quote or a commonly used separator
             if (strpos($value, '"') !== \false || strpos($value, $this->separator) !== \false || strpos($value, $this->lineEnd) !== \false || strpos($value, ',') !== \false || strpos($value, ';') !== \false) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
@@ -197,6 +199,10 @@ class Csv extends Renderer
         }
         return $value;
     }
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     protected function formatFormulas($value)
     {
         // Excel / Libreoffice formulas may start with one of these characters
@@ -219,8 +225,8 @@ class Csv extends Renderer
     protected function renderHeader() : void
     {
         $fileName = Piwik::translate('General_Export');
-        $period = Common::getRequestVar('period', \false);
-        $date = Common::getRequestVar('date', \false);
+        $period = Request::fromRequest()->getStringParameter('period', '');
+        $date = Request::fromRequest()->getStringParameter('date', '');
         if ($period || $date) {
             // in test cases, there are no request params set
             if ($period === 'range') {
@@ -304,7 +310,7 @@ class Csv extends Renderer
         return substr($str, 0, -strlen($this->lineEnd));
     }
     /**
-     * @param $table
+     * @param DataTable $table
      * @param array $allColumns
      * @return array of csv data
      */
@@ -359,7 +365,7 @@ class Csv extends Renderer
         return $csv;
     }
     /**
-     * @param $str
+     * @param string $str
      * @return string
      */
     private function convertToUnicode($str)

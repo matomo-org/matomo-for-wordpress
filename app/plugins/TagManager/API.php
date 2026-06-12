@@ -398,7 +398,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         if ($this->tagsProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
@@ -431,7 +431,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $tag = $this->tags->getContainerTag($idSite, $idContainerVersion, $idTag);
         if (!empty($tag) && $this->tagsProvider->isCustomTemplate($tag['type'])) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
@@ -453,7 +453,7 @@ class API extends \Piwik\Plugin\API
     public function deleteContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
         if ($tag) {
             if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
@@ -476,7 +476,7 @@ class API extends \Piwik\Plugin\API
     public function pauseContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
         if ($tag) {
             if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
@@ -501,7 +501,7 @@ class API extends \Piwik\Plugin\API
     public function resumeContainerTag($idSite, $idContainer, $idContainerVersion, $idTag)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $tag = $this->getContainerTag($idSite, $idContainer, $idContainerVersion, $idTag);
         if ($tag) {
             if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
@@ -581,7 +581,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         if ($this->triggersProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
@@ -610,7 +610,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $trigger = $this->triggers->getContainerTrigger($idSite, $idContainerVersion, $idTrigger);
         if (!empty($trigger) && $this->triggersProvider->isCustomTemplate($trigger['type'])) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
@@ -633,7 +633,7 @@ class API extends \Piwik\Plugin\API
     public function deleteContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $trigger = $this->getContainerTrigger($idSite, $idContainer, $idContainerVersion, $idTrigger);
         if ($trigger) {
             if ($this->triggersProvider->isCustomTemplate($trigger['type'])) {
@@ -742,7 +742,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         if ($this->variablesProvider->isCustomTemplate($type) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
@@ -789,7 +789,7 @@ class API extends \Piwik\Plugin\API
     {
         $name = trim($this->decodeQuotes($name));
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $variable = $this->variables->getContainerVariable($idSite, $idContainerVersion, $idVariable);
         if (!empty($variable) && $this->variablesProvider->isCustomTemplate($variable['type'])) {
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
@@ -821,7 +821,7 @@ class API extends \Piwik\Plugin\API
     public function deleteContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable)
     {
         $this->accessValidator->checkWriteCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $variable = $this->getContainerVariable($idSite, $idContainer, $idContainerVersion, $idVariable);
         if ($variable) {
             if ($this->variablesProvider->isCustomTemplate($variable['type'])) {
@@ -920,6 +920,8 @@ class API extends \Piwik\Plugin\API
         BaseValidator::check(Piwik::translate('TagManager_VersionName'), $name, [new NotEmpty(), new CharacterLength(1, 50)]);
         if (empty($idContainerVersion)) {
             $idContainerVersion = $this->getContainerDraftVersion($idSite, $idContainer);
+        } else {
+            $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         }
         $this->enableGeneratePreview = \false;
         $container = $this->containers->createContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description);
@@ -945,7 +947,7 @@ class API extends \Piwik\Plugin\API
             $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
         }
         BaseValidator::check(Piwik::translate('TagManager_VersionName'), $name, [new NotEmpty(), new CharacterLength(1, 50)]);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         return $this->containers->updateContainerVersion($idSite, $idContainer, $idContainerVersion, $name, $description);
     }
     /**
@@ -988,8 +990,8 @@ class API extends \Piwik\Plugin\API
     public function deleteContainerVersion($idSite, $idContainer, $idContainerVersion)
     {
         $this->accessValidator->checkWriteCapability($idSite);
+        $this->assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion);
         $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
-        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
         if ($this->getContainerVersion($idSite, $idContainer, $idContainerVersion)) {
             $this->containers->deleteContainerVersion($idSite, $idContainer, $idContainerVersion);
             Piwik::postEvent('TagManager.deleteContainerVersion.end', array(array('idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $idContainerVersion)));
@@ -1217,6 +1219,11 @@ class API extends \Piwik\Plugin\API
         if (!empty($containerVersion['draft']['idcontainerversion'])) {
             return $containerVersion['draft']['idcontainerversion'];
         }
+    }
+    private function assertUserCanEditContainerVersion($idSite, $idContainer, $idContainerVersion) : void
+    {
+        $this->containers->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);
+        $this->accessValidator->checkWriteCapabilityForContainerVersion($idSite, $idContainer, $idContainerVersion);
     }
     private function decodeQuotes($value)
     {

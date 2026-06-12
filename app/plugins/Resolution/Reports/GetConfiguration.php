@@ -25,6 +25,8 @@ class GetConfiguration extends \Piwik\Plugins\Resolution\Reports\Base
     }
     public function configureView(ViewDataTable $view)
     {
+        $view->config->show_flatten_table = \false;
+        $view->config->show_flatten_table_export = \false;
         $this->getBasicResolutionDisplayProperties($view);
         $view->requestConfig->filter_limit = 3;
         $view->config->show_search = \true;

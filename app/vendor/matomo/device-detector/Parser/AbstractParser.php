@@ -375,6 +375,9 @@ abstract class AbstractParser
     protected function preMatchOverall() : ?array
     {
         $regexes = $this->getRegexes();
+        if ([] === $regexes) {
+            return null;
+        }
         $cacheKey = $this->parserName . DeviceDetector::VERSION . '-all';
         $cacheKey = (string) \preg_replace('/([^a-z0-9_-]+)/i', '', $cacheKey);
         if (empty($this->overAllMatch)) {

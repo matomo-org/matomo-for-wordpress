@@ -25,4 +25,10 @@ namespace {
             return p\Normalizer::normalize($string, $form);
         }
     }
+    if (!\function_exists('normalizer_get_raw_decomposition')) {
+        function normalizer_get_raw_decomposition(?string $string, ?int $form = p\Normalizer::FORM_C)
+        {
+            return p\Normalizer::getRawDecomposition((string) $string, (int) $form);
+        }
+    }
 }

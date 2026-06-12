@@ -15,7 +15,7 @@ class ThemeStyles
     public const LIGHT_MODE = 'light';
     public const DARK_MODE = 'dark';
     // to maintain BC w/ old names that were defined in LESS
-    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderLight' => 'theme-color-border-light', 'colorBoxShadow' => 'theme-color-boxShadow', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
+    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderAlternative' => 'theme-color-border-alternative', 'colorBorderLight' => 'theme-color-border-light', 'colorBoxShadow' => 'theme-color-boxShadow', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
     /**
      * @var string
      */
@@ -39,7 +39,7 @@ class ThemeStyles
     /**
      * @var string|array<string>
      */
-    public $colorFocusRingAlternative;
+    public $colorFocusRingAlternative = '#00b4bE';
     /**
      * @var string|array<string>
      */
@@ -162,8 +162,17 @@ class ThemeStyles
     public $colorBorderLight = ['#a9a399', '#645e54'];
     /**
      * @var string|array<string>
+     * @deprecated Use $colorBorderAlternative instead. Retained only for legacy use and will be
+     *             phased out once everything has moved to the alternative.
      */
     public $colorBorder = ['#cccccc', '#555555'];
+    /**
+     * Use this as the new border color. $colorBorder only remains so that we don't need to update
+     * screenshots unless we really need to
+     *
+     * @var string|array<string>
+     */
+    public $colorBorderAlternative = ['#E0E0E0', '#555555'];
     /**
      * @var string|array<string>
      */
@@ -191,7 +200,6 @@ class ThemeStyles
     public function __construct(string $themeMode)
     {
         $this->themeMode = $themeMode;
-        $this->colorFocusRingAlternative = $this->colorBrand;
         $this->colorMenuContrastText = $this->colorText;
         $this->colorMenuContrastTextSelected = $this->colorMenuContrastText;
         $this->colorMenuContrastBackground = $this->colorBackgroundContrast;

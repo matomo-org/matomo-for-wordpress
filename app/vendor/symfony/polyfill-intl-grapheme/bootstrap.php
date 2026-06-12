@@ -85,7 +85,13 @@ namespace {
     if (!\function_exists('grapheme_levenshtein')) {
         function grapheme_levenshtein(string $string1, string $string2, int $insertion_cost = 1, int $replacement_cost = 1, int $deletion_cost = 1, string $locale = '')
         {
-            return p\Php85::grapheme_levenshtein($string1, $string2, $insertion_cost, $replacement_cost, $deletion_cost);
+            return p\Grapheme::grapheme_levenshtein($string1, $string2, $insertion_cost, $replacement_cost, $deletion_cost);
+        }
+    }
+    if (!\function_exists('grapheme_strrev')) {
+        function grapheme_strrev(string $string)
+        {
+            return p\Grapheme::grapheme_strrev($string);
         }
     }
 }

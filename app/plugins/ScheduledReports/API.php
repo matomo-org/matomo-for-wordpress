@@ -584,14 +584,14 @@ class API extends \Piwik\Plugin\API
         $reportRenderer->setLocale($language);
         $reportRenderer->setReport($report);
         // render report
-        $description = str_replace(["\r", "\n"], ' ', Common::unsanitizeInputValue($report['description']));
+        $reportName = str_replace(["\r", "\n"], ' ', Common::unsanitizeInputValue((string) $report['description']));
         [$reportSubject, $reportTitle] = self::getReportSubjectAndReportTitle(Common::unsanitizeInputValue(Site::getNameFor((int) $idSite)), $report['reports']);
         // if reporting for a segment, use the segment's name in the title
         if (is_array($segment) && strlen($segment['name'])) {
             $reportTitle .= " - " . $segment['name'];
         }
-        $filename = "{$reportTitle} - {$prettyDate} - {$description}";
-        $reportRenderer->renderFrontPage($reportTitle, $prettyDate, $description, $reportMetadata, $segment ?? []);
+        $filename = "{$reportTitle} - {$prettyDate} - {$reportName}";
+        $reportRenderer->renderFrontPage($reportTitle, $prettyDate, $reportName, $reportMetadata, $segment ?? []);
         array_walk($processedReports, [$reportRenderer, 'renderReport']);
         switch ($outputType) {
             case self::OUTPUT_SAVE_ON_DISK:
@@ -617,7 +617,7 @@ class API extends \Piwik\Plugin\API
      * dispatches it via the configured transport medium, and cleans up.
      *
      * @param int $idReport The scheduled report ID to send.
-     * @param 'day'|'week'|'month'|'year'|false $period The data period to send, or `false` to use the report's
+     * @param 'day'|'week'|'month'|'year'|'range'|false $period The data period to send, or `false` to use the report's
      *                                                 stored period.
      * @param string|false $date The date to generate the report for (e.g. `'2024-01-15'`),
      *                           or `false` to use the previous scheduled period.
@@ -630,7 +630,7 @@ class API extends \Piwik\Plugin\API
         $report = reset($reports);
         /** @phpstan-var ScheduledReport $report */
         if (!empty($period)) {
-            self::validatePeriodParam($period);
+            self::validatePeriodParam($period, \true);
             $report['period_param'] = $period;
         }
         if (empty($date)) {
@@ -814,11 +814,13 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Period schedule must be one of the following: ' . implode(', ', $availablePeriods) . ' (got ' . $period . ')');
         }
     }
-    private static function validatePeriodParam(string $period) : void
+    private static function validatePeriodParam(string $period, bool $allowRange = \false) : void
     {
         $periodValidator = new Period\PeriodValidator();
         $allowedPeriods = array_flip($periodValidator->getPeriodsAllowedForAPI());
-        unset($allowedPeriods['range']);
+        if (!$allowRange) {
+            unset($allowedPeriods['range']);
+        }
         if (!array_key_exists($period, $allowedPeriods)) {
             throw new Exception('Report period must be one of the following: ' . implode(', ', array_keys($allowedPeriods)) . ' (got ' . $period . ')');
         }
