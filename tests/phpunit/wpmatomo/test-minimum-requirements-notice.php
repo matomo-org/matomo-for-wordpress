@@ -175,7 +175,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 	}
 
 	/**
-	 * @dataProvider get_php_version_provider
+	 * @dataProvider get_php_version_test_data_for_get_unmet_requirements
 	 */
 	public function test_get_unmet_requirements_checks_the_given_php_version( $php_version, $is_unmet ) {
 		// use a supported database so only the PHP version can be reported.
@@ -186,7 +186,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertSame( $expected, $this->notice->get_unmet_requirements( $php_version ) );
 	}
 
-	public function get_php_version_provider() {
+	public function get_php_version_test_data_for_get_unmet_requirements() {
 		return [
 			[ '7.2.5', true ],
 			[ '7.4.33', true ],
@@ -270,14 +270,17 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->capture_notice( $notice ) );
 	}
 
-	public function test_check_requirements_is_suppressed_when_force_request_param_is_present() {
+	public function test_check_requirements_shows_notice_when_force_request_param_is_present_even_if_requirements_are_met() {
 		$this->create_set_super_admin();
 		$_GET['page'] = 'matomo-systemreport';
 
 		$_REQUEST[ MinimumRequirementsNotice::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] = '1';
 
-		$notice = $this->make_notice_with_unmet( [ 'MySQL 8.0 or higher is required (you are currently using MySQL 5.7.40).' ] );
-		$this->assertSame( '', $this->capture_notice( $notice ) );
+		$notice = $this->make_notice_with_unmet( [] );
+		$output = $this->capture_notice( $notice );
+
+		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
+		$this->assertStringContainsString( 'a future version of Matomo Analytics will require a newer server environment', $output );
 	}
 
 	private function set_fake_db( $server_info, $db_version ) {

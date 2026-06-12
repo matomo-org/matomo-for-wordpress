@@ -78,11 +78,10 @@ class MinimumRequirementsNotice extends Feature {
 			return;
 		}
 
+		$force = ! empty( $_REQUEST[ self::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] );
+
 		$unmet = $this->get_unmet_requirements();
-		if (
-			empty( $unmet )
-			|| ! empty( $_REQUEST[ self::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] )
-		) {
+		if ( empty( $unmet ) && ! $force ) {
 			return;
 		}
 
@@ -90,7 +89,7 @@ class MinimumRequirementsNotice extends Feature {
 
 		echo '<div class="matomo-notice notice notice-warning ' . esc_attr( $dismissible ) . '" id="matomo-minimumrequirements"><p>'
 			. sprintf(
-				esc_html__( '%1$sHeads up%2$s: a future version of Matomo Analytics will require a newer environment. You will not be able to update the plugin to that version until your server meets the new minimum requirements:', 'matomo' ),
+				esc_html__( '%1$sHeads up%2$s: Matomo Analytics version 6 and later will require a newer server environment. You will not be able to update the plugin to that version until your server meets the new minimum requirements:', 'matomo' ),
 				'<strong>',
 				'</strong>'
 			)

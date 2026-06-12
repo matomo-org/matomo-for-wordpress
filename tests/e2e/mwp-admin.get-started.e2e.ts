@@ -47,4 +47,17 @@ describe('MWP Admin > Get Started', () => {
     await MwpGetStartedPage.enableTracking();
     expect(await $('.matomo-dashboard-container').isExisting()).toBeTruthy();
   });
+
+  it('should display the minimum requirements notice', async () => {
+    const baseUrl = await Website.baseUrl();
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=matomo-get-started&matomo-force-mrn=1`);
+
+    const notice = await $('#matomo-minimumrequirements');
+    await notice.waitForDisplayed({ timeout: 30000 });
+
+    await expect(notice).toHaveText(
+      'Matomo Analytics version 6 and later will require a newer environment',
+      { containing: true }
+    );
+  });
 });
