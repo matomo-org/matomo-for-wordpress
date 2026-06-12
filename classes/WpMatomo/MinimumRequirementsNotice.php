@@ -85,7 +85,7 @@ class MinimumRequirementsNotice extends Feature {
 			return;
 		}
 
-		$dismissible = $is_plugins_admin_page ? 'dismissible' : '';
+		$dismissible = $is_plugins_admin_page ? 'is-dismissible' : '';
 
 		echo '<div class="matomo-notice notice notice-warning ' . esc_attr( $dismissible ) . '" id="matomo-minimumrequirements"><p>'
 			. sprintf(

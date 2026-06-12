@@ -244,7 +244,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertStringContainsString( 'a future version of Matomo Analytics will require a newer environment', $output );
 		$this->assertStringContainsString( 'MySQL 8.0 or higher is required (you are currently using MySQL 5.7.40).', $output );
 		// on matomo admin pages the notice cannot be dismissed.
-		$this->assertStringNotContainsString( 'dismissible', $output );
+		$this->assertStringNotContainsString( 'is-dismissible', $output );
 	}
 
 	public function test_check_requirements_shows_dismissible_notice_on_plugins_page() {
