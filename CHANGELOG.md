@@ -1,5 +1,12 @@
 == Changelog ===
 
+= 5.10.3 =
+* Bug fix: fix incorrect capability check that used current user in some cases instead of requested user.
+
+= 5.10.2 =
+* Bug fix: fix bug incompatibility issue in admin display, with several other WordPress plugins.
+* Bug fix: update API version of Matomo opt out block.
+
 = 5.10.1 =
 * Enable dismissible premium plugin promotional content in the main reporting menu.
 * Bug fix: missing global declaration breaks woocommerce order tracking for some users.

@@ -17,6 +17,15 @@ const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
 
+async function waitForPluginCardsOrMarketplace() {
+  await browser.waitUntil(async () => {
+    return browser.execute(
+      () => window.jQuery('.matomo-plugin-card:visible').length > 0
+        || window.jQuery('.matomo-marketplace-wizard:visible').length > 0
+    );
+  }, { timeout: 120000 });
+}
+
 class MwpMarketplaceSetupWizard {
   async downloadPlugin(): Promise<string> {
     const downloadUrl = await browser.execute(() => window.jQuery('.download-plugin').attr('href'));
@@ -63,7 +72,7 @@ class MwpMarketplaceSetupWizard {
   }
 
   async waitForReload(): Promise<void> {
-    await $('.matomo-plugin-card').waitForDisplayed({ timeout: 120000 });
+    await waitForPluginCardsOrMarketplace();
   }
 }
 
@@ -77,7 +86,11 @@ class MwpMarketplacePage extends MwpPage {
   async openMarketplacePluginsTab() {
     await $('a.nav-tab=Marketplace').click();
 
-    await $('.matomo-plugin-card,.matomo-marketplace-wizard').waitForExist({ timeout: 120000 });
+    await this.waitForMarketplaceTab();
+  }
+
+  async waitForMarketplaceTab() {
+    await waitForPluginCardsOrMarketplace();
 
     if (await $('.matomo-plugin-card').isExisting()) {
       // change sort to alphabetical
@@ -101,7 +114,7 @@ class MwpMarketplacePage extends MwpPage {
       element.dispatchEvent(event);
     });
     await browser.pause(1000);
-    await $('.matomo-plugin-card').waitForExist({ timeout: 120000 });
+    await waitForPluginCardsOrMarketplace();
   }
 
   async removeThirdPartyPlugins() {
