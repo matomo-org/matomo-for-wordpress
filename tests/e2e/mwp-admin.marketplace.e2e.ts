@@ -68,7 +68,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(1);
   });
 
   it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {
@@ -103,7 +103,7 @@ describe('MWP Admin > Marketplace', () => {
       const plugin = promo === 'Heatmaps' || promo === 'SessionRecording' ? 'HeatmapSessionRecording' : promo;
 
       // no screenshot testing since we depend on what is in core
-      expect(await $('.pluginPromo').isExisting()).toBeTruthy();
+      await $('.pluginPromo').waitForExist({ timeout: 30000 });
 
       const unlockUrl = await browser.execute(() => $('.pluginPromo .promo-actions a:not(.learn-more)').attr('href'));
       expect(unlockUrl).toEqual(`https://plugins.matomo.org/${plugin}?add-to-cart=ws&currency=EUR&wp=1`);

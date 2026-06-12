@@ -6,18 +6,10 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoAdminPage from '../matomo-admin.page.js';
 
 export default class TagManagerPage extends MatomoAdminPage {
-  async normalizeContainerSelector() {
-    await browser.execute(() => {
-      $('.tagContainerSelector a.title').html(
-        $('.tagContainerSelector a.title').html().replace(/\([A-Za-z0-9]+\)/g, '')
-      );
-    });
-  }
-
   async openPublishModal() {
     await browser.execute(() => {
       $('li[role=menuitem] a.item:contains(Publish)')[0].click();
@@ -78,8 +70,6 @@ export default class TagManagerPage extends MatomoAdminPage {
     if (!notificationsModified) {
       throw new Error('did not modify preview notification');
     }
-
-    await this.normalizeContainerSelector();
 
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));

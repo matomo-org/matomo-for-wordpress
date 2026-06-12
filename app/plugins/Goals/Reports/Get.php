@@ -87,6 +87,19 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
         $site = new Site($idSite);
         return $site->isEcommerceEnabled();
     }
+    private function hasGoalRevenue(string $idGoal) : bool
+    {
+        $params = ['format_metrics' => '0'];
+        if (!empty($idGoal)) {
+            $params['idGoal'] = $idGoal;
+        }
+        $datatable = Request::processRequest('Goals.get', $params);
+        if (!$datatable instanceof DataTable) {
+            return \false;
+        }
+        $row = $datatable->getFirstRow();
+        return $row && (float) $row->getColumn('revenue') > 0;
+    }
     public function configureView(ViewDataTable $view)
     {
         $idGoal = Common::getRequestVar('idGoal', 0, 'string');
@@ -129,7 +142,7 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
             $view->config->addSparklineMetric(['conversion_rate'], $order = 20);
             if (empty($idGoal)) {
                 // goals overview sparklines below evolution graph
-                if ($isEcommerceEnabled) {
+                if ($isEcommerceEnabled || $this->hasGoalRevenue($idGoal)) {
                     // this would be ideally done in Ecommerce plugin but then it is hard to keep same order
                     $view->config->addSparklineMetric(['revenue'], $order = 30);
                 }
@@ -137,8 +150,9 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
                 if ($onlySummary) {
                     // in Goals Overview we list an overview for each goal....
                     $view->config->addTranslation('conversion_rate', Piwik::translate('Goals_ConversionRate'));
-                } elseif ($isEcommerceEnabled) {
-                    // in Goals detail page...
+                }
+                if ($isEcommerceEnabled || $this->hasGoalRevenue($idGoal)) {
+                    // in Goals detail page and per-goal summary on Goals Overview
                     $view->config->addSparklineMetric(['revenue'], $order = 30);
                 }
             }
@@ -154,7 +168,8 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
                     $currentPrettyDate = $currentPeriod instanceof Month ? $currentPeriod->getLocalizedLongString() : $currentPeriod->getPrettyString();
                     $lastPeriod = PeriodFactory::build(Piwik::getPeriod(), $lastPeriodDate);
                     $lastPrettyDate = $currentPeriod instanceof Month ? $lastPeriod->getLocalizedLongString() : $lastPeriod->getPrettyString();
-                    $view->config->compute_evolution = function ($columns, $metrics) use($currentPrettyDate, $lastPrettyDate, $previousDataRow, $idSite) {
+                    $metricTranslations = $view->config->translations;
+                    $view->config->compute_evolution = function ($columns, $metrics) use($currentPrettyDate, $lastPrettyDate, $previousDataRow, $idSite, $metricTranslations) {
                         $value = reset($columns);
                         $columnName = key($columns);
                         $pastValue = $previousDataRow ? $previousDataRow->getColumn($columnName) : 0;
@@ -165,22 +180,25 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
                         $formatter = new MetricFormatter();
                         $currentValueFormatted = $value;
                         $pastValueFormatted = $pastValue;
-                        foreach ($metrics as $metric) {
-                            if ($metric->getName() === $columnName) {
-                                $pastValueFormatted = $metric->format($pastValue, $formatter);
-                                $currentValueFormatted = $metric->format($value, $formatter);
-                                break;
-                            }
-                        }
                         if (strpos($columnName, 'revenue') !== \false) {
                             $currencySymbol = Site::getCurrencySymbolFor($idSite);
                             $pastValueFormatted = NumberFormatter::getInstance()->formatCurrency($pastValue, $currencySymbol, GoalManager::REVENUE_PRECISION);
                             $currentValueFormatted = NumberFormatter::getInstance()->formatCurrency($value, $currencySymbol, GoalManager::REVENUE_PRECISION);
+                        } else {
+                            foreach ($metrics as $metric) {
+                                if ($metric->getName() === $columnName) {
+                                    $pastValueFormatted = $metric->format($pastValue, $formatter);
+                                    $currentValueFormatted = $metric->format($value, $formatter);
+                                    break;
+                                }
+                            }
                         }
-                        $columnTranslations = Metrics::getDefaultMetricTranslations();
-                        $columnTranslation = '';
-                        if (array_key_exists($columnName, $columnTranslations)) {
-                            $columnTranslation = $columnTranslations[$columnName];
+                        $columnTranslation = $metricTranslations[$columnName] ?? '';
+                        if ($columnTranslation === '') {
+                            $columnTranslations = Metrics::getDefaultMetricTranslations();
+                            if (array_key_exists($columnName, $columnTranslations)) {
+                                $columnTranslation = $columnTranslations[$columnName];
+                            }
                         }
                         return ['currentValue' => $value, 'pastValue' => $pastValue, 'isLowerValueBetter' => Metrics::isLowerValueBetter($columnName), 'tooltip' => Piwik::translate('General_EvolutionSummaryGeneric', [$currentValueFormatted . ' ' . $columnTranslation, $currentPrettyDate, $pastValueFormatted . ' ' . $columnTranslation, $lastPrettyDate, CalculateEvolutionFilter::calculate($value, $pastValue, $precision = 1)])];
                     };

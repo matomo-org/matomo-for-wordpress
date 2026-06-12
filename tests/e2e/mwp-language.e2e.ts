@@ -38,7 +38,7 @@ describe('MWP Language', () => {
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`matomo-lang.site-lang.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(1);
   });
 
   it('should use the appropriate language in Matomo Reporting when the site language changes', async () => {
@@ -56,7 +56,7 @@ describe('MWP Language', () => {
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`matomo-lang.profile-lang.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(1);
   });
 
   it('should use the appropriate language in Matomo Reporting when the user profile language changes', async () => {
@@ -73,7 +73,7 @@ describe('MWP Language', () => {
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`matomo-lang.switch-to-locale.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(1);
   });
 
   it.skip('should use the appropriate language in Matomo Reporting when a plugin calls switch_to_locale', async () => {

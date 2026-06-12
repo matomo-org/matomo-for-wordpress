@@ -58,7 +58,7 @@ class Rss extends Renderer
             $dateInSiteTimezone = $dateInSiteTimezone->toString('Y-m-d');
             $thisPiwikUrl = Common::sanitizeInputValue($piwikUrl . "&date={$dateInSiteTimezone}");
             $siteName = $site ? $site->getName() : '';
-            $title = $siteName . " on " . $date;
+            $title = self::formatValueXml($siteName . " on " . $date);
             $out .= "\t<item>\n\t\t<pubDate>{$pudDate}</pubDate>\n\t\t<guid>{$thisPiwikUrl}</guid>\n\t\t<link>{$thisPiwikUrl}</link>\n\t\t<title>{$title}</title>\n\t\t<author>https://matomo.org</author>\n\t\t<description>";
             $out .= Common::sanitizeInputValue($this->renderDataTable($subtable));
             $out .= "</description>\n\t</item>\n";
@@ -122,7 +122,7 @@ class Rss extends Renderer
                 if ($this->translateColumnNames) {
                     $name = $this->translateColumnName($name);
                 }
-                $html .= "\n\t<td><strong>{$name}</strong></td>";
+                $html .= "\n\t<td><strong>" . self::formatValueXml($name) . "</strong></td>";
             }
         }
         $html .= "\n</tr>";
@@ -132,7 +132,7 @@ class Rss extends Renderer
                 if ($toDisplay !== \false) {
                     $value = "-";
                     if (isset($row[$columnName])) {
-                        $value = urldecode($row[$columnName]);
+                        $value = self::formatValueXml(urldecode($row[$columnName]));
                     }
                     $html .= "\n\t<td>{$value}</td>";
                 }

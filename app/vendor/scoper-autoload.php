@@ -74,6 +74,7 @@ if (!function_exists('grapheme_stripos')) { function grapheme_stripos() { return
 if (!function_exists('grapheme_stristr')) { function grapheme_stristr() { return \Matomo\Dependencies\grapheme_stristr(...func_get_args()); } }
 if (!function_exists('grapheme_strlen')) { function grapheme_strlen() { return \Matomo\Dependencies\grapheme_strlen(...func_get_args()); } }
 if (!function_exists('grapheme_strpos')) { function grapheme_strpos() { return \Matomo\Dependencies\grapheme_strpos(...func_get_args()); } }
+if (!function_exists('grapheme_strrev')) { function grapheme_strrev() { return \Matomo\Dependencies\grapheme_strrev(...func_get_args()); } }
 if (!function_exists('grapheme_strripos')) { function grapheme_strripos() { return \Matomo\Dependencies\grapheme_strripos(...func_get_args()); } }
 if (!function_exists('grapheme_strrpos')) { function grapheme_strrpos() { return \Matomo\Dependencies\grapheme_strrpos(...func_get_args()); } }
 if (!function_exists('grapheme_strstr')) { function grapheme_strstr() { return \Matomo\Dependencies\grapheme_strstr(...func_get_args()); } }
@@ -139,6 +140,7 @@ if (!function_exists('mb_substr_count')) { function mb_substr_count() { return \
 if (!function_exists('mb_trim')) { function mb_trim() { return \Matomo\Dependencies\mb_trim(...func_get_args()); } }
 if (!function_exists('mb_ucfirst')) { function mb_ucfirst() { return \Matomo\Dependencies\mb_ucfirst(...func_get_args()); } }
 if (!function_exists('mysqli_set_charset')) { function mysqli_set_charset() { return \Matomo\Dependencies\mysqli_set_charset(...func_get_args()); } }
+if (!function_exists('normalizer_get_raw_decomposition')) { function normalizer_get_raw_decomposition() { return \Matomo\Dependencies\normalizer_get_raw_decomposition(...func_get_args()); } }
 if (!function_exists('normalizer_is_normalized')) { function normalizer_is_normalized() { return \Matomo\Dependencies\normalizer_is_normalized(...func_get_args()); } }
 if (!function_exists('normalizer_normalize')) { function normalizer_normalize() { return \Matomo\Dependencies\normalizer_normalize(...func_get_args()); } }
 if (!function_exists('pc_info')) { function pc_info() { return \Matomo\Dependencies\pc_info(...func_get_args()); } }

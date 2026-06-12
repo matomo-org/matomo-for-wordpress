@@ -18,12 +18,20 @@ const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
 
 async function waitForPluginCardsOrMarketplace() {
-  await browser.waitUntil(async () => {
-    return browser.execute(
-      () => window.jQuery('.matomo-plugin-card:visible').length > 0
-        || window.jQuery('.matomo-marketplace-wizard:visible').length > 0
-    );
-  }, { timeout: 120000 });
+  await Website.retry(3, async () => {
+    try {
+      await browser.waitUntil(async () => {
+        return browser.execute(
+          () => window.jQuery('.matomo-plugin-card:visible').length > 0
+            || window.jQuery('.matomo-marketplace-wizard:visible').length > 0
+        );
+      }, { timeout: 120000 });
+    } catch (e) {
+      await browser.refresh();
+      await $('#matomo-marketplace-for-wordpress').waitForExist({ timeout: 30000 });
+      throw e;
+    }
+  });
 }
 
 class MwpMarketplaceSetupWizard {
@@ -198,19 +206,30 @@ class MwpMarketplacePage extends MwpPage {
     });
 
     const baseUrl = await Website.baseUrl();
-    const responseBody = await browser.execute((bu, b) => {
-      return new Promise((resolve, reject) => {
-        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-          method: 'POST',
-          data: b,
-          dataType: 'html',
-          complete: resolve,
-          error: function (jqxhr, textStatus, errorThrown) {
-            reject(errorThrown || textStatus);
-          }
-        });
+    await browser.execute((bu, b) => {
+      window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+        method: 'POST',
+        data: b,
+        dataType: 'html',
+        complete: function (r) {
+          (window as any).bulkInstallResponse = r;
+        },
+        error: function (jqxhr, textStatus, errorThrown) {
+          (window as any).bulkInstallError = errorThrown || textStatus;
+        }
       });
-    }, baseUrl, body.toString()) as string;
+    }, baseUrl, body.toString());
+
+    await browser.waitUntil(() => {
+      return browser.execute(() => !!(window.bulkInstallResponse || window.bulkInstallError));
+    }, { timeout: 300000 });
+
+    const bulkInstallError = await browser.execute(() => window.bulkInstallError);
+    if (bulkInstallError) {
+      throw new Error(bulkInstallError);
+    }
+
+    const responseBody = await browser.execute(() => window.bulkInstallResponse);
 
     const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
       .map(g => g[1].replaceAll('&amp;', '&'));

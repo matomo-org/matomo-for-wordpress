@@ -35,6 +35,8 @@ class GetPlugin extends \Piwik\Plugins\DevicePlugins\Reports\Base
     }
     public function configureView(ViewDataTable $view)
     {
+        $view->config->show_flatten_table = \false;
+        $view->config->show_flatten_table_export = \false;
         $this->getBasicDevicePluginsDisplayProperties($view);
         $view->config->addTranslations(array('nb_visits_percentage' => str_replace(' ', '&nbsp;', Piwik::translate('General_ColumnPercentageVisits'))));
         $view->config->show_offset_information = \false;
