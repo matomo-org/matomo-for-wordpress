@@ -18,8 +18,6 @@ class ContainerDashboardPage extends TagManagerPage {
 
     await $('.containerDashboard .card-content').waitForDisplayed({ timeout: 20000 });
 
-    await this.normalizeContainerSelector();
-
     await browser.waitUntil(() => {
       return browser.execute(() => /Container ID/.test($('p.dashboardCreationDate').text()));
     });
