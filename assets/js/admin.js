@@ -40,6 +40,16 @@ window.jQuery(document).ready(function ($) {
     });
   }
 
+  // minimum requirements notice dismiss
+  if (typeof mtmMinimumRequirementsNoticeAjax !== 'undefined' && mtmMinimumRequirementsNoticeAjax.ajax_url) {
+    $(document).on( 'click', '#matomo-minimumrequirements .notice-dismiss', function () {
+      $.post(mtmMinimumRequirementsNoticeAjax.ajax_url, {
+        _ajax_nonce: mtmMinimumRequirementsNoticeAjax.nonce,
+        action: 'matomo_minimum_requirements_notice_dismissed',
+      });
+    });
+  }
+
   // scheduled task error dismiss
   if (typeof mtmScheduledTaskErrorAjax !== 'undefined' && mtmScheduledTaskErrorAjax.ajax_url) {
     $('body').on('click', '.matomo-cron-error .notice-dismiss', function (e) {

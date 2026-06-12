@@ -219,6 +219,7 @@ class WpMatomo {
 			new UserSync(),
 			new \WpMatomo\Referral(),
 			new \WpMatomo\ErrorNotice( self::$settings ),
+			new \WpMatomo\MinimumRequirementsNotice(),
 			new Chart(),
 
 			/*
