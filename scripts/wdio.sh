@@ -64,7 +64,14 @@ set +o allexport
 
 # run tests
 echo "Running tests..."
-EXIT_STATUS=0
-wdio run ./wdio.conf.tracking.ts && wdio run ./wdio.conf.ts || EXIT_STATUS=$?
-wdio run ./wdio.conf.uninstall.ts || EXIT_STATUS=$?
-exit $EXIT_STATUS
+
+SUITES="${1:-./wdio.conf.tracking.ts ./wdio.conf.ts ./wdio.conf.uninstall.ts}"
+
+for SUITE in $SUITES; do
+  wdio run "$SUITE"
+
+  EXIT_STATUS=$?
+  if [ "$EXIT_STATUS" != "0" ]; then
+    exit EXIT_STATUS
+  fi
+done
