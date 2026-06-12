@@ -56,7 +56,7 @@ describe('MWP Admin > Get Started', () => {
     await notice.waitForDisplayed({ timeout: 30000 });
 
     await expect(notice).toHaveText(
-      'Matomo Analytics version 6 and later will require a newer environment',
+      'Matomo Analytics version 6 and later will require a newer server environment',
       { containing: true }
     );
   });

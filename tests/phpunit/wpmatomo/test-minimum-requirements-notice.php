@@ -241,7 +241,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$output = $this->capture_notice( $notice );
 
 		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
-		$this->assertStringContainsString( 'a future version of Matomo Analytics will require a newer environment', $output );
+		$this->assertStringContainsString( 'Matomo Analytics version 6 and later will require a newer server environment', $output );
 		$this->assertStringContainsString( 'MySQL 8.0 or higher is required (you are currently using MySQL 5.7.40).', $output );
 		// on matomo admin pages the notice cannot be dismissed.
 		$this->assertStringNotContainsString( 'is-dismissible', $output );
@@ -256,7 +256,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$output = $this->capture_notice( $notice );
 
 		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
-		$this->assertStringContainsString( 'notice-warning dismissible', $output );
+		$this->assertStringContainsString( 'is-dismissible', $output );
 	}
 
 	public function test_check_requirements_outputs_nothing_on_plugins_page_when_dismissed() {
@@ -280,7 +280,7 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$output = $this->capture_notice( $notice );
 
 		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
-		$this->assertStringContainsString( 'a future version of Matomo Analytics will require a newer server environment', $output );
+		$this->assertStringContainsString( 'Matomo Analytics version 6 and later will require a newer server environment', $output );
 	}
 
 	private function set_fake_db( $server_info, $db_version ) {
