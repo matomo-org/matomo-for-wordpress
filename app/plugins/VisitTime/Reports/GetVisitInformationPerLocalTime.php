@@ -28,6 +28,8 @@ class GetVisitInformationPerLocalTime extends \Piwik\Plugins\VisitTime\Reports\B
     }
     public function configureView(ViewDataTable $view)
     {
+        $view->config->show_flatten_table = \false;
+        $view->config->show_flatten_table_export = \false;
         $this->setBasicConfigViewProperties($view);
         $view->requestConfig->filter_limit = 24;
         $view->config->title = Piwik::translate('VisitTime_ColumnLocalTime');

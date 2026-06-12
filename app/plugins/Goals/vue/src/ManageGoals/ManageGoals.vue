@@ -148,18 +148,23 @@
                 :maxlength="50"
                 autocomplete="off"
                 :title="translate('Goals_GoalName')"
+                :placeholder="translate('Goals_GoalNamePlaceholder')"
+                :inline-help="translate('Goals_GoalNameHelpText')"
                 @change="goalNameChanged">
               </Field>
             </div>
 
             <div>
               <Field
-                uicontrol="text"
+                uicontrol="textarea"
                 name="goal_description"
                 v-model="goal.description"
                 :maxlength="255"
                 autocomplete="off"
-                :title="translate('General_Description')"
+                :title="`${translate('General_Description')} ${translate('Goals_Optional')}`"
+                :placeholder="translate('Goals_GoalDescriptionPlaceholder')"
+                :inline-help="translate('Goals_GoalDescriptionHelpText')"
+                :ui-control-attributes="{ class: 'compact-textarea' }"
               />
             </div>
 

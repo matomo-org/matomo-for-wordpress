@@ -20,8 +20,6 @@ class ContainerTagsPage extends TagManagerPage {
     await $('.chip').waitForDisplayed();
     await browser.pause(500);
 
-    await this.normalizeContainerSelector();
-
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
