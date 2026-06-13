@@ -8,6 +8,7 @@
 
 import { expect, browser, $ } from '@wdio/globals';
 import fetch from 'node-fetch';
+import * as semver from 'semver';
 import MwpGetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import Website from './website.js';
 import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
@@ -49,15 +50,18 @@ describe('MWP Admin > Get Started', () => {
   });
 
   it('should display the minimum requirements notice', async () => {
-    const baseUrl = await Website.baseUrl();
-    await browser.url(`${baseUrl}/wp-admin/admin.php?page=matomo-get-started&matomo-force-mrn=1`);
+    await MwpGetStartedPage.openWithMinimumRequirementsNotice();
 
     const notice = await $('#matomo-minimumrequirements');
-    await notice.waitForDisplayed({ timeout: 30000 });
+    if (semver.lt(process.env.PHP_VERSION, '8.1')) {
+      expect(await notice.isExisting()).toBeFalsy();
+    } else {
+      await notice.waitForDisplayed({ timeout: 30000 });
 
-    await expect(notice).toHaveText(
-      'Matomo Analytics version 6 and later will require a newer server environment',
-      { containing: true }
-    );
+      await expect(notice).toHaveText(
+        'Matomo Analytics version 6 and later will require a newer server environment',
+        { containing: true }
+      );
+    }
   });
 });
