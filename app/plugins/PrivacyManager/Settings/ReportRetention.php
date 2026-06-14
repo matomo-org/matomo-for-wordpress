@@ -67,7 +67,7 @@ class ReportRetention implements OptionSettingInterface, ConfigSettingInterface,
     public static function getPolicyRequirements() : array
     {
         $policyValues = [];
-        $policyValues[CnilPolicy::class] = 180;
+        $policyValues[CnilPolicy::class] = 759;
         return $policyValues;
     }
     public static function getInstance(?int $idSite = null) : self
