@@ -54,6 +54,9 @@ class Marketplace implements MatomoPageContent {
 
 			$marketplace_setup_wizard = \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
 			$matomo_marketplace_url   = MarketplaceSetupWizardBody::get_marketplace_zip_url();
+
+			$matomo_marketplace_setup_wizard_body = $marketplace_setup_wizard->get_body( false );
+			$matomo_marketplace_setup_wizard_body->set_design_variant( MarketplaceSetupWizardBody::DESIGN_VARIANT_REDESIGN );
 		} else {
 			wp_safe_redirect( admin_url( 'admin.php?page=matomo-marketplace&tab=install' ) );
 		}

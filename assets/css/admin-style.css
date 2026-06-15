@@ -313,6 +313,11 @@ table.matomo-tracking-form th {
     margin-top: 24px;
 }
 
+.mtm-wp-gte-7 #adminmenu #toplevel_page_matomo li:hover a .awaiting-mod,
+.mtm-wp-gte-7 #adminmenu #toplevel_page_matomo li.current a .awaiting-mod {
+    background-color: var(--wp-admin-theme-color, #3858e9);
+}
+
 .matomo-primary-color-fg {
     color: #2271b1;
 }
