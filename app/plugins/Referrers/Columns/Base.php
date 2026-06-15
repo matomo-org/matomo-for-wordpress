@@ -12,6 +12,7 @@ use Piwik\Common;
 use Piwik\Exception\UnexpectedWebsiteFoundException;
 use Piwik\Piwik;
 use Piwik\Plugin\Dimension\VisitDimension;
+use Piwik\Plugins\PrivacyManager\Settings\CampaignParameterValuesMasked;
 use Piwik\Plugins\Referrers\AIAssistant as AIAssistantDetection;
 use Piwik\Plugins\Referrers\SearchEngine as SearchEngineDetection;
 use Piwik\Plugins\Referrers\Social as SocialNetworkDetection;
@@ -120,6 +121,10 @@ abstract class Base extends VisitDimension
         }
         if (!empty($referrerInformation['referer_keyword'])) {
             $referrerInformation['referer_keyword'] = $this->truncateReferrerKeyword($referrerInformation['referer_keyword']);
+        }
+        if ($referrerInformation['referer_type'] == Common::REFERRER_TYPE_CAMPAIGN && CampaignParameterValuesMasked::isEnabled((int) $this->idsite)) {
+            $referrerInformation['referer_name'] = CampaignParameterValuesMasked::getPlaceholderValue();
+            $referrerInformation['referer_keyword'] = CampaignParameterValuesMasked::getPlaceholderValue();
         }
         return $referrerInformation;
     }
@@ -386,7 +391,7 @@ abstract class Base extends VisitDimension
         if (!isset($this->currentUrlParse['query']) && !isset($this->currentUrlParse['fragment'])) {
             return;
         }
-        $campaignParameters = Common::getCampaignParameters(intval($this->idsite));
+        $campaignParameters = Common::getCampaignParameters();
         $this->campaignNames = $campaignParameters[0];
         $this->campaignKeywords = $campaignParameters[1];
         $found = \false;
@@ -406,7 +411,7 @@ abstract class Base extends VisitDimension
     protected function detectReferrerCampaignFromTrackerParams(Request $request) : void
     {
         $campaignName = null;
-        $campaignParameters = Common::getCampaignParameters(intval($request->getIdSite()));
+        $campaignParameters = Common::getCampaignParameters();
         $allTrackingParams = $request->getRawParams();
         foreach ($campaignParameters[0] as $parameter) {
             if (!empty($allTrackingParams[$parameter])) {
@@ -586,6 +591,10 @@ abstract class Base extends VisitDimension
             }
         } else {
             Common::printDebug("No referrer attribution found for this user. Current user's visit referrer is used.");
+        }
+        if ($type === Common::REFERRER_TYPE_CAMPAIGN && CampaignParameterValuesMasked::isEnabled((int) $request->getIdSite())) {
+            $name = CampaignParameterValuesMasked::getPlaceholderValue();
+            $keyword = CampaignParameterValuesMasked::getPlaceholderValue();
         }
         $this->setCampaignValuesToLowercase($type, $name, $keyword);
         $fields = ['referer_type' => $type, 'referer_name' => $name, 'referer_keyword' => $keyword];

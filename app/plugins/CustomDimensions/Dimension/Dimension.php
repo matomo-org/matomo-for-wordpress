@@ -56,6 +56,11 @@ class Dimension
         $this->checkExists();
         return $this->dimension['case_sensitive'];
     }
+    public function getDescription()
+    {
+        $this->checkExists();
+        return $this->dimension['description'] ?? '';
+    }
     private function getConfiguration()
     {
         return new Configuration();

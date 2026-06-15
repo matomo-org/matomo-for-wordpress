@@ -10,6 +10,7 @@ namespace Piwik\Plugins\Referrers;
 
 use Piwik\Common;
 use Piwik\Plugins\Live\VisitorDetailsAbstract;
+use Piwik\Plugins\PrivacyManager\Settings\CampaignParameterValuesMasked;
 use Piwik\UrlHelper;
 use Piwik\View;
 class VisitorDetails extends VisitorDetailsAbstract
@@ -66,7 +67,8 @@ class VisitorDetails extends VisitorDetailsAbstract
         if ($this->getReferrerType() == 'search') {
             $keyword = \Piwik\Plugins\Referrers\API::getCleanKeyword($keyword);
         }
-        return urldecode($keyword);
+        $keyword = urldecode($keyword);
+        return CampaignParameterValuesMasked::formatValue($keyword);
     }
     protected function getReferrerUrl()
     {
@@ -91,7 +93,8 @@ class VisitorDetails extends VisitorDetailsAbstract
     }
     protected function getReferrerName() : string
     {
-        return html_entity_decode($this->details['referer_name'] ?? '', \ENT_QUOTES, "UTF-8");
+        $name = html_entity_decode($this->details['referer_name'] ?? '', \ENT_QUOTES, "UTF-8");
+        return CampaignParameterValuesMasked::formatValue($name);
     }
     protected function getSearchEngineUrl()
     {

@@ -28,6 +28,8 @@ class GetVisitInformationPerServerTime extends \Piwik\Plugins\VisitTime\Reports\
     }
     public function configureView(ViewDataTable $view)
     {
+        $view->config->show_flatten_table = \false;
+        $view->config->show_flatten_table_export = \false;
         $this->setBasicConfigViewProperties($view);
         $view->requestConfig->filter_limit = 24;
         $view->requestConfig->request_parameters_to_modify['hideFutureHoursWhenToday'] = 1;

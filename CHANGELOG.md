@@ -1,6 +1,7 @@
 == Changelog ===
 
-= 5.10.3 =
+= 5.11.0 =
+* Update embedded Matomo to version 5.11.1.
 * Bug fix: fix incorrect capability check that used current user in some cases instead of requested user.
 
 = 5.10.2 =

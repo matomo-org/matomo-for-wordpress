@@ -18,8 +18,6 @@ class ContainerTriggersPage extends TagManagerPage {
 
     await $('.manageTrigger td.description').waitForDisplayed();
 
-    await this.normalizeContainerSelector();
-
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });

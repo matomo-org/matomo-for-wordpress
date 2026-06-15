@@ -62,7 +62,7 @@ class RssRenderer
                 $title = $post->title;
                 $date = @strftime("%B %e, %Y", strtotime($post->pubDate));
                 $link = $post->link;
-                $output .= '<li><a class="rss-title" title="" target="_blank" rel="noreferrer noopener" href="' . htmlspecialchars($link, \ENT_COMPAT, 'UTF-8') . '">' . $title . '</a>' . '<span class="rss-date">' . $date . '</span>';
+                $output .= '<li><a class="rss-title" title="" target="_blank" rel="noreferrer noopener" href="' . htmlspecialchars($link, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8') . '">' . htmlspecialchars($title, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8') . '</a>' . '<span class="rss-date">' . $date . '</span>';
                 if ($this->showDescription) {
                     $output .= '<div class="rss-description">' . $this->addTargetBlankAndNoReferrerToLinks($post->description) . '</div>';
                 }
