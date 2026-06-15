@@ -100,7 +100,11 @@ class MinimumRequirementsNotice extends Feature {
 		}
 
 		echo '</ul><p>'
-			. esc_html__( 'Please ask your hosting provider to update your server in time so you can keep receiving the latest Matomo features, bug fixes and security updates.', 'matomo' )
+			. sprintf(
+				esc_html__( 'Please ask your hosting provider to update your server by %1$sNovember, 2026%2$s so you can keep receiving the latest Matomo features, bug fixes and security updates.', 'matomo' ),
+				'<strong>',
+				'</strong>'
+			)
 			. '</p></div>';
 	}
 
