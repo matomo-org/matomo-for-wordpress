@@ -53,7 +53,7 @@ describe('MWP Admin > Get Started', () => {
     await MwpGetStartedPage.openWithMinimumRequirementsNotice();
 
     const notice = await $('#matomo-minimumrequirements');
-    if (semver.lt(`${process.env.PHP_VERSION}.0`, '8.1.0')) {
+    if (semver.gte(`${process.env.PHP_VERSION}.0`, '8.1.0')) {
       expect(await notice.isExisting()).toBeFalsy();
     } else {
       await notice.waitForDisplayed({ timeout: 30000 });
