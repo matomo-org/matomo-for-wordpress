@@ -258,4 +258,8 @@ class WpMatomo {
 		}
 		return self::$features[ $class_name ];
 	}
+
+	public static function is_feature_active( $class_name ) {
+		return ! empty( self::$features[ $class_name ] );
+	}
 }

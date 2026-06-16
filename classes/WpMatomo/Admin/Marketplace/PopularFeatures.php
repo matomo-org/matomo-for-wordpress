@@ -10,8 +10,24 @@
 namespace WpMatomo\Admin\Marketplace;
 
 class PopularFeatures {
+
+	private $show_free_plugins;
+
+	public function __construct( $show_free_plugins = true ) {
+		$this->show_free_plugins = $show_free_plugins;
+	}
+
 	public function show() {
 		$matomo_popular_features = $this->get_popular_features();
+
+		if ( ! $this->show_free_plugins ) {
+			$matomo_popular_features = array_filter(
+				$matomo_popular_features,
+				function ( $feature ) {
+					return ! empty( $feature['price'] );
+				}
+			);
+		}
 
 		include __DIR__ . '/views/popular-features.php';
 	}
