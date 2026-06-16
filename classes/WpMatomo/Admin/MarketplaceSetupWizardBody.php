@@ -11,13 +11,25 @@ namespace WpMatomo\Admin;
 
 class MarketplaceSetupWizardBody {
 
+	const DESIGN_VARIANT_ORIGINAL = 'original';
+	const DESIGN_VARIANT_REDESIGN = 'redesign';
+
 	/**
 	 * @var bool
 	 */
 	private $matomo_show_title;
 
+	/**
+	 * @var string
+	 */
+	private $design_variant = self::DESIGN_VARIANT_ORIGINAL;
+
 	public function __construct( $matomo_show_title = true ) {
 		$this->matomo_show_title = $matomo_show_title;
+	}
+
+	public function set_design_variant( $design_variant ) {
+		$this->design_variant = $design_variant;
 	}
 
 	public function show() {
@@ -28,7 +40,11 @@ class MarketplaceSetupWizardBody {
 		$matomo_is_plugin_active   = is_plugin_active( MarketplaceSetupWizard::MARKETPLACE_PLUGIN_FILE );
 		$matomo_marketplace_url    = self::get_marketplace_zip_url();
 
-		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body.php';
+		if ( self::DESIGN_VARIANT_ORIGINAL === $this->design_variant ) {
+			include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body_redesign.php';
+		}
 	}
 
 	public static function get_marketplace_zip_url() {

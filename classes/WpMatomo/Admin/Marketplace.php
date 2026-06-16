@@ -24,8 +24,14 @@ class Marketplace implements MatomoPageContent {
 	 */
 	private $settings;
 
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
+	/**
+	 * @var MarketplaceSetupWizard|null
+	 */
+	private $marketplace_setup_wizard;
+
+	public function __construct( Settings $settings, $marketplace_setup_wizard = null ) {
+		$this->settings                 = $settings;
+		$this->marketplace_setup_wizard = $marketplace_setup_wizard;
 	}
 
 	public function get_active_tab() {
@@ -52,10 +58,16 @@ class Marketplace implements MatomoPageContent {
 			$active_tab = $this->get_active_tab();
 			$valid_tabs = $this->get_valid_tabs();
 
-			$marketplace_setup_wizard = \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
+			$marketplace_setup_wizard = $this->marketplace_setup_wizard
+				? $this->marketplace_setup_wizard
+				: \WpMatomo::get_active_feature( MarketplaceSetupWizard::class );
 			$matomo_marketplace_url   = MarketplaceSetupWizardBody::get_marketplace_zip_url();
+
+			$matomo_marketplace_setup_wizard_body = $marketplace_setup_wizard->get_body();
+			$matomo_marketplace_setup_wizard_body->set_design_variant( MarketplaceSetupWizardBody::DESIGN_VARIANT_REDESIGN );
 		} else {
 			wp_safe_redirect( admin_url( 'admin.php?page=matomo-marketplace&tab=install' ) );
+			exit;
 		}
 
 		$matomo_currency = $this->get_currency_based_on_timezone();

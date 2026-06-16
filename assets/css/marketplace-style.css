@@ -19,6 +19,16 @@
     position: relative;
 }
 
+#matomo-welcome-marketplace-setup.embedded {
+    background-color: transparent;
+    padding: 0;
+    margin-top: 0;
+}
+
+#matomo-welcome-marketplace-setup.embedded #matomo-setup-preface > p:first-child {
+    margin-top: 0;
+}
+
 .matomo-steps {
     display: flex;
     flex-direction: row;
@@ -84,7 +94,6 @@
 #matomo-for-marketplace-welcome > p {
     margin-top: .25em;
     margin-bottom: .5em;
-    max-width: 700px;
 }
 
 .step-number {

@@ -125,9 +125,11 @@ if ( $was_updated ) {
 	<?php } ?>
 </h2>
 
-<div style="max-width: 700px;">
+<?php if ( ! $matomo_is_marketplace_active ) { ?>
+<div>
 	<?php $matomo_marketplace_setup_wizard_body->show(); ?>
 </div>
+<?php } ?>
 
 <p>
 	<br/>

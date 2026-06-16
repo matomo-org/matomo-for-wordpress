@@ -4,6 +4,7 @@
  */
 
 use WpMatomo\Admin\Marketplace;
+use WpMatomo\Admin\MarketplaceSetupWizard;
 use WpMatomo\Settings;
 
 class AdminMarketplaceTest extends MatomoUnit_TestCase {
@@ -22,7 +23,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		parent::setUp();
 
 		$this->settings    = new Settings();
-		$this->marketplace = new Marketplace( $this->settings );
+		$this->marketplace = new Marketplace( $this->settings, new MarketplaceSetupWizard() );
 
 		$this->assume_admin_page();
 		$this->create_set_super_admin();

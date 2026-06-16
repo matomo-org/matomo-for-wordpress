@@ -71,6 +71,7 @@ class GetStarted implements MatomoPageContent {
 
 		$matomo_marketplace_setup_wizard      = new MarketplaceSetupWizard();
 		$matomo_marketplace_setup_wizard_body = $matomo_marketplace_setup_wizard->get_body( false );
+		$matomo_marketplace_setup_wizard_body->set_design_variant( MarketplaceSetupWizardBody::DESIGN_VARIANT_REDESIGN );
 
 		include dirname( __FILE__ ) . '/views/get_started.php';
 	}
