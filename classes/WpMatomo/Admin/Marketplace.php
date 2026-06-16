@@ -67,6 +67,7 @@ class Marketplace implements MatomoPageContent {
 			$matomo_marketplace_setup_wizard_body->set_design_variant( MarketplaceSetupWizardBody::DESIGN_VARIANT_REDESIGN );
 		} else {
 			wp_safe_redirect( admin_url( 'admin.php?page=matomo-marketplace&tab=install' ) );
+			exit;
 		}
 
 		$matomo_currency = $this->get_currency_based_on_timezone();
