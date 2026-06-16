@@ -14,10 +14,6 @@ class MwpGetStartedPage extends MwpPage {
     return await super.open('/wp-admin/admin.php?page=matomo-get-started');
   }
 
-  async openWithMinimumRequirementsNotice() {
-    return await super.open('/wp-admin/admin.php?page=matomo-get-started&matomo-force-mrn=1');
-  }
-
   async enableTracking(expectRedirect = true) {
     await $('#matomo-enable-tracking').click();
 

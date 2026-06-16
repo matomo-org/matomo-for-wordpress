@@ -50,7 +50,7 @@ describe('MWP Admin > Get Started', () => {
   });
 
   it('should display the minimum requirements notice', async () => {
-    await MwpGetStartedPage.openWithMinimumRequirementsNotice();
+    await MwpGetStartedPage.open();
 
     const notice = await $('#matomo-minimumrequirements');
     if (semver.gte(`${process.env.PHP_VERSION}.0`, '8.1.0')) {

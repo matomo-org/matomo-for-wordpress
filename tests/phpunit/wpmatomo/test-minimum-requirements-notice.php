@@ -34,14 +34,12 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->notice = new MinimumRequirementsNotice();
 
 		unset( $_GET['page'] );
-		unset( $_REQUEST[ MinimumRequirementsNotice::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] );
 	}
 
 	public function tearDown(): void {
 		$GLOBALS['wpdb'] = $this->original_global_wpdb;
 
 		unset( $_GET['page'] );
-		unset( $_REQUEST[ MinimumRequirementsNotice::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] );
 
 		parent::tearDown();
 	}
@@ -268,19 +266,6 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 
 		$notice = $this->make_notice_with_unmet( [ 'MySQL 8.0 or higher is required (you are currently using MySQL 5.7.40).' ] );
 		$this->assertSame( '', $this->capture_notice( $notice ) );
-	}
-
-	public function test_check_requirements_shows_notice_when_force_request_param_is_present_even_if_requirements_are_met() {
-		$this->create_set_super_admin();
-		$_GET['page'] = 'matomo-systemreport';
-
-		$_REQUEST[ MinimumRequirementsNotice::FORCE_MINIMUM_REQUIREMENTS_NOTICE ] = '1';
-
-		$notice = $this->make_notice_with_unmet( [] );
-		$output = $this->capture_notice( $notice );
-
-		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
-		$this->assertStringContainsString( 'Matomo Analytics version 6 and later will require a newer server environment', $output );
 	}
 
 	private function set_fake_db( $server_info, $db_version ) {
