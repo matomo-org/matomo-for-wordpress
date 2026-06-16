@@ -3,6 +3,8 @@
 = 5.11.0 =
 * Update embedded Matomo to version 5.11.1.
 * Bug fix: fix incorrect capability check that used current user in some cases instead of requested user.
+* Add notice to inform users of change in minimum requirements in Matomo 6.
+* Some visual tweaks to recent marketplace UI changes.
 
 = 5.10.2 =
 * Bug fix: fix bug incompatibility issue in admin display, with several other WordPress plugins.

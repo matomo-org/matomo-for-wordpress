@@ -10,6 +10,7 @@
     "ini": "^5.0.0",
     "minimist": "^1.2.8",
     "node-fetch": "^3.3.2",
+    "semver": "^7.8.4",
     "ts-node": "^10.9.1",
     "tsx": "^4.20.5",
     "typescript": "^5.2.2",

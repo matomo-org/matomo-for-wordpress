@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser, $ } from '@wdio/globals';
 import MatomoHomePage from './pageobjects/matomo-admin/home.page.js';
 import Website from './website.js';
 
