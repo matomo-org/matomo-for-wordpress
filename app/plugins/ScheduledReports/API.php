@@ -488,24 +488,38 @@ class API extends \Piwik\Plugin\API
                 if (isset($action['parameters'])) {
                     $apiParameters = $action['parameters'];
                 }
-                $mustRestoreGET = \false;
+                $params = [
+                    'idSite' => $idSite,
+                    'period' => $period,
+                    'date' => $date,
+                    'apiModule' => $apiModule,
+                    'apiAction' => $apiAction,
+                    'apiParameters' => $apiParameters,
+                    'flat' => 1,
+                    'idGoal' => \false,
+                    'language' => $language,
+                    'serialize' => 0,
+                    'format' => 'original',
+                    // Always process report data with the default filters when generating a report,
+                    // regardless of the parameters present in the original request.
+                    'disable_queued_filters' => 0,
+                    'disable_generic_filters' => 0,
+                ];
                 // all Websites dashboard should not be truncated in the report
                 if ($apiModule == 'MultiSites') {
-                    $mustRestoreGET = $_GET;
-                    $_GET['enhanced'] = \true;
+                    $params['enhanced'] = \true;
                     if ($apiAction == 'getAll') {
-                        $_GET['filter_truncate'] = \false;
-                        $_GET['filter_limit'] = -1;
+                        $params['filter_truncate'] = \false;
+                        $params['filter_limit'] = -1;
                         // show all websites in all websites report
                         // when a view/admin user created a report, workaround the fact that "Super User"
                         // is enforced in Scheduled tasks, and ensure Multisites.getAll only return the websites that this user can access
                         $userLogin = $report['login'];
                         if (!empty($userLogin) && !Piwik::hasTheUserSuperUserAccess($userLogin)) {
-                            $_GET['_restrictSitesToLogin'] = $userLogin;
+                            $params['_restrictSitesToLogin'] = $userLogin;
                         }
                     }
                 }
-                $params = ['idSite' => $idSite, 'period' => $period, 'date' => $date, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'apiParameters' => $apiParameters, 'flat' => 1, 'idGoal' => \false, 'language' => $language, 'serialize' => 0, 'format' => 'original'];
                 if ($segment != null) {
                     $params['segment'] = urlencode($segment['definition']);
                 } else {
@@ -523,9 +537,6 @@ class API extends \Piwik\Plugin\API
                 $processedReport['segment'] = $segment;
                 // TODO add static method getPrettyDate($period, $date) in Period
                 $prettyDate = $processedReport['prettyDate'];
-                if ($mustRestoreGET) {
-                    $_GET = $mustRestoreGET;
-                }
                 $processedReports[] = $processedReport;
             }
         } finally {
