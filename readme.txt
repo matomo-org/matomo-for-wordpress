@@ -12,7 +12,7 @@ Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analyt
 
 == Description ==
 
-**Version 5.10.3 includes an important security related fix, it is highly recommended to update to this version.**
+**Version 5.10.3 and above include an important security related fix, it is highly recommended to update to this version.**
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
 
