@@ -11,6 +11,8 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Login\PasswordVerifier;
+use Piwik\Plugins\UsersManager\Model;
+use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -26,19 +28,15 @@ class WpPasswordVerifier extends PasswordVerifier
 		 */
 		Piwik::postEvent('Login.beforeLoginCheckAllowed');
 
-		if (function_exists('is_user_logged_in')
-			&& is_user_logged_in()
-		) {
-			$user = wp_get_current_user();
-			// check if this password is the login's password
-			// wp_authenticate should make sure that lockout/brute force feature by security plugins are used etc
-			$authenticatedUser = wp_authenticate($user->user_login, $password);
-			if ($authenticatedUser
-			       && $authenticatedUser instanceof \WP_User
-			       && $authenticatedUser->ID
-			       && $authenticatedUser->ID === $user->ID) {
+		// find the WP user for the given matomo user
+		$wpUser = $this->findWordPressUser($userLogin);
+		if ($wpUser instanceof \WP_User && $wpUser->ID) {
+			// wp_authenticate makes sure lockout/brute force features by security plugins are applied etc
+			$authenticatedUser = wp_authenticate($wpUser->user_login, $password);
+			if ($authenticatedUser instanceof \WP_User
+				&& (int) $authenticatedUser->ID === (int) $wpUser->ID) {
 				return true;
-			};
+			}
 		}
 
 		/**
@@ -48,5 +46,36 @@ class WpPasswordVerifier extends PasswordVerifier
 		Piwik::postEvent('Login.recordFailedLoginAttempt');
 
 		return false;
+	}
+
+	private function findWordPressUser($matomoLogin)
+	{
+		if (empty($matomoLogin) || !function_exists('get_user_by')) {
+			return null;
+		}
+
+		// common case: the Matomo login is identical to the WordPress user_login.
+		$wpUser = get_user_by('login', $matomoLogin);
+		if (
+            $wpUser instanceof \WP_User
+			&& $matomoLogin === User::get_matomo_user_login($wpUser->ID)
+        ) {
+			return $wpUser;
+		}
+
+		// the Matomo login may have been sanitized/truncated/prefixed and differ from the WP
+		// user_login, so fall back to resolving it via the (shared) email of the Matomo user.
+		$matomoUser = (new Model())->getUser($matomoLogin);
+		if (!empty($matomoUser['email'])) {
+			$wpUser = get_user_by('email', $matomoUser['email']);
+			if (
+                $wpUser instanceof \WP_User
+				&& $matomoLogin === User::get_matomo_user_login($wpUser->ID)
+            ) {
+				return $wpUser;
+			}
+		}
+
+		return null;
 	}
 }
