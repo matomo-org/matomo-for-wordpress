@@ -3,7 +3,7 @@ Contributors: matomoteam
 Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
 Tested up to: 7.0.0
-Stable tag: 5.11.0
+Stable tag: 5.11.1
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -12,7 +12,7 @@ Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analyt
 
 == Description ==
 
-**Version 5.10.3 and above include an important security related fix, it is highly recommended to update to this version.**
+**Version 5.11.1 and above include an important security related fix, it is highly recommended to update to this version.**
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
 
