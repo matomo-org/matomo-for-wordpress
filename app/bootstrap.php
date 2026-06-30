@@ -222,45 +222,15 @@ if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_t
 	}
 }
 
-$GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
-	$plugins = $settings['Plugins'];
-	if (is_array($settings['Plugins'])) {
-		$pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'MobileAppMeasurable', 'CustomPiwikJs');
-		foreach ($pluginsToRemove as $pluginToRemove) {
-			// Marketplace => this is instead done in wordpress
-			// MultiSites => doesn't really make sense since we have only one website per installation
-			// TwoFactorAuth => not needed as login is being handled by WordPress
-			// widgetize for now we don't want to allow widgetizing as it is based on the token_auth authentication
-			// Monolog => we use our own logger
-			// ProfessionalServices => we advertise in the WP plugin itself instead
-			// feedback => we want to hide things like Need help in the admin etc
-			// MobileAppMeasurable => for WP mobile apps are not a thing
-			// custom variables we don't want to enable as we will deprecate them in Matomo 4 anyway => used to be disabled but we need to make sure the columns get installed otherwise matomo has issues... need to wait to matomo 4 to remove it
-			$pos = array_search($pluginToRemove, $plugins['Plugins']);
-			if ($pos !== false) {
-				array_splice($plugins['Plugins'], $pos, 1);
-			}
-		}
-		if (matomo_has_tag_manager()) {
-			$plugins['Plugins'][] = 'TagManager';
-		}
-		$mustEnable = ['BulkTracking', 'CustomJsTracker'];
-		foreach ($mustEnable as $enable) {
-			if (!in_array($enable, $plugins['Plugins'])) {
-				$plugins['Plugins'][] = $enable;
-			}
-		}
-	}
-	if (!empty($GLOBALS['MATOMO_PLUGINS_ENABLED'])) {
-		foreach ($GLOBALS['MATOMO_PLUGINS_ENABLED'] as $plugin) {
-			if (!in_array($plugin, $plugins['Plugins'])) {
-				$plugins['Plugins'][] = $plugin;
-			}
-		}
-	}
-	if (!empty($GLOBALS['MATOMO_MARKETPLACE_PLUGINS'])) {
-		matomo_filter_incompatible_plugins($plugins['Plugins']);
-	}
-	$settings['Plugins'] = $plugins;
-	return $settings;
-};
+// use a WordPress specific GlobalSettingsProvider for the Matomo environment. at this point neither
+// the composer autoloader is not registered yet (it is set up later in core/bootstrap.php), so make
+// sure classes are loaded before referencing them.
+if (!defined('PIWIK_INCLUDE_PATH')) {
+	define('PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT);
+}
+require_once PIWIK_DOCUMENT_ROOT . '/vendor/autoload.php';
+require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/EnvironmentManipulator.php';
+require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/Overrides/GlobalSettingsProvider.php';
+\Piwik\Application\Environment::setGlobalEnvironmentManipulator(
+	new \Piwik\Plugins\WordPress\EnvironmentManipulator()
+);

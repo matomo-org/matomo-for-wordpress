@@ -12,10 +12,12 @@ namespace Piwik\Plugins\WordPress;
 use Exception;
 use Piwik\Access;
 use Piwik\API\Request;
+use Piwik\Application\Kernel\GlobalSettingsProvider;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
+use Piwik\Log\LoggerInterface;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin;
@@ -84,7 +86,18 @@ class WordPress extends Plugin
             'API.Request.dispatch' => 'onApiRequestDispatch',
             'API.Request.dispatch.end' => 'onApiRequestDispatchEnd',
             ProcessedReportInnerCallHooks::PROCESSED_REPORT_INNER_END_EVENT => 'afterProcessedReportInner',
+            'Core.configFileChanged' => 'configFileChanged',
         );
+    }
+
+    public function configFileChanged() {
+        $globalSettingsProvider = StaticContainer::get(GlobalSettingsProvider::class);
+        if ($globalSettingsProvider instanceof \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider) {
+            $globalSettingsProvider->persistConfigOption();
+        } else {
+            $logger = StaticContainer::get(LoggerInterface::class);
+            $logger->warning('Unexpected: overloaded GlobalSettingsProvider not found in DI container.');
+        }
     }
 
     public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {
