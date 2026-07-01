@@ -12,8 +12,8 @@ use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProv
 use WpMatomo\Settings;
 
 /**
- * A GlobalSettingsProvider that obtains the Matomo config data from a WordPress option (ie. the
- * database) instead of directly from the local INI files.
+ * A GlobalSettingsProvider that keeps a backup copy of the Matomo config data in a WordPress option
+ * (ie. the database).
  */
 class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 {
@@ -32,15 +32,14 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     public function reload($pathGlobal = null, $pathLocal = null, $pathCommon = null)
     {
         parent::reload($pathGlobal, $pathLocal, $pathCommon);
-        $this->loadConfigFromOptionOrSeed();
-        $this->reapplyConfigModifier();
+        $this->syncOrRestoreConfigBackup();
+        $this->detectExtraPluginsToLoad();
     }
 
     public function persistConfigOption()
     {
-        // only persist the values that differ from the INI default settings (ie. the same data that
-        // would be written to config.ini.php). storing the full merged config would freeze the
-        // defaults shipped with core and overwrite them on every reload, so we keep just the diff.
+        // only persist the values that differ from the INI default settings (ie, what would go
+        // in config.ini.php)
         $diff = $this->computeUserConfigDiff();
 
         $settings = $this->getWpMatomoSettings();
@@ -48,24 +47,54 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $settings->save();
     }
 
-    private function loadConfigFromOptionOrSeed()
+    private function syncOrRestoreConfigBackup()
     {
-        // use WP option data if it exists, if not save current INI config data
-        // to the option
-        $stored = $this->getWpMatomoSettings()->get_global_option(Settings::NETWORK_CONFIG_OPTIONS);
-        if (is_array($stored) && !empty($stored)) {
-            $this->applyUserConfigDiff($stored);
-        } else {
+        if ($this->localConfigFileExists()) {
+            // if local file exists, backup its contents to the WP option
             $this->persistConfigOption();
+        } else {
+            // if local file does not exist (for example, deleted by hosting provider or another plugin),
+            // restore the contents from the backup
+            $this->restoreConfigFromBackup();
         }
     }
 
-    /**
-     * Returns the config values that differ from the merged INI default settings, grouped by
-     * section. This is the same set of values core would write to config.ini.php.
-     *
-     * @return array
-     */
+    private function localConfigFileExists()
+    {
+        $path = $this->getPathLocal();
+        return !empty($path) && is_readable($path) && filesize($path) > 0;
+    }
+
+    private function restoreConfigFromBackup()
+    {
+        $backup = $this->getWpMatomoSettings()->get_global_option(Settings::NETWORK_CONFIG_OPTIONS);
+        if (!is_array($backup) || empty($backup)) {
+            // nothing to restore, eg. a fresh install before config.ini.php has been created
+            return;
+        }
+
+        $this->applyUserConfigDiff($backup);
+        $this->writeLocalConfigFile();
+    }
+
+    private function writeLocalConfigFile()
+    {
+        $path = $this->getPathLocal();
+        if (empty($path)) {
+            return;
+        }
+
+        $header  = "; <?php exit; ?> DO NOT REMOVE THIS LINE\n";
+        $header .= "; file automatically generated or modified by Matomo; you can manually override the default values in global.ini.php by redefining them in this file.\n";
+
+        $content = $this->iniFileChain->dumpChanges($header);
+        if (empty($content)) {
+            return;
+        }
+
+        @file_put_contents($path, $content, LOCK_EX);
+    }
+
     private function computeUserConfigDiff()
     {
         $diff = [];
@@ -82,13 +111,6 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         return $diff;
     }
 
-    /**
-     * Overlays the stored config diff on top of the freshly merged INI settings. Sections not present
-     * in the diff keep their default values, so this never wipes the defaults shipped with core (and
-     * legacy partial data written by older versions merges in harmlessly instead of replacing it).
-     *
-     * @param array $diff
-     */
     private function applyUserConfigDiff($diff)
     {
         foreach ($diff as $sectionName => $section) {
@@ -102,17 +124,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
     }
 
-    /**
-     * Re-applies the $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] callback to the [Plugins] section.
-     *
-     * The list of activated plugins is computed dynamically on every request (eg. depending on which
-     * premium plugins are active, whether Tag Manager is installed, incompatible plugins, ...).
-     * IniFileChain::reload() already applies the callback, but loadConfigFromOptionOrSeed() overlays
-     * the stored config on top of it, which would otherwise leave PluginList - and therefore the DI
-     * container - looking at the plugin list frozen in the stored option. Re-applying it here keeps
-     * the activated plugin list current for every consumer of the iniFileChain (PluginList and Config).
-     */
-    private function reapplyConfigModifier()
+    private function detectExtraPluginsToLoad()
     {
         $merged = $this->iniFileChain->getAll();
         if (empty($merged)) {
@@ -128,7 +140,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $this->iniFileChain->set('Plugins', [ 'Plugins' => $modified ]);
     }
 
-    private function getActualPluginsToLoad( $plugins ) {
+    private function getActualPluginsToLoad( $plugins ) { // TODO: cache result of this?
         $pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'MobileAppMeasurable', 'CustomPiwikJs');
         foreach ($pluginsToRemove as $pluginToRemove) {
             // Marketplace => this is instead done in wordpress
@@ -167,12 +179,6 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         return $plugins;
     }
 
-    /**
-     * Returns the default values (from global.ini.php and common.ini.php) for the given section.
-     *
-     * @param string $sectionName
-     * @return array
-     */
     private function getDefaultSection($sectionName)
     {
         $global = $this->iniFileChain->getFrom($this->getPathGlobal(), $sectionName);

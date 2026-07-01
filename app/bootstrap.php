@@ -194,7 +194,6 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 	}
 }
 
-
 if ( matomo_is_app_request() ) {
 	// pretend we are in the admin... potentially avoiding caching etc
 	$GLOBALS['hook_suffix'] = '';
