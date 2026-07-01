@@ -49,7 +49,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_construct_backs_up_config_to_option_when_option_has_no_data() {
-		$this->assertFalse( $this->get_option_data() );
+		$this->assertEquals( [], $this->get_option_data() );
 
 		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
 
@@ -81,7 +81,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 
 	public function test_construct_refreshes_backup_option_from_file_when_file_exists() {
 		// the config.ini.php file is the source of truth, so a stale backup option must be overwritten
-		// with the data currently in the file (which never contains this bogus section).
+		// with the data currently in the file.
 		$this->update_option_data(
 			array(
 				'ThisSectionIsNotInTheFile' => array( 'foo' => 'bar' ),
@@ -155,6 +155,9 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		// plugin versions) replaced the whole config and wiped the INI defaults.
 		$default_general = ( new GlobalSettingsProvider( null, null, null, $this->settings ) )->getSection( 'General' );
 		$this->assertNotEmpty( $default_general, 'precondition: the General section has default values' );
+
+		// trusted_hosts is set by the installer, it's not part of the default section data
+		unset( $default_general['trusted_hosts'] );
 
 		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
 		$this->settings = new \WpMatomo\Settings();

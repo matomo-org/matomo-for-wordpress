@@ -221,9 +221,9 @@ if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_t
 	}
 }
 
-// use a WordPress specific GlobalSettingsProvider for the Matomo environment. at this point neither
-// the composer autoloader is not registered yet (it is set up later in core/bootstrap.php), so make
-// sure classes are loaded before referencing them.
+// use a WordPress specific GlobalSettingsProvider for the Matomo environment. at this point
+// the composer autoloader is not registered yet (it is set up later in core/bootstrap.php), so
+// make sure classes are loaded before referencing them.
 if (!defined('PIWIK_INCLUDE_PATH')) {
 	define('PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT);
 }
