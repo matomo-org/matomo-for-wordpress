@@ -37,6 +37,39 @@ class SyncConfig {
 		$this->settings = $settings;
 	}
 
+	public function sync_config_for_current_site() {
+		if ( $this->settings->is_network_enabled() ) {
+			$config     = PiwikConfig::getInstance();
+			$has_change = false;
+			foreach ( $this->get_all() as $category => $keys ) {
+				$cat = $config->{$category};
+				if ( empty( $cat ) ) {
+					$cat = [];
+				}
+
+				if ( empty( $keys ) && ! empty( $cat ) ) {
+					// need to unset all values
+					$has_change          = true;
+					$config->{$category} = [];
+				}
+
+				if ( ! empty( $keys ) ) {
+					foreach ( $keys as $key => $value ) {
+						// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+						if ( ! isset( $cat[ $key ] ) || $cat[ $key ] != $value ) {
+							$has_change          = true;
+							$cat[ $key ]         = $value;
+							$config->{$category} = $cat;
+						}
+					}
+				}
+			}
+			if ( $has_change ) {
+				$config->forceSave();
+			}
+		}
+	}
+
 	private function get_all() {
 		$options = $this->settings->get_global_option( Settings::NETWORK_CONFIG_OPTIONS );
 
@@ -48,17 +81,40 @@ class SyncConfig {
 	}
 
 	public function get_config_value( $group, $key ) {
+		if ( $this->settings->is_network_enabled() ) {
+			$config = $this->get_all();
+			if ( isset( $config[ $group ][ $key ] ) ) {
+				return $config[ $group ][ $key ];
+			}
+		}
+
 		Bootstrap::do_bootstrap();
 		$config    = PiwikConfig::getInstance();
 		$the_group = $config->{$group};
 		if ( ! empty( $the_group ) && isset( $the_group[ $key ] ) ) {
 			return $the_group[ $key ];
 		}
+
 		return null;
 	}
 
 	public function set_config_value( $group, $key, $value ) {
-		if ( $this->settings->is_network_enabled() || ! WpMatomo::is_safe_mode() ) {
+		if ( $this->settings->is_network_enabled() ) {
+			$config = $this->get_all();
+
+			if ( ! isset( $config[ $group ] ) ) {
+				$config[ $group ] = [];
+			}
+			$config[ $group ][ $key ] = $value;
+
+			$this->settings->apply_changes(
+				[
+					Settings::NETWORK_CONFIG_OPTIONS => $config,
+				]
+			);
+			// need to update all config files
+			wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
+		} elseif ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
 			$config    = PiwikConfig::getInstance();
 			$the_group = $config->{$group};
@@ -68,11 +124,6 @@ class SyncConfig {
 			$the_group[ $key ] = $value;
 			$config->{$group}  = $the_group;
 			$config->forceSave();
-
-			// need to update all config files
-			if ( $this->settings->is_network_enabled() ) {
-				wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
-			}
 		}
 	}
 }

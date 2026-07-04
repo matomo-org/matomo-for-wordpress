@@ -219,6 +219,8 @@ class Sync extends Feature {
 					$this->settings->apply_tracking_related_changes( [] );
 				}
 
+				$this->config_sync->sync_config_for_current_site();
+
 				return true;
 			}
 		}
@@ -261,6 +263,8 @@ class Sync extends Feature {
 		}
 
 		Site::map_matomo_site_id( $blog_id, $idsite );
+
+		$this->config_sync->sync_config_for_current_site();
 
 		do_action( 'matomo_site_synced', $idsite, $blog_id );
 
