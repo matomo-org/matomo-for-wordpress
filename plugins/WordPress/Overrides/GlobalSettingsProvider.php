@@ -9,6 +9,8 @@
 namespace Piwik\Plugins\WordPress\Overrides;
 
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
+use Piwik\Container\ContainerDoesNotExistException;
+use Piwik\Container\StaticContainer;
 use WpMatomo\Settings;
 
 /**
@@ -21,6 +23,16 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
      * @var \WpMatomo\Settings
      */
     private $settings;
+
+    /**
+     * Restoring the config.ini.php file from a DB backup can happen before the environment
+     * is fully initiated, causing a fatal error. To avoid this, we set this flag to true
+     * and perform the actual write in the Platform.initialized event (see the WordPress plugin
+     * class).
+     *
+     * @var bool
+     */
+    private $delayLocalConfigWrite = false;
 
     public function __construct($pathGlobal = null, $pathLocal = null, $pathCommon = null, Settings $settings = null)
     {
@@ -77,8 +89,21 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $this->writeLocalConfigFile();
     }
 
+    public function writeLocalConfigFileIfDelayedWriteNeeded()
+    {
+        if ($this->delayLocalConfigWrite) {
+            $this->writeLocalConfigFile();
+            $this->delayLocalConfigWrite = false;
+        }
+    }
+
     private function writeLocalConfigFile()
     {
+        if (!$this->doesContainerExist()) {
+            $this->delayLocalConfigWrite = true;
+            return;
+        }
+
         $path = $this->getPathLocal();
         if (empty($path)) {
             return;
@@ -196,5 +221,15 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $this->settings = \WpMatomo::$settings ?: new Settings();
         }
         return $this->settings;
+    }
+
+    private function doesContainerExist()
+    {
+        try {
+            StaticContainer::getContainer();
+            return true;
+        } catch (ContainerDoesNotExistException $ex) {
+            return false;
+        }
     }
 }
