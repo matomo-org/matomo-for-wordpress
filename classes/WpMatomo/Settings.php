@@ -47,6 +47,7 @@ class Settings {
 	const INSTANCE_COMPONENTS_INSTALLED = 'instance-components-installed';
 
 	public static $is_doing_action_tracking_related = false;
+
 	/**
 	 * @internal tests only
 	 * @var bool
@@ -143,6 +144,15 @@ class Settings {
 	private $global_settings = [];
 	private $blog_settings   = [];
 
+	/**
+	 * The blog ID the cached settings were loaded for. Long-lived Settings instances can
+	 * be used across switch_to_blog() calls, cached values must be reloaded when a blog
+	 * changes.
+	 *
+	 * @var int|null
+	 */
+	private $loaded_for_blog_id = null;
+
 	private $settings_changed = [];
 
 	/**
@@ -175,11 +185,7 @@ class Settings {
 			$this->global_settings = $global_settings;
 		}
 
-		$settings = get_option( self::OPTION, [] );
-
-		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$this->blog_settings = $settings;
-		}
+		$this->load_blog_settings();
 	}
 
 	public function get_customised_global_settings() {
@@ -226,6 +232,8 @@ class Settings {
 	 * Save all settings as WordPress options
 	 */
 	public function save() {
+		$this->reload_if_blog_switched();
+
 		if ( empty( $this->settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
 
@@ -265,6 +273,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
 		}
@@ -283,6 +293,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->blog_settings[ $key ] ) ) {
 			return $this->blog_settings[ $key ];
 		}
@@ -309,6 +321,8 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_global_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_global_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
@@ -330,6 +344,8 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_blog_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_blog_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
@@ -550,5 +566,38 @@ class Settings {
 
 	public function is_track_via_esi_enabled() {
 		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
+	}
+
+	public function load_blog_settings() {
+		$settings = get_option( self::OPTION, [] );
+		if ( ! is_array( $settings ) ) {
+			$settings = [];
+		}
+
+		$this->blog_settings = $settings;
+
+		$this->loaded_for_blog_id = get_current_blog_id();
+	}
+
+	/**
+	 * Reload cached settings if the current blog changed since they were loaded (eg, via
+	 * switch_to_blog()). Cached per-blog settings must not be served for, or saved to, a
+	 * different blog. Pending unsaved changes for the previous blog are discarded.
+	 */
+	private function reload_if_blog_switched() {
+		if ( ! $this->is_multisite()
+			|| null === $this->loaded_for_blog_id
+			|| get_current_blog_id() === $this->loaded_for_blog_id
+		) {
+			return;
+		}
+
+		if ( $this->is_network_enabled() ) {
+			$this->load_blog_settings();
+		} else {
+			// when the plugin is not network activated, the "global" settings are stored
+			// per blog as well, so everything must be reloaded
+			$this->init_settings();
+		}
 	}
 }
