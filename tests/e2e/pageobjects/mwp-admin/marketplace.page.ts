@@ -293,6 +293,17 @@ class MwpMarketplacePage extends MwpPage {
 
     expect(activatedPlugins).toEqual(allPluginsName);
 
+    // make sure headless browsers are tracked otherwise following tests will fail
+    await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        action: 'matomo_test_disable_block_headless',
+      }),
+    });
+
     await browser.refresh(); // for new nonce values
   }
 }

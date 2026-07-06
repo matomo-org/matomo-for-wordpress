@@ -170,6 +170,7 @@ class API extends Feature {
 			'run'        => 'POST',
 			'send'       => 'POST',
 			'publish'    => 'POST',
+			'set'        => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
 		];
