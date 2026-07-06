@@ -55,6 +55,7 @@ class API extends Feature {
 		$this->register_route( 'CoreAdminHome', 'invalidateArchivedReports' );
 		$this->register_route( 'CoreAdminHome', 'runScheduledTasks' );
 		$this->register_route( 'CoreAdminHome', 'runCronArchiving' );
+		$this->register_route( 'CorePluginsAdmin', 'setSystemSettings' );
 		$this->register_route( 'Dashboard', 'getDashboards' );
 		$this->register_route( 'ImageGraph', 'get' );
 		$this->register_route( 'VisitsSummary', 'getVisits' );
@@ -170,6 +171,7 @@ class API extends Feature {
 			'run'        => 'POST',
 			'send'       => 'POST',
 			'publish'    => 'POST',
+			'set'        => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
 		];

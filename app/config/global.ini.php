@@ -962,7 +962,7 @@ use_third_party_id_cookie = 0
 
 ; If tracking does not work for you or you are stuck finding an issue, you might want to enable the tracker debug mode.
 ; Once enabled (set to 1) messages will be logged to all loggers defined in "[log] log_writers" config.
-debug = 1
+debug = 0
 
 ; This option is an alternative to the debug option above. When set to 1, you can debug tracker request by adding
 ; a debug=1 query parameter in the URL. All other HTTP requests will not have debug enabled. For security reasons this

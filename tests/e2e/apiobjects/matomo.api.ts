@@ -39,7 +39,7 @@ class MatomoApi {
 
   async call(restMethod: string, apiMethod: string, params: URLSearchParams = new URLSearchParams()) {
     const [module, action] = apiMethod.split('.');
-    const wpAction = action === 'get' ? 'get' : action.replace(/^(get|add|create)/, '');
+    const wpAction = action === 'get' ? 'get' : action.replace(/^(get|add|create|set)/, '');
     const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=${encodeURIComponent(`/matomo/v1/${this.toSnakeCase(module)}/${this.toSnakeCase(wpAction)}`)}`;
 
     const fullUrl = `${wordpressUrl}&${params}`;
