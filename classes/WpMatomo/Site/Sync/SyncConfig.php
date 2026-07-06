@@ -71,7 +71,7 @@ class SyncConfig {
 	}
 
 	private function get_all() {
-		$options = $this->settings->get_global_option( Settings::NETWORK_CONFIG_OPTIONS );
+		$options = $this->settings->get_global_option( Settings::CONFIG_OPTIONS );
 
 		if ( empty( $options ) || ! is_array( $options ) ) {
 			$options = [];
@@ -109,7 +109,7 @@ class SyncConfig {
 
 			$this->settings->apply_changes(
 				[
-					Settings::NETWORK_CONFIG_OPTIONS => $config,
+					Settings::CONFIG_OPTIONS => $config,
 				]
 			);
 			// need to update all config files

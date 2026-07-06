@@ -34,7 +34,7 @@ class Settings {
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
 	const SITE_CURRENCY                        = 'site_currency';
-	const NETWORK_CONFIG_OPTIONS               = 'config_options';
+	const CONFIG_OPTIONS                       = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
@@ -45,6 +45,11 @@ class Settings {
 	// NOTE: this is not a setting value, but is stored with setting values to avoid
 	// adding an extra get_option call to every WordPress backoffice request.
 	const INSTANCE_COMPONENTS_INSTALLED = 'instance-components-installed';
+
+	/**
+	 * @deprecated use CONFIG_OPTIONS instead
+	 */
+	const NETWORK_CONFIG_OPTIONS = 'config_options';
 
 	public static $is_doing_action_tracking_related = false;
 
@@ -75,7 +80,7 @@ class Settings {
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => [],
 		self::OPTION_KEY_CAPS_ACCESS               => [],
-		self::NETWORK_CONFIG_OPTIONS               => [],
+		self::CONFIG_OPTIONS                       => [],
 		self::DELETE_ALL_DATA_ON_UNINSTALL         => true,
 		self::SITE_CURRENCY                        => 'USD',
 		// User settings: Stats configuration
@@ -328,10 +333,14 @@ class Settings {
 			$value = $this->convert_type( $value, $type );
 		}
 
-		if ( ! isset( $this->global_settings[ $key ] )
-			 || $this->global_settings[ $key ] !== $value ) {
+		if (
+			! isset( $this->global_settings[ $key ] )
+			|| $this->global_settings[ $key ] !== $value
+		) {
 			$this->settings_changed[] = $key;
-			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+			if ( self::CONFIG_OPTIONS !== $key ) {
+				$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+			}
 
 			$this->global_settings[ $key ] = $value;
 		}

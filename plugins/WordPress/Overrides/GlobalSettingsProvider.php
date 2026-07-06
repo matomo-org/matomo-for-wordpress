@@ -79,7 +79,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function restoreConfigFromBackup()
     {
-        $backup = $this->getWpMatomoSettings()->get_global_option(Settings::NETWORK_CONFIG_OPTIONS);
+        $backup = $this->getWpMatomoSettings()->get_global_option(Settings::CONFIG_OPTIONS);
         if (!is_array($backup) || empty($backup)) {
             // nothing to restore, eg. a fresh install before config.ini.php has been created
             return;

@@ -320,11 +320,11 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function get_option_data() {
-		return $this->settings->get_global_option( \WpMatomo\Settings::NETWORK_CONFIG_OPTIONS );
+		return $this->settings->get_global_option( \WpMatomo\Settings::CONFIG_OPTIONS );
 	}
 
 	private function update_option_data( array $data ) {
-		$this->settings->set_global_option( \WpMatomo\Settings::NETWORK_CONFIG_OPTIONS, $data );
+		$this->settings->set_global_option( \WpMatomo\Settings::CONFIG_OPTIONS, $data );
 		$this->settings->save();
 	}
 }
