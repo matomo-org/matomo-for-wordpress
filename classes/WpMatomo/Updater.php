@@ -85,8 +85,6 @@ class Updater {
 	}
 
 	public function update_if_needed() {
-		$this->add_config_end_of_file_marker_if_needed();
-
 		$plugins_requiring_update = $this->get_plugins_requiring_update();
 		if ( ! empty( $plugins_requiring_update ) ) {
 			try {
@@ -144,6 +142,8 @@ class Updater {
 
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();
+
+		$this->add_config_end_of_file_marker_if_needed();
 
 		$paths = new Paths();
 		$paths->clear_cache_dir();

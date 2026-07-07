@@ -295,7 +295,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             return;
         }
 
-        @chmod($path, FS_CHMOD_FILE);
+        // use FS_CHMOD_FILE if a user has defined it (in wp-config.php for example)
+        $mode = defined('FS_CHMOD_FILE') ? FS_CHMOD_FILE : 0664;
+        @chmod($path, $mode);
     }
 
     /**
