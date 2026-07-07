@@ -40,6 +40,10 @@ class PluginSuggestions extends Feature {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
 
+		add_action( 'init', [ $this, 'register_suggestion_hooks' ] );
+	}
+
+	public function register_suggestion_hooks() {
 		foreach ( $this->get_suggestions() as $suggestion ) {
 			$suggestion->register_hooks();
 		}
