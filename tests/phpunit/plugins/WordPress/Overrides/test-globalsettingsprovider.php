@@ -29,6 +29,8 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		parent::setUp();
 
 		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
+		delete_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
 		$this->settings = new \WpMatomo\Settings();
 	}
 
@@ -156,8 +158,10 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$default_general = ( new GlobalSettingsProvider( null, null, null, $this->settings ) )->getSection( 'General' );
 		$this->assertNotEmpty( $default_general, 'precondition: the General section has default values' );
 
-		// trusted_hosts is set by the installer, it's not part of the default section data
+		// trusted_hosts and salt are set by the installer (and generated again on restore),
+		// they're not part of the default section data being compared
 		unset( $default_general['trusted_hosts'] );
+		unset( $default_general['salt'] );
 
 		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
 		$this->settings = new \WpMatomo\Settings();
@@ -172,7 +176,10 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		// the partial backup is applied...
 		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
 		// ...but the default sections that are not part of the backup are preserved.
-		$this->assertEquals( $default_general, $provider->getSection( 'General' ) );
+		$restored_general = $provider->getSection( 'General' );
+		unset( $restored_general['trusted_hosts'] );
+		unset( $restored_general['salt'] );
+		$this->assertEquals( $default_general, $restored_general );
 	}
 
 	public function test_activated_plugins_are_filtered_for_wordpress_when_file_exists() {
@@ -274,6 +281,204 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEquals( $chain->getAll(), $stored );
 	}
 
+	public function test_backup_does_not_contain_database_credentials_salt_or_trusted_hosts() {
+		// the real config.ini.php contains the [database] credentials and the [General] salt
+		// (secrets that must never be copied into the more exposed WordPress options table) as
+		// well as trusted_hosts (blog-specific, must not enter a potentially network-shared backup)
+		new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertNotEmpty( $stored );
+		$this->assertArrayNotHasKey( 'database', $stored );
+		if ( isset( $stored['General'] ) ) {
+			$this->assertArrayNotHasKey( 'salt', $stored['General'] );
+			$this->assertArrayNotHasKey( 'trusted_hosts', $stored['General'] );
+		}
+	}
+
+	public function test_backup_redacts_secret_like_values() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'TestSection',
+			array(
+				'some_password' => 'secret1',
+				'api_key'       => 'secret2',
+				'smtpPassword'  => 'secret3',
+				'safe_value'    => 'kept',
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		$this->assertSame( array( 'safe_value' => 'kept' ), $stored['TestSection'] );
+	}
+
+	public function test_restore_rebuilds_database_settings_from_wordpress() {
+		global $wpdb;
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the [database] section is not part of the backup, it is rebuilt from the current
+		// WordPress DB credentials (so restores keep working when the credentials change)
+		$database = $provider->getSection( 'database' );
+		$this->assertSame( DB_USER, $database['username'] );
+		$this->assertSame( $wpdb->prefix . MATOMO_DATABASE_PREFIX, $database['tables_prefix'] );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( '[database]', $contents );
+	}
+
+	public function test_restore_generates_missing_salt_and_trusted_hosts() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$general = $provider->getSection( 'General' );
+		$this->assertNotEmpty( $general['salt'] );
+		$this->assertNotEmpty( $general['trusted_hosts'] );
+	}
+
+	public function test_restore_does_not_reuse_a_salt_stored_in_a_backup() {
+		// old backups (or manually edited options) may contain a salt; it is a secret, so it is
+		// discarded and a fresh one is generated instead
+		$this->update_option_data(
+			array(
+				'General'     => array(
+					'salt'         => 'stored-salt',
+					'kept_setting' => 'kept-value',
+				),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$general = $provider->getSection( 'General' );
+		$this->assertNotEmpty( $general['salt'] );
+		$this->assertNotSame( 'stored-salt', $general['salt'] );
+		$this->assertSame( 'kept-value', $general['kept_setting'] );
+	}
+
+	public function test_restore_does_not_reuse_trusted_hosts_stored_in_a_backup() {
+		// trusted_hosts is blog-specific: a (potentially network-shared or legacy) backup may
+		// hold another blog's hosts, so it is always rebuilt from the restoring blog's home URL
+		$this->update_option_data(
+			array(
+				'General'     => array( 'trusted_hosts' => array( 'other-blog.example.com' ) ),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$expected_host = wp_parse_url( home_url(), PHP_URL_HOST );
+		$expected_port = wp_parse_url( home_url(), PHP_URL_PORT );
+		if ( $expected_port ) {
+			$expected_host .= ':' . $expected_port;
+		}
+
+		$trusted_hosts = $provider->getSection( 'General' )['trusted_hosts'];
+		$this->assertNotContains( 'other-blog.example.com', $trusted_hosts );
+		$this->assertSame( array( $expected_host ), $trusted_hosts );
+	}
+
+	public function test_restore_falls_back_to_legacy_config_options_backup() {
+		// backups made before the dedicated backup option existed were stored in the
+		// config_options option and must still restore
+		$this->update_legacy_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'legacy_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'legacy_value', $provider->getSection( 'TestSection' )['test_key'] );
+	}
+
+	public function test_restore_prefers_the_dedicated_backup_over_the_legacy_option() {
+		$this->update_legacy_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'legacy_value' ),
+			)
+		);
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'backup_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'backup_value', $provider->getSection( 'TestSection' )['test_key'] );
+	}
+
+	public function test_backup_and_restore_work_when_network_enabled() {
+		// in network mode the backup is stored network-wide (a site option): every blog in the
+		// network is supposed to have the same INI config, so one backup serves all of them
+		$this->settings->set_assume_is_network_enabled_in_tests();
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'network_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( 'network_value', $provider->getSection( 'TestSection' )['test_key'] );
+		$this->assertTrue( file_exists( $path ) );
+	}
+
+	public function test_restore_uses_legacy_backup_when_network_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests();
+		$this->update_legacy_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'legacy_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'legacy_value', $provider->getSection( 'TestSection' )['test_key'] );
+	}
+
+	public function test_restore_does_nothing_when_backup_holds_only_excluded_values() {
+		// if everything in a (legacy) backup is stripped (secrets and blog-specific values) there
+		// is nothing meaningful to restore; no config file may be written, so the regular install
+		// process can self-heal instead
+		$this->update_option_data(
+			array(
+				'database' => array( 'password' => 'stored-password' ),
+				'General'  => array(
+					'salt'          => 'stored-salt',
+					'trusted_hosts' => array( 'example.com' ),
+				),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertFalse( file_exists( $path ) );
+	}
+
 	/**
 	 * Builds a provider using the real config.ini.php and returns the activated plugin list the way the
 	 * DI container does, ie. via PluginList. This exercises the real consumer of the [Plugins] section.
@@ -320,10 +525,14 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function get_option_data() {
-		return $this->settings->get_global_option( \WpMatomo\Settings::CONFIG_OPTIONS );
+		return $this->settings->get_config_backup();
 	}
 
 	private function update_option_data( array $data ) {
+		$this->settings->update_config_backup( $data );
+	}
+
+	private function update_legacy_option_data( array $data ) {
 		$this->settings->set_global_option( \WpMatomo\Settings::CONFIG_OPTIONS, $data );
 		$this->settings->save();
 	}

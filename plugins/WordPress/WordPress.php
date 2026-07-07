@@ -129,14 +129,6 @@ class WordPress extends Plugin
             $locale = get_user_locale();
             $_COOKIE[$languageCookieName] = WpMatomo\User\Sync::get_matomo_lang_from_locale($locale);
         }
-
-        $globalSettingsProvider = StaticContainer::get(GlobalSettingsProvider::class);
-        if ($globalSettingsProvider instanceof \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider) {
-            $globalSettingsProvider->writeLocalConfigFileIfDelayedWriteNeeded();
-        } else {
-            $logger = StaticContainer::get(LoggerInterface::class);
-            $logger->warning('Unexpected: overloaded GlobalSettingsProvider not found in DI container.');
-        }
     }
 
     public function setTrackerCacheGeneral(&$cache)

@@ -8,9 +8,11 @@
 
 namespace Piwik\Plugins\WordPress\Overrides;
 
+use Matomo\Ini\IniWriter;
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
-use Piwik\Container\ContainerDoesNotExistException;
-use Piwik\Container\StaticContainer;
+use Piwik\Common;
+use WpMatomo\Installer;
+use WpMatomo\Logger;
 use WpMatomo\Settings;
 
 /**
@@ -19,24 +21,29 @@ use WpMatomo\Settings;
  */
 class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 {
+    const REDACTED_SECTIONS = ['database'];
+
+    /**
+     * Config keys that look like secrets (matched by this pattern) are left out of the DB backup.
+     */
+    const SECRET_KEY_PATTERN = '/password|passwd|secret|salt|private_?key|api_?key|license_?key/i';
+
     /**
      * @var \WpMatomo\Settings
      */
     private $settings;
 
     /**
-     * Restoring the config.ini.php file from a DB backup can happen before the environment
-     * is fully initiated, causing a fatal error. To avoid this, we set this flag to true
-     * and perform the actual write in the Platform.initialized event (see the WordPress plugin
-     * class).
-     *
-     * @var bool
+     * @var Logger
      */
-    private $delayLocalConfigWrite = false;
+    private $logger;
 
     public function __construct($pathGlobal = null, $pathLocal = null, $pathCommon = null, Settings $settings = null)
     {
         $this->settings = $settings;
+
+        // before parent::__construct(), which calls reload() and can log via a restore
+        $this->logger = new Logger();
 
         parent::__construct($pathGlobal, $pathLocal, $pathCommon);
     }
@@ -51,12 +58,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     public function persistConfigOption()
     {
         // only persist the values that differ from the INI default settings (ie, what would go
-        // in config.ini.php)
-        $diff = $this->computeUserConfigDiff();
+        // in config.ini.php), minus anything secret or blog-specific
+        $diff = $this->removeValuesExcludedFromBackup($this->computeUserConfigDiff());
 
-        $settings = $this->getWpMatomoSettings();
-        $settings->set_global_option(Settings::NETWORK_CONFIG_OPTIONS, $diff);
-        $settings->save();
+        $this->getWpMatomoSettings()->update_config_backup($diff);
     }
 
     private function syncOrRestoreConfigBackup()
@@ -79,31 +84,128 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function restoreConfigFromBackup()
     {
-        $backup = $this->getWpMatomoSettings()->get_global_option(Settings::CONFIG_OPTIONS);
-        if (!is_array($backup) || empty($backup)) {
+        // legacy backups (and manually edited options) may hold secrets or another blog's
+        // blog-specific values, so strip them on the way in too
+        $backup = $this->removeValuesExcludedFromBackup($this->getBackupToRestore());
+        if (empty($backup)) {
             // nothing to restore, eg. a fresh install before config.ini.php has been created
             return;
         }
 
+        $backup = $this->addUnbackedUpConfigValues($backup);
+
         $this->applyUserConfigDiff($backup);
-        $this->writeLocalConfigFile();
+        $this->writeLocalConfigFile($backup);
     }
 
-    public function writeLocalConfigFileIfDelayedWriteNeeded()
+    /**
+     * In network mode the backup is shared by every blog in the network: each blog is supposed
+     * to have the same INI config as the others (SyncConfig keeps the files in sync), so one
+     * backup serves all of them. Blog-specific values ([database], salt, trusted_hosts) are not
+     * part of the backup, they are rebuilt for the restoring blog (see addUnbackedUpConfigValues()).
+     *
+     * Installs that made backups before the dedicated option existed stored them in the
+     * config_options option (together with admin-configured config overrides); fall back to it.
+     *
+     * @return array
+     */
+    private function getBackupToRestore()
     {
-        if ($this->delayLocalConfigWrite) {
-            $this->writeLocalConfigFile();
-            $this->delayLocalConfigWrite = false;
+        $settings = $this->getWpMatomoSettings();
+
+        $backup = $settings->get_config_backup();
+        if (!empty($backup)) {
+            return $backup;
         }
+
+        $legacy = $settings->get_global_option(Settings::CONFIG_OPTIONS);
+        return is_array($legacy) ? $legacy : [];
     }
 
-    private function writeLocalConfigFile()
+    private function removeValuesExcludedFromBackup($config)
     {
-        if (!$this->doesContainerExist()) {
-            $this->delayLocalConfigWrite = true;
-            return;
+        $config = $this->redactSecrets($config);
+
+        // trusted_hosts is blog-specific (derived from the blog's home URL), so it must not
+        // enter the (potentially network-shared) backup; it is rebuilt on restore
+        unset($config['General']['trusted_hosts']);
+        if (empty($config['General'])) {
+            unset($config['General']);
         }
 
+        return $config;
+    }
+
+    private function redactSecrets($config)
+    {
+        if (!is_array($config)) {
+            return [];
+        }
+
+        foreach (self::REDACTED_SECTIONS as $sectionName) {
+            unset($config[$sectionName]);
+        }
+
+        foreach ($config as $sectionName => $section) {
+            if (!is_array($section)) {
+                continue;
+            }
+
+            foreach ($section as $key => $value) {
+                if (preg_match(self::SECRET_KEY_PATTERN, $key)) {
+                    unset($config[$sectionName][$key]);
+                }
+            }
+
+            if (empty($config[$sectionName])) {
+                unset($config[$sectionName]);
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Fills in the config values that are deliberately not part of the backup:
+     * - the [database] section is rebuilt from the current WordPress credentials
+     * - the salt is regenerated
+     * - trusted_hosts is derived from the current blog's WordPress home URL
+     *
+     * @param array $backup
+     * @return array
+     */
+    private function addUnbackedUpConfigValues($backup)
+    {
+        $backup['database'] = Installer::get_db_infos();
+
+        if (!isset($backup['General']) || !is_array($backup['General'])) {
+            $backup['General'] = [];
+        }
+
+        $backup['General']['salt'] = Common::generateUniqId();
+        $backup['General']['trusted_hosts'] = [$this->getTrustedHost()];
+
+        return $backup;
+    }
+
+    private function getTrustedHost()
+    {
+        $homeUrl = home_url();
+
+        $domain = wp_parse_url($homeUrl, PHP_URL_HOST);
+        if (!$domain) {
+            return $homeUrl;
+        }
+
+        $port = wp_parse_url($homeUrl, PHP_URL_PORT);
+        if ($port) {
+            $domain .= ':' . $port;
+        }
+        return $domain;
+    }
+
+    private function writeLocalConfigFile(array $userConfig)
+    {
         $path = $this->getPathLocal();
         if (empty($path)) {
             return;
@@ -112,12 +214,59 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $header  = "; <?php exit; ?> DO NOT REMOVE THIS LINE\n";
         $header .= "; file automatically generated or modified by Matomo; you can manually override the default values in global.ini.php by redefining them in this file.\n";
 
-        $content = $this->iniFileChain->dumpChanges($header);
-        if (empty($content)) {
+        // Config::forceSave()/IniFileChain::dumpChanges() cannot be used here: they post events,
+        // which needs the DI container, and a restore runs while the environment is being created,
+        // before the container exists. the install check (Installer::looks_like_it_is_installed())
+        // needs the file back on disk as soon as the environment is created (otherwise it triggers
+        // a full re-install), so the restored user config is dumped directly.
+        //
+        // note: we can do this safely since we only store the diff with global.ini.php/common.config.ini.php
+        // in the db backup.
+
+        try {
+            $writer  = new IniWriter();
+            $content = $writer->writeToString($this->encodeIniValues($userConfig), $header);
+        } catch (\Exception $ex) {
+            $this->logger->log('Failed to dump the restored Matomo config: ' . $ex->getMessage());
             return;
         }
 
-        @file_put_contents($path, $content, LOCK_EX);
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            wp_mkdir_p($dir);
+        }
+
+        // write to a temp file and rename so a concurrent request can never read a partially
+        // written config.ini.php (it would back it up, overwriting the good backup)
+        $tempPath     = $path . '.' . uniqid('tmp', true);
+        $bytesWritten = @file_put_contents($tempPath, $content, LOCK_EX);
+        if ($bytesWritten !== strlen($content) || !@rename($tempPath, $path)) {
+            @unlink($tempPath);
+            $this->logger->log('Failed to restore config.ini.php from the backup option.');
+            return;
+        }
+
+        @chmod($path, FS_CHMOD_FILE);
+    }
+
+    /**
+     * Same as IniFileChain::encodeValues() (protected, so not callable from here).
+     */
+    private function encodeIniValues($values)
+    {
+        if (is_array($values)) {
+            foreach ($values as $key => $value) {
+                $values[$key] = $this->encodeIniValues($value);
+            }
+            return $values;
+        }
+        if (is_float($values)) {
+            return Common::forceDotAsSeparatorForDecimalPoint($values);
+        }
+        if (is_string($values)) {
+            return str_replace('$', '&#36;', htmlentities($values, ENT_COMPAT, 'UTF-8'));
+        }
+        return $values;
     }
 
     private function computeUserConfigDiff()
@@ -221,15 +370,5 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $this->settings = \WpMatomo::$settings ?: new Settings();
         }
         return $this->settings;
-    }
-
-    private function doesContainerExist()
-    {
-        try {
-            StaticContainer::getContainer();
-            return true;
-        } catch (ContainerDoesNotExistException $ex) {
-            return false;
-        }
     }
 }

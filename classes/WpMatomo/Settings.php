@@ -27,6 +27,7 @@ class Settings {
 	const GLOBAL_OPTION_PREFIX                 = 'matomo_global-';
 	const OPTION                               = 'matomo-option';
 	const OPTION_GLOBAL                        = 'matomo-global-option';
+	const OPTION_CONFIG_BACKUP                 = 'matomo-global-config-backup';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
@@ -338,7 +339,8 @@ class Settings {
 			|| $this->global_settings[ $key ] !== $value
 		) {
 			$this->settings_changed[] = $key;
-			if ( self::CONFIG_OPTIONS !== $key ) {
+
+			if ( self::OPTION_CONFIG_BACKUP !== $key ) {
 				$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 			}
 
@@ -575,6 +577,37 @@ class Settings {
 
 	public function is_track_via_esi_enabled() {
 		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
+	}
+
+	/**
+	 * Get the backup of the Matomo config file data.
+	 *
+	 * In network mode the backup is stored network-wide: every blog in the network is supposed
+	 * to have the same INI config as the others (SyncConfig keeps the files in sync), so one
+	 * backup serves all of them. Blog-specific values ([database], salt, trusted_hosts) are
+	 * not part of the backup, they are rebuilt by the restoring blog.
+	 *
+	 * The option is named so both the "matomo-" wp_options cleanup and the "matomo_global-"
+	 * sitemeta cleanup in Uninstaller match it (in SQL LIKE, "_" matches "-").
+	 *
+	 * @return array
+	 */
+	public function get_config_backup() {
+		if ( $this->is_network_enabled() ) {
+			$backup = get_site_option( self::OPTION_CONFIG_BACKUP, [] );
+		} else {
+			$backup = get_option( self::OPTION_CONFIG_BACKUP, [] );
+		}
+		return is_array( $backup ) ? $backup : [];
+	}
+
+	public function update_config_backup( $config_backup ) {
+		if ( $this->is_network_enabled() ) {
+			update_site_option( self::OPTION_CONFIG_BACKUP, $config_backup );
+		} else {
+			// not autoloaded, the backup is only read when Matomo bootstraps
+			update_option( self::OPTION_CONFIG_BACKUP, $config_backup, false );
+		}
 	}
 
 	public function load_blog_settings() {
