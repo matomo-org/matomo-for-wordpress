@@ -411,4 +411,36 @@ class SettingsTest extends MatomoAnalytics_TestCase {
 		$tracker_cache = \Piwik\Tracker\Cache::getCacheGeneral();
 		$this->assertEquals( $other_user_agents, $tracker_cache['global_excluded_user_agents'] );
 	}
+
+	public function test_save_after_blog_switch_does_not_fire_actions_for_discarded_changes() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->set_assume_is_network_enabled_in_tests();
+
+		$blog_id = self::factory()->blog->create();
+
+		$fired    = 0;
+		$callback = function () use ( &$fired ) {
+			++$fired;
+		};
+		add_action( 'matomo_setting_change_noscript_code', $callback );
+
+		try {
+			$this->settings->set_option( 'noscript_code', 'pending change' );
+
+			switch_to_blog( $blog_id );
+			$this->settings->save();
+
+			// check that the setting was not saved after the blog switch, and
+			// the callback was not called
+			$this->assertSame( 0, $fired );
+			$this->assertSame( '', $this->settings->get_option( 'noscript_code' ) );
+		} finally {
+			restore_current_blog();
+			remove_action( 'matomo_setting_change_noscript_code', $callback );
+		}
+	}
 }

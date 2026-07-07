@@ -634,12 +634,9 @@ class Settings {
 			return;
 		}
 
-		if ( $this->is_network_enabled() ) {
-			$this->load_blog_settings();
-		} else {
-			// when the plugin is not network activated, the "global" settings are stored
-			// per blog as well, so everything must be reloaded
-			$this->init_settings();
-		}
+		// reload all settings, including intermediate state like $settings_changed
+		// to ensure that changes intended for the previous blog are not saved to this
+		// blog.
+		$this->init_settings();
 	}
 }

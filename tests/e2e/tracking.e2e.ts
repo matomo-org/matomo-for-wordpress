@@ -43,7 +43,7 @@ describe('Tracking', () => {
           lastMinutes: '60',
         }));
 
-        if (counters.actions !== parseInt(countersBefore[0].actions, 10) + 2) {
+        if (parseInt(counters[0]?.actions, 10) !== parseInt(countersBefore[0].actions, 10) + 2) {
           throw new Error('retry');
         }
       });
