@@ -228,7 +228,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
 
 		$updater = new Updater( new Settings() );
-		$updater->add_config_end_of_file_marker();
+		$updater->add_config_end_of_file_marker_if_needed();
 
 		$new_contents  = trim( (string) file_get_contents( $path ) );
 		$expected_tail = '[' . $marker_section . "]\n" . $marker_key . ' = 1';
