@@ -211,7 +211,9 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restored_plugin_list_is_filtered_for_wordpress() {
-		// the restored plugin activation state contains plugins that do not belong in WordPress
+		// a [Plugins] section stored in a (legacy) backup is discarded on restore: the plugin
+		// list is runtime-computed, so the activated list must come from the defaults plus the
+		// WordPress filtering, never from the stored value
 		$activated = $this->get_activated_plugins_for_missing_file(
 			array(
 				'Plugins' => array( 'Plugins' => array( 'CoreHome', 'Marketplace', 'MultiSites' ) ),
@@ -479,6 +481,37 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		new GlobalSettingsProvider( null, $path, null, $this->settings );
 
 		$this->assertFalse( file_exists( $path ) );
+	}
+
+	public function test_backup_does_not_contain_the_plugins_section() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		// the [Plugins] section holds the runtime-computed plugin list (set on every reload by
+		// the WordPress plugin filtering), it must not be persisted as if it were user config
+		$chain = $provider->getIniFileChain();
+		$chain->set( 'Plugins', array( 'Plugins' => array( 'CoreHome', 'TagManager' ) ) );
+
+		$provider->persistConfigOption();
+
+		$this->assertArrayNotHasKey( 'Plugins', $this->get_option_data() );
+	}
+
+	public function test_restore_does_not_write_a_plugins_section_from_the_backup() {
+		// a (legacy) backup holding a frozen plugin list must not pin that list in the restored
+		// config file; the list is recomputed at runtime instead
+		$this->update_option_data(
+			array(
+				'Plugins'     => array( 'Plugins' => array( 'CoreHome', 'Marketplace' ) ),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringNotContainsString( "[Plugins]\n", $contents );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
 	}
 
 	public function test_installed_config_file_ends_with_end_of_file_marker() {

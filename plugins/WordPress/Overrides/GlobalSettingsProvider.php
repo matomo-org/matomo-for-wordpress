@@ -86,6 +86,8 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         if ($this->isLocalConfigFileWrittenCompletely()) {
             // if local file exists and was written completely, backup its contents to the WP option
+            // note: in WP update_option() will not actually write to the database if the existing value
+            // is the same as what's already there, so it's safe to do this on every request.
             $this->persistConfigOption();
         }
 
@@ -169,6 +171,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         // the end-of-file marker is file bookkeeping, not user config; it is written fresh
         // whenever the file is (re)created
         unset($config[self::END_OF_FILE_MARKER_SECTION]);
+
+        // in MWP the [Plugins] section reflects the runtime-computed plugin list (see
+        // detectExtraPluginsToLoad()), it is built, indirectly, from WordPress' activated
+        // plugins list.
+        unset($config['Plugins']);
 
         return $config;
     }
