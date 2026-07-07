@@ -20,6 +20,7 @@ use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\SitesManager\Model;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 use WpMatomo\Site\Sync;
@@ -337,6 +338,11 @@ class Installer {
 		$config->database = array_merge( $db_default, $db_info );
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$config->General = array_merge( $general_default, $general );
+
+		// add the end-of-file marker used to detect interrupted writes to config.ini.php; it must
+		// exist in every config file (see GlobalSettingsProvider)
+		GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+
 		$config->forceSave();
 
 		$mode = 0664;

@@ -1,6 +1,8 @@
 <?php
 /**
  * @package matomo
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
  */
 
 use WpMatomo\Settings;
@@ -201,5 +203,35 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$columns = \Piwik\Db::fetchAll( 'SHOW COLUMNS IN ' . \Piwik\Common::prefixTable( $table_name ) );
 		$columns = array_column( $columns, 'Field' );
 		return $columns;
+	}
+
+	public function test_add_config_end_of_file_marker_adds_missing_marker_to_config_file() {
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$marker_key     = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_KEY;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		// simulate a config file written by a plugin version that predates the marker
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( $marker_section, $contents );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\]\s*' . preg_quote( $marker_key, '/' ) . '\s*=\s*1\s*/',
+			'',
+			$contents
+		);
+		$this->assertStringNotContainsString( $marker_section, $stripped );
+		file_put_contents( $path, $stripped );
+
+		// make the in-memory config state match the file on disk, the way the fresh bootstrap
+		// of an update request would see it
+		\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+
+		$updater = new Updater( new Settings() );
+		$updater->add_config_end_of_file_marker();
+
+		$new_contents  = trim( (string) file_get_contents( $path ) );
+		$expected_tail = '[' . $marker_section . "]\n" . $marker_key . ' = 1';
+		$this->assertSame( $expected_tail, substr( $new_contents, - strlen( $expected_tail ) ) );
 	}
 }

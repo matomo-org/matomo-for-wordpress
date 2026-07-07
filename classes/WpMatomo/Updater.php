@@ -17,6 +17,7 @@ use Piwik\Db;
 use Piwik\Filesystem;
 use Piwik\Option;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
@@ -84,6 +85,8 @@ class Updater {
 	}
 
 	public function update_if_needed() {
+		$this->add_config_end_of_file_marker_if_needed();
+
 		$plugins_requiring_update = $this->get_plugins_requiring_update();
 		if ( ! empty( $plugins_requiring_update ) ) {
 			try {
@@ -178,6 +181,8 @@ class Updater {
 
 			\Piwik\Access::doAsSuperUser(
 				function () {
+					// updating components twice is required for all updates to complete.
+					// unsure why, but suspect it is due to dimension updates.
 					self::update_components();
 					self::update_components();
 				}
@@ -216,6 +221,30 @@ class Updater {
 		}
 
 		do_action( 'matomo_update' );
+	}
+
+	/**
+	 * Make sure config.ini.php ends with the end-of-file marker used to detect interrupted
+	 * writes. The marker is kept up to date on every config file write, but config files
+	 * created by plugin versions that predate the marker need it added here once (without it,
+	 * the config backup is never refreshed).
+	 *
+	 * (public for tests)
+	 */
+	public function add_config_end_of_file_marker_if_needed() {
+		$config = Config::getInstance();
+		if ( GlobalSettingsProvider::isEndOfFileMarkerPresent( $config ) ) {
+			return;
+		}
+
+		try {
+			GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+			$config->forceSave();
+		} catch ( Exception $e ) {
+			// eg. the config file is not writable; the marker will be added by the next
+			// successful config write instead
+			$this->logger->log_exception( 'config_eof_marker', $e );
+		}
 	}
 
 	public function is_upgrade_in_progress() {

@@ -29,6 +29,17 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     const SECRET_KEY_PATTERN = '/password|passwd|secret|salt|private_?key|api_?key|license_?key/i';
 
     /**
+     * Name of the INI section that is always written as the very last section of config.ini.php
+     * (enforced by the Config.beforeSave event handler in the WordPress plugin and by
+     * writeLocalConfigFile()). If it is missing, a write to the file is in progress or was
+     * interrupted (eg. disk full), so the file contents cannot be trusted. Added once to
+     * existing config files during the plugin update (see Updater).
+     */
+    const END_OF_FILE_MARKER_SECTION = 'WpMatomoEndOfFileMarker';
+
+    const END_OF_FILE_MARKER_KEY = 'marker';
+
+    /**
      * @var \WpMatomo\Settings
      */
     private $settings;
@@ -66,20 +77,42 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function syncOrRestoreConfigBackup()
     {
-        if ($this->localConfigFileExists()) {
-            // if local file exists, backup its contents to the WP option
-            $this->persistConfigOption();
-        } else {
+        if (!$this->localConfigFileExists()) {
             // if local file does not exist (for example, deleted by hosting provider or another plugin),
             // restore the contents from the backup
             $this->restoreConfigFromBackup();
+            return;
         }
+
+        if ($this->isLocalConfigFileWrittenCompletely()) {
+            // if local file exists and was written completely, backup its contents to the WP option
+            $this->persistConfigOption();
+        }
+
+        // if the file exists but the end-of-file marker was not read from it, a write to it is
+        // in progress (or a previous write was interrupted): do not back up the incomplete
+        // contents (it would overwrite a good backup) and do not overwrite the file with the
+        // backup either (a write in progress would be lost). config files created by plugin
+        // versions that predate the marker are treated the same way until the plugin update
+        // adds the marker to them (see Updater).
     }
 
     private function localConfigFileExists()
     {
         $path = $this->getPathLocal();
-        return !empty($path) && is_readable($path) && filesize($path) > 0;
+        return !empty($path) && is_file($path);
+    }
+
+    /**
+     * The end-of-file marker is always the last section written to config.ini.php, so if it made
+     * it into the parsed INI data, the whole file was read and the file was written completely.
+     * The parsed data (and not the raw file) is checked on purpose: it is what gets persisted to
+     * the backup, and re-reading the file here could race with a concurrent write to it.
+     */
+    private function isLocalConfigFileWrittenCompletely()
+    {
+        $marker = $this->iniFileChain->getFrom($this->getPathLocal(), self::END_OF_FILE_MARKER_SECTION);
+        return !empty($marker[self::END_OF_FILE_MARKER_KEY]);
     }
 
     private function restoreConfigFromBackup()
@@ -132,6 +165,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         if (empty($config['General'])) {
             unset($config['General']);
         }
+
+        // the end-of-file marker is file bookkeeping, not user config; it is written fresh
+        // whenever the file is (re)created
+        unset($config[self::END_OF_FILE_MARKER_SECTION]);
 
         return $config;
     }
@@ -213,6 +250,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         $header  = "; <?php exit; ?> DO NOT REMOVE THIS LINE\n";
         $header .= "; file automatically generated or modified by Matomo; you can manually override the default values in global.ini.php by redefining them in this file.\n";
+
+        // the end-of-file marker must be the very last section of the file (see
+        // isLocalConfigFileWrittenCompletely())
+        unset($userConfig[self::END_OF_FILE_MARKER_SECTION]);
+        $userConfig[self::END_OF_FILE_MARKER_SECTION] = self::getEndOfFileMarkerSection();
 
         // Config::forceSave()/IniFileChain::dumpChanges() cannot be used here: they post events,
         // which needs the DI container, and a restore runs while the environment is being created,
@@ -370,5 +412,24 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $this->settings = \WpMatomo::$settings ?: new Settings();
         }
         return $this->settings;
+    }
+
+    public static function addEndOfFileMarkerSectionTo(\Piwik\Config $config)
+    {
+        $marker_section            = self::END_OF_FILE_MARKER_SECTION;
+        $config->{$marker_section} = self::getEndOfFileMarkerSection();
+    }
+
+    public static function isEndOfFileMarkerPresent(\Piwik\Config $config)
+    {
+        $markerSection = self::END_OF_FILE_MARKER_SECTION;
+        $markerSection = $config->{$markerSection};
+        return ! empty( $markerSection[self::END_OF_FILE_MARKER_KEY] )
+            && $markerSection[self::END_OF_FILE_MARKER_KEY] == 1;
+    }
+
+    public static function getEndOfFileMarkerSection()
+    {
+        return [self::END_OF_FILE_MARKER_KEY => 1];
     }
 }

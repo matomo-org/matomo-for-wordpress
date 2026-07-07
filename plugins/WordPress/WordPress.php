@@ -86,8 +86,19 @@ class WordPress extends Plugin
             'API.Request.dispatch' => 'onApiRequestDispatch',
             'API.Request.dispatch.end' => 'onApiRequestDispatchEnd',
             ProcessedReportInnerCallHooks::PROCESSED_REPORT_INNER_END_EVENT => 'afterProcessedReportInner',
+            'Config.beforeSave' => 'ensureEndOfFileMarkerIsLastConfigSection',
             'Core.configFileChanged' => 'configFileChanged',
         );
+    }
+
+    public function ensureEndOfFileMarkerIsLastConfigSection(&$values) {
+        // the marker must be the very last section of config.ini.php, so an interrupted or
+        // still running write can be detected by its absence (see
+        // GlobalSettingsProvider::isLocalConfigFileWrittenCompletely())
+        $section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+        unset($values[$section]);
+        $values[$section] = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::getEndOfFileMarkerSection();
     }
 
     public function configFileChanged() {

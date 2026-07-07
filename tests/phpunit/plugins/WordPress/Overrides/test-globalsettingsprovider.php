@@ -5,6 +5,8 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
  */
 
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
@@ -477,6 +479,108 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		new GlobalSettingsProvider( null, $path, null, $this->settings );
 
 		$this->assertFalse( file_exists( $path ) );
+	}
+
+	public function test_installed_config_file_ends_with_end_of_file_marker() {
+		// the config.ini.php created by the installer must end with the marker, otherwise it
+		// would never be backed up
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$this->assert_config_file_ends_with_marker( $provider->getPathLocal() );
+	}
+
+	public function test_backup_is_not_updated_when_config_file_is_missing_the_end_of_file_marker() {
+		$this->update_option_data(
+			array(
+				'Preexisting' => array( 'key' => 'value' ),
+			)
+		);
+
+		// a config file whose write did not finish (or that was truncated): no marker at the end
+		$path = $this->write_config_file( "[TestSection]\ntest_key = \"test_value\"\n" );
+
+		$original_contents = file_get_contents( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the incomplete file was not backed up (that would overwrite the good backup)...
+		$this->assertSame( array( 'Preexisting' => array( 'key' => 'value' ) ), $this->get_option_data() );
+		// ...and it was not overwritten with the backup either (a write may be in progress)
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
+	public function test_backup_is_updated_when_config_file_ends_with_the_end_of_file_marker() {
+		$marker_section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$path = $this->write_config_file(
+			"[TestSection]\ntest_key = \"test_value\"\n\n"
+			. '[' . $marker_section . "]\n" . GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . " = 1\n"
+		);
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
+		// the marker is file bookkeeping, it does not belong in the backup
+		$this->assertArrayNotHasKey( $marker_section, $stored );
+	}
+
+	public function test_empty_config_file_is_neither_backed_up_nor_restored_over() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// eg. a concurrent Config::forceSave() just truncated the file and is about to rewrite it
+		$path = $this->non_existent_config_path();
+		touch( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( '', file_get_contents( $path ) );
+		$this->assertSame( array( 'TestSection' => array( 'test_key' => 'test_value' ) ), $this->get_option_data() );
+	}
+
+	public function test_restored_config_file_ends_with_end_of_file_marker_and_is_backed_up_again() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assert_config_file_ends_with_marker( $path );
+
+		// round trip: the restored file passes the completeness check, so it is backed up again
+		$this->update_option_data( array() );
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$stored = $this->get_option_data();
+		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
+	}
+
+	private function write_config_file( $ini_content ) {
+		$path = $this->non_existent_config_path();
+		file_put_contents( $path, "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $ini_content );
+
+		return $path;
+	}
+
+	private function assert_config_file_ends_with_marker( $path ) {
+		$contents = trim( (string) file_get_contents( $path ) );
+
+		$expected_tail = '[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . "]\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = 1';
+
+		$this->assertSame(
+			$expected_tail,
+			substr( $contents, - strlen( $expected_tail ) ),
+			'config file does not end with the end-of-file marker, it ends with: ...' . substr( $contents, -200 )
+		);
 	}
 
 	/**
