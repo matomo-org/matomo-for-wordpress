@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress\Overrides;
 use Matomo\Ini\IniWriter;
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
 use Piwik\Common;
+use Piwik\SettingsServer;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
@@ -106,6 +107,12 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         if ($this->isLocalConfigFileWrittenCompletely()) {
+            // tracking requests need to be as fast as possible, so the backup is never refreshed
+            // there; config changes are picked up by the next non-tracker request instead
+            if (SettingsServer::isTrackerApiRequest()) {
+                return;
+            }
+
             // if local file exists and was written completely, backup its contents to the WP option
             // note: in WP, update_option() will not actually write to the database if the existing value
             // is the same as what's already there, so it's safe to do this on every request.
@@ -246,6 +253,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
      * - the [database] section is rebuilt from the current WordPress credentials
      * - the salt is regenerated
      * - trusted_hosts is derived from the current blog's WordPress home URL
+     *
+     * Note: Regenerating the salt is acceptable in MWP since using the API with a
+     * Matomo token_auth is not supported.
      *
      * @param array $backup
      * @return array

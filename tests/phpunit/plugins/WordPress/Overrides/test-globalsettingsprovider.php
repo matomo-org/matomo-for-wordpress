@@ -72,6 +72,18 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
+	public function test_backup_is_not_refreshed_on_tracker_requests() {
+		\Piwik\SettingsServer::setIsTrackerApiRequest();
+
+		try {
+			new GlobalSettingsProvider( null, null, null, $this->settings );
+
+			$this->assertEquals( [], $this->get_option_data() );
+		} finally {
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+		}
+	}
+
 	public function test_construct_backs_up_config_to_option_when_option_holds_an_empty_array() {
 		$this->update_option_data( [] );
 
