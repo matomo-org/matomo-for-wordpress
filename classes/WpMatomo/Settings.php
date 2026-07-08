@@ -342,7 +342,10 @@ class Settings {
 		) {
 			$this->settings_changed[] = $key;
 
-			if ( self::OPTION_CONFIG_BACKUP !== $key ) {
+			// config_options holds network config options to sync across all network sites'
+			// config.ini.php. these can include INI secrets (eg. an SMTP [mail] password);
+			// never write it to the log
+			if ( self::CONFIG_OPTIONS !== $key ) {
 				$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 			}
 

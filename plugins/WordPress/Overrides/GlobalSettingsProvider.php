@@ -311,10 +311,12 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         // trusted_hosts is blog-specific (derived from the blog's home URL), so it must not
-        // enter the network-shared backup; it is rebuilt on restore
-        unset($config['General']['trusted_hosts']);
-        if (empty($config['General'])) {
-            unset($config['General']);
+        // enter the network-shared backup; it is rebuilt on restore.
+        if (isset($config['General']) && is_array($config['General'])) {
+            unset($config['General']['trusted_hosts']);
+            if (empty($config['General'])) {
+                unset($config['General']);
+            }
         }
 
         // the end-of-file marker is file bookkeeping, not user config; it is written fresh

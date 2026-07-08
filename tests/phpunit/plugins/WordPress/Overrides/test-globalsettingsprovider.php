@@ -140,6 +140,24 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
 	}
 
+	public function test_restore_does_not_fatal_when_backup_general_section_is_not_an_array() {
+		$this->update_option_data(
+			array(
+				'General'     => 'corrupted',
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+
+		// check General was rebuilt into a real array with the regenerated salt/trusted_hosts
+		$general = $provider->getSection( 'General' );
+		$this->assertIsArray( $general );
+		$this->assertNotEmpty( $general['salt'] );
+	}
+
 	public function test_construct_recreates_config_file_from_backup_when_file_is_missing() {
 		$this->update_option_data(
 			array(
