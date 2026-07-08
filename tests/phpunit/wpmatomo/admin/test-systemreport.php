@@ -39,6 +39,13 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();
+
+		// the built report tables are cached in a static property; reset it so every test
+		// renders the report from the current state
+		$matomo_tables_property = new ReflectionProperty( SystemReport::class, 'matomo_tables' );
+		$matomo_tables_property->setAccessible( true );
+		$matomo_tables_property->setValue( null, null );
+
 		$this->settings = new Settings();
 		$this->report   = new SystemReport( $this->settings );
 		if ( is_multisite() ) {
@@ -62,6 +69,41 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
 		$this->assertStringContainsString( 'WordPress Plugins', $output );
+	}
+
+	public function test_show_does_not_mention_a_regenerated_salt_by_default() {
+		ob_start();
+		$this->report->show();
+		$output = ob_get_clean();
+
+		$this->assertStringNotContainsString( 'salt was regenerated', $output );
+	}
+
+	public function test_show_warns_about_a_regenerated_salt_after_a_config_recovery() {
+		$this->settings->set_time_salt_was_regenerated( time() );
+
+		ob_start();
+		$this->report->show();
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'Matomo salt was regenerated during a config file recovery', $output );
+		$this->assertStringContainsString( 'opted out of tracking', $output );
+	}
+
+	public function test_show_dismisses_the_salt_regeneration_warning_on_request() {
+		// the troubleshooting actions require super admin permissions
+		$this->create_set_super_admin();
+
+		$this->settings->set_time_salt_was_regenerated( time() );
+
+		$this->fake_request( SystemReport::TROUBLESHOOT_DISMISS_SALT_REGENERATED );
+
+		ob_start();
+		$this->report->show();
+		$output = ob_get_clean();
+
+		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
+		$this->assertStringNotContainsString( 'salt was regenerated', $output );
 	}
 
 	/**

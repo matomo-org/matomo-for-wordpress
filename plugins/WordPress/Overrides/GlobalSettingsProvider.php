@@ -385,7 +385,16 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         $salt = $this->decryptSaltFromOption();
-        $backup['General']['salt'] = !empty($salt) ? $salt : Common::generateUniqId();
+        if (empty($salt)) {
+            $salt = Common::generateUniqId();
+
+            // record it, so super admins are informed about the regenerated salt and its
+            // consequences in the system report (most importantly, visitors' signed tracking
+            // opt-out cookies are no longer recognized)
+            $this->getWpMatomoSettings()->set_time_salt_was_regenerated(time());
+        }
+
+        $backup['General']['salt'] = $salt;
         $backup['General']['trusted_hosts'] = [$this->getTrustedHost()];
 
         return $backup;

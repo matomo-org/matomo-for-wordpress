@@ -34,6 +34,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		delete_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
 		delete_site_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
 		delete_option( \WpMatomo\Settings::OPTION_ENCRYPTED_SALT );
+		delete_option( \WpMatomo\Settings::OPTION_SALT_REGENERATED );
 		$this->settings = new \WpMatomo\Settings();
 	}
 
@@ -709,6 +710,36 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$record_after = $this->settings->get_encrypted_salt_backup();
 		$this->assertNotSame( $record_before['salt_fingerprint'], $record_after['salt_fingerprint'] );
 		$this->assertNotSame( $record_before['ciphertext'], $record_after['ciphertext'] );
+	}
+
+	public function test_restore_records_the_time_when_the_salt_had_to_be_regenerated() {
+		// no encrypted salt is stored, so the restore has to generate a new salt; super admins
+		// are informed about this in the system report
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertGreaterThanOrEqual( time() - 60, $this->settings->get_time_salt_was_regenerated() );
+	}
+
+	public function test_restore_does_not_flag_a_regenerated_salt_when_the_salt_was_restored() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+		$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
 	}
 
 	private function skip_if_sodium_is_not_available() {

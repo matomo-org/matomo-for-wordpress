@@ -29,6 +29,7 @@ class Settings {
 	const OPTION_GLOBAL                        = 'matomo-global-option';
 	const OPTION_CONFIG_BACKUP                 = 'matomo-global-config-backup';
 	const OPTION_ENCRYPTED_SALT                = 'matomo-encrypted-salt';
+	const OPTION_SALT_REGENERATED              = 'matomo-salt-regenerated-at';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
@@ -630,6 +631,24 @@ class Settings {
 	public function update_encrypted_salt_backup( array $record ) {
 		// not autoloaded, the record is only read when Matomo bootstraps
 		update_option( self::OPTION_ENCRYPTED_SALT, $record, false );
+	}
+
+	/**
+	 * The time a config.ini.php restore had to generate a new salt because the original one
+	 * could not be recovered (see GlobalSettingsProvider). Used to inform super admins about
+	 * the consequences in the system report. 0 if this never happened.
+	 *
+	 * @return int
+	 */
+	public function get_time_salt_was_regenerated() {
+		return (int) get_option( self::OPTION_SALT_REGENERATED, 0 );
+	}
+
+	/**
+	 * @param int $timestamp
+	 */
+	public function set_time_salt_was_regenerated( $timestamp ) {
+		update_option( self::OPTION_SALT_REGENERATED, (int) $timestamp, false );
 	}
 
 	public function load_blog_settings() {
