@@ -21,12 +21,26 @@ use WpMatomo\Settings;
  */
 class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 {
-    const REDACTED_SECTIONS = ['database'];
+    const REDACTED_SECTIONS = ['database', 'database_reader', 'database_tests'];
+
+    const DATABASE_KEYS_TO_BACKUP = [
+        'charset',
+        'collation',
+        'enable_ssl',
+        'ssl_ca',
+        'ssl_ca_path',
+        'ssl_cert',
+        'ssl_cipher',
+        'ssl_key',
+        'ssl_no_verify',
+    ];
 
     /**
      * Config keys that look like secrets (matched by this pattern) are left out of the DB backup.
+     * A false positive only means the value is not restored, so the pattern errs on the side of
+     * matching too much.
      */
-    const SECRET_KEY_PATTERN = '/password|passwd|secret|salt|private_?key|api_?key|license_?key/i';
+    const SECRET_KEY_PATTERN = '/password|passwd|passphrase|secret|salt|token|bearer|credential|private_?key|api_?key|license_?key/i';
 
     /**
      * Name of the INI section that is always written as the very last section of config.ini.php
@@ -159,7 +173,21 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function removeValuesExcludedFromBackup($config)
     {
+        // save database keys that are not used to authenticate to the database,
+        // like whether to use SSL, in the DB backup
+        $portableDatabaseValues = [];
+        if (isset($config['database']) && is_array($config['database'])) {
+            $portableDatabaseValues = array_intersect_key(
+                $config['database'],
+                array_flip(self::DATABASE_KEYS_TO_BACKUP)
+            );
+        }
+
         $config = $this->redactSecrets($config);
+
+        if (!empty($portableDatabaseValues)) {
+            $config['database'] = $portableDatabaseValues;
+        }
 
         // trusted_hosts is blog-specific (derived from the blog's home URL), so it must not
         // enter the (potentially network-shared) backup; it is rebuilt on restore
@@ -220,7 +248,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
      */
     private function addUnbackedUpConfigValues($backup)
     {
-        $backup['database'] = Installer::get_db_infos();
+        $portableDatabaseValues = isset($backup['database']) && is_array($backup['database'])
+            ? $backup['database'] : [];
+        $backup['database'] = array_merge(Installer::get_db_infos(), $portableDatabaseValues);
 
         if (!isset($backup['General']) || !is_array($backup['General'])) {
             $backup['General'] = [];

@@ -294,7 +294,14 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$stored = $this->get_option_data();
 
 		$this->assertNotEmpty( $stored );
-		$this->assertArrayNotHasKey( 'database', $stored );
+		if ( isset( $stored['database'] ) ) {
+			// only portable connection settings may be backed up, never credentials or identity
+			$unexpected_keys = array_diff_key(
+				$stored['database'],
+				array_flip( GlobalSettingsProvider::DATABASE_KEYS_TO_BACKUP )
+			);
+			$this->assertSame( array(), $unexpected_keys );
+		}
 		if ( isset( $stored['General'] ) ) {
 			$this->assertArrayNotHasKey( 'salt', $stored['General'] );
 			$this->assertArrayNotHasKey( 'trusted_hosts', $stored['General'] );
@@ -311,6 +318,11 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 				'some_password' => 'secret1',
 				'api_key'       => 'secret2',
 				'smtpPassword'  => 'secret3',
+				'auth_token'    => 'secret4',
+				'accessToken'   => 'secret5',
+				'passphrase'    => 'secret6',
+				'bearer'        => 'secret7',
+				'credentials'   => 'secret8',
 				'safe_value'    => 'kept',
 			)
 		);
@@ -320,6 +332,100 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$stored = $this->get_option_data();
 
 		$this->assertSame( array( 'safe_value' => 'kept' ), $stored['TestSection'] );
+	}
+
+	public function test_backup_keeps_only_portable_database_values() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain    = $provider->getIniFileChain();
+		$database = (array) $chain->get( 'database' );
+		$chain->set(
+			'database',
+			array_merge(
+				$database,
+				array(
+					'enable_ssl' => 1,
+					'ssl_ca'     => '/etc/ssl/db-ca.pem',
+				)
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		// hand-added portable connection settings survive into the backup...
+		$this->assertSame( 1, $stored['database']['enable_ssl'] );
+		$this->assertSame( '/etc/ssl/db-ca.pem', $stored['database']['ssl_ca'] );
+		// ...but credentials and identity values never do
+		$this->assertArrayNotHasKey( 'username', $stored['database'] );
+		$this->assertArrayNotHasKey( 'password', $stored['database'] );
+		$this->assertArrayNotHasKey( 'host', $stored['database'] );
+		$this->assertArrayNotHasKey( 'dbname', $stored['database'] );
+		$this->assertArrayNotHasKey( 'tables_prefix', $stored['database'] );
+	}
+
+	public function test_restore_applies_portable_database_values_over_rebuilt_credentials() {
+		$this->update_option_data(
+			array(
+				'database'    => array(
+					'ssl_ca'   => '/etc/ssl/db-ca.pem',
+					'charset'  => 'custom_charset',
+					'username' => 'stale_user',
+					'host'     => 'stale-host.example.com',
+				),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$database = $provider->getSection( 'database' );
+		$this->assertSame( '/etc/ssl/db-ca.pem', $database['ssl_ca'] );
+		$this->assertSame( 'custom_charset', $database['charset'] );
+		$this->assertSame( DB_USER, $database['username'] );
+		$this->assertNotEquals( 'stale-host.example.com', $database['host'] );
+	}
+
+	public function test_backup_does_not_contain_reader_or_tests_database_sections() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'database_reader',
+			array(
+				'host'     => 'reader.example.com',
+				'username' => 'reader_user',
+				'password' => 'reader_pass',
+			)
+		);
+		$chain->set( 'database_tests', array( 'dbname' => 'tests_db' ) );
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		$this->assertArrayNotHasKey( 'database_reader', $stored );
+		$this->assertArrayNotHasKey( 'database_tests', $stored );
+	}
+
+	public function test_restore_does_not_write_a_database_reader_section_from_the_backup() {
+		$this->update_option_data(
+			array(
+				'database_reader' => array(
+					'host'     => 'reader.example.com',
+					'username' => 'reader_user',
+				),
+				'TestSection'     => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringNotContainsString( '[database_reader]', $contents );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
 	}
 
 	public function test_restore_rebuilds_database_settings_from_wordpress() {
@@ -359,8 +465,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_does_not_reuse_a_salt_stored_in_a_backup() {
-		// old backups (or manually edited options) may contain a salt; it is a secret, so it is
-		// discarded and a fresh one is generated instead
 		$this->update_option_data(
 			array(
 				'General'     => array(
@@ -380,8 +484,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_does_not_reuse_trusted_hosts_stored_in_a_backup() {
-		// trusted_hosts is blog-specific: a (potentially network-shared or legacy) backup may
-		// hold another blog's hosts, so it is always rebuilt from the restoring blog's home URL
 		$this->update_option_data(
 			array(
 				'General'     => array( 'trusted_hosts' => array( 'other-blog.example.com' ) ),
@@ -403,8 +505,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_falls_back_to_legacy_config_options_backup() {
-		// backups made before the dedicated backup option existed were stored in the
-		// config_options option and must still restore
 		$this->update_legacy_option_data(
 			array(
 				'TestSection' => array( 'test_key' => 'legacy_value' ),
@@ -434,8 +534,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_backup_and_restore_work_when_network_enabled() {
-		// in network mode the backup is stored network-wide (a site option): every blog in the
-		// network is supposed to have the same INI config, so one backup serves all of them
 		$this->settings->set_assume_is_network_enabled_in_tests();
 		$this->update_option_data(
 			array(
@@ -464,9 +562,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_does_nothing_when_backup_holds_only_excluded_values() {
-		// if everything in a (legacy) backup is stripped (secrets and blog-specific values) there
-		// is nothing meaningful to restore; no config file may be written, so the regular install
-		// process can self-heal instead
 		$this->update_option_data(
 			array(
 				'database' => array( 'password' => 'stored-password' ),
@@ -497,8 +592,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_does_not_write_a_plugins_section_from_the_backup() {
-		// a (legacy) backup holding a frozen plugin list must not pin that list in the restored
-		// config file; the list is recomputed at runtime instead
 		$this->update_option_data(
 			array(
 				'Plugins'     => array( 'Plugins' => array( 'CoreHome', 'Marketplace' ) ),
