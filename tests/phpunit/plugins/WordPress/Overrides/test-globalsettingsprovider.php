@@ -742,6 +742,54 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
 	}
 
+	public function test_restore_happens_on_tracker_requests() {
+		// only the persist path is skipped on tracker requests: if config.ini.php goes missing
+		// under tracker-only traffic, it must still be restored so tracking keeps working
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		\Piwik\SettingsServer::setIsTrackerApiRequest();
+
+		try {
+			$path     = $this->non_existent_config_path();
+			$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+			$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+			$this->assertTrue( file_exists( $path ) );
+			$this->assert_config_file_ends_with_marker( $path );
+		} finally {
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+		}
+	}
+
+	public function test_restore_produces_identical_files_for_identical_state() {
+		$this->skip_if_sodium_is_not_available();
+
+		// concurrent restores (eg. a tracker request storm hitting a deleted config) can never
+		// corrupt anything as long as every restore produces the exact same bytes: the atomic
+		// write-and-rename then makes the race a harmless last-writer-wins of identical content.
+		// this requires the salt to come from the encrypted per-blog backup, not be generated.
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$first_path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $first_path, null, $this->settings );
+
+		$second_path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $second_path, null, $this->settings );
+
+		$this->assertNotEmpty( file_get_contents( $first_path ) );
+		$this->assertSame( file_get_contents( $first_path ), file_get_contents( $second_path ) );
+	}
+
 	private function skip_if_sodium_is_not_available() {
 		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
 			$this->markTestSkipped( 'sodium is not available' );
