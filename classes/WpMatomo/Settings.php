@@ -28,6 +28,7 @@ class Settings {
 	const OPTION                               = 'matomo-option';
 	const OPTION_GLOBAL                        = 'matomo-global-option';
 	const OPTION_CONFIG_BACKUP                 = 'matomo-global-config-backup';
+	const OPTION_ENCRYPTED_SALT                = 'matomo-encrypted-salt';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
@@ -608,6 +609,27 @@ class Settings {
 			// not autoloaded, the backup is only read when Matomo bootstraps
 			update_option( self::OPTION_CONFIG_BACKUP, $config_backup, false );
 		}
+	}
+
+	/**
+	 * Get the encrypted copy of the Matomo salt kept for the current blog (see
+	 * GlobalSettingsProvider). Stored per blog, since every blog has its own Matomo salt,
+	 * and separately from the config backup, which never contains secrets.
+	 *
+	 * @return array
+	 */
+	public function get_encrypted_salt_backup() {
+		$record = get_option( self::OPTION_ENCRYPTED_SALT, [] );
+
+		return is_array( $record ) ? $record : [];
+	}
+
+	/**
+	 * @param array $record
+	 */
+	public function update_encrypted_salt_backup( array $record ) {
+		// not autoloaded, the record is only read when Matomo bootstraps
+		update_option( self::OPTION_ENCRYPTED_SALT, $record, false );
 	}
 
 	public function load_blog_settings() {

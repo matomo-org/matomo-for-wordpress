@@ -95,6 +95,114 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $diff = $this->removeValuesExcludedFromBackup($this->computeUserConfigDiff());
 
         $this->getWpMatomoSettings()->update_config_backup($diff);
+
+        $this->updateEncryptedSaltIfNeeded();
+    }
+
+    /**
+     * Keeps an encrypted copy of the salt in a dedicated per-blog option so a restore can
+     * bring the original salt back instead of generating a new one (a new salt would silently
+     * invalidate visitors' signed tracking opt-out cookies — a privacy compliance violation — and
+     * change config_id fingerprints).
+     *
+     * The salt is encrypted with a key derived from the WP auth key (wp_salt('auth'), ie.
+     * AUTH_KEY . AUTH_SALT from wp-config.php, which survives the loss of config.ini.php), so
+     * a wp_options dump alone does not reveal it. Cheap fingerprints of the auth key and of
+     * the salt make this a no-op on the fast path: encryption only runs when the record does
+     * not exist yet, the WP auth key was rotated, or the salt itself changed.
+     */
+    private function updateEncryptedSaltIfNeeded()
+    {
+        if (!$this->isSaltEncryptionSupported()) {
+            return;
+        }
+
+        $general = $this->iniFileChain->get('General');
+        $salt    = is_array($general) && !empty($general['salt']) ? $general['salt'] : '';
+        if ('' === $salt || !is_string($salt)) {
+            return;
+        }
+
+        $keyFingerprint  = $this->computeAuthKeyFingerprint();
+        $saltFingerprint = $this->computeSaltFingerprint($salt);
+
+        $record = $this->getWpMatomoSettings()->get_encrypted_salt_backup();
+        if (!empty($record['ciphertext'])
+            && isset($record['key_fingerprint'], $record['salt_fingerprint'])
+            && $record['key_fingerprint'] === $keyFingerprint
+            && $record['salt_fingerprint'] === $saltFingerprint
+        ) {
+            return; // up to date; only two cheap hashes were computed
+        }
+
+        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+
+        $this->getWpMatomoSettings()->update_encrypted_salt_backup([
+            'ciphertext'       => base64_encode($nonce . sodium_crypto_secretbox($salt, $nonce, $this->deriveSaltEncryptionKey())),
+            'key_fingerprint'  => $keyFingerprint,
+            'salt_fingerprint' => $saltFingerprint,
+        ]);
+    }
+
+    /**
+     * @return string|null the decrypted salt, or null if there is nothing to decrypt, the WP
+     *                     auth key was rotated in the meantime, or the record was tampered with
+     */
+    private function decryptSaltFromOption()
+    {
+        if (!$this->isSaltEncryptionSupported()) {
+            return null;
+        }
+
+        $record = $this->getWpMatomoSettings()->get_encrypted_salt_backup();
+        if (empty($record['ciphertext']) || !is_string($record['ciphertext'])) {
+            return null;
+        }
+
+        $decoded = base64_decode($record['ciphertext'], true);
+        if (false === $decoded || strlen($decoded) <= SODIUM_CRYPTO_SECRETBOX_NONCEBYTES) {
+            return null;
+        }
+
+        $nonce      = substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $ciphertext = substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+
+        try {
+            // the auth tag check fails (returns false) when the WP auth key was rotated or the
+            // ciphertext was modified
+            $salt = sodium_crypto_secretbox_open($ciphertext, $nonce, $this->deriveSaltEncryptionKey());
+        } catch (\Exception $ex) {
+            return null;
+        }
+
+        return is_string($salt) && '' !== $salt ? $salt : null;
+    }
+
+    private function isSaltEncryptionSupported()
+    {
+        // sodium is native in PHP 7.2+ and polyfilled by WordPress 5.2+ (via sodium_compat)
+        return function_exists('sodium_crypto_secretbox')
+            && function_exists('sodium_crypto_secretbox_open')
+            && function_exists('wp_salt');
+    }
+
+    private function deriveSaltEncryptionKey()
+    {
+        // derive a key from the WP auth key instead of re-using it directly
+        return hash('sha256', wp_salt('auth') . '|matomo-salt-encryption', true);
+    }
+
+    private function computeAuthKeyFingerprint()
+    {
+        // cheap (~1μs) and secure fingerprint to detect WP auth key rotation without decrypting/encrypting
+        // on every request.
+        return substr(hash('sha256', wp_salt('auth') . '|matomo-salt-key-fingerprint'), 0, 16);
+    }
+
+    private function computeSaltFingerprint($salt)
+    {
+        // detects a manually changed salt in config.ini.php, so the stored ciphertext is updated
+        return substr(hash('sha256', $salt . '|matomo-salt-fingerprint'), 0, 16);
     }
 
     private function syncOrRestoreConfigBackup()
@@ -184,8 +292,8 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function removeValuesExcludedFromBackup($config)
     {
-        // save database keys that are not used to authenticate to the database,
-        // like whether to use SSL, in the DB backup
+        // save database keys that are not used to authenticate to the database
+        // (like whether to use SSL) in the DB backup
         $portableDatabaseValues = [];
         if (isset($config['database']) && is_array($config['database'])) {
             $portableDatabaseValues = array_intersect_key(
@@ -201,7 +309,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         // trusted_hosts is blog-specific (derived from the blog's home URL), so it must not
-        // enter the (potentially network-shared) backup; it is rebuilt on restore
+        // enter the network-shared backup; it is rebuilt on restore
         unset($config['General']['trusted_hosts']);
         if (empty($config['General'])) {
             unset($config['General']);
@@ -251,11 +359,15 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     /**
      * Fills in the config values that are deliberately not part of the backup:
      * - the [database] section is rebuilt from the current WordPress credentials
-     * - the salt is regenerated
+     * - the salt is restored from the encrypted per-blog option, or regenerated when that is
+     *   not possible
      * - trusted_hosts is derived from the current blog's WordPress home URL
      *
-     * Note: Regenerating the salt is acceptable in MWP since using the API with a
-     * Matomo token_auth is not supported.
+     * Restoring the original salt keeps visitors' signed tracking opt-out cookies valid (a
+     * regenerated salt silently invalidates them, re-enabling tracking for visitors who opted
+     * out — a privacy compliance issue) and keeps config_id fingerprints stable. Falling back to
+     * a regenerated salt is otherwise acceptable in MWP since using the API with a Matomo
+     * token_auth is not supported.
      *
      * @param array $backup
      * @return array
@@ -270,7 +382,8 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $backup['General'] = [];
         }
 
-        $backup['General']['salt'] = Common::generateUniqId();
+        $salt = $this->decryptSaltFromOption();
+        $backup['General']['salt'] = !empty($salt) ? $salt : Common::generateUniqId();
         $backup['General']['trusted_hosts'] = [$this->getTrustedHost()];
 
         return $backup;

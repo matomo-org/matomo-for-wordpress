@@ -33,6 +33,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
 		delete_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
 		delete_site_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
+		delete_option( \WpMatomo\Settings::OPTION_ENCRYPTED_SALT );
 		$this->settings = new \WpMatomo\Settings();
 	}
 
@@ -595,6 +596,147 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertStringContainsString( "[TestSection]\n", $contents );
 	}
 
+	public function test_persist_stores_an_encrypted_copy_of_the_salt_in_its_own_option() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$record = $this->settings->get_encrypted_salt_backup();
+
+		$this->assertNotEmpty( $record['ciphertext'] );
+		$this->assertNotEmpty( $record['key_fingerprint'] );
+		$this->assertNotEmpty( $record['salt_fingerprint'] );
+
+		// the record must not reveal the salt
+		$this->assertStringNotContainsString( 'stored-test-salt', wp_json_encode( $record ) );
+		// the salt itself must still not be in the config backup either
+		$stored = $this->get_option_data();
+		$this->assertArrayNotHasKey( 'salt', isset( $stored['General'] ) ? $stored['General'] : array() );
+	}
+
+	public function test_restore_uses_the_encrypted_salt_instead_of_generating_a_new_one() {
+		$this->skip_if_sodium_is_not_available();
+
+		// a normal request stores the encrypted salt
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		// config.ini.php is lost and restored from the backup
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+		$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+	}
+
+	public function test_restore_generates_a_new_salt_when_the_wp_auth_key_was_rotated() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$rotate_key = function ( $salt_value ) {
+			return 'rotated-' . $salt_value;
+		};
+		add_filter( 'salt', $rotate_key );
+
+		try {
+			$this->update_option_data(
+				array(
+					'TestSection' => array( 'test_key' => 'test_value' ),
+				)
+			);
+			$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+			// decryption fails under the rotated key, so a fresh salt is generated
+			$restored_salt = $restored->getSection( 'General' )['salt'];
+			$this->assertNotEmpty( $restored_salt );
+			$this->assertNotSame( 'stored-test-salt', $restored_salt );
+		} finally {
+			remove_filter( 'salt', $rotate_key );
+		}
+	}
+
+	public function test_persist_reencrypts_the_salt_when_the_wp_auth_key_changes() {
+		$this->skip_if_sodium_is_not_available();
+
+		$path          = $this->build_provider_for_config_with_salt( 'stored-test-salt' );
+		$record_before = $this->settings->get_encrypted_salt_backup();
+
+		$rotate_key = function ( $salt_value ) {
+			return 'rotated-' . $salt_value;
+		};
+		add_filter( 'salt', $rotate_key );
+
+		try {
+			// the next non-tracker request notices the rotated key (fingerprint mismatch) and
+			// re-encrypts the salt, which is still available in config.ini.php
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+			$record_after = $this->settings->get_encrypted_salt_backup();
+			$this->assertNotSame( $record_before['key_fingerprint'], $record_after['key_fingerprint'] );
+			$this->assertNotSame( $record_before['ciphertext'], $record_after['ciphertext'] );
+
+			// the re-encrypted salt is restorable under the new key
+			$this->update_option_data(
+				array(
+					'TestSection' => array( 'test_key' => 'test_value' ),
+				)
+			);
+			$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+			$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+		} finally {
+			remove_filter( 'salt', $rotate_key );
+		}
+	}
+
+	public function test_persist_reencrypts_when_the_salt_in_the_config_file_changes() {
+		$this->skip_if_sodium_is_not_available();
+
+		$provider      = $this->build_provider_for_config_with_salt( 'stored-test-salt', $return_provider = true );
+		$record_before = $this->settings->get_encrypted_salt_backup();
+
+		// eg. the user manually changed the salt in config.ini.php
+		$chain   = $provider->getIniFileChain();
+		$general = (array) $chain->get( 'General' );
+
+		$general['salt'] = 'manually-changed-salt';
+		$chain->set( 'General', $general );
+
+		$provider->persistConfigOption();
+
+		$record_after = $this->settings->get_encrypted_salt_backup();
+		$this->assertNotSame( $record_before['salt_fingerprint'], $record_after['salt_fingerprint'] );
+		$this->assertNotSame( $record_before['ciphertext'], $record_after['ciphertext'] );
+	}
+
+	private function skip_if_sodium_is_not_available() {
+		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
+			$this->markTestSkipped( 'sodium is not available' );
+		}
+	}
+
+	/**
+	 * Writes a complete (marker-terminated) config file containing the given salt and builds a
+	 * provider for it, which persists the encrypted salt to the per-blog option.
+	 *
+	 * @param string $salt
+	 * @param bool   $return_provider
+	 * @return string|GlobalSettingsProvider the config file path, or the provider itself
+	 */
+	private function build_provider_for_config_with_salt( $salt, $return_provider = false ) {
+		$path = $this->write_config_file(
+			"[General]\nsalt = \"$salt\"\n\n"
+			. '[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . "]\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . " = 1\n"
+		);
+
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		return $return_provider ? $provider : $path;
+	}
+
 	public function test_installed_config_file_ends_with_end_of_file_marker() {
 		// the config.ini.php created by the installer must end with the marker, otherwise it
 		// would never be backed up
@@ -734,12 +876,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
-	/**
-	 * Builds a provider using the real config.ini.php and returns the activated plugin list the way the
-	 * DI container does, ie. via PluginList. This exercises the real consumer of the [Plugins] section.
-	 *
-	 * @return string[]
-	 */
 	private function get_activated_plugins() {
 		$provider    = new GlobalSettingsProvider( null, null, null, $this->settings );
 		$plugin_list = new \Piwik\Application\Kernel\PluginList( $provider );
