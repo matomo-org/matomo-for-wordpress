@@ -652,6 +652,43 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertArrayNotHasKey( $marker_section, $stored );
 	}
 
+	public function test_stale_incomplete_config_file_is_restored_from_backup() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// a marker-less file that has not been modified for longer than the grace period: the
+		// write that produced it was interrupted for good, so it is replaced with the backup
+		$path = $this->write_config_file( "[OldSection]\nold_key = \"old_value\"\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
+		$this->assertStringNotContainsString( '[OldSection]', $contents );
+		$this->assert_config_file_ends_with_marker( $path );
+	}
+
+	public function test_stale_incomplete_config_file_is_not_restored_from_the_legacy_backup() {
+		$this->update_legacy_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'legacy_value' ),
+			)
+		);
+
+		$path = $this->write_config_file( "[OldSection]\nold_key = \"old_value\"\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$original_contents = file_get_contents( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
 	public function test_empty_config_file_is_neither_backed_up_nor_restored_over() {
 		$this->update_option_data(
 			array(

@@ -54,6 +54,13 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     const END_OF_FILE_MARKER_KEY = 'marker';
 
     /**
+     * How long a config.ini.php without the end-of-file marker is assumed to be a write in
+     * progress. Once it is older than this, the write is considered interrupted for good and
+     * the file is restored from the backup.
+     */
+    const INCOMPLETE_FILE_GRACE_PERIOD_SECONDS = 300;
+
+    /**
      * @var \WpMatomo\Settings
      */
     private $settings;
@@ -100,17 +107,48 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         if ($this->isLocalConfigFileWrittenCompletely()) {
             // if local file exists and was written completely, backup its contents to the WP option
-            // note: in WP update_option() will not actually write to the database if the existing value
+            // note: in WP, update_option() will not actually write to the database if the existing value
             // is the same as what's already there, so it's safe to do this on every request.
             $this->persistConfigOption();
+            return;
         }
 
-        // if the file exists but the end-of-file marker was not read from it, a write to it is
-        // in progress (or a previous write was interrupted): do not back up the incomplete
-        // contents (it would overwrite a good backup) and do not overwrite the file with the
-        // backup either (a write in progress would be lost). config files created by plugin
-        // versions that predate the marker are treated the same way until the plugin update
-        // adds the marker to them (see Updater).
+        // the file exists but the end-of-file marker was not read from it: so either a write is in
+        // progress, or a previous write was interrupted.
+
+        if ($this->wasLocalConfigFileModifiedRecently()) {
+            // file was modified recently, assume a write is in progress; do not overwrite the
+            // file with the backup either, the in progress write would be lost
+            return;
+        }
+
+        // the last write to the file was interrupted: self-heal by restoring the
+        // backup over it.
+        //
+        // only the dedicated backup option is trusted here (it is only ever
+        // written from a complete config file); the config_options fallback is not used.
+        if (!$this->hasDedicatedBackup()) {
+            return;
+        }
+
+        $this->restoreConfigFromBackup();
+    }
+
+    private function hasDedicatedBackup()
+    {
+        $backup = $this->getWpMatomoSettings()->get_config_backup();
+        return !empty($backup);
+    }
+
+    private function wasLocalConfigFileModifiedRecently()
+    {
+        $mtime = filemtime($this->getPathLocal());
+        if (false === $mtime) {
+            // cannot tell (eg. the file just disappeared); err on the side of not touching it
+            return true;
+        }
+
+        return (time() - $mtime) < self::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS;
     }
 
     private function localConfigFileExists()
