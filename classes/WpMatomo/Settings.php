@@ -675,6 +675,14 @@ class Settings {
 			return;
 		}
 
+		if ( ! empty( $this->settings_changed ) ) {
+			// blog was switched in code before settings were save()'d
+			$this->logger->log(
+				'Unsaved Matomo setting changes were discarded after a WP blog switch: '
+				. implode( ', ', array_values( array_unique( $this->settings_changed ) ) )
+			);
+		}
+
 		// reload all settings, including intermediate state like $settings_changed
 		// to ensure that changes intended for the previous blog are not saved to this
 		// blog.
