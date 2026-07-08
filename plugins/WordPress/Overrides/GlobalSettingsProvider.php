@@ -188,8 +188,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function deriveSaltEncryptionKey()
     {
-        // derive a key from the WP auth key instead of re-using it directly
-        return hash('sha256', wp_salt('auth') . '|matomo-salt-encryption', true);
+        // derive a key from the WP auth key instead of re-using it directly. only a fixed-length
+        // prefix of the auth key is used, so even a total compromise of the derived key can never
+        // yield the complete WP auth secret.
+        return hash('sha256', substr(wp_salt('auth'), 0, 64) . '|matomo-salt-encryption', true);
     }
 
     private function computeAuthKeyFingerprint()
