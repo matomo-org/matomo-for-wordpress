@@ -211,7 +211,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restored_plugin_list_is_filtered_for_wordpress() {
-		// a [Plugins] section stored in a (legacy) backup is discarded on restore: the plugin
+		// a [Plugins] section stored in a backup is discarded on restore: the plugin
 		// list is runtime-computed, so the activated list must come from the defaults plus the
 		// WordPress filtering, never from the stored value
 		$activated = $this->get_activated_plugins_for_missing_file(
@@ -504,33 +504,22 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( array( $expected_host ), $trusted_hosts );
 	}
 
-	public function test_restore_falls_back_to_legacy_config_options_backup() {
-		$this->update_legacy_option_data(
+	public function test_restore_never_uses_the_config_options_option_as_a_backup() {
+		// config_options belongs to SyncConfig (admin-set config overrides, possibly partial
+		// data); it must never be treated as a config backup. SyncConfig re-applies it to
+		// config files through its own sync instead.
+		$this->update_sync_config_options(
 			array(
-				'TestSection' => array( 'test_key' => 'legacy_value' ),
+				'TestSection' => array( 'test_key' => 'sync_config_value' ),
 			)
 		);
 
-		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
 
-		$this->assertSame( 'legacy_value', $provider->getSection( 'TestSection' )['test_key'] );
-	}
-
-	public function test_restore_prefers_the_dedicated_backup_over_the_legacy_option() {
-		$this->update_legacy_option_data(
-			array(
-				'TestSection' => array( 'test_key' => 'legacy_value' ),
-			)
-		);
-		$this->update_option_data(
-			array(
-				'TestSection' => array( 'test_key' => 'backup_value' ),
-			)
-		);
-
-		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
-
-		$this->assertSame( 'backup_value', $provider->getSection( 'TestSection' )['test_key'] );
+		$section = (array) $provider->getSection( 'TestSection' );
+		$this->assertArrayNotHasKey( 'test_key', $section );
+		$this->assertFalse( file_exists( $path ) );
 	}
 
 	public function test_backup_and_restore_work_when_network_enabled() {
@@ -546,19 +535,6 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 
 		$this->assertSame( 'network_value', $provider->getSection( 'TestSection' )['test_key'] );
 		$this->assertTrue( file_exists( $path ) );
-	}
-
-	public function test_restore_uses_legacy_backup_when_network_enabled() {
-		$this->settings->set_assume_is_network_enabled_in_tests();
-		$this->update_legacy_option_data(
-			array(
-				'TestSection' => array( 'test_key' => 'legacy_value' ),
-			)
-		);
-
-		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
-
-		$this->assertSame( 'legacy_value', $provider->getSection( 'TestSection' )['test_key'] );
 	}
 
 	public function test_restore_does_nothing_when_backup_holds_only_excluded_values() {
@@ -672,10 +648,10 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assert_config_file_ends_with_marker( $path );
 	}
 
-	public function test_stale_incomplete_config_file_is_not_restored_from_the_legacy_backup() {
-		$this->update_legacy_option_data(
+	public function test_stale_incomplete_config_file_is_not_touched_when_the_backup_is_empty() {
+		$this->update_sync_config_options(
 			array(
-				'TestSection' => array( 'test_key' => 'legacy_value' ),
+				'TestSection' => array( 'test_key' => 'sync_config_value' ),
 			)
 		);
 
@@ -799,7 +775,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->settings->update_config_backup( $data );
 	}
 
-	private function update_legacy_option_data( array $data ) {
+	private function update_sync_config_options( array $data ) {
 		$this->settings->set_global_option( \WpMatomo\Settings::CONFIG_OPTIONS, $data );
 		$this->settings->save();
 	}

@@ -123,21 +123,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         // the last write to the file was interrupted: self-heal by restoring the
-        // backup over it.
-        //
-        // only the dedicated backup option is trusted here (it is only ever
-        // written from a complete config file); the config_options fallback is not used.
-        if (!$this->hasDedicatedBackup()) {
-            return;
-        }
-
+        // backup over it. this is safe for config files written by plugin versions that
+        // predate the marker (they legitimately have no marker and an old mtime): their
+        // backup option is still empty at that point, so nothing is restored over them
+        // until the plugin update adds the marker (see Updater).
         $this->restoreConfigFromBackup();
-    }
-
-    private function hasDedicatedBackup()
-    {
-        $backup = $this->getWpMatomoSettings()->get_config_backup();
-        return !empty($backup);
     }
 
     private function wasLocalConfigFileModifiedRecently()
@@ -171,9 +161,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function restoreConfigFromBackup()
     {
-        // legacy backups (and manually edited options) may hold secrets or another blog's
-        // blog-specific values, so strip them on the way in too
-        $backup = $this->removeValuesExcludedFromBackup($this->getBackupToRestore());
+        // manually edited backup options may hold secrets or blog-specific values, so strip
+        // them on the way in too
+        $backup = $this->removeValuesExcludedFromBackup($this->getWpMatomoSettings()->get_config_backup());
         if (empty($backup)) {
             // nothing to restore, eg. a fresh install before config.ini.php has been created
             return;
@@ -183,30 +173,6 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         $this->applyUserConfigDiff($backup);
         $this->writeLocalConfigFile($backup);
-    }
-
-    /**
-     * In network mode the backup is shared by every blog in the network: each blog is supposed
-     * to have the same INI config as the others (SyncConfig keeps the files in sync), so one
-     * backup serves all of them. Blog-specific values ([database], salt, trusted_hosts) are not
-     * part of the backup, they are rebuilt for the restoring blog (see addUnbackedUpConfigValues()).
-     *
-     * Installs that made backups before the dedicated option existed stored them in the
-     * config_options option (together with admin-configured config overrides); fall back to it.
-     *
-     * @return array
-     */
-    private function getBackupToRestore()
-    {
-        $settings = $this->getWpMatomoSettings();
-
-        $backup = $settings->get_config_backup();
-        if (!empty($backup)) {
-            return $backup;
-        }
-
-        $legacy = $settings->get_global_option(Settings::CONFIG_OPTIONS);
-        return is_array($legacy) ? $legacy : [];
     }
 
     private function removeValuesExcludedFromBackup($config)
