@@ -750,8 +750,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_restore_records_the_time_when_the_salt_had_to_be_regenerated() {
-		// no encrypted salt is stored, so the restore has to generate a new salt; super admins
-		// are informed about this in the system report
+		$this->mark_blog_installed( true );
 		$this->update_option_data(
 			array(
 				'TestSection' => array( 'test_key' => 'test_value' ),
@@ -761,6 +760,19 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
 
 		$this->assertGreaterThanOrEqual( time() - 60, $this->settings->get_time_salt_was_regenerated() );
+	}
+
+	public function test_restore_does_not_flag_a_regenerated_salt_on_a_never_installed_blog() {
+		$this->mark_blog_installed( false );
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
 	}
 
 	public function test_restore_does_not_flag_a_regenerated_salt_when_the_salt_was_restored() {
@@ -973,6 +985,14 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 
 		$stored = $this->get_option_data();
 		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
+	}
+
+	private function mark_blog_installed( $installed ) {
+		$this->settings->set_option(
+			\WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED,
+			$installed ? wp_json_encode( array( 'core' => '1.0.0' ) ) : ''
+		);
+		$this->settings->save();
 	}
 
 	private function write_config_file( $ini_content ) {

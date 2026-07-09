@@ -448,10 +448,14 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         if (empty($salt)) {
             $salt = Common::generateUniqId();
 
-            // record it, so super admins are informed about the regenerated salt and its
-            // consequences in the system report (most importantly, visitors' signed tracking
-            // opt-out cookies are no longer recognized)
-            $this->getWpMatomoSettings()->set_time_salt_was_regenerated(time());
+            // if the salt never existed (because this is a new install), don't raise a false
+            // alarm about the salt being regenerated
+            if (!empty($this->getWpMatomoSettings()->get_option(Settings::INSTANCE_COMPONENTS_INSTALLED))) {
+                // record it, so super admins are informed about the regenerated salt and its
+                // consequences in the system report (most importantly, visitors' signed tracking
+                // opt-out cookies are no longer recognized).
+                $this->getWpMatomoSettings()->set_time_salt_was_regenerated(time());
+            }
         }
 
         $backup['General']['salt'] = $salt;
