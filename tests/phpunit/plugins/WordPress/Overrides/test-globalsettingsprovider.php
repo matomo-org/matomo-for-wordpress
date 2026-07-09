@@ -158,6 +158,25 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEmpty( $general['salt'] );
 	}
 
+	public function test_restore_recovers_from_a_syntactically_corrupted_config_file() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// a write interrupted mid-quoted-string leaves an unparseable config.ini.php: the INI
+		// chain fails to load, which without recovery would fatal every request
+		$path = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// check that it did not fatal: the corrupt file was dropped and rebuilt from the backup
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assert_config_file_ends_with_marker( $path );
+	}
+
 	public function test_construct_recreates_config_file_from_backup_when_file_is_missing() {
 		$this->update_option_data(
 			array(

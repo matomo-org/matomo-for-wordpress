@@ -83,9 +83,65 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public function reload($pathGlobal = null, $pathLocal = null, $pathCommon = null)
     {
-        parent::reload($pathGlobal, $pathLocal, $pathCommon);
+        try {
+            parent::reload($pathGlobal, $pathLocal, $pathCommon);
+        } catch (\Exception $ex) {
+            // the config.ini.php file is possibly syntactically corrupted and cannot be loaded (eg. a
+            // write interrupted mid-value or mid-section header) makes the whole INI chain fail
+            // to load, which would otherwise fatal every request forever.
+            //
+            // if the local config file is the culprit, drop it so the missing-file restore path below
+            // can rebuild it from the DB backup, otherwise rethrow.
+            if (!$this->dropLocalConfigFileIfUnparseable()) {
+                throw $ex;
+            }
+
+            parent::reload($pathGlobal, $pathLocal, $pathCommon);
+        }
+
         $this->syncOrRestoreConfigBackup();
         $this->detectExtraPluginsToLoad();
+    }
+
+    /**
+     * @return bool true if the local config file was the culprit and was dropped, false if otherwise
+     */
+    private function dropLocalConfigFileIfUnparseable()
+    {
+        $path = $this->getPathLocal();
+        if (empty($path) || !is_file($path) || $this->isParseableIniFile($path)) {
+            // no local file, or it parses fine — the corruption is elsewhere
+            return false;
+        }
+
+        $this->logger->log('config.ini.php is corrupted and cannot be parsed; attempting to restore from the backup.');
+
+        return unlink($path);
+    }
+
+    private function isParseableIniFile($path)
+    {
+        if (!is_readable($path)) {
+            return true; // unable to check if it is parseable, play it safe and do not replace
+        }
+
+        $content = file_get_contents($path);
+        if (false === $content) {
+            return true;
+        }
+
+        // swallow parse warnings since we are just trying to detect if it is parseable.
+        // the website owner doesn't need to see the warnings from our test.
+        set_error_handler(static function () {
+            return true;
+        });
+        try {
+            $parsed = parse_ini_string($content, true);
+        } finally {
+            restore_error_handler();
+        }
+
+        return false !== $parsed;
     }
 
     public function persistConfigOption()
