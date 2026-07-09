@@ -994,6 +994,108 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_backup_is_not_written_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->assertSame( array(), $this->get_option_data() );
+
+		new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		// with the feature off, the real config.ini.php is not backed up to the option
+		$this->assertSame( array(), $this->get_option_data() );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_config_file_is_not_restored_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the missing config.ini.php is neither rebuilt from the backup...
+		$this->assertFalse( file_exists( $path ) );
+		// ...nor is the backup layered on top of the INI config
+		$section = (array) $provider->getSection( 'TestSection' );
+		$this->assertArrayNotHasKey( 'test_key', $section );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_persistConfigOption_is_a_noop_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain                  = $provider->getIniFileChain();
+		$section                = (array) $chain->get( 'TestSection' );
+		$section['changed_key'] = 'changed_value';
+		$chain->set( 'TestSection', $section );
+
+		$provider->persistConfigOption();
+
+		$this->assertSame( array(), $this->get_option_data() );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_corrupt_config_file_is_not_recovered_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path              = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		$original_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		// with the feature off there is no self-heal: the load error propagates instead of being
+		// swallowed, and the corrupt file is left untouched rather than dropped and rebuilt
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_plugin_filtering_still_runs_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$provider    = new GlobalSettingsProvider( null, null, null, $this->settings );
+		$plugin_list = new \Piwik\Application\Kernel\PluginList( $provider );
+		$activated   = $plugin_list->getActivatedPlugins();
+
+		$this->assertContains( 'BulkTracking', $activated );
+		$this->assertNotContains( 'Marketplace', $activated );
+	}
+
 	private function mark_blog_installed( $installed ) {
 		$this->settings->set_option(
 			\WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED,

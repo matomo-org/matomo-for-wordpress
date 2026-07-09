@@ -85,6 +85,14 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public function reload($pathGlobal = null, $pathLocal = null, $pathCommon = null)
     {
+        if ($this->isConfigBackupDisabled()) {
+            // the config backup/restore feature is turned off, so behave like the default provider
+            // (no corrupt-file recovery, no restore, no backup).
+            parent::reload($pathGlobal, $pathLocal, $pathCommon);
+            $this->detectExtraPluginsToLoad();
+            return;
+        }
+
         try {
             parent::reload($pathGlobal, $pathLocal, $pathCommon);
         } catch (\Exception $ex) {
@@ -103,6 +111,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         $this->syncOrRestoreConfigBackup();
         $this->detectExtraPluginsToLoad();
+    }
+
+    private function isConfigBackupDisabled()
+    {
+        return defined('MATOMO_DISABLE_CONFIG_BACKUP') && MATOMO_DISABLE_CONFIG_BACKUP;
     }
 
     /**
@@ -148,6 +161,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public function persistConfigOption()
     {
+        if ($this->isConfigBackupDisabled()) {
+            return;
+        }
+
         // only persist the values that differ from the INI default settings (ie, what would go
         // in config.ini.php), minus anything secret or blog-specific
         $diff = $this->removeValuesExcludedFromBackup($this->computeUserConfigDiff());
