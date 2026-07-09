@@ -52,7 +52,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
      */
     const END_OF_FILE_MARKER_SECTION = 'WpMatomoEndOfFileMarker';
 
-    const END_OF_FILE_MARKER_KEY = 'marker';
+    const END_OF_FILE_MARKER_KEY = 'doNotRemoveThisSection';
+
+    const END_OF_FILE_MARKER_VALUE = 'This section is used by Matomo for WordPress to detect an incompletely written config.ini.php. Do not remove it.';
 
     /**
      * How long a config.ini.php without the end-of-file marker is assumed to be a write in
@@ -659,12 +661,13 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
     {
         $markerSection = self::END_OF_FILE_MARKER_SECTION;
         $markerSection = $config->{$markerSection};
-        return ! empty( $markerSection[self::END_OF_FILE_MARKER_KEY] )
-            && $markerSection[self::END_OF_FILE_MARKER_KEY] == 1;
+        return ! empty( $markerSection[self::END_OF_FILE_MARKER_KEY] );
     }
 
     public static function getEndOfFileMarkerSection()
     {
-        return [self::END_OF_FILE_MARKER_KEY => 1];
+        return [
+            self::END_OF_FILE_MARKER_KEY => self::END_OF_FILE_MARKER_VALUE,
+        ];
     }
 }

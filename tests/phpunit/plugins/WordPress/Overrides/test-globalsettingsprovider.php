@@ -845,7 +845,8 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$path = $this->write_config_file(
 			"[General]\nsalt = \"$salt\"\n\n"
 			. '[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . "]\n"
-			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . " = 1\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = "'
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . "\"\n"
 		);
 
 		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
@@ -886,7 +887,9 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 
 		$path = $this->write_config_file(
 			"[TestSection]\ntest_key = \"test_value\"\n\n"
-			. '[' . $marker_section . "]\n" . GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . " = 1\n"
+			. '[' . $marker_section . "]\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = "'
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . "\"\n"
 		);
 
 		new GlobalSettingsProvider( null, $path, null, $this->settings );
@@ -982,9 +985,14 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	private function assert_config_file_ends_with_marker( $path ) {
 		$contents = trim( (string) file_get_contents( $path ) );
 
-		$expected_tail = '[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . "]\n"
-			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = 1';
-
+		// the marker section must be present...
+		$this->assertStringContainsString(
+			'[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . ']',
+			$contents
+		);
+		// ...and the marker key must be the very last line, so an interrupted write is detectable
+		$expected_tail = GlobalSettingsProvider::END_OF_FILE_MARKER_KEY
+			. ' = "' . GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . '"';
 		$this->assertSame(
 			$expected_tail,
 			substr( $contents, - strlen( $expected_tail ) ),

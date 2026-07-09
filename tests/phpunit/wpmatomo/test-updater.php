@@ -208,6 +208,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	public function test_add_config_end_of_file_marker_adds_missing_marker_to_config_file() {
 		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
 		$marker_key     = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_KEY;
+		$marker_value   = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE;
 
 		$config = \Piwik\Config::getInstance();
 		$path   = $config->getLocalPath();
@@ -216,7 +217,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$contents = file_get_contents( $path );
 		$this->assertStringContainsString( $marker_section, $contents );
 		$stripped = preg_replace(
-			'/\[' . preg_quote( $marker_section, '/' ) . '\]\s*' . preg_quote( $marker_key, '/' ) . '\s*=\s*1\s*/',
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
 			'',
 			$contents
 		);
@@ -230,8 +231,9 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$updater = new Updater( new Settings() );
 		$updater->add_config_end_of_file_marker_if_needed();
 
-		$new_contents  = trim( (string) file_get_contents( $path ) );
-		$expected_tail = '[' . $marker_section . "]\n" . $marker_key . ' = 1';
+		$new_contents = trim( (string) file_get_contents( $path ) );
+		$this->assertStringContainsString( '[' . $marker_section . ']', $new_contents );
+		$expected_tail = $marker_key . ' = "' . $marker_value . '"';
 		$this->assertSame( $expected_tail, substr( $new_contents, - strlen( $expected_tail ) ) );
 	}
 }
