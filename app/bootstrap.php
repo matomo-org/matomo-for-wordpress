@@ -221,15 +221,15 @@ if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_t
 	}
 }
 
-// use a WordPress specific GlobalSettingsProvider for the Matomo environment. at this point
-// the composer autoloader is not registered yet (it is set up later in core/bootstrap.php), so
-// make sure classes are loaded before referencing them.
+// use a WordPress specific Matomo Environment subclass so the WordPress GlobalSettingsProvider is
+// used. core Matomo entry points are patched to instantiate WordPressEnvironment (see
+// patches/prefixed/wordpress-environment.diff).
+//
+// at this point the composer autoloader is not included yet, so make sure the classes these
+// entry points reference are loaded before they run.
 if (!defined('PIWIK_INCLUDE_PATH')) {
 	define('PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT);
 }
 require_once PIWIK_DOCUMENT_ROOT . '/vendor/autoload.php';
-require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/EnvironmentManipulator.php';
 require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/Overrides/GlobalSettingsProvider.php';
-\Piwik\Application\Environment::setGlobalEnvironmentManipulator(
-	new \Piwik\Plugins\WordPress\EnvironmentManipulator()
-);
+require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/WordPressEnvironment.php';

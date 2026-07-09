@@ -156,9 +156,6 @@ class API extends Feature {
 		return implode( '_', $snake_case );
 	}
 
-	/**
-	 * @api
-	 */
 	public function register_route( $api_module, $api_method ) {
 		$methods                 = [
 			'get'        => 'GET',

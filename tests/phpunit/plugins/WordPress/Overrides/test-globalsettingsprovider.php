@@ -54,6 +54,13 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertInstanceOf( DefaultGlobalSettingsProvider::class, $provider );
 	}
 
+	public function test_bootstrapped_environment_uses_the_wordpress_global_settings_provider() {
+		\WpMatomo\Bootstrap::do_bootstrap();
+
+		$provider = \Piwik\Container\StaticContainer::get( DefaultGlobalSettingsProvider::class );
+		$this->assertInstanceOf( GlobalSettingsProvider::class, $provider );
+	}
+
 	public function test_construct_backs_up_config_to_option_when_option_has_no_data() {
 		$this->assertEquals( [], $this->get_option_data() );
 

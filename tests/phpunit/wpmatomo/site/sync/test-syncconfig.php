@@ -48,4 +48,81 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 		$val = $this->sync_config->get_config_value( 'General', 'foo' );
 		$this->assertEquals( array( 'baz', 'bar' ), $val );
 	}
+
+	public function test_sync_config_for_current_site_when_no_config_set() {
+		$sync = $this->sync_config->sync_config_for_current_site();
+		$this->assertNull( $sync );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_config_for_current_site_when_config_set() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+		$this->sync_config->set_config_value(
+			'General',
+			'foo',
+			array(
+				'baz',
+				'bar',
+			)
+		);
+		$general = \Piwik\Config::getInstance()->General;
+
+		$this->assertTrue( empty( $general['foo'] ) );
+
+		$this->sync_config->sync_config_for_current_site();
+
+		$general = \Piwik\Config::getInstance()->General;
+		$this->assertEquals( array( 'baz', 'bar' ), $general['foo'] );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_config_for_current_site_when_multiple_values() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+		$this->sync_config->set_config_value( 'General', 'foo', array( 'baz', 'bar' ) );
+		$this->sync_config->set_config_value( 'NewCategory', 'bar', 'baz' );
+		$this->sync_config->set_config_value( 'NewCategory', 'hello', 'world' );
+
+		$general      = \Piwik\Config::getInstance()->General;
+		$new_category = \Piwik\Config::getInstance()->NewCategory;
+
+		$this->assertTrue( empty( $general['foo'] ) );
+		$this->assertEmpty( $new_category );
+
+		$this->sync_config->sync_config_for_current_site();
+
+		$general = \Piwik\Config::getInstance()->General;
+		$this->assertEquals( array( 'baz', 'bar' ), $general['foo'] );
+
+		$new_category = \Piwik\Config::getInstance()->NewCategory;
+		$this->assertEquals(
+			array(
+				'bar'   => 'baz',
+				'hello' => 'world',
+			),
+			$new_category
+		);
+
+		// now we change one key
+		$this->sync_config->set_config_value( 'NewCategory', 'bar', '' );
+		$this->sync_config->sync_config_for_current_site();
+
+		$new_category = \Piwik\Config::getInstance()->NewCategory;
+		$this->assertEquals(
+			array(
+				'bar'   => '',
+				'hello' => 'world',
+			),
+			$new_category
+		);
+	}
 }

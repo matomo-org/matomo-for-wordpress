@@ -67,7 +67,7 @@ class Validator {
     public function validate() {}
 }
 $validator = new Validator();
-$environment = new \Piwik\Application\Environment(null, array(
+$environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null, array(
     'Piwik\Application\Kernel\EnvironmentValidator' => $validator
 ));
 $environment->init();
