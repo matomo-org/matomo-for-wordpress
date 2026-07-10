@@ -129,9 +129,26 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             return false;
         }
 
+        if ($this->isConfigBackupEmpty()) {
+            // throwing a fatal error on each request is required here, since there is no backup.
+            // allow the user to see and manually resolve the issue.
+            $this->logger->log('config.ini.php is corrupted and cannot be parsed; config backup does not exist, cannot restore, manual intervention required.');
+            return false;
+        }
+
         $this->logger->log('config.ini.php is corrupted and cannot be parsed; attempting to restore from the backup.');
 
         return unlink($path);
+    }
+
+    private function isConfigBackupEmpty()
+    {
+        $backup = $this->getWpMatomoSettings()->get_config_backup();
+
+        // clean the backup just in case the backup option includes values that should not be there
+        $backup = $this->removeValuesExcludedFromBackup($backup);
+
+        return empty($backup);
     }
 
     private function isParseableIniFile($path)

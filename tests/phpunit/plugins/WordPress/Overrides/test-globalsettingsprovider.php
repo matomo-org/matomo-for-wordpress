@@ -184,6 +184,26 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assert_config_file_ends_with_marker( $path );
 	}
 
+	public function test_corrupt_config_file_is_left_untouched_and_rethrown_when_there_is_no_backup() {
+		// no backup option is set, so there is nothing to restore from
+		$path             = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		$corrupt_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		// with no backup, dropping the file would lose the config for good, so the load error is
+		// rethrown instead of being swallowed. the corrupt file is left in place, unchanged, so the
+		// site owner can see and manually resolve the issue.
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assertSame( $corrupt_contents, file_get_contents( $path ) );
+	}
+
 	public function test_construct_recreates_config_file_from_backup_when_file_is_missing() {
 		$this->update_option_data(
 			array(
