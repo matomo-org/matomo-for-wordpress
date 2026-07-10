@@ -114,7 +114,9 @@ class SyncConfig {
 			);
 			// need to update all config files
 			wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
-		} elseif ( ! WpMatomo::is_safe_mode() ) {
+		}
+
+		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
 			$config    = PiwikConfig::getInstance();
 			$the_group = $config->{$group};

@@ -22,7 +22,14 @@ use WpMatomo\Settings;
  */
 class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 {
-    const REDACTED_SECTIONS = ['database', 'database_reader', 'database_tests'];
+    /**
+     * Sections that never enter the DB backup:
+     * - the database sections hold credentials; [database] is built from wp-config.php values
+     * - the reader/tests sections are dropped (a restored config simply has none)
+     * - [mail] can hold SMTP credentials and is unused in MWP anyway — mails are sent through
+     *   WordPress (wp_mail), see \WpMatomo\Email.
+     */
+    const REDACTED_SECTIONS = ['database', 'database_reader', 'database_tests', 'mail'];
 
     const DATABASE_KEYS_TO_BACKUP = [
         'charset',
@@ -478,7 +485,29 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $backup['General'] = [];
         }
 
+        // for network mode, apply any pending INI config changes to the backup we are about
+        // to restore, to avoid the case when a blog config is restored before a change to another
+        // blog is synced.
+        if ($this->getWpMatomoSettings()->is_network_enabled()) {
+            $toBeSyncedConfig = $this->getWpMatomoSettings()->get_global_option(Settings::CONFIG_OPTIONS);
+            $toBeSyncedConfig = $this->removeValuesExcludedFromBackup($toBeSyncedConfig);
+            foreach ($toBeSyncedConfig as $sectionName => $values) {
+                $existingSection = isset($backup[$sectionName]) && is_array($backup[$sectionName])
+                    ? $backup[$sectionName] : [];
+                $backup[$sectionName] = array_merge($existingSection, (array) $values);
+            }
+        }
+
         $salt = $this->decryptSaltFromOption();
+        if (empty($salt)) {
+            // if there is no salt backup, check if there is a complete looking one
+            // in the existing config.ini.php file. if there is, use it to avoid
+            // invalidating signed cookies.
+            $fileSalt = $this->iniFileChain->get('General')['salt'] ?? null;
+            if (!empty($fileSalt) && is_string($fileSalt) && strlen($fileSalt) >= 32) {
+                $salt = $fileSalt;
+            }
+        }
         if (empty($salt)) {
             $salt = Common::generateUniqId();
 
