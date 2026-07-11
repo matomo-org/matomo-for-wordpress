@@ -399,8 +399,12 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         $backup = $this->addUnbackedUpConfigValues($backup);
 
-        $this->applyUserConfigDiff($backup);
+        $this->applyConfigBackupToIniFileChain($backup);
         $this->writeLocalConfigFile($this->rebuildConfigViaIniFileChain($backup));
+
+        // edge case: auth key rotated and config.ini.php went missing, update
+        // salt to prevent salt from being regenerated on every request.
+        $this->updateEncryptedSaltIfNeeded();
     }
 
     /**
@@ -602,14 +606,14 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $writer  = new IniWriter();
             $content = $writer->writeToString($this->encodeIniValues($userConfig), $header);
         } catch (\Exception $ex) {
-            $this->logger->log('Failed to dump the restored Matomo config: ' . $ex->getMessage());
+            $this->logger->log_exception('config_backup', new \Exception('Failed to dump the restored Matomo config: ' . $ex->getMessage()));
             return;
         }
 
         // never write a file that cannot be parsed back: it would fail the next reload(), be
         // dropped as corrupt and be rewritten again on every request, forever.
         if (!$this->isParseableIniString($content)) { // sanity check
-            $this->logger->log('Refusing to restore config.ini.php: the generated content is not parseable INI.');
+            $this->logger->log_exception('config_backup', new \Exception('Refusing to restore config.ini.php: the generated content is not parseable INI.'));
             return;
         }
 
@@ -624,7 +628,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $bytesWritten = @file_put_contents($tempPath, $content, LOCK_EX);
         if ($bytesWritten !== strlen($content) || !@rename($tempPath, $path)) {
             @unlink($tempPath);
-            $this->logger->log('Failed to restore config.ini.php from the backup option.');
+            $this->logger->log_exception('config_backup', new \Exception('Failed to restore config.ini.php from the backup option.'));
             return;
         }
 
@@ -669,7 +673,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         return $diff;
     }
 
-    private function applyUserConfigDiff($diff)
+    private function applyConfigBackupToIniFileChain($diff)
     {
         foreach ($diff as $sectionName => $section) {
             if (!is_array($section)) {

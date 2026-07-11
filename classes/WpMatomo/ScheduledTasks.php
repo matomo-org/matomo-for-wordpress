@@ -225,7 +225,7 @@ class ScheduledTasks extends Feature {
 			return; // the marker only exists for the config backup feature
 		}
 
-		$this->remove_task_errors( [ 'config_eof_marker' ] );
+		$this->remove_task_errors( [ 'config_backup' ] );
 
 		try {
 			Bootstrap::do_bootstrap();
@@ -233,7 +233,7 @@ class ScheduledTasks extends Feature {
 			$updater = new Updater( $this->settings );
 			$updater->add_config_end_of_file_marker_if_needed();
 		} catch ( Exception $e ) {
-			$this->on_task_fail( 'config_eof_marker', $e, 'An error occurred when adding the end-of-file marker to config.ini.php.' );
+			$this->on_task_fail( 'config_backup', $e, 'An error occurred when adding the end-of-file marker to config.ini.php.' );
 		}
 	}
 

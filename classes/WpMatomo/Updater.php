@@ -262,7 +262,7 @@ class Updater {
 		} catch ( Exception $e ) {
 			// eg. the config file is not writable; the marker will be added by the next
 			// successful config write instead
-			$this->logger->log_exception( 'config_eof_marker', $e );
+			$this->logger->log_exception( 'config_backup', $e );
 		}
 	}
 
