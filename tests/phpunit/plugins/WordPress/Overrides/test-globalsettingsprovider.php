@@ -251,6 +251,52 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertStringContainsString( 'test_value', $contents );
 	}
 
+	public function test_restore_temp_file_keeps_the_php_extension_so_it_cannot_leak_as_plain_text() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$method = new ReflectionMethod( GlobalSettingsProvider::class, 'getTempConfigPath' );
+		$method->setAccessible( true );
+
+		$config_path = '/var/www/uploads/matomo/config/config.ini.php';
+		$temp_path   = $method->invoke( $provider, $config_path );
+
+		$this->assertStringEndsWith( '.php', $temp_path );
+		$this->assertNotSame( $config_path, $temp_path );
+		// the temp file lands next to the config file and is matched by the stale-temp sweep
+		$sweep_pattern = dirname( $config_path ) . '/' . basename( $config_path, '.php' ) . '.tmp*.php';
+		$this->assertNotEmpty( fnmatch( $sweep_pattern, $temp_path ) );
+	}
+
+	public function test_restore_deletes_stale_orphaned_temp_files_but_keeps_recent_ones() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		$dir  = dirname( $path );
+		$base = basename( $path, '.php' );
+
+		// an orphaned temp file from a long-ago interrupted restore, and one that a concurrent
+		// restore might be writing right now
+		$stale  = $dir . '/' . $base . '.tmpstale.php';
+		$recent = $dir . '/' . $base . '.tmprecent.php';
+		file_put_contents( $stale, "; <?php exit; ?>\n[database]\npassword = \"leaked\"\n" );
+		file_put_contents( $recent, "; <?php exit; ?>\n[database]\npassword = \"in-progress\"\n" );
+		$this->temp_files[] = $stale;
+		$this->temp_files[] = $recent;
+		touch( $stale, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		// a restore runs (missing config file) and sweeps stale temp files before writing
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertFalse( file_exists( $stale ), 'stale orphaned temp file should be deleted' );
+		$this->assertTrue( file_exists( $recent ), 'a recent temp file (possible in-progress write) must be kept' );
+		// the real config was still restored, and the config file itself was not swept
+		$this->assertTrue( file_exists( $path ) );
+	}
+
 	public function test_construct_does_not_write_file_when_backup_is_empty_and_file_is_missing() {
 		$path = $this->non_existent_config_path();
 

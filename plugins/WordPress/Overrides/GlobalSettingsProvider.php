@@ -655,9 +655,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             wp_mkdir_p($dir);
         }
 
-        // write to a temp file and rename so a concurrent request can never read a partially
-        // written config.ini.php (it would back it up, overwriting the good backup)
-        $tempPath     = $path . '.' . uniqid('tmp', true);
+        $this->deleteStaleTempConfigFiles($path);
+
+        // atomic write to config.ini.php to keep the file in as consistent a state as possible
+        $tempPath     = $this->getTempConfigPath($path);
         $bytesWritten = @file_put_contents($tempPath, $content, LOCK_EX);
         if ($bytesWritten !== strlen($content) || !@rename($tempPath, $path)) {
             @unlink($tempPath);
@@ -668,6 +669,25 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         // use FS_CHMOD_FILE if a user has defined it (in wp-config.php for example)
         $mode = defined('FS_CHMOD_FILE') ? FS_CHMOD_FILE : 0664;
         @chmod($path, $mode);
+    }
+
+    private function deleteStaleTempConfigFiles($path)
+    {
+        $pattern = dirname($path) . '/' . basename($path, '.php') . '.tmp*.php';
+        // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+        $matches = @glob($pattern, GLOB_NOSORT);
+        if (empty($matches)) {
+            return;
+        }
+
+        foreach ($matches as $match) {
+            // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+            $mtime = @filemtime($match);
+            if (false !== $mtime && (time() - $mtime) >= self::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS) {
+                // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+                @unlink($match);
+            }
+        }
     }
 
     /**
@@ -791,6 +811,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $this->settings = \WpMatomo::$settings ?: new Settings();
         }
         return $this->settings;
+    }
+
+    private function getTempConfigPath($path)
+    {
+        return dirname($path) . '/' . basename($path, '.php') . '.' . uniqid('tmp', true) . '.php';
     }
 
     public static function addEndOfFileMarkerSectionTo(\Piwik\Config $config)
