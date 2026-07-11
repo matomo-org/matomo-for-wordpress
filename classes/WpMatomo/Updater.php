@@ -237,7 +237,26 @@ class Updater {
 			return;
 		}
 
+		// do not write to the file if we think it may be being written to currently
+		$local_path = $config->getLocalPath();
+		if (
+			is_file( $local_path )
+			&& GlobalSettingsProvider::wasConfigFileModifiedRecently( $local_path )
+		) {
+			return;
+		}
+
 		try {
+			// persist the fully parsed config to the backup option BEFORE the marker write. if
+			// the write below is interrupted (eg. the process is killed mid-write), it leaves a
+			// truncated config.ini.php behind, and with the backup populated the marker-less
+			// self-heal can restore the complete file. without this, a later marker run would
+			// stamp the truncated remnant as complete and silently lose the cut-off sections.
+			$provider = \Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class );
+			if ( $provider instanceof GlobalSettingsProvider ) {
+				$provider->persistConfigOption();
+			}
+
 			GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
 			$config->forceSave();
 		} catch ( Exception $e ) {

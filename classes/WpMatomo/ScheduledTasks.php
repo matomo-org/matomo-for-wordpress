@@ -33,6 +33,7 @@ class ScheduledTasks extends Feature {
 	const EVENT_ARCHIVE            = 'matomo_scheduled_archive';
 	const EVENT_GEOIP              = 'matomo_scheduled_geoipdb';
 	const EVENT_UPDATE             = 'matomo_update_core';
+	const EVENT_CONFIG_MARKER      = 'matomo_scheduled_config_marker';
 
 	const KEY_BEFORE_CRON = 'before-cron-';
 	const KEY_AFTER_CRON  = 'after-cron-';
@@ -145,20 +146,25 @@ class ScheduledTasks extends Feature {
 
 	public function get_all_events() {
 		$events = [
-			self::EVENT_SYNC    => [
+			self::EVENT_SYNC          => [
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
 				'method'   => 'sync',
 			],
-			self::EVENT_ARCHIVE => [
+			self::EVENT_ARCHIVE       => [
 				'name'     => 'Archive',
 				'interval' => 'hourly',
 				'method'   => 'archive',
 			],
-			self::EVENT_GEOIP   => [
+			self::EVENT_GEOIP         => [
 				'name'     => 'Update GeoIP DB',
 				'interval' => 'matomo_monthly',
 				'method'   => 'update_geo_ip2_db',
+			],
+			self::EVENT_CONFIG_MARKER => [
+				'name'     => 'Add config end of file marker',
+				'interval' => 'daily',
+				'method'   => 'add_config_end_of_file_marker',
 			],
 		];
 		if ( $this->settings->should_disable_addhandler() ) {
@@ -208,6 +214,26 @@ class ScheduledTasks extends Feature {
 			} catch ( Exception $e ) {
 				$this->on_task_fail( 'disable_addhandler', $e, 'An error occurred when trying to disable AddHandler in apache config.' );
 			}
+		}
+	}
+
+	/**
+	 * Adds the eof file marker used by the config backup system (see GlobalSettingsProvider).
+	 */
+	public function add_config_end_of_file_marker() {
+		if ( defined( 'MATOMO_DISABLE_CONFIG_BACKUP' ) && MATOMO_DISABLE_CONFIG_BACKUP ) {
+			return; // the marker only exists for the config backup feature
+		}
+
+		$this->remove_task_errors( [ 'config_eof_marker' ] );
+
+		try {
+			Bootstrap::do_bootstrap();
+
+			$updater = new Updater( $this->settings );
+			$updater->add_config_end_of_file_marker_if_needed();
+		} catch ( Exception $e ) {
+			$this->on_task_fail( 'config_eof_marker', $e, 'An error occurred when adding the end-of-file marker to config.ini.php.' );
 		}
 	}
 

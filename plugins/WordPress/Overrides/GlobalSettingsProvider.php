@@ -354,7 +354,13 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     private function wasLocalConfigFileModifiedRecently()
     {
-        $mtime = filemtime($this->getPathLocal());
+        return self::wasConfigFileModifiedRecently($this->getPathLocal());
+    }
+
+    public static function wasConfigFileModifiedRecently($path)
+    {
+        // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+        $mtime = filemtime($path);
         if (false === $mtime) {
             // cannot tell (eg. the file just disappeared); err on the side of not touching it
             return true;

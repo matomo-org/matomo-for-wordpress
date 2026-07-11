@@ -1296,7 +1296,7 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * Returns a path to a config.ini.php that does not exist (used to simulate an accidentally deleted
-	 * file). Any file created at that path during the test is cleaned up in tearDown().
+	 * file).
 	 *
 	 * @return string
 	 */
