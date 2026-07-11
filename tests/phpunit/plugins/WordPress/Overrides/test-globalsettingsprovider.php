@@ -414,6 +414,31 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
+	public function test_backup_does_not_contain_values_stripped_by_config_before_save_handlers() {
+		$strip = function ( &$values ) {
+			if ( isset( $values['TestSection'] ) && is_array( $values['TestSection'] ) ) {
+				unset( $values['TestSection']['runtime_only_value'] );
+			}
+		};
+		\Piwik\Piwik::addAction( 'Config.beforeSave', $strip );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'TestSection',
+			array(
+				'runtime_only_value' => 'runtime-only',
+				'kept_value'         => 'kept',
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+		$this->assertSame( array( 'kept_value' => 'kept' ), $stored['TestSection'] );
+	}
+
 	public function test_backup_redacts_secret_like_values() {
 		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
 

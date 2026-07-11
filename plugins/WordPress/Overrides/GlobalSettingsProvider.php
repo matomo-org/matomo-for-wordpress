@@ -12,6 +12,8 @@ use Matomo\Ini\IniWriter;
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
 use Piwik\Common;
 use Piwik\Config\IniFileChain;
+use Piwik\Container\ContainerDoesNotExistException;
+use Piwik\Piwik;
 use Piwik\SettingsServer;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
@@ -203,12 +205,36 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         // only persist the values that differ from the INI default settings (ie, what would go
-        // in config.ini.php), minus anything secret or blog-specific
-        $diff = $this->removeValuesExcludedFromBackup($this->computeUserConfigDiff());
+        // in config.ini.php), minus anything plugins strip from config writes, secret or
+        // blog-specific
+        $diff = $this->applyConfigBeforeSaveHandlers($this->computeUserConfigDiff());
+        $diff = $this->removeValuesExcludedFromBackup($diff);
 
         $this->getWpMatomoSettings()->update_config_backup($diff);
 
         $this->updateEncryptedSaltIfNeeded();
+    }
+
+    /**
+     * Runs the Config.beforeSave handlers over the diff before it is persisted.
+     * Required because Config.beforeSave does not modify in-memory values, just
+     * a copy that is then written to the file. If a handler modifies the config
+     * before persisting, those modifications would be lost when saving a config
+     * backup to memory, unless another Config.beforeSave is posted.
+     *
+     * @param array $diff
+     * @return array
+     */
+    private function applyConfigBeforeSaveHandlers($diff)
+    {
+        try {
+            Piwik::postEvent('Config.beforeSave', [&$diff]);
+        } catch (ContainerDoesNotExistException $ex) {
+            // environment not created, safe not to run the event since
+            // here we are using data read directly from the config file.
+            // we expect modifications to be in place.
+        }
+        return $diff;
     }
 
     /**
