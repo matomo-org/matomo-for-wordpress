@@ -231,5 +231,5 @@ if (!defined('PIWIK_INCLUDE_PATH')) {
 	define('PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT);
 }
 require_once PIWIK_DOCUMENT_ROOT . '/vendor/autoload.php';
-require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/Overrides/GlobalSettingsProvider.php';
-require_once dirname( PIWIK_DOCUMENT_ROOT ) . '/plugins/WordPress/WordPressEnvironment.php';
+require_once __DIR__ . '/../plugins/WordPress/Overrides/GlobalSettingsProvider.php';
+require_once __DIR__ . '/../plugins/WordPress/WordPressEnvironment.php';

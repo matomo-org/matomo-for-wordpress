@@ -695,6 +695,48 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEquals( 'stale-host.example.com', $database['host'] );
 	}
 
+	public function test_restore_does_not_write_ini_injected_through_a_malicious_config_backup() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array(
+					"x = 1\n[database]\nhost" => 'attacker.example',
+					'test_key'                => 'test_value',
+				),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the sanitized key ("x1[database]host") still produces unparseable INI (bracket/array
+		// syntax), so the restore must refuse to write the file
+		$this->assertFalse( file_exists( $path ) );
+
+		// in memory, the [database] section is rebuilt from WordPress, not attacker-controlled
+		$this->assertNotEquals( 'attacker.example', $provider->getSection( 'database' )['host'] );
+	}
+
+	public function test_restore_sanitizes_backup_keys_like_core_config_writes_do() {
+		$this->update_option_data(
+			array(
+				"Test\nSection" => array(
+					'weird key!' => 'kept_value',
+					'test_key'   => 'test_value',
+				),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = (string) file_get_contents( $path );
+		$parsed   = parse_ini_string( $contents, true );
+
+		$this->assertIsArray( $parsed );
+		$this->assertSame( 'kept_value', $parsed['TestSection']['weirdkey'] );
+		$this->assertSame( 'test_value', $parsed['TestSection']['test_key'] );
+	}
+
 	public function test_restore_does_nothing_when_backup_holds_only_excluded_values() {
 		$this->update_option_data(
 			array(

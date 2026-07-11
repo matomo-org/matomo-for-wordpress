@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress\Overrides;
 use Matomo\Ini\IniWriter;
 use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
 use Piwik\Common;
+use Piwik\Config\IniFileChain;
 use Piwik\SettingsServer;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
@@ -169,6 +170,11 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             return true;
         }
 
+        return $this->isParseableIniString($content);
+    }
+
+    private function isParseableIniString($content)
+    {
         // swallow parse warnings since we are just trying to detect if it is parseable.
         // the website owner doesn't need to see the warnings from our test.
         set_error_handler(static function () {
@@ -388,7 +394,26 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $backup = $this->addUnbackedUpConfigValues($backup);
 
         $this->applyUserConfigDiff($backup);
-        $this->writeLocalConfigFile($backup);
+        $this->writeLocalConfigFile($this->rebuildConfigViaIniFileChain($backup));
+    }
+
+    /**
+     * Rebuilds config data through IniFileChain::set() to re-use the sanitization
+     * code in core.
+     *
+     * @param array $config
+     * @return array
+     */
+    private function rebuildConfigViaIniFileChain(array $config)
+    {
+        $scratchChain = new IniFileChain();
+        foreach ($config as $sectionName => $section) {
+            if (!is_array($section)) {
+                continue;
+            }
+            $scratchChain->set($sectionName, $section);
+        }
+        return $scratchChain->getAll();
     }
 
     private function removeValuesExcludedFromBackup($config)
@@ -572,6 +597,13 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             $content = $writer->writeToString($this->encodeIniValues($userConfig), $header);
         } catch (\Exception $ex) {
             $this->logger->log('Failed to dump the restored Matomo config: ' . $ex->getMessage());
+            return;
+        }
+
+        // never write a file that cannot be parsed back: it would fail the next reload(), be
+        // dropped as corrupt and be rewritten again on every request, forever.
+        if (!$this->isParseableIniString($content)) { // sanity check
+            $this->logger->log('Refusing to restore config.ini.php: the generated content is not parseable INI.');
             return;
         }
 
