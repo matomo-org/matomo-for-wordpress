@@ -137,6 +137,13 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
             return false;
         }
 
+        if ($this->wasLocalConfigFileModifiedRecently()) {
+            // the file may still be mid-write by a concurrent request (core's Config::forceSave()
+            // rewrites it in place and readers do not take the lock)
+            $this->logger->log('config.ini.php cannot be parsed but was modified recently; a write may be in progress, leaving the file alone.');
+            return false;
+        }
+
         if ($this->isConfigBackupEmpty()) {
             // throwing a fatal error on each request is required here, since there is no backup.
             // allow the user to see and manually resolve the issue.

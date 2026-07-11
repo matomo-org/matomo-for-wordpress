@@ -173,8 +173,10 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		);
 
 		// a write interrupted mid-quoted-string leaves an unparseable config.ini.php: the INI
-		// chain fails to load, which without recovery would fatal every request
+		// chain fails to load, which without recovery would fatal every request. the file must
+		// be at rest (older than the grace period) before it is replaced.
 		$path = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
 
 		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
 
@@ -184,9 +186,35 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assert_config_file_ends_with_marker( $path );
 	}
 
-	public function test_corrupt_config_file_is_left_untouched_and_rethrown_when_there_is_no_backup() {
-		// no backup option is set, so there is nothing to restore from
+	public function test_recently_modified_corrupt_config_file_is_not_dropped_or_replaced() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// an unparseable config.ini.php with a fresh mtime: a concurrent Config::forceSave()
+		// may still be rewriting it in place
 		$path             = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		$corrupt_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertSame( $corrupt_contents, file_get_contents( $path ) );
+	}
+
+	public function test_corrupt_config_file_is_left_untouched_and_rethrown_when_there_is_no_backup() {
+		// no backup option is set, so there is nothing to restore from. the file is aged past
+		// the grace period so this exercises the empty-backup branch, not the write-in-progress
+		// protection.
+		$path = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
 		$corrupt_contents = file_get_contents( $path );
 
 		$threw = false;
