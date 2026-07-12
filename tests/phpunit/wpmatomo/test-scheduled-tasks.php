@@ -79,6 +79,49 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
+	public function test_add_config_end_of_file_marker_adds_marker_and_repopulates_backup() {
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$marker_key     = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_KEY;
+		$marker_value   = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE;
+
+		Bootstrap::do_bootstrap();
+		$path = \Piwik\Config::getInstance()->getLocalPath();
+
+		// simulate the state after a failed one-time marker write during the plugin update
+		// (eg. the config file was temporarily not writable): the file has no marker, so the
+		// per-request backup refresh never runs and the backup option stays empty
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( $marker_section, $contents );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+		file_put_contents( $path, $stripped );
+		// age the file past the grace period
+		touch( $path, time() - \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		// the backup must be empty before the reload, otherwise the marker-less self-heal
+		// would restore the file during the reload and the task would have nothing to do
+		delete_option( Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( Settings::OPTION_CONFIG_BACKUP );
+
+		StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+		$this->assertSame( array(), $this->settings->get_config_backup() );
+
+		$this->tasks->add_config_end_of_file_marker();
+
+		// the marker is back as the very last section of the file...
+		$new_contents  = trim( (string) file_get_contents( $path ) );
+		$expected_tail = $marker_key . ' = "' . $marker_value . '"';
+		$this->assertSame( $expected_tail, substr( $new_contents, - strlen( $expected_tail ) ) );
+
+		// ...and the config write repopulated the backup in the same run (via the
+		// Core.configFileChanged event), so the self-heal feature is protective again
+		$this->assertNotEmpty( $this->settings->get_config_backup() );
+	}
+
 	public function test_disable_add_handler_wontfail_when_addhandler_enabled() {
 		$this->assertFalse( $this->settings->should_disable_addhandler() );
 		$this->tasks->disable_add_handler();

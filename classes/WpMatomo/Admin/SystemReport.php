@@ -75,8 +75,10 @@ class SystemReport implements MatomoPageContent {
 	const TROUBLESHOOT_UPDATE_GEOIP_DB    = 'matomo_troubleshooting_action_update_geoipdb';
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
-	const REGENERATE_TRACKING_CODE        = 'matomo_troubleshooting_action_regen_tracking_code';
-	const RUN_SCHEDULED_TASK              = 'matomo_troubleshooting_action_run_task';
+
+	const TROUBLESHOOT_DISMISS_SALT_REGENERATED = 'matomo_troubleshooting_action_dismiss_salt_regenerated';
+	const REGENERATE_TRACKING_CODE              = 'matomo_troubleshooting_action_regen_tracking_code';
+	const RUN_SCHEDULED_TASK                    = 'matomo_troubleshooting_action_run_task';
 
 	private $not_compatible_plugins = [
 		'minify-html-markup',
@@ -194,6 +196,10 @@ class SystemReport implements MatomoPageContent {
 
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_CLEAR_LOGS ] ) ) {
 				$this->logger->clear_logged_exceptions();
+			}
+
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_DISMISS_SALT_REGENERATED ] ) ) {
+				$this->settings->set_time_salt_was_regenerated( 0 );
 			}
 
 			if ( ! $this->settings->is_network_enabled() || ! is_network_admin() ) {
@@ -366,6 +372,7 @@ class SystemReport implements MatomoPageContent {
 		$matomo_has_exception_logs        = [];
 		$matomo_has_warning_and_no_errors = false;
 		$matomo_scheduled_tasks           = [];
+		$matomo_salt_was_regenerated      = $this->settings->get_time_salt_was_regenerated() > 0;
 
 		if ( empty( $matomo_active_tab ) ) { // system report
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
@@ -584,6 +591,19 @@ class SystemReport implements MatomoPageContent {
 		$paths            = new Paths();
 		$path_config_file = $paths->get_config_ini_path();
 		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config', true );
+
+		$salt_regenerated_time = $this->settings->get_time_salt_was_regenerated();
+		if ( $salt_regenerated_time > 0 ) {
+			$rows[] = [
+				'name'       => esc_html__( 'Matomo salt was regenerated during a config file recovery', 'matomo' ),
+				'value'      => $this->convert_time_to_date( $salt_regenerated_time, true, true ),
+				'is_warning' => true,
+				'comment'    => esc_html__(
+					'The Matomo config file (config.ini.php) went missing or was corrupted, and was automatically recovered from the backup kept in the WordPress database. The original "salt" setting could not be recovered, however, so a new one was generated. This has the following consequences for your install: visitors who opted out of tracking through the Matomo opt-out feature are being tracked again, because their opt-out cookie is no longer recognized — consider informing your users to renew their opt-out, since being able to refuse tracking may be legally required depending on your jurisdiction (eg. GDPR/ePrivacy). Additionally, visits that were ongoing at the time of the recovery may appear split in two in your reports.',
+					'matomo'
+				),
+			];
+		}
 
 		$path_tracker_file = $paths->get_matomo_js_upload_path();
 		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker', false );

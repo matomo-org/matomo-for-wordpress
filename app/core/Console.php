@@ -196,7 +196,7 @@ class Console extends Application
     {
         try {
             if ($this->environment === null) {
-                $this->environment = new Environment('cli');
+                $this->environment = new \Piwik\Plugins\WordPress\WordPressEnvironment('cli');
                 $this->environment->init();
             }
             $config = \Piwik\Config::getInstance();

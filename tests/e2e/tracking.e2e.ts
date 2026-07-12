@@ -33,12 +33,25 @@ describe('Tracking', () => {
     await BlogPostPage.open();
     await BlogPostPage.waitForTrackingRequest();
 
-    await browser.pause(3000); // just to make sure everything gets tracked
+    let counters;
+    try {
+      await Website.retry(3, async () => {
+        await browser.pause(3000); // just to make sure everything gets tracked
 
-    const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
-      idSite: '1',
-      lastMinutes: '60',
-    }));
+        counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+          idSite: '1',
+          lastMinutes: '60',
+        }));
+
+        if (parseInt(counters[0]?.actions, 10) !== parseInt(countersBefore[0].actions, 10) + 2) {
+          throw new Error('retry');
+        }
+      });
+    } catch (e) {
+      if ((e as Error).message !== 'retry') {
+        throw e; // ignore retry error so counters assert below will execute
+      }
+    }
 
     expect(counters).toEqual([{
       visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,

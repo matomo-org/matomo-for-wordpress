@@ -147,6 +147,8 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 
 		$this->mock->sync_current_site();
 
+		restore_current_blog();
+
 		wp_delete_site( $blogid1 );
 
 		$this->assertEquals(

@@ -19,7 +19,7 @@ namespace {
         \define('PIWIK_ENABLE_DISPATCH', \true);
     }
     if (\PIWIK_ENABLE_DISPATCH) {
-        $environment = new \Piwik\Application\Environment(null);
+        $environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null);
         $environment->init();
         $controller = FrontController::getInstance();
         try {

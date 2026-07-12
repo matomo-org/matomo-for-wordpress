@@ -17,6 +17,7 @@ use Piwik\Db;
 use Piwik\Filesystem;
 use Piwik\Option;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
@@ -142,6 +143,8 @@ class Updater {
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();
 
+		$this->add_config_end_of_file_marker_if_needed();
+
 		$paths = new Paths();
 		$paths->clear_cache_dir();
 
@@ -178,6 +181,8 @@ class Updater {
 
 			\Piwik\Access::doAsSuperUser(
 				function () {
+					// updating components twice is required for all updates to complete.
+					// unsure why, but suspect it is due to dimension updates.
 					self::update_components();
 					self::update_components();
 				}
@@ -216,6 +221,53 @@ class Updater {
 		}
 
 		do_action( 'matomo_update' );
+	}
+
+	/**
+	 * Make sure config.ini.php ends with the end-of-file marker used to detect interrupted
+	 * writes. The marker is kept up to date on every config file write, but config files
+	 * created by plugin versions that predate the marker need it added here once (without it,
+	 * the config backup is never refreshed).
+	 *
+	 * (public for tests)
+	 */
+	public function add_config_end_of_file_marker_if_needed() {
+		if ( Settings::is_config_backup_disabled() ) {
+			return; // the marker only exists for the config backup feature
+		}
+
+		$config = Config::getInstance();
+		if ( GlobalSettingsProvider::isEndOfFileMarkerPresent( $config ) ) {
+			return;
+		}
+
+		// do not write to the file if we think it may be being written to currently
+		$local_path = $config->getLocalPath();
+		if (
+			is_file( $local_path )
+			&& GlobalSettingsProvider::wasConfigFileModifiedRecently( $local_path )
+		) {
+			return;
+		}
+
+		try {
+			// persist the fully parsed config to the backup option BEFORE the marker write. if
+			// the write below is interrupted (eg. the process is killed mid-write), it leaves a
+			// truncated config.ini.php behind, and with the backup populated the marker-less
+			// self-heal can restore the complete file. without this, a later marker run would
+			// stamp the truncated remnant as complete and silently lose the cut-off sections.
+			$provider = \Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class );
+			if ( $provider instanceof GlobalSettingsProvider ) {
+				$provider->persistConfigOption();
+			}
+
+			GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+			$config->forceSave();
+		} catch ( Exception $e ) {
+			// eg. the config file is not writable; the marker will be added by the next
+			// successful config write instead
+			$this->logger->log_exception( 'config_backup', $e );
+		}
 	}
 
 	public function is_upgrade_in_progress() {

@@ -92,7 +92,7 @@ class RequestCommand extends ConsoleCommand
     {
         StaticContainer::clearContainer();
         Log::unsetInstance();
-        $this->environment = new Environment(null);
+        $this->environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null);
         $this->environment->init();
     }
     private function resetDatabase()

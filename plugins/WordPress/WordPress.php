@@ -12,10 +12,12 @@ namespace Piwik\Plugins\WordPress;
 use Exception;
 use Piwik\Access;
 use Piwik\API\Request;
+use Piwik\Application\Kernel\GlobalSettingsProvider;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
+use Piwik\Log\LoggerInterface;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin;
@@ -84,7 +86,35 @@ class WordPress extends Plugin
             'API.Request.dispatch' => 'onApiRequestDispatch',
             'API.Request.dispatch.end' => 'onApiRequestDispatchEnd',
             ProcessedReportInnerCallHooks::PROCESSED_REPORT_INNER_END_EVENT => 'afterProcessedReportInner',
+            'Config.beforeSave' => 'ensureEndOfFileMarkerIsLastConfigSection',
+            'Core.configFileChanged' => 'configFileChanged',
         );
+    }
+
+    public function ensureEndOfFileMarkerIsLastConfigSection(&$values) {
+        if (\WpMatomo\Settings::is_config_backup_disabled()) {
+            // the marker only exists for the config backup feature; with it disabled we must not
+            // modify config.ini.php, so it stays byte-identical to what the admin manages.
+            return;
+        }
+
+        // the marker must be the very last section of config.ini.php, so an interrupted or
+        // still running write can be detected by its absence (see
+        // GlobalSettingsProvider::isLocalConfigFileWrittenCompletely())
+        $section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+        unset($values[$section]);
+        $values[$section] = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::getEndOfFileMarkerSection();
+    }
+
+    public function configFileChanged() {
+        $globalSettingsProvider = StaticContainer::get(GlobalSettingsProvider::class);
+        if ($globalSettingsProvider instanceof \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider) {
+            $globalSettingsProvider->persistConfigOption();
+        } else {
+            $logger = StaticContainer::get(LoggerInterface::class);
+            $logger->warning('Unexpected: overloaded GlobalSettingsProvider not found in DI container.');
+        }
     }
 
     public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {

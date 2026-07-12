@@ -1,6 +1,8 @@
 <?php
 /**
  * @package matomo
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
  */
 
 use WpMatomo\Settings;
@@ -201,5 +203,151 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$columns = \Piwik\Db::fetchAll( 'SHOW COLUMNS IN ' . \Piwik\Common::prefixTable( $table_name ) );
 		$columns = array_column( $columns, 'Field' );
 		return $columns;
+	}
+
+	public function test_add_config_end_of_file_marker_adds_missing_marker_to_config_file() {
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$marker_key     = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_KEY;
+		$marker_value   = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		// simulate a config file written by a plugin version that predates the marker
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( $marker_section, $contents );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		$this->assertStringNotContainsString( $marker_section, $stripped );
+		file_put_contents( $path, $stripped );
+		// age the file past the grace period: a marker-less file with a fresh mtime is
+		// deliberately not stamped (a write may be in progress)
+		touch( $path, time() - \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		// empty the backup so the reload below does not restore the marker-less file (this test
+		// is about the marker retrofit, not the self-heal)
+		delete_option( Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( Settings::OPTION_CONFIG_BACKUP );
+
+		// make the in-memory config state match the file on disk, the way the fresh bootstrap
+		// of an update request would see it
+		\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+
+		$updater = new Updater( new Settings() );
+		$updater->add_config_end_of_file_marker_if_needed();
+
+		$new_contents = trim( (string) file_get_contents( $path ) );
+		$this->assertStringContainsString( '[' . $marker_section . ']', $new_contents );
+		$expected_tail = $marker_key . ' = "' . $marker_value . '"';
+		$this->assertSame( $expected_tail, substr( $new_contents, - strlen( $expected_tail ) ) );
+	}
+
+	public function test_add_config_end_of_file_marker_skips_a_recently_modified_config_file() {
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		$contents = file_get_contents( $path );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		// the file keeps its fresh mtime: a marker-less file modified moments ago may still be
+		// mid-write by a concurrent request
+		file_put_contents( $path, $stripped );
+
+		delete_option( Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( Settings::OPTION_CONFIG_BACKUP );
+
+		\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+
+		$updater = new Updater( new Settings() );
+		$updater->add_config_end_of_file_marker_if_needed();
+
+		// the possibly in-progress file was not stamped (that would canonicalize a partial
+		// write) and nothing was persisted to the backup either
+		$this->assertSame( $stripped, file_get_contents( $path ) );
+		$this->assertSame( array(), ( new Settings() )->get_config_backup() );
+	}
+
+	public function test_add_config_end_of_file_marker_persists_backup_before_writing_the_marker() {
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		$contents = file_get_contents( $path );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		file_put_contents( $path, $stripped );
+		touch( $path, time() - \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		delete_option( Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( Settings::OPTION_CONFIG_BACKUP );
+
+		\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
+
+		// observe the state of the file at the moment the backup option is first written: if the
+		// marker is not in the file yet, the backup was persisted before the risky config write,
+		// so an interrupted marker write leaves a complete backup for the self-heal to restore
+		$file_had_marker_at_first_persist = null;
+		$capture                          = function ( $value ) use ( &$file_had_marker_at_first_persist, $path, $marker_section ) {
+			if ( null === $file_had_marker_at_first_persist ) {
+				$file_had_marker_at_first_persist = false !== strpos( (string) file_get_contents( $path ), $marker_section );
+			}
+			return $value;
+		};
+		add_filter( 'pre_update_option_' . Settings::OPTION_CONFIG_BACKUP, $capture );
+
+		try {
+			$updater = new Updater( new Settings() );
+			$updater->add_config_end_of_file_marker_if_needed();
+		} finally {
+			remove_filter( 'pre_update_option_' . Settings::OPTION_CONFIG_BACKUP, $capture );
+		}
+
+		$this->assertFalse( $file_had_marker_at_first_persist );
+		$this->assertNotEmpty( ( new Settings() )->get_config_backup() );
+		$this->assertStringContainsString( '[' . $marker_section . ']', file_get_contents( $path ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_add_config_end_of_file_marker_is_skipped_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		// a marker-less config file, aged past the grace period (so only the kill switch could
+		// stop it from being stamped)
+		$contents = file_get_contents( $path );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		file_put_contents( $path, $stripped );
+		touch( $path, time() - \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$updater = new Updater( new Settings() );
+		$updater->add_config_end_of_file_marker_if_needed();
+
+		// with the feature disabled the marker is not written (the ScheduledTasks path and this
+		// Updater path now agree on the kill switch)
+		$this->assertSame( $stripped, file_get_contents( $path ) );
+		$this->assertStringNotContainsString( $marker_section, file_get_contents( $path ) );
 	}
 }

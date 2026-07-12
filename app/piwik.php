@@ -46,7 +46,7 @@ namespace {
     require_once \PIWIK_INCLUDE_PATH . '/core/Cookie.php';
     require_once \PIWIK_INCLUDE_PATH . '/core/API/CORSHandler.php';
     SettingsServer::setIsTrackerApiRequest();
-    $environment = new \Piwik\Application\Environment('tracker');
+    $environment = new \Piwik\Plugins\WordPress\WordPressEnvironment('tracker');
     try {
         $environment->init();
     } catch (\Piwik\Exception\NotYetInstalledException $e) {

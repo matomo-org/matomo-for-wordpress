@@ -130,6 +130,9 @@ describe( 'Matomo API', function () {
       });
 
       json = await response.json();
+      if (!Array.isArray(json)) {
+        console.log('response is: ', json)
+      }
       expect(Array.isArray(json)).toBeTruthy();
       expect(json.map(v => v.toString())).toEqual(['1']);
     });

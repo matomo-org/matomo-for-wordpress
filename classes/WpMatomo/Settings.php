@@ -27,6 +27,9 @@ class Settings {
 	const GLOBAL_OPTION_PREFIX                 = 'matomo_global-';
 	const OPTION                               = 'matomo-option';
 	const OPTION_GLOBAL                        = 'matomo-global-option';
+	const OPTION_CONFIG_BACKUP                 = 'matomo-global-config-backup';
+	const OPTION_ENCRYPTED_SALT                = 'matomo-encrypted-salt';
+	const OPTION_SALT_REGENERATED              = 'matomo-salt-regenerated-at';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
@@ -34,7 +37,7 @@ class Settings {
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
 	const SITE_CURRENCY                        = 'site_currency';
-	const NETWORK_CONFIG_OPTIONS               = 'config_options';
+	const CONFIG_OPTIONS                       = 'config_options';
 	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 	const USE_SESSION_VISITOR_ID_OPTION_NAME   = 'use_session_visitor_id';
 	const SERVER_SIDE_TRACKING_DELAY_SECS      = 'server_side_tracking_delay_secs';
@@ -46,7 +49,13 @@ class Settings {
 	// adding an extra get_option call to every WordPress backoffice request.
 	const INSTANCE_COMPONENTS_INSTALLED = 'instance-components-installed';
 
+	/**
+	 * @deprecated use CONFIG_OPTIONS instead
+	 */
+	const NETWORK_CONFIG_OPTIONS = 'config_options';
+
 	public static $is_doing_action_tracking_related = false;
+
 	/**
 	 * @internal tests only
 	 * @var bool
@@ -74,7 +83,7 @@ class Settings {
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => [],
 		self::OPTION_KEY_CAPS_ACCESS               => [],
-		self::NETWORK_CONFIG_OPTIONS               => [],
+		self::CONFIG_OPTIONS                       => [],
 		self::DELETE_ALL_DATA_ON_UNINSTALL         => true,
 		self::SITE_CURRENCY                        => 'USD',
 		// User settings: Stats configuration
@@ -143,6 +152,15 @@ class Settings {
 	private $global_settings = [];
 	private $blog_settings   = [];
 
+	/**
+	 * The blog ID the cached settings were loaded for. Long-lived Settings instances can
+	 * be used across switch_to_blog() calls, cached values must be reloaded when a blog
+	 * changes.
+	 *
+	 * @var int|null
+	 */
+	private $loaded_for_blog_id = null;
+
 	private $settings_changed = [];
 
 	/**
@@ -175,11 +193,11 @@ class Settings {
 			$this->global_settings = $global_settings;
 		}
 
-		$settings = get_option( self::OPTION, [] );
+		$this->load_blog_settings();
+	}
 
-		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$this->blog_settings = $settings;
-		}
+	public static function is_config_backup_disabled() {
+		return defined( 'MATOMO_DISABLE_CONFIG_BACKUP' ) && MATOMO_DISABLE_CONFIG_BACKUP;
 	}
 
 	public function get_customised_global_settings() {
@@ -226,6 +244,8 @@ class Settings {
 	 * Save all settings as WordPress options
 	 */
 	public function save() {
+		$this->reload_if_blog_switched();
+
 		if ( empty( $this->settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
 
@@ -265,6 +285,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
 		}
@@ -283,6 +305,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->blog_settings[ $key ] ) ) {
 			return $this->blog_settings[ $key ];
 		}
@@ -309,15 +333,25 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_global_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_global_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
 		}
 
-		if ( ! isset( $this->global_settings[ $key ] )
-			 || $this->global_settings[ $key ] !== $value ) {
+		if (
+			! isset( $this->global_settings[ $key ] )
+			|| $this->global_settings[ $key ] !== $value
+		) {
 			$this->settings_changed[] = $key;
-			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+
+			// config_options holds network config options to sync across all network sites'
+			// config.ini.php. these can include INI secrets (eg. an SMTP [mail] password);
+			// never write it to the log
+			if ( self::CONFIG_OPTIONS !== $key ) {
+				$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+			}
 
 			$this->global_settings[ $key ] = $value;
 		}
@@ -330,6 +364,8 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_blog_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_blog_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
@@ -550,5 +586,113 @@ class Settings {
 
 	public function is_track_via_esi_enabled() {
 		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
+	}
+
+	/**
+	 * Get the backup of the Matomo config file data.
+	 *
+	 * In network mode the backup is stored network-wide: every blog in the network is supposed
+	 * to have the same INI config as the others (SyncConfig keeps the files in sync), so one
+	 * backup serves all of them. Blog-specific values ([database], salt, trusted_hosts) are
+	 * not part of the backup, they are rebuilt by the restoring blog.
+	 *
+	 * The option is named so both the "matomo-" wp_options cleanup and the "matomo_global-"
+	 * sitemeta cleanup in Uninstaller match it (in SQL LIKE, "_" matches "-").
+	 *
+	 * @return array
+	 */
+	public function get_config_backup() {
+		if ( $this->is_network_enabled() ) {
+			$backup = get_site_option( self::OPTION_CONFIG_BACKUP, [] );
+		} else {
+			$backup = get_option( self::OPTION_CONFIG_BACKUP, [] );
+		}
+		return is_array( $backup ) ? $backup : [];
+	}
+
+	public function update_config_backup( $config_backup ) {
+		if ( $this->is_network_enabled() ) {
+			update_site_option( self::OPTION_CONFIG_BACKUP, $config_backup );
+		} else {
+			// not autoloaded, the backup is only read when Matomo bootstraps
+			update_option( self::OPTION_CONFIG_BACKUP, $config_backup, false );
+		}
+	}
+
+	/**
+	 * Get the encrypted copy of the Matomo salt kept for the current blog (see
+	 * GlobalSettingsProvider). Stored per blog, since every blog has its own Matomo salt,
+	 * and separately from the config backup, which never contains secrets.
+	 *
+	 * @return array
+	 */
+	public function get_encrypted_salt_backup() {
+		$record = get_option( self::OPTION_ENCRYPTED_SALT, [] );
+
+		return is_array( $record ) ? $record : [];
+	}
+
+	/**
+	 * @param array $record
+	 */
+	public function update_encrypted_salt_backup( array $record ) {
+		// not autoloaded, the record is only read when Matomo bootstraps
+		update_option( self::OPTION_ENCRYPTED_SALT, $record, false );
+	}
+
+	/**
+	 * The time a config.ini.php restore had to generate a new salt because the original one
+	 * could not be recovered (see GlobalSettingsProvider). Used to inform super admins about
+	 * the consequences in the system report. 0 if this never happened.
+	 *
+	 * @return int
+	 */
+	public function get_time_salt_was_regenerated() {
+		return (int) get_option( self::OPTION_SALT_REGENERATED, 0 );
+	}
+
+	/**
+	 * @param int $timestamp
+	 */
+	public function set_time_salt_was_regenerated( $timestamp ) {
+		update_option( self::OPTION_SALT_REGENERATED, (int) $timestamp, false );
+	}
+
+	public function load_blog_settings() {
+		$settings = get_option( self::OPTION, [] );
+		if ( ! is_array( $settings ) ) {
+			$settings = [];
+		}
+
+		$this->blog_settings = $settings;
+
+		$this->loaded_for_blog_id = get_current_blog_id();
+	}
+
+	/**
+	 * Reload cached settings if the current blog changed since they were loaded (eg, via
+	 * switch_to_blog()). Cached per-blog settings must not be served for, or saved to, a
+	 * different blog. Pending unsaved changes for the previous blog are discarded.
+	 */
+	private function reload_if_blog_switched() {
+		if ( ! $this->is_multisite()
+			|| null === $this->loaded_for_blog_id
+			|| get_current_blog_id() === $this->loaded_for_blog_id
+		) {
+			return;
+		}
+
+		if ( ! empty( $this->settings_changed ) ) {
+			// blog was switched in code before settings were save()'d
+			$this->logger->log(
+				'Unsaved Matomo setting changes were discarded after a WP blog switch: '
+				. implode( ', ', array_values( array_unique( $this->settings_changed ) ) )
+			);
+		}
+
+		// reload all settings, including intermediate state like $settings_changed
+		// to ensure that changes intended for the previous blog are not saved to this
+		// blog.
+		$this->init_settings();
 	}
 }

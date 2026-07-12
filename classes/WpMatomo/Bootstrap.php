@@ -9,7 +9,7 @@
 
 namespace WpMatomo;
 
-use Piwik\Application\Environment;
+use Piwik\Plugins\WordPress\WordPressEnvironment;
 use Piwik\Cache;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
@@ -104,7 +104,7 @@ class Bootstrap {
 
 		include_once 'Db/WordPress.php';
 
-		$environment = new Environment( null, self::$extra_di_definitions );
+		$environment = new WordPressEnvironment( null, self::$extra_di_definitions );
 		$environment->init();
 
 		self::$environment_bootstrapped = true;

@@ -19,6 +19,7 @@ use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
@@ -33,6 +34,7 @@ class ScheduledTasks extends Feature {
 	const EVENT_ARCHIVE            = 'matomo_scheduled_archive';
 	const EVENT_GEOIP              = 'matomo_scheduled_geoipdb';
 	const EVENT_UPDATE             = 'matomo_update_core';
+	const EVENT_CONFIG_MARKER      = 'matomo_scheduled_config_marker';
 
 	const KEY_BEFORE_CRON = 'before-cron-';
 	const KEY_AFTER_CRON  = 'after-cron-';
@@ -145,20 +147,25 @@ class ScheduledTasks extends Feature {
 
 	public function get_all_events() {
 		$events = [
-			self::EVENT_SYNC    => [
+			self::EVENT_SYNC          => [
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
 				'method'   => 'sync',
 			],
-			self::EVENT_ARCHIVE => [
+			self::EVENT_ARCHIVE       => [
 				'name'     => 'Archive',
 				'interval' => 'hourly',
 				'method'   => 'archive',
 			],
-			self::EVENT_GEOIP   => [
+			self::EVENT_GEOIP         => [
 				'name'     => 'Update GeoIP DB',
 				'interval' => 'matomo_monthly',
 				'method'   => 'update_geo_ip2_db',
+			],
+			self::EVENT_CONFIG_MARKER => [
+				'name'     => 'Add config end of file marker',
+				'interval' => 'daily',
+				'method'   => 'add_config_end_of_file_marker',
 			],
 		];
 		if ( $this->settings->should_disable_addhandler() ) {
@@ -208,6 +215,26 @@ class ScheduledTasks extends Feature {
 			} catch ( Exception $e ) {
 				$this->on_task_fail( 'disable_addhandler', $e, 'An error occurred when trying to disable AddHandler in apache config.' );
 			}
+		}
+	}
+
+	/**
+	 * Adds the eof file marker used by the config backup system (see GlobalSettingsProvider).
+	 */
+	public function add_config_end_of_file_marker() {
+		if ( Settings::is_config_backup_disabled() ) {
+			return; // the marker only exists for the config backup feature
+		}
+
+		$this->remove_task_errors( [ 'config_backup' ] );
+
+		try {
+			Bootstrap::do_bootstrap();
+
+			$updater = new Updater( $this->settings );
+			$updater->add_config_end_of_file_marker_if_needed();
+		} catch ( Exception $e ) {
+			$this->on_task_fail( 'config_backup', $e, 'An error occurred when adding the end-of-file marker to config.ini.php.' );
 		}
 	}
 

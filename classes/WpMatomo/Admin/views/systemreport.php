@@ -212,6 +212,14 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<br/><br/>
 			<?php } ?>
 
+			<?php if ( ! empty( $matomo_salt_was_regenerated ) ) { ?>
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_DISMISS_SALT_REGENERATED ); ?>" type="submit"
+					   class='button-primary'
+					   title="<?php esc_attr_e( 'Removes the system report warning about the Matomo salt having been regenerated during a config file recovery.', 'matomo' ); ?>"
+					   value="<?php esc_html_e( 'Dismiss salt regeneration warning', 'matomo' ); ?>">
+				<br/><br/>
+			<?php } ?>
+
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
 				   class='button-primary'
 				   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ); ?>"

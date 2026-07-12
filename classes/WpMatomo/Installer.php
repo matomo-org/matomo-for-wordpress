@@ -20,6 +20,7 @@ use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\SitesManager\Model;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 use WpMatomo\Site\Sync;
@@ -114,7 +115,10 @@ class Installer {
 
 			Bootstrap::bootstrap_environment();
 
-			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
+			if (
+				! SettingsPiwik::isMatomoInstalled()
+				|| ! $this->looks_like_it_is_installed()
+			) {
 				throw new NotYetInstalledException( 'Not yet installed' );
 			}
 
@@ -148,7 +152,7 @@ class Installer {
 			if ( ! $this->is_environment_set_up() ) {
 				try {
 					$this->logger->log( 'Matomo will now init the environment' );
-					$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
+					$environment = new \Piwik\Plugins\WordPress\WordPressEnvironment( null, Bootstrap::get_extra_di_definitions() );
 					$environment->init();
 				} catch ( Exception $e ) {
 					$this->logger->log( 'Ignoring error environment init' );
@@ -299,18 +303,25 @@ class Installer {
 		return $db_infos;
 	}
 
+	public static function get_trusted_host_from_wp_url() {
+		$home_url = home_url();
+
+		$domain = wp_parse_url( $home_url, PHP_URL_HOST );
+		if ( ! $domain ) {
+			return $home_url;
+		}
+
+		$port = wp_parse_url( $home_url, PHP_URL_PORT );
+		if ( $port ) {
+			$domain .= ':' . $port;
+		}
+
+		return $domain;
+	}
+
 	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
-		$home_url = home_url();
-		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
-		if ( $domain ) {
-			$port = wp_parse_url( $home_url, PHP_URL_PORT );
-			if ( $port ) {
-				$domain .= ':' . $port;
-			}
-		} else {
-			$domain = $home_url;
-		}
+		$domain  = self::get_trusted_host_from_wp_url();
 		$general = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
@@ -333,6 +344,14 @@ class Installer {
 		$config->database = array_merge( $db_default, $db_info );
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$config->General = array_merge( $general_default, $general );
+
+		// add the end-of-file marker used to detect interrupted writes to config.ini.php; it must
+		// exist in every config file (see GlobalSettingsProvider). skip it when the config backup
+		// feature is disabled, so the file is not modified for admins managing it themselves.
+		if ( ! Settings::is_config_backup_disabled() ) {
+			GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+		}
+
 		$config->forceSave();
 
 		$mode = 0664;

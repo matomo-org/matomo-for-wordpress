@@ -1,0 +1,65 @@
+diff --git a/app/core/CliMulti/RequestCommand.php b/app/core/CliMulti/RequestCommand.php
+index 1c3886ceb..9ad4275c7 100644
+--- a/app/core/CliMulti/RequestCommand.php
++++ b/app/core/CliMulti/RequestCommand.php
+@@ -92,7 +92,7 @@ class RequestCommand extends ConsoleCommand
+     {
+         StaticContainer::clearContainer();
+         Log::unsetInstance();
+-        $this->environment = new Environment(null);
++        $this->environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null);
+         $this->environment->init();
+     }
+     private function resetDatabase()
+diff --git a/app/core/Console.php b/app/core/Console.php
+index f8c3862ff..8527b86b0 100644
+--- a/app/core/Console.php
++++ b/app/core/Console.php
+@@ -196,7 +196,7 @@ class Console extends Application
+     {
+         try {
+             if ($this->environment === null) {
+-                $this->environment = new Environment('cli');
++                $this->environment = new \Piwik\Plugins\WordPress\WordPressEnvironment('cli');
+                 $this->environment->init();
+             }
+             $config = \Piwik\Config::getInstance();
+diff --git a/app/core/dispatch.php b/app/core/dispatch.php
+index d4c79ed69..b49179f6f 100644
+--- a/app/core/dispatch.php
++++ b/app/core/dispatch.php
+@@ -19,7 +19,7 @@ namespace {
+         \define('PIWIK_ENABLE_DISPATCH', \true);
+     }
+     if (\PIWIK_ENABLE_DISPATCH) {
+-        $environment = new \Piwik\Application\Environment(null);
++        $environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null);
+         $environment->init();
+         $controller = FrontController::getInstance();
+         try {
+diff --git a/app/js/tracker.php b/app/js/tracker.php
+index be82031fd..18b9a6cbb 100644
+--- a/app/js/tracker.php
++++ b/app/js/tracker.php
+@@ -67,7 +67,7 @@ class Validator {
+     public function validate() {}
+ }
+ $validator = new Validator();
+-$environment = new \Piwik\Application\Environment(null, array(
++$environment = new \Piwik\Plugins\WordPress\WordPressEnvironment(null, array(
+     'Piwik\Application\Kernel\EnvironmentValidator' => $validator
+ ));
+ $environment->init();
+diff --git a/app/piwik.php b/app/piwik.php
+index 8fd0e5ad3..ab133815e 100644
+--- a/app/piwik.php
++++ b/app/piwik.php
+@@ -46,7 +46,7 @@ namespace {
+     require_once \PIWIK_INCLUDE_PATH . '/core/Cookie.php';
+     require_once \PIWIK_INCLUDE_PATH . '/core/API/CORSHandler.php';
+     SettingsServer::setIsTrackerApiRequest();
+-    $environment = new \Piwik\Application\Environment('tracker');
++    $environment = new \Piwik\Plugins\WordPress\WordPressEnvironment('tracker');
+     try {
+         $environment->init();
+     } catch (\Piwik\Exception\NotYetInstalledException $e) {

@@ -12,6 +12,7 @@ import * as path from 'path';
 import * as url from 'url';
 import MwpPage from './page.js';
 import Website from '../../website.js';
+import MatomoApi from "../../apiobjects/matomo.api";
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -292,6 +293,13 @@ class MwpMarketplacePage extends MwpPage {
     allPluginsName.sort();
 
     expect(activatedPlugins).toEqual(allPluginsName);
+
+    // make sure headless browsers are tracked otherwise following tests will fail
+    await MatomoApi.call('POST', 'CorePluginsAdmin.setSystemSettings', new URLSearchParams({
+      'settingValues[TrackingSpamPrevention][0][name]': 'block_headless',
+      'settingValues[TrackingSpamPrevention][0][value]': '0',
+      passwordConfirmation: process.env.WORDPRESS_USER_PASS || 'pass',
+    }));
 
     await browser.refresh(); // for new nonce values
   }

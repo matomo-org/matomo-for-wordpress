@@ -1,0 +1,1523 @@
+<?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+ */
+
+use Piwik\Application\Kernel\GlobalSettingsProvider as DefaultGlobalSettingsProvider;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
+
+/**
+ * @package matomo
+ */
+class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
+
+	/**
+	 * @var \WpMatomo\Settings
+	 */
+	private $settings;
+
+	/**
+	 * @var string[]
+	 */
+	private $temp_files = [];
+
+	public function setUp(): void {
+		parent::setUp();
+
+		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
+		delete_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
+		delete_site_option( \WpMatomo\Settings::OPTION_CONFIG_BACKUP );
+		delete_option( \WpMatomo\Settings::OPTION_ENCRYPTED_SALT );
+		delete_option( \WpMatomo\Settings::OPTION_SALT_REGENERATED );
+		$this->settings = new \WpMatomo\Settings();
+	}
+
+	public function tearDown(): void {
+		foreach ( $this->temp_files as $file ) {
+			if ( file_exists( $file ) ) {
+				unlink( $file );
+			}
+		}
+		$this->temp_files = [];
+
+		parent::tearDown();
+	}
+
+	public function test_is_a_global_settings_provider() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+		$this->assertInstanceOf( DefaultGlobalSettingsProvider::class, $provider );
+	}
+
+	public function test_bootstrapped_environment_uses_the_wordpress_global_settings_provider() {
+		\WpMatomo\Bootstrap::do_bootstrap();
+
+		$provider = \Piwik\Container\StaticContainer::get( DefaultGlobalSettingsProvider::class );
+		$this->assertInstanceOf( GlobalSettingsProvider::class, $provider );
+	}
+
+	public function test_construct_backs_up_config_to_option_when_option_has_no_data() {
+		$this->assertEquals( [], $this->get_option_data() );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertIsArray( $stored );
+		$this->assertNotEmpty( $stored );
+
+		// only the diff (values that differ from the INI defaults) is backed up, not the full merged
+		// config. so the stored data must be a strict subset of the merged settings and must not
+		// contain unchanged default-only sections.
+		$merged = $provider->getIniFileChain()->getAll();
+		$this->assertNotEquals( $merged, $stored );
+		foreach ( $stored as $section_name => $section ) {
+			$this->assertArrayHasKey( $section_name, $merged );
+		}
+	}
+
+	public function test_backup_is_not_refreshed_on_tracker_requests() {
+		\Piwik\SettingsServer::setIsTrackerApiRequest();
+
+		try {
+			new GlobalSettingsProvider( null, null, null, $this->settings );
+
+			$this->assertEquals( [], $this->get_option_data() );
+		} finally {
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+		}
+	}
+
+	public function test_construct_backs_up_config_to_option_when_option_holds_an_empty_array() {
+		$this->update_option_data( [] );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertNotEmpty( $stored );
+		$this->assertNotEquals( $provider->getIniFileChain()->getAll(), $stored );
+	}
+
+	public function test_construct_refreshes_backup_option_from_file_when_file_exists() {
+		// the config.ini.php file is the source of truth, so a stale backup option must be overwritten
+		// with the data currently in the file.
+		$this->update_option_data(
+			array(
+				'ThisSectionIsNotInTheFile' => array( 'foo' => 'bar' ),
+			)
+		);
+
+		new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$stored = $this->get_option_data();
+		$this->assertArrayNotHasKey( 'ThisSectionIsNotInTheFile', $stored );
+	}
+
+	public function test_construct_does_not_apply_backup_option_when_file_exists() {
+		// the backup option is only a backup: while config.ini.php exists it must not be layered on top
+		// of the file config, so a value present only in the option is ignored.
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$section = (array) $provider->getSection( 'TestSection' );
+		$this->assertArrayNotHasKey( 'test_key', $section );
+	}
+
+	public function test_construct_restores_config_from_backup_when_file_is_missing() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		// the backup is applied on top of the INI config when the file is missing
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+	}
+
+	public function test_restore_does_not_fatal_when_backup_general_section_is_not_an_array() {
+		$this->update_option_data(
+			array(
+				'General'     => 'corrupted',
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+
+		// check General was rebuilt into a real array with the regenerated salt/trusted_hosts
+		$general = $provider->getSection( 'General' );
+		$this->assertIsArray( $general );
+		$this->assertNotEmpty( $general['salt'] );
+	}
+
+	public function test_restore_recovers_from_a_syntactically_corrupted_config_file() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// a write interrupted mid-quoted-string leaves an unparseable config.ini.php: the INI
+		// chain fails to load, which without recovery would fatal every request. the file must
+		// be at rest (older than the grace period) before it is replaced.
+		$path = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// check that it did not fatal: the corrupt file was dropped and rebuilt from the backup
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assert_config_file_ends_with_marker( $path );
+	}
+
+	public function test_recently_modified_corrupt_config_file_is_not_dropped_or_replaced() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// an unparseable config.ini.php with a fresh mtime: a concurrent Config::forceSave()
+		// may still be rewriting it in place
+		$path             = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		$corrupt_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertSame( $corrupt_contents, file_get_contents( $path ) );
+	}
+
+	public function test_corrupt_config_file_is_left_untouched_and_rethrown_when_there_is_no_backup() {
+		// no backup option is set, so there is nothing to restore from. the file is aged past
+		// the grace period so this exercises the empty-backup branch, not the write-in-progress
+		// protection.
+		$path = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+		$corrupt_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		// with no backup, dropping the file would lose the config for good, so the load error is
+		// rethrown instead of being swallowed. the corrupt file is left in place, unchanged, so the
+		// site owner can see and manually resolve the issue.
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assertSame( $corrupt_contents, file_get_contents( $path ) );
+	}
+
+	public function test_construct_recreates_config_file_from_backup_when_file_is_missing() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		$this->assertFalse( file_exists( $path ) );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the missing config.ini.php is written back to disk from the backup
+		$this->assertTrue( file_exists( $path ) );
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( '[TestSection]', $contents );
+		$this->assertStringContainsString( 'test_value', $contents );
+	}
+
+	public function test_restore_temp_file_keeps_the_php_extension_so_it_cannot_leak_as_plain_text() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$method = new ReflectionMethod( GlobalSettingsProvider::class, 'getTempConfigPath' );
+		$method->setAccessible( true );
+
+		$config_path = '/var/www/uploads/matomo/config/config.ini.php';
+		$temp_path   = $method->invoke( $provider, $config_path );
+
+		$this->assertStringEndsWith( '.php', $temp_path );
+		$this->assertNotSame( $config_path, $temp_path );
+		// the temp file lands next to the config file and is matched by the stale-temp sweep
+		$sweep_pattern = dirname( $config_path ) . '/' . basename( $config_path, '.php' ) . '.tmp*.php';
+		$this->assertNotEmpty( fnmatch( $sweep_pattern, $temp_path ) );
+	}
+
+	public function test_default_section_merges_global_and_common_per_key_like_core() {
+		$global_path = $this->write_raw_ini_file( "[TestArr]\nlist[] = \"a\"\nlist[] = \"b\"\n" );
+		$common_path = $this->write_raw_ini_file( "[TestArr]\nlist[] = \"c\"\n" );
+		$local_path  = $this->write_config_file( "[General]\nsalt = \"" . str_repeat( 'a', 32 ) . "\"\n" );
+
+		$provider = new GlobalSettingsProvider( $global_path, $local_path, $common_path, $this->settings );
+
+		$method = new ReflectionMethod( GlobalSettingsProvider::class, 'getDefaultSection' );
+		$method->setAccessible( true );
+		$default = $method->invoke( $provider, 'TestArr' );
+
+		// per-key recursive merge: index 0 overwritten by common's 'c', index 1 kept from global
+		// ('b') — exactly what core's array_merge_recursive_distinct produces. a plain
+		// array_merge would instead yield ['list' => ['c']] (whole array replaced).
+		$this->assertSame( array( 'list' => array( 'c', 'b' ) ), $default );
+	}
+
+	public function test_restore_deletes_stale_orphaned_temp_files_but_keeps_recent_ones() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		$dir  = dirname( $path );
+		$base = basename( $path, '.php' );
+
+		// an orphaned temp file from a long-ago interrupted restore, and one that a concurrent
+		// restore might be writing right now
+		$stale  = $dir . '/' . $base . '.tmpstale.php';
+		$recent = $dir . '/' . $base . '.tmprecent.php';
+		file_put_contents( $stale, "; <?php exit; ?>\n[database]\npassword = \"leaked\"\n" );
+		file_put_contents( $recent, "; <?php exit; ?>\n[database]\npassword = \"in-progress\"\n" );
+		$this->temp_files[] = $stale;
+		$this->temp_files[] = $recent;
+		touch( $stale, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		// a restore runs (missing config file) and sweeps stale temp files before writing
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertFalse( file_exists( $stale ), 'stale orphaned temp file should be deleted' );
+		$this->assertTrue( file_exists( $recent ), 'a recent temp file (possible in-progress write) must be kept' );
+		// the real config was still restored, and the config file itself was not swept
+		$this->assertTrue( file_exists( $path ) );
+	}
+
+	public function test_construct_does_not_write_file_when_backup_is_empty_and_file_is_missing() {
+		$path = $this->non_existent_config_path();
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// nothing to restore (eg. fresh install), so no bogus config.ini.php is created
+		$this->assertFalse( file_exists( $path ) );
+	}
+
+	public function test_restore_does_not_wipe_default_sections_when_backup_holds_partial_data() {
+		// this guards against the regression where partial stored data (eg. data written by older
+		// plugin versions) replaced the whole config and wiped the INI defaults.
+		$default_general = ( new GlobalSettingsProvider( null, null, null, $this->settings ) )->getSection( 'General' );
+		$this->assertNotEmpty( $default_general, 'precondition: the General section has default values' );
+
+		// trusted_hosts and salt are set by the installer (and generated again on restore),
+		// they're not part of the default section data being compared
+		unset( $default_general['trusted_hosts'] );
+		unset( $default_general['salt'] );
+
+		delete_option( \WpMatomo\Settings::OPTION_GLOBAL );
+		$this->settings = new \WpMatomo\Settings();
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		// the partial backup is applied...
+		$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+		// ...but the default sections that are not part of the backup are preserved.
+		$restored_general = $provider->getSection( 'General' );
+		unset( $restored_general['trusted_hosts'] );
+		unset( $restored_general['salt'] );
+		$this->assertEquals( $default_general, $restored_general );
+	}
+
+	public function test_activated_plugins_are_filtered_for_wordpress_when_file_exists() {
+		// the WordPress plugin filtering runs regardless of whether the config comes from the file or
+		// the backup, so with the real config.ini.php in place the activated list is still filtered.
+		$activated = $this->get_activated_plugins();
+
+		$this->assertNotContains( 'Marketplace', $activated );
+		$this->assertNotContains( 'MultiSites', $activated );
+		$this->assertContains( 'BulkTracking', $activated );
+		$this->assertContains( 'CustomJsTracker', $activated );
+	}
+
+	public function test_keeps_plugins_section_structure_so_it_can_be_read_by_pluginlist() {
+		// regression test: the [Plugins] section must stay a nested array (['Plugins' => [...]]) so
+		// PluginList::getActivatedPlugins() (and therefore the DI container) can read it. storing a
+		// flat list of plugin names would make the activated plugin list resolve to empty.
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$section = $provider->getSection( 'Plugins' );
+
+		$this->assertArrayHasKey( 'Plugins', $section );
+		$this->assertIsArray( $section['Plugins'] );
+		$this->assertNotEmpty( $section['Plugins'] );
+		// the section must not be a flat list of plugin names
+		$this->assertArrayNotHasKey( 0, $section );
+	}
+
+	public function test_restored_plugin_list_is_filtered_for_wordpress() {
+		// a [Plugins] section stored in a backup is discarded on restore: the plugin
+		// list is runtime-computed, so the activated list must come from the defaults plus the
+		// WordPress filtering, never from the stored value
+		$activated = $this->get_activated_plugins_for_missing_file(
+			array(
+				'Plugins' => array( 'Plugins' => array( 'CoreHome', 'Marketplace', 'MultiSites' ) ),
+			)
+		);
+
+		// activated plugins are read back through the real consumer of the section
+		$this->assertContains( 'CoreHome', $activated );
+		// plugins that do not make sense in WordPress are removed
+		$this->assertNotContains( 'Marketplace', $activated );
+		$this->assertNotContains( 'MultiSites', $activated );
+		// plugins required for WordPress are force enabled
+		$this->assertContains( 'BulkTracking', $activated );
+		$this->assertContains( 'CustomJsTracker', $activated );
+	}
+
+	public function test_restored_plugin_list_adds_globally_enabled_plugins() {
+		$original                          = isset( $GLOBALS['MATOMO_PLUGINS_ENABLED'] ) ? $GLOBALS['MATOMO_PLUGINS_ENABLED'] : null;
+		$GLOBALS['MATOMO_PLUGINS_ENABLED'] = array( 'MyExtraPlugin' );
+
+		try {
+			$activated = $this->get_activated_plugins_for_missing_file(
+				array(
+					'Plugins' => array( 'Plugins' => array( 'CoreHome' ) ),
+				)
+			);
+		} finally {
+			if ( null === $original ) {
+				unset( $GLOBALS['MATOMO_PLUGINS_ENABLED'] );
+			} else {
+				$GLOBALS['MATOMO_PLUGINS_ENABLED'] = $original;
+			}
+		}
+
+		$this->assertContains( 'MyExtraPlugin', $activated );
+	}
+
+	public function test_restored_plugin_list_is_not_frozen_to_stored_value() {
+		// a plugin list restored from the backup must not prevent the WordPress filtering from running
+		// again (eg. BulkTracking must always end up enabled even if it is not stored).
+		$activated = $this->get_activated_plugins_for_missing_file(
+			array(
+				'Plugins' => array( 'Plugins' => array( 'CoreHome' ) ),
+			)
+		);
+
+		$this->assertContains( 'CoreHome', $activated );
+		$this->assertContains( 'BulkTracking', $activated );
+	}
+
+	public function test_persistConfigOption_reflects_config_changes_in_the_option() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain   = $provider->getIniFileChain();
+		$section = $chain->get( 'TestSection' );
+		$this->assertArrayNotHasKey( 'changed_key', (array) $section );
+
+		// change the config data the same way Piwik\Config does (through IniFileChain)
+		$section                = (array) $section;
+		$section['changed_key'] = 'changed_value';
+		$chain->set( 'TestSection', $section );
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		$this->assertSame( 'changed_value', $stored['TestSection']['changed_key'] );
+		// only the override is stored, not the full merged config
+		$this->assertNotEquals( $chain->getAll(), $stored );
+	}
+
+	public function test_backup_does_not_contain_database_credentials_salt_or_trusted_hosts() {
+		// the real config.ini.php contains the [database] credentials and the [General] salt
+		// (secrets that must never be copied into the more exposed WordPress options table) as
+		// well as trusted_hosts (blog-specific, must not enter a potentially network-shared backup)
+		new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertNotEmpty( $stored );
+		if ( isset( $stored['database'] ) ) {
+			// only portable connection settings may be backed up, never credentials or identity
+			$unexpected_keys = array_diff_key(
+				$stored['database'],
+				array_flip( GlobalSettingsProvider::DATABASE_KEYS_TO_BACKUP )
+			);
+			$this->assertSame( array(), $unexpected_keys );
+		}
+		if ( isset( $stored['General'] ) ) {
+			$this->assertArrayNotHasKey( 'salt', $stored['General'] );
+			$this->assertArrayNotHasKey( 'trusted_hosts', $stored['General'] );
+		}
+	}
+
+	public function test_backup_does_not_contain_values_stripped_by_config_before_save_handlers() {
+		$strip = function ( &$values ) {
+			if ( isset( $values['TestSection'] ) && is_array( $values['TestSection'] ) ) {
+				unset( $values['TestSection']['runtime_only_value'] );
+			}
+		};
+		\Piwik\Piwik::addAction( 'Config.beforeSave', $strip );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'TestSection',
+			array(
+				'runtime_only_value' => 'runtime-only',
+				'kept_value'         => 'kept',
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+		$this->assertSame( array( 'kept_value' => 'kept' ), $stored['TestSection'] );
+	}
+
+	public function test_backup_redacts_secret_like_values() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'TestSection',
+			array(
+				'some_password' => 'secret1',
+				'api_key'       => 'secret2',
+				'smtpPassword'  => 'secret3',
+				'auth_token'    => 'secret4',
+				'accessToken'   => 'secret5',
+				'passphrase'    => 'secret6',
+				'bearer'        => 'secret7',
+				'credentials'   => 'secret8',
+				'safe_value'    => 'kept',
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		$this->assertSame( array( 'safe_value' => 'kept' ), $stored['TestSection'] );
+	}
+
+	public function test_backup_keeps_only_portable_database_values() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain    = $provider->getIniFileChain();
+		$database = (array) $chain->get( 'database' );
+		$chain->set(
+			'database',
+			array_merge(
+				$database,
+				array(
+					'enable_ssl' => 1,
+					'ssl_ca'     => '/etc/ssl/db-ca.pem',
+				)
+			)
+		);
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		// hand-added portable connection settings survive into the backup...
+		$this->assertSame( 1, $stored['database']['enable_ssl'] );
+		$this->assertSame( '/etc/ssl/db-ca.pem', $stored['database']['ssl_ca'] );
+		// ...but credentials and identity values never do
+		$this->assertArrayNotHasKey( 'username', $stored['database'] );
+		$this->assertArrayNotHasKey( 'password', $stored['database'] );
+		$this->assertArrayNotHasKey( 'host', $stored['database'] );
+		$this->assertArrayNotHasKey( 'dbname', $stored['database'] );
+		$this->assertArrayNotHasKey( 'tables_prefix', $stored['database'] );
+	}
+
+	public function test_restore_applies_portable_database_values_over_rebuilt_credentials() {
+		$this->update_option_data(
+			array(
+				'database'    => array(
+					'ssl_ca'   => '/etc/ssl/db-ca.pem',
+					'charset'  => 'custom_charset',
+					'username' => 'stale_user',
+					'host'     => 'stale-host.example.com',
+				),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$database = $provider->getSection( 'database' );
+		$this->assertSame( '/etc/ssl/db-ca.pem', $database['ssl_ca'] );
+		$this->assertSame( 'custom_charset', $database['charset'] );
+		$this->assertSame( DB_USER, $database['username'] );
+		$this->assertNotEquals( 'stale-host.example.com', $database['host'] );
+	}
+
+	public function test_backup_does_not_contain_reader_or_tests_database_sections() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain = $provider->getIniFileChain();
+		$chain->set(
+			'database_reader',
+			array(
+				'host'     => 'reader.example.com',
+				'username' => 'reader_user',
+				'password' => 'reader_pass',
+			)
+		);
+		$chain->set( 'database_tests', array( 'dbname' => 'tests_db' ) );
+
+		$provider->persistConfigOption();
+
+		$stored = $this->get_option_data();
+
+		$this->assertArrayNotHasKey( 'database_reader', $stored );
+		$this->assertArrayNotHasKey( 'database_tests', $stored );
+	}
+
+	public function test_restore_does_not_write_a_database_reader_section_from_the_backup() {
+		$this->update_option_data(
+			array(
+				'database_reader' => array(
+					'host'     => 'reader.example.com',
+					'username' => 'reader_user',
+				),
+				'TestSection'     => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringNotContainsString( '[database_reader]', $contents );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
+	}
+
+	public function test_restore_rebuilds_database_settings_from_wordpress() {
+		global $wpdb;
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the [database] section is not part of the backup, it is rebuilt from the current
+		// WordPress DB credentials (so restores keep working when the credentials change)
+		$database = $provider->getSection( 'database' );
+		$this->assertSame( DB_USER, $database['username'] );
+		$this->assertSame( $wpdb->prefix . MATOMO_DATABASE_PREFIX, $database['tables_prefix'] );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( '[database]', $contents );
+	}
+
+	public function test_restore_generates_missing_salt_and_trusted_hosts() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$general = $provider->getSection( 'General' );
+		$this->assertNotEmpty( $general['salt'] );
+		$this->assertNotEmpty( $general['trusted_hosts'] );
+	}
+
+	public function test_restore_does_not_reuse_a_salt_stored_in_a_backup() {
+		$this->update_option_data(
+			array(
+				'General'     => array(
+					'salt'         => 'stored-salt',
+					'kept_setting' => 'kept-value',
+				),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$general = $provider->getSection( 'General' );
+		$this->assertNotEmpty( $general['salt'] );
+		$this->assertNotSame( 'stored-salt', $general['salt'] );
+		$this->assertSame( 'kept-value', $general['kept_setting'] );
+	}
+
+	public function test_restore_does_not_reuse_trusted_hosts_stored_in_a_backup() {
+		$this->update_option_data(
+			array(
+				'General'     => array( 'trusted_hosts' => array( 'other-blog.example.com' ) ),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$expected_host = wp_parse_url( home_url(), PHP_URL_HOST );
+		$expected_port = wp_parse_url( home_url(), PHP_URL_PORT );
+		if ( $expected_port ) {
+			$expected_host .= ':' . $expected_port;
+		}
+
+		$trusted_hosts = $provider->getSection( 'General' )['trusted_hosts'];
+		$this->assertNotContains( 'other-blog.example.com', $trusted_hosts );
+		$this->assertSame( array( $expected_host ), $trusted_hosts );
+	}
+
+	public function test_restore_never_uses_the_config_options_option_as_a_backup() {
+		// config_options belongs to SyncConfig (admin-set config overrides, possibly partial
+		// data); it must never be treated as a config backup. SyncConfig re-applies it to
+		// config files through its own sync instead.
+		$this->update_sync_config_options(
+			array(
+				'TestSection' => array( 'test_key' => 'sync_config_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$section = (array) $provider->getSection( 'TestSection' );
+		$this->assertArrayNotHasKey( 'test_key', $section );
+		$this->assertFalse( file_exists( $path ) );
+	}
+
+	public function test_backup_and_restore_work_when_network_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests();
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'network_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( 'network_value', $provider->getSection( 'TestSection' )['test_key'] );
+		$this->assertTrue( file_exists( $path ) );
+	}
+
+	public function test_stale_markerless_config_keeps_its_salt_when_the_network_backup_is_restored_over_it() {
+		$this->settings->set_assume_is_network_enabled_in_tests();
+
+		// the shared network-wide backup was already populated by another blog
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'network_value' ),
+			)
+		);
+
+		// this blog's config.ini.php: valid and complete, but written by a plugin version that
+		// predates the end-of-file marker, and untouched since long before the grace period. its
+		// per-blog encrypted-salt option was never written, so the file is the only place its
+		// salt (a 32 char id generated by the installer) still exists.
+		$salt = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6';
+		$path = $this->write_config_file( "[General]\nsalt = \"$salt\"\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the network backup is applied...
+		$this->assertSame( 'network_value', $provider->getSection( 'TestSection' )['test_key'] );
+		// ...but this blog's salt survives, in memory and in the rewritten file
+		$this->assertSame( $salt, $provider->getSection( 'General' )['salt'] );
+		$this->assertStringContainsString( $salt, file_get_contents( $path ) );
+	}
+
+	public function test_restore_applies_pending_network_config_options_over_a_stale_backup() {
+		$this->settings->set_assume_is_network_enabled_in_tests();
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array(
+					'synced_key' => 'stale_value',
+					'other_key'  => 'kept_value',
+				),
+			)
+		);
+
+		// config_options (the source of truth SyncConfig applies to every blog) already holds
+		// the network admin's new value
+		$this->update_sync_config_options(
+			array(
+				'TestSection' => array( 'synced_key' => 'new_value' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$section = $provider->getSection( 'TestSection' );
+		// the synced value wins over the stale backup...
+		$this->assertSame( 'new_value', $section['synced_key'] );
+		// ...without wiping other backed-up values in the same section
+		$this->assertSame( 'kept_value', $section['other_key'] );
+	}
+
+	public function test_restore_does_not_let_synced_config_options_override_rebuilt_database_credentials() {
+		$this->settings->set_assume_is_network_enabled_in_tests();
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// a [database] group in config_options (nothing syncs one today, but set_config_value()
+		// accepts any group) must not clobber the credentials rebuilt from WordPress
+		$this->update_sync_config_options(
+			array(
+				'database' => array( 'host' => 'stale-host.example.com' ),
+			)
+		);
+
+		$provider = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$database = $provider->getSection( 'database' );
+		$this->assertSame( DB_USER, $database['username'] );
+		$this->assertNotEquals( 'stale-host.example.com', $database['host'] );
+	}
+
+	public function test_restore_does_not_write_ini_injected_through_a_malicious_config_backup() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array(
+					"x = 1\n[database]\nhost" => 'attacker.example',
+					'test_key'                => 'test_value',
+				),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the sanitized key ("x1[database]host") still produces unparseable INI (bracket/array
+		// syntax), so the restore must refuse to write the file
+		$this->assertFalse( file_exists( $path ) );
+
+		// in memory, the [database] section is rebuilt from WordPress, not attacker-controlled
+		$this->assertNotEquals( 'attacker.example', $provider->getSection( 'database' )['host'] );
+	}
+
+	public function test_restore_sanitizes_backup_keys_like_core_config_writes_do() {
+		$this->update_option_data(
+			array(
+				"Test\nSection" => array(
+					'weird key!' => 'kept_value',
+					'test_key'   => 'test_value',
+				),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = (string) file_get_contents( $path );
+		$parsed   = parse_ini_string( $contents, true );
+
+		$this->assertIsArray( $parsed );
+		$this->assertSame( 'kept_value', $parsed['TestSection']['weirdkey'] );
+		$this->assertSame( 'test_value', $parsed['TestSection']['test_key'] );
+	}
+
+	public function test_restore_does_nothing_when_backup_holds_only_excluded_values() {
+		$this->update_option_data(
+			array(
+				'database' => array( 'password' => 'stored-password' ),
+				'General'  => array(
+					'salt'          => 'stored-salt',
+					'trusted_hosts' => array( 'example.com' ),
+				),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertFalse( file_exists( $path ) );
+	}
+
+	public function test_backup_does_not_contain_the_plugins_section() {
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		// the [Plugins] section holds the runtime-computed plugin list (set on every reload by
+		// the WordPress plugin filtering), it must not be persisted as if it were user config
+		$chain = $provider->getIniFileChain();
+		$chain->set( 'Plugins', array( 'Plugins' => array( 'CoreHome', 'TagManager' ) ) );
+
+		$provider->persistConfigOption();
+
+		$this->assertArrayNotHasKey( 'Plugins', $this->get_option_data() );
+	}
+
+	public function test_restore_does_not_write_a_plugins_section_from_the_backup() {
+		$this->update_option_data(
+			array(
+				'Plugins'     => array( 'Plugins' => array( 'CoreHome', 'Marketplace' ) ),
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringNotContainsString( "[Plugins]\n", $contents );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
+	}
+
+	public function test_persist_stores_an_encrypted_copy_of_the_salt_in_its_own_option() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$record = $this->settings->get_encrypted_salt_backup();
+
+		$this->assertNotEmpty( $record['ciphertext'] );
+		$this->assertNotEmpty( $record['key_fingerprint'] );
+		$this->assertNotEmpty( $record['salt_fingerprint'] );
+
+		// the record must not reveal the salt
+		$this->assertStringNotContainsString( 'stored-test-salt', wp_json_encode( $record ) );
+		// the salt itself must still not be in the config backup either
+		$stored = $this->get_option_data();
+		$this->assertArrayNotHasKey( 'salt', isset( $stored['General'] ) ? $stored['General'] : array() );
+	}
+
+	public function test_restore_uses_the_encrypted_salt_instead_of_generating_a_new_one() {
+		$this->skip_if_sodium_is_not_available();
+
+		// a normal request stores the encrypted salt
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		// config.ini.php is lost and restored from the backup
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+		$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+	}
+
+	public function test_restore_generates_a_new_salt_when_the_wp_auth_key_was_rotated() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$rotate_key = function ( $salt_value ) {
+			return 'rotated-' . $salt_value;
+		};
+		add_filter( 'salt', $rotate_key );
+
+		try {
+			$this->update_option_data(
+				array(
+					'TestSection' => array( 'test_key' => 'test_value' ),
+				)
+			);
+			$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+			// decryption fails under the rotated key, so a fresh salt is generated
+			$restored_salt = $restored->getSection( 'General' )['salt'];
+			$this->assertNotEmpty( $restored_salt );
+			$this->assertNotSame( 'stored-test-salt', $restored_salt );
+		} finally {
+			remove_filter( 'salt', $rotate_key );
+		}
+	}
+
+	public function test_restore_does_not_regenerate_the_salt_on_every_request_when_it_cannot_be_decrypted() {
+		$this->skip_if_sodium_is_not_available();
+
+		// an encrypted salt exists, but it was stored under the pre-rotation WP auth key, so
+		// restores cannot decrypt it and have to fall back to generating a salt
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+		$this->mark_blog_installed( true );
+
+		$rotate_key = function ( $salt_value ) {
+			return 'rotated-' . $salt_value;
+		};
+		add_filter( 'salt', $rotate_key );
+
+		try {
+			$this->update_option_data(
+				array(
+					'TestSection' => array( 'test_key' => 'test_value' ),
+				)
+			);
+
+			// first restore: decryption fails under the rotated key, so a fresh salt is
+			// generated (once) and re-encrypted under the current key
+			$first      = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+			$first_salt = $first->getSection( 'General' )['salt'];
+			$this->assertNotSame( 'stored-test-salt', $first_salt );
+			$this->assertGreaterThan( 0, $this->settings->get_time_salt_was_regenerated() );
+
+			// make any further rewrite of the regeneration timestamp detectable
+			$this->settings->set_time_salt_was_regenerated( 12345 );
+
+			// second restore (eg. the restored file was lost again, or its write keeps
+			// failing): the salt generated by the first restore is decrypted and reused, so
+			// visitors' config_ids and opt-out cookie signatures stay stable across requests
+			$second = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+			$this->assertSame( $first_salt, $second->getSection( 'General' )['salt'] );
+
+			// the regeneration timestamp is not rewritten, so it keeps recording when the
+			// incident actually started
+			$this->assertSame( 12345, $this->settings->get_time_salt_was_regenerated() );
+		} finally {
+			remove_filter( 'salt', $rotate_key );
+		}
+	}
+
+	public function test_persist_reencrypts_the_salt_when_the_wp_auth_key_changes() {
+		$this->skip_if_sodium_is_not_available();
+
+		$path          = $this->build_provider_for_config_with_salt( 'stored-test-salt' );
+		$record_before = $this->settings->get_encrypted_salt_backup();
+
+		$rotate_key = function ( $salt_value ) {
+			return 'rotated-' . $salt_value;
+		};
+		add_filter( 'salt', $rotate_key );
+
+		try {
+			// the next non-tracker request notices the rotated key (fingerprint mismatch) and
+			// re-encrypts the salt, which is still available in config.ini.php
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+			$record_after = $this->settings->get_encrypted_salt_backup();
+			$this->assertNotSame( $record_before['key_fingerprint'], $record_after['key_fingerprint'] );
+			$this->assertNotSame( $record_before['ciphertext'], $record_after['ciphertext'] );
+
+			// the re-encrypted salt is restorable under the new key
+			$this->update_option_data(
+				array(
+					'TestSection' => array( 'test_key' => 'test_value' ),
+				)
+			);
+			$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+			$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+		} finally {
+			remove_filter( 'salt', $rotate_key );
+		}
+	}
+
+	public function test_persist_reencrypts_when_the_salt_in_the_config_file_changes() {
+		$this->skip_if_sodium_is_not_available();
+
+		$provider      = $this->build_provider_for_config_with_salt( 'stored-test-salt', $return_provider = true );
+		$record_before = $this->settings->get_encrypted_salt_backup();
+
+		// eg. the user manually changed the salt in config.ini.php
+		$chain   = $provider->getIniFileChain();
+		$general = (array) $chain->get( 'General' );
+
+		$general['salt'] = 'manually-changed-salt';
+		$chain->set( 'General', $general );
+
+		$provider->persistConfigOption();
+
+		$record_after = $this->settings->get_encrypted_salt_backup();
+		$this->assertNotSame( $record_before['salt_fingerprint'], $record_after['salt_fingerprint'] );
+		$this->assertNotSame( $record_before['ciphertext'], $record_after['ciphertext'] );
+	}
+
+	public function test_restore_records_the_time_when_the_salt_had_to_be_regenerated() {
+		$this->mark_blog_installed( true );
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertGreaterThanOrEqual( time() - 60, $this->settings->get_time_salt_was_regenerated() );
+	}
+
+	public function test_restore_does_not_flag_a_regenerated_salt_on_a_never_installed_blog() {
+		$this->mark_blog_installed( false );
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
+	}
+
+	public function test_restore_does_not_flag_a_regenerated_salt_when_the_salt_was_restored() {
+		$this->skip_if_sodium_is_not_available();
+
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+		$restored = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+
+		$this->assertSame( 'stored-test-salt', $restored->getSection( 'General' )['salt'] );
+		$this->assertSame( 0, $this->settings->get_time_salt_was_regenerated() );
+	}
+
+	public function test_restore_happens_on_tracker_requests() {
+		// only the persist path is skipped on tracker requests: if config.ini.php goes missing
+		// under tracker-only traffic, it must still be restored so tracking keeps working
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		\Piwik\SettingsServer::setIsTrackerApiRequest();
+
+		try {
+			$path     = $this->non_existent_config_path();
+			$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+			$this->assertSame( 'test_value', $provider->getSection( 'TestSection' )['test_key'] );
+			$this->assertTrue( file_exists( $path ) );
+			$this->assert_config_file_ends_with_marker( $path );
+		} finally {
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+		}
+	}
+
+	public function test_restore_produces_identical_files_for_identical_state() {
+		$this->skip_if_sodium_is_not_available();
+
+		// concurrent restores (eg. a tracker request storm hitting a deleted config) can never
+		// corrupt anything as long as every restore produces the exact same bytes: the atomic
+		// write-and-rename then makes the race a harmless last-writer-wins of identical content.
+		// this requires the salt to come from the encrypted per-blog backup, not be generated.
+		$this->build_provider_for_config_with_salt( 'stored-test-salt' );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$first_path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $first_path, null, $this->settings );
+
+		$second_path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $second_path, null, $this->settings );
+
+		$this->assertNotEmpty( file_get_contents( $first_path ) );
+		$this->assertSame( file_get_contents( $first_path ), file_get_contents( $second_path ) );
+	}
+
+	private function skip_if_sodium_is_not_available() {
+		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
+			$this->markTestSkipped( 'sodium is not available' );
+		}
+	}
+
+	/**
+	 * Writes a complete (marker-terminated) config file containing the given salt and builds a
+	 * provider for it, which persists the encrypted salt to the per-blog option.
+	 *
+	 * @param string $salt
+	 * @param bool   $return_provider
+	 * @return string|GlobalSettingsProvider the config file path, or the provider itself
+	 */
+	private function build_provider_for_config_with_salt( $salt, $return_provider = false ) {
+		$path = $this->write_config_file(
+			"[General]\nsalt = \"$salt\"\n\n"
+			. '[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . "]\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = "'
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . "\"\n"
+		);
+
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		return $return_provider ? $provider : $path;
+	}
+
+	public function test_installed_config_file_ends_with_end_of_file_marker() {
+		// the config.ini.php created by the installer must end with the marker, otherwise it
+		// would never be backed up
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$this->assert_config_file_ends_with_marker( $provider->getPathLocal() );
+	}
+
+	public function test_backup_is_not_updated_when_config_file_is_missing_the_end_of_file_marker() {
+		$this->update_option_data(
+			array(
+				'Preexisting' => array( 'key' => 'value' ),
+			)
+		);
+
+		// a config file whose write did not finish (or that was truncated): no marker at the end
+		$path = $this->write_config_file( "[TestSection]\ntest_key = \"test_value\"\n" );
+
+		$original_contents = file_get_contents( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the incomplete file was not backed up (that would overwrite the good backup)...
+		$this->assertSame( array( 'Preexisting' => array( 'key' => 'value' ) ), $this->get_option_data() );
+		// ...and it was not overwritten with the backup either (a write may be in progress)
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
+	public function test_backup_is_updated_when_config_file_ends_with_the_end_of_file_marker() {
+		$marker_section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$path = $this->write_config_file(
+			"[TestSection]\ntest_key = \"test_value\"\n\n"
+			. '[' . $marker_section . "]\n"
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_KEY . ' = "'
+			. GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . "\"\n"
+		);
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$stored = $this->get_option_data();
+
+		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
+		// the marker is file bookkeeping, it does not belong in the backup
+		$this->assertArrayNotHasKey( $marker_section, $stored );
+	}
+
+	public function test_stale_incomplete_config_file_is_restored_from_backup() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// a marker-less file that has not been modified for longer than the grace period: the
+		// write that produced it was interrupted for good, so it is replaced with the backup
+		$path = $this->write_config_file( "[OldSection]\nold_key = \"old_value\"\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$contents = file_get_contents( $path );
+		$this->assertStringContainsString( "[TestSection]\n", $contents );
+		$this->assertStringNotContainsString( '[OldSection]', $contents );
+		$this->assert_config_file_ends_with_marker( $path );
+	}
+
+	public function test_stale_incomplete_config_file_is_not_touched_when_the_backup_is_empty() {
+		$this->update_sync_config_options(
+			array(
+				'TestSection' => array( 'test_key' => 'sync_config_value' ),
+			)
+		);
+
+		$path = $this->write_config_file( "[OldSection]\nold_key = \"old_value\"\n" );
+		touch( $path, time() - GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$original_contents = file_get_contents( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
+	public function test_empty_config_file_is_neither_backed_up_nor_restored_over() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		// eg. a concurrent Config::forceSave() just truncated the file and is about to rewrite it
+		$path = $this->non_existent_config_path();
+		touch( $path );
+
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assertSame( '', file_get_contents( $path ) );
+		$this->assertSame( array( 'TestSection' => array( 'test_key' => 'test_value' ) ), $this->get_option_data() );
+	}
+
+	public function test_restored_config_file_ends_with_end_of_file_marker_and_is_backed_up_again() {
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path = $this->non_existent_config_path();
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$this->assert_config_file_ends_with_marker( $path );
+
+		// round trip: the restored file passes the completeness check, so it is backed up again
+		$this->update_option_data( array() );
+		new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		$stored = $this->get_option_data();
+		$this->assertSame( 'test_value', $stored['TestSection']['test_key'] );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_backup_is_not_written_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->assertSame( array(), $this->get_option_data() );
+
+		new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		// with the feature off, the real config.ini.php is not backed up to the option
+		$this->assertSame( array(), $this->get_option_data() );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_config_file_is_not_restored_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path     = $this->non_existent_config_path();
+		$provider = new GlobalSettingsProvider( null, $path, null, $this->settings );
+
+		// the missing config.ini.php is neither rebuilt from the backup...
+		$this->assertFalse( file_exists( $path ) );
+		// ...nor is the backup layered on top of the INI config
+		$section = (array) $provider->getSection( 'TestSection' );
+		$this->assertArrayNotHasKey( 'test_key', $section );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_persistConfigOption_is_a_noop_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$provider = new GlobalSettingsProvider( null, null, null, $this->settings );
+
+		$chain                  = $provider->getIniFileChain();
+		$section                = (array) $chain->get( 'TestSection' );
+		$section['changed_key'] = 'changed_value';
+		$chain->set( 'TestSection', $section );
+
+		$provider->persistConfigOption();
+
+		$this->assertSame( array(), $this->get_option_data() );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_corrupt_config_file_is_not_recovered_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$this->update_option_data(
+			array(
+				'TestSection' => array( 'test_key' => 'test_value' ),
+			)
+		);
+
+		$path              = $this->write_config_file( "[General]\nsalt = \"unterminated\n" );
+		$original_contents = file_get_contents( $path );
+
+		$threw = false;
+		try {
+			new GlobalSettingsProvider( null, $path, null, $this->settings );
+		} catch ( \Exception $ex ) {
+			$threw = true;
+		}
+
+		// with the feature off there is no self-heal: the load error propagates instead of being
+		// swallowed, and the corrupt file is left untouched rather than dropped and rebuilt
+		$this->assertTrue( $threw, 'expected the unparseable config to make reload() throw' );
+		$this->assertTrue( file_exists( $path ) );
+		$this->assertSame( $original_contents, file_get_contents( $path ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_plugin_filtering_still_runs_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$provider    = new GlobalSettingsProvider( null, null, null, $this->settings );
+		$plugin_list = new \Piwik\Application\Kernel\PluginList( $provider );
+		$activated   = $plugin_list->getActivatedPlugins();
+
+		$this->assertContains( 'BulkTracking', $activated );
+		$this->assertNotContains( 'Marketplace', $activated );
+	}
+
+	public function test_before_save_handler_adds_the_marker_when_the_feature_is_enabled() {
+		$section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$plugin  = new \Piwik\Plugins\WordPress\WordPress();
+
+		$values = array( 'General' => array( 'foo' => 'bar' ) );
+		$plugin->ensureEndOfFileMarkerIsLastConfigSection( $values );
+
+		$this->assertArrayHasKey( $section, $values );
+		// the marker must be the very last section
+		$this->assertSame( $section, array_key_last( $values ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_before_save_handler_does_not_add_the_marker_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$plugin  = new \Piwik\Plugins\WordPress\WordPress();
+
+		// with the feature disabled the beforeSave handler must not touch config.ini.php, so the
+		// marker section is not injected on every save (config-management drift, R5-3)
+		$values = array( 'General' => array( 'foo' => 'bar' ) );
+		$plugin->ensureEndOfFileMarkerIsLastConfigSection( $values );
+
+		$this->assertArrayNotHasKey( $section, $values );
+	}
+
+	private function mark_blog_installed( $installed ) {
+		$this->settings->set_option(
+			\WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED,
+			$installed ? wp_json_encode( array( 'core' => '1.0.0' ) ) : ''
+		);
+		$this->settings->save();
+	}
+
+	private function write_config_file( $ini_content ) {
+		$path = $this->non_existent_config_path();
+		file_put_contents( $path, "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $ini_content );
+
+		return $path;
+	}
+
+	private function write_raw_ini_file( $ini_content ) {
+		$path = get_temp_dir() . 'matomo-wp-ini-' . uniqid() . '.ini.php';
+		file_put_contents( $path, "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $ini_content );
+		$this->temp_files[] = $path;
+
+		return $path;
+	}
+
+	private function assert_config_file_ends_with_marker( $path ) {
+		$contents = trim( (string) file_get_contents( $path ) );
+
+		// the marker section must be present...
+		$this->assertStringContainsString(
+			'[' . GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION . ']',
+			$contents
+		);
+		// ...and the marker key must be the very last line, so an interrupted write is detectable
+		$expected_tail = GlobalSettingsProvider::END_OF_FILE_MARKER_KEY
+			. ' = "' . GlobalSettingsProvider::END_OF_FILE_MARKER_VALUE . '"';
+		$this->assertSame(
+			$expected_tail,
+			substr( $contents, - strlen( $expected_tail ) ),
+			'config file does not end with the end-of-file marker, it ends with: ...' . substr( $contents, -200 )
+		);
+	}
+
+	private function get_activated_plugins() {
+		$provider    = new GlobalSettingsProvider( null, null, null, $this->settings );
+		$plugin_list = new \Piwik\Application\Kernel\PluginList( $provider );
+
+		return $plugin_list->getActivatedPlugins();
+	}
+
+	/**
+	 * Builds a provider whose config.ini.php is missing so the given backup is restored, then returns
+	 * the activated plugin list the way the DI container does.
+	 *
+	 * @param array $backup
+	 * @return string[]
+	 */
+	private function get_activated_plugins_for_missing_file( array $backup ) {
+		$this->update_option_data( $backup );
+
+		$provider    = new GlobalSettingsProvider( null, $this->non_existent_config_path(), null, $this->settings );
+		$plugin_list = new \Piwik\Application\Kernel\PluginList( $provider );
+
+		return $plugin_list->getActivatedPlugins();
+	}
+
+	/**
+	 * Returns a path to a config.ini.php that does not exist (used to simulate an accidentally deleted
+	 * file).
+	 *
+	 * @return string
+	 */
+	private function non_existent_config_path() {
+		$path = get_temp_dir() . 'matomo-wp-missing-config-' . uniqid() . '.ini.php';
+		if ( file_exists( $path ) ) {
+			unlink( $path );
+		}
+		$this->temp_files[] = $path;
+
+		return $path;
+	}
+
+	private function get_option_data() {
+		return $this->settings->get_config_backup();
+	}
+
+	private function update_option_data( array $data ) {
+		$this->settings->update_config_backup( $data );
+	}
+
+	private function update_sync_config_options( array $data ) {
+		$this->settings->set_global_option( \WpMatomo\Settings::CONFIG_OPTIONS, $data );
+		$this->settings->save();
+	}
+}
