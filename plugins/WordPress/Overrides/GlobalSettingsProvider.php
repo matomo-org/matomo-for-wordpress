@@ -83,7 +83,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
      */
     private $logger;
 
-    public function __construct($pathGlobal = null, $pathLocal = null, $pathCommon = null, Settings $settings = null)
+    public function __construct($pathGlobal = null, $pathLocal = null, $pathCommon = null, ?Settings $settings = null)
     {
         $this->settings = $settings;
 
@@ -392,8 +392,10 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public static function wasConfigFileModifiedRecently($path)
     {
+        // @ suppresses the "stat failed" warning when the file disappears between the caller's
+        // is_file() check and this stat (a concurrent unlink)
         // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-        $mtime = filemtime($path);
+        $mtime = @filemtime($path);
         if (false === $mtime) {
             // cannot tell (eg. the file just disappeared); err on the side of not touching it
             return true;
@@ -802,7 +804,28 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $global = is_array($global) ? $global : [];
         $common = is_array($common) ? $common : [];
 
-        return array_merge($global, $common);
+        return $this->arrayMergeRecursiveDistinct($global, $common);
+    }
+
+    /**
+     * Same as IniFileChain::array_merge_recursive_distinct() (private in core, so not callable
+     * from here).
+     *
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    private function arrayMergeRecursiveDistinct(array $array1, array $array2)
+    {
+        $merged = $array1;
+        foreach ($array2 as $key => $value) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = $this->arrayMergeRecursiveDistinct($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+        return $merged;
     }
 
     private function getWpMatomoSettings()

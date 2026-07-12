@@ -267,6 +267,23 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEmpty( fnmatch( $sweep_pattern, $temp_path ) );
 	}
 
+	public function test_default_section_merges_global_and_common_per_key_like_core() {
+		$global_path = $this->write_raw_ini_file( "[TestArr]\nlist[] = \"a\"\nlist[] = \"b\"\n" );
+		$common_path = $this->write_raw_ini_file( "[TestArr]\nlist[] = \"c\"\n" );
+		$local_path  = $this->write_config_file( "[General]\nsalt = \"" . str_repeat( 'a', 32 ) . "\"\n" );
+
+		$provider = new GlobalSettingsProvider( $global_path, $local_path, $common_path, $this->settings );
+
+		$method = new ReflectionMethod( GlobalSettingsProvider::class, 'getDefaultSection' );
+		$method->setAccessible( true );
+		$default = $method->invoke( $provider, 'TestArr' );
+
+		// per-key recursive merge: index 0 overwritten by common's 'c', index 1 kept from global
+		// ('b') — exactly what core's array_merge_recursive_distinct produces. a plain
+		// array_merge would instead yield ['list' => ['c']] (whole array replaced).
+		$this->assertSame( array( 'list' => array( 'c', 'b' ) ), $default );
+	}
+
 	public function test_restore_deletes_stale_orphaned_temp_files_but_keeps_recent_ones() {
 		$this->update_option_data(
 			array(
@@ -1392,6 +1409,14 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 	private function write_config_file( $ini_content ) {
 		$path = $this->non_existent_config_path();
 		file_put_contents( $path, "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $ini_content );
+
+		return $path;
+	}
+
+	private function write_raw_ini_file( $ini_content ) {
+		$path = get_temp_dir() . 'matomo-wp-ini-' . uniqid() . '.ini.php';
+		file_put_contents( $path, "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $ini_content );
+		$this->temp_files[] = $path;
 
 		return $path;
 	}
