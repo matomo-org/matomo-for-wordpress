@@ -318,4 +318,36 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEmpty( ( new Settings() )->get_config_backup() );
 		$this->assertStringContainsString( '[' . $marker_section . ']', file_get_contents( $path ) );
 	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_add_config_end_of_file_marker_is_skipped_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$marker_section = \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+
+		$config = \Piwik\Config::getInstance();
+		$path   = $config->getLocalPath();
+
+		// a marker-less config file, aged past the grace period (so only the kill switch could
+		// stop it from being stamped)
+		$contents = file_get_contents( $path );
+		$stripped = preg_replace(
+			'/\[' . preg_quote( $marker_section, '/' ) . '\].*$/s',
+			'',
+			$contents
+		);
+		file_put_contents( $path, $stripped );
+		touch( $path, time() - \Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider::INCOMPLETE_FILE_GRACE_PERIOD_SECONDS - 60 );
+
+		$updater = new Updater( new Settings() );
+		$updater->add_config_end_of_file_marker_if_needed();
+
+		// with the feature disabled the marker is not written (the ScheduledTasks path and this
+		// Updater path now agree on the kill switch)
+		$this->assertSame( $stripped, file_get_contents( $path ) );
+		$this->assertStringNotContainsString( $marker_section, file_get_contents( $path ) );
+	}
 }

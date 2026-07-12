@@ -232,6 +232,10 @@ class Updater {
 	 * (public for tests)
 	 */
 	public function add_config_end_of_file_marker_if_needed() {
+		if ( GlobalSettingsProvider::isConfigBackupDisabled() ) {
+			return; // the marker only exists for the config backup feature
+		}
+
 		$config = Config::getInstance();
 		if ( GlobalSettingsProvider::isEndOfFileMarkerPresent( $config ) ) {
 			return;

@@ -22,6 +22,9 @@ use WpMatomo\Settings;
 /**
  * A GlobalSettingsProvider that keeps a backup copy of the Matomo config data in a WordPress option
  * (ie. the database).
+ *
+ * Note: the primary reason for keeping a backup in the DB and not simply storing the config
+ * in the DB is that modifying the config.ini.php by hand is a documented Matomo use case.
  */
 class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 {
@@ -123,7 +126,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         $this->detectExtraPluginsToLoad();
     }
 
-    private function isConfigBackupDisabled()
+    public static function isConfigBackupDisabled()
     {
         return defined('MATOMO_DISABLE_CONFIG_BACKUP') && MATOMO_DISABLE_CONFIG_BACKUP;
     }

@@ -19,6 +19,7 @@ use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Plugins\WordPress\Overrides\GlobalSettingsProvider;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
@@ -221,7 +222,7 @@ class ScheduledTasks extends Feature {
 	 * Adds the eof file marker used by the config backup system (see GlobalSettingsProvider).
 	 */
 	public function add_config_end_of_file_marker() {
-		if ( defined( 'MATOMO_DISABLE_CONFIG_BACKUP' ) && MATOMO_DISABLE_CONFIG_BACKUP ) {
+		if ( GlobalSettingsProvider::isConfigBackupDisabled() ) {
 			return; // the marker only exists for the config backup feature
 		}
 
