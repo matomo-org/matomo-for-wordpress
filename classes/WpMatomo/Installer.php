@@ -118,7 +118,6 @@ class Installer {
 			if (
 				! SettingsPiwik::isMatomoInstalled()
 				|| ! $this->looks_like_it_is_installed()
-				|| empty( $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED ) )
 			) {
 				throw new NotYetInstalledException( 'Not yet installed' );
 			}
