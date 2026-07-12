@@ -232,7 +232,7 @@ class Updater {
 	 * (public for tests)
 	 */
 	public function add_config_end_of_file_marker_if_needed() {
-		if (Settings::is_config_backup_disabled()) {
+		if ( Settings::is_config_backup_disabled() ) {
 			return; // the marker only exists for the config backup feature
 		}
 

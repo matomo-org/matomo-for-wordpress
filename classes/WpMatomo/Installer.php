@@ -303,18 +303,25 @@ class Installer {
 		return $db_infos;
 	}
 
+	public static function get_trusted_host_from_wp_url() {
+		$home_url = home_url();
+
+		$domain = wp_parse_url( $home_url, PHP_URL_HOST );
+		if ( ! $domain ) {
+			return $home_url;
+		}
+
+		$port = wp_parse_url( $home_url, PHP_URL_PORT );
+		if ( $port ) {
+			$domain .= ':' . $port;
+		}
+
+		return $domain;
+	}
+
 	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
-		$home_url = home_url();
-		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
-		if ( $domain ) {
-			$port = wp_parse_url( $home_url, PHP_URL_PORT );
-			if ( $port ) {
-				$domain .= ':' . $port;
-			}
-		} else {
-			$domain = $home_url;
-		}
+		$domain  = self::get_trusted_host_from_wp_url();
 		$general = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),

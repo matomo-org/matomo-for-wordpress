@@ -590,25 +590,9 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
         }
 
         $backup['General']['salt'] = $salt;
-        $backup['General']['trusted_hosts'] = [$this->getTrustedHost()];
+        $backup['General']['trusted_hosts'] = [Installer::get_trusted_host_from_wp_url()];
 
         return $backup;
-    }
-
-    private function getTrustedHost()
-    {
-        $homeUrl = home_url();
-
-        $domain = wp_parse_url($homeUrl, PHP_URL_HOST);
-        if (!$domain) {
-            return $homeUrl;
-        }
-
-        $port = wp_parse_url($homeUrl, PHP_URL_PORT);
-        if ($port) {
-            $domain .= ':' . $port;
-        }
-        return $domain;
     }
 
     private function writeLocalConfigFile(array $userConfig)

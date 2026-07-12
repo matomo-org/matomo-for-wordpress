@@ -196,9 +196,8 @@ class Settings {
 		$this->load_blog_settings();
 	}
 
-	public static function is_config_backup_disabled()
-	{
-		return defined('MATOMO_DISABLE_CONFIG_BACKUP') && MATOMO_DISABLE_CONFIG_BACKUP;
+	public static function is_config_backup_disabled() {
+		return defined( 'MATOMO_DISABLE_CONFIG_BACKUP' ) && MATOMO_DISABLE_CONFIG_BACKUP;
 	}
 
 	public function get_customised_global_settings() {

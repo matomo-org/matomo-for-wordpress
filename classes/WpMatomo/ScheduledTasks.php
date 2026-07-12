@@ -222,7 +222,7 @@ class ScheduledTasks extends Feature {
 	 * Adds the eof file marker used by the config backup system (see GlobalSettingsProvider).
 	 */
 	public function add_config_end_of_file_marker() {
-		if (Settings::is_config_backup_disabled()) {
+		if ( Settings::is_config_backup_disabled() ) {
 			return; // the marker only exists for the config backup feature
 		}
 
