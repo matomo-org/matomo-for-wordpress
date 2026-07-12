@@ -1398,6 +1398,36 @@ class GlobalSettingsProviderTest extends MatomoAnalytics_TestCase {
 		$this->assertNotContains( 'Marketplace', $activated );
 	}
 
+	public function test_before_save_handler_adds_the_marker_when_the_feature_is_enabled() {
+		$section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$plugin  = new \Piwik\Plugins\WordPress\WordPress();
+
+		$values = array( 'General' => array( 'foo' => 'bar' ) );
+		$plugin->ensureEndOfFileMarkerIsLastConfigSection( $values );
+
+		$this->assertArrayHasKey( $section, $values );
+		// the marker must be the very last section
+		$this->assertSame( $section, array_key_last( $values ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_before_save_handler_does_not_add_the_marker_when_the_feature_is_disabled() {
+		define( 'MATOMO_DISABLE_CONFIG_BACKUP', true );
+
+		$section = GlobalSettingsProvider::END_OF_FILE_MARKER_SECTION;
+		$plugin  = new \Piwik\Plugins\WordPress\WordPress();
+
+		// with the feature disabled the beforeSave handler must not touch config.ini.php, so the
+		// marker section is not injected on every save (config-management drift, R5-3)
+		$values = array( 'General' => array( 'foo' => 'bar' ) );
+		$plugin->ensureEndOfFileMarkerIsLastConfigSection( $values );
+
+		$this->assertArrayNotHasKey( $section, $values );
+	}
+
 	private function mark_blog_installed( $installed ) {
 		$this->settings->set_option(
 			\WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED,

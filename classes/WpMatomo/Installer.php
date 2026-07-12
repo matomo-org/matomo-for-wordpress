@@ -339,8 +339,11 @@ class Installer {
 		$config->General = array_merge( $general_default, $general );
 
 		// add the end-of-file marker used to detect interrupted writes to config.ini.php; it must
-		// exist in every config file (see GlobalSettingsProvider)
-		GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+		// exist in every config file (see GlobalSettingsProvider). skip it when the config backup
+		// feature is disabled, so the file is not modified for admins managing it themselves.
+		if ( ! Settings::is_config_backup_disabled() ) {
+			GlobalSettingsProvider::addEndOfFileMarkerSectionTo( $config );
+		}
 
 		$config->forceSave();
 

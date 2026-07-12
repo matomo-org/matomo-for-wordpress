@@ -98,7 +98,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public function reload($pathGlobal = null, $pathLocal = null, $pathCommon = null)
     {
-        if ($this->isConfigBackupDisabled()) {
+        if (Settings::is_config_backup_disabled()) {
             // the config backup/restore feature is turned off, so behave like the default provider
             // (no corrupt-file recovery, no restore, no backup).
             parent::reload($pathGlobal, $pathLocal, $pathCommon);
@@ -124,11 +124,6 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
         $this->syncOrRestoreConfigBackup();
         $this->detectExtraPluginsToLoad();
-    }
-
-    public static function isConfigBackupDisabled()
-    {
-        return defined('MATOMO_DISABLE_CONFIG_BACKUP') && MATOMO_DISABLE_CONFIG_BACKUP;
     }
 
     /**
@@ -203,7 +198,7 @@ class GlobalSettingsProvider extends DefaultGlobalSettingsProvider
 
     public function persistConfigOption()
     {
-        if ($this->isConfigBackupDisabled()) {
+        if (Settings::is_config_backup_disabled()) {
             return;
         }
 

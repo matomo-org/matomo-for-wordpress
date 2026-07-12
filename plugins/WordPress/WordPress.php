@@ -92,6 +92,12 @@ class WordPress extends Plugin
     }
 
     public function ensureEndOfFileMarkerIsLastConfigSection(&$values) {
+        if (\WpMatomo\Settings::is_config_backup_disabled()) {
+            // the marker only exists for the config backup feature; with it disabled we must not
+            // modify config.ini.php, so it stays byte-identical to what the admin manages.
+            return;
+        }
+
         // the marker must be the very last section of config.ini.php, so an interrupted or
         // still running write can be detected by its absence (see
         // GlobalSettingsProvider::isLocalConfigFileWrittenCompletely())
