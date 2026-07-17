@@ -81,11 +81,13 @@ echo "Running matomo-scoper..."
 php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
 
 echo -e "Applying patches to prefixed Matomo core..."
+cd "$SCRIPTPATH/.."
 for patch in $(ls $SCRIPTPATH/../patches/prefixed/*.diff);
 do
   echo -e "  applying $patch"
   git apply "$patch"
 done
+cd "$SCRIPTPATH"
 
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js
