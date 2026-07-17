@@ -100,4 +100,73 @@ class UserTest extends MatomoUnit_TestCase {
 		$this->assertFalse( User::get_matomo_user_login( 5 ) );
 	}
 
+	public function test_get_wp_user_ids_for_matomo_login_returns_empty_array_when_login_is_empty() {
+		$this->assertSame( [], $this->user->get_wp_user_ids_for_matomo_login( '' ) );
+		$this->assertSame( [], $this->user->get_wp_user_ids_for_matomo_login( null ) );
+	}
+
+	public function test_get_wp_user_ids_for_matomo_login_returns_empty_array_when_no_user_is_mapped() {
+		User::map_matomo_user_login( 5, 'someLogin' );
+
+		$this->assertSame( [], $this->user->get_wp_user_ids_for_matomo_login( 'notMappedLogin' ) );
+	}
+
+	public function test_get_wp_user_ids_for_matomo_login_returns_the_single_mapped_user() {
+		User::map_matomo_user_login( 5, 'myMatomoLogin' );
+
+		$this->assertSame( [ 5 ], $this->user->get_wp_user_ids_for_matomo_login( 'myMatomoLogin' ) );
+	}
+
+	public function test_get_wp_user_ids_for_matomo_login_returns_all_users_sharing_the_login() {
+		// unexpected state: two distinct WordPress users end up mapped to the same Matomo login
+		User::map_matomo_user_login( 5, 'sharedLogin' );
+		User::map_matomo_user_login( 6, 'sharedLogin' );
+		User::map_matomo_user_login( 7, 'otherLogin' );
+
+		$ids = $this->user->get_wp_user_ids_for_matomo_login( 'sharedLogin' );
+
+		$this->assertEqualsCanonicalizing( [ 5, 6 ], $ids );
+		foreach ( $ids as $id ) {
+			$this->assertIsInt( $id );
+		}
+	}
+
+	public function test_get_wp_user_ids_for_matomo_login_matches_the_login_exactly() {
+		User::map_matomo_user_login( 5, 'login' );
+		User::map_matomo_user_login( 6, 'login2' );
+
+		$this->assertSame( [ 5 ], $this->user->get_wp_user_ids_for_matomo_login( 'login' ) );
+	}
+
+	public function test_delete_mappings_for_matomo_login_removes_every_mapping_pointing_to_the_given_login() {
+		User::map_matomo_user_login( 5, 'sharedLogin' );
+		User::map_matomo_user_login( 6, 'sharedLogin' );
+		User::map_matomo_user_login( 7, 'otherLogin' );
+
+		$this->user->delete_mappings_for_matomo_login( 'sharedLogin' );
+
+		$this->assertFalse( User::get_matomo_user_login( 5 ) );
+		$this->assertFalse( User::get_matomo_user_login( 6 ) );
+		// unrelated mappings must be left untouched
+		$this->assertSame( 'otherLogin', User::get_matomo_user_login( 7 ) );
+		$this->assertSame( [], $this->user->get_wp_user_ids_for_matomo_login( 'sharedLogin' ) );
+	}
+
+	public function test_delete_mappings_for_matomo_login_does_nothing_when_login_is_empty() {
+		User::map_matomo_user_login( 5, 'someLogin' );
+
+		$this->user->delete_mappings_for_matomo_login( '' );
+		$this->user->delete_mappings_for_matomo_login( null );
+
+		$this->assertSame( 'someLogin', User::get_matomo_user_login( 5 ) );
+	}
+
+	public function test_delete_mappings_for_matomo_login_does_nothing_when_login_is_not_mapped() {
+		User::map_matomo_user_login( 5, 'someLogin' );
+
+		$this->user->delete_mappings_for_matomo_login( 'notMappedLogin' );
+
+		$this->assertSame( 'someLogin', User::get_matomo_user_login( 5 ) );
+	}
+
 }

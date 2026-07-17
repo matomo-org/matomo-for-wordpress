@@ -138,6 +138,8 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     environment:
       EXECUTE_CLI: 1
+      MULTISITE: ${MULTISITE:-0}
+      WP_MULTISITE: ${WP_MULTISITE:-0}
     depends_on:
       - "$BACKEND"
     extra_hosts:
