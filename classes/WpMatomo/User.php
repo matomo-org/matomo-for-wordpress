@@ -17,6 +17,11 @@ class User {
 	const USER_MAPPING_PREFIX = 'matomo-user-login-';
 
 	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
 	 * @api
 	 */
 	public function get_current_matomo_user_login() {
@@ -76,15 +81,17 @@ class User {
 			return;
 		}
 
-		if ( ! is_multisite() ) {
+		// on network-enabled multisite WP, there is one Matomo per network, so
+		// iterating over all blogs is not needed.
+		if ( ! $this->get_settings()->is_network_enabled() ) {
 			$this->delete_mappings_for_matomo_login_on_current_blog( $matomo_user_login );
 			return;
 		}
 
 		global $wpdb;
 
-		// for multisite, the mapping needs to be deleted for every site the user
-		// has been mapped within
+		// the same Matomo login can be mapped from several blogs, so the mapping needs to be deleted
+		// for every blog it has been mapped within
 		$cache_key   = 'blog_ids_for_mapping_cleanup';
 		$cache_group = 'matomo';
 
@@ -129,5 +136,14 @@ class User {
 
 	public function uninstall() {
 		Uninstaller::uninstall_options( self::USER_MAPPING_PREFIX );
+	}
+
+	private function get_settings() {
+		if ( ! empty( $this->settings ) ) {
+			return $this->settings;
+		}
+
+		$this->settings = \WpMatomo::$settings ? \WpMatomo::$settings : new Settings();
+		return $this->settings;
 	}
 }

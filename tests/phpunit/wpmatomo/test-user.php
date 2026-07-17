@@ -172,17 +172,18 @@ class UserTest extends MatomoUnit_TestCase {
 	/**
 	 * @group ms-required
 	 */
-	public function test_delete_mappings_for_matomo_login_removes_mappings_across_all_blogs() {
+	public function test_delete_mappings_for_matomo_login_removes_mappings_across_all_blogs_when_network_enabled() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
 
+		// simulate a network activated plugin so is_network_enabled() returns true
+		update_site_option( 'active_sitewide_plugins', array( 'matomo/matomo.php' => time() ) );
+
 		$blog1 = self::factory()->blog->create();
 		$blog2 = self::factory()->blog->create();
 
-		// Matomo users are global, but the WP -> Matomo mapping is stored per blog. the same
-		// Matomo login can therefore be mapped from several blogs at once.
 		User::map_matomo_user_login( 5, 'sharedLogin' );
 
 		switch_to_blog( $blog1 );
@@ -209,8 +210,44 @@ class UserTest extends MatomoUnit_TestCase {
 		$this->assertFalse( User::get_matomo_user_login( 6 ) );
 		restore_current_blog();
 
+		delete_site_option( 'active_sitewide_plugins' );
 		wp_delete_site( $blog1 );
 		wp_delete_site( $blog2 );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_delete_mappings_for_matomo_login_only_touches_current_blog_when_not_network_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// make sure the plugin is not considered network activated
+		delete_site_option( 'active_sitewide_plugins' );
+
+		$blog1 = self::factory()->blog->create();
+
+		// mapping on the current (main) blog
+		User::map_matomo_user_login( 5, 'sharedLogin' );
+
+		// same login string but on another blog => a different Matomo instance / user
+		switch_to_blog( $blog1 );
+		User::map_matomo_user_login( 6, 'sharedLogin' );
+		restore_current_blog();
+
+		$this->user->delete_mappings_for_matomo_login( 'sharedLogin' );
+
+		// only the current blog's mapping is removed...
+		$this->assertFalse( User::get_matomo_user_login( 5 ) );
+
+		// ...the other blog's mapping is left untouched
+		switch_to_blog( $blog1 );
+		$this->assertSame( 'sharedLogin', User::get_matomo_user_login( 6 ) );
+		restore_current_blog();
+
+		wp_delete_site( $blog1 );
 	}
 
 }
