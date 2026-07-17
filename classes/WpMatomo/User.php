@@ -76,6 +76,52 @@ class User {
 			return;
 		}
 
+		if ( ! is_multisite() ) {
+			$this->delete_mappings_for_matomo_login_on_current_blog( $matomo_user_login );
+			return;
+		}
+
+		global $wpdb;
+
+		// for multisite, the mapping needs to be deleted for every site the user
+		// has been mapped within
+		$cache_key   = 'blog_ids_for_mapping_cleanup';
+		$cache_group = 'matomo';
+
+		$blogs = wp_cache_get( $cache_key, $cache_group );
+		if ( false === $blogs ) {
+			// short lived cache so a sync deleting many users does not re-run this once per user;
+			// a slightly stale blog list is harmless here (deleted blogs are skipped below).
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+
+			if ( is_array( $blogs ) ) {
+				wp_cache_set( $cache_key, $blogs, $cache_group, 5 * MINUTE_IN_SECONDS );
+			}
+		}
+
+		if ( ! is_array( $blogs ) ) {
+			return;
+		}
+
+		foreach ( $blogs as $blog ) {
+			if ( 1 === (int) $blog['deleted'] ) {
+				continue;
+			}
+
+			switch_to_blog( $blog['blog_id'] );
+			try {
+				$this->delete_mappings_for_matomo_login_on_current_blog( $matomo_user_login );
+			} finally {
+				restore_current_blog();
+			}
+		}
+	}
+
+	/**
+	 * @param string $matomo_user_login
+	 */
+	private function delete_mappings_for_matomo_login_on_current_blog( $matomo_user_login ) {
 		foreach ( $this->get_wp_user_ids_for_matomo_login( $matomo_user_login ) as $wp_user_id ) {
 			delete_option( self::USER_MAPPING_PREFIX . $wp_user_id );
 		}

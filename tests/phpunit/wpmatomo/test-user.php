@@ -169,4 +169,48 @@ class UserTest extends MatomoUnit_TestCase {
 		$this->assertSame( 'someLogin', User::get_matomo_user_login( 5 ) );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_delete_mappings_for_matomo_login_removes_mappings_across_all_blogs() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog1 = self::factory()->blog->create();
+		$blog2 = self::factory()->blog->create();
+
+		// Matomo users are global, but the WP -> Matomo mapping is stored per blog. the same
+		// Matomo login can therefore be mapped from several blogs at once.
+		User::map_matomo_user_login( 5, 'sharedLogin' );
+
+		switch_to_blog( $blog1 );
+		User::map_matomo_user_login( 5, 'sharedLogin' );
+		User::map_matomo_user_login( 7, 'otherLogin' );
+		restore_current_blog();
+
+		switch_to_blog( $blog2 );
+		User::map_matomo_user_login( 6, 'sharedLogin' );
+		restore_current_blog();
+
+		$this->user->delete_mappings_for_matomo_login( 'sharedLogin' );
+
+		// the shared login mapping is removed on every blog...
+		$this->assertFalse( User::get_matomo_user_login( 5 ) );
+
+		switch_to_blog( $blog1 );
+		$this->assertFalse( User::get_matomo_user_login( 5 ) );
+		// ...while a mapping pointing at a different login on the same blog is left untouched
+		$this->assertSame( 'otherLogin', User::get_matomo_user_login( 7 ) );
+		restore_current_blog();
+
+		switch_to_blog( $blog2 );
+		$this->assertFalse( User::get_matomo_user_login( 6 ) );
+		restore_current_blog();
+
+		wp_delete_site( $blog1 );
+		wp_delete_site( $blog2 );
+	}
+
 }

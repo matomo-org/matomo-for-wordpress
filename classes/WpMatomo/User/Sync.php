@@ -430,7 +430,7 @@ class Sync extends Feature {
 		}
 
 		// the login is owned by another WP user if the single mapped user is not the requested user
-		return (int) $wp_user_ids_mapped_to_matomo_login[0] !== (int) $wp_user_id;
+		return (int) reset( $wp_user_ids_mapped_to_matomo_login ) !== (int) $wp_user_id;
 	}
 
 	public static function get_matomo_lang_from_locale( $locale ) {
