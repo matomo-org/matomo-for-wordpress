@@ -224,7 +224,15 @@ NO_COLOR='\033[0m'
 npm run matomo:console development:enable || echo -e "${RED}Failed to set development mode prior to rebuilding vue files.${NO_COLOR}"
 
 cd $MATOMO_ROOT && npm install && cd $SCRIPTPATH
-npm run matomo:console vue:build || echo -e "${RED}Failed to rebuild vue files.${NO_COLOR}"
+
+# check which plugins were modified by the patches and rebuild them only
+PATCHED_PLUGINS=$(grep -hoE '^\+\+\+ b/plugins/[^/]+/' $SCRIPTPATH/../patches/*.diff 2>/dev/null | sed -E 's#^\+\+\+ b/plugins/([^/]+)/#\1#' | sort -u | tr '\n' ' ')
+if [ -z "$PATCHED_PLUGINS" ]; then
+  echo -e "No patched plugins require a Vue rebuild, skipping vue:build."
+else
+  echo -e "Rebuilding Vue bundles for patched plugins: $PATCHED_PLUGINS"
+  npm run matomo:console vue:build $PATCHED_PLUGINS || echo -e "${RED}Failed to rebuild vue files.${NO_COLOR}"
+fi
 
 npm run matomo:console development:disable || echo -e "${RED}Failed to unset development mode prior to asset preparation.${NO_COLOR}"
 npm run matomo:console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
