@@ -29,15 +29,22 @@ use Zend_Db_Statement;
 class ArchivingHelper
 {
     public const OTHERS_ROW_KEY = '';
+    public const ACTION_TABLE_MODE_HIERARCHICAL = 'hierarchical';
+    public const ACTION_TABLE_MODE_FLAT = 'flat';
+    public const ACTION_FLAT_PATH_METADATA_NAME = 'flat_action_path';
+    private const URL_ACTION_LEAF_MARKER = '/';
+    private const TITLE_ACTION_LEAF_MARKER = ' ';
     /**
      * Ideally this should use the DataArray object instead of custom data structure
      *
      * @param Zend_Db_Statement|PDOStatement $query
      * @param string|bool $fieldQueried
      * @param array $actionsTablesByType
+     * @param array $metricsConfig
+     * @param array $tableModesByType
      * @return int
      */
-    public static function updateActionsTableWithRowQuery($query, $fieldQueried, $actionsTablesByType, $metricsConfig)
+    public static function updateActionsTableWithRowQuery($query, $fieldQueried, $actionsTablesByType, $metricsConfig, array $tableModesByType = [])
     {
         $rowsProcessed = 0;
         while ($row = $query->fetch()) {
@@ -79,7 +86,8 @@ class ArchivingHelper
                     }
                     continue;
                 }
-                $actionRow = self::getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType);
+                $tableMode = $tableModesByType[$actionType] ?? self::ACTION_TABLE_MODE_HIERARCHICAL;
+                $actionRow = self::getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType, $tableMode);
                 self::setCachedActionRow($idaction, $actionType, $actionRow);
             } else {
                 $actionRow = self::getCachedActionRow($row['idaction'], $row['type']);
@@ -180,8 +188,7 @@ class ArchivingHelper
      *
      * @param array $row        The array of goals metric data to add to the action table row
      * @param bool  $isPages    True if page view goals metrics should be used, else entry goal metrics
-     *
-     * @throws \Exception
+     * @return bool True if the row was updated, false otherwise
      */
     private static function updateActionsTableRowWithGoals(array $row, bool $isPages) : bool
     {
@@ -242,19 +249,7 @@ class ArchivingHelper
             $row[PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB] = (float) $row[PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB];
         }
         if (!$isPages) {
-            $nbEntrances = $actionRow->getColumn(PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS);
-            $conversions = $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY];
-            if ($nbEntrances !== \false && is_numeric($nbEntrances) && $nbEntrances > 0) {
-                // Calculate conversion entry rate
-                if (isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY])) {
-                    $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE] = Piwik::getQuotientSafe($conversions, $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
-                }
-                // Calculate revenue per entry
-                if (isset($row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY])) {
-                    $row[PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY] = (float) Piwik::getQuotientSafe($row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY], $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
-                    $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY] = (float) $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY];
-                }
-            }
+            self::normalizeEntryGoalMetricsForEntrances($row, $actionRow->getColumn(PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS));
         }
         // Get goals column
         $goalsColumn = $actionRow->getColumn(PiwikMetrics::INDEX_GOALS);
@@ -269,22 +264,112 @@ class ArchivingHelper
         foreach ($possibleMetrics as $metricKey => $columnName) {
             if (isset($row[$metricKey])) {
                 // Add metric
-                if (!isset($goalsColumn[$row['idgoal']][$metricKey])) {
-                    $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
-                } else {
-                    if ($metricKey == PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) {
-                        if ($goalsColumn[$row['idgoal']][$metricKey] < $row[$metricKey]) {
-                            $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
-                        }
-                    } else {
-                        $goalsColumn[$row['idgoal']][$metricKey] += $row[$metricKey];
-                    }
-                }
+                self::mergeGoalMetric($goalsColumn[$row['idgoal']], $metricKey, $row[$metricKey]);
                 // Write goals column back to datatable
                 $actionRow->setColumn(PiwikMetrics::INDEX_GOALS, $goalsColumn);
             }
         }
         return \true;
+    }
+    public static function normalizeFlatGoalsMetricsForHierarchy(array $flatPageTablesByType) : void
+    {
+        foreach ($flatPageTablesByType as $dataTable) {
+            if (!$dataTable instanceof DataTable) {
+                continue;
+            }
+            $rowsByLabel = [];
+            foreach ($dataTable->getRowsWithoutSummaryRow() as $row) {
+                $label = $row->getColumn('label');
+                if (!is_string($label) || $label === '') {
+                    continue;
+                }
+                $rowsByLabel[$label][] = $row;
+            }
+            foreach ($rowsByLabel as $rows) {
+                self::normalizeFlatGoalsMetricsForHierarchyPathRows($rows);
+            }
+        }
+    }
+    private static function normalizeFlatGoalsMetricsForHierarchyPathRows(array $rows) : void
+    {
+        $entryVisitsTotal = 0.0;
+        $maxPagesBeforeByGoal = [];
+        foreach ($rows as $row) {
+            $entryVisits = $row->getColumn(PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS);
+            if (is_numeric($entryVisits)) {
+                $entryVisitsTotal += (float) $entryVisits;
+            }
+            $goals = $row->getColumn(PiwikMetrics::INDEX_GOALS);
+            if (!is_array($goals)) {
+                continue;
+            }
+            foreach ($goals as $goalId => $goalMetrics) {
+                if (!is_array($goalMetrics)) {
+                    continue;
+                }
+                $pagesBefore = $goalMetrics[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE] ?? null;
+                if (!is_numeric($pagesBefore)) {
+                    continue;
+                }
+                if (!isset($maxPagesBeforeByGoal[$goalId]) || $maxPagesBeforeByGoal[$goalId]['value'] < (float) $pagesBefore) {
+                    $maxPagesBeforeByGoal[$goalId] = ['row' => $row, 'value' => (float) $pagesBefore];
+                }
+            }
+        }
+        foreach ($rows as $row) {
+            $goals = $row->getColumn(PiwikMetrics::INDEX_GOALS);
+            if (!is_array($goals)) {
+                continue;
+            }
+            foreach ($goals as &$goalMetrics) {
+                if (!is_array($goalMetrics)) {
+                    continue;
+                }
+                if (isset($goalMetrics[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE])) {
+                    $goalMetrics[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE] = 0;
+                }
+                self::normalizeEntryGoalMetricsForEntrances($goalMetrics, $entryVisitsTotal);
+            }
+            unset($goalMetrics);
+            $row[PiwikMetrics::INDEX_GOALS] = $goals;
+        }
+        foreach ($maxPagesBeforeByGoal as $goalId => $maxValue) {
+            /** @var Row $maxRow */
+            $maxRow = $maxValue['row'];
+            $goals = $maxRow->getColumn(PiwikMetrics::INDEX_GOALS);
+            if (!is_array($goals) || !isset($goals[$goalId]) || !is_array($goals[$goalId])) {
+                continue;
+            }
+            $goals[$goalId][PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE] = $maxValue['value'];
+            $maxRow[PiwikMetrics::INDEX_GOALS] = $goals;
+        }
+    }
+    private static function normalizeEntryGoalMetricsForEntrances(array &$goalMetrics, $nbEntrances) : void
+    {
+        if (!is_numeric($nbEntrances) || $nbEntrances <= 0) {
+            return;
+        }
+        if (isset($goalMetrics[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY])) {
+            $goalMetrics[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE] = Piwik::getQuotientSafe($goalMetrics[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY], $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
+        }
+        if (isset($goalMetrics[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY])) {
+            $goalMetrics[PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY] = (float) Piwik::getQuotientSafe($goalMetrics[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY], $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
+            $goalMetrics[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY] = (float) $goalMetrics[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY];
+        }
+    }
+    private static function mergeGoalMetric(array &$goalMetrics, int $metricKey, $value) : void
+    {
+        if (!isset($goalMetrics[$metricKey])) {
+            $goalMetrics[$metricKey] = $value;
+            return;
+        }
+        if ($metricKey == PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) {
+            if ($goalMetrics[$metricKey] < $value) {
+                $goalMetrics[$metricKey] = $value;
+            }
+            return;
+        }
+        $goalMetrics[$metricKey] += $value;
     }
     public static function removeEmptyColumns($dataTable)
     {
@@ -391,6 +476,7 @@ class ArchivingHelper
     public static $maximumRowsInDataTableLevelZero;
     public static $maximumRowsInSubDataTable;
     public static $maximumRowsInDataTableSiteSearch;
+    public static $maximumRowsInDataTableFlat;
     public static $columnToSortByBeforeTruncation;
     protected static $actionUrlCategoryDelimiter = null;
     protected static $actionTitleCategoryDelimiter = null;
@@ -412,6 +498,9 @@ class ArchivingHelper
         self::$maximumRowsInDataTableLevelZero = Config::getInstance()->General['datatable_archiving_maximum_rows_actions'];
         self::$maximumRowsInSubDataTable = Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_actions'];
         self::$maximumRowsInDataTableSiteSearch = Config::getInstance()->General['datatable_archiving_maximum_rows_site_search'];
+        self::$maximumRowsInDataTableFlat = Config::getInstance()->General['datatable_archiving_maximum_rows_actions_flat'] ?? 0;
+        self::$defaultActionNameWhenNotDefined = null;
+        self::$defaultActionUrlWhenNotDefined = null;
         DataTable::setMaximumDepthLevelAllowedAtLeast(self::getSubCategoryLevelLimit() + 1);
     }
     /**
@@ -433,16 +522,18 @@ class ArchivingHelper
         return $row;
     }
     /**
-     * Given a page name and type, builds a recursive datatable where
-     * each level of the tree is a category, based on the page name split by a delimiter (slash / by default)
+     * Given a page name and type, returns the matching action row, building a recursive
+     * category-tree datatable (split by delimiter) in hierarchical mode, or a flat row
+     * keyed by the full label in flat mode.
      *
      * @param string $actionName
      * @param int $actionType
      * @param int $urlPrefix
      * @param array $actionsTablesByType
+     * @param string $tableMode One of self::ACTION_TABLE_MODE_HIERARCHICAL or self::ACTION_TABLE_MODE_FLAT
      * @return DataTable\Row
      */
-    public static function getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType)
+    public static function getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType, string $tableMode = self::ACTION_TABLE_MODE_HIERARCHICAL)
     {
         // we work on the root table of the given TYPE (either ACTION_URL or DOWNLOAD or OUTLINK etc.)
         /* @var DataTable $currentTable */
@@ -458,10 +549,152 @@ class ArchivingHelper
             }
             return $summaryRow;
         }
+        if ($tableMode === self::ACTION_TABLE_MODE_FLAT) {
+            return self::getFlatActionRow($actionName, $actionType, $urlPrefix, $currentTable);
+        }
         // go to the level of the subcategory
         $actionExplodedNames = self::getActionExplodedNames($actionName, $actionType, $urlPrefix);
         list($row, $level) = $currentTable->walkPath($actionExplodedNames, self::getDefaultRowColumns(), self::$maximumRowsInSubDataTable);
         return $row;
+    }
+    public static function mergeHierarchicalActionsTableIntoFlatTable(DataTable $hierarchicalTable, DataTable $flatTable) : void
+    {
+        self::appendHierarchicalRowsToFlatTable($hierarchicalTable, [], $flatTable, [self::class, 'buildFlatRowLabel']);
+    }
+    public static function mergeHierarchicalActionsTableIntoBestEffortFlatTable(DataTable $hierarchicalTable, DataTable $flatTable, int $actionType) : void
+    {
+        self::appendHierarchicalRowsToFlatTable($hierarchicalTable, [], $flatTable, function (array $path) use($actionType) : string {
+            return self::buildBestEffortActionLabelFromPath($path, $actionType);
+        }, \false);
+    }
+    private static function getFlatActionRow($actionName, $actionType, $urlPrefix, DataTable $table) : Row
+    {
+        $flatLabel = self::buildFlatActionLabelFromActionName($actionName, $actionType, $urlPrefix);
+        $row = $table->getRowFromLabel($flatLabel);
+        if ($row !== \false) {
+            return $row;
+        }
+        $row = new Row(array(Row::COLUMNS => array('label' => $flatLabel) + self::getDefaultFlatRowColumns()));
+        // when the table is full, addRow() aggregates the row into the summary row and
+        // returns the summary row instead, so metrics of truncated actions accumulate there
+        return $table->addRow($row);
+    }
+    public static function buildBestEffortActionLabelFromPath(array $actionPath, int $actionType) : string
+    {
+        if (empty($actionPath)) {
+            return '';
+        }
+        $segments = array_values($actionPath);
+        $lastIndex = count($segments) - 1;
+        $lastSegment = (string) $segments[$lastIndex];
+        if ($actionType === Action::TYPE_PAGE_URL) {
+            if (strpos($lastSegment, self::URL_ACTION_LEAF_MARKER) === 0) {
+                $lastSegment = substr($lastSegment, strlen(self::URL_ACTION_LEAF_MARKER));
+            }
+            $segments[$lastIndex] = $lastSegment;
+            $delimiter = self::$actionUrlCategoryDelimiter;
+        } else {
+            if (strpos($lastSegment, self::TITLE_ACTION_LEAF_MARKER) === 0) {
+                $lastSegment = substr($lastSegment, strlen(self::TITLE_ACTION_LEAF_MARKER));
+            }
+            $segments[$lastIndex] = $lastSegment;
+            $delimiter = self::$actionTitleCategoryDelimiter;
+        }
+        if ($delimiter === '') {
+            $label = implode('', $segments);
+        } else {
+            $label = implode($delimiter, $segments);
+        }
+        if ($actionType === Action::TYPE_PAGE_URL && $label !== self::getUnknownActionName(Action::TYPE_PAGE_URL) && substr($label, 0, 1) !== '/') {
+            return '/' . $label;
+        }
+        return $label;
+    }
+    public static function removePageUrlLeafMarkerFromFlatLabel(string $label) : string
+    {
+        return ltrim($label, self::URL_ACTION_LEAF_MARKER);
+    }
+    private static function appendHierarchicalRowsToFlatTable(DataTable $sourceTable, array $path, DataTable $flatTable, callable $flatLabelBuilder, bool $useDefaultFlatRowColumns = \true) : void
+    {
+        foreach ($sourceTable->getRowsWithoutSummaryRow() as $row) {
+            $label = $row->getColumn('label');
+            if (!is_string($label) || $label === '') {
+                continue;
+            }
+            $currentPath = $path;
+            $currentPath[] = $label;
+            $subtable = $row->getSubtable();
+            if ($subtable) {
+                self::appendHierarchicalRowsToFlatTable($subtable, $currentPath, $flatTable, $flatLabelBuilder, $useDefaultFlatRowColumns);
+                continue;
+            }
+            $flatLabel = call_user_func($flatLabelBuilder, $currentPath);
+            $flatRow = $flatTable->getRowFromLabel($flatLabel);
+            if ($flatRow === \false) {
+                $columns = array('label' => $flatLabel);
+                if ($useDefaultFlatRowColumns) {
+                    $columns += self::getDefaultFlatRowColumns();
+                }
+                $flatRow = new Row(array(Row::COLUMNS => $columns));
+                $flatTable->addRow($flatRow);
+            }
+            self::mergeRowIntoDestination($row, $flatRow);
+        }
+        $summaryRow = $sourceTable->getRowFromId(DataTable::ID_SUMMARY_ROW);
+        if ($summaryRow !== \false) {
+            if (self::isRowEmptyOfMetrics($summaryRow)) {
+                return;
+            }
+            $globalSummary = $flatTable->getRowFromId(DataTable::ID_SUMMARY_ROW);
+            if ($globalSummary === \false) {
+                $globalSummary = self::createSummaryRow();
+                $flatTable->addSummaryRow($globalSummary);
+            }
+            self::mergeRowIntoDestination($summaryRow, $globalSummary);
+        }
+    }
+    private static function buildFlatRowLabel(array $actionPath) : string
+    {
+        $encodedPath = json_encode($actionPath);
+        if ($encodedPath === \false) {
+            return implode("\n", $actionPath);
+        }
+        return $encodedPath;
+    }
+    private static function buildFlatActionLabelFromActionName($actionName, $actionType, $urlPrefix) : string
+    {
+        if (!is_string($actionName)) {
+            return (string) $actionName;
+        }
+        $actionType = (int) $actionType;
+        if (($actionType === Action::TYPE_PAGE_URL || $actionType === Action::TYPE_PAGE_TITLE) && $actionName !== RankingQuery::LABEL_SUMMARY_ROW) {
+            $actionPath = self::getActionExplodedNames($actionName, $actionType, $urlPrefix);
+            return self::buildBestEffortActionLabelFromPath($actionPath, $actionType);
+        }
+        return $actionName;
+    }
+    private static function mergeRowIntoDestination(Row $source, Row $destination) : void
+    {
+        $sourceCopy = clone $source;
+        $sourceCopy->deleteMetadata(self::ACTION_FLAT_PATH_METADATA_NAME);
+        $aggregationOps = \Piwik\Plugins\Actions\Metrics::getColumnsAggregationOperation();
+        $destination->sumRow($sourceCopy, $enableCopyMetadata = \true, $aggregationOps);
+        $metadataValue = $sourceCopy->getMetadata('url');
+        if ($metadataValue !== \false) {
+            $destination->setMetadata('url', $metadataValue);
+        }
+    }
+    private static function isRowEmptyOfMetrics(Row $row) : bool
+    {
+        foreach ($row->getColumns() as $name => $value) {
+            if ($name === 'label') {
+                continue;
+            }
+            if (!empty($value)) {
+                return \false;
+            }
+        }
+        return \true;
     }
     /**
      * Returns the configured sub-category level limit.
@@ -508,7 +741,7 @@ class ArchivingHelper
      *
      * @param string $name action name
      * @param int $type action type
-     * @param int $urlPrefix url prefix (only used for TYPE_PAGE_URL)
+     * @param int|null $urlPrefix url prefix (only used for TYPE_PAGE_URL)
      * @return array of exploded elements from $name
      */
     public static function getActionExplodedNames($name, $type, $urlPrefix = null)
@@ -522,7 +755,7 @@ class ArchivingHelper
             if ($name === '' || $name === \false || $name === null || trim($name) === '') {
                 $name = self::getUnknownActionName($type);
             }
-            return array(' ' . trim($name));
+            return array(self::TITLE_ACTION_LEAF_MARKER . trim($name));
         }
         $name = self::parseNameFromPageUrl($name, $type, $urlPrefix);
         // outlinks and downloads
@@ -539,9 +772,9 @@ class ArchivingHelper
         // so that if a page has the same name as a category
         // we don't merge both entries
         if ($type != Action::TYPE_PAGE_TITLE) {
-            $lastPageName = '/' . $lastPageName;
+            $lastPageName = self::URL_ACTION_LEAF_MARKER . $lastPageName;
         } else {
-            $lastPageName = ' ' . $lastPageName;
+            $lastPageName = self::TITLE_ACTION_LEAF_MARKER . $lastPageName;
         }
         $split[count($split) - 1] = $lastPageName;
         return array_values($split);
@@ -566,7 +799,7 @@ class ArchivingHelper
         self::$cacheParsedAction = array();
     }
     /**
-     * Get cached action row by id & type. If $idAction is set to -1, the 'Others' row
+     * Get cached action row by id & type. If $idAction is set to RankingQuery::LABEL_SUMMARY_ROW, the 'Others' row
      * for the specific action type will be returned.
      *
      * @param int $idAction
@@ -589,7 +822,7 @@ class ArchivingHelper
      *
      * @param int $idAction
      * @param int $actionType
-     * @param \Piwik\DataTable\Row
+     * @param \Piwik\DataTable\Row|false|null $actionRow
      */
     private static function setCachedActionRow($idAction, $actionType, $actionRow)
     {
@@ -604,6 +837,10 @@ class ArchivingHelper
     private static function getDefaultRowColumns()
     {
         return array(PiwikMetrics::INDEX_NB_VISITS => 0, PiwikMetrics::INDEX_NB_UNIQ_VISITORS => 0, PiwikMetrics::INDEX_PAGE_NB_HITS => 0, PiwikMetrics::INDEX_PAGE_SUM_TIME_SPENT => 0);
+    }
+    private static function getDefaultFlatRowColumns()
+    {
+        return array(PiwikMetrics::INDEX_NB_VISITS => 0, PiwikMetrics::INDEX_PAGE_NB_HITS => 0, PiwikMetrics::INDEX_PAGE_SUM_TIME_SPENT => 0);
     }
     /**
      * Creates a summary row for an Actions DataTable.
@@ -677,7 +914,7 @@ class ArchivingHelper
     public static function setFolderPathMetadata(DataTable $dataTable, $isUrl, $prefix = '')
     {
         $configGeneral = Config::getInstance()->General;
-        $separator = $isUrl ? '/' : $configGeneral['action_title_category_delimiter'];
+        $separator = $isUrl ? $configGeneral['action_url_category_delimiter'] : $configGeneral['action_title_category_delimiter'];
         $metadataName = $isUrl ? 'folder_url_start' : 'page_title_path';
         foreach ($dataTable->getRows() as $row) {
             $subtable = $row->getSubtable();

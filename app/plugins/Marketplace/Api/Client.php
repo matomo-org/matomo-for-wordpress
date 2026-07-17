@@ -221,6 +221,10 @@ class Client
         $params['mysql'] = $this->environment->getMySQLVersion();
         $params['num_users'] = $this->environment->getNumUsers();
         $params['num_websites'] = $this->environment->getNumWebsites();
+        $uid = $this->environment->getUniqueId();
+        if (!empty($uid)) {
+            $params['uid'] = $uid;
+        }
         $query = Http::buildQuery($params);
         $cacheId = $this->getCacheKey($action, $query);
         $result = $this->cache->fetch($cacheId);
@@ -260,7 +264,12 @@ class Client
         }
         $latestVersion = array_pop($plugin['versions']);
         $downloadUrl = $latestVersion['download'];
-        return $this->service->getDomain() . $downloadUrl . '?coreVersion=' . $this->environment->getPiwikVersion();
+        $url = $this->service->getDomain() . $downloadUrl . '?coreVersion=' . $this->environment->getPiwikVersion();
+        $uid = $this->environment->getUniqueId();
+        if (!empty($uid)) {
+            $url .= '&uid=' . $uid;
+        }
+        return $url;
     }
     /**
      * Return the api.matomo.org URL with the correct protocol prefix

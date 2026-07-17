@@ -43,7 +43,6 @@ class RolesProvider
         return \in_array($roleId, $roles, \true);
     }
     /**
-     * @param $roleId
      * @throws Exception
      */
     public function checkValidRole(string $roleId) : void

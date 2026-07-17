@@ -390,7 +390,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
         $firstChild = reset($this->array);
         if ($firstChild instanceof \Piwik\DataTable\Map) {
             $result = $firstChild->getEmptyClone();
-            /** @var $subDataTableMap Map */
+            /** @var Map $subDataTableMap */
             foreach ($this->getDataTables() as $label => $subDataTableMap) {
                 foreach ($subDataTableMap->getDataTables() as $innerLabel => $subTable) {
                     if (!isset($result->array[$innerLabel])) {

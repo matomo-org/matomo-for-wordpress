@@ -140,18 +140,18 @@ class WidgetMetadata
     }
     /**
      * @param Category|null $category
-     * @return array
+     * @return array|null
      */
     private function buildCategoryMetadata($category)
     {
         if (!isset($category)) {
             return null;
         }
-        return array('id' => (string) $category->getId(), 'name' => $category->getDisplayName(), 'order' => $category->getOrder(), 'icon' => $category->getIcon(), 'help' => Piwik::translate($category->getHelp()), 'widget' => $category->getWidget() ?: null);
+        return array('id' => (string) $category->getId(), 'name' => $category->getDisplayName(), 'order' => $category->getOrder(), 'icon' => $category->getIcon(), 'help' => Piwik::translate($category->getHelp()), 'widget' => $category->getWidget() ?: null, 'groups' => $category->getGroups());
     }
     /**
      * @param Subcategory|null $subcategory
-     * @return array
+     * @return array|null
      */
     private function buildSubcategoryMetadata($subcategory)
     {

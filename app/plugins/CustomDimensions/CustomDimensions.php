@@ -344,8 +344,7 @@ class CustomDimensions extends Plugin
         return array(self::SCOPE_VISIT, self::SCOPE_ACTION);
     }
     /**
-     * These are public scopes that are actually visible to the user, scope Conversion
-     * is not really directly visible to the user and a user cannot manage/configure dimensions in scope conversion.
+     * Returns whether the given scope supports value extractions (only the action scope does).
      */
     public static function doesScopeSupportExtractions($scope)
     {

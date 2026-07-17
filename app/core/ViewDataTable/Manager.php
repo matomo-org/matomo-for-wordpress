@@ -30,7 +30,7 @@ class Manager
     /**
      * Returns the viewDataTable IDs of a visualization's class lineage.
      *
-     * @see self::getVisualizationClassLineage
+     * @see \Piwik\Common::getClassLineage
      *
      * @param string $klass The visualization class.
      *
@@ -255,7 +255,6 @@ class Manager
      * Display a meaningful error message when any invalid parameter is being set.
      *
      * @param $params
-     * @throws
      */
     private static function errorWhenSettingNonOverridableParameter($controllerAction, $params)
     {

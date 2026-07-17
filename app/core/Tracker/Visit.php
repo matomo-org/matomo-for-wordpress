@@ -13,6 +13,7 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Matomo\Network\IPUtils;
 use Piwik\Plugin\Dimension\VisitDimension;
+use Piwik\Plugin\LogTablesProvider;
 use Piwik\Plugins\Actions\Tracker\ActionsRequestProcessor;
 use Piwik\Tracker;
 use Piwik\Tracker\Visit\VisitProperties;
@@ -50,7 +51,7 @@ class Visit implements \Piwik\Tracker\VisitInterface
      */
     protected $requestProcessors;
     /**
-     * @var VisitProperties
+     * @var VisitProperties|null
      */
     protected $visitProperties;
     /**
@@ -310,8 +311,10 @@ class Visit implements \Piwik\Tracker\VisitInterface
         $idSite = $this->request->getIdSite();
         $idVisit = $this->visitProperties->getProperty('idvisit');
         $wasInserted = $this->getModel()->updateVisit($idSite, $idVisit, $valuesToUpdate);
-        // Debug output
         if (isset($valuesToUpdate['idvisitor'])) {
+            $this->updateIdVisitorAcrossLogTables($valuesToUpdate['idvisitor']);
+            Common::printDebug('Updating idvisitor across tables for idvisit = ' . $idVisit);
+            //For debug output below
             $valuesToUpdate['idvisitor'] = bin2hex($valuesToUpdate['idvisitor']);
         }
         if ($wasInserted) {
@@ -321,6 +324,21 @@ class Visit implements \Piwik\Tracker\VisitInterface
             // as WP doesn't set `MYSQLI_CLIENT_FOUND_ROWS` and therefore when the update succeeded but no value changed
             // it would still return 0 vs OnPremise would return 1 or 2.
             throw new \Piwik\Tracker\VisitorNotFoundInDb("The visitor with idvisitor=" . bin2hex($this->visitProperties->getProperty('idvisitor')) . " and idvisit=" . @$this->visitProperties->getProperty('idvisit') . " wasn't found in the DB, we fallback to a new visitor");
+        }
+    }
+    protected function updateIdVisitorAcrossLogTables(string $idVisitor) : void
+    {
+        $allLogTables = StaticContainer::get(LogTablesProvider::class)->getAllLogTables();
+        foreach ($allLogTables as $logTable) {
+            if (!$logTable->hasIdVisitorColumn() || $logTable instanceof \Piwik\Plugins\CoreHome\Tracker\LogTable\Visit) {
+                // skip all log tables that do not contain the idvisitor column, and `log_visit`, as it is already handled
+                continue;
+            }
+            $conditions = ['idvisitor' => $this->previousVisitProperties->getProperty('idvisitor')];
+            if ($logTable->getIdColumn() !== 'idvisitor' && $logTable->getColumnToJoinOnIdVisit()) {
+                $conditions[$logTable->getColumnToJoinOnIdVisit()] = $this->visitProperties->getProperty('idvisit');
+            }
+            $this->getModel()->updateIdVisitorInLogTable($logTable->getName(), $idVisitor, $conditions);
         }
     }
     private function printVisitorInformation()
@@ -362,7 +380,7 @@ class Visit implements \Piwik\Tracker\VisitInterface
     /**
      * @param VisitDimension[] $dimensions
      * @param string $hook
-     * @param array|null $valuesToUpdate If null, $this->visitorInfo will be updated
+     * @param array|null $valuesToUpdate If null, $this->visitProperties will be updated
      *
      * @return array|null The updated $valuesToUpdate or null if no $valuesToUpdate given
      */

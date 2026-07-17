@@ -157,7 +157,8 @@
     },
     "BotTracking": {
         "PageUrl": "పుట చిరునామా",
-        "SiteWithoutDataBackToMatomo": "తిరిగి పివిక్‌కి"
+        "SiteWithoutDataBackToMatomo": "తిరిగి పివిక్‌కి",
+        "AIChatbotsContentPagesTitle": "పుటలు"
     },
     "CoreAdminHome": {
         "Administration": "నిర్వహణ",

@@ -17,7 +17,7 @@ use Exception;
 class Weekly extends \Piwik\Scheduler\Schedule\Schedule
 {
     /**
-     * @see ScheduledTime::getRescheduledTime
+     * @see Schedule::getRescheduledTime
      * @return int
      */
     public function getRescheduledTime()

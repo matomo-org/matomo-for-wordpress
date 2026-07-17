@@ -37,7 +37,6 @@ class AIChatbotReports extends RecordBuilder
     public function __construct()
     {
         parent::__construct();
-        $this->columnToSortByBeforeTruncation = Metrics::COLUMN_REQUESTS;
         $this->maxRowsInTable = GeneralConfig::getIntegerConfigValue('datatable_archiving_maximum_rows_bots', 0);
         $this->maxRowsInSubtable = GeneralConfig::getIntegerConfigValue('datatable_archiving_maximum_rows_subtable_bots', 0);
         $this->rankingQueryLimit = $this->getRankingQueryLimit();
@@ -45,7 +44,7 @@ class AIChatbotReports extends RecordBuilder
     }
     public function getRecordMetadata(ArchiveProcessor $archiveProcessor) : array
     {
-        return [Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_PAGES_RECORD), Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_DOCUMENTS_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_CHATBOTS)->setIsCountOfBlobRecordRows(Archiver::AI_CHATBOTS_PAGES_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS)];
+        return [Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_PAGES_RECORD)->setColumnToSortByBeforeTruncation(Metrics::COLUMN_REQUESTS), Record::make(Record::TYPE_BLOB, Archiver::AI_CHATBOTS_DOCUMENTS_RECORD)->setColumnToSortByBeforeTruncation(Metrics::COLUMN_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_CHATBOTS)->setIsCountOfBlobRecordRows(Archiver::AI_CHATBOTS_PAGES_RECORD), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS), Record::make(Record::TYPE_NUMERIC, Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS)];
     }
     public function isEnabled(ArchiveProcessor $archiveProcessor) : bool
     {

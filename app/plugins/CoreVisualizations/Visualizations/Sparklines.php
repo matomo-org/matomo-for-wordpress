@@ -10,6 +10,7 @@ namespace Piwik\Plugins\CoreVisualizations\Visualizations;
 
 use Piwik\API\Request;
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Metrics\Formatter as MetricFormatter;
@@ -18,6 +19,8 @@ use Piwik\Plugin\Report;
 use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\API\Filter\DataComparisonFilter;
+use Piwik\Plugins\CoreVisualizations\FeatureFlags\SparklinesRedesign;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Piwik;
 use Piwik\SettingsPiwik;
 use Piwik\View;
@@ -27,7 +30,7 @@ use Piwik\View;
  * the sparklines are shown in one column.
  *
  * The sparklines view currently only supports requesting columns from the same API (the API method of the defining
- * report) via {Sparklines\Config::addSparklineMetric($columns = array('nb_visits', 'nb_unique_visitors'))}.
+ * report) via {Sparklines\Config::addSparklineMetric($columns = array('nb_visits', 'nb_uniq_visitors'))}.
  *
  * Example:
  * $view->config->addSparklineMetric('nb_visits'); // if an array of metrics given, they will be displayed comma separated
@@ -57,7 +60,6 @@ class Sparklines extends ViewDataTable
         return \true;
     }
     /**
-     * @see ViewDataTable::main()
      * @return mixed
      */
     public function render()
@@ -97,6 +99,10 @@ class Sparklines extends ViewDataTable
         $view->footerMessage = $this->config->show_footer_message;
         $view->areSparklinesLinkable = $this->config->areSparklinesLinkable();
         $view->isComparing = $this->isComparing();
+        // The redesigned Vue card grid (gated by the SparklinesRedesign feature flag) currently only
+        // covers the no-comparison layout, so fall back to the legacy Twig layout while comparing.
+        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+        $view->useNewSparklinesGrid = $featureFlagManager->isFeatureActive(SparklinesRedesign::class) && !$this->isComparing();
         $view->title = '';
         if ($this->config->show_title) {
             $view->title = $this->config->title;
@@ -136,6 +142,7 @@ class Sparklines extends ViewDataTable
         $processedMetrics = Report::getProcessedMetricsForTable($data, $report);
         $metricFormatter = new MetricFormatter();
         $idSite = $this->getRequestArray()['idSite'] ?? \false;
+        $metricTranslations = Metrics::getDefaultMetricTranslations();
         $firstRow = $data->getFirstRow();
         if ($firstRow) {
             $comparisons = $firstRow->getComparisons();
@@ -214,7 +221,7 @@ class Sparklines extends ViewDataTable
                                 continue;
                             }
                             $formattedValue = $this->formatSparklineMetricValue($value, $columnToUse[$i], $columnMetrics, $metricFormatter, $idSite);
-                            $metricInfo = ['value' => $formattedValue, 'description' => $compareDescriptions[$i], 'group' => $periodPretty];
+                            $metricInfo = ['value' => $formattedValue, 'description' => $compareDescriptions[$i], 'title' => $metricTranslations[$columnToUse[$i]] ?? $compareDescriptions[$i], 'group' => $periodPretty];
                             if (isset($evolutions[$i])) {
                                 $comparisonIndex = $periodIndex === 0 ? 1 : 0;
                                 $comparisonRow = $comparePeriods[$comparisonIndex] ?? \false;
@@ -245,7 +252,7 @@ class Sparklines extends ViewDataTable
                     if (!isset($column[$i])) {
                         continue;
                     }
-                    $newMetric = ['value' => $this->formatSparklineMetricValue($value, $column[$i], $columnMetrics, $metricFormatter, $idSite), 'description' => $descriptions[$i]];
+                    $newMetric = ['value' => $this->formatSparklineMetricValue($value, $column[$i], $columnMetrics, $metricFormatter, $idSite), 'description' => $descriptions[$i], 'title' => $metricTranslations[$column[$i]] ?? $descriptions[$i]];
                     $metrics[] = $newMetric;
                 }
                 $evolution = null;
@@ -290,7 +297,7 @@ class Sparklines extends ViewDataTable
                 $evolution = $firstRow->getColumn($col . $evolutionColumnNameSuffix);
                 $trend = $firstRow->getColumn($col . $trendColumnNameSuffix);
                 if ($evolution !== \false) {
-                    $evolutions[] = ['percent' => ltrim($evolution, '+'), 'trend' => $trend, 'tooltip' => ''];
+                    $evolutions[] = ['percent' => ltrim($evolution, '+'), 'trend' => $trend, 'tooltip' => '', 'isLowerValueBetter' => Metrics::isLowerValueBetter($col)];
                 }
             }
             $values[] = $value;

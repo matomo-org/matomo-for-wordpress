@@ -26,6 +26,8 @@ class Inconsistencies
      * formatted so we can maintain BC.
      *
      * Used by DataTablePostProcessor.
+     *
+     * @return string[]
      */
     public function getPercentMetricsToFormat()
     {

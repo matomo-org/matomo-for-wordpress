@@ -92,6 +92,11 @@ class BotRequestProcessor extends \Piwik\Tracker\BotRequestProcessor
         if ($url === \false || $url === '') {
             return null;
         }
+        if ($actionType === Action::TYPE_PAGE_URL) {
+            // Apply the same excluded query parameter logic as normal page tracking.
+            // Download URLs are intentionally left untouched, matching ActionDownloadUrl.
+            $url = PageUrl::excludeQueryParametersFromUrl($url, $request->getIdSite());
+        }
         $urlInfo = PageUrl::normalizeUrl($url);
         $actionsToLookup = [[$urlInfo['url'], $actionType, $urlInfo['prefixId']]];
         try {

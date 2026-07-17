@@ -18,9 +18,6 @@ class PHPBinaryCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
      * @var Translator
      */
     private $translator;
-    /**
-     * @var int
-     */
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

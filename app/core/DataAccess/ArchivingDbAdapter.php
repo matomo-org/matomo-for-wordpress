@@ -24,7 +24,7 @@ class ArchivingDbAdapter
      */
     private $logger;
     /**
-     * @var int
+     * @var float
      */
     private $maxExecutionTime;
     public function __construct($wrapped, ?LoggerInterface $logger = null)
@@ -77,7 +77,7 @@ class ArchivingDbAdapter
      * Test error number
      *
      * @param Exception $e
-     * @param string $errno
+     * @param int|string $errno
      * @return bool
      */
     public function isErrNo($e, $errno)

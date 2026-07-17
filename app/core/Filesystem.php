@@ -485,7 +485,7 @@ class Filesystem
         return $isPathWithinTmpFolder;
     }
     /**
-     * Check if the filesystem is case sensitive by writing a temporary file
+     * Check if the filesystem is case insensitive by writing a temporary file
      */
     public static function isFileSystemCaseInsensitive() : bool
     {

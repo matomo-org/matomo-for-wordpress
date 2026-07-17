@@ -16,11 +16,10 @@ use Piwik\DataTable\Simple;
 use Piwik\Piwik;
 /**
  * XML export of a given DataTable.
- * See the tests cases for more information about the XML format (/tests/core/DataTable/Renderer.test.php)
+ * See the tests for more information about the XML format (tests/PHPUnit/Unit/DataTable/Renderer/XmlTest.php).
  * Or have a look at the API calls examples.
  *
  * Works with recursive DataTable (when a row can be associated with a subDataTable).
- *
  */
 class Xml extends Renderer
 {
@@ -34,8 +33,7 @@ class Xml extends Renderer
     /**
      * Computes the output for the given data table
      *
-     * @param DataTable|DataTable\Map $table
-     * @throws Exception
+     * @param DataTable\DataTableInterface|array $table
      */
     protected function renderTable($table, bool $returnOnlyDataTableXml = \false, string $prefixLines = '') : string
     {

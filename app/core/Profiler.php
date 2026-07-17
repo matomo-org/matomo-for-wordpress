@@ -106,7 +106,7 @@ class Profiler
     /**
      * Print profiling report for the tracker
      *
-     * @param \Piwik\Db $db Tracker database object (or null)
+     * @param \Piwik\Tracker\Db|null $db Tracker database object (or null)
      */
     public static function displayDbTrackerProfile($db = null)
     {
@@ -142,7 +142,7 @@ class Profiler
     /**
      * Get total elapsed time (in seconds)
      *
-     * @return int  elapsed time
+     * @return float  elapsed time
      */
     public static function getDbElapsedSecs()
     {

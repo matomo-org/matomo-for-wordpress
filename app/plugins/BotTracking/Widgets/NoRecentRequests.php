@@ -15,6 +15,15 @@ class NoRecentRequests extends Widget
 {
     public static function configure(WidgetConfig $config)
     {
-        $config->setName('BotTracking_NoRecentRequestsWidgetTitle')->setCategoryId('General_AIAssistants')->setSubcategoryId('BotTracking_AIChatbotsOverview')->setModule('BotTracking')->setAction('noRecentRequestsMessage')->setClientSideComponent('BotTracking', 'NoRecentRequestsWidget')->setMiddlewareParameters(['module' => 'BotTracking', 'action' => 'showNoRecentRequestsMessage'])->setIsWide()->setOrder(0)->setIsNotWidgetizable();
+        self::configureMessageWidget($config, 'BotTracking_AIChatbotsOverview', 'noRecentRequestsMessage');
+    }
+    /**
+     * Shared config for the "no recent AI bot requests" message. It tops the Overview and Content
+     * Requests pages as its own widget (see {@see NoRecentRequestsContentRequests}); the
+     * showNoRecentRequestsMessage middleware hides it once recent requests exist.
+     */
+    public static function configureMessageWidget(WidgetConfig $config, string $subcategoryId, string $action) : void
+    {
+        $config->setName('BotTracking_NoRecentRequestsWidgetTitle')->setCategoryId('General_AIAssistants')->setSubcategoryId($subcategoryId)->setModule('BotTracking')->setAction($action)->setClientSideComponent('BotTracking', 'NoRecentRequestsWidget')->setMiddlewareParameters(['module' => 'BotTracking', 'action' => 'showNoRecentRequestsMessage'])->setIsWide()->setOrder(0)->setIsNotWidgetizable();
     }
 }

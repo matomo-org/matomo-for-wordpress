@@ -188,10 +188,8 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasWriteAccess($idSite);
         $patternType = Common::unsanitizeInputValue($patternType);
         $this->checkPatternIsValid($patternType, $pattern, $matchAttribute);
-        $name = $this->checkName($name);
         $pattern = $this->checkPattern($pattern, $matchAttribute);
         $patternType = $this->checkPatternType($patternType, $matchAttribute);
-        $description = $this->checkDescription($description);
         $revenue = Common::forceDotAsSeparatorForDecimalPoint((float) $revenue);
         $goal = array('name' => $name, 'description' => $description, 'match_attribute' => $matchAttribute, 'pattern' => $pattern, 'pattern_type' => $patternType, 'case_sensitive' => (int) $caseSensitive, 'allow_multiple' => (int) $allowMultipleConversionsPerVisit, 'revenue' => $revenue, 'deleted' => 0, 'event_value_as_revenue' => (int) $useEventValueAsRevenue);
         $idGoal = $this->getModel()->createGoalForSite($idSite, $goal);
@@ -229,8 +227,6 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $patternType = Common::unsanitizeInputValue($patternType);
-        $name = $this->checkName($name);
-        $description = $this->checkDescription($description);
         $patternType = $this->checkPatternType($patternType, $matchAttribute);
         $pattern = $this->checkPattern($pattern, $matchAttribute);
         $this->checkPatternIsValid($patternType, $pattern, $matchAttribute);
@@ -276,14 +272,6 @@ class API extends \Piwik\Plugin\API
             $validator->validate(GoalManager::formatRegex($pattern));
         }
     }
-    private function checkName(string $name) : string
-    {
-        return urldecode($name);
-    }
-    private function checkDescription(string $description) : string
-    {
-        return urldecode($description);
-    }
     /**
      * @param string|null $patternType
      * @param string $matchAttribute
@@ -313,7 +301,7 @@ class API extends \Piwik\Plugin\API
         if (in_array($matchAttribute, GoalManager::$NUMERIC_MATCH_ATTRIBUTES) && !is_numeric($pattern)) {
             throw new \Exception("Invalid pattern for match attribute '{$matchAttribute}'. (got '{$pattern}', expected numeric value).");
         }
-        return urldecode($pattern);
+        return $pattern;
     }
     /**
      * Soft deletes a given Goal.
@@ -585,8 +573,12 @@ class API extends \Piwik\Plugin\API
         }
         // if we are comparing, this will be queried with format_metrics=0, but we will eventually need to format the metrics.
         // unfortunately, we can't do that since the processed metric information is in the GetMetrics report. in this case,
-        // we queue the filter so it will eventually be formatted.
-        if (!empty($compare)) {
+        // we queue the filter so it will eventually be formatted. however, if the caller explicitly opted out of metric
+        // formatting via format_metrics=0 (e.g. the evolution chart, which then plots the raw numbers itself), we must not
+        // format the comparison rows either — formatting them turns revenue into a currency string and the chart cannot plot
+        // it as a number.
+        $formatMetricsRequest = \Piwik\Request::fromRequest()->getStringParameter('format_metrics', 'bc');
+        if (!empty($compare) && $formatMetricsRequest !== '0') {
             $getMetricsReport = ReportsProvider::factory('Goals', 'getMetrics');
             $table->queueFilter(function (DataTable $t) use($getMetricsReport) {
                 $t->setMetadata(Metrics\Formatter::PROCESSED_METRICS_FORMATTED_FLAG, \false);
