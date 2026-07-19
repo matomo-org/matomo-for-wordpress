@@ -157,7 +157,7 @@ class SearchEngine extends Singleton
      *     eg. if the url is "https://www.google.com/partners.html" this will return false,
      *       as the google keyword parameter couldn't be found.
      *
-     * @see unit tests in /tests/core/Common.test.php
+     * @see \Piwik\Plugins\Referrers\tests\Unit\SearchEngineTest
      * @param string $referrerUrl URL referrer URL, eg. $_SERVER['HTTP_REFERER']
      * @return array|bool   false if a keyword couldn't be extracted,
      *                        or array(
@@ -358,8 +358,6 @@ class SearchEngine extends Singleton
     /**
      * Return search engine URL by name
      *
-     * @see core/DataFiles/SearchEnginges.php
-     *
      * @param string $name
      * @return string URL
      */
@@ -394,7 +392,7 @@ class SearchEngine extends Singleton
      *
      * @param string $url
      * @return string path
-     * @see plugins/Morpheus/icons/dist/searchEnginges/
+     * @see plugins/Morpheus/icons/dist/searchEngines/
      */
     public function getLogoFromUrl($url)
     {
@@ -409,11 +407,9 @@ class SearchEngine extends Singleton
     /**
      * Return search engine URL for URL and keyword
      *
-     * @see core/DataFiles/SearchEnginges.php
-     *
      * @param string $url Domain name, e.g., search.piwik.org
      * @param string $keyword Keyword, e.g., web+analytics
-     * @return string URL, e.g., https://search.matomo.org/q=web+analytics
+     * @return string|false URL, e.g., https://search.matomo.org/q=web+analytics, or false if the search engine defines no backlink
      */
     public function getBackLinkFromUrlAndKeyword($url, $keyword)
     {

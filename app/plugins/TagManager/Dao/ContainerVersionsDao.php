@@ -103,6 +103,16 @@ class ContainerVersionsDao extends \Piwik\Plugins\TagManager\Dao\BaseDao impleme
         $version = Db::fetchRow("SELECT * FROM {$table} WHERE status = ? AND idsite = ? and idcontainer = ? and idcontainerversion = ? LIMIT 1", $bind);
         return $this->enrichVersion($version);
     }
+    public function getContainerIdByVersion(int $idSite, int $idContainerVersion) : ?string
+    {
+        $bind = array(self::STATUS_ACTIVE, $idSite, $idContainerVersion);
+        $table = $this->tablePrefixed;
+        $version = Db::fetchRow("SELECT idcontainer FROM {$table} WHERE status = ? AND idsite = ? and idcontainerversion = ? LIMIT 1", $bind);
+        if (empty($version['idcontainer'])) {
+            return null;
+        }
+        return (string) $version['idcontainer'];
+    }
     public function updateContainerColumns($idSite, $idContainer, $idContainerVersion, $columns)
     {
         if (!empty($columns)) {

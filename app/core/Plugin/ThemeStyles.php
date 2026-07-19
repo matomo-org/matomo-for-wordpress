@@ -15,7 +15,7 @@ class ThemeStyles
     public const LIGHT_MODE = 'light';
     public const DARK_MODE = 'dark';
     // to maintain BC w/ old names that were defined in LESS
-    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderAlternative' => 'theme-color-border-alternative', 'colorBorderLight' => 'theme-color-border-light', 'colorBoxShadow' => 'theme-color-boxShadow', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
+    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorNewBrand' => 'theme-color-new-brand', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextPlaceholder' => 'theme-color-text-placeholder', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderAlternative' => 'theme-color-border-alternative', 'colorBorderLight' => 'theme-color-border-light', 'colorBoxShadow' => 'theme-color-boxShadow', 'shadowOverlay' => 'theme-shadow-overlay', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
     /**
      * @var string
      */
@@ -32,6 +32,10 @@ class ThemeStyles
      * @var string|array<string>
      */
     public $colorBrandContrast = ['#fff', '#ffffff'];
+    /**
+     * @var string|array<string>
+     */
+    public $colorNewBrand = '#00b4be';
     /**
      * @var string|array<string>
      */
@@ -64,6 +68,11 @@ class ThemeStyles
      * @var string|array<string>
      */
     public $colorTextOnDisabled = ['#666666', '#999'];
+    /**
+     * @var string|array<string>
+     * @since Matomo 5.12.0
+     */
+    public $colorTextPlaceholder = ['#d1d1d1', '#565656'];
     /**
      * @var string|array<string>
      */
@@ -177,6 +186,10 @@ class ThemeStyles
      * @var string|array<string>
      */
     public $colorBoxShadow = ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)'];
+    /**
+     * @var string|array<string>
+     */
+    public $shadowOverlay = ['0 0 3px #A5B1CA4D, 0 10px 40px #A5B1CA4D', '0 0 3px #00000080, 0 10px 40px #00000080'];
     /**
      * @var string|array<string>
      */

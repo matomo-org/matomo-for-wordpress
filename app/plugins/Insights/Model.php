@@ -14,9 +14,7 @@ use Piwik\Period\Range;
 use Piwik\Plugins\API\ProcessedReport;
 use Piwik\Plugins\VisitsSummary\API as VisitsSummaryAPI;
 /**
- * API for plugin Insights
- *
- * @method static \Piwik\Plugins\Insights\API getInstance()
+ * Model for the Insights plugin.
  */
 class Model
 {

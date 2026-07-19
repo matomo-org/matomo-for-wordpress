@@ -25,7 +25,6 @@ class Sparkline extends ViewDataTable
         return \true;
     }
     /**
-     * @see ViewDataTable::main()
      * @return mixed
      */
     public function render()

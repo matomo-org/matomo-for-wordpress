@@ -164,7 +164,7 @@ class Controller extends ControllerAdmin
         return $toReturn;
     }
     /**
-     * Renders and echo's an admin page that lets users generate custom JavaScript
+     * Renders and returns an admin page that lets users generate custom JavaScript
      * tracking code and custom image tracker links.
      */
     public function trackingCodeGenerator()

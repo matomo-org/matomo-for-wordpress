@@ -37,7 +37,7 @@ class Get extends \Piwik\Plugins\Goals\Reports\Base
     {
         parent::init();
         $this->name = Piwik::translate('Goals_Goals');
-        $this->processedMetrics = ['conversion_rate'];
+        $this->processedMetrics = [new ConversionRate()];
         $this->documentation = Piwik::translate('Goals_OverviewReportDocumentation');
         $this->order = 1;
         $this->orderGoal = 50;

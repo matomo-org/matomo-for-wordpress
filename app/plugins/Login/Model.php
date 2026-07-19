@@ -18,7 +18,7 @@ class Model
     public const NOTIFIED_USER_ABOUT_LOGIN_ATTEMPTS_OPTION_PREFIX = 'BruteForceDetection.suspiciousLoginCountNotified.';
     public const LAST_LOGIN_COUNTRY_OPTION_PREFIX = 'LoginFromDifferentCountry.lastCountry.';
     /**
-     * @var
+     * @var string
      */
     private $tablePrefixed;
     public function __construct()

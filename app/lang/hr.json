@@ -573,7 +573,9 @@
     },
     "BotTracking": {
         "PageUrl": "URL stranice",
-        "SiteWithoutDataBackToMatomo": "Natrag na Matomo"
+        "SiteWithoutDataBackToMatomo": "Natrag na Matomo",
+        "AIChatbotsContentPagesTitle": "Stranice",
+        "ContentUrl": "網址"
     },
     "CoreAdminHome": {
         "Administration": "Administracija",

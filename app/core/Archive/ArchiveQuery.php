@@ -22,8 +22,8 @@ interface ArchiveQuery
      */
     public function getDataTableFromNumeric($names);
     /**
-     * @param $names
-     * @return mixed
+     * @param string|string[] $names
+     * @return DataTable|DataTable\Map
      */
     public function getDataTableFromNumericAndMergeChildren($names);
     /**

@@ -244,6 +244,12 @@ class Container extends \Piwik\Plugins\TagManager\Model\BaseModel
             throw new Exception(Piwik::translate('TagManager_ErrorContainerReleaseDoesNotExist'));
         }
     }
+    public function hasRelease($idSite, $idContainer, $environment)
+    {
+        $this->checkContainerExists($idSite, $idContainer);
+        $release = $this->releasesDao->getReleaseForContainerVersion($idSite, $idContainer, $environment);
+        return !empty($release);
+    }
     public function publishVersion($idSite, $idContainer, $idContainerVersion, $environment, $releaseLogin)
     {
         $this->checkContainerVersionExists($idSite, $idContainer, $idContainerVersion);

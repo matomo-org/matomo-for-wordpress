@@ -20,7 +20,7 @@ class Theme
     /** @var \Piwik\Plugin  */
     private $theme;
     /**
-     * @var Plugin $plugin
+     * @param Plugin|false $plugin
      */
     public function __construct($plugin = \false)
     {

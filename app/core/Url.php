@@ -770,7 +770,7 @@ class Url
         return (bool) $assume_secure_protocol;
     }
     /**
-     * @return string
+     * @return string|null
      */
     public static function getHostFromServerNameVar()
     {

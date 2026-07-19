@@ -19,7 +19,7 @@ class Settings
     public const OS_BOT = 'BOT';
     /**
      * If `true`, the config ID for a visitor will be the same no matter what site is being tracked.
-     * If `false, the config ID will be different.
+     * If `false`, the config ID will be different.
      *
      * @var bool
      */

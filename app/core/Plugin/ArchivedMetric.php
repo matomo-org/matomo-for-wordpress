@@ -29,7 +29,7 @@ class ArchivedMetric extends \Piwik\Plugin\Metric
     public const AGGREGATION_COUNT_WITH_NUMERIC_VALUE = 'sum(if(%s > 0, 1, 0))';
     public const AGGREGATION_COUNT_WITH_NUMERIC_VALUE_PREFIX = 'nb_with_';
     /**
-     * @var string
+     * @var string|false
      */
     private $aggregation;
     /**

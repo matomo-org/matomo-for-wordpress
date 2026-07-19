@@ -40,11 +40,14 @@ class PluginSuggestions extends Feature {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
 
+		add_action( 'init', [ $this, 'add_suggestion_hooks' ] );
+	}
+
+	public function add_suggestion_hooks() {
 		foreach ( $this->get_suggestions() as $suggestion ) {
 			$suggestion->register_hooks();
 		}
 	}
-
 	public function register_ajax() {
 		add_action( 'wp_ajax_matomo_dismiss_suggestion', [ $this, 'dismiss_suggestion_ajax' ] );
 	}

@@ -187,11 +187,8 @@ class Goals extends \Piwik\Plugin
         $model->deleteGoalsForSite($idSite);
     }
     /**
-     * Returns the Metadata for the Goals plugin API.
-     * The API returns general Goal metrics: conv, conv rate and revenue globally
-     * and for each goal.
-     *
-     * Also, this will update metadata of all other reports that have Goal segmentation
+     * Adds Goal metrics (conversions, conversion rate, revenue) to the metadata of all
+     * other reports that support Goal segmentation.
      */
     public function getReportMetadataEnd(&$reports, $info)
     {

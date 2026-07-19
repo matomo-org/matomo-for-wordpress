@@ -30,7 +30,8 @@ class DataTableGenericFilter
      */
     private $request;
     /**
-     * @param $request
+     * @param array $request
+     * @param Report $report
      */
     public function __construct($request, $report)
     {
@@ -93,7 +94,7 @@ class DataTableGenericFilter
      * Disable this feature by setting the parameter disable_generic_filters to 1 in the API call request.
      *
      * @param DataTable $datatable
-     * @return bool
+     * @return bool|null
      */
     protected function applyGenericFilters($datatable)
     {
@@ -102,7 +103,7 @@ class DataTableGenericFilter
             foreach ($tables as $table) {
                 $this->applyGenericFilters($table);
             }
-            return;
+            return null;
         }
         $tableDisabledFilters = $datatable->getMetadata(DataTable::GENERIC_FILTERS_TO_DISABLE_METADATA_NAME) ?: [];
         $genericFilters = $this->getGenericFiltersHavingDefaultValues();

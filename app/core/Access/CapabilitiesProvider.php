@@ -35,7 +35,7 @@ class CapabilitiesProvider
              *         $capabilities[] = new MyNewCapability();
              *     }
              *
-             * @param Capability[] $reports An array of reports
+             * @param Capability[] $capabilities An array of capabilities
              * @internal
              */
             Piwik::postEvent('Access.Capability.addCapabilities', array(&$capabilities));
@@ -53,7 +53,7 @@ class CapabilitiesProvider
              *         }
              *     }
              *
-             * @param Capability[] $reports An array of reports
+             * @param Capability[] $capabilities An array of capabilities
              * @internal
              */
             Piwik::postEvent('Access.Capability.filterCapabilities', array(&$capabilities));

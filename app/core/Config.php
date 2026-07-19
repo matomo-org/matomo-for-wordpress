@@ -162,8 +162,7 @@ class Config
         return array('action_url_category_delimiter' => $general['action_url_category_delimiter'], 'action_title_category_delimiter' => $general['action_title_category_delimiter'], 'are_ads_enabled' => Advertising::isAdsEnabledInConfig($general), 'autocomplete_min_sites' => $general['autocomplete_min_sites'], 'data_comparison_segment_limit' => $general['data_comparison_segment_limit'], 'datatable_export_range_as_day' => $general['datatable_export_range_as_day'], 'datatable_row_limits' => $this->getDatatableRowLimits(), 'enable_general_settings_admin' => Controller::isGeneralSettingsAdminEnabled(), 'enable_plugins_admin' => CorePluginsAdmin::isPluginsAdminEnabled());
     }
     /**
-     * @param $general
-     * @return mixed
+     * @return string[]
      */
     private function getDatatableRowLimits()
     {
@@ -368,7 +367,7 @@ class Config
         $this->writeConfig();
     }
     /**
-     * @throws \Exception
+     * @return MissingFilePermissionException
      */
     public function getConfigNotWritableException()
     {

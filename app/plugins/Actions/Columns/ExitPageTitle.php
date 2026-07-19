@@ -48,7 +48,7 @@ class ExitPageTitle extends VisitDimension
     }
     /**
      * @param Action|null $action
-     * @return int|bool
+     * @return int|false|null
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {

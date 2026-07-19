@@ -358,7 +358,7 @@ class FileIntegrity
      *
      * @param $directory
      * @param $directories
-     * @return string
+     * @return string|null
      */
     protected static function getDirectoryParentFromList($directory, $directories)
     {

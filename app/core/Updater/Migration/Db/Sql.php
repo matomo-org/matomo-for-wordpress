@@ -25,7 +25,7 @@ class Sql extends DbMigration
      */
     protected $sql;
     /**
-     * @var false|int|array
+     * @var array
      */
     private $errorCodesToIgnore;
     /**

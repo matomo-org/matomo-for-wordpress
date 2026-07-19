@@ -9,7 +9,6 @@
 namespace Piwik\Plugins\FeatureFlags;
 
 use Piwik\Container\StaticContainer;
-use Piwik\Log\Logger;
 use Piwik\Log\LoggerInterface;
 class FeatureFlagManager
 {
@@ -18,7 +17,7 @@ class FeatureFlagManager
      */
     private $storages;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     public function __construct(array $storages, LoggerInterface $logger)

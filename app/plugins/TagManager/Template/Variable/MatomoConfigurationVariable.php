@@ -33,7 +33,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
     }
     public function getIcon()
     {
-        return 'plugins/TagManager/images/MatomoIcon.png';
+        return 'plugins/TagManager/images/MatomoIcon.svg';
     }
     public function hasAdvancedSettings()
     {

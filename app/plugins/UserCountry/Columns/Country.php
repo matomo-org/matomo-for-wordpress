@@ -86,7 +86,7 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
     }
     /**
      * @param Action|null $action
-     * @return int
+     * @return string|false
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {

@@ -39,6 +39,7 @@ use Piwik\Tracker\Cache;
 use Piwik\Url;
 use Piwik\Validators\BaseValidator;
 use Piwik\Validators\NotEmpty;
+use Piwik\Validators\NumberRange;
 /**
  * The UsersManager API lets you Manage Users and their permissions to access specific websites.
  *
@@ -104,6 +105,8 @@ class API extends \Piwik\Plugin\API
     public const PREFERENCE_DEFAULT_THEME_MODE = ThemeStyles::LIGHT_MODE;
     public const PREFERENCE_DEFAULT_REPORT = 'defaultReport';
     public const PREFERENCE_DEFAULT_REPORT_DATE = 'defaultReportDate';
+    public const MIN_INVITE_EXPIRY_IN_DAYS = 1;
+    public const MAX_INVITE_EXPIRY_IN_DAYS = 3650;
     /**
      * @var API|null
      */
@@ -191,6 +194,7 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
     public function setUserPreference(string $userLogin, string $preferenceName, $preferenceValue) : void
     {
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($userLogin);
+        $userLogin = $this->getCanonicalLogin($userLogin);
         if (!$this->model->userExists($userLogin)) {
             throw new Exception('User does not exist: ' . $userLogin);
         }
@@ -649,6 +653,7 @@ string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = n
         if (empty($expiryInDays)) {
             $expiryInDays = GeneralConfig::getConfigValue('default_invite_user_token_expiry_days');
         }
+        BaseValidator::check(Piwik::translate('UsersManager_ExpiryInDays'), (int) $expiryInDays, [new NumberRange(self::MIN_INVITE_EXPIRY_IN_DAYS, self::MAX_INVITE_EXPIRY_IN_DAYS)]);
         if (empty($initialIdSite)) {
             throw new \Exception(Piwik::translate("UsersManager_AddUserNoInitialAccessError"));
         } else {
@@ -922,6 +927,7 @@ $passwordConfirmation = \false) : void
 ?string $passwordConfirmation = null) : void
     {
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
+        $userLogin = $this->getCanonicalLogin($userLogin);
         if ($access != 'noaccess') {
             $this->checkAccessType($access);
         }
@@ -999,6 +1005,7 @@ $passwordConfirmation = \false) : void
      */
     public function addCapabilities(string $userLogin, $capabilities, $idSites) : void
     {
+        $userLogin = $this->getCanonicalLogin($userLogin);
         $this->executeConcurrencySafe($userLogin, function () use($userLogin, $capabilities, $idSites) {
             $idSites = $this->getIdSitesCheckAdminAccess($idSites);
             if (strtolower($userLogin) === 'anonymous') {
@@ -1141,6 +1148,7 @@ $passwordConfirmation = \false) : void
     }
     private function checkUserIsNotAnonymous(string $userLogin) : void
     {
+        $userLogin = $this->getCanonicalLogin($userLogin);
         if (strtolower($userLogin) === 'anonymous') {
             throw new Exception(Piwik::translate("UsersManager_ExceptionEditAnonymous"));
         }
@@ -1247,6 +1255,22 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         }
     }
     /**
+     * Resolves the given login to the exact login stored in the database.
+     *
+     * Logins are matched case- and accent-insensitively by the database collation, so different
+     * representations of a login can refer to the same stored user. Checks that treat a specific
+     * login specially (such as the reserved anonymous user) must therefore be based on the resolved
+     * login rather than the raw request value, otherwise an equivalent representation of the login
+     * would not be recognised.
+     *
+     * @return string The stored login if a matching user exists, otherwise the given login unchanged.
+     */
+    private function getCanonicalLogin(string $userLogin) : string
+    {
+        $user = $this->model->getUser($userLogin);
+        return $user['login'] ?? $userLogin;
+    }
+    /**
      * @param string[] $access
      * @return array{0: list<string>, 1: list<string>}
      */
@@ -1329,6 +1353,7 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
+        BaseValidator::check(Piwik::translate('UsersManager_ExpiryInDays'), (int) $expiryInDays, [new NumberRange(self::MIN_INVITE_EXPIRY_IN_DAYS, self::MAX_INVITE_EXPIRY_IN_DAYS)]);
         if (!$this->model->isPendingUser($userLogin)) {
             throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
         }
@@ -1365,6 +1390,7 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
+        BaseValidator::check(Piwik::translate('UsersManager_ExpiryInDays'), (int) $expiryInDays, [new NumberRange(self::MIN_INVITE_EXPIRY_IN_DAYS, self::MAX_INVITE_EXPIRY_IN_DAYS)]);
         if (!$this->model->isPendingUser($userLogin)) {
             throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
         }

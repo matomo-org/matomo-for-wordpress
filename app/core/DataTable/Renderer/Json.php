@@ -28,8 +28,8 @@ class Json extends Renderer
     /**
      * Computes the output for the given data table
      *
-     * @param DataTable $table
-     * @return string
+     * @param DataTable\DataTableInterface|array $table
+     * @return string|false
      */
     protected function renderTable($table)
     {
@@ -39,7 +39,7 @@ class Json extends Renderer
                 $array = array($array);
             }
             foreach ($array as $key => $tab) {
-                if ($tab instanceof DataTable\Map || $tab instanceof DataTable || $tab instanceof DataTable\Simple) {
+                if ($tab instanceof DataTable\Map || $tab instanceof DataTable) {
                     $array[$key] = $this->convertDataTableToArray($tab);
                     if (!is_array($array[$key])) {
                         $array[$key] = array('value' => $array[$key]);

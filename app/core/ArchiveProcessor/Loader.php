@@ -152,9 +152,11 @@ class Loader
         }
     }
     /**
-     * @param $visits
-     * @param $visitsConverted
-     * @return int[]
+     * @param bool|int|float $visits
+     * @param bool|int|float $visitsConverted
+     * @param array|false $existingArchives
+     * @param array|null $foundRecords
+     * @return array{0: array, 1: bool|int|float}
      */
     protected function insertArchiveData($visits, $visitsConverted, $existingArchives, $foundRecords)
     {
@@ -182,7 +184,7 @@ class Loader
         return $this->params->getPeriod()->getDateStart()->toString() . $this->params->getPeriod()->getDateEnd()->toString() . '.' . $doneFlag;
     }
     /**
-     * @return array|false[]
+     * @return array
      */
     protected function loadArchiveData()
     {
@@ -225,7 +227,8 @@ class Loader
     /**
      * Prepares the core metrics if needed.
      *
-     * @param $visits
+     * @param bool|int|float $visits
+     * @param bool|int|float $visitsConverted
      * @return array
      */
     protected function prepareCoreMetricsArchive($visits, $visitsConverted)

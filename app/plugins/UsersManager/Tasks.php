@@ -19,7 +19,7 @@ class Tasks extends \Piwik\Plugin\Tasks
      */
     private $usersModel;
     /**
-     * @param API
+     * @var API
      */
     private $usersManagerApi;
     public function __construct(\Piwik\Plugins\UsersManager\Model $usersModel, \Piwik\Plugins\UsersManager\API $usersManagerApi)

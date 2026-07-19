@@ -200,8 +200,7 @@ class PluginInstaller
     }
     /**
      * @param $pluginDir
-     * @throws PluginInstallerException
-     * @return string
+     * @return string|false
      */
     private function getNameOfFirstSubfolder($pluginDir)
     {

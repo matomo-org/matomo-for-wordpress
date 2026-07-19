@@ -26,15 +26,15 @@ class Updater extends \Piwik\Updates
 {
     private static $cacheId = 'AllDimensionModifyTime';
     /**
-     * @var VisitDimension[]
+     * @var VisitDimension[]|null
      */
     public $visitDimensions;
     /**
-     * @var ActionDimension[]
+     * @var ActionDimension[]|null
      */
     private $actionDimensions;
     /**
-     * @var ConversionDimension[]
+     * @var ConversionDimension[]|null
      */
     private $conversionDimensions;
     /**
@@ -131,6 +131,7 @@ class Updater extends \Piwik\Updates
     /**
      * @param ActionDimension|ConversionDimension|VisitDimension $dimension
      * @param string $componentPrefix
+     * @param array $existingColumnsInDb
      * @return array
      */
     private function getUpdatesForDimension(PiwikUpdater $updater, $dimension, $componentPrefix, $existingColumnsInDb)
@@ -252,6 +253,21 @@ class Updater extends \Piwik\Updates
         $changes = self::getCurrentDimensionFileChanges();
         $cache = self::buildCache();
         $cache->save(self::$cacheId, $changes);
+    }
+    /**
+     * Invalidate the cached dimension file-change times.
+     *
+     * getAllVersions() short-circuits when the dimension files on disk are unchanged since they
+     * were last cached, treating "files unchanged" as "columns already installed". That assumption
+     * breaks whenever the tables are (re)created independently of the cache — most notably a fresh
+     * install or a test fixture that drops and recreates the database while a warm eager cache
+     * survives on disk. The freshly created log_visit / log_link_visit_action / log_conversion
+     * tables would then never receive their dimension columns. Callers that (re)create the schema
+     * must clear this cache so the column updates are re-evaluated against the new tables.
+     */
+    public static function clearCache()
+    {
+        self::buildCache()->delete(self::$cacheId);
     }
     private static function buildCache()
     {

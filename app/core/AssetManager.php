@@ -57,7 +57,7 @@ class AssetManager extends \Piwik\Singleton
      */
     private $minimalStylesheetFetcher;
     /**
-     * @var Theme
+     * @var Theme|null
      */
     private $theme;
     public function __construct()

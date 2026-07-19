@@ -26,9 +26,9 @@ index 0a050374c1..c1c9bc454a 100644
  {
      "CoreHome": {
 +        "ReportConfiguration": "Report Configuration",
+         "AIInsights": "AI Insights",
          "CategoryNoData": "No data in this category. Try to \"Include all population\".",
          "ChangeVisualization": "Change visualization",
-         "ChangePeriod": "Change period",
 diff --git a/plugins/CoreHome/stylesheets/a11y.less b/plugins/CoreHome/stylesheets/a11y.less
 new file mode 100644
 index 0000000000..cb48a85973

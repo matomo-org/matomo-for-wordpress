@@ -850,6 +850,25 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
         return $this->rows;
     }
     /**
+     * Removes and returns the first non-summary row in this table.
+     *
+     * @return Row|null
+     */
+    public function shiftRow()
+    {
+        if (empty($this->rows)) {
+            return null;
+        }
+        reset($this->rows);
+        $rowId = key($this->rows);
+        if (!isset($this->rows[$rowId])) {
+            return null;
+        }
+        $row = $this->rows[$rowId];
+        unset($this->rows[$rowId]);
+        return $row;
+    }
+    /**
      * @return int
      * @ignore
      */
