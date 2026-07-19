@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.11.2',
-        'version' => '5.11.2.0',
-        'reference' => '8084121992c10433be7643741a6495e337a3137f',
+        'pretty_version' => '5.12.0',
+        'version' => '5.12.0.0',
+        'reference' => '4a6c282486661287a0cba3fd5e24d450fac07da6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.11.2',
-            'version' => '5.11.2.0',
-            'reference' => '8084121992c10433be7643741a6495e337a3137f',
+            'pretty_version' => '5.12.0',
+            'version' => '5.12.0.0',
+            'reference' => '4a6c282486661287a0cba3fd5e24d450fac07da6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'df73028dc0423f493ce8eae872022bec38047a35',
+            'reference' => 'd94fc55b2bcd0a4f36fd32e8b4430ff5fd60d23d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -459,9 +459,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-mbstring' => array(
-            'pretty_version' => 'v1.38.1',
-            'version' => '1.38.1.0',
-            'reference' => '14c5439eec4ccff081ac14eca2dc57feb2a66d92',
+            'pretty_version' => 'v1.38.2',
+            'version' => '1.38.2.0',
+            'reference' => 'd3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),

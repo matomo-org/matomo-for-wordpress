@@ -74,7 +74,7 @@ class DeleteLogsData extends ConsoleCommand
         return self::SUCCESS;
     }
     /**
-     * @return Date[]
+     * @return string[]
      */
     private function getDateRangeToDeleteFrom()
     {

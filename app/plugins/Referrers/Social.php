@@ -16,7 +16,7 @@ use Piwik\Piwik;
 use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 /**
- * Contains methods to access search engine definition data.
+ * Contains methods to access social network definition data.
  */
 class Social extends Singleton
 {
@@ -25,9 +25,9 @@ class Social extends Singleton
     public const DEFINITION_FILE = '/vendor/matomo/searchengine-and-social-list/Socials.yml';
     protected $definitionList = null;
     /**
-     * Returns list of search engines by URL
+     * Returns list of social networks by URL
      *
-     * @return array  Array of ( URL => array( searchEngineName, keywordParameter, path, charset ) )
+     * @return array  Array of ( URL => socialNetworkName )
      */
     public function getDefinitions()
     {
@@ -156,7 +156,7 @@ class Social extends Singleton
      *
      * @param string  $social
      *
-     * @return string
+     * @return string|null
      */
     public function getMainUrlFromName($social)
     {

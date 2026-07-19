@@ -39,7 +39,8 @@ class Evolution extends JqplotGraph
     }
     public function beforeLoadDataTable()
     {
-        if (!$this->isComparing()) {
+        $isComparingDatesOrPeriods = $this->isComparingDatesOrPeriods();
+        if (!$this->isComparing() || !$isComparingDatesOrPeriods) {
             $this->calculateEvolutionDateRange();
         }
         parent::beforeLoadDataTable();
@@ -59,7 +60,7 @@ class Evolution extends JqplotGraph
             $this->requestConfig->request_parameters_to_modify['date'] = $requestingPeriod->getRangeString();
         }
         $this->config->custom_parameters['columns'] = $this->config->columns_to_display;
-        if ($this->isComparing()) {
+        if ($this->isComparing() && $isComparingDatesOrPeriods) {
             $this->config->show_limit_control = \false;
             // since we always show the evolution over the period, there's no point in changing the limit
             $this->config->show_periods = \false;
@@ -73,6 +74,12 @@ class Evolution extends JqplotGraph
             }
             $this->requestConfig->request_parameters_to_modify = $selector->setDatePeriods($this->requestConfig->request_parameters_to_modify, $requestingPeriod, $comparisonPeriods, \true);
         }
+    }
+    private function isComparingDatesOrPeriods() : bool
+    {
+        $comparePeriods = Common::getRequestVar('comparePeriods', [], 'array');
+        $compareDates = Common::getRequestVar('compareDates', [], 'array');
+        return !empty($comparePeriods) || !empty($compareDates);
     }
     public function afterAllFiltersAreApplied()
     {

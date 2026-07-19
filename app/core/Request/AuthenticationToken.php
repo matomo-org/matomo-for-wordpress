@@ -86,12 +86,14 @@ class AuthenticationToken
             $forceApiSessionBySource['post'] = $post->getBoolParameter('force_api_session', \false);
         }
         $get = Request::fromGet();
-        $getTokenAuth = $get->getStringParameter('token_auth', '');
-        if (!empty($getTokenAuth)) {
-            $tokenAuthBySource['get'] = $getTokenAuth;
-        }
-        if (array_key_exists('force_api_session', $_GET)) {
-            $forceApiSessionBySource['get'] = $get->getBoolParameter('force_api_session', \false);
+        if (!$this->isNavigationOnlyEndpoint()) {
+            $getTokenAuth = $get->getStringParameter('token_auth', '');
+            if (!empty($getTokenAuth)) {
+                $tokenAuthBySource['get'] = $getTokenAuth;
+            }
+            if (array_key_exists('force_api_session', $_GET)) {
+                $forceApiSessionBySource['get'] = $get->getBoolParameter('force_api_session', \false);
+            }
         }
         $this->throwIfValuesConflict($tokenAuthBySource);
         $this->throwIfValuesConflict($forceApiSessionBySource);
@@ -149,6 +151,9 @@ class AuthenticationToken
     }
     private function initTokenFromGetRequest() : bool
     {
+        if ($this->isNavigationOnlyEndpoint()) {
+            return \false;
+        }
         $request = Request::fromGet();
         $tokenAuth = $request->getStringParameter('token_auth', '');
         if ($tokenAuth !== '') {
@@ -158,6 +163,24 @@ class AuthenticationToken
             return \true;
         }
         return \false;
+    }
+    /**
+     * Some endpoints exist only as browser navigations, not as API entry points. They are reached
+     * via a top-level GET and hand off to another page, so GET credentials are not part of their
+     * request contract and must not be consumed as authentication.
+     *
+     * Keep this list extremely small. Only add an endpoint here once it has been independently
+     * confirmed that the endpoint never needs URL-borne auth and never performs writes.
+     */
+    private function isNavigationOnlyEndpoint() : bool
+    {
+        if (SettingsServer::isTrackerApiRequest()) {
+            return \false;
+        }
+        $get = Request::fromGet();
+        $module = $get->getStringParameter('module', '');
+        $action = $get->getStringParameter('action', '');
+        return $module === 'Overlay' && $action === 'startOverlaySession';
     }
     private function getTokenAuthFromHeader() : ?string
     {

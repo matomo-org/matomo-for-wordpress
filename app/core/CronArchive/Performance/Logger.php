@@ -17,7 +17,7 @@ use Piwik\Log\LoggerInterface;
 class Logger
 {
     /**
-     * @var int
+     * @var bool
      */
     private $isEnabled;
     /**
@@ -25,7 +25,7 @@ class Logger
      */
     private $logger;
     /**
-     * @var int
+     * @var string|false
      */
     private $archivingRunId;
     public function __construct(Config $config, ?LoggerInterface $logger = null)

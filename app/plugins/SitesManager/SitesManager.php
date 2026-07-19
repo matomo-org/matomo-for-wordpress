@@ -10,7 +10,6 @@ namespace Piwik\Plugins\SitesManager;
 
 use Piwik\Access;
 use Piwik\API\Request;
-use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
@@ -42,7 +41,7 @@ class SitesManager extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => ['function' => 'recordWebsiteDataInCache', 'before' => \true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'SitesManager.deleteSite.end' => 'onSiteDeleted', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Request.dispatch' => 'redirectDashboardToWelcomePage'];
+        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Tracker.Cache.getSiteAttributes' => ['function' => 'recordWebsiteDataInCache', 'before' => \true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'SitesManager.deleteSite.end' => 'onSiteDeleted', 'System.addSystemSummaryItems' => 'addSystemSummaryItems'];
     }
     public static function isSitesAdminEnabled()
     {
@@ -63,38 +62,37 @@ class SitesManager extends \Piwik\Plugin
             $systemSummary[] = new SystemSummary\Item('websites', Piwik::translate('CoreHome_SystemSummaryNWebsites', $numWebsites), null, ['module' => 'SitesManager', 'action' => 'index'], '', 10);
         }
     }
-    public function redirectDashboardToWelcomePage(&$module, &$action)
+    /**
+     * Returns whether the "site has no data" tracker-setup screen should be shown for the given site.
+     * Only answers the data question (never tracked, check not suppressed, not dismissed this session);
+     * the reporting UI decides where to render it, as the active group lives in the URL hash.
+     */
+    public static function shouldShowEmptySiteMessage(int $idSite) : bool
     {
-        if ($module !== 'CoreHome' || $action !== 'index') {
-            return;
+        if (!$idSite) {
+            return \false;
         }
-        $siteId = Common::getRequestVar('idSite', \false, 'int');
-        if (!$siteId) {
-            return;
+        if (!self::shouldPerformEmptySiteCheck($idSite)) {
+            return \false;
         }
-        $shouldPerformEmptySiteCheck = self::shouldPerformEmptySiteCheck($siteId);
-        if (!$shouldPerformEmptySiteCheck) {
-            return;
-        }
-        $hadTrafficKey = 'SitesManagerHadTrafficInPast_' . (int) $siteId;
+        $hadTrafficKey = 'SitesManagerHadTrafficInPast_' . $idSite;
         $hadTrafficBefore = Option::get($hadTrafficKey);
         if (!empty($hadTrafficBefore)) {
             // user had traffic at some stage in the past... not needed to show tracking code
-            return;
-        } elseif (self::hasTrackedAnyTraffic($siteId)) {
+            return \false;
+        }
+        if (self::hasTrackedAnyTraffic($idSite)) {
             // remember the user had traffic in the past so we won't show the tracking screen again
             // if all visits are deleted for example
             Option::set($hadTrafficKey, 1);
-            return;
-        } else {
-            // never had any traffic
-            $session = new SessionNamespace('siteWithoutData');
-            if (!empty($session->ignoreMessage)) {
-                return;
-            }
-            $module = 'SitesManager';
-            $action = 'siteWithoutData';
+            return \false;
         }
+        // never had any traffic - the screen can be temporarily hidden for an hour (see Controller)
+        $session = new SessionNamespace('siteWithoutData');
+        if (!empty($session->ignoreMessage)) {
+            return \false;
+        }
+        return \true;
     }
     public static function hasTrackedAnyTraffic($siteId)
     {
@@ -181,7 +179,7 @@ class SitesManager extends \Piwik\Plugin
         });
     }
     /**
-     * Returns whether we should keep URL fragments for a specific site.
+     * Returns the timezone configured for a specific site.
      *
      * @param array $site DB data for the site.
      * @return ?string

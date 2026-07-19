@@ -57,7 +57,7 @@ class Cache
         self::getEagerCache()->flushAll();
     }
     /**
-     * @param $type
+     * @param string $type
      * @return \Matomo\Cache\Backend
      */
     public static function buildBackend($type)

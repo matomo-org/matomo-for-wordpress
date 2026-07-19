@@ -67,7 +67,7 @@ class Rules
         return self::isSegmentPreProcessed($idSites, $segment);
     }
     /**
-     * @param $idSites
+     * @param array $idSites
      * @return array
      */
     public static function getSegmentsToProcess($idSites)
@@ -93,7 +93,6 @@ class Rules
      * Return done flags used to tell how the archiving process for a specific archive was completed,
      *
      * @param array $plugins
-     * @param $segment
      * @return array
      */
     public static function getDoneFlags(array $plugins, Segment $segment)
@@ -201,8 +200,8 @@ class Rules
             /**
              * @ignore
              *
-             * @params bool &$isRequestAuthorizedToArchive
-             * @params Parameters $params
+             * @param bool &$isRequestAuthorizedToArchive
+             * @param Parameters $params
              */
             Piwik::postEvent('Archiving.isRequestAuthorizedToArchive', [&$isRequestAuthorizedToArchive, $params]);
         }
@@ -258,7 +257,7 @@ class Rules
     /**
      * Returns done flag values allowed to be selected
      *
-     * @return string[]
+     * @return int[]
      */
     public static function getSelectableDoneFlagValues($includeInvalidated = \true, ?\Piwik\ArchiveProcessor\Parameters $params = null, $checkAuthorizedToArchive = \true)
     {

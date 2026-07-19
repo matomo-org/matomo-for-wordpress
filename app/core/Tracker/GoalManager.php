@@ -121,7 +121,7 @@ class GoalManager
      * is returned. Otherwise null is returned.
      *
      * @param array $goal
-     * @return bool|null if a goal is matched, a string of the Action URL is returned, or if no goal was matched it returns null
+     * @return string|null The Action URL that triggered the goal, or null if no goal was matched
      */
     public function detectGoalMatch($goal, \Piwik\Tracker\Action $action, VisitProperties $visitor, \Piwik\Tracker\Request $request)
     {
@@ -588,12 +588,12 @@ class GoalManager
         return $randomInt;
     }
     /**
-     * Helper function used by other record* methods which will INSERT or UPDATE the conversion in the DB
+     * Helper function used by other record* methods which will INSERT the conversion in the DB
      *
      * @param array $conversion
      * @param array $visitInformation
      * @param Action|null $action
-     * @param int|null $convertedGoal
+     * @param array|null $convertedGoal
      * @return bool
      */
     protected function insertNewConversion($conversion, $visitInformation, \Piwik\Tracker\Request $request, $action, $convertedGoal = null)
@@ -672,7 +672,7 @@ class GoalManager
      * @param string $hook
      * @param Visitor $visitor
      * @param Action|null $action
-     * @param array|null $valuesToUpdate If null, $this->visitorInfo will be updated
+     * @param array|null $valuesToUpdate
      *
      * @return array|null The updated $valuesToUpdate or null if no $valuesToUpdate given
      */

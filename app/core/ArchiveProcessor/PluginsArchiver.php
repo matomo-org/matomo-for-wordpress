@@ -31,7 +31,7 @@ class PluginsArchiver
      */
     private static $currentPluginBeingArchived = null;
     /**
-     * @param ArchiveProcessor $archiveProcessor
+     * @var ArchiveProcessor
      */
     public $archiveProcessor;
     /**
@@ -45,7 +45,7 @@ class PluginsArchiver
     /**
      * Public only for tests. Won't be necessary after DI changes are complete.
      *
-     * @var Archiver[] $archivers
+     * @var array<string, class-string<Archiver>>
      */
     public static $archivers = array();
     /**
@@ -180,7 +180,7 @@ class PluginsArchiver
     /**
      * Loads Archiver class from any plugin that defines one.
      *
-     * @return \Piwik\Plugin\Archiver[]
+     * @return array<string, class-string<Archiver>>
      */
     protected static function getPluginArchivers()
     {
@@ -250,7 +250,8 @@ class PluginsArchiver
         return $metrics;
     }
     /**
-     * @param $archiverClass
+     * @param class-string<Archiver> $archiverClass
+     * @param string $pluginName
      * @return Archiver
      */
     private function makeNewArchiverObject($archiverClass, $pluginName)
@@ -267,7 +268,7 @@ class PluginsArchiver
          *
          * @param \Piwik\Plugin\Archiver &$archiver The newly created plugin archiver instance.
          * @param string $pluginName The name of plugin of which archiver instance was created.
-         * @param array $this->params Array containing archive parameters (Site, Period, Date and Segment)
+         * @param Parameters $params Object containing archive parameters (Site, Period, Date and Segment)
          * @param bool false This parameter is deprecated and will be removed.
          */
         Piwik::postEvent('Archiving.makeNewArchiverObject', array($archiver, $pluginName, $this->params, \false));

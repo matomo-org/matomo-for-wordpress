@@ -12,6 +12,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Piwik;
 use Piwik\Plugins\TagManager\Dao\TagsDao;
+use Piwik\Plugins\TagManager\Input\AccessValidator;
 use Piwik\Plugins\TagManager\Input\IdSite;
 use Piwik\Plugins\TagManager\Input\Name;
 use Piwik\Plugins\TagManager\Validators\TriggerIds;
@@ -155,12 +156,16 @@ class Tag extends \Piwik\Plugins\TagManager\Model\BaseModel
     public function copyTag(int $idSite, int $idContainerVersion, int $idTag, ?int $idDestinationSite = null, ?string $idDestinationContainer = null) : int
     {
         $tag = $this->getContainerTag($idSite, $idContainerVersion, $idTag);
+        $idDestinationSite = $idDestinationSite ?? $idSite;
+        $this->checkDestinationCanUseCustomTemplate($tag, $idSite, $idContainerVersion, $idDestinationSite);
         $idDestinationVersion = $idContainerVersion;
         if ($idDestinationSite !== null && !empty($idDestinationContainer)) {
+            $idDestinationVersion = $this->getDraftContainerVersion($idDestinationSite, $idDestinationContainer);
+            $this->checkWriteCapabilityForContainerVersion($idDestinationSite, $idDestinationVersion, $idDestinationContainer);
             $idDestinationVersion = $this->copyReferencedVariablesAndTriggers($tag, $idSite, $idContainerVersion, $idDestinationSite, $idDestinationContainer);
+        } else {
+            $this->checkWriteCapabilityForContainerVersion($idDestinationSite, $idDestinationVersion);
         }
-        // If the destination site isn't set, simply use the source site
-        $idDestinationSite = $idDestinationSite ?? $idSite;
         $newName = $this->dao->makeCopyNameUnique($idDestinationSite, $tag['name'], $idDestinationVersion);
         if (class_exists('\\Piwik\\Plugins\\ActivityLog\\ActivityParamObject\\EntityDuplicatedData')) {
             $additionalData = ['idSite' => $idSite, 'idDestinationSites' => $idDestinationSite, 'idContainerVersion' => $idContainerVersion, 'idDestinationContainer' => $idDestinationContainer, 'idTag' => $idTag];
@@ -176,6 +181,38 @@ class Tag extends \Piwik\Plugins\TagManager\Model\BaseModel
         $tag['fire_trigger_ids'] = $this->copyReferencedTriggers($idSite, $idContainerVersion, $tag['fire_trigger_ids'], $idDestinationSite, $idDestinationVersion);
         $tag['block_trigger_ids'] = $this->copyReferencedTriggers($idSite, $idContainerVersion, $tag['block_trigger_ids'], $idDestinationSite, $idDestinationVersion);
         return $idDestinationVersion;
+    }
+    public function usesCustomTemplates(int $idSite, int $idContainerVersion, int $idTag) : bool
+    {
+        $tag = $this->getContainerTag($idSite, $idContainerVersion, $idTag);
+        if (empty($tag)) {
+            return \false;
+        }
+        if (!empty($tag['type']) && $this->tagsProvider->isCustomTemplate($tag['type'])) {
+            return \true;
+        }
+        $variableModel = StaticContainer::get(\Piwik\Plugins\TagManager\Model\Variable::class);
+        $checkedVariableNames = [];
+        if ($variableModel->doesEntityReferenceCustomTemplates($tag, $idSite, $idContainerVersion, $checkedVariableNames)) {
+            return \true;
+        }
+        $triggerModel = StaticContainer::get(\Piwik\Plugins\TagManager\Model\Trigger::class);
+        $triggerIds = array_merge($tag['fire_trigger_ids'] ?? [], $tag['block_trigger_ids'] ?? []);
+        foreach ($triggerIds as $triggerId) {
+            if ($triggerModel->usesCustomTemplates($idSite, $idContainerVersion, (int) $triggerId, $checkedVariableNames)) {
+                return \true;
+            }
+        }
+        return \false;
+    }
+    private function checkDestinationCanUseCustomTemplate(array $tag, int $idSite, int $idContainerVersion, int $idDestinationSite) : void
+    {
+        if ($idSite === $idDestinationSite || empty($tag['type'])) {
+            return;
+        }
+        if ($this->usesCustomTemplates($idSite, $idContainerVersion, (int) $tag['idtag'])) {
+            StaticContainer::get(AccessValidator::class)->checkUseCustomTemplatesCapability($idDestinationSite);
+        }
     }
     private function copyReferencedTriggers(int $idSite, int $idContainerVersion, array $triggerIds, int $idDestinationSite, int $idDestinationVersion) : array
     {

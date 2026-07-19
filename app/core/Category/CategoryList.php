@@ -10,11 +10,9 @@ namespace Piwik\Category;
 
 use Piwik\Container\StaticContainer;
 /**
- * Base type for category. lets you change the name for a categoryId and specify a different order
- * so the category appears eg at a different order in the reporting menu.
+ * Holds the list of categories (with their subcategories) available in the Piwik reporting menu.
  *
- * This class is for now not exposed as public API until needed. Categories of plugins will be automatically
- * displayed in the menu at the very right after all core categories.
+ * This class is for now not exposed as public API until needed.
  */
 class CategoryList
 {
@@ -33,6 +31,22 @@ class CategoryList
     public function getCategories()
     {
         return $this->categories;
+    }
+    /**
+     * Returns the reporting menu groups that do not require tracked data, collected across all
+     * categories (it is a property of the group, so resolved globally rather than per category).
+     *
+     * @return string[]
+     */
+    public function getGroupsWithoutTrackingRequirement() : array
+    {
+        $groups = [];
+        foreach ($this->categories as $category) {
+            foreach ($category->getGroupsWithoutTrackingRequirement() as $group) {
+                $groups[$group] = \true;
+            }
+        }
+        return array_keys($groups);
     }
     /**
      * @param string|null $categoryId

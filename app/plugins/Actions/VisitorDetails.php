@@ -238,9 +238,8 @@ class VisitorDetails extends VisitorDetailsAbstract
         unset($action['idlink_va']);
     }
     /**
-     * @param $idVisit
+     * @param array $idVisits
      * @return array
-     * @throws \Exception
      */
     protected function queryActionsForVisits($idVisits)
     {

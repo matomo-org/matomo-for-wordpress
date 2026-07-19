@@ -181,6 +181,8 @@ class Website {
     if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
       await possibleModalButton.click();
     } else { // latest woocommerce
+      await $('#woocommerce-select-control-0__help').waitForExist({ timeout: 10000 });
+
       await browser.execute(() => {
         window.jQuery('#woocommerce-select-control-0__help')[0].click();
       });

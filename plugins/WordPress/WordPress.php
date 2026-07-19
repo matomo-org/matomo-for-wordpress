@@ -67,9 +67,10 @@ class WordPress extends Plugin
             'Template.header' => 'onHeader',
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
+            'SitesManager.shouldPerformEmptySiteCheck' => 'shouldPerformEmptySiteCheck',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
-	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
+	          'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'API.CorePluginsAdmin.getSystemSettings.end' => 'onGetSystemSettingsEnd',
             'API.SitesManager.updateSite' => 'allowUpdateSiteForMeasurableSettings',
             'API.SitesManager.updateSite.end' => 'reDisableSitesAdmin',
@@ -96,6 +97,10 @@ class WordPress extends Plugin
     public function onDeleteMatomoUser($userLogin)
     {
         ( new WpMatomo\User() )->delete_mappings_for_matomo_login($userLogin);
+    }
+
+    public function shouldPerformEmptySiteCheck( &$shouldPerformEmptySiteCheck ) {
+        $shouldPerformEmptySiteCheck = false;
     }
 
     public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {

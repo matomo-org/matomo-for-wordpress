@@ -15,12 +15,17 @@ class DeviceDetectionPage extends MatomoAdminPage {
 
     await $('textarea').waitForDisplayed();
     await browser.execute(() => {
-      $('textarea').val(
-        $('textarea')
+      window.jQuery('textarea').val(
+        window.jQuery('textarea')
           .val()
           .replace(/rv:\d+\.\d+/g, 'rv:REMOVED')
           .replace(/\/\d+\.\d+/g, '/REMOVED')
       );
+
+      window.jQuery('td:contains(Version)').each(function () {
+        const $td = $(this).next();
+        $td.text($td.text().replace(/\d+\.\d+/g, 'REMOVED'));
+      });
     });
 
     return result;

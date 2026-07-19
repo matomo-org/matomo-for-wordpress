@@ -17,7 +17,7 @@ use Exception;
 class Hourly extends \Piwik\Scheduler\Schedule\Schedule
 {
     /**
-     * @see ScheduledTime::getRescheduledTime
+     * @see Schedule::getRescheduledTime
      * @return int
      */
     public function getRescheduledTime()
@@ -28,7 +28,7 @@ class Hourly extends \Piwik\Scheduler\Schedule\Schedule
         return $rescheduledTime;
     }
     /**
-     * @see ScheduledTime::setHour
+     * @see Schedule::setHour
      * @param int $_hour
      * @throws \Exception
      * @return int
@@ -38,7 +38,7 @@ class Hourly extends \Piwik\Scheduler\Schedule\Schedule
         throw new Exception("Method not supported");
     }
     /**
-     * @see ScheduledTime::setDay
+     * @see Schedule::setDay
      * @param int $_day
      * @throws \Exception
      * @return int

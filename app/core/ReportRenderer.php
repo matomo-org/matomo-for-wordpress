@@ -105,7 +105,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     public abstract function renderFrontPage($reportTitle, $prettyDate, $description, $reportMetadata, $segment);
     /**
      * Render the provided report.
-     * Multiple calls to this method before calling outputRendering appends each report content.
+     * Multiple calls to this method before calling getRenderedReport appends each report content.
      *
      * @param array $processedReport @see API::getProcessedReport()
      */

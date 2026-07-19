@@ -586,7 +586,8 @@ class CronArchive
      * @param string $idSite
      * @param string $period
      * @param string $date
-     * @param bool|false $segment
+     * @param string|false $segment
+     * @param string|null $plugin
      * @return string
      */
     private function getVisitsRequestUrl($idSite, $period, $date, $segment = \false, $plugin = null)
@@ -679,7 +680,7 @@ class CronArchive
     }
     /**
      * @internal
-     * @param $api
+     * @param CoreAdminHomeAPI $api
      */
     public function setApiToInvalidateArchivedReport($api)
     {
@@ -843,7 +844,8 @@ class CronArchive
      *
      * Note: this method should only be used in the context of invalidation.
      *
-     * @params Parameters $params The parameters for the archive we want to invalidate.
+     * @param Parameters $params The parameters for the archive we want to invalidate.
+     * @param bool $doNotIncludeTtlInExistingArchiveCheck
      */
     private function canWeSkipInvalidatingBecauseThereIsAUsablePeriod(Parameters $params, $doNotIncludeTtlInExistingArchiveCheck = \false) : bool
     {
@@ -1007,7 +1009,7 @@ class CronArchive
         return self::MAX_CONCURRENT_API_REQUESTS;
     }
     /**
-     * @return false|string
+     * @return string|int|false
      */
     private function getLastSuccessRunTimestamp()
     {
@@ -1020,7 +1022,7 @@ class CronArchive
         return $timestamp < $now ? $timestamp : $now;
     }
     /**
-     * @param $idSite
+     * @param int|string $idSite
      * @return array of date strings
      */
     private function getCustomDateRangeToPreProcess($idSite)
@@ -1073,7 +1075,7 @@ class CronArchive
         return $customDateRangesToProcessForSites;
     }
     /**
-     * @param $url
+     * @param string $url
      * @return string
      */
     private function makeRequestUrl($url)

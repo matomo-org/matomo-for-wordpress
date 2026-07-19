@@ -18,7 +18,7 @@ class UserInviteEmail extends Mail
      */
     private $currentUser;
     /**
-     * @var object
+     * @var array
      */
     private $invitedUser;
     /**

@@ -374,7 +374,7 @@ class Controller extends ControllerAdmin
         return AssetManager::compileCustomStylesheets($files);
     }
     /**
-     * Return the base.less compiled to css
+     * Return the compiled JavaScript for the installation screen.
      *
      * @return string
      */

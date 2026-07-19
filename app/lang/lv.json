@@ -371,14 +371,12 @@
         "PasswordConfirmation": "Paroles apstiprinājums",
         "Period": "Periods",
         "Piechart": "Sektoru diagramma",
-        "PiwikCannotBeUpgradedBecausePhpIsTooOld": "Matomo nevar tikt atjaunināts uz jaunāko galveno versiju, jo jūsu PHP versija ir pārāk veca.",
         "PiwikXIsAvailablePleaseNotifyPiwikAdmin": "%1$s versija ir pieejama. Lūdzu, informējiet %2$sMatomo administratoru%3$s.",
         "PiwikXIsAvailablePleaseUpdateNow": "Ir pieejams Matomo %1$s. %2$sLūdzu atjauniniet tagad!%3$s (apskatiet %4$sizmaiņas%5$s).",
         "PleaseContactYourPiwikAdministrator": "Lūdzu, sazinieties ar savu Matomo administratoru.",
         "PleaseSpecifyValue": "Lūdzu, norādiet \"%s\" vērtību.",
         "PleaseTryAgain": "Lūdzu, mēģiniet vēlreiz",
         "PleaseUpdatePiwik": "Lūdzu, atjauniniet savu Matomo",
-        "PleaseUpgradeYourPhpVersionSoYourPiwikDataStaysSecure": "Lūdzu, atjauniniet savu PHP versiju uz vismaz PHP %s, lai jūsu Matomo analīzes dati paliktu drošībā.",
         "Plugin": "Spraudnis",
         "Plugins": "Spraudņi",
         "PoweredBy": "Darbina",
@@ -547,7 +545,6 @@
         "YouAreCurrentlyUsing": "Jūs lietojat Matomo %s.",
         "YouAreViewingDemoMessage": "Jūs skatāties %1$sMatomo%2$s demonstrāciju",
         "YouMustBeLoggedIn": "Lai piekļūtu šai funkcionalitātei, ir jāpiesakās.",
-        "YouMustUpgradePhpVersionToReceiveLatestPiwik": "Jums ir jāatjaunina sava PHP versija, lai saņemtu jaunāko Matomo atjauninājumu.",
         "YourChangesHaveBeenSaved": "Izmaiņas saglabātas.",
         "YourSessionHasExpired": "Jūsu sesija ir beigusies. Lūdzu, pieslēdzieties, lai turpinātu."
     },
@@ -689,7 +686,9 @@
     "BotTracking": {
         "PageUrl": "Lapas URL",
         "NoDataHttpTrackingApi": "HTTP izsekošanas API",
-        "SiteWithoutDataBackToMatomo": "Atgriezties uz Matomo"
+        "SiteWithoutDataBackToMatomo": "Atgriezties uz Matomo",
+        "AIChatbotsContentPagesTitle": "Lapas",
+        "ContentUrl": "URL"
     },
     "CoreAdminHome": {
         "AcceptInvite": "Pieņemt ielūgumu",
@@ -704,7 +703,7 @@
         "CloudflareDescription": "Ja Jūsu vietne tiek izvietota Cloudflare, lūdzu skatiet %1$sšo ceļvedi%2$s.",
         "ConfirmDeleteAllTrackingFailures": "Vai esat pārliecināts, ka vēlaties dzēst visas izsekošanas kļūmes?",
         "ConfirmDeleteThisTrackingFailure": "Vai esat pārliecināts, ka vēlaties dzēst šo izsekošanas kļūdu?",
-        "Cors": "CORS",
+        "Cors": "Cors",
         "CorsDomains": "Starpizcelsmes resursu koplietošanas (CORS) domēni",
         "CorsDomainsHelp": "Varat definēt domēnus vai apakšdomēnus, piemēram, http:\/\/example.com vai http:\/\/stats.example.com., vai atļaut starpdomēnu pieprasījumus visiem domēniem, vienkārši pievienojot *",
         "CustomLogoFeedbackInfo": "Ja pielāgojat Matomo logotipu, jums varētu interesēt arī paslēpt %1$s saiti augšējā izvēlnē. Lai to izdarītu, atspējojiet atsauksmju spraudni %2$sspraudņu pārvaldības%3$s lapā.",
@@ -1077,12 +1076,12 @@
         "EmptyDatabaseError": "Datubāze %s ir tukša. Jums jāizlabo vai jāizdzēš Jūsu Matomo iestatījumu datne.",
         "ErrorDuringPluginsUpdates": "Kļūda atjaunojot spraudņus:",
         "ExceptionAlreadyLatestVersion": "Jūsu Matomo versija %s ir jaunākā pieejamā.",
-        "ExceptionArchiveEmpty": "Tukšs arhīvs",
+        "ExceptionArchiveEmpty": "Tukšs arhīvs.",
         "ExceptionArchiveIncompatible": "Nesaderīgs arhīvs: %s",
         "ExceptionArchiveIncomplete": "Arhīvs nav pilnīgs: trūkst dažas datnes (piem., %s).",
         "InstallingTheLatestVersion": "Tiek instalēta jaunākā versija",
         "NoteForLargePiwikInstances": "Svarīgas piezīmes lielām Matomo instalācijām",
-        "PiwikHasBeenSuccessfullyUpgraded": "Matomo tika veiksmīgi atjaunināts",
+        "PiwikHasBeenSuccessfullyUpgraded": "Matomo veiksmīgi atjaunināts!",
         "PiwikUpdatedSuccessfully": "Matomo atjaunināts veiksmīgi!",
         "PiwikWillBeUpgradedFromVersionXToVersionY": "Matomo datubāze tiks atjaunināta no %1$s līdz %2$s versijai.",
         "ReadyToGo": "Esat gatavi?",
@@ -1091,14 +1090,14 @@
         "ThereIsNewVersionAvailableForUpdate": "Ir pieejama atjaunināšanai jauna Matomo versija",
         "UnpackingTheUpdate": "Notiek atjauninājuma atpakošana",
         "UpdateAutomatically": "Atjaunināt automātiski",
-        "UpdateSuccessTitle": "Matomo tika veiksmīgi atjaunināts",
+        "UpdateSuccessTitle": "Matomo veiksmīgi atjaunināts!",
         "UpdateTitle": "Atjaunināt",
         "UpgradeComplete": "Atjaunināšana pabeigta!",
         "UpgradePiwik": "Atjaunināt Matomo",
         "VerifyingUnpackedFiles": "Notiek atpakoto datņu pārbaude",
         "WarningMessages": "Brīdinājumi:",
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "Mēs automātiski deaktivizējām sekojošus spraudņus: %s",
-        "YourDatabaseIsOutOfDate": "Jūsu Matomo datubāze ir novecojusi un tā ir jaatjaunina pirms varēsiet turpināt"
+        "YourDatabaseIsOutOfDate": "Jūsu Matomo datubāze ir novecojusi un tā ir jaatjaunina pirms varēsiet turpināt."
     },
     "CustomDimensions": {
         "CustomDimensions": "Pielāgoti parametri"
@@ -1198,7 +1197,7 @@
         "ColumnRevenueDocumentation": "Kopējie ienākumi, kurus veido %s.",
         "Contains": "satur %s",
         "DeleteGoalConfirm": "Vai tiešām vēlaties dzēst mērķi %s?",
-        "DocumentationRevenueGeneratedByProductSales": "Pārdotie produkti. Neskaitot nodokļus, piegādi un atlaidi.",
+        "DocumentationRevenueGeneratedByProductSales": "Pārdotie produkti. Neskaitot nodokļus, piegādi un atlaidi",
         "Download": "Lejupielādēt datni",
         "Ecommerce": "E-komercija",
         "EcommerceAndGoalsMenu": "E-komercija un mērķi",

@@ -23,7 +23,7 @@ class VisitorRecognizer
      */
     public const KEY_ORIGINAL_VISIT_ROW = 'originalVisit';
     /**
-     * Local variable cache for the getVisitFieldsPersist() method.
+     * Local variable cache for the getVisitorFieldsPersist() method.
      *
      * @var array
      */
@@ -56,7 +56,7 @@ class VisitorRecognizer
      */
     private $eventDispatcher;
     /**
-     * @var array
+     * @var array|false
      */
     private $visitRow;
     public function __construct($trustCookiesOnly, $visitStandardLength, $lookbackNSecondsCustom, \Piwik\Tracker\Model $model, EventDispatcher $eventDispatcher)

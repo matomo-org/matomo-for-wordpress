@@ -33,7 +33,7 @@ use Piwik\Log\LoggerInterface;
 class Tracker
 {
     /**
-     * @var Db
+     * @var Db|null
      */
     private static $db = null;
     // We use hex ID that are 16 chars in length, ie. 64 bits IDs
