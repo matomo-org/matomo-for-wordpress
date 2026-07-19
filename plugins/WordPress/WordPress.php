@@ -67,6 +67,7 @@ class WordPress extends Plugin
             'Template.header' => 'onHeader',
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
+            'SitesManager.shouldPerformEmptySiteCheck' => 'shouldPerformEmptySiteCheck',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
@@ -85,6 +86,10 @@ class WordPress extends Plugin
             'API.Request.dispatch.end' => 'onApiRequestDispatchEnd',
             ProcessedReportInnerCallHooks::PROCESSED_REPORT_INNER_END_EVENT => 'afterProcessedReportInner',
         );
+    }
+
+    public function shouldPerformEmptySiteCheck( &$shouldPerformEmptySiteCheck ) {
+        $shouldPerformEmptySiteCheck = false;
     }
 
     public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {
