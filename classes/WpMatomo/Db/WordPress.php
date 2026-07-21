@@ -441,10 +441,6 @@ class WordPress extends Mysqli {
 
 		$this->after_execute_query( $wpdb, $sql );
 
-		if ( $value === null ) {
-			return false; // make sure to behave same way as matomo
-		}
-
 		return $value;
 	}
 
