@@ -437,13 +437,16 @@ class WordPress extends Mysqli {
 
 		$this->before_execute_query( $wpdb, $sql );
 
-		$value = $wpdb->get_var( $prepare );
+		$rows = $wpdb->get_results( $prepare, ARRAY_A );
 
 		$this->after_execute_query( $wpdb, $sql );
 
-		if ( $value === null ) {
-			return false; // make sure to behave same way as matomo
+		if ( $rows === null ) {
+			return null; // make sure to behave same way as matomo
 		}
+
+		$values = empty( $rows ) ? false : reset( $rows );
+		$value  = empty( $values ) ? false : reset( $values );
 
 		return $value;
 	}
