@@ -10,6 +10,7 @@
 use Piwik\Access;
 use Piwik\API\Request as ApiRequest;
 use Piwik\Container\StaticContainer;
+use Piwik\NoAccessException;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\WordPress\Auth;
 use Piwik\Request\AuthenticationToken;
@@ -131,14 +132,19 @@ class WordPressAuthTest extends MatomoAnalytics_TestCase {
 		StaticContainer::getContainer()->set( AuthenticationToken::class, new AuthenticationToken() );
 
 		// performs the same token based auth reload the FrontController / API dispatcher does.
-		ApiRequest::reloadAuthUsingTokenAuth(
-			[
-				'token_auth'        => $token,
-				'force_api_session' => '1',
-				'module'            => 'API',
-				'method'            => 'SitesManager.getSitesIdWithAtLeastViewAccess',
-			]
-		);
+		try {
+			ApiRequest::reloadAuthUsingTokenAuth(
+				[
+					'token_auth'        => $token,
+					'force_api_session' => '1',
+					'module'            => 'API',
+					'method'            => 'SitesManager.getSitesIdWithAtLeastViewAccess',
+				]
+			);
+			$this->fail( 'expected NoAccessException to be thrown' );
+		} catch ( NoAccessException $e ) {
+			// ignore
+		}
 
 		$login = Access::getInstance()->getLogin();
 		$this->assertNotSame( 'testuser', $login );
