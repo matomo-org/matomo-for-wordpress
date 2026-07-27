@@ -38,27 +38,11 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return $result;
         }
 
-        // UI request authentication
+        // matomo token_auths are never allowed to authenticate on their own. the matomo UI
+        // authenticates through WordPress\SessionAuth (which uses a valid WP session plus the
+        // matomo-ui nonce). programmatic access is only allowed via WP application passwords.
         $isUserLoggedIn = function_exists('is_user_logged_in') && is_user_logged_in();
-        if ($isUserLoggedIn) {
-	        if (is_null($this->login) && empty($this->hashedPassword)) {
-                $current_user = wp_get_current_user();
-
-	            // api authentication using token
-		        $result = parent::authenticate();
-                // the Matomo login is derived from (and may differ from) the WP user_login, so we
-                // compare the token's identity against the current user's mapped Matomo login.
-                if (
-                    $result
-                    && $result->getIdentity()
-                    && $current_user
-                    && $current_user->ID
-                    && User::get_matomo_user_login($current_user->ID) === $result->getIdentity()
-                ) {
-                    return $result;
-                }
-	        }
-        } else if ($this->isAppPasswordInTokenAuthAllowed()) {
+        if (!$isUserLoggedIn && $this->isAppPasswordInTokenAuthAllowed()) {
             $result = $this->authApiWithTokenAuthAppPassword();
             if (!empty($result)) {
                 return $result;
