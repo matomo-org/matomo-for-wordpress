@@ -15,12 +15,6 @@ use Piwik\Tracker\TrackerConfig;
 use Piwik\Tracker\Visitor;
 class Campaign extends \Piwik\Plugins\Referrers\Columns\Base
 {
-    /**
-     * Obtained from the `[Tracker] create_new_visit_when_campaign_changes` INI config option.
-     * If true, will create new visits when campaign name changes.
-     *
-     * @var bool
-     */
     protected $nameSingular = 'Referrers_ColumnCampaign';
     /**
      * If we should create a new visit when the campaign changes, check if the campaign info changed and if so

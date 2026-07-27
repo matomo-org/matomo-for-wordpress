@@ -483,7 +483,8 @@
     },
     "BotTracking": {
         "PageUrl": "URL ng Pahina",
-        "SiteWithoutDataBackToMatomo": "Bumalik sa Matomo"
+        "SiteWithoutDataBackToMatomo": "Bumalik sa Matomo",
+        "AIChatbotsContentPagesTitle": "pahina"
     },
     "Contents": {
         "ContentName": "Pangalan ng Nilalaman",

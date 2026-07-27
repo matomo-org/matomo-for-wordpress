@@ -10,6 +10,7 @@ namespace Piwik\Plugins\CoreHome;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\Category\CategoryList;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -63,10 +64,9 @@ class Controller extends \Piwik\Plugin\Controller
         return $report->render();
     }
     /**
-     * This is only used for exported widgets
+     * Renders a widget container (used for dashboard/tab widget containers as well as
+     * widgetized/exported embeds).
      * @return string
-     * @throws Exception
-     * @throws \Piwik\NoAccessException
      */
     public function renderWidgetContainer()
     {
@@ -150,6 +150,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->showMenu = \true;
         $view->content = '';
         $view->exampleFeatureEnabled = $this->featureFlagManager->isFeatureActive(Example::class);
+        $view->groupsWithoutTrackingRequirement = CategoryList::get()->getGroupsWithoutTrackingRequirement();
         return $view;
     }
     protected function setDateTodayIfWebsiteCreatedToday()

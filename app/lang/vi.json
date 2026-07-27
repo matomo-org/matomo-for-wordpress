@@ -602,7 +602,9 @@
     },
     "BotTracking": {
         "PageUrl": "URL của trang",
-        "SiteWithoutDataBackToMatomo": "Quay lại Matomo"
+        "SiteWithoutDataBackToMatomo": "Quay lại Matomo",
+        "AIChatbotsContentPagesTitle": "Số trang",
+        "ContentUrl": "URL"
     },
     "Contents": {
         "ContentName": "Tên nội dung",

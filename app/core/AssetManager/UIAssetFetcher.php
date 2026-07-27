@@ -26,12 +26,12 @@ abstract class UIAssetFetcher
      */
     protected $plugins;
     /**
-     * @var Theme
+     * @var Theme|null
      */
     private $theme;
     /**
      * @param string[] $plugins
-     * @param Theme $theme
+     * @param Theme|null $theme
      */
     public function __construct($plugins, $theme)
     {
@@ -46,7 +46,7 @@ abstract class UIAssetFetcher
         return $this->plugins;
     }
     /**
-     * $return UIAssetCatalog
+     * @return UIAssetCatalog
      */
     public function getCatalog()
     {
@@ -117,7 +117,7 @@ abstract class UIAssetFetcher
         return PIWIK_DOCUMENT_ROOT;
     }
     /**
-     * @return Theme
+     * @return Theme|null
      */
     public function getTheme()
     {

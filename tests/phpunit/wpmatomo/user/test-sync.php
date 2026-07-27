@@ -466,6 +466,130 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( 'baafoo@example.org', $matomo_user['email'] );
 	}
 
+	public function test_ensure_user_exists_does_not_reuse_a_login_still_mapped_to_another_user() {
+		// two live WP users whose logins only differ by a space vs '_' and therefore
+		// normalize to the same Matomo login
+		$attacker_id = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'test_user',
+				'user_email' => 'attacker@example.org',
+			)
+		);
+		$victim_id   = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'test user',
+				'user_email' => 'victim@example.org',
+			)
+		);
+
+		// the victim WP -> Matomo user mapping still exists, even though the Matomo user
+		// itself no longer exists.
+		User::map_matomo_user_login( $victim_id, 'test_user' );
+
+		$attacker_login = $this->sync->ensure_user_exists( new WP_User( $attacker_id ) );
+
+		$this->assertNotSame( 'test_user', $attacker_login );
+		$this->assertSame( 'test_user', User::get_matomo_user_login( $victim_id ) );
+		$this->assertNotSame(
+			User::get_matomo_user_login( $victim_id ),
+			User::get_matomo_user_login( $attacker_id )
+		);
+	}
+
+	public function test_ensure_user_exists_reallocates_when_retained_mapping_is_owned_by_another_user() {
+		$attacker_id = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'test_user',
+				'user_email' => 'attacker@example.org',
+			)
+		);
+		$victim_id   = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'test user',
+				'user_email' => 'victim@example.org',
+			)
+		);
+
+		// corrupted pre-existing state: both WP users are mapped to the same Matomo login and
+		// the matomo user exists
+		$model = new Model();
+		$model->addUser( 'test_user', md5( 1 ), 'attacker@example.org', 'test_user', md5( 1 ), '2018-01-02 03:04:05' );
+		User::map_matomo_user_login( $attacker_id, 'test_user' );
+		User::map_matomo_user_login( $victim_id, 'test_user' );
+
+		// the victim must not keep the contested mapping when syncing
+		$victim_login = $this->sync->ensure_user_exists( new WP_User( $victim_id ) );
+
+		$this->assertNotSame( 'test_user', $victim_login );
+		$this->assertSame( 'test_user', User::get_matomo_user_login( $attacker_id ) );
+		$this->assertNotSame(
+			User::get_matomo_user_login( $attacker_id ),
+			User::get_matomo_user_login( $victim_id )
+		);
+	}
+
+	public function test_colliding_wp_users_never_share_a_matomo_login_across_role_lifecycle() {
+		$settings = new Settings();
+		$caps     = new Capabilities( $settings );
+		$caps->register_hooks();
+
+		$attacker_id = self::factory()->user->create(
+			array(
+				'role'       => 'subscriber',
+				'user_login' => 'test_user',
+				'user_email' => 'attacker@example.org',
+			)
+		);
+		$victim_id   = self::factory()->user->create(
+			array(
+				'role'       => 'subscriber',
+				'user_login' => 'test user',
+				'user_email' => 'victim@example.org',
+			)
+		);
+
+		// victim receives Matomo View
+		( new WP_User( $victim_id ) )->add_role( Roles::ROLE_VIEW );
+		$this->sync->sync_current_users();
+		$this->assertNotEmpty( User::get_matomo_user_login( $victim_id ) );
+
+		// victim goes back to subscriber -> the Matomo row AND the WP mapping must be removed
+		( new WP_User( $victim_id ) )->remove_role( Roles::ROLE_VIEW );
+		$this->sync->sync_current_users();
+		$this->assertEmpty(
+			User::get_matomo_user_login( $victim_id ),
+			'a stale mapping must not survive deletion of the Matomo user'
+		);
+
+		// attacker receives Matomo View and may now be allocated the freed canonical login
+		( new WP_User( $attacker_id ) )->add_role( Roles::ROLE_VIEW );
+		$this->sync->sync_current_users();
+		$this->assertNotEmpty( User::get_matomo_user_login( $attacker_id ) );
+		$this->assertEmpty( User::get_matomo_user_login( $victim_id ) );
+
+		// only the victim is promoted to an ordinary WordPress administrator (== superuser)
+		( new WP_User( $victim_id ) )->add_role( 'administrator' );
+		$this->sync->sync_current_users();
+
+		$victim_login   = User::get_matomo_user_login( $victim_id );
+		$attacker_login = User::get_matomo_user_login( $attacker_id );
+
+		// the two WP users must never resolve to the same Matomo user
+		$this->assertNotEmpty( $victim_login );
+		$this->assertNotEmpty( $attacker_login );
+		$this->assertNotSame( $attacker_login, $victim_login );
+
+		// the superuser flag must land on the victim's own row, not the attacker's shared one
+		$this->assertEquals( '1', $this->get_matomo_user( $victim_login )['superuser_access'] );
+		$this->assertEquals( '0', $this->get_matomo_user( $attacker_login )['superuser_access'] );
+
+		$caps->remove_hooks();
+	}
+
 	private function get_matomo_user( $login ) {
 		$model = new Model();
 

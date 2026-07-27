@@ -22,7 +22,7 @@ class DoNotTrackHeaderChecker
 {
     protected $config;
     /**
-     * @param Config $config
+     * @param Config|null $config
      */
     public function __construct($config = null)
     {

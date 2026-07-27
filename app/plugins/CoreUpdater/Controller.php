@@ -66,7 +66,7 @@ class Controller extends \Piwik\Plugin\Controller
         return AssetManager::compileCustomStylesheets($files);
     }
     /**
-     * Return the base.less compiled to css
+     * Return the compiled JavaScript for the updater screen.
      *
      * @return string
      */

@@ -64,12 +64,21 @@ class MwpDiagnosticsPage extends MwpPage {
         'versionhistory',
         'matomoanalytics-ethicalstatspowerfulinsights',
         'activeplugins',
+        'matomo-diagnostic-woocommerce',
+        'matomo-diagnostic-wpmailsmtp',
+        'matomo-diagnostic-wpstatistics',
+        'matomo-diagnostic-theme',
       ];
       var currentVersion = window.jQuery('tr#matomo-diagnostic-matomopluginversion>td:nth-child(2)').text().trim();
       versionRows.forEach((id) => {
         const $cell = window.jQuery(`tr#matomo-diagnostic-${id}>td:nth-child(2)`);
         if ($cell.length) {
-          $cell.html($cell.html().replaceAll(currentVersion, 'CURRENT_VERSION'));
+          $cell.html(
+            $cell
+              .html()
+              .replaceAll(currentVersion, 'CURRENT_VERSION')
+              .replace(/\d+\.\d+\.\d+/g, 'VERSION')
+          );
         }
       });
 

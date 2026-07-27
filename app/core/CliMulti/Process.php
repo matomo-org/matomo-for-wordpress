@@ -150,9 +150,10 @@ class Process
         return @file_get_contents($this->pidFile);
     }
     /**
-     * Tests only
+     * Writes the given content to the process' PID file.
+     *
      * @internal
-     * @param $content
+     * @param string|int $content
      */
     public function writePidFileContent($content)
     {

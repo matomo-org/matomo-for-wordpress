@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.12.0 =
+* Update core to 5.12.0.
+* Bug fix: fix user collision that can occur when a user is deleted from Matomo.
+
 = 5.11.1 =
 * Fix two vulnerabilities.
 

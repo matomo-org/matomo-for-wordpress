@@ -433,9 +433,8 @@ class Piwik
     }
     /**
      * Checks whether the user has the given capability or not.
-     * @param array $idSites
+     * @param int|array|string $idSites
      * @param string $capability
-     * @throws NoAccessException Thrown if the user does not have the given capability
      */
     public static function checkUserHasCapability($idSites, $capability)
     {
@@ -594,6 +593,7 @@ class Piwik
      * This function will handle both cases and return the array.
      *
      * @param array<string>|string|null|false $columns
+     * @param bool $unique
      * @return array<string>
      */
     public static function getArrayFromApiParameter($columns, $unique = \true)
@@ -638,9 +638,9 @@ class Piwik
         return filter_var($emailAddress, \FILTER_VALIDATE_EMAIL) !== \false;
     }
     /**
-     * Returns `true` if the login is valid.
+     * Checks that the login string is valid.
      *
-     * _Warning: does not check if the login already exists! You must use UsersManager_API->userExists as well._
+     * _Warning: does not check if the login already exists! You must use UsersManager\API->userExists as well._
      *
      * @param string $userLogin
      * @throws Exception

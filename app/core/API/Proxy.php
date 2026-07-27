@@ -31,8 +31,6 @@ if (!class_exists('Piwik\\API\\NoDefaultValue', \false)) {
  * and default values.
  * Proxy receives all the API calls requests via call() and forwards them to the right
  * object, with the parameters in the right order.
- *
- * It will also log the performance of API calls (time spent, parameter values, etc.) if logger available
  */
 class Proxy
 {
@@ -71,7 +69,7 @@ class Proxy
      *
      * The method will introspect the methods, their parameters, etc.
      *
-     * @param string $className ModuleName eg. "API"
+     * @param string $className Fully qualified API class name, eg. "\Piwik\Plugins\Referrers\API"
      */
     public function registerClass($className)
     {
@@ -117,6 +115,10 @@ class Proxy
      * Removes docblock annotations and their continuation lines.
      *
      * For example, this removes `@phpstan-type` and the following multiline shape definition.
+     *
+     * @param string|false $doc
+     * @param string $annotationPrefix
+     * @return string|false
      */
     private function removeDocblockAnnotationBlocks($doc, $annotationPrefix)
     {
@@ -157,9 +159,6 @@ class Proxy
      * Will execute $className->$methodName($parametersValues)
      * If any error is detected (wrong number of parameters, method not found, class not found, etc.)
      * it will throw an exception
-     *
-     * It also logs the API calls, with the parameters values, the returned value, the performance, etc.
-     * You can enable logging in config/global.ini.php (log_api_call)
      *
      * @param string $className The class name (eg. API)
      * @param string $methodName The method name
@@ -418,7 +417,7 @@ class Proxy
     /**
      * Returns an array containing the *sanitized* values of the parameters to pass to the method to call
      *
-     * @param array $requiredParameters array of (parameter name, default value)
+     * @param array $requiredParameters array mapping parameter name to ['default' => value, 'type' => type]
      * @param array $parametersRequest
      * @throws Exception
      * @return array values to pass to the function call
@@ -468,7 +467,7 @@ class Proxy
     /**
      * Returns an array containing the values of the parameters to pass to the method to call
      *
-     * @param array $requiredParameters array of (parameter name, default value)
+     * @param array $requiredParameters array mapping parameter name to ['default' => value, 'type' => type]
      * @param \Piwik\Request $request
      * @throws Exception
      * @return array values to pass to the function call
@@ -580,7 +579,7 @@ class Proxy
         }
     }
     /**
-     * @param $docComment
+     * @param string|false $docComment
      * @return bool
      */
     public function shouldHideAPIMethod($docComment)

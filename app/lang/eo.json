@@ -396,7 +396,8 @@
         "PagesSubcategoryHelp3": "Uzi la plus kaj minus ikonoj maldekstre por foliumi."
     },
     "BotTracking": {
-        "SiteWithoutDataBackToMatomo": "Reen al matomo"
+        "SiteWithoutDataBackToMatomo": "Reen al matomo",
+        "AIChatbotsContentPagesTitle": "Paĝoj"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Aldoni fidendan gastejon",

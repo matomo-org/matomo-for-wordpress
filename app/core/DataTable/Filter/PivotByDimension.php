@@ -71,7 +71,7 @@ class PivotByDimension extends BaseFilter
      * is used to determine if we can pivot the report and used to fetch intersected tables
      * by segment.
      *
-     * @var Report
+     * @var Report|null
      */
     private $pivotDimensionReport;
     /**
@@ -105,7 +105,7 @@ class PivotByDimension extends BaseFilter
      * Metadata for the segment of the dimension of the report being pivoted. When
      * fetching intersected tables by segment, this is the segment used.
      *
-     * @var Segment
+     * @var Segment|null
      */
     private $thisReportDimensionSegment;
     /**

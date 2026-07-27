@@ -74,6 +74,41 @@ add_action(
 	}
 );
 
+add_action(
+	'wp_ajax_nopriv_matomo_test_disable_block_headless',
+	function () {
+		\WpMatomo\Bootstrap::do_bootstrap();
+
+		\Piwik\Access::doAsSuperUser(
+			function () {
+				$settings_provider = \Piwik\Container\StaticContainer::get( \Piwik\Plugin\SettingsProvider::class );
+				$settings_metadata = \Piwik\Container\StaticContainer::get( \Piwik\Plugins\CorePluginsAdmin\SettingsMetadata::class );
+
+				$plugins_settings = $settings_provider->getAllSystemSettings();
+				$settings_metadata->setPluginSettings(
+					$plugins_settings,
+					[
+						'TrackingSpamPrevention' => [
+							[
+								'name'  => 'block_headless',
+								'value' => '0',
+							],
+						],
+					]
+				);
+
+				foreach ( $plugins_settings as $plugin_setting ) {
+					if ( 'TrackingSpamPrevention' === $plugin_setting->getPluginName() ) {
+						$plugin_setting->save();
+					}
+				}
+			}
+		);
+
+		wp_send_json( 'ok' );
+	}
+);
+
 // overwrite user agent to be used via appendToTrackingUrl() (webdriverio does not allow
 // changing the user agent sent with AJAX requests)
 add_action(

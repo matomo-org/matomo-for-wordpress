@@ -21,6 +21,7 @@ class Widget
 {
     /**
      * @api
+     * @return void
      */
     public static function configure(\Piwik\Widget\WidgetConfig $config)
     {

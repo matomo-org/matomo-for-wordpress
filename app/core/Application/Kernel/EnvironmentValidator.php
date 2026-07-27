@@ -54,7 +54,7 @@ class EnvironmentValidator
         $this->checkConfigFileExists($this->settingsProvider->getPathLocal(), $startInstaller);
     }
     /**
-     * @param $path
+     * @param string $path
      * @param bool $startInstaller
      * @throws \Exception
      */
@@ -79,7 +79,7 @@ class EnvironmentValidator
         }
     }
     /**
-     * @param $exception
+     * @param NotYetInstalledException $exception
      */
     private function startInstallation($exception)
     {
@@ -94,7 +94,7 @@ class EnvironmentValidator
         Piwik::postEvent('Config.NoConfigurationFile', array($exception), $pending = \true);
     }
     /**
-     * @param $path
+     * @param string $path
      * @return string
      */
     private function getMessageWhenFileExistsButNotReadable($path)
@@ -106,7 +106,7 @@ class EnvironmentValidator
         return sprintf($format, $this->translator->translate('General_ExceptionConfigurationFilePleaseCheckReadableByUser', array($path, Filechecks::getUser())));
     }
     /**
-     * @param $path
+     * @param string $path
      * @return string
      */
     private function getSpecificMessageWhetherFileExistsOrNot($path)

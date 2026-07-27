@@ -33,6 +33,7 @@ class ResponseBuilder
     /**
      * @param string $outputFormat
      * @param array $request
+     * @param bool|null $shouldPrintBacktrace
      */
     public function __construct($outputFormat, $request = array(), $shouldPrintBacktrace = null)
     {
@@ -129,7 +130,7 @@ class ResponseBuilder
     }
     /**
      * @param Exception|\Throwable $e
-     * @return Exception
+     * @return Exception|\Throwable
      */
     private function decorateExceptionWithDebugTrace($e)
     {

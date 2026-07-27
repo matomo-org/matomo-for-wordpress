@@ -27,4 +27,8 @@ class ConversionItem extends LogTable
     {
         return array('idvisit', 'idorder', 'idaction_sku');
     }
+    public function hasIdVisitorColumn() : bool
+    {
+        return \true;
+    }
 }

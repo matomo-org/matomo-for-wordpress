@@ -17,7 +17,7 @@ class CreateTable extends \Piwik\Updater\Migration\Db\Sql
 {
     /**
      * @param string $table Prefixed table name
-     * @param string|string[] $columnNames array(columnName => columnValue)
+     * @param array $columnNames array(columnName => columnType)
      * @param string|string[] $primaryKey one or multiple columns that define the primary key
      */
     public function __construct($table, $columnNames, $primaryKey)

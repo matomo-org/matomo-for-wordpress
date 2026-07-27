@@ -39,7 +39,7 @@ class Cookie
      */
     protected $path = '';
     /**
-     * @var string
+     * @var bool|string
      */
     protected $keyStore = \false;
     /**
@@ -72,9 +72,9 @@ class Cookie
      * exists already.
      *
      * @param string $cookieName cookie Name
-     * @param int|string $expire The timestamp after which the cookie will expire, eg time() + 86400;
+     * @param int|string|null $expire The timestamp after which the cookie will expire, eg time() + 86400;
      *                                  use 0 (int zero) to expire cookie at end of browser session
-     * @param string $path The path on the server in which the cookie will be available on.
+     * @param string|null $path The path on the server in which the cookie will be available on.
      * @param bool|string $keyStore Will be used to store several bits of data (eg. one array per website)
      */
     public function __construct($cookieName, $expire = null, $path = null, $keyStore = \false)
@@ -113,12 +113,12 @@ class Cookie
      *
      * @param string $Name Name of cookie
      * @param string $Value Value of cookie
-     * @param int|string $Expires Time the cookie expires
+     * @param int|string|null $Expires Time the cookie expires
      * @param string $Path
      * @param string $Domain
      * @param bool $Secure
      * @param bool $HTTPOnly
-     * @param string $sameSite
+     * @param string|false|null $sameSite
      */
     protected function setCookie($Name, $Value, $Expires, $Path = '', $Domain = '', $Secure = \false, $HTTPOnly = \false, $sameSite = \false)
     {
@@ -162,7 +162,7 @@ class Cookie
      * Saves the cookie (set the Cookie header).
      * You have to call this method before sending any text to the browser or you would get the
      * "Header already sent" error.
-     * @param string $sameSite Value for SameSite cookie property
+     * @param string|null $sameSite Value for SameSite cookie property
      */
     public function save($sameSite = null)
     {
@@ -292,7 +292,7 @@ class Cookie
      * A cookie has to stay small and its size shouldn't increase over time!
      *
      * @param string $name Name of the value to save; the name will be used to retrieve this value
-     * @param string|number $value Value to save. If null, entry will be deleted from cookie.
+     * @param string|int|float|null $value Value to save. If null, entry will be deleted from cookie.
      */
     public function set($name, $value)
     {
@@ -315,7 +315,7 @@ class Cookie
     /**
      * Returns the value defined by $name from the cookie.
      *
-     * @param string|integer Index name of the value to return
+     * @param string|int $name Index name of the value to return
      * @return mixed  The value if found, false if the value is not found
      */
     public function get($name)
@@ -355,7 +355,7 @@ class Cookie
      * Escape values from the cookie before sending them back to the client
      * (when using the get() method).
      *
-     * @param string $value Value to be escaped
+     * @param mixed $value Value to be escaped
      * @return mixed  The value once cleaned.
      */
     protected static function escapeValue($value)
@@ -408,7 +408,7 @@ class Cookie
     }
     /**
      *  extend Cookie by timestamp or sting like + 30 years, + 10 months, default 2 years
-     * @param $time
+     * @param int|string|null $time
      * @return string
      */
     public function formatExpireTime($time = null)

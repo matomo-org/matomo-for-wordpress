@@ -11,7 +11,7 @@ namespace Piwik\Updater\Migration\Db;
 use Piwik\Db;
 use Piwik\Updater\Migration;
 /**
- * Inserts a new record into an existing table.
+ * Inserts multiple records into an existing table.
  *
  * @see Factory::batchInsert()
  * @see Db\BatchInsert::tableInsertBatch()

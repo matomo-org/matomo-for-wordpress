@@ -64,7 +64,7 @@ use Piwik\Site;
 class DataComparisonFilter
 {
     /**
-     * @var array
+     * @var \Piwik\Request
      */
     private $request;
     /**

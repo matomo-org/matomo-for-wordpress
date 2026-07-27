@@ -405,7 +405,9 @@
     },
     "BotTracking": {
         "PageUrl": "URL stranice",
-        "SiteWithoutDataBackToMatomo": "Nazad na Matomo"
+        "SiteWithoutDataBackToMatomo": "Nazad na Matomo",
+        "AIChatbotsContentPagesTitle": "Stranice",
+        "ContentUrl": "Veza"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Dodajte novi pouzdani host",

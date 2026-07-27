@@ -9,6 +9,7 @@
 declare (strict_types=1);
 namespace Piwik\Plugins\BotTracking;
 
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Piwik;
 use Piwik\Plugins\BotTracking\BotTrackingMethod\BotTrackingMethodAbstract;
@@ -120,7 +121,7 @@ class Controller extends \Piwik\Plugin\Controller
     }
     protected function buildSiteContentDetector() : SiteContentDetector
     {
-        return new SiteContentDetector();
+        return StaticContainer::get(SiteContentDetector::class);
     }
     protected function buildAIBotsOverviewUrl(string $period, string $date) : string
     {

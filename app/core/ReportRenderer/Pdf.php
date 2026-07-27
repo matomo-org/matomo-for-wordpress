@@ -942,12 +942,12 @@ class Pdf extends ReportRenderer
         $this->TCPDF->Ln();
     }
     /**
-     * Get report attachments, ex. graph images
+     * PDF reports embed graphs directly, so there are never any separate attachments.
      *
      * @param $report
      * @param $processedReports
      * @param $prettyDate
-     * @return array
+     * @return array  Always empty.
      */
     public function getAttachments($report, $processedReports, $prettyDate) : array
     {

@@ -61,7 +61,7 @@ class ControllerResolver
         if (!class_exists($controllerClass)) {
             return null;
         }
-        /** @var $controller Controller */
+        /** @var \Piwik\Plugin\Controller $controller */
         $controller = $this->abstractFactory->make($controllerClass);
         $action = $action ?: $controller->getDefaultAction();
         if (!is_callable(array($controller, $action)) || !in_array($action, get_class_methods($controller))) {
