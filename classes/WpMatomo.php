@@ -135,8 +135,11 @@ class WpMatomo {
 			! function_exists( 'is_multisite' )
 			|| ! is_multisite()
 		) {
-			$user = wp_get_current_user();
-			return in_array( 'administrator', $user->roles, true );
+			// checking the role as a capability on purpose so that plugins which grant it through the
+			// `user_has_cap` filter (role managers etc) keep working. reading `WP_User::$roles` directly
+			// would bypass those filters.
+			// phpcs:ignore WordPress.WP.Capabilities.RoleFound
+			return current_user_can( 'administrator' );
 		}
 
 		return is_super_admin();

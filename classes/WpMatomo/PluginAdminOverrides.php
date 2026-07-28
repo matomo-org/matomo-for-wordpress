@@ -44,6 +44,7 @@ class PluginAdminOverrides extends Feature {
 			$deletion_setting_notice = sprintf( $deletion_setting_notice, '<strong style="display:inline;">', '</strong>' );
 		}
 
+		// the interpolated values above are already escaped
 		// phpcs:disable WordPress.Security.EscapeOutput.HeredocOutputNotEscaped
 		echo <<<EOF
 <script>
@@ -55,6 +56,7 @@ jQuery(document).ready(
 );
 </script>
 EOF;
+		// phpcs:enable WordPress.Security.EscapeOutput.HeredocOutputNotEscaped
 	}
 
 	private function is_plugins_php_page() {

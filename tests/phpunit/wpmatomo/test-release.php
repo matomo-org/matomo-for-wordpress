@@ -78,16 +78,16 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$contents        = substr( $contents, strpos( $contents, "\n" ) );
 		$current_hash    = md5( $contents );
 
-		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		[$return_code, $output] = $this->execute_command( 'WordPress:generate-core-assets' );
+		// phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		[$return_code, $output] = $this->execute_command( 'wordpress:generate-core-assets' );
 		$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
 		$contents            = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
 		$contents            = substr( $contents, strpos( $contents, "\n" ) );
 		$hash_after_generate = md5( $contents );
 
-		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run matomo:console WordPress:generate-core-assets".' );
+		// phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run matomo:console wordpress:generate-core-assets".' );
 	}
 
 	public function test_built_release_has_all_needed_matomo_contents_and_is_not_too_big() {
@@ -146,8 +146,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$application->setAutoExit( false );
 
 			// generate release
-			// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-			[$return_code, $output] = $this->execute_command( 'WordPress:build-release --name=test-release --zip' );
+			// phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+			[$return_code, $output] = $this->execute_command( 'wordpress:build-release --name=test-release --zip' );
 			$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
 			$path_to_zip = 'matomo-test-release.zip';

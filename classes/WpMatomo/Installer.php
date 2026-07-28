@@ -284,18 +284,9 @@ class Installer {
 
 			DbHelper::checkDatabaseVersion();
 		} catch ( Exception $e ) {
-			throw new Exception(
-				sprintf(
-					'Database info detection failed with %s in %s:%s.',
-					esc_html( $e->getMessage() ),
-					esc_html( $e->getFile() ),
-					esc_html( $e->getLine() )
-				),
-				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				$e->getCode(),
-				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				$e
-			);
+			$message = sprintf( 'Database info detection failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new Exception( $message, $e->getCode(), $e );
 		}
 
 		$tables_installed = DbHelper::getTablesInstalled();

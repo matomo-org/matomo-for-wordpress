@@ -120,8 +120,8 @@ class AIBotTracking {
 			$response_code = 200;
 		}
 
-		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$source = 'WordPress';
+		// phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		$source = 'wordpress';
 
 		if ( empty( $url ) ) {
 			$url = AjaxTracker::getCurrentUrl();

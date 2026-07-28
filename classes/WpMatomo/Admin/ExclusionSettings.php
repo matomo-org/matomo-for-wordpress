@@ -79,7 +79,10 @@ class ExclusionSettings implements AdminSettingsInterface {
 					try {
 						$api->setGlobalExcludedIps( $ips );
 					} catch ( \Exception $e ) {
-						throw new InvalidIpException( esc_html( $e->getMessage() ) );
+						// not escaped here on purpose, the message is escaped where it is rendered
+						// (see views/settings_errors.php); escaping twice would show HTML entities to the user
+						// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+						throw new InvalidIpException( $e->getMessage() );
 					}
 				}
 			}
