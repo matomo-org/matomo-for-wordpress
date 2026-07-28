@@ -119,8 +119,19 @@
     <rule ref="WordPress.WP.AlternativeFunctions.unlink_unlink">
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_chmod">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_is_writeable">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_is_writable">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
     <rule ref="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode">
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
-
+    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
 </ruleset>

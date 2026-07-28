@@ -262,7 +262,7 @@ class Sync extends Feature {
 					$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 				}
 			}
-			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 			if ( 1 != $idsite ) {
 				// only needed if the actual site is not the default site... makes sure when they click in Matomo
 				// UI on "Dashboard" that the correct site is being opened by default

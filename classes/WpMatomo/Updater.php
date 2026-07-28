@@ -285,7 +285,7 @@ class Updater {
 		self::unlock();
 
 		if ( ! empty( $result['errors'] ) ) {
-			throw new Exception( 'Error while updating components: ' . implode( ', ', $result['errors'] ) );
+			throw new Exception( 'Error while updating components: ' . esc_html( implode( ', ', $result['errors'] ) ) );
 		}
 
 		\Piwik\Updater::recordComponentSuccessfullyUpdated( 'core', Version::VERSION );

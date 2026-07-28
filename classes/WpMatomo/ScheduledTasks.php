@@ -194,6 +194,7 @@ class ScheduledTasks extends Feature {
 							$replace = 'AddHandler';
 						}
 						if ( strpos( $content, $search ) !== false && ( $force_undo || strpos( $content, $replace ) === false ) ) {
+							// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writeable
 							if ( is_writeable( $file ) ) {
 								$content       = str_replace( $search, $replace, $content );
 								$paths         = new Paths();

@@ -86,7 +86,7 @@ class Base {
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 		return get_post_meta( $order_id, $this->key_order_tracked, true ) == 1;
 	}
 

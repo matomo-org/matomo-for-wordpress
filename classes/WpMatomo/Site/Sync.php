@@ -194,7 +194,7 @@ class Sync extends Feature {
 				// if site has changed then we have to update it
 				if ( $site['name'] !== $blog_name
 					|| $site['main_url'] !== $blog_url
-				     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+				     // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 					|| $site['ecommerce'] != $track_ecommerce
 					|| $site['currency'] !== $site_currency
 					|| $site['timezone'] !== $detected_timezone ) {

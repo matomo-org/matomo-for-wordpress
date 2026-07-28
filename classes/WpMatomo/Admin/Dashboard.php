@@ -54,6 +54,7 @@ class Dashboard extends Feature {
 								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo $renderer->show_report(
 									[
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										'unique_id'   => $widget['unique_id'],
 										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										'report_date' => $widget['date'],

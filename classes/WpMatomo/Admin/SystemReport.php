@@ -432,6 +432,7 @@ class SystemReport implements MatomoPageContent {
 	private function check_file_exists_and_writable( $rows, $path_to_check, $title, $required ) {
 		$file_exists   = file_exists( $path_to_check );
 		$file_readable = is_readable( $path_to_check );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 		$file_writable = is_writable( $path_to_check );
 		$comment       = '"' . $path_to_check . '" ';
 		if ( ! $file_exists ) {
@@ -598,6 +599,7 @@ class SystemReport implements MatomoPageContent {
 
 		$rows[] = [
 			'name'    => esc_html__( 'Tmp directory writable', 'matomo' ),
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir,
 		];

@@ -79,7 +79,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 					try {
 						$api->setGlobalExcludedIps( $ips );
 					} catch ( \Exception $e ) {
-						throw new InvalidIpException( $e->getMessage() );
+						throw new InvalidIpException( esc_html( $e->getMessage() ) );
 					}
 				}
 			}
@@ -99,7 +99,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 			}
 
 			$keep_fragments = ! empty( $post['keep_url_fragments'] );
-			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 			if ( $keep_fragments != $api->getKeepURLFragmentsGlobal() ) {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}

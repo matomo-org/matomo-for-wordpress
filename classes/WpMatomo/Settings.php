@@ -187,7 +187,7 @@ class Settings {
 
 		foreach ( $this->global_settings as $key => $val ) {
 			if ( isset( $this->default_global_settings[ $key ] )
-			     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			     // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 				&& $this->default_global_settings[ $key ] != $val ) {
 				$custom_settings[ $key ] = $val;
 			}

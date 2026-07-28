@@ -44,7 +44,7 @@ class PluginAdminOverrides extends Feature {
 			$deletion_setting_notice = sprintf( $deletion_setting_notice, '<strong style="display:inline;">', '</strong>' );
 		}
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:disable WordPress.Security.EscapeOutput.HeredocOutputNotEscaped
 		echo <<<EOF
 <script>
 jQuery(document).ready(

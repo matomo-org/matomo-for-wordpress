@@ -292,7 +292,7 @@ SQL;
 			$this->record_importers = [];
 			foreach ( $record_importers as $record_importer_class ) {
 				if ( ! defined( $record_importer_class . '::PLUGIN_NAME' ) ) {
-					throw new \Exception( "The $record_importer_class record importer is missing the PLUGIN_NAME constant." );
+					throw new \Exception( 'The ' . esc_html( $record_importer_class ) . ' record importer is missing the PLUGIN_NAME constant.' );
 				}
 
 				$namespace   = explode( '\\', $record_importer_class );

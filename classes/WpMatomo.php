@@ -108,6 +108,7 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 			&& ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
@@ -130,9 +131,12 @@ class WpMatomo {
 	}
 
 	public static function is_admin_user() {
-		if ( ! function_exists( 'is_multisite' )
-			|| ! is_multisite() ) {
-			return current_user_can( 'administrator' );
+		if (
+			! function_exists( 'is_multisite' )
+			|| ! is_multisite()
+		) {
+			$user = wp_get_current_user();
+			return in_array( 'administrator', $user->roles, true );
 		}
 
 		return is_super_admin();

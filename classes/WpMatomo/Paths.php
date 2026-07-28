@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+/**
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
+ */
 class Paths {
 
 	private static $host_init_filesystem           = false;

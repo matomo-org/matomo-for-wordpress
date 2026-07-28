@@ -97,6 +97,7 @@ class Installer {
 		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 		return is_writable( $upload_dir ) || is_writable( dirname( $upload_dir ) );
 	}
 
@@ -283,8 +284,18 @@ class Installer {
 
 			DbHelper::checkDatabaseVersion();
 		} catch ( Exception $e ) {
-			$message = sprintf( 'Database info detection failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
-			throw new Exception( $message, $e->getCode(), $e );
+			throw new Exception(
+				sprintf(
+					'Database info detection failed with %s in %s:%s.',
+					esc_html( $e->getMessage() ),
+					esc_html( $e->getFile() ),
+					esc_html( $e->getLine() )
+				),
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				$e->getCode(),
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				$e
+			);
 		}
 
 		$tables_installed = DbHelper::getTablesInstalled();
@@ -336,6 +347,7 @@ class Installer {
 		$config->forceSave();
 
 		$mode = 0664;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 		if ( ! chmod( $config->getLocalPath(), $mode ) ) {
 			$this->logger->log( "Can't chmod " . $config->getLocalPath() );
 		}
@@ -354,11 +366,11 @@ class Installer {
 	}
 
 	/**
-	 * @param array $default params
+	 * @param array $default_conn_params params
 	 *
 	 * @return array
 	 */
-	public static function get_db_infos( $default = [] ) {
+	public static function get_db_infos( $default_conn_params = [] ) {
 		global $wpdb;
 
 		$socket    = '';
@@ -412,7 +424,7 @@ class Installer {
 		if ( ! empty( $socket ) ) {
 			$database['unix_socket'] = $socket;
 		}
-		$database = array_merge( $default, $database );
+		$database = array_merge( $default_conn_params, $database );
 
 		return $database;
 	}

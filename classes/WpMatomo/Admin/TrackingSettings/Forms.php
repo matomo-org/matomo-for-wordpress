@@ -94,10 +94,10 @@ class Forms {
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: false)
 	 * @param string  $on_change javascript for onchange event (default: empty)
 	 * @param boolean $is_readonly set textarea to read only (default: false)
-	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
+	 * @param boolean $is_global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = false, $on_change = '', $is_readonly = false, $global = true, $exclude_name = false ) {
-		$value = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = false, $on_change = '', $is_readonly = false, $is_global = true, $exclude_name = false ) {
+		$value = $is_global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		$value = $value ? $value : '';
 
 		printf(
@@ -155,9 +155,9 @@ class Forms {
 	 * @param boolean $is_hidden set to true to initially hide the option (default: false)
 	 * @param string  $group_name define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: false)
-	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
+	 * @param boolean $is_global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_select( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = false, $global = true ) {
+	public function show_select( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = false, $is_global = true ) {
 		$options_list = '';
 
 		if ( 'tracker_debug' === $id && ! WpMatomo::is_safe_mode() && ! $this->settings->is_network_enabled() ) {
@@ -170,11 +170,11 @@ class Forms {
 				$default = 'disabled';
 			}
 		} else {
-			$default = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+			$default = $is_global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		}
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $value ) {
-				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+				// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 				$options_list .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr( $key ), esc_html( $value ) );
 			}
 		}
@@ -197,12 +197,12 @@ class Forms {
 	 * @param boolean         $is_hidden set to true to initially hide the option (default: false)
 	 * @param string          $group_name define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean         $hide_description $hideDescription set to false to show description initially (default: false)
-	 * @param boolean         $global set to false if the textarea shows a site-specific option (default: true)
+	 * @param boolean         $is_global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_radio( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = false, $global = true ) {
+	public function show_radio( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = false, $is_global = true ) {
 		$button_list = [];
 
-		$default = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+		$default = $is_global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $info ) {
 				$label    = $info;
@@ -231,7 +231,7 @@ class Forms {
 					$radio_id,
 					esc_attr( TrackingSettings::FORM_NAME ) . '[' . esc_attr( $id ) . ']',
 					esc_attr( $key ),
-					// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+					// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 					( $key == $default ? 'checked="checked"' : '' ),
 					( $disabled ? 'disabled="disabled"' : '' ),
 					esc_attr( $on_change ),

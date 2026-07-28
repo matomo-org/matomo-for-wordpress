@@ -8,6 +8,7 @@ use WpMatomo\Capabilities;
 class MatomoUnit_WordPress_Fixture {
 	public function set_up() {
 		if ( ! function_exists( 'wp_delete_site' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 			function wp_delete_site( $site_id ) {
 				wpmu_delete_blog( $site_id, true );
 			}

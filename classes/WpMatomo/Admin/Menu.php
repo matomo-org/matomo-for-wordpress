@@ -228,7 +228,7 @@ EOF;
 
 			$warning = '';
 			if ( Admin::is_matomo_admin() ) {
-				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->get_content()->errors_present() ) {
+				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true ) && $system_report->get_content()->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
 			}
@@ -288,8 +288,8 @@ EOF;
 		}
 	}
 
-	public static function get_matomo_goto_url( $goto ) {
-		return add_query_arg( [ 'goto' => $goto ], menu_page_url( self::SLUG_REPORTING, false ) );
+	public static function get_matomo_goto_url( $destination ) {
+		return add_query_arg( [ 'goto' => $destination ], menu_page_url( self::SLUG_REPORTING, false ) );
 	}
 
 	public static function get_reporting_url() {
