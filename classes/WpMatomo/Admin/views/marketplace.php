@@ -30,17 +30,17 @@ $matomo_extra_url_params = '&' . http_build_query(
 <h2 class="nav-tab-wrapper" style="margin-bottom:1em;">
 	<?php if ( in_array( 'marketplace', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=marketplace"
-		   class="nav-tab <?php echo ( 'marketplace' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
+			class="nav-tab <?php echo ( 'marketplace' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
 		><?php esc_html_e( 'Welcome', 'matomo' ); ?></a>
 	<?php } ?>
 	<?php if ( in_array( 'install', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=install"
-		   class="nav-tab <?php echo ( 'install' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
+			class="nav-tab <?php echo ( 'install' === $active_tab ) ? 'nav-tab-active' : ''; ?>"
 		><?php esc_html_e( 'Marketplace', 'matomo' ); ?></a>
 	<?php } ?>
 	<?php if ( in_array( 'subscriptions', $valid_tabs, true ) ) { ?>
 		<a href="?page=matomo-marketplace&tab=subscriptions"
-		   class="nav-tab <?php echo 'subscriptions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Subscriptions', 'matomo' ); ?></a>
+			class="nav-tab <?php echo 'subscriptions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Subscriptions', 'matomo' ); ?></a>
 	<?php } ?>
 </h2>
 <?php } ?>

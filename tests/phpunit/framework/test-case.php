@@ -210,6 +210,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 						$error_info['query']
 					);
 
+					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					throw new \Exception( $msg );
 				}
 

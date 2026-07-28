@@ -125,5 +125,4 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 			$new_category
 		);
 	}
-
 }

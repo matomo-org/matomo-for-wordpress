@@ -52,5 +52,4 @@ class ErrorNotice extends Feature {
 			}
 		}
 	}
-
 }

@@ -64,7 +64,7 @@ require 'info_help.php';
 			<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><span
 						class="dashicons-before dashicons-email"></span></a>
 			<a target="_blank" rel="noreferrer noopener"
-			   href="https://matomo.org/newsletter/"><?php esc_html_e( 'Newsletter', 'matomo' ); ?></a>
+				href="https://matomo.org/newsletter/"><?php esc_html_e( 'Newsletter', 'matomo' ); ?></a>
 		</li>
 		<li>
 			<a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org"><span
@@ -85,12 +85,12 @@ require 'info_help.php';
 	</ul>
 	<ul>
 		<li><a target="_blank" rel="noreferrer noopener"
-			   href="https://matomo.org/blog/"><?php esc_html_e( 'Blog', 'matomo' ); ?></a></li>
+				href="https://matomo.org/blog/"><?php esc_html_e( 'Blog', 'matomo' ); ?></a></li>
 		<li><a target="_blank" rel="noreferrer noopener"
-			   href="https://developer.matomo.org"><?php esc_html_e( 'Developers', 'matomo' ); ?></a></li>
+				href="https://developer.matomo.org"><?php esc_html_e( 'Developers', 'matomo' ); ?></a></li>
 		<li><a target="_blank" rel="noreferrer noopener"
-			   href="https://plugins.matomo.org"><?php esc_html_e( 'Marketplace', 'matomo' ); ?></a></li>
+				href="https://plugins.matomo.org"><?php esc_html_e( 'Marketplace', 'matomo' ); ?></a></li>
 		<li><a target="_blank" rel="noreferrer noopener"
-			   href="https://matomo.org/thank-you-all/"><?php esc_html_e( 'Credits', 'matomo' ); ?></a></li>
+				href="https://matomo.org/thank-you-all/"><?php esc_html_e( 'Credits', 'matomo' ); ?></a></li>
 	</ul>
 </div>

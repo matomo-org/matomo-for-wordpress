@@ -37,12 +37,12 @@ class Summary implements MatomoPageContent {
 
 	private function pin_if_submitted() {
 		if ( ! empty( $_GET['pin'] )
-			 && ! empty( $_GET['report_uniqueid'] )
-			 && ! empty( $_GET['report_date'] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_DASHBOARD )
-			 && is_user_logged_in()
-			 && current_user_can( Capabilities::KEY_VIEW )
+			&& ! empty( $_GET['report_uniqueid'] )
+			&& ! empty( $_GET['report_date'] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_DASHBOARD )
+			&& is_user_logged_in()
+			&& current_user_can( Capabilities::KEY_VIEW )
 		) {
 			$unique_id = sanitize_text_field( wp_unslash( $_GET['report_uniqueid'] ) );
 			$date      = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
@@ -79,7 +79,7 @@ class Summary implements MatomoPageContent {
 		$wp_version              = get_bloginfo( 'version' );
 		$matomo_is_version_pre55 = empty( $wp_version ) || version_compare( $wp_version, '5.5.0' ) === - 1;
 
-		include dirname( __FILE__ ) . '/views/summary.php';
+		include __DIR__ . '/views/summary.php';
 	}
 
 	private function get_reports_to_show() {

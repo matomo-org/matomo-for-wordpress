@@ -121,7 +121,7 @@ class AIBotTracking {
 		}
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$source = 'wordpress';
+		$source = 'WordPress';
 
 		if ( empty( $url ) ) {
 			$url = AjaxTracker::getCurrentUrl();

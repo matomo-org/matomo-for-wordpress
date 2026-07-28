@@ -96,8 +96,8 @@ class Paths {
 		$default_cache_dir     = $base_cache_dir . '/' . MATOMO_UPLOAD_DIR;
 
 		if ( ! $is_multi_site &&
-			 ( ( is_writable( WP_CONTENT_DIR ) && ! is_dir( $base_cache_dir ) )
-			   || is_writable( $base_cache_dir ) ) ) {
+			( ( is_writable( WP_CONTENT_DIR ) && ! is_dir( $base_cache_dir ) )
+				|| is_writable( $base_cache_dir ) ) ) {
 			// we prefer wp-content/cache
 			$cache_dir = $default_cache_dir;
 
@@ -168,7 +168,7 @@ class Paths {
 
 		$path_upload_dir = rtrim( $path_upload_dir, '/' ) . '/';
 		if ( ! empty( $file_to_look_for )
-			 && ! file_exists( $path_upload_dir . $file_to_look_for ) ) {
+			&& ! file_exists( $path_upload_dir . $file_to_look_for ) ) {
 			// seems we haven't auto detected the right one yet... (or it is not yet installed)
 			// we go up the site upload dir step by step to try and find the network upload dir
 			$parent_dir = $path_upload_dir;
@@ -199,8 +199,8 @@ class Paths {
 	public function clear_cache_dir() {
 		$tmp_dir = $this->get_tmp_dir();
 		if ( $tmp_dir
-			 && is_dir( $tmp_dir )
-			 && is_dir( $tmp_dir . '/cache' ) ) {
+			&& is_dir( $tmp_dir )
+			&& is_dir( $tmp_dir . '/cache' ) ) {
 			// we make sure it's a matomo cache dir to not delete something falsely
 			$file_system_direct = $this->get_file_system();
 			$file_system_direct->rmdir( $tmp_dir, true );

@@ -46,7 +46,7 @@ function manually_load_plugin() {
 		define( 'MATOMO_ANALYTICS_FILE', ABSPATH . '/wp-content/plugins/matomo/matomo.php' );
 	}
 
-	require dirname( dirname( dirname( __FILE__ ) ) ) . '/matomo.php';
+	require dirname( dirname( __DIR__ ) ) . '/matomo.php';
 }
 
 tests_add_filter( 'muplugins_loaded', 'manually_load_plugin' );
@@ -56,4 +56,3 @@ require $tests_dir . '/includes/bootstrap.php';
 
 require 'framework/test-case.php';
 require 'framework/test-matomo-test-case.php';
-

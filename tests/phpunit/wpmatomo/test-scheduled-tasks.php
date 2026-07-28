@@ -259,7 +259,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		return [
 			\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::class => function () {
 				// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
-				return new class extends \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater {
+				return new class() extends \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater {
 					public function update() {
 						throw new \Exception( 'forced error' );
 					}

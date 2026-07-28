@@ -82,7 +82,7 @@ if ( $was_updated ) {
 			<td>
 				<span style="white-space:nowrap;display: inline-block;">
 					<input type="checkbox" <?php echo ! empty( $matomo_disable_async_archiving ) || empty( $matomo_async_archiving_supported ) ? 'checked="checked" ' : ''; ?> value="1" name="matomo[disable_async_archiving]"
-						   id="matomo[disable_async_archiving]" <?php echo ! empty( $matomo_async_archiving_supported ) ? '' : 'disabled="disabled"'; ?>
+							id="matomo[disable_async_archiving]" <?php echo ! empty( $matomo_async_archiving_supported ) ? '' : 'disabled="disabled"'; ?>
 					/>
 				</span>
 			</td>
@@ -102,8 +102,8 @@ if ( $was_updated ) {
 			</th>
 			<td scope="row">
 				<input id="matomo_server_side_tracking_delay_secs" type="number"
-					   name="matomo[server_side_tracking_delay_secs]"
-					   value="<?php echo esc_attr( $matomo_server_side_tracking_delay ); ?>" />
+						name="matomo[server_side_tracking_delay_secs]"
+						value="<?php echo esc_attr( $matomo_server_side_tracking_delay ); ?>" />
 			</td>
 			<td width="50%">
 				<?php esc_html_e( 'Number of seconds delay before server side tracking is executed.', 'matomo' ); ?>
@@ -115,7 +115,7 @@ if ( $was_updated ) {
 		</tr>
 		<tr>
 			<td colspan="3"><p class="submit"><input name="Submit" type="submit" class="button-primary"
-													 value="<?php esc_attr_e( 'Save Changes', 'matomo' ); ?>"/></p></td>
+													value="<?php esc_attr_e( 'Save Changes', 'matomo' ); ?>"/></p></td>
 		</tr>
 		</tbody>
 	</table>

@@ -20,5 +20,4 @@ abstract class MatomoAnalytics_Ajax_TestCase extends MatomoUnit_Ajax_TestCase {
 		$this->matomo_fixture->tear_down();
 		parent::tearDown();
 	}
-
 }

@@ -59,15 +59,15 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$current_ip            = $this->get_current_ip();
 		$settings              = $this->settings;
 
-		include dirname( __FILE__ ) . '/views/exclusion_settings.php';
+		include __DIR__ . '/views/exclusion_settings.php';
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& ! empty( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			Bootstrap::do_bootstrap();
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$post = wp_unslash( $_POST[ self::FORM_NAME ] );

@@ -236,9 +236,9 @@ class Installer {
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
 		if ( $matomo_url
-			 && $plugins_url === $matomo_url
-			 && wp_parse_url( $matomo_url, PHP_URL_SCHEME )
-			 && wp_parse_url( $matomo_url, PHP_URL_HOST )
+			&& $plugins_url === $matomo_url
+			&& wp_parse_url( $matomo_url, PHP_URL_SCHEME )
+			&& wp_parse_url( $matomo_url, PHP_URL_HOST )
 		) {
 			// if currently no scheme or host is set then we'll make sure to overwrite it
 			return;

@@ -100,5 +100,4 @@ class UninstallTest extends MatomoAnalytics_TestCase {
 
 		$this->assertEmpty( get_role( Roles::ROLE_WRITE ) );
 	}
-
 }

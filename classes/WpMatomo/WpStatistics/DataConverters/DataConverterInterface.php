@@ -12,5 +12,5 @@ interface DataConverterInterface {
 	 *
 	 * @return DataTable
 	 */
-	public static function convert( array $wp_statistics_data);
+	public static function convert( array $wp_statistics_data );
 }

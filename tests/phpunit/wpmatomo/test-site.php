@@ -114,5 +114,4 @@ class SiteTest extends MatomoUnit_TestCase {
 
 		$this->assertEmpty( Site::get_matomo_site_id( 49 ) );
 	}
-
 }

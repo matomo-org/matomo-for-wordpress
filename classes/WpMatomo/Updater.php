@@ -130,7 +130,7 @@ class Updater {
 			}
 
 			if ( ! empty( $plugin_data['Version'] )
-				 && ! in_array( $plugin_data['Version'], $history, true ) ) {
+				&& ! in_array( $plugin_data['Version'], $history, true ) ) {
 				// this allows us to see which versions of matomo the user was using before this update so we better understand
 				// which version maybe regressed something
 				array_unshift( $history, $plugin_data['Version'] );

@@ -73,17 +73,17 @@ class GetStarted implements MatomoPageContent {
 		$matomo_marketplace_setup_wizard_body = $matomo_marketplace_setup_wizard->get_body( false );
 		$matomo_marketplace_setup_wizard_body->set_design_variant( MarketplaceSetupWizardBody::DESIGN_VARIANT_REDESIGN );
 
-		include dirname( __FILE__ ) . '/views/get_started.php';
+		include __DIR__ . '/views/get_started.php';
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && $this->can_user_manage() ) {
+			&& ! empty( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& $this->can_user_manage() ) {
 			if ( ! empty( $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] )
-				 && 'no' === $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] ) {
+				&& 'no' === $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] ) {
 				$this->settings->apply_changes(
 					[
 						Settings::SHOW_GET_STARTED_PAGE => 0,
@@ -93,7 +93,7 @@ class GetStarted implements MatomoPageContent {
 				return true;
 			}
 			if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] )
-				 && TrackingSettings::TRACK_MODE_DEFAULT === $_POST[ self::FORM_NAME ]['track_mode'] ) {
+				&& TrackingSettings::TRACK_MODE_DEFAULT === $_POST[ self::FORM_NAME ]['track_mode'] ) {
 				$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
 
 				self::auto_hide_page_if_steps_completed( $this->settings );

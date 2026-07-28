@@ -22,8 +22,8 @@ class VisitorsConverter {
 						'nb_uniq_visitors' => 0,
 					];
 				}
-				$data[ $row[ $key ] ]['nb_visits'] ++;
-				$data[ $row[ $key ] ]['nb_uniq_visitors'] ++;
+				++$data[ $row[ $key ] ]['nb_visits'];
+				++$data[ $row[ $key ] ]['nb_uniq_visitors'];
 			}
 		}
 		$datatable = new DataTable();

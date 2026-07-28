@@ -93,5 +93,4 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 			$this->get_all_annotations()
 		);
 	}
-
 }

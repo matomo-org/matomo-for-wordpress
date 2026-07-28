@@ -54,5 +54,4 @@ class OptOutTest extends MatomoAnalytics_TestCase {
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/46
 		$this->assertFileExists( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/plugins/CoreAdminHome/javascripts/optOut.js' );
 	}
-
 }
