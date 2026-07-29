@@ -173,26 +173,4 @@ class WordPressUmdCssTest extends MatomoAnalytics_TestCase {
 			$property->setValue( null, [] );
 		}
 	}
-
-	private function delete_directory( $dir ) {
-		if ( ! is_dir( $dir ) ) {
-			return;
-		}
-
-		$items = scandir( $dir );
-		foreach ( $items as $item ) {
-			if ( '.' === $item || '..' === $item ) {
-				continue;
-			}
-
-			$path = $dir . '/' . $item;
-			if ( is_dir( $path ) ) {
-				$this->delete_directory( $path );
-			} else {
-				@unlink( $path );
-			}
-		}
-
-		@rmdir( $dir );
-	}
 }
