@@ -41,7 +41,7 @@ class ErrorNotice extends Feature {
 			&& $is_matomo_super_user
 		) {
 			$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
-			if ( ! get_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->errors_present() ) {
+			if ( ! get_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true ) && $system_report->errors_present() ) {
 				echo '<div class="matomo-notice notice notice-warning is-dismissible" id="matomo-systemreporterrors"><p>'
 					. sprintf(
 						esc_html__( 'There are some errors in the %1$sMatomo Diagnostics System report%2$s that may prevent the plugin for working normally.', 'matomo' ),
@@ -52,5 +52,4 @@ class ErrorNotice extends Feature {
 			}
 		}
 	}
-
 }

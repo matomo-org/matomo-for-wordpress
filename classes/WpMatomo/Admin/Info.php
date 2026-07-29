@@ -31,11 +31,11 @@ class Info implements MatomoPageContent {
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && $this->show_newsletter_signup()
-			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			&& ! empty( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& $this->show_newsletter_signup()
+			&& current_user_can( Capabilities::KEY_VIEW ) ) {
 			$user   = wp_get_current_user();
 			$locale = explode( '_', get_user_locale( $user->ID ) );
 			wp_remote_get(
@@ -75,7 +75,7 @@ class Info implements MatomoPageContent {
 		$signedup_newsletter = $this->update_if_submitted();
 		$show_newsletter     = $this->show_newsletter_signup();
 
-		include dirname( __FILE__ ) . '/views/' . $template . '.php';
+		include __DIR__ . '/views/' . $template . '.php';
 	}
 
 	public function get_title() {

@@ -44,5 +44,4 @@ class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
 		$containers = $this->tracking_settings->get_active_containers();
 		$this->assertSame( array( $id => 'Default Container' ), $containers );
 	}
-
 }

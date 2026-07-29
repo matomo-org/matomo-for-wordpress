@@ -156,7 +156,7 @@ if ( count( $settings_errors ) ) {
 			<tr>
 				<td colspan="3">
 					<p class="submit"><input name="Submit" type="submit" class="button-primary"
-											 value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></p>
+											value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></p>
 				</td>
 			</tr>
 

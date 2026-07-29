@@ -20,6 +20,4 @@ class DbInfoTest extends MatomoAnalytics_TestCase {
 	public function test_prefix_table_name() {
 		$this->assertEquals( 'wptests_matomo_site', $this->db->prefix_table_name( 'site' ) );
 	}
-
-
 }

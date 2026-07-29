@@ -47,15 +47,15 @@ class AccessSettings implements AdminSettingsInterface {
 		$access      = $this->access;
 		$roles       = new Roles( $this->settings );
 		$capabilites = new Capabilities( $this->settings );
-		include dirname( __FILE__ ) . '/views/access.php';
+		include __DIR__ . '/views/access.php';
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& ! empty( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->access->save( wp_unslash( $_POST[ self::FORM_NAME ] ) );
 

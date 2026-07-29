@@ -39,15 +39,15 @@ class GeolocationSettings implements AdminSettingsInterface {
 
 		$current_maxmind_license = $this->settings->get_global_option( 'maxmind_license_key' );
 
-		include dirname( __FILE__ ) . '/views/geolocation_settings.php';
+		include __DIR__ . '/views/geolocation_settings.php';
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && isset( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& isset( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			$maxmind_license = trim( stripslashes( sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ] ) ) ) );
 
 			if ( empty( $maxmind_license ) ) {

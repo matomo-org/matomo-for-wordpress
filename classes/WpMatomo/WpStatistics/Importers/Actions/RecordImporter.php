@@ -48,8 +48,11 @@ class RecordImporter {
 	}
 
 	protected function insert_record(
-		$record_name, DataTable $record, $maximum_rows_in_data_table = null,
-		$maximum_rows_in_sub_data_table = null, $column_to_sort_by_before_truncation = null
+		$record_name,
+		DataTable $record,
+		$maximum_rows_in_data_table = null,
+		$maximum_rows_in_sub_data_table = null,
+		$column_to_sort_by_before_truncation = null
 	) {
 		$this->record_inserter->insert_record( $record_name, $record, $maximum_rows_in_data_table, $maximum_rows_in_sub_data_table, $column_to_sort_by_before_truncation );
 	}
@@ -113,7 +116,7 @@ class RecordImporter {
 				$visitors = [];
 			}
 
-			$page++;
+			++$page;
 			$no_data = count( $visitors ) < 1; // copied from wpstatistics
 			if ( $no_data ) {
 				$visitors = [];
@@ -186,7 +189,7 @@ class RecordImporter {
 					'paged'    => $page,
 				]
 			);
-			$page ++;
+			++$page;
 			$no_data = ( ( array_key_exists( 'no_data', $visitors ) ) && ( 1 === $visitors['no_data'] ) );
 			if ( $no_data ) {
 				$visitors = [];

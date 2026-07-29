@@ -47,5 +47,4 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 		$this->assertNotEmpty( $output );
 		$this->assertStringContainsString( 'Matomo is network enabled', $output );
 	}
-
 }

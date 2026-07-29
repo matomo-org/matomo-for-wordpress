@@ -80,8 +80,8 @@ class Capabilities extends Feature {
 		}
 
 		if ( Menu::CAP_NOT_EXISTS === $cap
-			 && is_multisite()
-			 && is_super_admin( $user_id ) ) {
+			&& is_multisite()
+			&& is_super_admin( $user_id ) ) {
 			$caps[] = 'do_not_allow'; // prevent matomo-analytics submenu to be shown
 		}
 
@@ -106,7 +106,7 @@ class Capabilities extends Feature {
 						// when user has the above permission we also make sure to add all capabilites below... eg
 						// when user has write... then we ensure the user also has the view capability
 						if ( $this->has_any_higher_permission( $cap_request, $allcaps )
-							 || $this->has_super_user_capability( $allcaps, $user ) ) {
+							|| $this->has_super_user_capability( $allcaps, $user ) ) {
 							$allcaps[ $cap_request ] = true;
 						}
 					}

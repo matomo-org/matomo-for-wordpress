@@ -43,6 +43,6 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 		$site                = new Site();
 		$idsite              = $site->get_current_matomo_site_id();
 
-		include dirname( __FILE__ ) . '/views/measurable_settings.php';
+		include __DIR__ . '/views/measurable_settings.php';
 	}
 }

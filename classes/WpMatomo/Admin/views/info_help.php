@@ -21,27 +21,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 </form>
 <ul class="matomo-list">
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://matomo.org/docs/"><?php esc_html_e( 'User guides', 'matomo' ); ?></a>
+			href="https://matomo.org/docs/"><?php esc_html_e( 'User guides', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Learn how to configure Matomo and how to effectively analyse your data', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://matomo.org/faq/wordpress/"><?php esc_html_e( 'Matomo for WordPress FAQs', 'matomo' ); ?></a>
+			href="https://matomo.org/faq/wordpress/"><?php esc_html_e( 'Matomo for WordPress FAQs', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://matomo.org/faq/"><?php esc_html_e( 'General FAQs', 'matomo' ); ?></a>
+			href="https://matomo.org/faq/"><?php esc_html_e( 'General FAQs', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://forum.matomo.org/"><?php esc_html_e( 'Forums', 'matomo' ); ?></a>
+			href="https://forum.matomo.org/"><?php esc_html_e( 'Forums', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get help directly from the community of Matomo users', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://glossary.matomo.org"><?php esc_html_e( 'Glossary', 'matomo' ); ?> </a>
+			href="https://glossary.matomo.org"><?php esc_html_e( 'Glossary', 'matomo' ); ?> </a>
 		- <?php esc_html_e( 'Learn about commonly used terms to make the most of Matomo Analytics', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
-		   href="https://matomo.org/support-plans/"><?php esc_html_e( 'Support Plans', 'matomo' ); ?></a>
+			href="https://matomo.org/support-plans/"><?php esc_html_e( 'Support Plans', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Let our experienced team assist you online on how to best utilise Matomo', 'matomo' ); ?>
 	</li>
 	<?php if ( ! empty( $show_troubleshooting_link ) ) { ?>

@@ -36,7 +36,7 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		$pages = [];
 		$page  = 0;
 		do {
-			$page ++;
+			++$page;
 			if ( class_exists( '\WP_STATISTICS\MetaBox\pages' ) ) {
 				$pages_found = pages::get(
 					[

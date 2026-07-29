@@ -5,7 +5,7 @@
  * @package matomo
  */
 
-use \WpMatomo\Logger;
+use WpMatomo\Logger;
 
 class LoggerTest extends MatomoUnit_TestCase {
 
@@ -64,6 +64,4 @@ class LoggerTest extends MatomoUnit_TestCase {
 
 		$this->assertSame( array(), $this->logger->get_last_logged_entries() );
 	}
-
-
 }

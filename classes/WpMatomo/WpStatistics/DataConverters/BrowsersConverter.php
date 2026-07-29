@@ -17,7 +17,7 @@ class BrowsersConverter implements DataConverterInterface {
 			if ( ! array_key_exists( $browser_name, $data ) ) {
 				$data[ $browser_name ] = 0;
 			}
-			$data[ $browser_name ]++;
+			++$data[ $browser_name ];
 		}
 		foreach ( $data as $browser => $hits ) {
 			$browsers->addRowFromSimpleArray(

@@ -74,7 +74,7 @@ class TrackingCodeGenerator {
 		$track_mode = $this->settings->get_global_option( 'track_mode' );
 
 		if ( ! $this->settings->is_tracking_enabled()
-			 || TrackingSettings::TRACK_MODE_MANUALLY === $track_mode ) {
+			|| TrackingSettings::TRACK_MODE_MANUALLY === $track_mode ) {
 			return false;
 		}
 
@@ -156,8 +156,8 @@ class TrackingCodeGenerator {
 
 			foreach ( $container_ids as $container_id => $enabled ) {
 				if ( $enabled
-					 && ctype_alnum( $container_id )
-					 && strlen( $container_id ) <= 16 ) {
+					&& ctype_alnum( $container_id )
+					&& strlen( $container_id ) <= 16 ) {
 					$container_url = $upload_url . '/container_' . rawurlencode( $container_id ) . '.js';
 
 					$data_cf_async = '';

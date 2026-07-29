@@ -249,5 +249,4 @@ class UserTest extends MatomoUnit_TestCase {
 
 		wp_delete_site( $blog1 );
 	}
-
 }

@@ -388,7 +388,7 @@ class SystemReport implements MatomoPageContent {
 			}
 		}
 
-		include dirname( __FILE__ ) . '/views/systemreport.php';
+		include __DIR__ . '/views/systemreport.php';
 	}
 
 	private function has_only_warnings_no_error( $report_tables ) {
@@ -432,6 +432,7 @@ class SystemReport implements MatomoPageContent {
 	private function check_file_exists_and_writable( $rows, $path_to_check, $title, $required ) {
 		$file_exists   = file_exists( $path_to_check );
 		$file_readable = is_readable( $path_to_check );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 		$file_writable = is_writable( $path_to_check );
 		$comment       = '"' . $path_to_check . '" ';
 		if ( ! $file_exists ) {
@@ -598,6 +599,7 @@ class SystemReport implements MatomoPageContent {
 
 		$rows[] = [
 			'name'    => esc_html__( 'Tmp directory writable', 'matomo' ),
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir,
 		];
@@ -1206,7 +1208,7 @@ class SystemReport implements MatomoPageContent {
 					$item_comment = $item->getComment();
 					if ( ! empty( $item_comment ) && is_string( $item_comment ) ) {
 						if ( stripos( $item_comment, 'core:archive' ) > 0 ) {
-							// we only want to keep the first sentence like "	Archiving last ran successfully on Wednesday, January 2, 2019 00:00:00 which is 335 days 20:08:11 ago"
+							// we only want to keep the first sentence like "   Archiving last ran successfully on Wednesday, January 2, 2019 00:00:00 which is 335 days 20:08:11 ago"
 							// but not anything that asks user to set up a cronjob
 							$item_comment = substr( $item_comment, 0, stripos( $item_comment, 'core:archive' ) );
 							if ( strpos( $item_comment, '.' ) > 0 ) {
@@ -1783,22 +1785,20 @@ class SystemReport implements MatomoPageContent {
 				'comment'    => esc_html__( 'Please check your MySQL user has these permissions (grants):', 'matomo' ) . '<br />' . implode( ', ', $needed_grants ),
 				'is_warning' => false,
 			];
-		} else {
-			if ( ! empty( $grants_missing ) ) {
+		} elseif ( ! empty( $grants_missing ) ) {
 				$rows[] = [
 					'name'       => esc_html__( 'Required permissions', 'matomo' ),
 					'value'      => esc_html__( 'Error', 'matomo' ),
 					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . esc_html__( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . sprintf( '<a href="https://matomo.org/faq/troubleshooting/how-do-i-check-if-my-mysql-user-has-all-required-grants/" target="_blank">%s</a>', __( 'Learn more', 'matomo' ) ),
 					'is_warning' => true,
 				];
-			} else {
-				$rows[] = [
-					'name'       => esc_html__( 'Required permissions', 'matomo' ),
-					'value'      => esc_html__( 'OK', 'matomo' ),
-					'comment'    => '',
-					'is_warning' => false,
-				];
-			}
+		} else {
+			$rows[] = [
+				'name'       => esc_html__( 'Required permissions', 'matomo' ),
+				'value'      => esc_html__( 'OK', 'matomo' ),
+				'comment'    => '',
+				'is_warning' => false,
+			];
 		}
 
 		return $rows;

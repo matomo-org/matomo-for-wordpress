@@ -157,20 +157,16 @@ class Sync extends Feature {
 					$this->logger->log( "Can't find the id site in the mapping, but there is already an existing site. Use its ID " . $idsite . ' for blog' );
 					wp_cache_flush();
 					add_site_option( Site::SITE_MAPPING_PREFIX . $blog_id, $idsite );
-				} else {
-					if ( (int) $idsite !== $matomo_id_site ) {
-						// the mapped id in the WP config is different from the id in the matomo_site table: we force usage of the matomo table site ID
-						$idsite = $matomo_id_site;
-						$this->logger->log( 'The id site in the mapping is different from the id site in the matomo table. Force usage of Matomo ID ' . $idsite . ' for blog' );
-						Site::map_matomo_site_id( $blog_id, $idsite );
-					}
+				} elseif ( (int) $idsite !== $matomo_id_site ) {
+					// the mapped id in the WP config is different from the id in the matomo_site table: we force usage of the matomo table site ID
+					$idsite = $matomo_id_site;
+					$this->logger->log( 'The id site in the mapping is different from the id site in the matomo table. Force usage of Matomo ID ' . $idsite . ' for blog' );
+					Site::map_matomo_site_id( $blog_id, $idsite );
 				}
-			} else {
-				if ( count( $matomo_id_sites ) > 1 ) {
-					// there are more than one record: we'll have to identify which one has data and which one must be removed from the matomo_site table
-					$this->logger->log( 'There is a problem in your configuration. Please contact support at wordpress@matomo.org' );
-					return false;
-				}
+			} elseif ( count( $matomo_id_sites ) > 1 ) {
+				// there are more than one record: we'll have to identify which one has data and which one must be removed from the matomo_site table
+				$this->logger->log( 'There is a problem in your configuration. Please contact support at wordpress@matomo.org' );
+				return false;
 			}
 		}
 
@@ -197,11 +193,11 @@ class Sync extends Feature {
 			if ( ! empty( $site ) ) {
 				// if site has changed then we have to update it
 				if ( $site['name'] !== $blog_name
-					 || $site['main_url'] !== $blog_url
-				     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-					 || $site['ecommerce'] != $track_ecommerce
-					 || $site['currency'] !== $site_currency
-					 || $site['timezone'] !== $detected_timezone ) {
+					|| $site['main_url'] !== $blog_url
+				     // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
+					|| $site['ecommerce'] != $track_ecommerce
+					|| $site['currency'] !== $site_currency
+					|| $site['timezone'] !== $detected_timezone ) {
 
 					/** @var WP_Site $site */
 					$params = [
@@ -302,8 +298,8 @@ class Sync extends Feature {
 		foreach ( timezone_abbreviations_list() as $abbr ) {
 			foreach ( $abbr as $city ) {
 				if ( $dst === (bool) $city['dst']
-					 && $city['timezone_id']
-					 && (int) $city['offset'] === $utc_offset_in_seconds ) {
+					&& $city['timezone_id']
+					&& (int) $city['offset'] === $utc_offset_in_seconds ) {
 					return $city['timezone_id'];
 				}
 			}

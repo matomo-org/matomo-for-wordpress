@@ -48,7 +48,7 @@ use WpMatomo\Roles;
 		?>
 		<tr>
 			<td colspan="2"><input name="Submit" type="submit" class="button-primary"
-								   value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></td>
+									value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></td>
 		</tr>
 		</tbody>
 	</table>
@@ -62,13 +62,13 @@ use WpMatomo\Roles;
 	?>
 	<?php esc_html_e( 'Learn about the differences between these Matomo roles:', 'matomo' ); ?>
 	<a href="https://matomo.org/faq/general/faq_70/" target="_blank"
-	   rel="noopener"><?php esc_html_e( 'View', 'matomo' ); ?></a>,
+		rel="noopener"><?php esc_html_e( 'View', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_26910/" target="_blank"
-	   rel="noopener"><?php esc_html_e( 'Write', 'matomo' ); ?></a>,
+		rel="noopener"><?php esc_html_e( 'Write', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_69/" target="_blank"
-	   rel="noopener"><?php esc_html_e( 'Admin', 'matomo' ); ?></a>,
+		rel="noopener"><?php esc_html_e( 'Admin', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_35/" target="_blank"
-	   rel="noopener"><?php esc_html_e( 'Super User', 'matomo' ); ?></a><br/>
+		rel="noopener"><?php esc_html_e( 'Super User', 'matomo' ); ?></a><br/>
 	<?php esc_html_e( 'Want to redirect to the home page when not logged in?', 'matomo' ); ?> <a
 			href="https://matomo.org/faq/wordpress/how-do-i-hide-my-wordpress-login-url-when-someone-accesses-a-matomo-report-directly/"
 			target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'matomo' ); ?></a>

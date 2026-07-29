@@ -36,7 +36,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_listTables() {
-		 // we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
+		// we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
 		$tables = $this->db->listTables();
 		$this->assertTrue( is_array( $tables ) );
 	}

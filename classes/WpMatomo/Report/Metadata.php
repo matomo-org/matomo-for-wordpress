@@ -104,7 +104,7 @@ class Metadata {
 
 	public function find_report_page_params_by_report_metadata( $report_metadata ) {
 		if ( empty( $report_metadata['module'] )
-			 || empty( $report_metadata['action'] ) ) {
+			|| empty( $report_metadata['action'] ) ) {
 			return [];
 		}
 
@@ -114,7 +114,7 @@ class Metadata {
 			if ( ! empty( $report_page['widgets'] ) ) {
 				foreach ( $report_page['widgets'] as $widget ) {
 					if ( ! empty( $widget['module'] ) && $widget['module'] === $report_metadata['module']
-						 && ! empty( $widget['action'] ) && $widget['action'] === $report_metadata['action'] ) {
+						&& ! empty( $widget['action'] ) && $widget['action'] === $report_metadata['action'] ) {
 						return [
 							'category'    => $report_page['category']['id'],
 							'subcategory' => $report_page['subcategory']['id'],

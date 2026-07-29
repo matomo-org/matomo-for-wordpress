@@ -36,11 +36,11 @@ class Compatibility extends Feature {
 				$is_wp_content_dir_compatible = defined( 'WP_CONTENT_DIR' )
 												&& ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
 				if ( $rules
-					 && $is_wp_content_dir_compatible
-					 && is_string( $rules )
-					 && strpos( $rules, 'RewriteEngine On' ) > 0
-					 && strpos( $rules, 'content' ) > 0
-					 && strpos( $rules, 'plugins' ) > 0 ) {
+					&& $is_wp_content_dir_compatible
+					&& is_string( $rules )
+					&& strpos( $rules, 'RewriteEngine On' ) > 0
+					&& strpos( $rules, 'content' ) > 0
+					&& strpos( $rules, 'plugins' ) > 0 ) {
 					$rules = '
 	<IfModule mod_rewrite.c>
 		RewriteEngine On

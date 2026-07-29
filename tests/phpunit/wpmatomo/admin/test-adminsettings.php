@@ -30,5 +30,4 @@ class AdminSettingsTest extends MatomoAnalytics_TestCase {
 		$this->assertStringContainsString( 'Tracking', $output );
 		$this->assertStringContainsString( 'Access', $output );
 	}
-
 }

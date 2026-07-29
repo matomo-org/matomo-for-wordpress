@@ -242,7 +242,7 @@ class Woocommerce extends Base {
 			return;
 		}
 
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 		if ( $this->get_order_meta( $order, $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
@@ -457,7 +457,7 @@ class Woocommerce extends Base {
 			return false;
 		}
 
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 		return $this->get_order_meta( $order, $this->key_order_tracked ) == 1;
 	}
 

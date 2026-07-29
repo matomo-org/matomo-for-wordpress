@@ -27,7 +27,8 @@ if ( ! $tests_dir ) {
 }
 
 if ( ! file_exists( $tests_dir . '/includes/functions.php' ) ) {
-	echo "Could not find $tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // WPCS: XSS ok.
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo "Could not find $tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL;
 	exit( 1 );
 }
 
@@ -46,7 +47,7 @@ function manually_load_plugin() {
 		define( 'MATOMO_ANALYTICS_FILE', ABSPATH . '/wp-content/plugins/matomo/matomo.php' );
 	}
 
-	require dirname( dirname( dirname( __FILE__ ) ) ) . '/matomo.php';
+	require dirname( dirname( __DIR__ ) ) . '/matomo.php';
 }
 
 tests_add_filter( 'muplugins_loaded', 'manually_load_plugin' );
@@ -56,4 +57,3 @@ require $tests_dir . '/includes/bootstrap.php';
 
 require 'framework/test-case.php';
 require 'framework/test-matomo-test-case.php';
-

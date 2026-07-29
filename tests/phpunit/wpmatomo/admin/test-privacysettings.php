@@ -26,6 +26,4 @@ class AdminPrivacySettingsTest extends MatomoUnit_TestCase {
 		$this->assertNotEmpty( $output );
 		$this->assertStringContainsString( 'Let users opt-out of tracking', $output );
 	}
-
-
 }

@@ -34,7 +34,7 @@ class EasyDigitalDownloads extends Base {
 
 	public function on_cart_update() {
 		if ( ! function_exists( 'EDD' )
-			 || ! class_exists( '\EDD_Download' ) ) {
+			|| ! class_exists( '\EDD_Download' ) ) {
 			return;
 		}
 
@@ -137,8 +137,8 @@ class EasyDigitalDownloads extends Base {
 	public function on_order( $payment, $edd_receipt_args ) {
 		if ( $edd_receipt_args['payment_id'] ) {
 			if ( 'publish' !== $payment->post_status
-				 && 'complete' !== $payment->post_status
-				 && 'edd_subscription' !== $payment->post_status ) {
+				&& 'complete' !== $payment->post_status
+				&& 'edd_subscription' !== $payment->post_status ) {
 				return;
 			}
 			// Use a meta value so we only send the beacon once.
@@ -203,7 +203,7 @@ class EasyDigitalDownloads extends Base {
 			$payment_meta = edd_get_payment_meta( $payment->ID );
 			$discount     = 0;
 			if ( ! empty( $payment_meta['user_info']['discount'] )
-				 && 'none' !== $payment_meta['user_info']['discount'] ) {
+				&& 'none' !== $payment_meta['user_info']['discount'] ) {
 				$discount = $payment_meta['user_info']['discount'];
 				$discount = explode( ',', $discount );
 				$discount = reset( $discount );

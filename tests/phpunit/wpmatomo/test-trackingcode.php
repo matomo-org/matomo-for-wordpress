@@ -220,6 +220,4 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->go_to( get_post_comments_feed_link( $post_id ) );
 		$this->assertQueryTrue( 'is_feed', 'is_single', 'is_singular', 'is_comment_feed' );
 	}
-
-
 }

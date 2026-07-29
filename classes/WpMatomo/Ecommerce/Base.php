@@ -86,7 +86,7 @@ class Base {
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 		return get_post_meta( $order_id, $this->key_order_tracked, true ) == 1;
 	}
 
@@ -96,10 +96,10 @@ class Base {
 
 	protected function should_track_background() {
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
-			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
-			   || ( defined( 'MATOMO_TRACK_ECOMMERCE_SERVER_SIDE' ) && MATOMO_TRACK_ECOMMERCE_SERVER_SIDE )
-			   || ( did_action( 'wp_footer' ) && ! doing_action( 'wp_footer' ) )
-			   || $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
+				|| ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+				|| ( defined( 'MATOMO_TRACK_ECOMMERCE_SERVER_SIDE' ) && MATOMO_TRACK_ECOMMERCE_SERVER_SIDE )
+				|| ( did_action( 'wp_footer' ) && ! doing_action( 'wp_footer' ) )
+				|| $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {

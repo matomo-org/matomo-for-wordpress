@@ -35,6 +35,6 @@ class PrivacySettings implements AdminSettingsInterface {
 	public function show_settings() {
 		$matomo_settings = $this->settings;
 
-		include dirname( __FILE__ ) . '/views/privacy_gdpr.php';
+		include __DIR__ . '/views/privacy_gdpr.php';
 	}
 }
