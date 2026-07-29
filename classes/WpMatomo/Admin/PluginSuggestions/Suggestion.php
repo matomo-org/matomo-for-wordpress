@@ -82,7 +82,7 @@ abstract class Suggestion {
 	}
 
 	public function get_unlock_url() {
-		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		// phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
 		return 'https://matomo.org/get/matomo-for-wordpress-' . $this->to_snake_case( $this->plugin_slug ) . '/?source=wordpress';
 	}
 

@@ -35,7 +35,7 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 		$visits = [];
 		$page   = 0;
 		do {
-			$page ++;
+			++$page;
 
 			// copied from wp-statistics-meta-box-top-visitors.php.
 			// used to use top_visitors::get(), but that no longer supports
@@ -74,7 +74,7 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 		$visits = [];
 		$page   = 0;
 		do {
-			$page ++;
+			++$page;
 			$visits_found = top_visitors::get(
 				[
 					'day'      => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),

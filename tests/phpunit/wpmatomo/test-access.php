@@ -92,5 +92,4 @@ class AccessTest extends MatomoAnalytics_TestCase {
 			$access
 		);
 	}
-
 }

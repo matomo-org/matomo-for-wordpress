@@ -292,6 +292,7 @@ SQL;
 			$this->record_importers = [];
 			foreach ( $record_importers as $record_importer_class ) {
 				if ( ! defined( $record_importer_class . '::PLUGIN_NAME' ) ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					throw new \Exception( "The $record_importer_class record importer is missing the PLUGIN_NAME constant." );
 				}
 

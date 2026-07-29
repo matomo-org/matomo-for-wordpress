@@ -170,5 +170,4 @@ class AdminDashboardTest extends MatomoAnalytics_TestCase {
 			array( false, 'foobar_baz', Dates::LAST_WEEK ),
 		);
 	}
-
 }

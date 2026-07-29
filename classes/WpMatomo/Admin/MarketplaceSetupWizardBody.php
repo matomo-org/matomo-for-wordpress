@@ -41,9 +41,9 @@ class MarketplaceSetupWizardBody {
 		$matomo_marketplace_url    = self::get_marketplace_zip_url();
 
 		if ( self::DESIGN_VARIANT_ORIGINAL === $this->design_variant ) {
-			include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body.php';
+			include __DIR__ . '/views/marketplace_setup_wizard_body.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/marketplace_setup_wizard_body_redesign.php';
+			include __DIR__ . '/views/marketplace_setup_wizard_body_redesign.php';
 		}
 	}
 

@@ -97,6 +97,7 @@ class Installer {
 		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 		return is_writable( $upload_dir ) || is_writable( dirname( $upload_dir ) );
 	}
 
@@ -236,9 +237,9 @@ class Installer {
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
 		if ( $matomo_url
-			 && $plugins_url === $matomo_url
-			 && wp_parse_url( $matomo_url, PHP_URL_SCHEME )
-			 && wp_parse_url( $matomo_url, PHP_URL_HOST )
+			&& $plugins_url === $matomo_url
+			&& wp_parse_url( $matomo_url, PHP_URL_SCHEME )
+			&& wp_parse_url( $matomo_url, PHP_URL_HOST )
 		) {
 			// if currently no scheme or host is set then we'll make sure to overwrite it
 			return;
@@ -284,6 +285,7 @@ class Installer {
 			DbHelper::checkDatabaseVersion();
 		} catch ( Exception $e ) {
 			$message = sprintf( 'Database info detection failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 			throw new Exception( $message, $e->getCode(), $e );
 		}
 
@@ -336,6 +338,7 @@ class Installer {
 		$config->forceSave();
 
 		$mode = 0664;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 		if ( ! chmod( $config->getLocalPath(), $mode ) ) {
 			$this->logger->log( "Can't chmod " . $config->getLocalPath() );
 		}
@@ -354,11 +357,11 @@ class Installer {
 	}
 
 	/**
-	 * @param array $default params
+	 * @param array $default_conn_params params
 	 *
 	 * @return array
 	 */
-	public static function get_db_infos( $default = [] ) {
+	public static function get_db_infos( $default_conn_params = [] ) {
 		global $wpdb;
 
 		$socket    = '';
@@ -412,7 +415,7 @@ class Installer {
 		if ( ! empty( $socket ) ) {
 			$database['unix_socket'] = $socket;
 		}
-		$database = array_merge( $default, $database );
+		$database = array_merge( $default_conn_params, $database );
 
 		return $database;
 	}

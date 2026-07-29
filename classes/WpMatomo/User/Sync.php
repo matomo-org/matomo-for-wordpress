@@ -262,7 +262,7 @@ class Sync extends Feature {
 					$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 				}
 			}
-			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 			if ( 1 != $idsite ) {
 				// only needed if the actual site is not the default site... makes sure when they click in Matomo
 				// UI on "Dashboard" that the correct site is being opened by default
@@ -296,7 +296,7 @@ class Sync extends Feature {
 		$all_users                    = $user_model->getUsers( [] );
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
-				 && ! empty( $all_user['login'] ) ) {
+				&& ! empty( $all_user['login'] ) ) {
 				Access::doAsSuperUser(
 					function () use ( $user_model, $all_user ) {
 						$user_model->deleteUserOnly( $all_user['login'] );
@@ -372,7 +372,7 @@ class Sync extends Feature {
 						$matomo_user_login = 'wp_' . $login . $index;
 					}
 
-					$index ++;
+					++$index;
 				} while ( $this->is_matomo_login_taken( $user_model, $matomo_user_login, $user_id ) );
 			}
 		}

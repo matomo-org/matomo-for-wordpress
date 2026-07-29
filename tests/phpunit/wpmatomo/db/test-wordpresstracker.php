@@ -227,6 +227,4 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
 		return $this->db->query( sprintf( "insert into %s (login, idsite, access) values('%s', '1', '%s')", $table, $login, $permission ) );
 	}
-
-
 }

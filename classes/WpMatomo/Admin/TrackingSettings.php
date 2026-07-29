@@ -117,7 +117,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	private function update_if_submitted() {
 		if ( $this->form_submitted() === true
-			 && check_admin_referer( self::NONCE_NAME ) ) {
+			&& check_admin_referer( self::NONCE_NAME ) ) {
 			$this->apply_settings();
 
 			return true;
@@ -204,7 +204,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		if ( empty( $_POST[ self::FORM_NAME ][ Settings::SITE_CURRENCY ] )
-			 || ! array_key_exists( sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ][ Settings::SITE_CURRENCY ] ) ), $valid_currencies ) ) {
+			|| ! array_key_exists( sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ][ Settings::SITE_CURRENCY ] ) ), $valid_currencies ) ) {
 			$_POST[ self::FORM_NAME ][ Settings::SITE_CURRENCY ] = 'USD';
 		}
 
@@ -268,8 +268,8 @@ class TrackingSettings implements AdminSettingsInterface {
 		$previus_track_mode = $this->settings->get_global_option( 'track_mode' );
 		$must_update        = false;
 		if ( self::TRACK_MODE_MANUALLY === $track_mode
-			 || ( self::TRACK_MODE_DISABLED === $track_mode &&
-				  in_array( $previus_track_mode, [ self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ], true ) ) ) {
+			|| ( self::TRACK_MODE_DISABLED === $track_mode &&
+					in_array( $previus_track_mode, [ self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ], true ) ) ) {
 			// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
 			$must_update = true;
 		}
@@ -282,8 +282,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	 */
 	private function form_submitted() {
 		return isset( $_POST ) && ! empty( $_POST[ self::FORM_NAME ] )
-			   && is_admin()
-			   && $this->can_user_manage();
+				&& is_admin()
+				&& $this->can_user_manage();
 	}
 
 	/**
@@ -410,7 +410,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_is_using_litespeed_cache    = $this->is_using_litespeed_cache_plugin();
 		$matomo_is_esi_enabled_in_litespeed = $this->is_litespeed_esi_enabled_in_webserver();
 
-		include dirname( __FILE__ ) . '/views/tracking.php';
+		include __DIR__ . '/views/tracking.php';
 	}
 
 	/**

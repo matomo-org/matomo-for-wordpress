@@ -187,8 +187,8 @@ class Settings {
 
 		foreach ( $this->global_settings as $key => $val ) {
 			if ( isset( $this->default_global_settings[ $key ] )
-			     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-				 && $this->default_global_settings[ $key ] != $val ) {
+			     // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
+				&& $this->default_global_settings[ $key ] != $val ) {
 				$custom_settings[ $key ] = $val;
 			}
 		}
@@ -315,7 +315,7 @@ class Settings {
 		}
 
 		if ( ! isset( $this->global_settings[ $key ] )
-			 || $this->global_settings[ $key ] !== $value ) {
+			|| $this->global_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 
@@ -336,7 +336,7 @@ class Settings {
 		}
 
 		if ( ! isset( $this->blog_settings[ $key ] )
-			 || $this->blog_settings[ $key ] !== $value ) {
+			|| $this->blog_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed option ' . $key . ': ' . $value );
 			$this->blog_settings[ $key ] = $value;
@@ -402,7 +402,7 @@ class Settings {
 
 	private function should_save_tracking_code_across_sites() {
 		return $this->is_network_enabled()
-			   && $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+				&& $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 	}
 
 	public function get_js_tracking_code() {

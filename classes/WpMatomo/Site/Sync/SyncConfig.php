@@ -55,7 +55,7 @@ class SyncConfig {
 
 				if ( ! empty( $keys ) ) {
 					foreach ( $keys as $key => $value ) {
-						// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+						// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 						if ( ! isset( $cat[ $key ] ) || $cat[ $key ] != $value ) {
 							$has_change          = true;
 							$cat[ $key ]         = $value;

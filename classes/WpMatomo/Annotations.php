@@ -58,7 +58,7 @@ class Annotations extends Feature {
 		}
 
 		if ( 'publish' === $new_status
-			 && 'publish' !== $old_status ) {
+			&& 'publish' !== $old_status ) {
 			$site   = new Site();
 			$idsite = $site->get_current_matomo_site_id();
 

@@ -71,7 +71,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 			// import the dump file
 			global $wpdb;
-			$file = dirname( __FILE__ ) . '/dump.sql';
+			$file = __DIR__ . '/dump.sql';
 			// wpdb does not allow multiple queries in the query method
 			foreach ( explode( ';', str_replace( 'wp_', $wpdb->prefix, $wp_filesystem->get_contents( $file ) ) ) as $query ) {
 				if ( ! empty( trim( $query ) ) ) {

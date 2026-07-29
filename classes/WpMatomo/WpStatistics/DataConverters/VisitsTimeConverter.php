@@ -34,8 +34,8 @@ class VisitsTimeConverter extends VisitorsConverter implements DataConverterInte
 					];
 				}
 
-				$data[ $hour ]['nb_visits'] ++;
-				$data[ $hour ]['nb_uniq_visitors'] ++;
+				++$data[ $hour ]['nb_visits'];
+				++$data[ $hour ]['nb_uniq_visitors'];
 			}
 			$datatable->addRowsFromSimpleArray( array_values( $data ) );
 		}

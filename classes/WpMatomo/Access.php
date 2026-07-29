@@ -50,8 +50,8 @@ class Access {
 		$caps_to_store = [];
 		foreach ( $values as $role => $matomo_permission ) {
 			if ( isset( $available_roles[ $role ] ) &&
-				 $wp_roles->is_role( $role )
-				 && array_key_exists( $matomo_permission, self::$matomo_permissions ) ) {
+				$wp_roles->is_role( $role )
+				&& array_key_exists( $matomo_permission, self::$matomo_permissions ) ) {
 				$caps_to_store[ $role ] = $matomo_permission;
 			}
 		}

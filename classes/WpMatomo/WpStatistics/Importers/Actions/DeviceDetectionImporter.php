@@ -46,7 +46,7 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 		// we do not have the version with wpstatistics, so set an empty version
 		array_walk(
 			$platform_ids,
-			function( &$item1, $key ) {
+			function ( &$item1 ) {
 				$item1 = $item1 . ';';
 			}
 		);

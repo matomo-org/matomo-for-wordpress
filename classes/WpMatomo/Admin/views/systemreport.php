@@ -85,9 +85,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=<?php echo esc_attr( Menu::SLUG_SYSTEM_REPORT ); ?>"
-		   class="nav-tab <?php echo empty( $matomo_active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
+			class="nav-tab <?php echo empty( $matomo_active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
 		<a href="?page=<?php echo esc_attr( Menu::SLUG_SYSTEM_REPORT ); ?>&tab=troubleshooting"
-		   class="nav-tab <?php echo 'troubleshooting' === $matomo_active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
+			class="nav-tab <?php echo 'troubleshooting' === $matomo_active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
 	</h2>
 
 	<?php if ( empty( $matomo_active_tab ) ) { ?>
@@ -95,13 +95,13 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		<p><?php esc_html_e( 'Copy the below info in case our support team asks you for this information:', 'matomo' ); ?>
 			<br/> <br/>
 			<a href="javascript:void(0);"
-			   onclick="var textarea = document.getElementById('matomo_system_report_info');textarea.select();document.execCommand('copy');"
-			   class='button-primary'><?php esc_html_e( 'Copy system report', 'matomo' ); ?></a>
+				onclick="var textarea = document.getElementById('matomo_system_report_info');textarea.select();document.execCommand('copy');"
+				class='button-primary'><?php esc_html_e( 'Copy system report', 'matomo' ); ?></a>
 
 		</p>
 		<textarea style="width:100%;height: 200px;" readonly
-				  id="matomo_system_report_info">
-				  <?php
+					id="matomo_system_report_info">
+					<?php
 					foreach ( $matomo_tables as $matomo_table ) {
 						if ( empty( $matomo_table['rows'] ) ) {
 							continue;
@@ -126,7 +126,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 							}
 							echo "\n* " . esc_html( $matomo_class ) . esc_html( $matomo_row['name'] ) . ': ' . esc_html( matomo_anonymize_value( matomo_format_value_text( $matomo_value ) ) );
 							if ( isset( $matomo_row['comment'] ) && '' !== $matomo_row['comment'] ) {
-								 // We want to add links in the comments
+								// We want to add links in the comments
                                  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo ' (' . matomo_anonymize_value( matomo_format_value_text( $matomo_row['comment'] ) ) . ')';
 							}
@@ -195,76 +195,76 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 			<?php wp_nonce_field( SystemReport::NONCE_NAME ); ?>
 
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
-				   class='button-primary'
-				   title="<?php esc_attr_e( 'If reports show no data even though they should, you may try to see if report generation works when manually triggering the report generation.', 'matomo' ); ?>"
-				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
+					class='button-primary'
+					title="<?php esc_attr_e( 'If reports show no data even though they should, you may try to see if report generation works when manually triggering the report generation.', 'matomo' ); ?>"
+					value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 			<br/><br/>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
-				   class='button-primary'
-				   title="<?php esc_attr_e( 'Will reset / empty the Matomo cache which can be helpful if something is not working as expected for example after an update.', 'matomo' ); ?>"
-				   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
+					class='button-primary'
+					title="<?php esc_attr_e( 'Will reset / empty the Matomo cache which can be helpful if something is not working as expected for example after an update.', 'matomo' ); ?>"
+					value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
 			<br/><br/>
 			<?php if ( ! empty( $matomo_has_exception_logs ) ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
-					   class='button-primary'
-					   title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
+						class='button-primary'
+						title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ); ?>"
+						value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
 				<br/><br/>
 			<?php } ?>
 
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
-				   class='button-primary'
-				   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ); ?>"
-				   value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
+					class='button-primary'
+					title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ); ?>"
+					value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
 			<br/><br/>
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit"
-					   class='button-primary'
-					   title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
+						class='button-primary'
+						title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
+						value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_SITE ); ?>" type="submit"
-					   class='button-primary'
-					   title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   value="<?php esc_html_e( 'Sync site (blog)', 'matomo' ); ?>">
+						class='button-primary'
+						title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
+						value="<?php esc_html_e( 'Sync site (blog)', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_RUN_UPDATER ); ?>" type="submit"
-					   class='button-primary'
-					   title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ); ?>"
-					   value="<?php esc_attr_e( 'Run Updater', 'matomo' ); ?>">
+						class='button-primary'
+						title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ); ?>"
+						value="<?php esc_attr_e( 'Run Updater', 'matomo' ); ?>">
 				<label for="matomo_troubleshooting_update_from">Run updates from version:</label>
 				<input id="matomo_troubleshooting_update_from"
-					   type="text"
-					   name="matomo_troubleshooting_update_from"
-					   title="<?php esc_attr_e( 'Enter a version to re-run updates from, eg, "5.0.0".', 'matomo' ); ?>"
-					   value="">
+						type="text"
+						name="matomo_troubleshooting_update_from"
+						title="<?php esc_attr_e( 'Enter a version to re-run updates from, eg, "5.0.0".', 'matomo' ); ?>"
+						value="">
 				<br/><br/>
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
-					   class='button-primary'
-					   title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   value="<?php esc_attr_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
+						class='button-primary'
+						title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
+						value="<?php esc_attr_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ); ?>" type="submit"
-					   title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
-					   class='button-primary'
-					   value="<?php esc_attr_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
+						title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"
+						class='button-primary'
+						value="<?php esc_attr_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
 				<br/><br/>
 			<?php } ?>
 			<input name="<?php echo esc_attr( SystemReport::REGENERATE_TRACKING_CODE ); ?>" type="submit"
-				   class="button-primary"
-				   title="<?php esc_attr_e( 'Force the cached tracking code to be regenerated. The tracking code is usually regenerated on update and after changing tracking settings, or if a Matomo plugin is installed/updated, but if you need to do it manually, you can do it here.', 'matomo' ); ?>"
-				   value="<?php esc_attr_e( 'Regenerate tracking code', 'matomo' ); ?>">
+					class="button-primary"
+					title="<?php esc_attr_e( 'Force the cached tracking code to be regenerated. The tracking code is usually regenerated on update and after changing tracking settings, or if a Matomo plugin is installed/updated, but if you need to do it manually, you can do it here.', 'matomo' ); ?>"
+					value="<?php esc_attr_e( 'Regenerate tracking code', 'matomo' ); ?>">
 			<br/>
 			<br/>
 
 			<input name="<?php echo esc_attr( SystemReport::RUN_SCHEDULED_TASK ); ?>" type="submit"
-				   class="button-primary"
-				   title="<?php esc_attr_e( 'Run a scheduled task by name.', 'matomo' ); ?>"
-				   value="<?php esc_attr_e( 'Run scheduled task', 'matomo' ); ?>"
-				   />
+					class="button-primary"
+					title="<?php esc_attr_e( 'Run a scheduled task by name.', 'matomo' ); ?>"
+					value="<?php esc_attr_e( 'Run scheduled task', 'matomo' ); ?>"
+					/>
 			<label for="matomo_troubleshooting_run_task">Task to run:</label>
 			<select
 				id="matomo_troubleshooting_run_task"
@@ -287,23 +287,23 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		<ul class="matomo-list">
 			<li>
 				<a href="https://matomo.org/faq/wordpress/matomo-for-wordpress-is-not-showing-any-statistics-not-archiving-how-do-i-fix-it/"
-				   target="_blank"
-				   rel="noreferrer noopener"><?php esc_html_e( 'Matomo is not showing any statistics / reports, how do I fix it?', 'matomo' ); ?></a>
+					target="_blank"
+					rel="noreferrer noopener"><?php esc_html_e( 'Matomo is not showing any statistics / reports, how do I fix it?', 'matomo' ); ?></a>
 			</li>
 			<li><a href="https://matomo.org/faq/wordpress/i-cannot-open-backend-page-how-do-i-troubleshoot-it/"
-				   target="_blank"
-				   rel="noreferrer noopener"><?php esc_html_e( 'I cannot open the Matomo Reporting, Admin, or Tag Manager page, how do I troubleshoot it?', 'matomo' ); ?></a>
+					target="_blank"
+					rel="noreferrer noopener"><?php esc_html_e( 'I cannot open the Matomo Reporting, Admin, or Tag Manager page, how do I troubleshoot it?', 'matomo' ); ?></a>
 			</li>
 			<li><a href="https://matomo.org/faq/wordpress/i-have-a-problem-how-do-i-troubleshoot-and-enable-wp_debug/"
-				   target="_blank"
-				   rel="noreferrer noopener"><?php esc_html_e( 'I have an issue with the plugin, how do I troubleshoot and enable debug mode?', 'matomo' ); ?></a>
+					target="_blank"
+					rel="noreferrer noopener"><?php esc_html_e( 'I have an issue with the plugin, how do I troubleshoot and enable debug mode?', 'matomo' ); ?></a>
 			</li>
 			<li><a href="https://matomo.org/faq/wordpress/how-do-i-manually-delete-all-matomo-for-wordpress-data/"
-				   target="_blank"
-				   rel="noreferrer noopener"><?php esc_html_e( 'How do I manually delete or reset all Matomo for WordPress data?', 'matomo' ); ?></a>
+					target="_blank"
+					rel="noreferrer noopener"><?php esc_html_e( 'How do I manually delete or reset all Matomo for WordPress data?', 'matomo' ); ?></a>
 			</li>
 			<li><a href="https://matomo.org/faq/wordpress/" target="_blank"
-				   rel="noreferrer noopener"><?php esc_html_e( 'View all FAQs', 'matomo' ); ?></a></li>
+					rel="noreferrer noopener"><?php esc_html_e( 'View all FAQs', 'matomo' ); ?></a></li>
 		</ul>
 		<?php include 'info_bug_report.php'; ?>
 		<h4><?php esc_html_e( 'Before you create an issue', 'matomo' ); ?></h4>

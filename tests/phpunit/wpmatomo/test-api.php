@@ -3,7 +3,7 @@
  * @package matomo
  */
 
-use \WpMatomo\API;
+use WpMatomo\API;
 
 class ApiTest extends MatomoAnalytics_TestCase {
 

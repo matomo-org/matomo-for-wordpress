@@ -53,9 +53,9 @@ if ( $invalid_format ) { ?>
 			</th>
 			<td>
 				<input size="40" type="text" maxlength="50"
-					   id="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
-					   name="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
-					   value="<?php echo esc_attr( $current_maxmind_license ); ?>">
+						id="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
+						name="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
+						value="<?php echo esc_attr( $current_maxmind_license ); ?>">
 			</td>
 			<td>
 				<?php if ( ! empty( $current_maxmind_license ) ) { ?>
@@ -72,7 +72,7 @@ if ( $invalid_format ) { ?>
 		<tr>
 			<td colspan="3">
 				<p class="submit"><input name="Submit" type="submit" class="button-primary"
-										 value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></p>
+										value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></p>
 			</td>
 		</tr>
 

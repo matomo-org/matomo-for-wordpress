@@ -52,7 +52,7 @@ class MarketplaceSetupWizard extends Feature {
 		$matomo_logo_big               = plugins_url( 'assets/img/logo-big.png?v=' . rawurlencode( matomo_get_asset_version() ), MATOMO_ANALYTICS_FILE );
 		$marketplace_setup_wizard_body = $this->get_body();
 
-		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard.php';
+		include __DIR__ . '/views/marketplace_setup_wizard.php';
 	}
 
 	public function register_hooks() {

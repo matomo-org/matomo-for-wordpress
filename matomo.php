@@ -38,13 +38,13 @@ $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 add_action(
 	'init',
 	function () {
-		load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'matomo', false, basename( __DIR__ ) . '/languages' );
 	}
 );
 
 function matomo_has_compatible_content_dir() {
 	if ( ! empty( $_SERVER['MATOMO_WP_ROOT_PATH'] )
-		 && file_exists( rtrim( $_SERVER['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php' ) ) {
+		&& file_exists( rtrim( $_SERVER['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php' ) ) {
 		return true;
 	}
 
@@ -63,11 +63,11 @@ function matomo_has_compatible_content_dir() {
 	);
 
 	if ( in_array( $content_dir, $abs_paths, true ) ) {
-		 return true;
+		return true;
 	}
 
 	$wpload_base = '../../../wp-load.php';
-	$wpload_full = dirname( __FILE__ ) . '/' . $wpload_base;
+	$wpload_full = __DIR__ . '/' . $wpload_base;
 	if ( file_exists( $wpload_full ) && is_readable( $wpload_full ) ) {
 		return true;
 	} elseif ( realpath( $wpload_full ) && file_exists( realpath( $wpload_full ) ) && is_readable( realpath( $wpload_full ) ) ) {
@@ -85,7 +85,7 @@ function matomo_has_compatible_content_dir() {
 	}
 
 	// look in plugins directory if there is a config file for us
-	$wpload_config = dirname( __FILE__ ) . '/../matomo.wpload_dir.php';
+	$wpload_config = __DIR__ . '/../matomo.wpload_dir.php';
 	if ( file_exists( $wpload_config ) && is_readable( $wpload_config ) ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$content = @file_get_contents( $wpload_config ); // we do not include that file for security reasons

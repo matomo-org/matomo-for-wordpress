@@ -108,6 +108,7 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
 			&& ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
@@ -130,8 +131,14 @@ class WpMatomo {
 	}
 
 	public static function is_admin_user() {
-		if ( ! function_exists( 'is_multisite' )
-			|| ! is_multisite() ) {
+		if (
+			! function_exists( 'is_multisite' )
+			|| ! is_multisite()
+		) {
+			// checking the role as a capability on purpose so that plugins which grant it through the
+			// `user_has_cap` filter (role managers etc) keep working. reading `WP_User::$roles` directly
+			// would bypass those filters.
+			// phpcs:ignore WordPress.WP.Capabilities.RoleFound
 			return current_user_can( 'administrator' );
 		}
 
@@ -164,7 +171,7 @@ class WpMatomo {
 	private function declare_woocommerce_hpos_compatible() {
 		add_action(
 			'before_woocommerce_init',
-			function() {
+			function () {
 				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'matomo/matomo.php', true );
 				}

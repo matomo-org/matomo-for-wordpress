@@ -75,15 +75,15 @@ class AdvancedSettings implements AdminSettingsInterface {
 		$matomo_async_archiving_supported  = $this->settings->is_async_archiving_supported();
 		$matomo_server_side_tracking_delay = $this->settings->get_option( Settings::SERVER_SIDE_TRACKING_DELAY_SECS );
 
-		include dirname( __FILE__ ) . '/views/advanced_settings.php';
+		include __DIR__ . '/views/advanced_settings.php';
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && $this->can_user_manage() ) {
+			&& ! empty( $_POST[ self::FORM_NAME ] )
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& $this->can_user_manage() ) {
 			$this->apply_settings();
 
 			return true;

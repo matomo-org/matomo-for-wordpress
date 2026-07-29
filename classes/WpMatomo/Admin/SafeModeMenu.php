@@ -53,7 +53,7 @@ class SafeModeMenu extends WpMatomo\Feature {
 			$this->parent_slug,
 			__( 'System Report', 'matomo' ),
 			__( 'System Report', 'matomo' ),
-			'administrator',
+			'manage_options',
 			Menu::SLUG_SYSTEM_REPORT,
 			[
 				$system_report,

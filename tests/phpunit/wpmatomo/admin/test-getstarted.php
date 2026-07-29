@@ -95,6 +95,4 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$_REQUEST['_wpnonce']           = wp_create_nonce( GetStarted::NONCE_NAME );
 		$_SERVER['REQUEST_URI']         = home_url();
 	}
-
-
 }

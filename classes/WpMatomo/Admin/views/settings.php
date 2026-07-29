@@ -33,13 +33,13 @@ if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
 <h2 class="nav-tab-wrapper">
 	<?php foreach ( $setting_tabs as $matomo_setting_slug => $matomo_setting_tab ) { ?>
 		<a href="<?php echo esc_url( AdminSettings::make_url( $matomo_setting_slug ) ); ?>"
-		   class="nav-tab <?php echo $active_tab === $matomo_setting_slug ? 'nav-tab-active' : ''; ?>"
+			class="nav-tab <?php echo $active_tab === $matomo_setting_slug ? 'nav-tab-active' : ''; ?>"
 		><?php echo esc_html( $matomo_setting_tab->get_title() ); ?></a>
 	<?php } ?>
 
 	<?php
 	if ( current_user_can( Capabilities::KEY_SUPERUSER )
-		 && ! is_network_admin() ) {
+		&& ! is_network_admin() ) {
 		?>
 		<a href="<?php echo esc_url( Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) ); ?>" target="_blank" class="nav-tab"
 		><?php esc_html_e( 'Matomo Admin', 'matomo' ); ?> <span class="dashicons-before dashicons-external"></span></a>

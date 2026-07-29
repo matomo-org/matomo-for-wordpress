@@ -42,16 +42,12 @@ class PluginInit extends Feature {
 					$updater = new Updater( $this->settings );
 					$updater->update_if_needed();
 				}
-			} else {
-				if ( matomo_is_app_request() ) {
+			} elseif ( matomo_is_app_request() ) {
 					// we can't install if matomo is requested... there's some circular reference
 					wp_safe_redirect( admin_url() );
 					exit;
-				} else {
-					if ( $installer->can_be_installed() ) {
-						$installer->install();
-					}
-				}
+			} elseif ( $installer->can_be_installed() ) {
+					$installer->install();
 			}
 		}
 

@@ -4,9 +4,9 @@
  */
 
 use WpMatomo\Roles;
-use \WpMatomo\Settings;
-use \WpMatomo\Admin\TrackingSettings;
-use \WpMatomo\RedirectOnActivation;
+use WpMatomo\Settings;
+use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\RedirectOnActivation;
 
 class AdminInstallTest extends MatomoUnit_TestCase {
 	/**

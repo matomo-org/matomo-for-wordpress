@@ -96,5 +96,4 @@ class ReportMetadataTest extends MatomoAnalytics_TestCase {
 		);
 		$this->assertSame( array(), $report_page );
 	}
-
 }

@@ -110,9 +110,9 @@ class Email {
 					$match           = false;
 					foreach ( $phpmailer->getCustomHeaders() as $header ) {
 						if ( isset( $header[0] ) && isset( $header[1] ) &&
-							 is_string( $header[0] ) && is_string( $header[1] ) &&
-							 'x-matomo' === Common::mb_strtolower( $header[0] ) &&
-							 trim( $header[1] ) === $random_id
+							is_string( $header[0] ) && is_string( $header[1] ) &&
+							'x-matomo' === Common::mb_strtolower( $header[0] ) &&
+							trim( $header[1] ) === $random_id
 						) {
 							$match = true;
 						}

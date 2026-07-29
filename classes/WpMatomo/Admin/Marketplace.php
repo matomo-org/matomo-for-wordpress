@@ -72,7 +72,7 @@ class Marketplace implements MatomoPageContent {
 
 		$matomo_currency = $this->get_currency_based_on_timezone();
 
-		include dirname( __FILE__ ) . '/views/marketplace.php';
+		include __DIR__ . '/views/marketplace.php';
 	}
 
 	private function get_valid_tabs() {

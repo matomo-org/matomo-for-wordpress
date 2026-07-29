@@ -77,6 +77,4 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 
 		$this->assertEmpty( $this->access->get_permission_for_role( 'editor' ) );
 	}
-
-
 }

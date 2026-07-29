@@ -59,5 +59,4 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 		$parts = explode( '<tr><td width="75%"', $report );
 		$this->assertCount( 19, $parts );
 	}
-
 }
