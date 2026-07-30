@@ -7,16 +7,46 @@
  * @package matomo
  */
 
+use Piwik\Access;
+use Piwik\API\Request as ApiRequest;
+use Piwik\Container\StaticContainer;
+use Piwik\NoAccessException;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\WordPress\Auth;
+use Piwik\Request\AuthenticationToken;
 use WpMatomo\User;
 
 /**
  * @package matomo
+ * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class WordPressAuthTest extends MatomoAnalytics_TestCase {
 
-	public function test_authenticate_succeeds_when_token_belongs_to_the_logged_in_user() {
+	private $original_get;
+	private $original_post;
+	private $original_request;
+	private $original_server;
+
+	public function setUp(): void {
+		parent::setUp();
+
+		$this->original_get     = $_GET;
+		$this->original_post    = $_POST;
+		$this->original_request = $_REQUEST;
+		$this->original_server  = $_SERVER;
+	}
+
+	public function tearDown(): void {
+		$_GET     = $this->original_get;
+		$_POST    = $this->original_post;
+		$_REQUEST = $this->original_request;
+		$_SERVER  = $this->original_server;
+
+		parent::tearDown();
+	}
+
+	public function test_authenticate_rejects_a_token_even_when_it_belongs_to_the_logged_in_user() {
+		// a matomo token_auth is not allowed to authenticate by itself
 		$wp_user_id = $this->create_mapped_user( 'testuser', 'testuser@example.com', 'testuser' );
 		$token      = $this->create_token_for( 'testuser' );
 
@@ -24,13 +54,13 @@ class WordPressAuthTest extends MatomoAnalytics_TestCase {
 
 		$result = $this->authenticate_with_token( $token );
 
-		$this->assertTrue( $result->wasAuthenticationSuccessful() );
-		$this->assertSame( 'testuser', $result->getIdentity() );
+		$this->assertFalse( $result->wasAuthenticationSuccessful() );
+		$this->assertSame( 'anonymous', $result->getIdentity() );
 	}
 
-	public function test_authenticate_succeeds_when_matomo_login_differs_from_wp_username() {
-		// WP user 'testuser2' is mapped to a renamed Matomo login 'wp_testuser2'. The token belongs to 'wp_testuser2',
-		// so authentication must succeed even though it does not match the WP user_login.
+	public function test_authenticate_rejects_a_token_when_matomo_login_differs_from_wp_username() {
+		// WP user 'testuser2' is mapped to a renamed Matomo login 'wp_testuser2'; the token belongs to
+		// 'wp_testuser2'. it must still be rejected: token_auth alone never authenticates.
 		$wp_user_id = $this->create_mapped_user( 'testuser2', 'testuser2@example.com', 'wp_testuser2' );
 		$token      = $this->create_token_for( 'wp_testuser2' );
 
@@ -38,8 +68,8 @@ class WordPressAuthTest extends MatomoAnalytics_TestCase {
 
 		$result = $this->authenticate_with_token( $token );
 
-		$this->assertTrue( $result->wasAuthenticationSuccessful() );
-		$this->assertSame( 'wp_testuser2', $result->getIdentity() );
+		$this->assertFalse( $result->wasAuthenticationSuccessful() );
+		$this->assertSame( 'anonymous', $result->getIdentity() );
 	}
 
 	public function test_authenticate_rejects_a_token_belonging_to_a_different_user() {
@@ -65,6 +95,61 @@ class WordPressAuthTest extends MatomoAnalytics_TestCase {
 		$result = $this->authenticate_with_token( $token );
 
 		$this->assertFalse( $result->wasAuthenticationSuccessful() );
+	}
+
+	public function test_authenticate_rejects_a_token_even_when_force_api_session_is_requested() {
+		// force_api_session is a caller controlled request parameter and must never re-enable token_auth
+		// authentication
+		$wp_user_id = $this->create_mapped_user( 'testuser', 'testuser@example.com', 'testuser' );
+		$token      = $this->create_token_for( 'testuser' );
+
+		wp_set_current_user( $wp_user_id );
+
+		$_GET['force_api_session']     = '1';
+		$_POST['force_api_session']    = '1';
+		$_REQUEST['force_api_session'] = '1';
+
+		$result = $this->authenticate_with_token( $token );
+
+		$this->assertFalse( $result->wasAuthenticationSuccessful() );
+		$this->assertSame( 'anonymous', $result->getIdentity() );
+	}
+
+	public function test_api_request_with_token_auth_and_wp_session_is_not_authenticated() {
+		$wp_user_id = $this->create_mapped_user( 'testuser', 'testuser@example.com', 'testuser' );
+		$token      = $this->create_token_for( 'testuser' );
+
+		wp_set_current_user( $wp_user_id );
+
+		// simulate the API request globals (token supplied as a POST parameter, force_api_session on).
+		$_SERVER['REQUEST_METHOD']  = 'POST';
+		$_GET['module']             = 'API';
+		$_GET['method']             = 'SitesManager.getSitesIdWithAtLeastViewAccess';
+		$_POST['token_auth']        = $token;
+		$_POST['force_api_session'] = '1';
+
+		// the token is detected once per request and cached, so give this simulated request a fresh detector.
+		StaticContainer::getContainer()->set( AuthenticationToken::class, new AuthenticationToken() );
+
+		// performs the same token based auth reload the FrontController / API dispatcher does.
+		try {
+			ApiRequest::reloadAuthUsingTokenAuth(
+				[
+					'token_auth'        => $token,
+					'force_api_session' => '1',
+					'module'            => 'API',
+					'method'            => 'SitesManager.getSitesIdWithAtLeastViewAccess',
+				]
+			);
+			$this->fail( 'expected NoAccessException to be thrown' );
+		} catch ( NoAccessException $e ) {
+			// ignore
+		}
+
+		$login = Access::getInstance()->getLogin();
+		$this->assertNotSame( 'testuser', $login );
+		$this->assertTrue( empty( $login ) || 'anonymous' === $login );
+		$this->assertFalse( Access::getInstance()->hasSuperUserAccess() );
 	}
 
 	private function authenticate_with_token( $token ) {
