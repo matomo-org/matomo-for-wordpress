@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.12.1 =
+* Security: remove unneeded token auth authentication path for Matomo API from WordPress/Auth.
+
 = 5.12.0 =
 * Update core to 5.12.0.
 * Bug fix: fix user collision that can occur when a user is deleted from Matomo.
