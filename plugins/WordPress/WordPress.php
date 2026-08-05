@@ -96,7 +96,7 @@ class WordPress extends Plugin
      */
     public function onDeleteMatomoUser($userLogin)
     {
-        ( new WpMatomo\User() )->delete_mappings_for_matomo_login($userLogin);
+        ( new WpMatomo\User() )->delete_mappings_for_matomo_login_on_current_blog($userLogin);
     }
 
     public function shouldPerformEmptySiteCheck( &$shouldPerformEmptySiteCheck ) {

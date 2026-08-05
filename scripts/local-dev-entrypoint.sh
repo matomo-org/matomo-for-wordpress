@@ -14,8 +14,8 @@ fi
 function export_global() {
   export WP_CLI_CACHE_DIR=/.wp-cli
 
-  # http serves a single offer, whereas https serves multiple. we only want one
-  export LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
+  # use curl in case the current environment uses an http proxy
+  export LATEST_WORDPRESS_VERSION=$( curl -sS "http://api.wordpress.org/core/version-check/1.7/" | php -r 'echo @json_decode(file_get_contents("php://stdin"), true)["offers"][0]["version"];' );
   if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
     echo "Latest WordPress version could not be found"
     exit 1
@@ -187,6 +187,20 @@ define( 'NONCE_SALT',       'put your unique phrase here' );
 define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
+# route WordPress' http api through an http proxy when one is configured in the environment.
+# php's http api (used by wp-cli plugin installs) does not read the proxy env vars the way curl does,
+# so we translate them into the constants WordPress' proxy support understands. this is a no-op when no
+# proxy is configured, so it has no effect outside proxied environments (e.g. sandboxed CI).
+\$matomo_http_proxy = getenv( 'https_proxy' ) ?: ( getenv( 'HTTPS_PROXY' ) ?: ( getenv( 'http_proxy' ) ?: getenv( 'HTTP_PROXY' ) ) );
+if ( \$matomo_http_proxy ) {
+  \$matomo_proxy = parse_url( \$matomo_http_proxy );
+  if ( ! empty( \$matomo_proxy['host'] ) ) {
+    define( 'WP_PROXY_HOST', \$matomo_proxy['host'] );
+    define( 'WP_PROXY_PORT', empty( \$matomo_proxy['port'] ) ? '3128' : \$matomo_proxy['port'] );
+    define( 'WP_PROXY_BYPASS_HOSTS', 'localhost, 127.0.0.1, mariadb, mysql, mailer' );
+  }
+}
+
 if ( getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) ) {
   define( 'MATOMO_MARKETPLACE_ZIP_URL', getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) );
 }
@@ -238,6 +252,39 @@ EOF
 
     echo "setup wp-config.php!"
   fi
+
+  # sandbox/proxy compatibility: when only an http proxy can resolve dns, WordPress' safe-url validation
+  # (gethostbyname based) rejects external URLs and breaks wp-cli plugin installs. drop a mu-plugin that
+  # relaxes it. this is a no-op when no http proxy is configured, so it has no effect in normal setups.
+  mkdir -p "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins"
+  cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/zz-sandbox-http-proxy.php" <<'PHPEOF'
+<?php
+/**
+ * Plugin Name: Sandbox HTTP proxy compatibility
+ * Description: Dev/sandbox only. Relaxes WordPress' safe-URL validation when an http proxy is
+ *              configured, so wp-cli plugin/theme installs work when local DNS is unavailable and only
+ *              the proxy can resolve names. The request itself still goes through the proxy via the
+ *              WP_PROXY_* constants in wp-config.php. No-op when no proxy is configured.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$sandbox_http_proxy = getenv( 'https_proxy' ) ?: ( getenv( 'HTTPS_PROXY' ) ?: ( getenv( 'http_proxy' ) ?: getenv( 'HTTP_PROXY' ) ) );
+
+if ( $sandbox_http_proxy ) {
+	add_filter(
+		'http_request_args',
+		function ( $args ) {
+			$args['reject_unsafe_urls'] = false;
+			return $args;
+		},
+		100
+	);
+	add_filter( 'http_request_host_is_external', '__return_true', 100 );
+}
+PHPEOF
 
   HOSTNAME=localhost
   if [[ $PORT != "80" ]]; then
@@ -588,6 +635,24 @@ EOF
     WORDPRESS_SVN_FOLDER="tags/$WORDPRESS_VERSION"
   fi
 
+  # sandbox/proxy compatibility: svn does not honor the http_proxy env vars, so configure its proxy
+  # explicitly when one is set. no-op when no proxy is configured.
+  SANDBOX_SVN_PROXY="${https_proxy:-${HTTPS_PROXY:-${http_proxy:-${HTTP_PROXY:-}}}}"
+  if [[ -n "$SANDBOX_SVN_PROXY" ]]; then
+    SANDBOX_SVN_PROXY_NOSCHEME="${SANDBOX_SVN_PROXY#*://}"
+    SANDBOX_SVN_PROXY_HOST="${SANDBOX_SVN_PROXY_NOSCHEME%%:*}"
+    SANDBOX_SVN_PROXY_PORT="${SANDBOX_SVN_PROXY_NOSCHEME##*:}"
+    if [[ "$SANDBOX_SVN_PROXY_PORT" = "$SANDBOX_SVN_PROXY_HOST" ]]; then
+      SANDBOX_SVN_PROXY_PORT=3128
+    fi
+    mkdir -p "${HOME:-/root}/.subversion"
+    cat > "${HOME:-/root}/.subversion/servers" <<EOF
+[global]
+http-proxy-host = $SANDBOX_SVN_PROXY_HOST
+http-proxy-port = $SANDBOX_SVN_PROXY_PORT
+EOF
+  fi
+
   if [[ ! -d "$WP_TESTS_DIR/includes" || ! -d "$WP_TESTS_DIR/data" ]];
   then
       mkdir -p $WP_TESTS_DIR
@@ -636,8 +701,14 @@ EOF
     echo "downloading GeoLite2-City.mmdb..."
 
     mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics
-    curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
-    gunzip $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    # the GeoLite2 database is optional (geolocation for wp-statistics); don't abort the whole setup if
+    # it can't be downloaded (e.g. cdn.jsdelivr.net not reachable behind a restrictive proxy).
+    if curl -fsS 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz; then
+      gunzip $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    else
+      echo "warning: could not download GeoLite2-City.mmdb; geolocation data will be unavailable. continuing."
+      rm -f $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
+    fi
   fi
 
   # set allow_wp_app_password_auth tracker config, used in tests
