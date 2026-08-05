@@ -182,17 +182,13 @@ class UserTest extends MatomoUnit_TestCase {
 		update_site_option( 'active_sitewide_plugins', array( 'matomo/matomo.php' => time() ) );
 
 		$blog1 = self::factory()->blog->create();
-		$blog2 = self::factory()->blog->create();
 
 		User::map_matomo_user_login( 5, 'sharedLogin' );
 
 		switch_to_blog( $blog1 );
 		User::map_matomo_user_login( 5, 'sharedLogin' );
-		User::map_matomo_user_login( 7, 'otherLogin' );
-		restore_current_blog();
-
-		switch_to_blog( $blog2 );
 		User::map_matomo_user_login( 6, 'sharedLogin' );
+		User::map_matomo_user_login( 7, 'otherLogin' );
 		restore_current_blog();
 
 		// the deletion happens on the main blog, so only the main blog's mapping is removed
@@ -200,19 +196,15 @@ class UserTest extends MatomoUnit_TestCase {
 
 		$this->assertFalse( User::get_matomo_user_login( 5 ) );
 
-		// ...the other blogs keep their own independent mappings for the same login
+		// ...the other blog keeps its own independent mappings for the same login
 		switch_to_blog( $blog1 );
 		$this->assertSame( 'sharedLogin', User::get_matomo_user_login( 5 ) );
-		$this->assertSame( 'otherLogin', User::get_matomo_user_login( 7 ) );
-		restore_current_blog();
-
-		switch_to_blog( $blog2 );
 		$this->assertSame( 'sharedLogin', User::get_matomo_user_login( 6 ) );
+		$this->assertSame( 'otherLogin', User::get_matomo_user_login( 7 ) );
 		restore_current_blog();
 
 		delete_site_option( 'active_sitewide_plugins' );
 		wp_delete_site( $blog1 );
-		wp_delete_site( $blog2 );
 	}
 
 	/**

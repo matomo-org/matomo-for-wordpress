@@ -32,7 +32,7 @@ class MockMatomoUserSync extends Sync {
 	}
 }
 
-class UserSyncTest extends MatomoAnalytics_TestCase {
+class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Sync

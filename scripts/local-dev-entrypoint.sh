@@ -188,9 +188,6 @@ define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
 # route WordPress' http api through an http proxy when one is configured in the environment.
-# php's http api (used by wp-cli plugin installs) does not read the proxy env vars the way curl does,
-# so we translate them into the constants WordPress' proxy support understands. this is a no-op when no
-# proxy is configured, so it has no effect outside proxied environments (e.g. sandboxed CI).
 \$matomo_http_proxy = getenv( 'https_proxy' ) ?: ( getenv( 'HTTPS_PROXY' ) ?: ( getenv( 'http_proxy' ) ?: getenv( 'HTTP_PROXY' ) ) );
 if ( \$matomo_http_proxy ) {
   \$matomo_proxy = parse_url( \$matomo_http_proxy );
@@ -257,28 +254,24 @@ EOF
   # (gethostbyname based) rejects external URLs and breaks wp-cli plugin installs. drop a mu-plugin that
   # relaxes it. this is a no-op when no http proxy is configured, so it has no effect in normal setups.
   mkdir -p "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins"
-  cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/zz-sandbox-http-proxy.php" <<'PHPEOF'
+  cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/zz-sandbox-http-proxy.php" <<PHPEOF
 <?php
 /**
  * Plugin Name: Sandbox HTTP proxy compatibility
- * Description: Dev/sandbox only. Relaxes WordPress' safe-URL validation when an http proxy is
- *              configured, so wp-cli plugin/theme installs work when local DNS is unavailable and only
- *              the proxy can resolve names. The request itself still goes through the proxy via the
- *              WP_PROXY_* constants in wp-config.php. No-op when no proxy is configured.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$sandbox_http_proxy = getenv( 'https_proxy' ) ?: ( getenv( 'HTTPS_PROXY' ) ?: ( getenv( 'http_proxy' ) ?: getenv( 'HTTP_PROXY' ) ) );
+\$sandbox_http_proxy = getenv( 'https_proxy' ) ?: ( getenv( 'HTTPS_PROXY' ) ?: ( getenv( 'http_proxy' ) ?: getenv( 'HTTP_PROXY' ) ) );
 
-if ( $sandbox_http_proxy ) {
+if ( \$sandbox_http_proxy ) {
 	add_filter(
 		'http_request_args',
-		function ( $args ) {
-			$args['reject_unsafe_urls'] = false;
-			return $args;
+		function ( \$args ) {
+			\$args['reject_unsafe_urls'] = false;
+			return \$args;
 		},
 		100
 	);
@@ -635,8 +628,7 @@ EOF
     WORDPRESS_SVN_FOLDER="tags/$WORDPRESS_VERSION"
   fi
 
-  # sandbox/proxy compatibility: svn does not honor the http_proxy env vars, so configure its proxy
-  # explicitly when one is set. no-op when no proxy is configured.
+  # sandbox/proxy compatibility for svn
   SANDBOX_SVN_PROXY="${https_proxy:-${HTTPS_PROXY:-${http_proxy:-${HTTP_PROXY:-}}}}"
   if [[ -n "$SANDBOX_SVN_PROXY" ]]; then
     SANDBOX_SVN_PROXY_NOSCHEME="${SANDBOX_SVN_PROXY#*://}"
@@ -702,7 +694,7 @@ EOF
 
     mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics
     # the GeoLite2 database is optional (geolocation for wp-statistics); don't abort the whole setup if
-    # it can't be downloaded (e.g. cdn.jsdelivr.net not reachable behind a restrictive proxy).
+    # it can't be downloaded
     if curl -fsS 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz; then
       gunzip $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb.gz
     else
