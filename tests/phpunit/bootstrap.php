@@ -57,3 +57,4 @@ require $tests_dir . '/includes/bootstrap.php';
 
 require 'framework/test-case.php';
 require 'framework/test-matomo-test-case.php';
+require 'framework/test-matomo-shared-fixture-test-case.php';

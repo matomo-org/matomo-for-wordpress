@@ -2,7 +2,7 @@
 Contributors: matomoteam
 Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 7.0.2
+Tested up to: 7.0.3
 Stable tag: 5.12.1
 Requires PHP: 7.2.5
 License: GPLv3 or later
