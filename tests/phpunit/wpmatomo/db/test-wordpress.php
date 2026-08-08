@@ -282,10 +282,14 @@ class DbWordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		\Piwik\Config::getInstance()->database['schema'] = 'Mariadb';
 		\Piwik\Db\Schema::unsetInstance();
 
-		$params         = new \Piwik\ArchiveProcessor\Parameters(
-			new \Piwik\Site( 1 ),
-			\Piwik\Period\Factory::build( 'day', 'today' ),
-			new \Piwik\Segment( '', [ 1 ] )
+		$params         = \Piwik\Access::doAsSuperUser(
+			function () {
+				return new \Piwik\ArchiveProcessor\Parameters(
+					new \Piwik\Site( 1 ),
+					\Piwik\Period\Factory::build( 'day', 'today' ),
+					new \Piwik\Segment( '', [ 1 ] )
+				);
+			}
 		);
 		$log_aggregator = new \Piwik\DataAccess\LogAggregator( $params );
 
