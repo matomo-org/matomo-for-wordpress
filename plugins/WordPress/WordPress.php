@@ -27,6 +27,7 @@ use Piwik\Plugins\WordPress\Workaround\ProcessedReportForceShortDateFormat;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportInnerCallHooks;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
+use Piwik\UrlHelper;
 use Piwik\Version;
 use Piwik\Widget\WidgetsList;
 use WpMatomo;
@@ -329,15 +330,8 @@ class WordPress extends Plugin
     		return;
 	    }
 
-        if ((strpos($url, 'module=API&method=API.get') !== false
-             && strpos($url, '&trigger=archivephp') !== false
-             && Url::isValidHost(parse_url($url, PHP_URL_HOST)))
-            ||
-            (strpos($url, 'module=API&method=CoreAdminHome.archiveReports') !== false
-             && strpos($url, '&trigger=archivephp') !== false
-             && Url::isValidHost(parse_url($url, PHP_URL_HOST)))
-        ) {
-            // archiving query... we avoid issueing an http request for many reasons...
+        if ($this->isLocalArchivingApiRequest($url)) {
+            // archiving query... we avoid issuing an http request for many reasons...
             // eg user might be using self signed certificate and request fails
             // eg http requests may not be allowed
             // eg because the WP user wouldn't be logged in the auth wouldn't work
@@ -347,7 +341,7 @@ class WordPress extends Plugin
             	WordPress::$is_archiving = true;
             	// refs #118 because there is no actual user when archiving there is also no token etc
                 $urlQuery = parse_url($url, PHP_URL_QUERY);
-                $request = new Request($urlQuery, array('serialize' => 1));
+                $request = new Request($urlQuery, ['serialize' => 1]);
                 $response = $request->process();
 	            WordPress::$is_archiving = false;
             });
@@ -396,6 +390,50 @@ class WordPress extends Plugin
             $headers = $headers->getAll();
         }
         $response = wp_remote_retrieve_body($wpResponse);
+    }
+
+    /**
+     * @param string $url
+     * @return bool
+     */
+    private function isLocalArchivingApiRequest($url)
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!Url::isValidHost($host)) {
+            return false;
+        }
+
+        $urlQuery = parse_url($url, PHP_URL_QUERY);
+        if ($urlQuery === null || $urlQuery === '') {
+            return false;
+        }
+
+        // parse with the SAME parser the dispatcher (Piwik\API\Request) uses. parse_str and
+        // UrlHelper::getArrayFromQueryString disagree on URL-encoded key names — parse_str
+        // decodes %6dethod to method, getArrayFromQueryString does not — so validating with
+        // parse_str while the dispatcher reads getArrayFromQueryString lets an attacker show
+        // one method to the check and run another.
+        $query = UrlHelper::getArrayFromQueryString($urlQuery);
+
+        if (($query['module'] ?? null) !== 'API') {
+            return false;
+        }
+        if (($query['trigger'] ?? null) !== 'archivephp') {
+            return false;
+        }
+
+        // allowlist of archive methods, all other methods are denied
+        $allowedMethods = ['API.get', 'CoreAdminHome.archiveReports'];
+        if (!in_array($query['method'] ?? null, $allowedMethods, true)) {
+            return false;
+        }
+
+        // deny attempt at bulk requests if found
+        if (array_key_exists('urls', $query)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function onGenerateReportEnd()
