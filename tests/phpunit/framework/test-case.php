@@ -75,6 +75,12 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		set_current_screen( 'edit.php' );
 	}
 
+	protected function skip_if_old_wordpress() {
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.6', '<' ) ) {
+			$this->markTestSkipped( 'WordPress version does not support application passwords.' );
+		}
+	}
+
 	protected function create_set_super_admin() {
 		$logger = new \WpMatomo\Logger();
 		$logger->log( 'creating super admin' );

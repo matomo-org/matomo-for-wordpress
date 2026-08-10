@@ -5,6 +5,7 @@
 
 use Piwik\Plugins\UsersManager\Model;
 use WpMatomo\Access;
+use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
@@ -590,9 +591,302 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$caps->remove_hooks();
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_revoke_matomo_access_when_a_user_is_removed_from_a_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'betaviewer',
+			]
+		);
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		// check that the user really does have Matomo View on the other blog before we remove them
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$beta_idsite = $this->get_current_site_id();
+		$login       = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $login ) );
+		$this->restore_bootstrapped_blog();
+
+		( new Sync() )->register_hooks();
+
+		remove_user_from_blog( $user_id, $beta );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+
+		// sanity check: WordPress itself no longer considers the user able to view Matomo here, so
+		// anything left below is Matomo's own stale state and not a broken fixture
+		$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_VIEW ) );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertFalse( User::get_matomo_user_login( $user_id ) );
+
+		$this->restore_bootstrapped_blog();
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_matomo_access_on_other_blogs_when_a_user_is_removed_from_one_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'dualsiteviewer',
+			]
+		);
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		// the user keeps Matomo View on the main blog, which is the access that must be preserved
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+		( new Sync() )->sync_current_users();
+		$main_idsite = $this->get_current_site_id();
+		$main_login  = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $main_login );
+		$this->assertEquals( [ $main_idsite ], $this->get_view_sites_for( $main_login ) );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$this->restore_bootstrapped_blog();
+
+		( new Sync() )->register_hooks();
+
+		remove_user_from_blog( $user_id, $beta );
+
+		Bootstrap::do_bootstrap();
+
+		$this->assertTrue( user_can( new WP_User( $user_id ), Capabilities::KEY_VIEW ) );
+		$this->assertSame( $main_login, User::get_matomo_user_login( $user_id ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $main_login ) );
+		$this->assertEquals( [ $main_idsite ], $this->get_view_sites_for( $main_login ) );
+
+		wp_delete_site( $beta );
+	}
+
+	public function test_on_remove_user_from_blog_should_not_change_matomo_access_on_its_own() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		( new Sync() )->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
+	public function test_on_remove_user_from_blog_should_fall_back_to_the_current_blog_when_no_blog_id_is_given() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, 0 );
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	public function test_on_clean_user_cache_should_do_nothing_when_the_user_was_not_removed() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the capability is gone but no removal was recorded, so this is one of the many unrelated
+		// clean_user_cache() calls that must be ignored
+		$this->remove_matomo_view_from_user( $user_id );
+
+		( new Sync() )->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	public function test_on_clean_user_cache_should_do_nothing_when_the_removal_was_recorded_for_a_different_blog() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() + 1234 );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_on_clean_user_cache_should_flush_only_the_blog_it_is_called_on() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		$main_login = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$beta_idsite = $this->get_current_site_id();
+		$beta_login  = User::get_matomo_user_login( $user_id );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $beta_login ) );
+		$this->remove_matomo_view_from_user( $user_id );
+		$this->restore_bootstrapped_blog();
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, $beta );
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		// flushing on the main blog must leave the queued entry for the other blog alone
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $main_login ) );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $beta_login ) );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $beta_login ) );
+		$this->restore_bootstrapped_blog();
+
+		wp_delete_site( $beta );
+	}
+
+	public function test_on_clean_user_cache_should_keep_access_for_a_user_who_still_has_the_capability() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		// deliberately not taking the capability away
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
 	private function get_matomo_user( $login ) {
 		$model = new Model();
 
 		return $model->getUser( $login );
+	}
+
+	private function activate_matomo_plugin() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( is_multisite() ) {
+			update_site_option( 'active_sitewide_plugins', [ 'matomo/matomo.php' => time() ] );
+		} else {
+			// is_plugin_active_for_network() always returns false outside multisite
+			update_option( 'active_plugins', [ 'matomo/matomo.php' ] );
+		}
+
+		$this->assertTrue( is_plugin_active( 'matomo/matomo.php' ) );
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 * @return string the Matomo login the user was synced to
+	 */
+	private function grant_matomo_view_and_sync( $wp_user_id ) {
+		( new WP_User( $wp_user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $wp_user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+
+		return $login;
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	private function remove_matomo_view_from_user( $wp_user_id ) {
+		( new WP_User( $wp_user_id ) )->remove_role( Roles::ROLE_VIEW );
+
+		$this->assertFalse( user_can( new WP_User( $wp_user_id ), Capabilities::KEY_VIEW ) );
+	}
+
+	private function create_blog_with_matomo() {
+		$blog_id = self::factory()->blog->create();
+
+		( new \WpMatomo\Site\Sync( new Settings() ) )->sync_all();
+
+		$this->assertNotEmpty( Site::get_matomo_site_id( $blog_id ) );
+
+		return $blog_id;
+	}
+
+	private function switch_to_bootstrapped_blog( $blog_id ) {
+		switch_to_blog( $blog_id );
+		Bootstrap::do_bootstrap();
+	}
+
+	private function restore_bootstrapped_blog() {
+		restore_current_blog();
+		Bootstrap::do_bootstrap();
+	}
+
+	/**
+	 * @param string $login
+	 * @return array
+	 */
+	private function get_view_sites_for( $login ) {
+		$view_access = ( new Model() )->getUsersSitesFromAccess( 'view' );
+		return isset( $view_access[ $login ] ) ? $view_access[ $login ] : [];
 	}
 }

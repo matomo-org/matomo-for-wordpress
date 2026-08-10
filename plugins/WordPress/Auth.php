@@ -16,6 +16,7 @@ use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
+use WpMatomo\Capabilities;
 use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
@@ -73,7 +74,30 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        $login = User::get_matomo_user_login($loggedInUserId);
+        return $this->makeAuthResultForWpUser($loggedInUserId);
+    }
+
+    /**
+     * @param int $wpUserId
+     * @return AuthResult|null null when the user must not be authenticated
+     */
+    private function makeAuthResultForWpUser($wpUserId)
+    {
+        $code = null;
+
+        if ($this->isCapabilityCheckAvailable()) {
+            if (user_can($wpUserId, Capabilities::KEY_SUPERUSER)) {
+                $code = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
+            } elseif (user_can($wpUserId, Capabilities::KEY_VIEW)) {
+                $code = AuthResult::SUCCESS;
+            }
+
+            if ($code === null) {
+                return null;
+            }
+        }
+
+        $login = User::get_matomo_user_login($wpUserId);
 
         $userModel = new Model();
         $matomoUser = $userModel->getUser($login);
@@ -81,8 +105,34 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
+        if ($code === null) {
+            // safe mode only, see isCapabilityCheckAvailable(). matomo capabilities cannot be
+            // resolved at all, so user_can() would reject everyone including administrators. fall
+            // back to the persisted access.
+            $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
+        }
+
         return new AuthResult($code, $login, $this->token_auth);
+    }
+
+    /**
+     * Whether matomo capabilities can be resolved at all in this request. Normally
+     * available, but in safe mode, it's not.
+     *
+     * @return bool
+     */
+    private function isCapabilityCheckAvailable()
+    {
+        if (!class_exists('\WpMatomo')) {
+            return false;
+        }
+
+        $capabilities = \WpMatomo::get_active_feature(Capabilities::class);
+        if (empty($capabilities)) {
+            return false;
+        }
+
+        return has_filter('user_has_cap', [$capabilities, 'add_capabilities_to_user']) !== false;
     }
 
     private function isAppPasswordInTokenAuthAllowed()
@@ -134,15 +184,6 @@ class Auth extends \Piwik\Plugins\Login\Auth
             remove_filter('application_password_is_api_request', $callback);
         }
 
-        $login = User::get_matomo_user_login($loggedInUserId);
-
-        $userModel = new Model();
-        $matomoUser = $userModel->getUser($login);
-        if (empty($matomoUser)) {
-            return null;
-        }
-
-        $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-        return new AuthResult($code, $login, $this->token_auth);
+        return $this->makeAuthResultForWpUser($loggedInUserId);
     }
 }

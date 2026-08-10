@@ -52,6 +52,14 @@ class Sync extends Feature {
 	 */
 	private $user;
 
+	/**
+	 * Blogs a user is being removed from in this request, as [ wp_user_id ][ blog_id ] => true.
+	 * A single request can remove the same user from several blogs, see wpmu_delete_user().
+	 *
+	 * @var array
+	 */
+	private $pending_removals = [];
+
 	public function __construct() {
 		$this->logger = new Logger();
 		$this->user   = new User();
@@ -65,10 +73,91 @@ class Sync extends Feature {
 		add_action( 'add_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'remove_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
-		add_action( 'remove_user_from_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], $prio = 10, $args = 2 );
+		add_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], $prio = 10, $args = 1 );
 		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], $prio = 10, $args = 0 );
 		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
+	}
+
+	/**
+	 * WordPress fires this action before it removes the user's capabilities, so we can't sync the
+	 * user here, the access it has to the site would not be removed. Instead, we remember them
+	 * and have on_clean_user_cache() do the actual re-syncing.
+	 *
+	 * @param int $wp_user_id
+	 * @param int $blog_id
+	 */
+	public function on_remove_user_from_blog( $wp_user_id, $blog_id ) {
+		$blog_id = (int) $blog_id;
+		$blog_id = $blog_id ? $blog_id : get_current_blog_id();
+
+		$this->pending_removals[ (int) $wp_user_id ][ $blog_id ] = true;
+	}
+
+	/**
+	 * Runs while WordPress is still switched to the blog the user was removed from, after their
+	 * capabilities are gone. Other callers of clean_user_cache() (wp_insert_user(),
+	 * add_user_to_blog(), ...) are ignored because they didn't queue anything.
+	 *
+	 * @param int $wp_user_id
+	 */
+	public function on_clean_user_cache( $wp_user_id ) {
+		$wp_user_id = (int) $wp_user_id;
+		$blog_id    = get_current_blog_id();
+
+		if ( empty( $this->pending_removals[ $wp_user_id ][ $blog_id ] ) ) {
+			return;
+		}
+
+		// only this blog is done, the same user may still be queued for others
+		unset( $this->pending_removals[ $wp_user_id ][ $blog_id ] );
+
+		$this->sync_user_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	private function sync_user_for_current_blog( $wp_user_id ) {
+		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
+		if ( ! $idsite ) {
+			return;
+		}
+
+		$wp_user = get_userdata( $wp_user_id );
+		if ( empty( $wp_user ) ) {
+			return;
+		}
+
+		Bootstrap::do_bootstrap();
+
+		$user_model = new Model();
+
+		Access::doAsSuperUser(
+			function () use ( $user_model, $wp_user, $wp_user_id, $idsite ) {
+				$mapped_matomo_login = User::get_matomo_user_login( $wp_user_id );
+
+				$access = $this->sync_user_access( $wp_user, $idsite, $user_model );
+
+				if ( $access['login'] ) {
+					// the user still legitimately has access here, eg. a network super admin who is
+					// no longer a member of this blog
+					if ( $access['is_superuser'] ) {
+						$user_model->setSuperUserAccess( $access['login'], true );
+					}
+
+					return;
+				}
+
+				if ( $mapped_matomo_login && ! $user_model->getSiteAccessCount( $mapped_matomo_login ) ) {
+					// user has access to no sites, delete the user also
+					$user_model->deleteUserOnly( $mapped_matomo_login );
+					$user_model->deleteUserOptions( $mapped_matomo_login );
+					$user_model->deleteUserAccess( $mapped_matomo_login );
+				}
+			}
+		);
 	}
 
 	public function sync_maybe_background() {
@@ -214,42 +303,20 @@ class Sync extends Feature {
 		API::unsetInstance();
 
 		foreach ( $users as $user ) {
-			$user_id = $user->ID;
-
 			// todo if we used transactions we could commit it after a possibly new access has been added
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
-			$mapped_matomo_login = User::get_matomo_user_login( $user_id );
+			$access = $this->sync_user_access( $user, $idsite, $user_model );
 
-			$matomo_login = null;
-
-			if ( user_can( $user, Capabilities::KEY_SUPERUSER ) ) {
-				$matomo_login                   = $this->ensure_user_exists( $user );
-				$super_users[ $matomo_login ]   = $user;
-				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
-				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
-				$user_model->addUserAccess( $matomo_login, Admin::ID, [ $idsite ] );
-				$user_model->setSuperUserAccess( $matomo_login, false );
-				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
-				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
-				$user_model->addUserAccess( $matomo_login, Write::ID, [ $idsite ] );
-				$user_model->setSuperUserAccess( $matomo_login, false );
-				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
-				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
-				$user_model->addUserAccess( $matomo_login, View::ID, [ $idsite ] );
-				$user_model->setSuperUserAccess( $matomo_login, false );
-				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
-			}
+			$matomo_login = $access['login'];
 
 			if ( $matomo_login ) {
+				$logins_with_some_view_access[] = $matomo_login;
+
+				if ( $access['is_superuser'] ) {
+					$super_users[ $matomo_login ] = $user;
+				}
+
 				$locale = get_user_locale( $user->ID );
 				$lang   = self::get_matomo_lang_from_locale( $locale );
 				if (
@@ -308,6 +375,55 @@ class Sync extends Feature {
 				// that deleteUserOnly() fires (see WordPress::onDeleteMatomoUser).
 			}
 		}
+	}
+
+	/**
+	 * @param WP_User    $user
+	 * @param int|string $idsite
+	 * @param Model      $user_model
+	 *
+	 * @return array{login: string|null, is_superuser: bool} login is null when the user should have
+	 *                                                       no access to this site at all
+	 */
+	protected function sync_user_access( $user, $idsite, $user_model ) {
+		$mapped_matomo_login = User::get_matomo_user_login( $user->ID );
+
+		if ( user_can( $user, Capabilities::KEY_SUPERUSER ) ) {
+			return [
+				'login'        => $this->ensure_user_exists( $user ),
+				'is_superuser' => true,
+			];
+		}
+
+		$role = null;
+		if ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
+			$role = Admin::ID;
+		} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
+			$role = Write::ID;
+		} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
+			$role = View::ID;
+		}
+
+		if ( null === $role ) {
+			if ( $mapped_matomo_login ) {
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+			}
+
+			return [
+				'login'        => null,
+				'is_superuser' => false,
+			];
+		}
+
+		$matomo_login = $this->ensure_user_exists( $user );
+		$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+		$user_model->addUserAccess( $matomo_login, $role, [ $idsite ] );
+		$user_model->setSuperUserAccess( $matomo_login, false );
+
+		return [
+			'login'        => $matomo_login,
+			'is_superuser' => false,
+		];
 	}
 
 	/**
