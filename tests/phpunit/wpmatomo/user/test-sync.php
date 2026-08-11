@@ -712,6 +712,129 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_delete_site( $beta );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_revoke_matomo_superuser_access_on_every_blog_when_super_admin_is_revoked() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'netadmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertSame( '1', $this->get_matomo_user_on_blog( $blog_id, $login )['superuser_access'] );
+		}
+
+		( new Sync() )->register_hooks();
+
+		revoke_super_admin( $user_id );
+
+		// sanity check: WordPress itself no longer considers them a Matomo superuser, so anything
+		// left below is Matomo's own stale state and not a broken fixture
+		$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_SUPERUSER ) );
+
+		foreach ( $logins as $blog_id => $login ) {
+			// a subscriber has no Matomo capability at all, so they are removed
+			$this->assertEmpty( $this->get_matomo_user_on_blog( $blog_id, $login ) );
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_grant_matomo_superuser_access_on_every_blog_when_super_admin_is_granted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'futureadmin',
+			]
+		);
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		foreach ( $logins as $login ) {
+			$this->assertFalse( $login, 'a subscriber should not be in Matomo yet' );
+		}
+
+		( new Sync() )->register_hooks();
+
+		grant_super_admin( $user_id );
+
+		foreach ( array_keys( $logins ) as $blog_id ) {
+			$this->switch_to_bootstrapped_blog( $blog_id );
+			$login = User::get_matomo_user_login( $user_id );
+			$this->assertNotEmpty( $login );
+			$this->assertSame( '1', $this->get_matomo_user( $login )['superuser_access'] );
+			$this->restore_bootstrapped_blog();
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_on_super_admin_change_should_correct_blogs_other_than_the_current_one() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'formeradmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		// take the status away without the hooks registered, leaving the flag stale everywhere
+		revoke_super_admin( $user_id );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertSame( '1', $this->get_matomo_user_on_blog( $blog_id, $login )['superuser_access'] );
+		}
+
+		( new Sync() )->on_super_admin_change( $user_id );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertEmpty( $this->get_matomo_user_on_blog( $blog_id, $login ) );
+		}
+
+		wp_delete_site( $beta );
+	}
+
 	public function test_on_remove_user_from_blog_should_not_change_matomo_access_on_its_own() {
 		$this->activate_matomo_plugin();
 
@@ -942,6 +1065,38 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$model = new Model();
 
 		return $model->getUser( $login );
+	}
+
+	/**
+	 * @param int   $wp_user_id
+	 * @param int[] $other_blog_ids
+	 * @return array<int, string|false>
+	 */
+	private function sync_and_get_logins_per_blog( $wp_user_id, $other_blog_ids ) {
+		$logins = [];
+
+		foreach ( array_merge( [ get_current_blog_id() ], $other_blog_ids ) as $blog_id ) {
+			$this->switch_to_bootstrapped_blog( $blog_id );
+			( new Sync() )->sync_current_users();
+			$logins[ $blog_id ] = User::get_matomo_user_login( $wp_user_id );
+			$this->restore_bootstrapped_blog();
+		}
+
+		return $logins;
+	}
+
+	/**
+	 * @param int    $blog_id
+	 * @param string $login
+	 *
+	 * @return array
+	 */
+	private function get_matomo_user_on_blog( $blog_id, $login ) {
+		$this->switch_to_bootstrapped_blog( $blog_id );
+		$matomo_user = $this->get_matomo_user( $login );
+		$this->restore_bootstrapped_blog();
+
+		return $matomo_user;
 	}
 
 	/**

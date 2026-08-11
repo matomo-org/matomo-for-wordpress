@@ -74,6 +74,8 @@ class Sync extends Feature {
 		add_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], $prio = 10, $args = 2 );
 		add_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], $prio = 10, $args = 1 );
 		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
+		add_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
 		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], $prio = 10, $args = 0 );
 		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
 	}
@@ -112,6 +114,32 @@ class Sync extends Feature {
 		unset( $this->pending_removals[ $wp_user_id ][ $blog_id ] );
 
 		$this->sync_user_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	public function on_super_admin_change( $wp_user_id ) {
+		if ( ! function_exists( 'is_multisite' ) || ! is_multisite() ) {
+			return;
+		}
+
+		foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
+			if ( 1 === (int) $site->deleted ) {
+				continue;
+			}
+
+			switch_to_blog( $site->blog_id );
+
+			try {
+				$this->sync_user_for_current_blog( $wp_user_id );
+			} catch ( Exception $e ) {
+				// one blog failing must not stop the rest from being corrected
+				$this->logger->log_exception( 'user_sync', $e );
+			}
+
+			restore_current_blog();
+		}
 	}
 
 	/**
