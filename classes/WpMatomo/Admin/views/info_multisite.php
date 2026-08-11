@@ -51,17 +51,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 </p>
 
 <h2><?php esc_html_e( 'Matomo sites', 'matomo' ); ?></h2>
+<?php
+$matomo_sites_limit = 100;
+$matomo_sites       = [];
+$matomo_sites_total = 0;
+
+if ( function_exists( 'get_sites' ) ) {
+	$matomo_sites       = get_sites( [ 'number' => $matomo_sites_limit ] );
+	$matomo_sites_total = (int) get_sites( [ 'count' => true ] );
+}
+?>
 <ul class="matomo-list">
 	<?php
-	if ( function_exists( 'get_sites' ) ) {
-		foreach ( get_sites() as $matomo_site ) {
-			/** @var WP_Site $matomo_site */
-			switch_to_blog( $matomo_site->blog_id );
-			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'matomo/matomo.php' ) ) {
-				echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=matomo-reporting' ) ) . '">' . esc_html( $matomo_site->blogname ) . ' (Site ID: ' . esc_html( $matomo_site->blog_id ) . ')</a></li>';
-			}
-			restore_current_blog();
+	foreach ( $matomo_sites as $matomo_site ) {
+		/** @var WP_Site $matomo_site */
+		switch_to_blog( $matomo_site->blog_id );
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'matomo/matomo.php' ) ) {
+			echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=matomo-reporting' ) ) . '">' . esc_html( $matomo_site->blogname ) . ' (Site ID: ' . esc_html( $matomo_site->blog_id ) . ')</a></li>';
 		}
+		restore_current_blog();
 	}
 	?>
 </ul>
+<?php if ( $matomo_sites_total > $matomo_sites_limit ) : ?>
+	<p>
+		<?php
+		echo esc_html(
+			sprintf(
+				__( 'Note: only the first %1$s of %2$s sites in this network were checked.', 'matomo' ),
+				number_format_i18n( $matomo_sites_limit ),
+				number_format_i18n( $matomo_sites_total )
+			)
+		);
+		?>
+	</p>
+<?php endif; ?>

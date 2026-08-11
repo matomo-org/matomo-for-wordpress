@@ -89,7 +89,9 @@ class Sync extends Feature {
 		Bootstrap::do_bootstrap();
 
 		if ( is_multisite() && function_exists( 'get_sites' ) ) {
-			foreach ( get_sites() as $site ) {
+			// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently leave
+			// every blog after that without a Matomo site
+			foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
 				if ( 1 === (int) $site->deleted ) {
 					continue;
 				}

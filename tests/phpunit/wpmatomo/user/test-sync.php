@@ -132,6 +132,29 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_delete_site( $blogid2 );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_not_limit_the_number_of_blogs_it_reconciles() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$limits = $this->capture_blog_query_limits(
+			function () {
+				$this->mock->sync_all();
+			}
+		);
+
+		$this->assertNotEmpty( $limits, 'expected sync_all() to query the list of blogs' );
+		$this->assertSame(
+			[ 0 ],
+			array_values( array_unique( $limits ) ),
+			'WP_Site_Query defaults to 100 blogs, so a limit leaves the rest unreconciled'
+		);
+	}
+
 	public function test_sync_current_site_does_not_fail() {
 		$this->assertNull( $this->sync->sync_current_users() );
 	}
@@ -892,6 +915,27 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertEmpty( User::get_matomo_user_login( $user_id ) );
 
 		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+	}
+
+	/**
+	 * @param callable $callback
+	 * @return int[] the `number` query var of every blog query the callback made
+	 */
+	private function capture_blog_query_limits( $callback ) {
+		$limits = [];
+
+		$capture = function ( $query ) use ( &$limits ) {
+			$limits[] = (int) $query->query_vars['number'];
+		};
+
+		add_action( 'pre_get_sites', $capture );
+		try {
+			$callback();
+		} finally {
+			remove_action( 'pre_get_sites', $capture );
+		}
+
+		return $limits;
 	}
 
 	private function get_matomo_user( $login ) {

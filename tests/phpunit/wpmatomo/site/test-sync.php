@@ -20,7 +20,7 @@ class MockMatomoSiteSync extends Sync {
 	}
 }
 
-class SiteSyncTest extends MatomoAnalytics_TestCase {
+class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Sync
@@ -107,6 +107,36 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 				),
 			),
 			$this->mock->synced_sites
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_not_limit_the_number_of_blogs_it_syncs() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$limits = [];
+
+		$capture = function ( $query ) use ( &$limits ) {
+			$limits[] = (int) $query->query_vars['number'];
+		};
+
+		add_action( 'pre_get_sites', $capture );
+		try {
+			$this->mock->sync_all();
+		} finally {
+			remove_action( 'pre_get_sites', $capture );
+		}
+
+		$this->assertNotEmpty( $limits, 'expected sync_all() to query the list of blogs' );
+		$this->assertSame(
+			[ 0 ],
+			array_values( array_unique( $limits ) ),
+			'WP_Site_Query defaults to 100 blogs, so a limit leaves the rest without a Matomo site'
 		);
 	}
 

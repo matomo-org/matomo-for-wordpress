@@ -257,7 +257,9 @@ class Sync extends Feature {
 
 	public function sync_all() {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			foreach ( get_sites() as $site ) {
+			// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently leave
+			// every blog after that unsynced
+			foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
 				if ( 1 === (int) $site->deleted ) {
 					continue;
 				}

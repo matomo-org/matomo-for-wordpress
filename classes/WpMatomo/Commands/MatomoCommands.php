@@ -175,7 +175,9 @@ class MatomoCommands extends WP_CLI_Command {
 			$importer = new Importer( $logger );
 			if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
 				$id_blog = ! empty( $assoc_args['blog'] ) ? $assoc_args['blog'] : null;
-				foreach ( get_sites() as $site ) {
+				// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently
+				// skip importing into every blog after that
+				foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
 					/** @var WP_Site $site */
 					if ( is_null( $id_blog ) || ( $site->blog_id === $id_blog ) ) {
 						switch_to_blog( $site->blog_id );
@@ -214,7 +216,9 @@ class MatomoCommands extends WP_CLI_Command {
 	 */
 	public function update( $args, $assoc_args ) {
 		if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
-			foreach ( get_sites() as $site ) {
+			// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently leave
+			// every blog after that un-updated
+			foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
 				/** @var WP_Site $site */
 				switch_to_blog( $site->blog_id );
 				// this way we make sure all blogs get updated eventually
