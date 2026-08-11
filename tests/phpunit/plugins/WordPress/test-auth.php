@@ -8,6 +8,7 @@
  */
 
 use Piwik\Access;
+use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\View;
 use Piwik\API\Request as ApiRequest;
 use Piwik\AuthResult;
@@ -262,6 +263,71 @@ class WordPressAuthTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( 'nocapsuser', $result->getIdentity() );
 	}
 
+	public function test_authenticate_should_revoke_access_that_outranks_the_wp_capability() {
+		$this->skip_if_old_wordpress();
+
+		$wp_user_id = $this->create_mapped_user( 'downgraded', 'downgraded@example.com', 'downgraded' );
+		( new WP_User( $wp_user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		$idsite = $this->get_current_idsite();
+
+		// the admin access a sync left behind before the WordPress side was downgraded to view
+		( new Model() )->addUserAccess( 'downgraded', Admin::ID, [ $idsite ] );
+
+		$password = $this->create_application_password( $wp_user_id );
+
+		wp_set_current_user( 0 );
+		$_SERVER['PHP_AUTH_USER'] = 'downgraded';
+		$_SERVER['PHP_AUTH_PW']   = $password;
+
+		$auth   = new Auth();
+		$result = $auth->authenticate();
+
+		$this->assertTrue( $result->wasAuthenticationSuccessful() );
+
+		// matomo's authorisation layer reads the access table, so it must no longer see admin
+		Access::getInstance()->reloadAccess( $auth );
+
+		$admin_sites = array_map( 'intval', Access::getInstance()->getSitesIdWithAdminAccess() );
+		$view_sites  = array_map( 'intval', Access::getInstance()->getSitesIdWithAtLeastViewAccess() );
+
+		$this->assertNotContains( (int) $idsite, $admin_sites );
+		$this->assertContains( (int) $idsite, $view_sites );
+
+		$this->assertSame( View::ID, $this->get_access_for_idsite( 'downgraded', $idsite ) );
+	}
+
+	public function test_authenticate_should_not_revoke_access_when_the_capabilities_feature_is_not_registered() {
+		$this->skip_if_old_wordpress();
+
+		$wp_user_id = $this->create_mapped_user( 'safemodeuser', 'safemodeuser@example.com', 'safemodeuser' );
+		( new WP_User( $wp_user_id ) )->add_role( 'administrator' );
+
+		$idsite = $this->get_current_idsite();
+
+		( new Model() )->addUserAccess( 'safemodeuser', Admin::ID, [ $idsite ] );
+
+		$password = $this->create_application_password( $wp_user_id );
+
+		wp_set_current_user( 0 );
+		$_SERVER['PHP_AUTH_USER'] = 'safemodeuser';
+		$_SERVER['PHP_AUTH_PW']   = $password;
+
+		$capabilities = WpMatomo::get_active_feature( Capabilities::class );
+		$this->assertNotEmpty( $capabilities, 'Capabilities is expected to be registered by default' );
+
+		$capabilities->remove_hooks();
+		try {
+			$result = ( new Auth() )->authenticate();
+		} finally {
+			$capabilities->register_hooks();
+		}
+
+		// safe mode cannot resolve capabilities, so it must not conclude everyone lost their access
+		$this->assertTrue( $result->wasAuthenticationSuccessful() );
+		$this->assertSame( Admin::ID, $this->get_access_for_idsite( 'safemodeuser', $idsite ) );
+	}
+
 	private function authenticate_with_token( $token ) {
 		$auth = new Auth();
 		$auth->setLogin( null );
@@ -320,5 +386,20 @@ class WordPressAuthTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	private function get_current_idsite() {
 		return ( new Site() )->get_current_matomo_site_id();
+	}
+
+	/**
+	 * @param string $matomo_login
+	 * @param int    $idsite
+	 * @return string|null
+	 */
+	private function get_access_for_idsite( $matomo_login, $idsite ) {
+		foreach ( ( new Model() )->getSitesAccessFromUser( $matomo_login ) as $access ) {
+			if ( (int) $access['site'] === (int) $idsite ) {
+				return $access['access'];
+			}
+		}
+
+		return null;
 	}
 }

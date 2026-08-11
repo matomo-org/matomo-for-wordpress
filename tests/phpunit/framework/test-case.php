@@ -24,6 +24,10 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	protected $overwrite_wpdb = true;
 
+	protected $tracker_user;
+
+	protected $application_password;
+
 	/**
 	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
 	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
@@ -99,6 +103,92 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		}
 
 		return $id;
+	}
+
+	protected function assert_tracking_response( $tracking_response ) {
+		$this->assertEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	protected function assert_not_tracking_response( $tracking_response ) {
+		$this->assertNotEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	protected function make_local_tracker( $date_time, $set_auth = false ) {
+		\WpMatomo\Bootstrap::do_bootstrap();
+
+		include_once __DIR__ . '/test-local-tracker.php';
+		$site     = new \WpMatomo\Site();
+		$paths    = new \WpMatomo\Paths();
+		$endpoint = $paths->get_tracker_api_rest_api_endpoint();
+		$tracker  = new MatomoLocalTracker( $site->get_current_matomo_site_id(), $endpoint );
+
+		$tracker->setForceVisitDateTime( $date_time );
+		$tracker->setIp( '156.5.3.2' );
+		// Optional tracking
+		$tracker->setUserAgent( 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 (.NET CLR 3.5.30729)' );
+		$tracker->setBrowserLanguage( 'fr' );
+		$tracker->setLocalTime( '12:34:06' );
+		$tracker->setResolution( 1024, 768 );
+		$tracker->setBrowserHasCookies( true );
+		$tracker->setPlugins( true, true, false );
+
+		if ( $set_auth ) {
+			$this->create_user_for_tracker();
+			$tracker->setTokenAuth( 'testtesttest' ); // ignored
+			$tracker->setExtraServerVar( 'PHP_AUTH_USER', $this->tracker_user );
+			$tracker->setExtraServerVar( 'PHP_AUTH_PW', $this->application_password );
+		}
+
+		return $tracker;
+	}
+
+	protected function create_user_for_tracker() {
+		if ( isset( $this->tracker_user ) ) {
+			return;
+		}
+
+		$user_id = self::factory()->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
+		wp_set_current_user( $user_id );
+		$user_login = wp_get_current_user()->user_login;
+
+		$this->assertNotEmpty( $user_login );
+
+		$sync = new \WpMatomo\User\Sync();
+		$sync->sync_all();
+
+		$user_model = new \Piwik\Plugins\UsersManager\Model();
+		$this->assertNotEmpty( $user_model->getUser( \WpMatomo\User::get_matomo_user_login( $user_id ) ) );
+
+		\Piwik\Tracker\TrackerConfig::setConfigValue( 'allow_wp_app_password_auth', 1 );
+
+		// add application password
+		// NOTE: we don't skip all the tests here to make sure the auth code
+		// works when application password functions do not exist
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.6', '>=' ) ) {
+			add_filter( 'wp_is_application_passwords_available', '__return_true' );
+
+			$request = new WP_REST_Request( 'POST', '/wp/v2/users/me/application-passwords' );
+			$request->set_param( 'name', 'test' );
+			$response = rest_get_server()->dispatch( $request );
+
+			$response_data        = $response->get_data();
+			$application_password = $response_data['password'];
+
+			$this->application_password = $application_password;
+		}
+
+		$this->tracker_user = $user_login;
+	}
+
+	private function get_expected_tracking_response() {
+		$trans_gif_64 = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$expected_response = base64_decode( $trans_gif_64 );
+		return $expected_response;
 	}
 
 	private function delete_extraneous_blogs() {

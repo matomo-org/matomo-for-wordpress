@@ -42,6 +42,12 @@ class Capabilities extends Feature {
 	const KEY_STEALTH   = 'stealth_matomo';
 
 	/**
+	 * Matomo has Role classes for view/write/admin, but superuser access is a flag on the user
+	 * rather than a role, so there is no Matomo constant to reuse for it.
+	 */
+	const ROLE_SUPERUSER = 'superuser';
+
+	/**
 	 * @var Settings
 	 */
 	private $settings;
@@ -158,12 +164,72 @@ class Capabilities extends Feature {
 	}
 
 	public function get_all_capabilities_sorted_by_highest_permission() {
+		return array_keys( self::get_capability_role_map() );
+	}
+
+	/**
+	 * The Matomo access each Matomo capability corresponds to, highest permission first.
+	 *
+	 * The values are Matomo role IDs (Piwik\Access\Role\Admin::ID and friends), spelled out
+	 * literally because this map is reached from the user_has_cap filter, long before Matomo is
+	 * bootstrapped and those classes can be loaded. WpMatomoCapabilitiesTest asserts they match.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function get_capability_role_map() {
 		return [
-			self::KEY_SUPERUSER,
-			self::KEY_ADMIN,
-			self::KEY_WRITE,
-			self::KEY_VIEW,
+			self::KEY_SUPERUSER => self::ROLE_SUPERUSER,
+			self::KEY_ADMIN     => 'admin',
+			self::KEY_WRITE     => 'write',
+			self::KEY_VIEW      => 'view',
 		];
+	}
+
+	/**
+	 * @param int|\WP_User $user
+	 * @return string|null a Matomo role ID or self::ROLE_SUPERUSER, null when they are entitled to
+	 *                     no access at all
+	 */
+	public static function get_highest_role_for_user( $user ) {
+		foreach ( self::get_capability_role_map() as $capability => $role ) {
+			if ( user_can( $user, $capability ) ) {
+				return $role;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param string|null $role
+	 * @return int
+	 */
+	public static function get_role_ranking( $role ) {
+		$roles = array_reverse( array_values( self::get_capability_role_map() ) );
+
+		$rank = array_search( $role, $roles, true );
+
+		return false === $rank ? 0 : $rank + 1;
+	}
+
+	/**
+	 * Whether Matomo capabilities can be resolved for a user in this request. They cannot in safe
+	 * mode, where this feature is not registered and user_can() would report that nobody, not even
+	 * an administrator, has any Matomo capability.
+	 *
+	 * @return bool
+	 */
+	public static function is_capability_check_available() {
+		if ( ! class_exists( '\WpMatomo' ) ) {
+			return false;
+		}
+
+		$capabilities = \WpMatomo::get_active_feature( self::class );
+		if ( empty( $capabilities ) ) {
+			return false;
+		}
+
+		return false !== has_filter( 'user_has_cap', [ $capabilities, 'add_capabilities_to_user' ] );
 	}
 
 	protected function has_any_higher_permission( $cap_to_find, $allcaps ) {

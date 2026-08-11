@@ -3,6 +3,8 @@
  * @package matomo
  */
 
+use Piwik\Access\Role\Admin;
+use Piwik\Access\Role\View;
 use Piwik\Plugins\UsersManager\Model;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;
@@ -815,10 +817,117 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
 	}
 
+	public function test_sync_user_if_access_exceeds_capabilities_should_downgrade_an_access_row_that_outranks_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the admin access a sync left behind before the user was downgraded to view in WordPress
+		$this->set_access_for_current_site( $login, Admin::ID );
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_leave_an_access_row_that_matches_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_not_upgrade_an_access_row_below_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// promoted in WordPress but not synced yet. granting access is a sync's job, not ours
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+		$this->assertTrue( user_can( new WP_User( $user_id ), Capabilities::KEY_ADMIN ) );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_clear_a_stale_superuser_flag() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the flag a sync left behind after the WordPress side was downgraded
+		( new Model() )->setSuperUserAccess( $login, true );
+		$this->assertNotEmpty( $this->get_matomo_user( $login )['superuser_access'] );
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertEmpty( $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_do_nothing_when_matomo_capabilities_cannot_be_resolved() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->set_access_for_current_site( $login, Admin::ID );
+
+		$capabilities = WpMatomo::get_active_feature( Capabilities::class );
+		$this->assertNotEmpty( $capabilities, 'Capabilities is expected to be registered by default' );
+
+		// safe mode: without the user_has_cap filter nobody resolves any matomo capability, so
+		// every user would look like they no longer qualify for the access they have
+		$capabilities->remove_hooks();
+		try {
+			$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+		} finally {
+			$capabilities->register_hooks();
+		}
+
+		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_do_nothing_when_the_user_is_not_mapped_to_a_matomo_user() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+
+		$this->assertEmpty( User::get_matomo_user_login( $user_id ) );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+	}
+
 	private function get_matomo_user( $login ) {
 		$model = new Model();
 
 		return $model->getUser( $login );
+	}
+
+	/**
+	 * @param string $login
+	 * @return string|null the Matomo access the login has to the current site
+	 */
+	private function get_access_for_current_site( $login ) {
+		$idsite = $this->get_current_site_id();
+
+		foreach ( ( new Model() )->getSitesAccessFromUser( $login ) as $access ) {
+			if ( (int) $access['site'] === (int) $idsite ) {
+				return $access['access'];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param string $login
+	 * @param string $role
+	 */
+	private function set_access_for_current_site( $login, $role ) {
+		$model  = new Model();
+		$idsite = $this->get_current_site_id();
+
+		$model->deleteUserAccess( $login, [ $idsite ] );
+		$model->addUserAccess( $login, $role, [ $idsite ] );
+
+		$this->assertSame( $role, $this->get_access_for_current_site( $login ) );
 	}
 
 	private function activate_matomo_plugin() {

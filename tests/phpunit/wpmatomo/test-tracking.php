@@ -6,7 +6,7 @@
 /**
  * @phpcs:disable WordPress.PHP.IniSet.Risky
  */
-class TrackingTest extends MatomoAnalytics_TestCase {
+class TrackingTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 

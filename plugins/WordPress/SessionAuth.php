@@ -43,6 +43,15 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
             if (!empty($permission)) {
                 $matomo_user = $this->findMatomoUser($user->ID);
+
+                // matomo's authorisation layer trusts the persisted per site role verbatim, so
+                // correct it now if it grants more than the user's live capabilities do. when
+                // findMatomoUser() just synced the user, this finds nothing to do.
+                if ((new User\Sync())->sync_user_if_access_exceeds_capabilities($user->ID, $matomo_user)) {
+                    // syncing can reallocate a contested login, so re-read the user it resolved to
+                    $matomo_user = $this->findMatomoUser($user->ID);
+                }
+
                 $token = $this->makeTemporaryToken($user->ID);
 
                 if (

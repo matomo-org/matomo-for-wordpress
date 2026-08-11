@@ -18,6 +18,7 @@ use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
 use WpMatomo\Capabilities;
 use WpMatomo\User;
+use WpMatomo\User\Sync;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -85,7 +86,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
     {
         $code = null;
 
-        if ($this->isCapabilityCheckAvailable()) {
+        if (Capabilities::is_capability_check_available()) {
             if (user_can($wpUserId, Capabilities::KEY_SUPERUSER)) {
                 $code = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
             } elseif (user_can($wpUserId, Capabilities::KEY_VIEW)) {
@@ -106,33 +107,22 @@ class Auth extends \Piwik\Plugins\Login\Auth
         }
 
         if ($code === null) {
-            // safe mode only, see isCapabilityCheckAvailable(). matomo capabilities cannot be
-            // resolved at all, so user_can() would reject everyone including administrators. fall
-            // back to the persisted access.
+            // safe mode only, see Capabilities::is_capability_check_available(). the hooks that
+            // synthesise most matomo capabilities are not registered, so user_can() would reject
+            // administrators and anyone covered by the role mapping. fall back to the persisted
+            // access.
             $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
+        } elseif ((new Sync())->sync_user_if_access_exceeds_capabilities($wpUserId, $matomoUser)) {
+            // matomo's authorization layer trusts the persisted per site role verbatim, so the call
+            // above corrects it when it grants more than the user's live WordPress capabilities do.
+            // syncing can remove a user from Matomo, so re-read the one we authenticate as.
+            $login = User::get_matomo_user_login($wpUserId);
+            if (empty($login)) {
+                return null;
+            }
         }
 
         return new AuthResult($code, $login, $this->token_auth);
-    }
-
-    /**
-     * Whether matomo capabilities can be resolved at all in this request. Normally
-     * available, but in safe mode, it's not.
-     *
-     * @return bool
-     */
-    private function isCapabilityCheckAvailable()
-    {
-        if (!class_exists('\WpMatomo')) {
-            return false;
-        }
-
-        $capabilities = \WpMatomo::get_active_feature(Capabilities::class);
-        if (empty($capabilities)) {
-            return false;
-        }
-
-        return has_filter('user_has_cap', [$capabilities, 'add_capabilities_to_user']) !== false;
     }
 
     private function isAppPasswordInTokenAuthAllowed()

@@ -11,12 +11,10 @@ namespace WpMatomo\User;
 
 use Exception;
 use Piwik\Access;
-use Piwik\Access\Role\Admin;
-use Piwik\Access\Role\View;
-use Piwik\Access\Role\Write;
 use Piwik\Auth\Password;
 use Piwik\Common;
 use Piwik\Date;
+use Piwik\Db;
 use Piwik\Plugin;
 use Piwik\Plugins\LanguagesManager\API;
 use Piwik\Plugins\UsersManager;
@@ -114,6 +112,86 @@ class Sync extends Feature {
 		unset( $this->pending_removals[ $wp_user_id ][ $blog_id ] );
 
 		$this->sync_user_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * Corrects a Matomo access row that grants the user more than their live WordPress capabilities
+	 * do, before anything reads it.
+	 *
+	 * Only ever downgrades. A user promoted in WordPress still waits for a regular sync.
+	 *
+	 * @param int        $wp_user_id
+	 * @param array|null $matomo_user the already fetched Matomo user row, to save a query
+	 *
+	 * @return bool whether the user was re-synced
+	 */
+	public function sync_user_if_access_exceeds_capabilities( $wp_user_id, $matomo_user = null ) {
+		if ( ! Capabilities::is_capability_check_available() ) {
+			return false;
+		}
+
+		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
+		if ( ! $idsite ) {
+			return false;
+		}
+
+		$matomo_login = User::get_matomo_user_login( $wp_user_id );
+		if ( ! $matomo_login ) {
+			return false; // nothing was ever persisted for this user
+		}
+
+		$wp_user = get_userdata( $wp_user_id );
+		if ( empty( $wp_user ) ) {
+			return false;
+		}
+
+		Bootstrap::do_bootstrap();
+
+		$user_model = new Model();
+
+		if ( null === $matomo_user ) {
+			$matomo_user = $user_model->getUser( $matomo_login );
+		}
+
+		if ( empty( $matomo_user ) ) {
+			return false;
+		}
+
+		$live_rank      = Capabilities::get_role_ranking( Capabilities::get_highest_role_for_user( $wp_user ) );
+		$persisted_rank = $this->get_persisted_role_rank( $matomo_login, $matomo_user, $idsite );
+
+		if ( $persisted_rank <= $live_rank ) {
+			return false;
+		}
+
+		$this->sync_user_for_current_blog( $wp_user_id );
+
+		return true;
+	}
+
+	/**
+	 * @param string $matomo_login
+	 * @param array  $matomo_user
+	 * @param int    $idsite
+	 *
+	 * @return int
+	 */
+	private function get_persisted_role_rank( $matomo_login, $matomo_user, $idsite ) {
+		if ( ! empty( $matomo_user['superuser_access'] ) ) {
+			return Capabilities::get_role_ranking( Capabilities::ROLE_SUPERUSER );
+		}
+
+		$rows = Db::fetchAll(
+			'SELECT access FROM ' . Common::prefixTable( 'access' ) . ' WHERE login = ? AND idsite = ?',
+			[ $matomo_login, (int) $idsite ]
+		);
+
+		$rank = 0;
+		foreach ( $rows as $row ) {
+			$rank = max( $rank, Capabilities::get_role_ranking( $row['access'] ) );
+		}
+
+		return $rank;
 	}
 
 	/**
@@ -388,20 +466,13 @@ class Sync extends Feature {
 	protected function sync_user_access( $user, $idsite, $user_model ) {
 		$mapped_matomo_login = User::get_matomo_user_login( $user->ID );
 
-		if ( user_can( $user, Capabilities::KEY_SUPERUSER ) ) {
+		$role = Capabilities::get_highest_role_for_user( $user );
+
+		if ( Capabilities::ROLE_SUPERUSER === $role ) {
 			return [
 				'login'        => $this->ensure_user_exists( $user ),
 				'is_superuser' => true,
 			];
-		}
-
-		$role = null;
-		if ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
-			$role = Admin::ID;
-		} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
-			$role = Write::ID;
-		} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
-			$role = View::ID;
 		}
 
 		if ( null === $role ) {
