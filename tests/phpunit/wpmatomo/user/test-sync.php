@@ -50,6 +50,15 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->assume_admin_page();
+
+		// if left active, the plugin's own Sync would start syncing on every role change. these
+		// tests drive their own instance, so leave only the test one hooked
+		$registered = WpMatomo::get_active_feature( Sync::class );
+		if ( $registered ) {
+			$registered->remove_hooks();
+		}
+
 		$this->sync            = new MockMatomoUserSync();
 		$this->sync->mock_sync = false;
 		$this->mock            = new MockMatomoUserSync();

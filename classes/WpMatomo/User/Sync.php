@@ -24,6 +24,7 @@ use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Feature;
 use WpMatomo\Logger;
+use WpMatomo\Request;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Site;
 use WpMatomo\User;
@@ -63,10 +64,6 @@ class Sync extends Feature {
 		$this->user   = new User();
 	}
 
-	public function is_active() {
-		return is_admin();
-	}
-
 	public function register_hooks() {
 		add_action( 'add_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'remove_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
@@ -81,6 +78,24 @@ class Sync extends Feature {
 	}
 
 	/**
+	 * Tests only
+	 *
+	 * @internal
+	 */
+	public function remove_hooks() {
+		remove_action( 'add_user_role', [ $this, 'sync_current_users_1000' ], 10 );
+		remove_action( 'remove_user_role', [ $this, 'sync_current_users_1000' ], 10 );
+		remove_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], 10 );
+		remove_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], 10 );
+		remove_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], 10 );
+		remove_action( 'user_register', [ $this, 'sync_current_users_1000' ], 10 );
+		remove_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], 10 );
+		remove_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], 10 );
+		remove_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], 10 );
+		remove_action( 'profile_update', [ $this, 'sync_maybe_background' ], 10 );
+	}
+
+	/**
 	 * WordPress fires this action before it removes the user's capabilities, so we can't sync the
 	 * user here, the access it has to the site would not be removed. Instead, we remember them
 	 * and have on_clean_user_cache() do the actual re-syncing.
@@ -89,6 +104,11 @@ class Sync extends Feature {
 	 * @param int $blog_id
 	 */
 	public function on_remove_user_from_blog( $wp_user_id, $blog_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			// nothing queued means on_clean_user_cache() has nothing to do either
+			return;
+		}
+
 		$blog_id = (int) $blog_id;
 		$blog_id = $blog_id ? $blog_id : get_current_blog_id();
 
@@ -120,6 +140,10 @@ class Sync extends Feature {
 	 * @param int $wp_user_id
 	 */
 	public function on_super_admin_change( $wp_user_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
 		if ( ! function_exists( 'is_multisite' ) || ! is_multisite() ) {
 			return;
 		}
@@ -376,6 +400,15 @@ class Sync extends Feature {
 	 * @see Sync::sync_current_users()
 	 */
 	public function sync_current_users_1000() {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			// these hooks are not admin only, so this may run somewhere wp-admin/includes is not loaded
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		if ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
 			// @see https://github.com/matomo-org/matomo-for-wordpress/issues/577
 			return;
@@ -659,5 +692,9 @@ class Sync extends Feature {
 			$parts = explode( '_', $locale );
 		}
 		return ! empty( $parts[0] ) ? $parts[0] : null;
+	}
+
+	private function is_sync_allowed_for_request() {
+		return ! Request::is_frontend();
 	}
 }
