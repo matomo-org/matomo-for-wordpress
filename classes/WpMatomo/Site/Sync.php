@@ -21,6 +21,7 @@ use WpMatomo\Bootstrap;
 use WpMatomo\Feature;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
+use WpMatomo\Request;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync\SyncConfig;
@@ -57,8 +58,11 @@ class Sync extends Feature {
 		$this->config_sync = new SyncConfig( $settings );
 	}
 
-	public function is_active() {
-		return is_admin();
+	/**
+	 * @return bool
+	 */
+	private function is_sync_allowed_for_request() {
+		return ! Request::is_frontend();
 	}
 
 	public function register_hooks() {
@@ -71,6 +75,15 @@ class Sync extends Feature {
 	}
 
 	public function sync_current_site_ignore_error() {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			// these hooks are not admin only, so this may run somewhere wp-admin/includes is not loaded
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		if ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
 			// @see https://github.com/matomo-org/matomo-for-wordpress/issues/577
 			return;

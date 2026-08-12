@@ -204,8 +204,27 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 				continue;
 			}
 
+			$this->delete_matomo_upload_dir( $blog['blog_id'] );
+
 			wpmu_delete_blog( $blog['blog_id'] );
 		}
+	}
+
+	/**
+	 * @param int $blog_id
+	 */
+	private function delete_matomo_upload_dir( $blog_id ) {
+		switch_to_blog( $blog_id );
+
+		try {
+			// removes the blog's matomo upload and cache dirs, and nothing else
+			( new \WpMatomo\Paths() )->uninstall();
+			// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+		} catch ( \Exception $e ) {
+			// ignore; a blog we could not clean up must not stop the rest from being deleted
+		}
+
+		restore_current_blog();
 	}
 
 	/**
