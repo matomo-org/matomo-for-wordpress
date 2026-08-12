@@ -127,6 +127,7 @@ class Sync extends Feature {
 						if ( $installer->can_be_installed() ) {
 							$installer->install();
 						} else {
+							$this->logger->log( sprintf( 'Matomo cannot be installed for blog: %s, skipping it.', $site->blog_id ) );
 							continue;
 						}
 					}

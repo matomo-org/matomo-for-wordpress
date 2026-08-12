@@ -42,6 +42,12 @@ class Sync extends Feature {
 	const MAX_USER_NAME_LENGTH = 95;
 
 	/**
+	 * Above this many users on a blog, syncing them all is too much work for the request that
+	 * happened to change one of them. The scheduled task does it instead.
+	 */
+	const MAX_INLINE_SYNC_USERS = 1000;
+
+	/**
 	 * @var Logger
 	 */
 	private $logger;
@@ -417,9 +423,14 @@ class Sync extends Feature {
 		if ( $idsite ) {
 			$num_users = count_users();
 			$num_users = $num_users['total_users'];
-			if ( $num_users < 1000 ) {
+			if ( $num_users < self::MAX_INLINE_SYNC_USERS ) {
 				$users = $this->get_users();
 				$this->sync_users( $users, $idsite );
+			} else {
+				// too expensive to sync in this request
+				$this->logger->log( 'Deferring user sync to a scheduled task, since this blog has ' . $num_users . ' users' );
+
+				wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
 			}
 		}
 	}
