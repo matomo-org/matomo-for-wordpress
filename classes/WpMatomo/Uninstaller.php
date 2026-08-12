@@ -153,14 +153,19 @@ class Uninstaller {
 
 		$db_settings      = new \WpMatomo\Db\Settings();
 		$installed_tables = $db_settings->get_installed_matomo_tables();
+
+		if ( empty( $installed_tables ) ) {
+			return;
+		}
+
 		$this->logger->log( sprintf( 'Matomo will now drop %s matomo tables', count( $installed_tables ) ) );
 
+		$quoted_tables = [];
 		foreach ( $installed_tables as $table_name ) {
-			// temporary table are used in tests and just making sure they are being removed
-			// $wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
-			// two spaces between drop and table so it won't be replaced in WP tests
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
-			$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
+			$quoted_tables[] = '`' . $table_name . '`';
 		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( 'DROP TABLE IF EXISTS ' . implode( ', ', $quoted_tables ) );
 	}
 }

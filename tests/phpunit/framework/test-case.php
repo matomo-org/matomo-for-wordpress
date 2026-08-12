@@ -72,7 +72,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		parent::tearDown();
 
-		$this->restore_db_snapshot();
+		self::restore_db_snapshot();
 	}
 
 	protected function assume_admin_page() {
@@ -253,28 +253,60 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	}
 
 	private function snapshot_db_data() {
-		global $wpdb;
-
 		if ( ! empty( self::$initial_table_data ) ) {
 			return;
 		}
 
-		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
-		foreach ( $tables as $row ) {
-			$table                              = reset( $row );
-			self::$initial_table_data[ $table ] = $wpdb->get_results( "SELECT * FROM `$table`", ARRAY_A );
-		}
+		self::$initial_table_data = self::capture_db_snapshot();
 	}
 
-	private function restore_db_snapshot() {
-		global $wpdb, $table_prefix;
+	/**
+	 * @return array table name => [ 'create' => string|null, 'rows' => array ]
+	 */
+	protected static function capture_db_snapshot() {
+		global $wpdb;
+
+		$data = [];
 
 		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
 		foreach ( $tables as $row ) {
 			$table = reset( $row );
+
+			$create = $wpdb->get_row( "SHOW CREATE TABLE `$table`", ARRAY_N );
+
+			$data[ $table ] = [
+				'create' => isset( $create[1] ) ? $create[1] : null,
+				'rows'   => $wpdb->get_results( "SELECT * FROM `$table`", ARRAY_A ),
+			];
+		}
+
+		return $data;
+	}
+
+	protected static function restore_db_snapshot() {
+		global $wpdb, $table_prefix;
+
+		$existing = [];
+		foreach ( $wpdb->get_results( 'SHOW TABLES', ARRAY_A ) as $row ) {
+			$existing[ reset( $row ) ] = true;
+		}
+
+		// create tables that are missing from the db
+		foreach ( self::$initial_table_data as $table => $snapshot ) {
+			if ( isset( $existing[ $table ] ) || empty( $snapshot['create'] ) ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SHOW CREATE TABLE output, nothing to prepare
+			$wpdb->query( $snapshot['create'] );
+			$existing[ $table ] = true;
+		}
+
+		// then fill tables with snapshot data
+		foreach ( array_keys( $existing ) as $table ) {
 			$wpdb->query( "TRUNCATE `$table`" );
 
-			$rows = ! empty( self::$initial_table_data[ $table ] ) ? self::$initial_table_data[ $table ] : [];
+			$rows = ! empty( self::$initial_table_data[ $table ]['rows'] ) ? self::$initial_table_data[ $table ]['rows'] : [];
 			if ( ! empty( $rows ) ) {
 				foreach ( $rows as $data_row ) {
 					$wpdb->insert( $table, $data_row );

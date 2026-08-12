@@ -104,14 +104,9 @@ class Settings {
 			$table_names[] = array_shift( $table_name_to_look_for );
 		}
 
-		$table_names_to_look_for = $this->get_matomo_tables();
-
-		foreach ( range( 2010, gmdate( 'Y' ) + 1 ) as $year ) {
-			foreach ( range( 1, 12 ) as $month ) {
-				$table_names_to_look_for[] = 'archive_numeric_' . $year . '_' . str_pad( $month, 2, '0' );
-				$table_names_to_look_for[] = 'archive_blob_' . $year . '_' . str_pad( $month, 2, '0' );
-			}
-		}
+		// filter and code that adds tables to the list of installed tables kept here for
+		// backwards compatibility
+		$table_names_to_look_for = [];
 		$table_names_to_look_for = apply_filters( 'matomo_install_tables', $table_names_to_look_for );
 
 		foreach ( $table_names_to_look_for as $table_name_to_look_for ) {
