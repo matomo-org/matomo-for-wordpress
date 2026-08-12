@@ -303,22 +303,93 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		}
 
 		// then fill tables with snapshot data
+		$has_rows = self::get_tables_with_at_least_one_row( array_keys( $existing ) );
 		foreach ( array_keys( $existing ) as $table ) {
-			$wpdb->query( "TRUNCATE `$table`" );
-
 			$rows = ! empty( self::$initial_table_data[ $table ]['rows'] ) ? self::$initial_table_data[ $table ]['rows'] : [];
-			if ( ! empty( $rows ) ) {
-				foreach ( $rows as $data_row ) {
-					$wpdb->insert( $table, $data_row );
-				}
-			} else {
+
+			if ( empty( $rows ) ) {
 				$is_multisite_table = preg_match( '/^' . preg_quote( $table_prefix, '/' ) . '\d+_/', $table );
 				if ( $is_multisite_table ) {
 					// WordPress will only initialize a site if the site table for it does not exist
 					// so we have to drop these if present, not just truncate.
 					$wpdb->query( "DROP TABLE `$table`" );
+				} elseif ( ! empty( $has_rows[ $table ] ) ) {
+					$wpdb->query( "TRUNCATE `$table`" );
 				}
+
+				continue;
 			}
+
+			if ( ! empty( $has_rows[ $table ] ) ) {
+				$wpdb->query( "TRUNCATE `$table`" );
+			}
+
+			self::insert_snapshot_rows( $table, $rows );
+		}
+	}
+
+	/**
+	 * @param string[] $tables
+	 * @return array table name => bool
+	 */
+	private static function get_tables_with_at_least_one_row( $tables ) {
+		global $wpdb;
+
+		if ( empty( $tables ) ) {
+			return [];
+		}
+
+		$selects = [];
+		foreach ( $tables as $table ) {
+			$selects[] = "SELECT '" . $wpdb->_real_escape( $table ) . "' AS snapshot_table, EXISTS( SELECT 1 FROM `$table` ) AS has_rows";
+		}
+
+		$has_rows = [];
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- table names come from SHOW TABLES
+		foreach ( (array) $wpdb->get_results( implode( ' UNION ALL ', $selects ), ARRAY_A ) as $row ) {
+			$has_rows[ $row['snapshot_table'] ] = ! empty( $row['has_rows'] );
+		}
+
+		return $has_rows;
+	}
+
+	/**
+	 * @param string $table
+	 * @param array  $rows
+	 */
+	private static function insert_snapshot_rows( $table, $rows ) {
+		global $wpdb;
+
+		$columns    = array_keys( reset( $rows ) );
+		$column_sql = '`' . implode( '`, `', $columns ) . '`';
+		$insert_sql = "INSERT INTO `$table` ($column_sql) VALUES ";
+
+		$values = [];
+		$length = 0;
+
+		foreach ( $rows as $data_row ) {
+			$cells = [];
+			foreach ( $columns as $column ) {
+				$value   = isset( $data_row[ $column ] ) ? $data_row[ $column ] : null;
+				$cells[] = null === $value ? 'NULL' : "'" . $wpdb->_real_escape( $value ) . "'";
+			}
+
+			$value_sql = '(' . implode( ', ', $cells ) . ')';
+			$values[]  = $value_sql;
+			$length   += strlen( $value_sql );
+
+			// option values can be large, so flush before getting anywhere near max_allowed_packet
+			if ( $length > 500000 ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- values escaped above
+				$wpdb->query( $insert_sql . implode( ', ', $values ) );
+				$values = [];
+				$length = 0;
+			}
+		}
+
+		if ( ! empty( $values ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- values escaped above
+			$wpdb->query( $insert_sql . implode( ', ', $values ) );
 		}
 	}
 
