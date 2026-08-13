@@ -1092,6 +1092,61 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
 	}
 
+	public function test_on_clean_user_cache_should_not_touch_other_users_when_the_removed_user_was_never_mapped() {
+		$this->activate_matomo_plugin();
+
+		$other_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$other_login = $this->grant_matomo_view_and_sync( $other_id );
+
+		// Matomo never knew about this one, so get_matomo_user_login() gives back false and every
+		// cleanup query below runs with a false login
+		$unmapped_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->assertFalse( User::get_matomo_user_login( $unmapped_id ) );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $unmapped_id, get_current_blog_id() );
+		$sync->on_clean_user_cache( $unmapped_id );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $other_login ) );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $other_login ) );
+		$this->assertEquals( '1', $this->get_matomo_user( 'admin' )['superuser_access'] );
+	}
+
+	public function test_sync_current_users_should_not_leave_a_per_site_access_row_on_a_superuser() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+
+		( new WP_User( $user_id ) )->add_role( 'administrator' );
+
+		( new Sync() )->sync_current_users();
+
+		// superuser_access already grants every site, so the row the earlier role added is unneeded
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertNull( $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_clear_superuser_access_when_the_identity_survives() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
+
+		// add view access row in addition to the superuser flag above
+		( new Model() )->addUserAccess( $login, View::ID, [ $this->get_current_site_id() + 1000 ] );
+
+		( new WP_User( $user_id ) )->remove_role( 'administrator' ); // user will have no access after this
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertEquals( '0', $this->get_matomo_user( $login )['superuser_access'] );
+	}
+
 	public function test_sync_user_if_access_exceeds_capabilities_should_revoke_when_no_capability_resolves_for_the_user() {
 		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
 		$login   = $this->grant_matomo_view_and_sync( $user_id );

@@ -294,20 +294,24 @@ class Sync extends Feature {
 			function () use ( $user_model, $wp_user, $wp_user_id, $idsite ) {
 				$mapped_matomo_login = User::get_matomo_user_login( $wp_user_id );
 
-				$access = $this->sync_user_access( $wp_user, $idsite, $user_model );
-
-				if ( $access['login'] ) {
-					// the user still legitimately has access here, eg. a network super admin who is
-					// no longer a member of this blog
-					if ( $access['is_superuser'] ) {
-						$user_model->setSuperUserAccess( $access['login'], true );
-					}
-
+				$has_access = (bool) $this->sync_user_access_for_site( $wp_user, $idsite, $user_model );
+				if ( $has_access ) { // user has access
 					return;
 				}
 
-				if ( $mapped_matomo_login && ! $user_model->getSiteAccessCount( $mapped_matomo_login ) ) {
-					// user has access to no sites, delete the user also
+				// user has no access but was never mapped originally, and thus has no matomo user
+				if ( ! $mapped_matomo_login ) {
+					return;
+				}
+
+				// user still exists in matomo but has no access to matomo when determined by
+				// WP roles
+
+				// user does not have super user access (otherwise, a login would have been returned above)
+				$user_model->setSuperUserAccess( $mapped_matomo_login, false );
+
+				// user may still have access to other sites, but if they don't, delete the user entirely
+				if ( ! $user_model->getSiteAccessCount( $mapped_matomo_login ) ) {
 					$this->delete_matomo_user( $user_model, $mapped_matomo_login );
 				}
 			}
@@ -497,7 +501,6 @@ class Sync extends Feature {
 
 		$this->logger->log( 'Matomo will now sync ' . count( $users ) . ' users' );
 
-		$super_users                  = [];
 		$logins_with_some_view_access = [ 'anonmyous' ]; // may or may not exist... we don't want to delete this user though
 		$user_model                   = new Model();
 
@@ -508,16 +511,10 @@ class Sync extends Feature {
 			// todo if we used transactions we could commit it after a possibly new access has been added
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
-			$access = $this->sync_user_access( $user, $idsite, $user_model );
-
-			$matomo_login = $access['login'];
+			$matomo_login = $this->sync_user_access_for_site( $user, $idsite, $user_model );
 
 			if ( $matomo_login ) {
 				$logins_with_some_view_access[] = $matomo_login;
-
-				if ( $access['is_superuser'] ) {
-					$super_users[ $matomo_login ] = $user;
-				}
 
 				$locale = get_user_locale( $user->ID );
 				$lang   = self::get_matomo_lang_from_locale( $locale );
@@ -557,10 +554,6 @@ class Sync extends Feature {
 			}
 		}
 
-		foreach ( $super_users as $matomo_login => $user ) {
-			$user_model->setSuperUserAccess( $matomo_login, true );
-		}
-
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
 		$all_users                    = $user_model->getUsers( [] );
 		foreach ( $all_users as $all_user ) {
@@ -582,19 +575,24 @@ class Sync extends Feature {
 	 * @param int|string $idsite
 	 * @param Model      $user_model
 	 *
-	 * @return array{login: string|null, is_superuser: bool} login is null when the user should have
-	 *                                                       no access to this site at all
+	 * @return string|null matomo login or null when the user has no access
 	 */
-	protected function sync_user_access( $user, $idsite, $user_model ) {
+	protected function sync_user_access_for_site( $user, $idsite, $user_model ) {
 		$mapped_matomo_login = User::get_matomo_user_login( $user->ID );
 
 		$role = Capabilities::get_highest_role_for_user( $user );
 
 		if ( Capabilities::ROLE_SUPERUSER === $role ) {
-			return [
-				'login'        => $this->ensure_user_exists( $user ),
-				'is_superuser' => true,
-			];
+			$matomo_login = $this->ensure_user_exists( $user );
+
+			$user_model->setSuperUserAccess( $matomo_login, true );
+
+			// superuser_access already grants every site, so a per site row is redundant here. Left
+			// behind it outlives the superuser flag and goes on granting this site by itself, and it
+			// keeps getSiteAccessCount() non zero, which is what stops the identity being cleaned up
+			$user_model->deleteUserAccess( $matomo_login, [ $idsite ] );
+
+			return $matomo_login;
 		}
 
 		if ( null === $role ) {
@@ -602,10 +600,7 @@ class Sync extends Feature {
 				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
 			}
 
-			return [
-				'login'        => null,
-				'is_superuser' => false,
-			];
+			return null;
 		}
 
 		$matomo_login = $this->ensure_user_exists( $user );
@@ -613,10 +608,7 @@ class Sync extends Feature {
 		$user_model->addUserAccess( $matomo_login, $role, [ $idsite ] );
 		$user_model->setSuperUserAccess( $matomo_login, false );
 
-		return [
-			'login'        => $matomo_login,
-			'is_superuser' => false,
-		];
+		return $matomo_login;
 	}
 
 	/**
