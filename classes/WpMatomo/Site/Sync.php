@@ -18,6 +18,7 @@ use Piwik\Plugins\SitesManager;
 use Piwik\Plugins\SitesManager\Model;
 use WP_Site;
 use WpMatomo\Bootstrap;
+use WpMatomo\Db\Settings as DbSettings;
 use WpMatomo\Feature;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
@@ -72,6 +73,31 @@ class Sync extends Feature {
 		add_action( 'update_option_timezone_string', [ $this, 'sync_current_site_ignore_error' ] );
 		add_action( 'matomo_setting_change_track_ecommerce', [ $this, 'sync_current_site_ignore_error' ] );
 		add_action( 'matomo_setting_change_site_currency', [ $this, 'sync_current_site_ignore_error' ] );
+		add_filter( 'wpmu_drop_tables', [ $this, 'on_drop_blog_tables' ], 10, 2 );
+		add_action( 'wp_delete_site', [ $this, 'on_delete_site' ], 10, 1 );
+	}
+
+	/**
+	 * @param string[] $tables
+	 * @param int      $blog_id
+	 *
+	 * @return string[]
+	 */
+	public function on_drop_blog_tables( $tables, $blog_id ) {
+		$matomo_tables = ( new DbSettings() )->get_installed_matomo_tables();
+
+		$this->logger->log( sprintf( 'Matomo will drop %s tables of deleted blog %s', count( $matomo_tables ), $blog_id ) );
+
+		return array_merge( (array) $tables, $matomo_tables );
+	}
+
+	/**
+	 * remove the matomo site mapping when a site is deleted
+	 *
+	 * @param WP_Site $old_site
+	 */
+	public function on_delete_site( $old_site ) {
+		Site::map_matomo_site_id( $old_site->id, null );
 	}
 
 	public function sync_current_site_ignore_error() {

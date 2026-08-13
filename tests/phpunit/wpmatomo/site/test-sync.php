@@ -360,6 +360,113 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_drop_the_matomo_tables_of_a_deleted_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+		$this->assertNotEmpty( $this->get_matomo_tables_for_blog( $blog_id ) );
+
+		wp_delete_site( $blog_id );
+
+		$this->assertSame( [], $this->get_matomo_tables_for_blog( $blog_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_remove_the_site_mapping_of_a_deleted_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		$this->assertNotEmpty( Site::get_matomo_site_id( $blog_id ) );
+
+		wp_delete_site( $blog_id );
+
+		$this->assertEmpty( Site::get_matomo_site_id( $blog_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_the_matomo_data_of_other_blogs_when_one_blog_is_deleted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$deleted_blog_id = $this->create_blog_with_matomo();
+		$kept_blog_id    = $this->create_blog_with_matomo();
+
+		$kept_tables = $this->get_matomo_tables_for_blog( $kept_blog_id );
+		$kept_idsite = Site::get_matomo_site_id( $kept_blog_id );
+		$this->assertNotEmpty( $kept_tables );
+		$this->assertNotEmpty( $kept_idsite );
+
+		wp_delete_site( $deleted_blog_id );
+
+		// the mapping is deleted per blog, not with a LIKE across the whole network
+		$this->assertSame( $kept_tables, $this->get_matomo_tables_for_blog( $kept_blog_id ) );
+		$this->assertSame( $kept_idsite, Site::get_matomo_site_id( $kept_blog_id ) );
+
+		wp_delete_site( $kept_blog_id );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_the_matomo_data_of_a_blog_that_is_only_flagged_deleted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		$tables = $this->get_matomo_tables_for_blog( $blog_id );
+		$idsite = Site::get_matomo_site_id( $blog_id );
+		$this->assertNotEmpty( $tables );
+
+		// flagging a blog deleted is reversible, so nothing may be destroyed
+		wpmu_delete_blog( $blog_id, false );
+
+		$this->assertSame( $tables, $this->get_matomo_tables_for_blog( $blog_id ) );
+		$this->assertSame( $idsite, Site::get_matomo_site_id( $blog_id ) );
+
+		wp_delete_site( $blog_id );
+	}
+
+	private function create_blog_with_matomo() {
+		$blog_id = self::factory()->blog->create();
+
+		$this->sync->sync_all();
+
+		$this->assertNotEmpty( Site::get_matomo_site_id( $blog_id ) );
+
+		return $blog_id;
+	}
+
+	/**
+	 * @param int $blog_id
+	 * @return string[]
+	 */
+	private function get_matomo_tables_for_blog( $blog_id ) {
+		switch_to_blog( $blog_id );
+		$tables = ( new DbSettings() )->get_installed_matomo_tables();
+		restore_current_blog();
+
+		return $tables;
+	}
+
+	/**
 	 * get the mapping options in the wp_options table
 	 *
 	 * @return stdClass[]|null
