@@ -1154,6 +1154,47 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertNull( $this->get_access_for_current_site( $login ) );
 	}
 
+	public function test_sync_current_users_should_keep_a_user_whose_sync_threw_and_still_sync_the_rest() {
+		$failing_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'aaa_sync_fails',
+			]
+		);
+		$other_id   = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'zzz_sync_works',
+			]
+		);
+
+		$failing_login = $this->grant_matomo_view_and_sync( $failing_id );
+		$other_login   = $this->grant_matomo_view_and_sync( $other_id );
+
+		$fail_for_one_user = function ( $user ) use ( $failing_id ) {
+			if ( (int) $user->ID === $failing_id ) {
+				throw new \Exception( 'simulated failure while syncing this user' );
+			}
+		};
+
+		add_action( 'matomo_before_sync_user', $fail_for_one_user );
+		try {
+			( new Sync() )->sync_current_users();
+		} finally {
+			remove_action( 'matomo_before_sync_user', $fail_for_one_user );
+		}
+
+		// the sync never got far enough to decide this user has no access, so the cleanup sweep must
+		// leave them alone rather than read the failure as "not entitled to anything"
+		$this->assertNotEmpty( $this->get_matomo_user( $failing_login ) );
+		$this->assertSame( $failing_login, User::get_matomo_user_login( $failing_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $failing_login ) );
+
+		// the users after the failing one were still synced
+		$this->assertNotEmpty( $this->get_matomo_user( $other_login ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $other_login ) );
+	}
+
 	public function test_sync_user_if_access_exceeds_capabilities_should_clear_superuser_access_when_the_identity_survives() {
 		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
 

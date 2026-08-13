@@ -511,46 +511,66 @@ class Sync extends Feature {
 			// todo if we used transactions we could commit it after a possibly new access has been added
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
-			$matomo_login = $this->sync_user_access_for_site( $user, $idsite, $user_model );
-
-			if ( $matomo_login ) {
-				$logins_with_some_view_access[] = $matomo_login;
-
-				$locale = get_user_locale( $user->ID );
-				$lang   = self::get_matomo_lang_from_locale( $locale );
-				if (
-					! empty( $lang )
-					&& Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
-					&& Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
-					&& API::getInstance()->isLanguageAvailable( $lang )
-				) {
-					$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
-					$user_lang_model->setLanguageForUser( $matomo_login, $lang );
+			try {
+				if ( defined( 'MATOMO_PHPUNIT_TEST' ) && MATOMO_PHPUNIT_TEST ) {
+					/**
+					 * @internal tests only
+					 * @param WP_User    $user
+					 * @param int|string $idsite
+					 */
+					do_action( 'matomo_before_sync_user', $user, $idsite );
 				}
-			}
-			// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
-			if ( 1 != $idsite ) {
-				// only needed if the actual site is not the default site... makes sure when they click in Matomo
-				// UI on "Dashboard" that the correct site is being opened by default
-				// eg if the linked site is actually idSite=2.
-				Access::doAsSuperUser(
-					function () use ( $matomo_login, &$idsite ) {
-						try {
-							UsersManager\API::unsetInstance();
-							// we need to unset the instance to make sure it fetches the
-							// up to date dependencies eg current plugin manager etc
 
-							UsersManager\API::getInstance()->setUserPreference(
-								$matomo_login,
-								UsersManager\API::PREFERENCE_DEFAULT_REPORT,
-								$idsite
-							);
-							//phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-						} catch ( Exception $e ) {
-							// ignore any error for now
-						}
+				$matomo_login = $this->sync_user_access_for_site( $user, $idsite, $user_model );
+
+				if ( $matomo_login ) {
+					$logins_with_some_view_access[] = $matomo_login;
+
+					$locale = get_user_locale( $user->ID );
+					$lang   = self::get_matomo_lang_from_locale( $locale );
+					if (
+						! empty( $lang )
+						&& Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
+						&& Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
+						&& API::getInstance()->isLanguageAvailable( $lang )
+					) {
+						$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
+						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 					}
-				);
+				}
+				// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
+				if ( 1 != $idsite ) {
+					// only needed if the actual site is not the default site... makes sure when they click in Matomo
+					// UI on "Dashboard" that the correct site is being opened by default
+					// eg if the linked site is actually idSite=2.
+					Access::doAsSuperUser(
+						function () use ( $matomo_login, &$idsite ) {
+							try {
+								UsersManager\API::unsetInstance();
+								// we need to unset the instance to make sure it fetches the
+								// up to date dependencies eg current plugin manager etc
+
+								UsersManager\API::getInstance()->setUserPreference(
+									$matomo_login,
+									UsersManager\API::PREFERENCE_DEFAULT_REPORT,
+									$idsite
+								);
+								//phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+							} catch ( Exception $e ) {
+								// ignore any error for now
+							}
+						}
+					);
+				}
+			} catch ( Exception $e ) {
+				// one user sync failure must not abort the whole sync
+				$this->logger->log_exception( 'user_sync', $e );
+
+				// make sure this user for whom syncing failed is not deleted
+				$login_to_keep = User::get_matomo_user_login( $user->ID );
+				if ( $login_to_keep ) {
+					$logins_with_some_view_access[] = $login_to_keep;
+				}
 			}
 		}
 
@@ -559,13 +579,18 @@ class Sync extends Feature {
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				&& ! empty( $all_user['login'] ) ) {
-				Access::doAsSuperUser(
-					function () use ( $user_model, $all_user ) {
-						$this->delete_matomo_user( $user_model, $all_user['login'] );
-					}
-				);
-				// the WP -> Matomo mapping is cleaned up via the UsersManager.deleteUser event
-				// that deleteUserOnly() fires (see WordPress::onDeleteMatomoUser).
+				try {
+					Access::doAsSuperUser(
+						function () use ( $user_model, $all_user ) {
+							$this->delete_matomo_user( $user_model, $all_user['login'] );
+						}
+					);
+					// the WP -> Matomo mapping is cleaned up via the UsersManager.deleteUser event
+					// that deleteUserOnly() fires (see WordPress::onDeleteMatomoUser).
+				} catch ( Exception $e ) {
+					// do not abort entirely if a single delete fails
+					$this->logger->log_exception( 'user_sync', $e );
+				}
 			}
 		}
 	}
