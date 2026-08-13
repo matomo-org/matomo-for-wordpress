@@ -19,6 +19,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\LanguagesManager\API;
 use Piwik\Plugins\UsersManager;
 use Piwik\Plugins\UsersManager\Model;
+use Piwik\Tracker\Cache as TrackerCache;
 use WP_User;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
@@ -316,6 +317,8 @@ class Sync extends Feature {
 				}
 			}
 		);
+
+		$this->invalidate_tracker_cache( $idsite );
 	}
 
 	/**
@@ -592,6 +595,25 @@ class Sync extends Feature {
 					$this->logger->log_exception( 'user_sync', $e );
 				}
 			}
+		}
+
+		$this->invalidate_tracker_cache( $idsite );
+	}
+
+	/**
+	 * This plugin does not provide token auths to authenticate with, but in case an
+	 * attacker is somehow able to create one, we want to make sure it can't be used,
+	 * so after syncing, we clear the tracker cache.
+	 *
+	 * @param int|string $idsite
+	 */
+	private function invalidate_tracker_cache( $idsite ) {
+		try {
+			TrackerCache::deleteCacheWebsiteAttributes( $idsite );
+		} catch ( Exception $e ) {
+			// the sync itself is done, so a cache that could not be cleared must not fail the
+			// request that triggered it
+			$this->logger->log_exception( 'user_sync', $e );
 		}
 	}
 

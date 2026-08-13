@@ -5,7 +5,9 @@
 
 use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\View;
+use Piwik\Date;
 use Piwik\Plugins\UsersManager\Model;
+use Piwik\Tracker\Request as TrackerRequest;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
@@ -1152,6 +1154,33 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		// superuser_access already grants every site, so the row the earlier role added is unneeded
 		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
 		$this->assertNull( $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_current_users_should_stop_a_token_tracking_once_the_access_behind_it_is_gone() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+
+		// the plugin never issues these itself, but UsersManager.createAppSpecificTokenAuth can, and
+		// only admin/write access puts one in the tracker's list of tokens allowed to force an IP,
+		// a timestamp or a visitor id
+		$token = ( new Model() )->generateRandomTokenAuth();
+		( new Model() )->addTokenAuth( $login, $token, 'test token', Date::now()->getDatetime() );
+
+		$idsite = $this->get_current_site_id();
+		$this->assertTrue( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+
+		( new WP_User( $user_id ) )->remove_role( Roles::ROLE_ADMIN );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		( new Sync() )->sync_current_users();
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+		$this->assertFalse( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
 	}
 
 	public function test_sync_current_users_should_keep_a_user_whose_sync_threw_and_still_sync_the_rest() {
