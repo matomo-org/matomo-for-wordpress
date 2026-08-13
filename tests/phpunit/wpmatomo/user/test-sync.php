@@ -199,13 +199,16 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$model  = new Model();
 		$logins = $model->getUsersLogin();
-		$this->assertSame( array( 'admin', 'admin1', 'admin2' ), $logins );
+
+		$this->assertSame( array( 'admin', 'admin1', 'admin2', 'anonymous' ), $logins );
 
 		// all admins should also be super users
-		foreach ( $logins as $login ) {
+		foreach ( array( 'admin', 'admin1', 'admin2' ) as $login ) {
 			$matomo_user = $this->get_matomo_user( $login );
 			$this->assertEquals( '1', $matomo_user['superuser_access'] );
 		}
+
+		$this->assertEquals( '0', $this->get_matomo_user( 'anonymous' )['superuser_access'] );
 	}
 
 	public function test_sync_current_users_creates_users_where_needed() {
@@ -231,6 +234,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin2',
+				'anonymous',
 				'author1',
 				'author2',
 				'editor1',
@@ -296,6 +300,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
+				'anonymous',
 				'contributor1',
 				'editor1',
 				'editor2',
@@ -335,6 +340,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
+				'anonymous',
 				'contributor1',
 				'editor1',
 				'editor2',
@@ -1031,11 +1037,9 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
 		$login   = $this->grant_matomo_view_and_sync( $user_id );
 
-		// matomo can hold sites beyond the one WordPress maps to this blog. access to one of those
-		// is what keeps the Matomo user alive once remove_user_from_blog() has revoked this site,
-		// and so is the only state in which deleting it would be observable
-		$other_idsite = $this->get_current_site_id() + 1000;
-		( new Model() )->addUserAccess( $login, View::ID, [ $other_idsite ] );
+		// a super admin is entitled to Matomo on every blog whether or not they are a member of it,
+		// so removing them from this one leaves a Matomo user that has to survive
+		grant_super_admin( $user_id );
 
 		( new Sync() )->register_hooks();
 
@@ -1048,9 +1052,8 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_delete_user( $user_id );
 		$this->assertNotEmpty( get_userdata( $user_id ) );
 
-		// this blog's site was revoked by remove_user_from_blog(), the other one is untouched
-		$this->assertEquals( [ $other_idsite ], $this->get_view_sites_for( $login ) );
 		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
 		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
 	}
 
@@ -1224,7 +1227,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( View::ID, $this->get_access_for_current_site( $other_login ) );
 	}
 
-	public function test_sync_user_if_access_exceeds_capabilities_should_clear_superuser_access_when_the_identity_survives() {
+	public function test_sync_user_if_access_exceeds_capabilities_should_remove_a_revoked_user_that_a_stale_site_row_would_otherwise_keep() {
 		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
 
 		( new Sync() )->sync_current_users();
@@ -1233,15 +1236,34 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertNotEmpty( $login );
 		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
 
-		// add view access row in addition to the superuser flag above
-		( new Model() )->addUserAccess( $login, View::ID, [ $this->get_current_site_id() + 1000 ] );
+		// stale site access which shouldn't normally happen
+		$stale_idsite = $this->get_current_site_id() + 1000;
+		( new Model() )->addUserAccess( $login, View::ID, [ $stale_idsite ] );
 
 		( new WP_User( $user_id ) )->remove_role( 'administrator' ); // user will have no access after this
 
 		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
 
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( [], ( new Model() )->getSitesAccessFromUser( $login ) );
+	}
+
+	public function test_sync_current_users_should_remove_access_to_sites_the_blog_is_not_mapped_to() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// only one Matomo site belongs to a blog, so a row for any other is orphaned. Site\Sync
+		// can produce them by creating a fresh site whenever the blog to site mapping is lost
+		$stale_idsite = $this->get_current_site_id() + 1000;
+		( new Model() )->addUserAccess( $login, Admin::ID, [ $stale_idsite ] );
+
+		( new Sync() )->sync_current_users();
+
+		// the user is retained, so nothing else would ever have reconciled the stale row
 		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
-		$this->assertEquals( '0', $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertSame( [], ( new Model() )->getUsersSitesFromAccess( Admin::ID ) );
 	}
 
 	public function test_sync_user_if_access_exceeds_capabilities_should_revoke_when_no_capability_resolves_for_the_user() {

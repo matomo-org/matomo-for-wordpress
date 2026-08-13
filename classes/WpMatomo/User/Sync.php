@@ -637,14 +637,14 @@ class Sync extends Feature {
 			// superuser_access already grants every site, so a per site row is redundant here. Left
 			// behind it outlives the superuser flag and goes on granting this site by itself, and it
 			// keeps getSiteAccessCount() non zero, which is what stops the identity being cleaned up
-			$user_model->deleteUserAccess( $matomo_login, [ $idsite ] );
+			$user_model->deleteUserAccess( $matomo_login );
 
 			return $matomo_login;
 		}
 
 		if ( null === $role ) {
 			if ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->deleteUserAccess( $mapped_matomo_login );
 			}
 
 			return null;
@@ -652,7 +652,7 @@ class Sync extends Feature {
 
 		// note: matomo_login may not be the same as mapped_matomo_login
 		$matomo_login = $this->ensure_user_exists( $user );
-		$user_model->deleteUserAccess( $matomo_login, [ $idsite ] );
+		$user_model->deleteUserAccess( $matomo_login );
 		$user_model->addUserAccess( $matomo_login, $role, [ $idsite ] );
 		$user_model->setSuperUserAccess( $matomo_login, false );
 
