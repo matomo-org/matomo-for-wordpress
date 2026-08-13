@@ -972,6 +972,33 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
 	}
 
+	public function test_on_clean_user_cache_should_not_delete_another_users_access_when_the_login_mapping_is_reallocated() {
+		$this->activate_matomo_plugin();
+
+		$other_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$other_login = $this->grant_matomo_view_and_sync( $other_id );
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		// corrupted state: both WP users point at the same Matomo login, so syncing this one has to
+		// give it a login of its own rather than let the two share an identity
+		User::map_matomo_user_login( $user_id, $other_login );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+		$sync->on_clean_user_cache( $user_id );
+
+		$new_login = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $new_login );
+		$this->assertNotSame( $other_login, $new_login );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $new_login ) );
+
+		// the contested login belongs to the other user, who was not part of this sync at all
+		$this->assertSame( $other_login, User::get_matomo_user_login( $other_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $other_login ) );
+	}
+
 	public function test_register_hooks_should_delete_the_matomo_user_when_a_wordpress_user_is_deleted() {
 		$this->activate_matomo_plugin();
 

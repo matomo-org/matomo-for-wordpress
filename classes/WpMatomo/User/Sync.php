@@ -603,8 +603,9 @@ class Sync extends Feature {
 			return null;
 		}
 
+		// note: matomo_login may not be the same as mapped_matomo_login
 		$matomo_login = $this->ensure_user_exists( $user );
-		$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+		$user_model->deleteUserAccess( $matomo_login, [ $idsite ] );
 		$user_model->addUserAccess( $matomo_login, $role, [ $idsite ] );
 		$user_model->setSuperUserAccess( $matomo_login, false );
 
