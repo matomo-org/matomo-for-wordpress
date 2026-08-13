@@ -504,7 +504,7 @@ class Sync extends Feature {
 
 		$this->logger->log( 'Matomo will now sync ' . count( $users ) . ' users' );
 
-		$logins_with_some_view_access = [ 'anonmyous' ]; // may or may not exist... we don't want to delete this user though
+		$logins_with_some_view_access = [ 'anonymous' ]; // may or may not exist... we don't want to delete this user though
 		$user_model                   = new Model();
 
 		// need to make sure we recreate new instance later with latest dependencies in case they changed
