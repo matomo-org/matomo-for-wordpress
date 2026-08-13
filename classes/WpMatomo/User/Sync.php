@@ -76,6 +76,7 @@ class Sync extends Feature {
 		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], $prio = 10, $args = 2 );
 		add_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], $prio = 10, $args = 1 );
+		add_action( 'deleted_user', [ $this, 'on_deleted_user' ], $prio = 10, $args = 1 );
 		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
 		add_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
@@ -94,6 +95,7 @@ class Sync extends Feature {
 		remove_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], 10 );
 		remove_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], 10 );
 		remove_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], 10 );
+		remove_action( 'deleted_user', [ $this, 'on_deleted_user' ], 10 );
 		remove_action( 'user_register', [ $this, 'sync_current_users_1000' ], 10 );
 		remove_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], 10 );
 		remove_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], 10 );
@@ -140,6 +142,28 @@ class Sync extends Feature {
 		unset( $this->pending_removals[ $wp_user_id ][ $blog_id ] );
 
 		$this->sync_user_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	public function on_deleted_user( $wp_user_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		if ( get_userdata( $wp_user_id ) ) {
+			// user still exists, do not delete user from matomo (edge case that can happen
+			// on multisite installs)
+			return;
+		}
+
+		try {
+			$this->delete_matomo_user_for_current_blog( $wp_user_id );
+		} catch ( Exception $e ) {
+			// deleting a WordPress user must not fail because the Matomo cleanup did
+			$this->logger->log_exception( 'user_sync', $e );
+		}
 	}
 
 	/**
@@ -288,12 +312,42 @@ class Sync extends Feature {
 
 				if ( $mapped_matomo_login && ! $user_model->getSiteAccessCount( $mapped_matomo_login ) ) {
 					// user has access to no sites, delete the user also
-					$user_model->deleteUserOnly( $mapped_matomo_login );
-					$user_model->deleteUserOptions( $mapped_matomo_login );
-					$user_model->deleteUserAccess( $mapped_matomo_login );
+					$this->delete_matomo_user( $user_model, $mapped_matomo_login );
 				}
 			}
 		);
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	private function delete_matomo_user_for_current_blog( $wp_user_id ) {
+		$matomo_login = User::get_matomo_user_login( $wp_user_id );
+		if ( ! $matomo_login ) {
+			return;
+		}
+
+		Bootstrap::do_bootstrap();
+
+		$user_model = new Model();
+
+		Access::doAsSuperUser(
+			function () use ( $user_model, $matomo_login ) {
+				$this->delete_matomo_user( $user_model, $matomo_login );
+			}
+		);
+	}
+
+	/**
+	 * Callers are responsible for being inside Access::doAsSuperUser().
+	 *
+	 * @param Model  $user_model
+	 * @param string $matomo_login
+	 */
+	private function delete_matomo_user( $user_model, $matomo_login ) {
+		$user_model->deleteUserOnly( $matomo_login );
+		$user_model->deleteUserOptions( $matomo_login );
+		$user_model->deleteUserAccess( $matomo_login );
 	}
 
 	public function sync_maybe_background() {
@@ -518,9 +572,7 @@ class Sync extends Feature {
 				&& ! empty( $all_user['login'] ) ) {
 				Access::doAsSuperUser(
 					function () use ( $user_model, $all_user ) {
-						$user_model->deleteUserOnly( $all_user['login'] );
-						$user_model->deleteUserOptions( $all_user['login'] );
-						$user_model->deleteUserAccess( $all_user['login'] );
+						$this->delete_matomo_user( $user_model, $all_user['login'] );
 					}
 				);
 				// the WP -> Matomo mapping is cleaned up via the UsersManager.deleteUser event

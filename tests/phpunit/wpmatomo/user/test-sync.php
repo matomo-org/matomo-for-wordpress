@@ -972,6 +972,78 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
 	}
 
+	public function test_register_hooks_should_delete_the_matomo_user_when_a_wordpress_user_is_deleted() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		( new Sync() )->register_hooks();
+
+		// picks wp_delete_user() on single site and wpmu_delete_user() on multisite
+		self::delete_user( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertFalse( User::get_matomo_user_login( $user_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_the_matomo_user_when_only_deleted_from_one_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// matomo can hold sites beyond the one WordPress maps to this blog. access to one of those
+		// is what keeps the Matomo user alive once remove_user_from_blog() has revoked this site,
+		// and so is the only state in which deleting it would be observable
+		$other_idsite = $this->get_current_site_id() + 1000;
+		( new Model() )->addUserAccess( $login, View::ID, [ $other_idsite ] );
+
+		( new Sync() )->register_hooks();
+
+		if ( ! function_exists( 'wp_delete_user' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+		}
+
+		// on multisite wp_delete_user() only removes the user from the current blog, so it fires
+		// deleted_user while the WordPress user itself still exists
+		wp_delete_user( $user_id );
+		$this->assertNotEmpty( get_userdata( $user_id ) );
+
+		// this blog's site was revoked by remove_user_from_blog(), the other one is untouched
+		$this->assertEquals( [ $other_idsite ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
+	public function test_register_hooks_should_leave_matomo_alone_when_a_user_it_never_synced_is_deleted() {
+		$this->activate_matomo_plugin();
+
+		$synced_user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login          = $this->grant_matomo_view_and_sync( $synced_user_id );
+
+		// a subscriber has no Matomo capability, so nothing ever mapped them to a Matomo user
+		$unsynced_user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->assertFalse( User::get_matomo_user_login( $unsynced_user_id ) );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $unsynced_user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $synced_user_id ) );
+	}
+
 	public function test_sync_user_if_access_exceeds_capabilities_should_downgrade_an_access_row_that_outranks_the_wp_capability() {
 		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
 		$login   = $this->grant_matomo_view_and_sync( $user_id );
