@@ -76,6 +76,34 @@ class WordPressSessionAuthTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( 'anonymous', $result->getIdentity() );
 	}
 
+	public function test_authenticate_should_reject_when_matomo_capabilities_cannot_be_resolved() {
+		// an administrator's Matomo capabilities are added by the user_has_cap filter rather
+		// than stored on the role, so removing the filter takes all of them away
+		$wp_user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$login      = $this->sync_and_get_login( $wp_user_id );
+		$idsite     = $this->get_current_idsite();
+
+		$this->set_access_for_idsite( $login, Admin::ID, $idsite );
+
+		wp_set_current_user( $wp_user_id );
+
+		$capabilities = WpMatomo::get_active_feature( Capabilities::class );
+		$this->assertNotEmpty( $capabilities, 'Capabilities is expected to be registered by default' );
+
+		$capabilities->remove_hooks();
+		try {
+			$result = ( new SessionAuth() )->authenticate();
+		} finally {
+			$capabilities->register_hooks();
+		}
+
+		$this->assertFalse( $result->wasAuthenticationSuccessful() );
+		$this->assertSame( 'anonymous', $result->getIdentity() );
+
+		// rejecting is not the same as revoking, the stored access is left alone
+		$this->assertSame( Admin::ID, $this->get_access_for_idsite( $login, $idsite ) );
+	}
+
 	/**
 	 * @return int
 	 */

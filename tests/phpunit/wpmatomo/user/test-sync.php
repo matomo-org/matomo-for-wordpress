@@ -1092,25 +1092,18 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
 	}
 
-	public function test_sync_user_if_access_exceeds_capabilities_should_do_nothing_when_matomo_capabilities_cannot_be_resolved() {
+	public function test_sync_user_if_access_exceeds_capabilities_should_revoke_when_no_capability_resolves_for_the_user() {
 		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
 		$login   = $this->grant_matomo_view_and_sync( $user_id );
 
-		$this->set_access_for_current_site( $login, Admin::ID );
+		// the user is left entitled to no Matomo access at all, so the access a sync left behind
+		// is the only thing keeping them in Matomo
+		$this->remove_matomo_view_from_user( $user_id );
 
-		$capabilities = WpMatomo::get_active_feature( Capabilities::class );
-		$this->assertNotEmpty( $capabilities, 'Capabilities is expected to be registered by default' );
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
 
-		// safe mode: without the user_has_cap filter nobody resolves any matomo capability, so
-		// every user would look like they no longer qualify for the access they have
-		$capabilities->remove_hooks();
-		try {
-			$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
-		} finally {
-			$capabilities->register_hooks();
-		}
-
-		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+		// the user has access to no site anymore, so they are removed from Matomo entirely
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
 	}
 
 	public function test_sync_user_if_access_exceeds_capabilities_should_do_nothing_when_the_user_is_not_mapped_to_a_matomo_user() {

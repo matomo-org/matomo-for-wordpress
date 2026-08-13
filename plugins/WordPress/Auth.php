@@ -86,16 +86,14 @@ class Auth extends \Piwik\Plugins\Login\Auth
     {
         $code = null;
 
-        if (Capabilities::is_capability_check_available()) {
-            if (user_can($wpUserId, Capabilities::KEY_SUPERUSER)) {
-                $code = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
-            } elseif (user_can($wpUserId, Capabilities::KEY_VIEW)) {
-                $code = AuthResult::SUCCESS;
-            }
+        if (user_can($wpUserId, Capabilities::KEY_SUPERUSER)) {
+            $code = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
+        } elseif (user_can($wpUserId, Capabilities::KEY_VIEW)) {
+            $code = AuthResult::SUCCESS;
+        }
 
-            if ($code === null) {
-                return null;
-            }
+        if ($code === null) {
+            return null;
         }
 
         $login = User::get_matomo_user_login($wpUserId);
@@ -106,13 +104,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        if ($code === null) {
-            // safe mode only, see Capabilities::is_capability_check_available(). the hooks that
-            // synthesise most matomo capabilities are not registered, so user_can() would reject
-            // administrators and anyone covered by the role mapping. fall back to the persisted
-            // access.
-            $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-        } elseif ((new Sync())->sync_user_if_access_exceeds_capabilities($wpUserId, $matomoUser)) {
+        if ((new Sync())->sync_user_if_access_exceeds_capabilities($wpUserId, $matomoUser)) {
             // matomo's authorization layer trusts the persisted per site role verbatim, so the call
             // above corrects it when it grants more than the user's live WordPress capabilities do.
             // syncing can remove a user from Matomo, so re-read the one we authenticate as.

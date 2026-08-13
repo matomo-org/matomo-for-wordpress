@@ -212,26 +212,6 @@ class Capabilities extends Feature {
 		return false === $rank ? 0 : $rank + 1;
 	}
 
-	/**
-	 * Whether Matomo capabilities can be resolved for a user in this request. They cannot in safe
-	 * mode, where this feature is not registered and user_can() would report that nobody, not even
-	 * an administrator, has any Matomo capability.
-	 *
-	 * @return bool
-	 */
-	public static function is_capability_check_available() {
-		if ( ! class_exists( '\WpMatomo' ) ) {
-			return false;
-		}
-
-		$capabilities = \WpMatomo::get_active_feature( self::class );
-		if ( empty( $capabilities ) ) {
-			return false;
-		}
-
-		return false !== has_filter( 'user_has_cap', [ $capabilities, 'add_capabilities_to_user' ] );
-	}
-
 	protected function has_any_higher_permission( $cap_to_find, $allcaps ) {
 		$all_caps = $this->get_all_capabilities_sorted_by_highest_permission();
 		if ( ! in_array( $cap_to_find, $all_caps, true ) ) {

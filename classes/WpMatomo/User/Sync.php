@@ -208,10 +208,6 @@ class Sync extends Feature {
 	 * @return bool whether the user was re-synced
 	 */
 	public function sync_user_if_access_exceeds_capabilities( $wp_user_id, $matomo_user = null ) {
-		if ( ! Capabilities::is_capability_check_available() ) {
-			return false;
-		}
-
 		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
 		if ( ! $idsite ) {
 			return false;

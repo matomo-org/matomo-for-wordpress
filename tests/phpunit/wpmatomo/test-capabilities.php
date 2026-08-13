@@ -171,22 +171,6 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertNull( Capabilities::get_highest_role_for_user( $no_access_id ) );
 	}
 
-	public function test_is_capability_check_available_should_be_true_while_the_feature_is_registered() {
-		$this->assertTrue( Capabilities::is_capability_check_available() );
-	}
-
-	public function test_is_capability_check_available_should_be_false_once_the_feature_stops_filtering_capabilities() {
-		$registered = WpMatomo::get_active_feature( Capabilities::class );
-		$this->assertNotEmpty( $registered, 'Capabilities is expected to be registered by default' );
-
-		$registered->remove_hooks();
-		try {
-			$this->assertFalse( Capabilities::is_capability_check_available() );
-		} finally {
-			$registered->register_hooks();
-		}
-	}
-
 	private function make_all_caps( $caps_to_set ) {
 		$caps = array();
 		foreach ( $this->make_capabilities()->get_all_capabilities_sorted_by_highest_permission() as $cap ) {
