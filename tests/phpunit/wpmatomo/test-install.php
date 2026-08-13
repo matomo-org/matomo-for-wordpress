@@ -15,6 +15,14 @@ use WpMatomo\Uninstaller;
 class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
+	 * these tests need to run Installer::install() itself, so a new blog has to start out without
+	 * Matomo rather than getting the framework's cloned install
+	 *
+	 * @var bool
+	 */
+	protected $clone_matomo_to_new_blogs = false;
+
+	/**
 	 * @var Settings
 	 */
 	private $settings;

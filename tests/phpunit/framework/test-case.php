@@ -20,6 +20,45 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	protected static $initial_table_data = [];
 
+	/**
+	 * A Matomo install as it looks on the main blog. Used to bootstrap blogs created during tests
+	 * without running the (slow) installer.
+	 *
+	 * Set to null at first, false when there is nothing to clone.
+	 *
+	 * @var array|false|null
+	 */
+	private static $matomo_blog_template = null;
+
+	/**
+	 * Set to false to turn off the blog creation optimization.
+	 *
+	 * Should be used by tests that call Installer::install(), or require a blog without
+	 * Matomo installed for whatever reason.
+	 *
+	 * @var bool
+	 */
+	protected $clone_matomo_to_new_blogs = true;
+
+	/**
+	 * Tables a per-blog install leaves empty, because create_website()/create_user() fill them
+	 * afterwards. Cloning the main blog's rows into them would hand the new blog the main blog's
+	 * site and users.
+	 *
+	 * @var string[]
+	 */
+	private static $blog_specific_matomo_tables = [
+		'access',
+		'session',
+		'site',
+		'site_setting',
+		'site_url',
+		'user',
+		'user_dashboard',
+		'user_language',
+		'user_token_auth',
+	];
+
 	private $original_wpdb = null;
 
 	protected $overwrite_wpdb = true;
@@ -55,9 +94,15 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		$this->wordpress_fixture = new MatomoUnit_WordPress_Fixture();
 		$this->wordpress_fixture->set_up();
+
+		if ( is_multisite() && $this->clone_matomo_to_new_blogs ) {
+			add_action( 'wp_initialize_site', [ $this, 'clone_matomo_install_to_new_blog' ], 100, 1 );
+		}
 	}
 
 	public function tearDown(): void {
+		remove_action( 'wp_initialize_site', [ $this, 'clone_matomo_install_to_new_blog' ], 100 );
+
 		if ( is_multisite() ) {
 			$this->delete_extraneous_blogs();
 		}
@@ -208,6 +253,115 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 			wpmu_delete_blog( $blog['blog_id'] );
 		}
+	}
+
+	/**
+	 * Installing Matomo takes a long time, and a multisite test that creates a blog pays it
+	 * again for every blog. The result is deterministic though, so we can clone the main blog
+	 * to generate a new one, which is much faster.
+	 *
+	 * @param WP_Site $new_site
+	 */
+	public function clone_matomo_install_to_new_blog( $new_site ) {
+		global $wpdb;
+
+		$template = self::get_matomo_blog_template();
+		if ( empty( $template ) ) {
+			return; // Matomo is not installed on the main blog, so there is nothing to clone
+		}
+
+		$blog_id       = (int) $new_site->blog_id;
+		$target_prefix = $wpdb->get_blog_prefix( $blog_id ) . MATOMO_DATABASE_PREFIX;
+
+		foreach ( $template['tables'] as $suffix => $table ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( str_replace( $template['prefix'], $target_prefix, $table['create'] ) );
+
+			if ( ! empty( $table['rows'] ) ) {
+				self::insert_snapshot_rows( $target_prefix . $suffix, $table['rows'] );
+			}
+		}
+
+		switch_to_blog( $blog_id );
+
+		$config_path = ( new \WpMatomo\Paths() )->get_config_ini_path();
+		wp_mkdir_p( dirname( $config_path ) );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		file_put_contents( $config_path, str_replace( $template['prefix'], $target_prefix, $template['config'] ) );
+
+		// what Installer::install() records so looks_like_it_is_installed() stops returning false
+		$blog_settings = get_option( \WpMatomo\Settings::OPTION );
+		$blog_settings = is_array( $blog_settings ) ? $blog_settings : [];
+		$blog_settings[ \WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED ] = $template['components'];
+		update_option( \WpMatomo\Settings::OPTION, $blog_settings );
+
+		update_option( \WpMatomo\Installer::OPTION_NAME_INSTALL_VERSION, $template['version'] );
+		update_option( \WpMatomo\Installer::OPTION_NAME_INSTALL_DATE, time() );
+
+		// the matomo_* roles live in the blog's own wp_N_user_roles. Roles::add_roles() normally
+		// adds them on init, which has long since fired by the time a test creates a blog, so
+		// without this the new blog has no role carrying view_matomo and nothing can be granted
+		( new \WpMatomo\Roles( new \WpMatomo\Settings() ) )->add_roles( true );
+
+		restore_current_blog();
+	}
+
+	/**
+	 * @return array|false
+	 */
+	private static function get_matomo_blog_template() {
+		global $wpdb;
+
+		if ( null !== self::$matomo_blog_template ) {
+			return self::$matomo_blog_template;
+		}
+
+		self::$matomo_blog_template = false;
+
+		$prefix = $wpdb->base_prefix . MATOMO_DATABASE_PREFIX;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$tables = $wpdb->get_col( 'SHOW TABLES LIKE "' . $wpdb->esc_like( $prefix ) . '%"' );
+		if ( empty( $tables ) ) {
+			return self::$matomo_blog_template;
+		}
+
+		$config_path = ( new \WpMatomo\Paths() )->get_config_ini_path();
+		if ( ! file_exists( $config_path ) ) {
+			return self::$matomo_blog_template;
+		}
+
+		$settings   = new \WpMatomo\Settings();
+		$components = $settings->get_option( \WpMatomo\Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( empty( $components ) ) {
+			return self::$matomo_blog_template;
+		}
+
+		$template = [];
+		foreach ( $tables as $table ) {
+			$suffix = substr( $table, strlen( $prefix ) );
+			$create = $wpdb->get_row( "SHOW CREATE TABLE `$table`", ARRAY_N );
+
+			$template[ $suffix ] = [
+				// without dropping AUTO_INCREMENT the new blog's first site would be idsite 2, where
+				// a real per blog install gives it idsite 1
+				'create' => isset( $create[1] ) ? preg_replace( '/ AUTO_INCREMENT=\d+/', '', $create[1] ) : null,
+				'rows'   => in_array( $suffix, self::$blog_specific_matomo_tables, true )
+					? []
+					: $wpdb->get_results( "SELECT * FROM `$table`", ARRAY_A ),
+			];
+		}
+
+		self::$matomo_blog_template = [
+			'prefix'     => $prefix,
+			'tables'     => $template,
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_get_contents
+			'config'     => file_get_contents( $config_path ),
+			'components' => $components,
+			'version'    => get_option( \WpMatomo\Installer::OPTION_NAME_INSTALL_VERSION ),
+		];
+
+		return self::$matomo_blog_template;
 	}
 
 	/**
