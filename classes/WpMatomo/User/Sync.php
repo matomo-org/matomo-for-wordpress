@@ -317,7 +317,7 @@ class Sync extends Feature {
 
 		Access::doAsSuperUser(
 			function () use ( $user_model, $wp_user, $wp_user_id, $idsite ) {
-				$mapped_matomo_login = User::get_matomo_user_login( $wp_user_id );
+				$mapped_matomo_login = $this->get_own_matomo_user_login( $wp_user_id );
 
 				$has_access = (bool) $this->sync_user_access_for_site( $wp_user, $idsite, $user_model );
 				if ( $has_access ) { // user has access
@@ -346,11 +346,34 @@ class Sync extends Feature {
 	}
 
 	/**
+	 * Returns the matomo login mapped to the given user, if and only if the matomo login
+	 * is not currently mapped to another user. (should not normally happen unless in a
+	 * corrupted state)
+	 *
+	 * @param int $wp_user_id
+	 * @return string|null
+	 */
+	private function get_own_matomo_user_login( $wp_user_id ) {
+		$matomo_login = User::get_matomo_user_login( $wp_user_id );
+
+		if ( ! $matomo_login || $this->is_matomo_login_owned_by_other_wp_user( $matomo_login, $wp_user_id ) ) {
+			return null;
+		}
+
+		return $matomo_login;
+	}
+
+	/**
 	 * @param int $wp_user_id
 	 */
 	private function delete_matomo_user_for_current_blog( $wp_user_id ) {
-		$matomo_login = User::get_matomo_user_login( $wp_user_id );
+		$matomo_login = $this->get_own_matomo_user_login( $wp_user_id );
 		if ( ! $matomo_login ) {
+			// either never mapped, or the login belongs to another WP user.
+			// should not delete the matomo user in this case. instead we remove the
+			// corrupted mapping.
+			User::map_matomo_user_login( $wp_user_id, null );
+
 			return;
 		}
 
@@ -363,6 +386,13 @@ class Sync extends Feature {
 				$this->delete_matomo_user( $user_model, $matomo_login );
 			}
 		);
+
+		// in case a token somehow has been created for the user, invalidate the
+		// tracker cache so it will not be used in the tracker
+		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
+		if ( $idsite ) {
+			$this->invalidate_tracker_cache( $idsite );
+		}
 	}
 
 	/**
@@ -648,7 +678,7 @@ class Sync extends Feature {
 	 * @return string|null matomo login or null when the user has no access
 	 */
 	protected function sync_user_access_for_site( $user, $idsite, $user_model ) {
-		$mapped_matomo_login = User::get_matomo_user_login( $user->ID );
+		$mapped_matomo_login = $this->get_own_matomo_user_login( $user->ID );
 
 		$role = Capabilities::get_highest_role_for_user( $user );
 

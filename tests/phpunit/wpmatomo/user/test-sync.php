@@ -1101,6 +1101,59 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
 	}
 
+	public function test_register_hooks_should_not_delete_a_matomo_user_that_another_wordpress_user_is_also_mapped_to() {
+		$this->activate_matomo_plugin();
+
+		$keeper_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$keeper_login = $this->grant_matomo_view_and_sync( $keeper_id );
+
+		$deleted_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->grant_matomo_view_and_sync( $deleted_id );
+
+		// corrupted state: both WP users point at the same Matomo login. deleting one of them must
+		// not take the identity the other is still using with it
+		User::map_matomo_user_login( $deleted_id, $keeper_login );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $deleted_id );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $keeper_login ) );
+		$this->assertSame( $keeper_login, User::get_matomo_user_login( $keeper_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $keeper_login ) );
+
+		// the contested mapping must not outlive the WP user it belonged to, or the keeper goes on
+		// looking contested and gets reallocated on their next sync
+		$this->assertFalse( User::get_matomo_user_login( $deleted_id ) );
+	}
+
+	public function test_register_hooks_should_stop_a_deleted_users_token_tracking() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+
+		$token = ( new Model() )->generateRandomTokenAuth();
+		( new Model() )->addTokenAuth( $login, $token, 'test token', Date::now()->getDatetime() );
+
+		$idsite = $this->get_current_site_id();
+		$this->assertTrue( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $user_id );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+
+		// the token rows went with the user, but the tracker compares against a hashed copy it never
+		// rechecks, so without invalidating it the token of a deleted user keeps tracking
+		$this->assertFalse( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+	}
+
 	public function test_register_hooks_should_leave_matomo_alone_when_a_user_it_never_synced_is_deleted() {
 		$this->activate_matomo_plugin();
 
