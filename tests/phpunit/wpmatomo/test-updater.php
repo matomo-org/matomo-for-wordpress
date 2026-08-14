@@ -7,7 +7,7 @@ use WpMatomo\Settings;
 use WpMatomo\Updater;
 use WpMatomo\User;
 
-class UpdaterTest extends MatomoAnalytics_TestCase {
+class UpdaterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 
 	/**
@@ -130,7 +130,12 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_update_from_version_applys_updates_from_specified_version_to_current() {
-		\Piwik\Plugin\Manager::getInstance()->activatePlugin( 'TagManager' );
+		// activating TagManager looks the site up through the SitesManager API, which needs access
+		\Piwik\Access::doAsSuperUser(
+			function () {
+				\Piwik\Plugin\Manager::getInstance()->activatePlugin( 'TagManager' );
+			}
+		);
 
 		$settings  = new Settings();
 		$installer = new \WpMatomo\Installer( $settings );

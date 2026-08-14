@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\SearchEngineConverter;
 
-class SearchEngineConverterTest extends MatomoAnalytics_TestCase {
+class SearchEngineConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$search_engines = SearchEngineConverter::convert( [] );

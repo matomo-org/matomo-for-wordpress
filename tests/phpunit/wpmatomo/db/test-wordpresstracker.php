@@ -6,7 +6,7 @@
 use Piwik\Common;
 use Piwik\Tracker\Db\WordPress;
 
-class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
+class DbWordPressTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var WordPress

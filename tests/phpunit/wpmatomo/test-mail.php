@@ -7,7 +7,7 @@
 
 use Piwik\Mail;
 
-class MailTest extends MatomoAnalytics_TestCase {
+class MailTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function test_mail() {
 		if ( ! is_file( $this->plugin_file() ) ) {
 			$this->fail( 'cannot run mail test without wp-mail-smtp, plugin must be installed and configured via consts locally' );

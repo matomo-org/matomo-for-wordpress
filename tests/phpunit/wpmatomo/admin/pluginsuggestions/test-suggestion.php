@@ -36,7 +36,7 @@ class TestSuggestion extends Suggestion {
 	}
 }
 
-class SuggestionTest extends MatomoAnalytics_TestCase {
+class SuggestionTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 
 	public function test_is_suggestion_applicable_returns_true_if_the_suggestion_plugin_is_not_installed() {

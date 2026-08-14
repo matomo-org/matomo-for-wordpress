@@ -258,8 +258,11 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			restore_current_blog();
 		}
 
-		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		$blogs    = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		$blog_ids = [];
 		foreach ( $blogs as $blog ) {
+			$blog_ids[] = (int) $blog['blog_id'];
+
 			if ( 1 === (int) $blog['deleted'] || 1 === (int) $blog['blog_id'] ) {
 				continue;
 			}
@@ -267,6 +270,30 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			$this->delete_matomo_upload_dir( $blog['blog_id'] );
 
 			wpmu_delete_blog( $blog['blog_id'] );
+		}
+
+		$this->delete_orphaned_matomo_upload_dirs( $blog_ids );
+	}
+
+	/**
+	 * Removes leftover matomo upload dirs from blogs that were deleted or dropped by
+	 * a test or snapshot restoration, so they won't be re-used when a blog is created
+	 * with the same ID.
+	 *
+	 * @param int[] $existing_blog_ids
+	 */
+	private function delete_orphaned_matomo_upload_dirs( $existing_blog_ids ) {
+		$sites_dir = dirname( ( new \WpMatomo\Paths() )->get_upload_base_dir() ) . '/sites';
+		if ( ! is_dir( $sites_dir ) ) {
+			return;
+		}
+
+		foreach ( new FilesystemIterator( $sites_dir, FilesystemIterator::SKIP_DOTS ) as $dir ) {
+			if ( ! $dir->isDir() || in_array( (int) $dir->getFilename(), $existing_blog_ids, true ) ) {
+				continue;
+			}
+
+			\Piwik\Filesystem::unlinkRecursive( $dir->getPathname() . '/matomo', true );
 		}
 	}
 

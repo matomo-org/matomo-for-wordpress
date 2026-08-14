@@ -12,7 +12,7 @@ use WpMatomo\Admin\PluginSuggestions\Suggestions\AdvertisingConversionExport;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\Funnels;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\HeatmapSessionRecording;
 
-class PluginSuggestionsTest extends MatomoAnalytics_TestCase {
+class PluginSuggestionsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

@@ -9,7 +9,7 @@ use WpMatomo\Settings;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Renderer;
 
-class AdminSummaryTest extends MatomoAnalytics_TestCase {
+class AdminSummaryTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Summary

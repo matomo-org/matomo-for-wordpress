@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\ReferrersConverter;
 
-class ReferrersConverterTest extends MatomoAnalytics_TestCase {
+class ReferrersConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$referrers = ReferrersConverter::convert( [] );

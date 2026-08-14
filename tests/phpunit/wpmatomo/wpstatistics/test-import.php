@@ -14,7 +14,7 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\WpStatistics\IncompatibleWpStatisticsVersion;
 
-class ImportTest extends MatomoAnalytics_TestCase {
+class ImportTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * static due to multiple tests instanciations
 	 *

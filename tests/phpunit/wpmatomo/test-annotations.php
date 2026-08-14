@@ -10,7 +10,7 @@ use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 
-class AnnotationsTest extends MatomoAnalytics_TestCase {
+class AnnotationsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Annotations

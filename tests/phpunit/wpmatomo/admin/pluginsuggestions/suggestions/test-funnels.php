@@ -10,7 +10,7 @@
 use WpMatomo\Admin\PluginSuggestions\Suggestions\Funnels;
 
 
-class FunnelsTest extends MatomoAnalytics_TestCase {
+class FunnelsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

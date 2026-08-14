@@ -14,7 +14,7 @@ use WpMatomo\User;
 /**
  * @package matomo
  */
-class WpPasswordVerifierTest extends MatomoAnalytics_TestCase {
+class WpPasswordVerifierTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var WpPasswordVerifier

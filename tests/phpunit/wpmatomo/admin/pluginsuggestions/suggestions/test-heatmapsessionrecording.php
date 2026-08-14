@@ -9,7 +9,7 @@
 
 use WpMatomo\Admin\PluginSuggestions\Suggestions\HeatmapSessionRecording;
 
-class HeatmapSessionRecordingTest extends MatomoAnalytics_TestCase {
+class HeatmapSessionRecordingTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

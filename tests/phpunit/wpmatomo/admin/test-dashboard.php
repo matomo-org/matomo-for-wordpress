@@ -7,7 +7,7 @@ use WpMatomo\Admin\Dashboard;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Renderer;
 
-class AdminDashboardTest extends MatomoAnalytics_TestCase {
+class AdminDashboardTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	const EXAMPLE_ID = 'VisitsSummary_get';
 

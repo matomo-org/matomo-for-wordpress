@@ -12,7 +12,7 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
-class InstallTest extends MatomoAnalytics_TestCase {
+class InstallTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * these tests need to run Installer::install() itself, so a new blog has to start out without
@@ -155,7 +155,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $this->installer->looks_like_it_is_installed() );
 		$this->assertFalse( Installer::is_intalled() );
 
-		$this->matomo_fixture->reset_config_for_install();
+		( new MatomoUnit_Matomo_Fixture() )->reset_config_for_install();
 
 		Bootstrap::set_not_bootstrapped();
 		$this->assertTrue( $this->installer->install() );

@@ -11,7 +11,7 @@ use WpMatomo\Site;
 use WpMatomo\Uninstaller;
 use WpMatomo\User;
 
-class UninstallTest extends MatomoAnalytics_TestCase {
+class UninstallTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Installer

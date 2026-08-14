@@ -10,7 +10,7 @@
 use Piwik\Common;
 use WpMatomo\Admin\PluginSuggestions\Suggestions\SearchEngineKeywordsPerformance;
 
-class SearchEngineKeywordsPerformanceTest extends MatomoAnalytics_TestCase {
+class SearchEngineKeywordsPerformanceTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

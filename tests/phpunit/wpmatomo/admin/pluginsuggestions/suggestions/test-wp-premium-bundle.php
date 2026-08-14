@@ -9,7 +9,7 @@
 
 use WpMatomo\Admin\PluginSuggestions\Suggestions\WpPremiumBundle;
 
-class WpPremiumBundleTest extends MatomoAnalytics_TestCase {
+class WpPremiumBundleTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function test_should_trigger_should_return_true_if_more_than_three_plugins_installed() {
 		$suggestion = $this->make_suggestion(
 			[

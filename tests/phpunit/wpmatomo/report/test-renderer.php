@@ -5,7 +5,7 @@
 
 use WpMatomo\Report\Dates;
 
-class ReportRendererTest extends MatomoAnalytics_TestCase {
+class ReportRendererTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	protected $disable_temp_tables = true;
 

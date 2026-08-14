@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\UserCityConverter;
 
-class UserCityConverterTest extends MatomoAnalytics_TestCase {
+class UserCityConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$cities = UserCityConverter::convert( [] );

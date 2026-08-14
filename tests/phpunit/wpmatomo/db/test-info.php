@@ -5,7 +5,7 @@
 
 use WpMatomo\Db\Settings;
 
-class DbInfoTest extends MatomoAnalytics_TestCase {
+class DbInfoTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Settings

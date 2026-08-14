@@ -6,7 +6,7 @@
 use WpMatomo\Bootstrap;
 use WpMatomo\Report\Metadata;
 
-class ReportMetadataTest extends MatomoAnalytics_TestCase {
+class ReportMetadataTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Metadata

@@ -9,7 +9,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Admin\InvalidIpException;
 use WpMatomo\Settings;
 
-class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
+class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var ExclusionSettings

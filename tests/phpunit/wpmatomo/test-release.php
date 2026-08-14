@@ -6,7 +6,7 @@
  * @package matomo
  *
  */
-class ReleaseTest extends MatomoAnalytics_TestCase {
+class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	const MAX_RELEASE_SIZE = 26214400; // 25mb
 
