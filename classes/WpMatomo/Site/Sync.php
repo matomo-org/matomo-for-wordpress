@@ -180,10 +180,11 @@ class Sync extends Feature {
 					$success = false;
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log( 'Matomo error syncing site: ' . $e->getMessage() );
+				} finally {
+					restore_current_blog();
 				}
 
 				$succeed_all = $succeed_all && $success;
-				restore_current_blog();
 			}
 		} else {
 			$success     = $this->sync_current_site();
