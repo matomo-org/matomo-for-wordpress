@@ -182,7 +182,7 @@ class Sync extends Feature {
 		switch_to_blog( $blog_id );
 
 		try {
-			$this->sync_current_users();
+			$this->sync_current_users_1000();
 		} catch ( Exception $e ) {
 			// restoring a blog must not fail because Matomo could not be synced for it
 			$this->logger->log_exception( 'user_sync', $e );

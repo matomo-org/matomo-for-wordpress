@@ -117,6 +117,13 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$users_model = new UsersModel();
 		$all_users   = $users_model->getUsers( array() );
 
+		// matomo creates its own anonymous user at install time. it is not a WP user and the sync
+		// leaves it alone, so only the admin row is compared in full below
+		$this->assertSame( array( 'admin', 'anonymous' ), array_column( $all_users, 'login' ) );
+		$this->assertEquals( '0', $all_users[1]['superuser_access'] );
+
+		$all_users = array( $all_users[0] );
+
 		foreach ( array( 'password', 'date_registered', 'ts_password_modified' ) as $field ) {
 			$this->assertNotEmpty( $all_users[0][ $field ] );
 			unset( $all_users[0][ $field ] );

@@ -99,7 +99,10 @@ class Settings {
 
 		$table_names = [];
 
-		$tables = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
+		$tables = $wpdb->get_results(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $this->prefix_table_name() ) . '%' ),
+			ARRAY_N
+		);
 		foreach ( $tables as $table_name_to_look_for ) {
 			$table_names[] = array_shift( $table_name_to_look_for );
 		}
