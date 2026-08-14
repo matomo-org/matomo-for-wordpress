@@ -83,6 +83,9 @@ class Sync extends Feature {
 		add_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
 		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], $prio = 10, $args = 0 );
 		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
+
+		// must run after the site sync hook
+		add_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], $prio = Site\Sync::MAKE_UNDELETE_BLOG_PRIORITY + 1, $args = 1 );
 	}
 
 	/**
@@ -102,6 +105,7 @@ class Sync extends Feature {
 		remove_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], 10 );
 		remove_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], 10 );
 		remove_action( 'profile_update', [ $this, 'sync_maybe_background' ], 10 );
+		remove_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], 11 );
 	}
 
 	/**
@@ -165,6 +169,26 @@ class Sync extends Feature {
 			// deleting a WordPress user must not fail because the Matomo cleanup did
 			$this->logger->log_exception( 'user_sync', $e );
 		}
+	}
+
+	/**
+	 * @param int $blog_id
+	 */
+	public function on_undelete_blog( $blog_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		switch_to_blog( $blog_id );
+
+		try {
+			$this->sync_current_users();
+		} catch ( Exception $e ) {
+			// restoring a blog must not fail because Matomo could not be synced for it
+			$this->logger->log_exception( 'user_sync', $e );
+		}
+
+		restore_current_blog();
 	}
 
 	/**
@@ -509,6 +533,7 @@ class Sync extends Feature {
 
 		// need to make sure we recreate new instance later with latest dependencies in case they changed
 		API::unsetInstance();
+		UsersManager\API::unsetInstance();
 
 		foreach ( $users as $user ) {
 			// todo if we used transactions we could commit it after a possibly new access has been added
@@ -540,30 +565,28 @@ class Sync extends Feature {
 						$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
 						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 					}
-				}
-				// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
-				if ( 1 != $idsite ) {
-					// only needed if the actual site is not the default site... makes sure when they click in Matomo
-					// UI on "Dashboard" that the correct site is being opened by default
-					// eg if the linked site is actually idSite=2.
-					Access::doAsSuperUser(
-						function () use ( $matomo_login, &$idsite ) {
-							try {
-								UsersManager\API::unsetInstance();
-								// we need to unset the instance to make sure it fetches the
-								// up to date dependencies eg current plugin manager etc
 
-								UsersManager\API::getInstance()->setUserPreference(
-									$matomo_login,
-									UsersManager\API::PREFERENCE_DEFAULT_REPORT,
-									$idsite
-								);
-								//phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-							} catch ( Exception $e ) {
-								// ignore any error for now
+					// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
+					if ( 1 != $idsite ) {
+						// only needed if the actual site is not the default site... makes sure when they click in Matomo
+						// UI on "Dashboard" that the correct site is being opened by default
+						// eg if the linked site is actually idSite=2.
+						Access::doAsSuperUser(
+							function () use ( $matomo_login, &$idsite ) {
+								try {
+									UsersManager\API::getInstance()->setUserPreference(
+										$matomo_login,
+										UsersManager\API::PREFERENCE_DEFAULT_REPORT,
+										$idsite
+									);
+								} catch ( Exception $e ) {
+									// a preference is not worth failing the sync over, but it should not
+									// disappear silently either
+									$this->logger->log_exception( 'user_sync', $e );
+								}
 							}
-						}
-					);
+						);
+					}
 				}
 			} catch ( Exception $e ) {
 				// one user sync failure must not abort the whole sync

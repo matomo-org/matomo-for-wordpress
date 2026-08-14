@@ -4,6 +4,7 @@
  */
 
 use Piwik\Plugins\SitesManager\Model;
+use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync;
@@ -444,6 +445,43 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_delete_site( $blog_id );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_sync_a_blog_that_has_been_restored_and_is_no_longer_flagged_deleted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// restoring a blog only ever happens in the network admin, and the sync is skipped on front
+		// end requests
+		$this->assume_admin_page();
+
+		$blog_id = $this->create_blog_with_matomo();
+		$idsite  = Site::get_matomo_site_id( $blog_id );
+
+		update_blog_status( $blog_id, 'deleted', '1' );
+
+		// renamed before the hooks are registered, so update_option_blogname cannot sync it for us
+		// and the only thing left that could is the restore below
+		switch_to_blog( $blog_id );
+		update_option( 'blogname', 'Renamed While Deleted' );
+		restore_current_blog();
+
+		// sync_all() skips blogs flagged deleted, so the Matomo site stays stale
+		$this->sync->sync_all();
+		$this->assertNotSame( 'Renamed While Deleted', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+
+		$this->sync->register_hooks();
+
+		update_blog_status( $blog_id, 'deleted', '0' );
+
+		$this->assertSame( 'Renamed While Deleted', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+
+		wp_delete_site( $blog_id );
+	}
+
 	private function create_blog_with_matomo() {
 		$blog_id = self::factory()->blog->create();
 
@@ -452,6 +490,25 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertNotEmpty( Site::get_matomo_site_id( $blog_id ) );
 
 		return $blog_id;
+	}
+
+	/**
+	 * every blog has its own matomo_site table, so the row has to be read while switched to it
+	 *
+	 * @param int $blog_id
+	 * @param int $idsite
+	 * @return string
+	 */
+	private function get_matomo_site_name_for_blog( $blog_id, $idsite ) {
+		switch_to_blog( $blog_id );
+		Bootstrap::do_bootstrap();
+
+		$site = ( new Model() )->getSiteFromId( $idsite );
+
+		restore_current_blog();
+		Bootstrap::do_bootstrap();
+
+		return $site['name'];
 	}
 
 	/**

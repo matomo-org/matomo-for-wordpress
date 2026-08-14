@@ -816,6 +816,50 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * @group ms-required
 	 */
+	public function test_register_hooks_should_resync_a_blog_that_has_been_restored_and_is_no_longer_flagged_deleted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'restoredadmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+		$login  = $logins[ $beta ];
+		$this->assertSame( '1', $this->get_matomo_user_on_blog( $beta, $login )['superuser_access'] );
+
+		( new Sync() )->register_hooks();
+
+		update_blog_status( $beta, 'deleted', '1' );
+
+		revoke_super_admin( $user_id );
+
+		// on_super_admin_change() skips blogs flagged deleted, so this one keeps access it should no
+		// longer have
+		$this->assertSame( '1', $this->get_matomo_user_on_blog( $beta, $login )['superuser_access'] );
+
+		update_blog_status( $beta, 'deleted', '0' );
+
+		// after restoration, the user is resynced, and because it has no Matomo capabilities
+		// as a subscriber, it is removed
+		$this->assertEmpty( $this->get_matomo_user_on_blog( $beta, $login ) );
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
 	public function test_on_super_admin_change_should_correct_blogs_other_than_the_current_one() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );

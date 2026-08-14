@@ -36,7 +36,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */
 class Sync extends Feature {
-	const MAX_LENGTH_SITE_NAME = 90;
+	const MAX_LENGTH_SITE_NAME        = 90;
+	const MAKE_UNDELETE_BLOG_PRIORITY = 10;
 
 	/**
 	 * @var Logger
@@ -75,6 +76,27 @@ class Sync extends Feature {
 		add_action( 'matomo_setting_change_site_currency', [ $this, 'sync_current_site_ignore_error' ] );
 		add_filter( 'wpmu_drop_tables', [ $this, 'on_drop_blog_tables' ], 10, 2 );
 		add_action( 'wp_delete_site', [ $this, 'on_delete_site' ], 10, 1 );
+		add_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], self::MAKE_UNDELETE_BLOG_PRIORITY, 1 );
+	}
+
+	/**
+	 * @param int $blog_id
+	 */
+	public function on_undelete_blog( $blog_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		switch_to_blog( $blog_id );
+
+		try {
+			$this->sync_current_site();
+		} catch ( Exception $e ) {
+			// restoring a blog must not fail because Matomo could not be synced for it
+			$this->logger->log_exception( 'sync_site', $e );
+		}
+
+		restore_current_blog();
 	}
 
 	/**
