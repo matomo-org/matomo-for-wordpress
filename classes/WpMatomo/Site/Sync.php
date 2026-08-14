@@ -89,12 +89,7 @@ class Sync extends Feature {
 
 		switch_to_blog( $blog_id );
 
-		try {
-			$this->sync_current_site();
-		} catch ( Exception $e ) {
-			// restoring a blog must not fail because Matomo could not be synced for it
-			$this->logger->log_exception( 'sync_site', $e );
-		}
+		$this->sync_current_site_ignore_error();
 
 		restore_current_blog();
 	}

@@ -1474,21 +1474,6 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( $role, $this->get_access_for_current_site( $login ) );
 	}
 
-	private function activate_matomo_plugin() {
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		if ( is_multisite() ) {
-			update_site_option( 'active_sitewide_plugins', [ 'matomo/matomo.php' => time() ] );
-		} else {
-			// is_plugin_active_for_network() always returns false outside multisite
-			update_option( 'active_plugins', [ 'matomo/matomo.php' ] );
-		}
-
-		$this->assertTrue( is_plugin_active( 'matomo/matomo.php' ) );
-	}
-
 	/**
 	 * @param int $wp_user_id
 	 * @return string the Matomo login the user was synced to

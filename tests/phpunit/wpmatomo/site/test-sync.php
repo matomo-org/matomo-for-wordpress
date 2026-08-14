@@ -463,11 +463,14 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		update_blog_status( $blog_id, 'deleted', '1' );
 
-		// renamed before the hooks are registered, so update_option_blogname cannot sync it for us
-		// and the only thing left that could is the restore below
+		// renamed while Matomo is still inactive, so the plugin's own update_option_blogname hook
+		// cannot sync it for us and the only thing left that could is the restore below
 		switch_to_blog( $blog_id );
 		update_option( 'blogname', 'Renamed While Deleted' );
 		restore_current_blog();
+
+		// restore handlers require matomo to be active on the blog
+		$this->activate_matomo_plugin();
 
 		// sync_all() skips blogs flagged deleted, so the Matomo site stays stale
 		$this->sync->sync_all();

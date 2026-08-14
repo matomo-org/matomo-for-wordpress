@@ -124,6 +124,21 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		set_current_screen( 'edit.php' );
 	}
 
+	protected function activate_matomo_plugin() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( is_multisite() ) {
+			update_site_option( 'active_sitewide_plugins', [ 'matomo/matomo.php' => time() ] );
+		} else {
+			// is_plugin_active_for_network() always returns false outside multisite
+			update_option( 'active_plugins', [ 'matomo/matomo.php' ] );
+		}
+
+		$this->assertTrue( is_plugin_active( 'matomo/matomo.php' ) );
+	}
+
 	protected function skip_if_old_wordpress() {
 		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.6', '<' ) ) {
 			$this->markTestSkipped( 'WordPress version does not support application passwords.' );

@@ -105,7 +105,7 @@ class Sync extends Feature {
 		remove_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], 10 );
 		remove_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], 10 );
 		remove_action( 'profile_update', [ $this, 'sync_maybe_background' ], 10 );
-		remove_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], 11 );
+		remove_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], Site\Sync::MAKE_UNDELETE_BLOG_PRIORITY + 1 );
 	}
 
 	/**
@@ -678,8 +678,6 @@ class Sync extends Feature {
 	 * @return string|null matomo login or null when the user has no access
 	 */
 	protected function sync_user_access_for_site( $user, $idsite, $user_model ) {
-		$mapped_matomo_login = $this->get_own_matomo_user_login( $user->ID );
-
 		$role = Capabilities::get_highest_role_for_user( $user );
 
 		if ( Capabilities::ROLE_SUPERUSER === $role ) {
@@ -696,6 +694,8 @@ class Sync extends Feature {
 		}
 
 		if ( null === $role ) {
+			// make sure the mapped matomo login is actually for the current WP user
+			$mapped_matomo_login = $this->get_own_matomo_user_login( $user->ID );
 			if ( $mapped_matomo_login ) {
 				$user_model->deleteUserAccess( $mapped_matomo_login );
 			}
@@ -703,7 +703,7 @@ class Sync extends Feature {
 			return null;
 		}
 
-		// note: matomo_login may not be the same as mapped_matomo_login
+		// note: matomo_login may not be the same as the login this user was mapped to on the way in
 		$matomo_login = $this->ensure_user_exists( $user );
 		$user_model->deleteUserAccess( $matomo_login );
 		$user_model->addUserAccess( $matomo_login, $role, [ $idsite ] );
