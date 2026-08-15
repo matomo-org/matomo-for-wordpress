@@ -28,7 +28,7 @@ async function getLatestWordpressVersion() {
 
 class Website {
   private wpNonce: string|undefined;
-  private loggedIn: boolean = false;
+  private loggedInUser: string|null = null;
   private isWooCommerceSetup: boolean = false;
   private site: string|null = null;
   private wordPressFolderOverride: string|null = null;
@@ -43,13 +43,17 @@ class Website {
   }
 
   async getWpFolder() {
+    const wordpressFolder = this.wordPressFolderOverride || process.env.WORDPRESS_FOLDER;
+    if (wordpressFolder) {
+      return wordpressFolder;
+    }
+
     let wordpressVersion = process.env.WORDPRESS_VERSION || 'latest';
     if (wordpressVersion === 'latest') {
       wordpressVersion = await getLatestWordpressVersion();
     }
 
-    const wordpressFolder = this.wordPressFolderOverride || process.env.WORDPRESS_FOLDER || wordpressVersion;
-    return wordpressFolder;
+    return wordpressVersion;
   }
 
   async baseUrl() {
@@ -73,11 +77,14 @@ class Website {
   }
 
   async login(user?: string, pass?: string) {
-    if (this.loggedIn) {
+    const login = user || process.env.WORDPRESS_USER_LOGIN || 'root';
+
+    // set unconditionally: screenshot comparisons depend on the viewport size
+    await browser.setWindowSize(1366, 994);
+
+    if (this.loggedInUser === login) {
       return;
     }
-
-    await browser.setWindowSize(1366, 994);
 
     const baseUrl = await this.baseUrl();
     await this.retry(3, async () => {
@@ -91,7 +98,7 @@ class Website {
             window.jQuery('#user_login').val(l);
             window.jQuery('#user_pass').val(p);
           },
-          user || process.env.WORDPRESS_USER_LOGIN || 'root',
+          login,
           pass || process.env.WORDPRESS_USER_PASS || 'pass'
         );
         await $('#wp-submit').click();
@@ -103,6 +110,16 @@ class Website {
         }));
       }, { timeout: 60000 });
     });
+
+    this.loggedInUser = login;
+  }
+
+  /**
+   * Forgets which user we believe is logged in, so the next login() call logs in again instead of
+   * short circuiting. Used when we detect the browser has been logged out unexpectedly.
+   */
+  markLoggedOut() {
+    this.loggedInUser = null;
   }
 
   async logout() {
@@ -114,6 +131,8 @@ class Website {
 
         await $('#user_login').waitForExist({ timeout: 60000 });
     }
+
+    this.loggedInUser = null;
   }
 
   async getWpNonce() {
@@ -123,8 +142,11 @@ class Website {
 
     // assuming local docker-compose environment
     if (!this.wpNonce) {
-      const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
-      const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
+      // note this deliberately ignores wordPressFolderOverride: the app password always lives in
+      // the primary install, even while a multisite spec is pointed at the '-multi' one.
+      const wordpressFolder = process.env.WORDPRESS_FOLDER
+        || process.env.WORDPRESS_VERSION
+        || (await getLatestWordpressVersion());
 
       // using process.cwd() as __dirname is not available in wdio for some reason (except probably the conf.ts file)
       const pathToLocalAppPassword = path.join(process.cwd(), 'docker', 'wordpress', wordpressFolder, 'apppassword');
@@ -355,7 +377,7 @@ class Website {
 
   async deleteAllCookies() {
     await browser.deleteAllCookies();
-    this.loggedIn = false;
+    this.loggedInUser = null;
   }
 
   async setSiteLanguage(locale: string) {

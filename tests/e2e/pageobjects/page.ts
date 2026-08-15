@@ -71,6 +71,7 @@ export default class Page {
     result = await Website.retry(3, async () => {
       let r = await browser.url(`${baseUrl}${path}`);
       if (await $('#user_login').isExisting()) {
+        Website.markLoggedOut(); // so the login below isn't skipped as redundant
         await Website.login(); // logged out for some reason
         throw new Error('force retry');
       }
@@ -258,13 +259,21 @@ export default class Page {
   }
 
   overrideRequestDetails(ipAddress: string, userAgent: string, referrer: string) {
+    const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');
+
+    // only test-data-gen sets these; during e2e runs they are always null
+    if (!ipAddress && !userAgent && !referrer) {
+      // force so this doesn't throw when another worker removed it first, or it was never there
+      fs.rmSync(overrideFile, { force: true });
+      return;
+    }
+
     const overrides = {
       ipAddress,
       userAgent,
       referrer,
     };
 
-    const overrideFile = path.join(__dirname, '..', '..', '..', '.e2e-test-overrides.json');
     fs.writeFileSync(overrideFile, JSON.stringify(overrides));
   }
 

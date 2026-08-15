@@ -14,7 +14,7 @@ import * as path from "path";
 export default class MatomoPage extends Page {
 
   async open(path: string) {
-    const result = super.open(path);
+    const result = await super.open(path);
     await this.waitForLoading();
     await this.addStylesToPage(`
       table.entityTable tbody tr:hover td { background-color: unset !important; }
@@ -24,6 +24,10 @@ export default class MatomoPage extends Page {
   }
 
   async removeWhatsNewIfPresent(u) {
+    if (!(await $('.what-is-new-popup').isExisting())) {
+      return;
+    }
+
     let exists = false;
 
     try {

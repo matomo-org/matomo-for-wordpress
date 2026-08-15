@@ -10,7 +10,7 @@ import Page from './page.js';
 
 class ContactUsPage extends Page {
     async open() {
-        const result = super.open('/contact-us/');
+        const result = await super.open('/contact-us/');
 
         await $('#matomo_optout_checkbox').waitForExist({ timeout: 30000 });
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });

@@ -20,27 +20,6 @@ describe('Matomo Reporting > Ecommerce', () => {
 
   it('should load the overview page correctly', async () => {
     await OverviewPage.open();
-    await browser.pause(500);
-
-    let tags = await browser.execute(() => {
-      var tags = [];
-      $('.enrichedHeadline>.title').each(function () {
-        tags.push(this.tagName);
-      });
-      return tags;
-    });
-    console.log('TAG NAMES ARE: ' + JSON.stringify(tags));
-
-    await browser.pause(10000);
-
-    tags = await browser.execute(() => {
-      var tags = [];
-      $('.enrichedHeadline>.title').each(function () {
-        tags.push(this.tagName);
-      });
-      return tags;
-    });
-    console.log('TAG NAMES ARE: ' + JSON.stringify(tags));
 
     await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(

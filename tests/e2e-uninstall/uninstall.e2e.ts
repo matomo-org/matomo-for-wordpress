@@ -97,11 +97,19 @@ describe('MWP Uninstall', () => {
         await $('form #submit').click();
 
         await $('table.plugins').waitForExist({ timeout: 180000 });
-        await browser.pause(30000);
     }
 
-    // check that no matomo table exists in the database
+    // wait until tables have been dropped
     let result = await getTablesInstalled();
+    try {
+      await browser.waitUntil(async () => {
+        result = await getTablesInstalled();
+        return result.tables instanceof Array
+          && result.tables.filter((t: string) => t.includes('matomo')).length === 0;
+      }, { timeout: 60000, interval: 1000 });
+    } catch (e) {
+      // ignore, the assertions below will report what is still there
+    }
 
     expect(result.tables).toBeInstanceOf(Array); // sanity check
 
