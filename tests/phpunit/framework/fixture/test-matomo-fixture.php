@@ -198,11 +198,9 @@ class MatomoUnit_Matomo_Fixture {
 
 	private function uninstall_matomo() {
 		try {
-			// will not be defined for the first run test case
-			if (
-				class_exists( '\Piwik\SettingsPiwik' )
-				&& \Piwik\SettingsPiwik::isMatomoInstalled()
-			) {
+			Bootstrap::bootstrap_environment();
+
+			if ( \Piwik\SettingsPiwik::isMatomoInstalled() ) {
 				$uninstall = new Uninstaller();
 				$uninstall->uninstall( true );
 			}

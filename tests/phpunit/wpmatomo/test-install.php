@@ -12,7 +12,7 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
-class InstallTest extends MatomoAnalytics_SharedFixture_TestCase {
+class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * these tests need to run Installer::install() itself, so a new blog has to start out without

@@ -283,17 +283,20 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 * @param int[] $existing_blog_ids
 	 */
 	private function delete_orphaned_matomo_upload_dirs( $existing_blog_ids ) {
-		$sites_dir = dirname( ( new \WpMatomo\Paths() )->get_upload_base_dir() ) . '/sites';
+		$paths     = new \WpMatomo\Paths();
+		$sites_dir = dirname( $paths->get_upload_base_dir() ) . '/sites';
 		if ( ! is_dir( $sites_dir ) ) {
 			return;
 		}
+
+		$filesystem = $paths->get_file_system();
 
 		foreach ( new FilesystemIterator( $sites_dir, FilesystemIterator::SKIP_DOTS ) as $dir ) {
 			if ( ! $dir->isDir() || in_array( (int) $dir->getFilename(), $existing_blog_ids, true ) ) {
 				continue;
 			}
 
-			\Piwik\Filesystem::unlinkRecursive( $dir->getPathname() . '/matomo', true );
+			$filesystem->rmdir( $dir->getPathname() . '/matomo', true );
 		}
 	}
 

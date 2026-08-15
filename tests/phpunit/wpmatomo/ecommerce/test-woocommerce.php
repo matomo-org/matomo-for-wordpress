@@ -46,6 +46,8 @@ class WoocommerceTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	private $tracker;
 
+	private $sync_config;
+
 	public function setUp(): void {
 		parent::setUp();
 
