@@ -1,5 +1,26 @@
 == Changelog ===
 
+= 5.12.2 =
+* Bug fix: removing users from a blog did not correctly remove Matomo permissions. Matomo
+  permissions stayed valid until the daily sync executed.
+* Security: after authentication, if a user has more Matomo capabilities than their WP
+  capabilities allow, correct the user access row and only grant what their WP capabilities
+  allow.
+* Bug fix: multisite syncing and other functionality was broken for multisite installs
+  with > 100 sites.
+* Bug fix: make sure access syncing occurs when a user is granted superuser access and
+  if superuser access is revoked.
+* Bug fix: make sure user syncing can occur in REST, XML RPC and other non-frontend requests.
+* Bug fix: make sure site syncing can occur in REST, XML RPC and other non-frontend requests.
+* Bug fix: when saving user assigned WP role => matomo permission mappings, only sync changes
+  with Matomo after the changes are finalized in WordPress (or nothing gets synced until the
+  daily user sync).
+* Bug fix: drop Matomo tables and the WP => Matomo site mapping when a site is deleted in WP.
+* Bug fix: ensure Matomo capabilities are correctly assigned to users in safe mode.
+* Reliability: better handling of potential failures during the user and site sync processes.
+* Bug fix: make sure site and user syncing occur when a WP blog is restored (and Matomo is
+  activated for it).
+
 = 5.12.1 =
 * Security: remove unneeded token auth authentication path for Matomo API from WordPress/Auth.
 
