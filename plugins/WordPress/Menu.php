@@ -40,6 +40,8 @@ class Menu extends \Piwik\Plugin\Menu
 
             $view = new View("@WordPress/blogselection");
             $sites = array();
+            // get_sites() by default limits to first 100. kept here to potentially avoid blocking page
+            // render. (it is still possible to switch to one of those sites via the WordPress admin)
             foreach ( get_sites() as $matomo_site ) {
                 /** @var \WP_Site $matomo_site */
                 switch_to_blog( $matomo_site->blog_id );

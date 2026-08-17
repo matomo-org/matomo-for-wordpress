@@ -18,9 +18,11 @@ use Piwik\Plugins\SitesManager;
 use Piwik\Plugins\SitesManager\Model;
 use WP_Site;
 use WpMatomo\Bootstrap;
+use WpMatomo\Db\Settings as DbSettings;
 use WpMatomo\Feature;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
+use WpMatomo\Request;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync\SyncConfig;
@@ -34,7 +36,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */
 class Sync extends Feature {
-	const MAX_LENGTH_SITE_NAME = 90;
+	const MAX_LENGTH_SITE_NAME        = 90;
+	const MAKE_UNDELETE_BLOG_PRIORITY = 10;
 
 	/**
 	 * @var Logger
@@ -57,8 +60,11 @@ class Sync extends Feature {
 		$this->config_sync = new SyncConfig( $settings );
 	}
 
-	public function is_active() {
-		return is_admin();
+	/**
+	 * @return bool
+	 */
+	private function is_sync_allowed_for_request() {
+		return ! Request::is_frontend();
 	}
 
 	public function register_hooks() {
@@ -68,9 +74,59 @@ class Sync extends Feature {
 		add_action( 'update_option_timezone_string', [ $this, 'sync_current_site_ignore_error' ] );
 		add_action( 'matomo_setting_change_track_ecommerce', [ $this, 'sync_current_site_ignore_error' ] );
 		add_action( 'matomo_setting_change_site_currency', [ $this, 'sync_current_site_ignore_error' ] );
+		add_filter( 'wpmu_drop_tables', [ $this, 'on_drop_blog_tables' ], 10, 2 );
+		add_action( 'wp_delete_site', [ $this, 'on_delete_site' ], 10, 1 );
+		add_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], self::MAKE_UNDELETE_BLOG_PRIORITY, 1 );
+	}
+
+	/**
+	 * @param int $blog_id
+	 */
+	public function on_undelete_blog( $blog_id ) {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		switch_to_blog( $blog_id );
+
+		$this->sync_current_site_ignore_error();
+
+		restore_current_blog();
+	}
+
+	/**
+	 * @param string[] $tables
+	 * @param int      $blog_id
+	 *
+	 * @return string[]
+	 */
+	public function on_drop_blog_tables( $tables, $blog_id ) {
+		$matomo_tables = ( new DbSettings() )->get_installed_matomo_tables();
+
+		$this->logger->log( sprintf( 'Matomo will drop %s tables of deleted blog %s', count( $matomo_tables ), $blog_id ) );
+
+		return array_merge( (array) $tables, $matomo_tables );
+	}
+
+	/**
+	 * remove the matomo site mapping when a site is deleted
+	 *
+	 * @param WP_Site $old_site
+	 */
+	public function on_delete_site( $old_site ) {
+		Site::map_matomo_site_id( $old_site->id, null );
 	}
 
 	public function sync_current_site_ignore_error() {
+		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			// these hooks are not admin only, so this may run somewhere wp-admin/includes is not loaded
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		if ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
 			// @see https://github.com/matomo-org/matomo-for-wordpress/issues/577
 			return;
@@ -89,7 +145,9 @@ class Sync extends Feature {
 		Bootstrap::do_bootstrap();
 
 		if ( is_multisite() && function_exists( 'get_sites' ) ) {
-			foreach ( get_sites() as $site ) {
+			// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently leave
+			// every blog after that without a Matomo site
+			foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
 				if ( 1 === (int) $site->deleted ) {
 					continue;
 				}
@@ -112,6 +170,7 @@ class Sync extends Feature {
 						if ( $installer->can_be_installed() ) {
 							$installer->install();
 						} else {
+							$this->logger->log( sprintf( 'Matomo cannot be installed for blog: %s, skipping it.', $site->blog_id ) );
 							continue;
 						}
 					}
@@ -121,10 +180,11 @@ class Sync extends Feature {
 					$success = false;
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log( 'Matomo error syncing site: ' . $e->getMessage() );
+				} finally {
+					restore_current_blog();
 				}
 
 				$succeed_all = $succeed_all && $success;
-				restore_current_blog();
 			}
 		} else {
 			$success     = $this->sync_current_site();

@@ -15,6 +15,14 @@ use WpMatomo\Uninstaller;
 class InstallTest extends MatomoAnalytics_TestCase {
 
 	/**
+	 * these tests need to run Installer::install() itself, so a new blog has to start out without
+	 * Matomo rather than getting the framework's cloned install
+	 *
+	 * @var bool
+	 */
+	protected $clone_matomo_to_new_blogs = false;
+
+	/**
 	 * @var Settings
 	 */
 	private $settings;
@@ -109,6 +117,13 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$users_model = new UsersModel();
 		$all_users   = $users_model->getUsers( array() );
 
+		// matomo creates its own anonymous user at install time. it is not a WP user and the sync
+		// leaves it alone, so only the admin row is compared in full below
+		$this->assertSame( array( 'admin', 'anonymous' ), array_column( $all_users, 'login' ) );
+		$this->assertEquals( '0', $all_users[1]['superuser_access'] );
+
+		$all_users = array( $all_users[0] );
+
 		foreach ( array( 'password', 'date_registered', 'ts_password_modified' ) as $field ) {
 			$this->assertNotEmpty( $all_users[0][ $field ] );
 			unset( $all_users[0][ $field ] );
@@ -140,7 +155,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $this->installer->looks_like_it_is_installed() );
 		$this->assertFalse( Installer::is_intalled() );
 
-		$this->matomo_fixture->reset_config_for_install();
+		( new MatomoUnit_Matomo_Fixture() )->reset_config_for_install();
 
 		Bootstrap::set_not_bootstrapped();
 		$this->assertTrue( $this->installer->install() );

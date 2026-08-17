@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\UserRegionConverter;
 
-class UserRegionConverterTest extends MatomoAnalytics_TestCase {
+class UserRegionConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$regions = UserRegionConverter::convert( [] );

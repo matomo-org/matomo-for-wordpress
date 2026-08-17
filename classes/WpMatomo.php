@@ -42,7 +42,7 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.12.1';
+	const VERSION = '5.12.2';
 
 	/**
 	 * @var \WpMatomo\Feature[]
@@ -196,16 +196,25 @@ class WpMatomo {
 		}
 	}
 
+	/**
+	 * @param Settings $settings
+	 * @return \WpMatomo\Feature[]
+	 */
+	public static function get_safe_mode_features( $settings ) {
+		// being able to determine who has what access to Matomo is always necessary
+		$features = [ new Capabilities( $settings ) ];
+
+		if ( is_admin() ) {
+			$features[] = new Admin( $settings );
+			$features[] = new \WpMatomo\Admin\SafeModeMenu( $settings );
+		}
+
+		return $features;
+	}
+
 	private function get_all_features() {
 		if ( self::is_safe_mode() ) {
-			if ( is_admin() ) {
-				return [
-					new Admin( self::$settings ),
-					new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
-				];
-			}
-
-			return [];
+			return self::get_safe_mode_features( self::$settings );
 		}
 
 		$site_config = new SiteSync\SyncConfig( self::$settings );

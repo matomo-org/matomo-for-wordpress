@@ -16,7 +16,7 @@ use Piwik\Theme;
  * phpcs:disable WordPress.WP.AlternativeFunctions
  * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
  */
-class WordPressUmdCssTest extends MatomoAnalytics_TestCase {
+class WordPressUmdCssTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	const CUSTOM_CSS_PLUGIN    = 'WpUmdCssTestPlugin';
 	const CUSTOM_NO_CSS_PLUGIN = 'WpUmdNoCssTestPlugin';

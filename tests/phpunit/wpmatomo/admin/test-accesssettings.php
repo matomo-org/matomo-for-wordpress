@@ -9,7 +9,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 
-class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
+class AdminAccessSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var AccessSettings

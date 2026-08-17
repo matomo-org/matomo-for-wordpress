@@ -17,7 +17,7 @@ use WpMatomo\Settings;
  *
  * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
  */
-class AdminTrackingSettingsTest extends MatomoAnalytics_TestCase {
+class AdminTrackingSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var TrackingSettings

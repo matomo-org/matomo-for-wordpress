@@ -19,7 +19,7 @@ use WpMatomo\Uninstaller;
  * Don't need remote access
  * phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
  */
-class ScheduledTasksTest extends MatomoAnalytics_TestCase {
+class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var ScheduledTasks

@@ -3,12 +3,16 @@
  * @package matomo
  */
 
+use Piwik\Plugins\UsersManager\Model;
 use WpMatomo\Access;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+use WpMatomo\Site;
+use WpMatomo\User;
+use WpMatomo\User\Sync;
 
-class AccessTest extends MatomoAnalytics_TestCase {
+class AccessTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Access
@@ -91,5 +95,44 @@ class AccessTest extends MatomoAnalytics_TestCase {
 			),
 			$access
 		);
+	}
+
+	public function test_save_should_grant_access_that_the_capabilities_it_just_stored_allow() {
+		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
+
+		$this->access->save( array( 'editor' => Capabilities::KEY_VIEW ) );
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( array( $this->get_current_site_id() ), $this->get_view_sites_for( $login ) );
+	}
+
+	public function test_save_should_revoke_access_that_the_capabilities_it_just_stored_no_longer_allow() {
+		$user_id = self::factory()->user->create( array( 'role' => 'editor' ) );
+
+		// the behaviour under test is save()'s own sync, so get to the starting state independently
+		$this->access->save( array( 'editor' => Capabilities::KEY_VIEW ) );
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertEquals( array( $this->get_current_site_id() ), $this->get_view_sites_for( $login ) );
+
+		$this->access->save( array( 'editor' => Capabilities::KEY_NONE ) );
+
+		$this->assertSame( array(), $this->get_view_sites_for( $login ) );
+	}
+
+	private function get_current_site_id() {
+		return ( new Site() )->get_current_matomo_site_id();
+	}
+
+	/**
+	 * @param string $login
+	 * @return array
+	 */
+	private function get_view_sites_for( $login ) {
+		$view_access = ( new Model() )->getUsersSitesFromAccess( 'view' );
+
+		return isset( $view_access[ $login ] ) ? $view_access[ $login ] : array();
 	}
 }

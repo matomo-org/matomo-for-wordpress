@@ -5,7 +5,7 @@
 
 use WpMatomo\Report\Data;
 
-class ReportDataTest extends MatomoAnalytics_TestCase {
+class ReportDataTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Data

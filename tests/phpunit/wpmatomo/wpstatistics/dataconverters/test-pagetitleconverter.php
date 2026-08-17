@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\PagesTitleConverter;
 
-class PageTitleConverterTest extends MatomoAnalytics_TestCase {
+class PageTitleConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$pages = PagesTitleConverter::convert( [] );

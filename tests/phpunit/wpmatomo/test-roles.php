@@ -9,6 +9,8 @@ use WpMatomo\Settings;
 
 class RolesTest extends MatomoUnit_TestCase {
 
+	const THIRD_PARTY_ROLE = 'test_shop_manager';
+
 	/**
 	 * @var Roles
 	 */
@@ -20,6 +22,14 @@ class RolesTest extends MatomoUnit_TestCase {
 		$this->roles = $this->make_roles();
 		$this->roles->uninstall();
 		$this->roles->add_roles();
+	}
+
+	public function tearDown(): void {
+		// WP_Roles keeps roles in memory, and the database restore does not touch that, so a role
+		// left behind here would show up in every test case that runs after this one
+		remove_role( self::THIRD_PARTY_ROLE );
+
+		parent::tearDown();
 	}
 
 	private function make_roles() {
@@ -86,18 +96,28 @@ class RolesTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_available_roles_for_configuration() {
+		add_role( self::THIRD_PARTY_ROLE, 'Shop manager' );
+
 		$roles = $this->roles->get_available_roles_for_configuration();
-		$this->assertSame(
-			array(
-				'editor'       => 'Editor',
-				'author'       => 'Author',
-				'contributor'  => 'Contributor',
-				'subscriber'   => 'Subscriber',
-				'customer'     => 'Customer',
-				'shop_manager' => 'Shop manager',
-			),
-			$roles
+
+		$expected = array(
+			'editor'               => 'Editor',
+			'author'               => 'Author',
+			'contributor'          => 'Contributor',
+			'subscriber'           => 'Subscriber',
+			self::THIRD_PARTY_ROLE => 'Shop manager',
 		);
+		foreach ( $expected as $role_name => $display_name ) {
+			$this->assertArrayHasKey( $role_name, $roles );
+			$this->assertSame( $display_name, $roles[ $role_name ] );
+		}
+
+		// administrator is the super user when not network enabled, so it is not configurable
+		$this->assertArrayNotHasKey( 'administrator', $roles );
+
+		foreach ( array_keys( $this->roles->get_matomo_roles() ) as $matomo_role ) {
+			$this->assertArrayNotHasKey( $matomo_role, $roles );
+		}
 	}
 
 	public function test_role_capability() {

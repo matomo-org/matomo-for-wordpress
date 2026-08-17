@@ -6,7 +6,7 @@
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Settings;
 
-class SettingsTest extends MatomoAnalytics_TestCase {
+class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Settings

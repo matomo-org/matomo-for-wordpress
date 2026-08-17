@@ -31,7 +31,7 @@ class TestWoocommerce extends \WpMatomo\Ecommerce\Woocommerce {
 /**
  * @package matomo
  */
-class WoocommerceTest extends MatomoAnalytics_TestCase {
+class WoocommerceTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	use MatomoWooCommerceAwareTest;
 
@@ -45,6 +45,8 @@ class WoocommerceTest extends MatomoAnalytics_TestCase {
 	private $settings;
 
 	private $tracker;
+
+	private $sync_config;
 
 	public function setUp(): void {
 		parent::setUp();

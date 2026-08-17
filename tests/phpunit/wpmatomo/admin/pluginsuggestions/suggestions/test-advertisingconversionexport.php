@@ -9,7 +9,7 @@
 
 use WpMatomo\Admin\PluginSuggestions\Suggestions\AdvertisingConversionExport;
 
-class AdvertisingConversionExportTest extends MatomoAnalytics_TestCase {
+class AdvertisingConversionExportTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

@@ -6,7 +6,7 @@
 use WpMatomo\Report\Dates;
 use WpMatomo\User;
 
-class ReportDatesTest extends MatomoAnalytics_TestCase {
+class ReportDatesTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Dates

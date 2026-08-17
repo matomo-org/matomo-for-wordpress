@@ -16,7 +16,9 @@ use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
 use Piwik\Tracker\TrackerConfig;
+use WpMatomo\Capabilities;
 use WpMatomo\User;
+use WpMatomo\User\Sync;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -73,7 +75,28 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        $login = User::get_matomo_user_login($loggedInUserId);
+        return $this->makeAuthResultForWpUser($loggedInUserId);
+    }
+
+    /**
+     * @param int $wpUserId
+     * @return AuthResult|null null when the user must not be authenticated
+     */
+    private function makeAuthResultForWpUser($wpUserId)
+    {
+        $code = null;
+
+        if (user_can($wpUserId, Capabilities::KEY_SUPERUSER)) {
+            $code = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
+        } elseif (user_can($wpUserId, Capabilities::KEY_VIEW)) {
+            $code = AuthResult::SUCCESS;
+        }
+
+        if ($code === null) {
+            return null;
+        }
+
+        $login = User::get_matomo_user_login($wpUserId);
 
         $userModel = new Model();
         $matomoUser = $userModel->getUser($login);
@@ -81,7 +104,16 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
-        $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
+        if ((new Sync())->sync_user_if_access_exceeds_capabilities($wpUserId, $matomoUser)) {
+            // matomo's authorization layer trusts the persisted per site role verbatim, so the call
+            // above corrects it when it grants more than the user's live WordPress capabilities do.
+            // syncing can remove a user from Matomo, so re-read the one we authenticate as.
+            $login = User::get_matomo_user_login($wpUserId);
+            if (empty($login)) {
+                return null;
+            }
+        }
+
         return new AuthResult($code, $login, $this->token_auth);
     }
 
@@ -134,15 +166,6 @@ class Auth extends \Piwik\Plugins\Login\Auth
             remove_filter('application_password_is_api_request', $callback);
         }
 
-        $login = User::get_matomo_user_login($loggedInUserId);
-
-        $userModel = new Model();
-        $matomoUser = $userModel->getUser($login);
-        if (empty($matomoUser)) {
-            return null;
-        }
-
-        $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-        return new AuthResult($code, $login, $this->token_auth);
+        return $this->makeAuthResultForWpUser($loggedInUserId);
     }
 }

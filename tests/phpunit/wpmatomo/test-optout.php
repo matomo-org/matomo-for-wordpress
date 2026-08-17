@@ -6,7 +6,7 @@ use WpMatomo\Admin\PrivacySettings;
  * @package matomo
  * phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript
  */
-class OptOutTest extends MatomoAnalytics_TestCase {
+class OptOutTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_matomo_opt_out_classic_no_options() {
 		$result = do_shortcode( '[matomo_opt_out]' );

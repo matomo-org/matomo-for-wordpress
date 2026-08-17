@@ -6,7 +6,7 @@
 use Piwik\Common;
 use Piwik\Tracker\Db\WordPress;
 
-class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
+class DbWordPressTrackerTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var WordPress
@@ -65,8 +65,9 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_query_can_execute_select_queries() {
-		$table  = Common::prefixTable( 'user' );
-		$result = $this->db->query( ' select * from ' . $table );
+		$table = Common::prefixTable( 'user' );
+		// scoped to a single row: installing also creates Matomo's own anonymous user
+		$result = $this->db->query( ' select * from ' . $table . ' where login = ?', [ 'admin' ] );
 		$first  = $result->fetch();
 		$this->assertEquals( 'admin', $first['login'] );
 
@@ -76,7 +77,7 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
 	public function test_query_can_execute_select_queries_with_comments() {
 		$table  = Common::prefixTable( 'user' );
-		$result = $this->db->query( ' /* trigger = CronArchive */ select * from ' . $table );
+		$result = $this->db->query( ' /* trigger = CronArchive */ select * from ' . $table . ' where login = ?', [ 'admin' ] );
 
 		$first = $result->fetch();
 		$this->assertEquals( 'admin', $first['login'] );

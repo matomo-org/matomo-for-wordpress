@@ -6,7 +6,7 @@
 use WpMatomo\Settings;
 use WpMatomo\Site\Sync;
 
-class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
+class SiteSyncConfigTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Sync\SyncConfig

@@ -5,7 +5,7 @@
 
 use WpMatomo\API;
 
-class ApiTest extends MatomoAnalytics_TestCase {
+class ApiTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Api

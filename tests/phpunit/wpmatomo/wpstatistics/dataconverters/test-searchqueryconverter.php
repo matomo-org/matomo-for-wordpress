@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\SearchQueryConverter;
 
-class SearchQueryConverterTest extends MatomoAnalytics_TestCase {
+class SearchQueryConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$search_queries = SearchQueryConverter::convert( [] );

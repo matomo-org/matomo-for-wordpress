@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\PlatformConverter;
 
-class PlatformConverterTest extends MatomoAnalytics_TestCase {
+class PlatformConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$platforms = PlatformConverter::convert( [] );

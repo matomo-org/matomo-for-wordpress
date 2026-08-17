@@ -3,8 +3,13 @@
  * @package matomo
  */
 
+use Piwik\Access\Role\Admin;
+use Piwik\Access\Role\View;
+use Piwik\Date;
 use Piwik\Plugins\UsersManager\Model;
+use Piwik\Tracker\Request as TrackerRequest;
 use WpMatomo\Access;
+use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
@@ -46,6 +51,15 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();
+
+		$this->assume_admin_page();
+
+		// if left active, the plugin's own Sync would start syncing on every role change. these
+		// tests drive their own instance, so leave only the test one hooked
+		$registered = WpMatomo::get_active_feature( Sync::class );
+		if ( $registered ) {
+			$registered->remove_hooks();
+		}
 
 		$this->sync            = new MockMatomoUserSync();
 		$this->sync->mock_sync = false;
@@ -129,6 +143,29 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_delete_site( $blogid2 );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_not_limit_the_number_of_blogs_it_reconciles() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$limits = $this->capture_blog_query_limits(
+			function () {
+				$this->mock->sync_all();
+			}
+		);
+
+		$this->assertNotEmpty( $limits, 'expected sync_all() to query the list of blogs' );
+		$this->assertSame(
+			[ 0 ],
+			array_values( array_unique( $limits ) ),
+			'WP_Site_Query defaults to 100 blogs, so a limit leaves the rest unreconciled'
+		);
+	}
+
 	public function test_sync_current_site_does_not_fail() {
 		$this->assertNull( $this->sync->sync_current_users() );
 	}
@@ -162,13 +199,16 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$model  = new Model();
 		$logins = $model->getUsersLogin();
-		$this->assertSame( array( 'admin', 'admin1', 'admin2' ), $logins );
+
+		$this->assertSame( array( 'admin', 'admin1', 'admin2', 'anonymous' ), $logins );
 
 		// all admins should also be super users
-		foreach ( $logins as $login ) {
+		foreach ( array( 'admin', 'admin1', 'admin2' ) as $login ) {
 			$matomo_user = $this->get_matomo_user( $login );
 			$this->assertEquals( '1', $matomo_user['superuser_access'] );
 		}
+
+		$this->assertEquals( '0', $this->get_matomo_user( 'anonymous' )['superuser_access'] );
 	}
 
 	public function test_sync_current_users_creates_users_where_needed() {
@@ -194,6 +234,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin2',
+				'anonymous',
 				'author1',
 				'author2',
 				'editor1',
@@ -259,6 +300,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
+				'anonymous',
 				'contributor1',
 				'editor1',
 				'editor2',
@@ -298,6 +340,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
+				'anonymous',
 				'contributor1',
 				'editor1',
 				'editor2',
@@ -590,9 +633,898 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$caps->remove_hooks();
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_revoke_matomo_access_when_a_user_is_removed_from_a_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'betaviewer',
+			]
+		);
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		// check that the user really does have Matomo View on the other blog before we remove them
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$beta_idsite = $this->get_current_site_id();
+		$login       = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $login ) );
+		$this->restore_bootstrapped_blog();
+
+		( new Sync() )->register_hooks();
+
+		remove_user_from_blog( $user_id, $beta );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+
+		// sanity check: WordPress itself no longer considers the user able to view Matomo here, so
+		// anything left below is Matomo's own stale state and not a broken fixture
+		$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_VIEW ) );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertFalse( User::get_matomo_user_login( $user_id ) );
+
+		$this->restore_bootstrapped_blog();
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_matomo_access_on_other_blogs_when_a_user_is_removed_from_one_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'dualsiteviewer',
+			]
+		);
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		// the user keeps Matomo View on the main blog, which is the access that must be preserved
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+		( new Sync() )->sync_current_users();
+		$main_idsite = $this->get_current_site_id();
+		$main_login  = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $main_login );
+		$this->assertEquals( [ $main_idsite ], $this->get_view_sites_for( $main_login ) );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$this->restore_bootstrapped_blog();
+
+		( new Sync() )->register_hooks();
+
+		remove_user_from_blog( $user_id, $beta );
+
+		Bootstrap::do_bootstrap();
+
+		$this->assertTrue( user_can( new WP_User( $user_id ), Capabilities::KEY_VIEW ) );
+		$this->assertSame( $main_login, User::get_matomo_user_login( $user_id ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $main_login ) );
+		$this->assertEquals( [ $main_idsite ], $this->get_view_sites_for( $main_login ) );
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_revoke_matomo_superuser_access_on_every_blog_when_super_admin_is_revoked() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'netadmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertSame( '1', $this->get_matomo_user_on_blog( $blog_id, $login )['superuser_access'] );
+		}
+
+		( new Sync() )->register_hooks();
+
+		revoke_super_admin( $user_id );
+
+		// sanity check: WordPress itself no longer considers them a Matomo superuser, so anything
+		// left below is Matomo's own stale state and not a broken fixture
+		$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_SUPERUSER ) );
+
+		foreach ( $logins as $blog_id => $login ) {
+			// a subscriber has no Matomo capability at all, so they are removed
+			$this->assertEmpty( $this->get_matomo_user_on_blog( $blog_id, $login ) );
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_grant_matomo_superuser_access_on_every_blog_when_super_admin_is_granted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'futureadmin',
+			]
+		);
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		foreach ( $logins as $login ) {
+			$this->assertFalse( $login, 'a subscriber should not be in Matomo yet' );
+		}
+
+		( new Sync() )->register_hooks();
+
+		grant_super_admin( $user_id );
+
+		foreach ( array_keys( $logins ) as $blog_id ) {
+			$this->switch_to_bootstrapped_blog( $blog_id );
+			$login = User::get_matomo_user_login( $user_id );
+			$this->assertNotEmpty( $login );
+			$this->assertSame( '1', $this->get_matomo_user( $login )['superuser_access'] );
+			$this->restore_bootstrapped_blog();
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_resync_a_blog_that_has_been_restored_and_is_no_longer_flagged_deleted() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'restoredadmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+		$login  = $logins[ $beta ];
+		$this->assertSame( '1', $this->get_matomo_user_on_blog( $beta, $login )['superuser_access'] );
+
+		( new Sync() )->register_hooks();
+
+		update_blog_status( $beta, 'deleted', '1' );
+
+		revoke_super_admin( $user_id );
+
+		// on_super_admin_change() skips blogs flagged deleted, so this one keeps access it should no
+		// longer have
+		$this->assertSame( '1', $this->get_matomo_user_on_blog( $beta, $login )['superuser_access'] );
+
+		update_blog_status( $beta, 'deleted', '0' );
+
+		// after restoration, the user is resynced, and because it has no Matomo capabilities
+		// as a subscriber, it is removed
+		$this->assertEmpty( $this->get_matomo_user_on_blog( $beta, $login ) );
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_on_super_admin_change_should_correct_blogs_other_than_the_current_one() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'formeradmin',
+			]
+		);
+		grant_super_admin( $user_id );
+
+		$logins = $this->sync_and_get_logins_per_blog( $user_id, [ $beta ] );
+
+		// take the status away without the hooks registered, leaving the flag stale everywhere
+		revoke_super_admin( $user_id );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertSame( '1', $this->get_matomo_user_on_blog( $blog_id, $login )['superuser_access'] );
+		}
+
+		( new Sync() )->on_super_admin_change( $user_id );
+
+		foreach ( $logins as $blog_id => $login ) {
+			$this->assertEmpty( $this->get_matomo_user_on_blog( $blog_id, $login ) );
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	public function test_on_remove_user_from_blog_should_not_change_matomo_access_on_its_own() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		( new Sync() )->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
+	public function test_on_remove_user_from_blog_should_fall_back_to_the_current_blog_when_no_blog_id_is_given() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, 0 );
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	public function test_on_clean_user_cache_should_do_nothing_when_the_user_was_not_removed() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the capability is gone but no removal was recorded, so this is one of the many unrelated
+		// clean_user_cache() calls that must be ignored
+		$this->remove_matomo_view_from_user( $user_id );
+
+		( new Sync() )->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	public function test_on_clean_user_cache_should_do_nothing_when_the_removal_was_recorded_for_a_different_blog() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() + 1234 );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_on_clean_user_cache_should_flush_only_the_blog_it_is_called_on() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		add_user_to_blog( $beta, $user_id, Roles::ROLE_VIEW );
+
+		$main_login = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		( new Sync() )->sync_current_users();
+		$beta_idsite = $this->get_current_site_id();
+		$beta_login  = User::get_matomo_user_login( $user_id );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $beta_login ) );
+		$this->remove_matomo_view_from_user( $user_id );
+		$this->restore_bootstrapped_blog();
+
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, $beta );
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		// flushing on the main blog must leave the queued entry for the other blog alone
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $main_login ) );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+		$this->assertEquals( [ $beta_idsite ], $this->get_view_sites_for( $beta_login ) );
+
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $beta_login ) );
+		$this->restore_bootstrapped_blog();
+
+		wp_delete_site( $beta );
+	}
+
+	public function test_on_clean_user_cache_should_keep_access_for_a_user_who_still_has_the_capability() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+
+		// deliberately not taking the capability away
+		$sync->on_clean_user_cache( $user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
+	public function test_on_clean_user_cache_should_not_delete_another_users_access_when_the_login_mapping_is_reallocated() {
+		$this->activate_matomo_plugin();
+
+		$other_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$other_login = $this->grant_matomo_view_and_sync( $other_id );
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		// corrupted state: both WP users point at the same Matomo login, so syncing this one has to
+		// give it a login of its own rather than let the two share an identity
+		User::map_matomo_user_login( $user_id, $other_login );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $user_id, get_current_blog_id() );
+		$sync->on_clean_user_cache( $user_id );
+
+		$new_login = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $new_login );
+		$this->assertNotSame( $other_login, $new_login );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $new_login ) );
+
+		// the contested login belongs to the other user, who was not part of this sync at all
+		$this->assertSame( $other_login, User::get_matomo_user_login( $other_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $other_login ) );
+	}
+
+	public function test_register_hooks_should_delete_the_matomo_user_when_a_wordpress_user_is_deleted() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		( new Sync() )->register_hooks();
+
+		// picks wp_delete_user() on single site and wpmu_delete_user() on multisite
+		self::delete_user( $user_id );
+
+		$this->assertEquals( [], $this->get_view_sites_for( $login ) );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertFalse( User::get_matomo_user_login( $user_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_keep_the_matomo_user_when_only_deleted_from_one_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// a super admin is entitled to Matomo on every blog whether or not they are a member of it,
+		// so removing them from this one leaves a Matomo user that has to survive
+		grant_super_admin( $user_id );
+
+		( new Sync() )->register_hooks();
+
+		if ( ! function_exists( 'wp_delete_user' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+		}
+
+		// on multisite wp_delete_user() only removes the user from the current blog, so it fires
+		// deleted_user while the WordPress user itself still exists
+		wp_delete_user( $user_id );
+		$this->assertNotEmpty( get_userdata( $user_id ) );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertSame( $login, User::get_matomo_user_login( $user_id ) );
+	}
+
+	public function test_register_hooks_should_not_delete_a_matomo_user_that_another_wordpress_user_is_also_mapped_to() {
+		$this->activate_matomo_plugin();
+
+		$keeper_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$keeper_login = $this->grant_matomo_view_and_sync( $keeper_id );
+
+		$deleted_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->grant_matomo_view_and_sync( $deleted_id );
+
+		// corrupted state: both WP users point at the same Matomo login. deleting one of them must
+		// not take the identity the other is still using with it
+		User::map_matomo_user_login( $deleted_id, $keeper_login );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $deleted_id );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $keeper_login ) );
+		$this->assertSame( $keeper_login, User::get_matomo_user_login( $keeper_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $keeper_login ) );
+
+		// the contested mapping must not outlive the WP user it belonged to, or the keeper goes on
+		// looking contested and gets reallocated on their next sync
+		$this->assertFalse( User::get_matomo_user_login( $deleted_id ) );
+	}
+
+	public function test_register_hooks_should_stop_a_deleted_users_token_tracking() {
+		$this->activate_matomo_plugin();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+
+		$token = ( new Model() )->generateRandomTokenAuth();
+		( new Model() )->addTokenAuth( $login, $token, 'test token', Date::now()->getDatetime() );
+
+		$idsite = $this->get_current_site_id();
+		$this->assertTrue( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $user_id );
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+
+		// the token rows went with the user, but the tracker compares against a hashed copy it never
+		// rechecks, so without invalidating it the token of a deleted user keeps tracking
+		$this->assertFalse( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+	}
+
+	public function test_register_hooks_should_leave_matomo_alone_when_a_user_it_never_synced_is_deleted() {
+		$this->activate_matomo_plugin();
+
+		$synced_user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login          = $this->grant_matomo_view_and_sync( $synced_user_id );
+
+		// a subscriber has no Matomo capability, so nothing ever mapped them to a Matomo user
+		$unsynced_user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->assertFalse( User::get_matomo_user_login( $unsynced_user_id ) );
+
+		( new Sync() )->register_hooks();
+
+		self::delete_user( $unsynced_user_id );
+
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( $login, User::get_matomo_user_login( $synced_user_id ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_downgrade_an_access_row_that_outranks_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the admin access a sync left behind before the user was downgraded to view in WordPress
+		$this->set_access_for_current_site( $login, Admin::ID );
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_leave_an_access_row_that_matches_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_not_upgrade_an_access_row_below_the_wp_capability() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// promoted in WordPress but not synced yet. granting access is a sync's job, not ours
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+		$this->assertTrue( user_can( new WP_User( $user_id ), Capabilities::KEY_ADMIN ) );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_clear_a_stale_superuser_flag() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the flag a sync left behind after the WordPress side was downgraded
+		( new Model() )->setSuperUserAccess( $login, true );
+		$this->assertNotEmpty( $this->get_matomo_user( $login )['superuser_access'] );
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertEmpty( $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_on_clean_user_cache_should_not_touch_other_users_when_the_removed_user_was_never_mapped() {
+		$this->activate_matomo_plugin();
+
+		$other_id    = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$other_login = $this->grant_matomo_view_and_sync( $other_id );
+
+		// Matomo never knew about this one, so get_matomo_user_login() gives back false and every
+		// cleanup query below runs with a false login
+		$unmapped_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$this->assertFalse( User::get_matomo_user_login( $unmapped_id ) );
+
+		$sync = new Sync();
+		$sync->on_remove_user_from_blog( $unmapped_id, get_current_blog_id() );
+		$sync->on_clean_user_cache( $unmapped_id );
+
+		$this->assertNotEmpty( $this->get_matomo_user( $other_login ) );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $other_login ) );
+		$this->assertEquals( '1', $this->get_matomo_user( 'admin' )['superuser_access'] );
+	}
+
+	public function test_sync_current_users_should_not_leave_a_per_site_access_row_on_a_superuser() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+
+		( new WP_User( $user_id ) )->add_role( 'administrator' );
+
+		( new Sync() )->sync_current_users();
+
+		// superuser_access already grants every site, so the row the earlier role added is unneeded
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
+		$this->assertNull( $this->get_access_for_current_site( $login ) );
+	}
+
+	public function test_sync_current_users_should_stop_a_token_tracking_once_the_access_behind_it_is_gone() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_ADMIN );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertSame( Admin::ID, $this->get_access_for_current_site( $login ) );
+
+		// the plugin never issues these itself, but UsersManager.createAppSpecificTokenAuth can, and
+		// only admin/write access puts one in the tracker's list of tokens allowed to force an IP,
+		// a timestamp or a visitor id
+		$token = ( new Model() )->generateRandomTokenAuth();
+		( new Model() )->addTokenAuth( $login, $token, 'test token', Date::now()->getDatetime() );
+
+		$idsite = $this->get_current_site_id();
+		$this->assertTrue( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+
+		( new WP_User( $user_id ) )->remove_role( Roles::ROLE_ADMIN );
+		( new WP_User( $user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		( new Sync() )->sync_current_users();
+
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+		$this->assertFalse( TrackerRequest::authenticateSuperUserOrAdminOrWrite( $token, $idsite ) );
+	}
+
+	public function test_sync_current_users_should_keep_a_user_whose_sync_threw_and_still_sync_the_rest() {
+		$failing_id = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'aaa_sync_fails',
+			]
+		);
+		$other_id   = self::factory()->user->create(
+			[
+				'role'       => 'subscriber',
+				'user_login' => 'zzz_sync_works',
+			]
+		);
+
+		$failing_login = $this->grant_matomo_view_and_sync( $failing_id );
+		$other_login   = $this->grant_matomo_view_and_sync( $other_id );
+
+		$fail_for_one_user = function ( $user ) use ( $failing_id ) {
+			if ( (int) $user->ID === $failing_id ) {
+				throw new \Exception( 'simulated failure while syncing this user' );
+			}
+		};
+
+		add_action( 'matomo_before_sync_user', $fail_for_one_user );
+		try {
+			( new Sync() )->sync_current_users();
+		} finally {
+			remove_action( 'matomo_before_sync_user', $fail_for_one_user );
+		}
+
+		// the sync never got far enough to decide this user has no access, so the cleanup sweep must
+		// leave them alone rather than read the failure as "not entitled to anything"
+		$this->assertNotEmpty( $this->get_matomo_user( $failing_login ) );
+		$this->assertSame( $failing_login, User::get_matomo_user_login( $failing_id ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $failing_login ) );
+
+		// the users after the failing one were still synced
+		$this->assertNotEmpty( $this->get_matomo_user( $other_login ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $other_login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_remove_a_revoked_user_that_a_stale_site_row_would_otherwise_keep() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( '1', $this->get_matomo_user( $login )['superuser_access'] );
+
+		// stale site access which shouldn't normally happen
+		$stale_idsite = $this->get_current_site_id() + 1000;
+		( new Model() )->addUserAccess( $login, View::ID, [ $stale_idsite ] );
+
+		( new WP_User( $user_id ) )->remove_role( 'administrator' ); // user will have no access after this
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( [], ( new Model() )->getSitesAccessFromUser( $login ) );
+	}
+
+	public function test_sync_current_users_should_remove_access_to_sites_the_blog_is_not_mapped_to() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// only one Matomo site belongs to a blog, so a row for any other is orphaned. Site\Sync
+		// can produce them by creating a fresh site whenever the blog to site mapping is lost
+		$stale_idsite = $this->get_current_site_id() + 1000;
+		( new Model() )->addUserAccess( $login, Admin::ID, [ $stale_idsite ] );
+
+		( new Sync() )->sync_current_users();
+
+		// the user is retained, so nothing else would ever have reconciled the stale row
+		$this->assertNotEmpty( $this->get_matomo_user( $login ) );
+		$this->assertSame( View::ID, $this->get_access_for_current_site( $login ) );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+		$this->assertSame( [], ( new Model() )->getUsersSitesFromAccess( Admin::ID ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_revoke_when_no_capability_resolves_for_the_user() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$login   = $this->grant_matomo_view_and_sync( $user_id );
+
+		// the user is left entitled to no Matomo access at all, so the access a sync left behind
+		// is the only thing keeping them in Matomo
+		$this->remove_matomo_view_from_user( $user_id );
+
+		$this->assertTrue( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+
+		// the user has access to no site anymore, so they are removed from Matomo entirely
+		$this->assertEmpty( $this->get_matomo_user( $login ) );
+	}
+
+	public function test_sync_user_if_access_exceeds_capabilities_should_do_nothing_when_the_user_is_not_mapped_to_a_matomo_user() {
+		$user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+
+		$this->assertEmpty( User::get_matomo_user_login( $user_id ) );
+
+		$this->assertFalse( ( new Sync() )->sync_user_if_access_exceeds_capabilities( $user_id ) );
+	}
+
+	/**
+	 * @param callable $callback
+	 * @return int[] the `number` query var of every blog query the callback made
+	 */
+	private function capture_blog_query_limits( $callback ) {
+		$limits = [];
+
+		$capture = function ( $query ) use ( &$limits ) {
+			$limits[] = (int) $query->query_vars['number'];
+		};
+
+		add_action( 'pre_get_sites', $capture );
+		try {
+			$callback();
+		} finally {
+			remove_action( 'pre_get_sites', $capture );
+		}
+
+		return $limits;
+	}
+
 	private function get_matomo_user( $login ) {
 		$model = new Model();
 
 		return $model->getUser( $login );
+	}
+
+	/**
+	 * @param int   $wp_user_id
+	 * @param int[] $other_blog_ids
+	 * @return array<int, string|false>
+	 */
+	private function sync_and_get_logins_per_blog( $wp_user_id, $other_blog_ids ) {
+		$logins = [];
+
+		foreach ( array_merge( [ get_current_blog_id() ], $other_blog_ids ) as $blog_id ) {
+			$this->switch_to_bootstrapped_blog( $blog_id );
+			( new Sync() )->sync_current_users();
+			$logins[ $blog_id ] = User::get_matomo_user_login( $wp_user_id );
+			$this->restore_bootstrapped_blog();
+		}
+
+		return $logins;
+	}
+
+	/**
+	 * @param int    $blog_id
+	 * @param string $login
+	 *
+	 * @return array
+	 */
+	private function get_matomo_user_on_blog( $blog_id, $login ) {
+		$this->switch_to_bootstrapped_blog( $blog_id );
+		$matomo_user = $this->get_matomo_user( $login );
+		$this->restore_bootstrapped_blog();
+
+		return $matomo_user;
+	}
+
+	/**
+	 * @param string $login
+	 * @return string|null the Matomo access the login has to the current site
+	 */
+	private function get_access_for_current_site( $login ) {
+		$idsite = $this->get_current_site_id();
+
+		foreach ( ( new Model() )->getSitesAccessFromUser( $login ) as $access ) {
+			if ( (int) $access['site'] === (int) $idsite ) {
+				return $access['access'];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param string $login
+	 * @param string $role
+	 */
+	private function set_access_for_current_site( $login, $role ) {
+		$model  = new Model();
+		$idsite = $this->get_current_site_id();
+
+		$model->deleteUserAccess( $login, [ $idsite ] );
+		$model->addUserAccess( $login, $role, [ $idsite ] );
+
+		$this->assertSame( $role, $this->get_access_for_current_site( $login ) );
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 * @return string the Matomo login the user was synced to
+	 */
+	private function grant_matomo_view_and_sync( $wp_user_id ) {
+		( new WP_User( $wp_user_id ) )->add_role( Roles::ROLE_VIEW );
+
+		( new Sync() )->sync_current_users();
+
+		$login = User::get_matomo_user_login( $wp_user_id );
+		$this->assertNotEmpty( $login );
+		$this->assertEquals( [ $this->get_current_site_id() ], $this->get_view_sites_for( $login ) );
+
+		return $login;
+	}
+
+	/**
+	 * @param int $wp_user_id
+	 */
+	private function remove_matomo_view_from_user( $wp_user_id ) {
+		( new WP_User( $wp_user_id ) )->remove_role( Roles::ROLE_VIEW );
+
+		$this->assertFalse( user_can( new WP_User( $wp_user_id ), Capabilities::KEY_VIEW ) );
+	}
+
+	private function create_blog_with_matomo() {
+		$blog_id = self::factory()->blog->create();
+
+		( new \WpMatomo\Site\Sync( new Settings() ) )->sync_all();
+
+		$this->assertNotEmpty( Site::get_matomo_site_id( $blog_id ) );
+
+		return $blog_id;
+	}
+
+	private function switch_to_bootstrapped_blog( $blog_id ) {
+		switch_to_blog( $blog_id );
+		Bootstrap::do_bootstrap();
+	}
+
+	private function restore_bootstrapped_blog() {
+		restore_current_blog();
+		Bootstrap::do_bootstrap();
+	}
+
+	/**
+	 * @param string $login
+	 * @return array
+	 */
+	private function get_view_sites_for( $login ) {
+		$view_access = ( new Model() )->getUsersSitesFromAccess( 'view' );
+		return isset( $view_access[ $login ] ) ? $view_access[ $login ] : [];
 	}
 }

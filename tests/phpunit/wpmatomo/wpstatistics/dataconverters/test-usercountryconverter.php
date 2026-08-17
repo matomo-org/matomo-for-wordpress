@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\UserCountryConverter;
 
-class UserCountryConverterTest extends MatomoAnalytics_TestCase {
+class UserCountryConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$countries = UserCountryConverter::convert( [] );

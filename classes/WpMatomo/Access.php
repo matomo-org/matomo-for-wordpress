@@ -60,10 +60,12 @@ class Access {
 		// synced across sites when the plugin is network activated
 		$this->settings->apply_changes( [ Settings::OPTION_KEY_CAPS_ACCESS => $caps_to_store ] );
 
+		// wp_roles_init must be invoked for the change to be finalized. the user sync will then
+		// read the WP roles to update user access
+		$wp_roles->init_roles();
+
 		$sync = new Sync();
 		$sync->sync_current_users();
-
-		$wp_roles->init_roles();
 
 		if ( $this->settings->is_network_enabled() ) {
 			// we do this in the background syncing across all sites...

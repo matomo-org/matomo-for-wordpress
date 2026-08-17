@@ -18,7 +18,7 @@ $piwik_minimumPHPVersion = '7.2.5';
  * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
  */
-class AdminSystemReportTest extends MatomoAnalytics_TestCase {
+class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var SystemReport

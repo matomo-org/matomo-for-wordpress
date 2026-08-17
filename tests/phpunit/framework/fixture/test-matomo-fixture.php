@@ -32,7 +32,21 @@ use WpMatomo\User;
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
  */
 class MatomoUnit_Matomo_Fixture {
-	public function set_up( $test_case = null ) {
+
+	/**
+	 * Applies the per test annotations this fixture supports: noTestMode, noDebugLog and
+	 * provideContainerConfig.
+	 *
+	 * Kept separate from set_up() so MatomoAnalytics_SharedFixture_TestCase, which does not run the
+	 * installer per test, can still honor them before it bootstraps.
+	 *
+	 * @param mixed $test_case
+	 * @param bool  $enable_test_mode set to false when the caller knows PIWIK_TEST_MODE must not be
+	 *                                defined, but has no test case to read @noTestMode off
+	 */
+	public function apply_test_annotations( $test_case = null, $enable_test_mode = true ) {
+		$annotations = [];
+
 		if ( $test_case ) {
 			$test_class_name  = get_class( $test_case );
 			$test_method_name = $test_case->getName();
@@ -43,7 +57,8 @@ class MatomoUnit_Matomo_Fixture {
 		}
 
 		if (
-			empty( $annotations['method']['noTestMode'] )
+			$enable_test_mode
+			&& empty( $annotations['method']['noTestMode'] )
 			&& ! defined( 'PIWIK_TEST_MODE' )
 		) {
 			define( 'PIWIK_TEST_MODE', true );
@@ -62,9 +77,13 @@ class MatomoUnit_Matomo_Fixture {
 			}
 		}
 
-		if ( ! empty( $annotations['method']['noDebugLog'] ) ) {
+		if ( ! empty( $annotations['method']['noDebugLog'] ) && ! defined( 'MATOMO_DEBUG' ) ) {
 			define( 'MATOMO_DEBUG', false );
 		}
+	}
+
+	public function set_up( $test_case = null, $enable_test_mode = true ) {
+		$this->apply_test_annotations( $test_case, $enable_test_mode );
 
 		$this->uninstall_matomo();
 
@@ -90,6 +109,14 @@ class MatomoUnit_Matomo_Fixture {
 		// is always set when tests start
 		$roles->add_roles( true );
 
+		$this->register_hooks();
+
+		if ( ! empty( $GLOBALS['wpdb'] ) ) {
+			$GLOBALS['wpdb']->suppress_errors( false );
+		}
+	}
+
+	public function register_hooks() {
 		add_action(
 			'set_current_user',
 			function () {
@@ -123,10 +150,6 @@ class MatomoUnit_Matomo_Fixture {
 				\Piwik\Log::unsetInstance();
 			}
 		);
-
-		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( false );
-		}
 	}
 
 	public function tear_down() {
@@ -175,11 +198,9 @@ class MatomoUnit_Matomo_Fixture {
 
 	private function uninstall_matomo() {
 		try {
-			// will not be defined for the first run test case
-			if (
-				class_exists( '\Piwik\SettingsPiwik' )
-				&& \Piwik\SettingsPiwik::isMatomoInstalled()
-			) {
+			Bootstrap::bootstrap_environment();
+
+			if ( \Piwik\SettingsPiwik::isMatomoInstalled() ) {
 				$uninstall = new Uninstaller();
 				$uninstall->uninstall( true );
 			}

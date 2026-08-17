@@ -9,7 +9,7 @@
 
 use WpMatomo\Admin\PluginSuggestions\Suggestions\UsersFlow;
 
-class UsersFlowTest extends MatomoAnalytics_TestCase {
+class UsersFlowTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function setUp(): void {
 		parent::setUp();

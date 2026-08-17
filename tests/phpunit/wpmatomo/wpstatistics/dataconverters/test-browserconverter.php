@@ -2,7 +2,7 @@
 
 use WpMatomo\WpStatistics\DataConverters\BrowsersConverter;
 
-class BrowserConverterTest extends MatomoAnalytics_TestCase {
+class BrowserConverterTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_empty_list() {
 		$browsers = BrowsersConverter::convert( [] );

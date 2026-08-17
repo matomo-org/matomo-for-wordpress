@@ -6,7 +6,7 @@
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Settings;
 
-class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
+class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var TrackingSettings

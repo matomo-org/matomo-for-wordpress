@@ -18,7 +18,7 @@ require_once __DIR__ . '/../../framework/mocks/mock-ajax-tracker.php';
  * phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
  * phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
  */
-class BaseTest extends MatomoAnalytics_TestCase {
+class BaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var Settings

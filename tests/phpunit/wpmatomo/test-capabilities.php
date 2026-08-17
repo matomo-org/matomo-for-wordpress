@@ -3,6 +3,9 @@
  * @package matomo
  */
 
+use Piwik\Access\Role\Admin;
+use Piwik\Access\Role\View;
+use Piwik\Access\Role\Write;
 use WpMatomo\Access;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
@@ -20,7 +23,7 @@ class TestMatomoCapabilities extends Capabilities {
 	}
 }
 
-class CapabilitiesTest extends MatomoAnalytics_TestCase {
+class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
 	 * @var TestMatomoCapabilities
@@ -79,7 +82,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	public function test_add_capabilities_to_user_and_add_capabilities_to_roles( $assume_network_enabled ) {
 		$this->settings->set_assume_is_network_enabled_in_tests( $assume_network_enabled );
 
-		$this->matomo_fixture->create_set_super_admin( self::factory() );
+		$this->create_set_super_admin();
 
 		$id1 = self::factory()->user->create( array( 'role' => 'editor' ) );
 		$id2 = self::factory()->user->create( array( 'role' => 'author' ) );
@@ -126,6 +129,46 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 			[ true ],
 			[ false ],
 		];
+	}
+
+	public function test_get_role_ranking_should_rank_matomo_access_from_no_access_to_superuser() {
+		// also guards the role IDs in Capabilities against drifting from Matomo's Role classes, as
+		// they have to be spelled out literally there
+		$this->assertSame( 0, Capabilities::get_role_ranking( null ) );
+		$this->assertSame( 0, Capabilities::get_role_ranking( 'noaccess' ) );
+		$this->assertSame( 1, Capabilities::get_role_ranking( View::ID ) );
+		$this->assertSame( 2, Capabilities::get_role_ranking( Write::ID ) );
+		$this->assertSame( 3, Capabilities::get_role_ranking( Admin::ID ) );
+		$this->assertSame( 4, Capabilities::get_role_ranking( Capabilities::ROLE_SUPERUSER ) );
+	}
+
+	/**
+	 * @dataProvider get_test_data_for_network_enabled_test
+	 */
+	public function test_get_highest_role_for_user_should_return_the_matomo_access_the_wp_capability_maps_to( $assume_network_enabled ) {
+		$this->settings->set_assume_is_network_enabled_in_tests( $assume_network_enabled );
+
+		$super_admin_id = $this->create_set_super_admin();
+
+		$admin_id     = self::factory()->user->create( [ 'role' => 'editor' ] );
+		$write_id     = self::factory()->user->create( [ 'role' => 'author' ] );
+		$view_id      = self::factory()->user->create( [ 'role' => 'contributor' ] );
+		$no_access_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+
+		$access = new Access( $this->settings );
+		$access->save(
+			[
+				'editor'      => Capabilities::KEY_ADMIN,
+				'author'      => Capabilities::KEY_WRITE,
+				'contributor' => Capabilities::KEY_VIEW,
+			]
+		);
+
+		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
+		$this->assertSame( Admin::ID, Capabilities::get_highest_role_for_user( $admin_id ) );
+		$this->assertSame( Write::ID, Capabilities::get_highest_role_for_user( $write_id ) );
+		$this->assertSame( View::ID, Capabilities::get_highest_role_for_user( $view_id ) );
+		$this->assertNull( Capabilities::get_highest_role_for_user( $no_access_id ) );
 	}
 
 	private function make_all_caps( $caps_to_set ) {
