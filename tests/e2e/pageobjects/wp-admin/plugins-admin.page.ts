@@ -7,6 +7,7 @@
  */
 
 import WpAdminPage from './page.js';
+import { REQUIREMENTS_FAQ_PATH } from './update-plugin.page.js';
 import {$, browser} from "@wdio/globals";
 
 export const MATOMO_UPDATE_ROW_SELECTOR = 'tr.plugin-update-tr[data-slug="matomo"]';
@@ -30,10 +31,30 @@ class PluginsAdminPage extends WpAdminPage {
     await browser.execute((s) => {
       window.jQuery(`${s} .update-link`)[0].click();
     }, MATOMO_UPDATE_ROW_SELECTOR);
+  }
 
-    await browser.waitUntil(async () => {
-      return /update\.php/.test(await browser.execute(() => window.location.href));
-    }, { timeout: 60000 });
+  async waitForUpdateRowText(text: string) {
+    await browser.waitUntil(
+      async () => (await this.updateRowText()).includes(text),
+      { timeout: 60000, timeoutMsg: `the plugin update row never contained "${text}"` }
+    );
+  }
+
+  async updateNowUrl(): Promise<string> {
+    const url = await browser.execute(
+      (s) => window.jQuery(`${s} .update-link`).attr('href'),
+      MATOMO_UPDATE_ROW_SELECTOR
+    ) as string;
+
+    if (!url) {
+      throw new Error(`no update link found in ${MATOMO_UPDATE_ROW_SELECTOR}`);
+    }
+
+    return url;
+  }
+
+  async hasRequirementsFaqLinkInUpdateRow() {
+    return await this.hasElement(`${MATOMO_UPDATE_ROW_SELECTOR} a[href*="${REQUIREMENTS_FAQ_PATH}"]`);
   }
 
   async installedVersion() {

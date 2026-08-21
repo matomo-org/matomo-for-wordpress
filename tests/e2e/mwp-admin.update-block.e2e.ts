@@ -105,7 +105,7 @@ describe('MWP Admin > Matomo 6 Update Block', () => {
     // would really replace the installed plugin.
   });
 
-  it('should fail the update with a message explaining the requirements', async function () {
+  it('should fail the update in place with a message explaining the requirements', async function () {
     if (!isBlocked) {
       this.skip();
       return;
@@ -113,6 +113,24 @@ describe('MWP Admin > Matomo 6 Update Block', () => {
 
     await PluginsAdminPage.open();
     await PluginsAdminPage.clickUpdateNow();
+
+    await PluginsAdminPage.waitForUpdateRowText('Update failed');
+
+    const rowText = await PluginsAdminPage.updateRowText();
+    expect(rowText).toContain(`Matomo Analytics ${FAKE_UPDATE_VERSION} cannot be installed`);
+    expect(rowText).toContain('PHP 8.1 or higher is required');
+    expect(rowText).toContain('Please ask your hosting provider to update your server');
+    expect(await PluginsAdminPage.hasRequirementsFaqLinkInUpdateRow()).toBeTruthy();
+  });
+
+  it('should fail the update on the update page with a message explaining the requirements', async function () {
+    if (!isBlocked) {
+      this.skip();
+      return;
+    }
+
+    await PluginsAdminPage.open();
+    await UpdatePluginPage.open(await PluginsAdminPage.updateNowUrl());
 
     await UpdatePluginPage.waitForText('cannot be installed because your server');
 

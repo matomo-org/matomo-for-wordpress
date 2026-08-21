@@ -8,12 +8,21 @@
 
 import { browser } from '@wdio/globals';
 import WpAdminPage from './page.js';
+import Website from '../../website.js';
 
-const REQUIREMENTS_FAQ_PATH = 'what-are-the-requirements-for-matomo-for-wordpress';
+export const REQUIREMENTS_FAQ_PATH = 'what-are-the-requirements-for-matomo-for-wordpress';
 
 export const UPDATE_RESULT_SELECTOR = '#wpbody-content .wrap';
 
 class UpdatePluginPage extends WpAdminPage {
+  /**
+   * Opens an update link taken from the plugins screen.
+   */
+  async open(url: string) {
+    const baseUrl = await Website.baseUrl();
+    return await super.open(url.startsWith(baseUrl) ? url.substring(baseUrl.length) : url);
+  }
+
   async waitForText(text: string) {
     await browser.waitUntil(
       async () => (await this.content()).includes(text),
