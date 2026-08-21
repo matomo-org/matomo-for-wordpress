@@ -31,7 +31,9 @@ class PluginsAdminPage extends WpAdminPage {
       window.jQuery(`${s} .update-link`)[0].click();
     }, MATOMO_UPDATE_ROW_SELECTOR);
 
-    await browser.waitUntil(async () => /update\.php/.test(await browser.getUrl()), { timeout: 60000 });
+    await browser.waitUntil(async () => {
+      return /update\.php/.test(await browser.execute(() => window.location.href));
+    }, { timeout: 60000 });
   }
 
   async installedVersion() {
