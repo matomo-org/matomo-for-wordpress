@@ -130,7 +130,9 @@ describe('MWP Admin > Matomo 6 Update Block', () => {
     }
 
     await PluginsAdminPage.open();
-    await UpdatePluginPage.open(await PluginsAdminPage.updateNowUrl());
+    const updateNowUrl = await PluginsAdminPage.updateNowUrl();
+    console.log(`updateNowUrl: ${updateNowUrl}`);
+    await UpdatePluginPage.open(updateNowUrl);
 
     await UpdatePluginPage.waitForText('cannot be installed because your server');
 
