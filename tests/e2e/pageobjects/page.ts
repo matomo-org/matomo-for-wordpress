@@ -115,6 +115,14 @@ export default class Page {
     return result;
   }
 
+  async hasElement(selector: string) {
+    return await browser.execute((s) => window.jQuery(s).length > 0, selector);
+  }
+
+  async elementHasClass(selector: string, className: string) {
+    return await browser.execute((s, c) => window.jQuery(s).hasClass(c), selector, className);
+  }
+
   async enableHoverStyles() {
     await browser.execute(() => {
       $('html').removeClass('disable-hover');

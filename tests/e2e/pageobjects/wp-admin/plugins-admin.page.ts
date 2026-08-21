@@ -6,12 +6,44 @@
  *
  */
 
-import Page from '../page.js';
-import {browser} from "@wdio/globals";
+import WpAdminPage from './page.js';
+import {$, browser} from "@wdio/globals";
 
-class PluginsAdminPage extends Page {
+export const MATOMO_UPDATE_ROW_SELECTOR = 'tr.plugin-update-tr[data-slug="matomo"]';
+
+class PluginsAdminPage extends WpAdminPage {
   async open() {
-    return await super.open('/wp-admin/plugins.php');
+    const result = await super.open('/wp-admin/plugins.php');
+    await $('tr[data-slug="matomo"]').waitForExist({ timeout: 30000 });
+    return result;
+  }
+
+  async hasUpdateAvailable() {
+    return await this.hasElement(MATOMO_UPDATE_ROW_SELECTOR);
+  }
+
+  async updateRowText() {
+    return await browser.execute((s) => window.jQuery(s).text(), MATOMO_UPDATE_ROW_SELECTOR);
+  }
+
+  async clickUpdateNow() {
+    await browser.execute((s) => {
+      window.jQuery(`${s} .update-link`)[0].click();
+    }, MATOMO_UPDATE_ROW_SELECTOR);
+
+    await browser.waitUntil(async () => /update\.php/.test(await browser.getUrl()), { timeout: 60000 });
+  }
+
+  async installedVersion() {
+    return await browser.execute(() => {
+      const text = window.jQuery('tr[data-slug="matomo"] .plugin-version-author-uri').text();
+      const match = text.match(/Version (\d+\.\d+\.\d+)/);
+      return match ? match[1] : null;
+    });
+  }
+
+  async isMatomoActive() {
+    return await browser.execute(() => window.jQuery('tr[data-slug="matomo"]').hasClass('active'));
   }
 
   async hideNonMatomoRows() {
