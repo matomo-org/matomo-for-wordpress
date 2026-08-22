@@ -155,7 +155,7 @@ class Factory
     private static function getReport($apiAction)
     {
         if (strpos($apiAction, '.') === \false) {
-            return;
+            return null;
         }
         list($module, $action) = explode('.', $apiAction);
         $report = ReportsProvider::factory($module, $action);

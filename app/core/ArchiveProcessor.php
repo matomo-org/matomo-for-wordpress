@@ -357,8 +357,8 @@ class ArchiveProcessor
                  */
                 $this->renameColumnsAfterAggregation($table, $columnsToRenameAfterAggregation);
             }
-        }, null, function (string $period, int $tableId) : void {
-            StaticContainer::get(LoggerInterface::class)->info('Unexpected state when aggregating DataTable, unknown period/table ID combination encountered: {period} - {tableId}.' . ' This either means the SQL to order blobs is behaving incorrectly or the blob data is corrupt in some way.', ['period' => $period, 'tableId' => $tableId]);
+        }, null, function (string $sitePeriod, int $tableId) : void {
+            StaticContainer::get(LoggerInterface::class)->info('Unexpected state when aggregating DataTable, unknown site/period/table ID combination encountered: {sitePeriod} - {tableId}.' . ' This either means the SQL to order blobs is behaving incorrectly or the blob data is corrupt in some way.', ['sitePeriod' => $sitePeriod, 'tableId' => $tableId]);
         });
         unset($hasRows);
         return $result;

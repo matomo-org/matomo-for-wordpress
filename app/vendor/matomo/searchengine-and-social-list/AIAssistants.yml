@@ -23,6 +23,9 @@ ChatGLM:
 Deepseek:
   - chat.deepseek.com
 
+Duck.ai:
+  - duck.ai
+
 Gemini:
   - gemini.google.com
   - bard.google.com

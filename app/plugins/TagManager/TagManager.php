@@ -70,7 +70,6 @@ class TagManager extends \Piwik\Plugin
             'API.addGlossaryItems' => 'addGlossaryItems',
             'Template.bodyClass' => 'addBodyClass',
             'Access.Capability.addCapabilities' => 'addCapabilities',
-            'TwoFactorAuth.requiresTwoFactorAuthentication' => 'requiresTwoFactorAuthentication',
             'Db.getTablesInstalled' => 'getTablesInstalled',
             'Template.siteWithoutDataTab.ReactJs.content' => 'embedReactTagManagerTrackingCode',
             'SitesManager.getMessagesToWarnOnSiteRemoval' => 'getMessagesToWarnOnSiteRemoval',
@@ -89,12 +88,6 @@ class TagManager extends \Piwik\Plugin
         $allTablesInstalled[] = Common::prefixTable('tagmanager_tag');
         $allTablesInstalled[] = Common::prefixTable('tagmanager_trigger');
         $allTablesInstalled[] = Common::prefixTable('tagmanager_variable');
-    }
-    public function requiresTwoFactorAuthentication(&$requiresAuth, $module, $action, $parameters)
-    {
-        if ($module == 'TagManager' && $action === 'debug') {
-            $requiresAuth = \false;
-        }
     }
     public function addBodyClass(&$out, $type)
     {

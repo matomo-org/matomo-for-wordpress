@@ -91,6 +91,18 @@ string $password = '', bool $isPasswordHashed = \false) : void
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
+    /**
+     * Replaces the activation token for an unchanged, unexpired pending user
+     * without changing the invitation expiry.
+     */
+    public function refreshInviteToken(string $userLogin, string $expectedInviteToken, string $expectedEmail) : ?string
+    {
+        $generatedToken = $this->model->generateRandomInviteToken();
+        if (!$this->model->replaceInviteTokenForPendingUser($userLogin, $generatedToken, $expectedInviteToken, $expectedEmail)) {
+            return null;
+        }
+        return $generatedToken;
+    }
     public function generateInviteToken(string $userLogin, int $expiryInDays) : string
     {
         $generatedToken = $this->model->generateRandomInviteToken();

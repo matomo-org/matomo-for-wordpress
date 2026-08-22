@@ -51,8 +51,9 @@ $password)
          * @internal
          */
         Piwik::postEvent('Login.beforeLoginCheckAllowed');
+        // Use an isolated copy so the check does not mutate the shared auth object.
         /** @var \Piwik\Auth $authAdapter */
-        $authAdapter = StaticContainer::get('Piwik\\Auth');
+        $authAdapter = clone StaticContainer::get('Piwik\\Auth');
         $authAdapter->setLogin($userLogin);
         $authAdapter->setPasswordHash(null);
         // ensure authentication happens on password
@@ -67,7 +68,7 @@ $password)
          * @ignore
          * @internal
          */
-        Piwik::postEvent('Login.recordFailedLoginAttempt');
+        Piwik::postEvent('Login.recordFailedLoginAttempt', [$userLogin]);
         return \false;
     }
     /**

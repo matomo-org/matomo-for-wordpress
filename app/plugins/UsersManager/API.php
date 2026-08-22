@@ -11,7 +11,9 @@ namespace Piwik\Plugins\UsersManager;
 use DeviceDetector\DeviceDetector;
 use Exception;
 use Piwik\Access;
+use Piwik\API\Request as ApiRequest;
 use Piwik\Access\CapabilitiesProvider;
+use Piwik\Access\Role\Admin;
 use Piwik\Access\RolesProvider;
 use Piwik\Auth\Password;
 use Piwik\Common;
@@ -919,8 +921,8 @@ $passwordConfirmation = \false) : void
      *                                  - Single site ID (e.g. 1)
      *                                  - Multiple site IDs (e.g. [1, 4, 5])
      *                                  - Comma-separated list ("1,4,5") or "all"
-     * @param string|null $passwordConfirmation Current user's password confirmation. Only required when granting
-     *                                          anonymous `view` access through session auth.
+     * @param string|null $passwordConfirmation Current user's password confirmation. Only required through session
+     *                                          auth when granting anonymous `view` access or the `admin` role.
      */
     public function setUserAccess(string $userLogin, $access, $idSites,
 #[\SensitiveParameter]
@@ -932,8 +934,13 @@ $passwordConfirmation = \false) : void
             $this->checkAccessType($access);
         }
         $idSites = $this->getIdSitesCheckAdminAccess($idSites);
-        // check password confirmation only when using session auth and setting view access for anonymous user
-        if (strtolower($userLogin) === 'anonymous' && StaticContainer::get(AuthenticationToken::class)->isSessionToken() && $access === 'view') {
+        // When using session auth, re-confirm the current user's password for the most sensitive grants:
+        // granting anonymous view access, or granting the admin role to any user.
+        // This is intentionally limited to the session scope (matching the anonymous view, inviteUser and
+        // addUser checks): persistent token_auth requests and CLI are not affected, so automation keeps working.
+        $grantsAnonymousView = strtolower($userLogin) === 'anonymous' && $access === 'view';
+        $grantsAdminRole = in_array(Admin::ID, (array) $access, \true);
+        if (($grantsAnonymousView || $grantsAdminRole) && StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
         if (strtolower($userLogin) === 'anonymous' && (is_array($access) || !in_array($access, ['view', 'noaccess'], \true))) {
@@ -1198,12 +1205,22 @@ $passwordConfirmation = \false) : void
 #[\SensitiveParameter]
 string $passwordConfirmation, string $description, $expireDate = null, $expireHours = 0, bool $secureOnly = \false)
     {
+        // Only allowed as a top-level request, not nested within another API request.
+        if (ApiRequest::isRootRequestApiRequest() && !ApiRequest::isCurrentApiRequestTheRootApiRequest()) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionCreateTokenAuthWithinNestedRequest'));
+        }
         $user = $this->model->getUser($userLogin);
         if (empty($user) && Piwik::isValidEmailString($userLogin)) {
             $user = $this->model->getUserByEmail($userLogin);
             if (!empty($user['login'])) {
                 $userLogin = $user['login'];
             }
+        }
+        // A logged-in user may only create a token for their own account. Creating a token
+        // for a different account requires that account's credentials via an anonymous request.
+        $currentLogin = Piwik::getCurrentUserLogin();
+        if (strtolower((string) $currentLogin) !== 'anonymous' && ($user['login'] ?? $userLogin) !== $currentLogin) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionCreateTokenAuthForOtherUser'));
         }
         if (empty($user) || !$this->passwordVerifier->isPasswordCorrect($userLogin, $passwordConfirmation)) {
             if (empty($user)) {
