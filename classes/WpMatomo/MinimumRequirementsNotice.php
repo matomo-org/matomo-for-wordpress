@@ -78,27 +78,60 @@ class MinimumRequirementsNotice extends Feature {
 
 		$is_plugin_blocked = $this->requirements->does_plugin_version_require_new_minimums( $this->get_plugin_version() );
 
-		if ( ! $this->is_always_visible_page() ) {
-			if ( ! $is_plugin_blocked || $this->is_dismissed() ) {
-				return;
-			}
+		if ( $is_plugin_blocked ) {
+			$this->maybe_render_blocked_notice();
+			return;
 		}
 
-		$unmet = $this->requirements->get_unmet_requirements();
+		$this->maybe_render_upcoming_requirements_notice();
+	}
+
+	private function maybe_render_blocked_notice() {
+		$is_dismissible = ! $this->is_always_visible_page();
+
+		$unmet = $this->get_unmet_requirements_to_show( $is_dismissible );
 		if ( empty( $unmet ) ) {
 			return;
 		}
 
-		if ( $is_plugin_blocked ) {
-			$this->render_blocked_notice( $unmet );
+		$this->render_blocked_notice( $unmet, $is_dismissible );
+	}
+
+	private function maybe_render_upcoming_requirements_notice() {
+		$is_matomo_page = Admin::is_matomo_admin();
+
+		if ( ! $is_matomo_page && ! $this->is_plugin_management_page() ) {
 			return;
 		}
 
-		$this->render_upcoming_requirements_notice( $unmet );
+		$is_dismissible = ! $is_matomo_page;
+
+		$unmet = $this->get_unmet_requirements_to_show( $is_dismissible );
+		if ( empty( $unmet ) ) {
+			return;
+		}
+
+		$this->render_upcoming_requirements_notice( $unmet, $is_dismissible );
 	}
 
-	private function render_upcoming_requirements_notice( array $unmet ) {
-		echo '<div class="matomo-notice ' . esc_attr( self::NOTICE_CLASS ) . ' notice notice-warning ' . esc_attr( $this->get_dismissible_class() ) . '" id="matomo-minimumrequirements"><p>'
+	/**
+	 * @param bool $is_dismissible whether a previous dismissal applies to this page
+	 * @return string[] empty when there is nothing to show
+	 */
+	private function get_unmet_requirements_to_show( $is_dismissible ) {
+		if ( $is_dismissible && $this->is_dismissed() ) {
+			return [];
+		}
+
+		return $this->requirements->get_unmet_requirements();
+	}
+
+	/**
+	 * @param string[] $unmet
+	 * @param bool     $is_dismissible
+	 */
+	private function render_upcoming_requirements_notice( array $unmet, $is_dismissible ) {
+		echo '<div class="matomo-notice ' . esc_attr( self::NOTICE_CLASS ) . ' notice notice-warning ' . esc_attr( $this->get_dismissible_class( $is_dismissible ) ) . '" id="matomo-minimumrequirements"><p>'
 			. sprintf(
 				esc_html__( '%1$sHeads up!%2$s Matomo Analytics version 6 and later will require a newer server environment. You will not be able to update the plugin to that version until your server meets the new minimum requirements:', 'matomo' ),
 				'<strong>',
@@ -119,9 +152,10 @@ class MinimumRequirementsNotice extends Feature {
 
 	/**
 	 * @param string[] $unmet
+	 * @param bool     $is_dismissible
 	 */
-	private function render_blocked_notice( array $unmet ) {
-		echo '<div class="matomo-notice ' . esc_attr( self::NOTICE_CLASS ) . ' notice notice-error ' . esc_attr( $this->get_dismissible_class() ) . '" id="matomo-minimumrequirementsblocked"><p>'
+	private function render_blocked_notice( array $unmet, $is_dismissible ) {
+		echo '<div class="matomo-notice ' . esc_attr( self::NOTICE_CLASS ) . ' notice notice-error ' . esc_attr( $this->get_dismissible_class( $is_dismissible ) ) . '" id="matomo-minimumrequirementsblocked"><p>'
 			. sprintf(
 				esc_html__( '%1$sMatomo Analytics has been disabled.%2$s The installed version of Matomo Analytics needs a newer server environment than this server provides, so tracking and reporting are turned off to prevent errors. Your data has not been deleted.', 'matomo' ),
 				'<strong>',
@@ -182,7 +216,7 @@ class MinimumRequirementsNotice extends Feature {
 		return (bool) get_user_meta( get_current_user_id(), self::OPTION_NAME_MINIMUM_REQUIREMENTS_DISMISSED, true );
 	}
 
-	private function get_dismissible_class() {
-		return $this->is_always_visible_page() ? '' : 'is-dismissible';
+	private function get_dismissible_class( $is_dismissible ) {
+		return $is_dismissible ? 'is-dismissible' : '';
 	}
 }

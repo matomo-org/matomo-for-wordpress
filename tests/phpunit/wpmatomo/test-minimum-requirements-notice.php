@@ -44,12 +44,9 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->capture_notice( $this->make_notice( [] ) ) );
 	}
 
-	/**
-	 * @dataProvider get_always_visible_screens
-	 */
-	public function test_check_requirements_shows_a_notice_that_cannot_be_dismissed_where_matomo_or_plugins_are_managed( $screen, $page ) {
+	public function test_check_requirements_shows_a_notice_that_cannot_be_dismissed_on_a_matomo_admin_page() {
 		$this->create_set_super_admin();
-		$this->go_to_admin_screen( $screen, $page );
+		$this->go_to_admin_screen( 'edit.php', 'matomo-systemreport' );
 
 		$output = $this->capture_notice( $this->make_notice() );
 
@@ -58,12 +55,9 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertStringNotContainsString( 'is-dismissible', $output );
 	}
 
-	/**
-	 * @dataProvider get_always_visible_screens
-	 */
-	public function test_check_requirements_ignores_a_dismissal_where_matomo_or_plugins_are_managed( $screen, $page ) {
+	public function test_check_requirements_ignores_a_dismissal_on_a_matomo_admin_page() {
 		$this->create_set_super_admin_who_dismissed_the_notice();
-		$this->go_to_admin_screen( $screen, $page );
+		$this->go_to_admin_screen( 'edit.php', 'matomo-systemreport' );
 
 		$output = $this->capture_notice( $this->make_notice() );
 
@@ -71,13 +65,35 @@ class MinimumRequirementsNoticeTest extends MatomoUnit_TestCase {
 		$this->assertStringNotContainsString( 'is-dismissible', $output );
 	}
 
-	public function get_always_visible_screens() {
+	/**
+	 * @dataProvider get_plugin_management_screens
+	 */
+	public function test_check_requirements_shows_a_dismissible_notice_where_plugins_are_managed( $screen ) {
+		$this->create_set_super_admin();
+		$this->go_to_admin_screen( $screen );
+
+		$output = $this->capture_notice( $this->make_notice() );
+
+		$this->assertStringContainsString( 'id="matomo-minimumrequirements"', $output );
+		$this->assertStringContainsString( self::UNMET_MESSAGE, $output );
+		$this->assertStringContainsString( 'is-dismissible', $output );
+	}
+
+	/**
+	 * @dataProvider get_plugin_management_screens
+	 */
+	public function test_check_requirements_outputs_nothing_where_plugins_are_managed_once_dismissed( $screen ) {
+		$this->create_set_super_admin_who_dismissed_the_notice();
+		$this->go_to_admin_screen( $screen );
+
+		$this->assertSame( '', $this->capture_notice( $this->make_notice() ) );
+	}
+
+	public function get_plugin_management_screens() {
 		return [
-			// a matomo admin page is detected by the page query parameter, not the screen
-			[ 'edit.php', 'matomo-systemreport' ],
-			[ 'plugins', null ],
-			[ 'plugin-install', null ],
-			[ 'update-core', null ],
+			[ 'plugins' ],
+			[ 'plugin-install' ],
+			[ 'update-core' ],
 		];
 	}
 
