@@ -287,14 +287,19 @@ export default class Page {
   async hideAllButElement( selector: string ) {
     await browser.execute((s) => {
       (function () {
+        const targets = window.jQuery(s).toArray();
+        if (!targets.length) {
+          throw new Error(`no elements match ${s}, nothing to screenshot`);
+        }
+
         function visitNode(n: HTMLElement) {
-          const isSelectedNode = window.jQuery(n).is(s);
+          const isSelectedNode = targets.indexOf(n) !== -1;
           if (isSelectedNode) {
             return; // if node is one we want to screenshot, do nothing
           }
 
           // if node contains node we want to screenshot, recurse
-          if (window.jQuery(n).find(s).length > 0) {
+          if (targets.some((t) => n.contains(t))) {
             window.jQuery(n).css({ 'margin': '0', 'padding': '0' });
             for (let i = 0; i < n.children.length; ++i) {
               const child = n.children.item(i);
