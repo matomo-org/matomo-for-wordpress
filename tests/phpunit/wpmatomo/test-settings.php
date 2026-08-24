@@ -272,7 +272,7 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function test_get_js_tracking_code_returns_js_tracking_code_network_enabled() {
-		$this->settings->set_assume_is_network_enabled_in_tests();
+		$this->assume_network_enabled( $this->settings );
 		$this->assertSame( '', $this->settings->get_js_tracking_code() );
 		$this->assertSame( '', $this->settings->get_global_option( 'js_manually' ) );
 
@@ -289,7 +289,8 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$this->settings->apply_changes(
 			array(
-				'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => $test_value,
 			)
 		);
 		$this->assertSame( $test_value, $this->settings->get_global_option( 'js_manually' ) );
@@ -300,7 +301,7 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function test_get_noscript_tracking_code_returns_noscript_tracking_code_network_enabled() {
-		$this->settings->set_assume_is_network_enabled_in_tests();
+		$this->assume_network_enabled( $this->settings );
 		$this->assertSame( '', $this->settings->get_noscript_tracking_code() );
 		$this->assertSame( '', $this->settings->get_global_option( 'noscript_manually' ) );
 
@@ -317,7 +318,8 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$this->settings->apply_changes(
 			array(
-				'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'noscript_code' => $test_value,
 			)
 		);
 
@@ -326,6 +328,36 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		// to be sure we're testing the functionality of noscript correctly we're setting different noscript_code
 		$this->settings->set_option( 'noscript_code', 'baz' );
 		$this->assertSame( $test_value, $this->settings->get_noscript_tracking_code() );
+	}
+
+	public function test_apply_changes_should_keep_the_manual_tracking_code_when_no_tracking_code_is_supplied() {
+		$this->assume_network_enabled( $this->settings );
+
+		$manual_js       = 'var manual = "js";';
+		$manual_noscript = '<noscript>manual</noscript>';
+
+		$this->settings->apply_changes(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => $manual_js,
+				'noscript_code' => $manual_noscript,
+			]
+		);
+
+		$this->assertSame( $manual_js, $this->settings->get_global_option( 'js_manually' ) );
+		$this->assertSame( $manual_noscript, $this->settings->get_global_option( 'noscript_manually' ) );
+
+		// this blog's own copy drifts away from the network wide one
+		$this->settings->set_option( 'tracking_code', 'code of this blog only' );
+		$this->settings->set_option( 'noscript_code', 'noscript of this blog only' );
+		$this->settings->save();
+
+		// save a setting, without saving a new tracking or noscript code
+		$this->settings->apply_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY ] );
+
+		// check that the system wide tracking code has not been changed
+		$this->assertSame( $manual_js, $this->settings->get_global_option( 'js_manually' ) );
+		$this->assertSame( $manual_noscript, $this->settings->get_global_option( 'noscript_manually' ) );
 	}
 
 	/**
@@ -410,5 +442,338 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$tracker_cache = \Piwik\Tracker\Cache::getCacheGeneral();
 		$this->assertEquals( $other_user_agents, $tracker_cache['global_excluded_user_agents'] );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_save_should_not_fire_actions_for_changes_discarded_after_a_blog_switch() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		$action_fired = false;
+		$on_change    = function () use ( &$action_fired ) {
+			$action_fired = true;
+		};
+		add_action( 'matomo_setting_change_noscript_code', $on_change );
+
+		try {
+			$this->settings->set_option( 'noscript_code', 'pending change' );
+
+			switch_to_blog( $blogid );
+
+			$this->settings->save();
+
+			$this->assertFalse( $action_fired );
+			$this->assertSame( '', $this->settings->get_option( 'noscript_code' ) );
+		} finally {
+			restore_current_blog();
+			remove_action( 'matomo_setting_change_noscript_code', $on_change );
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_apply_changes_should_not_overwrite_the_network_manual_tracking_code_when_another_blog_is_current() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		$manual_code = '<script>NETWORK_WIDE</script>';
+		$this->settings->apply_changes(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => $manual_code,
+			]
+		);
+
+		$this->assertSame( $manual_code, $this->settings->get_global_option( 'js_manually' ) );
+
+		switch_to_blog( $blogid );
+
+		try {
+			// what Site\Sync does when only a blog's metadata changed: no tracking code supplied
+			$this->settings->apply_tracking_related_changes( [] );
+
+			$this->assertSame( $manual_code, $this->settings->get_global_option( 'js_manually' ) );
+
+			$stored = get_site_option( Settings::OPTION_GLOBAL, [] );
+			$this->assertSame( $manual_code, $stored['js_manually'] );
+		} finally {
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_option_should_return_the_current_blogs_value_after_a_blog_switch() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		$this->settings->set_option( 'tracking_code', 'code of the first blog' );
+		$this->settings->save();
+
+		switch_to_blog( $blogid );
+
+		try {
+			$other_settings = $this->assume_network_enabled( new Settings() );
+			$other_settings->set_option( 'tracking_code', 'code of the second blog' );
+			$other_settings->save();
+
+			$this->assertSame( 'code of the second blog', $this->settings->get_option( 'tracking_code' ) );
+		} finally {
+			restore_current_blog();
+		}
+
+		$this->assertSame( 'code of the first blog', $this->settings->get_option( 'tracking_code' ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_set_option_should_write_to_the_current_blog_after_a_blog_switch() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		$this->settings->set_option( 'tracking_code', 'code of the first blog' );
+		$this->settings->save();
+
+		switch_to_blog( $blogid );
+
+		try {
+			$this->settings->set_option( 'tracking_code', 'code of the second blog' );
+			$this->settings->save();
+
+			$stored_second = get_option( Settings::OPTION, [] );
+		} finally {
+			restore_current_blog();
+		}
+
+		$stored_first = get_option( Settings::OPTION, [] );
+
+		$this->assertSame( 'code of the second blog', $stored_second['tracking_code'] );
+		$this->assertSame( 'code of the first blog', $stored_first['tracking_code'] );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_save_should_still_persist_global_changes_after_a_blog_switch_when_network_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		$this->settings->set_global_option( 'track_codeposition', 'header' );
+
+		switch_to_blog( $blogid );
+
+		try {
+			$this->settings->save();
+
+			$stored = get_site_option( Settings::OPTION_GLOBAL, [] );
+			$this->assertArrayHasKey( 'track_codeposition', $stored );
+			$this->assertSame( 'header', $stored['track_codeposition'] );
+			$this->assertSame( 'header', $this->settings->get_global_option( 'track_codeposition' ) );
+		} finally {
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_option_should_not_reload_settings_again_while_they_are_being_loaded() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blogid = self::factory()->blog->create();
+
+		$settings = $this->settings;
+
+		$times_filtered = 0;
+		$re_entered     = false;
+
+		$filter = function ( $value ) use ( &$times_filtered, &$re_entered, $settings ) {
+			++$times_filtered;
+
+			if ( ! $re_entered ) {
+				// self guarded so a regression cannot blow the stack and take out the whole run
+				$re_entered = true;
+
+				// recurse
+				$settings->get_option( 'tracking_code' );
+			}
+
+			return $value;
+		};
+
+		switch_to_blog( $blogid );
+
+		try {
+			// the option filter only runs for an option that exists
+			update_option( Settings::OPTION, [ 'tracking_code' => 'some code' ] );
+
+			add_filter( 'option_' . Settings::OPTION, $filter );
+
+			$this->assertSame( 'some code', $settings->get_option( 'tracking_code' ) );
+
+			$this->assertTrue( $re_entered, 'the filter did not re-enter, so nothing was tested' );
+			$this->assertSame( 1, $times_filtered );
+		} finally {
+			remove_filter( 'option_' . Settings::OPTION, $filter );
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_option_should_not_reload_settings_again_while_checking_whether_the_plugin_is_network_activated() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$settings = $this->settings;
+
+		$settings->set_option( 'tracking_code', 'code of the first blog' );
+		$settings->save();
+
+		$blogid = self::factory()->blog->create();
+
+		$blog_option_reads = 0;
+		$re_entered        = false;
+		$re_entered_value  = null;
+
+		$count_blog_option_reads = function ( $value ) use ( &$blog_option_reads ) {
+			++$blog_option_reads;
+
+			return $value;
+		};
+
+		$re_enter = function ( $value ) use ( &$re_entered, &$re_entered_value, $settings ) {
+			if ( ! $re_entered ) {
+				// guard against infinite recursion in this test
+				$re_entered       = true;
+				$re_entered_value = $settings->get_option( 'tracking_code' );
+			}
+
+			return $value;
+		};
+
+		switch_to_blog( $blogid );
+
+		try {
+			update_option( Settings::OPTION, [ 'tracking_code' => 'code of the second blog' ] );
+
+			add_filter( 'option_' . Settings::OPTION, $count_blog_option_reads );
+			add_filter( 'site_option_active_sitewide_plugins', $re_enter );
+
+			$this->assertSame( 'code of the second blog', $settings->get_option( 'tracking_code' ) );
+
+			$this->assertTrue( $re_entered, 'the filter did not re-enter, so nothing was tested' );
+			$this->assertSame( 1, $blog_option_reads );
+
+			// whatever the re-entrant read got, it must not be the blog that was left behind
+			$this->assertNotSame( 'code of the first blog', $re_entered_value );
+		} finally {
+			remove_filter( 'site_option_active_sitewide_plugins', $re_enter );
+			remove_filter( 'option_' . Settings::OPTION, $count_blog_option_reads );
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_save_should_not_persist_the_emptied_settings_when_it_is_called_while_they_are_being_loaded() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$settings = $this->settings;
+
+		$blogid = self::factory()->blog->create();
+
+		$saved_during_load = false;
+
+		$save_from_filter = function ( $value ) use ( &$saved_during_load, $settings ) {
+			if ( ! $saved_during_load ) {
+				// guard against infinite recursion in this test
+				$saved_during_load = true;
+				$settings->save();
+			}
+
+			return $value;
+		};
+
+		$settings->set_option( 'noscript_code', 'pending change of the first blog' );
+
+		$blog_settings = [ 'tracking_code' => 'code of the second blog' ];
+
+		switch_to_blog( $blogid );
+
+		try {
+			update_option( Settings::OPTION, $blog_settings );
+
+			// whichever of the two the load reaches first, depending on whether the plugin is
+			// network activated
+			add_filter( 'site_option_active_sitewide_plugins', $save_from_filter );
+			add_filter( 'option_' . Settings::OPTION, $save_from_filter );
+
+			$actual_value = $settings->get_option( 'tracking_code' );
+			$this->assertSame( 'code of the second blog', $actual_value );
+
+			$this->assertTrue( $saved_during_load, 'the filter did not run, so nothing was tested' );
+			$this->assertSame( $blog_settings, get_option( Settings::OPTION, [] ) );
+		} finally {
+			remove_filter( 'option_' . Settings::OPTION, $save_from_filter );
+			remove_filter( 'site_option_active_sitewide_plugins', $save_from_filter );
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @param Settings $settings
+	 * @return Settings
+	 */
+	private function assume_network_enabled( Settings $settings ) {
+		$settings->set_assume_is_network_enabled_in_tests();
+		$settings->init_settings();
+		return $settings;
 	}
 }

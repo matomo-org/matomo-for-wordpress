@@ -143,7 +143,45 @@ class Settings {
 	private $global_settings = [];
 	private $blog_settings   = [];
 
-	private $settings_changed = [];
+	/**
+	 * The blog ID the cached settings were loaded for. Long-lived Settings instances can
+	 * be used across switch_to_blog() calls, cached values must be reloaded when a blog
+	 * changes.
+	 *
+	 * @var int|null
+	 */
+	private $loaded_for_blog_id = null;
+
+	/**
+	 * Whether the cached global settings were read from the network wide site option rather
+	 * than from this blog's own option. Recorded when they are loaded instead of re-derived
+	 * during a reload, to avoid invoking WP option filters while reloading settings.
+	 *
+	 * @var bool
+	 */
+	private $global_settings_are_network_wide = false;
+
+	/**
+	 * @var string[]
+	 */
+	private $global_settings_changed = [];
+
+	/**
+	 * @var string[]
+	 */
+	private $blog_settings_changed = [];
+
+	/**
+	 * Settings whose value is a secret. Their values are never written to the debug log.
+	 *
+	 * Matching whole keys also means a secret nested inside an array valued setting cannot be
+	 * hidden this way: the whole array is json encoded into the log.
+	 *
+	 * @var string[]
+	 */
+	private static $sensitive_settings = [
+		'maxmind_license_key',
+	];
 
 	/**
 	 * @var Logger
@@ -161,11 +199,21 @@ class Settings {
 	}
 
 	public function init_settings() {
-		$this->settings_changed = [];
-		$this->global_settings  = [];
-		$this->blog_settings    = [];
+		// set and cleared before the option reads below, which all run filters that can
+		// reach back in here through WpMatomo::$settings. such a re-entrant call must not find
+		// a blog mismatch, or it would start the load over again recursing forever
+		$this->loaded_for_blog_id = get_current_blog_id();
 
-		if ( $this->is_network_enabled() ) {
+		// a re-entrant call must also not reference values that were changed for the previously
+		// loaded blog
+		$this->global_settings_changed = [];
+		$this->blog_settings_changed   = [];
+		$this->global_settings         = [];
+		$this->blog_settings           = [];
+
+		$this->global_settings_are_network_wide = $this->is_network_enabled();
+
+		if ( $this->global_settings_are_network_wide ) {
 			$global_settings = get_site_option( self::OPTION_GLOBAL, [] );
 		} else {
 			$global_settings = get_option( self::OPTION_GLOBAL, [] );
@@ -175,14 +223,12 @@ class Settings {
 			$this->global_settings = $global_settings;
 		}
 
-		$settings = get_option( self::OPTION, [] );
-
-		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			$this->blog_settings = $settings;
-		}
+		$this->load_blog_settings();
 	}
 
 	public function get_customised_global_settings() {
+		$this->reload_if_blog_switched();
+
 		$custom_settings = [];
 
 		foreach ( $this->global_settings as $key => $val ) {
@@ -223,27 +269,39 @@ class Settings {
 	}
 
 	/**
-	 * Save all settings as WordPress options
+	 * Save all settings as WordPress options.
+	 *
+	 * Note: save() should be called immediately after one or more set_option/set_global_option
+	 * calls.
 	 */
 	public function save() {
-		if ( empty( $this->settings_changed ) ) {
-			$this->logger->log( 'No settings changed yet' );
+		$this->reload_if_blog_switched();
 
+		if ( empty( $this->global_settings_changed ) && empty( $this->blog_settings_changed ) ) {
+			$this->logger->log( 'No settings changed yet' );
 			return;
 		}
 
 		$this->logger->log( 'Save settings' );
 
-		if ( $this->is_network_enabled() ) {
-			update_site_option( self::OPTION_GLOBAL, $this->global_settings );
-		} else {
-			update_option( self::OPTION_GLOBAL, $this->global_settings );
+		if ( ! empty( $this->global_settings_changed ) ) {
+			if ( $this->global_settings_are_network_wide ) {
+				update_site_option( self::OPTION_GLOBAL, $this->global_settings );
+			} else {
+				update_option( self::OPTION_GLOBAL, $this->global_settings );
+			}
 		}
 
-		update_option( self::OPTION, $this->blog_settings );
+		if ( ! empty( $this->blog_settings_changed ) ) {
+			update_option( self::OPTION, $this->blog_settings );
+		}
 
-		$keys_changed           = array_values( array_unique( $this->settings_changed ) );
-		$this->settings_changed = [];
+		$keys_changed = array_values(
+			array_unique( array_merge( $this->global_settings_changed, $this->blog_settings_changed ) )
+		);
+
+		$this->global_settings_changed = [];
+		$this->blog_settings_changed   = [];
 
 		foreach ( $keys_changed as $key_changed ) {
 			if ( self::GLOBAL_USER_AGENT_EXCLUSIONS === $key_changed ) {
@@ -265,6 +323,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
 		}
@@ -283,6 +343,8 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->blog_settings[ $key ] ) ) {
 			return $this->blog_settings[ $key ];
 		}
@@ -309,15 +371,18 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_global_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_global_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
 		}
 
 		if ( ! isset( $this->global_settings[ $key ] )
-			|| $this->global_settings[ $key ] !== $value ) {
-			$this->settings_changed[] = $key;
-			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+			|| $this->global_settings[ $key ] !== $value
+		) {
+			$this->global_settings_changed[] = $key;
+			$this->logger->log( 'Changed global option ' . $key . ': ' . $this->loggable_value( $key, $value ) );
 
 			$this->global_settings[ $key ] = $value;
 		}
@@ -330,6 +395,8 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
+		$this->reload_if_blog_switched();
+
 		if ( isset( $this->default_blog_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_blog_settings[ $key ] );
 			$value = $this->convert_type( $value, $type );
@@ -337,10 +404,33 @@ class Settings {
 
 		if ( ! isset( $this->blog_settings[ $key ] )
 			|| $this->blog_settings[ $key ] !== $value ) {
-			$this->settings_changed[] = $key;
-			$this->logger->log( 'Changed option ' . $key . ': ' . $value );
+			$this->blog_settings_changed[] = $key;
+			$this->logger->log( 'Changed option ' . $key . ': ' . $this->loggable_value( $key, $value ) );
 			$this->blog_settings[ $key ] = $value;
 		}
+	}
+
+	/**
+	 * Values of some settings are secrets and must not be written to the debug log.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return string
+	 */
+	private function loggable_value( $key, $value ) {
+		if ( in_array( $key, self::$sensitive_settings, true ) ) {
+			return '(value hidden)';
+		}
+
+		if ( is_array( $value ) || is_object( $value ) ) {
+			$encoded = wp_json_encode( $value );
+
+			// wp_json_encode() returns false eg when the value nests deeper than it can encode
+			return false === $encoded ? '(value could not be encoded)' : $encoded;
+		}
+
+		return (string) $value;
 	}
 
 	/**
@@ -392,16 +482,20 @@ class Settings {
 		$this->set_global_option( 'last_settings_update', time() );
 
 		if ( $this->should_save_tracking_code_across_sites() ) {
-			// special case for when the same tracking code needs to be used across all instances
-			$this->set_global_option( 'js_manually', $this->get_option( 'tracking_code' ) );
-			$this->set_global_option( 'noscript_manually', $this->get_option( 'noscript_code' ) );
+			// special case for when the same tracking code needs to be used across all instances.
+			if ( isset( $settings['tracking_code'] ) ) {
+				$this->set_global_option( 'js_manually', $this->get_option( 'tracking_code' ) );
+			}
+			if ( isset( $settings['noscript_code'] ) ) {
+				$this->set_global_option( 'noscript_manually', $this->get_option( 'noscript_code' ) );
+			}
 		}
 
 		$this->save();
 	}
 
 	private function should_save_tracking_code_across_sites() {
-		return $this->is_network_enabled()
+		return $this->global_settings_are_network_wide
 				&& $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 	}
 
@@ -472,6 +566,17 @@ class Settings {
 	}
 
 	/**
+	 * Whether the tracking code of the current blog is generated by the plugin, as opposed to
+	 * being entered manually or not used at all.
+	 *
+	 * @return bool
+	 */
+	public function is_tracking_code_autogenerated() {
+		return $this->is_tracking_enabled()
+			&& TrackingSettings::TRACK_MODE_MANUALLY !== $this->get_global_option( 'track_mode' );
+	}
+
+	/**
 	 * Check if noscript code insertion is enabled
 	 *
 	 * @return boolean Insert noscript code?
@@ -498,6 +603,7 @@ class Settings {
 
 	public function set_assume_is_network_enabled_in_tests( $network_enabled = true ) {
 		$this->assume_is_network_enabled_in_tests = $network_enabled;
+		$this->global_settings_are_network_wide   = $network_enabled;
 	}
 
 	public function is_async_archiving_supported() {
@@ -550,5 +656,54 @@ class Settings {
 
 	public function is_track_via_esi_enabled() {
 		return ( (bool) $this->get_global_option( 'track_ai_bots_using_esi' ) ) === true;
+	}
+
+	private function load_blog_settings() {
+		// set and cleared before the option read below for the same reasons as in
+		// init_settings(), see there
+		$this->loaded_for_blog_id    = get_current_blog_id();
+		$this->blog_settings         = [];
+		$this->blog_settings_changed = [];
+
+		$settings = get_option( self::OPTION, [] );
+		if ( ! is_array( $settings ) ) {
+			$settings = [];
+		}
+
+		$this->blog_settings = $settings;
+	}
+
+	/**
+	 * Reload cached settings if the current blog changed since they were loaded (eg, via
+	 * switch_to_blog()). Cached per-blog settings must not be served for, or saved to, a
+	 * different blog. Pending unsaved per-blog changes are discarded.
+	 */
+	private function reload_if_blog_switched() {
+		if ( ! $this->is_multisite()
+			|| get_current_blog_id() === $this->loaded_for_blog_id
+		) {
+			return;
+		}
+
+		$discarded = $this->blog_settings_changed;
+
+		if ( $this->global_settings_are_network_wide ) {
+			// they live in a network wide site option, so neither they nor unsaved changes to
+			// them are affected by the blog switch, and both are left alone
+			$this->load_blog_settings();
+		} else {
+			// without network activation the global settings are stored per blog too
+			$discarded = array_merge( $this->global_settings_changed, $discarded );
+
+			$this->init_settings();
+		}
+
+		if ( ! empty( $discarded ) ) {
+			// the blog was switched in code before the settings were save()'d
+			$this->logger->log(
+				'Unsaved Matomo setting changes were discarded after a WP blog switch: '
+				. implode( ', ', array_values( array_unique( $discarded ) ) )
+			);
+		}
 	}
 }

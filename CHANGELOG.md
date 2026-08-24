@@ -1,5 +1,22 @@
 == Changelog ===
 
+= 5.13.0 =
+* Security: in multisite, a Settings instance kept across a switch_to_blog() call could write
+  one blog's tracking code and other per blog settings into a different blog. Settings are now
+  reloaded when the current blog changes.
+* Bug fix: syncing a single blog's site metadata no longer overwrites the network wide manual
+  tracking code, and no longer forces every other blog to regenerate its tracking code.
+* Bug fix: a blog that is given a new Matomo site during a sync now regenerates its tracking
+  code, instead of keeping one that still refers to the site it no longer belongs to.
+* Bug fix: site syncing now reports a failure when a blog could not be installed.
+* Bug fix: site and user syncing now skip archived blogs and blogs marked as spam, as they
+  already did for deleted ones. A blog returning to service is synced straight away.
+* Bug fix: the MaxMind license key is no longer written to the debug log in plain text.
+* Internal change: matomo_tracking_settings_changed is no longer fired when a site sync only
+  updated a blog's metadata (its name, URL, timezone, currency or ecommerce flag), since no
+  tracking setting changed in that case. Listeners that need to know a site was synced can use
+  matomo_site_synced, which is still fired.
+
 = 5.12.2 =
 * Bug fix: removing users from a blog did not correctly remove Matomo permissions. Matomo
   permissions stayed valid until the daily sync executed.
