@@ -465,7 +465,7 @@ class SystemReport implements MatomoPageContent {
 	private function get_phpcli_info() {
 		$rows = [];
 
-		if ( $this->shell_exec_available ) {
+		if ( $this->shell_exec_available && class_exists( CliMulti::class ) ) {
 			try {
 				$cli_multi = new CliMulti();
 
