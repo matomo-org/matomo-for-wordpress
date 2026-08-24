@@ -18,7 +18,7 @@ import MwpDiagnosticsPage from './pageobjects/mwp-admin/diagnostics.page.js';
 
 const FAKE_UPDATE_VERSION = '6.0.0';
 const BLOCKED_NOTICE_SELECTOR = '#matomo-minimumrequirementsblocked';
-const BLOCKED_MESSAGE = 'This update cannot be installed because your server does not meet its minimum requirements';
+const BLOCKED_MESSAGE = 'This update cannot be installed because your server does not meet Matomo\'s new minimum requirements';
 
 async function callTestUtility(action: string, enable: boolean) {
   await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
