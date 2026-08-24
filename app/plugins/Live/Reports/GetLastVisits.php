@@ -15,5 +15,6 @@ class GetLastVisits extends \Piwik\Plugins\Live\Reports\Base
     public function buildReportMetadata()
     {
         // do not add this report as metadata
+        return null;
     }
 }

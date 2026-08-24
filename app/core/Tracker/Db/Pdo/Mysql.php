@@ -316,7 +316,7 @@ class Mysql extends Db
     public function beginTransaction()
     {
         if ($this->activeTransaction !== null) {
-            return;
+            return null;
         }
         try {
             $success = $this->connection->beginTransaction();
@@ -334,6 +334,7 @@ class Mysql extends Db
             $this->activeTransaction = uniqid();
             return $this->activeTransaction;
         }
+        return null;
     }
     /**
      * Commit Transaction

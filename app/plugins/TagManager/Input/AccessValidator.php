@@ -28,10 +28,24 @@ class AccessValidator
      * @var ContainerReleaseDao|null
      */
     private $containerReleaseDao;
+    /**
+     * @var bool
+     */
+    private $skipCustomTemplatesCapabilityCheck = \false;
     public function __construct(SystemSettings $settings, ?ContainerReleaseDao $containerReleaseDao = null)
     {
         $this->settings = $settings;
         $this->containerReleaseDao = $containerReleaseDao;
+    }
+    public function runWithoutCustomTemplatesCapabilityCheck(callable $callback)
+    {
+        $previous = $this->skipCustomTemplatesCapabilityCheck;
+        $this->skipCustomTemplatesCapabilityCheck = \true;
+        try {
+            return $callback();
+        } finally {
+            $this->skipCustomTemplatesCapabilityCheck = $previous;
+        }
     }
     public function checkViewPermission($idSite)
     {
@@ -53,6 +67,9 @@ class AccessValidator
     }
     public function checkUseCustomTemplatesCapability($idSite)
     {
+        if ($this->skipCustomTemplatesCapabilityCheck) {
+            return;
+        }
         $this->checkSiteExists($idSite);
         if ($this->settings->restrictCustomTemplates->getValue() === SystemSettings::CUSTOM_TEMPLATES_SUPERUSER) {
             Piwik::checkUserHasSuperUserAccess();

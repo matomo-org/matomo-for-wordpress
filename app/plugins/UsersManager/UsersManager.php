@@ -258,6 +258,7 @@ $passwordHash, $exceptionMessage)
         $translationKeys[] = 'UsersManager_AddExistingUser';
         $translationKeys[] = 'UsersManager_AddNewUser';
         $translationKeys[] = 'UsersManager_AddSuperuserAccessConfirm';
+        $translationKeys[] = 'UsersManager_AdminUserRoleChangeWarning';
         $translationKeys[] = 'UsersManager_AllUsersAreSelected';
         $translationKeys[] = 'UsersManager_AllWebsitesAreSelected';
         $translationKeys[] = 'UsersManager_AnonymousUserRoleChangeWarning';
@@ -265,7 +266,7 @@ $passwordHash, $exceptionMessage)
         $translationKeys[] = 'UsersManager_AreYouSureAddCapability';
         $translationKeys[] = 'UsersManager_AreYouSureChangeDetails';
         $translationKeys[] = 'UsersManager_AreYouSureRemoveCapability';
-        $translationKeys[] = 'UsersManager_AuthTokenSecureOnlyHelp';
+        $translationKeys[] = 'UsersManager_AuthTokenSecureOnlyHelp2';
         $translationKeys[] = 'UsersManager_AuthTokenSecureOnlyHelpForced';
         $translationKeys[] = 'UsersManager_AuthTokenPurpose';
         $translationKeys[] = 'UsersManager_AuthTokens';

@@ -108,6 +108,11 @@ class API extends \Piwik\Plugin\API
     public function get(int $idSite, string $period, string $date, string $apiModule, string $apiAction, $graphType = \false, int $outputType = \Piwik\Plugins\ImageGraph\API::GRAPH_OUTPUT_INLINE, $columns = \false, $labels = \false, bool $showLegend = \true, $width = \false, $height = \false, int $fontSize = \Piwik\Plugins\ImageGraph\API::DEFAULT_FONT_SIZE, $legendFontSize = \false, bool $aliasedGraph = \true, $idGoal = \false, $colors = \false, string $textColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_TEXT_COLOR, string $backgroundColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_BACKGROUND_COLOR, string $gridColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_GRID_COLOR, $idSubtable = \false, bool $legendAppendMetric = \true, $segment = \false, $idDimension = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
+        // a graph may only be streamed to the browser by the top-level request, so it is checked
+        // upfront and no graph is rendered for an output mode that will be refused anyway
+        if (self::isStreamingOutputType($outputType) && Request::isCurrentApiRequestNestedInAnotherApiRequest()) {
+            throw new Exception('A graph can only be sent to the browser by the top-level request.');
+        }
         // Health check - should we also test for GD2 only?
         if (!SettingsServer::isGdExtensionEnabled()) {
             throw new Exception('Error: To create graphs in Matomo, please enable GD php extension (with Freetype support) in php.ini,
@@ -412,6 +417,14 @@ class API extends \Piwik\Plugin\API
                 $graph->sendToBrowser();
                 exit;
         }
+    }
+    /**
+     * Whether the given output mode streams the graph to the browser. Mirrors the output modes
+     * handled by the switch in {@see get()}, where any unknown mode means inline.
+     */
+    private static function isStreamingOutputType(int $outputType) : bool
+    {
+        return !in_array($outputType, [self::GRAPH_OUTPUT_FILE, self::GRAPH_OUTPUT_PHP], \true);
     }
     private function setFilterTruncate(int $default) : void
     {

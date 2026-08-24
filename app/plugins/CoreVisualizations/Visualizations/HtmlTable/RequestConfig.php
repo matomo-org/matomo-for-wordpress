@@ -31,6 +31,13 @@ class RequestConfig extends VisualizationRequestConfig
      * Default value: false
      */
     public $keep_totals_row = \false;
+    /**
+     * If true, eligible metric cells show the percentage of the report total, and the absolute
+     * value is shown on hover instead.
+     *
+     * Default value: false
+     */
+    public $show_percentage_values = \false;
     public function __construct()
     {
         $this->totals = \true;
@@ -43,7 +50,7 @@ class RequestConfig extends VisualizationRequestConfig
             }
             $this->filter_excludelowpop_value = \false;
         }
-        $this->addPropertiesThatShouldBeAvailableClientSide(array('search_recursive', 'filter_limit', 'filter_offset', 'filter_sort_column', 'filter_sort_order', 'keep_summary_row', 'keep_totals_row', 'show_dimensions'));
-        $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('keep_summary_row', 'keep_totals_row', 'show_dimensions'));
+        $this->addPropertiesThatShouldBeAvailableClientSide(array('search_recursive', 'filter_limit', 'filter_offset', 'filter_sort_column', 'filter_sort_order', 'keep_summary_row', 'keep_totals_row', 'show_dimensions', 'show_percentage_values'));
+        $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('keep_summary_row', 'keep_totals_row', 'show_dimensions', 'show_percentage_values'));
     }
 }

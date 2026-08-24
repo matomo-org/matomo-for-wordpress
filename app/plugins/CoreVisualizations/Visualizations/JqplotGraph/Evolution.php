@@ -11,9 +11,11 @@ namespace Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph;
 use Piwik\API\Request as ApiRequest;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\DataTable;
 use Piwik\Period\Factory;
 use Piwik\Period\Range;
 use Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
+use Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph;
 use Piwik\Plugins\CoreVisualizations\Visualizations\EvolutionPeriodSelector;
 use Piwik\Site;
@@ -26,9 +28,40 @@ class Evolution extends JqplotGraph
 {
     public const ID = 'graphEvolution';
     public const SERIES_COLOR_COUNT = 8;
+    /**
+     * Precomputed forecast values, keyed by series index then tick index. Populated by
+     * afterAllFiltersAreApplied() so the data generator can reuse the same result instead
+     * of recomputing it during render.
+     *
+     * @var array<int, array<int, float|null>>
+     */
+    private $forecastData = [];
+    /**
+     * Per-series state collected by JqplotDataGenerator\Evolution::precomputeForecast()
+     * so the later initChartObjectData() pass can skip its row × column loop. Null when
+     * no precompute ran.
+     *
+     * @var ForecastSeriesState|null
+     */
+    private $forecastSeriesState = null;
     public static function getDefaultConfig()
     {
         return new \Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution\Config();
+    }
+    /**
+     * @return array<int, array<int, float|null>>
+     */
+    public function getForecastData() : array
+    {
+        return $this->forecastData;
+    }
+    public function setForecastSeriesState(?ForecastSeriesState $state) : void
+    {
+        $this->forecastSeriesState = $state;
+    }
+    public function getForecastSeriesState() : ?ForecastSeriesState
+    {
+        return $this->forecastSeriesState;
     }
     public function beforeRender()
     {
@@ -59,6 +92,12 @@ class Evolution extends JqplotGraph
             $this->requestConfig->request_parameters_to_modify['period'] = $selector->getHighestPeriodInCommon($requestingPeriod, []);
             $this->requestConfig->request_parameters_to_modify['date'] = $requestingPeriod->getRangeString();
         }
+        // Forecast values can only be drawn by the LineRenderer. Force-off when the viz is in
+        // bar mode (subclass override or ?show_line_graph=0 query param) so the always-on
+        // forecast cannot sneak forecast computation into a bar-mode render.
+        if (!$this->config->show_line_graph) {
+            $this->config->show_forecast = \false;
+        }
         $this->config->custom_parameters['columns'] = $this->config->columns_to_display;
         if ($this->isComparing() && $isComparingDatesOrPeriods) {
             $this->config->show_limit_control = \false;
@@ -88,10 +127,38 @@ class Evolution extends JqplotGraph
             $rowCount = $this->dataTable->getRowsCount();
             $this->config->x_axis_step_size = $this->getDefaultXAxisStepSize($rowCount);
         }
+        // The forecast is always active for line charts, but the per-series builder only runs
+        // when there is something to forecast: precomputeForecast() bails cheaply unless at
+        // least one tick is incomplete, so dashboards full of historical-only evolution
+        // widgets do not pay for the regression on every render.
+        if ($this->config->show_forecast && !$this->config->disable_forecast) {
+            $this->forecastData = $this->precomputeForecastData();
+        }
     }
     protected function makeDataGenerator($properties)
     {
         return JqplotDataGenerator::factory('evolution', $properties, $this);
+    }
+    /**
+     * @return array<int, array<int, float|null>>
+     */
+    private function precomputeForecastData() : array
+    {
+        if ($this->isComparing()) {
+            return [];
+        }
+        /** @var DataTable|DataTable\Map|null $dataTable */
+        $dataTable = $this->dataTable;
+        if (!$dataTable instanceof DataTable\Map) {
+            return [];
+        }
+        // Same merge order as Visualization::render() when it populates
+        // $view->properties, so the precomputed forecast sees the same property
+        // set the rendered chart will.
+        $properties = array_merge($this->requestConfig->getProperties(), $this->config->getProperties());
+        /** @var JqplotDataGenerator\Evolution $dataGenerator */
+        $dataGenerator = $this->makeDataGenerator($properties);
+        return $dataGenerator->precomputeForecast($dataTable);
     }
     /**
      * Based on the period, date and evolution_{$period}_last_n query parameters,

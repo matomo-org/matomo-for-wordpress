@@ -77,6 +77,7 @@ class Sync extends Feature {
 		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], $prio = 10, $args = 2 );
 		add_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], $prio = 10, $args = 1 );
+		add_action( 'deleted_user_meta', [ $this, 'on_deleted_user_meta' ], $prio = 10, $args = 3 );
 		add_action( 'deleted_user', [ $this, 'on_deleted_user' ], $prio = 10, $args = 1 );
 		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], $prio = 10, $args = 1 );
@@ -99,6 +100,7 @@ class Sync extends Feature {
 		remove_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], 10 );
 		remove_action( 'remove_user_from_blog', [ $this, 'on_remove_user_from_blog' ], 10 );
 		remove_action( 'clean_user_cache', [ $this, 'on_clean_user_cache' ], 10 );
+		remove_action( 'deleted_user_meta', [ $this, 'on_deleted_user_meta' ], 10 );
 		remove_action( 'deleted_user', [ $this, 'on_deleted_user' ], 10 );
 		remove_action( 'user_register', [ $this, 'sync_current_users_1000' ], 10 );
 		remove_action( 'granted_super_admin', [ $this, 'on_super_admin_change' ], 10 );
@@ -111,14 +113,14 @@ class Sync extends Feature {
 	/**
 	 * WordPress fires this action before it removes the user's capabilities, so we can't sync the
 	 * user here, the access it has to the site would not be removed. Instead, we remember them
-	 * and have on_clean_user_cache() do the actual re-syncing.
+	 * and have flush_pending_removal_for_current_blog() do the actual re-syncing once the
+	 * capabilities are gone.
 	 *
 	 * @param int $wp_user_id
 	 * @param int $blog_id
 	 */
 	public function on_remove_user_from_blog( $wp_user_id, $blog_id ) {
 		if ( ! $this->is_sync_allowed_for_request() ) {
-			// nothing queued means on_clean_user_cache() has nothing to do either
 			return;
 		}
 
@@ -136,6 +138,39 @@ class Sync extends Feature {
 	 * @param int $wp_user_id
 	 */
 	public function on_clean_user_cache( $wp_user_id ) {
+		$this->flush_pending_removal_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * Required since remove_user_from_blog() only calls clean_user_cache() since WordPress 6.1.
+	 * On older versions the capabilities meta deleted by WP_User::remove_all_caps(), so we have
+	 * to try to sync from both places.
+	 *
+	 * Whichever of the two fires first does the sync, the other then finds nothing queued.
+	 *
+	 * @param array  $meta_ids
+	 * @param int    $wp_user_id
+	 * @param string $meta_key
+	 */
+	public function on_deleted_user_meta( $meta_ids, $wp_user_id, $meta_key ) {
+		global $wpdb;
+
+		$blog_prefix = $wpdb->get_blog_prefix();
+
+		if ( $blog_prefix . 'capabilities' !== $meta_key && $blog_prefix . 'user_level' !== $meta_key ) {
+			return;
+		}
+
+		$this->flush_pending_removal_for_current_blog( $wp_user_id );
+	}
+
+	/**
+	 * Syncs a user queued by on_remove_user_from_blog(), if the blog WordPress is currently
+	 * switched to is one they were queued for.
+	 *
+	 * @param int $wp_user_id
+	 */
+	private function flush_pending_removal_for_current_blog( $wp_user_id ) {
 		$wp_user_id = (int) $wp_user_id;
 		$blog_id    = get_current_blog_id();
 

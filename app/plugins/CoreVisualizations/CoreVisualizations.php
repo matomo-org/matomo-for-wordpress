@@ -8,9 +8,6 @@
  */
 namespace Piwik\Plugins\CoreVisualizations;
 
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\CoreVisualizations\FeatureFlags\SparklinesRedesign;
-use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\ViewDataTable\Manager as ViewDataTableManager;
 require_once PIWIK_INCLUDE_PATH . '/plugins/CoreVisualizations/JqplotDataGenerator.php';
 /**
@@ -24,20 +21,11 @@ class CoreVisualizations extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'UsersManager.deleteUser' => 'deleteUser', 'Template.bodyClass' => 'addBodyClass');
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'UsersManager.deleteUser' => 'deleteUser');
     }
     public function deleteUser($userLogin)
     {
         ViewDataTableManager::clearUserViewDataTableParameters($userLogin);
-    }
-    public function addBodyClass(&$out, $type)
-    {
-        $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
-        // The sparklines redesign refreshes sparkline styling app-wide (gated by the flag),
-        // so sparklines also appear on other page types (e.g. admin).
-        if ($featureFlagManager->isFeatureActive(SparklinesRedesign::class)) {
-            $out .= ' sparklines-redesign-enabled';
-        }
     }
     public function getStylesheetFiles(&$stylesheets)
     {
@@ -48,6 +36,11 @@ class CoreVisualizations extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SingleMetricView/SingleMetricView.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/SparklinesGrid/SparklinesGrid.less";
         $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/SparklineCard.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/DateAtom.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/PeriodColumns.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/DateComparison.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/SegmentComparisonCard.less";
+        $stylesheets[] = "plugins/CoreVisualizations/vue/src/Sparklines/SegmentComparisonRow.less";
         $stylesheets[] = "plugins/CoreVisualizations/stylesheets/dataTableVisualizations.less";
         $stylesheets[] = "plugins/CoreVisualizations/stylesheets/jqplot.less";
     }
@@ -71,5 +64,6 @@ class CoreVisualizations extends \Piwik\Plugin
         $translationKeys[] = 'General_EvolutionSummaryGeneric';
         $translationKeys[] = 'General_IncompletePeriod';
         $translationKeys[] = 'General_InvalidatedPeriod';
+        $translationKeys[] = 'General_Forecast';
     }
 }

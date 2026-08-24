@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.12.0',
-        'version' => '5.12.0.0',
-        'reference' => '4a6c282486661287a0cba3fd5e24d450fac07da6',
+        'pretty_version' => '5.13.0',
+        'version' => '5.13.0.0',
+        'reference' => '04c528673024239d858998eebc34e1f8afa1acf3',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.12',
-            'version' => '1.5.12.0',
-            'reference' => '00a2f4201641d5c53f7fc0195e6c8d9fcc321a78',
+            'pretty_version' => '1.5.13',
+            'version' => '1.5.13.0',
+            'reference' => 'c008272789979f709f7fcb32c2ecf1d2db5e84e5',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.12.0',
-            'version' => '5.12.0.0',
-            'reference' => '4a6c282486661287a0cba3fd5e24d450fac07da6',
+            'pretty_version' => '5.13.0',
+            'version' => '5.13.0.0',
+            'reference' => '04c528673024239d858998eebc34e1f8afa1acf3',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd94fc55b2bcd0a4f36fd32e8b4430ff5fd60d23d',
+            'reference' => '4f1c7a8d99be37b0aa19ff93fcd8bd7f2d0bf27e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -149,7 +149,7 @@
         'matomo/searchengine-and-social-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '743a0faff8185340c6db38f3b7f1c13cf168cc5b',
+            'reference' => '3b3a82dc83cd146abe17aafe31254de1c25f7844',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/searchengine-and-social-list',
             'aliases' => array(
@@ -441,9 +441,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-intl-grapheme' => array(
-            'pretty_version' => 'v1.38.1',
-            'version' => '1.38.1.0',
-            'reference' => 'e9247d281d694a5120554d9afaf54e070e88a603',
+            'pretty_version' => 'v1.41.0',
+            'version' => '1.41.0.0',
+            'reference' => 'bb899c1db0aa8127dc3afe8cda4a67eb24915f8d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-intl-grapheme',
             'aliases' => array(),

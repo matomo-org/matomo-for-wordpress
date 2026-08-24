@@ -63,6 +63,7 @@ abstract class Settings
         if (array_key_exists($name, $this->settings)) {
             return $this->settings[$name];
         }
+        return null;
     }
     /**
      * Implemented by descendants. This method should define plugin settings (via the

@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\ProfessionalServices\Widgets;
 
 use Piwik\Container\StaticContainer;
+use Piwik\Plugins\Marketplace\SiteAwareLinks;
 use Piwik\Piwik;
 use Piwik\View;
 use Piwik\Widget\WidgetConfig;
@@ -32,6 +33,7 @@ class PromoHeatmaps extends \Piwik\Plugins\ProfessionalServices\Widgets\Dismissi
         $view->plugin = $pluginInfo;
         $view->widgetName = self::getDismissibleWidgetName();
         $view->userCanDismiss = Piwik::isUserIsAnonymous() === \false;
+        $view->marketplaceOverviewLink = (new SiteAwareLinks())->getOverviewUrl($pluginInfo['name']);
         $view->title = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', 'Heatmaps');
         $view->imageName = 'ad-heatmaps.png';
         $view->listOfFeatures = [Piwik::translate('ProfessionalServices_HeatmapsFeature01'), Piwik::translate('ProfessionalServices_HeatmapsFeature02'), Piwik::translate('ProfessionalServices_HeatmapsFeature03')];
