@@ -135,8 +135,10 @@ class MinimumRequirementsUpdateGuard extends Feature {
 		}
 
 		// this is rendered inside a <p>, so no block level elements here.
-		echo '<br><em>'
-			. esc_html__( 'This update cannot be installed because your server does not meet its minimum requirements:', 'matomo' )
+		echo '<br><em style="display: inline-block;margin-top:8px;"><strong>'
+			. esc_html__( 'WARNING', 'matomo' ) . ': '
+			. '</strong>'
+			. esc_html__( 'This update cannot be installed because your server does not meet Matomo\'s new minimum requirements:', 'matomo' )
 			. ' '
 			. esc_html( implode( ' ', $unmet ) )
 			. '</em>';
@@ -220,7 +222,7 @@ class MinimumRequirementsUpdateGuard extends Feature {
 
 		$message .= ' ' . implode( ' ', $unmet );
 		$message .= ' ' . __( 'Please ask your hosting provider to update your server and then try again.', 'matomo' );
-		$message .= ' <a href="' . esc_url( MinimumRequirementsNotice::REQUIREMENTS_FAQ_URL ) . '">'
+		$message .= ' <a href="' . esc_url( MinimumRequirementsNotice::REQUIREMENTS_FAQ_URL ) . '" target="_blank" rel="noreferrer noopener">'
 			. __( 'Learn more about the requirements for Matomo for WordPress', 'matomo' ) . '</a>';
 
 		return $message;
