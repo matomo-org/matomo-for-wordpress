@@ -11,6 +11,8 @@ namespace Piwik;
 use Matomo\Cache\Lazy;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
+use Piwik\Http\EgressBlockedException;
+use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 /**
@@ -278,8 +280,41 @@ class SiteContentDetector
         }
         $siteData = [];
         try {
-            $siteData = \Piwik\Http::sendHttpRequestBy(\Piwik\Http::getTransportMethod(), $url, $timeOut, null, null, null, 0, \false, \true, \false, \true);
+            // @todo PHP 8.1 min (Matomo 6): use named arguments to drop the positional null/false filler.
+            $siteData = \Piwik\Http::sendHttpRequestBy(
+                'curl',
+                $url,
+                $timeOut,
+                null,
+                null,
+                null,
+                0,
+                \false,
+                \true,
+                // $acceptInvalidSslCertificate: detected sites may use self-signed certs
+                \false,
+                \true,
+                // $getExtendedInfo
+                'GET',
+                null,
+                null,
+                null,
+                [],
+                null,
+                \true,
+                // $checkHostIsAllowed
+                \true
+            );
+        } catch (EgressBlockedException $e) {
+            // admin-fixable rejection, not a transient network error, so it must clear the default WARN level
+            StaticContainer::get(LoggerInterface::class)->warning('Site content detection request for {url} was refused: {message}', [
+                // host only, so a configured URL carrying userinfo keeps credentials out of the log
+                'url' => \Piwik\UrlHelper::getHostFromUrl($url),
+                'message' => $e->getMessage(),
+            ]);
         } catch (\Exception $e) {
+            // intentionally fail closed, but leave a diagnostic trail
+            StaticContainer::get(LoggerInterface::class)->debug('Site content detection request for {url} failed: {message}', ['url' => \Piwik\UrlHelper::getHostFromUrl($url), 'message' => $e->getMessage()]);
         }
         return $siteData;
     }

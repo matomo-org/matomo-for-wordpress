@@ -51,7 +51,7 @@ class SessionAuth implements Auth
     }
     public function getName()
     {
-        // empty
+        return null;
     }
     public function setTokenAuth(
 #[\SensitiveParameter]
@@ -64,10 +64,11 @@ $token_auth)
         if (isset($this->user['login'])) {
             return $this->user['login'];
         }
+        return null;
     }
     public function getTokenAuthSecret()
     {
-        // empty
+        return null;
     }
     public function setLogin($login)
     {

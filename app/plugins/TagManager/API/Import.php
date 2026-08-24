@@ -10,7 +10,6 @@ namespace Piwik\Plugins\TagManager\API;
 
 use Piwik\API\Request;
 use Piwik\Piwik;
-use Piwik\Plugins\TagManager\Access\Capability\PublishLiveContainer;
 use Piwik\Plugins\TagManager\Exception\EntityRecursionException;
 use Piwik\Plugins\TagManager\Input\AccessValidator;
 use Piwik\Plugins\TagManager\Model\Container;
@@ -78,19 +77,19 @@ class Import
         }
         foreach ($exportedContainerVersion['tags'] as $tag) {
             $this->tagsProvider->checkIsValidTag($tag['type']);
-            if ($this->tagsProvider->isCustomTemplate($tag['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            if ($this->tagsProvider->isCustomTemplate($tag['type'])) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }
         foreach ($exportedContainerVersion['triggers'] as $trigger) {
             $this->triggersProvider->checkIsValidTrigger($trigger['type']);
-            if ($this->triggersProvider->isCustomTemplate($trigger['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            if ($this->triggersProvider->isCustomTemplate($trigger['type'])) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }
         foreach ($exportedContainerVersion['variables'] as $variable) {
             $this->variablesProvider->checkIsValidVariable($variable['type']);
-            if ($this->variablesProvider->isCustomTemplate($variable['type']) && !Piwik::isUserHasCapability($idSite, PublishLiveContainer::ID)) {
+            if ($this->variablesProvider->isCustomTemplate($variable['type'])) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idSite);
             }
         }

@@ -386,7 +386,7 @@ class Filesystem
             throw new \Exception('Invalid unit given');
         }
         if (!file_exists($pathToFile)) {
-            return;
+            return null;
         }
         $filesize = filesize($pathToFile);
         $factor = $units[$unit];

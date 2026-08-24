@@ -58,6 +58,14 @@ class Config extends \Piwik\ViewDataTable\Config
      * @var callable
      */
     public $compute_evolution = null;
+    /**
+     * When true, the redesigned sparkline card uses this view's own metric translations as the card
+     * title instead of the generic Metrics::getDefaultMetricTranslations() names. Intended for views
+     * that relabel shared columns with section-specific names and render no per-section block title
+     * (show_title = false), e.g. Ecommerce Overview. Default false keeps the generic card titles.
+     * @var bool
+     */
+    public $use_metric_labels_as_titles = \false;
     public function __construct()
     {
         parent::__construct();
@@ -249,7 +257,19 @@ class Config extends \Piwik\ViewDataTable\Config
             $groupedMetrics[$metricGroup][] = $metricInfo;
         }
         $tooltip = $this->generateSparklineTooltip($requestParamsForSparkline);
-        $sparkline = array('url' => $this->getUrlSparkline($requestParamsForSparkline), 'tooltip' => $tooltip, 'metrics' => $groupedMetrics, 'order' => $this->getSparklineOrder($order), 'title' => $title, 'group' => $group, 'seriesIndices' => $seriesIndices, 'graphParams' => $graphParams);
+        $sparkline = array(
+            'url' => $this->getUrlSparkline($requestParamsForSparkline),
+            'tooltip' => $tooltip,
+            'metrics' => $groupedMetrics,
+            // Ordered `metrics` group keys = the Vue grid's column order. Sent as an array because JS
+            // re-sorts integer-like object keys (eg year "2025"/"2026"), losing the backend order.
+            'metricsOrder' => array_map('strval', array_keys($groupedMetrics)),
+            'order' => $this->getSparklineOrder($order),
+            'title' => $title,
+            'group' => $group,
+            'seriesIndices' => $seriesIndices,
+            'graphParams' => $graphParams,
+        );
         if (!empty($evolution)) {
             if (!is_array($evolution) || !array_key_exists('currentValue', $evolution) || !array_key_exists('pastValue', $evolution)) {
                 throw new \Exception('In order to show an evolution in the sparklines view a currentValue and pastValue array key needs to be present');

@@ -46,6 +46,7 @@ class LogTablesProvider
                 return $table;
             }
         }
+        return null;
     }
     /**
      * @param LogTableTemporary|null $table

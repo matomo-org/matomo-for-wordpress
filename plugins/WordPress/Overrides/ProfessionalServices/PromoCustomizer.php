@@ -24,7 +24,7 @@ class PromoCustomizer
         $matchNumber = 0;
 
         $promoContents = preg_replace_callback(
-            '/\\?module=Marketplace&action=overview#\\?showPlugin=(.+?)"/',
+            '/href=".*?(?:\\?|&amp;)module=Marketplace(?:&|&amp;)action=overview#\\?showPlugin=(.+?)"/',
             function ($matches) use (&$matchNumber) {
                 if ($matchNumber === 0) { // unlock button
                     if (!$this->isMwpMarketplaceInstalled()) {
@@ -37,7 +37,7 @@ class PromoCustomizer
                 }
 
                 ++$matchNumber;
-                return $replacement;
+                return 'href="' . $replacement;
             },
             $promoContents
         );

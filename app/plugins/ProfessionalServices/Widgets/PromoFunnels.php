@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\ProfessionalServices\Widgets;
 
 use Piwik\Container\StaticContainer;
+use Piwik\Plugins\Marketplace\SiteAwareLinks;
 use Piwik\Piwik;
 use Piwik\View;
 use Piwik\Widget\WidgetConfig;
@@ -32,6 +33,7 @@ class PromoFunnels extends \Piwik\Plugins\ProfessionalServices\Widgets\Dismissib
         $view->plugin = $pluginInfo;
         $view->widgetName = self::getDismissibleWidgetName();
         $view->userCanDismiss = Piwik::isUserIsAnonymous() === \false;
+        $view->marketplaceOverviewLink = (new SiteAwareLinks())->getOverviewUrl($pluginInfo['name']);
         $view->title = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', $pluginInfo['displayName']);
         $view->listOfFeatures = [Piwik::translate('ProfessionalServices_FunnelsFeature01'), Piwik::translate('ProfessionalServices_FunnelsFeature02'), Piwik::translate('ProfessionalServices_FunnelsFeature03')];
         return $view->render();

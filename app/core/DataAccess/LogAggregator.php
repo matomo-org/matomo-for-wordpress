@@ -419,7 +419,8 @@ class LogAggregator
     }
     private static function getSqlConversionRevenueSum(string $field) : string
     {
-        return self::getSqlRevenue('SUM(' . self::LOG_CONVERSION_TABLE . '.' . $field . ')');
+        $column = self::LOG_CONVERSION_TABLE . '.' . $field;
+        return self::getSqlRevenue(self::getSqlSumExcludingOutOfRange($column, $column));
     }
     /**
      * @param string $field
@@ -428,6 +429,28 @@ class LogAggregator
     public static function getSqlRevenue($field)
     {
         return "ROUND(" . $field . "," . GoalManager::REVENUE_PRECISION . ")";
+    }
+    /**
+     * Wraps a money value expression in a SUM() that excludes rows whose guarding money
+     * column is outside the tracked-value bound (GoalManager::MAX_ALLOWED_REVENUE).
+     *
+     * Such rows are rejected at tracking time; excluding them here keeps archiving
+     * consistent with tracking for values that were stored before the bound existed.
+     * It is used for both the ecommerce item metrics (guarded on log_conversion_item.price)
+     * and the order-level revenue metrics (each guarded on its own log_conversion column),
+     * so the item and order aggregations treat legacy out-of-range values the same way.
+     *
+     * It also removes the archiving overflow vector: once every money value is bounded by
+     * |value| <= 1e12 (and item quantity by its INT UNSIGNED column, <= ~4.29e9), neither
+     * quantity * price nor the summed totals can exceed the MySQL DOUBLE range and abort
+     * archiving with error 1690.
+     *
+     * @param string $guardColumn     the money column whose magnitude decides row exclusion
+     * @param string $valueExpression the expression summed for kept rows (0 is summed otherwise)
+     */
+    private static function getSqlSumExcludingOutOfRange(string $guardColumn, string $valueExpression) : string
+    {
+        return sprintf('SUM(CASE WHEN ABS(%s) > %d THEN 0 ELSE %s END)', $guardColumn, GoalManager::MAX_ALLOWED_REVENUE, $valueExpression);
     }
     /**
      * Helper function that returns an array with common metrics for a given log_visit field distinct values.
@@ -778,7 +801,7 @@ class LogAggregator
     {
         $query = $this->generateQuery(
             // SELECT ...
-            implode(', ', array("log_action.name AS label", sprintf("log_conversion_item.%s AS labelIdAction", $dimension), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion_item.quantity * log_conversion_item.price)'), Metrics::INDEX_ECOMMERCE_ITEM_REVENUE), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion_item.quantity)'), Metrics::INDEX_ECOMMERCE_ITEM_QUANTITY), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion_item.price)'), Metrics::INDEX_ECOMMERCE_ITEM_PRICE), sprintf('COUNT(distinct log_conversion_item.idorder) AS `%d`', Metrics::INDEX_ECOMMERCE_ORDERS), sprintf('COUNT(distinct log_conversion_item.idvisit) AS `%d`', Metrics::INDEX_NB_VISITS), sprintf('CASE log_conversion_item.idorder WHEN \'0\' THEN %d ELSE %d END AS ecommerceType', GoalManager::IDGOAL_CART, GoalManager::IDGOAL_ORDER))),
+            implode(', ', array("log_action.name AS label", sprintf("log_conversion_item.%s AS labelIdAction", $dimension), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion_item.price', 'log_conversion_item.quantity * log_conversion_item.price')), Metrics::INDEX_ECOMMERCE_ITEM_REVENUE), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion_item.quantity)'), Metrics::INDEX_ECOMMERCE_ITEM_QUANTITY), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion_item.price', 'log_conversion_item.price')), Metrics::INDEX_ECOMMERCE_ITEM_PRICE), sprintf('COUNT(distinct log_conversion_item.idorder) AS `%d`', Metrics::INDEX_ECOMMERCE_ORDERS), sprintf('COUNT(distinct log_conversion_item.idvisit) AS `%d`', Metrics::INDEX_NB_VISITS), sprintf('CASE log_conversion_item.idorder WHEN \'0\' THEN %d ELSE %d END AS ecommerceType', GoalManager::IDGOAL_CART, GoalManager::IDGOAL_ORDER))),
             // FROM ...
             array("log_conversion_item", array("table" => "log_action", "joinOn" => sprintf("log_conversion_item.%s = log_action.idaction", $dimension))),
             // WHERE ... AND ...
@@ -983,7 +1006,7 @@ class LogAggregator
      */
     public function queryConversionsByPageView(string $linkField, int $idGoal)
     {
-        $select = "\n            log_conversion.idvisit AS idvisit,\n            " . $idGoal . " AS idgoal,\n            " . ($linkField == 'idaction_url' ? Action::TYPE_PAGE_URL : Action::TYPE_PAGE_TITLE) . " AS `type`,\n            lac.idaction AS idaction, \n            COUNT(*) AS `1`,            \n            " . sprintf("ROUND(SUM(log_conversion.revenue),2) AS `%d`,", Metrics::INDEX_GOAL_REVENUE) . "\n            " . sprintf("COUNT(log_conversion.idvisit) AS `%d`,", Metrics::INDEX_GOAL_NB_VISITS_CONVERTED) . "\n            " . sprintf("ROUND(SUM(1 / log_conversion.pageviews_before * log_conversion.revenue_subtotal),2) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL) . "\n            " . sprintf("ROUND(SUM(1 / log_conversion.pageviews_before * log_conversion.revenue_tax),2) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX) . "\n            " . sprintf("ROUND(SUM(1 / log_conversion.pageviews_before * log_conversion.revenue_shipping),2) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING) . "\n            " . sprintf("ROUND(SUM(1 / log_conversion.pageviews_before * log_conversion.revenue_discount),2) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT) . "\n            " . sprintf("SUM(ROUND(1 / log_conversion.pageviews_before * log_conversion.items, 4)) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_ITEMS) . "\n            " . sprintf("log_conversion.pageviews_before AS `%d`,", Metrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) . "\n            " . sprintf("SUM(ROUND(1 / log_conversion.pageviews_before, 4)) AS `%d`,", Metrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB) . "\n            " . sprintf("COUNT(*) AS `%d`,", Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ) . "\n            " . sprintf("ROUND(SUM(1 / log_conversion.pageviews_before * log_conversion.revenue),2) AS `%d`", Metrics::INDEX_GOAL_REVENUE_ATTRIB);
+        $select = "\n            log_conversion.idvisit AS idvisit,\n            " . $idGoal . " AS idgoal,\n            " . ($linkField == 'idaction_url' ? Action::TYPE_PAGE_URL : Action::TYPE_PAGE_TITLE) . " AS `type`,\n            lac.idaction AS idaction, \n            COUNT(*) AS `1`,            \n            " . sprintf("ROUND(%s,2) AS `%d`,", self::getSqlSumExcludingOutOfRange('log_conversion.revenue', 'log_conversion.revenue'), Metrics::INDEX_GOAL_REVENUE) . "\n            " . sprintf("COUNT(log_conversion.idvisit) AS `%d`,", Metrics::INDEX_GOAL_NB_VISITS_CONVERTED) . "\n            " . sprintf("ROUND(%s,2) AS `%d`,", self::getSqlSumExcludingOutOfRange('log_conversion.revenue_subtotal', '1 / log_conversion.pageviews_before * log_conversion.revenue_subtotal'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL) . "\n            " . sprintf("ROUND(%s,2) AS `%d`,", self::getSqlSumExcludingOutOfRange('log_conversion.revenue_tax', '1 / log_conversion.pageviews_before * log_conversion.revenue_tax'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX) . "\n            " . sprintf("ROUND(%s,2) AS `%d`,", self::getSqlSumExcludingOutOfRange('log_conversion.revenue_shipping', '1 / log_conversion.pageviews_before * log_conversion.revenue_shipping'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING) . "\n            " . sprintf("ROUND(%s,2) AS `%d`,", self::getSqlSumExcludingOutOfRange('log_conversion.revenue_discount', '1 / log_conversion.pageviews_before * log_conversion.revenue_discount'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT) . "\n            " . sprintf("SUM(ROUND(1 / log_conversion.pageviews_before * log_conversion.items, 4)) AS `%d`,", Metrics::INDEX_GOAL_ECOMMERCE_ITEMS) . "\n            " . sprintf("log_conversion.pageviews_before AS `%d`,", Metrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) . "\n            " . sprintf("SUM(ROUND(1 / log_conversion.pageviews_before, 4)) AS `%d`,", Metrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB) . "\n            " . sprintf("COUNT(*) AS `%d`,", Metrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ) . "\n            " . sprintf("ROUND(%s,2) AS `%d`", self::getSqlSumExcludingOutOfRange('log_conversion.revenue', '1 / log_conversion.pageviews_before * log_conversion.revenue'), Metrics::INDEX_GOAL_REVENUE_ATTRIB);
         $from = ['log_conversion', ['table' => 'log_link_visit_action', 'tableAlias' => 'logva', 'join' => 'RIGHT JOIN', 'joinOn' => 'log_conversion.idvisit = logva.idvisit'], ['table' => 'log_action', 'tableAlias' => 'lac', 'joinOn' => 'logva.' . $linkField . ' = lac.idaction']];
         $where = $this->getWhereStatement('log_conversion', 'server_time');
         $where .= sprintf('AND log_conversion.idgoal = %d
@@ -1001,7 +1024,7 @@ class LogAggregator
     public function queryConversionsByEntryPageView(string $linkField, int $rankingQueryLimit = 0)
     {
         $tableName = self::LOG_CONVERSION_TABLE;
-        $select = implode(', ', ['log_conversion.idgoal AS idgoal', sprintf('log_visit.%s AS idaction', $linkField), 'log_action.type', sprintf('COUNT(*) AS `%d`', Metrics::INDEX_GOAL_NB_CONVERSIONS), sprintf('COUNT(distinct log_conversion.idvisit) AS `%d`', Metrics::INDEX_GOAL_NB_VISITS_CONVERTED), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion.revenue)'), Metrics::INDEX_GOAL_REVENUE_ENTRY), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion.revenue_subtotal)'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion.revenue_tax)'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion.revenue_shipping)'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING), sprintf('%s AS `%d`', self::getSqlRevenue('SUM(log_conversion.revenue_discount)'), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT), sprintf('SUM(log_conversion.items) AS `%d`', Metrics::INDEX_GOAL_ECOMMERCE_ITEMS), sprintf('COUNT(*) AS `%d`', Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY)]);
+        $select = implode(', ', ['log_conversion.idgoal AS idgoal', sprintf('log_visit.%s AS idaction', $linkField), 'log_action.type', sprintf('COUNT(*) AS `%d`', Metrics::INDEX_GOAL_NB_CONVERSIONS), sprintf('COUNT(distinct log_conversion.idvisit) AS `%d`', Metrics::INDEX_GOAL_NB_VISITS_CONVERTED), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion.revenue', 'log_conversion.revenue')), Metrics::INDEX_GOAL_REVENUE_ENTRY), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion.revenue_subtotal', 'log_conversion.revenue_subtotal')), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SUBTOTAL), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion.revenue_tax', 'log_conversion.revenue_tax')), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_TAX), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion.revenue_shipping', 'log_conversion.revenue_shipping')), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_SHIPPING), sprintf('%s AS `%d`', self::getSqlRevenue(self::getSqlSumExcludingOutOfRange('log_conversion.revenue_discount', 'log_conversion.revenue_discount')), Metrics::INDEX_GOAL_ECOMMERCE_REVENUE_DISCOUNT), sprintf('SUM(log_conversion.items) AS `%d`', Metrics::INDEX_GOAL_ECOMMERCE_ITEMS), sprintf('COUNT(*) AS `%d`', Metrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY)]);
         $from = [$tableName, ["table" => "log_visit", "joinOn" => "log_visit.idvisit = log_conversion.idvisit"], ["table" => "log_action", "joinOn" => "log_action.idaction = log_visit." . $linkField]];
         $where = $linkField . ' IS NOT NULL AND log_conversion.idgoal >= 0';
         $where = $this->getWhereStatement($tableName, self::CONVERSION_DATETIME_FIELD, $where);

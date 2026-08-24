@@ -189,6 +189,7 @@ class SitesManager extends \Piwik\Plugin
         if (!empty($site['timezone'])) {
             return $site['timezone'];
         }
+        return null;
     }
     /**
      * Returns whether we should keep URL fragments for a specific site.

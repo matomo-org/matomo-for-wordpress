@@ -187,9 +187,9 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $patternType = Common::unsanitizeInputValue($patternType);
-        $this->checkPatternIsValid($patternType, $pattern, $matchAttribute);
-        $pattern = $this->checkPattern($pattern, $matchAttribute);
         $patternType = $this->checkPatternType($patternType, $matchAttribute);
+        $pattern = $this->checkPattern($pattern, $matchAttribute);
+        $this->checkPatternIsValid($patternType, $pattern, $matchAttribute);
         $revenue = Common::forceDotAsSeparatorForDecimalPoint((float) $revenue);
         $goal = array('name' => $name, 'description' => $description, 'match_attribute' => $matchAttribute, 'pattern' => $pattern, 'pattern_type' => $patternType, 'case_sensitive' => (int) $caseSensitive, 'allow_multiple' => (int) $allowMultipleConversionsPerVisit, 'revenue' => $revenue, 'deleted' => 0, 'event_value_as_revenue' => (int) $useEventValueAsRevenue);
         $idGoal = $this->getModel()->createGoalForSite($idSite, $goal);
@@ -298,6 +298,9 @@ class API extends \Piwik\Plugin\API
      */
     private function checkPattern($pattern, $matchAttribute) : string
     {
+        if ($matchAttribute !== 'manually' && $pattern === '') {
+            throw new \Exception(Piwik::translate('General_PleaseSpecifyValue', ['pattern']));
+        }
         if (in_array($matchAttribute, GoalManager::$NUMERIC_MATCH_ATTRIBUTES) && !is_numeric($pattern)) {
             throw new \Exception("Invalid pattern for match attribute '{$matchAttribute}'. (got '{$pattern}', expected numeric value).");
         }

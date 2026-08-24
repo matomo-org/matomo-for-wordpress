@@ -28,6 +28,10 @@ class Chart
      */
     protected $dataStates = [];
     /**
+     * @var array<int, array<int, float|null>>
+     */
+    protected $forecastData = [];
+    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -132,7 +136,7 @@ class Chart
         ProxyHttp::overrideCacheControlHeaders();
         $this->checkDataStateAvailableForAllTicks();
         // See https://www.jqplot.com/docs/files/jqPlotOptions-txt.html
-        $data = ['params' => ['axes' => &$this->axes, 'series' => &$this->series], 'data' => &$this->data, 'dataStates' => &$this->dataStates];
+        $data = ['params' => ['axes' => &$this->axes, 'series' => &$this->series], 'data' => &$this->data, 'dataStates' => &$this->dataStates, 'forecastData' => &$this->forecastData];
         return $data;
     }
     public function setAxisXLabelsMultiple($xLabels, $seriesToXAxis, $ticks = null)
@@ -157,6 +161,15 @@ class Chart
     public function setDataStates(array $dataStates) : void
     {
         $this->dataStates = $dataStates;
+    }
+    /**
+     * Set forecast values for all series/ticks.
+     *
+     * @param array<int, array<int, float|null>> $forecastData
+     */
+    public function setForecastData(array $forecastData) : void
+    {
+        $this->forecastData = $forecastData;
     }
     private function getXAxis($index)
     {
