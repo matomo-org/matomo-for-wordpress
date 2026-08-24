@@ -11,6 +11,7 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
 import MatomoCli from "./apiobjects/matomo.cli.ts";
+import { markReleaseInstalled } from './release-sentinel.js';
 
 const SKIP_SETUP_LINK_SELECTOR = '.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link,.woocommerce-profiler-setup-store__button.is-tertiary';
 
@@ -423,7 +424,9 @@ class Website {
         }
 
         if (sleepTimeInMsecs) {
-          await browser.pause(sleepTimeInMsecs);
+          // not browser.pause(), so this can also be used from wdio hooks like onPrepare
+          // where there is no browser session
+          await new Promise((resolve) => setTimeout(resolve, sleepTimeInMsecs));
         }
       }
     }
@@ -496,6 +499,12 @@ class Website {
     } else {
       console.log('No activate button found.');
     }
+
+    // so the main wdio run knows it does not have to install the release itself
+    markReleaseInstalled(
+      path.join(process.cwd(), 'docker', 'wordpress', await this.getWpFolder(), 'wp-content', 'plugins', 'matomo'),
+      pathToRelease,
+    );
   }
 
   /**

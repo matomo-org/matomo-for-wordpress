@@ -47,7 +47,11 @@ class MatomoCli {
     for (let name of Object.keys(params)) {
       command += ` ${name}${params[name] ? `=${params[name]}` : ''}`;
     }
-    command = `docker compose --env-file .env.default --env-file .env run --rm exec matomo:console ${command}`;
+
+    // WORDPRESS_FOLDER is passed explicitly since the exec service only reads it from
+    // .env.default/.env, and scripts/wdio.sh puts it in .env.script.
+    const folderArg = process.env.WORDPRESS_FOLDER ? `-e WORDPRESS_FOLDER=${process.env.WORDPRESS_FOLDER} ` : '';
+    command = `docker compose --env-file .env.default --env-file .env run --rm ${folderArg}exec matomo:console ${command}`;
 
     try {
       execSync(command);
