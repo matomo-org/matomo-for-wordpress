@@ -131,7 +131,6 @@ describe('MWP Admin > Matomo 6 Update Block', () => {
 
     await PluginsAdminPage.open();
     const updateNowUrl = await PluginsAdminPage.updateNowUrl();
-    console.log(`updateNowUrl: ${updateNowUrl}`);
     await UpdatePluginPage.open(updateNowUrl);
 
     await UpdatePluginPage.waitForText('cannot be installed because your server');
@@ -227,11 +226,12 @@ describe('MWP Admin > Matomo 6 Update Block', () => {
       await UsersAdminPage.open();
       expect(await UsersAdminPage.hasElement(BLOCKED_NOTICE_SELECTOR)).toBeFalsy();
 
-      // the pages the user acts on it from keep showing it regardless
+      // always visible on plugin management pages
       await PluginsAdminPage.open();
       expect(await PluginsAdminPage.hasElement(BLOCKED_NOTICE_SELECTOR)).toBeTruthy();
       expect(await PluginsAdminPage.elementHasClass(BLOCKED_NOTICE_SELECTOR, 'is-dismissible')).toBeFalsy();
 
+      // always shown in mwp admin pages
       await MwpDiagnosticsPage.open();
       expect(await MwpDiagnosticsPage.hasElement(BLOCKED_NOTICE_SELECTOR)).toBeTruthy();
     });

@@ -1,6 +1,7 @@
 == Changelog ===
 
-= 5.12.3 =
+= 5.13.0 =
+* Update core Matomo to version 5.13.0.
 * Compatibility: Matomo 6 will require PHP 8.1, MySQL 8.0 or MariaDB 10.6 at minimum. Plugin updates to Matomo 6 are now aborted on systems that do not meet these requirements.
 * Compatibility: should a version that needs the new requirements end up installed on a
   server that does not meet them, the plugin now loads in safe mode and explains what is

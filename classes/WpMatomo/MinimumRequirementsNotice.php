@@ -115,12 +115,12 @@ class MinimumRequirementsNotice extends Feature {
 	}
 
 	/**
-	 * @param bool $is_dismissible whether a previous dismissal applies to this page
+	 * @param bool $is_dismissible whether a previous dismissal should be applied on this page
 	 * @return string[] empty when there is nothing to show
 	 */
 	private function get_unmet_requirements_to_show( $is_dismissible ) {
 		if ( $is_dismissible && $this->is_dismissed() ) {
-			return [];
+			return []; // dismissed, nothing to show
 		}
 
 		return $this->requirements->get_unmet_requirements();
