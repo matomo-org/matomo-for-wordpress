@@ -16,6 +16,8 @@
 .env.script
 /app/.ddev
 .e2e-test-overrides.json
+# dummy update archive written into the plugin dir by mwp-admin.update-block.e2e.ts
+/matomo.6.0.0.zip
 .mysql.options
 
 # for local docker dev

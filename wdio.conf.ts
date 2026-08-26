@@ -119,6 +119,7 @@ export const config: Options.Testrunner = {
     './tests/e2e/tracking.tag-manager.e2e.ts',
     './tests/e2e/manual-archiving.e2e.ts',
     './tests/e2e/mwp-language.e2e.ts',
+    './tests/e2e/mwp-admin.update-block.e2e.ts',
   ],
   //
   // ============
