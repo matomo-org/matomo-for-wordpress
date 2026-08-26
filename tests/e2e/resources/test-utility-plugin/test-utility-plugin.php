@@ -184,6 +184,182 @@ add_filter(
 	}
 );
 
+/**
+ * Everything below is used by mwp-admin.update-block.e2e.ts to exercise the Matomo 6
+ * minimum requirements update guard.
+ */
+const MATOMO_TEST_FAKE_UPDATE_OPTION  = 'matomo_test_fake_plugin_update';
+const MATOMO_TEST_FAKE_UPDATE_VERSION = '6.0.0';
+const MATOMO_TEST_FAKE_UPDATE_ZIP     = 'matomo.6.0.0.zip';
+const MATOMO_TEST_BLOCKED_OPTION      = 'matomo_test_fake_blocked_version';
+
+function matomo_test_fake_update_zip_path() {
+	return WP_PLUGIN_DIR . '/matomo/' . MATOMO_TEST_FAKE_UPDATE_ZIP;
+}
+
+function matomo_test_build_fake_update_zip() {
+	require_once ABSPATH . 'wp-admin/includes/class-pclzip.php';
+
+	$path = matomo_test_fake_update_zip_path();
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink,WordPress.PHP.NoSilencedErrors.Discouraged
+	@unlink( $path );
+
+	$tmp_dir    = rtrim( get_temp_dir(), '/' ) . '/matomo-fake-update';
+	$plugin_dir = $tmp_dir . '/matomo';
+
+	matomo_test_delete_directory( $tmp_dir );
+	wp_mkdir_p( $plugin_dir );
+
+	// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+	file_put_contents(
+		$plugin_dir . '/matomo.php',
+		"<?php\n/**\n * Plugin Name: Matomo Analytics\n * Description: dummy archive used by mwp-admin.update-block.e2e.ts, never meant to be installed.\n * Version: " . MATOMO_TEST_FAKE_UPDATE_VERSION . "\n */\n"
+	);
+	file_put_contents( $plugin_dir . '/readme.txt', "=== Matomo Analytics ===\nStable tag: " . MATOMO_TEST_FAKE_UPDATE_VERSION . "\n" );
+	// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+
+	$archive = new PclZip( $path );
+	$created = $archive->create( $plugin_dir, PCLZIP_OPT_REMOVE_PATH, $tmp_dir );
+
+	matomo_test_delete_directory( $tmp_dir );
+
+	if ( empty( $created ) ) {
+		throw new \Exception( 'could not create fake update archive: ' . $archive->errorInfo( true ) );
+	}
+
+	return plugins_url( 'matomo/' . MATOMO_TEST_FAKE_UPDATE_ZIP );
+}
+
+function matomo_test_delete_directory( $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		return;
+	}
+
+	foreach ( (array) glob( $dir . '/*' ) as $entry ) {
+		if ( is_dir( $entry ) ) {
+			matomo_test_delete_directory( $entry );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			unlink( $entry );
+		}
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+	rmdir( $dir );
+}
+
+add_action(
+	'wp_ajax_nopriv_matomo_test_set_fake_plugin_update',
+	function () {
+		if ( empty( $_REQUEST['enable'] ) ) {
+			delete_option( MATOMO_TEST_FAKE_UPDATE_OPTION );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink,WordPress.PHP.NoSilencedErrors.Discouraged
+			@unlink( matomo_test_fake_update_zip_path() );
+		} else {
+			update_option(
+				MATOMO_TEST_FAKE_UPDATE_OPTION,
+				[
+					'version' => MATOMO_TEST_FAKE_UPDATE_VERSION,
+					'package' => matomo_test_build_fake_update_zip(),
+				]
+			);
+		}
+
+		wp_clean_plugins_cache();
+
+		wp_send_json( 'ok' );
+	}
+);
+
+// make WordPress believe a Matomo 6 update is available, pointing at the archive above.
+add_filter(
+	'site_transient_update_plugins',
+	function ( $value ) {
+		$fake = get_option( MATOMO_TEST_FAKE_UPDATE_OPTION );
+		if ( empty( $fake['package'] ) ) {
+			return $value;
+		}
+
+		if ( ! is_object( $value ) ) {
+			$value = new stdClass();
+		}
+		if ( empty( $value->response ) || ! is_array( $value->response ) ) {
+			$value->response = [];
+		}
+
+		$value->response['matomo/matomo.php'] = (object) [
+			'id'           => 'w.org/plugins/matomo',
+			'slug'         => 'matomo',
+			'plugin'       => 'matomo/matomo.php',
+			'new_version'  => $fake['version'],
+			'url'          => 'https://wordpress.org/plugins/matomo/',
+			'package'      => $fake['package'],
+			// deliberately low: if this required PHP 8.1, WordPress' own gate would hide the
+			// update link and print its own message, and Matomo's guard would never run.
+			'requires_php' => '7.2.5',
+		];
+
+		if ( ! empty( $value->no_update['matomo/matomo.php'] ) ) {
+			unset( $value->no_update['matomo/matomo.php'] );
+		}
+
+		return $value;
+	}
+);
+
+add_action(
+	'wp_ajax_nopriv_matomo_test_set_fake_blocked_version',
+	function () {
+		if ( empty( $_REQUEST['enable'] ) ) {
+			delete_option( MATOMO_TEST_BLOCKED_OPTION );
+
+			// these requests are not authenticated (see the nopriv hook), so the dismissal has
+			// to be cleared for every user rather than the current one.
+			delete_metadata(
+				'user',
+				0,
+				\WpMatomo\MinimumRequirementsNotice::OPTION_NAME_MINIMUM_REQUIREMENTS_DISMISSED,
+				'',
+				true
+			);
+		} else {
+			update_option( MATOMO_TEST_BLOCKED_OPTION, 1 );
+		}
+
+		wp_send_json( 'ok' );
+	}
+);
+
+/**
+ * The "Matomo Analytics has been disabled" notice only renders once the installed version
+ * requires the new minimums, which blocking an update never produces. Swap the live feature
+ * for a subclass that reports version 6 so the e2e test can see the real notice.
+ */
+add_action(
+	'admin_notices',
+	function () {
+		if ( ! get_option( MATOMO_TEST_BLOCKED_OPTION ) ) {
+			return;
+		}
+
+		$notice = WpMatomo::get_active_feature( \WpMatomo\MinimumRequirementsNotice::class );
+		if ( empty( $notice ) ) {
+			return;
+		}
+
+		remove_action( 'admin_notices', [ $notice, 'check_requirements' ] );
+
+		$fake_notice = new class() extends \WpMatomo\MinimumRequirementsNotice {
+			protected function get_plugin_version() {
+				return MATOMO_TEST_FAKE_UPDATE_VERSION;
+			}
+		};
+		$fake_notice->check_requirements();
+	},
+	1
+);
+
 function matomo_test_utility_plugin_request_overrides() {
 	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 

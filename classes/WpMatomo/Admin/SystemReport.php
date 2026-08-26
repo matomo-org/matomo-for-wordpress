@@ -126,6 +126,12 @@ class SystemReport implements MatomoPageContent {
 	}
 
 	private function execute_troubleshoot_if_needed() {
+		if ( WpMatomo::is_safe_mode() ) {
+			// most troubleshooting actions bootstrap Matomo, which is exactly what safe mode
+			// is meant to avoid.
+			return;
+		}
+
 		if ( ! empty( $_POST )
 			&& is_admin()
 			&& check_admin_referer( self::NONCE_NAME )
@@ -378,7 +384,7 @@ class SystemReport implements MatomoPageContent {
 			$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 			$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
 			$matomo_has_exception_logs        = $this->logger->get_last_logged_entries();
-		} else { // troubleshooting
+		} elseif ( ! WpMatomo::is_safe_mode() ) { // troubleshooting
 			try {
 				Bootstrap::do_bootstrap();
 				$scheduler              = StaticContainer::get( Scheduler::class );
@@ -459,7 +465,7 @@ class SystemReport implements MatomoPageContent {
 	private function get_phpcli_info() {
 		$rows = [];
 
-		if ( $this->shell_exec_available ) {
+		if ( $this->shell_exec_available && class_exists( CliMulti::class ) ) {
 			try {
 				$cli_multi = new CliMulti();
 

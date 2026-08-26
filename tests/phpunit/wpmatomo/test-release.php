@@ -309,6 +309,59 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertEquals( $plugin_data['Version'], WpMatomo::VERSION );
 	}
 
+	/**
+	 * Every file checked here is loaded before WpMatomo::is_safe_mode() has decided whether this
+	 * server can run the bundled Matomo, or on the safe mode path that decision leads to. A parse
+	 * error in any of them could take down the whole site when a server doesn't meet the minimum
+	 * PHP requirements.
+	 *
+	 * Note: this only checks the PHP version the suite is currently running under - it is the CI
+	 * matrix that decides which versions actually get verified.
+	 *
+	 * @dataProvider get_files_that_must_parse_on_the_minimum_php_version
+	 */
+	public function test_files_needed_to_reach_safe_mode_have_no_syntax_errors( $file ) {
+		$path = plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $file;
+		$this->assertFileExists( $path );
+
+		$output  = array();
+		$command = escapeshellarg( PHP_BINARY ) . ' -l ' . escapeshellarg( $path ) . ' 2>&1';
+		exec( $command, $output, $return_code );
+
+		$this->assertSame(
+			0,
+			$return_code,
+			$file . ' does not parse on PHP ' . PHP_VERSION . ': ' . implode( "\n", $output )
+		);
+	}
+
+	public function get_files_that_must_parse_on_the_minimum_php_version() {
+		return array(
+			// the bootstrap, up to and including the WpMatomo::is_safe_mode() check
+			array( 'matomo.php' ),
+			array( 'shared.php' ),
+			array( 'classes/WpMatomo.php' ),
+			array( 'classes/WpMatomo/MinimumRequirements.php' ),
+			array( 'classes/WpMatomo/Settings.php' ),
+			array( 'classes/WpMatomo/Paths.php' ),
+			array( 'classes/WpMatomo/Logger.php' ),
+
+			// the features safe mode loads, see WpMatomo::get_safe_mode_features()
+			array( 'classes/WpMatomo/Feature.php' ),
+			array( 'classes/WpMatomo/Capabilities.php' ),
+			array( 'classes/WpMatomo/MinimumRequirementsUpdateGuard.php' ),
+			array( 'classes/WpMatomo/MinimumRequirementsNotice.php' ),
+			array( 'classes/WpMatomo/Admin/Admin.php' ),
+			array( 'classes/WpMatomo/Admin/SafeModeMenu.php' ),
+			array( 'classes/WpMatomo/Admin/Menu.php' ),
+
+			// the only page safe mode offers, plus what building it needs
+			array( 'classes/WpMatomo/Admin/SystemReport.php' ),
+			array( 'classes/WpMatomo/Admin/MatomoPageContent.php' ),
+			array( 'classes/WpMatomo/Db/Settings.php' ),
+		);
+	}
+
 	private function get_zip_file_contents( $path_to_zip ) {
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$output = shell_exec( 'unzip -l ' . $path_to_zip );

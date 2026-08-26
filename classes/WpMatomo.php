@@ -42,13 +42,17 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.12.2';
+	const VERSION = '5.13.0';
 
 	/**
 	 * @var \WpMatomo\Feature[]
 	 */
 	private static $features = [];
 
+	/**
+	 * @var \WpMatomo\MinimumRequirements
+	 */
+	private static $minimum_requirements;
 
 	/**
 	 * @var Settings
@@ -150,7 +154,30 @@ class WpMatomo {
 			return MATOMO_SAFE_MODE;
 		}
 
-		return false;
+		// if this version of the plugin cannot run on this server, load as little as possible
+		// rather than fataling. the admin menu and system report stay available so the user
+		// can see what is missing.
+		return ! self::get_minimum_requirements()->can_this_system_run_plugin_version( self::VERSION );
+	}
+
+	/**
+	 * @return \WpMatomo\MinimumRequirements
+	 */
+	public static function get_minimum_requirements() {
+		if ( ! isset( self::$minimum_requirements ) ) {
+			self::$minimum_requirements = new \WpMatomo\MinimumRequirements();
+		}
+
+		return self::$minimum_requirements;
+	}
+
+	/**
+	 * For tests.
+	 *
+	 * @param \WpMatomo\MinimumRequirements|null $minimum_requirements
+	 */
+	public static function set_minimum_requirements( $minimum_requirements ) {
+		self::$minimum_requirements = $minimum_requirements;
 	}
 
 	private static function get_active_plugins() {
@@ -202,11 +229,17 @@ class WpMatomo {
 	 */
 	public static function get_safe_mode_features( $settings ) {
 		// being able to determine who has what access to Matomo is always necessary
-		$features = [ new Capabilities( $settings ) ];
+		$features = [
+			new Capabilities( $settings ),
+			// safe mode may have been entered because this version cannot run here, so keep
+			// blocking incompatible updates and keep telling the user why.
+			new \WpMatomo\MinimumRequirementsUpdateGuard(),
+		];
 
 		if ( is_admin() ) {
 			$features[] = new Admin( $settings );
 			$features[] = new \WpMatomo\Admin\SafeModeMenu( $settings );
+			$features[] = new \WpMatomo\MinimumRequirementsNotice();
 		}
 
 		return $features;
@@ -236,6 +269,7 @@ class WpMatomo {
 			new \WpMatomo\Referral(),
 			new \WpMatomo\ErrorNotice( self::$settings ),
 			new \WpMatomo\MinimumRequirementsNotice(),
+			new \WpMatomo\MinimumRequirementsUpdateGuard(),
 			new Chart(),
 
 			/*

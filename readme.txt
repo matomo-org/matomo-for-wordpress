@@ -3,7 +3,7 @@ Contributors: matomoteam
 Tags: analytics,privacy-friendly,gdpr,behavior,conversion,wordpress analytics,google analytics,woocommerce analytics,matomo,statistics,stats,ecommerce
 Requires at least: 4.8
 Tested up to: 7.1.0
-Stable tag: 5.12.2
+Stable tag: 5.13.0
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -93,6 +93,7 @@ Running Matomo Analytics on your server can use significant resources. Whenever 
 
 * The minimum PHP memory limit is 128Mb, but we recommend to use a higher limit (memory_limit = 256M).
 * PHP 7.2 at minimum is required.
+* From Matomo 6 onwards, PHP 8.1, MySQL 8.0 or MariaDB 10.6 will be required at minimum. If your server does not meet those requirements, the plugin will not update to Matomo 6 and will tell you what needs upgrading.
 * If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend installing [Matomo On-Premise](https://matomo.org/docs/installation/) or signup to [Matomo Cloud](https://matomo.org/hosting/) and install the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead.
 * Needing to know more before you install? Have a [read through the most popular FAQs to ensure you’re making the right choice for you](https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/).
 
@@ -110,6 +111,15 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 * PHP 7.2 or greater
 * MySQL 5.5 or greater is recommended
 * 128MB memory or greater is recommended
+
+= Upcoming Minimum Requirements (Matomo 6) =
+
+Matomo 6 raises the minimum system requirements. From that version onwards you will need:
+
+* PHP 8.1 or greater
+* MySQL 8.0 or greater, or MariaDB 10.6 or greater
+
+Until your server meets these requirements the plugin will not update to Matomo 6. Please ask your hosting provider to upgrade your server so you can keep receiving the latest Matomo features, bug fixes and security updates.
 
 = Automatic installation =
 
@@ -156,6 +166,13 @@ The Tag Manager does currently not work in WP Multisite mode.
 
 = Which MySQL versions are supported?
 Matomo should run on most MySQL versions. However, we only support MySQL 5.5 and newer. It should also work with MariaDB and other MySQL compatible databases.
+
+From Matomo 6 onwards, MySQL 8.0 or MariaDB 10.6 will be required at minimum.
+
+= What happens if my server does not meet the requirements for Matomo 6?
+Nothing breaks. The plugin checks your PHP and database versions before downloading an update, and if your server cannot run the new version the update is stopped with a message telling you which requirement is missing. Your existing install keeps working and keeps tracking as before.
+
+You can see the versions your server is running at any time under "Matomo Analytics" -> "System Report" in your WordPress admin. Once your hosting provider has upgraded your server, the update will go through as normal.
 
 = Which browsers do you support?
 * Tracking: We support pretty much all browsers even very old browsers
