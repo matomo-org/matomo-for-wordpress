@@ -85,8 +85,11 @@ class Sync extends Feature {
 		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], $prio = 10, $args = 0 );
 		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
 
-		// must run after the site sync hook
-		add_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], $prio = Site\Sync::MAKE_UNDELETE_BLOG_PRIORITY + 1, $args = 1 );
+		foreach ( Site\Sync::RETURN_TO_SERVICE_ACTIONS as $blog_action ) {
+			// must run after the site sync hook: the users are synced against the Matomo site that
+			// is created during the site sync
+			add_action( $blog_action, [ $this, 'on_blog_returned_to_service' ], $prio = Site\Sync::RETURN_TO_SERVICE_PRIORITY + 1, $args = 1 );
+		}
 	}
 
 	/**
@@ -107,7 +110,9 @@ class Sync extends Feature {
 		remove_action( 'revoked_super_admin', [ $this, 'on_super_admin_change' ], 10 );
 		remove_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], 10 );
 		remove_action( 'profile_update', [ $this, 'sync_maybe_background' ], 10 );
-		remove_action( 'make_undelete_blog', [ $this, 'on_undelete_blog' ], Site\Sync::MAKE_UNDELETE_BLOG_PRIORITY + 1 );
+		foreach ( Site\Sync::RETURN_TO_SERVICE_ACTIONS as $blog_action ) {
+			remove_action( $blog_action, [ $this, 'on_blog_returned_to_service' ], Site\Sync::RETURN_TO_SERVICE_PRIORITY + 1 );
+		}
 	}
 
 	/**
@@ -209,8 +214,14 @@ class Sync extends Feature {
 	/**
 	 * @param int $blog_id
 	 */
-	public function on_undelete_blog( $blog_id ) {
+	public function on_blog_returned_to_service( $blog_id ) {
 		if ( ! $this->is_sync_allowed_for_request() ) {
+			return;
+		}
+
+		// only one of the three flags was cleared, and the blog stays out of service while any
+		// of the others is still set
+		if ( Site::is_blog_out_of_service( $blog_id ) ) {
 			return;
 		}
 
@@ -239,7 +250,9 @@ class Sync extends Feature {
 		}
 
 		foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
-			if ( 1 === (int) $site->deleted ) {
+			// a revoked super admin keeps their row on a blog skipped here, which is only safe
+			// because authenticating downgrades it first
+			if ( Site::is_blog_out_of_service( $site ) ) {
 				continue;
 			}
 
@@ -464,7 +477,7 @@ class Sync extends Feature {
 			// number => 0 means no limit. WP_Site_Query defaults to 100, which would silently leave
 			// every blog after that unsynced
 			foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
-				if ( 1 === (int) $site->deleted ) {
+				if ( Site::is_blog_out_of_service( $site ) ) {
 					continue;
 				}
 

@@ -146,6 +146,35 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * @group ms-required
 	 */
+	public function test_sync_all_should_skip_blogs_that_are_archived_or_marked_as_spam() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$archived_blog = $this->create_blog_with_matomo();
+		$spam_blog     = $this->create_blog_with_matomo();
+
+		try {
+			$this->mock->sync_all();
+			$blogs_reached_before = count( $this->mock->synced_users );
+
+			wp_update_site( $archived_blog, [ 'archived' => 1 ] );
+			wp_update_site( $spam_blog, [ 'spam' => 1 ] );
+
+			$this->mock->synced_users = [];
+			$this->mock->sync_all();
+
+			$this->assertSame( $blogs_reached_before - 2, count( $this->mock->synced_users ) );
+		} finally {
+			wp_delete_site( $archived_blog );
+			wp_delete_site( $spam_blog );
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
 	public function test_sync_all_should_not_limit_the_number_of_blogs_it_reconciles() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
