@@ -746,6 +746,7 @@ class Sync extends Feature {
 			$mapped_matomo_login = $this->get_own_matomo_user_login( $user->ID );
 			if ( $mapped_matomo_login ) {
 				$user_model->deleteUserAccess( $mapped_matomo_login );
+				$user_model->setSuperUserAccess( $mapped_matomo_login, false );
 			}
 
 			return null;
