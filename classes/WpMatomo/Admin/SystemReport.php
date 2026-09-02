@@ -125,6 +125,23 @@ class SystemReport implements MatomoPageContent {
 		return $this->not_compatible_plugins;
 	}
 
+	/**
+	 * Whether the current user may run the troubleshooting actions that reach every blog.
+	 *
+	 * @return bool
+	 */
+	public function can_user_sync_all_blogs() {
+		if ( ! $this->settings->is_network_enabled() ) {
+			// outside network activation these actions are not offered at all: with a single blog
+			// they do no more than the per blog sync buttons next to them. and in a multisite where
+			// blogs activate Matomo individually, syncing sites would install it onto blogs that
+			// deliberately do not have it
+			return false;
+		}
+
+		return current_user_can( Menu::CAP_NETWORK );
+	}
+
 	private function execute_troubleshoot_if_needed() {
 		if ( WpMatomo::is_safe_mode() ) {
 			// most troubleshooting actions bootstrap Matomo, which is exactly what safe mode
@@ -236,7 +253,7 @@ class SystemReport implements MatomoPageContent {
 					}
 				}
 			}
-			if ( $this->settings->is_network_enabled() ) {
+			if ( $this->can_user_sync_all_blogs() ) {
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_ALL_SITES ] ) ) {
 					$sync = new SiteSync( $this->settings );
 					$sync->sync_all();
@@ -372,6 +389,7 @@ class SystemReport implements MatomoPageContent {
 		$matomo_has_exception_logs        = [];
 		$matomo_has_warning_and_no_errors = false;
 		$matomo_scheduled_tasks           = [];
+		$matomo_can_sync_all_blogs        = $this->can_user_sync_all_blogs();
 
 		if ( empty( $matomo_active_tab ) ) { // system report
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting

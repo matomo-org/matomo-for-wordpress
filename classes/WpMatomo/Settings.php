@@ -29,6 +29,7 @@ class Settings {
 	const OPTION_GLOBAL                        = 'matomo-global-option';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
+	const OPTION_KEY_STEALTH_BLOG              = 'caps_tracking_blog';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
 	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
@@ -124,7 +125,6 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
-		self::GLOBAL_USER_AGENT_EXCLUSIONS         => null,
 	];
 
 	/**
@@ -138,6 +138,8 @@ class Settings {
 		self::OPTION_LAST_TRACKING_CODE_UPDATE   => 0,
 		self::USE_SESSION_VISITOR_ID_OPTION_NAME => false,
 		self::SERVER_SIDE_TRACKING_DELAY_SECS    => 180,
+		self::GLOBAL_USER_AGENT_EXCLUSIONS       => null,
+		self::OPTION_KEY_STEALTH_BLOG            => [],
 	];
 
 	private $global_settings = [];
@@ -634,12 +636,27 @@ class Settings {
 		return (int) $parts[0];
 	}
 
+	/**
+	 * Note: "Global" here means what it means in Matomo, where the setting this stands in for lives:
+	 * every Matomo site of one Matomo install. A WordPress blog only has one Matomo install of its
+	 * own, so this is stored per blog even when the plugin is network activated.
+	 *
+	 * @param string[] $user_agents
+	 */
 	public function set_global_user_agent_exclusions( $user_agents ) {
-		$this->set_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
+		$this->set_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
 	}
 
 	public function get_global_user_agent_exclusions() {
-		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		$user_agents = $this->get_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+
+		if ( ! is_array( $user_agents ) ) {
+			// previously this setting was incorrectly stored as a network wide option. now it
+			// is saved as a per-blog option, but we make sure to fall back to the network wide
+			// setting for installs that still have a value there.
+			$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		}
+
 		if ( ! is_array( $user_agents ) ) {
 			// only bootstrap if we can't access the SitesManager API.
 			// if we always bootstrap, it is possible to try initializing the FrontController before Matomo
@@ -651,7 +668,41 @@ class Settings {
 			$user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
 			$user_agents = explode( ',', $user_agents );
 		}
+
 		return $user_agents;
+	}
+
+	/**
+	 * The WordPress roles whose users must not be tracked on the current blog.
+	 *
+	 * Two settings decide this: OPTION_KEY_STEALTH, a network wide option, and OPTION_KEY_STEALTH_BLOG
+	 * the blog's own. Merged rather than one overriding the other, so a blog can stop tracking a
+	 * role the network still tracks, but cannot start tracking one the network excluded.
+	 *
+	 * On a non-network activated install, only the first option is used.
+	 *
+	 * @return array<string, bool> role name => true, listing only the excluded roles
+	 */
+	public function get_stealth_roles() {
+		$stealth_roles = [];
+
+		foreach ( [ self::OPTION_KEY_STEALTH, self::OPTION_KEY_STEALTH_BLOG ] as $key ) {
+			$roles = self::OPTION_KEY_STEALTH === $key
+				? $this->get_global_option( $key )
+				: $this->get_option( $key );
+
+			if ( ! is_array( $roles ) ) {
+				continue;
+			}
+
+			foreach ( $roles as $role_name => $is_excluded ) {
+				if ( $is_excluded ) {
+					$stealth_roles[ $role_name ] = true;
+				}
+			}
+		}
+
+		return $stealth_roles;
 	}
 
 	public function is_track_via_esi_enabled() {

@@ -175,6 +175,53 @@ EOF;
 		$this->assertFalse( TrackingSettings::is_track_script_used_in_wp_config( __DIR__ ) );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_manage_should_refuse_a_matomo_super_user_who_does_not_administrate_the_network_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// network enabled for real rather than assumed, so that the plugin's own hooks see it too
+		$this->activate_matomo_plugin();
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		// the role is theirs to hold, and it is worth this blog's Matomo. the tracking settings are
+		// the network's, so they are not part of what it is worth
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+		$this->assertFalse( is_super_admin() );
+
+		$this->assertFalse( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_manage_should_allow_a_network_administrator_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$this->create_set_super_admin();
+
+		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+	}
+
+	public function test_can_user_manage_should_allow_a_matomo_super_user_when_the_network_is_not_enabled() {
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+	}
+
 	private function delete_temp_wp_config() {
 		if ( is_file( $this->get_wp_config_path() ) ) {
 			unlink( $this->get_wp_config_path() );

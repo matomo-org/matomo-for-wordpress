@@ -444,6 +444,179 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertEquals( $other_user_agents, $tracker_cache['global_excluded_user_agents'] );
 	}
 
+	public function test_get_global_user_agent_exclusions_should_fall_back_to_the_value_stored_before_it_became_a_per_blog_setting() {
+		$this->settings->set_global_option( Settings::GLOBAL_USER_AGENT_EXCLUSIONS, [ 'agent stored before the upgrade' ] );
+		$this->settings->save();
+
+		$this->assertSame( [ 'agent stored before the upgrade' ], $this->make_settings()->get_global_user_agent_exclusions() );
+
+		$this->settings->set_global_user_agent_exclusions( [ 'agent stored after the upgrade' ] );
+		$this->settings->save();
+
+		$this->assertSame( [ 'agent stored after the upgrade' ], $this->make_settings()->get_global_user_agent_exclusions() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_global_user_agent_exclusions_should_return_the_current_blogs_own_user_agents_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$blogid = self::factory()->blog->create();
+
+		$this->settings->set_global_user_agent_exclusions( [ 'agent of the first blog' ] );
+		$this->settings->save();
+
+		switch_to_blog( $blogid );
+
+		try {
+			$other_settings = $this->assume_network_enabled( new Settings() );
+			$other_settings->set_global_user_agent_exclusions( [ 'agent of the second blog' ] );
+			$other_settings->save();
+
+			$this->assertSame( [ 'agent of the second blog' ], $this->settings->get_global_user_agent_exclusions() );
+		} finally {
+			restore_current_blog();
+		}
+
+		$this->assertSame( [ 'agent of the first blog' ], $this->settings->get_global_user_agent_exclusions() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_global_user_agent_exclusions_should_fall_back_to_the_network_wide_user_agents_a_blog_has_not_replaced() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		// where the setting was stored before it became a per blog one
+		$this->settings->set_global_option( Settings::GLOBAL_USER_AGENT_EXCLUSIONS, [ 'agent of the network' ] );
+		$this->settings->save();
+
+		$blogid = self::factory()->blog->create();
+
+		switch_to_blog( $blogid );
+
+		try {
+			$other_settings = $this->assume_network_enabled( new Settings() );
+
+			$this->assertSame( [ 'agent of the network' ], $other_settings->get_global_user_agent_exclusions() );
+
+			// a blog that saves a list of its own stops inheriting
+			$other_settings->set_global_user_agent_exclusions( [] );
+			$other_settings->save();
+
+			$this->assertSame( [], $other_settings->get_global_user_agent_exclusions() );
+			$this->assertSame( [], $this->assume_network_enabled( new Settings() )->get_global_user_agent_exclusions() );
+		} finally {
+			restore_current_blog();
+		}
+
+		// the blogs that never saved one still have what the network configured. read through a new
+		// instance, so that this is what storage holds rather than what was loaded before the switch
+		$this->assertSame(
+			[ 'agent of the network' ],
+			$this->assume_network_enabled( new Settings() )->get_global_user_agent_exclusions()
+		);
+	}
+
+	public function test_get_stealth_roles_should_return_the_network_wide_roles_when_the_network_is_not_enabled() {
+		$this->assertSame( [], $this->settings->get_stealth_roles() );
+
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
+	}
+
+	public function test_get_stealth_roles_should_ignore_a_role_that_is_stored_but_not_excluded() {
+		$this->settings->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor' => '1',
+					'author' => '',
+				],
+			]
+		);
+
+		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_stealth_roles_should_merge_the_network_wide_roles_with_the_current_blogs_own() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$this->settings->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH      => [ 'editor' => '1' ],
+				Settings::OPTION_KEY_STEALTH_BLOG => [ 'author' => '1' ],
+			]
+		);
+
+		$this->assertSame(
+			[
+				'editor' => true,
+				'author' => true,
+			],
+			$this->assume_network_enabled( new Settings() )->get_stealth_roles()
+		);
+
+		$blogid = self::factory()->blog->create();
+
+		switch_to_blog( $blogid );
+
+		try {
+			// the network's roles reach every blog, the first blog's own reach only itself
+			$this->assertSame(
+				[ 'editor' => true ],
+				$this->assume_network_enabled( new Settings() )->get_stealth_roles()
+			);
+		} finally {
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_stealth_roles_should_not_let_a_blog_track_a_role_the_network_excluded() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_network_enabled( $this->settings );
+
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+		$this->assertSame(
+			[ 'editor' => true ],
+			$this->assume_network_enabled( new Settings() )->get_stealth_roles()
+		);
+
+		// try to unset the network wide setting via the blog specific one, and check that
+		// it doesn't change the get_stealth_roles() output.
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_STEALTH_BLOG => [] ] );
+		$this->assertSame(
+			[ 'editor' => true ],
+			$this->assume_network_enabled( new Settings() )->get_stealth_roles()
+		);
+	}
+
 	/**
 	 * @group ms-required
 	 */

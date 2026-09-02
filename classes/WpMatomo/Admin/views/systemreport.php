@@ -33,6 +33,7 @@ use WpMatomo\Admin\SystemReport;
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
 /** @var array $matomo_scheduled_tasks */
+/** @var bool $matomo_can_sync_all_blogs */
 
 if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	function matomo_format_value_text( $value ) {
@@ -241,7 +242,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 						value="">
 				<br/><br/>
 			<?php } ?>
-			<?php if ( $settings->is_network_enabled() ) { ?>
+			<?php if ( $matomo_can_sync_all_blogs ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
 						class='button-primary'
 						title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ); ?>"

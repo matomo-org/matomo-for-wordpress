@@ -1,5 +1,24 @@
 == Changelog ===
 
+= 5.13.1 =
+* Bug fix: when the plugin is network activated, a blog's administrator now holds Matomo super
+  user access on that blog, instead of no access at all. Note: Matomo super user access is not
+  the same as WordPress super user access; it only provides access to a specific blog's Matomo,
+  nothing else.
+* Security: the "Sync all users across sites / blogs" and "Sync all sites (blogs)" actions on
+  Matomo > Diagnostics now require an administrator of the network and are hidden from everyone else.
+* Security: when the plugin is network activated, the tracking settings are stored once for the
+  whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
+  super user access, which a blog's own administrator can grant. Changing them now requires an
+  administrator of the network.
+* New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
+  plugin is network activated. A network administrator can set the roles excluded on every blog in
+  the network, while administrators of specific blogs can exclude roles for the blogs they manage.
+* New feature: everything on Matomo > Settings > Exclusions is now editable with Matomo admin access
+  in a blog's own admin: the excluded IPs, query parameters, user agents and URL fragments.
+* Bug fix: the excluded user agents on Matomo > Settings > Exclusions are now stored per blog,
+  like the other exclusions on that screen, when the plugin is network activated.
+
 = 5.13.0 =
 * Update core Matomo to version 5.13.0.
 * Compatibility: Matomo 6 will require PHP 8.1, MySQL 8.0 or MariaDB 10.6 at minimum. Plugin updates to Matomo 6 are now aborted on systems that do not meet these requirements.

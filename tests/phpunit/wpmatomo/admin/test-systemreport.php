@@ -4,10 +4,13 @@
  */
 
 use WpMatomo\Admin\SystemReport;
+use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+
 // phpcs:ignore WordPress.NamingConventions
 $piwik_minimumPHPVersion = '7.2.5';
+
 /**
  * We want a real data, not something coming from cache
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -92,6 +95,102 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_sync_all_blogs_should_return_false_for_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		// they are the super user of the Matomo belonging to their own blog, which these two
+		// actions reach far beyond
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+		$this->assertFalse( is_super_admin( get_current_user_id() ) );
+
+		$this->assertFalse( $this->report->can_user_sync_all_blogs() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_sync_all_blogs_should_return_true_for_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->create_set_super_admin();
+
+		$this->assertTrue( $this->report->can_user_sync_all_blogs() );
+	}
+
+	public function test_can_user_sync_all_blogs_should_return_false_when_the_network_is_not_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		$this->create_set_super_admin();
+
+		// with a single blog these actions do no more than the per blog sync buttons beside them,
+		// and where blogs activate Matomo individually syncing sites would install it onto blogs
+		// that deliberately do not have it
+		$this->assertFalse( $this->report->can_user_sync_all_blogs() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_not_offer_the_sync_all_blogs_actions_to_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$output = $this->render_troubleshooting();
+
+		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES, $output );
+		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS, $output );
+
+		// the actions that reach no further than their own blog stay
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE, $output );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_offer_the_sync_all_blogs_actions_to_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->create_set_super_admin();
+
+		$output = $this->render_troubleshooting();
+
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES, $output );
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS, $output );
+	}
+
+	public function test_show_should_not_offer_the_sync_all_blogs_actions_when_the_network_is_not_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		$this->create_set_super_admin();
+
+		$output = $this->render_troubleshooting();
+
+		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES, $output );
+		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS, $output );
+
+		// the actions that sync the blog the page is shown for stay
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_SYNC_SITE, $output );
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_SYNC_USERS, $output );
+	}
+
 	public function test_not_compatible_plugins_are_mentioned_in_faq() {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$contents = file_get_contents( 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/' );
@@ -122,5 +221,21 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( array( $old_table_name ), array_values( $missing_tables ) );
 
 		$wpdb->query( "ALTER TABLE $new_table_name RENAME $old_table_name" );
+	}
+
+	private function render_troubleshooting() {
+		$_GET['tab'] = 'troubleshooting';
+
+		ob_start();
+
+		try {
+			$this->report->show();
+		} finally {
+			$output = ob_get_clean();
+
+			unset( $_GET['tab'] );
+		}
+
+		return $output;
 	}
 }

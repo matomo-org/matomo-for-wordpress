@@ -112,12 +112,32 @@ class RolesTest extends MatomoUnit_TestCase {
 			$this->assertSame( $display_name, $roles[ $role_name ] );
 		}
 
-		// administrator is the super user when not network enabled, so it is not configurable
+		// an administrator is the superuser of their blog's Matomo, so there is nothing to configure
 		$this->assertArrayNotHasKey( 'administrator', $roles );
 
 		foreach ( array_keys( $this->roles->get_matomo_roles() ) as $matomo_role ) {
 			$this->assertArrayNotHasKey( $matomo_role, $roles );
 		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_available_roles_for_configuration_should_leave_out_the_administrator_role_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$settings = new Settings();
+		$settings->set_assume_is_network_enabled_in_tests( true );
+
+		$roles = ( new Roles( $settings ) )->get_available_roles_for_configuration();
+
+		// network activation used to make the administrator role configurable, because it was not
+		// the super user then. it is now, on the blog it administrates, so it stays out
+		$this->assertArrayNotHasKey( 'administrator', $roles );
+		$this->assertArrayHasKey( 'editor', $roles );
 	}
 
 	public function test_role_capability() {

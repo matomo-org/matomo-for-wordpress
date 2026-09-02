@@ -27,7 +27,8 @@ if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
 	echo '<div class="matomo-notice notice notice-info is-dismissible"><br>';
 	esc_html_e( 'You are running Matomo in network mode.', 'matomo' );
 	echo ' ';
-	echo 'Below settings aren\'t applied for all blogs but have to be configured for each blog separately. We are hoping to improve this in the future. Any setting within the Matomo admin is configured on a per blog basis as well. Only you as a Matomo super user can see these settings.<br><br></div>';
+	echo esc_html__( 'Below settings aren\'t applied for all blogs but have to be configured for each blog separately. We are hoping to improve this in the future. Any setting within the Matomo admin is configured on a per blog basis as well.', 'matomo' );
+	echo '<br><br></div>';
 }
 ?>
 <h2 class="nav-tab-wrapper">

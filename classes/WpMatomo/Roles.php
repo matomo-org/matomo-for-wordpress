@@ -60,13 +60,12 @@ class Roles extends Feature {
 
 	public function get_available_roles_for_configuration() {
 		global $wp_roles;
-		$is_network_enabled = $this->settings->is_network_enabled();
-		$roles              = [];
+		$roles = [];
 
 		foreach ( $wp_roles->role_names as $role_name => $name ) {
-			if ( ! $is_network_enabled && 'administrator' === $role_name ) {
-				// when multi site, then we consider "administrator" just a regular role and not a super user
-				// when not multi site, administrator is automatically the super user
+			if ( 'administrator' === $role_name ) {
+				// an administrator is automatically the Matomo superuser for their blog's
+				// Matomo instance, so there is nothing to configure for them
 				continue;
 			}
 

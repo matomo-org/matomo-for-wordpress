@@ -49,6 +49,11 @@ class Menu extends Feature {
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
 	/**
+	 * The WordPress capability required to reach any Matomo page in the network admin.
+	 */
+	const CAP_NETWORK = 'manage_network_options';
+
+	/**
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings ) {
@@ -127,7 +132,7 @@ EOF;
 					self::$parent_slug,
 					__( 'Get Started', 'matomo' ),
 					__( 'Get Started', 'matomo' ),
-					Capabilities::KEY_SUPERUSER,
+					$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 					self::SLUG_GET_STARTED,
 					[
 						$get_started,
@@ -144,7 +149,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Multi Site', 'matomo' ),
 				__( 'Multi Site', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 				'matomo-multisite',
 				[
 					$info_multisite,
@@ -156,7 +161,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Summary', 'matomo' ),
 				__( 'Summary', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_REPORT_SUMMARY,
 				[
 					$summary,
@@ -169,7 +174,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Reporting', 'matomo' ),
 				__( 'Reporting', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_REPORTING,
 				[
 					$this,
@@ -182,7 +187,7 @@ EOF;
 					self::$parent_slug,
 					__( 'Tag Manager', 'matomo' ),
 					__( 'Tag Manager', 'matomo' ),
-					Capabilities::KEY_WRITE,
+					$this->get_actual_menu_capability( Capabilities::KEY_WRITE ),
 					self::SLUG_TAGMANAGER,
 					[
 						$this,
@@ -200,7 +205,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Settings', 'matomo' ),
 				__( 'Settings', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_settings_menu_capability(),
 				self::SLUG_SETTINGS,
 				[
 					$admin_settings,
@@ -214,7 +219,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Marketplace', 'matomo' ),
 				__( 'Marketplace', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_MARKETPLACE,
 				[
 					$marketplace,
@@ -237,7 +242,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
 				__( 'Diagnostics', 'matomo' ) . $warning,
-				Capabilities::KEY_SUPERUSER,
+				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 				self::SLUG_SYSTEM_REPORT,
 				[
 					$system_report,
@@ -251,7 +256,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Import WP Statistics', 'matomo' ),
 				__( 'Import WP Statistics', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 				self::SLUG_IMPORTWPS,
 				[
 					$import_wp_s,
@@ -263,7 +268,7 @@ EOF;
 			self::$parent_slug,
 			__( 'Help', 'matomo' ),
 			__( 'Help', 'matomo' ),
-			Capabilities::KEY_VIEW,
+			$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 			self::SLUG_ABOUT,
 			[
 				$info,
@@ -443,6 +448,31 @@ EOF;
 		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
 		wp_safe_redirect( $url );
 		exit;
+	}
+
+	private function get_actual_menu_capability( $matomo_capability ) {
+		if ( is_multisite() && is_network_admin() ) {
+			return self::CAP_NETWORK;
+		}
+
+		return $matomo_capability;
+	}
+
+	private function get_settings_menu_capability() {
+		// only network admins can see the network settings version of this page
+		if ( is_multisite() && is_network_admin() ) {
+			return self::CAP_NETWORK;
+		}
+
+		if ( $this->settings->is_network_enabled() ) {
+			// when network activated, the settings page only shows the Exclusions and Privacy tabs.
+			// these tabs only need matomo admin access
+			return Capabilities::KEY_ADMIN;
+		}
+
+		// every tab is on the page otherwise, including the ones that configure tracking and hand
+		// out access, which require Matomo superuser access
+		return Capabilities::KEY_SUPERUSER;
 	}
 
 	private function get_light_grey_brand_icon() {
