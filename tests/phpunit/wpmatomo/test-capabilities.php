@@ -277,6 +277,36 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 	}
 
+	public function test_remove_roles_the_current_user_may_not_grant_should_hide_the_matomo_superuser_role_from_a_user_who_does_not_have_that_access() {
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		$user_id = self::factory()->user->create( [ 'role' => 'editor' ] );
+		get_userdata( $user_id )->add_cap( 'promote_users' );
+		wp_set_current_user( $user_id );
+
+		// promote_users is all WordPress asks for to change another user's role
+		$this->assertTrue( current_user_can( 'promote_users' ) );
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$editable_roles = get_editable_roles();
+
+		$this->assertArrayNotHasKey( Roles::ROLE_SUPERUSER, $editable_roles );
+
+		// the roles they may still hand out are untouched
+		$this->assertArrayHasKey( Roles::ROLE_ADMIN, $editable_roles );
+		$this->assertArrayHasKey( 'editor', $editable_roles );
+	}
+
+	public function test_remove_roles_the_current_user_may_not_grant_should_leave_the_matomo_superuser_role_for_a_matomo_superuser() {
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$this->assertArrayHasKey( Roles::ROLE_SUPERUSER, get_editable_roles() );
+	}
+
 	private function make_all_caps( $caps_to_set ) {
 		$caps = array();
 		foreach ( $this->make_capabilities()->get_all_capabilities_sorted_by_highest_permission() as $cap ) {

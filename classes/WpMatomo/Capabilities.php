@@ -60,6 +60,7 @@ class Capabilities extends Feature {
 		add_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
 		add_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10, 4 );
 		add_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10, 4 );
+		add_filter( 'editable_roles', [ $this, 'remove_roles_the_current_user_may_not_grant' ] );
 	}
 
 	/**
@@ -71,6 +72,16 @@ class Capabilities extends Feature {
 		remove_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
 		remove_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10 );
 		remove_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10 );
+		remove_filter( 'editable_roles', [ $this, 'remove_roles_the_current_user_may_not_grant' ] );
+	}
+
+	public function remove_roles_the_current_user_may_not_grant( $roles ) {
+		// do not allow non-matomo-superusers from granting matomo superuser access to another user
+		if ( isset( $roles[ Roles::ROLE_SUPERUSER ] ) && ! current_user_can( self::KEY_SUPERUSER ) ) {
+			unset( $roles[ Roles::ROLE_SUPERUSER ] );
+		}
+
+		return $roles;
 	}
 
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {

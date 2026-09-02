@@ -11,6 +11,9 @@
   whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
   super user access, which a blog's own administrator can grant. Changing them now requires an
   administrator of the network.
+* Security: the Matomo Super User role can no longer be handed out by a user who does not have
+  Matomo super user access themselves. WordPress asks only for the promote_users capability to
+  change another user's role, and that capability can be held without any Matomo access at all.
 * New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
   plugin is network activated. A network administrator can set the roles excluded on every blog in
   the network, while administrators of specific blogs can exclude roles for the blogs they manage.
