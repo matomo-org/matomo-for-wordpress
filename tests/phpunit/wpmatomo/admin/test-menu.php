@@ -145,17 +145,22 @@ class MenuTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( Capabilities::KEY_ADMIN, $this->get_registered_capability_per_page()[ Menu::SLUG_SETTINGS ] );
 	}
 
-	public function test_add_menu_should_require_matomo_super_user_for_the_settings_page_when_the_network_is_not_enabled() {
-		wp_set_current_user( $this->create_set_super_admin() );
+	public function test_add_menu_should_register_the_settings_page_for_a_matomo_admin_when_the_network_is_not_enabled() {
+		( new Roles( new Settings() ) )->add_roles( true );
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] ) );
 
 		if ( is_multisite() ) {
 			set_current_screen( 'dashboard' );
 		}
 
+		$this->assertTrue( current_user_can( Capabilities::KEY_ADMIN ) );
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
 		$this->register_menu();
 
-		// every tab is on the page then, including the ones that configure tracking
-		$this->assertSame( Capabilities::KEY_SUPERUSER, $this->get_registered_capability_per_page()[ Menu::SLUG_SETTINGS ] );
+		// the page itself only needs Matomo admin access, for the Exclusions tab. the tabs that
+		// configure tracking or hand out access are left off it for them, see AdminSettingsTest
+		$this->assertSame( Capabilities::KEY_ADMIN, $this->get_registered_capability_per_page()[ Menu::SLUG_SETTINGS ] );
 	}
 
 	private function register_menu() {

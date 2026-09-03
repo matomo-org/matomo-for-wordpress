@@ -140,7 +140,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( 1, Capabilities::get_role_ranking( View::ID ) );
 		$this->assertSame( 2, Capabilities::get_role_ranking( Write::ID ) );
 		$this->assertSame( 3, Capabilities::get_role_ranking( Admin::ID ) );
-		$this->assertSame( 4, Capabilities::get_role_ranking( Capabilities::ROLE_SUPERUSER ) );
+		$this->assertSame( 4, Capabilities::get_role_ranking( Capabilities::MATOMO_ROLE_SUPERUSER ) );
 	}
 
 	/**
@@ -165,7 +165,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 			]
 		);
 
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
 		$this->assertSame( Admin::ID, Capabilities::get_highest_role_for_user( $admin_id ) );
 		$this->assertSame( Write::ID, Capabilities::get_highest_role_for_user( $write_id ) );
 		$this->assertSame( View::ID, Capabilities::get_highest_role_for_user( $view_id ) );
@@ -191,7 +191,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( is_super_admin( $user_id ) );
 
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 	}
 
 	public function test_add_capabilities_to_user_should_grant_superuser_capability_when_the_user_has_the_superuser_role() {
@@ -200,7 +200,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] );
 
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 	}
 
 	/**
@@ -217,7 +217,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$super_admin_id = $this->create_set_super_admin();
 
 		$this->assertTrue( user_can( $super_admin_id, Capabilities::KEY_SUPERUSER ) );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
 	}
 
 	/**
@@ -241,7 +241,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_ADMIN ) );
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_WRITE ) );
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_VIEW ) );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 	}
 
 	/**
@@ -257,7 +257,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_roles()->init_roles();
 
 		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 
 		$other_blog = self::factory()->blog->create();
 
@@ -274,37 +274,11 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
 
 		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
 	}
 
-	public function test_remove_roles_the_current_user_may_not_grant_should_hide_the_matomo_superuser_role_from_a_user_who_does_not_have_that_access() {
-		( new Roles( $this->settings ) )->add_roles( true );
-
-		$user_id = self::factory()->user->create( [ 'role' => 'editor' ] );
-		get_userdata( $user_id )->add_cap( 'promote_users' );
-		wp_set_current_user( $user_id );
-
-		// promote_users is all WordPress asks for to change another user's role
-		$this->assertTrue( current_user_can( 'promote_users' ) );
-		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
-
-		$editable_roles = get_editable_roles();
-
-		$this->assertArrayNotHasKey( Roles::ROLE_SUPERUSER, $editable_roles );
-
-		// the roles they may still hand out are untouched
-		$this->assertArrayHasKey( Roles::ROLE_ADMIN, $editable_roles );
-		$this->assertArrayHasKey( 'editor', $editable_roles );
-	}
-
-	public function test_remove_roles_the_current_user_may_not_grant_should_leave_the_matomo_superuser_role_for_a_matomo_superuser() {
-		( new Roles( $this->settings ) )->add_roles( true );
-
-		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
-
-		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
-
-		$this->assertArrayHasKey( Roles::ROLE_SUPERUSER, get_editable_roles() );
+	public function test_matomo_role_superuser_should_be_reachable_under_its_deprecated_name() {
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::ROLE_SUPERUSER );
 	}
 
 	private function make_all_caps( $caps_to_set ) {

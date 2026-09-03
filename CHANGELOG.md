@@ -4,16 +4,15 @@
 * Bug fix: when the plugin is network activated, a blog's administrator now holds Matomo super
   user access on that blog, instead of no access at all. Note: Matomo super user access is not
   the same as WordPress super user access; it only provides access to a specific blog's Matomo,
-  nothing else.
+  nothing else. Because of this, the administrator role can no longer be given a Matomo access of
+  its own on Matomo > Settings > Access, and a network activated install that had configured one
+  there before will no longer apply it.
 * Security: the "Sync all users across sites / blogs" and "Sync all sites (blogs)" actions on
   Matomo > Diagnostics now require an administrator of the network and are hidden from everyone else.
 * Security: when the plugin is network activated, the tracking settings are stored once for the
   whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
   super user access, which a blog's own administrator can grant. Changing them now requires an
   administrator of the network.
-* Security: the Matomo Super User role can no longer be handed out by a user who does not have
-  Matomo super user access themselves. WordPress asks only for the promote_users capability to
-  change another user's role, and that capability can be held without any Matomo access at all.
 * New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
   plugin is network activated. A network administrator can set the roles excluded on every blog in
   the network, while administrators of specific blogs can exclude roles for the blogs they manage.

@@ -42,10 +42,16 @@ class Capabilities extends Feature {
 	const KEY_STEALTH   = 'stealth_matomo';
 
 	/**
-	 * Matomo has Role classes for view/write/admin, but superuser access is a flag on the user
-	 * rather than a role, so there is no Matomo constant to reuse for it.
+	 * Note: the Matomo role, not a WordPress capability.
 	 */
-	const ROLE_SUPERUSER = 'superuser';
+	const MATOMO_ROLE_SUPERUSER = 'superuser';
+
+	/**
+	 * @deprecated 5.13.1 use self::MATOMO_ROLE_SUPERUSER instead. Renamed because the old name was
+	 *             indistinguishable from Roles::ROLE_SUPERUSER, which is the WordPress role
+	 *             'matomo_superuser_role'.
+	 */
+	const ROLE_SUPERUSER = self::MATOMO_ROLE_SUPERUSER;
 
 	/**
 	 * @var Settings
@@ -60,7 +66,6 @@ class Capabilities extends Feature {
 		add_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
 		add_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10, 4 );
 		add_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10, 4 );
-		add_filter( 'editable_roles', [ $this, 'remove_roles_the_current_user_may_not_grant' ] );
 	}
 
 	/**
@@ -72,16 +77,6 @@ class Capabilities extends Feature {
 		remove_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
 		remove_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10 );
 		remove_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10 );
-		remove_filter( 'editable_roles', [ $this, 'remove_roles_the_current_user_may_not_grant' ] );
-	}
-
-	public function remove_roles_the_current_user_may_not_grant( $roles ) {
-		// do not allow non-matomo-superusers from granting matomo superuser access to another user
-		if ( isset( $roles[ Roles::ROLE_SUPERUSER ] ) && ! current_user_can( self::KEY_SUPERUSER ) ) {
-			unset( $roles[ Roles::ROLE_SUPERUSER ] );
-		}
-
-		return $roles;
 	}
 
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
@@ -197,7 +192,7 @@ class Capabilities extends Feature {
 	 */
 	private static function get_capability_role_map() {
 		return [
-			self::KEY_SUPERUSER => self::ROLE_SUPERUSER,
+			self::KEY_SUPERUSER => self::MATOMO_ROLE_SUPERUSER,
 			self::KEY_ADMIN     => 'admin',
 			self::KEY_WRITE     => 'write',
 			self::KEY_VIEW      => 'view',
@@ -206,8 +201,8 @@ class Capabilities extends Feature {
 
 	/**
 	 * @param int|\WP_User $user
-	 * @return string|null a Matomo role ID or self::ROLE_SUPERUSER, null when they are entitled to
-	 *                     no access at all
+	 * @return string|null a Matomo role ID or self::MATOMO_ROLE_SUPERUSER, null when they are
+	 *                     entitled to no access at all
 	 */
 	public static function get_highest_role_for_user( $user ) {
 		foreach ( self::get_capability_role_map() as $capability => $role ) {

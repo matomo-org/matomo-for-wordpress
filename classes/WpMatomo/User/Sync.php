@@ -329,7 +329,7 @@ class Sync extends Feature {
 	 */
 	private function get_persisted_role_rank( $matomo_login, $matomo_user, $idsite ) {
 		if ( ! empty( $matomo_user['superuser_access'] ) ) {
-			return Capabilities::get_role_ranking( Capabilities::ROLE_SUPERUSER );
+			return Capabilities::get_role_ranking( Capabilities::MATOMO_ROLE_SUPERUSER );
 		}
 
 		$rows = Db::fetchAll(
@@ -728,7 +728,7 @@ class Sync extends Feature {
 	protected function sync_user_access_for_site( $user, $idsite, $user_model ) {
 		$role = Capabilities::get_highest_role_for_user( $user );
 
-		if ( Capabilities::ROLE_SUPERUSER === $role ) {
+		if ( Capabilities::MATOMO_ROLE_SUPERUSER === $role ) {
 			$matomo_login = $this->ensure_user_exists( $user );
 
 			$user_model->setSuperUserAccess( $matomo_login, true );

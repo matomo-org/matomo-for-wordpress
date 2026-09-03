@@ -87,6 +87,7 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 				[
 					Settings::OPTION_KEY_STEALTH_BLOG => [ 'author' => '1' ],
 					'excluded_ips'                    => '127.0.0.9',
+					'excluded_user_agents'            => "firefox\nsafari",
 				]
 			);
 		} finally {
@@ -108,6 +109,9 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 		// check that excluded IPs was set
 		$this->assertSame( '127.0.0.9', API::getInstance()->getExcludedIpsGlobal() );
+
+		// and that the user agents were stored without needing Matomo super user access
+		$this->assertSame( [ 'firefox', 'safari' ], $saved->get_global_user_agent_exclusions() );
 
 		// check that the network wide option was not modified
 		$this->assertSame( [ 'editor' => '1' ], $saved->get_global_option( Settings::OPTION_KEY_STEALTH ) );

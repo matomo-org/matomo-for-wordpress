@@ -172,9 +172,26 @@ class ExclusionSettings implements AdminSettingsInterface {
 		// (see can_user_edit_exclusions()).
 		\Piwik\Access::doAsSuperUser(
 			function () use ( $post ) {
-				$this->apply_exclusions( $post );
+				$this->apply_matomo_exclusions( $post );
 			}
 		);
+
+		$this->apply_user_agent_exclusions( $post );
+	}
+
+	/**
+	 * @param array $post
+	 */
+	private function apply_user_agent_exclusions( $post ) {
+		if ( ! isset( $post['excluded_user_agents'] ) ) {
+			return;
+		}
+
+		$useragents = $this->split_on_newlines( $post['excluded_user_agents'] );
+		if ( $useragents !== $this->settings->get_global_user_agent_exclusions() ) {
+			$this->settings->set_global_user_agent_exclusions( $useragents );
+			$this->settings->save();
+		}
 	}
 
 	/**
@@ -182,7 +199,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 	 *
 	 * @throws InvalidIpException When Matomo refuses one of the excluded IPs.
 	 */
-	private function apply_exclusions( $post ) {
+	private function apply_matomo_exclusions( $post ) {
 		$api = API::getInstance();
 		if ( isset( $post['excluded_ips'] ) ) {
 			$ips = $this->to_comma_list( $post['excluded_ips'] );
@@ -202,14 +219,6 @@ class ExclusionSettings implements AdminSettingsInterface {
 			$params = $this->to_comma_list( $post['excluded_query_parameters'] );
 			if ( $params !== $api->getExcludedQueryParametersGlobal() ) {
 				$api->setGlobalExcludedQueryParameters( $params );
-			}
-		}
-
-		if ( isset( $post['excluded_user_agents'] ) ) {
-			$useragents = $this->split_on_newlines( $post['excluded_user_agents'] );
-			if ( $useragents !== $this->settings->get_global_user_agent_exclusions() ) {
-				$this->settings->set_global_user_agent_exclusions( $useragents );
-				$this->settings->save();
 			}
 		}
 

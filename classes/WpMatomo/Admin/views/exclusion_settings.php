@@ -80,7 +80,13 @@ foreach ( $network_tracking_filter as $matomo_role_name => $matomo_enabled ) {
 				<td>
 					<?php
 					foreach ( $wp_roles->role_names as $matomo_key => $matomo_name ) {
-						echo '<input type="checkbox" ' . ( isset( $tracking_filter[ $matomo_key ] ) && $tracking_filter[ $matomo_key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[' . esc_attr( $tracking_filter_key ) . '][' . esc_attr( $matomo_key ) . ']"' . esc_attr( $matomo_filter_disabled ) . ' /> ' . esc_html( $matomo_name ) . ' &nbsp; <br />';
+						echo '<input type="checkbox" '
+							. ( isset( $tracking_filter[ $matomo_key ] ) && $tracking_filter[ $matomo_key ] ? 'checked="checked" ' : '' )
+							. 'value="1" name="'
+							. esc_attr( ExclusionSettings::FORM_NAME ) . '[' . esc_attr( $tracking_filter_key ) . '][' . esc_attr( $matomo_key ) . ']"'
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							. $matomo_filter_disabled
+							. ' /> ' . esc_html( $matomo_name ) . ' &nbsp; <br />';
 					}
 					?>
 				</td>
@@ -107,7 +113,15 @@ foreach ( $network_tracking_filter as $matomo_role_name => $matomo_enabled ) {
 					<label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedIps' ) ); ?></label>:
 				</th>
 				<td width="30%">
-					<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>', 'excluded_ips', esc_html( $excluded_ips ), esc_attr( $matomo_exclusions_disabled ) ); ?>
+					<?php
+						echo sprintf(
+							'<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>',
+							'excluded_ips',
+							esc_html( $excluded_ips ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$matomo_exclusions_disabled
+						);
+					?>
 				</td>
 				<td width="50%">
 					<?php
@@ -131,7 +145,15 @@ foreach ( $network_tracking_filter as $matomo_role_name => $matomo_enabled ) {
 					<label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedQueryParameters' ) ); ?></label>:
 				</th>
 				<td>
-					<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>', 'excluded_query_parameters', esc_html( $excluded_query_params ), esc_attr( $matomo_exclusions_disabled ) ); ?>
+					<?php
+						echo sprintf(
+							'<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>',
+							'excluded_query_parameters',
+							esc_html( $excluded_query_params ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$matomo_exclusions_disabled
+						);
+					?>
 				</td>
 				<td>
 					<?php echo esc_html( Piwik::translate( 'SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/' ) ); ?>
@@ -143,7 +165,15 @@ foreach ( $network_tracking_filter as $matomo_role_name => $matomo_enabled ) {
 					<label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents' ) ); ?></label>:
 				</th>
 				<td>
-					<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>', 'excluded_user_agents', esc_html( $excluded_user_agents ), esc_attr( $matomo_exclusions_disabled ) ); ?>
+					<?php
+						echo sprintf(
+							'<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]"%3$s>%2$s</textarea>',
+							'excluded_user_agents',
+							esc_html( $excluded_user_agents ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							$matomo_exclusions_disabled
+						);
+					?>
 				</td>
 				<td>
 
@@ -161,7 +191,13 @@ foreach ( $network_tracking_filter as $matomo_role_name => $matomo_enabled ) {
 				<td>
 					<?php
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo sprintf( '<input type="checkbox" value="1" %2$s%3$s name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">', 'keep_url_fragments', $keep_url_fragments ? ' checked="checked"' : '', esc_attr( $matomo_exclusions_disabled ) );
+					echo sprintf(
+						'<input type="checkbox" value="1" %2$s%3$s name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">',
+						'keep_url_fragments',
+						$keep_url_fragments ? ' checked="checked"' : '',
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$matomo_exclusions_disabled
+					);
 					?>
 				</td>
 				<td>

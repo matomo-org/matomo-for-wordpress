@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Piwik\Plugin\Manager;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;
+use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -74,14 +75,23 @@ class AdminSettings implements MatomoPageContent {
 			self::TAB_ADVANCED    => $advanced,
 		];
 
+		$matomo_is_super_user = current_user_can( Capabilities::KEY_SUPERUSER );
+
 		$active_tab = self::TAB_TRACKING;
 
+		// the tabs a Matomo admin may see. every other tab either configures tracking or hands out
+		// access to Matomo, both of which need Matomo super user access.
+		$tabs_for_matomo_admin = [ self::TAB_EXCLUSIONS ];
+
 		if ( $this->settings->is_network_enabled() && ! is_network_admin() ) {
-			$active_tab   = self::TAB_EXCLUSIONS;
-			$setting_tabs = [
+			$active_tab            = self::TAB_EXCLUSIONS;
+			$setting_tabs          = [
 				self::TAB_EXCLUSIONS => $exclusions,
 				self::TAB_PRIVACY    => $privacy,
 			];
+			$tabs_for_matomo_admin = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
+		} elseif ( ! $matomo_is_super_user ) {
+			$active_tab = self::TAB_EXCLUSIONS;
 		}
 
 		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
@@ -95,11 +105,21 @@ class AdminSettings implements MatomoPageContent {
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
+		if ( ! $matomo_is_super_user ) {
+			// remove tabs a matomo admin should not be able to see
+			$setting_tabs = array_intersect_key( $setting_tabs, array_flip( $tabs_for_matomo_admin ) );
+		}
+
 		if ( ! empty( $_GET['tab'] ) ) {
 			$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
 			if ( isset( $setting_tabs[ $tab ] ) ) {
 				$active_tab = $tab;
 			}
+		}
+
+		if ( ! isset( $setting_tabs[ $active_tab ] ) && ! empty( $setting_tabs ) ) {
+			// the tab we would show by default is not on the page, eg because a plugin removed it
+			$active_tab = key( $setting_tabs );
 		}
 
 		$content_tab     = $setting_tabs[ $active_tab ];

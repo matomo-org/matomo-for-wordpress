@@ -464,15 +464,9 @@ EOF;
 			return self::CAP_NETWORK;
 		}
 
-		if ( $this->settings->is_network_enabled() ) {
-			// when network activated, the settings page only shows the Exclusions and Privacy tabs.
-			// these tabs only need matomo admin access
-			return Capabilities::KEY_ADMIN;
-		}
-
-		// every tab is on the page otherwise, including the ones that configure tracking and hand
-		// out access, which require Matomo superuser access
-		return Capabilities::KEY_SUPERUSER;
+		// the page always has the Exclusions tab on it, which Matomo admin users are allowed to see.
+		// other tabs require Matomo super user access and are gated in the page class itself.
+		return Capabilities::KEY_ADMIN;
 	}
 
 	private function get_light_grey_brand_icon() {
