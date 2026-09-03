@@ -29,6 +29,11 @@ class AdminTrackingSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 	 */
 	private $settings;
 
+	/**
+	 * @var callable|null
+	 */
+	private $unfiltered_html_grant;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -44,6 +49,11 @@ class AdminTrackingSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
+
+		if ( $this->unfiltered_html_grant ) {
+			remove_filter( 'map_meta_cap', $this->unfiltered_html_grant, 20 );
+			$this->unfiltered_html_grant = null;
+		}
 
 		$this->delete_temp_wp_config();
 
@@ -220,6 +230,279 @@ EOF;
 		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
 
 		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_edit_tracking_code_should_refuse_a_blog_administrator_in_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->make_current_user_blog_administrator();
+
+		$tracking_settings = new TrackingSettings( new Settings() );
+
+		// the rest of the tab is still theirs, only the code they could put on the frontend is not
+		$this->assertTrue( $tracking_settings->can_user_manage() );
+		$this->assertFalse( $tracking_settings->can_user_edit_tracking_code() );
+	}
+
+	public function test_can_user_edit_tracking_code_should_allow_an_administrator_outside_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Multisite.' );
+			return;
+		}
+
+		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_edit_tracking_code_should_allow_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$user_id = $this->create_set_super_admin();
+
+		$this->assertTrue( is_super_admin( $user_id ) );
+		$this->assertNotContains( 'administrator', wp_get_current_user()->roles );
+		$this->assertNotContains( 'editor', wp_get_current_user()->roles );
+
+		// check that network admins have unfiltered_html by default
+		$this->assertTrue( current_user_can( 'unfiltered_html' ) );
+
+		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_edit_tracking_code_should_allow_a_blog_administrator_the_network_granted_unfiltered_html() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->make_current_user_blog_administrator();
+
+		$this->assertFalse( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
+
+		// what a network that wants its blog administrators trusted with markup does, since
+		// map_meta_cap() is where WordPress takes the capability away from them
+		$this->grant_unfiltered_html_to_everyone();
+
+		$this->assertTrue( current_user_can( 'unfiltered_html' ) );
+		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_let_a_blog_administrator_the_network_granted_unfiltered_html_change_the_tracking_code() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->make_current_user_blog_administrator();
+		$this->grant_unfiltered_html_to_everyone();
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<script>console.log(1)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_MANUALLY, $saved->get_global_option( 'track_mode' ) );
+		$this->assertSame( '<script>console.log(1)</script>', $saved->get_js_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_not_let_a_blog_administrator_switch_to_the_manual_tracking_code_in_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
+
+		$this->make_current_user_blog_administrator();
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<script>alert(/xss/)</script>',
+				'noscript_code' => '<script>alert(/xss/)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $saved->get_global_option( 'track_mode' ) );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_js_tracking_code() );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_noscript_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_keep_the_tracking_code_a_network_administrator_entered_in_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<!-- set by the network administrator -->',
+				'noscript_code' => '<!-- noscript set by the network administrator -->',
+			]
+		);
+
+		$this->make_current_user_blog_administrator();
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<script>alert(/xss/)</script>',
+				'noscript_code' => '<script>alert(/xss/)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		// left alone rather than blanked, so submitting the page does not wipe what is configured
+		$this->assertSame( '<!-- set by the network administrator -->', $saved->get_js_tracking_code() );
+		$this->assertSame( '<!-- noscript set by the network administrator -->', $saved->get_noscript_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_still_let_a_blog_administrator_change_the_other_tracking_settings_in_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->make_current_user_blog_administrator();
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'        => TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_404'         => true,
+				'track_search'      => true,
+				'track_js_endpoint' => 'restapi',
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $saved->get_global_option( 'track_mode' ) );
+		$this->assertEquals( true, $saved->get_global_option( 'track_404' ) );
+		$this->assertEquals( true, $saved->get_global_option( 'track_search' ) );
+		$this->assertSame( 'restapi', $saved->get_global_option( 'track_js_endpoint' ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_offer_the_manual_mode_and_its_code_fields_as_disabled_to_a_blog_administrator_in_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->make_current_user_blog_administrator();
+
+		ob_start();
+		$this->tracking_settings->show_settings();
+		$output = ob_get_clean();
+
+		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_manually"[^>]*disabled="disabled"/', $output );
+		$this->assertMatchesRegularExpression( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
+		$this->assertMatchesRegularExpression( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
+
+		// the settings that only feed the generated code stay editable
+		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_default"(?![^>]*disabled)/', $output );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_offer_the_manual_mode_and_its_code_fields_to_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		ob_start();
+		$this->tracking_settings->show_settings();
+		$output = ob_get_clean();
+
+		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_manually"(?![^>]*disabled)/', $output );
+		$this->assertDoesNotMatchRegularExpression( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
+		$this->assertDoesNotMatchRegularExpression( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
+	}
+
+	private function make_current_user_blog_administrator() {
+		// multisite, but not network activated
+		update_site_option( 'active_sitewide_plugins', [] );
+		update_option( 'active_plugins', [ 'matomo/matomo.php' ] );
+
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		add_user_to_blog( get_current_blog_id(), $user_id, 'administrator' );
+		wp_set_current_user( $user_id );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertFalse( current_user_can( 'manage_network_options' ) );
+
+		// what WordPress itself denies them, and the reason for all of the above
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+
+		$this->settings = new Settings();
+		$this->assertFalse( $this->settings->is_network_enabled() );
+
+		$this->tracking_settings = new TrackingSettings( $this->settings );
+
+		return $user_id;
+	}
+
+	private function grant_unfiltered_html_to_everyone() {
+		$this->unfiltered_html_grant = function ( $caps, $cap ) {
+			return 'unfiltered_html' === $cap ? [ 'unfiltered_html' ] : $caps;
+		};
+
+		add_filter( 'map_meta_cap', $this->unfiltered_html_grant, 20, 2 );
+	}
+
+	private function submit_tracking_settings( $form_values ) {
+		$this->fake_request( $form_values );
+
+		ob_start();
+		try {
+			// a new instance, so that it reads the settings again rather than what the tests set up
+			( new TrackingSettings( new Settings() ) )->show_settings();
+		} finally {
+			$output = ob_get_clean();
+
+			$_POST    = [];
+			$_REQUEST = [];
+		}
+
+		return $output;
 	}
 
 	private function delete_temp_wp_config() {

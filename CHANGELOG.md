@@ -13,6 +13,8 @@
   whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
   super user access, which a blog's own administrator can grant. Changing them now requires an
   administrator of the network.
+* Security: in a multisite network, the Manual tracking mode, and the "Tracking code" and "Noscript
+  code" tracking settings now require WordPress' unfiltered_html capability.
 * New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
   plugin is network activated. A network administrator can set the roles excluded on every blog in
   the network, while administrators of specific blogs can exclude roles for the blogs they manage.

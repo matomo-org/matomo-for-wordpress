@@ -138,6 +138,31 @@ class TrackingSettings implements AdminSettingsInterface {
 		return true;
 	}
 
+	/**
+	 * Whether the user may write the tracking code by hand instead of letting the plugin generate
+	 * it. This determines whether the user can use the manual tracking mode.
+	 *
+	 * Custom tracking JS and noscript HTML are embedded into the frontend exactly as entered, so
+	 * using them requires the same privilege as WordPress' unfiltered_html, and in multisite we
+	 * ask for that capability itself rather than deciding who should have it.
+	 *
+	 * Outside multisite the capability is not asked for, because a role can hold Matomo super user
+	 * access without holding any WordPress role that comes with unfiltered_html.
+	 *
+	 * @return bool
+	 */
+	public function can_user_edit_tracking_code() {
+		if ( ! $this->can_user_manage() ) {
+			return false;
+		}
+
+		if ( is_multisite() ) {
+			return current_user_can( 'unfiltered_html' );
+		}
+
+		return true;
+	}
+
 	private function apply_settings() {
 		$keys_to_keep = [
 			'track_mode',
@@ -217,6 +242,16 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
+			$can_edit_tracking_code = $this->can_user_edit_tracking_code();
+
+			if (
+				! $can_edit_tracking_code
+				&& self::TRACK_MODE_MANUALLY === $this->get_track_mode()
+			) {
+				// user cannot use manual tracking mode, ensure the saved tracking mode does not change
+				$_POST[ self::FORM_NAME ]['track_mode'] = $this->settings->get_global_option( 'track_mode' );
+			}
+
 			$track_mode = $this->get_track_mode();
 			if ( self::TRACK_MODE_TAGMANAGER === $track_mode ) {
 				// no noscript mode in this case
@@ -225,7 +260,14 @@ class TrackingSettings implements AdminSettingsInterface {
 			} else {
 				unset( $_POST['tagmanger_container_ids'] );
 			}
-			if ( $this->must_update_tracker() === true ) {
+			if ( ! $can_edit_tracking_code ) {
+				// user cannot use manual tracking mode, ensure the existing custom tracking code
+				// and noscript code is not deleted
+				unset(
+					$_POST[ self::FORM_NAME ]['tracking_code'],
+					$_POST[ self::FORM_NAME ]['noscript_code']
+				);
+			} elseif ( $this->must_update_tracker() === true ) {
 				// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
 				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
 					// don't process, this is a script
@@ -301,7 +343,11 @@ class TrackingSettings implements AdminSettingsInterface {
 	 */
 	private function has_valid_html_comments( $field ) {
 		$valid = true;
-		if ( $this->form_submitted() === true ) {
+		if (
+			$this->form_submitted() === true
+			// a field they cannot set is discarded rather than saved, so it has nothing to report
+			&& $this->can_user_edit_tracking_code()
+		) {
 			if ( $this->must_update_tracker() === true ) {
 				if ( ! empty( $_POST[ self::FORM_NAME ][ $field ] ) ) {
 					// phpcs:disable WordPress.Security.ValidatedSanitizedInput
@@ -372,6 +418,14 @@ class TrackingSettings implements AdminSettingsInterface {
 			),
 			self::TRACK_MODE_TAGMANAGER => esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one or more of them into your website automatically.', 'matomo' ),
 		];
+
+		$matomo_can_edit_tracking_code = $this->can_user_edit_tracking_code();
+
+		if ( ! $matomo_can_edit_tracking_code ) {
+			$track_modes[ self::TRACK_MODE_MANUALLY ]['disabled']         = true;
+			$track_modes[ self::TRACK_MODE_MANUALLY ]['tooltip']          = esc_html__( 'You are not allowed to add HTML or JavaScript to this site.', 'matomo' );
+			$matomo_track_mode_descriptions[ self::TRACK_MODE_MANUALLY ] .= ' ' . esc_html__( 'This mode is not selectable because you are not allowed to add HTML or JavaScript to this site.', 'matomo' );
+		}
 
 		if ( empty( $containers ) ) {
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['disabled']         = true;
