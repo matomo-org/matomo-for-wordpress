@@ -531,6 +531,17 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
 	}
 
+	public function test_get_stealth_roles_should_ignore_the_blog_specific_roles_option_when_the_network_is_not_enabled() {
+		$this->settings->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH      => [ 'editor' => '1' ],
+				Settings::OPTION_KEY_STEALTH_BLOG => [ 'author' => '1' ],
+			]
+		);
+
+		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
+	}
+
 	public function test_get_stealth_roles_should_ignore_a_role_that_is_stored_but_not_excluded() {
 		$this->settings->apply_changes(
 			[

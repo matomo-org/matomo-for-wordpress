@@ -36,6 +36,15 @@ class TrackingSettings implements AdminSettingsInterface {
 	const TRACK_MODE_TAGMANAGER                  = 'tagmanager';
 	const NONCE_NAME_GENERATE_TRACKING_CODE_AJAX = 'matomo-tracking-settings-code';
 
+	public static function get_available_track_modes() {
+		return [
+			self::TRACK_MODE_DEFAULT,
+			self::TRACK_MODE_MANUALLY,
+			self::TRACK_MODE_TAGMANAGER,
+			self::TRACK_MODE_DISABLED,
+		];
+	}
+
 	/**
 	 * @var Settings
 	 */
@@ -241,9 +250,24 @@ class TrackingSettings implements AdminSettingsInterface {
 			$_POST[ self::FORM_NAME ][ Settings::SITE_CURRENCY ] = 'USD';
 		}
 
-		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
-			$can_edit_tracking_code = $this->can_user_edit_tracking_code();
+		if ( isset( $_POST[ self::FORM_NAME ]['track_mode'] )
+			&& ! in_array( $this->get_track_mode(), self::get_available_track_modes(), true ) ) {
+			// if the track_mode value is invalid, don't save it and keep the existing one
+			unset( $_POST[ self::FORM_NAME ]['track_mode'] );
+		}
 
+		$can_edit_tracking_code = $this->can_user_edit_tracking_code();
+
+		if ( ! $can_edit_tracking_code ) {
+			// the user is not allowed to write the tracking code by hand, so discard the new values
+			// and keep the existing ones.
+			unset(
+				$_POST[ self::FORM_NAME ]['tracking_code'],
+				$_POST[ self::FORM_NAME ]['noscript_code']
+			);
+		}
+
+		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
 			if (
 				! $can_edit_tracking_code
 				&& self::TRACK_MODE_MANUALLY === $this->get_track_mode()
@@ -252,42 +276,36 @@ class TrackingSettings implements AdminSettingsInterface {
 				$_POST[ self::FORM_NAME ]['track_mode'] = $this->settings->get_global_option( 'track_mode' );
 			}
 
-			$track_mode = $this->get_track_mode();
-			if ( self::TRACK_MODE_TAGMANAGER === $track_mode ) {
+			if ( self::TRACK_MODE_TAGMANAGER === $this->get_track_mode() ) {
 				// no noscript mode in this case
 				$_POST[ self::FORM_NAME ]['track_noscript'] = '';
-				$_POST[ self::FORM_NAME ]['noscript_code']  = '';
 			} else {
 				unset( $_POST['tagmanger_container_ids'] );
 			}
-			if ( ! $can_edit_tracking_code ) {
-				// user cannot use manual tracking mode, ensure the existing custom tracking code
-				// and noscript code is not deleted
-				unset(
-					$_POST[ self::FORM_NAME ]['tracking_code'],
-					$_POST[ self::FORM_NAME ]['noscript_code']
-				);
-			} elseif ( $this->must_update_tracker() === true ) {
-				// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
-				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
-					// don't process, this is a script
-					// phpcs:disable WordPress.Security.ValidatedSanitizedInput
-					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
-					// phpcs:enable WordPress.Security.ValidatedSanitizedInput
-				} else {
-					$_POST[ self::FORM_NAME ]['tracking_code'] = '';
-				}
-				if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
-					// don't process, this is a script
-					// phpcs:disable WordPress.Security.ValidatedSanitizedInput
-					$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
-					// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+
+			if ( $can_edit_tracking_code ) {
+				if ( $this->must_update_tracker() === true ) {
+					// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
+					if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+						// don't process, this is a script
+						// phpcs:disable WordPress.Security.ValidatedSanitizedInput
+						$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
+						// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+					} else {
+						$_POST[ self::FORM_NAME ]['tracking_code'] = '';
+					}
+					if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
+						// don't process, this is a script
+						// phpcs:disable WordPress.Security.ValidatedSanitizedInput
+						$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
+						// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+					} else {
+						$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+					}
 				} else {
 					$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+					$_POST[ self::FORM_NAME ]['tracking_code'] = '';
 				}
-			} else {
-				$_POST[ self::FORM_NAME ]['noscript_code'] = '';
-				$_POST[ self::FORM_NAME ]['tracking_code'] = '';
 			}
 		}
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput

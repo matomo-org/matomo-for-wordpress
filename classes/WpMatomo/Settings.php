@@ -677,14 +677,18 @@ class Settings {
 	 * the blog's own. Merged rather than one overriding the other, so a blog can stop tracking a
 	 * role the network still tracks, but cannot start tracking one the network excluded.
 	 *
-	 * On a non-network activated install, only the first option is used.
-	 *
 	 * @return array<string, bool> role name => true, listing only the excluded roles
 	 */
 	public function get_stealth_roles() {
 		$stealth_roles = [];
 
-		foreach ( [ self::OPTION_KEY_STEALTH, self::OPTION_KEY_STEALTH_BLOG ] as $key ) {
+		$keys = [ self::OPTION_KEY_STEALTH ];
+		if ( $this->is_network_enabled() ) {
+			// use the per-blog overrides only if network mode is enabled
+			$keys[] = self::OPTION_KEY_STEALTH_BLOG;
+		}
+
+		foreach ( $keys as $key ) {
 			$roles = self::OPTION_KEY_STEALTH === $key
 				? $this->get_global_option( $key )
 				: $this->get_option( $key );

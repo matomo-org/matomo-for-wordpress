@@ -391,6 +391,70 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
+	public function test_show_settings_should_keep_the_tracking_code_a_network_administrator_entered_when_the_submission_leaves_the_track_mode_out() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<!-- set by the network administrator -->',
+				'noscript_code' => '<!-- noscript set by the network administrator -->',
+			]
+		);
+
+		$this->make_current_user_blog_administrator();
+
+		// no track_mode field supplied at all. the mode stays as manual, so whatever is stored keeps being
+		// served. we check that the tracking code is not overwritten with new values in this case.
+		$this->submit_tracking_settings(
+			[
+				'tracking_code' => '<script>alert(/xss/)</script>',
+				'noscript_code' => '<script>alert(/xss/)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_MANUALLY, $saved->get_global_option( 'track_mode' ) );
+		$this->assertSame( '<!-- set by the network administrator -->', $saved->get_js_tracking_code() );
+		$this->assertSame( '<!-- noscript set by the network administrator -->', $saved->get_noscript_tracking_code() );
+	}
+
+	/**
+	 * @dataProvider get_unrecognised_track_modes
+	 */
+	public function test_show_settings_should_not_store_a_track_mode_it_does_not_recognise( $track_mode ) {
+		$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode' => $track_mode,
+				'track_404'  => true,
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $saved->get_global_option( 'track_mode' ) );
+
+		// the rest of the submission is still saved, only the mode is dropped
+		$this->assertEquals( true, $saved->get_global_option( 'track_404' ) );
+	}
+
+	public function get_unrecognised_track_modes() {
+		return [
+			'differs from a known mode only in case' => [ 'Manually' ],
+			'is not a mode at all'                   => [ 'foobar' ],
+			'is empty'                               => [ '' ],
+		];
+	}
+
+	/**
+	 * @group ms-required
+	 */
 	public function test_show_settings_should_still_let_a_blog_administrator_change_the_other_tracking_settings_in_multisite() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
