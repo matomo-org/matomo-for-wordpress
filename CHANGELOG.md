@@ -7,8 +7,19 @@
   nothing else. Because of this, the administrator role can no longer be given a Matomo access of
   its own on Matomo > Settings > Access, and a network activated install that had configured one
   there before will no longer apply it.
+* Note: because of the above, a blog admin now sees more Matomo screens than before on a network
+  activated install, including Matomo > Diagnostics and some of its troubleshooting actions. The
+  actions shown to such users only operate on the single blog they are displayed for, which the
+  admin has access to.
 * Security: the "Sync all users across sites / blogs" and "Sync all sites (blogs)" actions on
   Matomo > Diagnostics now require an administrator of the network and are hidden from everyone else.
+* Security: the "Install/Update Geo-IP DB" action on Matomo > Diagnostics now requires an
+  administrator of the network when the plugin is network activated, and is hidden from everyone
+  else, since the geolocation database is downloaded once for the whole install rather than once per
+  blog.
+* Security: the request that previews the generated JavaScript tracking code on
+  Matomo > Settings > Tracking now requires the same access as the tracking settings page:
+  Matomo admin access.
 * Security: when the plugin is network activated, the tracking settings are stored once for the
   whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
   super user access, which a blog's own administrator can grant. Changing them now requires an

@@ -191,6 +191,88 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_SYNC_USERS, $output );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_update_geoip_db_should_return_false_for_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		// the geolocation database is downloaded once for the whole install, not once per blog
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+		$this->assertFalse( is_super_admin( get_current_user_id() ) );
+
+		$this->assertFalse( $this->report->can_user_update_geoip_db() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_update_geoip_db_should_return_true_for_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->create_set_super_admin();
+
+		$this->assertTrue( $this->report->can_user_update_geoip_db() );
+	}
+
+	public function test_can_user_update_geoip_db_should_return_true_when_the_network_is_not_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		// there is only one Matomo install to download it for, and it is theirs
+		$this->assertTrue( $this->report->can_user_update_geoip_db() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_not_offer_the_geoip_db_action_to_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$output = $this->render_troubleshooting();
+
+		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB, $output );
+
+		// the actions that reach no further than their own blog stay
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE, $output );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_offer_the_geoip_db_action_to_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->create_set_super_admin();
+
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB, $this->render_troubleshooting() );
+	}
+
+	public function test_show_should_offer_the_geoip_db_action_when_the_network_is_not_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB, $this->render_troubleshooting() );
+	}
+
 	public function test_not_compatible_plugins_are_mentioned_in_faq() {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$contents = file_get_contents( 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/' );

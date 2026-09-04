@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /** @var AdminSettingsInterface[] $setting_tabs */
-/** @var AdminSettingsInterface $content_tab */
+/** @var AdminSettingsInterface|null $content_tab */
 /** @var string $active_tab */
 /** @var Settings $matomo_settings */
 
@@ -50,4 +50,8 @@ if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
 	?>
 </h2>
 
-<?php $content_tab->show_settings(); ?>
+<?php
+if ( $content_tab ) {
+	$content_tab->show_settings();
+}
+?>

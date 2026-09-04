@@ -117,12 +117,14 @@ class AdminSettings implements MatomoPageContent {
 			}
 		}
 
-		if ( ! isset( $setting_tabs[ $active_tab ] ) && ! empty( $setting_tabs ) ) {
+		if ( ! isset( $setting_tabs[ $active_tab ] ) ) {
 			// the tab we would show by default is not on the page, eg because a plugin removed it
-			$active_tab = key( $setting_tabs );
+			$active_tab = empty( $setting_tabs ) ? '' : key( $setting_tabs );
 		}
 
-		$content_tab     = $setting_tabs[ $active_tab ];
+		// null when a plugin filtered every tab away, in which case the page shows its tab bar and
+		// nothing below it rather than fataling
+		$content_tab     = isset( $setting_tabs[ $active_tab ] ) ? $setting_tabs[ $active_tab ] : null;
 		$matomo_settings = $this->settings;
 
 		include __DIR__ . '/views/settings.php';

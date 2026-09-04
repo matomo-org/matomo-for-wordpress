@@ -189,7 +189,6 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public function test_apply_tracking_related_changes_updates_last_tracking_setting_change() {
 		$this->assertSame( 0, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
-		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
 
 		$test_value = 'var foo = "bar";';
 		$this->settings->apply_tracking_related_changes(
@@ -199,7 +198,6 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 
 		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
-		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( 'last_settings_update' ) );
 	}
 
 	public function test_apply_tracking_related_changes_persists_changes() {
@@ -216,9 +214,8 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertEquals( $test_value, $this->make_settings()->get_option( 'tracking_code' ) );
 	}
 
-	public function test_apply_changes_updates_last_setting_change_time() {
+	public function test_apply_changes_should_not_touch_the_last_tracking_settings_change_time() {
 		$this->assertSame( 0, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
-		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
 
 		$test_value = 'var foo = "bar";';
 		$this->settings->apply_changes(
@@ -227,14 +224,11 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 			)
 		);
 
-		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( 'last_settings_update' ) );
-		// tracking settings should remain unchanged
-		$this->assertGreaterThanOrEqual( 0, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
+		// only apply_tracking_related_changes() advances it
+		$this->assertSame( 0, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
 	}
 
 	public function test_apply_changes_persists_changes() {
-		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
-
 		$test_value = 'var foo = "bar";';
 		$this->settings->apply_changes(
 			array(

@@ -142,6 +142,23 @@ class SystemReport implements MatomoPageContent {
 		return current_user_can( Menu::CAP_NETWORK );
 	}
 
+	/**
+	 * Whether the current user may install or update the geolocation database.
+	 *
+	 * When the plugin is network activated the database is downloaded once for the whole install
+	 * rather than once per blog (see ScheduledTasks::update_geo_ip2_db()), so only the network
+	 * admin is allowed to trigger it manually.
+	 *
+	 * @return bool
+	 */
+	public function can_user_update_geoip_db() {
+		if ( ! $this->settings->is_network_enabled() ) {
+			return true;
+		}
+
+		return current_user_can( Menu::CAP_NETWORK );
+	}
+
 	private function execute_troubleshoot_if_needed() {
 		if ( WpMatomo::is_safe_mode() ) {
 			// most troubleshooting actions bootstrap Matomo, which is exactly what safe mode
@@ -209,7 +226,8 @@ class SystemReport implements MatomoPageContent {
 				Updater::unlock();
 			}
 
-			if ( ! empty( $_POST[ self::TROUBLESHOOT_UPDATE_GEOIP_DB ] ) ) {
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_UPDATE_GEOIP_DB ] )
+				&& $this->can_user_update_geoip_db() ) {
 				$sync_config     = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
 				$scheduled_tasks = new ScheduledTasks( $this->settings, $sync_config );
 				$scheduled_tasks->update_geo_ip2_db();
@@ -278,8 +296,10 @@ class SystemReport implements MatomoPageContent {
 					$tracking_code_generator->update_tracking_code( true );
 
 					echo '<div class="matomo-notice notice notice-success"><p>' . esc_html__( 'JavaScript tracking code regenerated successfully.', 'matomo' ) . '</p></div>';
-				} catch ( \Exception $ex ) {
-					echo '<div class="error"><p>' . esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
+				} catch ( \Exception $e ) {
+					echo '<div class="error"><p>'
+						. esc_html__( 'Matomo Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) )
+						. '</p></div>';
 				}
 			}
 
@@ -390,6 +410,7 @@ class SystemReport implements MatomoPageContent {
 		$matomo_has_warning_and_no_errors = false;
 		$matomo_scheduled_tasks           = [];
 		$matomo_can_sync_all_blogs        = $this->can_user_sync_all_blogs();
+		$matomo_can_update_geoip_db       = $this->can_user_update_geoip_db();
 
 		if ( empty( $matomo_active_tab ) ) { // system report
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting

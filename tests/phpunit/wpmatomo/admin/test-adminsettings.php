@@ -79,6 +79,32 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertContains( self::TAB_ADDED_BY_A_PLUGIN, $this->get_rendered_tabs( $this->show() ) );
 	}
 
+	public function test_show_should_render_no_tab_when_another_plugin_removed_every_tab() {
+		$this->remove_every_setting_tab();
+
+		wp_set_current_user( $this->create_set_super_admin() );
+
+		$output = $this->show();
+
+		$this->assertSame( [], $this->get_rendered_tabs( $output ) );
+		// the page itself still renders rather than fatalling on the missing tab
+		$this->assertStringContainsString( 'nav-tab-wrapper', $output );
+	}
+
+	public function test_show_should_render_no_tab_when_the_only_tab_a_matomo_admin_may_see_was_removed() {
+		$this->remove_every_setting_tab();
+
+		( new Roles( new Settings() ) )->add_roles( true );
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] ) );
+
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$output = $this->show();
+
+		$this->assertSame( [], $this->get_rendered_tabs( $output ) );
+		$this->assertStringContainsString( 'nav-tab-wrapper', $output );
+	}
+
 	private function add_setting_tab_from_a_plugin() {
 		add_filter(
 			'matomo_setting_tabs',
@@ -86,6 +112,15 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 				$tabs[ self::TAB_ADDED_BY_A_PLUGIN ] = new PrivacySettings( new Settings() );
 
 				return $tabs;
+			}
+		);
+	}
+
+	private function remove_every_setting_tab() {
+		add_filter(
+			'matomo_setting_tabs',
+			function () {
+				return [];
 			}
 		);
 	}

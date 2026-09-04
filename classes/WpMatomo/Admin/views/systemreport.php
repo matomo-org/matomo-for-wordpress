@@ -34,6 +34,7 @@ use WpMatomo\Admin\SystemReport;
 /** @var \WpMatomo\Settings $settings */
 /** @var array $matomo_scheduled_tasks */
 /** @var bool $matomo_can_sync_all_blogs */
+/** @var bool $matomo_can_update_geoip_db */
 
 if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	function matomo_format_value_text( $value ) {
@@ -213,11 +214,13 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				<br/><br/>
 			<?php } ?>
 
-			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
-					class='button-primary'
-					title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ); ?>"
-					value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
-			<br/><br/>
+			<?php if ( $matomo_can_update_geoip_db ) { ?>
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
+						class='button-primary'
+						title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ); ?>"
+						value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
+				<br/><br/>
+			<?php } ?>
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit"

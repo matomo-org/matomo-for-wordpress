@@ -131,13 +131,13 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 		$was_updated = false;
 
-		if ( $this->can_user_edit_tracking_filter() ) {
-			$this->update_tracking_filter( $post );
+		if ( $this->can_user_edit_exclusions() ) {
+			$this->update_exclusions( $post );
 			$was_updated = true;
 		}
 
-		if ( $this->can_user_edit_exclusions() ) {
-			$this->update_exclusions( $post );
+		if ( $this->can_user_edit_tracking_filter() ) {
+			$this->update_tracking_filter( $post );
 			$was_updated = true;
 		}
 

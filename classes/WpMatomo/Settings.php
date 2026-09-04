@@ -71,7 +71,6 @@ class Settings {
 	 */
 	public $default_global_settings = [
 		// Plugin settings
-		'last_settings_update'                     => 0,
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => [],
 		self::OPTION_KEY_CAPS_ACCESS               => [],
@@ -481,7 +480,6 @@ class Settings {
 				$this->set_option( $key, $settings[ $key ] );
 			}
 		}
-		$this->set_global_option( 'last_settings_update', time() );
 
 		if ( $this->should_save_tracking_code_across_sites() ) {
 			// special case for when the same tracking code needs to be used across all instances.

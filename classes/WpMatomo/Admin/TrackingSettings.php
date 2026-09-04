@@ -556,6 +556,10 @@ class TrackingSettings implements AdminSettingsInterface {
 	public static function generate_tracking_code() {
 		check_ajax_referer( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
 
+		if ( ! current_user_can( Capabilities::KEY_ADMIN ) ) {
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
+		}
+
 		$blog_id = get_current_blog_id();
 		$idsite  = Site::get_matomo_site_id( $blog_id );
 
