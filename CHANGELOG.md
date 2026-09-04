@@ -33,6 +33,12 @@
   in a blog's own admin: the excluded IPs, query parameters, user agents and URL fragments.
 * Bug fix: the excluded user agents on Matomo > Settings > Exclusions are now stored per blog,
   like the other exclusions on that screen, when the plugin is network activated.
+* Bug fix: network activating the plugin on a multisite where blogs had activated it individually
+  now carries each blog's tracking filter over to the per blog setting described above. Previously
+  a blog's global settings stopped being read the moment the network's took over, so roles a blog
+  had excluded from tracking started being tracked again, with nothing to show for it and no way
+  left to reach the setting. Only the tracking filter is carried over; the remaining global
+  settings become the network's, as they always have.
 
 = 5.13.0 =
 * Update core Matomo to version 5.13.0.

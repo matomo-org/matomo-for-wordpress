@@ -542,6 +542,47 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_save_should_not_write_a_blogs_global_settings_into_the_network_option() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assertFalse( $this->settings->is_network_enabled() );
+
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$blog_row = get_option( Settings::OPTION_GLOBAL, [] );
+		$this->assertSame( [ 'editor' => '1' ], $blog_row[ Settings::OPTION_KEY_STEALTH ] );
+
+		$this->assertArrayNotHasKey( Settings::OPTION_KEY_STEALTH, (array) get_site_option( Settings::OPTION_GLOBAL, [] ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_stealth_roles_should_stop_reading_a_blogs_own_roles_once_the_network_is_activated() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+		$this->assertSame( [ 'editor' => true ], $this->make_settings()->get_stealth_roles() );
+
+		$this->activate_matomo_plugin();
+
+		$this->assertSame( [], $this->make_settings()->get_stealth_roles() );
+
+		// the value stays where the blog wrote it rather than being promoted to the network
+		$blog_row = get_option( Settings::OPTION_GLOBAL, [] );
+		$this->assertSame( [ 'editor' => '1' ], $blog_row[ Settings::OPTION_KEY_STEALTH ] );
+		$this->assertArrayNotHasKey( Settings::OPTION_KEY_STEALTH, (array) get_site_option( Settings::OPTION_GLOBAL, [] ) );
+	}
+
 	public function test_get_stealth_roles_should_ignore_a_role_that_is_stored_but_not_excluded() {
 		$this->settings->apply_changes(
 			[

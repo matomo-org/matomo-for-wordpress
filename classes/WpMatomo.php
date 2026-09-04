@@ -282,6 +282,8 @@ class WpMatomo {
 			new TrackingCode( self::$settings ),
 			new Annotations( self::$settings ),
 
+			new \WpMatomo\NetworkActivationMigration(),
+
 			new \WpMatomo\PluginActionLinks( self::$settings ),
 
 			new MarketplaceSetupWizard(),
