@@ -155,8 +155,10 @@ class TrackingSettings implements AdminSettingsInterface {
 	 * using them requires the same privilege as WordPress' unfiltered_html, and in multisite we
 	 * ask for that capability itself rather than deciding who should have it.
 	 *
-	 * Outside multisite the capability is not asked for, because a role can hold Matomo super user
-	 * access without holding any WordPress role that comes with unfiltered_html.
+	 * Outside multisite the capability itself is not asked for, because a role can hold Matomo super
+	 * user access without holding any WordPress role that comes with unfiltered_html. DISALLOW_UNFILTERED_HTML
+	 * is still honored there: a site that defines it has said that nobody, administrators included,
+	 * may put raw script on the site, and the tracking code is raw script.
 	 *
 	 * @return bool
 	 */
@@ -166,10 +168,11 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		if ( is_multisite() ) {
+			// current_user_can() already denies this to everyone when DISALLOW_UNFILTERED_HTML is set
 			return current_user_can( 'unfiltered_html' );
 		}
 
-		return true;
+		return ! defined( 'DISALLOW_UNFILTERED_HTML' ) || ! DISALLOW_UNFILTERED_HTML;
 	}
 
 	private function apply_settings() {

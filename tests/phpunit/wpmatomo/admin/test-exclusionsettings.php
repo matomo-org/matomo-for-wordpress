@@ -179,6 +179,37 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame( [ 'editor' => '1' ], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
 	}
 
+	public function test_show_settings_should_report_an_update_when_a_setting_changed() {
+		$output = $this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		$this->assertStringContainsString( 'Settings have been updated successfully', $output );
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_the_submission_changed_nothing() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		// submit the form again with the same exact values
+		$output = $this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		// nothing moved, so check the the clear caches message did not display
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+	}
+
 	public function test_show_settings_should_keep_the_tracking_filter_in_one_setting_when_the_network_is_not_enabled() {
 		$this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
 

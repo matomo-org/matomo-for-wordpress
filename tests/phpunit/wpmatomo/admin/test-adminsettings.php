@@ -43,14 +43,17 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertStringContainsString( 'Access', $output );
 	}
 
-	public function test_show_should_offer_only_the_exclusions_tab_to_a_matomo_admin() {
+	public function test_show_should_offer_only_the_exclusions_and_privacy_tabs_to_a_matomo_admin() {
 		( new Roles( new Settings() ) )->add_roles( true );
 		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] ) );
 
 		$this->assertTrue( current_user_can( Capabilities::KEY_ADMIN ) );
 		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
 
-		$this->assertSame( [ AdminSettings::TAB_EXCLUSIONS ], $this->get_rendered_tabs( $this->show() ) );
+		$this->assertSame(
+			[ AdminSettings::TAB_PRIVACY, AdminSettings::TAB_EXCLUSIONS ],
+			$this->get_rendered_tabs( $this->show() )
+		);
 	}
 
 	public function test_show_should_not_offer_a_tab_another_plugin_added_to_a_matomo_admin() {
@@ -68,7 +71,7 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 
 		$this->assertNotContains( self::TAB_ADDED_BY_A_PLUGIN, $tabs );
-		$this->assertSame( [ AdminSettings::TAB_EXCLUSIONS ], $tabs );
+		$this->assertSame( [ AdminSettings::TAB_PRIVACY, AdminSettings::TAB_EXCLUSIONS ], $tabs );
 	}
 
 	public function test_show_should_offer_a_tab_another_plugin_added_to_a_matomo_super_user() {

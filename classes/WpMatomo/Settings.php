@@ -155,8 +155,11 @@ class Settings {
 
 	/**
 	 * Whether the cached global settings were read from the network wide site option rather
-	 * than from this blog's own option. Recorded when they are loaded instead of re-derived
-	 * during a reload, to avoid invoking WP option filters while reloading settings.
+	 * than from this blog's own option. Recorded on load instead of re-derived on reload, to
+	 * avoid invoking WP option filters while reloading settings.
+	 *
+	 * TODO: for thoroughness, at some point we need to hook on plugin activation here and
+	 * re-compute this value.
 	 *
 	 * @var bool
 	 */

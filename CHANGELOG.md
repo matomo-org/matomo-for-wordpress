@@ -5,8 +5,9 @@
   user access on that blog, instead of no access at all. Note: Matomo super user access is not
   the same as WordPress super user access; it only provides access to a specific blog's Matomo,
   nothing else. Because of this, the administrator role can no longer be given a Matomo access of
-  its own on Matomo > Settings > Access, and a network activated install that had configured one
-  there before will no longer apply it.
+  its own on Matomo > Settings > Access. Access a network activated install had configured there
+  before no longer has any effect, since Matomo super user access outranks anything that screen can
+  grant.
 * Note: because of the above, a blog admin now sees more Matomo screens than before on a network
   activated install, including Matomo > Diagnostics and some of its troubleshooting actions. The
   actions shown to such users only operate on the single blog they are displayed for, which the

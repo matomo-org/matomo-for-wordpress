@@ -18,16 +18,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class NetworkActivationMigration extends Feature {
 
 	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
 	 * @var Logger
 	 */
 	private $logger;
 
-	public function __construct() {
-		$this->logger = new Logger();
+	public function __construct( Settings $settings ) {
+		$this->settings = $settings;
+		$this->logger   = new Logger();
 	}
 
 	public function is_active() {
-		return is_admin();
+		// must also be able to run when wp-cli network activates a plugin, so can't be is_admin() only
+		return true;
 	}
 
 	public function register_hooks() {
@@ -118,6 +125,10 @@ class NetworkActivationMigration extends Feature {
 		$blog_settings[ Settings::OPTION_KEY_STEALTH_BLOG ] = $merged;
 
 		update_option( Settings::OPTION, $blog_settings );
+
+		// settings options were written manually, so the Settings instance will be out of date here,
+		// so re-load the saved setting data.
+		$this->settings->init_settings();
 
 		return true;
 	}

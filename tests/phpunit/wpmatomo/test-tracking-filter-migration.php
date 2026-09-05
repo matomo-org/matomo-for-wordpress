@@ -9,6 +9,11 @@ use WpMatomo\NetworkActivationMigration;
 class TrackingFilterMigrationTest extends MatomoUnit_TestCase {
 
 	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
 	 * @var NetworkActivationMigration
 	 */
 	private $migration;
@@ -16,7 +21,31 @@ class TrackingFilterMigrationTest extends MatomoUnit_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->migration = new NetworkActivationMigration();
+		$this->settings  = new Settings();
+		$this->migration = new NetworkActivationMigration( $this->settings );
+	}
+
+	public function test_is_active_should_be_true_outside_the_admin_for_wp_cli() {
+		$this->assertFalse( is_admin() );
+
+		$this->assertTrue( $this->migration->is_active() );
+	}
+
+	public function test_migrate_current_blog_should_leave_the_settings_it_was_given_and_reread_the_new_value() {
+		// loaded before the migration writes the option, the way the plugin's shared instance is
+		$this->assertSame( [], $this->settings->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
+
+		$this->store_tracking_filter( [ 'editor' => '1' ] );
+
+		$this->assertTrue( $this->migration->migrate_current_blog() );
+
+		$this->assertSame( [ 'editor' => true ], $this->settings->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
+
+		// left stale, a save would write the copy taken before the migration
+		$this->settings->set_option( 'tracking_code', '<!-- tracking code -->' );
+		$this->settings->save();
+
+		$this->assertSame( [ 'editor' => true ], $this->get_stored_blog_tracking_filter() );
 	}
 
 	public function test_migrate_current_blog_should_copy_the_tracking_filter_into_the_blogs_own_setting() {

@@ -260,6 +260,24 @@ EOF;
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_can_user_edit_tracking_code_should_refuse_everyone_when_unfiltered_html_is_disallowed() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+		define( 'DISALLOW_UNFILTERED_HTML', true );
+
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+
+		$tracking_settings = new TrackingSettings( new Settings() );
+
+		$this->assertFalse( $tracking_settings->can_user_edit_tracking_code() );
+
+		// check that the rest of the tab is still editable
+		$this->assertTrue( $tracking_settings->can_user_manage() );
+	}
+
+	/**
 	 * @group ms-required
 	 */
 	public function test_can_user_edit_tracking_code_should_allow_a_network_administrator() {

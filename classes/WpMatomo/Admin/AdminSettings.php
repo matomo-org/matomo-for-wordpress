@@ -79,17 +79,14 @@ class AdminSettings implements MatomoPageContent {
 
 		$active_tab = self::TAB_TRACKING;
 
-		// the tabs a Matomo admin may see. every other tab either configures tracking or hands out
-		// access to Matomo, both of which need Matomo super user access.
-		$tabs_for_matomo_admin = [ self::TAB_EXCLUSIONS ];
+		$tabs_for_matomo_admin = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
 
 		if ( $this->settings->is_network_enabled() && ! is_network_admin() ) {
-			$active_tab            = self::TAB_EXCLUSIONS;
-			$setting_tabs          = [
+			$active_tab   = self::TAB_EXCLUSIONS;
+			$setting_tabs = [
 				self::TAB_EXCLUSIONS => $exclusions,
 				self::TAB_PRIVACY    => $privacy,
 			];
-			$tabs_for_matomo_admin = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
 		} elseif ( ! $matomo_is_super_user ) {
 			$active_tab = self::TAB_EXCLUSIONS;
 		}

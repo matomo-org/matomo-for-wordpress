@@ -132,13 +132,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$was_updated = false;
 
 		if ( $this->can_user_edit_exclusions() ) {
-			$this->update_exclusions( $post );
-			$was_updated = true;
+			$was_updated = $this->update_exclusions( $post );
 		}
 
 		if ( $this->can_user_edit_tracking_filter() ) {
-			$this->update_tracking_filter( $post );
-			$was_updated = true;
+			$filter_updated = $this->update_tracking_filter( $post );
+			$was_updated    = $filter_updated || $was_updated;
 		}
 
 		return $was_updated;
@@ -146,6 +145,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 	/**
 	 * @param array $post
+	 * @return bool whether the stored filter changed
 	 */
 	private function update_tracking_filter( $post ) {
 		$key = $this->get_tracking_filter_option_name();
@@ -155,11 +155,24 @@ class ExclusionSettings implements AdminSettingsInterface {
 			$roles = $post[ $key ];
 		}
 
+		$existing_roles = $this->get_stored_tracking_filter( $key );
+
+		ksort( $roles );
+		ksort( $existing_roles );
+
+		if ( $roles === $existing_roles ) {
+			return false;
+		}
+
 		$this->settings->apply_changes( [ $key => $roles ] );
+
+		return true;
 	}
 
 	/**
 	 * @param array $post
+	 *
+	 * @return bool whether any of the exclusions changed
 	 *
 	 * @throws InvalidIpException When Matomo refuses one of the excluded IPs.
 	 */
@@ -170,36 +183,48 @@ class ExclusionSettings implements AdminSettingsInterface {
 		// install there. a WP blog has an install of its own holding the one site, so global is this
 		// blog and no other, and a Matomo admin of it is entitled to the change
 		// (see can_user_edit_exclusions()).
-		\Piwik\Access::doAsSuperUser(
+		$was_updated = \Piwik\Access::doAsSuperUser(
 			function () use ( $post ) {
-				$this->apply_matomo_exclusions( $post );
+				return $this->apply_matomo_exclusions( $post );
 			}
 		);
 
-		$this->apply_user_agent_exclusions( $post );
-	}
+		$user_agents_updated = $this->apply_user_agent_exclusions( $post );
 
-	/**
-	 * @param array $post
-	 */
-	private function apply_user_agent_exclusions( $post ) {
-		if ( ! isset( $post['excluded_user_agents'] ) ) {
-			return;
-		}
-
-		$useragents = $this->split_on_newlines( $post['excluded_user_agents'] );
-		if ( $useragents !== $this->settings->get_global_user_agent_exclusions() ) {
-			$this->settings->set_global_user_agent_exclusions( $useragents );
-			$this->settings->save();
-		}
+		return $was_updated || $user_agents_updated;
 	}
 
 	/**
 	 * @param array $post
 	 *
+	 * @return bool whether the stored user agents changed
+	 */
+	private function apply_user_agent_exclusions( $post ) {
+		if ( ! isset( $post['excluded_user_agents'] ) ) {
+			return false;
+		}
+
+		$useragents = $this->split_on_newlines( $post['excluded_user_agents'] );
+		if ( $useragents === $this->settings->get_global_user_agent_exclusions() ) {
+			return false;
+		}
+
+		$this->settings->set_global_user_agent_exclusions( $useragents );
+		$this->settings->save();
+
+		return true;
+	}
+
+	/**
+	 * @param array $post
+	 *
+	 * @return bool whether any of them changed
+	 *
 	 * @throws InvalidIpException When Matomo refuses one of the excluded IPs.
 	 */
 	private function apply_matomo_exclusions( $post ) {
+		$was_updated = false;
+
 		$api = API::getInstance();
 		if ( isset( $post['excluded_ips'] ) ) {
 			$ips = $this->to_comma_list( $post['excluded_ips'] );
@@ -212,6 +237,8 @@ class ExclusionSettings implements AdminSettingsInterface {
 					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					throw new InvalidIpException( $e->getMessage() );
 				}
+
+				$was_updated = true;
 			}
 		}
 
@@ -219,6 +246,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 			$params = $this->to_comma_list( $post['excluded_query_parameters'] );
 			if ( $params !== $api->getExcludedQueryParametersGlobal() ) {
 				$api->setGlobalExcludedQueryParameters( $params );
+				$was_updated = true;
 			}
 		}
 
@@ -226,7 +254,10 @@ class ExclusionSettings implements AdminSettingsInterface {
 		// phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 		if ( $keep_fragments != $api->getKeepURLFragmentsGlobal() ) {
 			$api->setKeepURLFragmentsGlobal( $keep_fragments );
+			$was_updated = true;
 		}
+
+		return $was_updated;
 	}
 
 	/**

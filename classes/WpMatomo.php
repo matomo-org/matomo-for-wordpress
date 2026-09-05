@@ -282,7 +282,7 @@ class WpMatomo {
 			new TrackingCode( self::$settings ),
 			new Annotations( self::$settings ),
 
-			new \WpMatomo\NetworkActivationMigration(),
+			new \WpMatomo\NetworkActivationMigration( self::$settings ),
 
 			new \WpMatomo\PluginActionLinks( self::$settings ),
 
