@@ -147,7 +147,8 @@ class Settings {
 	/**
 	 * The blog ID the cached settings were loaded for. Long-lived Settings instances can
 	 * be used across switch_to_blog() calls, cached values must be reloaded when a blog
-	 * changes.
+	 * changes. If null, it means the current settings are invalid and must be reloaded
+	 * before the next read/write.
 	 *
 	 * @var int|null
 	 */
@@ -230,8 +231,12 @@ class Settings {
 		$this->load_blog_settings();
 	}
 
+	public function invalidate_loaded_settings() {
+		$this->loaded_for_blog_id = null;
+	}
+
 	public function get_customised_global_settings() {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		$custom_settings = [];
 
@@ -279,7 +284,7 @@ class Settings {
 	 * calls.
 	 */
 	public function save() {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( empty( $this->global_settings_changed ) && empty( $this->blog_settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
@@ -327,7 +332,7 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
@@ -347,7 +352,7 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->blog_settings[ $key ] ) ) {
 			return $this->blog_settings[ $key ];
@@ -375,7 +380,7 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->default_global_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_global_settings[ $key ] );
@@ -399,7 +404,7 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->default_blog_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_blog_settings[ $key ] );
@@ -730,11 +735,19 @@ class Settings {
 	}
 
 	/**
-	 * Reload cached settings if the current blog changed since they were loaded (eg, via
-	 * switch_to_blog()). Cached per-blog settings must not be served for, or saved to, a
-	 * different blog. Pending unsaved per-blog changes are discarded.
+	 * Reload cached settings when they were dropped, or when the current blog changed since they
+	 * were loaded (eg, via switch_to_blog()). Cached per-blog settings must not be served for, or
+	 * saved to, a different blog. Pending unsaved per-blog changes are discarded.
 	 */
-	private function reload_if_blog_switched() {
+	private function reload_if_needed() {
+		if ( null === $this->loaded_for_blog_id ) {
+			// dropped rather than loaded for another blog, so there is nothing to carry over and
+			// nothing to report as discarded
+			$this->init_settings();
+
+			return;
+		}
+
 		if ( ! $this->is_multisite()
 			|| get_current_blog_id() === $this->loaded_for_blog_id
 		) {

@@ -22,7 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var Settings $matomo_settings */
 
 if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
-	echo '<div class="matomo-notice notice notice-info is-dismissible"><br>You are running Matomo in network mode. This means below settings will be applied to all blogs in your network.<br><br></div>';
+	echo '<div class="matomo-notice notice notice-info is-dismissible"><br>';
+	esc_html_e( 'You are running Matomo in network mode.', 'matomo' );
+	echo ' ';
+	echo esc_html__( 'This means below settings will be applied to all blogs in your network.', 'matomo' );
+	echo '<br><br></div>';
 } elseif ( $matomo_settings->is_network_enabled() && ! is_network_admin() ) {
 	echo '<div class="matomo-notice notice notice-info is-dismissible"><br>';
 	esc_html_e( 'You are running Matomo in network mode.', 'matomo' );

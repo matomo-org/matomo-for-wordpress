@@ -9,9 +9,11 @@
   before no longer has any effect, since Matomo super user access outranks anything that screen can
   grant.
 * Note: because of the above, a blog admin now sees more Matomo screens than before on a network
-  activated install, including Matomo > Diagnostics and some of its troubleshooting actions. The
-  actions shown to such users only operate on the single blog they are displayed for, which the
-  admin has access to.
+  activated install. The settings shown to such users only apply to the single blog they are
+  displayed for, which the admin has access to.
+* Security: Matomo > Diagnostics now requires an administrator of the network when the plugin is
+  network activated. The report describes the whole install rather than a single blog's reports, and
+  not every troubleshooting action on it stops at the blog it was triggered from.
 * Security: the "Sync all users across sites / blogs" and "Sync all sites (blogs)" actions on
   Matomo > Diagnostics now require an administrator of the network and are hidden from everyone else.
 * Security: the "Install/Update Geo-IP DB" action on Matomo > Diagnostics now requires an
@@ -19,22 +21,39 @@
   else, since the geolocation database is downloaded once for the whole install rather than once per
   blog.
 * Security: the request that previews the generated JavaScript tracking code on
-  Matomo > Settings > Tracking now requires the same access as the tracking settings page:
-  Matomo admin access.
+  Matomo > Settings > Tracking now requires the same access as the tracking settings page itself,
+  which means an administrator of the network when the plugin is network activated.
 * Security: when the plugin is network activated, the tracking settings are stored once for the
   whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
   super user access, which a blog's own administrator can grant. Changing them now requires an
   administrator of the network.
-* Security: in a multisite network, the Manual tracking mode, and the "Tracking code" and "Noscript
-  code" tracking settings now require WordPress' unfiltered_html capability.
+* Security: the Manual tracking mode, and the "Tracking code" and "Noscript code" tracking settings,
+  now require WordPress' unfiltered_html capability, since what they hold is embedded into the
+  frontend exactly as entered. This applies outside a multisite network as well: an administrator
+  holds that capability already, a user who holds Matomo super user access through the Matomo Super
+  User role alone does not, and neither does anybody on a site that defines DISALLOW_UNFILTERED_HTML.
+* Security: when the plugin is network activated, a blog's own Matomo > Settings now shows only the
+  Exclusions and Privacy tabs, plus Matomo plugin settings, for a user holding Matomo super
+  user access on that blog (which includes network admins).
+* Security: the AJAX request that clears a recorded scheduled task failure now requires Matomo super
+  user access, where before it checked only a nonce.
 * Security: Matomo > Settings > Access, Matomo > Settings > Geolocation and
   Matomo > Settings > Advanced are stored once for the whole network when the plugin is network
   activated, so changing any of them now requires network admin access.
 * New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
   plugin is network activated. A network administrator can set the roles excluded on every blog in
   the network, while administrators of specific blogs can exclude roles for the blogs they manage.
+* Note: Matomo > Settings now opens with Matomo admin access rather than Matomo super user access,
+  and shows the Exclusions and Privacy tabs to such a user. This applies outside a multisite network
+  as well, so a role given Matomo admin access on Matomo > Settings > Access can now reach the two
+  settings below. Every other tab continues to require Matomo super user access, and network wide
+  tabs require a network admin.
 * New feature: everything on Matomo > Settings > Exclusions is now editable with Matomo admin access
   in a blog's own admin: the excluded IPs, query parameters, user agents and URL fragments.
+* New feature: the tracking filter on Matomo > Settings > Exclusions is editable with Matomo admin
+  access in a blog's own admin, where before it needed Matomo super user access.
+* Security: the tracking filter on Matomo > Settings > Exclusions now stores only the WordPress roles
+  the form offered, rather than whatever was submitted for it.
 * Bug fix: the excluded user agents on Matomo > Settings > Exclusions are now stored per blog,
   like the other exclusions on that screen, when the plugin is network activated.
 * Bug fix: network activating the plugin on a multisite where blogs had activated it individually

@@ -5,6 +5,7 @@
 
 use WpMatomo\Admin\Info;
 use WpMatomo\Admin\MatomoPage;
+use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 
 class MatomoPageTest extends MatomoAnalytics_SharedFixture_TestCase {
@@ -51,6 +52,34 @@ class MatomoPageTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_set_current_user( $user_id );
 
 		$this->assertFalse( is_super_admin( $user_id ) );
+
+		set_current_screen( 'dashboard-network' );
+
+		$this->expectException( WPDieException::class );
+
+		ob_start();
+
+		try {
+			$this->page->show();
+		} finally {
+			ob_end_clean();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_refuse_a_blog_administrator_in_the_network_admin() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $user_id );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
 
 		set_current_screen( 'dashboard-network' );
 

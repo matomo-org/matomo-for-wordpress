@@ -795,7 +795,10 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 		<?php if ( ! $matomo_can_edit_tracking_code ) { ?>
 			<p>
 				<span class="dashicons dashicons-info-outline"></span>
-				<?php esc_html_e( 'The code below is embedded into your pages exactly as entered, so changing it needs permission to add HTML and JavaScript to this site, which you do not have. In a multisite network WordPress reserves that for the network\'s administrators. Every other setting on this page remains yours to change.', 'matomo' ); ?>
+				<?php esc_html_e( 'The code below is embedded into your pages exactly as entered, so changing it needs the WordPress permission to add unfiltered HTML and JavaScript to this site, which you do not have. Every other setting on this page remains yours to change.', 'matomo' ); ?>
+				<?php if ( is_multisite() ) { ?>
+					<?php esc_html_e( 'In a multisite network WordPress reserves that permission for the network\'s administrators.', 'matomo' ); ?>
+				<?php } ?>
 			</p>
 		<?php } ?>
 		<table class="matomo-tracking-form widefat">

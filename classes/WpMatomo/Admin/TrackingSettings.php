@@ -152,13 +152,13 @@ class TrackingSettings implements AdminSettingsInterface {
 	 * it. This determines whether the user can use the manual tracking mode.
 	 *
 	 * Custom tracking JS and noscript HTML are embedded into the frontend exactly as entered, so
-	 * using them requires the same privilege as WordPress' unfiltered_html, and in multisite we
-	 * ask for that capability itself rather than deciding who should have it.
+	 * using them requires the same privilege as WordPress' unfiltered_html, and we ask for that
+	 * capability itself rather than deciding who should have it.
 	 *
-	 * Outside multisite the capability itself is not asked for, because a role can hold Matomo super
-	 * user access without holding any WordPress role that comes with unfiltered_html. DISALLOW_UNFILTERED_HTML
-	 * is still honored there: a site that defines it has said that nobody, administrators included,
-	 * may put raw script on the site, and the tracking code is raw script.
+	 * This is not a multisite only restriction. An administrator holds unfiltered_html already, but
+	 * a user who holds Matomo super user access through the Matomo Super User role alone (see
+	 * Roles::ROLE_SUPERUSER) does not, and neither does anybody on a site that defines
+	 * DISALLOW_UNFILTERED_HTML, which is how that site says nobody may put raw script on it.
 	 *
 	 * @return bool
 	 */
@@ -167,12 +167,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			return false;
 		}
 
-		if ( is_multisite() ) {
-			// current_user_can() already denies this to everyone when DISALLOW_UNFILTERED_HTML is set
-			return current_user_can( 'unfiltered_html' );
-		}
-
-		return ! defined( 'DISALLOW_UNFILTERED_HTML' ) || ! DISALLOW_UNFILTERED_HTML;
+		return current_user_can( 'unfiltered_html' );
 	}
 
 	private function apply_settings() {
@@ -256,7 +251,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		if ( isset( $_POST[ self::FORM_NAME ]['track_mode'] )
 			&& ! in_array( $this->get_track_mode(), self::get_available_track_modes(), true ) ) {
 			// if the track_mode value is invalid, don't save it and keep the existing one
-			unset( $_POST[ self::FORM_NAME ]['track_mode'] );
+			$_POST[ self::FORM_NAME ]['track_mode'] = $this->settings->get_global_option( 'track_mode' );
 		}
 
 		$can_edit_tracking_code = $this->can_user_edit_tracking_code();
@@ -577,7 +572,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	public static function generate_tracking_code() {
 		check_ajax_referer( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
 
-		if ( ! current_user_can( Capabilities::KEY_ADMIN ) ) {
+		$tracking_settings = new self( \WpMatomo::$settings );
+		if ( ! $tracking_settings->can_user_manage() ) {
 			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
 		}
 

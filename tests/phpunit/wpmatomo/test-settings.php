@@ -986,6 +986,44 @@ class SettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 	}
 
+	public function test_invalidate_loaded_settings_should_make_the_next_read_load_the_stored_value_again() {
+		$this->assertSame( 'disabled', $this->settings->get_global_option( 'track_mode' ) );
+
+		update_option( Settings::OPTION_GLOBAL, [ 'track_mode' => 'manually' ] );
+
+		// still the value it loaded when it was constructed
+		$this->assertSame( 'disabled', $this->settings->get_global_option( 'track_mode' ) );
+
+		$this->settings->invalidate_loaded_settings();
+
+		$this->assertSame( 'manually', $this->settings->get_global_option( 'track_mode' ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_invalidate_loaded_settings_should_leave_the_global_settings_scope_to_be_decided_on_the_next_read() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		update_option( Settings::OPTION_GLOBAL, [ 'track_mode' => 'this blogs own' ] );
+		update_site_option( Settings::OPTION_GLOBAL, [ 'track_mode' => 'the networks' ] );
+
+		$settings = $this->make_settings();
+
+		$this->assertFalse( $settings->is_network_enabled() );
+		$this->assertSame( 'this blogs own', $settings->get_global_option( 'track_mode' ) );
+
+		$settings->invalidate_loaded_settings();
+
+		// as WordPress finishes the activation it started
+		$this->activate_matomo_plugin();
+
+		$this->assertSame( 'the networks', $settings->get_global_option( 'track_mode' ) );
+	}
+
 	/**
 	 * @param Settings $settings
 	 * @return Settings

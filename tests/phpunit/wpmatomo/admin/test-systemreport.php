@@ -24,6 +24,11 @@ $piwik_minimumPHPVersion = '7.2.5';
 class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	/**
+	 * @see SystemReport::get_errors_present_cache_key(), which is private
+	 */
+	const ERRORS_PRESENT_CACHE_KEY = 'matomo_system_report_has_errors';
+
+	/**
 	 * @var SystemReport
 	 */
 	private $report;
@@ -60,6 +65,8 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function test_show_renders_ui() {
+		$this->create_set_super_admin();
+
 		ob_start();
 		$this->report->show();
 		$output = ob_get_clean();
@@ -71,6 +78,8 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 	 * @dataProvider get_trouble_shooting_data
 	 */
 	public function test_show_executes_troubleshooting_with_no_error( $method ) {
+		$this->create_set_super_admin();
+
 		$this->fake_request( $method );
 
 		ob_start();
@@ -142,7 +151,7 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_should_not_offer_the_sync_all_blogs_actions_to_a_matomo_super_user_who_does_not_administrate_the_network() {
+	public function test_show_should_refuse_a_matomo_super_user_who_does_not_administrate_the_network() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -150,13 +159,31 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
-		$output = $this->render_troubleshooting();
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+		$this->assertFalse( is_super_admin( get_current_user_id() ) );
 
-		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES, $output );
-		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS, $output );
+		$this->expectException( WPDieException::class );
 
-		// the actions that reach no further than their own blog stay
-		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE, $output );
+		$this->render_troubleshooting();
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_not_run_a_troubleshooting_action_for_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$this->fake_request( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES );
+
+		// refused before execute_troubleshoot_if_needed() gets to look at the request
+		$this->expectException( WPDieException::class );
+
+		$this->render_troubleshooting();
 	}
 
 	/**
@@ -235,25 +262,6 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_should_not_offer_the_geoip_db_action_to_a_matomo_super_user_who_does_not_administrate_the_network() {
-		if ( ! is_multisite() ) {
-			$this->markTestSkipped( 'Not multisite.' );
-			return;
-		}
-
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
-
-		$output = $this->render_troubleshooting();
-
-		$this->assertStringNotContainsString( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB, $output );
-
-		// the actions that reach no further than their own blog stay
-		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE, $output );
-	}
-
-	/**
-	 * @group ms-required
-	 */
 	public function test_show_should_offer_the_geoip_db_action_to_a_network_administrator() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
@@ -271,6 +279,123 @@ class AdminSystemReportTest extends MatomoAnalytics_SharedFixture_TestCase {
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 
 		$this->assertStringContainsString( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB, $this->render_troubleshooting() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_manage_should_refuse_a_matomo_super_user_who_does_not_administrate_the_network() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+		$this->assertFalse( is_super_admin( get_current_user_id() ) );
+
+		$this->assertFalse( $this->report->can_user_manage() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_can_user_manage_should_allow_a_network_administrator() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->create_set_super_admin();
+
+		$this->assertTrue( $this->report->can_user_manage() );
+	}
+
+	public function test_can_user_manage_should_allow_a_matomo_super_user_when_the_network_is_not_enabled() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		$this->create_set_super_admin();
+
+		$this->assertTrue( $this->report->can_user_manage() );
+	}
+
+	public function test_can_user_manage_should_refuse_a_user_without_matomo_super_user_access() {
+		$this->settings->set_assume_is_network_enabled_in_tests( false );
+
+		( new Roles( $this->settings ) )->add_roles( true );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => Roles::ROLE_ADMIN ) ) );
+
+		$this->assertTrue( current_user_can( Capabilities::KEY_ADMIN ) );
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$this->assertFalse( $this->report->can_user_manage() );
+	}
+
+	public function test_errors_present_should_prefer_the_answer_recorded_for_this_blog_over_one_recorded_for_the_network() {
+		set_site_transient( self::ERRORS_PRESENT_CACHE_KEY, 1, WEEK_IN_SECONDS );
+		set_transient( self::ERRORS_PRESENT_CACHE_KEY, 0, WEEK_IN_SECONDS );
+
+		$this->assertFalse( $this->report->errors_present() );
+
+		set_site_transient( self::ERRORS_PRESENT_CACHE_KEY, 0, WEEK_IN_SECONDS );
+		set_transient( self::ERRORS_PRESENT_CACHE_KEY, 1, WEEK_IN_SECONDS );
+
+		$this->assertTrue( $this->report->errors_present() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_errors_present_should_not_answer_with_what_was_recorded_for_another_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$other_blog_id = self::factory()->blog->create();
+
+		// what one site transient for the whole network would have left behind
+		set_site_transient( self::ERRORS_PRESENT_CACHE_KEY, 0, WEEK_IN_SECONDS );
+
+		set_transient( self::ERRORS_PRESENT_CACHE_KEY, 1, WEEK_IN_SECONDS );
+
+		switch_to_blog( $other_blog_id );
+		try {
+			set_transient( self::ERRORS_PRESENT_CACHE_KEY, 0, WEEK_IN_SECONDS );
+
+			$this->assertFalse( ( new SystemReport( new Settings() ) )->errors_present() );
+		} finally {
+			restore_current_blog();
+		}
+
+		// this blog has errors and the other one does not, and it stays that way
+		$this->assertTrue( $this->report->errors_present() );
+	}
+
+	public function test_errors_present_should_answer_with_what_the_report_found_rather_than_with_the_cache_it_missed() {
+		delete_transient( self::ERRORS_PRESENT_CACHE_KEY );
+
+		add_filter(
+			'matomo_systemreport_tables',
+			function () {
+				return [
+					[
+						'title' => 'Test',
+						'rows'  => [
+							[
+								'name'     => 'Something broken',
+								'value'    => '',
+								'is_error' => true,
+							],
+						],
+					],
+				];
+			}
+		);
+
+		$this->assertTrue( $this->report->errors_present() );
+		$this->assertSame( 1, (int) get_transient( self::ERRORS_PRESENT_CACHE_KEY ) );
 	}
 
 	public function test_not_compatible_plugins_are_mentioned_in_faq() {

@@ -48,11 +48,6 @@ class NetworkActivationMigration extends Feature {
 	public function register_hooks() {
 		register_activation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'on_plugin_activated' ] );
 		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'on_plugin_deactivated' ] );
-
-		// executes if activate_plugin()/deactivate_plugins() was invoked with the plugin slug rather
-		// than with the path to its entry point
-		add_action( 'activate_matomo', [ $this, 'on_plugin_activated' ] );
-		add_action( 'deactivate_matomo', [ $this, 'on_plugin_deactivated' ] );
 	}
 
 	public function on_plugin_activated( $network_wide = false ) {
@@ -123,8 +118,8 @@ class NetworkActivationMigration extends Feature {
 		update_option( Settings::OPTION, $blog_settings );
 
 		// settings options were written manually, so the Settings instance will be out of date here,
-		// so re-load the saved setting data.
-		$this->settings->init_settings();
+		// so invalidate the saved setting data.
+		$this->settings->invalidate_loaded_settings();
 
 		return true;
 	}
@@ -167,7 +162,7 @@ class NetworkActivationMigration extends Feature {
 		update_option( Settings::OPTION_GLOBAL, $blog_global_settings );
 
 		// see migrate_current_blog()
-		$this->settings->init_settings();
+		$this->settings->invalidate_loaded_settings();
 
 		return true;
 	}
@@ -179,8 +174,17 @@ class NetworkActivationMigration extends Feature {
 
 		$migrated = 0;
 
-		// number => 0 means no limit
-		foreach ( get_sites( [ 'number' => 0 ] ) as $site ) {
+		// number => 0 means no limit. network_id because get_sites() spans every network of the
+		// install unless it is told which one, while activating the plugin for a network only writes
+		// that network's active_sitewide_plugins
+		$sites = get_sites(
+			[
+				'number'     => 0,
+				'network_id' => get_current_network_id(),
+			]
+		);
+
+		foreach ( $sites as $site ) {
 			switch_to_blog( $site->blog_id );
 
 			try {

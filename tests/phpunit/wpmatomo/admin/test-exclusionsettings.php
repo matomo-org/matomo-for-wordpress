@@ -98,7 +98,7 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 		// check that 'editor' was added to the blog specific action and that it's correctly merged
 		// with the pre-existing network wide option when fetching.
-		$this->assertSame( [ 'author' => '1' ], $saved->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
+		$this->assertSame( [ 'author' => true ], $saved->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
 		$this->assertSame(
 			[
 				'editor' => true,
@@ -176,7 +176,7 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 			set_current_screen( 'dashboard' );
 		}
 
-		$this->assertSame( [ 'editor' => '1' ], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+		$this->assertSame( [ 'editor' => true ], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
 	}
 
 	public function test_show_settings_should_report_an_update_when_a_setting_changed() {
@@ -215,9 +215,117 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 		$saved = new Settings();
 
-		$this->assertSame( [ 'editor' => '1' ], $saved->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+		$this->assertSame( [ 'editor' => true ], $saved->get_global_option( Settings::OPTION_KEY_STEALTH ) );
 		$this->assertSame( [], $saved->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
 		$this->assertSame( [ 'editor' => true ], $saved->get_stealth_roles() );
+	}
+
+	public function test_show_settings_should_keep_only_the_wordpress_roles_out_of_a_submitted_tracking_filter() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor'                    => '1',
+					'not-a-role'                => '1',
+					'<script>alert(1)</script>' => '1',
+				],
+			]
+		);
+
+		$this->assertSame(
+			[ 'editor' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_leave_a_role_the_submitted_tracking_filter_did_not_exclude_out_of_it() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor' => '1',
+					'author' => '0',
+				],
+			]
+		);
+
+		$this->assertSame(
+			[ 'editor' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_the_stored_tracking_filter_was_written_as_booleans() {
+		( new Settings() )->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => true ] ] );
+
+		$output = $this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+	}
+
+	public function test_show_settings_should_keep_a_tracking_filter_role_this_blog_does_not_register() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor'                => true,
+					'role_of_a_gone_plugin' => true,
+				],
+			]
+		);
+
+		$this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'author' => '1' ] ] );
+
+		// the form has no checkbox for a role this blog does not register, so leaving that role out
+		// of the submission is not the user unchecking it
+		$this->assertSame(
+			[
+				'author'                => true,
+				'role_of_a_gone_plugin' => true,
+			],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_only_a_role_this_blog_does_not_register_is_excluded() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'role_of_a_gone_plugin' => true ],
+			]
+		);
+
+		$output = $this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [] ] );
+
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+		$this->assertSame(
+			[ 'role_of_a_gone_plugin' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_keep_a_stored_tracking_filter_key_that_is_not_a_role_name_as_it_is() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					5        => true,
+					'editor' => true,
+				],
+			]
+		);
+
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor' => '1',
+					'author' => '1',
+				],
+			]
+		);
+
+		$saved = ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH );
+
+		// a stored key that is not a role name can be an integer, which array_merge() would renumber
+		$this->assertArrayHasKey( 5, $saved );
+		$this->assertArrayHasKey( 'editor', $saved );
+		$this->assertArrayHasKey( 'author', $saved );
+		$this->assertCount( 3, $saved );
 	}
 
 	public function test_validate_ip() {

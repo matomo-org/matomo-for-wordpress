@@ -125,6 +125,18 @@ class SystemReport implements MatomoPageContent {
 		return $this->not_compatible_plugins;
 	}
 
+	public function can_user_manage() {
+		if ( ! current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			return false;
+		}
+
+		if ( $this->settings->is_network_enabled() ) {
+			return current_user_can( Menu::CAP_NETWORK );
+		}
+
+		return true;
+	}
+
 	/**
 	 * Whether the current user may run the troubleshooting actions that reach every blog.
 	 *
@@ -169,7 +181,7 @@ class SystemReport implements MatomoPageContent {
 		if ( ! empty( $_POST )
 			&& is_admin()
 			&& check_admin_referer( self::NONCE_NAME )
-			&& current_user_can( Capabilities::KEY_SUPERUSER )
+			&& $this->can_user_manage()
 		) {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
@@ -373,25 +385,34 @@ class SystemReport implements MatomoPageContent {
 
 	public function errors_present() {
 		$cache_key   = $this->get_errors_present_cache_key();
-		$cache_value = get_site_transient( $cache_key );
+		$cache_value = get_transient( $cache_key );
 
 		if ( false === $cache_value ) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
 			// allow the rest of Matomo for WordPress to continue to still be usable.
-			set_site_transient( $cache_key, 0, WEEK_IN_SECONDS );
+			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
 			$matomo_tables = $this->get_error_tables();
 
 			$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 			$matomo_tables = $this->add_errors_first( $matomo_tables );
 
-			$this->set_errors_present_transient( $matomo_tables );
+			return $this->set_errors_present_transient( $matomo_tables );
 		}
 
 		return 1 === (int) $cache_value;
 	}
 
 	public function show() {
+		// this check required in safe mode as the menu item is registered with manage_options, rather
+		// than a matomo capability
+		if ( ! $this->can_user_manage() ) {
+			wp_die(
+				esc_html__( 'Sorry, you are not allowed to access this page.', 'matomo' ),
+				403
+			);
+		}
+
 		$this->execute_troubleshoot_if_needed();
 
 		$settings = $this->settings;
@@ -2204,7 +2225,7 @@ class SystemReport implements MatomoPageContent {
 			}
 		}
 
-		set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+		set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 
 		return $cache_value;
 	}

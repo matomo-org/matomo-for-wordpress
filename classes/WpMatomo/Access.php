@@ -52,7 +52,7 @@ class Access {
 	}
 
 	public function save( $values ) {
-		global $wp_roles;
+		$wp_roles = wp_roles();
 
 		$roles           = new Roles( $this->settings );
 		$available_roles = $roles->get_available_roles_for_configuration();

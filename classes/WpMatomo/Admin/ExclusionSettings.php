@@ -73,7 +73,8 @@ class ExclusionSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings( $throw_exception = false ) {
-		global $wp_roles;
+		$wp_roles = wp_roles();
+
 		$settings_errors = [];
 		$was_updated     = false;
 		try {
@@ -150,12 +151,23 @@ class ExclusionSettings implements AdminSettingsInterface {
 	private function update_tracking_filter( $post ) {
 		$key = $this->get_tracking_filter_option_name();
 
-		$roles = [];
+		$submitted_roles = [];
 		if ( ! empty( $post[ $key ] ) && is_array( $post[ $key ] ) ) {
-			$roles = $post[ $key ];
+			$submitted_roles = $post[ $key ];
 		}
 
-		$existing_roles = $this->get_stored_tracking_filter( $key );
+		// remove roles that do not currently exist/are not currently registered with WP,
+		// so a role from a deactivated plugin cannot be excluded before the plugin is
+		// activated
+		$submitted_roles = $this->only_registered_roles( $this->excluded_roles( $submitted_roles ) );
+
+		$existing_roles = $this->excluded_roles( $this->read_tracking_filter( $key ) );
+
+		// keep roles in the existing setting value that are currently unregistered,
+		// so we don't start tracking roles that were previously excluded, when the plugin
+		// that registers them is activated
+		// (note: union rather than array_merge() is intentional)
+		$roles = $submitted_roles + $this->only_unregistered_roles( $existing_roles );
 
 		ksort( $roles );
 		ksort( $existing_roles );
@@ -260,17 +272,57 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return $was_updated;
 	}
 
+	private function get_stored_tracking_filter( $key ) {
+		return $this->only_registered_roles( $this->read_tracking_filter( $key ) );
+	}
+
 	/**
 	 * @param string $key
-	 *
-	 * @return array<string, bool>
+	 * @return array whatever is stored, unvalidated
 	 */
-	private function get_stored_tracking_filter( $key ) {
+	private function read_tracking_filter( $key ) {
 		$roles = Settings::OPTION_KEY_STEALTH === $key
 			? $this->settings->get_global_option( $key )
 			: $this->settings->get_option( $key );
+		$roles = is_array( $roles ) ? $roles : [];
+		$roles = $this->excluded_roles( $roles );
+		return $roles;
+	}
 
-		return is_array( $roles ) ? $roles : [];
+	/**
+	 * Removes roles from a value for the tracking filter (stored or submitted), that
+	 * are not excluded. Values are normalized to true as well.
+	 *
+	 * @param array $roles
+	 * @return array<string, true>
+	 */
+	private function excluded_roles( array $roles ) {
+		$excluded_roles = $roles;
+		$excluded_roles = array_filter( $excluded_roles );
+		$excluded_roles = array_map( 'boolval', $excluded_roles );
+		return $excluded_roles;
+	}
+
+	/**
+	 * For use with tracking filter values. Filters out roles that do not, or no
+	 * longer, exist.
+	 *
+	 * @param array<string, true> $roles
+	 * @return array<string, true>
+	 */
+	private function only_registered_roles( array $roles ) {
+		return array_intersect_key( $roles, wp_roles()->role_names );
+	}
+
+	/**
+	 * For use with tracking filter values. Keeps only roles that do not, or no
+	 * longer, exist.
+	 *
+	 * @param array<string, true> $roles
+	 * @return array<string, true>
+	 */
+	private function only_unregistered_roles( array $roles ) {
+		return array_diff_key( $roles, wp_roles()->role_names );
 	}
 
 	/**

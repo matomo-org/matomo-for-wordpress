@@ -142,6 +142,72 @@ class TrackingFilterMigrationTest extends MatomoUnit_TestCase {
 		}
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_migrate_all_blogs_should_leave_a_blog_of_another_network_alone() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->store_tracking_filter( [ 'editor' => '1' ] );
+
+		$other_blog_id = $this->create_blog_on_another_network();
+
+		switch_to_blog( $other_blog_id );
+		try {
+			$this->store_tracking_filter( [ 'author' => '1' ] );
+		} finally {
+			restore_current_blog();
+		}
+
+		$this->migration->migrate_all_blogs();
+
+		$this->assertSame( [ 'editor' => true ], $this->get_stored_blog_tracking_filter() );
+
+		switch_to_blog( $other_blog_id );
+		try {
+			// the other blog did not activate the plugin, so the setting should not have changed
+			$this->assertSame( [], $this->get_stored_blog_tracking_filter() );
+		} finally {
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_migrate_all_blogs_back_should_leave_a_blog_of_another_network_alone() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$other_blog_id = $this->create_blog_on_another_network();
+
+		switch_to_blog( $other_blog_id );
+		try {
+			$this->store_blog_tracking_filter( [ 'author' => true ] );
+		} finally {
+			restore_current_blog();
+		}
+
+		$this->store_network_wide_tracking_filter( [ 'editor' => '1' ] );
+
+		$this->migration->migrate_all_blogs_back();
+
+		$this->assertSame( [ 'editor' => true ], $this->get_stored_tracking_filter() );
+
+		switch_to_blog( $other_blog_id );
+		try {
+			// the other blog did not deactivate the plugin, so the setting should not have changed
+			$this->assertSame( [], $this->get_stored_tracking_filter() );
+		} finally {
+			restore_current_blog();
+		}
+	}
+
 	public function test_migrate_all_blogs_should_do_nothing_outside_multisite() {
 		if ( is_multisite() ) {
 			$this->markTestSkipped( 'Multisite.' );
@@ -354,6 +420,14 @@ class TrackingFilterMigrationTest extends MatomoUnit_TestCase {
 		$this->migration->on_plugin_deactivated( false );
 
 		$this->assertSame( [], $this->get_stored_tracking_filter() );
+	}
+
+	private function create_blog_on_another_network() {
+		$network_id = self::factory()->network->create();
+
+		$this->assertNotEquals( get_current_network_id(), $network_id );
+
+		return self::factory()->blog->create( [ 'network_id' => $network_id ] );
 	}
 
 	private function store_tracking_filter( $roles ) {

@@ -33,6 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $tracking_filter_key */
 /** @var array<string, bool> $tracking_filter */
 /** @var array<string, bool> $network_tracking_filter */
+/** @var WP_Roles $wp_roles */
 ?>
 
 <?php

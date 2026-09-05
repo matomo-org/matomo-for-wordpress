@@ -59,8 +59,8 @@ class Roles extends Feature {
 	}
 
 	public function get_available_roles_for_configuration() {
-		global $wp_roles;
-		$roles = [];
+		$wp_roles = wp_roles();
+		$roles    = [];
 
 		foreach ( $wp_roles->role_names as $role_name => $name ) {
 			if ( 'administrator' === $role_name ) {

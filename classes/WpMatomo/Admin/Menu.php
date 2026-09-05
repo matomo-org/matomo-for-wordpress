@@ -229,10 +229,13 @@ EOF;
 		}
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
-			$system_report = new MatomoPage( new SystemReport( $this->settings ) );
+			$system_report     = new MatomoPage( new SystemReport( $this->settings ) );
+			$system_report_cap = $this->get_system_report_menu_capability();
 
+			// only display the ! icon next to the system report menu item, if the user can actually
+			// visit the system report page.
 			$warning = '';
-			if ( Admin::is_matomo_admin() ) {
+			if ( Admin::is_matomo_admin() && current_user_can( $system_report_cap ) ) {
 				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true ) && $system_report->get_content()->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
@@ -242,7 +245,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
 				__( 'Diagnostics', 'matomo' ) . $warning,
-				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
+				$system_report_cap,
 				self::SLUG_SYSTEM_REPORT,
 				[
 					$system_report,
@@ -291,6 +294,28 @@ EOF;
 				}
 			}
 		}
+	}
+
+	public static function make_page_url( $menu_slug ) {
+		global $_parent_pages;
+
+		if ( ! is_multisite() || ! is_network_admin() ) {
+			return (string) menu_page_url( $menu_slug, false );
+		}
+
+		// menu_page_url() always builds a blog admin URL, so it cannot be used
+		// for a page that is displayed in the network admin as well.
+
+		if ( ! isset( $_parent_pages[ $menu_slug ] ) ) {
+			return '';
+		}
+
+		$parent_slug = $_parent_pages[ $menu_slug ];
+		if ( $parent_slug && ! isset( $_parent_pages[ $parent_slug ] ) ) {
+			return network_admin_url( add_query_arg( 'page', $menu_slug, $parent_slug ) );
+		}
+
+		return network_admin_url( 'admin.php?page=' . $menu_slug );
 	}
 
 	public static function get_matomo_goto_url( $destination ) {
@@ -456,6 +481,17 @@ EOF;
 		}
 
 		return $matomo_capability;
+	}
+
+	private function get_system_report_menu_capability() {
+		// the report is about the install rather than about one blog's reports, and not every
+		// troubleshooting action on it stops at the blog it was triggered from
+		// (see SystemReport::can_user_manage())
+		if ( $this->settings->is_network_enabled() ) {
+			return self::CAP_NETWORK;
+		}
+
+		return $this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER );
 	}
 
 	private function get_settings_menu_capability() {

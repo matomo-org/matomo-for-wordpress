@@ -211,6 +211,63 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
+	public function test_can_user_manage_should_refuse_a_blog_administrator_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// network enabled for real rather than assumed, so that the plugin's own hooks see it too
+		$this->activate_matomo_plugin();
+
+		$this->make_current_user_blog_administrator_of_the_network_activated_install();
+
+		$this->assertFalse( $this->tracking_settings->can_user_manage() );
+		$this->assertFalse( $this->tracking_settings->can_user_edit_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_not_let_a_blog_administrator_change_any_tracking_setting_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		( new Settings() )->apply_tracking_related_changes(
+			[
+				'track_mode' => TrackingSettings::TRACK_MODE_DISABLED,
+				'track_404'  => true,
+			]
+		);
+
+		$this->make_current_user_blog_administrator_of_the_network_activated_install();
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_404'     => '',
+				'tracking_code' => '<script>alert(/xss/)</script>',
+				'noscript_code' => '<script>alert(/xss/)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		// the whole screen is refused, not only the tracking code: every setting on it is stored
+		// once for the network
+		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $saved->get_global_option( 'track_mode' ) );
+		$this->assertEquals( true, $saved->get_global_option( 'track_404' ) );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_js_tracking_code() );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_noscript_tracking_code() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
 	public function test_can_user_manage_should_allow_a_network_administrator_when_the_network_is_enabled() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
@@ -235,7 +292,7 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
-	public function test_can_user_edit_tracking_code_should_refuse_a_blog_administrator_in_multisite() {
+	public function test_can_user_edit_tracking_code_should_refuse_a_blog_administrator_when_the_plugin_is_not_network_activated() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -257,6 +314,51 @@ EOF;
 		}
 
 		$this->assertTrue( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
+	}
+
+	public function test_can_user_edit_tracking_code_should_refuse_the_matomo_super_user_role_outside_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Multisite.' );
+			return;
+		}
+
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		$tracking_settings = new TrackingSettings( new Settings() );
+
+		$this->assertTrue( $tracking_settings->can_user_manage() );
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+		$this->assertFalse( $tracking_settings->can_user_edit_tracking_code() );
+	}
+
+	public function test_show_settings_should_not_let_the_matomo_super_user_role_switch_to_the_manual_tracking_code_outside_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Multisite.' );
+			return;
+		}
+
+		$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
+
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<script>alert(/xss/)</script>',
+				'noscript_code' => '<script>alert(/xss/)</script>',
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $saved->get_global_option( 'track_mode' ) );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_js_tracking_code() );
+		$this->assertStringNotContainsString( 'alert(/xss/)', $saved->get_noscript_tracking_code() );
 	}
 
 	/**
@@ -347,7 +449,7 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_settings_should_not_let_a_blog_administrator_switch_to_the_manual_tracking_code_in_multisite() {
+	public function test_show_settings_should_not_let_a_blog_administrator_switch_to_the_manual_tracking_code_when_the_plugin_is_not_network_activated() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -375,7 +477,7 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_settings_should_keep_the_tracking_code_a_network_administrator_entered_in_multisite() {
+	public function test_show_settings_should_keep_the_tracking_code_a_network_administrator_entered_when_the_plugin_is_not_network_activated() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -462,6 +564,27 @@ EOF;
 		$this->assertEquals( true, $saved->get_global_option( 'track_404' ) );
 	}
 
+	/**
+	 * @dataProvider get_unrecognised_track_modes
+	 */
+	public function test_show_settings_should_still_remove_the_slashes_from_a_tracking_code_submitted_with_an_unrecognised_track_mode( $track_mode ) {
+		$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY ] );
+
+		$tracking_code = '<!-- Matomo --><script>var matomoUrl = "//example.org/";</script>';
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'    => $track_mode,
+				'tracking_code' => addslashes( $tracking_code ),
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertSame( TrackingSettings::TRACK_MODE_MANUALLY, $saved->get_global_option( 'track_mode' ) );
+		$this->assertSame( $tracking_code, $saved->get_option( 'tracking_code' ) );
+	}
+
 	public function get_unrecognised_track_modes() {
 		return [
 			'differs from a known mode only in case' => [ 'Manually' ],
@@ -473,7 +596,7 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_settings_should_still_let_a_blog_administrator_change_the_other_tracking_settings_in_multisite() {
+	public function test_show_settings_should_still_let_a_blog_administrator_change_the_other_tracking_settings_when_the_plugin_is_not_network_activated() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -501,7 +624,7 @@ EOF;
 	/**
 	 * @group ms-required
 	 */
-	public function test_show_settings_should_offer_the_manual_mode_and_its_code_fields_as_disabled_to_a_blog_administrator_in_multisite() {
+	public function test_show_settings_should_offer_the_manual_mode_and_its_code_fields_as_disabled_to_a_blog_administrator_when_the_plugin_is_not_network_activated() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -539,6 +662,13 @@ EOF;
 		$this->assertDoesNotMatchRegularExpression( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
 	}
 
+	/**
+	 * An administrator of a blog on a multisite where each blog activates the plugin for itself, so
+	 * the tracking settings are that blog's own and theirs to change. Not the network activated case,
+	 * which is make_current_user_blog_administrator_of_the_network_activated_install().
+	 *
+	 * @return int
+	 */
 	private function make_current_user_blog_administrator() {
 		// multisite, but not network activated
 		update_site_option( 'active_sitewide_plugins', [] );
@@ -556,6 +686,36 @@ EOF;
 
 		$this->settings = new Settings();
 		$this->assertFalse( $this->settings->is_network_enabled() );
+
+		$this->tracking_settings = new TrackingSettings( $this->settings );
+
+		return $user_id;
+	}
+
+	/**
+	 * The population AS-702 created: an administrator of a blog on a network activated install. They
+	 * hold Matomo super user access through the administrator role rather than through a Matomo
+	 * capability of their own, which is a different branch of
+	 * Capabilities::has_matomo_super_user_capability() than the Matomo Super User role takes.
+	 *
+	 * Assumes the plugin is already network activated, so that a test can set up the settings it
+	 * expects to find unchanged in the store the network reads them from.
+	 *
+	 * @return int
+	 */
+	private function make_current_user_blog_administrator_of_the_network_activated_install() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		add_user_to_blog( get_current_blog_id(), $user_id, 'administrator' );
+		wp_set_current_user( $user_id );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertFalse( current_user_can( 'manage_network_options' ) );
+
+		// the access this branch grants them, and the reason for the tests that use this
+		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$this->settings = new Settings();
+		$this->assertTrue( $this->settings->is_network_enabled() );
 
 		$this->tracking_settings = new TrackingSettings( $this->settings );
 
