@@ -1203,6 +1203,9 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		( new Sync() )->sync_all();
 
+		// re-bootstrap after syncing, since the environment is destroyed after switching blogs
+		Bootstrap::do_bootstrap();
+
 		// the blog they administrate has a Matomo of its own, and they are its super user
 		$this->assertContains(
 			'blogadmin',
@@ -1249,6 +1252,9 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( is_user_member_of_blog( $user_id, $beta ) );
 
 		( new Sync() )->sync_all();
+
+		// see the note in the test above: switching blogs tears Matomo's environment down
+		Bootstrap::do_bootstrap();
 
 		$this->assertSame( 'admin', $this->get_access_for_current_site( 'promotedadmin' ) );
 

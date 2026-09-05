@@ -27,6 +27,9 @@
   administrator of the network.
 * Security: in a multisite network, the Manual tracking mode, and the "Tracking code" and "Noscript
   code" tracking settings now require WordPress' unfiltered_html capability.
+* Security: Matomo > Settings > Access, Matomo > Settings > Geolocation and
+  Matomo > Settings > Advanced are stored once for the whole network when the plugin is network
+  activated, so changing any of them now requires network admin access.
 * New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
   plugin is network activated. A network administrator can set the roles excluded on every blog in
   the network, while administrators of specific blogs can exclude roles for the blogs they manage.
@@ -40,6 +43,9 @@
   had excluded from tracking started being tracked again, with nothing to show for it and no way
   left to reach the setting. Only the tracking filter is carried over; the remaining global
   settings become the network's, as they always have.
+* Bug fix: network deactivating the plugin now carries the tracking filter back the other way, for
+  the same reason: the network's tracking filter and each blog's own stop being read once the blog
+  activates the plugin for itself. So both must be merged into the blog's own setting.
 
 = 5.13.0 =
 * Update core Matomo to version 5.13.0.

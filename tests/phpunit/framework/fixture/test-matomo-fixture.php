@@ -51,8 +51,6 @@ class MatomoUnit_Matomo_Fixture {
 			$test_class_name  = get_class( $test_case );
 			$test_method_name = $test_case->getName();
 
-			unset( $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] );
-
 			$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
 		}
 
