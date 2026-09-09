@@ -169,7 +169,7 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertContains( self::TAB_ADDED_BY_A_PLUGIN, $this->get_rendered_tabs( $this->show() ) );
 	}
 
-	public function test_show_should_not_offer_the_settings_of_a_matomo_plugin_to_a_matomo_admin() {
+	public function test_show_should_offer_the_settings_of_a_matomo_plugin_to_a_matomo_admin() {
 		$this->add_measurable_settings_as_a_tab_from_a_plugin();
 
 		( new Roles( new Settings() ) )->add_roles( true );
@@ -177,7 +177,23 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
 
-		$this->assertNotContains( self::TAB_ADDED_BY_A_PLUGIN, $this->get_rendered_tabs( $this->show() ) );
+		$this->assertContains( self::TAB_ADDED_BY_A_PLUGIN, $this->get_rendered_tabs( $this->show() ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_should_offer_the_settings_of_a_matomo_plugin_to_a_matomo_admin_when_the_plugin_is_network_activated() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->add_measurable_settings_as_a_tab_from_a_plugin();
+
+		$this->network_activate_and_become_a_matomo_admin();
+
+		$this->assertContains( self::TAB_ADDED_BY_A_PLUGIN, $this->get_rendered_tabs( $this->show() ) );
 	}
 
 	/**
@@ -236,6 +252,21 @@ class AdminSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( is_super_admin( $user_id ) );
 		// an administrator is the Matomo super user of the blog they administrate
 		$this->assertTrue( current_user_can( Capabilities::KEY_SUPERUSER ) );
+	}
+
+	private function network_activate_and_become_a_matomo_admin() {
+		$this->activate_matomo_plugin();
+
+		// built again so that it reads the settings as they are with the plugin network activated
+		$this->admin_settings = new AdminSettings( new Settings() );
+
+		( new Roles( new Settings() ) )->add_roles( true );
+		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] );
+		wp_set_current_user( $user_id );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertTrue( current_user_can( Capabilities::KEY_ADMIN ) );
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
 	}
 
 	private function add_advanced_settings_as_a_tab_from_a_plugin() {

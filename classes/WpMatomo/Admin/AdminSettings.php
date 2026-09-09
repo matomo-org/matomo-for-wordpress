@@ -59,8 +59,8 @@ class AdminSettings implements MatomoPageContent {
 
 		$matomo_is_super_user = current_user_can( Capabilities::KEY_SUPERUSER );
 
-		$is_blog_specific_screen         = $this->settings->is_network_enabled() && ! is_network_admin();
-		$built_in_tabs_for_blog_specific = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
+		$is_blog_specific_screen_and_network_activated = $this->settings->is_network_enabled() && ! is_network_admin();
+		$built_in_tabs_for_blog_specific               = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
 
 		$active_tab = self::TAB_TRACKING;
 
@@ -76,19 +76,15 @@ class AdminSettings implements MatomoPageContent {
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
 		// set which tabs the current user is entitled to on this screen
-		if ( ! $matomo_is_super_user ) {
-			// tabs for a Matomo admin
-			$setting_tabs = $this->keep_only_tabs( $setting_tabs, $built_in_tabs_for_blog_specific );
-			$active_tab   = self::TAB_EXCLUSIONS;
-		} elseif ( $is_blog_specific_screen ) {
-			// superuser on a blog specific screen
+		if ( ! $matomo_is_super_user || $is_blog_specific_screen_and_network_activated ) {
+			// tabs for matomo admin or superuser on a blog specific screen
 			$setting_tabs = $this->keep_only_tabs(
 				$setting_tabs,
 				array_merge( $built_in_tabs_for_blog_specific, $this->find_plugin_measurable_settings_tabs( $setting_tabs ) )
 			);
 			$active_tab   = self::TAB_EXCLUSIONS;
 		}
-		// a WP super user/network admin or a a Matomo super user on a single site blog. they
+		// a WP super user/network admin or a Matomo super user on a single site blog. they
 		// are entitled to see every tab.
 
 		$setting_tabs = $this->remove_tabs_the_user_cannot_manage( $setting_tabs );
