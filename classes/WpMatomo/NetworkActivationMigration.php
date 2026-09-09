@@ -76,7 +76,7 @@ class NetworkActivationMigration extends Feature {
 	}
 
 	public function migrate_all_blogs_back() {
-		// a site option, so the same list for every blog: read once rather than once for each a blog
+		// a site option, so the same list for every blog: read once rather than once for each blog
 		$network_wide_filter = $this->get_network_wide_tracking_filter();
 
 		$this->for_every_blog(
@@ -118,7 +118,7 @@ class NetworkActivationMigration extends Feature {
 		update_option( Settings::OPTION, $blog_settings );
 
 		// settings options were written manually, so the Settings instance will be out of date here,
-		// so invalidate the saved setting data.
+		// so invalidate the cached setting data.
 		$this->settings->invalidate_loaded_settings();
 
 		return true;

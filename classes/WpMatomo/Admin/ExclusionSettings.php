@@ -183,9 +183,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 	/**
 	 * @param array $post
-	 *
 	 * @return bool whether any of the exclusions changed
-	 *
 	 * @throws InvalidIpException When Matomo refuses one of the excluded IPs.
 	 */
 	private function update_exclusions( $post ) {
@@ -208,7 +206,6 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 	/**
 	 * @param array $post
-	 *
 	 * @return bool whether the stored user agents changed
 	 */
 	private function apply_user_agent_exclusions( $post ) {
@@ -229,9 +226,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 	/**
 	 * @param array $post
-	 *
 	 * @return bool whether any of them changed
-	 *
 	 * @throws InvalidIpException When Matomo refuses one of the excluded IPs.
 	 */
 	private function apply_matomo_exclusions( $post ) {

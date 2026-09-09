@@ -120,7 +120,7 @@ class Bootstrap {
 		$environment = new Environment( null, self::$extra_di_definitions );
 		$environment->init();
 
-		// add blog switch handler (adding the same event more than once is a no-op)
+		// add blog switch handler (note: adding the same event more than once is a no-op)
 		add_action( 'switch_blog', [ self::class, 'on_blog_switched' ], 10, 2 );
 
 		self::$environment_bootstrapped = true;

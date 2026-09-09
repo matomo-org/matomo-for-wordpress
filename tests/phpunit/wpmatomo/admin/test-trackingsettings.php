@@ -636,12 +636,12 @@ EOF;
 		$this->tracking_settings->show_settings();
 		$output = ob_get_clean();
 
-		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_manually"[^>]*disabled="disabled"/', $output );
-		$this->assertMatchesRegularExpression( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
-		$this->assertMatchesRegularExpression( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
+		$this->assert_output_matches( '/<input type="radio" id="track_mode_manually"[^>]*disabled="disabled"/', $output );
+		$this->assert_output_matches( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
+		$this->assert_output_matches( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
 
 		// the settings that only feed the generated code stay editable
-		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_default"(?![^>]*disabled)/', $output );
+		$this->assert_output_matches( '/<input type="radio" id="track_mode_default"(?![^>]*disabled)/', $output );
 	}
 
 	/**
@@ -657,9 +657,29 @@ EOF;
 		$this->tracking_settings->show_settings();
 		$output = ob_get_clean();
 
-		$this->assertMatchesRegularExpression( '/<input type="radio" id="track_mode_manually"(?![^>]*disabled)/', $output );
-		$this->assertDoesNotMatchRegularExpression( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
-		$this->assertDoesNotMatchRegularExpression( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
+		$this->assert_output_matches( '/<input type="radio" id="track_mode_manually"(?![^>]*disabled)/', $output );
+		$this->assert_output_does_not_match( '/<textarea[^>]*id="tracking_code"[^>]*readonly="readonly"/', $output );
+		$this->assert_output_does_not_match( '/<textarea[^>]*id="noscript_code"[^>]*readonly="readonly"/', $output );
+	}
+
+	/**
+	 * Using preg_match() rather than assertMatchesRegularExpression(), for the WordPress 5.2 build.
+	 *
+	 * @param string $pattern
+	 * @param string $output
+	 */
+	private function assert_output_matches( $pattern, $output ) {
+		$this->assertSame( 1, preg_match( $pattern, $output ), "The rendered settings do not match $pattern." );
+	}
+
+	/**
+	 * @see assert_output_matches()
+	 *
+	 * @param string $pattern
+	 * @param string $output
+	 */
+	private function assert_output_does_not_match( $pattern, $output ) {
+		$this->assertSame( 0, preg_match( $pattern, $output ), "The rendered settings match $pattern." );
 	}
 
 	/**

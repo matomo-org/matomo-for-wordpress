@@ -423,11 +423,18 @@ class TrackingFilterMigrationTest extends MatomoUnit_TestCase {
 	}
 
 	private function create_blog_on_another_network() {
-		$network_id = self::factory()->network->create();
+		// cast because the network factory returns the id as a string before WordPress 5.5
+		$network_id = (int) self::factory()->network->create();
 
-		$this->assertNotEquals( get_current_network_id(), $network_id );
+		$this->assertNotSame( get_current_network_id(), $network_id );
 
-		return self::factory()->blog->create( [ 'network_id' => $network_id ] );
+		// site_id rather than network_id: the blog factory only learned network_id in WordPress 5.5
+		// and silently falls back to the current network without it, while every version since maps
+		// site_id onto it. asserted below, to ensure the test is correct.
+		$blog_id = self::factory()->blog->create( [ 'site_id' => $network_id ] );
+		$this->assertSame( $network_id, get_site( $blog_id )->network_id );
+
+		return $blog_id;
 	}
 
 	private function store_tracking_filter( $roles ) {
