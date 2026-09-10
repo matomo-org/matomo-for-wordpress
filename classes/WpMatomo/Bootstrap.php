@@ -65,6 +65,19 @@ class Bootstrap {
 		return self::$bootstrapped_by_wordpress;
 	}
 
+	/**
+	 * @param int|string $new_blog
+	 * @param int|string $prev_blog
+	 */
+	public static function on_blog_switched( $new_blog, $prev_blog ) {
+		if ( (int) $new_blog === (int) $prev_blog ) {
+			return;
+		}
+
+		// make sure the environment will be re-created for the new blog
+		self::destroy_bootstrapped_environment();
+	}
+
 	public static function is_environment_bootstrapped() {
 		return self::$environment_bootstrapped;
 	}
@@ -106,6 +119,9 @@ class Bootstrap {
 
 		$environment = new Environment( null, self::$extra_di_definitions );
 		$environment->init();
+
+		// add blog switch handler (note: adding the same event more than once is a no-op)
+		add_action( 'switch_blog', [ self::class, 'on_blog_switched' ], 10, 2 );
 
 		self::$environment_bootstrapped = true;
 	}

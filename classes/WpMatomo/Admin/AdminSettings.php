@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Piwik\Plugin\Manager;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;
+use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,25 +37,7 @@ class AdminSettings implements MatomoPageContent {
 	}
 
 	public static function make_url( $tab ) {
-		global $_parent_pages;
-		$menu_slug = Menu::SLUG_SETTINGS;
-
-		if ( is_multisite() && is_network_admin() ) {
-			if ( isset( $_parent_pages[ $menu_slug ] ) ) {
-				$parent_slug = $_parent_pages[ $menu_slug ];
-				if ( $parent_slug && ! isset( $_parent_pages[ $parent_slug ] ) ) {
-					$url = network_admin_url( add_query_arg( 'page', $menu_slug, $parent_slug ) );
-				} else {
-					$url = network_admin_url( 'admin.php?page=' . $menu_slug );
-				}
-			} else {
-				$url = '';
-			}
-		} else {
-			$url = menu_page_url( $menu_slug, false );
-		}
-
-		return add_query_arg( [ 'tab' => $tab ], $url );
+		return add_query_arg( [ 'tab' => $tab ], Menu::make_page_url( Menu::SLUG_SETTINGS ) );
 	}
 
 	public function show() {
@@ -74,15 +57,12 @@ class AdminSettings implements MatomoPageContent {
 			self::TAB_ADVANCED    => $advanced,
 		];
 
-		$active_tab = self::TAB_TRACKING;
+		$matomo_is_super_user = current_user_can( Capabilities::KEY_SUPERUSER );
 
-		if ( $this->settings->is_network_enabled() && ! is_network_admin() ) {
-			$active_tab   = self::TAB_EXCLUSIONS;
-			$setting_tabs = [
-				self::TAB_EXCLUSIONS => $exclusions,
-				self::TAB_PRIVACY    => $privacy,
-			];
-		}
+		$is_blog_specific_screen_and_network_activated = $this->settings->is_network_enabled() && ! is_network_admin();
+		$built_in_tabs_for_blog_specific               = [ self::TAB_EXCLUSIONS, self::TAB_PRIVACY ];
+
+		$active_tab = self::TAB_TRACKING;
 
 		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
 		$plugin_settings_tabs = array_map(
@@ -95,6 +75,20 @@ class AdminSettings implements MatomoPageContent {
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
+		// set which tabs the current user is entitled to on this screen
+		if ( ! $matomo_is_super_user || $is_blog_specific_screen_and_network_activated ) {
+			// tabs for matomo admin or superuser on a blog specific screen
+			$setting_tabs = $this->keep_only_tabs(
+				$setting_tabs,
+				array_merge( $built_in_tabs_for_blog_specific, $this->find_plugin_measurable_settings_tabs( $setting_tabs ) )
+			);
+			$active_tab   = self::TAB_EXCLUSIONS;
+		}
+		// a WP super user/network admin or a Matomo super user on a single site blog. they
+		// are entitled to see every tab.
+
+		$setting_tabs = $this->remove_tabs_the_user_cannot_manage( $setting_tabs );
+
 		if ( ! empty( $_GET['tab'] ) ) {
 			$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
 			if ( isset( $setting_tabs[ $tab ] ) ) {
@@ -102,10 +96,59 @@ class AdminSettings implements MatomoPageContent {
 			}
 		}
 
-		$content_tab     = $setting_tabs[ $active_tab ];
+		if ( ! isset( $setting_tabs[ $active_tab ] ) ) {
+			// the tab we would show by default is not on the page, eg because a plugin removed it
+			$active_tab = empty( $setting_tabs ) ? '' : key( $setting_tabs );
+		}
+
+		// null when a plugin filtered every tab away, in which case the page shows its tab bar and
+		// nothing below it rather than fataling
+		$content_tab     = isset( $setting_tabs[ $active_tab ] ) ? $setting_tabs[ $active_tab ] : null;
 		$matomo_settings = $this->settings;
 
 		include __DIR__ . '/views/settings.php';
+	}
+
+	/**
+	 * @param AdminSettingsInterface[] $setting_tabs
+	 * @param string[]                 $tab_ids
+	 * @return AdminSettingsInterface[]
+	 */
+	private function keep_only_tabs( $setting_tabs, $tab_ids ) {
+		return array_intersect_key( $setting_tabs, array_flip( $tab_ids ) );
+	}
+
+	/**
+	 * @param AdminSettingsInterface[] $setting_tabs
+	 * @return string[]
+	 */
+	private function find_plugin_measurable_settings_tabs( $setting_tabs ) {
+		$tab_ids = [];
+		foreach ( $setting_tabs as $tab_id => $tab ) {
+			if ( $tab instanceof PluginMeasurableSettings ) {
+				$tab_ids[] = $tab_id;
+			}
+		}
+		return $tab_ids;
+	}
+
+	/**
+	 * @param AdminSettingsInterface[] $setting_tabs
+	 * @return AdminSettingsInterface[]
+	 */
+	private function remove_tabs_the_user_cannot_manage( $setting_tabs ) {
+		foreach ( $setting_tabs as $tab_id => $tab ) {
+			// is_callable() rather than method_exists(), since method_exists() also finds
+			// methods that cannot be called (eg, private methods)
+			if ( is_object( $tab )
+				&& is_callable( [ $tab, 'can_user_manage' ] )
+				&& ! $tab->can_user_manage()
+			) {
+				unset( $setting_tabs[ $tab_id ] );
+			}
+		}
+
+		return $setting_tabs;
 	}
 
 	private function get_plugin_settings_tabs() {

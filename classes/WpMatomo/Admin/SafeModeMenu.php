@@ -53,7 +53,7 @@ class SafeModeMenu extends WpMatomo\Feature {
 			$this->parent_slug,
 			__( 'System Report', 'matomo' ),
 			__( 'System Report', 'matomo' ),
-			'manage_options',
+			$this->settings->is_network_enabled() ? Menu::CAP_NETWORK : 'manage_options',
 			Menu::SLUG_SYSTEM_REPORT,
 			[
 				$system_report,

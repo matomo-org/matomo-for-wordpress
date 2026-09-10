@@ -42,7 +42,7 @@ use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
 
-	const VERSION = '5.13.0';
+	const VERSION = '5.13.1';
 
 	/**
 	 * @var \WpMatomo\Feature[]
@@ -281,6 +281,8 @@ class WpMatomo {
 
 			new TrackingCode( self::$settings ),
 			new Annotations( self::$settings ),
+
+			new \WpMatomo\NetworkActivationMigration( self::$settings ),
 
 			new \WpMatomo\PluginActionLinks( self::$settings ),
 

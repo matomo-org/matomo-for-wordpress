@@ -1099,6 +1099,182 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 	/**
 	 * @group ms-required
 	 */
+	public function test_sync_current_users_should_persist_superuser_access_for_a_matomo_superuser_role_holder_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// network enabled for real rather than assumed, so that the plugin's own hooks see it too
+		$this->activate_matomo_plugin();
+
+		$caps = new Capabilities( new Settings() );
+		$caps->register_hooks();
+
+		try {
+			$user_id = self::factory()->user->create(
+				[
+					'user_login' => 'promoted',
+					'role'       => Roles::ROLE_SUPERUSER,
+				]
+			);
+
+			$this->assertFalse( is_super_admin( $user_id ) );
+
+			$this->sync->sync_current_users();
+
+			$this->assertContains(
+				'promoted',
+				array_column( ( new Model() )->getUsersHavingSuperUserAccess(), 'login' )
+			);
+		} finally {
+			$caps->remove_hooks();
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_not_grant_a_matomo_superuser_role_holder_access_to_another_blogs_matomo() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$super_admin_id = $this->create_set_super_admin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => Roles::ROLE_SUPERUSER,
+				'user_login' => 'promotedsuperuser',
+			]
+		);
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertFalse( is_user_member_of_blog( $user_id, $beta ) );
+
+		( new Sync() )->sync_all();
+
+		$this->switch_to_bootstrapped_blog( $beta );
+
+		try {
+			$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_SUPERUSER ) );
+			$this->assertEmpty( User::get_matomo_user_login( $user_id ) );
+			$this->assertEmpty( $this->get_matomo_user( 'promotedsuperuser' ) );
+
+			$super_user_logins = array_column( ( new Model() )->getUsersHavingSuperUserAccess(), 'login' );
+
+			$this->assertContains( User::get_matomo_user_login( $super_admin_id ), $super_user_logins );
+			$this->assertNotContains( 'promotedsuperuser', $super_user_logins );
+		} finally {
+			$this->restore_bootstrapped_blog();
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_grant_a_wordpress_administrator_superuser_access_to_their_own_blog_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+		wp_roles()->init_roles();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => 'administrator',
+				'user_login' => 'blogadmin',
+			]
+		);
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+		$this->assertFalse( is_user_member_of_blog( $user_id, $beta ) );
+
+		( new Sync() )->sync_all();
+
+		// re-bootstrap after syncing, since the environment is destroyed after switching blogs
+		Bootstrap::do_bootstrap();
+
+		// the blog they administrate has a Matomo of its own, and they are its super user
+		$this->assertContains(
+			'blogadmin',
+			array_column( ( new Model() )->getUsersHavingSuperUserAccess(), 'login' )
+		);
+
+		// and only that blog: they cannot modify another
+		$this->switch_to_bootstrapped_blog( $beta );
+
+		try {
+			$this->assertEmpty( $this->get_matomo_user( 'blogadmin' ) );
+			$this->assertNull( $this->get_access_for_current_site( 'blogadmin' ) );
+			$this->assertNotContains(
+				'blogadmin',
+				array_column( ( new Model() )->getUsersHavingSuperUserAccess(), 'login' )
+			);
+		} finally {
+			$this->restore_bootstrapped_blog();
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_not_grant_a_matomo_admin_role_holder_access_to_another_blogs_matomo() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		$beta = $this->create_blog_with_matomo();
+
+		$user_id = self::factory()->user->create(
+			[
+				'role'       => Roles::ROLE_ADMIN,
+				'user_login' => 'promotedadmin',
+			]
+		);
+
+		$this->assertFalse( is_user_member_of_blog( $user_id, $beta ) );
+
+		( new Sync() )->sync_all();
+
+		// see the note in the test above: switching blogs tears Matomo's environment down
+		Bootstrap::do_bootstrap();
+
+		$this->assertSame( 'admin', $this->get_access_for_current_site( 'promotedadmin' ) );
+
+		$this->switch_to_bootstrapped_blog( $beta );
+
+		try {
+			$this->assertFalse( user_can( new WP_User( $user_id ), Capabilities::KEY_ADMIN ) );
+			$this->assertEmpty( User::get_matomo_user_login( $user_id ) );
+			$this->assertEmpty( $this->get_matomo_user( 'promotedadmin' ) );
+			$this->assertNull( $this->get_access_for_current_site( 'promotedadmin' ) );
+		} finally {
+			$this->restore_bootstrapped_blog();
+		}
+
+		wp_delete_site( $beta );
+	}
+
+	/**
+	 * @group ms-required
+	 */
 	public function test_register_hooks_should_keep_the_matomo_user_when_only_deleted_from_one_blog() {
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );

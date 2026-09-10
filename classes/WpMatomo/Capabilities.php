@@ -42,10 +42,16 @@ class Capabilities extends Feature {
 	const KEY_STEALTH   = 'stealth_matomo';
 
 	/**
-	 * Matomo has Role classes for view/write/admin, but superuser access is a flag on the user
-	 * rather than a role, so there is no Matomo constant to reuse for it.
+	 * Note: the Matomo role, not a WordPress capability.
 	 */
-	const ROLE_SUPERUSER = 'superuser';
+	const MATOMO_ROLE_SUPERUSER = 'superuser';
+
+	/**
+	 * @deprecated 5.13.1 use self::MATOMO_ROLE_SUPERUSER instead. Renamed because the old name was
+	 *             indistinguishable from Roles::ROLE_SUPERUSER, which is the WordPress role
+	 *             'matomo_superuser_role'.
+	 */
+	const ROLE_SUPERUSER = self::MATOMO_ROLE_SUPERUSER;
 
 	/**
 	 * @var Settings
@@ -78,7 +84,7 @@ class Capabilities extends Feature {
 			// in multisite prevent super admin from having their tracking being filtered
 			// a super admin is usually allowed all actions... unless we add do_not_allow
 			if ( is_multisite() && is_super_admin( $user_id ) ) {
-				$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
+				$stealth = $this->settings->get_stealth_roles();
 				if ( ! empty( $stealth['administrator'] ) ) {
 					$caps[] = 'do_not_allow';
 				}
@@ -100,7 +106,7 @@ class Capabilities extends Feature {
 			switch ( $cap_request ) {
 				// ensure the Matomo capability inheritcance always works
 				case self::KEY_SUPERUSER:
-					if ( $this->has_super_user_capability( $allcaps, $user ) ) {
+					if ( $this->has_matomo_super_user_capability( $allcaps, $user ) ) {
 						$allcaps[ $cap_request ] = true;
 					}
 					break;
@@ -112,7 +118,7 @@ class Capabilities extends Feature {
 						// when user has the above permission we also make sure to add all capabilites below... eg
 						// when user has write... then we ensure the user also has the view capability
 						if ( $this->has_any_higher_permission( $cap_request, $allcaps )
-							|| $this->has_super_user_capability( $allcaps, $user ) ) {
+							|| $this->has_matomo_super_user_capability( $allcaps, $user ) ) {
 							$allcaps[ $cap_request ] = true;
 						}
 					}
@@ -124,32 +130,40 @@ class Capabilities extends Feature {
 		return $allcaps;
 	}
 
-	private function has_super_user_capability( $allcaps, $user ) {
-		if ( is_multisite() && $this->settings->is_network_enabled() ) {
-			if ( is_super_admin( $user->ID ) ) {
-				// only network manager can be super user in this case
-				return true;
-			}
-		} elseif ( ! empty( $allcaps['administrator'] ) || ( is_multisite() && is_super_admin( $user->ID ) ) ) {
+	/**
+	 * Whether the user is entitled to Matomo super user access on the blog this request is for.
+	 *
+	 * An administrator administrates their blog, and every blog has a Matomo install of its own, so
+	 * they are the superuser of it.
+	 *
+	 * In multisite this is decided a blog at a time: roles are held per blog and $allcaps carries
+	 * the ones for the current blog, so an administrator of one blog is nothing on another. An
+	 * administrator of the network is a super user on all of them.
+	 *
+	 * @param array    $allcaps
+	 * @param \WP_User $user
+	 *
+	 * @return bool
+	 */
+	private function has_matomo_super_user_capability( $allcaps, $user ) {
+		if ( ! empty( $allcaps['administrator'] ) ) {
 			return true;
 		}
 
-		return false;
+		return is_multisite() && is_super_admin( $user->ID );
 	}
 
 	/**
 	 * @param WP_Roles $roles
 	 */
 	public function add_capabilities_to_roles( $roles ) {
-		$access  = $this->settings->get_global_option( Settings::OPTION_KEY_CAPS_ACCESS );
-		$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
+		$access  = ( new Access( $this->settings ) )->get_configured_permissions_for_roles();
+		$stealth = $this->settings->get_stealth_roles();
 
-		if ( ! empty( $access ) && is_array( $access ) ) {
-			foreach ( $access as $role_name => $cap ) {
-				$role = $roles->get_role( $role_name );
-				if ( $role ) {
-					$role->capabilities[ $cap ] = true;
-				}
+		foreach ( $access as $role_name => $cap ) {
+			$role = $roles->get_role( $role_name );
+			if ( $role ) {
+				$role->capabilities[ $cap ] = true;
 			}
 		}
 
@@ -178,7 +192,7 @@ class Capabilities extends Feature {
 	 */
 	private static function get_capability_role_map() {
 		return [
-			self::KEY_SUPERUSER => self::ROLE_SUPERUSER,
+			self::KEY_SUPERUSER => self::MATOMO_ROLE_SUPERUSER,
 			self::KEY_ADMIN     => 'admin',
 			self::KEY_WRITE     => 'write',
 			self::KEY_VIEW      => 'view',
@@ -187,8 +201,8 @@ class Capabilities extends Feature {
 
 	/**
 	 * @param int|\WP_User $user
-	 * @return string|null a Matomo role ID or self::ROLE_SUPERUSER, null when they are entitled to
-	 *                     no access at all
+	 * @return string|null a Matomo role ID or self::MATOMO_ROLE_SUPERUSER, null when they are
+	 *                     entitled to no access at all
 	 */
 	public static function get_highest_role_for_user( $user ) {
 		foreach ( self::get_capability_role_map() as $capability => $role ) {

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php
-$show_troubleshooting_link = true;
+$show_troubleshooting_link = (bool) Menu::make_page_url( Menu::SLUG_SYSTEM_REPORT );
 require 'info_help.php';
 ?>
 

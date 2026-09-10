@@ -24,14 +24,19 @@ class AccessTest extends MatomoAnalytics_SharedFixture_TestCase {
 	 */
 	private $capabilities;
 
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
 	public function setUp(): void {
 		parent::setUp();
 
-		$settings           = new Settings();
-		$this->capabilities = new Capabilities( $settings );
+		$this->settings     = new Settings();
+		$this->capabilities = new Capabilities( $this->settings );
 		$this->capabilities->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
 
-		$this->access = new Access( $settings );
+		$this->access = new Access( $this->settings );
 	}
 
 	public function tearDown(): void {
@@ -120,6 +125,41 @@ class AccessTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->access->save( array( 'editor' => Capabilities::KEY_NONE ) );
 
 		$this->assertSame( array(), $this->get_view_sites_for( $login ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_get_permission_for_role_should_not_give_the_administrator_role_a_permission_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->set_assume_is_network_enabled_in_tests( true );
+
+		// an administrator is the super user of the Matomo belonging to the blog they administrate,
+		// which is not something these settings decide
+		$this->assertNull( $this->access->get_permission_for_role( 'administrator' ) );
+		$this->assertNull( $this->access->get_permission_for_role( 'editor' ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_save_should_ignore_a_permission_submitted_for_the_administrator_role_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->set_assume_is_network_enabled_in_tests( true );
+
+		$this->access->save( array( 'administrator' => Capabilities::KEY_NONE ) );
+
+		// the role is not offered for configuration, so a value posted for it is dropped rather
+		// than quietly stored somewhere that nothing reads
+		$this->assertNull( $this->access->get_permission_for_role( 'administrator' ) );
 	}
 
 	private function get_current_site_id() {

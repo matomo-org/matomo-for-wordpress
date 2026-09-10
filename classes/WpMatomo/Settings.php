@@ -29,6 +29,7 @@ class Settings {
 	const OPTION_GLOBAL                        = 'matomo-global-option';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
+	const OPTION_KEY_STEALTH_BLOG              = 'caps_tracking_blog';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
 	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
@@ -70,7 +71,6 @@ class Settings {
 	 */
 	public $default_global_settings = [
 		// Plugin settings
-		'last_settings_update'                     => 0,
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => [],
 		self::OPTION_KEY_CAPS_ACCESS               => [],
@@ -124,7 +124,6 @@ class Settings {
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
-		self::GLOBAL_USER_AGENT_EXCLUSIONS         => null,
 	];
 
 	/**
@@ -138,6 +137,8 @@ class Settings {
 		self::OPTION_LAST_TRACKING_CODE_UPDATE   => 0,
 		self::USE_SESSION_VISITOR_ID_OPTION_NAME => false,
 		self::SERVER_SIDE_TRACKING_DELAY_SECS    => 180,
+		self::GLOBAL_USER_AGENT_EXCLUSIONS       => null,
+		self::OPTION_KEY_STEALTH_BLOG            => [],
 	];
 
 	private $global_settings = [];
@@ -146,7 +147,8 @@ class Settings {
 	/**
 	 * The blog ID the cached settings were loaded for. Long-lived Settings instances can
 	 * be used across switch_to_blog() calls, cached values must be reloaded when a blog
-	 * changes.
+	 * changes. If null, it means the current settings are invalid and must be reloaded
+	 * before the next read/write.
 	 *
 	 * @var int|null
 	 */
@@ -154,8 +156,11 @@ class Settings {
 
 	/**
 	 * Whether the cached global settings were read from the network wide site option rather
-	 * than from this blog's own option. Recorded when they are loaded instead of re-derived
-	 * during a reload, to avoid invoking WP option filters while reloading settings.
+	 * than from this blog's own option. Recorded on load instead of re-derived on reload, to
+	 * avoid invoking WP option filters while reloading settings.
+	 *
+	 * TODO: for thoroughness, at some point we need to hook on plugin activation here and
+	 * re-compute this value.
 	 *
 	 * @var bool
 	 */
@@ -226,8 +231,12 @@ class Settings {
 		$this->load_blog_settings();
 	}
 
+	public function invalidate_loaded_settings() {
+		$this->loaded_for_blog_id = null;
+	}
+
 	public function get_customised_global_settings() {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		$custom_settings = [];
 
@@ -275,7 +284,7 @@ class Settings {
 	 * calls.
 	 */
 	public function save() {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( empty( $this->global_settings_changed ) && empty( $this->blog_settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
@@ -323,7 +332,7 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
@@ -343,7 +352,7 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->blog_settings[ $key ] ) ) {
 			return $this->blog_settings[ $key ];
@@ -371,7 +380,7 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->default_global_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_global_settings[ $key ] );
@@ -395,7 +404,7 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
-		$this->reload_if_blog_switched();
+		$this->reload_if_needed();
 
 		if ( isset( $this->default_blog_settings[ $key ] ) ) {
 			$type  = gettype( $this->default_blog_settings[ $key ] );
@@ -479,7 +488,6 @@ class Settings {
 				$this->set_option( $key, $settings[ $key ] );
 			}
 		}
-		$this->set_global_option( 'last_settings_update', time() );
 
 		if ( $this->should_save_tracking_code_across_sites() ) {
 			// special case for when the same tracking code needs to be used across all instances.
@@ -634,12 +642,27 @@ class Settings {
 		return (int) $parts[0];
 	}
 
+	/**
+	 * Note: "Global" here means what it means in Matomo, where the setting this stands in for lives:
+	 * every Matomo site of one Matomo install. A WordPress blog only has one Matomo install of its
+	 * own, so this is stored per blog even when the plugin is network activated.
+	 *
+	 * @param string[] $user_agents
+	 */
 	public function set_global_user_agent_exclusions( $user_agents ) {
-		$this->set_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
+		$this->set_option( self::GLOBAL_USER_AGENT_EXCLUSIONS, $user_agents );
 	}
 
 	public function get_global_user_agent_exclusions() {
-		$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		$user_agents = $this->get_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+
+		if ( ! is_array( $user_agents ) ) {
+			// previously this setting was incorrectly stored as a network wide option. now it
+			// is saved as a per-blog option, but we make sure to fall back to the network wide
+			// setting for installs that still have a value there.
+			$user_agents = $this->get_global_option( self::GLOBAL_USER_AGENT_EXCLUSIONS );
+		}
+
 		if ( ! is_array( $user_agents ) ) {
 			// only bootstrap if we can't access the SitesManager API.
 			// if we always bootstrap, it is possible to try initializing the FrontController before Matomo
@@ -651,7 +674,45 @@ class Settings {
 			$user_agents = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
 			$user_agents = explode( ',', $user_agents );
 		}
+
 		return $user_agents;
+	}
+
+	/**
+	 * The WordPress roles whose users must not be tracked on the current blog.
+	 *
+	 * Two settings decide this: OPTION_KEY_STEALTH, a network wide option, and OPTION_KEY_STEALTH_BLOG
+	 * the blog's own. Merged rather than one overriding the other, so a blog can stop tracking a
+	 * role the network still tracks, but cannot start tracking one the network excluded.
+	 *
+	 * @return array<string, bool> role name => true, listing only the excluded roles
+	 */
+	public function get_stealth_roles() {
+		$stealth_roles = [];
+
+		$keys = [ self::OPTION_KEY_STEALTH ];
+		if ( $this->is_network_enabled() ) {
+			// use the per-blog overrides only if network mode is enabled
+			$keys[] = self::OPTION_KEY_STEALTH_BLOG;
+		}
+
+		foreach ( $keys as $key ) {
+			$roles = self::OPTION_KEY_STEALTH === $key
+				? $this->get_global_option( $key )
+				: $this->get_option( $key );
+
+			if ( ! is_array( $roles ) ) {
+				continue;
+			}
+
+			foreach ( $roles as $role_name => $is_excluded ) {
+				if ( $is_excluded ) {
+					$stealth_roles[ $role_name ] = true;
+				}
+			}
+		}
+
+		return $stealth_roles;
 	}
 
 	public function is_track_via_esi_enabled() {
@@ -674,11 +735,19 @@ class Settings {
 	}
 
 	/**
-	 * Reload cached settings if the current blog changed since they were loaded (eg, via
-	 * switch_to_blog()). Cached per-blog settings must not be served for, or saved to, a
-	 * different blog. Pending unsaved per-blog changes are discarded.
+	 * Reload cached settings when they were dropped, or when the current blog changed since they
+	 * were loaded (eg, via switch_to_blog()). Cached per-blog settings must not be served for, or
+	 * saved to, a different blog. Pending unsaved per-blog changes are discarded.
 	 */
-	private function reload_if_blog_switched() {
+	private function reload_if_needed() {
+		if ( null === $this->loaded_for_blog_id ) {
+			// dropped rather than loaded for another blog, so there is nothing to carry over and
+			// nothing to report as discarded
+			$this->init_settings();
+
+			return;
+		}
+
 		if ( ! $this->is_multisite()
 			|| get_current_blog_id() === $this->loaded_for_blog_id
 		) {
