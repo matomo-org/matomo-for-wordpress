@@ -98,6 +98,17 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame( $url, $parameter->getValue() );
 	}
 
+	public function test_customImageTag_should_keep_a_query_string_on_the_image_source() {
+		// unlike the two parameters that become a script origin, nothing is appended to this one,
+		// and a tracking pixel on this site legitimately takes parameters
+		$url = home_url( '/pixel.gif?campaign=spring' );
+
+		$parameter = $this->find_parameter( $this->template_factory->customImageTag( new CustomImageTag() ), 'customImageSrc' );
+		$parameter->setValue( $url );
+
+		$this->assertSame( $url, $parameter->getValue() );
+	}
+
 	public function test_customImageTag_should_leave_the_other_parameters_alone() {
 		$parameter = $this->find_parameter( $this->template_factory->customImageTag( new CustomImageTag() ), 'cacheBusterEnabled' );
 		$parameter->setValue( false );
@@ -128,6 +139,22 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$parameter->setValue( $url );
 
 		$this->assertSame( $url, $parameter->getValue() );
+	}
+
+	public function test_livezillaDynamicTag_should_drop_a_query_string_from_the_domain() {
+		// the template appends "/script.php?id=" to this, so a query string of the user's own would
+		// swallow it and leave the browser asking for whatever the domain already addressed
+		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDomain' );
+		$parameter->setValue( home_url( '/uploads/payload.txt?x=' ) );
+
+		$this->assertSame( home_url( '/uploads/payload.txt' ), $parameter->getValue() );
+	}
+
+	public function test_livezillaDynamicTag_should_drop_a_fragment_from_the_domain() {
+		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDomain' );
+		$parameter->setValue( home_url( '/uploads/payload.txt#' ) );
+
+		$this->assertSame( home_url( '/uploads/payload.txt' ), $parameter->getValue() );
 	}
 
 	public function test_livezillaDynamicTag_should_keep_matomos_own_checks_on_the_domain() {
@@ -183,6 +210,20 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame( $parameter->getDefaultValue(), $parameter->getValue() );
 	}
 
+	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_the_matomo_url() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
+		$parameter->setValue( home_url( '/wp-content/uploads/payload.txt?x=' ) );
+
+		$this->assertSame( home_url( '/wp-content/uploads/payload.txt' ), $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_the_matomo_url() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
+		$parameter->setValue( home_url( '/wp-content/uploads/payload.txt#' ) );
+
+		$this->assertSame( home_url( '/wp-content/uploads/payload.txt' ), $parameter->getValue() );
+	}
+
 	public function test_matomoConfigurationVariable_should_keep_matomos_own_validators_on_the_matomo_url() {
 		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
 
@@ -208,6 +249,19 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->expectException( ValidatorException::class );
 
 		$this->find_parameter( $variable, $name )->setValue( '{{MyEndpoint}}' );
+	}
+
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_refuse_a_custom_endpoint_that_walks_out_of_the_matomo_url( $name ) {
+		// the endpoint is concatenated onto the Matomo URL, and the browser resolves "../" away
+		// before it asks for anything, so a pinned Matomo URL is worth nothing without this
+		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, $name )->setValue( '../../wp-content/uploads/payload.txt' );
 	}
 
 	/**

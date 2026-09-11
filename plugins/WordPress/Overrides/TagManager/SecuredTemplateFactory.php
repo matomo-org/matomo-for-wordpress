@@ -14,6 +14,7 @@ use Piwik\Plugins\TagManager\Template\Tag\LivezillaDynamicTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
@@ -92,7 +93,8 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['LivezillaDynamicDomain' => [new SiteOwnUrl()]]
+            ['LivezillaDynamicDomain' => [new SiteOwnUrl()]],
+            ['LivezillaDynamicDomain' => self::dropUrlQueryAndFragment()]
         ) extends LivezillaDynamicTag {
             use SecuredTemplate;
         };
@@ -114,9 +116,10 @@ class SecuredTemplateFactory
             $wrapped,
             [
                 'matomoUrl' => [new SiteOwnUrl()],
-                'jsEndpointCustom' => [new NoVariableInterpolation()],
-                'trackingEndpointCustom' => [new NoVariableInterpolation()],
-            ]
+                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal()],
+                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal()],
+            ],
+            ['matomoUrl' => self::dropUrlQueryAndFragment()]
         ) extends MatomoConfigurationVariable {
             use SecuredTemplate;
         };
@@ -154,6 +157,24 @@ class SecuredTemplateFactory
             ['jsFunction' => [new UnfilteredHtmlRequired()]]
         ) extends CustomRequestProcessingVariable {
             use SecuredTemplate;
+        };
+    }
+
+    /**
+     * Drops a query string or fragment from a URL parameter that a template appends its own path
+     * to — `g.src = url + jsEndpoint` in MatomoTag.web.js. Prevents negating the appended path
+     * in order for the browser to load another, potentially malicious, file.
+     *
+     * @return \Closure
+     */
+    private static function dropUrlQueryAndFragment()
+    {
+        return function ($value) {
+            if (!is_string($value)) {
+                return $value;
+            }
+
+            return preg_replace('/[?#].*$/s', '', $value);
         };
     }
 }

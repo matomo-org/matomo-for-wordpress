@@ -15,6 +15,7 @@
     "TagManagerUrlNotAllowed": "This is not a valid URL for this site.",
     "TagManagerUrlSchemeNotAllowed": "Only http:// and https:// URLs, or a path on this site, are allowed here.",
     "TagManagerUrlHostNotAllowed": "%1$s is not this site's address. You are not allowed to load resources from another site, so only a URL on %2$s, or a path, can be used here.",
+    "TagManagerPathTraversalNotAllowed": "This has to be a path below the Matomo URL above, so it cannot contain \"..\".",
     "TagManagerUnfilteredHtmlRequired": "You are not allowed to add HTML or JavaScript to this site, so this cannot be used."
   }
 }
