@@ -23,6 +23,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Plugins\WordPress\Html\PluginUrlReplacer;
 use Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoCustomizer;
+use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportForceShortDateFormat;
 use Piwik\Plugins\WordPress\Workaround\ProcessedReportInnerCallHooks;
 use Piwik\Scheduler\Task;
@@ -63,6 +64,8 @@ class WordPress extends Plugin
             'User.isNotAuthorized' => array('before' => true, 'function' => 'noAccess'),
             'Http.sendHttpRequest' => 'onSendHttpRequestBy',
             'Widget.filterWidgets' => 'filterWidgets',
+            'TagManager.filterVariables' => 'filterTagManagerVariables',
+            'TagManager.filterTags' => 'filterTagManagerTags',
             'System.filterSystemSummaryItems' => 'filterSystemSummaryItems',
             'CliMulti.supportsAsync' => 'supportsAsync',
             'Template.header' => 'onHeader',
@@ -313,6 +316,53 @@ class WordPress extends Plugin
         $list->remove('About Matomo', 'CoreHome_SystemSummaryWidget');
         $list->remove('About Matomo', 'CoreHome_QuickLinks');
         $list->remove('About Matomo', 'ProfessionalServices_WidgetPremiumServicesForPiwik');
+    }
+
+    /**
+     * @param \Piwik\Plugins\TagManager\Template\Variable\BaseVariable[] $variables
+     */
+    public function filterTagManagerVariables(&$variables)
+    {
+        $factory = new SecuredTemplateFactory();
+        $this->constrainTagManagerTemplates($variables, $factory->getVariableReplacements());
+    }
+
+    /**
+     * @param \Piwik\Plugins\TagManager\Template\Tag\BaseTag[] $tags
+     */
+    public function filterTagManagerTags(&$tags)
+    {
+        $factory = new SecuredTemplateFactory();
+        $this->constrainTagManagerTemplates($tags, $factory->getTagReplacements());
+    }
+
+    /**
+     * Replaces Tag Manager templates with the secured versions of them, unless the current user
+     * is allowed to write arbitrary HTML and JavaScript.
+     *
+     * The replacements use extra validations to narrow what may be saved. Existing containers
+     * in existing MWP installs that have already been saved before this change, will still
+     * generate the same as before.
+     *
+     * @param \Piwik\Plugins\TagManager\Template\BaseTemplate[] $templates
+     * @param array<string, callable> $replacements upstream class name => builds the stand-in for
+     *                                              an instance of it
+     */
+    private function constrainTagManagerTemplates(&$templates, $replacements)
+    {
+        if (current_user_can('unfiltered_html')) {
+            return;
+        }
+
+        foreach ($templates as $index => $template) {
+            $className = get_class($template);
+
+            // an exact match instead of instanceof, so a subclasses in another plugin will not
+            // be replaced
+            if (isset($replacements[$className])) {
+                $templates[$index] = call_user_func($replacements[$className], $template);
+            }
+        }
     }
 
     public function isTrackerPlugin() {

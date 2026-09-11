@@ -46,6 +46,18 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	/**
+	 * The tracking modes that embed HTML or JavaScript of the user's own choosing, rather than
+	 * code Matomo generates itself. These are gated on can_user_edit_tracking_code().
+	 *
+	 * @return string[]
+	 */
+	public static function get_restricted_track_modes() {
+		return [
+			self::TRACK_MODE_MANUALLY,
+		];
+	}
+
+	/**
 	 * @var Settings
 	 */
 	private $settings;
@@ -268,9 +280,9 @@ class TrackingSettings implements AdminSettingsInterface {
 		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
 			if (
 				! $can_edit_tracking_code
-				&& self::TRACK_MODE_MANUALLY === $this->get_track_mode()
+				&& in_array( $this->get_track_mode(), self::get_restricted_track_modes(), true )
 			) {
-				// user cannot use manual tracking mode, ensure the saved tracking mode does not change
+				// user cannot use this tracking mode, ensure the saved tracking mode does not change
 				$_POST[ self::FORM_NAME ]['track_mode'] = $this->settings->get_global_option( 'track_mode' );
 			}
 
@@ -438,9 +450,11 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_can_edit_tracking_code = $this->can_user_edit_tracking_code();
 
 		if ( ! $matomo_can_edit_tracking_code ) {
-			$track_modes[ self::TRACK_MODE_MANUALLY ]['disabled']         = true;
-			$track_modes[ self::TRACK_MODE_MANUALLY ]['tooltip']          = esc_html__( 'You are not allowed to add HTML or JavaScript to this site.', 'matomo' );
-			$matomo_track_mode_descriptions[ self::TRACK_MODE_MANUALLY ] .= ' ' . esc_html__( 'This mode is not selectable because you are not allowed to add HTML or JavaScript to this site.', 'matomo' );
+			foreach ( self::get_restricted_track_modes() as $matomo_restricted_mode ) {
+				$track_modes[ $matomo_restricted_mode ]['disabled']         = true;
+				$track_modes[ $matomo_restricted_mode ]['tooltip']          = esc_html__( 'You are not allowed to add arbitrary HTML or JavaScript to this site.', 'matomo' );
+				$matomo_track_mode_descriptions[ $matomo_restricted_mode ] .= ' ' . esc_html__( 'This mode is not selectable because you are not allowed to add arbitrary HTML or JavaScript to this site.', 'matomo' );
+			}
 		}
 
 		if ( empty( $containers ) ) {

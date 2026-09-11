@@ -32,6 +32,12 @@
   frontend exactly as entered. This applies outside a multisite network as well: an administrator
   holds that capability already, a user who holds Matomo super user access through the Matomo Super
   User role alone does not, and neither does anybody on a site that defines DISALLOW_UNFILTERED_HTML.
+* Security: the Tag Manager templates that can put arbitrary HTML or JavaScript on the WordPress
+  frontend now require the same unfiltered_html capability for that part of what they do. A user without
+  it can still use the Tag Manager and every one of these templates, but the Custom HTML, Custom
+  JavaScript Function and Custom Request Processing templates no longer accept code from them, and
+  the Custom Image, LiveZilla and Matomo Configuration templates only accept URLs on this site.
+  Containers that already use any of them keep working and are generated exactly as before.
 * Security: when the plugin is network activated, a blog's own Matomo > Settings now shows only the
   Exclusions and Privacy tabs, plus Matomo plugin settings, for a user holding Matomo super
   user access on that blog (which includes network admins).
