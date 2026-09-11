@@ -16,6 +16,8 @@
     "TagManagerUrlSchemeNotAllowed": "Only http:// and https:// URLs, or a path on this site, are allowed here.",
     "TagManagerUrlHostNotAllowed": "%1$s is not this site's address. You are not allowed to load resources from another site, so only a URL on %2$s, or a path, can be used here.",
     "TagManagerPathTraversalNotAllowed": "This has to be a path below the Matomo URL above, so it cannot contain \"..\".",
+    "TagManagerTrackerEndpointNotAllowed": "This has to address a \".js\" or \".php\" file below the Matomo URL above, or a directory ending in \"/\".",
+    "TagManagerTrackerEndpointCharacterNotAllowed": "Only letters, digits and the characters . - _ ~ / can be used in the path here.",
     "TagManagerUnfilteredHtmlRequired": "You are not allowed to add HTML or JavaScript to this site, so this cannot be used."
   }
 }

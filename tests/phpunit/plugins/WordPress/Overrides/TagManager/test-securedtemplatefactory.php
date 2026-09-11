@@ -267,6 +267,37 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	/**
 	 * @dataProvider custom_endpoint_provider
 	 */
+	public function test_matomoConfigurationVariable_should_refuse_a_custom_endpoint_that_could_address_an_upload( $name ) {
+		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, $name )->setValue( 'payload.txt' );
+	}
+
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_accept_a_directory_for_a_custom_endpoint( $name ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
+		$parameter->setValue( 'js/' );
+
+		$this->assertSame( 'js/', $parameter->getValue() );
+	}
+
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_accept_its_own_default_for_a_custom_endpoint( $name ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
+		$parameter->setValue( $parameter->getDefaultValue() );
+
+		$this->assertSame( $parameter->getDefaultValue(), $parameter->getValue() );
+	}
+
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
 	public function test_matomoConfigurationVariable_should_accept_a_plain_value_for_a_custom_endpoint( $name ) {
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
 		$parameter->setValue( 'custom.js' );

@@ -17,6 +17,7 @@ use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
 
 /**
@@ -116,8 +117,8 @@ class SecuredTemplateFactory
             $wrapped,
             [
                 'matomoUrl' => [new SiteOwnUrl()],
-                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal()],
-                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal()],
+                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
             ],
             ['matomoUrl' => self::dropUrlQueryAndFragment()]
         ) extends MatomoConfigurationVariable {
