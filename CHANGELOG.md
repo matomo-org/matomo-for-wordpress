@@ -39,8 +39,11 @@
   the Custom Image, LiveZilla and Matomo Configuration templates only accept URLs on this site. The
   Matomo Configuration template's custom JavaScript and tracking endpoints additionally have to name
   a ".js" or ".php" file, or a directory, because they are appended to the Matomo URL to form the
-  address the tracker itself is loaded from.
-  Containers that already use any of them keep working and are generated exactly as before.
+  address the tracker itself is loaded from. A Tag Manager variable's name cannot contain "{{" or
+  "}}" for such a user either.
+  Containers that already use any of these templates keep working and are generated exactly as
+  before, and a user without the capability can still create a version of one, publish it and rename
+  the variables it uses.
 * Security: when the plugin is network activated, a blog's own Matomo > Settings now shows only the
   Exclusions and Privacy tabs, plus Matomo plugin settings, for a user holding Matomo super
   user access on that blog (which includes network admins).

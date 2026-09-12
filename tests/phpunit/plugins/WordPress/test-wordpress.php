@@ -412,6 +412,126 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
+	public function test_addContainerVariable_should_refuse_a_name_that_could_be_read_as_a_variable_reference() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'cannot contain' );
+
+				$this->add_a_constant_variable( $id_site, $container, 'X}}https://evil.example/{{Y' );
+			}
+		);
+	}
+
+	public function test_updateContainerVariable_should_refuse_renaming_a_variable_to_something_that_could_be_read_as_a_reference() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container   = $this->create_a_container( $id_site );
+				$id_variable = $this->add_a_constant_variable( $id_site, $container, 'MatomoHost' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'cannot contain' );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.updateContainerVariable',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+						'idVariable'         => $id_variable,
+						'name'               => 'X}}https://evil.example/{{Y',
+						'parameters'         => [ 'constantValue' => '/' ],
+					]
+				);
+			}
+		);
+	}
+
+	public function test_updateContainerVariable_should_rename_a_variable_a_constrained_tag_refers_to() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container   = $this->create_a_container( $id_site );
+				$id_variable = $this->add_a_constant_variable( $id_site, $container, 'MatomoHost' );
+				$tag_name    = 'a custom html tag somebody else added';
+
+				$this->store_a_custom_html_tag( $id_site, $container, $tag_name, '<script>console.log("{{MatomoHost}}");</script>' );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.updateContainerVariable',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+						'idVariable'         => $id_variable,
+						'name'               => 'MatomoHostRenamed',
+						'parameters'         => [ 'constantValue' => '/' ],
+					]
+				);
+
+				$tag = $this->find_container_tag( $id_site, $container, $tag_name );
+
+				$this->assertStringContainsString( '{{MatomoHostRenamed}}', $tag['parameters']['customHtml'] );
+			}
+		);
+	}
+
+	public function test_importContainerVersion_should_restore_the_draft_when_it_refuses_an_import_that_uses_a_constrained_tag() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a custom html tag somebody else added';
+
+				$this->store_a_custom_html_tag( $id_site, $container, $tag_name );
+
+				$exported = MatomoApiRequest::processRequest(
+					'TagManager.exportContainerVersion',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+					]
+				);
+
+				try {
+					MatomoApiRequest::processRequest(
+						'TagManager.importContainerVersion',
+						[
+							'idSite'                   => $id_site,
+							'idContainer'              => $container['id_container'],
+							'exportedContainerVersion' => wp_json_encode( $exported ),
+						]
+					);
+					$this->fail( 'importing a container that uses a Custom HTML tag has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'not allowed to add HTML or JavaScript', $e->getMessage() );
+				}
+
+				$this->assertNotNull(
+					$this->find_container_tag( $id_site, $container, $tag_name ),
+					'the refused import has to leave the draft it deleted as it found it'
+				);
+			}
+		);
+	}
+
 	private function require_tag_manager() {
 		if ( ! Manager::getInstance()->isPluginActivated( 'TagManager' ) ) {
 			$this->markTestSkipped( 'Tag Manager is not activated on this install.' );
@@ -468,16 +588,17 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 	 * @param int    $id_site
 	 * @param array  $container what create_a_container() returned
 	 * @param string $tag_name
+	 * @param string $html
 	 * @return int the tag ID
 	 */
-	private function store_a_custom_html_tag( $id_site, $container, $tag_name ) {
+	private function store_a_custom_html_tag( $id_site, $container, $tag_name, $html = '<script>console.log(1);</script>' ) {
 		return StaticContainer::get( TagsDao::class )->createTag(
 			$id_site,
 			$container['id_version'],
 			( new CustomHtmlTag() )->getId(),
 			$tag_name,
 			[
-				'customHtml'   => '<script>console.log(1);</script>',
+				'customHtml'   => $html,
 				'htmlPosition' => 'bodyEnd',
 			],
 			[ $container['id_trigger'] ],
@@ -509,6 +630,51 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 			[],
 			Date::now()->getDatetime()
 		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $variable_name
+	 * @return int the variable ID
+	 */
+	private function add_a_constant_variable( $id_site, $container, $variable_name ) {
+		return MatomoApiRequest::processRequest(
+			'TagManager.addContainerVariable',
+			[
+				'idSite'             => $id_site,
+				'idContainer'        => $container['id_container'],
+				'idContainerVersion' => $container['id_version'],
+				'type'               => ( new ConstantVariable() )->getId(),
+				'name'               => $variable_name,
+				'parameters'         => [ 'constantValue' => '/' ],
+			]
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $tag_name
+	 * @return array|null the tag as Tag Manager reports it, or null when the container has no such tag
+	 */
+	private function find_container_tag( $id_site, $container, $tag_name ) {
+		$tags = MatomoApiRequest::processRequest(
+			'TagManager.getContainerTags',
+			[
+				'idSite'             => $id_site,
+				'idContainer'        => $container['id_container'],
+				'idContainerVersion' => $container['id_version'],
+			]
+		);
+
+		foreach ( $tags as $tag ) {
+			if ( $tag['name'] === $tag_name ) {
+				return $tag;
+			}
+		}
+
+		return null;
 	}
 
 	/**

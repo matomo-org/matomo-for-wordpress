@@ -189,4 +189,13 @@ return array(
 
 	\Piwik\Plugins\TagManager\Model\Container::class =>
 		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Container::class ),
+
+	\Piwik\Plugins\TagManager\Model\Tag::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Tag::class ),
+
+	\Piwik\Plugins\TagManager\Model\Variable::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Variable::class ),
+
+	\Piwik\Plugins\TagManager\API::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\API::class ),
 );

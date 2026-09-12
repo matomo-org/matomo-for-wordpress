@@ -29,7 +29,9 @@ class NoVariableInterpolation extends BaseValidator
             return;
         }
 
-        if (strpos((string) $value, '{{') !== false) {
+        // "}}" is refused as well as "{{", so a value cannot be left holding one half of a
+        // reference for something else to complete later
+        if (preg_match('/\{\{|\}\}/', (string) $value)) {
             throw new Exception(Piwik::translate('WordPress_TagManagerNoVariableInterpolation'));
         }
     }

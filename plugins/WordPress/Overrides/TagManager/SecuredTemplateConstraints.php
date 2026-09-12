@@ -27,6 +27,19 @@ class SecuredTemplateConstraints
     }
 
     /**
+     * Whether the extra checks apply to whoever is making the current request.
+     *
+     * Note: WordPress::constrainTagManagerTemplates() decides on the capability alone and
+     * deliberately does not ask this.
+     *
+     * @return bool
+     */
+    public static function areRequired()
+    {
+        return !self::$suspended && !current_user_can('unfiltered_html');
+    }
+
+    /**
      * Runs the callback with extra validations turned off. Only ever used for re-saving values
      * this Matomo already has stored, never for anything the request carried.
      *
