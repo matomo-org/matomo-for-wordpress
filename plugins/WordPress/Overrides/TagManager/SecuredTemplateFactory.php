@@ -19,6 +19,7 @@ use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolat
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
+use Piwik\Validators\Exception as ValidatorException;
 
 /**
  * Creates Tag Manager template overrides with extra field validations for use
@@ -120,7 +121,11 @@ class SecuredTemplateFactory
                 'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
                 'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
             ],
-            ['matomoUrl' => self::dropUrlQueryAndFragment()]
+            [
+                'matomoUrl' => self::dropUrlQueryAndFragment(),
+                'jsEndpointCustom' => self::dropUrlQueryAndFragment(),
+            ],
+            ['matomoUrl' => self::siteOwnDefaultUrl()]
         ) extends MatomoConfigurationVariable {
             use SecuredTemplate;
         };
@@ -162,10 +167,6 @@ class SecuredTemplateFactory
     }
 
     /**
-     * Drops a query string or fragment from a URL parameter that a template appends its own path
-     * to — `g.src = url + jsEndpoint` in MatomoTag.web.js. Prevents negating the appended path
-     * in order for the browser to load another, potentially malicious, file.
-     *
      * @return \Closure
      */
     private static function dropUrlQueryAndFragment()
@@ -176,6 +177,30 @@ class SecuredTemplateFactory
             }
 
             return preg_replace('/[?#].*$/s', '', $value);
+        };
+    }
+
+    /**
+     * Replaces a default URL that SiteOwnUrl would refuse with the same URL relative to this site.
+     *
+     * @return \Closure
+     */
+    private static function siteOwnDefaultUrl()
+    {
+        return function ($default) {
+            if (!is_string($default) || '' === $default) {
+                return $default;
+            }
+
+            try {
+                (new SiteOwnUrl())->validate($default);
+
+                return $default;
+            } catch (ValidatorException $e) {
+                // ignore
+            }
+
+            return wp_make_link_relative($default);
         };
     }
 }

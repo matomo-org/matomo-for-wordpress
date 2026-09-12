@@ -36,16 +36,24 @@ trait SecuredTemplate
     private $extraTransforms;
 
     /**
+     * @var array<string, Closure>
+     */
+    private $extraDefaults;
+
+    /**
      * @param BaseTemplate $wrapped the instance this one is replacing, as Matomo ships it
      * @param array<string, BaseValidator[]> $extraValidators parameter name => validators to add
      * @param array<string, Closure> $extraTransforms parameter name => normalises the value that
      *                                                is stored for it
+     * @param array<string, Closure> $extraDefaults parameter name => given the default Matomo
+     *                                              proposes, returns the one to propose instead
      */
-    public function __construct(BaseTemplate $wrapped, array $extraValidators, array $extraTransforms = [])
+    public function __construct(BaseTemplate $wrapped, array $extraValidators, array $extraTransforms = [], array $extraDefaults = [])
     {
         $this->wrapped = $wrapped;
         $this->extraValidators = $extraValidators;
         $this->extraTransforms = $extraTransforms;
+        $this->extraDefaults = $extraDefaults;
     }
 
     public function getParameters()
@@ -64,6 +72,10 @@ trait SecuredTemplate
 
             if (!empty($this->extraTransforms[$name])) {
                 $this->addTransform($parameter->configureField(), $this->extraTransforms[$name]);
+            }
+
+            if (!empty($this->extraDefaults[$name])) {
+                $parameter->setDefaultValue(call_user_func($this->extraDefaults[$name], $parameter->getDefaultValue()));
             }
         }
 

@@ -7,6 +7,7 @@
  * @package matomo
  */
 
+use Piwik\Option;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
@@ -16,6 +17,7 @@ use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
+use Piwik\SettingsPiwik;
 use Piwik\Validators\Exception as ValidatorException;
 
 /**
@@ -31,10 +33,31 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	 */
 	private $template_factory;
 
+	/**
+	 * Null until a test overwrites the option, since the fixture is only restored between classes.
+	 *
+	 * @var string|false|null
+	 */
+	private $previous_matomo_url_option;
+
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->template_factory = new SecuredTemplateFactory();
+	}
+
+	public function tearDown(): void {
+		if ( isset( $this->previous_matomo_url_option ) ) {
+			if ( false === $this->previous_matomo_url_option ) {
+				Option::delete( SettingsPiwik::OPTION_PIWIK_URL );
+			} else {
+				Option::set( SettingsPiwik::OPTION_PIWIK_URL, $this->previous_matomo_url_option );
+			}
+
+			$this->previous_matomo_url_option = null;
+		}
+
+		parent::tearDown();
 	}
 
 	public function test_customHtmlTag_should_refuse_any_custom_html() {
@@ -224,6 +247,31 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame( home_url( '/wp-content/uploads/payload.txt' ), $parameter->getValue() );
 	}
 
+	public function test_matomoConfigurationVariable_should_propose_a_matomo_url_default_this_site_answers_to() {
+		// set OPTION_PIWIK_URL to a completely different domain
+		$this->set_matomo_url_option( 'https://cdn.example/wp-content/plugins/matomo/app/' );
+
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
+
+		$this->assertSame( '/wp-content/plugins/matomo/app/', $parameter->getDefaultValue() );
+
+		$parameter->setValue( $parameter->getDefaultValue() );
+
+		$this->assertSame( '/wp-content/plugins/matomo/app/', $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_leave_a_matomo_url_default_on_this_site_as_matomo_proposed_it() {
+		$this->set_matomo_url_option( home_url( '/wp-content/plugins/matomo/app/' ) );
+
+		$matomo_default = $this->find_parameter( new MatomoConfigurationVariable(), 'matomoUrl' )->getDefaultValue();
+
+		$this->assertNotEmpty( $matomo_default, 'Matomo must propose something to leave alone' );
+		$this->assertSame(
+			$matomo_default,
+			$this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' )->getDefaultValue()
+		);
+	}
+
 	public function test_matomoConfigurationVariable_should_keep_matomos_own_validators_on_the_matomo_url() {
 		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
 
@@ -303,6 +351,27 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$parameter->setValue( 'custom.js' );
 
 		$this->assertSame( 'custom.js', $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_the_js_endpoint() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'jsEndpointCustom' );
+		$parameter->setValue( 'matomo.js?cache=1' );
+
+		$this->assertSame( 'matomo.js', $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_the_js_endpoint() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'jsEndpointCustom' );
+		$parameter->setValue( 'matomo.js#x' );
+
+		$this->assertSame( 'matomo.js', $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_keep_a_query_string_on_the_tracking_endpoint() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'trackingEndpointCustom' );
+		$parameter->setValue( 'matomo.php?idsite=1' );
+
+		$this->assertSame( 'matomo.php?idsite=1', $parameter->getValue() );
 	}
 
 	public function test_matomoConfigurationVariable_should_stand_in_for_the_template_it_narrows() {
@@ -393,6 +462,17 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 			$this->assertNotEmpty( $expected, 'the template Matomo ships must not be empty' );
 			$this->assertSame( $expected, $secured->loadTemplate( WebContext::ID, $entity ) );
 		}
+	}
+
+	/**
+	 * @param string $url what SettingsPiwik::getPiwikUrl() should report from here on
+	 */
+	private function set_matomo_url_option( $url ) {
+		if ( ! isset( $this->previous_matomo_url_option ) ) {
+			$this->previous_matomo_url_option = Option::get( SettingsPiwik::OPTION_PIWIK_URL );
+		}
+
+		Option::set( SettingsPiwik::OPTION_PIWIK_URL, $url );
 	}
 
 	/**
