@@ -189,11 +189,35 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->find_parameter( $tag, 'LivezillaDynamicDomain' )->setValue( '/lz' );
 	}
 
-	public function test_livezillaDynamicTag_should_leave_the_other_parameters_alone() {
+	public function test_livezillaDynamicTag_should_refuse_url_syntax_in_the_id() {
+		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $tag, 'LivezillaDynamicID' )->setValue( self::LIVEZILLA_ID . '&callback=alert' );
+	}
+
+	public function test_livezillaDynamicTag_should_refuse_a_variable_reference_in_the_id() {
+		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
+
+		$this->expectException( ValidatorException::class );
+
+		// long enough that Matomo's own CharacterLength(32) is not what refuses it
+		$this->find_parameter( $tag, 'LivezillaDynamicID' )->setValue( '{{' . self::LIVEZILLA_ID . '}}' );
+	}
+
+	public function test_livezillaDynamicTag_should_accept_an_opaque_id() {
 		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicID' );
 		$parameter->setValue( self::LIVEZILLA_ID );
 
 		$this->assertSame( self::LIVEZILLA_ID, $parameter->getValue() );
+	}
+
+	public function test_livezillaDynamicTag_should_leave_the_other_parameters_alone() {
+		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDefer' );
+		$parameter->setValue( false );
+
+		$this->assertFalse( $parameter->getValue() );
 	}
 
 	public function test_livezillaDynamicTag_should_stand_in_for_the_template_it_narrows() {
@@ -269,6 +293,33 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame(
 			$matomo_default,
 			$this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' )->getDefaultValue()
+		);
+	}
+
+	public function unsalvageable_matomo_url_provider() {
+		return [
+			// wp_make_link_relative() answers '' for this one, and an empty default fails NotEmpty()
+			'a url that is nothing but a host'    => [ '//cdn.example' ],
+			// and it leaves this one exactly as it found it, since its scheme is not followed by "//"
+			'a scheme that is not followed by //' => [ 'https:cdn.example/wp-content/plugins/matomo/app/' ],
+		];
+	}
+
+	/**
+	 * @dataProvider unsalvageable_matomo_url_provider
+	 */
+	public function test_matomoConfigurationVariable_should_propose_a_savable_matomo_url_default_however_unusable_the_stored_one_is( $stored ) {
+		$this->set_matomo_url_option( $stored );
+
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
+
+		// whatever is proposed has to survive the field's own validators, or every save of the
+		// whole variable failszz
+		$parameter->setValue( $parameter->getDefaultValue() );
+
+		$this->assertSame(
+			wp_make_link_relative( rtrim( plugins_url( 'app', MATOMO_ANALYTICS_FILE ), '/' ) . '/' ),
+			$parameter->getValue()
 		);
 	}
 

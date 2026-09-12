@@ -8,20 +8,32 @@
  */
 
 use Piwik\Access;
+use Piwik\API\Request as MatomoApiRequest;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
+use Piwik\Date;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\API\API;
 use Piwik\Plugins\CoreAdminHome\API as CoreAdminHomeAPI;
+use Piwik\Plugins\TagManager\Context\WebContext;
+use Piwik\Plugins\TagManager\Dao\TagsDao;
+use Piwik\Plugins\TagManager\Dao\VariablesDao;
+use Piwik\Plugins\TagManager\Model\Container as ContainerModel;
+use Piwik\Plugins\TagManager\Model\Tag as TagModel;
+use Piwik\Plugins\TagManager\Model\Variable as VariableModel;
 use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
 use Piwik\Plugins\TagManager\Template\Tag\LivezillaDynamicTag;
 use Piwik\Plugins\TagManager\Template\Tag\TagsProvider;
+use Piwik\Plugins\TagManager\Template\Trigger\PageViewTrigger;
 use Piwik\Plugins\TagManager\Template\Variable\ConstantVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\TagManager\Template\Variable\VariablesProvider;
+use Piwik\Validators\Exception as ValidatorException;
 use WpMatomo\Roles;
+use WpMatomo\Site;
 
 /**
  * @package matomo
@@ -259,6 +271,261 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$resolved = $provider->getTag( ( new CustomHtmlTag() )->getId() );
 
 		$this->assert_narrowed( CustomHtmlTag::class, $resolved );
+	}
+
+	public function test_filterTagManagerTags_should_not_prevent_versioning_a_container_that_already_uses_a_constrained_tag() {
+		$this->require_tag_manager();
+
+		$id_site  = $this->create_a_user_without_unfiltered_html();
+		$tag_name = 'a custom html tag somebody else added';
+
+		// note: Matomo access is not relevant here: the user is the super user of their blog's Matomo,
+		// what they do not have is the WordPress capability to write arbitrary HTML
+		Access::doAsSuperUser(
+			function () use ( $id_site, $tag_name ) {
+				$container = $this->create_a_container( $id_site );
+				$this->store_a_custom_html_tag( $id_site, $container, $tag_name );
+
+				// createContainerVersion() does not copy rows, it exports the draft and imports it
+				// again through the API, so every parameter is offered to its template a second time
+				$id_version = MatomoApiRequest::processRequest(
+					'TagManager.createContainerVersion',
+					[
+						'idSite'      => $id_site,
+						'idContainer' => $container['id_container'],
+						'name'        => '0.2.0',
+					]
+				);
+
+				$tags = MatomoApiRequest::processRequest(
+					'TagManager.getContainerTags',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $id_version,
+					]
+				);
+
+				$this->assertContains( $tag_name, wp_list_pluck( $tags, 'name' ) );
+			}
+		);
+	}
+
+	public function test_filterTagManagerTags_should_constrain_a_new_tag_again_once_a_version_has_been_created() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$this->store_a_custom_html_tag( $id_site, $container, 'a custom html tag somebody else added' );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.createContainerVersion',
+					[
+						'idSite'      => $id_site,
+						'idContainer' => $container['id_container'],
+						'name'        => '0.2.0',
+					]
+				);
+
+				$this->expectException( ValidatorException::class );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.addContainerTag',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $this->get_draft_version_of( $id_site, $container['id_container'] ),
+						'type'               => ( new CustomHtmlTag() )->getId(),
+						'name'               => 'one this user is authoring',
+						'parameters'         => [ 'customHtml' => '<script>alert(1)</script>' ],
+					]
+				);
+			}
+		);
+	}
+
+	public function test_filterTagManagerTags_should_refuse_copying_a_constrained_tag() {
+		// unlike creating a version, a copy puts the script somewhere it was not before, so this
+		// one is deliberately refused
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$id_tag    = $this->store_a_custom_html_tag( $id_site, $container, 'a custom html tag somebody else added' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'not allowed to add HTML or JavaScript' );
+
+				StaticContainer::get( TagModel::class )->copyTag( $id_site, $container['id_version'], $id_tag );
+			}
+		);
+	}
+
+	public function test_filterTagManagerVariables_should_refuse_copying_a_constrained_variable() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container   = $this->create_a_container( $id_site );
+				$id_variable = $this->store_a_custom_js_function_variable( $id_site, $container, 'a js function somebody else added' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'not allowed to add HTML or JavaScript' );
+
+				StaticContainer::get( VariableModel::class )->copyVariable( $id_site, $container['id_version'], $id_variable );
+			}
+		);
+	}
+
+	public function test_filterTagManagerTags_should_refuse_copying_a_container_that_uses_a_constrained_tag() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$this->store_a_custom_html_tag( $id_site, $container, 'a custom html tag somebody else added' );
+
+				$container_model = StaticContainer::get( ContainerModel::class );
+				$before          = count( $container_model->getContainers( $id_site ) );
+
+				try {
+					$container_model->copyContainer( $id_site, $container['id_container'] );
+					$this->fail( 'copying a container that uses a Custom HTML tag has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'not allowed to add HTML or JavaScript', $e->getMessage() );
+				}
+
+				// copyContainer() deletes what it had made before it rethrows, so a refused copy
+				// leaves nothing behind
+				$this->assertCount( $before, $container_model->getContainers( $id_site ) );
+			}
+		);
+	}
+
+	private function require_tag_manager() {
+		if ( ! Manager::getInstance()->isPluginActivated( 'TagManager' ) ) {
+			$this->markTestSkipped( 'Tag Manager is not activated on this install.' );
+		}
+	}
+
+	/**
+	 * @return int the Matomo site this blog maps to
+	 */
+	private function create_a_user_without_unfiltered_html() {
+		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] );
+		wp_set_current_user( $user_id );
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+
+		$id_site = Site::get_matomo_site_id( get_current_blog_id() );
+		$this->assertNotEmpty( $id_site, 'the fixture has to have mapped this blog to a Matomo site' );
+
+		return $id_site;
+	}
+
+	/**
+	 * @param int $id_site
+	 * @return array{id_container: string, id_version: int, id_trigger: int} an empty draft container
+	 */
+	private function create_a_container( $id_site ) {
+		$id_container = MatomoApiRequest::processRequest(
+			'TagManager.addContainer',
+			[
+				'idSite'  => $id_site,
+				'context' => WebContext::ID,
+				'name'    => 'a container that predates the constraint ' . uniqid(),
+			]
+		);
+
+		$id_version = $this->get_draft_version_of( $id_site, $id_container );
+
+		return [
+			'id_container' => $id_container,
+			'id_version'   => $id_version,
+			'id_trigger'   => MatomoApiRequest::processRequest(
+				'TagManager.addContainerTrigger',
+				[
+					'idSite'             => $id_site,
+					'idContainer'        => $id_container,
+					'idContainerVersion' => $id_version,
+					'type'               => PageViewTrigger::ID,
+					'name'               => 'every page view',
+				]
+			),
+		];
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $tag_name
+	 * @return int the tag ID
+	 */
+	private function store_a_custom_html_tag( $id_site, $container, $tag_name ) {
+		return StaticContainer::get( TagsDao::class )->createTag(
+			$id_site,
+			$container['id_version'],
+			( new CustomHtmlTag() )->getId(),
+			$tag_name,
+			[
+				'customHtml'   => '<script>console.log(1);</script>',
+				'htmlPosition' => 'bodyEnd',
+			],
+			[ $container['id_trigger'] ],
+			[],
+			TagModel::FIRE_LIMIT_UNLIMITED,
+			0,
+			999,
+			null,
+			null,
+			Date::now()->getDatetime()
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $variable_name
+	 * @return int the variable ID
+	 * @see store_a_custom_html_tag() for why this goes in through the DAO
+	 */
+	private function store_a_custom_js_function_variable( $id_site, $container, $variable_name ) {
+		return StaticContainer::get( VariablesDao::class )->createVariable(
+			$id_site,
+			$container['id_version'],
+			( new CustomJsFunctionVariable() )->getId(),
+			$variable_name,
+			[ 'jsFunction' => 'function () { return document.cookie; }' ],
+			'',
+			[],
+			Date::now()->getDatetime()
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param string $id_container
+	 * @return int
+	 */
+	private function get_draft_version_of( $id_site, $id_container ) {
+		$container = MatomoApiRequest::processRequest(
+			'TagManager.getContainer',
+			[
+				'idSite'      => $id_site,
+				'idContainer' => $id_container,
+			]
+		);
+
+		return (int) $container['draft']['idcontainerversion'];
 	}
 
 	/**

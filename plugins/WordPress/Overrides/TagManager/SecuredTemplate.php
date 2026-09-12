@@ -60,6 +60,12 @@ trait SecuredTemplate
     {
         $parameters = parent::getParameters();
 
+        if (SecuredTemplateConstraints::areSuspended()) {
+            // Tag Manager is re-saving what it just read back out of its own tables, so there is
+            // nothing here that hasn't already been validated
+            return $parameters;
+        }
+
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
 

@@ -19,6 +19,7 @@ use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolat
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UrlSafeToken;
 use Piwik\Validators\Exception as ValidatorException;
 
 /**
@@ -86,7 +87,8 @@ class SecuredTemplateFactory
     }
 
     /**
-     * The LiveZilla tag, with the domain it loads its script from constrained to this site.
+     * The LiveZilla tag, with the domain it loads its script from constrained to this site, and
+     * the ID it appends to that domain kept to something that cannot address anything else.
      *
      * @param LivezillaDynamicTag $wrapped the instance this one stands in for
      * @return LivezillaDynamicTag
@@ -95,7 +97,10 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['LivezillaDynamicDomain' => [new SiteOwnUrl()]],
+            [
+                'LivezillaDynamicDomain' => [new SiteOwnUrl()],
+                'LivezillaDynamicID' => [new NoVariableInterpolation(), new UrlSafeToken()],
+            ],
             ['LivezillaDynamicDomain' => self::dropUrlQueryAndFragment()]
         ) extends LivezillaDynamicTag {
             use SecuredTemplate;
@@ -181,26 +186,60 @@ class SecuredTemplateFactory
     }
 
     /**
-     * Replaces a default URL that SiteOwnUrl would refuse with the same URL relative to this site.
+     * Replaces a default URL that SiteOwnUrl would refuse with one this site does answer to.
      *
      * @return \Closure
      */
     private static function siteOwnDefaultUrl()
     {
         return function ($default) {
-            if (!is_string($default) || '' === $default) {
-                return $default;
+            foreach (self::siteOwnUrlCandidates($default) as $candidate) {
+                if (self::isSiteOwnUrl($candidate)) {
+                    return $candidate;
+                }
             }
 
-            try {
-                (new SiteOwnUrl())->validate($default);
-
-                return $default;
-            } catch (ValidatorException $e) {
-                // ignore
-            }
-
-            return wp_make_link_relative($default);
+            // can't find a correct URL, leave the default which will be refused with a message
+            return $default;
         };
+    }
+
+    /**
+     * @param mixed $default what Matomo proposes for the field
+     * @return string[] URLs to propose instead, best first
+     */
+    private static function siteOwnUrlCandidates($default)
+    {
+        $candidates = [];
+
+        if (is_string($default)) {
+            $candidates[] = $default;
+            $candidates[] = wp_make_link_relative($default);
+        }
+
+        if (defined('MATOMO_ANALYTICS_FILE')) {
+            $candidates[] = wp_make_link_relative(rtrim(plugins_url('app', MATOMO_ANALYTICS_FILE), '/') . '/');
+        }
+
+        return $candidates;
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool whether SiteOwnUrl accepts the value as a URL of this site
+     */
+    private static function isSiteOwnUrl($value)
+    {
+        if (!is_string($value) || '' === $value) {
+            return false;
+        }
+
+        try {
+            (new SiteOwnUrl())->validate($value);
+        } catch (ValidatorException $e) {
+            return false;
+        }
+
+        return true;
     }
 }

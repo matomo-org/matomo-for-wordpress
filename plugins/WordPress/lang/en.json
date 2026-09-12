@@ -18,6 +18,7 @@
     "TagManagerPathTraversalNotAllowed": "This has to be a path below the Matomo URL above, so it cannot contain \"..\".",
     "TagManagerTrackerEndpointNotAllowed": "This has to address a \".js\" or \".php\" file below the Matomo URL above, or a directory ending in \"/\".",
     "TagManagerTrackerEndpointCharacterNotAllowed": "Only letters, digits and the characters . - _ ~ / can be used in the path here.",
+    "TagManagerUrlTokenCharacterNotAllowed": "Only letters, digits and the characters . - _ ~ can be used here.",
     "TagManagerUnfilteredHtmlRequired": "You are not allowed to add HTML or JavaScript to this site, so this cannot be used."
   }
 }

@@ -23,6 +23,10 @@ use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
  * Note: if a template is removed from core, this test will also fail. Removing the factory
  * method in this case would make the test pass.
  *
+ * Note: this can only see what is on disk when it runs, and SecuredTemplateFactory matches
+ * class names exactly, so a template shipped by a Matomo plugin installed later (eg, from the
+ * Marketplace) is not caught by this test.
+ *
  * @package matomo
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  */
