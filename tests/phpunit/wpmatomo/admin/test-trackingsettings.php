@@ -481,6 +481,8 @@ EOF;
 
 		$this->assertFalse( ( new TrackingSettings( new Settings() ) )->can_user_edit_tracking_code() );
 
+		// what a network that wants its blog administrators trusted with markup does, since
+		// map_meta_cap() is where WordPress takes the capability away from them
 		$this->grant_unfiltered_html_to_everyone();
 
 		$this->assertTrue( current_user_can( 'unfiltered_html' ) );
