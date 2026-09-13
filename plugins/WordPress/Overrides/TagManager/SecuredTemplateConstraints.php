@@ -9,7 +9,7 @@
 namespace Piwik\Plugins\WordPress\Overrides\TagManager;
 
 /**
- * Whether the extra validations SecuredTemplate adds are currentl enabled or not.
+ * Whether the extra validations SecuredTemplate adds are currently enabled or not.
  */
 class SecuredTemplateConstraints
 {

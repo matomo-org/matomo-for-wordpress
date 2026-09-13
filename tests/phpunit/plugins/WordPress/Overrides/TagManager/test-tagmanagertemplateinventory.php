@@ -9,6 +9,7 @@
 
 use Piwik\Filesystem;
 use Piwik\Plugin\Manager;
+use Piwik\Plugins\WordPress\Overrides\TagManager\BlockedTemplates;
 use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
 
 /**
@@ -17,8 +18,12 @@ use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
  * without `unfiltered_html`. If it is not, a secured version must be registered.
  *
  * This test uses the tag-manager-templates.json file as the current known state of Tag
- * Manager templates. Each entry maps a template class with the value `"save"` or `"narrowed"`.
- * `"safe"` means it should not have a secured version, `"narrowed"` means it should.
+ * Manager templates. Each entry maps a template class to one of three verdicts:
+ *
+ * - `"safe"`: the template is left as Matomo ships it.
+ * - `"narrowed"`: SecuredTemplateFactory registers a version of it with extra validations.
+ * - `"blocked"`: BlockedTemplates refuses it to a user without the capability. Every one of
+ *                these loads JavaScript from a third party the tag's own parameters name.
  *
  * Note: if a template is removed from core, this test will also fail. Removing the factory
  * method in this case would make the test pass.
@@ -63,14 +68,14 @@ class TagManagerTemplateInventoryTest extends MatomoAnalytics_SharedFixture_Test
 
 	public function test_getTagReplacements_should_cover_exactly_the_tags_the_inventory_records_as_narrowed() {
 		$this->assertSame(
-			$this->narrowed_templates( 'Template\Tag' ),
+			$this->templates_with_verdict( 'narrowed', 'Template\Tag' ),
 			$this->replaced_templates( ( new SecuredTemplateFactory() )->getTagReplacements() )
 		);
 	}
 
 	public function test_getVariableReplacements_should_cover_exactly_the_variables_the_inventory_records_as_narrowed() {
 		$this->assertSame(
-			$this->narrowed_templates( 'Template\Variable' ),
+			$this->templates_with_verdict( 'narrowed', 'Template\Variable' ),
 			$this->replaced_templates( ( new SecuredTemplateFactory() )->getVariableReplacements() )
 		);
 	}
@@ -80,11 +85,36 @@ class TagManagerTemplateInventoryTest extends MatomoAnalytics_SharedFixture_Test
 		// handles. Since the plugin does not replace triggers, there is no need to check whether a new
 		// one has been added or not.
 
-		$covered = array_merge( $this->narrowed_templates( 'Template\Tag' ), $this->narrowed_templates( 'Template\Variable' ) );
+		$covered = array_merge(
+			$this->templates_with_verdict( 'narrowed', 'Template\Tag' ),
+			$this->templates_with_verdict( 'narrowed', 'Template\Variable' )
+		);
 
 		sort( $covered );
 
-		$this->assertSame( $this->narrowed_templates(), $covered );
+		$this->assertSame( $this->templates_with_verdict( 'narrowed' ), $covered );
+	}
+
+	public function test_BlockedTemplates_should_list_exactly_the_tags_the_inventory_records_as_blocked() {
+		$listed = BlockedTemplates::TAGS;
+
+		sort( $listed );
+
+		$this->assertSame( $this->templates_with_verdict( 'blocked', 'Template\Tag' ), $listed );
+	}
+
+	public function test_tag_manager_should_block_no_template_that_is_not_a_tag() {
+		// a blocked variable or trigger would have nowhere to be enforced, since BlockedTemplates is
+		// only consulted where a tag is written
+
+		$this->assertSame(
+			$this->templates_with_verdict( 'blocked' ),
+			$this->templates_with_verdict( 'blocked', 'Template\Tag' )
+		);
+	}
+
+	public function test_BlockedTemplates_should_report_a_type_for_every_tag_it_lists() {
+		$this->assertCount( count( BlockedTemplates::TAGS ), BlockedTemplates::getTagTypes() );
 	}
 
 	/**
@@ -166,22 +196,23 @@ class TagManagerTemplateInventoryTest extends MatomoAnalytics_SharedFixture_Test
 	}
 
 	/**
-	 * @param string $kind namespace fragment to keep, e.g. 'Template\Tag'. Everything when omitted.
-	 * @return string[] the class names the inventory says need to be secured, sorted
+	 * @param string $verdict which verdict to collect, e.g. 'narrowed'
+	 * @param string $kind    namespace fragment to keep, e.g. 'Template\Tag'. Everything when omitted.
+	 * @return string[] the class names the inventory gives that verdict
 	 */
-	private function narrowed_templates( $kind = '' ) {
-		$narrowed = [];
+	private function templates_with_verdict( $verdict, $kind = '' ) {
+		$matched = [];
 
-		foreach ( $this->read_inventory() as $class_name => $verdict ) {
-			if ( 'narrowed' !== $verdict ) {
+		foreach ( $this->read_inventory() as $class_name => $recorded ) {
+			if ( $verdict !== $recorded ) {
 				continue;
 			}
 
 			if ( '' === $kind || false !== strpos( $class_name, '\\' . $kind . '\\' ) ) {
-				$narrowed[] = $class_name;
+				$matched[] = $class_name;
 			}
 		}
 
-		return $narrowed;
+		return $matched;
 	}
 }

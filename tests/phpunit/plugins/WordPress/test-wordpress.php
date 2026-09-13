@@ -23,7 +23,8 @@ use Piwik\Plugins\TagManager\Model\Tag as TagModel;
 use Piwik\Plugins\TagManager\Model\Variable as VariableModel;
 use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
-use Piwik\Plugins\TagManager\Template\Tag\LivezillaDynamicTag;
+use Piwik\Plugins\TagManager\Template\Tag\GoogleConsentModeV2Tag;
+use Piwik\Plugins\TagManager\Template\Tag\HotjarTag;
 use Piwik\Plugins\TagManager\Template\Tag\TagsProvider;
 use Piwik\Plugins\TagManager\Template\Trigger\PageViewTrigger;
 use Piwik\Plugins\TagManager\Template\Variable\ConstantVariable;
@@ -223,7 +224,6 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		return [
 			[ CustomHtmlTag::class ],
 			[ CustomImageTag::class ],
-			[ LivezillaDynamicTag::class ],
 		];
 	}
 
@@ -532,6 +532,363 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
+	public function test_addContainerTag_should_refuse_a_tag_that_loads_javascript_from_another_service() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'not allowed to choose which other services' );
+
+				$this->add_a_tag( $id_site, $container, 'a hotjar tag', ( new HotjarTag() )->getId(), [ 'hjid' => '1234567' ] );
+			}
+		);
+	}
+
+	public function test_addContainerTag_should_allow_a_tag_that_loads_javascript_from_another_service_for_a_user_with_unfiltered_html() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_with_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag an administrator added';
+
+				$this->add_a_tag( $id_site, $container, $tag_name, ( new HotjarTag() )->getId(), [ 'hjid' => '1234567' ] );
+
+				$this->assertNotNull( $this->find_container_tag( $id_site, $container, $tag_name ) );
+			}
+		);
+	}
+
+	public function test_addContainerTag_should_allow_a_third_party_tag_that_neither_runs_what_its_account_holds_nor_reports_visitors() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a google consent signal';
+
+				// this one names no account of its own: it loads nothing and pushes a consent
+				// state onto the page's own data layer for whatever is already listening
+				$this->add_a_tag( $id_site, $container, $tag_name, ( new GoogleConsentModeV2Tag() )->getId(), [ 'consentAction' => [ 'update' ] ] );
+
+				$this->assertNotNull( $this->find_container_tag( $id_site, $container, $tag_name ) );
+			}
+		);
+	}
+
+	public function test_updateContainerTag_should_refuse_changing_a_tag_that_loads_javascript_from_another_service() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$id_tag    = $this->store_a_third_party_tag( $id_site, $container, 'a hotjar tag somebody else added' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'not allowed to choose which other services' );
+
+				// the account the recordings go to is a parameter, so changing one is as much a
+				// decision about which third party this site talks to as adding it was
+				MatomoApiRequest::processRequest(
+					'TagManager.updateContainerTag',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+						'idTag'              => $id_tag,
+						'name'               => 'a hotjar tag somebody else added',
+						'parameters'         => [ 'hjid' => '7654321' ],
+						'fireTriggerIds'     => [ $container['id_trigger'] ],
+					]
+				);
+			}
+		);
+	}
+
+	public function test_copyTag_should_refuse_a_tag_that_loads_javascript_from_another_service() {
+		// a copy goes straight to the model rather than through the API, which is why the refusal
+		// lives there
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$id_tag    = $this->store_a_third_party_tag( $id_site, $container, 'a hotjar tag somebody else added' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'not allowed to choose which other services' );
+
+				StaticContainer::get( TagModel::class )->copyTag( $id_site, $container['id_version'], $id_tag );
+			}
+		);
+	}
+
+	public function test_getContainerTags_should_still_describe_a_tag_that_loads_javascript_from_another_service() {
+		// the template stays registered on purpose. Container generation looks a stored tag's
+		// template up by type and leaves out what it cannot find, so withdrawing the template would
+		// quietly drop this tag from the container the next time anything regenerated it
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag somebody else added';
+
+				$this->store_a_third_party_tag( $id_site, $container, $tag_name );
+
+				$tag = $this->find_container_tag( $id_site, $container, $tag_name );
+
+				$this->assertNotEmpty( $tag['typeMetadata'], 'Tag Manager has to still resolve the template this tag was stored with' );
+			}
+		);
+	}
+
+	public function test_createContainerVersion_should_not_be_prevented_by_a_tag_that_loads_javascript_from_another_service() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag somebody else added';
+
+				$this->store_a_third_party_tag( $id_site, $container, $tag_name );
+
+				// createContainerVersion() does not copy rows, it exports the draft and imports it
+				// again through the API, so the tag is offered to addContainerTag() a second time
+				$id_version = MatomoApiRequest::processRequest(
+					'TagManager.createContainerVersion',
+					[
+						'idSite'      => $id_site,
+						'idContainer' => $container['id_container'],
+						'name'        => 'a version of what was already there',
+					]
+				);
+
+				$versioned = [
+					'id_container' => $container['id_container'],
+					'id_version'   => $id_version,
+				];
+
+				$this->assertNotEmpty( $id_version );
+				$this->assertNotNull( $this->find_container_tag( $id_site, $versioned, $tag_name ) );
+			}
+		);
+	}
+
+	public function test_importContainerVersion_should_still_validate_an_import_that_asks_to_be_treated_as_a_draft_restore() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a custom html tag somebody else added';
+
+				$this->store_a_custom_html_tag( $id_site, $container, $tag_name );
+
+				$exported = MatomoApiRequest::processRequest(
+					'TagManager.exportContainerVersion',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+					]
+				);
+
+				try {
+					MatomoApiRequest::processRequest(
+						'TagManager.importContainerVersion',
+						[
+							'idSite'                   => $id_site,
+							'idContainer'              => $container['id_container'],
+							'exportedContainerVersion' => wp_json_encode( $exported ),
+							'_isDraftRestoreCall'      => 1,
+						]
+					);
+					$this->fail( 'asking directly for the draft restore treatment must not skip the checks' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'not allowed to add HTML or JavaScript', $e->getMessage() );
+				}
+
+				// and the rollback the refusal triggers still gets its suspension, so the draft the
+				// import emptied is put back
+				$this->assertNotNull(
+					$this->find_container_tag( $id_site, $container, $tag_name ),
+					'the refused import has to leave the draft it deleted as it found it'
+				);
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_refuse_turning_a_tag_that_loads_javascript_from_another_service_back_on() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag somebody else added';
+				$id_tag    = $this->store_a_third_party_tag( $id_site, $container, $tag_name );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+
+				try {
+					$this->resume_a_tag( $id_site, $container, $id_tag );
+					$this->fail( 'turning a blocked tag back on has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'turn it back on', $e->getMessage() );
+				}
+
+				$this->assertSame( 'paused', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_refuse_turning_a_custom_html_tag_back_on() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a custom html tag somebody else added';
+				$id_tag    = $this->store_a_custom_html_tag( $id_site, $container, $tag_name );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+
+				try {
+					$this->resume_a_tag( $id_site, $container, $id_tag );
+					$this->fail( 'turning a narrowed tag back on has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'turn it back on', $e->getMessage() );
+				}
+
+				$this->assertSame( 'paused', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_refuse_turning_a_custom_image_tag_pointing_at_another_site_back_on() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a tracking pixel somebody else added';
+				$id_tag    = $this->store_a_custom_image_tag( $id_site, $container, $tag_name, 'https://evil.example/pixel.gif' );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+
+				try {
+					$this->resume_a_tag( $id_site, $container, $id_tag );
+					$this->fail( 'turning a tag holding a value the user may not write back on has to be refused' );
+				} catch ( ValidatorException $e ) {
+					$this->assertStringContainsString( 'turn it back on', $e->getMessage() );
+				}
+
+				$this->assertSame( 'paused', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_turn_a_custom_image_tag_pointing_at_this_site_back_on() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a tracking pixel on this site';
+				$id_tag    = $this->store_a_custom_image_tag( $id_site, $container, $tag_name, home_url( '/pixel.gif' ) );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+				$this->resume_a_tag( $id_site, $container, $id_tag );
+
+				$this->assertSame( 'active', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_turn_a_tag_the_user_could_have_added_themselves_back_on() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a google consent signal';
+				$id_tag    = $this->add_a_tag( $id_site, $container, $tag_name, ( new GoogleConsentModeV2Tag() )->getId(), [ 'consentAction' => [ 'update' ] ] );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+				$this->resume_a_tag( $id_site, $container, $id_tag );
+
+				$this->assertSame( 'active', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_resumeContainerTag_should_turn_a_tag_that_loads_javascript_from_another_service_back_on_for_a_user_with_unfiltered_html() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_with_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag';
+				$id_tag    = $this->store_a_third_party_tag( $id_site, $container, $tag_name );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+				$this->resume_a_tag( $id_site, $container, $id_tag );
+
+				$this->assertSame( 'active', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
+	public function test_pauseContainerTag_should_still_pause_a_tag_that_loads_javascript_from_another_service() {
+		// pausing can only stop something being served, so it stays available to everybody
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container = $this->create_a_container( $id_site );
+				$tag_name  = 'a hotjar tag somebody else added';
+				$id_tag    = $this->store_a_third_party_tag( $id_site, $container, $tag_name );
+
+				$this->pause_a_tag( $id_site, $container, $id_tag );
+
+				$this->assertSame( 'paused', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
+			}
+		);
+	}
+
 	private function require_tag_manager() {
 		if ( ! Manager::getInstance()->isPluginActivated( 'TagManager' ) ) {
 			$this->markTestSkipped( 'Tag Manager is not activated on this install.' );
@@ -545,6 +902,22 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] );
 		wp_set_current_user( $user_id );
 		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+
+		$id_site = Site::get_matomo_site_id( get_current_blog_id() );
+		$this->assertNotEmpty( $id_site, 'the fixture has to have mapped this blog to a Matomo site' );
+
+		return $id_site;
+	}
+
+	/**
+	 * @return int the Matomo site this blog maps to
+	 */
+	private function create_a_user_with_unfiltered_html() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $user_id );
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
+			$this->markTestSkipped( 'this install does not grant administrators unfiltered_html.' );
+		}
 
 		$id_site = Site::get_matomo_site_id( get_current_blog_id() );
 		$this->assertNotEmpty( $id_site, 'the fixture has to have mapped this blog to a Matomo site' );
@@ -629,6 +1002,119 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'',
 			[],
 			Date::now()->getDatetime()
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $tag_name
+	 * @param string $src
+	 * @return int the tag ID
+	 * @see store_a_custom_html_tag() for why this goes in through the DAO
+	 */
+	private function store_a_custom_image_tag( $id_site, $container, $tag_name, $src ) {
+		return StaticContainer::get( TagsDao::class )->createTag(
+			$id_site,
+			$container['id_version'],
+			( new CustomImageTag() )->getId(),
+			$tag_name,
+			[
+				'customImageSrc'     => $src,
+				'cacheBusterEnabled' => false,
+			],
+			[ $container['id_trigger'] ],
+			[],
+			TagModel::FIRE_LIMIT_UNLIMITED,
+			0,
+			999,
+			null,
+			null,
+			Date::now()->getDatetime()
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container what create_a_container() returned
+	 * @param string $tag_name
+	 * @return int the tag ID
+	 */
+	private function store_a_third_party_tag( $id_site, $container, $tag_name ) {
+		return StaticContainer::get( TagsDao::class )->createTag(
+			$id_site,
+			$container['id_version'],
+			( new HotjarTag() )->getId(),
+			$tag_name,
+			[
+				'hjid' => '1234567',
+				'hjsv' => 6,
+			],
+			[ $container['id_trigger'] ],
+			[],
+			TagModel::FIRE_LIMIT_UNLIMITED,
+			0,
+			999,
+			null,
+			null,
+			Date::now()->getDatetime()
+		);
+	}
+
+	/**
+	 * @param int    $id_site
+	 * @param array  $container  what create_a_container() returned
+	 * @param string $tag_name
+	 * @param string $type
+	 * @param array  $parameters
+	 * @return int the tag ID
+	 */
+	private function add_a_tag( $id_site, $container, $tag_name, $type, $parameters ) {
+		return MatomoApiRequest::processRequest(
+			'TagManager.addContainerTag',
+			[
+				'idSite'             => $id_site,
+				'idContainer'        => $container['id_container'],
+				'idContainerVersion' => $container['id_version'],
+				'type'               => $type,
+				'name'               => $tag_name,
+				'parameters'         => $parameters,
+				'fireTriggerIds'     => [ $container['id_trigger'] ],
+			]
+		);
+	}
+
+	/**
+	 * @param int   $id_site
+	 * @param array $container what create_a_container() returned
+	 * @param int   $id_tag
+	 */
+	private function pause_a_tag( $id_site, $container, $id_tag ) {
+		MatomoApiRequest::processRequest(
+			'TagManager.pauseContainerTag',
+			[
+				'idSite'             => $id_site,
+				'idContainer'        => $container['id_container'],
+				'idContainerVersion' => $container['id_version'],
+				'idTag'              => $id_tag,
+			]
+		);
+	}
+
+	/**
+	 * @param int   $id_site
+	 * @param array $container what create_a_container() returned
+	 * @param int   $id_tag
+	 */
+	private function resume_a_tag( $id_site, $container, $id_tag ) {
+		MatomoApiRequest::processRequest(
+			'TagManager.resumeContainerTag',
+			[
+				'idSite'             => $id_site,
+				'idContainer'        => $container['id_container'],
+				'idContainerVersion' => $container['id_version'],
+				'idTag'              => $id_tag,
+			]
 		);
 	}
 

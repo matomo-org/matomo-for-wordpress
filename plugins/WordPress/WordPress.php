@@ -357,7 +357,7 @@ class WordPress extends Plugin
         foreach ($templates as $index => $template) {
             $className = get_class($template);
 
-            // an exact match instead of instanceof, so a subclasses in another plugin will not
+            // an exact match instead of instanceof, so a subclass in another plugin will not
             // be replaced
             if (isset($replacements[$className])) {
                 $templates[$index] = call_user_func($replacements[$className], $template);

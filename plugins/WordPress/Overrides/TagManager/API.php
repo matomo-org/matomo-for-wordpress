@@ -18,14 +18,32 @@ use Piwik\Plugins\TagManager\API as UpstreamAPI;
  */
 class API extends UpstreamAPI
 {
+    /**
+     * @var bool whether an import is already running on this instance
+     */
+    private $isImporting = false;
+
     public function importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName = '', bool $_isDraftRestoreCall = false)
     {
-        if (!$_isDraftRestoreCall) {
-            return parent::importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName, $_isDraftRestoreCall);
-        }
+        // note: $_isDraftRestoreCall says which of the two this is, but it cannot be believed on its own,
+        // since an attacker could send the parameter to trigger the suspension. So to prevent this, the
+        // flag is only honored in the nested call TagManager\API makes to itself while rolling back.
 
-        return SecuredTemplateConstraints::suspendedFor(function () use ($exportedContainerVersion, $idSite, $idContainer, $backupName, $_isDraftRestoreCall) {
-            return parent::importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName, $_isDraftRestoreCall);
-        });
+        $isRollback = $_isDraftRestoreCall && $this->isImporting;
+
+        $wasImporting      = $this->isImporting;
+        $this->isImporting = true;
+
+        try {
+            if (!$isRollback) {
+                return parent::importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName, false);
+            }
+
+            return SecuredTemplateConstraints::suspendedFor(function () use ($exportedContainerVersion, $idSite, $idContainer, $backupName) {
+                return parent::importContainerVersion($exportedContainerVersion, $idSite, $idContainer, $backupName, true);
+            });
+        } finally {
+            $this->isImporting = $wasImporting;
+        }
     }
 }

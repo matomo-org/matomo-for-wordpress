@@ -10,7 +10,6 @@ namespace Piwik\Plugins\WordPress\Overrides\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
-use Piwik\Plugins\TagManager\Template\Tag\LivezillaDynamicTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -19,7 +18,6 @@ use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolat
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
-use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UrlSafeToken;
 use Piwik\Validators\Exception as ValidatorException;
 
 /**
@@ -36,7 +34,6 @@ class SecuredTemplateFactory
         return [
             CustomHtmlTag::class => [$this, 'customHtmlTag'],
             CustomImageTag::class => [$this, 'customImageTag'],
-            LivezillaDynamicTag::class => [$this, 'livezillaDynamicTag'],
         ];
     }
 
@@ -53,7 +50,7 @@ class SecuredTemplateFactory
     }
 
     /**
-     * Prevent use of custom HTML tag entirely. Note: if the user has `unfilterd_html`,
+     * Prevent use of the custom HTML tag entirely. Note: if the user has `unfiltered_html`,
      * this override will not be registered (see WordPress.php).
      *
      * @param CustomHtmlTag $wrapped the instance this one stands in for
@@ -87,27 +84,6 @@ class SecuredTemplateFactory
     }
 
     /**
-     * The LiveZilla tag, with the domain it loads its script from constrained to this site, and
-     * the ID it appends to that domain kept to something that cannot address anything else.
-     *
-     * @param LivezillaDynamicTag $wrapped the instance this one stands in for
-     * @return LivezillaDynamicTag
-     */
-    public function livezillaDynamicTag(LivezillaDynamicTag $wrapped)
-    {
-        return new class(
-            $wrapped,
-            [
-                'LivezillaDynamicDomain' => [new SiteOwnUrl()],
-                'LivezillaDynamicID' => [new NoVariableInterpolation(), new UrlSafeToken()],
-            ],
-            ['LivezillaDynamicDomain' => self::dropUrlQueryAndFragment()]
-        ) extends LivezillaDynamicTag {
-            use SecuredTemplate;
-        };
-    }
-
-    /**
      * The Matomo Configuration variable, with the parameters that decide which origin the tracker
      * is loaded from constrained to this site.
      *
@@ -128,7 +104,8 @@ class SecuredTemplateFactory
             ],
             [
                 'matomoUrl' => self::dropUrlQueryAndFragment(),
-                'jsEndpointCustom' => self::dropUrlQueryAndFragment(),
+                'jsEndpointCustom' => self::relativeTrackerEndpoint(),
+                'trackingEndpointCustom' => self::relativeTrackerEndpoint(),
             ],
             ['matomoUrl' => self::siteOwnDefaultUrl()]
         ) extends MatomoConfigurationVariable {
@@ -138,7 +115,7 @@ class SecuredTemplateFactory
 
     /**
      * Prevent use of custom JavaScript function bodies. Note: if the user has
-     * `unfilterd_html`, this override will not be registered (see WordPress.php).
+     * `unfiltered_html`, this override will not be registered (see WordPress.php).
      *
      * @param CustomJsFunctionVariable $wrapped the instance this one stands in for
      * @return CustomJsFunctionVariable
@@ -155,7 +132,7 @@ class SecuredTemplateFactory
 
     /**
      * Prevent use of custom JavaScript functions run for tracking requests. Note:
-     * if the user has `unfilterd_html`, this override will not be registered (see
+     * if the user has `unfiltered_html`, this override will not be registered (see
      * WordPress.php).
      *
      * @param CustomRequestProcessingVariable $wrapped the instance this one stands in for
@@ -182,6 +159,24 @@ class SecuredTemplateFactory
             }
 
             return preg_replace('/[?#].*$/s', '', $value);
+        };
+    }
+
+    /**
+     * @return \Closure
+     */
+    private static function relativeTrackerEndpoint()
+    {
+        $dropUrlQueryAndFragment = self::dropUrlQueryAndFragment();
+
+        return function ($value) use ($dropUrlQueryAndFragment) {
+            $value = call_user_func($dropUrlQueryAndFragment, $value);
+
+            if (!is_string($value)) {
+                return $value;
+            }
+
+            return ltrim($value, '/');
         };
     }
 

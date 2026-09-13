@@ -12,7 +12,6 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
-use Piwik\Plugins\TagManager\Template\Tag\LivezillaDynamicTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -25,8 +24,6 @@ use Piwik\Validators\Exception as ValidatorException;
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  */
 class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase {
-
-	const LIVEZILLA_ID = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
 	/**
 	 * @var SecuredTemplateFactory
@@ -144,92 +141,6 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 			$this->template_factory->customImageTag( new CustomImageTag() ),
 			new CustomImageTag(),
 			[ 'parameters' => [ 'customImageSrc' => home_url( '/pixel.gif' ) ] ]
-		);
-	}
-
-	public function test_livezillaDynamicTag_should_refuse_a_domain_on_another_host() {
-		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
-
-		$this->expectException( ValidatorException::class );
-
-		$this->find_parameter( $tag, 'LivezillaDynamicDomain' )->setValue( 'https://evil.example/livezilla' );
-	}
-
-	public function test_livezillaDynamicTag_should_accept_a_domain_on_this_site() {
-		$url = home_url( '/livezilla' );
-
-		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDomain' );
-		$parameter->setValue( $url );
-
-		$this->assertSame( $url, $parameter->getValue() );
-	}
-
-	public function test_livezillaDynamicTag_should_drop_a_query_string_from_the_domain() {
-		// the template appends "/script.php?id=" to this, so a query string of the user's own would
-		// swallow it and leave the browser asking for whatever the domain already addressed
-		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDomain' );
-		$parameter->setValue( home_url( '/uploads/payload.txt?x=' ) );
-
-		$this->assertSame( home_url( '/uploads/payload.txt' ), $parameter->getValue() );
-	}
-
-	public function test_livezillaDynamicTag_should_drop_a_fragment_from_the_domain() {
-		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDomain' );
-		$parameter->setValue( home_url( '/uploads/payload.txt#' ) );
-
-		$this->assertSame( home_url( '/uploads/payload.txt' ), $parameter->getValue() );
-	}
-
-	public function test_livezillaDynamicTag_should_keep_matomos_own_checks_on_the_domain() {
-		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
-
-		$this->expectException( ValidatorException::class );
-
-		// on this site, but under the 11 character minimum Matomo asks for
-		$this->find_parameter( $tag, 'LivezillaDynamicDomain' )->setValue( '/lz' );
-	}
-
-	public function test_livezillaDynamicTag_should_refuse_url_syntax_in_the_id() {
-		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
-
-		$this->expectException( ValidatorException::class );
-
-		$this->find_parameter( $tag, 'LivezillaDynamicID' )->setValue( self::LIVEZILLA_ID . '&callback=alert' );
-	}
-
-	public function test_livezillaDynamicTag_should_refuse_a_variable_reference_in_the_id() {
-		$tag = $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() );
-
-		$this->expectException( ValidatorException::class );
-
-		// long enough that Matomo's own CharacterLength(32) is not what refuses it
-		$this->find_parameter( $tag, 'LivezillaDynamicID' )->setValue( '{{' . self::LIVEZILLA_ID . '}}' );
-	}
-
-	public function test_livezillaDynamicTag_should_accept_an_opaque_id() {
-		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicID' );
-		$parameter->setValue( self::LIVEZILLA_ID );
-
-		$this->assertSame( self::LIVEZILLA_ID, $parameter->getValue() );
-	}
-
-	public function test_livezillaDynamicTag_should_leave_the_other_parameters_alone() {
-		$parameter = $this->find_parameter( $this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ), 'LivezillaDynamicDefer' );
-		$parameter->setValue( false );
-
-		$this->assertFalse( $parameter->getValue() );
-	}
-
-	public function test_livezillaDynamicTag_should_stand_in_for_the_template_it_narrows() {
-		$this->assert_stands_in_for(
-			$this->template_factory->livezillaDynamicTag( new LivezillaDynamicTag() ),
-			new LivezillaDynamicTag(),
-			[
-				'parameters' => [
-					'LivezillaDynamicID'     => self::LIVEZILLA_ID,
-					'LivezillaDynamicDomain' => home_url( '/livezilla' ),
-				],
-			]
 		);
 	}
 
@@ -404,25 +315,53 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertSame( 'custom.js', $parameter->getValue() );
 	}
 
-	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_the_js_endpoint() {
-		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'jsEndpointCustom' );
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_a_custom_endpoint( $name ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
 		$parameter->setValue( 'matomo.js?cache=1' );
 
 		$this->assertSame( 'matomo.js', $parameter->getValue() );
 	}
 
-	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_the_js_endpoint() {
-		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'jsEndpointCustom' );
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_a_custom_endpoint( $name ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
 		$parameter->setValue( 'matomo.js#x' );
 
 		$this->assertSame( 'matomo.js', $parameter->getValue() );
 	}
 
-	public function test_matomoConfigurationVariable_should_keep_a_query_string_on_the_tracking_endpoint() {
-		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'trackingEndpointCustom' );
-		$parameter->setValue( 'matomo.php?idsite=1' );
+	public function rooted_custom_endpoint_provider() {
+		$endpoints = [
+			'a leading slash' => [ '/evil.example/x.js', 'evil.example/x.js' ],
+			'two of them'     => [ '//evil.example/x.js', 'evil.example/x.js' ],
+			'three of them'   => [ '///evil.example/x.js', 'evil.example/x.js' ],
+			'a rooted path'   => [ '/wp-content/plugins/matomo/app/matomo.js', 'wp-content/plugins/matomo/app/matomo.js' ],
+			'nothing else'    => [ '/', '' ],
+		];
 
-		$this->assertSame( 'matomo.php?idsite=1', $parameter->getValue() );
+		$cases = [];
+		foreach ( $this->custom_endpoint_provider() as $name ) {
+			foreach ( $endpoints as $label => $endpoint ) {
+				$cases[ $name[0] . ', ' . $label ] = [ $name[0], $endpoint[0], $endpoint[1] ];
+			}
+		}
+
+		return $cases;
+	}
+
+	/**
+	 * @dataProvider rooted_custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_drop_leading_slashes_from_a_custom_endpoint( $name, $stored, $expected ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), $name );
+		$parameter->setValue( $stored );
+
+		$this->assertSame( $expected, $parameter->getValue() );
 	}
 
 	public function test_matomoConfigurationVariable_should_stand_in_for_the_template_it_narrows() {
