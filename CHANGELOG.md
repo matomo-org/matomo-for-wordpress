@@ -32,6 +32,33 @@
   frontend exactly as entered. This applies outside a multisite network as well: an administrator
   holds that capability already, a user who holds Matomo super user access through the Matomo Super
   User role alone does not, and neither does anybody on a site that defines DISALLOW_UNFILTERED_HTML.
+* Security: the Tag Manager templates that can put arbitrary HTML or JavaScript on the WordPress
+  frontend now require the same unfiltered_html capability for that part of what they do. A user without
+  it can still use the Tag Manager and every one of these templates, but the Custom HTML, Custom
+  JavaScript Function and Custom Request Processing templates no longer accept code from them, and
+  the Custom Image and Matomo Configuration templates only accept URLs on this site. The
+  Matomo Configuration template's custom JavaScript and tracking endpoints additionally have to name
+  a ".js" or ".php" file, or a directory, because they are appended to the Matomo URL to form the
+  address the tracker itself is loaded from. A Tag Manager variable's name cannot contain "{{" or
+  "}}" for such a user either.
+  Containers that already use any of these templates keep working and are generated exactly as
+  before, and a user without the capability can still create a version of one, publish it and rename
+  the variables it uses.
+* Security: the Tag Manager tag templates that name an account at another service now require the
+  unfiltered_html capability as well. Which other services a site loads code from, and which account
+  at those services it reports its visitors to, is a decision for whoever is responsible for the
+  site. A user without the capability can no longer add, change, or copy a tag using one of these
+  26 templates: AddThis, Axeptio, Bing UET, Bugsnag, Cookiebot, CookieYes, Drift, Emarsys, etracker,
+  Facebook Pixel, Google Ads Conversion, Google Analytics 4, Google Analytics (Universal),
+  Google Tag, Honeybadger, Hotjar, LinkedIn Insight, LiveZilla, OneTrust, Pingdom RUM, Raygun,
+  Sentry, Shareaholic, Tawk.to, Visual Website Optimizer and Zendesk Chat.
+* Security: a paused tag that a user without the unfiltered_html capability would not be allowed to
+  add can no longer be turned back on by them either. A paused tag is left out of the generated
+  container, so resuming one puts a script on the site that was not being served before. This covers
+  a tag using one of the 26 templates above, and a Custom HTML or Custom Image tag whose stored
+  values are ones the user could not have entered themselves -- a Custom Image tag pointing at this
+  site can still be turned back on, since they are allowed to add one. Pausing and deleting such a
+  tag is still allowed.
 * Security: when the plugin is network activated, a blog's own Matomo > Settings now shows only the
   Exclusions and Privacy tabs, plus Matomo plugin settings, for a user holding Matomo super
   user access on that blog (which includes network admins).

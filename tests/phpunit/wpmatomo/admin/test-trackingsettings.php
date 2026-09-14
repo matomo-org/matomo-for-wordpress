@@ -362,6 +362,74 @@ EOF;
 	}
 
 	/**
+	 * The Tag Manager track mode is allowed for users without unfiltered_html since it only allows
+	 * choosing between existing containers.
+	 */
+	public function test_show_settings_should_let_the_matomo_super_user_role_switch_to_the_tag_manager_tracking_mode_outside_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Multisite.' );
+			return;
+		}
+
+		$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
+
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'tagmanger_container_ids' => [ 'abcdef' => '1' ],
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+		$this->assertSame( TrackingSettings::TRACK_MODE_TAGMANAGER, $saved->get_global_option( 'track_mode' ) );
+	}
+
+	public function test_show_settings_should_let_the_matomo_super_user_role_choose_which_containers_are_embedded() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Multisite.' );
+			return;
+		}
+
+		$this->settings->apply_tracking_related_changes(
+			[
+				'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'tagmanger_container_ids' => [ 'abcdef' => '1' ],
+			]
+		);
+
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] ) );
+
+		$this->submit_tracking_settings(
+			[
+				'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'tagmanger_container_ids' => [ 'ghijkl' => '1' ],
+			]
+		);
+
+		$saved = new Settings();
+
+		$this->assertFalse( current_user_can( 'unfiltered_html' ) );
+		$this->assertSame( [ 'ghijkl' => '1' ], $saved->get_global_option( 'tagmanger_container_ids' ) );
+	}
+
+	public function test_get_restricted_track_modes_should_cover_every_mode_that_embeds_the_users_own_code() {
+		$this->assertSame(
+			[
+				TrackingSettings::TRACK_MODE_MANUALLY,
+			],
+			TrackingSettings::get_restricted_track_modes()
+		);
+	}
+
+	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */

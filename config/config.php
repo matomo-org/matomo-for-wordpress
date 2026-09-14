@@ -186,4 +186,16 @@ return array(
 		\Piwik\DI::get( \Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoWidgetApplicable::class ),
 
 	\Piwik\Plugins\Marketplace\Api\Service::class => \Piwik\DI::autowire()->constructor( 'https://plugins.matomo.org' ),
+
+	\Piwik\Plugins\TagManager\Model\Container::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Container::class ),
+
+	\Piwik\Plugins\TagManager\Model\Tag::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Tag::class ),
+
+	\Piwik\Plugins\TagManager\Model\Variable::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Variable::class ),
+
+	\Piwik\Plugins\TagManager\API::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\API::class ),
 );
