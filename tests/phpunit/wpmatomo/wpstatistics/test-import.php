@@ -128,7 +128,10 @@ class ImportTest extends MatomoAnalytics_SharedFixture_TestCase {
 					try {
 						$process = WP_Statistics::instance()->getBackgroundProcess( 'schema_migration_process' );
 						$method  = new \ReflectionMethod( $process, 'handle' );
-						$method->setAccessible( true );
+						if ( PHP_VERSION_ID < 80100 ) {
+							// no-op since PHP 8.1 and deprecated since PHP 8.5
+							$method->setAccessible( true );
+						}
 						$method->invoke( $process );
 					} catch ( \WPDieException $ex ) {
 						// ignore

@@ -1775,7 +1775,10 @@ namespace {
                     }
                     $this->parseIncomingCookies(\explode("\r\n", $header));
                 } finally {
-                    \curl_close($ch);
+                    if (\PHP_VERSION_ID < 80000) {
+                        // curl_close() has no effect since PHP 8.0 and is deprecated since PHP 8.5
+                        \curl_close($ch);
+                    }
                     \ob_end_clean();
                 }
             } elseif (\function_exists('stream_context_create')) {
@@ -1783,6 +1786,10 @@ namespace {
                 $ctx = \stream_context_create($stream_options);
                 $response = \file_get_contents($url, 0, $ctx);
                 $content = $response;
+                if (\function_exists('http_get_last_response_headers')) {
+                    // the locally scoped $http_response_header variable is deprecated since PHP 8.5.
+                    $http_response_header = \http_get_last_response_headers() ?: [];
+                }
                 $this->parseIncomingCookies($http_response_header);
             }
             return $content;

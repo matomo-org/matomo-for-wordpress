@@ -140,7 +140,10 @@ class RecordImporter {
 	 */
 	protected function convert_visitors_to_array( $visitors ) {
 		$property = new \ReflectionProperty( VisitorDecorator::class, 'visitor' );
-		$property->setAccessible( true );
+		if ( PHP_VERSION_ID < 80100 ) {
+			// no-op since PHP 8.1 and deprecated since PHP 8.5
+			$property->setAccessible( true );
+		}
 
 		$result = [];
 		foreach ( $visitors as $visitor ) {
