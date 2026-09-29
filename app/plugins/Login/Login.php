@@ -38,6 +38,10 @@ class Login extends \Piwik\Plugin
      */
     private $hasPerformedBruteForceCheckForUserPwdLogin = \false;
     /**
+     * @var bool
+     */
+    private $isHandlingNoAccess = \false;
+    /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
@@ -100,6 +104,9 @@ class Login extends \Piwik\Plugin
         $translations[] = 'Login_UnblockAllIPs';
         $translations[] = 'Login_CurrentlyBlockedIPsUnblockConfirm';
         $translations[] = 'Login_IPsAlwaysBlocked';
+        $translations[] = 'Login_LoginOrEmail';
+        $translations[] = 'General_Password';
+        $translations[] = 'General_Required';
     }
     /**
      * @return true
@@ -237,6 +244,9 @@ class Login extends \Piwik\Plugin
     {
         $stylesheetFiles[] = "plugins/Login/stylesheets/login.less";
         $stylesheetFiles[] = "plugins/Login/stylesheets/variables.less";
+        $stylesheetFiles[] = "plugins/Login/stylesheets/loginLayout.less";
+        $stylesheetFiles[] = "plugins/Login/stylesheets/loginForm.less";
+        $stylesheetFiles[] = "plugins/Login/stylesheets/loginWhatsNew.less";
     }
     /**
      * @return void
@@ -271,14 +281,24 @@ class Login extends \Piwik\Plugin
      */
     public function noAccess(Exception $exception)
     {
-        $frontController = FrontController::getInstance();
-        if (Common::isXmlHttpRequest()) {
-            $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'ajaxNoAccess', [$exception->getMessage()]);
-            echo is_string($response) ? $response : '';
-            return;
+        if ($this->isHandlingNoAccess) {
+            // dispatching the login page raised another no access exception, which would trigger this handler
+            // again and again. Rethrow instead, so the regular error page is shown.
+            throw $exception;
         }
-        $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'login', [$exception->getMessage()]);
-        echo is_string($response) ? $response : '';
+        $frontController = FrontController::getInstance();
+        $this->isHandlingNoAccess = \true;
+        try {
+            if (Common::isXmlHttpRequest()) {
+                $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'ajaxNoAccess', [$exception->getMessage()]);
+                echo is_string($response) ? $response : '';
+                return;
+            }
+            $response = $frontController->dispatch(Piwik::getLoginPluginName(), 'login', [$exception->getMessage()]);
+            echo is_string($response) ? $response : '';
+        } finally {
+            $this->isHandlingNoAccess = \false;
+        }
     }
     /**
      * Set login name and authentication token for API request.
@@ -287,9 +307,8 @@ class Login extends \Piwik\Plugin
      * @param string $tokenAuth
      * @return void
      */
-    public function apiRequestAuthenticate(
-#[\SensitiveParameter]
-$tokenAuth)
+    public function apiRequestAuthenticate(#[\SensitiveParameter]
+        $tokenAuth)
     {
         $this->beforeLoginCheckBruteForce();
         /** @var \Piwik\Auth $auth */

@@ -17,8 +17,11 @@ use Piwik\Metrics\Formatter;
 use Piwik\Nonce;
 use Piwik\Option;
 use Piwik\Piwik;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\LanguagesManager\API as APILanguagesManager;
+use Piwik\Plugins\PrivacyManager\FeatureFlags\GranularPrivacyCompliance;
+use Piwik\Policy\PolicyManager;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\SiteContentDetector;
@@ -166,6 +169,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@PrivacyManager/compliance');
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
+        $view->granularComplianceEnabled = StaticContainer::get(FeatureFlagManager::class)->isFeatureActive(GranularPrivacyCompliance::class);
         $this->setBasicVariablesView($view);
         return $view->render();
     }
@@ -240,6 +244,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $deleteDataInfos = [];
         $deleteDataInfos["config"] = \Piwik\Plugins\PrivacyManager\PrivacyManager::getPurgeDataSettings();
         $deleteDataInfos["deleteTables"] = "<br/>" . implode(", ", \Piwik\Plugins\PrivacyManager\LogDataPurger::getDeleteTableLogTables());
+        // retention is stored as an instance-wide option, so it is never site specific
+        $deleteDataInfos["compliancePolicyControlled"] = PolicyManager::getCompliancePoliciesControllingASetting('delete_logs_older_than', null, PolicyManager::SETTING_TYPE_OPTION);
         /** @var Scheduler $scheduler */
         $scheduler = StaticContainer::getContainer()->get('Piwik\\Scheduler\\Scheduler');
         $scheduleTimetable = $scheduler->getScheduledTimeForMethod("PrivacyManager", "deleteLogTables");

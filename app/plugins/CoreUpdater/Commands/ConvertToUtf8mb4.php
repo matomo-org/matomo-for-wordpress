@@ -135,6 +135,9 @@ class ConvertToUtf8mb4 extends ConsoleCommand
                 return null;
             }
             $userTableCollation = $userTableStatus['Collation'];
+            if (!is_string($userTableCollation) || !DbHelper::isValidCollation($userTableCollation)) {
+                return null;
+            }
             $archiveTable = ArchiveTableCreator::getLatestArchiveTableInstalled(ArchiveTableCreator::NUMERIC_TABLE);
             if (null === $archiveTable) {
                 return null;

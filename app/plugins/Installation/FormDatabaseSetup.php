@@ -12,7 +12,6 @@ use Exception;
 use HTML_QuickForm2_DataSource_Array;
 use HTML_QuickForm2_Factory;
 use HTML_QuickForm2_Rule;
-use Piwik\Config;
 use Piwik\Db;
 use Piwik\Db\Adapter;
 use Piwik\DbHelper;
@@ -56,9 +55,7 @@ class FormDatabaseSetup extends QuickForm2
         $this->addElement('select', 'adapter')->setLabel(Piwik::translate('Installation_DatabaseSetupAdapter'))->loadOptions($adapters)->addRule('required', Piwik::translate('General_Required', Piwik::translate('Installation_DatabaseSetupAdapter')));
         $this->addElement('select', 'schema')->setLabel(Piwik::translate('Installation_DatabaseSetupEngine'))->loadOptions(['Mysql' => 'MySQL', 'Mariadb' => 'MariaDB'])->addRule('required', Piwik::translate('General_Required', Piwik::translate('Installation_DatabaseSetupEngine')));
         $this->addElement('submit', 'submit', array('value' => Piwik::translate('General_Next') . ' »', 'class' => 'btn'));
-        $defaultDatabaseType = Config::getInstance()->database['type'];
-        $this->addElement('hidden', 'type')->setLabel('Database engine');
-        $defaults = array('host' => '127.0.0.1', 'type' => $defaultDatabaseType, 'tables_prefix' => 'matomo_', 'schema' => 'Mysql', 'port' => '3306');
+        $defaults = array('host' => '127.0.0.1', 'tables_prefix' => 'matomo_', 'schema' => 'Mysql', 'port' => '3306');
         $defaultsEnvironment = array('host', 'adapter', 'tables_prefix', 'username', 'schema', 'password', 'dbname');
         foreach ($defaultsEnvironment as $name) {
             $envValue = $this->getEnvironmentSetting($name);
@@ -106,7 +103,7 @@ class FormDatabaseSetup extends QuickForm2
             $password = $passwordFromEnv;
         }
         $schema = $this->getSubmitValue('schema');
-        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => $this->getSubmitValue('type'), 'enable_ssl' => \false);
+        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => 'InnoDB', 'enable_ssl' => \false);
         $extractedHostAndPort = \Piwik\Plugins\Installation\HostPortExtractor::extract($dbInfos['host']);
         if (!is_null($extractedHostAndPort)) {
             $dbInfos['host'] = $extractedHostAndPort->host;

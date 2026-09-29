@@ -14,7 +14,7 @@ index 42a96abef..67d9557ee 100644
                      \ob_end_clean();
                  }
              } elseif (\function_exists('stream_context_create')) {
-@@ -1783,6 +1786,11 @@ namespace {
+@@ -1783,6 +1786,10 @@ namespace {
                  $ctx = \stream_context_create($stream_options);
                  $response = \file_get_contents($url, 0, $ctx);
                  $content = $response;
