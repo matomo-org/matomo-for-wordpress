@@ -41,9 +41,8 @@ class API extends \Piwik\Plugin\API
      * @param array<string, array<int, array{name:string, value?:mixed}>> $settingValues
      * @param string|false $passwordConfirmation
      */
-    public function setSystemSettings($settingValues,
-#[\SensitiveParameter]
-$passwordConfirmation = \false) : void
+    public function setSystemSettings($settingValues, #[\SensitiveParameter]
+        $passwordConfirmation = \false) : void
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

@@ -8,6 +8,7 @@
  */
 namespace Piwik\Plugins\UserCountry;
 
+use Piwik\Columns\Dimension;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
@@ -19,7 +20,14 @@ class UserCountry extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Insights.addReportToOverview' => 'addReportToInsightsOverview');
+        return array('Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Insights.addReportToOverview' => 'addReportToInsightsOverview', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes');
+    }
+    /**
+     * @param array<string, string> $types
+     */
+    public function addMetricSemanticTypes(array &$types) : void
+    {
+        $types[\Piwik\Plugins\UserCountry\Archiver::DISTINCT_COUNTRIES_METRIC] = Dimension::TYPE_NUMBER;
     }
     public function getClientSideTranslationKeys(&$translations)
     {

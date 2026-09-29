@@ -49,6 +49,11 @@ class Menu extends Feature {
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
 	/**
+	 * The WordPress capability required to reach any Matomo page in the network admin.
+	 */
+	const CAP_NETWORK = 'manage_network_options';
+
+	/**
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings ) {
@@ -127,7 +132,7 @@ EOF;
 					self::$parent_slug,
 					__( 'Get Started', 'matomo' ),
 					__( 'Get Started', 'matomo' ),
-					Capabilities::KEY_SUPERUSER,
+					$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 					self::SLUG_GET_STARTED,
 					[
 						$get_started,
@@ -144,7 +149,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Multi Site', 'matomo' ),
 				__( 'Multi Site', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 				'matomo-multisite',
 				[
 					$info_multisite,
@@ -156,7 +161,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Summary', 'matomo' ),
 				__( 'Summary', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_REPORT_SUMMARY,
 				[
 					$summary,
@@ -169,7 +174,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Reporting', 'matomo' ),
 				__( 'Reporting', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_REPORTING,
 				[
 					$this,
@@ -182,7 +187,7 @@ EOF;
 					self::$parent_slug,
 					__( 'Tag Manager', 'matomo' ),
 					__( 'Tag Manager', 'matomo' ),
-					Capabilities::KEY_WRITE,
+					$this->get_actual_menu_capability( Capabilities::KEY_WRITE ),
 					self::SLUG_TAGMANAGER,
 					[
 						$this,
@@ -200,7 +205,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Settings', 'matomo' ),
 				__( 'Settings', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_settings_menu_capability(),
 				self::SLUG_SETTINGS,
 				[
 					$admin_settings,
@@ -214,7 +219,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Marketplace', 'matomo' ),
 				__( 'Marketplace', 'matomo' ),
-				Capabilities::KEY_VIEW,
+				$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 				self::SLUG_MARKETPLACE,
 				[
 					$marketplace,
@@ -224,10 +229,13 @@ EOF;
 		}
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
-			$system_report = new MatomoPage( new SystemReport( $this->settings ) );
+			$system_report     = new MatomoPage( new SystemReport( $this->settings ) );
+			$system_report_cap = $this->get_system_report_menu_capability();
 
+			// only display the ! icon next to the system report menu item, if the user can actually
+			// visit the system report page.
 			$warning = '';
-			if ( Admin::is_matomo_admin() ) {
+			if ( Admin::is_matomo_admin() && current_user_can( $system_report_cap ) ) {
 				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true ) && $system_report->get_content()->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
@@ -237,7 +245,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
 				__( 'Diagnostics', 'matomo' ) . $warning,
-				Capabilities::KEY_SUPERUSER,
+				$system_report_cap,
 				self::SLUG_SYSTEM_REPORT,
 				[
 					$system_report,
@@ -251,7 +259,7 @@ EOF;
 				self::$parent_slug,
 				__( 'Import WP Statistics', 'matomo' ),
 				__( 'Import WP Statistics', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
+				$this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER ),
 				self::SLUG_IMPORTWPS,
 				[
 					$import_wp_s,
@@ -263,7 +271,7 @@ EOF;
 			self::$parent_slug,
 			__( 'Help', 'matomo' ),
 			__( 'Help', 'matomo' ),
-			Capabilities::KEY_VIEW,
+			$this->get_actual_menu_capability( Capabilities::KEY_VIEW ),
 			self::SLUG_ABOUT,
 			[
 				$info,
@@ -286,6 +294,28 @@ EOF;
 				}
 			}
 		}
+	}
+
+	public static function make_page_url( $menu_slug ) {
+		global $_parent_pages;
+
+		if ( ! is_multisite() || ! is_network_admin() ) {
+			return (string) menu_page_url( $menu_slug, false );
+		}
+
+		// menu_page_url() always builds a blog admin URL, so it cannot be used
+		// for a page that is displayed in the network admin as well.
+
+		if ( ! isset( $_parent_pages[ $menu_slug ] ) ) {
+			return '';
+		}
+
+		$parent_slug = $_parent_pages[ $menu_slug ];
+		if ( $parent_slug && ! isset( $_parent_pages[ $parent_slug ] ) ) {
+			return network_admin_url( add_query_arg( 'page', $menu_slug, $parent_slug ) );
+		}
+
+		return network_admin_url( 'admin.php?page=' . $menu_slug );
 	}
 
 	public static function get_matomo_goto_url( $destination ) {
@@ -443,6 +473,36 @@ EOF;
 		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
 		wp_safe_redirect( $url );
 		exit;
+	}
+
+	private function get_actual_menu_capability( $matomo_capability ) {
+		if ( is_multisite() && is_network_admin() ) {
+			return self::CAP_NETWORK;
+		}
+
+		return $matomo_capability;
+	}
+
+	private function get_system_report_menu_capability() {
+		// the report is about the install rather than about one blog's reports, and not every
+		// troubleshooting action on it stops at the blog it was triggered from
+		// (see SystemReport::can_user_manage())
+		if ( $this->settings->is_network_enabled() ) {
+			return self::CAP_NETWORK;
+		}
+
+		return $this->get_actual_menu_capability( Capabilities::KEY_SUPERUSER );
+	}
+
+	private function get_settings_menu_capability() {
+		// only network admins can see the network settings version of this page
+		if ( is_multisite() && is_network_admin() ) {
+			return self::CAP_NETWORK;
+		}
+
+		// the page always has the Exclusions tab on it, which Matomo admin users are allowed to see.
+		// other tabs require Matomo super user access and are gated in the page class itself.
+		return Capabilities::KEY_ADMIN;
 	}
 
 	private function get_light_grey_brand_icon() {

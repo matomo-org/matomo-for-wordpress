@@ -520,6 +520,12 @@ class ScheduledTasks extends Feature {
 	public function remove_cron_error_ajax() {
 		check_ajax_referer( 'matomo-scheduled-task-errors' );
 
+		// only allow a superuser to remove this notice, since it will be removed for everyone who
+		// is an admin for the blog
+		if ( ! current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
+		}
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST['matomo_job_id'] ) ) {
 			wp_send_json( false );

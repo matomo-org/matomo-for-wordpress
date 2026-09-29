@@ -6,43 +6,40 @@
  *
  */
 
-import * as path from 'node:path';
-import { writeFile , readFile } from 'node:fs/promises'
-import { stringify , parse } from 'ini'
+import fetch from 'node-fetch';
 import Website from '../website.js'
-
-type IniObject = Awaited<ReturnType<parse>>;
 
 class MatomoIniConfig {
   async set(section: string, key: string, value: any) {
-    const iniFile = await this.getConfigIniContents();
-    iniFile[section] = iniFile[section] || {};
-    iniFile[section][key] = value;
-    await this.writeConfigIniContents(iniFile);
+    await this.callSetConfigValue(new URLSearchParams({
+      section,
+      key,
+      value: JSON.stringify(value),
+    }));
   }
 
   async remove(section: string, key: string) {
-    const iniFile = await this.getConfigIniContents();
-    if (iniFile[section]) {
-      delete iniFile[section][key];
+    await this.callSetConfigValue(new URLSearchParams({
+      section,
+      key,
+    }));
+  }
+
+  private async callSetConfigValue(body: URLSearchParams) {
+    body.set('action', 'matomo_test_set_config_value');
+
+    const response = await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body,
+    });
+
+    const result = await response.text();
+    if (result !== '"ok"') {
+      throw new Error(`failed to change config.ini.php: ${result}`);
     }
-    await this.writeConfigIniContents(iniFile);
-  }
-
-  async writeConfigIniContents(iniFile: IniObject) {
-    const configIniPath = await this.getConfigIniPath();
-    const text = stringify(iniFile);
-    await writeFile(configIniPath, text);
-  }
-
-  async getConfigIniContents(): Promise<IniObject> {
-    const configIniPath = await this.getConfigIniPath();
-    const text = await readFile(configIniPath, { encoding : 'utf-8' })
-    return parse(text);
-  }
-
-  async getConfigIniPath(): Promise<string> {
-    return path.join(process.cwd(), 'docker', 'wordpress', await Website.getWpFolder(), 'wp-content', 'uploads', 'matomo', 'config', 'config.ini.php');
   }
 }
 

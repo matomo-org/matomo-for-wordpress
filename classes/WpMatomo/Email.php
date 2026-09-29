@@ -151,7 +151,10 @@ class Email {
 								$attachments[ count( $attachments ) - 1 ][7] = $attachment['filename'];
 
 								$property = new \ReflectionProperty( get_class( $phpmailer ), 'attachment' );
-								$property->setAccessible( true );
+								if ( PHP_VERSION_ID < 80100 ) {
+									// no-op since PHP 8.1 and deprecated since PHP 8.5
+									$property->setAccessible( true );
+								}
 								$property->setValue( $phpmailer, $attachments );
 							}
 						}

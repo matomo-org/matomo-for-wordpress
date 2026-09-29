@@ -101,7 +101,10 @@ class DownloadTestScreenshots extends ConsoleCommand
         // hack needed in matomo 5, since helpers can no longer be accessed directly
         $klass = new \ReflectionClass(get_parent_class(get_parent_class(self::class)));
         $property = $klass->getProperty('helperSet');
-        $property->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            // no-op since PHP 8.1 and deprecated since PHP 8.5
+            $property->setAccessible(true);
+        }
         $helperSet = $property->getValue($this);
 
         $helper = $helperSet->get('question');

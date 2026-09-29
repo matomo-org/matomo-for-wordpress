@@ -33,16 +33,26 @@ class Access {
 	}
 
 	public function get_permission_for_role( $role_name ) {
-		$options = $this->settings->get_global_option( Settings::OPTION_KEY_CAPS_ACCESS );
+		$permissions = $this->get_configured_permissions_for_roles();
 
 		$role = get_role( $role_name );
-		if ( $role && isset( $options[ $role_name ] ) ) {
-			return $options[ $role_name ];
+		if ( $role && isset( $permissions[ $role_name ] ) ) {
+			return $permissions[ $role_name ];
 		}
 	}
 
+	public function get_configured_permissions_for_roles() {
+		$options = $this->settings->get_global_option( Settings::OPTION_KEY_CAPS_ACCESS );
+
+		if ( empty( $options ) || ! is_array( $options ) ) {
+			$options = [];
+		}
+
+		return $options;
+	}
+
 	public function save( $values ) {
-		global $wp_roles;
+		$wp_roles = wp_roles();
 
 		$roles           = new Roles( $this->settings );
 		$available_roles = $roles->get_available_roles_for_configuration();

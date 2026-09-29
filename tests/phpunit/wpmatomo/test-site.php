@@ -114,4 +114,53 @@ class SiteTest extends MatomoUnit_TestCase {
 
 		$this->assertEmpty( Site::get_matomo_site_id( 49 ) );
 	}
+
+	public function test_is_blog_out_of_service_should_return_false_for_the_current_blog() {
+		$this->assertFalse( Site::is_blog_out_of_service( get_current_blog_id() ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_is_blog_out_of_service_should_return_true_for_a_blog_that_does_not_exist() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assertTrue( Site::is_blog_out_of_service( 987654 ) );
+	}
+
+	public function get_test_data_for_out_of_service_flags() {
+		return [
+			[ 'deleted' ],
+			[ 'archived' ],
+			[ 'spam' ],
+		];
+	}
+
+	/**
+	 * @group ms-required
+	 * @dataProvider get_test_data_for_out_of_service_flags
+	 */
+	public function test_is_blog_out_of_service_should_return_true_for_each_flag_a_blog_can_be_out_of_service_by( $flag ) {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = self::factory()->blog->create();
+
+		try {
+			$this->assertFalse( Site::is_blog_out_of_service( $blog_id ) );
+
+			wp_update_site( $blog_id, [ $flag => 1 ] );
+
+			// the blog id has to be looked up again, and the already fetched WP_Site accepted
+			$this->assertTrue( Site::is_blog_out_of_service( $blog_id ) );
+			$this->assertTrue( Site::is_blog_out_of_service( get_site( $blog_id ) ) );
+		} finally {
+			wp_delete_site( $blog_id );
+		}
+	}
 }

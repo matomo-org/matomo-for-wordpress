@@ -3,6 +3,7 @@
  * @package matomo
  */
 
+use WpMatomo\Admin\Menu;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
@@ -20,6 +21,9 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 		parent::setUp();
 		TrackingSettings::register_ajax();
 		$this->wordpress_fixture->switch_to_admin_page();
+
+		$this->_setRole( 'administrator' );
+
 		$this->settings = new Settings();
 		$this->settings->set_global_option( 'track_js_endpoint', 'plugin' );
 		$this->settings->save();
@@ -34,6 +38,52 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 		} catch ( WPAjaxDieStopException $e ) {
 			$this->assertEquals( '-1', $e->getMessage() ); // see check_ajax_referer()
 		}
+	}
+
+	public function test_generate_tracking_code_should_refuse_a_user_who_may_not_manage_the_tracking_settings() {
+		$this->_setRole( 'subscriber' );
+
+		$nonce = wp_create_nonce( TrackingSettings::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
+
+		$this->assertFalse( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+
+		$response = $this->call_ajax( 'matomo_generate_tracking_code', [], [ '_ajax_nonce' => $nonce ] );
+
+		$this->assertSame(
+			[
+				'success' => false,
+				'data'    => [ 'message' => 'forbidden' ],
+			],
+			$response
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_generate_tracking_code_should_refuse_a_blog_administrator_when_the_plugin_is_network_activated() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		update_site_option( 'active_sitewide_plugins', [ 'matomo/matomo.php' => time() ] );
+
+		$this->assertTrue( current_user_can( Capabilities::KEY_ADMIN ) );
+		$this->assertFalse( current_user_can( Menu::CAP_NETWORK ) );
+		$this->assertFalse( ( new TrackingSettings( new Settings() ) )->can_user_manage() );
+
+		$nonce = wp_create_nonce( TrackingSettings::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
+
+		$response = $this->call_ajax( 'matomo_generate_tracking_code', [], [ '_ajax_nonce' => $nonce ] );
+
+		$this->assertSame(
+			[
+				'success' => false,
+				'data'    => [ 'message' => 'forbidden' ],
+			],
+			$response
+		);
 	}
 
 	public function test_generate_tracking_code_returns_generated_code_using_settings() {

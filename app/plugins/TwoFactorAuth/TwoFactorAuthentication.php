@@ -77,9 +77,8 @@ class TwoFactorAuthentication
      * @param string $secret
      * @return void
      */
-    public function saveSecret($login,
-#[\SensitiveParameter]
-$secret)
+    public function saveSecret($login, #[\SensitiveParameter]
+        $secret)
     {
         if (self::isAnonymous($login)) {
             throw new Exception('Anonymous cannot use two-factor authentication');
@@ -116,9 +115,8 @@ $secret)
         $model = self::getUserModel();
         return $model->getUser($login);
     }
-    private function wasTwoFaCodeUsedRecently(string $login,
-#[\SensitiveParameter]
-string $authCode) : bool
+    private function wasTwoFaCodeUsedRecently(string $login, #[\SensitiveParameter]
+        string $authCode) : bool
     {
         $time = Option::get($this->gettwoFaCodeUsedKey($login, $authCode));
         if (empty($time)) {
@@ -127,15 +125,13 @@ string $authCode) : bool
         $blockWindowSeconds = 60 * self::BLOCK_TWOFA_CODE_MINUTES;
         return (int) $time >= time() - $blockWindowSeconds;
     }
-    private function gettwoFaCodeUsedKey(string $login,
-#[\SensitiveParameter]
-string $authCode) : string
+    private function gettwoFaCodeUsedKey(string $login, #[\SensitiveParameter]
+        string $authCode) : string
     {
         return self::OPTION_PREFIX_TWO_FA_CODE_USED . md5($login . $authCode . SettingsPiwik::getSalt());
     }
-    private function setTwoFaCodeWasUsed(string $login,
-#[\SensitiveParameter]
-string $authCode) : bool
+    private function setTwoFaCodeWasUsed(string $login, #[\SensitiveParameter]
+        string $authCode) : bool
     {
         $table = Common::prefixTable('option');
         $optionName = $this->gettwoFaCodeUsedKey($login, $authCode);
@@ -180,9 +176,8 @@ string $authCode) : bool
      * @param string $authCode
      * @return bool
      */
-    public function validateAuthCode($login,
-#[\SensitiveParameter]
-$authCode)
+    public function validateAuthCode($login, #[\SensitiveParameter]
+        $authCode)
     {
         if (!self::isUserUsingTwoFactorAuthentication($login)) {
             return \false;
@@ -210,11 +205,9 @@ $authCode)
      * @param string $secret
      * @return bool
      */
-    public function validateAuthCodeDuringSetup(
-#[\SensitiveParameter]
-$authCode,
-#[\SensitiveParameter]
-$secret)
+    public function validateAuthCodeDuringSetup(#[\SensitiveParameter]
+        $authCode, #[\SensitiveParameter]
+            $secret)
     {
         $twoFactorAuth = $this->makeAuthenticator();
         if (!empty($secret) && $twoFactorAuth->verifyCode($secret, $authCode, 2)) {

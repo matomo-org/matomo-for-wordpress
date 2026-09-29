@@ -13,6 +13,7 @@ use Piwik\API\Request;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Row;
 use Piwik\DataTable\Simple;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Plugins\ImageGraph\API;
 /**
  * A Report Renderer produces user friendly renderings of any given Piwik report.
@@ -142,6 +143,9 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      */
     protected static function getOutputPath($filename)
     {
+        // Keep the generated file inside the assets directory: strip any directory components so the
+        // filename can never point outside $baseAssetsDir when it is concatenated below.
+        $filename = basename($filename);
         $baseAssetsDir = StaticContainer::get('path.tmp') . '/assets/';
         $outputFilename = $baseAssetsDir . $filename;
         if (!is_dir($baseAssetsDir)) {
@@ -180,6 +184,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     {
         self::checkStreamingToBrowserIsAllowed();
         $filename = \Piwik\ReportRenderer::makeFilenameWithExtension($filename, $extension);
+        SecurityHeaders::sendForDataResponse();
         \Piwik\ProxyHttp::overrideCacheControlHeaders();
         \Piwik\Common::sendHeader('Content-Description: File Transfer');
         \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
@@ -190,8 +195,21 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     protected static function inlineToBrowser($contentType, $content)
     {
         self::checkStreamingToBrowserIsAllowed();
+        SecurityHeaders::sendForDataResponse();
         \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
         echo $content;
+    }
+    /**
+     * Whether the report aggregates its rows by a dimension.
+     *
+     * A report without a dimension has a single row of metrics rather than one row per
+     * dimension value.
+     *
+     * @param array $reportMetadata
+     */
+    protected static function isAggregateReport($reportMetadata) : bool
+    {
+        return !empty($reportMetadata['dimension']);
     }
     /**
      * Convert a dimension-less report to a multi-row two-column data table
@@ -205,7 +223,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     protected static function processTableFormat($reportMetadata, $report, $reportColumns)
     {
         $finalReport = $report;
-        if (empty($reportMetadata['dimension'])) {
+        if (!self::isAggregateReport($reportMetadata)) {
             $simpleReportMetrics = $report->getFirstRow();
             if ($simpleReportMetrics) {
                 $finalReport = new Simple();

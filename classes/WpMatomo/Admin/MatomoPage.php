@@ -27,6 +27,8 @@ class MatomoPage {
 	}
 
 	public function show() {
+		$this->check_network_admin_access();
+
 		$title = $this->content->get_title();
 		?>
 		<div class="wrap">
@@ -48,5 +50,20 @@ class MatomoPage {
 
 	public function get_content() {
 		return $this->content;
+	}
+
+	private function check_network_admin_access() {
+		if ( ! is_multisite() || ! is_network_admin() ) {
+			return;
+		}
+
+		if ( current_user_can( Menu::CAP_NETWORK ) ) {
+			return;
+		}
+
+		wp_die(
+			esc_html__( 'Sorry, you are not allowed to access this page.', 'matomo' ),
+			403
+		);
 	}
 }

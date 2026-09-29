@@ -3,10 +3,15 @@
  * @package matomo
  */
 
+use Piwik\Access;
+use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\API;
+use Piwik\Session\SessionAuth;
 use WpMatomo\Admin\ExclusionSettings;
+use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Admin\InvalidIpException;
+use WpMatomo\Roles;
 use WpMatomo\Settings;
 
 class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase {
@@ -54,6 +59,273 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->assertEquals( 'test,test2', API::getInstance()->getExcludedQueryParametersGlobal() );
 		$this->assertEquals( [ 'firefox', 'safari' ], $settings->get_global_user_agent_exclusions() );
 		$this->assertNotEmpty( API::getInstance()->getKeepURLFragmentsGlobal() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_let_a_matomo_admin_change_what_their_own_blog_records_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+		( new Roles( new Settings() ) )->add_roles( true );
+
+		$settings = new Settings();
+		$settings->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] ) );
+
+		$this->assertFalse( current_user_can( Capabilities::KEY_SUPERUSER ) );
+
+		$this->authenticate_matomo_as_current_user();
+
+		try {
+			$this->submit_exclusion_settings(
+				[
+					Settings::OPTION_KEY_STEALTH_BLOG => [ 'author' => '1' ],
+					'excluded_ips'                    => '127.0.0.9',
+					'excluded_user_agents'            => "firefox\nsafari",
+				]
+			);
+		} finally {
+			$this->restore_matomo_super_user_access();
+		}
+
+		$saved = new Settings();
+
+		// check that 'editor' was added to the blog specific action and that it's correctly merged
+		// with the pre-existing network wide option when fetching.
+		$this->assertSame( [ 'author' => true ], $saved->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
+		$this->assertSame(
+			[
+				'editor' => true,
+				'author' => true,
+			],
+			$saved->get_stealth_roles()
+		);
+
+		// check that excluded IPs was set
+		$this->assertSame( '127.0.0.9', API::getInstance()->getExcludedIpsGlobal() );
+
+		// and that the user agents were stored without needing Matomo super user access
+		$this->assertSame( [ 'firefox', 'safari' ], $saved->get_global_user_agent_exclusions() );
+
+		// check that the network wide option was not modified
+		$this->assertSame( [ 'editor' => '1' ], $saved->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+	}
+
+	public function test_show_settings_should_not_let_a_matomo_write_user_change_the_exclusions() {
+		( new Roles( new Settings() ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_WRITE ] ) );
+
+		$this->assertFalse( current_user_can( Capabilities::KEY_ADMIN ) );
+
+		$this->submit_exclusion_settings( [ 'excluded_ips' => '127.0.0.9' ] );
+
+		$this->assertEmpty( API::getInstance()->getExcludedIpsGlobal() );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_not_let_a_matomo_admin_change_the_network_wide_tracking_filter_from_a_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+		( new Roles( new Settings() ) )->add_roles( true );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => Roles::ROLE_ADMIN ] ) );
+
+		// the field name of the network's list rather than the blog's, which is what a hand written
+		// request would carry
+		$this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$this->assertSame( [], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_show_settings_should_let_a_network_administrator_change_the_network_wide_tracking_filter() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+
+		wp_set_current_user( $this->create_set_super_admin() );
+		set_current_screen( 'dashboard-network' );
+		$this->assertTrue( is_network_admin() );
+
+		$this->assertSame( [], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+
+		try {
+			$output = $this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+			$this->assertStringContainsString( 'Tracking filter', $output );
+			$this->assertStringNotContainsString( 'excluded_ips', $output );
+		} finally {
+			set_current_screen( 'dashboard' );
+		}
+
+		$this->assertSame( [ 'editor' => true ], ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+	}
+
+	public function test_show_settings_should_report_an_update_when_a_setting_changed() {
+		$output = $this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		$this->assertStringContainsString( 'Settings have been updated successfully', $output );
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_the_submission_changed_nothing() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		// submit the form again with the same exact values
+		$output = $this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ],
+				'excluded_ips'               => '127.0.0.9',
+			]
+		);
+
+		// nothing moved, so check the the clear caches message did not display
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+	}
+
+	public function test_show_settings_should_keep_the_tracking_filter_in_one_setting_when_the_network_is_not_enabled() {
+		$this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$saved = new Settings();
+
+		$this->assertSame( [ 'editor' => true ], $saved->get_global_option( Settings::OPTION_KEY_STEALTH ) );
+		$this->assertSame( [], $saved->get_option( Settings::OPTION_KEY_STEALTH_BLOG ) );
+		$this->assertSame( [ 'editor' => true ], $saved->get_stealth_roles() );
+	}
+
+	public function test_show_settings_should_keep_only_the_wordpress_roles_out_of_a_submitted_tracking_filter() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor'                    => '1',
+					'not-a-role'                => '1',
+					'<script>alert(1)</script>' => '1',
+				],
+			]
+		);
+
+		$this->assertSame(
+			[ 'editor' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_leave_a_role_the_submitted_tracking_filter_did_not_exclude_out_of_it() {
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor' => '1',
+					'author' => '0',
+				],
+			]
+		);
+
+		$this->assertSame(
+			[ 'editor' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_the_stored_tracking_filter_was_written_as_booleans() {
+		( new Settings() )->apply_changes( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => true ] ] );
+
+		$output = $this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'editor' => '1' ] ] );
+
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+	}
+
+	public function test_show_settings_should_keep_a_tracking_filter_role_this_blog_does_not_register() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor'                => true,
+					'role_of_a_gone_plugin' => true,
+				],
+			]
+		);
+
+		$this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [ 'author' => '1' ] ] );
+
+		// the form has no checkbox for a role this blog does not register, so leaving that role out
+		// of the submission is not the user unchecking it
+		$this->assertSame(
+			[
+				'author'                => true,
+				'role_of_a_gone_plugin' => true,
+			],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_not_report_an_update_when_only_a_role_this_blog_does_not_register_is_excluded() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [ 'role_of_a_gone_plugin' => true ],
+			]
+		);
+
+		$output = $this->submit_exclusion_settings( [ Settings::OPTION_KEY_STEALTH => [] ] );
+
+		$this->assertStringNotContainsString( 'Settings have been updated successfully', $output );
+		$this->assertSame(
+			[ 'role_of_a_gone_plugin' => true ],
+			( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH )
+		);
+	}
+
+	public function test_show_settings_should_keep_a_stored_tracking_filter_key_that_is_not_a_role_name_as_it_is() {
+		( new Settings() )->apply_changes(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					5        => true,
+					'editor' => true,
+				],
+			]
+		);
+
+		$this->submit_exclusion_settings(
+			[
+				Settings::OPTION_KEY_STEALTH => [
+					'editor' => '1',
+					'author' => '1',
+				],
+			]
+		);
+
+		$saved = ( new Settings() )->get_global_option( Settings::OPTION_KEY_STEALTH );
+
+		// a stored key that is not a role name can be an integer, which array_merge() would renumber
+		$this->assertArrayHasKey( 5, $saved );
+		$this->assertArrayHasKey( 'editor', $saved );
+		$this->assertArrayHasKey( 'author', $saved );
+		$this->assertCount( 3, $saved );
 	}
 
 	public function test_validate_ip() {
@@ -143,5 +415,46 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_SharedFixture_TestCase 
 			$this->assertTrue( true );
 		}
 		ob_get_clean();
+	}
+
+	private function authenticate_matomo_as_current_user() {
+		Bootstrap::do_bootstrap();
+
+		$access = Access::getInstance();
+
+		$access->setSuperUserAccess( false );
+		$access->reloadAccess( StaticContainer::get( SessionAuth::class ) );
+
+		$this->assertFalse( $access->hasSuperUserAccess() );
+	}
+
+	private function restore_matomo_super_user_access() {
+		Access::getInstance()->setSuperUserAccess( true );
+	}
+
+	/**
+	 * @param array $form_values
+	 *
+	 * @return string what the screen rendered
+	 */
+	private function submit_exclusion_settings( $form_values ) {
+		$_POST[ ExclusionSettings::FORM_NAME ] = $form_values;
+		$_REQUEST['_wpnonce']                  = wp_create_nonce( ExclusionSettings::NONCE_NAME );
+		$_SERVER['REQUEST_URI']                = home_url();
+
+		ob_start();
+
+		try {
+			// a new instance, so that it loads the settings again, rather than using what
+			// the tests set up
+			( new ExclusionSettings( new Settings() ) )->show_settings();
+		} finally {
+			$output = ob_get_clean();
+
+			$_POST    = [];
+			$_REQUEST = [];
+		}
+
+		return $output;
 	}
 }

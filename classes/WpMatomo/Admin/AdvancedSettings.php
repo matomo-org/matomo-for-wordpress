@@ -93,7 +93,17 @@ class AdvancedSettings implements AdminSettingsInterface {
 	}
 
 	public function can_user_manage() {
-		return current_user_can( Capabilities::KEY_SUPERUSER );
+		if ( ! current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			return false;
+		}
+
+		if ( $this->settings->is_network_enabled() ) {
+			// global settings are stored as network wide on a network enabled install, but not
+			// otherwise
+			return current_user_can( Menu::CAP_NETWORK );
+		}
+
+		return true;
 	}
 
 	private function apply_settings() {

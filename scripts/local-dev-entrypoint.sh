@@ -707,6 +707,11 @@ EOF
   echo "set allow_wp_app_password_auth config..."
   php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
+  # the site is served from localhost, which matomo's SSRF-safe requests (eg, site content detection) refuse
+  # to contact unless loopback is allowlisted
+  echo "set allowed_private_egress_ranges config..."
+  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set 'General.allowed_private_egress_ranges=["127.0.0.0/8","::1"]'
+
   # add test-utility-plugin used in UI tests
   mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins
   cp $DOCUMENT_ROOT/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php

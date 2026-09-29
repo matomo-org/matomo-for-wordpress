@@ -8,6 +8,7 @@ use Piwik\Access\Role\View;
 use Piwik\Access\Role\Write;
 use WpMatomo\Access;
 use WpMatomo\Capabilities;
+use WpMatomo\Roles;
 use WpMatomo\Settings;
 
 class TestMatomoCapabilities extends Capabilities {
@@ -139,7 +140,7 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( 1, Capabilities::get_role_ranking( View::ID ) );
 		$this->assertSame( 2, Capabilities::get_role_ranking( Write::ID ) );
 		$this->assertSame( 3, Capabilities::get_role_ranking( Admin::ID ) );
-		$this->assertSame( 4, Capabilities::get_role_ranking( Capabilities::ROLE_SUPERUSER ) );
+		$this->assertSame( 4, Capabilities::get_role_ranking( Capabilities::MATOMO_ROLE_SUPERUSER ) );
 	}
 
 	/**
@@ -164,11 +165,120 @@ class CapabilitiesTest extends MatomoAnalytics_SharedFixture_TestCase {
 			]
 		);
 
-		$this->assertSame( Capabilities::ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
 		$this->assertSame( Admin::ID, Capabilities::get_highest_role_for_user( $admin_id ) );
 		$this->assertSame( Write::ID, Capabilities::get_highest_role_for_user( $write_id ) );
 		$this->assertSame( View::ID, Capabilities::get_highest_role_for_user( $view_id ) );
 		$this->assertNull( Capabilities::get_highest_role_for_user( $no_access_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_add_capabilities_to_user_should_let_the_matomo_superuser_role_grant_superuser_access_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// network enabled for real rather than assumed, so that the plugin's own hooks see it too
+		$this->activate_matomo_plugin();
+
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+	}
+
+	public function test_add_capabilities_to_user_should_grant_superuser_capability_when_the_user_has_the_superuser_role() {
+		( new Roles( $this->settings ) )->add_roles( true );
+
+		$user_id = self::factory()->user->create( [ 'role' => Roles::ROLE_SUPERUSER ] );
+
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_add_capabilities_to_user_should_still_grant_superuser_access_to_a_super_admin_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->settings->set_assume_is_network_enabled_in_tests( true );
+
+		$super_admin_id = $this->create_set_super_admin();
+
+		$this->assertTrue( user_can( $super_admin_id, Capabilities::KEY_SUPERUSER ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $super_admin_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_add_capabilities_to_user_should_grant_superuser_access_to_a_wordpress_administrator_when_the_network_is_enabled() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+		wp_roles()->init_roles();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+
+		$this->assertFalse( is_super_admin( $user_id ) );
+
+		// the blog they administrate has a Matomo of its own, and they are its super user
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_ADMIN ) );
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_WRITE ) );
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_VIEW ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_add_capabilities_to_user_should_not_grant_an_administrator_superuser_access_on_a_blog_they_do_not_administrate() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->activate_matomo_plugin();
+		wp_roles()->init_roles();
+
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+
+		$other_blog = self::factory()->blog->create();
+
+		switch_to_blog( $other_blog );
+		try {
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
+			$this->assertNull( Capabilities::get_highest_role_for_user( $user_id ) );
+		} finally {
+			restore_current_blog();
+		}
+	}
+
+	public function test_add_capabilities_to_user_should_leave_an_administrator_the_super_user_when_the_network_is_not_enabled() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+
+		$this->assertTrue( user_can( $user_id, Capabilities::KEY_SUPERUSER ) );
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::get_highest_role_for_user( $user_id ) );
+	}
+
+	public function test_matomo_role_superuser_should_be_reachable_under_its_deprecated_name() {
+		$this->assertSame( Capabilities::MATOMO_ROLE_SUPERUSER, Capabilities::ROLE_SUPERUSER );
 	}
 
 	private function make_all_caps( $caps_to_set ) {

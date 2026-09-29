@@ -84,7 +84,7 @@ class Marketplace implements MatomoPageContent {
 			$valid_tabs[] = 'marketplace';
 		}
 
-		if ( $this->can_user_manage() ) {
+		if ( $this->can_user_manage_plugins() ) {
 			if ( current_user_can( 'install_plugins' ) ) {
 				$valid_tabs[] = 'install';
 			}
@@ -93,7 +93,7 @@ class Marketplace implements MatomoPageContent {
 		return $valid_tabs;
 	}
 
-	private function can_user_manage() {
+	private function can_user_manage_plugins() {
 		// only someone who can activate plugins is allowed to manage subscriptions
 		if ( $this->is_multisite() ) {
 			return is_super_admin();

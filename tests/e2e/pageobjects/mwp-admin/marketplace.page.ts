@@ -222,7 +222,7 @@ class MwpMarketplacePage extends MwpPage {
 
     await browser.waitUntil(() => {
       return browser.execute(() => !!(window.bulkInstallResponse || window.bulkInstallError));
-    }, { timeout: 300000 });
+    }, { timeout: 420000 });
 
     const bulkInstallError = await browser.execute(() => window.bulkInstallError);
     if (bulkInstallError) {

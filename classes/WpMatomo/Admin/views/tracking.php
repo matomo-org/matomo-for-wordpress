@@ -37,6 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $matomo_is_track_via_esi_enabled */
 /** @var bool $matomo_is_esi_enabled_in_litespeed */
 /** @var bool $matomo_is_htaccess_serving_cache_files */
+/** @var bool $matomo_can_edit_tracking_code */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -791,6 +792,15 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 			<span class="inactive-notice">(<?php esc_html_e( 'Inactive', 'matomo' ); ?>)</span>
 		</h2>
 		<p><?php esc_html_e( 'With the Manual tracking mode, you can write the JavaScript tracking code yourself, customizing it any way you need to. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
+		<?php if ( ! $matomo_can_edit_tracking_code ) { ?>
+			<p>
+				<span class="dashicons dashicons-info-outline"></span>
+				<?php esc_html_e( 'The code below is embedded into your pages exactly as entered, so changing it needs the WordPress permission to add unfiltered HTML and JavaScript to this site, which you do not have. Every other setting on this page remains yours to change.', 'matomo' ); ?>
+				<?php if ( is_multisite() ) { ?>
+					<?php esc_html_e( 'In a multisite network WordPress reserves that permission for the network\'s administrators.', 'matomo' ); ?>
+				<?php } ?>
+			</p>
+		<?php } ?>
 		<table class="matomo-tracking-form widefat">
 			<tbody>
 			<?php
@@ -806,7 +816,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually',
 				! $settings->is_network_enabled(),
 				'',
-				false,
+				! $matomo_can_edit_tracking_code,
 				false
 			);
 
@@ -819,7 +829,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				'matomo-track-option matomo-track-option-default  matomo-track-option-manually',
 				true,
 				'',
-				false,
+				! $matomo_can_edit_tracking_code,
 				false
 			);
 			?>

@@ -87,7 +87,7 @@ class TrackingCode extends Feature {
 	public function is_hidden_user() {
 		if ( is_multisite() && is_super_admin() ) {
 			// by pass the hook in the WP_User::has_cap method which bypass the capabilities management
-			$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
+			$stealth = $this->settings->get_stealth_roles();
 			return ( ! empty( $stealth['administrator'] ) );
 		}
 		return current_user_can( Capabilities::KEY_STEALTH );

@@ -1,5 +1,127 @@
 == Changelog ===
 
+= 5.14.0 =
+* Update core Matomo to version 5.14.0.
+* Hide the "Invite team member" link on the no data page, since users are managed in WordPress.
+* Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
+  `curl_close()` and of the `$http_response_header` variable, or for the plugin's own use of
+  `ReflectionProperty::setAccessible()` and of an implicitly nullable parameter type.
+
+= 5.13.1 =
+* Bug fix: when the plugin is network activated, a blog's administrator now holds Matomo super
+  user access on that blog, instead of no access at all. Note: Matomo super user access is not
+  the same as WordPress super user access; it only provides access to a specific blog's Matomo,
+  nothing else. Because of this, the administrator role can no longer be given a Matomo access of
+  its own on Matomo > Settings > Access. Access a network activated install had configured there
+  before no longer has any effect, since Matomo super user access outranks anything that screen can
+  grant.
+* Note: because of the above, a blog admin now sees more Matomo screens than before on a network
+  activated install. The settings shown to such users only apply to the single blog they are
+  displayed for, which the admin has access to.
+* Security: Matomo > Diagnostics now requires an administrator of the network when the plugin is
+  network activated. The report describes the whole install rather than a single blog's reports, and
+  not every troubleshooting action on it stops at the blog it was triggered from.
+* Security: the "Sync all users across sites / blogs" and "Sync all sites (blogs)" actions on
+  Matomo > Diagnostics now require an administrator of the network and are hidden from everyone else.
+* Security: the "Install/Update Geo-IP DB" action on Matomo > Diagnostics now requires an
+  administrator of the network when the plugin is network activated, and is hidden from everyone
+  else, since the geolocation database is downloaded once for the whole install rather than once per
+  blog.
+* Security: the request that previews the generated JavaScript tracking code on
+  Matomo > Settings > Tracking now requires the same access as the tracking settings page itself,
+  which means an administrator of the network when the plugin is network activated.
+* Security: when the plugin is network activated, the tracking settings are stored once for the
+  whole network, but the Get Started page and Matomo > Settings > Tracking only asked for Matomo
+  super user access, which a blog's own administrator can grant. Changing them now requires an
+  administrator of the network.
+* Security: the Manual tracking mode, and the "Tracking code" and "Noscript code" tracking settings,
+  now require WordPress' unfiltered_html capability, since what they hold is embedded into the
+  frontend exactly as entered. This applies outside a multisite network as well: an administrator
+  holds that capability already, a user who holds Matomo super user access through the Matomo Super
+  User role alone does not, and neither does anybody on a site that defines DISALLOW_UNFILTERED_HTML.
+* Security: the Tag Manager templates that can put arbitrary HTML or JavaScript on the WordPress
+  frontend now require the same unfiltered_html capability for that part of what they do. A user without
+  it can still use the Tag Manager and every one of these templates, but the Custom HTML, Custom
+  JavaScript Function and Custom Request Processing templates no longer accept code from them, and
+  the Custom Image and Matomo Configuration templates only accept URLs on this site. The
+  Matomo Configuration template's custom JavaScript and tracking endpoints additionally have to name
+  a ".js" or ".php" file, or a directory, because they are appended to the Matomo URL to form the
+  address the tracker itself is loaded from. A Tag Manager variable's name cannot contain "{{" or
+  "}}" for such a user either.
+  Containers that already use any of these templates keep working and are generated exactly as
+  before, and a user without the capability can still create a version of one, publish it and rename
+  the variables it uses.
+* Security: the Tag Manager tag templates that name an account at another service now require the
+  unfiltered_html capability as well. Which other services a site loads code from, and which account
+  at those services it reports its visitors to, is a decision for whoever is responsible for the
+  site. A user without the capability can no longer add, change, or copy a tag using one of these
+  26 templates: AddThis, Axeptio, Bing UET, Bugsnag, Cookiebot, CookieYes, Drift, Emarsys, etracker,
+  Facebook Pixel, Google Ads Conversion, Google Analytics 4, Google Analytics (Universal),
+  Google Tag, Honeybadger, Hotjar, LinkedIn Insight, LiveZilla, OneTrust, Pingdom RUM, Raygun,
+  Sentry, Shareaholic, Tawk.to, Visual Website Optimizer and Zendesk Chat.
+* Security: a paused tag that a user without the unfiltered_html capability would not be allowed to
+  add can no longer be turned back on by them either. A paused tag is left out of the generated
+  container, so resuming one puts a script on the site that was not being served before. This covers
+  a tag using one of the 26 templates above, and a Custom HTML or Custom Image tag whose stored
+  values are ones the user could not have entered themselves -- a Custom Image tag pointing at this
+  site can still be turned back on, since they are allowed to add one. Pausing and deleting such a
+  tag is still allowed.
+* Security: when the plugin is network activated, a blog's own Matomo > Settings now shows only the
+  Exclusions and Privacy tabs, plus Matomo plugin settings, for a user holding Matomo super
+  user access on that blog (which includes network admins).
+* Security: the AJAX request that clears a recorded scheduled task failure now requires Matomo super
+  user access, where before it checked only a nonce.
+* Security: Matomo > Settings > Access, Matomo > Settings > Geolocation and
+  Matomo > Settings > Advanced are stored once for the whole network when the plugin is network
+  activated, so changing any of them now requires network admin access.
+* New feature: the tracking filter on Matomo > Settings > Exclusions is now two settings when the
+  plugin is network activated. A network administrator can set the roles excluded on every blog in
+  the network, while administrators of specific blogs can exclude roles for the blogs they manage.
+* Note: Matomo > Settings now opens with Matomo admin access rather than Matomo super user access,
+  and shows the Exclusions and Privacy tabs to such a user. This applies outside a multisite network
+  as well, so a role given Matomo admin access on Matomo > Settings > Access can now reach the two
+  settings below. Every other tab continues to require Matomo super user access, and network wide
+  tabs require a network admin.
+* New feature: everything on Matomo > Settings > Exclusions is now editable with Matomo admin access
+  in a blog's own admin: the excluded IPs, query parameters, user agents and URL fragments.
+* New feature: the tracking filter on Matomo > Settings > Exclusions is editable with Matomo admin
+  access in a blog's own admin, where before it needed Matomo super user access.
+* Security: the tracking filter on Matomo > Settings > Exclusions now stores only the WordPress roles
+  the form offered, rather than whatever was submitted for it.
+* Bug fix: the excluded user agents on Matomo > Settings > Exclusions are now stored per blog,
+  like the other exclusions on that screen, when the plugin is network activated.
+* Bug fix: network activating the plugin on a multisite where blogs had activated it individually
+  now carries each blog's tracking filter over to the per blog setting described above. Previously
+  a blog's global settings stopped being read the moment the network's took over, so roles a blog
+  had excluded from tracking started being tracked again, with nothing to show for it and no way
+  left to reach the setting. Only the tracking filter is carried over; the remaining global
+  settings become the network's, as they always have.
+* Bug fix: network deactivating the plugin now carries the tracking filter back the other way, for
+  the same reason: the network's tracking filter and each blog's own stop being read once the blog
+  activates the plugin for itself. So both must be merged into the blog's own setting.
+
+= 5.13.0 =
+* Update core Matomo to version 5.13.0.
+* Compatibility: Matomo 6 will require PHP 8.1, MySQL 8.0 or MariaDB 10.6 at minimum. Plugin updates to Matomo 6 are now aborted on systems that do not meet these requirements.
+* Compatibility: should a version that needs the new requirements end up installed on a
+  server that does not meet them, the plugin now loads in safe mode and explains what is
+  missing.
+* Security: in multisite, a Settings instance kept across a switch_to_blog() call could write
+  one blog's tracking code and other per blog settings into a different blog. Settings are now
+  reloaded when the current blog changes.
+* Bug fix: syncing a single blog's site metadata no longer overwrites the network wide manual
+  tracking code, and no longer forces every other blog to regenerate its tracking code.
+* Bug fix: a blog that is given a new Matomo site during a sync now regenerates its tracking
+  code, instead of keeping one that still refers to the site it no longer belongs to.
+* Bug fix: site syncing now reports a failure when a blog could not be installed.
+* Bug fix: site and user syncing now skip archived blogs and blogs marked as spam, as they
+  already did for deleted ones. A blog returning to service is synced straight away.
+* Bug fix: the MaxMind license key is no longer written to the debug log in plain text.
+* Internal change: matomo_tracking_settings_changed is no longer fired when a site sync only
+  updated a blog's metadata (its name, URL, timezone, currency or ecommerce flag), since no
+  tracking setting changed in that case. Listeners that need to know a site was synced can use
+  matomo_site_synced, which is still fired.
+
 = 5.12.2 =
 * Bug fix: removing users from a blog did not correctly remove Matomo permissions. Matomo
   permissions stayed valid until the daily sync executed.

@@ -4,11 +4,13 @@
  */
 
 use Piwik\Plugins\SitesManager\Model;
+use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync;
 use WpMatomo\Db\Settings as DbSettings;
+
 class MockMatomoSiteSync extends Sync {
 	public $synced_sites = array();
 
@@ -141,6 +143,422 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_not_copy_source_blog_tracking_settings_into_another_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// destination blog, installed and synced with its own default settings,
+		$dest_blog = $this->create_blog_with_matomo();
+
+		// emulate a request that starts on the source blog: the Settings object is
+		// built while the source blog is current and then handed to the scheduled sync
+		$source_settings = $this->make_network_enabled_settings();
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		$injected_code = '<script src="https://somesite.com/other-script.js"></script>';
+		$source_settings->set_global_option( 'track_mode', 'manually' );
+		$source_settings->set_global_option( 'track_admin', true );
+		$source_settings->set_global_option( 'track_codeposition', 'header' );
+		$source_settings->set_option( 'tracking_code', $injected_code );
+		$source_settings->save();
+
+		// renaming the destination blog is what makes sync_site() take its metadata-update
+		// branch, which is where the tracking settings get written
+		switch_to_blog( $dest_blog );
+		try {
+			update_option( 'blogname', 'Renamed Destination Blog' );
+
+			// the scheduled sync switches to the destination blog but keeps using the source
+			// scoped Settings object
+			( new Sync( $source_settings ) )->sync_current_site();
+			$stored_dest_options = get_option( Settings::OPTION, [] );
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $dest_blog );
+		}
+
+		$stored_dest_code = isset( $stored_dest_options['tracking_code'] ) ? $stored_dest_options['tracking_code'] : '';
+
+		$this->assertNotSame(
+			$injected_code,
+			$stored_dest_code,
+			'the source blog manual tracking code must not be written into another blog during sync'
+		);
+		$this->assertStringNotContainsString( 'other-script.js', $stored_dest_code );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_invalidate_the_tracking_code_of_the_synced_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		// what the tracking code generator sees when it reacts to matomo_site_synced. it runs on
+		// the default priority, so this has to run before it to observe the invalidation itself
+		// rather than the fresh timestamp the generator writes
+		$seen_as_current = null;
+
+		switch_to_blog( $blog_id );
+		try {
+			$settings = $this->make_network_enabled_settings();
+			$settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+
+			// is_current_tracking_code() compares the two strictly, so both are set rather
+			// than left to whatever second the fixture happened to write
+			$settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 100 );
+			$settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 50 );
+			$settings->save();
+
+			$this->assertTrue( $settings->is_current_tracking_code() );
+
+			$listener = function () use ( $settings, &$seen_as_current ) {
+				$seen_as_current = $settings->is_current_tracking_code();
+			};
+			add_action( 'matomo_site_synced', $listener, 1 );
+
+			try {
+				update_option( 'blogname', 'Renamed Blog Needing A New Tracking Code' );
+				( new Sync( $settings ) )->sync_current_site();
+			} finally {
+				remove_action( 'matomo_site_synced', $listener, 1 );
+			}
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $blog_id );
+		}
+
+		$this->assertFalse(
+			$seen_as_current,
+			'a blog whose metadata changed must have its own tracking code invalidated before matomo_site_synced fires'
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_not_fire_the_tracking_settings_changed_action_when_only_metadata_changed() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		$site_synced_fired               = 0;
+		$tracking_settings_changed_fired = 0;
+
+		$on_site_synced = function () use ( &$site_synced_fired ) {
+			++$site_synced_fired;
+		};
+
+		$on_tracking_settings_changed = function () use ( &$tracking_settings_changed_fired ) {
+			++$tracking_settings_changed_fired;
+		};
+
+		switch_to_blog( $blog_id );
+		try {
+			$settings = $this->make_network_enabled_settings();
+			$settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+			$settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 100 );
+			$settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 50 );
+			$settings->save();
+
+			update_option( 'blogname', 'Renamed Blog Whose Tracking Settings Did Not Change' );
+
+			// hooked after the setup above, so only what the sync itself fires is counted
+			add_action( 'matomo_site_synced', $on_site_synced );
+			add_action( 'matomo_tracking_settings_changed', $on_tracking_settings_changed );
+
+			try {
+				( new Sync( $settings ) )->sync_current_site();
+			} finally {
+				remove_action( 'matomo_tracking_settings_changed', $on_tracking_settings_changed );
+				remove_action( 'matomo_site_synced', $on_site_synced );
+			}
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $blog_id );
+		}
+
+		// so a sync that never reached its metadata-update branch cannot satisfy the one below
+		$this->assertSame( 1, $site_synced_fired );
+
+		$this->assertSame(
+			0,
+			$tracking_settings_changed_fired,
+			'a sync that only updated a blog\'s metadata changed no tracking setting'
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_invalidate_the_tracking_code_when_the_blog_gets_a_new_matomo_site() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		$seen_as_current = null;
+
+		switch_to_blog( $blog_id );
+		try {
+			$settings = $this->make_network_enabled_settings();
+			$settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+			$settings->set_option( 'tracking_code', '<!-- tracking code of the previous matomo site -->' );
+			// is_current_tracking_code() compares the two strictly, so both are pinned rather
+			// than left to whatever second the fixture happened to write
+			$settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 100 );
+			$settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 50 );
+			$settings->save();
+
+			$this->assertTrue( $settings->is_current_tracking_code() );
+
+			// dropping the mapping is what sends sync_site() down its create branch, the same
+			// way deleting the Matomo site of a blog does. the blog comes back with a brand new
+			// Matomo site id, which the tracking code it kept knows nothing about
+			Site::map_matomo_site_id( $blog_id, null );
+
+			$listener = function () use ( $settings, &$seen_as_current ) {
+				$seen_as_current = $settings->is_current_tracking_code();
+			};
+			add_action( 'matomo_site_synced', $listener, 1 );
+
+			try {
+				( new Sync( $settings ) )->sync_current_site();
+			} finally {
+				remove_action( 'matomo_site_synced', $listener, 1 );
+			}
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $blog_id );
+		}
+
+		$this->assertFalse(
+			$seen_as_current,
+			'a blog that was given a new Matomo site must have its tracking code invalidated before matomo_site_synced fires'
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_not_invalidate_a_manually_entered_tracking_code() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = $this->create_blog_with_matomo();
+
+		// a manually entered tracking code is never regenerated, so there is nothing to
+		// invalidate and the sync must not write to this blog's settings at all. the filter
+		// runs even when the stored value would not change, so it catches a pointless save()
+		// as well as a harmful one
+		$blog_settings_writes = 0;
+		$count_writes         = function ( $value ) use ( &$blog_settings_writes ) {
+			++$blog_settings_writes;
+
+			return $value;
+		};
+
+		$last_code_update = time();
+
+		switch_to_blog( $blog_id );
+		try {
+			$settings = $this->make_network_enabled_settings();
+			$settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_MANUALLY );
+			$settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, $last_code_update );
+			$settings->save();
+
+			update_option( 'blogname', 'Renamed Blog With A Manual Tracking Code' );
+
+			// counted around the sync only, so that anything the rename itself writes is not
+			// mistaken for the sync writing
+			add_filter( 'pre_update_option_' . Settings::OPTION, $count_writes );
+
+			try {
+				( new Sync( $settings ) )->sync_current_site();
+			} finally {
+				remove_filter( 'pre_update_option_' . Settings::OPTION, $count_writes );
+			}
+
+			$stored = get_option( Settings::OPTION, [] );
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $blog_id );
+		}
+
+		$this->assertSame( 0, $blog_settings_writes );
+		$this->assertSame( $last_code_update, $stored[ Settings::OPTION_LAST_TRACKING_CODE_UPDATE ] );
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_skip_blogs_that_are_archived_or_marked_as_spam() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$archived_blog = self::factory()->blog->create();
+		$spam_blog     = self::factory()->blog->create();
+		$live_blog     = self::factory()->blog->create();
+
+		wp_update_site( $archived_blog, [ 'archived' => 1 ] );
+		wp_update_site( $spam_blog, [ 'spam' => 1 ] );
+
+		try {
+			$this->mock->sync_all();
+
+			// get_sites() hands out blog ids as strings, the factory returns them as ints
+			$synced_blog_ids = array_map( 'intval', wp_list_pluck( $this->mock->synced_sites, 'id' ) );
+
+			$this->assertNotContains( $archived_blog, $synced_blog_ids );
+			$this->assertNotContains( $spam_blog, $synced_blog_ids );
+
+			// so a sync that skipped everything cannot satisfy the two assertions above
+			$this->assertContains( $live_blog, $synced_blog_ids );
+		} finally {
+			wp_delete_site( $archived_blog );
+			wp_delete_site( $spam_blog );
+			wp_delete_site( $live_blog );
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_site_should_not_invalidate_the_tracking_code_of_other_blogs() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$renamed_blog = $this->create_blog_with_matomo();
+		$other_blog   = $this->create_blog_with_matomo();
+
+		// last_tracking_settings_update is a global setting, and global settings are only shared
+		// between blogs when the plugin is network activated. without that every Settings object
+		// below reads a copy of its own blog's option and the leak cannot happen at all
+		$network_settings = $this->make_network_enabled_settings();
+
+		// the track mode defaults to disabled, and a blog whose tracking code is never generated
+		// is never invalidated either, so we set the track mode to default
+		$network_settings->set_global_option( 'track_mode', TrackingSettings::TRACK_MODE_DEFAULT );
+		$network_settings->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() - 100 );
+		$network_settings->save();
+
+		// the other blog generates its tracking code after that, so its copy is up to date
+		switch_to_blog( $other_blog );
+		try {
+			$other_settings = $this->make_network_enabled_settings();
+			$other_settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 50 );
+			$other_settings->save();
+
+			$this->assertTrue( $other_settings->is_current_tracking_code() );
+		} finally {
+			restore_current_blog();
+		}
+
+		// switch to the blog that will need syncing
+		switch_to_blog( $renamed_blog );
+		try {
+			$renamed_settings = $this->make_network_enabled_settings();
+			$renamed_settings->set_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE, time() - 50 );
+			$renamed_settings->save();
+
+			// make sure the current blog's tracking code is up to date, and thus will be invalidated
+			// by the sync
+			$this->assertTrue( $renamed_settings->is_tracking_code_autogenerated() );
+			$this->assertTrue( $renamed_settings->is_current_tracking_code() );
+
+			update_option( 'blogname', 'Renamed Blog For Sync' );
+			( new Sync( $renamed_settings ) )->sync_current_site();
+		} finally {
+			restore_current_blog();
+		}
+
+		// check that the other_blog did not have it's tracking code invalidated
+		switch_to_blog( $other_blog );
+		try {
+			$still_current = $this->make_network_enabled_settings()->is_current_tracking_code();
+		} finally {
+			restore_current_blog();
+			wp_delete_site( $renamed_blog );
+			wp_delete_site( $other_blog );
+		}
+
+		$this->assertTrue(
+			$still_current,
+			'syncing one blog must not force every other blog to regenerate its tracking code'
+		);
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_sync_all_should_return_false_when_a_blog_cannot_be_installed() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$blog_id = self::factory()->blog->create();
+
+		// get_sites() iterates by ascending blog id, so a healthy blog created after the broken
+		// one is the only way to tell that the loop carried on past the blog it skipped
+		$later_blog = self::factory()->blog->create();
+
+		// the uploads directory of that one blog cannot be written to nor created, which is the
+		// only thing Installer::can_be_installed() checks. a path below a regular file can never
+		// be created, which works to fail the install even when the tests run as root.
+		$unwritable_parent = tempnam( sys_get_temp_dir(), 'matomo-not-a-dir' );
+		$this->assertNotFalse( $unwritable_parent, 'could not create the file standing in for an uncreatable uploads dir' );
+
+		$break_uploads = function ( $dirs ) use ( $blog_id, $unwritable_parent ) {
+			if ( get_current_blog_id() === $blog_id ) {
+				$dirs['basedir'] = $unwritable_parent . '/uploads';
+				$dirs['baseurl'] = 'http://example.org/uploads';
+			}
+
+			return $dirs;
+		};
+
+		try {
+			add_filter( 'upload_dir', $break_uploads );
+
+			$this->assertFalse(
+				$this->sync->sync_all(),
+				'a blog that could not be installed must make the whole sync report a failure'
+			);
+
+			// check that the broken blog did not actually get installed as we intended, while the others
+			// did
+			$this->assertEmpty( Site::get_matomo_site_id( $blog_id ) );
+			$this->assertNotEmpty( Site::get_matomo_site_id( get_current_blog_id() ) );
+			$this->assertNotEmpty( Site::get_matomo_site_id( $later_blog ) );
+		} finally {
+			remove_filter( 'upload_dir', $break_uploads );
+			wp_delete_site( $blog_id );
+			wp_delete_site( $later_blog );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			unlink( $unwritable_parent );
+		}
+	}
+
 	public function test_sync_current_site_does_not_fail() {
 		$this->assertTrue( $this->sync->sync_current_site() );
 	}
@@ -177,6 +595,8 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		switch_to_blog( $blogid1 );
 
 		$this->mock->sync_current_site();
+
+		restore_current_blog();
 
 		wp_delete_site( $blogid1 );
 
@@ -483,6 +903,108 @@ class SiteSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertSame( 'Renamed While Deleted', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
 
 		wp_delete_site( $blog_id );
+	}
+
+	public function get_test_data_for_the_other_flags_a_blog_returns_to_service_from() {
+		return [
+			[ 'archived' ],
+			[ 'spam' ],
+		];
+	}
+
+	/**
+	 * @group ms-required
+	 * @dataProvider get_test_data_for_the_other_flags_a_blog_returns_to_service_from
+	 */
+	public function test_register_hooks_should_sync_a_blog_that_is_no_longer_archived_or_flagged_as_spam( $flag ) {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		// taking a blog out of service and back only happens in the network admin, and the
+		// sync is skipped on front end requests
+		$this->assume_admin_page();
+
+		$blog_id = $this->create_blog_with_matomo();
+		$idsite  = Site::get_matomo_site_id( $blog_id );
+
+		update_blog_status( $blog_id, $flag, '1' );
+
+		// renamed while the blog is out of service, so the plugin's own update_option_blogname
+		// hook cannot sync it for us and the only thing left that could is the return below
+		switch_to_blog( $blog_id );
+		update_option( 'blogname', 'Renamed While Out Of Service' );
+		restore_current_blog();
+
+		// the return handlers require matomo to be active on the blog
+		$this->activate_matomo_plugin();
+
+		// sync_all() skips a blog that is out of service, so the Matomo site stays stale
+		$this->sync->sync_all();
+		$this->assertNotSame( 'Renamed While Out Of Service', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+
+		$this->sync->register_hooks();
+
+		try {
+			update_blog_status( $blog_id, $flag, '0' ); // triggers sync via hook
+
+			$this->assertSame( 'Renamed While Out Of Service', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+		} finally {
+			$this->sync->remove_hooks();
+			wp_delete_site( $blog_id );
+		}
+	}
+
+	/**
+	 * @group ms-required
+	 */
+	public function test_register_hooks_should_not_sync_a_blog_that_is_still_out_of_service_by_another_flag() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
+
+		$this->assume_admin_page();
+
+		$blog_id = $this->create_blog_with_matomo();
+		$idsite  = Site::get_matomo_site_id( $blog_id );
+
+		update_blog_status( $blog_id, 'archived', '1' );
+		update_blog_status( $blog_id, 'spam', '1' );
+
+		switch_to_blog( $blog_id );
+		update_option( 'blogname', 'Renamed While Out Of Service' );
+		restore_current_blog();
+
+		$this->activate_matomo_plugin();
+
+		$this->sync->register_hooks();
+
+		try {
+			// one flag cleared, the other still set, so the blog is not back in service yet
+			update_blog_status( $blog_id, 'archived', '0' );
+
+			$this->assertNotSame( 'Renamed While Out Of Service', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+
+			update_blog_status( $blog_id, 'spam', '0' );
+
+			$this->assertSame( 'Renamed While Out Of Service', $this->get_matomo_site_name_for_blog( $blog_id, $idsite ) );
+		} finally {
+			$this->sync->remove_hooks();
+			wp_delete_site( $blog_id );
+		}
+	}
+
+	/**
+	 * @return Settings
+	 */
+	private function make_network_enabled_settings() {
+		$settings = new Settings();
+		$settings->set_assume_is_network_enabled_in_tests();
+		$settings->init_settings();
+
+		return $settings;
 	}
 
 	private function create_blog_with_matomo() {

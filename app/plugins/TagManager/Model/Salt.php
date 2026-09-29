@@ -14,9 +14,8 @@ class Salt
 {
     public const OPTION_TAGMANAGER_SALT = 'tagmanager_salt';
     public const SALT_LENGTH = 40;
-    public function __construct(
-#[\SensitiveParameter]
-$salt = '')
+    public function __construct(#[\SensitiveParameter]
+        $salt = '')
     {
         if ($this->isValidSalt($salt)) {
             // only used for testing
@@ -25,9 +24,8 @@ $salt = '')
             throw new \Exception('Invalid salt!');
         }
     }
-    private function isValidSalt(
-#[\SensitiveParameter]
-$salt = '')
+    private function isValidSalt(#[\SensitiveParameter]
+        $salt = '')
     {
         return !empty($salt) && strlen($salt) >= self::SALT_LENGTH;
     }

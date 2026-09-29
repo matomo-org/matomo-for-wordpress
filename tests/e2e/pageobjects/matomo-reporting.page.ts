@@ -11,6 +11,9 @@ import * as querystring from 'querystring';
 import MatomoPage from './matomo.page.js';
 import GlobalSetup from '../global-setup.js';
 
+const WIDGET_SELECTOR = '.matomo-widget';
+const WIDGET_LOADING_SELECTOR = '.matomo-widget > div > .loadingPiwik,.matomo-widget .dimensionReport > .loadingPiwik';
+
 export default class MatomoReportingPage extends MatomoPage {
   async open(categorySubcategory: string, params: Record<string, string> = {}) {
     const [category, subcategory] = categorySubcategory.split('.');
@@ -67,8 +70,17 @@ export default class MatomoReportingPage extends MatomoPage {
     let numLoadingsFound = 0;
 
     try {
+      await $(WIDGET_SELECTOR).waitForExist({ timeout: 30000 });
+    } catch (e) {
+      // no widgets on the page
+    }
+
+    // we check for loading widgets twice in case widgets are added/loaded by other widgets
+    let numTimesLoaded = 0;
+
+    try {
       await browser.waitUntil(async () => {
-        const loadings = await $$('.matomo-widget > div > .loadingPiwik,.matomo-widget .dimensionReport > .loadingPiwik');
+        const loadings = await $$(WIDGET_LOADING_SELECTOR);
 
         numLoadingsFound = loadings.length;
 
@@ -81,7 +93,9 @@ export default class MatomoReportingPage extends MatomoPage {
           }
         }
 
-        return numLoadingsFound <= 0 || numLoadingsFound === numWidgetsLoaded;
+        numTimesLoaded = numLoadingsFound === numWidgetsLoaded ? numTimesLoaded + 1 : 0;
+
+        return numTimesLoaded >= 2;
       }, { timeout: 90000, interval: 2000 });
     } catch (e) {
       console.log(`waitForPageWidgets failed, numLoadingsFound = ${numLoadingsFound}, numWidgetsLoaded = ${numWidgetsLoaded}`);

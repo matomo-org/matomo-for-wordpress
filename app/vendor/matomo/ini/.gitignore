@@ -3,3 +3,4 @@
 /vendor/
 /coverage/
 /clover.xml
+.phpunit.result.cache

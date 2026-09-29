@@ -41,6 +41,20 @@ class AccessSettings implements AdminSettingsInterface {
 		return esc_html__( 'Access', 'matomo' );
 	}
 
+	public function can_user_manage() {
+		if ( ! current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			return false;
+		}
+
+		if ( $this->settings->is_network_enabled() ) {
+			// global settings are stored as network wide on a network enabled install, but not
+			// otherwise
+			return current_user_can( Menu::CAP_NETWORK );
+		}
+
+		return true;
+	}
+
 	public function show_settings() {
 		$this->update_if_submitted();
 
@@ -55,7 +69,7 @@ class AccessSettings implements AdminSettingsInterface {
 			&& ! empty( $_POST[ self::FORM_NAME ] )
 			&& is_admin()
 			&& check_admin_referer( self::NONCE_NAME )
-			&& current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& $this->can_user_manage() ) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->access->save( wp_unslash( $_POST[ self::FORM_NAME ] ) );
 

@@ -95,18 +95,6 @@ return array(
 			}
 			$previous->General = $general;
 
-			if (empty($GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'])) {
-			    // only execute it once since we might init this several times...
-                $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] = true;
-
-                add_action('switch_blog', function ($new_blog, $prev_blog) {
-                    if ($new_blog == $prev_blog) {
-                        return;
-                    }
-                    // ensure correct path to config is set, ensure to update tables_prefix etc.
-                    \WpMatomo\Bootstrap::destroy_bootstrapped_environment();
-                }, 10, 2);
-            }
 		}
 
 		\WpMatomo\AjaxTracker::add_ip_forward_proxy_header_to_config( $previous );
@@ -198,4 +186,16 @@ return array(
 		\Piwik\DI::get( \Piwik\Plugins\WordPress\Overrides\ProfessionalServices\PromoWidgetApplicable::class ),
 
 	\Piwik\Plugins\Marketplace\Api\Service::class => \Piwik\DI::autowire()->constructor( 'https://plugins.matomo.org' ),
+
+	\Piwik\Plugins\TagManager\Model\Container::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Container::class ),
+
+	\Piwik\Plugins\TagManager\Model\Tag::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Tag::class ),
+
+	\Piwik\Plugins\TagManager\Model\Variable::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\Variable::class ),
+
+	\Piwik\Plugins\TagManager\API::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\API::class ),
 );

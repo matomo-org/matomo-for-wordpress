@@ -142,17 +142,17 @@ class WordPressUmdCssTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$declaring_class = \Piwik\AssetManager\UIAssetFetcher::class;
 
 		$file_locations = new ReflectionProperty( $declaring_class, 'fileLocations' );
-		$file_locations->setAccessible( true );
+		$this->make_accessible( $file_locations );
 		$file_locations->setValue( $fetcher, [ $location ] );
 
 		foreach ( [ 'initCatalog', 'populateCatalog' ] as $method_name ) {
 			$method = new ReflectionMethod( $declaring_class, $method_name );
-			$method->setAccessible( true );
+			$this->make_accessible( $method );
 			$method->invoke( $fetcher );
 		}
 
 		$catalog = new ReflectionProperty( $declaring_class, 'catalog' );
-		$catalog->setAccessible( true );
+		$this->make_accessible( $catalog );
 		$resolved_catalog = $catalog->getValue( $fetcher );
 
 		foreach ( $resolved_catalog->getAssets() as $asset ) {
@@ -169,8 +169,18 @@ class WordPressUmdCssTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 		foreach ( [ 'pluginsToPathCache', 'pluginsToWebRootDirCache' ] as $property_name ) {
 			$property = $reflection->getProperty( $property_name );
-			$property->setAccessible( true );
+			$this->make_accessible( $property );
 			$property->setValue( null, [] );
+		}
+	}
+
+	/**
+	 * @param ReflectionProperty|ReflectionMethod $member
+	 */
+	private function make_accessible( $member ) {
+		if ( PHP_VERSION_ID < 80100 ) {
+			// no-op since PHP 8.1 and deprecated since PHP 8.5
+			$member->setAccessible( true );
 		}
 	}
 }

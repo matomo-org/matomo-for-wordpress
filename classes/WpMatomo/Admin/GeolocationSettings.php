@@ -34,6 +34,20 @@ class GeolocationSettings implements AdminSettingsInterface {
 		return esc_html__( 'Geolocation', 'matomo' );
 	}
 
+	public function can_user_manage() {
+		if ( ! current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			return false;
+		}
+
+		if ( $this->settings->is_network_enabled() ) {
+			// global settings are stored as network wide on a network enabled install, but not
+			// otherwise
+			return current_user_can( Menu::CAP_NETWORK );
+		}
+
+		return true;
+	}
+
 	public function show_settings() {
 		$invalid_format = $this->update_if_submitted() === false;
 
@@ -47,7 +61,7 @@ class GeolocationSettings implements AdminSettingsInterface {
 			&& isset( $_POST[ self::FORM_NAME ] )
 			&& is_admin()
 			&& check_admin_referer( self::NONCE_NAME )
-			&& current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& $this->can_user_manage() ) {
 			$maxmind_license = trim( stripslashes( sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ] ) ) ) );
 
 			if ( empty( $maxmind_license ) ) {
