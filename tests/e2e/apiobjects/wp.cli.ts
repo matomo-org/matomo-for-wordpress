@@ -101,8 +101,13 @@ class WpCli {
     await this.call(['matomo', 'update']);
   }
 
-  async evalFile(pathToScript: string) {
-    return this.call(['eval-file', this.toContainerPath(pathToScript)]);
+  async evalFile(pathToScript: string, user?: string) {
+    const args = ['eval-file', this.toContainerPath(pathToScript)];
+    if (user) {
+      args.push(`--user=${user}`);
+    }
+
+    return this.call(args);
   }
 }
 

@@ -5,6 +5,7 @@ import type { Options } from '@wdio/types'
 import GlobalSetup from './tests/e2e/global-setup.ts';
 import ReleaseSetup from './tests/e2e/release-setup.ts';
 import PremiumPluginsSetup from './tests/e2e/premium-plugins-setup.ts';
+import WooCommerceSetup from './tests/e2e/woocommerce-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -304,13 +305,14 @@ export const config: Options.Testrunner = {
     try {
       console.log('Performing one time setup...');
 
-      // These two make this wdio run independent of the tracking run, which would otherwise
-      // have to have succeeded for any of these tests to be meaningful. Both are no-ops when
+      // These make this wdio run independent of the tracking run, which would otherwise
+      // have to have succeeded for any of these tests to be meaningful. All are no-ops when
       // it did. They run before GlobalSetup because the installed release determines which
       // marketplace builds are downloaded, and because the premium plugins have to be
       // registered before GlobalSetup archives anything.
       await ReleaseSetup.setUp();
       await PremiumPluginsSetup.setUp();
+      await WooCommerceSetup.setUpIfInstalled();
 
       await GlobalSetup.setUp();
     } catch (e) {

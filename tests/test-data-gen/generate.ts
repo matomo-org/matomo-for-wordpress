@@ -15,6 +15,7 @@ import Config from './config.js';
 import { config as wdioConfig } from '../../wdio.conf.js';
 import PluginsAdminPage from '../e2e/pageobjects/wp-admin/plugins-admin.page.js';
 import Website from '../e2e/website.js';
+import WooCommerceSetup from '../e2e/woocommerce-setup.js';
 
 async function initWebdriverIo() {
   const options = {
@@ -58,7 +59,8 @@ export default async function generate() {
   let i = 0;
 
   try {
-    await Website.setUpWooCommerce();
+    await WooCommerceSetup.setUp();
+    await Website.login();
     await activateWpStatistics();
 
     for (; i < Config.visits; ++i) {

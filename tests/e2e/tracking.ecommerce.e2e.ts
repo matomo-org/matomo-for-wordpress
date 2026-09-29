@@ -13,6 +13,7 @@ import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
+import WooCommerceSetup from './woocommerce-setup.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import BlogHomepagePage from './pageobjects/blog-homepage.page.js';
 import * as fs from "node:fs";
@@ -20,7 +21,8 @@ import * as fs from "node:fs";
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
     await GlobalSetup.setUp();
-    await Website.setUpWooCommerce();
+    await WooCommerceSetup.setUp();
+    await Website.login();
   });
 
   async function checkPageHasForcedVisitorId() {
