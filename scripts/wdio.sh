@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export WORDPRESS_FOLDER=test
+TRACKING_WORDPRESS_FOLDER=test-tracking
 
 function wait_for_docker_compose_up() {
   FOLDER=$1
@@ -50,10 +51,21 @@ export RELEASE_ZIP="$( pwd )/matomo.zip"
 
 trap cleanup EXIT
 
-echo "Creating test environment..."
+echo "Creating test environments..."
 echo INSTALLING_FROM_ZIP=1 >> .env.script
+echo MATOMO_PLUGIN_ZIP=matomo.zip >> .env.script
 sed -i 's/WOOCOMMERCE=0/WOOCOMMERCE=1/' .env.script
-docker_compose_up test
+
+# one install per wdio run
+# release instead of the one under test, since the tracking run tests updating to the release.
+echo "Creating $TRACKING_WORDPRESS_FOLDER environment..."
+if ! CUSTOM_ENV_FILE=.env.script npm run compose -- run --rm -e WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER -e WITHOUT_MULTISITE=1 -e INSTALL_ONLY=1 -e MATOMO_PLUGIN_ZIP= wordpress &>> .e2e-docker-out; then
+  echo "failed to set up the $TRACKING_WORDPRESS_FOLDER environment"
+  exit 1
+fi
+
+echo "Creating $WORDPRESS_FOLDER environments..."
+docker_compose_up $WORDPRESS_FOLDER
 
 set -o allexport
 source .env.default
@@ -64,7 +76,7 @@ set +o allexport
 # run tests
 echo "Running tests..."
 EXIT_STATUS=0
-wdio run ./wdio.conf.tracking.ts || EXIT_STATUS=$?
+WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER wdio run ./wdio.conf.tracking.ts || EXIT_STATUS=$?
 wdio run ./wdio.conf.ts || EXIT_STATUS=$?
 wdio run ./wdio.conf.uninstall.ts || EXIT_STATUS=$?
 exit $EXIT_STATUS

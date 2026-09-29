@@ -97,8 +97,8 @@ class WpCli {
     await this.call(['option', 'update', name, value]);
   }
 
-  async matomoUpdate() {
-    await this.call(['matomo', 'update']);
+  async matomoInstall() {
+    await this.call(['matomo', 'install']);
   }
 
   async evalFile(pathToScript: string, user?: string) {

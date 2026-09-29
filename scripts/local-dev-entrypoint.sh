@@ -63,7 +63,7 @@ function handle_cli_command() {
     . $NVM_DIR/nvm.sh
     nvm use 16 > /dev/null
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
-    ./console $EXECUTE_ARGS
+    php ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
@@ -87,6 +87,12 @@ function install_wordpress() {
   WP_FOLDER_SUFFIX="$2"
 
   chmod 777 "/.wp-cli"
+
+  # computed up front since the matomo plugin is chowned before the rest of the install is
+  FIlE_OWNER_USERID=$UID
+  if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
+    FIlE_OWNER_USERID=1000
+  fi
 
   export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
@@ -369,7 +375,12 @@ EOF
       ln -s $DOCUMENT_ROOT/matomo-for-wordpress "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
     fi
   else
-    echo "installing latest stable matomo..."
+    MATOMO_PLUGIN_ZIP=${MATOMO_PLUGIN_ZIP:-https://downloads.wordpress.org/plugin/matomo.latest-stable.zip}
+    if [[ "$MATOMO_PLUGIN_ZIP" != /* && "$MATOMO_PLUGIN_ZIP" != *://* ]]; then
+      MATOMO_PLUGIN_ZIP="$DOCUMENT_ROOT/matomo-for-wordpress/$MATOMO_PLUGIN_ZIP" # relative to this repository
+    fi
+
+    echo "installing matomo from $MATOMO_PLUGIN_ZIP..."
 
     if [ -L "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
       rm "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
@@ -377,7 +388,7 @@ EOF
       rm -r "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
     fi
 
-    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "$MATOMO_PLUGIN_ZIP"
     chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
   fi
 
@@ -389,7 +400,7 @@ EOF
   $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo install
 
   # extra actions required during tests
-  if [ "$WORDPRESS_FOLDER" = "test" ]; then
+  if [[ "$WORDPRESS_FOLDER" = "test" || "$WORDPRESS_FOLDER" = "test-tracking" ]]; then
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo sync sites
 
@@ -716,11 +727,6 @@ EOF
   mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins
   cp $DOCUMENT_ROOT/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
 
-  FIlE_OWNER_USERID=$UID
-  if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
-    FIlE_OWNER_USERID=1000
-  fi
-
   # make sure the files can be edited outside of docker (for easier debugging)
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
   touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log $DOCUMENT_ROOT/matomo.wpload_dir.php
@@ -797,7 +803,9 @@ wait_for_database
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
-install_wordpress 1 -multi
+if [[ "$WITHOUT_MULTISITE" != "1" ]]; then
+  install_wordpress 1 -multi
+fi
 
 touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE/setup_finished || true
 touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true

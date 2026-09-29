@@ -55,13 +55,8 @@ function log(message: string) {
   console.log(`[premium-plugins] ${message}`);
 }
 
-/**
- * Installs the Matomo marketplace plugins that the tests expect to be present.
- *
- * The tracking wdio run does this through the browser in tests/e2e/mwp-admin.marketplace.e2e.ts,
- * which is the test of that flow. This exists so the main wdio run does not depend on that run
- * having succeeded. When it succeeds, everything here is already in place and this is a no-op.
- */
+// installs the marketplace plugins the main run expects, which the tracking run installs via the browser
+// in its own WordPress install (mwp-admin.marketplace.e2e.ts)
 class PremiumPluginsSetup {
   private isSetUp = false;
 
@@ -109,9 +104,7 @@ class PremiumPluginsSetup {
     const activated = await this.activateInstalledPlugins(pluginsDir);
 
     if (toInstall.length || activated.length) {
-      // the marketplace spec does this by opening a Matomo page afterwards, which triggers
-      // any pending plugin component updates
-      await WpCli.matomoUpdate();
+      await WpCli.matomoInstall(); // trigger plugin installation code
     }
 
     await this.disableHeadlessBlocking();

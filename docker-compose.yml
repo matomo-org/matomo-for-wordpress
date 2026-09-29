@@ -8,6 +8,8 @@
 #   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
 #   - WOOCOMMERCE - if set, installs and sets up woocommerce
 #   - MULTISITE - if set to '1', creates a multisite wordpress install. the folder will be suffixed with '-multi'
+#   - WITHOUT_MULTISITE - if set to '1', only the normal wordpress install is created, not the '-multi' one
+#   - MATOMO_PLUGIN_ZIP - with INSTALLING_FROM_ZIP=1, the zip (path relative to this repository, or URL) to install matomo from. defaults to the latest stable release
 
 services:
   # basic apache service
