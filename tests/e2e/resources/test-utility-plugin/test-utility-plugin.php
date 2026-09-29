@@ -75,6 +75,40 @@ add_action(
 );
 
 add_action(
+	'wp_ajax_nopriv_matomo_test_set_config_value',
+	function () {
+		if ( empty( $_REQUEST['section'] ) || empty( $_REQUEST['key'] ) ) {
+			wp_send_json( 'missing section or key' );
+		}
+
+		\WpMatomo\Bootstrap::do_bootstrap();
+
+		$section = sanitize_text_field( wp_unslash( $_REQUEST['section'] ) );
+		$key     = sanitize_text_field( wp_unslash( $_REQUEST['key'] ) );
+
+		$config = \Piwik\Config::getInstance();
+
+		$values = $config->{$section};
+		if ( ! is_array( $values ) ) {
+			$values = [];
+		}
+
+		if ( isset( $_REQUEST['value'] ) ) {
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$values[ $key ] = json_decode( wp_unslash( $_REQUEST['value'] ), true );
+		} else {
+			// removing the key makes Matomo fall back to the default in global.ini.php
+			unset( $values[ $key ] );
+		}
+
+		$config->{$section} = $values;
+		$config->forceSave();
+
+		wp_send_json( 'ok' );
+	}
+);
+
+add_action(
 	'wp_ajax_nopriv_matomo_test_disable_block_headless',
 	function () {
 		\WpMatomo\Bootstrap::do_bootstrap();

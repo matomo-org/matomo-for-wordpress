@@ -4,7 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3
  */
 namespace Matomo\Ini;
 
@@ -93,7 +93,11 @@ class IniWriter
                         }
                     }
                 } else {
-                    $ini .= $option . ' = ' . $this->encodeValue($value) . "\n";
+                    $encodedOption = $this->encodeOptionName($option);
+                    if ($encodedOption === '') {
+                        throw new \Matomo\Ini\IniWritingException(sprintf('Option name "%s" cannot be written', $option));
+                    }
+                    $ini .= $encodedOption . ' = ' . $this->encodeValue($value) . "\n";
                 }
             }
             $ini .= "\n";
@@ -110,9 +114,13 @@ class IniWriter
             return (int) $value;
         }
         if (is_string($value)) {
-            // remove any quotes w/ newlines after it since INI parsing will consider it the end of the string
-            $value = preg_replace('/\\"[\\n\\r]/', "\n", $value);
-            $value = addcslashes($value, '"');
+            // The native parse_ini_string() cannot read an escaped quote before a line
+            // break, and a single remaining one would end up as the last character of a
+            // line, where it is no longer distinguishable from the closing quote. Keep this.
+            $value = preg_replace('/"+([\\n\\r])/', '$1', $value);
+            // Backslashes are escaped as well, so a value ending in one cannot leave the
+            // closing quote preceded by a lone backslash. IniReader reverses this.
+            $value = addcslashes($value, '\\"');
             return '"' . $value . '"';
         }
         return $value;
@@ -125,6 +133,19 @@ class IniWriter
     {
         $key = preg_replace('/[^A-Za-z0-9\\-_]/', '', $key);
         return $key;
+    }
+    /**
+     * Removes the characters that would change the structure of the file when they appear in
+     * an option name. Brackets are kept, as they denote an array. Everything else is kept as
+     * well, so names such as "db.host" stay unchanged.
+     *
+     * @param $key
+     * @return string
+     */
+    private function encodeOptionName($key)
+    {
+        $key = preg_replace('/[\\r\\n\\t=;#"\']/', '', $key);
+        return trim($key);
     }
     /**
      * @param $key

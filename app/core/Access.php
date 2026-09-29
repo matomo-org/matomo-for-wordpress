@@ -137,7 +137,7 @@ class Access
             return \false;
         }
         $result = null;
-        $isApiRequest = \Piwik\Piwik::getModule() === 'API' && (\Piwik\Piwik::getAction() === 'index' || !\Piwik\Piwik::getAction());
+        $isApiRequest = Request::isApiHttpRequest();
         $apiMethod = Request::getMethodIfApiRequest(null);
         $isGetApiRequest = !empty($apiMethod) && 1 === substr_count($apiMethod, '.') && strpos($apiMethod, '.get') > 0;
         $token = StaticContainer::get(AuthenticationToken::class);

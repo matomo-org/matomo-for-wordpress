@@ -72,6 +72,7 @@ class WordPress extends Plugin
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'SitesManager.shouldPerformEmptySiteCheck' => 'shouldPerformEmptySiteCheck',
+            'SitesManager.siteWithoutData.showInviteTeamMemberLink' => 'hideInviteTeamMemberLink',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	          'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
@@ -105,6 +106,10 @@ class WordPress extends Plugin
 
     public function shouldPerformEmptySiteCheck( &$shouldPerformEmptySiteCheck ) {
         $shouldPerformEmptySiteCheck = false;
+    }
+
+    public function hideInviteTeamMemberLink( &$showInviteTeamMemberLink ) {
+        $showInviteTeamMemberLink = false;
     }
 
     public function onApiRequestDispatch(&$finalParameters, $pluginName, $methodName) {

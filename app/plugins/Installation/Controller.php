@@ -503,9 +503,8 @@ class Controller extends ControllerAdmin
             $config->General['trusted_hosts'] = [$host];
         }
     }
-    private function createSuperUser($login,
-#[\SensitiveParameter]
-$password, $email)
+    private function createSuperUser($login, #[\SensitiveParameter]
+        $password, $email)
     {
         Access::doAsSuperUser(function () use($login, $password, $email) {
             $api = APIUsersManager::getInstance();

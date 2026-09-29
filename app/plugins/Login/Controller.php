@@ -75,6 +75,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     private $passwordStrength;
     /**
+     * @var WhatsNewProvider
+     */
+    private $whatsNewProvider;
+    /**
      * @param PasswordResetter $passwordResetter
      * @param \Piwik\Auth $auth
      * @param SessionInitializer $sessionInitializer
@@ -82,8 +86,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @param BruteForceDetection $bruteForceDetection
      * @param SystemSettings $systemSettings
      * @param PasswordStrength $passwordStrength
+     * @param WhatsNewProvider $whatsNewProvider
      */
-    public function __construct($passwordResetter = null, $auth = null, $sessionInitializer = null, $passwordVerify = null, $bruteForceDetection = null, $systemSettings = null, $passwordStrength = null)
+    public function __construct($passwordResetter = null, $auth = null, $sessionInitializer = null, $passwordVerify = null, $bruteForceDetection = null, $systemSettings = null, $passwordStrength = null, $whatsNewProvider = null)
     {
         parent::__construct();
         if (empty($passwordResetter)) {
@@ -114,6 +119,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $passwordStrength = StaticContainer::get('Piwik\\Auth\\PasswordStrength');
         }
         $this->passwordStrength = $passwordStrength;
+        if (empty($whatsNewProvider)) {
+            $whatsNewProvider = StaticContainer::get(\Piwik\Plugins\Login\WhatsNewProvider::class);
+        }
+        $this->whatsNewProvider = $whatsNewProvider;
     }
     /**
      * Default action
@@ -176,6 +185,16 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view->linkTitle = Piwik::getRandomTitle();
         // crsf token: don't trust the submitted value; generate/fetch it from session data
         $view->nonce = Nonce::getNonce('Login.login');
+        $view->whatsNewChanges = $this->getWhatsNewChanges();
+    }
+    /**
+     * The "What's New" entries shown by the shared login layout.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getWhatsNewChanges() : array
+    {
+        return $this->whatsNewProvider->getChanges();
     }
     public function confirmPassword()
     {
@@ -202,7 +221,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $messageNoAccess = Piwik::translate('Login_WrongPasswordEntered');
             }
         }
-        return $this->renderTemplate('@Login/confirmPassword', ['nonce' => Nonce::getNonce($nonceKey), 'AccessErrorString' => $messageNoAccess, 'loginPlugin' => Piwik::getLoginPluginName()]);
+        return $this->renderTemplate('@Login/confirmPassword', ['nonce' => Nonce::getNonce($nonceKey), 'AccessErrorString' => $messageNoAccess, 'loginPlugin' => Piwik::getLoginPluginName(), 'whatsNewChanges' => $this->getWhatsNewChanges()]);
     }
     /**
      * Form-less login
@@ -275,11 +294,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @param string|false $urlToRedirect URL to redirect to, if successfully authenticated
      * @param bool $passwordHashed indicates if $password is hashed
      */
-    protected function authenticateAndRedirect($login,
-#[\SensitiveParameter]
-$password, $urlToRedirect = \false,
-#[\SensitiveParameter]
-$passwordHashed = \false)
+    protected function authenticateAndRedirect($login, #[\SensitiveParameter]
+        $password, $urlToRedirect = \false, #[\SensitiveParameter]
+            $passwordHashed = \false)
     {
         Nonce::discardNonce('Login.login');
         $this->auth->setLogin($login);
@@ -399,7 +416,7 @@ $passwordHashed = \false)
             $errorMessage = $ex->getMessage();
         }
         $nonce = Nonce::getNonce(self::NONCE_CONFIRMCANCELRESETPASSWORD);
-        return $this->renderTemplateAs('@Login/initiateCancelResetPassword', ['nonce' => $nonce, 'errorMessage' => $errorMessage, 'loginPlugin' => Piwik::getLoginPluginName(), 'login' => $login, 'resetToken' => $resetToken], 'basic');
+        return $this->renderTemplateAs('@Login/initiateCancelResetPassword', ['nonce' => $nonce, 'errorMessage' => $errorMessage, 'loginPlugin' => Piwik::getLoginPluginName(), 'login' => $login, 'resetToken' => $resetToken, 'whatsNewChanges' => $this->getWhatsNewChanges()], 'basic');
     }
     /**
      * Password reset cancel action. Invalidates a password reset token.
@@ -432,7 +449,7 @@ $passwordHashed = \false)
          * @param string $cancelResetPasswordContent The content to render.
          */
         Piwik::postEvent('Template.loginCancelResetPasswordContent', [&$cancelResetPasswordContent]);
-        return $this->renderTemplateAs('@Login/cancelResetPassword', ['cancelResetPasswordContent' => $cancelResetPasswordContent], 'basic');
+        return $this->renderTemplateAs('@Login/cancelResetPassword', ['cancelResetPasswordContent' => $cancelResetPasswordContent, 'whatsNewChanges' => $this->getWhatsNewChanges()], 'basic');
     }
     /**
      * Password reset confirmation action. Finishes the password reset process.
@@ -468,7 +485,7 @@ $passwordHashed = \false)
             }
         }
         $nonce = Nonce::getNonce(self::NONCE_CONFIRMRESETPASSWORD);
-        return $this->renderTemplateAs('@Login/confirmResetPassword', ['nonce' => $nonce, 'errorMessage' => $errorMessage, 'loginPlugin' => Piwik::getLoginPluginName()], 'basic');
+        return $this->renderTemplateAs('@Login/confirmResetPassword', ['nonce' => $nonce, 'errorMessage' => $errorMessage, 'loginPlugin' => Piwik::getLoginPluginName(), 'whatsNewChanges' => $this->getWhatsNewChanges()], 'basic');
     }
     /**
      * The action used after a password is successfully reset. Displays the login
