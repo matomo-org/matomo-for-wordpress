@@ -210,13 +210,21 @@ jobs:
       - name: Disable deprecation notices
         shell: bash
         run: |
-          mkdir docker
+          mkdir -p docker
           echo '[PHP]' > docker/php-custom.ini
           echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
           echo 'upload_max_filesize = 128M' >> docker/php-custom.ini
           echo 'memory_limit = 2G' >> docker/php-custom.ini
           echo 'max_execution_time = 600' >> docker/php-custom.ini
           echo 'post_max_size = 128M' >> docker/php-custom.ini
+
+      - name: Restore plugin download cache
+        id: plugin-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: docker/wp-cli
+          key: e2e-plugin-downloads
+          restore-keys: e2e-plugin-downloads-
 
       # docker-compose up
       - run: |
@@ -264,6 +272,25 @@ jobs:
         with:
           name: diff-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
           path: tests/e2e/diff
+
+      - name: Compute plugin download cache key
+        id: plugin-cache-key
+        if: always()
+        run: |
+          # wp-cli runs as root in the wordpress container, so its cache has to be made readable first
+          sudo chown -R "$(id -u):$(id -g)" docker/wp-cli || exit 0
+
+          if [ -z "$( find docker/wp-cli -name '*.zip' )" ]; then
+            exit 0 # nothing was downloaded, don't save an empty cache
+          fi
+
+          echo "key=e2e-plugin-downloads-$( cd docker/wp-cli && find . -name '*.zip' | sort | sha256sum | cut -c1-16 )" >> "$GITHUB_OUTPUT"
+      - name: Save plugin download cache
+        if: always() && steps.plugin-cache-key.outputs.key != '' && steps.plugin-cache-key.outputs.key != steps.plugin-cache.outputs.cache-matched-key
+        uses: actions/cache/save@v4
+        with:
+          path: docker/wp-cli
+          key: ${{ steps.plugin-cache-key.outputs.key }}
 
       # output docker-compose logs
       - run: npm run compose logs wordpress --no-color

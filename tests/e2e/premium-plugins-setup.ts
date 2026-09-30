@@ -16,7 +16,8 @@ import Website from './website.js';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-const DOWNLOADS_DIR = path.join(dirname, 'downloads');
+// kept alongside wp-cli's download cache so CI can cache both as one folder
+const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'docker', 'wp-cli', 'marketplace');
 
 if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR, { recursive: true });
@@ -48,6 +49,7 @@ interface MarketplacePlugin {
   displayName?: string;
   owner?: string;
   isDownloadable?: boolean;
+  latestVersion?: string;
   downloadUrl?: string;
 }
 
@@ -202,11 +204,13 @@ class PremiumPluginsSetup {
         + ' license in TEST_SHOP_LICENSE, so it cannot be installed.');
     }
 
-    // the marketplace names the download after the version, so it has to be renamed to keep
-    // downloads from colliding. Requests to the endpoint have to be POSTs with the access
-    // token in the body, which is what MatomoMarketplaceAdmin::add_authentication_if_needed()
-    // arranges for WordPress. The environment parameters are already in the URL.
-    const pathToZip = path.join(DOWNLOADS_DIR, `${plugin.name}.zip`);
+    const version = this.getDownloadVersion(plugin);
+    const pathToZip = path.join(DOWNLOADS_DIR, `${plugin.name}-${version}.zip`);
+
+    if (fs.existsSync(pathToZip)) {
+      log(`using cached ${path.basename(pathToZip)}`);
+      return pathToZip;
+    }
 
     await Website.retry(3, async () => {
       const response = await fetch(plugin.downloadUrl!, {
@@ -226,10 +230,35 @@ class PremiumPluginsSetup {
         throw new Error(`could not download ${plugin.name}: ${contents.toString('utf-8').substring(0, 500)}`);
       }
 
-      fs.writeFileSync(pathToZip, contents);
+      // written under a temporary name so an interrupted run cannot leave a partial zip in the cache
+      fs.writeFileSync(`${pathToZip}.tmp`, contents);
+      fs.renameSync(`${pathToZip}.tmp`, pathToZip);
     }, 2000);
 
+    this.removeOtherCachedVersions(plugin.name, pathToZip);
+
     return pathToZip;
+  }
+
+  private getDownloadVersion(plugin: MarketplacePlugin) {
+    const version = path.posix.basename(new URL(plugin.downloadUrl!).pathname);
+    if (/^\d+\.\d+/.test(version)) {
+      return version;
+    }
+
+    if (!plugin.latestVersion) {
+      throw new Error(`could not determine the version of ${plugin.name} from ${plugin.downloadUrl}`);
+    }
+
+    return plugin.latestVersion;
+  }
+
+  private removeOtherCachedVersions(slug: string, pathToKeep: string) {
+    fs.readdirSync(DOWNLOADS_DIR)
+      .filter((file) => file.startsWith(`${slug}-`) && file.endsWith('.zip'))
+      .map((file) => path.join(DOWNLOADS_DIR, file))
+      .filter((file) => file !== pathToKeep)
+      .forEach((file) => fs.rmSync(file, { force: true }));
   }
 
   /**

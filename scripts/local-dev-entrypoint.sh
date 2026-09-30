@@ -375,8 +375,8 @@ EOF
       ln -s $DOCUMENT_ROOT/matomo-for-wordpress "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
     fi
   else
-    MATOMO_PLUGIN_ZIP=${MATOMO_PLUGIN_ZIP:-https://downloads.wordpress.org/plugin/matomo.latest-stable.zip}
-    if [[ "$MATOMO_PLUGIN_ZIP" != /* && "$MATOMO_PLUGIN_ZIP" != *://* ]]; then
+    MATOMO_PLUGIN_ZIP=${MATOMO_PLUGIN_ZIP:-matomo} # installing by slug lets wp-cli cache the download
+    if [[ "$MATOMO_PLUGIN_ZIP" != "matomo" && "$MATOMO_PLUGIN_ZIP" != /* && "$MATOMO_PLUGIN_ZIP" != *://* ]]; then
       MATOMO_PLUGIN_ZIP="$DOCUMENT_ROOT/matomo-for-wordpress/$MATOMO_PLUGIN_ZIP" # relative to this repository
     fi
 
