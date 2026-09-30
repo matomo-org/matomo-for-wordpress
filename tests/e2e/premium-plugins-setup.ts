@@ -44,6 +44,9 @@ const EXPECTED_SLUGS = [
 
 const DOWNLOAD_CONCURRENCY = 3;
 
+// other versions can still be in use, since test-tracking runs a different Matomo version
+const OTHER_VERSIONS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
 interface MarketplacePlugin {
   name: string;
   displayName?: string;
@@ -235,7 +238,7 @@ class PremiumPluginsSetup {
       fs.renameSync(`${pathToZip}.tmp`, pathToZip);
     }, 2000);
 
-    this.removeOtherCachedVersions(plugin.name, pathToZip);
+    this.removeStaleCachedVersions(plugin.name, pathToZip);
 
     return pathToZip;
   }
@@ -253,11 +256,12 @@ class PremiumPluginsSetup {
     return plugin.latestVersion;
   }
 
-  private removeOtherCachedVersions(slug: string, pathToKeep: string) {
+  private removeStaleCachedVersions(slug: string, pathToKeep: string) {
     fs.readdirSync(DOWNLOADS_DIR)
       .filter((file) => file.startsWith(`${slug}-`) && file.endsWith('.zip'))
       .map((file) => path.join(DOWNLOADS_DIR, file))
       .filter((file) => file !== pathToKeep)
+      .filter((file) => Date.now() - fs.statSync(file).mtimeMs > OTHER_VERSIONS_MAX_AGE_MS)
       .forEach((file) => fs.rmSync(file, { force: true }));
   }
 

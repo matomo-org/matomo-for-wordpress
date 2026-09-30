@@ -394,6 +394,122 @@ add_action(
 	1
 );
 
+/**
+ * Serves marketplace plugin downloads from the local cache e2e tests use, bypassing the real marketplace,
+ * unless the plugin does not exist in the cache.
+ */
+const MATOMO_TEST_MARKETPLACE_CACHE_OPTION = 'matomo_test_use_marketplace_download_cache';
+const MATOMO_TEST_MARKETPLACE_CACHE_DIR    = '/.wp-cli/marketplace';
+
+function matomo_test_marketplace_cache_path( $url ) {
+	if (
+		! defined( 'MATOMO_MARKETPLACE_ENDPOINT' )
+		|| ! get_option( MATOMO_TEST_MARKETPLACE_CACHE_OPTION )
+	) {
+		return null;
+	}
+
+	// the marketplace plugin builds download URLs from the endpoint's host
+	$host = wp_parse_url( MATOMO_MARKETPLACE_ENDPOINT, PHP_URL_HOST );
+	if ( wp_parse_url( $url, PHP_URL_HOST ) !== $host ) {
+		return null;
+	}
+
+	if ( ! preg_match( '%^/api/2\.0/plugins/([A-Za-z0-9_]+)/download/(\d+\.\d+[^/]*)$%', (string) wp_parse_url( $url, PHP_URL_PATH ), $matches ) ) {
+		return null;
+	}
+
+	// same file names as premium-plugins-setup.ts
+	return MATOMO_TEST_MARKETPLACE_CACHE_DIR . '/' . $matches[1] . '-' . $matches[2] . '.zip';
+}
+
+add_action(
+	'wp_ajax_nopriv_matomo_test_use_marketplace_download_cache',
+	function () {
+		if ( empty( $_REQUEST['enable'] ) ) {
+			delete_option( MATOMO_TEST_MARKETPLACE_CACHE_OPTION );
+		} else {
+			update_option( MATOMO_TEST_MARKETPLACE_CACHE_OPTION, 1 );
+		}
+
+		wp_send_json( 'ok' );
+	}
+);
+
+add_filter(
+	'pre_http_request',
+	function ( $response, $args, $url ) {
+		$path_to_zip = matomo_test_marketplace_cache_path( $url );
+		if ( empty( $path_to_zip ) || ! is_file( $path_to_zip ) ) {
+			return $response;
+		}
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( "matomo test: serving $url from $path_to_zip" );
+
+		$body = '';
+		if ( ! empty( $args['stream'] ) && ! empty( $args['filename'] ) ) {
+			copy( $path_to_zip, $args['filename'] );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$body = file_get_contents( $path_to_zip );
+		}
+
+		return [
+			'headers'  => [],
+			'body'     => $body,
+			'response' => [
+				'code'    => 200,
+				'message' => 'OK',
+			],
+			'cookies'  => [],
+			'filename' => ! empty( $args['filename'] ) ? $args['filename'] : null,
+		];
+	},
+	10,
+	3
+);
+
+// not called for responses served by the pre_http_request filter above
+add_filter(
+	'http_response',
+	function ( $response, $args, $url ) {
+		$path_to_zip = matomo_test_marketplace_cache_path( $url );
+		if (
+			empty( $path_to_zip )
+			|| is_file( $path_to_zip )
+			|| 200 !== wp_remote_retrieve_response_code( $response )
+		) {
+			return $response;
+		}
+
+		$tmp_path = $path_to_zip . '.tmp';
+		if ( ! empty( $args['stream'] ) && ! empty( $args['filename'] ) ) {
+			$saved = copy( $args['filename'], $tmp_path );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			$saved = false !== file_put_contents( $tmp_path, wp_remote_retrieve_body( $response ) );
+		}
+
+		// the marketplace responds with JSON when it refuses a download
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ( $saved && 'PK' === file_get_contents( $tmp_path, false, null, 0, 2 ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+			rename( $tmp_path, $path_to_zip );
+
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( "matomo test: cached $url in $path_to_zip" );
+		} elseif ( is_file( $tmp_path ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			unlink( $tmp_path );
+		}
+
+		return $response;
+	},
+	10,
+	3
+);
+
 function matomo_test_utility_plugin_request_overrides() {
 	$override_path = ABSPATH . '/wp-content/plugins/matomo/.e2e-test-overrides.json';
 

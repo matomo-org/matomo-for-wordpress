@@ -86,7 +86,9 @@ function install_wordpress() {
   MULTISITE="$1"
   WP_FOLDER_SUFFIX="$2"
 
-  chmod 777 "/.wp-cli"
+  # create the premium plugin cache directory (used in e2e tests)
+  mkdir -p "/.wp-cli/marketplace"
+  chmod 777 "/.wp-cli" "/.wp-cli/marketplace"
 
   # computed up front since the matomo plugin is chowned before the rest of the install is
   FIlE_OWNER_USERID=$UID
