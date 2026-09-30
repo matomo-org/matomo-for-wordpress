@@ -326,10 +326,19 @@ export default class Page {
 
       const elementRect = await browser.execute((s) => {
         const rect = window.jQuery(s)[0].getBoundingClientRect();
-        return { right: rect.right, bottom: rect.bottom };
+        return {
+          right: rect.right,
+          bottom: rect.bottom,
+          // browser UI size, so the viewport (not the window) ends up the size of the element
+          uiWidth: window.outerWidth - window.innerWidth,
+          uiHeight: window.outerHeight - window.innerHeight,
+        };
       }, selector);
 
-      await browser.setWindowSize(elementRect.right, elementRect.bottom);
+      await browser.setWindowSize(
+        Math.floor(elementRect.right) + elementRect.uiWidth,
+        Math.floor(elementRect.bottom) + elementRect.uiHeight,
+      );
 
       return await browser.checkFullPageScreen(tag);
     } finally {
