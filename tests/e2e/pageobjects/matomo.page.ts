@@ -14,7 +14,7 @@ import * as path from "path";
 export default class MatomoPage extends Page {
 
   async open(path: string) {
-    const result = super.open(path);
+    const result = await super.open(path);
     await this.waitForLoading();
     await this.addStylesToPage(`
       table.entityTable tbody tr:hover td { background-color: unset !important; }
@@ -67,11 +67,17 @@ export default class MatomoPage extends Page {
   }
 
   async waitForLoading() {
+    // spinners may only appear once the page's JS has run, so give them a moment to show up first
+    await this.waitForLoadingIndicators(true, 2000);
+    await this.waitForLoadingIndicators(false, 30000);
+  }
+
+  private async waitForLoadingIndicators(visible: boolean, timeout: number) {
     try {
       await browser.waitUntil(async () => {
         const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
-        return loadingGifs !== 0;
-      }, { timeout: 30000 });
+        return (loadingGifs !== 0) === visible;
+      }, { timeout });
     } catch (e: any) {
       if (!/condition timed out/i.test(e.message)) { // don't fail the whole test if this times out for some reason
         throw e;
