@@ -746,6 +746,28 @@ EOF
   echo "finish wordpress install (multisite = $MULTISITE)"
 }
 
+function configure_opcache() {
+  OPCACHE_INI="$PHP_INI_DIR/conf.d/zz-opcache.ini"
+
+  # removed first, since the container can be reused
+  rm -f "$OPCACHE_INI"
+  if [[ "$PHP_OPCACHE" != "1" ]]; then
+    return
+  fi
+
+  # newer php images already load opcache
+  if ! php -m | grep -q "Zend OPcache"; then
+    echo "zend_extension=opcache" > "$OPCACHE_INI"
+  fi
+
+  cat >> "$OPCACHE_INI" <<EOF
+opcache.enable=1
+opcache.memory_consumption=256
+opcache.max_accelerated_files=20000
+opcache.revalidate_freq=0
+EOF
+}
+
 function start_webserver() {
   # TODO: is it possible to use wp-cli for this?
   # make sure home url points to 'localhost'
@@ -779,9 +801,11 @@ function start_webserver() {
 
     tail -f -n 50 /usr/local/lsws/logs/error.log /usr/local/lsws/logs/stderr.log
   elif ! which apache2-foreground &> /dev/null; then
+    configure_opcache
     php-fpm "$@"
   else
     a2enmod rewrite || true
+    configure_opcache
 
     # set port to exposed port so we can make server side requests to localhost
     sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
