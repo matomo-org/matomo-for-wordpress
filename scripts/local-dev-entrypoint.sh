@@ -210,6 +210,11 @@ if ( getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) ) {
   define( 'MATOMO_MARKETPLACE_ZIP_URL', getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) );
 }
 
+# e2e tests archive only what they need themselves
+if ( getenv( 'MATOMO_DISABLE_WP_ARCHIVING' ) ) {
+  define( 'MATOMO_DISABLE_WP_ARCHIVING', true );
+}
+
 # mail settings
 define( 'WPMS_ON', true );
 define( 'WPMS_MAILER', 'smtp' );

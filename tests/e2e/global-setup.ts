@@ -7,6 +7,7 @@
  */
 
 import MatomoApi from './apiobjects/matomo.api.js';
+import MatomoCli from './apiobjects/matomo.cli.js';
 import Website from './website.js';
 
 // TODO: need to document how to write an e2e test. eg, individual tests
@@ -52,15 +53,12 @@ class GlobalSetup {
   }
 
   async runArchiving() {
-    try {
-      await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
-    } catch (e) {
-      // this API method currently prints out some PHP warnings due to a flush() that's
-      // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
-      // causing the warnings to emit.
-
-      // ignore
-    }
+    // the reporting pages only view this day
+    await MatomoCli.call('core:archive', {
+      '--force-idsites': '1',
+      '--force-periods': 'day',
+      '--force-date-range': `${this.getDateOfVisitTrackedInPast()},${this.getDateOfVisitTrackedInPast()}`,
+    });
   }
 
   async trackRealtimeVisitWithLocation() {
