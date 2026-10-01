@@ -19,6 +19,7 @@ use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Plugins\WordPress\Overrides\GeoIp2\DbIpPreviousMonthUpdater;
 use WpMatomo\Admin\Admin;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
@@ -283,18 +284,44 @@ class ScheduledTasks extends Feature {
 			}
 
 			$updater = StaticContainer::get( GeoIP2AutoUpdater::class );
-			$updater->update();
+			try {
+				$updater->update();
+			} catch ( Exception $e ) {
+				// DB-IP does not always publish a new month's database on the 1st, so if there is
+				// no database at all, use last month's until this month's can be downloaded
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$location_dbs = GeoIp2::$dbNames['loc'];
+				if ( ! $this->is_free_db_ip_url( $db_url ) || GeoIp2::getPathToGeoIpDatabase( $location_dbs ) ) {
+					throw $e;
+				}
+
+				$this->logger->log_exception( 'update_geoip2', $e );
+
+				$updater = StaticContainer::get( DbIpPreviousMonthUpdater::class );
+				$updater->update();
+
+				$this->schedule_geo_ip2_db_retry();
+			}
+
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
 				LocationProvider::setCurrentProvider( Php::ID );
 			}
 		} catch ( Exception $e ) {
-			$next = wp_next_scheduled( self::EVENT_GEOIP );
-			if ( false === $next || $next - time() > 2 * 24 * 60 * 60 ) {
-				wp_schedule_single_event( time() + 24 * 60 * 60, self::EVENT_GEOIP );
-			}
+			$this->schedule_geo_ip2_db_retry();
 
 			$this->on_task_fail( 'update_geoip2', $e, 'An error occurred while updating the geolocation database.' );
 		}
+	}
+
+	private function schedule_geo_ip2_db_retry() {
+		$next = wp_next_scheduled( self::EVENT_GEOIP );
+		if ( false === $next || $next - time() > 2 * 24 * 60 * 60 ) {
+			wp_schedule_single_event( time() + 24 * 60 * 60, self::EVENT_GEOIP );
+		}
+	}
+
+	private function is_free_db_ip_url( $url ) {
+		return 0 === strpos( $url, 'https://download.db-ip.com/free/' );
 	}
 
 	public function sync() {
