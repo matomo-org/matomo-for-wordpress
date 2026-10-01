@@ -71,7 +71,8 @@ describe('Matomo Reporting > Behaviour', () => {
       }, { interval: 1000, timeout: 30000 });
     }
 
-    await browser.pause(4000);
+    await EngagementPage.waitForLoading();
+    await EngagementPage.waitForImages();
 
     await EngagementPage.prepareMatomoPageForScreenshot();
     await expect(

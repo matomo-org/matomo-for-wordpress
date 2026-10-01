@@ -14,7 +14,16 @@ export default class MwpPage extends Page {
     const result = await super.open(url);
 
     await browser.waitUntil(() => browser.execute(() => !!window.jQuery), { timeout: 30000 });
-    await browser.pause(1500);
+
+    // idle must hold for consecutive checks, since ajax requests can be chained
+    let idleChecks = 0;
+    await browser.waitUntil(async () => {
+      const isIdle = await browser.execute(() => document.readyState === 'complete'
+        && window.jQuery.active === 0
+        && document.fonts.status === 'loaded');
+      idleChecks = isIdle ? idleChecks + 1 : 0;
+      return idleChecks >= 3;
+    }, { timeout: 30000, interval: 200 });
 
     return result;
   }

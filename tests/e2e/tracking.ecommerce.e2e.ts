@@ -46,20 +46,17 @@ describe('Tracking (Ecommerce)', function() {
     // disabled for now due to ordering failing in github actions for an unknown reason
     // await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 
-    await browser.pause(5000); // just to make sure everything gets tracked
-
-    const visitsAfter = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
+    const isEcommerceVisit = (v) => v.visitEcommerceStatus === 'ordered' || v.visitEcommerceStatus === 'abandonedCart';
+    const visitsAfter = await MatomoApi.callUntil('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
       date: 'today',
       period: 'month',
       filter_limit: '100',
       format: 'json',
       test: '1',
-    }));
+    }), (visits) => visits.some(isEcommerceVisit));
 
-    const visitsWithEcommerceOrder = visitsAfter.filter(
-      (v) => v.visitEcommerceStatus === 'ordered' || v.visitEcommerceStatus === 'abandonedCart'
-    );
+    const visitsWithEcommerceOrder = visitsAfter.filter(isEcommerceVisit);
 
     // even checking for ordered or abandonedCart, still fails randomly
     expect(visitsWithEcommerceOrder.length).toEqual(1);
@@ -147,17 +144,15 @@ describe('Tracking (Ecommerce)', function() {
       await BlogProductPage.waitForTrackingRequest(1); // pageview refresh + product update
       await checkPageHasForcedVisitorId();
 
-      await browser.pause(5000);
-
       // ensure we are doing cookieless tracking
       const matomoCookies = Object.keys(await browser.getCookies()).filter(k => /^_pk_/.test(k));
       expect(matomoCookies).toEqual([]);
 
       // check that a new visit was tracked, instead of tracking to an existing visit
-      const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+      const counters = await MatomoApi.callUntil('GET', 'Live.getCounters', new URLSearchParams({
         idSite: '1',
         lastMinutes: '60',
-      }));
+      }), (c) => parseInt(c[0]?.visits, 10) > parseInt(countersBefore[0].visits, 10));
 
       expect(counters).toHaveLength(1);
       expect(parseInt(counters[0].visits, 10)).toEqual(parseInt(countersBefore[0].visits, 10) + 1);

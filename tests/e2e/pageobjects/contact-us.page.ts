@@ -10,7 +10,7 @@ import Page from './page.js';
 
 class ContactUsPage extends Page {
     async open() {
-        const result = super.open('/contact-us/');
+        const result = await super.open('/contact-us/');
 
         await $('#matomo_optout_checkbox').waitForExist({ timeout: 30000 });
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });
@@ -18,7 +18,8 @@ class ContactUsPage extends Page {
             return window.jQuery('input#trackVisits:visible').length > 0;
         }), { timeout: 60000 })
 
-        await browser.pause(10000);
+        await this.waitForImages();
+        await browser.waitUntil(() => browser.execute(() => document.fonts.status === 'loaded'));
 
         return result;
     }

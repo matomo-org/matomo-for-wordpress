@@ -20,7 +20,6 @@ describe('Matomo Reporting > Ecommerce', () => {
 
   it('should load the overview page correctly', async () => {
     await OverviewPage.open();
-    await browser.pause(500);
 
     await OverviewPage.prepareMatomoPageForScreenshot();
 

@@ -81,7 +81,6 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
-    await browser.pause(1000);
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
     ).toBeLessThanOrEqual(3);

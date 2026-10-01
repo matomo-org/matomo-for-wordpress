@@ -22,8 +22,6 @@ class MwpSettingsPage extends MwpPage {
     });
 
     await this.saveSettings();
-
-    await browser.pause(1000);
   }
 
   async disableTagManagerTracking() {
@@ -58,8 +56,31 @@ class MwpSettingsPage extends MwpPage {
 
   async openMeasurableSettings(pluginDisplayName: string) {
     await $(`a.nav-tab=${pluginDisplayName}`).click();
-    await $('iframe').waitForDisplayed();
-    await browser.pause(2000); // wait for iframe resizer to activate
+    await this.waitForMeasurableSettings();
+  }
+
+  async waitForMeasurableSettings() {
+    await $('#plugin_measurable_settings').waitForDisplayed();
+    await browser.waitUntil(() => browser.execute(() => {
+      const iframe = document.querySelector('#plugin_measurable_settings') as HTMLIFrameElement|null;
+      const doc = iframe?.contentDocument;
+      if (!doc || doc.readyState !== 'complete' || doc.fonts.status !== 'loaded') {
+        return false;
+      }
+
+      const settings = doc.querySelector('.pluginMeasurableSettings');
+      if (!settings) {
+        return !!doc.querySelector('h4'); // no access page
+      }
+
+      const iframeJQuery = (iframe!.contentWindow as any).jQuery;
+      return iframeJQuery.active === 0
+        && iframeJQuery('.pluginMeasurableSettings .loadingPiwik:visible').length === 0
+        && !!settings.querySelector('.settingsFormFooter,.noMeasurableSettingsAvailable');
+    }), { timeout: 30000 });
+
+    // iframe-resizer sets the height after the content has loaded
+    await this.waitForElementsToSettle('#plugin_measurable_settings');
   }
 
   async setSeoWebVitalsSettingValue(value: string) {
@@ -72,7 +93,13 @@ class MwpSettingsPage extends MwpPage {
       window.jQuery('#plugin_measurable_settings').contents()
         .find('.settingsFormFooter input')[0].click();
     });
-    await browser.pause(3000);
+    // there's no success notification, but the save request starts synchronously in the click handler
+    await browser.waitUntil(() => browser.execute(() => {
+      const iframe = window.jQuery('#plugin_measurable_settings')[0] as HTMLIFrameElement;
+      const iframeWindow = iframe.contentWindow as any;
+      return iframeWindow.jQuery.active === 0
+        && !iframeWindow.jQuery('.settingsFormFooter input').prop('disabled');
+    }), { timeout: 30000 });
   }
 
   async expandAllTrackingSettingsSections() {

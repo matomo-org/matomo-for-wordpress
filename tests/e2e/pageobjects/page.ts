@@ -171,6 +171,23 @@ export default class Page {
     await browser.pause(500); // wait for matomo to process the tracking requests
   }
 
+  // waits until the elements stop moving/fading, eg, after an open animation
+  async waitForElementsToSettle(selector: string) {
+    let lastState: string|null = null;
+    let stableChecks = 0;
+    await browser.waitUntil(async () => {
+      const state = await browser.execute((s) => {
+        return window.jQuery(s).toArray().map((e) => {
+          const r = e.getBoundingClientRect();
+          return [r.x, r.y, r.width, r.height, getComputedStyle(e).opacity].join(',');
+        }).join(';');
+      }, selector);
+      stableChecks = state === lastState ? stableChecks + 1 : 0;
+      lastState = state;
+      return stableChecks >= 2;
+    }, { timeout: 10000, interval: 100 });
+  }
+
   async addStylesToPage(css: string, elementId: string|null = null) {
     await $('head').waitForExist();
     await browser.execute(function (c, id) {
@@ -197,6 +214,12 @@ export default class Page {
     } catch (e) {
       // ignore and try to compare a screenshot anyway
     }
+
+    // complete images (svgs especially) may not be decoded yet, and so not painted
+    await browser.execute(() => {
+      const decodes = Array.from(document.images).map((i) => i.decode().catch(() => null));
+      return Promise.race([Promise.all(decodes), new Promise((r) => setTimeout(r, 5000))]);
+    });
   }
 
   // for wp themes/plugins that use react

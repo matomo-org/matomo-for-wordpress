@@ -23,8 +23,13 @@ class MwpSummaryPage extends MwpPage {
   }
 
   async changePeriod(periodDescriptor: string) {
+    // marks the current page, so we can tell when the next one has loaded
+    await browser.execute(() => { (window as any).e2eOldPage = true; });
     await $(`a.button=${periodDescriptor}`).click();
-    await browser.pause(1000);
+    await browser.waitUntil(
+      () => browser.execute(() => !(window as any).e2eOldPage && document.readyState === 'complete'),
+      { timeout: 30000 }
+    );
     await $('.postbox').waitForExist({ timeout: 30000 });
   }
 

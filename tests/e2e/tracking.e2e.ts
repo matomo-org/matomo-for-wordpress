@@ -33,12 +33,10 @@ describe('Tracking', () => {
     await BlogPostPage.open();
     await BlogPostPage.waitForTrackingRequest();
 
-    await browser.pause(3000); // just to make sure everything gets tracked
-
-    const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+    const counters = await MatomoApi.callUntil('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',
       lastMinutes: '60',
-    }));
+    }), (c) => parseInt(c[0]?.actions, 10) >= parseInt(countersBefore[0].actions, 10) + 2);
 
     expect(counters).toEqual([{
       visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,

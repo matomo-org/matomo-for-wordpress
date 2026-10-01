@@ -25,7 +25,7 @@ export default class TagManagerPage extends MatomoAdminPage {
       );
     }, { timeout: 30000 });
 
-    await browser.pause(2000);
+    await this.waitForElementsToSettle('.modal.open,.modal-overlay');
   }
 
   async openInstallCodeModal() {

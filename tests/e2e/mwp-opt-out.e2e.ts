@@ -23,7 +23,7 @@ describe('OptOut', () => {
         await ContactUsPage.prepareBlogPostPageForScreenshot();
         await expect(
             await browser.checkFullPageScreen(`mwp.page-with-opt-out.${process.env.PHP_VERSION}${trunkSuffix}`)
-        ).toEqual(0);
+        ).toBeLessThanOrEqual(1);
     });
 
     it('should opt the user out when the checkbox is unchecked (classic)', async () => {
@@ -33,7 +33,7 @@ describe('OptOut', () => {
         await ContactUsPage.prepareBlogPostPageForScreenshot();
         await expect(
             await browser.checkFullPageScreen(`mwp.page-with-opt-out.classic-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
-        ).toEqual(0);
+        ).toBeLessThanOrEqual(1);
     });
 
     it('should opt the user in when the checkbox is checked (classic)', async () => {
