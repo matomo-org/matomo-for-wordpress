@@ -176,7 +176,6 @@ export default class Page {
     await browser.execute(function (c, id) {
       document.head.insertAdjacentHTML('beforeend', `<style${id ? ` id="${id}"` : ''}>${c}</style>`);
     } as any, css, elementId);
-    await browser.pause(500); // wait for the browser to finish rendering
   }
 
   async waitForImages() {
@@ -227,9 +226,16 @@ export default class Page {
   }
 
   async prepareWpAdminForScreenshot() {
-    await browser.execute(() => {
+    // only hidden in the main run, the serial run sets E2E_SERIAL_RUN
+    const hidePluginSuggestions = !process.env.E2E_SERIAL_RUN;
+
+    await browser.execute((hideSuggestions) => {
       if (!window.jQuery('#wpadminbar,#adminmenumain').length) {
         throw new Error('cannot find elements to hide');
+      }
+
+      if (hideSuggestions) {
+        document.head.insertAdjacentHTML('beforeend', '<style id="e2e-hide-plugin-suggestions">.matomo-plugin-suggestion { display: none !important; }</style>');
       }
 
       window.jQuery('.notice:contains(An error occurred while updating the geolocation database)').hide();
@@ -244,7 +250,7 @@ export default class Page {
       if (emptyDiv) {
         emptyDiv.remove();
       }
-    });
+    }, hidePluginSuggestions);
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
@@ -264,6 +270,7 @@ export default class Page {
 
   async undoChangesToWpAdminForScreenshot() {
     await browser.execute(() => {
+      window.jQuery('#e2e-hide-plugin-suggestions').remove();
       window.jQuery('.notice-ocean-extra-plugin').show();
       window.jQuery('#wpadminbar,#adminmenumain').show();
       window.jQuery('#footer-upgrade').show();

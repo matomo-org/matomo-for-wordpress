@@ -3,6 +3,9 @@
 
 import { config as baseConfig } from './wdio.conf.js';
 
+// inherited by the worker processes
+process.env.E2E_SERIAL_RUN = '1';
+
 export const config = {
   ...baseConfig,
   maxInstances: 1,
