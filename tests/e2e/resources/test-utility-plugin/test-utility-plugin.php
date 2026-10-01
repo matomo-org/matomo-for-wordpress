@@ -483,7 +483,8 @@ add_filter(
 			return $response;
 		}
 
-		$tmp_path = $path_to_zip . '.tmp';
+		// unique, since the e2e runs can download the same zip concurrently
+		$tmp_path = $path_to_zip . '.' . uniqid( '', true ) . '.tmp';
 		if ( ! empty( $args['stream'] ) && ! empty( $args['filename'] ) ) {
 			$saved = copy( $args['filename'], $tmp_path );
 		} else {

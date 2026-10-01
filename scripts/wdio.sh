@@ -78,7 +78,14 @@ set +o allexport
 # run tests
 echo "Running tests..."
 EXIT_STATUS=0
-WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER wdio run ./wdio.conf.tracking.ts || EXIT_STATUS=$?
+
+# the serial run uses its own install, so it runs alongside the main run
+(
+  WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER wdio run ./wdio.conf.tracking.ts 2>&1 | sed -u 's/^/[serial] /'
+  exit "${PIPESTATUS[0]}"
+) &
+SERIAL_PID=$!
+
 wdio run ./wdio.conf.ts || EXIT_STATUS=$?
-wdio run ./wdio.conf.uninstall.ts || EXIT_STATUS=$?
+wait $SERIAL_PID || EXIT_STATUS=$?
 exit $EXIT_STATUS

@@ -237,9 +237,11 @@ class PremiumPluginsSetup {
         throw new Error(`could not download ${plugin.name}: ${contents.toString('utf-8').substring(0, 500)}`);
       }
 
-      // written under a temporary name so an interrupted run cannot leave a partial zip in the cache
-      fs.writeFileSync(`${pathToZip}.tmp`, contents);
-      fs.renameSync(`${pathToZip}.tmp`, pathToZip);
+      // written under a temporary name so an interrupted run cannot leave a partial zip in the cache.
+      // unique, since the e2e runs can download the same zip concurrently.
+      const tmpPath = `${pathToZip}.${process.pid}.tmp`;
+      fs.writeFileSync(tmpPath, contents);
+      fs.renameSync(tmpPath, pathToZip);
     }, 2000);
 
     this.removeStaleCachedVersions(plugin.name, pathToZip);
