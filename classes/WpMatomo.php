@@ -254,6 +254,7 @@ class WpMatomo {
 
 		return [
 			new \WpMatomo\PluginInit( self::$settings ),
+			new \WpMatomo\PluginActivationInstaller( self::$settings ),
 			new Capabilities( self::$settings ),
 			new Roles( self::$settings ),
 			new \WpMatomo\Compatibility(),

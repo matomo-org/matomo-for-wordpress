@@ -433,11 +433,7 @@ class Installer {
 	 * @return bool
 	 */
 	public function is_current_instance_installed() {
-		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
-		if ( empty( $installed_components ) ) {
-			$installed_components = '[]';
-		}
-		$installed_components = json_decode( $installed_components, true );
+		$installed_components = $this->get_installed_components();
 
 		if ( empty( $installed_components['core'] ) ) {
 			return false;
@@ -468,11 +464,19 @@ class Installer {
 	 * @return void
 	 */
 	public function mark_matomo_installed() {
-		$installed = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
-		if ( empty( $installed ) ) {
-			$installed = '[]';
-		}
-		$installed = json_decode( $installed, true );
+		$this->record_installed_components();
+
+		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
+		delete_option( $option_name );
+	}
+
+	/**
+	 * Records core and the plugins in Matomo's PluginsInstalled config as installed for this instance.
+	 *
+	 * @return void
+	 */
+	public function record_installed_components() {
+		$installed = $this->get_installed_components();
 
 		$installed['core'] = 1;
 		foreach ( Config::getInstance()->PluginsInstalled['PluginsInstalled'] as $plugin_name ) {
@@ -481,9 +485,19 @@ class Installer {
 
 		$this->settings->set_option( Settings::INSTANCE_COMPONENTS_INSTALLED, wp_json_encode( $installed ) );
 		$this->settings->save();
+	}
 
-		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
-		delete_option( $option_name );
+	public function is_core_installed() {
+		$installed_components = $this->get_installed_components();
+		return ! empty( $installed_components['core'] );
+	}
+
+	private function get_installed_components() {
+		$installed_components = $this->settings->get_option( Settings::INSTANCE_COMPONENTS_INSTALLED );
+		if ( empty( $installed_components ) ) {
+			return [];
+		}
+		return json_decode( $installed_components, true );
 	}
 
 	private function mark_install_started() {
@@ -491,7 +505,7 @@ class Installer {
 		update_option( $option_name, time() );
 	}
 
-	private function is_install_in_progress() {
+	public function is_install_in_progress() {
 		$five_minutes = 5 * 60;
 
 		$option_name = Settings::OPTION_PREFIX . 'install-start-time';
