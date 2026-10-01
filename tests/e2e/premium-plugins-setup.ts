@@ -26,6 +26,9 @@ if (!fs.existsSync(DOWNLOADS_DIR)) {
 const AVAILABLE_PLUGINS_SCRIPT = path.join(dirname, 'resources', 'marketplace-available-plugins.php');
 const AVAILABLE_PLUGINS_JSON_MARKER = 'MARKETPLACE_PLUGINS_JSON:';
 
+// last successful marketplace response, used when the marketplace is down
+const AVAILABLE_PLUGINS_CACHE = path.join(DOWNLOADS_DIR, 'available-plugins.json');
+
 const MARKETPLACE_WP_PLUGIN = 'matomo-marketplace-for-wordpress';
 const LICENSE_OPTION = 'matomo_marketplace_license_key';
 
@@ -152,13 +155,34 @@ class PremiumPluginsSetup {
     this.checkPluginWasInstalled(pluginsDir, MARKETPLACE_WP_PLUGIN, false);
   }
 
+  private async fetchAvailablePlugins() {
+    let available: MarketplacePlugin[];
+    try {
+      available = await this.fetchAvailablePluginsFromMarketplace();
+    } catch (e: any) {
+      if (!fs.existsSync(AVAILABLE_PLUGINS_CACHE)) {
+        throw e;
+      }
+
+      log(`could not reach the marketplace, using the cached list of available plugins instead:\n${e.stack}`);
+      return JSON.parse(fs.readFileSync(AVAILABLE_PLUGINS_CACHE, 'utf-8')) as MarketplacePlugin[];
+    }
+
+    // written under a temporary name so an interrupted run cannot leave a partial file
+    const tmpPath = `${AVAILABLE_PLUGINS_CACHE}.${process.pid}.tmp`;
+    fs.writeFileSync(tmpPath, JSON.stringify(available));
+    fs.renameSync(tmpPath, AVAILABLE_PLUGINS_CACHE);
+
+    return available;
+  }
+
   /**
    * Asks the marketplace plugin itself for the plugins available to the configured license,
    * rather than reimplementing MatomoMarketplaceApi in here. That way the environment
    * parameters, the compatibility filtering and the download URLs cannot drift from what the
    * marketplace spec ends up installing through the browser.
    */
-  private async fetchAvailablePlugins() {
+  private async fetchAvailablePluginsFromMarketplace() {
     return await Website.retry(3, async () => {
       const output = await WpCli.evalFile(AVAILABLE_PLUGINS_SCRIPT);
 
