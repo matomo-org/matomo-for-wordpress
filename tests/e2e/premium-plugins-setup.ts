@@ -44,6 +44,10 @@ const EXPECTED_SLUGS = [
 
 const DOWNLOAD_CONCURRENCY = 3;
 
+// enough to wait out a short marketplace outage
+const FETCH_ATTEMPTS = 5;
+const FETCH_RETRY_DELAY_MS = 15000;
+
 // other versions can still be in use, since test-tracking runs a different Matomo version
 const OTHER_VERSIONS_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -166,12 +170,12 @@ class PremiumPluginsSetup {
       const json = output.substring(startOfJson + AVAILABLE_PLUGINS_JSON_MARKER.length);
 
       const parsed = JSON.parse(json);
-      if (!(parsed instanceof Array)) {
+      if (!(parsed instanceof Array) || !parsed.length) {
         throw new Error(`expected a list of marketplace plugins, got: ${json.substring(0, 500)}`);
       }
 
       return parsed as MarketplacePlugin[];
-    }, 2000) as MarketplacePlugin[];
+    }, FETCH_ATTEMPTS, FETCH_RETRY_DELAY_MS) as MarketplacePlugin[];
   }
 
   private checkExpectedPluginsArePresent(pluginsDir: string, toInstall: MarketplacePlugin[]) {

@@ -26,8 +26,29 @@ call_user_func(
 			);
 		}
 
+		// MatomoMarketplaceApi turns error responses into an empty list, so check the response ourselves
+		$marketplace_response = null;
+		add_action(
+			'http_api_debug',
+			function ( $response, $context, $transport, $args, $url ) use ( &$marketplace_response ) {
+				if ( 0 === strpos( $url, MATOMO_MARKETPLACE_ENDPOINT . 'plugins' ) ) {
+					$marketplace_response = $response;
+				}
+			},
+			10,
+			5
+		);
+
 		$api     = new MatomoMarketplaceApi();
 		$plugins = $api->get_available_plugins( 'plugins', '' );
+
+		$code = wp_remote_retrieve_response_code( $marketplace_response );
+		$body = wp_remote_retrieve_body( $marketplace_response );
+		if ( 200 !== $code || ! is_array( json_decode( $body, true ) ) ) {
+			throw new Exception(
+				"Unexpected marketplace response (HTTP $code): " . substr( $body, 0, 500 )
+			);
+		}
 
 		// a marker so the JSON can be found even if WordPress emits notices before it. Keep in
 		// sync with AVAILABLE_PLUGINS_JSON_MARKER in tests/e2e/premium-plugins-setup.ts
