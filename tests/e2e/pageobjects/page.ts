@@ -180,6 +180,11 @@ export default class Page {
   }
 
   async waitForImages() {
+    // offscreen lazy images never complete until scrolled to
+    await browser.execute(() => {
+      window.jQuery('img[loading="lazy"]').attr('loading', 'eager');
+    });
+
     try {
       await browser.waitUntil(async () => {
         return browser.execute(function () {

@@ -24,16 +24,11 @@ export default class MatomoPage extends Page {
   }
 
   async removeWhatsNewIfPresent(u) {
-    let exists = false;
+    // the popover is opened on DOMContentLoaded, its content is loaded after
+    const isOpening = await browser.execute(() => $('.what-is-new-popup').length > 0);
 
-    try {
-      await $('.whatisnew').waitForExist({ timeout: 5000 });
-      exists = true;
-    } catch (e) {
-      // ignore
-    }
-
-    if (exists) {
+    if (isOpening) {
+      await $('.whatisnew').waitForExist({ timeout: 30000 });
       await browser.execute(() => {
         $('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
       });
@@ -67,17 +62,14 @@ export default class MatomoPage extends Page {
   }
 
   async waitForLoading() {
-    // spinners may only appear once the page's JS has run, so give them a moment to show up first
-    await this.waitForLoadingIndicators(true, 2000);
-    await this.waitForLoadingIndicators(false, 30000);
-  }
-
-  private async waitForLoadingIndicators(visible: boolean, timeout: number) {
+    // idle must hold for consecutive checks, since loading can start in a chain of requests
+    let idleChecks = 0;
     try {
       await browser.waitUntil(async () => {
-        const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
-        return (loadingGifs !== 0) === visible;
-      }, { timeout });
+        const isIdle = await browser.execute(() => window.jQuery.active === 0 && $('.loadingPiwik:visible').length === 0);
+        idleChecks = isIdle ? idleChecks + 1 : 0;
+        return idleChecks >= 3;
+      }, { timeout: 30000, interval: 200 });
     } catch (e: any) {
       if (!/condition timed out/i.test(e.message)) { // don't fail the whole test if this times out for some reason
         throw e;

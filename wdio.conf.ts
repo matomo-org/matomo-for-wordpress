@@ -217,6 +217,8 @@ export const config: Options.Testrunner = {
         autoSaveBaseline: false,
         blockOutStatusBar: true,
         blockOutToolBar: true,
+        // default is 1500ms per scrolled viewport
+        fullPageScrollTimeout: 300,
         // Options for the tabbing image
         tabbableOptions: {
           circle: {
