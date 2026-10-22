@@ -1,4 +1,4 @@
 interface:
   display_name: "Matomo WordPress Regression"
   short_description: "Test Matomo plugin behavior before and after changes"
-  default_prompt: "Use $matomo-wordpress-regression to test wp-content/plugins/matomo and compare the results with the saved baseline."
+  default_prompt: "Use $matomo-wordpress-regression to test this plugin, identify the Git comparison base and committed plus local changes, and compare stable test cases against an approved baseline."

@@ -18,7 +18,7 @@ ddev wp option get siteurl
 ddev wp cron event list --fields=hook,next_run_gmt,recurrence --format=json
 ```
 
-These are discovery checks, not functional test passes. Inspect staged changes with `git diff --cached` as well. Avoid dumping configuration, cookies, tokens or entire options tables into reports.
+These are discovery checks, not functional test passes. The working-tree diff above is not the branch comparison: follow [comparison-baselines.md](comparison-baselines.md) to inspect committed feature changes, base advancement, staged/unstaged changes and relevant untracked files. Avoid dumping configuration, cookies, tokens or entire options tables into reports.
 
 At skill creation, DDEV specified PHP 8.4 and MariaDB 10.11; plugin Compose defaults specified PHP 8.1. Record actual execution versions; host PHP and DDEV PHP may differ. Plugin development `vendor/bin` and `node_modules/.bin` were absent. Bundled `app/vendor` does not establish plugin test dependencies.
 
@@ -73,6 +73,31 @@ Do not simply set WebdriverIO `baseUrl` to DDEV. `tests/e2e/website.ts` builds U
 
 ## Compare runs
 
-Use matching fixture start states. Reusing populated sites can alter global setup and totals. Do not compare DDEV report totals against fresh Compose fixtures. Pin concrete PHP/WordPress versions where practical; `latest` can change between runs. Record environment differences as gaps until there is evidence they represent code regressions.
+Use matching fixture start states and the approval/compatibility rules in [comparison-baselines.md](comparison-baselines.md). Reusing populated sites can alter global setup and totals. Do not compare DDEV report totals against fresh Compose fixtures. Pin concrete PHP/WordPress versions where practical; `latest` can change between runs. Record versions before and after execution so automatic updates cannot silently change a run's identity. Record environment differences as gaps until there is evidence they represent code regressions.
 
 Preserve original failure output, reproduce the smallest relevant case once if useful, and compare the same case against the reference revision in isolation. Preserve local edits. Separate likely cause from observed facts, and repair application code only when requested.
+
+## First practical validation: TRACK-001
+
+Complete the entire journey below on a user-identified known-working commit, then on the feature candidate. Keep the reference source free of candidate edits, but include committed and local changes in the candidate snapshot. Use the same runtime versions, enabled integrations, fixture recipe, site mode, site timezone, report date/period, case contract and assertions. Run against independent equivalent fixture states; avoid unrelated visits that alter totals. Use a unique marker on each side and compare the same outcome rather than requiring identical generated IDs.
+
+1. **Prepare:** record the source/skill identities, versions, fixture fingerprint, effective site ID and site timezone. Select a concrete visit/report date that stays fixed through the case; do not mix UTC and site-local dates. Prepare a unique page URL or title that survives configured query-parameter exclusions. Record the expected count (one page action for the marked page in the clean fixture) before navigating.
+2. **Generate the visit:** open a fresh anonymous Chrome context through available MCP tools or the existing browser framework and visit the identifiable page once. Capture tracker loading, the request and response, and the run marker. Wait on observable completion; do not pass from HTTP 200 alone or generate extra visits through automatic navigation retries.
+3. **Confirm raw storage:** verify exactly one matching page action for the intended site and URL/title via Live API or a read-only query using the actual table prefix. Preserve the matching record and count. A response from the tracker without a stored matching action is insufficient.
+4. **Archive:** inspect the current `tests/e2e/manual-archiving.e2e.ts` and CLI helper before choosing the supported invocation. In the disposable repository Compose environment, an example is:
+
+   ```bash
+   npm run matomo:console -- core:archive --force-idsites=<site-id> --force-date-range=<YYYY-MM-DD>,<YYYY-MM-DD> --force-periods=day
+   ```
+
+   Replace placeholders with the verified site ID and concrete action date; never run them literally. Ensure the CLI targets the same WordPress/Matomo installation as the browser. Record the exact command, exit code and archive completion/output. If stale archives need invalidating, limit the existing supported API to the fixture's site/date/period in the disposable environment. Do not copy the test suite's archive-table deletion workaround onto a retained installation. A registered cron event or a request to start archiving without confirmed completion is not completion of this step.
+5. **Confirm the archived report:** request the page URL/title report for the same site, concrete date and `period=day`, using the authenticated reporting API (for example `Actions.getPageUrls`) or rendered report. Expand hierarchical rows or inspect the appropriate subtable as necessary; a default top-row limit must not hide the marker. Assert the exact marker appears with the expected action count, and retain that report row and parameters. A Live visit or unrelated aggregate count is not an archived report assertion.
+6. **Finish and compare:** revoke temporary sessions, restore permitted settings and record retained synthetic data. Fill [report-template.md](report-template.md) for both runs. `TRACK-001` passes only when all stages pass. If a prerequisite is unavailable, mark the case BLOCKED and retain completed subassertions; if an executed assertion fails, mark it FAIL, even if later stages are blocked by it. Missing archiving/report checks cannot be called a successful journey. Compare both runs only after compatibility and approval checks.
+
+Useful invocations:
+
+```text
+Use $matomo-wordpress-regression to establish a baseline on known-working commit <full-sha>. Complete TRACK-001 and available coverage, preserve evidence, and report blocked or untested functionality. Do not fix application code or update screenshot baselines.
+
+Use $matomo-wordpress-regression to compare this branch against <base-branch> and baseline <report-path>. Include committed branch changes and local changes, execute affected cases and core smoke checks, and report new, existing and resolved failures.
+```
