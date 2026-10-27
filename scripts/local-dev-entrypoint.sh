@@ -287,7 +287,7 @@ PHPEOF
   # install wordpress
   echo "installing wordpress"
   if [[ "$MULTISITE" = "1" ]]; then
-    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url=$HOSTNAME --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url="$HOSTNAME/$WORDPRESS_FOLDER" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
 
     cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 RewriteEngine On
