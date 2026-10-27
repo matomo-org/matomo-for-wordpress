@@ -297,10 +297,15 @@ PHPEOF
     # set` call fails with "Site '<host>/<folder>/' not found" and
     # the dev multisite install is unusable.
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url="http://$HOSTNAME/$WORDPRESS_FOLDER" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
-    # Realign the main site's path with wp-config's PATH_CURRENT_SITE.
-    # Must be raw SQL — every wp-cli call needs to look the site up
-    # first, which fails on the pre-patch mismatch.
-    mariadb -h "$WP_DB_HOST" -uroot -ppass "$WP_DB_NAME" -e "UPDATE wp_site SET path='/$WORDPRESS_FOLDER/' WHERE id=1; UPDATE wp_blogs SET path='/$WORDPRESS_FOLDER/' WHERE blog_id=1;"
+    # Realign the main site's (domain, path) with wp-config's
+    # DOMAIN_CURRENT_SITE + PATH_CURRENT_SITE. Must be raw SQL
+    # because every subsequent wp-cli call does a site lookup
+    # against those values and fails before any `wp site update`
+    # could run. Even with --url=http://host:port/..., wp-cli's
+    # multisite-install writes wp_blogs.domain WITHOUT the port
+    # when wp-config carries WP_DEBUG/WP_ENVIRONMENT_TYPE=local
+    # (observed on dev installs); force both fields here.
+    mariadb -h "$WP_DB_HOST" -uroot -ppass "$WP_DB_NAME" -e "UPDATE wp_site SET domain='$HOSTNAME', path='/$WORDPRESS_FOLDER/' WHERE id=1; UPDATE wp_blogs SET domain='$HOSTNAME', path='/$WORDPRESS_FOLDER/' WHERE blog_id=1;"
 
     cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 RewriteEngine On
