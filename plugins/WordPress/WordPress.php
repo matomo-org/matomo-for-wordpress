@@ -16,6 +16,7 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
+use Piwik\Http\EgressBlockedException;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin;
@@ -429,13 +430,12 @@ class WordPress extends Plugin
 		    $args['sslverify'] = false;
 	    }
         if (!empty($params['validateEgressIp'])) {
-            // WordPress validates the initial URL and every redirect target before
-            // connecting, preventing requests to private and reserved IP ranges.
-            $args['reject_unsafe_urls'] = true;
-            $wpResponse = wp_safe_remote_request($url, $args);
-        } else {
-            $wpResponse = wp_remote_request($url, $args);
+            // WordPress URL validation does not pin DNS results or guarantee that
+            // proxies use the validated address, so it cannot provide Matomo's
+            // SSRF-safe egress guarantees.
+            throw new EgressBlockedException('SSRF-safe HTTP requests are not supported by the WordPress HTTP transport.');
         }
+        $wpResponse = wp_remote_request($url, $args);
 
         if (is_object($wpResponse) && is_wp_error($wpResponse)) {
             throw new Exception("Error while fetching data: " . $wpResponse->get_error_message());
