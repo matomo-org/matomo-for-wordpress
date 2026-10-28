@@ -457,6 +457,62 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
+	public function test_updateContainerVariable_should_refuse_a_variable_name_with_a_single_closing_brace() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container   = $this->create_a_container( $id_site );
+				$id_variable = $this->add_a_constant_variable( $id_site, $container, 'MatomoHost' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'braces or angle brackets' );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.updateContainerVariable',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+						'idVariable'         => $id_variable,
+						'name'               => 'MatomoHost}',
+						'parameters'         => [ 'constantValue' => '/' ],
+					]
+				);
+			}
+		);
+	}
+
+	public function test_updateContainerVariable_should_refuse_markup_in_a_variable_name() {
+		$this->require_tag_manager();
+
+		$id_site = $this->create_a_user_without_unfiltered_html();
+
+		Access::doAsSuperUser(
+			function () use ( $id_site ) {
+				$container   = $this->create_a_container( $id_site );
+				$id_variable = $this->add_a_constant_variable( $id_site, $container, 'MatomoHost' );
+
+				$this->expectException( ValidatorException::class );
+				$this->expectExceptionMessage( 'braces or angle brackets' );
+
+				MatomoApiRequest::processRequest(
+					'TagManager.updateContainerVariable',
+					[
+						'idSite'             => $id_site,
+						'idContainer'        => $container['id_container'],
+						'idContainerVersion' => $container['id_version'],
+						'idVariable'         => $id_variable,
+						'name'               => '<img src=x onerror=alert(1)}',
+						'parameters'         => [ 'constantValue' => '/' ],
+					]
+				);
+			}
+		);
+	}
+
 	public function test_updateContainerVariable_should_rename_a_variable_a_constrained_tag_refers_to() {
 		$this->require_tag_manager();
 
