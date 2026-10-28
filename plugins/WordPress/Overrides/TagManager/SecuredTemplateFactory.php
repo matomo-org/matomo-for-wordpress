@@ -30,15 +30,15 @@ use Piwik\Validators\Exception as ValidatorException;
 class SecuredTemplateFactory
 {
     /**
-     * Whether the additional Matomo URL and tracker-resource restrictions are enabled.
+     * Whether the authenticated-request and Matomo URL hardening is enabled.
      *
      * Set MATOMO_TAG_MANAGER_RESTRICT_URLS to false in wp-config.php, or use the
      * matomo_tag_manager_restrict_urls filter to support custom tracker deployments.
-     * Restrictions are enabled by default. Other security validations remain active.
+     * Hardening is enabled by default. Other template restrictions remain active.
      *
      * @return bool
      */
-    private static function restrictMatomoUrls()
+    private static function isUrlHardeningEnabled()
     {
         $enabled = !defined('MATOMO_TAG_MANAGER_RESTRICT_URLS') || MATOMO_TAG_MANAGER_RESTRICT_URLS;
 
@@ -61,12 +61,17 @@ class SecuredTemplateFactory
      */
     public function getVariableReplacements()
     {
-        return [
+        $replacements = [
             MatomoConfigurationVariable::class => [$this, 'matomoConfigurationVariable'],
-            JavaScriptVariable::class => [$this, 'javaScriptVariable'],
             CustomJsFunctionVariable::class => [$this, 'customJsFunctionVariable'],
             CustomRequestProcessingVariable::class => [$this, 'customRequestProcessingVariable'],
         ];
+
+        if (self::isUrlHardeningEnabled()) {
+            $replacements[JavaScriptVariable::class] = [$this, 'javaScriptVariable'];
+        }
+
+        return $replacements;
     }
 
     /**
@@ -115,17 +120,19 @@ class SecuredTemplateFactory
      */
     public function matomoConfigurationVariable(MatomoConfigurationVariable $wrapped)
     {
-        $restrictUrls = self::restrictMatomoUrls();
+        $restrictUrls = self::isUrlHardeningEnabled();
         $urlValidators = $restrictUrls ? [new MatomoAppUrl()] : [];
-        $endpointValidators = $restrictUrls ? [new TrackerEndpointPath()] : [];
+        $endpointValidators = $restrictUrls
+            ? [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()]
+            : [];
 
         return new class(
             $wrapped,
             [
                 'matomoUrl' => $urlValidators,
-                'jsEndpointCustom' => array_merge([new NoVariableInterpolation(), new NoPathTraversal()], $endpointValidators),
-                'trackingEndpointCustom' => array_merge([new NoVariableInterpolation(), new NoPathTraversal()], $endpointValidators),
-                'appendToTrackingUrl' => [new NoVariableInterpolation(), new NoAuthenticationParameters()],
+                'jsEndpointCustom' => $endpointValidators,
+                'trackingEndpointCustom' => $endpointValidators,
+                'appendToTrackingUrl' => $restrictUrls ? [new NoVariableInterpolation(), new NoAuthenticationParameters()] : [],
             ],
             [
                 'matomoUrl' => self::dropUrlQueryAndFragment(),

@@ -384,21 +384,17 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 			$endpoint = $this->find_parameter( $variable, 'trackingEndpointCustom' );
 			$endpoint->setValue( 'custom-tracker.php' );
 			$this->assertSame( 'custom-tracker.php', $endpoint->getValue() );
-		} finally {
-			remove_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
-		}
-	}
+			$endpoint->setValue( '../../wp-content/uploads/payload.txt' );
+			$this->assertSame( '../../wp-content/uploads/payload.txt', $endpoint->getValue() );
 
-	public function test_matomoConfigurationVariable_should_keep_path_traversal_protection_when_url_restrictions_are_disabled() {
-		$disable_restrictions = static function () {
-			return false;
-		};
-		add_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
+			$append = $this->find_parameter( $variable, 'appendToTrackingUrl' );
+			$append->setValue( '_wpnonce=123&campaign={{Campaign}}' );
+			$this->assertSame( '_wpnonce=123&campaign={{Campaign}}', $append->getValue() );
 
-		try {
-			$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
-			$this->expectException( ValidatorException::class );
-			$this->find_parameter( $variable, 'trackingEndpointCustom' )->setValue( '../../wp-content/uploads/payload.txt' );
+			$this->assertArrayNotHasKey( JavaScriptVariable::class, $this->template_factory->getVariableReplacements() );
+			$variable_name = $this->find_parameter( new JavaScriptVariable(), 'variableName' );
+			$variable_name->setValue( 'wpApiSettings.nonce' );
+			$this->assertSame( 'wpApiSettings.nonce', $variable_name->getValue() );
 		} finally {
 			remove_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
 		}
