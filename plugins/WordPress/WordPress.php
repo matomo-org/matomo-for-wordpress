@@ -429,7 +429,7 @@ class WordPress extends Plugin
 		    // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
 		    $args['sslverify'] = false;
 	    }
-        if (!empty($params['validateEgressIp'])) {
+        if (!empty($params['validateEgressIp']) && !wp_http_validate_url($url)) {
             // WordPress URL validation does not pin DNS results or guarantee that
             // proxies use the validated address, so it cannot provide Matomo's
             // SSRF-safe egress guarantees.
