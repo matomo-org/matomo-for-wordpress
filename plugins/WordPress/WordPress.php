@@ -428,7 +428,14 @@ class WordPress extends Plugin
 		    // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
 		    $args['sslverify'] = false;
 	    }
-        $wpResponse = wp_remote_request($url, $args);
+        if (!empty($params['validateEgressIp'])) {
+            // WordPress validates the initial URL and every redirect target before
+            // connecting, preventing requests to private and reserved IP ranges.
+            $args['reject_unsafe_urls'] = true;
+            $wpResponse = wp_safe_remote_request($url, $args);
+        } else {
+            $wpResponse = wp_remote_request($url, $args);
+        }
 
         if (is_object($wpResponse) && is_wp_error($wpResponse)) {
             throw new Exception("Error while fetching data: " . $wpResponse->get_error_message());
