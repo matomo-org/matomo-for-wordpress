@@ -369,6 +369,41 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->find_parameter( $variable, $name )->setValue( 'payload.txt' );
 	}
 
+	public function test_matomoConfigurationVariable_should_allow_custom_urls_when_url_restrictions_are_disabled() {
+		$disable_restrictions = static function () {
+			return false;
+		};
+		add_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
+
+		try {
+			$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+			$matomo_url = $this->find_parameter( $variable, 'matomoUrl' );
+			$matomo_url->setValue( 'https://tracker.example/custom-matomo/' );
+			$this->assertSame( 'https://tracker.example/custom-matomo/', $matomo_url->getValue() );
+
+			$endpoint = $this->find_parameter( $variable, 'trackingEndpointCustom' );
+			$endpoint->setValue( 'custom-tracker.php' );
+			$this->assertSame( 'custom-tracker.php', $endpoint->getValue() );
+		} finally {
+			remove_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
+		}
+	}
+
+	public function test_matomoConfigurationVariable_should_keep_path_traversal_protection_when_url_restrictions_are_disabled() {
+		$disable_restrictions = static function () {
+			return false;
+		};
+		add_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
+
+		try {
+			$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+			$this->expectException( ValidatorException::class );
+			$this->find_parameter( $variable, 'trackingEndpointCustom' )->setValue( '../../wp-content/uploads/payload.txt' );
+		} finally {
+			remove_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
+		}
+	}
+
 	/**
 	 * @dataProvider custom_endpoint_provider
 	 */

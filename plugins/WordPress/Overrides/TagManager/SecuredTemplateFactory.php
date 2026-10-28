@@ -30,6 +30,22 @@ use Piwik\Validators\Exception as ValidatorException;
 class SecuredTemplateFactory
 {
     /**
+     * Whether the additional Matomo URL and tracker-resource restrictions are enabled.
+     *
+     * Set MATOMO_TAG_MANAGER_RESTRICT_URLS to false in wp-config.php, or use the
+     * matomo_tag_manager_restrict_urls filter to support custom tracker deployments.
+     * Restrictions are enabled by default. Other security validations remain active.
+     *
+     * @return bool
+     */
+    private static function restrictMatomoUrls()
+    {
+        $enabled = !defined('MATOMO_TAG_MANAGER_RESTRICT_URLS') || MATOMO_TAG_MANAGER_RESTRICT_URLS;
+
+        return (bool) apply_filters('matomo_tag_manager_restrict_urls', $enabled);
+    }
+
+    /**
      * @return array<class-string, callable>
      */
     public function getTagReplacements()
@@ -99,12 +115,16 @@ class SecuredTemplateFactory
      */
     public function matomoConfigurationVariable(MatomoConfigurationVariable $wrapped)
     {
+        $restrictUrls = self::restrictMatomoUrls();
+        $urlValidators = $restrictUrls ? [new MatomoAppUrl()] : [];
+        $endpointValidators = $restrictUrls ? [new TrackerEndpointPath()] : [];
+
         return new class(
             $wrapped,
             [
-                'matomoUrl' => [new MatomoAppUrl()],
-                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
-                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+                'matomoUrl' => $urlValidators,
+                'jsEndpointCustom' => array_merge([new NoVariableInterpolation(), new NoPathTraversal()], $endpointValidators),
+                'trackingEndpointCustom' => array_merge([new NoVariableInterpolation(), new NoPathTraversal()], $endpointValidators),
                 'appendToTrackingUrl' => [new NoVariableInterpolation(), new NoAuthenticationParameters()],
             ],
             [
