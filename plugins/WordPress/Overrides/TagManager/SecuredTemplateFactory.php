@@ -12,9 +12,11 @@ use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
+use Piwik\Plugins\TagManager\Template\Variable\JavaScriptVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoAuthenticationParameters;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
@@ -44,6 +46,7 @@ class SecuredTemplateFactory
     {
         return [
             MatomoConfigurationVariable::class => [$this, 'matomoConfigurationVariable'],
+            JavaScriptVariable::class => [$this, 'javaScriptVariable'],
             CustomJsFunctionVariable::class => [$this, 'customJsFunctionVariable'],
             CustomRequestProcessingVariable::class => [$this, 'customRequestProcessingVariable'],
         ];
@@ -101,6 +104,7 @@ class SecuredTemplateFactory
                 'matomoUrl' => [new SiteOwnUrl()],
                 'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
                 'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+                'appendToTrackingUrl' => [new NoVariableInterpolation(), new NoAuthenticationParameters()],
             ],
             [
                 'matomoUrl' => self::dropUrlQueryAndFragment(),
@@ -109,6 +113,23 @@ class SecuredTemplateFactory
             ],
             ['matomoUrl' => self::siteOwnDefaultUrl()]
         ) extends MatomoConfigurationVariable {
+            use SecuredTemplate;
+        };
+    }
+
+    /**
+     * Prevent arbitrary reads from the visitor's global JavaScript namespace. In WordPress this
+     * includes REST nonces and other credentials used by same-origin authenticated requests.
+     *
+     * @param JavaScriptVariable $wrapped
+     * @return JavaScriptVariable
+     */
+    public function javaScriptVariable(JavaScriptVariable $wrapped)
+    {
+        return new class(
+            $wrapped,
+            ['variableName' => [new UnfilteredHtmlRequired()]]
+        ) extends JavaScriptVariable {
             use SecuredTemplate;
         };
     }

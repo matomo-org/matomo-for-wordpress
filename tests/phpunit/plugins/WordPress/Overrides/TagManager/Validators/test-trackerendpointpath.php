@@ -71,6 +71,8 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'a path parameter'                            => [ 'payload.txt;x.js' ],
 			// an endpoint is appended to the Matomo URL, so it addresses no host of its own
 			'an absolute url'                             => [ 'https://evil.example/payload.js' ],
+			'a WordPress REST API directory'               => [ 'wp-json/wp/v2/users/2/' ],
+			'an arbitrary directory'                      => [ 'some/other/directory/' ],
 		];
 	}
 

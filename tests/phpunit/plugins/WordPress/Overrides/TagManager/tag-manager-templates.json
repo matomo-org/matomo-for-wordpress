@@ -59,7 +59,7 @@
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\DataLayerVariable": "safe",
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\DomElementVariable": "safe",
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\EtrackerConfigurationVariable": "safe",
-        "Piwik\\Plugins\\TagManager\\Template\\Variable\\JavaScriptVariable": "safe",
+        "Piwik\\Plugins\\TagManager\\Template\\Variable\\JavaScriptVariable": "narrowed",
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\MatomoConfigurationVariable": "narrowed",
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\MetaContentVariable": "safe",
         "Piwik\\Plugins\\TagManager\\Template\\Variable\\PreConfigured\\BrowserLanguageVariable": "safe",

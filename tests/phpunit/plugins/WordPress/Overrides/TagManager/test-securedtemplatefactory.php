@@ -14,6 +14,7 @@ use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
+use Piwik\Plugins\TagManager\Template\Variable\JavaScriptVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\WordPress\Overrides\TagManager\SecuredTemplateFactory;
 use Piwik\SettingsPiwik;
@@ -248,6 +249,48 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 			[ 'jsEndpointCustom' ],
 			[ 'trackingEndpointCustom' ],
 		];
+	}
+
+	public function test_javaScriptVariable_should_refuse_arbitrary_window_property_access() {
+		$variable = $this->template_factory->javaScriptVariable( new JavaScriptVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, 'variableName' )->setValue( 'wpApiSettings.nonce' );
+	}
+
+	public function test_matomoConfigurationVariable_should_allow_empty_tracking_url_append() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'appendToTrackingUrl' );
+		$parameter->setValue( '' );
+
+		$this->assertSame( '', $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_allow_non_authentication_tracking_parameters() {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'appendToTrackingUrl' );
+		$parameter->setValue( 'campaign=spring&source=newsletter' );
+
+		$this->assertSame( 'campaign=spring&source=newsletter', $parameter->getValue() );
+	}
+
+	public function unsafe_tracking_url_append_provider() {
+		return [
+			'nonce parameter' => [ '_wpnonce=123' ],
+			'encoded nonce parameter' => [ '%5Fwpnonce=123' ],
+			'authorization parameter' => [ 'Authorization=Bearer%20token' ],
+			'variable interpolation' => [ 'campaign={{Nonce}}' ],
+		];
+	}
+
+	/**
+	 * @dataProvider unsafe_tracking_url_append_provider
+	 */
+	public function test_matomoConfigurationVariable_should_refuse_authentication_data_in_tracking_url_append( $value ) {
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'appendToTrackingUrl' );
+
+		$this->expectException( ValidatorException::class );
+
+		$parameter->setValue( $value );
 	}
 
 	/**

@@ -52,8 +52,19 @@ class TrackerEndpointPath extends BaseValidator
             throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointCharacterNotAllowed'));
         }
 
-        if ('' === $path || substr($path, -1) === '/') {
-            return; // a directory
+        if ('' === $path) {
+            return;
+        }
+
+        if (substr($path, -1) === '/') {
+            // Matomo's documented JavaScript proxy endpoint is the one directory endpoint
+            // needed by the tracker. Other directories can resolve to authenticated application
+            // routes (for example WordPress REST paths).
+            if ('js/' === $path) {
+                return;
+            }
+
+            throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
         }
 
         $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
