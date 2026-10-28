@@ -14,9 +14,10 @@ use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\JavaScriptVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\MatomoAppUrl;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoAuthenticationParameters;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
-use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoAuthenticationParameters;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\TrackerEndpointPath;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\UnfilteredHtmlRequired;
@@ -87,8 +88,8 @@ class SecuredTemplateFactory
     }
 
     /**
-     * The Matomo Configuration variable, with the parameters that decide which origin the tracker
-     * is loaded from constrained to this site.
+     * The Matomo Configuration variable, with the tracker base and endpoints constrained to this
+     * Matomo for WordPress installation.
      *
      * This one is narrowed rather than refused for the additional reason that it is the variable
      * Tag Manager users need most.
@@ -101,7 +102,7 @@ class SecuredTemplateFactory
         return new class(
             $wrapped,
             [
-                'matomoUrl' => [new SiteOwnUrl()],
+                'matomoUrl' => [new MatomoAppUrl()],
                 'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
                 'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
                 'appendToTrackingUrl' => [new NoVariableInterpolation(), new NoAuthenticationParameters()],
@@ -202,7 +203,7 @@ class SecuredTemplateFactory
     }
 
     /**
-     * Replaces a default URL that SiteOwnUrl would refuse with one this site does answer to.
+     * Replaces a default URL that MatomoAppUrl would refuse with this installation's Matomo app.
      *
      * @return \Closure
      */
@@ -210,7 +211,7 @@ class SecuredTemplateFactory
     {
         return function ($default) {
             foreach (self::siteOwnUrlCandidates($default) as $candidate) {
-                if (self::isSiteOwnUrl($candidate)) {
+                if (self::isSiteMatomoAppUrl($candidate)) {
                     return $candidate;
                 }
             }
@@ -244,14 +245,14 @@ class SecuredTemplateFactory
      * @param mixed $value
      * @return bool whether SiteOwnUrl accepts the value as a URL of this site
      */
-    private static function isSiteOwnUrl($value)
+    private static function isSiteMatomoAppUrl($value)
     {
         if (!is_string($value) || '' === $value) {
             return false;
         }
 
         try {
-            (new SiteOwnUrl())->validate($value);
+            (new MatomoAppUrl())->validate($value);
         } catch (ValidatorException $e) {
             return false;
         }

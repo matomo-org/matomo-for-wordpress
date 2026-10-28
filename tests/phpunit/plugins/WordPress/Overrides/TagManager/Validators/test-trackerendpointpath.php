@@ -31,17 +31,15 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 		return [
 			'the default custom js endpoint'       => [ 'custom.js' ],
 			'the default custom tracking endpoint' => [ 'custom.php' ],
+			'a Matomo JavaScript resource'          => [ 'matomo.js' ],
+			'a Matomo PHP tracker resource'         => [ 'matomo.php' ],
 			'a js file below the matomo url'       => [ 'js/tracker.js' ],
 			'a php file below the matomo url'      => [ 'js/tracker.php' ],
-			'an upper case extension'              => [ 'MATOMO.JS' ],
 			'a dot in a file name'                 => [ 'matomo.min.js' ],
 			// Matomo's own "js/" endpoint. a directory is not something an upload can become
 			'a directory'                          => [ 'js/' ],
 			'a query string on a php endpoint'     => [ 'matomo.php?idsite=1' ],
 			'a fragment on a js endpoint'          => [ 'matomo.js#x' ],
-			// nothing but a query leaves the Matomo URL addressing itself, which is a directory
-			'a query string on its own'            => [ '?idsite=1' ],
-			'an empty value'                       => [ '' ],
 		];
 	}
 
@@ -73,23 +71,27 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'an absolute url'                             => [ 'https://evil.example/payload.js' ],
 			'a WordPress REST API directory'               => [ 'wp-json/wp/v2/users/2/' ],
 			'an arbitrary directory'                      => [ 'some/other/directory/' ],
+			'an arbitrary PHP endpoint'                    => [ 'wp-admin/admin-ajax.php' ],
+			'an arbitrary JavaScript endpoint'             => [ 'custom-handler.js' ],
+			'an upper case path'                           => [ 'MATOMO.JS' ],
+			'a query string without an endpoint'           => [ '?idsite=1' ],
+			'an empty endpoint'                            => [ '' ],
 		];
 	}
 
 	/**
 	 * @dataProvider rejected_paths_provider
 	 */
-	public function test_validate_should_reject_a_path_that_could_address_an_uploaded_file( $path ) {
+	public function test_validate_should_reject_paths_that_are_not_known_tracker_resources( $path ) {
 		$this->expectException( ValidatorException::class );
 
 		$this->validator->validate( $path );
 	}
 
-	public function test_validate_should_ignore_a_bare_value_and_leave_it_to_not_empty() {
-		$this->validator->validate( null );
-		$this->validator->validate( false );
+	public function test_validate_should_reject_bare_values() {
+		$this->expectException( ValidatorException::class );
 
-		$this->assertTrue( true, 'no exception was thrown' );
+		$this->validator->validate( null );
 	}
 
 	public function test_validate_should_reject_a_value_that_is_not_a_string() {

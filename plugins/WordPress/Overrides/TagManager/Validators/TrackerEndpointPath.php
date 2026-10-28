@@ -13,7 +13,7 @@ use Piwik\Validators\BaseValidator;
 use Piwik\Validators\Exception;
 
 /**
- * Constrains a tracker endpoint to a resource that cannot be a file somebody uploaded.
+ * Restricts custom endpoints to Matomo's tracker resources below the validated Matomo app URL.
  */
 class TrackerEndpointPath extends BaseValidator
 {
@@ -27,15 +27,21 @@ class TrackerEndpointPath extends BaseValidator
     /**
      * @var string[]
      */
-    const ALLOWED_EXTENSIONS = ['js', 'php'];
+    const ALLOWED_PATHS = [
+        'custom.js',
+        'matomo.js',
+        'piwik.js',
+        'matomo.min.js',
+        'js/tracker.js',
+        'custom.php',
+        'matomo.php',
+        'piwik.php',
+        'js/tracker.php',
+        'js/',
+    ];
 
     public function validate($value)
     {
-        if ($this->isValueBare($value)) {
-            // whether an empty value is acceptable is NotEmpty()'s decision, not ours
-            return;
-        }
-
         if (!is_string($value)) {
             throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
         }
@@ -52,24 +58,11 @@ class TrackerEndpointPath extends BaseValidator
             throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointCharacterNotAllowed'));
         }
 
-        if ('' === $path) {
-            return;
-        }
+        // Leading slashes are removed by the secured-template transform before the value is
+        // used. Apply the same normalization here so validation covers the final relative path.
+        $path = ltrim($path, '/');
 
-        if (substr($path, -1) === '/') {
-            // Matomo's documented JavaScript proxy endpoint is the one directory endpoint
-            // needed by the tracker. Other directories can resolve to authenticated application
-            // routes (for example WordPress REST paths).
-            if ('js/' === $path) {
-                return;
-            }
-
-            throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
-        }
-
-        $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
-
-        if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
+        if ('' === $path || !in_array($path, self::ALLOWED_PATHS, true)) {
             throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
         }
     }

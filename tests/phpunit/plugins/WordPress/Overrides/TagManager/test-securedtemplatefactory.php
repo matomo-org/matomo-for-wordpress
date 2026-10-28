@@ -154,12 +154,40 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_accept_a_matomo_url_on_this_site() {
-		$url = '//' . wp_parse_url( home_url(), PHP_URL_HOST ) . '/wp-content/plugins/matomo/app/';
+		$site = wp_parse_url( home_url() );
+		$url  = '//' . $site['host'] . ( isset( $site['port'] ) ? ':' . $site['port'] : '' ) . $this->matomo_app_path();
 
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
 		$parameter->setValue( $url );
 
 		$this->assertSame( $url, $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_accept_the_matomo_app_path_without_a_trailing_slash() {
+		$url = untrailingslashit( home_url( $this->matomo_app_path() ) );
+		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
+		$parameter->setValue( $url );
+
+		$this->assertSame( $url, $parameter->getValue() );
+	}
+
+	public function test_matomoConfigurationVariable_should_refuse_a_same_site_non_matomo_path() {
+		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, 'matomoUrl' )->setValue( home_url( '/wp-json/wp/v2/users/2/' ) );
+	}
+
+	public function test_matomoConfigurationVariable_should_refuse_the_matomo_path_on_another_port() {
+		$site = wp_parse_url( home_url() );
+		$port = isset( $site['port'] ) ? (int) $site['port'] + 1 : ( 'https' === $site['scheme'] ? 444 : 81 );
+		$url  = $site['scheme'] . '://' . $site['host'] . ':' . $port . $this->matomo_app_path();
+		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, 'matomoUrl' )->setValue( $url );
 	}
 
 	public function test_matomoConfigurationVariable_should_accept_its_own_default_matomo_url() {
@@ -170,17 +198,19 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_the_matomo_url() {
+		$app_path = $this->matomo_app_path();
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
-		$parameter->setValue( home_url( '/wp-content/uploads/payload.txt?x=' ) );
+		$parameter->setValue( home_url( $app_path . '?x=' ) );
 
-		$this->assertSame( home_url( '/wp-content/uploads/payload.txt' ), $parameter->getValue() );
+		$this->assertSame( home_url( $app_path ), $parameter->getValue() );
 	}
 
 	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_the_matomo_url() {
+		$app_path = $this->matomo_app_path();
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
-		$parameter->setValue( home_url( '/wp-content/uploads/payload.txt#' ) );
+		$parameter->setValue( home_url( $app_path . '#' ) );
 
-		$this->assertSame( home_url( '/wp-content/uploads/payload.txt' ), $parameter->getValue() );
+		$this->assertSame( home_url( $app_path ), $parameter->getValue() );
 	}
 
 	public function test_matomoConfigurationVariable_should_propose_a_matomo_url_default_this_site_answers_to() {
@@ -189,15 +219,15 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
 
-		$this->assertSame( '/wp-content/plugins/matomo/app/', $parameter->getDefaultValue() );
+		$this->assertSame( $this->matomo_app_path(), $parameter->getDefaultValue() );
 
 		$parameter->setValue( $parameter->getDefaultValue() );
 
-		$this->assertSame( '/wp-content/plugins/matomo/app/', $parameter->getValue() );
+		$this->assertSame( $this->matomo_app_path(), $parameter->getValue() );
 	}
 
 	public function test_matomoConfigurationVariable_should_leave_a_matomo_url_default_on_this_site_as_matomo_proposed_it() {
-		$this->set_matomo_url_option( home_url( '/wp-content/plugins/matomo/app/' ) );
+		$this->set_matomo_url_option( home_url( $this->matomo_app_path() ) );
 
 		$matomo_default = $this->find_parameter( new MatomoConfigurationVariable(), 'matomoUrl' )->getDefaultValue();
 
@@ -230,7 +260,7 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$parameter->setValue( $parameter->getDefaultValue() );
 
 		$this->assertSame(
-			wp_make_link_relative( rtrim( plugins_url( 'app', MATOMO_ANALYTICS_FILE ), '/' ) . '/' ),
+			$this->matomo_app_path(),
 			$parameter->getValue()
 		);
 	}
@@ -302,6 +332,17 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		$this->expectException( ValidatorException::class );
 
 		$this->find_parameter( $variable, $name )->setValue( '{{MyEndpoint}}' );
+	}
+
+	/**
+	 * @dataProvider custom_endpoint_provider
+	 */
+	public function test_matomoConfigurationVariable_should_refuse_an_empty_custom_endpoint( $name ) {
+		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+
+		$this->expectException( ValidatorException::class );
+
+		$this->find_parameter( $variable, $name )->setValue( '' );
 	}
 
 	/**
@@ -380,11 +421,8 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 	public function rooted_custom_endpoint_provider() {
 		$endpoints = [
-			'a leading slash' => [ '/evil.example/x.js', 'evil.example/x.js' ],
-			'two of them'     => [ '//evil.example/x.js', 'evil.example/x.js' ],
-			'three of them'   => [ '///evil.example/x.js', 'evil.example/x.js' ],
-			'a rooted path'   => [ '/wp-content/plugins/matomo/app/matomo.js', 'wp-content/plugins/matomo/app/matomo.js' ],
-			'nothing else'    => [ '/', '' ],
+			'a leading slash' => [ '/custom.js', 'custom.js' ],
+			'two of them'     => [ '//matomo.php', 'matomo.php' ],
 		];
 
 		$cases = [];
@@ -506,6 +544,13 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		}
 
 		Option::set( SettingsPiwik::OPTION_PIWIK_URL, $url );
+	}
+
+	/**
+	 * @return string the root-relative path to this plugin's Matomo application
+	 */
+	private function matomo_app_path() {
+		return wp_make_link_relative( rtrim( plugins_url( 'app', MATOMO_ANALYTICS_FILE ), '/' ) . '/' );
 	}
 
 	/**
