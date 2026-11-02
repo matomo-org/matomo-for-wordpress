@@ -54,6 +54,16 @@ abstract class AbstractAIChatbotFavouredPagesReport extends Report
         $this->defaultSortColumn = Metrics::COLUMN_DISCREPANCY_SCORE;
     }
     /**
+     * The discrepancy score is left out, as it weights the two traffic columns against each other
+     * per page — a percentage of the summed up scores of the report would be meaningless.
+     *
+     * @return array<string, string>
+     */
+    public function getMetricNamesToProcessReportTotals()
+    {
+        return [Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS => Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS, Metrics::COLUMN_AI_CHATBOT_REQUESTS => Metrics::COLUMN_AI_CHATBOT_REQUESTS];
+    }
+    /**
      * @return DiscrepancyScore::VARIANT_HUMAN_FAVOURED|DiscrepancyScore::VARIANT_AI_FAVOURED
      */
     protected abstract function getDiscrepancyScoreVariant() : string;

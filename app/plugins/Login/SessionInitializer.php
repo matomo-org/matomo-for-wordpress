@@ -160,9 +160,8 @@ class SessionInitializer
      * @param string $token_auth authentication token
      * @return string hashed authentication token
      */
-    public static function getHashTokenAuth($login,
-#[\SensitiveParameter]
-$token_auth)
+    public static function getHashTokenAuth($login, #[\SensitiveParameter]
+        $token_auth)
     {
         return md5($login . $token_auth);
     }

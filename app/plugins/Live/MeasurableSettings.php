@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\Live;
 
 use Piwik\Piwik;
+use Piwik\Plugins\Live\Settings\AggregatedRealtimeReportsEnabled as AggregatedRealtimeReportsEnabledSetting;
 use Piwik\Plugins\Live\Settings\VisitorLogDisabled as VisitorLogDisabledSetting;
 use Piwik\Settings\FieldConfig;
 use Piwik\Settings\Measurable\MeasurableSetting;
@@ -18,23 +19,44 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     public $disableVisitorLog;
     /** @var MeasurableSetting|null */
     public $disableVisitorProfile;
+    /** @var MeasurableSetting|null */
+    public $enableAggregatedRealtimeReports;
     protected function init()
     {
         $this->disableVisitorLog = $this->makeVisitorLogSetting();
+        $this->enableAggregatedRealtimeReports = $this->makeAggregatedRealtimeReportsSetting();
         $this->disableVisitorProfile = $this->makeVisitorProfileSetting();
         $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
         $this->disableVisitorLog->setIsWritableByCurrentUser(!VisitorLogDisabledSetting::getInstance()->getValue());
+        $this->enableAggregatedRealtimeReports->setIsWritableByCurrentUser(!AggregatedRealtimeReportsEnabledSetting::getInstance()->getValue());
         $this->disableVisitorProfile->setIsWritableByCurrentUser(!$systemSettings->disableVisitorProfile->getValue());
     }
     private function makeVisitorLogSetting() : MeasurableSetting
     {
         $setting = VisitorLogDisabledSetting::getMeasurableSetting($this->idSite);
         $setting->setConfigureCallback(function (FieldConfig $field) {
-            $field->title = VisitorLogDisabledSetting::getTitle();
+            // the checkbox keeps its imperative label; getTitle() is the state-phrased compliance dashboard title
+            $field->title = Piwik::translate('Live_DisableVisitsLogAndProfile');
             $field->inlineHelp = VisitorLogDisabledSetting::getInlineHelp();
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
         });
         $this->addSetting($setting);
+        return $setting;
+    }
+    private function makeAggregatedRealtimeReportsSetting() : MeasurableSetting
+    {
+        $setting = AggregatedRealtimeReportsEnabledSetting::getMeasurableSetting($this->idSite);
+        $setting->setConfigureCallback(function (FieldConfig $field) {
+            // the checkbox keeps its imperative label; getTitle() is the state-phrased compliance dashboard title
+            $field->title = Piwik::translate('Live_EnableAggregatedRealtimeReports');
+            $field->inlineHelp = AggregatedRealtimeReportsEnabledSetting::getInlineHelp();
+            $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
+        });
+        // Only expose the setting for this site while its Visits log is disabled - see SystemSettings
+        // for why this is gated server-side instead of with a client-side condition.
+        if (VisitorLogDisabledSetting::getInstance($this->idSite)->getValue()) {
+            $this->addSetting($setting);
+        }
         return $setting;
     }
     private function makeVisitorProfileSetting() : MeasurableSetting

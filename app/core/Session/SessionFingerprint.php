@@ -90,9 +90,8 @@ class SessionFingerprint
             unset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER]);
         }
     }
-    public function initialize($userName,
-#[\SensitiveParameter]
-$tokenAuth, $isRemembered = \false, $time = null)
+    public function initialize($userName, #[\SensitiveParameter]
+        $tokenAuth, $isRemembered = \false, $time = null)
     {
         $time = $time ?: Date::now()->getTimestampUTC();
         $_SESSION[self::USER_NAME_SESSION_VAR_NAME] = $userName;

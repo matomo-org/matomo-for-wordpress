@@ -67,9 +67,8 @@ class Auth implements \Piwik\Auth
         }
         return new AuthResult(AuthResult::FAILURE, $this->login, $this->token_auth);
     }
-    private function authenticateWithPassword($login,
-#[\SensitiveParameter]
-$passwordHash)
+    private function authenticateWithPassword($login, #[\SensitiveParameter]
+        $passwordHash)
     {
         $user = $this->userModel->getUser($login);
         if (empty($user['login'])) {
@@ -146,9 +145,8 @@ $passwordHash)
      *
      * @param string $token_auth authentication token
      */
-    public function setTokenAuth(
-#[\SensitiveParameter]
-$token_auth)
+    public function setTokenAuth(#[\SensitiveParameter]
+        $token_auth)
     {
         $this->token_auth = $token_auth;
     }
@@ -157,9 +155,8 @@ $token_auth)
      *
      * @param string $password
      */
-    public function setPassword(
-#[\SensitiveParameter]
-$password)
+    public function setPassword(#[\SensitiveParameter]
+        $password)
     {
         if (empty($password)) {
             $this->hashedPassword = null;
@@ -172,9 +169,8 @@ $password)
      *
      * @param string $passwordHash The password hash.
      */
-    public function setPasswordHash(
-#[\SensitiveParameter]
-$passwordHash)
+    public function setPasswordHash(#[\SensitiveParameter]
+        $passwordHash)
     {
         if ($passwordHash === null) {
             $this->hashedPassword = null;

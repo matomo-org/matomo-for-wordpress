@@ -113,9 +113,8 @@ class API extends \Piwik\Plugin\API
      * @var API|null
      */
     private static $instance = null;
-    public function __construct(\Piwik\Plugins\UsersManager\Model $model, \Piwik\Plugins\UsersManager\UserAccessFilter $filter,
-#[\SensitiveParameter]
-Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider = null, ?Access\CapabilitiesProvider $capabilityProvider = null, ?PasswordVerifier $passwordVerifier = null)
+    public function __construct(\Piwik\Plugins\UsersManager\Model $model, \Piwik\Plugins\UsersManager\UserAccessFilter $filter, #[\SensitiveParameter]
+        Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider = null, ?Access\CapabilitiesProvider $capabilityProvider = null, ?PasswordVerifier $passwordVerifier = null)
     {
         $this->model = $model;
         $this->userFilter = $filter;
@@ -603,11 +602,9 @@ Password $password, ?Access $access = null, ?Access\RolesProvider $roleProvider 
      * @param int|null $initialIdSite Initial site to grant `view` access to. Required for non-superusers.
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function addUser(string $userLogin,
-#[\SensitiveParameter]
-string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = null,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function addUser(string $userLogin, #[\SensitiveParameter]
+        string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = null, #[\SensitiveParameter]
+            ?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -642,9 +639,8 @@ string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = n
      * @param int|null $expiryInDays Number of days before the invite expires. Uses the configured default when empty.
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function inviteUser(string $userLogin, string $email, $initialIdSite = null, $expiryInDays = null,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function inviteUser(string $userLogin, string $email, $initialIdSite = null, $expiryInDays = null, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -679,9 +675,8 @@ string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = n
      * @param bool|int|string $hasSuperUserAccess `true` or `1` to grant super user access, `false` or `0` to remove it.
      * @param string|null $passwordConfirmation Current user's password confirmation when required.
      */
-    public function setSuperUserAccess(string $userLogin, $hasSuperUserAccess,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function setSuperUserAccess(string $userLogin, $hasSuperUserAccess, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         $this->executeConcurrencySafe($userLogin, function () use($userLogin, $hasSuperUserAccess, $passwordConfirmation) {
             Piwik::checkUserHasSuperUserAccess();
@@ -737,11 +732,9 @@ string $password, string $email, $_isPasswordHashed = \false, $initialIdSite = n
      * @param bool $_isPasswordHashed `true` if `$password` is already pre-hashed for storage.
      * @param string|false $passwordConfirmation Current user's password confirmation when required.
      */
-    public function updateUser(string $userLogin,
-#[\SensitiveParameter]
-$password = \false, $email = \false, $_isPasswordHashed = \false,
-#[\SensitiveParameter]
-$passwordConfirmation = \false) : void
+    public function updateUser(string $userLogin, #[\SensitiveParameter]
+        $password = \false, $email = \false, $_isPasswordHashed = \false, #[\SensitiveParameter]
+            $passwordConfirmation = \false) : void
     {
         $email = Common::unsanitizeInputValue($email);
         $requirePasswordConfirmation = self::$UPDATE_USER_REQUIRE_PASSWORD_CONFIRMATION;
@@ -811,9 +804,8 @@ $passwordConfirmation = \false) : void
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      * @return void
      */
-    public function deleteUser(string $userLogin,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null)
+    public function deleteUser(string $userLogin, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null)
     {
         Piwik::checkUserHasSomeAdminAccess();
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
@@ -824,9 +816,10 @@ $passwordConfirmation = \false) : void
         $this->checkUserExist($userLogin);
         /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
-        // If user is not a super user check if the user was invited by the current user
+        // If user is not a super user check if the user was invited by the current user and is still pending.
+        // Read the pending state from the same row we resolved by login, so the two checks cannot disagree.
         if (!Piwik::hasUserSuperUserAccess()) {
-            if ($user['invited_by'] !== Piwik::getCurrentUserLogin() || !$this->model->isPendingUser($userLogin)) {
+            if ($user['invited_by'] !== Piwik::getCurrentUserLogin() || empty($user['invite_token'])) {
                 throw new NoAccessException(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
             }
         }
@@ -847,9 +840,8 @@ $passwordConfirmation = \false) : void
      * @param string $userLogin Login of the user to sign out.
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function logoutUser(string $userLogin,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function logoutUser(string $userLogin, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSuperUserAccess();
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
@@ -924,9 +916,8 @@ $passwordConfirmation = \false) : void
      * @param string|null $passwordConfirmation Current user's password confirmation. Only required through session
      *                                          auth when granting anonymous `view` access or the `admin` role.
      */
-    public function setUserAccess(string $userLogin, $access, $idSites,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function setUserAccess(string $userLogin, $access, $idSites, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         \Piwik\Plugins\UsersManager\UsersManager::dieIfUsersAdminIsDisabled();
         $userLogin = $this->getCanonicalLogin($userLogin);
@@ -1201,9 +1192,8 @@ $passwordConfirmation = \false) : void
      * @param bool $secureOnly `true` if the token must not be accepted in GET requests.
      * @return string Newly generated app-specific token.
      */
-    public function createAppSpecificTokenAuth(string $userLogin,
-#[\SensitiveParameter]
-string $passwordConfirmation, string $description, $expireDate = null, $expireHours = 0, bool $secureOnly = \false)
+    public function createAppSpecificTokenAuth(string $userLogin, #[\SensitiveParameter]
+        string $passwordConfirmation, string $description, $expireDate = null, $expireHours = 0, bool $secureOnly = \false)
     {
         // Only allowed as a top-level request, not nested within another API request.
         if (ApiRequest::isRootRequestApiRequest() && !ApiRequest::isCurrentApiRequestTheRootApiRequest()) {
@@ -1361,9 +1351,8 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
      * @param int $expiryInDays Number of days before the regenerated invite expires.
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      */
-    public function resendInvite(string $userLogin, $expiryInDays = 7,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : void
+    public function resendInvite(string $userLogin, $expiryInDays = 7, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : void
     {
         Piwik::checkUserHasSomeAdminAccess();
         // check password confirmation only when using session auth
@@ -1371,11 +1360,13 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
         BaseValidator::check(Piwik::translate('UsersManager_ExpiryInDays'), (int) $expiryInDays, [new NumberRange(self::MIN_INVITE_EXPIRY_IN_DAYS, self::MAX_INVITE_EXPIRY_IN_DAYS)]);
-        if (!$this->model->isPendingUser($userLogin)) {
-            throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
-        }
         /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
+        // Resolve the account by login first and require that same row to still be pending. Checking
+        // pending state and reading the account must always answer about the same user.
+        if (empty($user['invite_token'])) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
+        }
         // If user is not a super user check if the user was invited by the current user
         if (!Piwik::hasUserSuperUserAccess()) {
             if ($user['invited_by'] !== Piwik::getCurrentUserLogin()) {
@@ -1398,9 +1389,8 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
      * @param string|null $passwordConfirmation Current user's password confirmation when required by session auth.
      * @return string Generated invitation URL.
      */
-    public function generateInviteLink(string $userLogin, $expiryInDays = 7,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : string
+    public function generateInviteLink(string $userLogin, $expiryInDays = 7, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : string
     {
         Piwik::checkUserHasSomeAdminAccess();
         // check password confirmation only when using session auth
@@ -1408,11 +1398,13 @@ string $passwordConfirmation, string $description, $expireDate = null, $expireHo
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
         BaseValidator::check(Piwik::translate('UsersManager_ExpiryInDays'), (int) $expiryInDays, [new NumberRange(self::MIN_INVITE_EXPIRY_IN_DAYS, self::MAX_INVITE_EXPIRY_IN_DAYS)]);
-        if (!$this->model->isPendingUser($userLogin)) {
-            throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
-        }
         /** @phpstan-var UserRow $user */
         $user = $this->model->getUser($userLogin);
+        // Resolve the account by login first and require that same row to still be pending. Checking
+        // pending state and reading the account must always answer about the same user.
+        if (empty($user['invite_token'])) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
+        }
         // If user is not a super user check if the user was invited by the current user
         if (!Piwik::hasUserSuperUserAccess()) {
             if ($user['invited_by'] !== Piwik::getCurrentUserLogin()) {

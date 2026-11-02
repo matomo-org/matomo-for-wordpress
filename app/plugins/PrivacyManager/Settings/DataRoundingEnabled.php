@@ -17,6 +17,14 @@ class DataRoundingEnabled extends \Piwik\Plugins\PrivacyManager\Settings\Complia
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingTitle');
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingImpact');
+    }
     public static function getComplianceRequirementNote(?int $idSite = null) : string
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingRequirementNote');

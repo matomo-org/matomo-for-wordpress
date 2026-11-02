@@ -178,7 +178,12 @@ class Google extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                 // functionCall.args must be a JSON object even when empty;
                 // json_decode collapses `{}` to `[]`, so coerce empty inputs
                 // back to stdClass so json_encode produces `{}` again.
-                $parts[] = ['functionCall' => ['name' => $name, 'args' => $input === [] ? new \stdClass() : $input]];
+                $part = ['functionCall' => ['name' => $name, 'args' => $input === [] ? new \stdClass() : $input]];
+                // Gemini 3 rejects replayed functionCall parts without their thoughtSignature.
+                if (is_string($block['thoughtSignature'] ?? null) && $block['thoughtSignature'] !== '') {
+                    $part['thoughtSignature'] = $block['thoughtSignature'];
+                }
+                $parts[] = $part;
             }
         }
         return $parts;
@@ -319,7 +324,12 @@ class Google extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                 // Google supplies no id; synthesize a deterministic one so the
                 // caller can echo it back and the id => name resolver can
                 // recover the function name on the next turn.
-                $canonical[] = ['type' => 'tool_use', 'id' => sprintf('google-%d-%s', $index, $name), 'name' => $name, 'input' => $normalizedInput];
+                $toolUse = ['type' => 'tool_use', 'id' => sprintf('google-%d-%s', $index, $name), 'name' => $name, 'input' => $normalizedInput];
+                // Keep the part-level thoughtSignature: Gemini 3 requires it back on replay.
+                if (is_string($part['thoughtSignature'] ?? null) && $part['thoughtSignature'] !== '') {
+                    $toolUse['thoughtSignature'] = $part['thoughtSignature'];
+                }
+                $canonical[] = $toolUse;
             }
         }
         return $canonical;

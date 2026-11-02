@@ -16,7 +16,10 @@ use Piwik\Piwik;
 use Piwik\Config as PiwikConfig;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomJsTracker\File;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Piwik\Plugins\Live\Live;
+use Piwik\Plugins\PrivacyManager\Compliance\ComplianceSettingsProvider;
+use Piwik\Plugins\PrivacyManager\FeatureFlags\GranularPrivacyCompliance;
 use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
 use Piwik\Plugins\PrivacyManager\Dao\LogDataAnonymizer;
 use Piwik\Plugins\PrivacyManager\Model\LogDataAnonymizations;
@@ -49,11 +52,21 @@ class API extends \Piwik\Plugin\API
      * @var LogDataAnonymizer
      */
     private $logDataAnonymizer;
-    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer)
+    /**
+     * @var ComplianceSettingsProvider
+     */
+    private $complianceSettingsProvider;
+    /**
+     * @var FeatureFlagManager
+     */
+    private $featureFlagManager;
+    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer, ComplianceSettingsProvider $complianceSettingsProvider, FeatureFlagManager $featureFlagManager)
     {
         $this->gdpr = $gdpr;
         $this->logDataAnonymizations = $logDataAnonymizations;
         $this->logDataAnonymizer = $logDataAnonymizer;
+        $this->complianceSettingsProvider = $complianceSettingsProvider;
+        $this->featureFlagManager = $featureFlagManager;
     }
     /**
      * @param array<int, VisitDescriptor> $visits
@@ -161,9 +174,8 @@ class API extends \Piwik\Plugin\API
      * @param string[] $unsetLinkVisitActionColumns Link-visit-action column names to clear during anonymization.
      * @param string $passwordConfirmation Current user password confirmation.
      */
-    public function anonymizeSomeRawData($idSites, string $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [],
-#[\SensitiveParameter]
-string $passwordConfirmation = '') : void
+    public function anonymizeSomeRawData($idSites, string $date, $anonymizeIp = \false, $anonymizeLocation = \false, $anonymizeUserId = \false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [], #[\SensitiveParameter]
+        string $passwordConfirmation = '') : void
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -210,6 +222,43 @@ string $passwordConfirmation = '') : void
             $formatted[] = ['column_name' => $column, 'default_value' => $default];
         }
         return $formatted;
+    }
+    /**
+     * Whether a privacy config property may be stored with the given value, given the compliance
+     * policies enforced for the scope being saved.
+     *
+     * @param mixed $value
+     * @throws \Piwik\Policy\Exceptions\CompliancePolicyViolationException when a policy forbids the value
+     */
+    private function mayStoreUnderCompliancePolicies(string $settingName, $value, ?int $idSite) : bool
+    {
+        return PolicyManager::checkSettingValueAgainstPolicies($settingName, $value, $idSite, PolicyManager::SETTING_TYPE_CUSTOM);
+    }
+    /**
+     * Removes the choices a compliance policy no longer allows from a privacy setting's options,
+     * so a field it only bounds keeps offering the values that stay compliant.
+     *
+     * Handles both option shapes used on this screen: a value => label map, and a list of
+     * ['key' => value, ...] entries.
+     *
+     * @param array<mixed, mixed> $options
+     * @return array<mixed, mixed>
+     */
+    private function filterOptionsAllowedByPolicies(array $options, string $settingName, ?int $idSite) : array
+    {
+        $isKeyedList = isset($options[0]) && is_array($options[0]);
+        $values = $isKeyedList ? array_column($options, 'key') : array_keys($options);
+        // privacy config properties are addressed through the custom getter mechanism
+        $allowedValues = PolicyManager::filterValuesAllowedByPolicies($values, $settingName, $idSite, PolicyManager::SETTING_TYPE_CUSTOM);
+        if (count($allowedValues) === count($values)) {
+            return $options;
+        }
+        if ($isKeyedList) {
+            return array_values(array_filter($options, static function ($option) use($allowedValues) {
+                return in_array($option['key'], $allowedValues, \false);
+            }));
+        }
+        return array_intersect_key($options, array_flip($allowedValues));
     }
     /**
      * Provide tracker file name and whether it's writable
@@ -261,9 +310,11 @@ string $passwordConfirmation = '') : void
             }
         }
         $settings['useSiteSpecificSettings'] = $privacyConfig->useSiteSpecificSettings();
+        // the stored values above already reflect any policy override, see
+        // PrivacyManager\Config::getOptionValueWithPrivacyComplianceOverride()
         // provide extra settings
         [$trackerFilename, $trackerFileWritable] = $this->getTrackerFileDetails();
-        $settings = array_merge($settings, ['maskLengthOptions' => \Piwik\Plugins\PrivacyManager\PrivacyManager::getMaskLengthOptions(), 'useAnonymizedIpForVisitEnrichmentOptions' => \Piwik\Plugins\PrivacyManager\PrivacyManager::getUseAnonymizedIpForVisitEnrichmentOptions(), 'referrerAnonymizationOptions' => \Piwik\Plugins\PrivacyManager\ReferrerAnonymizer::getAvailableAnonymizationOptions(), 'trackerFileName' => $trackerFilename, 'trackerWritable' => $trackerFileWritable]);
+        $settings = array_merge($settings, ['maskLengthOptions' => $this->filterOptionsAllowedByPolicies(\Piwik\Plugins\PrivacyManager\PrivacyManager::getMaskLengthOptions(), 'ipAddressMaskLength', $idSite), 'useAnonymizedIpForVisitEnrichmentOptions' => \Piwik\Plugins\PrivacyManager\PrivacyManager::getUseAnonymizedIpForVisitEnrichmentOptions(), 'referrerAnonymizationOptions' => $this->filterOptionsAllowedByPolicies(\Piwik\Plugins\PrivacyManager\ReferrerAnonymizer::getAvailableAnonymizationOptions(), 'anonymizeReferrer', $idSite), 'trackerFileName' => $trackerFilename, 'trackerWritable' => $trackerFileWritable]);
         if (!empty($extraMetadata)) {
             $settings['extraMetadata'] = $extraMetadata;
         }
@@ -291,9 +342,8 @@ string $passwordConfirmation = '') : void
      *                                     `$randomizeConfigId` is enabled.
      * @return bool `true` after the settings have been updated or the site override has been removed.
      */
-    public function setAnonymizeIpSettings(bool $anonymizeIPEnable, int $ipAddressMaskLength, bool $useAnonymizedIpForVisitEnrichment, bool $anonymizeUserId = \false, bool $anonymizeOrderId = \false, string $anonymizeReferrer = '', bool $forceCookielessTracking = \false, bool $randomizeConfigId = \false, ?int $idSiteSpecific = null, bool $useSiteSpecificSettings = \false,
-#[\SensitiveParameter]
-string $passwordConfirmation = '') : bool
+    public function setAnonymizeIpSettings(bool $anonymizeIPEnable, int $ipAddressMaskLength, bool $useAnonymizedIpForVisitEnrichment, bool $anonymizeUserId = \false, bool $anonymizeOrderId = \false, string $anonymizeReferrer = '', bool $forceCookielessTracking = \false, bool $randomizeConfigId = \false, ?int $idSiteSpecific = null, bool $useSiteSpecificSettings = \false, #[\SensitiveParameter]
+        string $passwordConfirmation = '') : bool
     {
         if (null !== $idSiteSpecific) {
             $idSite = $idSiteSpecific;
@@ -312,21 +362,32 @@ string $passwordConfirmation = '') : bool
         if ($randomizeConfigId) {
             $this->confirmCurrentUserPassword($passwordConfirmation);
         }
-        if ($anonymizeIPEnable) {
-            \Piwik\Plugins\PrivacyManager\IPAnonymizer::activate($idSite);
-        } else {
-            \Piwik\Plugins\PrivacyManager\IPAnonymizer::deactivate($idSite);
-        }
         if (!empty($anonymizeReferrer) && !array_key_exists($anonymizeReferrer, \Piwik\Plugins\PrivacyManager\ReferrerAnonymizer::getAvailableAnonymizationOptions())) {
             $anonymizeReferrer = '';
         }
+        // resolved before anything is stored, so that a value breaking an enforced compliance
+        // policy is rejected without leaving the other settings half applied
+        $mayStore = ['ipAnonymizerEnabled' => $this->mayStoreUnderCompliancePolicies('ipAnonymizerEnabled', $anonymizeIPEnable, $idSite), 'ipAddressMaskLength' => $this->mayStoreUnderCompliancePolicies('ipAddressMaskLength', $ipAddressMaskLength, $idSite), 'anonymizeReferrer' => $this->mayStoreUnderCompliancePolicies('anonymizeReferrer', $anonymizeReferrer, $idSite), 'anonymizeOrderId' => $this->mayStoreUnderCompliancePolicies('anonymizeOrderId', $anonymizeOrderId, $idSite)];
+        if ($mayStore['ipAnonymizerEnabled']) {
+            if ($anonymizeIPEnable) {
+                \Piwik\Plugins\PrivacyManager\IPAnonymizer::activate($idSite);
+            } else {
+                \Piwik\Plugins\PrivacyManager\IPAnonymizer::deactivate($idSite);
+            }
+        }
         $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config($idSite);
-        $privacyConfig->ipAddressMaskLength = $ipAddressMaskLength;
         $privacyConfig->useAnonymizedIpForVisitEnrichment = $useAnonymizedIpForVisitEnrichment;
-        $privacyConfig->anonymizeReferrer = $anonymizeReferrer;
         $privacyConfig->anonymizeUserId = $anonymizeUserId;
-        $privacyConfig->anonymizeOrderId = $anonymizeOrderId;
         $privacyConfig->randomizeConfigId = $randomizeConfigId;
+        if ($mayStore['ipAddressMaskLength']) {
+            $privacyConfig->ipAddressMaskLength = $ipAddressMaskLength;
+        }
+        if ($mayStore['anonymizeReferrer']) {
+            $privacyConfig->anonymizeReferrer = $anonymizeReferrer;
+        }
+        if ($mayStore['anonymizeOrderId']) {
+            $privacyConfig->anonymizeOrderId = $anonymizeOrderId;
+        }
         if (!$idSite) {
             // only allow setting 'force cookieless tracking' instance-wide and skip it for site as it applies
             // changes to JS tracker files that we can't currently support on a per-site basis
@@ -373,9 +434,8 @@ string $passwordConfirmation = '') : bool
      * @internal
      *
      */
-    public function setScheduleReportDeletionSettings($deleteLowestInterval = 7,
-#[\SensitiveParameter]
-string $passwordConfirmation = '') : bool
+    public function setScheduleReportDeletionSettings($deleteLowestInterval = 7, #[\SensitiveParameter]
+        string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -391,9 +451,8 @@ string $passwordConfirmation = '') : bool
      * @internal
      *
      */
-    public function setDeleteLogsSettings($enableDeleteLogs = '0', $deleteLogsOlderThan = 180,
-#[\SensitiveParameter]
-string $passwordConfirmation = '') : bool
+    public function setDeleteLogsSettings($enableDeleteLogs = '0', $deleteLogsOlderThan = 180, #[\SensitiveParameter]
+        string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -401,7 +460,14 @@ string $passwordConfirmation = '') : bool
         if ($deleteLogsOlderThan < 1) {
             $deleteLogsOlderThan = 1;
         }
-        return $this->savePurgeDataSettings(['delete_logs_enable' => !empty($enableDeleteLogs), 'delete_logs_older_than' => $deleteLogsOlderThan]);
+        $mayStoreRetention = PolicyManager::checkSettingValueAgainstPolicies('delete_logs_older_than', $deleteLogsOlderThan, null, PolicyManager::SETTING_TYPE_OPTION);
+        $settings = ['delete_logs_enable' => !empty($enableDeleteLogs)];
+        // leaving the retention out entirely keeps whatever the user had configured before the
+        // policy started applying, which savePurgeDataSettings() only rewrites when it is given
+        if ($mayStoreRetention) {
+            $settings['delete_logs_older_than'] = $deleteLogsOlderThan;
+        }
+        return $this->savePurgeDataSettings($settings);
     }
     /**
      * Configures automatic report deletion settings.
@@ -421,9 +487,8 @@ string $passwordConfirmation = '') : bool
      * @internal
      *
      */
-    public function setDeleteReportsSettings($enableDeleteReports = 0, $deleteReportsOlderThan = 3, $keepBasic = 0, $keepDay = 0, $keepWeek = 0, $keepMonth = 0, $keepYear = 0, $keepRange = 0, $keepSegments = 0,
-#[\SensitiveParameter]
-string $passwordConfirmation = '') : bool
+    public function setDeleteReportsSettings($enableDeleteReports = 0, $deleteReportsOlderThan = 3, $keepBasic = 0, $keepDay = 0, $keepWeek = 0, $keepMonth = 0, $keepYear = 0, $keepRange = 0, $keepSegments = 0, #[\SensitiveParameter]
+        string $passwordConfirmation = '') : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);
@@ -452,9 +517,8 @@ string $passwordConfirmation = '') : bool
      * @internal
      * @param string $passwordConfirmation Current user password confirmation.
      */
-    public function executeDataPurge(
-#[\SensitiveParameter]
-string $passwordConfirmation) : void
+    public function executeDataPurge(#[\SensitiveParameter]
+        string $passwordConfirmation) : void
     {
         $this->confirmCurrentUserPassword($passwordConfirmation);
         Piwik::checkUserHasSuperUserAccess();
@@ -488,6 +552,7 @@ string $passwordConfirmation) : void
      * @param string $complianceType Compliance policy name to inspect.
      * @return array<string, bool|array<int, array<string, string>>> Compliance status including enforcement state,
      *                                                               config control flag, and requirement details.
+     * @deprecated since Matomo 6.0, use {@link getCompliancePolicySettings()} instead.
      * @internal
      *
      */
@@ -516,6 +581,125 @@ string $passwordConfirmation) : void
         return $payload;
     }
     /**
+     * Returns the granular per-setting enforcement configuration and compliance status of a compliance policy.
+     *
+     * Each returned setting contains its stable identifier, translated texts, current compliance
+     * status (`compliant` when the underlying Matomo setting satisfies the requirement on its own,
+     * `enforced` when the requirement is only met through policy enforcement, `non_compliant`
+     * otherwise) and, for toggleable settings, its current enforcement state.
+     *
+     * @param int|string $idSite Site ID to inspect, or `all` for the instance-wide view.
+     * @param string $compliancePolicy Compliance policy id to inspect, e.g. `cnil_v1`.
+     * @return array<string, mixed> Policy details, config control flag, derived whole-policy
+     *                              enforcement state and the list of settings.
+     * @internal
+     *
+     */
+    public function getCompliancePolicySettings($idSite, string $compliancePolicy) : array
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $this->checkGranularComplianceFeatureIsEnabled();
+        $policy = PolicyManager::getPolicyByName($compliancePolicy);
+        if (is_null($policy)) {
+            throw new Exception('Invalid compliance policy');
+        }
+        $idSite = $this->resolveCompliancePolicyIdSite($idSite);
+        return $this->complianceSettingsProvider->getPolicySettings($policy, $idSite);
+    }
+    /**
+     * @param int|string $idSite
+     * @throws Exception when the site does not exist
+     */
+    private function resolveCompliancePolicyIdSite($idSite) : ?int
+    {
+        if ($idSite === 'all') {
+            return null;
+        }
+        $idSite = intval($idSite);
+        new Site($idSite);
+        // throws for unknown site ids
+        return $idSite;
+    }
+    /**
+     * Sets the enforcement state of individual compliance policy settings.
+     *
+     * Only the settings present in `settingValues` are changed; all other settings keep
+     * their current enforcement state. Enforcing a setting overrides the underlying Matomo
+     * setting at read time, the underlying configuration itself is never modified.
+     *
+     * @param int|string $idSite Site ID to update, or `all` for the instance-wide state.
+     * @param string $compliancePolicy Compliance policy id to update, e.g. `cnil_v1`.
+     * @param array<string, int|string|bool> $settingValues Map of policy setting id => whether to
+     *                                                      enforce it, e.g. settingValues[PrivacyManager.IPAnonymisation]=1
+     * @param string|null $passwordConfirmation Current user password confirmation when required.
+     * @return array<string, mixed> The updated payload, as returned by {@link getCompliancePolicySettings()}.
+     * @internal
+     *
+     */
+    public function setCompliancePolicySettings($idSite, string $compliancePolicy, array $settingValues, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : array
+    {
+        $policy = $this->checkCompliancePolicySettingsWriteAccess($compliancePolicy, $passwordConfirmation);
+        $idSite = $this->resolveCompliancePolicyIdSite($idSite);
+        PolicyManager::setPolicySettingEnforcedStatuses($policy, $settingValues, $idSite);
+        return $this->complianceSettingsProvider->getPolicySettings($policy, $idSite);
+    }
+    /**
+     * Enables enforcement of every toggleable setting of a compliance policy at once.
+     *
+     * This enforces each of the policy's toggleable settings individually; every setting
+     * stays individually toggleable afterwards. Settings managed outside the compliance
+     * page are left untouched.
+     *
+     * @param int|string $idSite Site ID to update, or `all` for the instance-wide state.
+     * @param string $compliancePolicy Compliance policy id to enforce, e.g. `cnil_v1`.
+     * @param string|null $passwordConfirmation Current user password confirmation when required.
+     * @return array<string, mixed> The updated payload, as returned by {@link getCompliancePolicySettings()}.
+     * @internal
+     *
+     */
+    public function enforceCompliancePolicySettings($idSite, string $compliancePolicy, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : array
+    {
+        $policy = $this->checkCompliancePolicySettingsWriteAccess($compliancePolicy, $passwordConfirmation);
+        $idSite = $this->resolveCompliancePolicyIdSite($idSite);
+        $settingValues = [];
+        foreach (PolicyManager::getAllControlledSettings($policy, $idSite) as $settingClass) {
+            if ($settingClass::isExternallyManagedByPolicyPage()) {
+                continue;
+            }
+            $settingValues[$settingClass::getPolicySettingId()] = \true;
+        }
+        PolicyManager::setPolicySettingEnforcedStatuses($policy, $settingValues, $idSite);
+        return $this->complianceSettingsProvider->getPolicySettings($policy, $idSite);
+    }
+    /**
+     * @return class-string<CompliancePolicy>
+     */
+    private function checkCompliancePolicySettingsWriteAccess(string $compliancePolicy, #[\SensitiveParameter]
+        ?string $passwordConfirmation) : string
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        $this->checkGranularComplianceFeatureIsEnabled();
+        if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {
+            $this->confirmCurrentUserPassword($passwordConfirmation);
+        }
+        $policy = PolicyManager::getPolicyByName($compliancePolicy);
+        if (is_null($policy)) {
+            throw new Exception('Invalid compliance policy');
+        }
+        if (PolicyManager::isPolicyConfigControlled($policy)) {
+            throw new Exception('The compliance policy is controlled by the config file and cannot be changed');
+        }
+        return $policy;
+    }
+    private function checkGranularComplianceFeatureIsEnabled() : void
+    {
+        if (!$this->featureFlagManager->isFeatureActive(GranularPrivacyCompliance::class)) {
+            throw new Exception('Granular compliance configuration is not enabled');
+        }
+    }
+    /**
      * Enables or disables enforcement of a compliance policy.
      *
      * @param string $idSite Site ID to update, or `all` for global compliance status.
@@ -523,12 +707,13 @@ string $passwordConfirmation) : void
      * @param bool $enforce `true` to enforce the selected policy, `false` to disable enforcement.
      * @param string|null $passwordConfirmation Current user password confirmation when required.
      * @return bool `true` if the policy is enabled after the update, `false` otherwise.
+     * @deprecated since Matomo 6.0, use {@link setCompliancePolicySettings()} or
+     *             {@link enforceCompliancePolicySettings()} instead.
      * @internal
      *
      */
-    public function setComplianceStatus(string $idSite, string $complianceType, bool $enforce,
-#[\SensitiveParameter]
-?string $passwordConfirmation = null) : bool
+    public function setComplianceStatus(string $idSite, string $complianceType, bool $enforce, #[\SensitiveParameter]
+        ?string $passwordConfirmation = null) : bool
     {
         Piwik::checkUserHasSuperUserAccess();
         if (StaticContainer::get(AuthenticationToken::class)->isSessionToken()) {

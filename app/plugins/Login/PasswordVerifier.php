@@ -42,9 +42,8 @@ class PasswordVerifier
      * @param string $password
      * @return bool
      */
-    public function isPasswordCorrect($userLogin,
-#[\SensitiveParameter]
-$password)
+    public function isPasswordCorrect($userLogin, #[\SensitiveParameter]
+        $password)
     {
         /**
          * @ignore

@@ -13,6 +13,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\Report;
 use Piwik\Plugins\BotTracking\Columns\DocumentUrl;
 use Piwik\Plugins\BotTracking\Columns\Metrics\Requests;
+use Piwik\Plugins\BotTracking\Metrics;
 class GetDocumentUrlsForAIChatbot extends Report
 {
     protected function init() : void
@@ -24,5 +25,12 @@ class GetDocumentUrlsForAIChatbot extends Report
         $this->processedMetrics = [];
         $this->dimension = new DocumentUrl();
         $this->isSubtableReport = \true;
+    }
+    /**
+     * @return array<string, string>
+     */
+    public function getMetricNamesToProcessReportTotals()
+    {
+        return [Metrics::COLUMN_REQUESTS => Metrics::COLUMN_REQUESTS];
     }
 }

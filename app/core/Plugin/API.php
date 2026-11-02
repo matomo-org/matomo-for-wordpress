@@ -105,9 +105,8 @@ abstract class API
      * @param $passwordConfirmation
      * @throws Exception
      */
-    protected function confirmCurrentUserPassword(
-#[\SensitiveParameter]
-$passwordConfirmation)
+    protected function confirmCurrentUserPassword(#[\SensitiveParameter]
+        $passwordConfirmation)
     {
         $loginCurrentUser = Piwik::getCurrentUserLogin();
         if (!Piwik::doesUserRequirePasswordConfirmation($loginCurrentUser)) {

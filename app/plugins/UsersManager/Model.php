@@ -218,9 +218,8 @@ class Model
         }
         return (array) reset($matchedUsers);
     }
-    public function hashTokenAuth(
-#[\SensitiveParameter]
-$tokenAuth)
+    public function hashTokenAuth(#[\SensitiveParameter]
+        $tokenAuth)
     {
         $salt = SettingsPiwik::getSalt();
         return hash(self::TOKEN_HASH_ALGO, $tokenAuth . $salt);
@@ -271,9 +270,8 @@ $tokenAuth)
      * @return int                  Primary key of the new token auth
      * @throws \Piwik\Tracker\Db\DbException
      */
-    public function addTokenAuth($login,
-#[\SensitiveParameter]
-$tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = \false, bool $secureOnly = \false)
+    public function addTokenAuth($login, #[\SensitiveParameter]
+        $tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = \false, bool $secureOnly = \false)
     {
         if (!$this->getUser($login)) {
             throw new \Exception('User ' . $login . ' does not exist');
@@ -289,9 +287,8 @@ $tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = \f
         $db->query($insertSql, [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, (int) $secureOnly]);
         return $db->lastInsertId();
     }
-    private function getTokenByTokenAuth(
-#[\SensitiveParameter]
-$tokenAuth)
+    private function getTokenByTokenAuth(#[\SensitiveParameter]
+        $tokenAuth)
     {
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
@@ -316,9 +313,8 @@ $tokenAuth)
      * @return array|bool               An array representing the token record, or false if not found
      * @throws \Exception
      */
-    private function getTokenByTokenAuthIfNotExpired(
-#[\SensitiveParameter]
-?string $tokenAuth, bool $isTokenSecured)
+    private function getTokenByTokenAuthIfNotExpired(#[\SensitiveParameter]
+        ?string $tokenAuth, bool $isTokenSecured)
     {
         // If the token wasn't provided via a secure mechanism and use of secure tokens is enforced globally
         // then don't attempt to find the token
@@ -388,9 +384,8 @@ $tokenAuth)
         $db = $this->getDb();
         return $db->query("DELETE FROM " . $this->tokenTable . " WHERE `idusertokenauth` = ? and login = ?", array($idTokenAuth, $login));
     }
-    public function setTokenAuthWasUsed(
-#[\SensitiveParameter]
-$tokenAuth, $dateLastUsed)
+    public function setTokenAuthWasUsed(#[\SensitiveParameter]
+        $tokenAuth, $dateLastUsed)
     {
         $token = $this->getTokenByTokenAuth($tokenAuth);
         if (!empty($token)) {
@@ -439,9 +434,8 @@ $tokenAuth, $dateLastUsed)
      * @return array|null
      * @phpstan-return UserRow|null
      */
-    public function getUserByInviteToken(
-#[\SensitiveParameter]
-$tokenAuth)
+    public function getUserByInviteToken(#[\SensitiveParameter]
+        $tokenAuth)
     {
         $token = $this->hashTokenAuth($tokenAuth);
         if (!empty($token)) {
@@ -456,9 +450,8 @@ $tokenAuth)
      * @return array|null
      * @phpstan-return UserRow|null
      */
-    public function getUserByTokenAuth(
-#[\SensitiveParameter]
-?string $tokenAuth, bool $doNotCheckSecurity = \false) : ?array
+    public function getUserByTokenAuth(#[\SensitiveParameter]
+        ?string $tokenAuth, bool $doNotCheckSecurity = \false) : ?array
     {
         if ($tokenAuth === 'anonymous') {
             $row = $this->getUser('anonymous');
@@ -479,9 +472,8 @@ $tokenAuth)
      * @param $email
      * @param $dateRegistered
      */
-    public function addUser($userLogin,
-#[\SensitiveParameter]
-$hashedPassword, $email, $dateRegistered)
+    public function addUser($userLogin, #[\SensitiveParameter]
+        $hashedPassword, $email, $dateRegistered)
     {
         $user = array('login' => $userLogin, 'password' => $hashedPassword, 'email' => $email, 'date_registered' => $dateRegistered, 'superuser_access' => 0, 'ts_password_modified' => Date::now()->getDatetime(), 'idchange_last_viewed' => null, 'invited_by' => null);
         $db = $this->getDb();
@@ -534,9 +526,8 @@ $hashedPassword, $email, $dateRegistered)
         $users = $db->fetchAll("SELECT login, email, superuser_access\n                                FROM " . Common::prefixTable("user") . "\n                                WHERE superuser_access = 1\n                                ORDER BY date_registered ASC");
         return $users;
     }
-    public function updateUser($userLogin,
-#[\SensitiveParameter]
-$hashedPassword, $email)
+    public function updateUser($userLogin, #[\SensitiveParameter]
+        $hashedPassword, $email)
     {
         $fields = array('email' => $email);
         if (!empty($hashedPassword)) {
