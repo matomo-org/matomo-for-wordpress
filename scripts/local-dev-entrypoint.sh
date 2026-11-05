@@ -287,7 +287,25 @@ PHPEOF
   # install wordpress
   echo "installing wordpress"
   if [[ "$MULTISITE" = "1" ]]; then
-    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url=$HOSTNAME --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+    # core multisite-install splits --url into (host, path): a URL
+    # without a scheme has its port stripped from the host part; a
+    # URL with a sub-path lands the main site in wp_blogs at path='/'
+    # instead of the subpath. We can only win one at a time, so use
+    # http:// to preserve the port in the host, then patch the path
+    # in wp_blogs + wp_site to match PATH_CURRENT_SITE from wp-config.
+    # Without this, every subsequent `wp site create` / `wp option
+    # set` call fails with "Site '<host>/<folder>/' not found" and
+    # the dev multisite install is unusable.
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER core multisite-install --url="http://$HOSTNAME/$WORDPRESS_FOLDER" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+    # Realign the main site's (domain, path) with wp-config's
+    # DOMAIN_CURRENT_SITE + PATH_CURRENT_SITE. Must be raw SQL
+    # because every subsequent wp-cli call does a site lookup
+    # against those values and fails before any `wp site update`
+    # could run. Even with --url=http://host:port/..., wp-cli's
+    # multisite-install writes wp_blogs.domain WITHOUT the port
+    # when wp-config carries WP_DEBUG/WP_ENVIRONMENT_TYPE=local
+    # (observed on dev installs); force both fields here.
+    mariadb -h "$WP_DB_HOST" -uroot -ppass "$WP_DB_NAME" -e "UPDATE wp_site SET domain='$HOSTNAME', path='/$WORDPRESS_FOLDER/' WHERE id=1; UPDATE wp_blogs SET domain='$HOSTNAME', path='/$WORDPRESS_FOLDER/' WHERE blog_id=1;"
 
     cat > "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/.htaccess" <<EOF
 RewriteEngine On
