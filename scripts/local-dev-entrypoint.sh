@@ -85,6 +85,7 @@ function handle_cli_command() {
 function install_wordpress() {
   MULTISITE="$1"
   WP_FOLDER_SUFFIX="$2"
+  MATOMO_PLUGIN_NAME=matomo
 
   # create the premium plugin cache directory (used in e2e tests)
   mkdir -p "/.wp-cli/marketplace"
@@ -226,7 +227,8 @@ define( 'WPMS_SMTP_AUTOTLS', true );
 define( 'WPMS_SMTP_USER', '' );
 define( 'WPMS_SMTP_PASS', '' );
 
-define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
+\$matomo_plugin_files = glob( __DIR__ . '/wp-content/plugins/matomo*/matomo.php' );
+define( 'MATOMO_ANALYTICS_FILE', \$matomo_plugin_files ? \$matomo_plugin_files[0] : __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
 if ( ! empty( \$_SERVER['HTTP_HOST'] )
@@ -426,7 +428,7 @@ EOF
     COMMAND_SUFFIX=" --network"
   fi
 
-  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate "$MATOMO_PLUGIN_NAME" $COMMAND_SUFFIX
   $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo install
 
   # extra actions required during tests
@@ -760,11 +762,11 @@ EOF
   # make sure the files can be edited outside of docker (for easier debugging)
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
   touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log $DOCUMENT_ROOT/matomo.wpload_dir.php
-  mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp
+  mkdir -p "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/tmp"
   chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads
-  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
-  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-  chmod -R 0777 "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "$DOCUMENT_ROOT/index.php" "/usr/local/etc/php/conf.d" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log" $DOCUMENT_ROOT/matomo.wpload_dir.php
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chmod 0777 {} +
+  chmod -R 0777 "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/tmp" "$DOCUMENT_ROOT/index.php" "/usr/local/etc/php/conf.d" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log" $DOCUMENT_ROOT/matomo.wpload_dir.php
 
   echo "finish wordpress install (multisite = $MULTISITE)"
 }
