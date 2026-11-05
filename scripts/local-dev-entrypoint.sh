@@ -438,7 +438,12 @@ EOF
 
     # update site created date for e2e tests
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-    \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
+    \$table = \$pdo->query('SHOW TABLES FROM \`${WP_DB_NAME}\` LIKE \'wp_matomo_site\'')->fetchColumn();
+    if ( \$table ) {
+      \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');
+    } else {
+      echo 'Matomo site table is not available; skipping test timestamp setup.' . PHP_EOL;
+    }"
   fi
 
   # add index.php file listing available installs to root $DOCUMENT_ROOT
