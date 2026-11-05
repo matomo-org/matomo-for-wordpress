@@ -12,7 +12,10 @@ use Piwik\Plugins\TagManager\Template\Tag\CustomHtmlTag;
 use Piwik\Plugins\TagManager\Template\Tag\CustomImageTag;
 use Piwik\Plugins\TagManager\Template\Variable\CustomJsFunctionVariable;
 use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
+use Piwik\Plugins\TagManager\Template\Variable\JavaScriptVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\MatomoAppUrl;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoAuthenticationParameters;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\SiteOwnUrl;
@@ -26,6 +29,22 @@ use Piwik\Validators\Exception as ValidatorException;
  */
 class SecuredTemplateFactory
 {
+    /**
+     * Whether the authenticated-request and Matomo URL hardening is enabled.
+     *
+     * Set MATOMO_TAG_MANAGER_RESTRICT_URLS to false in wp-config.php, or use the
+     * matomo_tag_manager_restrict_urls filter to support custom tracker deployments.
+     * Hardening is enabled by default. Other template restrictions remain active.
+     *
+     * @return bool
+     */
+    private static function isUrlHardeningEnabled()
+    {
+        $enabled = !defined('MATOMO_TAG_MANAGER_RESTRICT_URLS') || MATOMO_TAG_MANAGER_RESTRICT_URLS;
+
+        return (bool) apply_filters('matomo_tag_manager_restrict_urls', $enabled);
+    }
+
     /**
      * @return array<class-string, callable>
      */
@@ -42,11 +61,17 @@ class SecuredTemplateFactory
      */
     public function getVariableReplacements()
     {
-        return [
+        $replacements = [
             MatomoConfigurationVariable::class => [$this, 'matomoConfigurationVariable'],
             CustomJsFunctionVariable::class => [$this, 'customJsFunctionVariable'],
             CustomRequestProcessingVariable::class => [$this, 'customRequestProcessingVariable'],
         ];
+
+        if (self::isUrlHardeningEnabled()) {
+            $replacements[JavaScriptVariable::class] = [$this, 'javaScriptVariable'];
+        }
+
+        return $replacements;
     }
 
     /**
@@ -84,8 +109,8 @@ class SecuredTemplateFactory
     }
 
     /**
-     * The Matomo Configuration variable, with the parameters that decide which origin the tracker
-     * is loaded from constrained to this site.
+     * The Matomo Configuration variable, with the tracker base and endpoints constrained to this
+     * Matomo for WordPress installation.
      *
      * This one is narrowed rather than refused for the additional reason that it is the variable
      * Tag Manager users need most.
@@ -95,12 +120,19 @@ class SecuredTemplateFactory
      */
     public function matomoConfigurationVariable(MatomoConfigurationVariable $wrapped)
     {
+        $restrictUrls = self::isUrlHardeningEnabled();
+        $urlValidators = $restrictUrls ? [new MatomoAppUrl()] : [];
+        $endpointValidators = $restrictUrls
+            ? [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()]
+            : [];
+
         return new class(
             $wrapped,
             [
-                'matomoUrl' => [new SiteOwnUrl()],
-                'jsEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
-                'trackingEndpointCustom' => [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()],
+                'matomoUrl' => $urlValidators,
+                'jsEndpointCustom' => $endpointValidators,
+                'trackingEndpointCustom' => $endpointValidators,
+                'appendToTrackingUrl' => $restrictUrls ? [new NoVariableInterpolation(), new NoAuthenticationParameters()] : [],
             ],
             [
                 'matomoUrl' => self::dropUrlQueryAndFragment(),
@@ -109,6 +141,23 @@ class SecuredTemplateFactory
             ],
             ['matomoUrl' => self::siteOwnDefaultUrl()]
         ) extends MatomoConfigurationVariable {
+            use SecuredTemplate;
+        };
+    }
+
+    /**
+     * Prevent arbitrary reads from the visitor's global JavaScript namespace. In WordPress this
+     * includes REST nonces and other credentials used by same-origin authenticated requests.
+     *
+     * @param JavaScriptVariable $wrapped
+     * @return JavaScriptVariable
+     */
+    public function javaScriptVariable(JavaScriptVariable $wrapped)
+    {
+        return new class(
+            $wrapped,
+            ['variableName' => [new UnfilteredHtmlRequired()]]
+        ) extends JavaScriptVariable {
             use SecuredTemplate;
         };
     }
@@ -181,7 +230,7 @@ class SecuredTemplateFactory
     }
 
     /**
-     * Replaces a default URL that SiteOwnUrl would refuse with one this site does answer to.
+     * Replaces a default URL that MatomoAppUrl would refuse with this installation's Matomo app.
      *
      * @return \Closure
      */
@@ -189,7 +238,7 @@ class SecuredTemplateFactory
     {
         return function ($default) {
             foreach (self::siteOwnUrlCandidates($default) as $candidate) {
-                if (self::isSiteOwnUrl($candidate)) {
+                if (self::isSiteMatomoAppUrl($candidate)) {
                     return $candidate;
                 }
             }
@@ -223,14 +272,14 @@ class SecuredTemplateFactory
      * @param mixed $value
      * @return bool whether SiteOwnUrl accepts the value as a URL of this site
      */
-    private static function isSiteOwnUrl($value)
+    private static function isSiteMatomoAppUrl($value)
     {
         if (!is_string($value) || '' === $value) {
             return false;
         }
 
         try {
-            (new SiteOwnUrl())->validate($value);
+            (new MatomoAppUrl())->validate($value);
         } catch (ValidatorException $e) {
             return false;
         }

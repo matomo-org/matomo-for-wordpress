@@ -161,6 +161,15 @@ The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', 
 
 The Tag Manager does currently not work in WP Multisite mode.
 
+= Can I disable the Tag Manager URL security restrictions?
+By default, Matomo for WordPress applies additional security restrictions to Tag Manager templates for users without the `unfiltered_html` capability. These restrictions limit the Matomo URL and custom tracker endpoints, prevent endpoint paths from traversing outside the Matomo URL, block variable interpolation in endpoints and tracking URL parameters, block authentication-related tracking URL parameters, and prevent JavaScript variables from reading arbitrary browser globals.
+
+If you use a custom tracker deployment that is incompatible with these restrictions, you can disable this hardening by adding the following to your `wp-config.php`:
+
+`define('MATOMO_TAG_MANAGER_RESTRICT_URLS', false);`
+
+This disables the protections listed above. Other Tag Manager restrictions, such as restrictions on custom HTML and JavaScript functions for users without `unfiltered_html`, continue to apply. Disabling the hardening can allow tags to access authenticated browser data or send requests to other routes, so only do this if you understand the security implications. The default is enabled when the constant is not defined.
+
 = How do you support WP Multisite?
 [Click here to learn more](https://matomo.org/faq/wordpress/does-it-support-wp-multisite/)
 
