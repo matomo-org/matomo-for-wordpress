@@ -414,7 +414,12 @@ EOF
     fi
 
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "$MATOMO_PLUGIN_ZIP"
-    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
+    MATOMO_PLUGIN_NAME=$($DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin list --status=active --field=name | awk '$0 == "matomo" || $0 ~ /^matomo-/ { print; exit }')
+    if [[ -z "$MATOMO_PLUGIN_NAME" ]]; then
+      echo "Could not find the installed Matomo plugin directory."
+      exit 1
+    fi
+    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME"
   fi
 
   if [[ "$MULTISITE" = "1" ]]; then
