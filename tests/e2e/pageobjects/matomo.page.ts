@@ -66,7 +66,15 @@ export default class MatomoPage extends Page {
     let idleChecks = 0;
     try {
       await browser.waitUntil(async () => {
-        const isIdle = await browser.execute(() => window.jQuery.active === 0 && $('.loadingPiwik:visible').length === 0);
+        const isIdle = await browser.execute(() => {
+          const hasNoActiveRequests = !window.jQuery || window.jQuery.active === 0;
+          const hasVisibleLoader = Array.from(document.querySelectorAll('.loadingPiwik')).some((loader) => {
+            const style = window.getComputedStyle(loader);
+            return style.display !== 'none' && style.visibility !== 'hidden' && loader.getClientRects().length > 0;
+          });
+          const hasNoVisibleLoader = !hasVisibleLoader;
+          return hasNoActiveRequests && hasNoVisibleLoader;
+        });
         idleChecks = isIdle ? idleChecks + 1 : 0;
         return idleChecks >= 3;
       }, { timeout: 30000, interval: 200 });
