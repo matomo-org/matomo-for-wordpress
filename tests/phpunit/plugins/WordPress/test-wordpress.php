@@ -96,6 +96,25 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( Access::getInstance()->hasSuperUserAccess() );
 	}
 
+	public function test_onSendHttpRequestBy_rejects_requests_requiring_safe_egress() {
+		$this->expectException( \Piwik\Http\EgressBlockedException::class );
+
+		$response = null;
+		$status   = null;
+		$headers  = null;
+		$params   = [
+			'headers'          => [],
+			'httpMethod'       => 'GET',
+			'timeout'          => 1,
+			'body'             => '',
+			'userAgent'        => null,
+			'destinationPath'  => null,
+			'validateEgressIp' => true,
+		];
+
+		$this->plugin->onSendHttpRequestBy( 'https://example.com/data', $params, $response, $status, $headers );
+	}
+
 	public function test_onSendHttpRequestBy_should_dispatch_legitimate_coreadminhome_archive_reports_url() {
 		// short circuit CoreAdminHome.archiveReports to skip archiving (slow and uneeded for this test)
 		CoreAdminHomeAPI::setSingletonInstance( $this->make_coreadminhome_archive_mock() );
