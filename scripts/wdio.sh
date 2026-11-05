@@ -2,17 +2,27 @@
 
 export WORDPRESS_FOLDER=test
 TRACKING_WORDPRESS_FOLDER=test-tracking
+E2E_SETUP_TIMEOUT=${E2E_SETUP_TIMEOUT:-900}
 
 function wait_for_docker_compose_up() {
   FOLDER=$1
+  COMPOSE_UP_PID=$2
 
   elapsed=0
-  until [ -e ./docker/wordpress/$FOLDER/setup_finished ] || (( elapsed++ >= 420 )); do
+  until [ -e "./docker/wordpress/$FOLDER/setup_finished" ] || (( elapsed++ >= E2E_SETUP_TIMEOUT )); do
+    if ! kill -0 "$COMPOSE_UP_PID" 2>/dev/null; then
+      wait "$COMPOSE_UP_PID" || true
+      echo "WordPress container exited before $FOLDER setup completed. Recent setup output:"
+      tail -n 200 .e2e-docker-out
+      exit 1
+    fi
     sleep 1
   done
 
-  if [ ! -e ./docker/wordpress/$FOLDER/setup_finished ]; then
-    echo "did not setup local environment in time"
+  if [ ! -e "./docker/wordpress/$FOLDER/setup_finished" ]; then
+    echo "did not setup local environment in ${E2E_SETUP_TIMEOUT} seconds"
+    echo "Recent setup output:"
+    tail -n 200 .e2e-docker-out
     exit 1
   fi
 }
@@ -22,7 +32,8 @@ function docker_compose_up() {
 
   rm -rf ./docker/wordpress/$FOLDER/setup_finished
   CUSTOM_ENV_FILE=.env.script npm run compose up wordpress &>> .e2e-docker-out &
-  wait_for_docker_compose_up $FOLDER
+  COMPOSE_UP_PID=$!
+  wait_for_docker_compose_up "$FOLDER" "$COMPOSE_UP_PID"
 }
 
 function cleanup {
@@ -30,6 +41,7 @@ function cleanup {
 }
 
 echo "Creating test release..." # must be done before creating environment with latest stable version
+: > .e2e-docker-out
 
 cat > .env.script <<EOF
 WOOCOMMERCE=0
