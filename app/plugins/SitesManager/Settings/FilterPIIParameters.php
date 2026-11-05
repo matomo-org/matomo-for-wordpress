@@ -11,33 +11,44 @@ use Piwik\Settings\Interfaces\Traits\PolicyComparisonTrait;
 use Piwik\Policy\CnilPolicy;
 use Piwik\Settings\Interfaces\OptionSettingInterface;
 use Piwik\Settings\Interfaces\Traits\Getters\OptionGetterTrait;
+
 /**
  * @implements PolicyComparisonInterface<string>
  * @implements SettingValueInterface<string>
  */
-class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInterface, SettingValueInterface
+class FilterPIIParameters implements
+    OptionSettingInterface,
+    PolicyComparisonInterface,
+    SettingValueInterface
 {
     use OptionGetterTrait;
+
     /** @use PolicyComparisonTrait<string> */
     use PolicyComparisonTrait;
+
     /** @var string $value */
     private $value;
+
     protected function __construct(string $value)
     {
         $this->value = $value;
     }
-    public static function getTitle() : string
+
+    public static function getTitle(): string
     {
         return Piwik::translate('SitesManager_FilterPIIParametersSettingTitle');
     }
-    public static function getWhatItDoes(?int $idSite = null) : string
+
+    public static function getWhatItDoes(?int $idSite = null): string
     {
         return Piwik::translate('SitesManager_FilterPIIParametersSettingWhatItDoes');
     }
-    public static function getImpact(?int $idSite = null) : string
+
+    public static function getImpact(?int $idSite = null): string
     {
         return Piwik::translate('SitesManager_FilterPIIParametersSettingImpact');
     }
+
     public static function getInstance(?int $idSite = null)
     {
         $values = self::getPolicyRequiredValues($idSite);
@@ -45,31 +56,41 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
         $strictest = self::getStrictestValueFromArray($values);
         return new static($strictest);
     }
-    public static function getInlineHelp() : string
+
+    public static function getInlineHelp(): string
     {
         return '';
     }
-    public static function getPolicyRequirements() : array
+
+    public static function getPolicyRequirements(): array
     {
-        return [CnilPolicy::class => SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII];
+        return [
+            CnilPolicy::class => SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII,
+        ];
     }
-    public static function getComplianceRequirementNote(?int $idSite = null) : string
+
+    public static function getComplianceRequirementNote(?int $idSite = null): string
     {
         return Piwik::translate('SitesManager_FilterPiiParametersSettingRequirementNote');
     }
+
     public function getValue()
     {
         return $this->value;
     }
-    public static function isCompliant(string $policy, ?int $idSite = null) : bool
+
+    public static function isCompliant(string $policy, ?int $idSite = null): bool
     {
         $policyValues = self::getPolicyRequirements();
         if (!array_key_exists($policy, $policyValues)) {
-            return \true;
+            return true;
         }
+
         $currentValue = self::getInstance($idSite)->getValue();
+
         return $currentValue === $policyValues[$policy];
     }
+
     protected static function compareStrictness($value1, $value2)
     {
         /* strictest is simply defined as if a value equals matomo recommended PII
@@ -77,7 +98,9 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
          *    - matomo_PII
          *    - everything else
          */
-        $matomoPII = SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII;
+
+        $matomoPII =  SitesManager::URL_PARAM_EXCLUSION_TYPE_NAME_MATOMO_RECOMMENDED_PII;
+
         if ($value1 === $matomoPII) {
             return $value1;
         } elseif ($value2 === $matomoPII) {
@@ -88,7 +111,8 @@ class FilterPIIParameters implements OptionSettingInterface, PolicyComparisonInt
             return $value2;
         }
     }
-    protected static function getOptionName(?int $idSite = null) : string
+
+    protected static function getOptionName(?int $idSite = null): string
     {
         return API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL;
     }

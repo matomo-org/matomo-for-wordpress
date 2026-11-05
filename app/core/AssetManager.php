@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
@@ -22,6 +23,7 @@ use Piwik\AssetManager\UIAssetMerger\JScriptUIAssetMerger;
 use Piwik\AssetManager\UIAssetMerger\StylesheetUIAssetMerger;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager;
+
 /**
  * AssetManager is the class used to manage the inclusion of UI assets:
  * JavaScript and CSS files.
@@ -36,11 +38,12 @@ use Piwik\Plugin\Manager;
  * the global option 'disable_merged_assets'. See the documentation in the global
  * config for more information.
  */
-class AssetManager extends \Piwik\Singleton
+class AssetManager extends Singleton
 {
     public const MERGED_CSS_FILE = "asset_manager_global_css.css";
     public const MERGED_CORE_JS_FILE = "asset_manager_core_js.js";
     public const MERGED_NON_CORE_JS_FILE = "asset_manager_non_core_js.js";
+
     public const CSS_IMPORT_DIRECTIVE = "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />\n";
     public const JS_IMPORT_DIRECTIVE = "<script type=\"text/javascript\" src=\"%s\"></script>\n";
     public const JS_DEFER_IMPORT_DIRECTIVE = "<script type=\"text/javascript\" src=\"%s\" defer></script>\n";
@@ -48,27 +51,34 @@ class AssetManager extends \Piwik\Singleton
     public const GET_CORE_JS_MODULE_ACTION = "index.php?module=Proxy&action=getCoreJs";
     public const GET_NON_CORE_JS_MODULE_ACTION = "index.php?module=Proxy&action=getNonCoreJs";
     public const GET_JS_UMD_MODULE_ACTION = "index.php?module=Proxy&action=getUmdJs&chunk=";
+
     /**
      * @var UIAssetCacheBuster
      */
     private $cacheBuster;
+
     /**
      * @var UIAssetFetcher
      */
     private $minimalStylesheetFetcher;
+
     /**
      * @var Theme|null
      */
     private $theme;
+
     public function __construct()
     {
         $this->cacheBuster = UIAssetCacheBuster::getInstance();
+
         $this->minimalStylesheetFetcher = new StaticUIAssetFetcher(array(), array(), $this->theme);
+
         $theme = Manager::getInstance()->getThemeEnabled();
         if (!empty($theme)) {
-            $this->theme = new \Piwik\Theme();
+            $this->theme = new Theme();
         }
     }
+
     /**
      * @inheritDoc
      * @return AssetManager
@@ -76,6 +86,7 @@ class AssetManager extends \Piwik\Singleton
     public static function getInstance()
     {
         $assetManager = parent::getInstance();
+
         /**
          * Triggered when creating an instance of the asset manager. Lets you overwrite the
          * asset manager behavior.
@@ -86,9 +97,11 @@ class AssetManager extends \Piwik\Singleton
          * This event is not a public event since we don't want to make the asset manager itself public
          * API
          */
-        \Piwik\Piwik::postEvent('AssetManager.makeNewAssetManagerObject', array(&$assetManager));
+        Piwik::postEvent('AssetManager.makeNewAssetManagerObject', array(&$assetManager));
+
         return $assetManager;
     }
+
     /**
      * @param UIAssetCacheBuster $cacheBuster
      */
@@ -96,6 +109,7 @@ class AssetManager extends \Piwik\Singleton
     {
         $this->cacheBuster = $cacheBuster;
     }
+
     /**
      * @param UIAssetFetcher $minimalStylesheetFetcher
      */
@@ -103,6 +117,7 @@ class AssetManager extends \Piwik\Singleton
     {
         $this->minimalStylesheetFetcher = $minimalStylesheetFetcher;
     }
+
     /**
      * @param Theme $theme
      */
@@ -110,6 +125,7 @@ class AssetManager extends \Piwik\Singleton
     {
         $this->theme = $theme;
     }
+
     /**
      * Return CSS file inclusion directive(s) using the markup <link>
      *
@@ -119,27 +135,35 @@ class AssetManager extends \Piwik\Singleton
     {
         return sprintf(self::CSS_IMPORT_DIRECTIVE, self::GET_CSS_MODULE_ACTION);
     }
+
     /**
      * Return JS file inclusion directive(s) using the markup <script>
      */
-    public function getJsInclusionDirective(bool $deferJS = \false) : string
+    public function getJsInclusionDirective(bool $deferJS = false): string
     {
-        $result = "<script type=\"text/javascript\">\n" . StaticContainer::get('Piwik\\Translation\\Translator')->getJavascriptTranslations() . "\n</script>";
+        $result = "<script type=\"text/javascript\">\n" . StaticContainer::get('Piwik\Translation\Translator')->getJavascriptTranslations() . "\n</script>";
+
         if ($this->isMergedAssetsDisabled()) {
             $this->getMergedCoreJSAsset()->delete();
             $this->getMergedNonCoreJSAsset()->delete();
+
             $result .= $this->getIndividualCoreAndNonCoreJsIncludes();
         } else {
             $result .= sprintf($deferJS ? self::JS_DEFER_IMPORT_DIRECTIVE : self::JS_IMPORT_DIRECTIVE, self::GET_CORE_JS_MODULE_ACTION);
             $result .= sprintf($deferJS ? self::JS_DEFER_IMPORT_DIRECTIVE : self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+
             $result .= $this->getPluginUmdChunks();
         }
+
         return $result;
     }
+
     protected function getPluginUmdChunks()
     {
         $fetcher = $this->getPluginUmdJScriptFetcher();
+
         $chunks = $fetcher->getChunkFiles();
+
         $result = '';
         foreach ($chunks as $chunk) {
             $src = self::GET_JS_UMD_MODULE_ACTION . urlencode($chunk->getChunkName());
@@ -147,6 +171,7 @@ class AssetManager extends \Piwik\Singleton
         }
         return $result;
     }
+
     /**
      * Return the base.less compiled to css
      *
@@ -155,10 +180,14 @@ class AssetManager extends \Piwik\Singleton
     public function getCompiledBaseCss()
     {
         $mergedAsset = new InMemoryUIAsset();
+
         $assetMerger = new StylesheetUIAssetMerger($mergedAsset, $this->minimalStylesheetFetcher, $this->cacheBuster);
+
         $assetMerger->generateFile();
+
         return $mergedAsset;
     }
+
     /**
      * Return the css merged file absolute location.
      * If there is none, the generation process will be triggered.
@@ -168,11 +197,16 @@ class AssetManager extends \Piwik\Singleton
     public function getMergedStylesheet()
     {
         $mergedAsset = $this->getMergedStylesheetAsset();
+
         $assetFetcher = new StylesheetUIAssetFetcher(Manager::getInstance()->getLoadedPluginsName(), $this->theme);
+
         $assetMerger = new StylesheetUIAssetMerger($mergedAsset, $assetFetcher, $this->cacheBuster);
+
         $assetMerger->generateFile();
+
         return $mergedAsset;
     }
+
     /**
      * Return the core js merged file absolute location.
      * If there is none, the generation process will be triggered.
@@ -183,6 +217,7 @@ class AssetManager extends \Piwik\Singleton
     {
         return $this->getMergedJavascript($this->getCoreJScriptFetcher(), $this->getMergedCoreJSAsset());
     }
+
     /**
      * Return the non core js merged file absolute location.
      * If there is none, the generation process will be triggered.
@@ -193,6 +228,7 @@ class AssetManager extends \Piwik\Singleton
     {
         return $this->getMergedJavascript($this->getNonCoreJScriptFetcher(), $this->getMergedNonCoreJSAsset());
     }
+
     /**
      * Return a chunk JS merged file absolute location.
      * If there is none, the generation process will be triggered.
@@ -204,8 +240,10 @@ class AssetManager extends \Piwik\Singleton
     {
         $assetFetcher = $this->getPluginUmdJScriptFetcher($chunk);
         $outputFile = $assetFetcher->getRequestedChunkOutputFile();
+
         return $this->getMergedJavascript($assetFetcher, $this->getMergedUIAsset($outputFile));
     }
+
     /**
      * @param boolean|"all" $core
      * @return string[]
@@ -213,21 +251,26 @@ class AssetManager extends \Piwik\Singleton
     public function getLoadedPlugins($core)
     {
         $loadedPlugins = array();
+
         foreach (Manager::getInstance()->getPluginsLoadedAndActivated() as $plugin) {
             $pluginName = $plugin->getPluginName();
             $pluginIsCore = Manager::getInstance()->isPluginBundledWithCore($pluginName);
-            if ($core === 'all' || $pluginIsCore && $core || !$pluginIsCore && !$core) {
+
+            if ($core === 'all' || ($pluginIsCore && $core) || (!$pluginIsCore && !$core)) {
                 $loadedPlugins[] = $pluginName;
             }
         }
+
         return $loadedPlugins;
     }
+
     /**
      * Remove previous merged assets
      */
-    public function removeMergedAssets($pluginName = \false)
+    public function removeMergedAssets($pluginName = false)
     {
         $assetsToRemove = array($this->getMergedStylesheetAsset());
+
         if ($pluginName) {
             if ($this->pluginContainsJScriptAssets($pluginName)) {
                 if (Manager::getInstance()->isPluginBundledWithCore($pluginName)) {
@@ -235,15 +278,18 @@ class AssetManager extends \Piwik\Singleton
                 } else {
                     $assetsToRemove[] = $this->getMergedNonCoreJSAsset();
                 }
+
                 $assetFetcher = $this->getPluginUmdJScriptFetcher();
                 foreach ($assetFetcher->getChunkFiles() as $chunk) {
                     $files = $chunk->getFiles();
-                    $foundInChunk = \false;
+
+                    $foundInChunk = false;
                     foreach ($files as $file) {
-                        if (strpos($file, "/{$pluginName}.umd.") !== \false) {
-                            $foundInChunk = \true;
+                        if (strpos($file, "/$pluginName.umd.") !== false) {
+                            $foundInChunk = true;
                         }
                     }
+
                     if ($foundInChunk) {
                         $outputFile = $chunk->getOutputFile();
                         $asset = $this->getMergedUIAsset($outputFile);
@@ -257,6 +303,7 @@ class AssetManager extends \Piwik\Singleton
         } else {
             $assetsToRemove[] = $this->getMergedCoreJSAsset();
             $assetsToRemove[] = $this->getMergedNonCoreJSAsset();
+
             $assetFetcher = $this->getPluginUmdJScriptFetcher();
             foreach ($assetFetcher->getChunkFiles() as $chunk) {
                 $outputFile = $chunk->getOutputFile();
@@ -266,8 +313,10 @@ class AssetManager extends \Piwik\Singleton
                 }
             }
         }
+
         $this->removeAssets($assetsToRemove);
     }
+
     /**
      * Check if the merged file directory exists and is writable.
      *
@@ -277,14 +326,18 @@ class AssetManager extends \Piwik\Singleton
     public function getAssetDirectory()
     {
         $mergedFileDirectory = StaticContainer::get('path.tmp') . '/assets';
+
         if (!is_dir($mergedFileDirectory)) {
-            \Piwik\Filesystem::mkdir($mergedFileDirectory);
+            Filesystem::mkdir($mergedFileDirectory);
         }
+
         if (!is_writable($mergedFileDirectory)) {
             throw new Exception("Directory " . $mergedFileDirectory . " has to be writable.");
         }
+
         return $mergedFileDirectory;
     }
+
     /**
      * Return the global option disable_merged_assets
      *
@@ -292,14 +345,17 @@ class AssetManager extends \Piwik\Singleton
      */
     public function isMergedAssetsDisabled()
     {
-        if (\Piwik\Config::getInstance()->Development['disable_merged_assets'] == 1) {
-            return \true;
+        if (Config::getInstance()->Development['disable_merged_assets'] == 1) {
+            return true;
         }
+
         if (isset($_GET['disable_merged_assets']) && $_GET['disable_merged_assets'] == 1) {
-            return \true;
+            return true;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param UIAssetFetcher $assetFetcher
      * @param UIAsset $mergedAsset
@@ -308,41 +364,55 @@ class AssetManager extends \Piwik\Singleton
     private function getMergedJavascript($assetFetcher, $mergedAsset)
     {
         $assetMerger = new JScriptUIAssetMerger($mergedAsset, $assetFetcher, $this->cacheBuster);
+
         $assetMerger->generateFile();
+
         return $mergedAsset;
     }
+
     /**
      * Return individual JS file inclusion directive(s) using the markup <script>
      */
-    protected function getIndividualCoreAndNonCoreJsIncludes() : string
+    protected function getIndividualCoreAndNonCoreJsIncludes(): string
     {
-        return $this->getIndividualJsIncludesFromAssetFetcher($this->getCoreJScriptFetcher()) . $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher()) . $this->getIndividualJsIncludesFromAssetFetcher($this->getPluginUmdJScriptFetcher());
+        return
+            $this->getIndividualJsIncludesFromAssetFetcher($this->getCoreJScriptFetcher()) .
+            $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher()) .
+            $this->getIndividualJsIncludesFromAssetFetcher($this->getPluginUmdJScriptFetcher());
     }
+
     /**
      * @param UIAssetFetcher $assetFetcher
      */
-    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher) : string
+    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher): string
     {
         $jsIncludeString = '';
+
         $assets = $assetFetcher->getCatalog()->getAssets();
+
         foreach ($assets as $jsFile) {
             $jsFile->validateFile();
             $jsIncludeString = $jsIncludeString . sprintf(self::JS_IMPORT_DIRECTIVE, $jsFile->getRelativeLocation());
         }
+
         return $jsIncludeString;
     }
+
     private function getCoreJScriptFetcher()
     {
-        return new JScriptUIAssetFetcher($this->getLoadedPlugins(\true), $this->theme);
+        return new JScriptUIAssetFetcher($this->getLoadedPlugins(true), $this->theme);
     }
+
     protected function getNonCoreJScriptFetcher()
     {
-        return new JScriptUIAssetFetcher($this->getLoadedPlugins(\false), $this->theme);
+        return new JScriptUIAssetFetcher($this->getLoadedPlugins(false), $this->theme);
     }
+
     protected function getPluginUmdJScriptFetcher($chunk = null)
     {
         return new PluginUmdAssetFetcher($this->getLoadedPlugins('all'), $this->theme, $chunk);
     }
+
     /**
      * @param string $pluginName
      * @return boolean
@@ -350,27 +420,34 @@ class AssetManager extends \Piwik\Singleton
     private function pluginContainsJScriptAssets($pluginName)
     {
         $fetcher = new JScriptUIAssetFetcher(array($pluginName), $this->theme);
+
         try {
             $assets = $fetcher->getCatalog()->getAssets();
         } catch (\Exception $e) {
             // This can happen when a plugin is not valid (eg. Piwik 1.x format)
             // When posting the event to the plugin, it returns an exception "Plugin has not been loaded"
-            return \false;
+            return false;
         }
+
         $pluginManager = Manager::getInstance();
         $plugin = null;
         if ($pluginManager->isPluginLoaded($pluginName)) {
             $plugin = $pluginManager->getLoadedPlugin($pluginName);
         }
+
         if ($plugin && $plugin->isTheme()) {
             $theme = $pluginManager->getTheme($pluginName);
+
             $javaScriptFiles = $theme->getJavaScriptFiles();
+
             if (!empty($javaScriptFiles)) {
                 $assets = array_merge($assets, $javaScriptFiles);
             }
         }
+
         return !empty($assets);
     }
+
     /**
      * @param UIAsset[] $uiAssets
      */
@@ -380,6 +457,7 @@ class AssetManager extends \Piwik\Singleton
             $uiAsset->delete();
         }
     }
+
     /**
      * @return UIAsset
      */
@@ -387,6 +465,7 @@ class AssetManager extends \Piwik\Singleton
     {
         return $this->getMergedUIAsset(self::MERGED_CSS_FILE);
     }
+
     /**
      * @return UIAsset
      */
@@ -394,6 +473,7 @@ class AssetManager extends \Piwik\Singleton
     {
         return $this->getMergedUIAsset(self::MERGED_CORE_JS_FILE);
     }
+
     /**
      * @return UIAsset
      */
@@ -401,6 +481,7 @@ class AssetManager extends \Piwik\Singleton
     {
         return $this->getMergedUIAsset(self::MERGED_NON_CORE_JS_FILE);
     }
+
     /**
      * @param string $fileName
      * @return UIAsset
@@ -409,20 +490,28 @@ class AssetManager extends \Piwik\Singleton
     {
         return new OnDiskUIAsset($this->getAssetDirectory(), $fileName);
     }
+
     public static function compileCustomStylesheets($files)
     {
-        $assetManager = new \Piwik\AssetManager();
+        $assetManager = new AssetManager();
+
         $fetcher = new StaticUIAssetFetcher($files, $priorityOrder = array(), $theme = null);
+
         $assetManager->setMinimalStylesheetFetcher($fetcher);
+
         return $assetManager->getCompiledBaseCss()->getContent();
     }
+
     public static function compileCustomJs($files)
     {
         $mergedAsset = new InMemoryUIAsset();
         $fetcher = new StaticUIAssetFetcher($files, $priorityOrder = array(), $theme = null);
+
         $cacheBuster = UIAssetCacheBuster::getInstance();
+
         $assetMerger = new JScriptUIAssetMerger($mergedAsset, $fetcher, $cacheBuster);
         $assetMerger->generateFile();
+
         return $mergedAsset->getContent();
     }
 }

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\Container\StaticContainer;
@@ -14,6 +15,7 @@ use Piwik\Plugin;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
 use Piwik\Widget\WidgetContainerConfig;
+
 /**
  * Get widgets that are defined by plugins.
  */
@@ -23,10 +25,12 @@ class WidgetsProvider
      * @var Plugin\Manager
      */
     private $pluginManager;
+
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
+
     /**
      * Get all existing widget configs.
      *
@@ -35,7 +39,9 @@ class WidgetsProvider
     public function getWidgetConfigs()
     {
         $widgetClasses = $this->getAllWidgetClassNames();
+
         $configs = array();
+
         /**
          * Triggered to add custom widget configs. To filter widgets have a look at the {@hook Widget.filterWidgets}
          * event.
@@ -55,11 +61,14 @@ class WidgetsProvider
          * @param array &$configs An array containing a list of widget config entries.
          */
         Piwik::postEvent('Widget.addWidgetConfigs', array(&$configs));
+
         foreach ($widgetClasses as $widgetClass) {
             $configs[] = $this->getWidgetConfigForClassName($widgetClass);
         }
+
         return $configs;
     }
+
     /**
      * Get all existing widget container configs.
      * @return WidgetContainerConfig[]
@@ -67,12 +76,15 @@ class WidgetsProvider
     public function getWidgetContainerConfigs()
     {
         $configs = array();
+
         $widgetContainerConfigs = $this->getAllWidgetContainerConfigClassNames();
         foreach ($widgetContainerConfigs as $widgetClass) {
             $configs[] = StaticContainer::get($widgetClass);
         }
+
         return $configs;
     }
+
     /**
      * Get the widget defined by the given module and action.
      *
@@ -86,16 +98,20 @@ class WidgetsProvider
         if (empty($module) || empty($action)) {
             return null;
         }
+
         try {
             if (!$this->pluginManager->isPluginActivated($module)) {
                 return null;
             }
+
             $plugin = $this->pluginManager->getLoadedPlugin($module);
         } catch (\Exception $e) {
             // we are not allowed to use possible widgets, plugin is not active
             return null;
         }
+
         $widgets = $plugin->findMultipleComponents('Widgets', 'Piwik\\Widget\\Widget');
+
         foreach ($widgets as $widgetClass) {
             $config = $this->getWidgetConfigForClassName($widgetClass);
             if ($config->getAction() === $action) {
@@ -103,8 +119,10 @@ class WidgetsProvider
                 return StaticContainer::get($widgetClass);
             }
         }
+
         return null;
     }
+
     private function getWidgetConfigForClassName($widgetClass)
     {
         /** @var string|Widget $widgetClass */
@@ -112,8 +130,10 @@ class WidgetsProvider
         $config->setModule($this->getModuleFromWidgetClassName($widgetClass));
         $config->setAction($this->getActionFromWidgetClassName($widgetClass));
         $widgetClass::configure($config);
+
         return $config;
     }
+
     /**
      * @return string[]
      */
@@ -121,19 +141,25 @@ class WidgetsProvider
     {
         return $this->pluginManager->findMultipleComponents('Widgets', 'Piwik\\Widget\\Widget');
     }
+
     private function getModuleFromWidgetClassName($widgetClass)
     {
         $parts = explode('\\', $widgetClass);
+
         return $parts[2];
     }
+
     private function getActionFromWidgetClassName($widgetClass)
     {
         $parts = explode('\\', $widgetClass);
+
         if (count($parts) >= 4) {
             return lcfirst(end($parts));
         }
+
         return '';
     }
+
     /**
      * @return string[]
      */

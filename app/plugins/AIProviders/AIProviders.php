@@ -6,17 +6,24 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders;
 
 use Piwik\Piwik;
 use Piwik\Plugin;
+
 class AIProviders extends Plugin
 {
-    public function registerEvents() : array
+    public function registerEvents(): array
     {
-        return ['AIProviders.addAIProviders' => 'addAIProviders', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys'];
+        return [
+            'AIProviders.addAIProviders'             => 'addAIProviders',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+        ];
     }
+
     /**
      * Registers the built-in AI providers.
      *
@@ -25,20 +32,22 @@ class AIProviders extends Plugin
      * the built-in providers, and a provider that is centrally forced in a
      * managed environment, from being shadowed by another plugin.
      */
-    public function addAIProviders(\Piwik\Plugins\AIProviders\AIProvidersList $providers) : void
+    public function addAIProviders(AIProvidersList $providers): void
     {
-        $providers->addProvider(new \Piwik\Plugins\AIProviders\Provider\Anthropic());
-        $providers->addProvider(new \Piwik\Plugins\AIProviders\Provider\Google());
-        $providers->addProvider(new \Piwik\Plugins\AIProviders\Provider\OpenAI());
-        $providers->addProvider(new \Piwik\Plugins\AIProviders\Provider\Bedrock());
-        $providers->addProvider(new \Piwik\Plugins\AIProviders\Provider\CustomProvider());
+        $providers->addProvider(new Provider\Anthropic());
+        $providers->addProvider(new Provider\Google());
+        $providers->addProvider(new Provider\OpenAI());
+        $providers->addProvider(new Provider\Bedrock());
+        $providers->addProvider(new Provider\CustomProvider());
     }
+
     /**
      * Returns all AI providers registered by active plugins.
      */
-    public static function getAvailableProviders() : \Piwik\Plugins\AIProviders\AIProvidersList
+    public static function getAvailableProviders(): AIProvidersList
     {
-        $providers = new \Piwik\Plugins\AIProviders\AIProvidersList();
+        $providers = new AIProvidersList();
+
         /**
          * Triggered to let plugins register AI providers.
          *
@@ -60,6 +69,7 @@ class AIProviders extends Plugin
          * @param AIProvidersList $providers Provider registry to mutate.
          */
         Piwik::postEvent('AIProviders.addAIProviders', [$providers]);
+
         /**
          * Triggered after providers have been registered, so plugins can remove
          * or adjust providers before they are shown or used.
@@ -75,9 +85,11 @@ class AIProviders extends Plugin
          * @param AIProvidersList $providers Provider registry to mutate.
          */
         Piwik::postEvent('AIProviders.filterAIProviders', [$providers]);
+
         return $providers;
     }
-    public function getClientSideTranslationKeys(array &$translations) : void
+
+    public function getClientSideTranslationKeys(array &$translations): void
     {
         $translations[] = 'AIProviders_AnthropicDefaultModelDescription';
         $translations[] = 'AIProviders_ApiKey';

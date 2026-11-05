@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Live;
 
 use Exception;
@@ -17,11 +18,13 @@ use Piwik\Piwik;
 use Piwik\Plugins\PrivacyManager\DataRounding;
 use Piwik\Site;
 use Piwik\Log\LoggerInterface;
+
 /**
  * @see plugins/Live/Visitor.php
  */
 require_once PIWIK_INCLUDE_PATH . '/plugins/Live/Visitor.php';
 require_once PIWIK_INCLUDE_PATH . '/plugins/UserCountry/functions.php';
+
 /**
  * The Live! API lets you access complete visit level information about your visitors. Combined with the power of <a href='https://matomo.org/docs/analytics-api/segmentation/' target='_blank'>Segmentation</a>,
  * you will be able to request visits filtered by any criteria.
@@ -50,10 +53,12 @@ class API extends \Piwik\Plugin\API
      * @var LoggerInterface
      */
     private $logger;
+
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
+
     /**
      * Returns simple live counters for visits over the last N minutes.
      *
@@ -66,25 +71,32 @@ class API extends \Piwik\Plugin\API
      * @param string|string[] $hideColumns Optional columns to omit from the response.
      * @return array<int, array<string, int>> A single-row array containing the requested counters.
      */
-    public function getCounters($idSite, int $lastMinutes, $segment = \false, $showColumns = [], $hideColumns = []) : array
+    public function getCounters($idSite, int $lastMinutes, $segment = false, $showColumns = [], $hideColumns = []): array
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         if ($lastMinutes < 1 || $lastMinutes > 2880) {
             throw new \InvalidArgumentException('lastMinutes only accepts values between 1 and 2880');
         }
-        $model = new \Piwik\Plugins\Live\Model();
+
+        $model = new Model();
+
         if (is_string($showColumns)) {
             $showColumns = explode(',', $showColumns);
         }
+
         if (is_string($hideColumns)) {
             $hideColumns = explode(',', $hideColumns);
         }
+
         $counters = array();
-        $hasVisits = \true;
+
+        $hasVisits = true;
         if ($this->shouldColumnBePresentInResponse('visits', $showColumns, $hideColumns)) {
             $counters['visits'] = $model->getNumVisits($idSite, $lastMinutes, $segment);
             $hasVisits = !empty($counters['visits']);
         }
+
         if ($this->shouldColumnBePresentInResponse('actions', $showColumns, $hideColumns)) {
             if ($hasVisits) {
                 $counters['actions'] = $model->getNumActions($idSite, $lastMinutes, $segment);
@@ -92,6 +104,7 @@ class API extends \Piwik\Plugin\API
                 $counters['actions'] = 0;
             }
         }
+
         if ($this->shouldColumnBePresentInResponse('visitors', $showColumns, $hideColumns)) {
             if ($hasVisits) {
                 $counters['visitors'] = $model->getNumVisitors($idSite, $lastMinutes, $segment);
@@ -99,6 +112,7 @@ class API extends \Piwik\Plugin\API
                 $counters['visitors'] = 0;
             }
         }
+
         if ($this->shouldColumnBePresentInResponse('visitsConverted', $showColumns, $hideColumns)) {
             if ($hasVisits) {
                 $counters['visitsConverted'] = $model->getNumVisitsConverted($idSite, $lastMinutes, $segment);
@@ -106,6 +120,7 @@ class API extends \Piwik\Plugin\API
                 $counters['visitsConverted'] = 0;
             }
         }
+
         // Apply privacy-safe rounding to the counters when data rounding is enforced (e.g. CNIL mode),
         // so the aggregated real-time reports do not expose near-single-user volumes.
         if ($this->shouldRoundCounters($idSite)) {
@@ -113,41 +128,49 @@ class API extends \Piwik\Plugin\API
                 $counters[$name] = DataRounding::roundCount($value);
             }
         }
+
         return array($counters);
     }
+
     /**
      * @param int|int[]|string $idSite
      */
-    private function shouldRoundCounters($idSite) : bool
+    private function shouldRoundCounters($idSite): bool
     {
         try {
-            $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \false);
+            $idSites = Site::getIdSitesFromIdSitesString($idSite, false, false);
         } catch (\Throwable $e) {
-            return \false;
+            return false;
         }
+
         return DataRounding::isDataRoundingEnabledForAnySites($idSites);
     }
+
     /**
      * @param list<string> $showColumns
      * @param list<string> $hideColumns
      */
-    private function shouldColumnBePresentInResponse(string $column, array $showColumns, array $hideColumns) : bool
+    private function shouldColumnBePresentInResponse(string $column, array $showColumns, array $hideColumns): bool
     {
-        $show = empty($showColumns) || in_array($column, $showColumns);
+        $show = (empty($showColumns) || in_array($column, $showColumns));
         $hide = in_array($column, $hideColumns);
+
         return $show && !$hide;
     }
+
     /**
      * Returns whether the visitor profile is enabled for the given site selection.
      *
      * @param int|string|int[] $idSite Website ID or site selection to query.
      * @return bool Whether visitor profiles are enabled.
      */
-    public function isVisitorProfileEnabled($idSite) : bool
+    public function isVisitorProfileEnabled($idSite): bool
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return \Piwik\Plugins\Live\Live::isVisitorProfileEnabled($idSite);
+
+        return Live::isVisitorProfileEnabled($idSite);
     }
+
     /**
      * Returns the most recent visit details for one or more websites.
      *
@@ -167,54 +190,63 @@ class API extends \Piwik\Plugin\API
      * @param bool $enhanced Whether plugins should enrich the returned visit details.
      * @return DataTable Recent visit details.
      */
-    public function getLastVisitsDetails($idSite, $period = \false, $date = \false, $segment = \false, $countVisitorsToFetch = \false, $minTimestamp = \false, $flat = \false, $doNotFetchActions = \false, $enhanced = \false) : DataTable
+    public function getLastVisitsDetails($idSite, $period = false, $date = false, $segment = false, $countVisitorsToFetch = false, $minTimestamp = false, $flat = false, $doNotFetchActions = false, $enhanced = false): DataTable
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
+        $idSites = Site::getIdSitesFromIdSitesString($idSite, false, true);
         if (is_array($idSites) && count($idSites) === 1) {
             $idSites = array_shift($idSites);
         }
         Piwik::checkUserHasViewAccess($idSites);
+
         if (is_numeric($minTimestamp)) {
             $minTimestamp = (int) $minTimestamp;
         } else {
-            $minTimestamp = \false;
+            $minTimestamp = false;
         }
+
         if (Request::isCurrentApiRequestTheRootApiRequest() || !in_array(Request::getRootApiRequestMethod(), ['API.getSuggestedValuesForSegment', 'PrivacyManager.findDataSubjects'])) {
             if (is_array($idSites)) {
                 $filteredSites = array_filter($idSites, function ($idSite) {
-                    return \Piwik\Plugins\Live\Live::isVisitorLogEnabled($idSite);
+                    return Live::isVisitorLogEnabled($idSite);
                 });
                 if (empty($filteredSites)) {
                     throw new Exception('Visits log is deactivated for all given websites (idSite=' . json_encode($idSite) . ').');
                 }
             } else {
-                \Piwik\Plugins\Live\Live::checkIsVisitorLogEnabled($idSites);
+                Live::checkIsVisitorLogEnabled($idSites);
             }
         }
-        if ($countVisitorsToFetch !== \false) {
-            $filterLimit = (int) $countVisitorsToFetch;
-            $filterOffset = 0;
+
+        if ($countVisitorsToFetch !== false) {
+            $filterLimit     = (int) $countVisitorsToFetch;
+            $filterOffset    = 0;
         } else {
-            $filterLimit = \Piwik\Request::fromRequest()->getIntegerParameter('filter_limit', 10);
+            $filterLimit  = \Piwik\Request::fromRequest()->getIntegerParameter('filter_limit', 10);
             $filterOffset = \Piwik\Request::fromRequest()->getIntegerParameter('filter_offset', 0);
         }
+
         $filterSortOrder = \Piwik\Request::fromRequest()->getStringParameter('filter_sort_order', '');
-        $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSites, $period, $date, $segment, $filterOffset, $filterLimit, $minTimestamp, $filterSortOrder, $visitorId = \false);
+
+        $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSites, $period, $date, $segment, $filterOffset, $filterLimit, $minTimestamp, $filterSortOrder, $visitorId = false);
         $this->addFilterToCleanVisitors($dataTable, $flat, $doNotFetchActions);
+
         $filterSortColumn = \Piwik\Request::fromRequest()->getStringParameter('filter_sort_column', '');
+
         if ($filterSortColumn) {
             $this->logger->warning('Sorting the API method "Live.getLastVisitDetails" by column is currently not supported. To avoid this warning remove the URL parameter "filter_sort_column" from your API request.');
         }
+
         // Usually one would Sort a DataTable and then apply a Limit. In this case we apply a Limit first in SQL
         // for fast offset usage see https://github.com/piwik/piwik/issues/7458. Sorting afterwards would lead to a
         // wrong sorting result as it would only sort the limited results. Therefore we do not support a Sort for this
         // API
         $dataTable->disableFilter('Sort');
-        $dataTable->disableFilter('Limit');
-        // limit is already applied here
+        $dataTable->disableFilter('Limit'); // limit is already applied here
+
         return $dataTable;
     }
+
     /**
      * Returns a visitor profile built from the visitor's recent visits.
      *
@@ -226,28 +258,46 @@ class API extends \Piwik\Plugin\API
      * @param int|false $limitVisits Optional maximum number of visits to include in the profile.
      * @return array<string, mixed> Visitor profile data, or an empty array if no visitor is found.
      */
-    public function getVisitorProfile(int $idSite, $visitorId = \false, $segment = \false, $limitVisits = \false) : array
+    public function getVisitorProfile(int $idSite, $visitorId = false, $segment = false, $limitVisits = false): array
     {
         Piwik::checkUserHasViewAccess($idSite);
-        \Piwik\Plugins\Live\Live::checkIsVisitorProfileEnabled($idSite);
+        Live::checkIsVisitorProfileEnabled($idSite);
+
         if (!is_numeric($limitVisits) || $limitVisits <= 0) {
-            $limitVisits = \Piwik\Plugins\Live\VisitorProfile::VISITOR_PROFILE_MAX_VISITS_TO_SHOW;
+            $limitVisits = VisitorProfile::VISITOR_PROFILE_MAX_VISITS_TO_SHOW;
         } else {
             $limitVisits = (int) $limitVisits;
         }
-        if ($visitorId === \false) {
+
+        if ($visitorId === false) {
             $visitorId = $this->getMostRecentVisitorId($idSite, $segment);
         }
+
         $limit = GeneralConfig::getConfigValue('live_visitor_profile_max_visits_to_aggregate');
-        $visits = $this->loadLastVisitsDetailsFromDatabase($idSite, $period = \false, $date = \false, $segment, $offset = 0, $limit, \false, \false, $visitorId);
-        $this->addFilterToCleanVisitors($visits, $flat = \false, $doNotFetchActions = \false, $filterNow = \true);
+
+        $visits = $this->loadLastVisitsDetailsFromDatabase(
+            $idSite,
+            $period = false,
+            $date = false,
+            $segment,
+            $offset = 0,
+            $limit,
+            false,
+            false,
+            $visitorId
+        );
+        $this->addFilterToCleanVisitors($visits, $flat = false, $doNotFetchActions = false, $filterNow = true);
+
         if ($visits->getRowsCount() == 0) {
             return array();
         }
-        $profile = new \Piwik\Plugins\Live\VisitorProfile($idSite);
+
+        $profile = new VisitorProfile($idSite);
         $result = $profile->makeVisitorProfile($visits, $visitorId, $segment, $limitVisits);
+
         return $result;
     }
+
     /**
      * Returns the visitor ID of the most recent visit.
      *
@@ -257,29 +307,60 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return string|false Visitor ID of the most recent matching visit, or `false` if none is found.
      */
-    public function getMostRecentVisitorId(int $idSite, $segment = \false)
+    public function getMostRecentVisitorId(int $idSite, $segment = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         // for faster performance search for a visitor within the last 7 days first
         $minTimestamp = Date::now()->subDay(7)->getTimestamp();
-        $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSite, $period = \false, $date = \false, $segment, $offset = 0, $limit = 1, $minTimestamp);
+
+        $dataTable = $this->loadLastVisitsDetailsFromDatabase(
+            $idSite,
+            $period = false,
+            $date = false,
+            $segment,
+            $offset = 0,
+            $limit = 1,
+            $minTimestamp
+        );
+
         if (0 >= $dataTable->getRowsCount()) {
             $minTimestamp = Date::now()->subYear(1)->getTimestamp();
             // no visitor found in last 7 days, look further back for up to 1 year. This query will be slower
-            $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSite, $period = \false, $date = \false, $segment, $offset = 0, $limit = 1, $minTimestamp);
+            $dataTable = $this->loadLastVisitsDetailsFromDatabase(
+                $idSite,
+                $period = false,
+                $date = false,
+                $segment,
+                $offset = 0,
+                $limit = 1,
+                $minTimestamp
+            );
         }
+
         if (0 >= $dataTable->getRowsCount()) {
             // no visitor found in last year, look over all logs. This query might be quite slow
-            $dataTable = $this->loadLastVisitsDetailsFromDatabase($idSite, $period = \false, $date = \false, $segment, $offset = 0, $limit = 1);
+            $dataTable = $this->loadLastVisitsDetailsFromDatabase(
+                $idSite,
+                $period = false,
+                $date = false,
+                $segment,
+                $offset = 0,
+                $limit = 1
+            );
         }
+
         if (0 >= $dataTable->getRowsCount()) {
-            return \false;
+            return false;
         }
-        $visitorFactory = new \Piwik\Plugins\Live\VisitorFactory();
-        $visitDetails = $dataTable->getFirstRow()->getColumns();
-        $visitor = $visitorFactory->create($visitDetails);
+
+        $visitorFactory = new VisitorFactory();
+        $visitDetails   = $dataTable->getFirstRow()->getColumns();
+        $visitor        = $visitorFactory->create($visitDetails);
+
         return $visitor->getVisitorId();
     }
+
     /**
      * Returns the very first visit for the given visitor ID.
      *
@@ -289,19 +370,23 @@ class API extends \Piwik\Plugin\API
      * @internal
      *
      */
-    public function getFirstVisitForVisitorId($idSite, $visitorId) : DataTable
+    public function getFirstVisitForVisitorId($idSite, $visitorId): DataTable
     {
         Piwik::checkUserHasViewAccess($idSite);
-        \Piwik\Plugins\Live\Live::checkIsVisitorProfileEnabled($idSite);
+        Live::checkIsVisitorProfileEnabled($idSite);
+
         if (empty($visitorId)) {
             return new DataTable();
         }
-        $model = new \Piwik\Plugins\Live\Model();
-        $data = $model->queryLogVisits($idSite, \false, \false, \false, 0, 1, $visitorId, \false, 'ASC');
+
+        $model = new Model();
+        $data = $model->queryLogVisits($idSite, false, false, false, 0, 1, $visitorId, false, 'ASC');
         $dataTable = $this->makeVisitorTableFromArray($data);
-        $this->addFilterToCleanVisitors($dataTable, \false, \true);
+        $this->addFilterToCleanVisitors($dataTable, false, true);
+
         return $dataTable;
     }
+
     /**
      * Returns the most recent UTC datetime when an action was performed for the given website or websites.
      *
@@ -310,56 +395,76 @@ class API extends \Piwik\Plugin\API
      * @param string|null $date Optional date or date range restriction.
      * @return string Most recent visit datetime in UTC, or an empty string if none exists.
      */
-    public function getMostRecentVisitsDateTime($idSite, ?string $period = null, ?string $date = null) : string
+    public function getMostRecentVisitsDateTime($idSite, ?string $period = null, ?string $date = null): string
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $model = new \Piwik\Plugins\Live\Model();
+
+        $model = new Model();
         return $model->getMostRecentVisitsDateTime($idSite, $period, $date);
     }
+
     /**
      * @param bool $flat
      * @param bool $doNotFetchActions
      * @param bool $filterNow
      */
-    private function addFilterToCleanVisitors(DataTable $dataTable, $flat = \false, $doNotFetchActions = \false, $filterNow = \false) : void
-    {
+    private function addFilterToCleanVisitors(
+        DataTable $dataTable,
+        $flat = false,
+        $doNotFetchActions = false,
+        $filterNow = false
+    ): void {
         $filter = 'queueFilter';
         if ($filterNow) {
             $filter = 'filter';
         }
-        $dataTable->{$filter}(function ($table) use($flat, $doNotFetchActions) {
+
+        $dataTable->$filter(function ($table) use ($flat, $doNotFetchActions) {
             /** @var DataTable $table */
-            $visitorFactory = new \Piwik\Plugins\Live\VisitorFactory();
+            $visitorFactory = new VisitorFactory();
+
             // live api is not summable, prevents errors like "Unexpected ECommerce status value"
             $table->deleteRow(DataTable::ID_SUMMARY_ROW);
+
             $actionsByVisitId = array();
+
             if (!$doNotFetchActions) {
                 $visitIds = $table->getColumn('idvisit');
-                $visitorDetailsManipulators = \Piwik\Plugins\Live\Visitor::getAllVisitorDetailsInstances();
+
+                $visitorDetailsManipulators = Visitor::getAllVisitorDetailsInstances();
+
                 foreach ($visitorDetailsManipulators as $instance) {
                     $instance->provideActionsForVisitIds($actionsByVisitId, $visitIds);
                 }
             }
+
             foreach ($table->getRows() as $visitorDetailRow) {
-                $visitorDetailsArray = \Piwik\Plugins\Live\Visitor::cleanVisitorDetails($visitorDetailRow->getColumns());
+                $visitorDetailsArray = Visitor::cleanVisitorDetails($visitorDetailRow->getColumns());
+
                 $visitor = $visitorFactory->create($visitorDetailsArray);
                 $visitorDetailsArray = $visitor->getAllVisitorDetails();
+
                 $visitorDetailsArray['actionDetails'] = array();
                 if (!$doNotFetchActions) {
                     $bulkFetchedActions = [];
+
                     if (isset($actionsByVisitId[$visitorDetailsArray['idVisit']])) {
                         $bulkFetchedActions = $actionsByVisitId[$visitorDetailsArray['idVisit']];
                         unset($actionsByVisitId[$visitorDetailsArray['idVisit']]);
                     }
-                    $visitorDetailsArray = \Piwik\Plugins\Live\Visitor::enrichVisitorArrayWithActions($visitorDetailsArray, $bulkFetchedActions);
+
+                    $visitorDetailsArray = Visitor::enrichVisitorArrayWithActions($visitorDetailsArray, $bulkFetchedActions);
                 }
+
                 if ($flat) {
-                    $visitorDetailsArray = \Piwik\Plugins\Live\Visitor::flattenVisitorDetailsArray($visitorDetailsArray);
+                    $visitorDetailsArray = Visitor::flattenVisitorDetailsArray($visitorDetailsArray);
                 }
+
                 $visitorDetailRow->setColumns($visitorDetailsArray);
             }
         });
     }
+
     /**
      * @param int|int[] $idSite
      * @param string|false $period
@@ -371,28 +476,34 @@ class API extends \Piwik\Plugin\API
      * @param string|false $filterSortOrder
      * @param string|false $visitorId
      */
-    private function loadLastVisitsDetailsFromDatabase($idSite, $period, $date, $segment = \false, $offset = 0, $limit = 100, $minTimestamp = \false, $filterSortOrder = \false, $visitorId = \false) : DataTable
+    private function loadLastVisitsDetailsFromDatabase($idSite, $period, $date, $segment = false, $offset = 0, $limit = 100, $minTimestamp = false, $filterSortOrder = false, $visitorId = false): DataTable
     {
-        $model = new \Piwik\Plugins\Live\Model();
-        [$data, $hasMoreVisits] = $model->queryLogVisits($idSite, $period, $date, $segment, $offset, $limit, $visitorId, $minTimestamp, $filterSortOrder, \true);
+        $model = new Model();
+        [$data, $hasMoreVisits] = $model->queryLogVisits($idSite, $period, $date, $segment, $offset, $limit, $visitorId, $minTimestamp, $filterSortOrder, true);
         return $this->makeVisitorTableFromArray($data, $hasMoreVisits);
     }
+
     /**
      * @param array $data
      */
-    private function makeVisitorTableFromArray(array $data, ?bool $hasMoreVisits = null) : DataTable
+    private function makeVisitorTableFromArray(array $data, ?bool $hasMoreVisits = null): DataTable
     {
         $dataTable = new DataTable();
+
         $dataTable->addRowsFromSimpleArray($data);
+
         if (!empty($data[0])) {
             $columnsToNotAggregate = array_map(function () {
                 return 'skip';
             }, $data[0]);
+
             $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, $columnsToNotAggregate);
         }
+
         if (null !== $hasMoreVisits) {
             $dataTable->setMetadata('hasMoreVisits', $hasMoreVisits);
         }
+
         return $dataTable;
     }
 }

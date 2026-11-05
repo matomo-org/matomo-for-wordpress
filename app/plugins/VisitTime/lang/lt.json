@@ -1,0 +1,14 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Vietinis laikas - valanda (Apsilankymo pradžia)",
+        "ColumnLocalMinute": "Vietinis laikas - minutė (Apsilankymo pradžia)",
+        "ColumnLocalTime": "Vietinis laikas",
+        "ColumnServerHour": "Serverio laikas - valanda",
+        "DayOfWeek": "Savaitės diena",
+        "LocalTime": "Apsilankymai vietiniu laiku",
+        "PluginDescription": "Praneša vietinį laiką ir serverio laiką, kai jūsų lankytojai peržiūri jūsų svetainę ar programėlę.",
+        "SubmenuTimes": "Laikai",
+        "VisitsByDayOfWeek": "Apsilankymai pagal savaitės dienas",
+        "WidgetByDayOfWeekDocumentation": "Šis grafikas rodo kiek buvo apsilankymų jūsų svetainėje kiekvieną savaitės dieną"
+    }
+}

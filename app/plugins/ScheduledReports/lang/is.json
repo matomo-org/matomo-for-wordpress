@@ -1,0 +1,11 @@
+{
+    "ScheduledReports": {
+        "AlsoSendReportToTheseEmails": "Senda skýrsluna einnig á þessi netföng (eitt í hverja línu):",
+        "EmailHello": "Halló,",
+        "MonthlyScheduleHelp": "Mánaðarleg tímaáætlun: skýrsla er send fyrsta dag hvers mánaðar.",
+        "PiwikReports": "Matomo skýrslur",
+        "SendReportTo": "Senda skýrslu til",
+        "SentToMe": "Senda mér",
+        "WeeklyScheduleHelp": "Vikuleg tímaáætlun: skýrsla er send hvern mánudag."
+    }
+}

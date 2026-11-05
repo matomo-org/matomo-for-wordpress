@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TwoFactorAuth\Dao;
 
-class RecoveryCodeStaticGenerator extends \Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeRandomGenerator
+class RecoveryCodeStaticGenerator extends RecoveryCodeRandomGenerator
 {
     private $index = 10;
+
     public function generateCode()
     {
         $this->index++;

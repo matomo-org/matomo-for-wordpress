@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Login\Emails;
 
 use Piwik\Date;
@@ -15,29 +16,36 @@ use Piwik\Piwik;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Url;
 use Piwik\View;
+
 class LoginFromDifferentCountryEmail extends Mail
 {
     /**
      * @var string
      */
     protected $login;
+
     /**
      * @var string
      */
     protected $country;
+
     /**
      * @var string
      */
     protected $ip;
+
     public function __construct(string $login, string $country, string $ip)
     {
         parent::__construct();
+
         $this->login = $login;
         $this->country = $country;
         $this->ip = $ip;
+
         $this->setUpEmail();
     }
-    private function setUpEmail() : void
+
+    private function setUpEmail(): void
     {
         $this->setDefaultFromPiwik();
         $this->setSubject($this->getDefaultSubject());
@@ -45,19 +53,25 @@ class LoginFromDifferentCountryEmail extends Mail
         $this->setBodyText($this->getDefaultBodyText());
         $this->setWrappedHtmlBody($this->getDefaultBodyView());
     }
-    protected function getDefaultSubject() : string
+
+    protected function getDefaultSubject(): string
     {
         return Piwik::translate('Login_LoginFromDifferentCountryEmailSubject');
     }
-    protected function getDateAndTimeFormatted() : string
+
+    protected function getDateAndTimeFormatted(): string
     {
         return Date::now()->getLocalized(DateTimeFormatProvider::DATETIME_FORMAT_LONG);
     }
-    protected function getPasswordResetLink() : string
+
+    protected function getPasswordResetLink(): string
     {
-        return Url::getCurrentUrlWithoutQueryString() . '?module=' . Piwik::getLoginPluginName() . '&showResetForm=1';
+        return Url::getCurrentUrlWithoutQueryString()
+            . '?module=' . Piwik::getLoginPluginName()
+            . '&showResetForm=1';
     }
-    protected function getEnable2FALink() : string
+
+    protected function getEnable2FALink(): string
     {
         if (PluginManager::getInstance()->isPluginActivated('TwoFactorAuth')) {
             return Url::getCurrentUrlWithoutQueryString() . '?module=UsersManager&action=userSecurity';
@@ -65,20 +79,27 @@ class LoginFromDifferentCountryEmail extends Mail
             return '';
         }
     }
-    protected function getDefaultBodyText() : string
+
+    protected function getDefaultBodyText(): string
     {
         $view = new View('@Login/_loginFromDifferentCountryTextEmail.twig');
         $view->setContentType('text/plain');
+
         $this->assignCommonParameters($view);
+
         return $view->render();
     }
-    protected function getDefaultBodyView() : View
+
+    protected function getDefaultBodyView(): View
     {
         $view = new View('@Login/_loginFromDifferentCountryHtmlEmail.twig');
+
         $this->assignCommonParameters($view);
+
         return $view;
     }
-    protected function assignCommonParameters(View $view) : void
+
+    protected function assignCommonParameters(View $view): void
     {
         $view->login = $this->login;
         $view->country = $this->country;

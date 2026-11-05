@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Annotations;
 
 use Piwik\Date;
 use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution as EvolutionViz;
+
 /**
  * Annotations plugins. Provides the ability to attach text notes to
  * dates for each site. Notes can be viewed, modified, deleted or starred.
@@ -24,12 +26,18 @@ class Annotations extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
+        return array(
+            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
+            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+        );
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'Intl_Today';
     }
+
     /**
      * Adds css files for this plugin to the list in the event notification.
      */
@@ -37,6 +45,7 @@ class Annotations extends \Piwik\Plugin
     {
         $stylesheets[] = "plugins/Annotations/stylesheets/annotations.less";
     }
+
     /**
      * Adds js files for this plugin to the list in the event notification.
      */
@@ -44,6 +53,8 @@ class Annotations extends \Piwik\Plugin
     {
         $jsFiles[] = "plugins/Annotations/javascripts/annotations.js";
     }
+
+
     /**
      * Returns start & end dates for the range described by a period and optional lastN
      * argument.
@@ -57,30 +68,33 @@ class Annotations extends \Piwik\Plugin
      *
      * @return array{0: Date, 1: Date}|array{0: false, 1: false}
      */
-    public static function getDateRangeForPeriod($date, $period, $lastN = \false, ?int $idSite = null) : array
+    public static function getDateRangeForPeriod($date, $period, $lastN = false, ?int $idSite = null): array
     {
-        if ($date === \false) {
-            return [\false, \false];
+        if ($date === false) {
+            return [false, false];
         }
+
         $isMultiplePeriod = Period\Range::isMultiplePeriod($date, $period);
+
         // if the range is just a normal period (or the period is a range in which case lastN is ignored)
         if ($period == 'range') {
             $oPeriod = new Period\Range('day', $date);
             $startDate = $oPeriod->getDateStart()->getStartOfDay();
             $endDate = $oPeriod->getDateEnd()->getStartOfDay();
-        } elseif ($lastN == \false && !$isMultiplePeriod) {
+        } elseif ($lastN == false && !$isMultiplePeriod) {
             $oPeriod = Period\Factory::build($period, Date::factory($date));
             $startDate = $oPeriod->getDateStart();
             $endDate = $oPeriod->getDateEnd();
-        } else {
-            // if the range includes the last N periods or is a multiple period
+        } else { // if the range includes the last N periods or is a multiple period
             if (!$isMultiplePeriod) {
                 [$date, $lastN] = EvolutionViz::getDateRangeAndLastN($period, $date, $lastN, $idSite);
             }
             [$startDate, $endDate] = explode(',', $date);
+
             $startDate = Date::factory($startDate);
             $endDate = Date::factory($endDate);
         }
+
         // Limit the end date to the maximum allowed range end to prevent generating huge date ranges.
         // Date::factory() already rejects dates before the first website timestamp, so only the (future)
         // end of the range needs to be clamped here.
@@ -91,8 +105,10 @@ class Annotations extends \Piwik\Plugin
         if ($startDate->isLater($endDate)) {
             $startDate = $endDate;
         }
+
         return [$startDate, $endDate];
     }
+
     /**
      * Returns true if the current user can modify or delete a specific annotation.
      *
@@ -102,9 +118,11 @@ class Annotations extends \Piwik\Plugin
      *
      * @param array $annotation The annotation.
      */
-    public static function canUserModifyOrDelete(array $annotation) : bool
+    public static function canUserModifyOrDelete(array $annotation): bool
     {
         // user can save if user is admin or if has view access, is not anonymous & is user who wrote note
-        return Piwik::isUserHasWriteAccess($annotation['idsite']) || !Piwik::isUserIsAnonymous() && Piwik::getCurrentUserLogin() === $annotation['user'];
+        return Piwik::isUserHasWriteAccess($annotation['idsite'])
+            || (!Piwik::isUserIsAnonymous()
+                && Piwik::getCurrentUserLogin() === $annotation['user']);
     }
 }

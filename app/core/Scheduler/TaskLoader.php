@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Scheduler;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
+
 /**
  * Loads scheduled tasks.
  */
@@ -21,14 +23,18 @@ class TaskLoader
     public function loadTasks()
     {
         $tasks = array();
-        $pluginTasks = PluginManager::getInstance()->findComponents('Tasks', 'Piwik\\Plugin\\Tasks');
+
+        $pluginTasks = PluginManager::getInstance()->findComponents('Tasks', 'Piwik\Plugin\Tasks');
+
         foreach ($pluginTasks as $pluginTask) {
             $pluginTask = StaticContainer::get($pluginTask);
             $pluginTask->schedule();
+
             foreach ($pluginTask->getScheduledTasks() as $task) {
                 $tasks[] = $task;
             }
         }
+
         return $tasks;
     }
 }

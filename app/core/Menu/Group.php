@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Menu;
 
 /**
@@ -14,10 +15,16 @@ namespace Piwik\Menu;
 class Group
 {
     private $items;
-    public function add($subTitleMenu, $url, $tooltip = \false)
+
+    public function add($subTitleMenu, $url, $tooltip = false)
     {
-        $this->items[] = array('name' => $subTitleMenu, 'url' => $url, 'tooltip' => $tooltip);
+        $this->items[] = array(
+            'name'    => $subTitleMenu,
+            'url'     => $url,
+            'tooltip' => $tooltip,
+        );
     }
+
     public function getItems()
     {
         return $this->items;

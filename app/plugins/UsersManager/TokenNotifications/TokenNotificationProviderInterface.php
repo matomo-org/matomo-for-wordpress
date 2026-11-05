@@ -6,6 +6,7 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager\TokenNotifications;
 
 interface TokenNotificationProviderInterface
@@ -16,9 +17,10 @@ interface TokenNotificationProviderInterface
      *
      * @return TokenNotificationInterface[]
      */
-    public function getTokenNotificationsForDispatch() : array;
+    public function getTokenNotificationsForDispatch(): array;
+
     /**
      * Sets information that a notification for a given token has been dispatched
      */
-    public function setTokenNotificationDispatched(string $tokenId) : void;
+    public function setTokenNotificationDispatched(string $tokenId): void;
 }

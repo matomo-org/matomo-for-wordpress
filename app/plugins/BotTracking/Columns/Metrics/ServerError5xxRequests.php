@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
@@ -14,20 +16,24 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\AggregatedMetric;
 use Piwik\Plugins\BotTracking\Metrics;
+
 class ServerError5xxRequests extends AggregatedMetric
 {
     public function getName()
     {
         return Metrics::COLUMN_SERVER_ERROR_5XX_REQUESTS;
     }
+
     public function getTranslatedName()
     {
         return Piwik::translate('BotTracking_ColumnServerError5xxRequests');
     }
+
     public function getDocumentation()
     {
         return Piwik::translate('BotTracking_ColumnServerError5xxRequestsDocumentation');
     }
+
     /**
      * @param int $value
      * @return string
@@ -36,7 +42,8 @@ class ServerError5xxRequests extends AggregatedMetric
     {
         return $formatter->getPrettyNumber($value);
     }
-    public function getSemanticType() : ?string
+
+    public function getSemanticType(): ?string
     {
         return Dimension::TYPE_NUMBER;
     }

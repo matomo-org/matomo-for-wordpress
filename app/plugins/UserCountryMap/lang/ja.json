@@ -1,0 +1,28 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "と、%s ほか",
+        "Cities": "都市",
+        "Countries": "国",
+        "DaysAgo": "%s 日前",
+        "GoalConversions": "%s 目標コンバージョン",
+        "HoursAgo": "%s 時間前",
+        "MinutesAgo": "%s 分前",
+        "NoVisit": "訪問なし",
+        "NoVisitsInfo": "この期間のビジットには正しい (緯度と経度) 地理位置情報が含まれていないため、ビジットは表示されません。",
+        "NoVisitsInfo2": "GeoIP 都市データベースで GeoIP ジオロケーション プロバイダーを使用して、この問題を解決します。 (可能性は低いですが) IP アドレスの地理的位置を特定することは依然として不可能です。",
+        "None": "なし",
+        "PluginDescription": "\"ビジター マップ\" ウィジェットと \"リアルタイム マップ\" ウィジェットを提供します。 \"UserCountry\" プラグインが必要です。",
+        "RealTimeMap": "リアルタイムマップ",
+        "RealTimeMapHelp": "過去 30 分間の Web サイトビジターの場所を表示し、新しいビジターは点滅します。 最近のビジットは大きなオレンジ色のバブルで表示され、古いビジットは小さな灰色のバブルで表示されます。 5 秒ごとに更新されます。",
+        "Regions": "地域",
+        "Searches": "%s 検索",
+        "SecondsAgo": "%s 秒前",
+        "ShowingVisits": "最後のビジットのジオロケーション",
+        "Unlocated": "<b>%1$s</b> %3$s からの %2$s 回のビジットは位置情報を特定できませんでした。",
+        "VisitorMap": "ビジターマップ",
+        "WithUnknownCity": "%s は未知の都市から",
+        "WithUnknownRegion": "%s は不明な地域から",
+        "WorldWide": "ワールドワイド",
+        "map": "地図"
+    }
+}

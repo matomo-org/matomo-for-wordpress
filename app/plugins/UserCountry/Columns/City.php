@@ -6,13 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\Columns;
 
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class City extends \Piwik\Plugins\UserCountry\Columns\Base
+
+class City extends Base
 {
     protected $columnName = 'location_city';
     protected $columnType = 'varchar(255) DEFAULT NULL';
@@ -22,6 +24,7 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $namePlural = 'UserCountryMap_Cities';
     protected $acceptValues = 'Sydney, Sao Paolo, Rome, etc.';
     protected $category = 'UserCountry_VisitLocation';
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -29,13 +32,16 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('city', $request);
-        if ($value !== \false) {
+        if ($value !== false) {
             $value = substr($value, 0, 255);
             return $value;
         }
+
         $userInfo = $this->getUserInfo($request, $visitor);
+
         return $this->getLocationDetail($userInfo, LocationProvider::CITY_NAME_KEY);
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -44,6 +50,7 @@ class City extends \Piwik\Plugins\UserCountry\Columns\Base
     {
         return $this->getUrlOverrideValueIfAllowed('city', $request);
     }
+
     /**
      * @param Action|null $action
      * @return mixed

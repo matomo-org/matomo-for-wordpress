@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
@@ -14,6 +16,7 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\AggregatedMetric;
 use Piwik\Plugins\BotTracking\Metrics;
+
 /**
  * Column metric for the AI-chatbot request count on the Human/AI-Favoured Pages reports.
  *
@@ -29,14 +32,17 @@ class AIChatbotRequests extends AggregatedMetric
     {
         return Metrics::COLUMN_AI_CHATBOT_REQUESTS;
     }
+
     public function getTranslatedName()
     {
         return Piwik::translate('BotTracking_ColumnAIChatbotRequests');
     }
+
     public function getDocumentation()
     {
         return Piwik::translate('BotTracking_ColumnAIChatbotRequestsDocumentation');
     }
+
     /**
      * @param int $value
      * @return string
@@ -45,7 +51,8 @@ class AIChatbotRequests extends AggregatedMetric
     {
         return $formatter->getPrettyNumber($value);
     }
-    public function getSemanticType() : ?string
+
+    public function getSemanticType(): ?string
     {
         return Dimension::TYPE_NUMBER;
     }

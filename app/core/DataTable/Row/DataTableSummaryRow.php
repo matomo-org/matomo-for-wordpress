@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Row;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
+
 /**
  * A special row whose column values are the aggregate of the row's subtable.
  *
@@ -35,6 +37,7 @@ class DataTableSummaryRow extends Row
             $this->sumTable($subTable);
         }
     }
+
     /**
      * Re-sums the associated subtable's rows into this row's existing column values.
      */
@@ -45,6 +48,7 @@ class DataTableSummaryRow extends Row
             $this->sumTable($subTable);
         }
     }
+
     /**
      * Sums a tables row with this one.
      *
@@ -53,11 +57,14 @@ class DataTableSummaryRow extends Row
     private function sumTable($table)
     {
         $metadata = $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
-        $enableCopyMetadata = \false;
+        $enableCopyMetadata = false;
+
         foreach ($table->getRowsWithoutSummaryRow() as $row) {
             $this->sumRow($row, $enableCopyMetadata, $metadata);
         }
+
         $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
+
         if ($summaryRow) {
             $this->sumRow($summaryRow, $enableCopyMetadata, $metadata);
         }

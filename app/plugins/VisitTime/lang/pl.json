@@ -1,0 +1,16 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Czas lokalny - godzina (początek wizyty)",
+        "ColumnLocalMinute": "Czas lokalny - minuty (początek wizyty)",
+        "ColumnLocalTime": "Czas lokalny",
+        "ColumnServerHour": "Czas serwera - godzina",
+        "DayOfWeek": "Dzień tygodnia",
+        "LocalTime": "Odwiedziny według lokalnego czasu",
+        "PluginDescription": "Raport czasu lokalnego użytkownika i czasu serwera, kiedy użytkownik odwiedził Twój serwis lub aplikację.",
+        "SubmenuTimes": "Czasy odwiedzin",
+        "TimesSubcategoryHelp": "Sekcja Czasy odwiedzin pokazuje Ci kiedy Internauci odwiedzają Twoją stronę. Możesz zobaczyć o jakich godzinach swojego czasu użytkownicy odwiedzają Cię, dzięki czemu możesz zrozumieć rolę strony w ich życiu. Dodatkowo zobaczysz tu najpopularniejsze godziny względem czasu serwera, dzięki czemu określisz wyzwania stojące przed Twoją infrastrukturą.",
+        "VisitsByDayOfWeek": "Odwiedziny w poszczególnych dniach tygodnia",
+        "WidgetByDayOfWeekDocumentation": "Ten wykres pokazuje liczbę odwiedzin Twojej strony w ciągu każdego dnia tygodnia",
+        "WidgetLocalTimeDocumentation": "Ten wykres pokazuje godzinę w %1$s strefie czasowej odwiedzających %2$s podczas ich wizyty."
+    }
+}

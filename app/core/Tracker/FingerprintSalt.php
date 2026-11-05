@@ -6,20 +6,23 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker;
 
 use Piwik\Common;
 use Piwik\Date;
 use Piwik\Option;
+
 class FingerprintSalt
 {
     public const OPTION_PREFIX = 'fingerprint_salt_';
-    public const DELETE_FINGERPRINT_OLDER_THAN_SECONDS = 432000;
-    // 5 days in seconds
+    public const DELETE_FINGERPRINT_OLDER_THAN_SECONDS = 432000; // 5 days in seconds
+
     public function generateSalt()
     {
         return Common::getRandomString(32);
     }
+
     public function deleteOldSalts()
     {
         // we want to make sure to delete salts that were created more than five days ago as they are likely not in
@@ -40,21 +43,26 @@ class FingerprintSalt
                 $deleted[] = $name;
             }
         }
+
         return $deleted;
     }
+
     public function getDateString(Date $date, $timezone)
     {
         $dateString = Date::factory($date->getTimestampUTC(), $timezone)->toString();
         return $dateString;
     }
+
     private function encode($value)
     {
         return json_encode($value);
     }
+
     private function decode($value)
     {
-        return @json_decode($value, \true);
+        return @json_decode($value, true);
     }
+
     public function getSalt($dateString, $idSite)
     {
         $fingerprintSaltKey = self::OPTION_PREFIX . (int) $idSite . '_' . $dateString;
@@ -63,7 +71,10 @@ class FingerprintSalt
             $salt = $this->decode($salt);
         }
         if (empty($salt['value'])) {
-            $salt = array('value' => $this->generateSalt(), 'time' => Date::getNowTimestamp());
+            $salt = array(
+                'value' => $this->generateSalt(),
+                'time' => Date::getNowTimestamp(),
+            );
             Option::set($fingerprintSaltKey, $this->encode($salt));
         }
         return $salt['value'];

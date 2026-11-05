@@ -1,0 +1,7 @@
+{
+    "UserId": {
+        "PluginDescription": "Muestra informes de usuario",
+        "UserId": "Identificación",
+        "UserReportTitle": "Identificadores de usuario"
+    }
+}

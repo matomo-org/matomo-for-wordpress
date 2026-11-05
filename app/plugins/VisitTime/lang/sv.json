@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Lokal tid — timme (början av besöket)",
+        "ColumnLocalMinute": "Lokal tid — minut (början av besöket)",
+        "ColumnLocalTime": "Lokal tid",
+        "ColumnServerHour": "Servertid — timme",
+        "ColumnSiteHour": "Webbplatstid — timme",
+        "ColumnUTCMinute": "UTC-tid — minut",
+        "ColumnVisitEndSiteHour": "Webbplatstid — timme (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCDate": "UTC-tid — datum (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCDayOfMonth": "UTC-tid — dag i månaden (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCDayOfWeek": "UTC-tid — veckodag (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCDayOfYear": "UTC-tid — dag på året (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCMinute": "UTC-tid — minut (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCMonth": "UTC-tid — månad (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCQuarter": "UTC-tid — kvartal (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCSecond": "UTC-tid — sekund (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCWeekOfYear": "UTC-tid — vecka på året (tid för senaste åtgärd)",
+        "ColumnVisitEndUTCYear": "UTC-tid — år (tid för senaste åtgärd)",
+        "ColumnVisitStartSiteHour": "Webbplatstid — timme (början av besöket)",
+        "ColumnVisitStartUTCMinute": "UTC-tid — minut (början av besöket)",
+        "DayOfWeek": "Veckodag",
+        "LocalTime": "Besök efter lokal tid",
+        "PluginDescription": "Rapporterar lokal tid och servertid för när besökarna besökt din webbplats eller app.",
+        "SiteTime": "Besök per timme i webbplatsens tidszon",
+        "SubmenuTimes": "Tider",
+        "TimesSubcategoryHelp": "Avsnittet \"Tider\" visar när människor besöker din webbplats. Populära lokala tider hjälper dig förstå var din webbplats passar in i deras liv. De mest populära servertiderna avslöjar krav på din teknikstack.",
+        "VisitsByDayOfWeek": "Besök efter veckodag",
+        "WidgetByDayOfWeekDocumentation": "Den här grafen visar antalet besök din webbplats fått per veckodag.",
+        "WidgetLocalTimeDocumentation": "Denna graf visar vad klockan var i %1$s besökarens tidszon %2$s vid deras besök.",
+        "WidgetSiteTimeDocumentation": "Denna graf visar vad klockan var i %1$s webbplatsens tidszon %2$s under besöken."
+    }
+}

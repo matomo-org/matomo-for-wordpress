@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Local time",
+        "ColumnLocalHour": "Local time — hour (start of visit)",
+        "ColumnLocalMinute": "Local time — minute (start of visit)",
+        "ColumnServerHour": "Server time — hour",
+        "ColumnSiteHour": "Site time — hour",
+        "ColumnVisitEndSiteHour": "Site time — hour (time of last action)",
+        "ColumnVisitEndUTCMinute": "Time in UTC — minute (time of last action)",
+        "ColumnVisitStartSiteHour": "Site time — hour (start of visit)",
+        "ColumnVisitStartUTCMinute": "Time in UTC — minute (start of visit)",
+        "ColumnVisitEndUTCDate": "Time in UTC — date (time of last action)",
+        "ColumnVisitEndUTCDayOfMonth": "Time in UTC — day of month (time of last action)",
+        "ColumnVisitEndUTCDayOfWeek": "Time in UTC — day of week (time of last action)",
+        "ColumnVisitEndUTCDayOfYear": "Time in UTC — day of year (time of last action)",
+        "ColumnVisitEndUTCQuarter": "Time in UTC — quarter (time of last action)",
+        "ColumnVisitEndUTCSecond": "Time in UTC — second (Time of last action)",
+        "ColumnVisitEndUTCWeekOfYear": "Time in UTC — week of year (time of last action)",
+        "ColumnVisitEndUTCMonth": "Time in UTC — month (time of last action)",
+        "ColumnVisitEndUTCYear": "Time in UTC — year (time of last action)",
+        "ColumnUTCMinute": "Time in UTC — minute",
+        "DayOfWeek": "Day of the week",
+        "LocalTime": "Visits per local time",
+        "PluginDescription": "Reports the local time and the server time of when your visitors view your website or app.",
+        "SiteTime": "Visits per hour in the site's timezone",
+        "SubmenuTimes": "Times",
+        "VisitsByDayOfWeek": "Visits by day of the week",
+        "WidgetByDayOfWeekDocumentation": "This graph shows the number of visits your website received on each day of the week.",
+        "WidgetLocalTimeDocumentation": "This graph shows what time it was in the %1$s visitors' time zones %2$s during their visits.",
+        "WidgetSiteTimeDocumentation": "This graph shows what time it was in the %1$s site's time zone %2$s during the visits.",
+        "TimesSubcategoryHelp": "The \"Times\" section shows when people visit your site. Popular local times helps you cater your site to their lives. The most popular server times reveals technical demand."
+    }
+}

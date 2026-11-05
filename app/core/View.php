@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
@@ -16,13 +17,15 @@ use Piwik\Plugins\CoreAdminHome\Controller;
 use Piwik\Plugins\CorePluginsAdmin\CorePluginsAdmin;
 use Piwik\View\ViewInterface;
 use Piwik\View\SecurityPolicy;
-use Matomo\Dependencies\Twig\Environment;
+use Twig\Environment;
+
 /**
  * Transition for pre-Piwik 0.4.4
  */
 if (!defined('PIWIK_USER_PATH')) {
     define('PIWIK_USER_PATH', PIWIK_INCLUDE_PATH);
 }
+
 /**
  * Encapsulates and manages a [Twig](https://twig.sensiolabs.org/) template.
  *
@@ -110,6 +113,7 @@ if (!defined('PIWIK_USER_PATH')) {
 class View implements ViewInterface
 {
     private $template = '';
+
     /**
      * Instance
      * @var Environment
@@ -118,8 +122,10 @@ class View implements ViewInterface
     protected $templateVars = array();
     private $contentType = 'text/html; charset=utf-8';
     private $xFrameOptions = null;
-    private $enableCacheBuster = \true;
-    private $useStrictReferrerPolicy = \true;
+    private $enableCacheBuster = true;
+
+    private $useStrictReferrerPolicy = true;
+
     /**
      * Can be disabled to not send headers when rendering a view. This can be useful if heaps of views are being
      * rendered during one request to possibly prevent a segmentation fault see eg #15307 . It should not be disabled
@@ -127,7 +133,8 @@ class View implements ViewInterface
      * is part of the "main view".
      * @var bool
      */
-    public $sendHeadersWhenRendering = \true;
+    public $sendHeadersWhenRendering = true;
+
     /**
      * @param string $templateFile The template file to load. Must be in the following format:
      *                             `"@MyPlugin/templateFileName"`. Note the absence of .twig
@@ -140,29 +147,35 @@ class View implements ViewInterface
             $templateFile .= $templateExt;
         }
         $this->template = $templateFile;
+
         $this->initializeTwig();
-        $this->piwik_version = \Piwik\Version::VERSION;
-        $this->userLogin = \Piwik\Piwik::getCurrentUserLogin();
-        $this->isSuperUser = \Piwik\Access::getInstance()->hasSuperUserAccess();
+
+        $this->piwik_version = Version::VERSION;
+        $this->userLogin = Piwik::getCurrentUserLogin();
+        $this->isSuperUser = Access::getInstance()->hasSuperUserAccess();
         // following is used in ajaxMacros called macro (showMoreHelp as passed in other templates) - requestErrorDiv
         $isGeneralSettingsAdminEnabled = Controller::isGeneralSettingsAdminEnabled();
         $isPluginsAdminEnabled = CorePluginsAdmin::isPluginsAdminEnabled();
         // simplify template usage
         $this->showMoreFaqInfo = $this->isSuperUser && ($isGeneralSettingsAdminEnabled || $isPluginsAdminEnabled);
+
         try {
-            $this->piwikUrl = \Piwik\SettingsPiwik::getPiwikUrl();
+            $this->piwikUrl = SettingsPiwik::getPiwikUrl();
         } catch (Exception $ex) {
             // pass (occurs when DB cannot be connected to, perhaps piwik URL cache should be stored in config file...)
         }
-        $this->userRequiresPasswordConfirmation = \Piwik\Piwik::doesUserRequirePasswordConfirmation(\Piwik\Piwik::getCurrentUserLogin());
+
+        $this->userRequiresPasswordConfirmation = Piwik::doesUserRequirePasswordConfirmation(Piwik::getCurrentUserLogin());
     }
+
     /**
      * Disables the cache buster (adding of ?cb=...) to JavaScript and stylesheet files
      */
     public function disableCacheBuster()
     {
-        $this->enableCacheBuster = \false;
+        $this->enableCacheBuster = false;
     }
+
     /**
      * Returns the template filename.
      *
@@ -172,6 +185,7 @@ class View implements ViewInterface
     {
         return $this->template;
     }
+
     /**
      * Returns the variables to bind to the template when rendering.
      *
@@ -183,6 +197,7 @@ class View implements ViewInterface
     {
         return $override + $this->templateVars;
     }
+
     /**
      * Directly assigns a variable to the view script.
      * Variable names may not be prefixed with '_'.
@@ -194,6 +209,7 @@ class View implements ViewInterface
     {
         $this->templateVars[$key] = $val;
     }
+
     /**
      * Retrieves an assigned variable.
      * Variable names may not be prefixed with '_'.
@@ -205,6 +221,7 @@ class View implements ViewInterface
     {
         return $this->templateVars[$key];
     }
+
     /**
      * Returns true if a template variable has been set or not.
      *
@@ -215,6 +232,7 @@ class View implements ViewInterface
     {
         return isset($this->templateVars[$name]);
     }
+
     /**
      * Unsets a template variable.
      *
@@ -224,10 +242,12 @@ class View implements ViewInterface
     {
         unset($this->templateVars[$name]);
     }
+
     private function initializeTwig()
     {
-        $this->twig = StaticContainer::get(\Piwik\Twig::class)->getTwigEnvironment();
+        $this->twig = StaticContainer::get(Twig::class)->getTwigEnvironment();
     }
+
     /**
      * Renders the current view. Also sends the stored 'Content-Type' HTML header.
      * See {@link setContentType()}.
@@ -237,57 +257,68 @@ class View implements ViewInterface
     public function render()
     {
         try {
-            $this->currentModule = \Piwik\Piwik::getModule();
-            $this->currentAction = \Piwik\Piwik::getAction();
-            $this->url = \Piwik\Common::sanitizeInputValue(\Piwik\Url::getCurrentUrl());
-            $this->token_auth = \Piwik\Piwik::getCurrentUserTokenAuth();
-            $this->userHasSomeAdminAccess = \Piwik\Piwik::isUserHasSomeAdminAccess();
-            $this->userIsAnonymous = \Piwik\Piwik::isUserIsAnonymous();
-            $this->userIsSuperUser = \Piwik\Piwik::hasUserSuperUserAccess();
-            $this->latest_version_available = \Piwik\UpdateCheck::isNewestVersionAvailable();
-            $this->showUpdateNotificationToUser = !\Piwik\SettingsPiwik::isShowUpdateNotificationToSuperUsersOnlyEnabled() || \Piwik\Piwik::hasUserSuperUserAccess();
-            $this->disableLink = \Piwik\Common::getRequestVar('disableLink', 0, 'int');
-            $this->isWidget = \Piwik\Common::getRequestVar('widget', 0, 'int');
-            $this->isMultiServerEnvironment = \Piwik\SettingsPiwik::isMultiServerEnvironment();
-            $this->isInternetEnabled = \Piwik\SettingsPiwik::isInternetEnabled();
+            $this->currentModule = Piwik::getModule();
+            $this->currentAction = Piwik::getAction();
+
+            $this->url = Common::sanitizeInputValue(Url::getCurrentUrl());
+            $this->token_auth = Piwik::getCurrentUserTokenAuth();
+            $this->userHasSomeAdminAccess = Piwik::isUserHasSomeAdminAccess();
+            $this->userIsAnonymous = Piwik::isUserIsAnonymous();
+            $this->userIsSuperUser = Piwik::hasUserSuperUserAccess();
+            $this->latest_version_available = UpdateCheck::isNewestVersionAvailable();
+            $this->showUpdateNotificationToUser = !SettingsPiwik::isShowUpdateNotificationToSuperUsersOnlyEnabled() || Piwik::hasUserSuperUserAccess();
+            $this->disableLink = Common::getRequestVar('disableLink', 0, 'int');
+            $this->isWidget = Common::getRequestVar('widget', 0, 'int');
+            $this->isMultiServerEnvironment = SettingsPiwik::isMultiServerEnvironment();
+            $this->isInternetEnabled = SettingsPiwik::isInternetEnabled();
             $this->shouldPropagateTokenAuth = $this->shouldPropagateTokenAuthInAjaxRequests();
-            $this->isAutoUpdateEnabled = \Piwik\SettingsPiwik::isAutoUpdateEnabled();
-            $piwikAds = StaticContainer::get('Piwik\\ProfessionalServices\\Advertising');
+            $this->isAutoUpdateEnabled = SettingsPiwik::isAutoUpdateEnabled();
+
+            $piwikAds = StaticContainer::get('Piwik\ProfessionalServices\Advertising');
             $this->areAdsForProfessionalServicesEnabled = $piwikAds->areAdsForProfessionalServicesEnabled();
-            if (\Piwik\Development::isEnabled()) {
+
+            if (Development::isEnabled()) {
                 $cacheBuster = rand(0, 10000);
             } else {
                 $cacheBuster = UIAssetCacheBuster::getInstance()->piwikVersionBasedCacheBuster();
             }
             $this->cacheBuster = $cacheBuster;
-            $this->loginModule = \Piwik\Piwik::getLoginPluginName();
+
+            $this->loginModule = Piwik::getLoginPluginName();
         } catch (Exception $e) {
-            \Piwik\Log::debug($e);
+            Log::debug($e);
+
             // can fail, for example at installation (no plugin loaded yet)
         }
+
         if ($this->sendHeadersWhenRendering) {
-            \Piwik\ProxyHttp::overrideCacheControlHeaders('no-store');
-            \Piwik\Common::sendHeader('Content-Type: ' . $this->contentType);
+            ProxyHttp::overrideCacheControlHeaders('no-store');
+
+            Common::sendHeader('Content-Type: ' . $this->contentType);
             // always sending this header, sometimes empty, to ensure that Dashboard embed loads
             // - when calling sendHeader() multiple times, the last one prevails
             if (!empty($this->xFrameOptions)) {
-                \Piwik\Common::sendHeader('X-Frame-Options: ' . (string) $this->xFrameOptions);
+                Common::sendHeader('X-Frame-Options: ' . (string)$this->xFrameOptions);
             }
+
             // don't send Referer-Header for outgoing links
             if (!empty($this->useStrictReferrerPolicy)) {
-                \Piwik\Common::sendHeader('Referrer-Policy: same-origin');
+                Common::sendHeader('Referrer-Policy: same-origin');
             } else {
                 // always send explicit default header
-                \Piwik\Common::sendHeader('Referrer-Policy: no-referrer-when-downgrade');
+                Common::sendHeader('Referrer-Policy: no-referrer-when-downgrade');
             }
+
             // this will be an empty string if CSP is disabled
             $cspHeader = StaticContainer::get(SecurityPolicy::class)->createHeaderString();
             if ('' !== $cspHeader) {
-                \Piwik\Common::sendHeader($cspHeader);
+                Common::sendHeader($cspHeader);
             }
         }
+
         return $this->renderTwigTemplate();
     }
+
     /**
      * @internal
      * @ignore
@@ -297,23 +328,28 @@ class View implements ViewInterface
     {
         return $this->twig;
     }
+
     protected function renderTwigTemplate()
     {
         $output = $this->twig->render($this->getTemplateFile(), $this->getTemplateVars());
+
         if ($this->enableCacheBuster) {
             $output = $this->applyFilterCacheBuster($output);
         }
-        $helper = new \Piwik\Theme();
+
+        $helper = new Theme();
         $output = $helper->rewriteAssetsPathToTheme($output);
         return $output;
     }
+
     protected function applyFilterCacheBuster($output)
     {
         $cacheBuster = UIAssetCacheBuster::getInstance();
-        $cache = \Piwik\Cache::getTransientCache();
+        $cache = Cache::getTransientCache();
+
         $cssCacheBusterId = $cache->fetch('cssCacheBusterId');
         if (empty($cssCacheBusterId)) {
-            $assetManager = \Piwik\AssetManager::getInstance();
+            $assetManager = AssetManager::getInstance();
             $stylesheet = $assetManager->getMergedStylesheetAsset();
             if ($stylesheet->exists()) {
                 $content = $stylesheet->getContent();
@@ -323,20 +359,32 @@ class View implements ViewInterface
             $cssCacheBusterId = $cacheBuster->md5BasedCacheBuster($content);
             $cache->save('cssCacheBusterId', $cssCacheBusterId);
         }
-        $tagJs = 'cb=' . ($this->cacheBuster ?? $cacheBuster->piwikVersionBasedCacheBuster());
+
+        $tagJs  = 'cb=' . ($this->cacheBuster ?? $cacheBuster->piwikVersionBasedCacheBuster());
         $tagCss = 'cb=' . $cssCacheBusterId;
+
         $pattern = array(
             '~<script type=[\'"]text/javascript[\'"] src=[\'"]([^\'"]+)[\'"]>~',
             '~<script src=[\'"]([^\'"]+)[\'"] type=[\'"]text/javascript[\'"]>~',
-            '~<script type=[\'"]text/javascript[\'"] src=[\'"]([^\'"?]*\\?[^\'"]+)[\'"] defer>~',
+            '~<script type=[\'"]text/javascript[\'"] src=[\'"]([^\'"?]*\?[^\'"]+)[\'"] defer>~',
             '~<script type=[\'"]text/javascript[\'"] src=[\'"]([^\'"?]+)[\'"] defer>~',
             '~<link rel=[\'"]stylesheet[\'"] type=[\'"]text/css[\'"] href=[\'"]([^\'"]+)[\'"] ?/?>~',
             // removes the double ?cb= tag
-            '~(src|href)=\\"index.php\\?module=([A-Za-z0-9_]+)&action=([A-Za-z0-9_]+)\\?cb=~',
+            '~(src|href)=\"index.php\?module=([A-Za-z0-9_]+)&action=([A-Za-z0-9_]+)\?cb=~',
         );
-        $replace = array('<script type="text/javascript" src="$1?' . $tagJs . '">', '<script type="text/javascript" src="$1?' . $tagJs . '">', '<script type="text/javascript" src="$1&' . $tagJs . '" defer>', '<script type="text/javascript" src="$1?' . $tagJs . '" defer>', '<link rel="stylesheet" type="text/css" href="$1?' . $tagCss . '" />', '$1="index.php?module=$2&amp;action=$3&amp;cb=');
+
+        $replace = array(
+            '<script type="text/javascript" src="$1?' . $tagJs . '">',
+            '<script type="text/javascript" src="$1?' . $tagJs . '">',
+            '<script type="text/javascript" src="$1&' . $tagJs . '" defer>',
+            '<script type="text/javascript" src="$1?' . $tagJs . '" defer>',
+            '<link rel="stylesheet" type="text/css" href="$1?' . $tagCss . '" />',
+            '$1="index.php?module=$2&amp;action=$3&amp;cb=',
+        );
+
         return preg_replace($pattern, $replace, $output);
     }
+
     /**
      * Set stored value used in the Content-Type HTTP header field. The header is
      * set just before rendering.
@@ -347,6 +395,7 @@ class View implements ViewInterface
     {
         $this->contentType = $contentType;
     }
+
     /**
      * Set X-Frame-Options field in the HTTP response. The header is set just
      * before rendering.
@@ -358,6 +407,7 @@ class View implements ViewInterface
      */
     public function setXFrameOptions($option = 'deny')
     {
+
         if ($option === 'deny' || $option === 'sameorigin') {
             $this->xFrameOptions = $option;
         }
@@ -365,17 +415,20 @@ class View implements ViewInterface
             $this->xFrameOptions = null;
         }
     }
+
     /**
      * Add form to view
      *
      * @ignore
      */
-    public function addForm(\Piwik\QuickForm2 $form)
+    public function addForm(QuickForm2 $form)
     {
+
         // assign array with form data
         $this->assign('form_data', $form->getFormData());
         $this->assign('element_list', $form->getElementList());
     }
+
     /**
      * Assign value to a variable for use in a template
      * @param string|array $var
@@ -385,13 +438,14 @@ class View implements ViewInterface
     public function assign($var, $value = null)
     {
         if (is_string($var)) {
-            $this->{$var} = $value;
+            $this->$var = $value;
         } elseif (is_array($var)) {
             foreach ($var as $key => $value) {
-                $this->{$key} = $value;
+                $this->$key = $value;
             }
         }
     }
+
     /**
      * Clear compiled Twig templates
      * @ignore
@@ -403,9 +457,10 @@ class View implements ViewInterface
             // some high performance systems that run many Matomo instances may never want to clear this template cache
             // if they use eg a blue/green deployment
             $templatesCompiledPath = StaticContainer::get('path.tmp.templates');
-            \Piwik\Filesystem::unlinkRecursive($templatesCompiledPath, \false);
+            Filesystem::unlinkRecursive($templatesCompiledPath, false);
         }
     }
+
     /**
      * Creates a View for and then renders the single report template.
      *
@@ -418,16 +473,20 @@ class View implements ViewInterface
      */
     public static function singleReport($title, $reportHtml)
     {
-        $view = new \Piwik\View('@CoreHome/_singleReport');
+        $view = new View('@CoreHome/_singleReport');
         $view->title = $title;
         $view->report = $reportHtml;
         return $view->render();
     }
+
     private function shouldPropagateTokenAuthInAjaxRequests()
     {
-        $generalConfig = \Piwik\Config::getInstance()->General;
-        return \Piwik\Common::getRequestVar('module', \false) == 'Widgetize' || $generalConfig['enable_framed_pages'] == '1' || $this->validTokenAuthInUrl();
+        $generalConfig = Config::getInstance()->General;
+        return Common::getRequestVar('module', false) == 'Widgetize' ||
+            $generalConfig['enable_framed_pages'] == '1' ||
+            $this->validTokenAuthInUrl();
     }
+
     /**
      * @return bool
      * @throws Exception
@@ -435,8 +494,9 @@ class View implements ViewInterface
     private function validTokenAuthInUrl()
     {
         $token = StaticContainer::get(AuthenticationToken::class);
-        return !$token->wasTokenAuthProvidedSecurely() && $token->getAuthToken() === \Piwik\Piwik::getCurrentUserTokenAuth();
+        return (!$token->wasTokenAuthProvidedSecurely() && $token->getAuthToken() === Piwik::getCurrentUserTokenAuth());
     }
+
     /**
      * Returns whether a strict Referrer-Policy header will be sent. Generally this should be set to 'true'.
      *
@@ -446,6 +506,7 @@ class View implements ViewInterface
     {
         return $this->useStrictReferrerPolicy;
     }
+
     /**
      * Sets whether a strict Referrer-Policy header will be sent.
      *

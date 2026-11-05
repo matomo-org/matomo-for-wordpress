@@ -6,22 +6,25 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
+
 /**
  * Base type for processed metrics. A processed metric is a metric that is computed using
  * one or more other metrics.
  *
  * @api
  */
-abstract class ProcessedMetric extends \Piwik\Plugin\Metric
+abstract class ProcessedMetric extends Metric
 {
     /**
      * The sub-namespace name in a plugin where ProcessedMetrics are stored.
      */
     public const COMPONENT_SUBNAMESPACE = 'Columns\\Metrics';
+
     /**
      * Computes the metric using the values in a {@link Piwik\DataTable\Row}.
      *
@@ -30,14 +33,16 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
      *
      * @return mixed
      */
-    public abstract function compute(Row $row);
+    abstract public function compute(Row $row);
+
     /**
      * Returns the array of metrics that are necessary for computing this metric. The elements
      * of the array are metric names.
      *
      * @return string[]
      */
-    public abstract function getDependentMetrics();
+    abstract public function getDependentMetrics();
+
     /**
      * Returns the array of metrics that are necessary for computing this metric, but should not
      * be displayed to the user unless explicitly requested. These metrics are intermediate
@@ -50,6 +55,7 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
     {
         return array();
     }
+
     /**
      * Executed before computing all processed metrics for a report. Implementers can return `false`
      * to skip computing this metric.
@@ -60,8 +66,9 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
      */
     public function beforeCompute($report, DataTable $table)
     {
-        return \true;
+        return true;
     }
+
     /**
      * @ignore
      */
@@ -69,6 +76,7 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
     {
         // empty
     }
+
     /**
      * @ignore
      */

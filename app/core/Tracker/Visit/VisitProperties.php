@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker\Visit;
 
 /**
@@ -21,17 +22,21 @@ class VisitProperties
      * @var array
      */
     private $visitInfo = [];
+
     /**
      * Holds the initial visit properties information about the current visit, this data is not changed during request processing.
      *
      * @var array
      */
     private $visitInfoImmutableProperties = [];
+
+
     public function __construct(array $visitInfo = [])
     {
         $this->visitInfo = $visitInfo;
         $this->visitInfoImmutableProperties = $visitInfo;
     }
+
     /**
      * Returns a visit property, or `null` if none is set.
      *
@@ -43,41 +48,46 @@ class VisitProperties
     {
         return isset($this->visitInfo[$name]) ? $this->visitInfo[$name] : null;
     }
+
     /**
      * Returns all visit properties by reference.
      *
      * @return array
      */
-    public function &getProperties() : array
+    public function &getProperties(): array
     {
         return $this->visitInfo;
     }
+
     /**
      * Sets a visit property.
      *
      * @param string $name The property name.
      * @param mixed $value The property value.
      */
-    public function setProperty($name, $value) : void
+    public function setProperty($name, $value): void
     {
         $this->visitInfo[$name] = $value;
     }
+
     /**
      * Unsets all visit properties.
      */
-    public function clearProperties() : void
+    public function clearProperties(): void
     {
         $this->visitInfo = [];
     }
+
     /**
      * Sets all visit properties.
      *
      * @param array $properties
      */
-    public function setProperties(array $properties) : void
+    public function setProperties(array $properties): void
     {
         $this->visitInfo = $properties;
     }
+
     /**
      * Set the initial values of a property.
      * The immutable value remains unchanged throughout request processing and can be access with getImmutableProperty()
@@ -85,7 +95,7 @@ class VisitProperties
      *
      * @param mixed $value
      */
-    public function initializeProperty(string $name, $value) : void
+    public function initializeProperty(string $name, $value): void
     {
         if (isset($this->visitInfoImmutableProperties[$name])) {
             throw new \Exception(sprintf('The property %s has already been initialized', $name));
@@ -93,6 +103,7 @@ class VisitProperties
         $this->visitInfoImmutableProperties[$name] = $value;
         $this->setProperty($name, $value);
     }
+
     /**
      * Returns a visit property, unmodified by request processors. Returns `null` if not set.
      *
@@ -104,12 +115,13 @@ class VisitProperties
     {
         return $this->visitInfoImmutableProperties[$name] ?? null;
     }
+
     /**
      * Returns all immutable visit properties
      *
      * @return array
      */
-    public function getImmutableProperties() : array
+    public function getImmutableProperties(): array
     {
         return $this->visitInfoImmutableProperties;
     }

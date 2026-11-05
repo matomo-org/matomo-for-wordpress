@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
 use Piwik\DbHelper;
@@ -14,31 +15,38 @@ use Piwik\SettingsPiwik;
 use Piwik\Translation\Translator;
 use Piwik\Updater;
 use Piwik\Version;
+
 /**
  * Information about Matomo itself
  */
-class MatomoInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
+class MatomoInformational implements Diagnostic
 {
     /**
      * @var Translator
      */
     private $translator;
+
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
+
     public function execute()
     {
         $results = [];
-        $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Matomo Version', Version::VERSION);
+
+        $results[] = DiagnosticResult::informationalResult('Matomo Version', Version::VERSION);
+
         if (SettingsPiwik::isMatomoInstalled()) {
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Matomo Update History', Option::get(Updater::OPTION_KEY_MATOMO_UPDATE_HISTORY));
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Matomo Install Version', $this->getInstallVersion());
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Latest Available Version', Option::get(\Piwik\Plugins\CoreUpdater\Updater::OPTION_LATEST_VERSION));
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('Is Git Deployment', SettingsPiwik::isGitDeployment());
+            $results[] = DiagnosticResult::informationalResult('Matomo Update History', Option::get(Updater::OPTION_KEY_MATOMO_UPDATE_HISTORY));
+            $results[] = DiagnosticResult::informationalResult('Matomo Install Version', $this->getInstallVersion());
+            $results[] = DiagnosticResult::informationalResult('Latest Available Version', Option::get(\Piwik\Plugins\CoreUpdater\Updater::OPTION_LATEST_VERSION));
+            $results[] = DiagnosticResult::informationalResult('Is Git Deployment', SettingsPiwik::isGitDeployment());
         }
+
         return $results;
     }
+
     private function getInstallVersion()
     {
         try {

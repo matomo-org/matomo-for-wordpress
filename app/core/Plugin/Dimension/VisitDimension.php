@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin\Dimension;
 
 use Piwik\CacheId;
@@ -21,6 +22,7 @@ use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
 use Piwik\Plugin;
 use Exception;
+
 /**
  * Defines a new visit dimension that records any visit related information during tracking.
  *
@@ -37,19 +39,27 @@ use Exception;
 abstract class VisitDimension extends Dimension
 {
     public const INSTALLER_PREFIX = 'log_visit.';
+
     protected $dbTableName = 'log_visit';
     protected $category = 'General_Visitors';
+
     public function install()
     {
         if (empty($this->columnType) || empty($this->columnName)) {
             return array();
         }
-        $changes = array($this->dbTableName => array("ADD COLUMN `{$this->columnName}` {$this->columnType}"));
+
+        $changes = array(
+            $this->dbTableName => array("ADD COLUMN `$this->columnName` $this->columnType"),
+        );
+
         if ($this->isHandlingLogConversion()) {
-            $changes['log_conversion'] = array("ADD COLUMN `{$this->columnName}` {$this->columnType}");
+            $changes['log_conversion'] = array("ADD COLUMN `$this->columnName` $this->columnType");
         }
+
         return $changes;
     }
+
     /**
      * @see ActionDimension::update()
      * @return array
@@ -60,20 +70,27 @@ abstract class VisitDimension extends Dimension
         if (!$this->columnType) {
             return array();
         }
+
         $conversionColumns = DbHelper::getTableColumns(Common::prefixTable('log_conversion'));
+
         $changes = array();
-        $changes[$this->dbTableName] = array("MODIFY COLUMN `{$this->columnName}` {$this->columnType}");
-        $handlingConversion = $this->isHandlingLogConversion();
+
+        $changes[$this->dbTableName] = array("MODIFY COLUMN `$this->columnName` $this->columnType");
+
+        $handlingConversion  = $this->isHandlingLogConversion();
         $hasConversionColumn = array_key_exists($this->columnName, $conversionColumns);
+
         if ($hasConversionColumn && $handlingConversion) {
-            $changes['log_conversion'] = array("MODIFY COLUMN `{$this->columnName}` {$this->columnType}");
+            $changes['log_conversion'] = array("MODIFY COLUMN `$this->columnName` $this->columnType");
         } elseif (!$hasConversionColumn && $handlingConversion) {
-            $changes['log_conversion'] = array("ADD COLUMN `{$this->columnName}` {$this->columnType}");
+            $changes['log_conversion'] = array("ADD COLUMN `$this->columnName` $this->columnType");
         } elseif ($hasConversionColumn && !$handlingConversion) {
-            $changes['log_conversion'] = array("DROP COLUMN `{$this->columnName}`");
+            $changes['log_conversion'] = array("DROP COLUMN `$this->columnName`");
         }
+
         return $changes;
     }
+
     /**
      * @return string
      * @ignore
@@ -82,13 +99,16 @@ abstract class VisitDimension extends Dimension
     {
         return $this->columnType . $this->isHandlingLogConversion();
     }
+
     private function isHandlingLogConversion()
     {
         if (empty($this->columnName) || empty($this->columnType)) {
-            return \false;
+            return false;
         }
+
         return $this->hasImplementedEvent('onAnyGoalConversion');
     }
+
     /**
      * Uninstalls the dimension if a {@link $columnName} and {@link columnType} is set. In case you perform any custom
      * actions during {@link install()} - for instance adding an index - you should make sure to undo those actions by
@@ -102,19 +122,22 @@ abstract class VisitDimension extends Dimension
         if (empty($this->columnName) || empty($this->columnType)) {
             return;
         }
+
         try {
-            $sql = "ALTER TABLE `" . Common::prefixTable($this->dbTableName) . "` DROP COLUMN `{$this->columnName}`";
+            $sql = "ALTER TABLE `" . Common::prefixTable($this->dbTableName) . "` DROP COLUMN `$this->columnName`";
             Db::exec($sql);
         } catch (Exception $e) {
             if (!Db::get()->isErrNo($e, '1091')) {
                 throw $e;
             }
         }
+
         try {
             if (!$this->isHandlingLogConversion()) {
                 return;
             }
-            $sql = "ALTER TABLE `" . Common::prefixTable('log_conversion') . "` DROP COLUMN `{$this->columnName}`";
+
+            $sql = "ALTER TABLE `" . Common::prefixTable('log_conversion') . "` DROP COLUMN `$this->columnName`";
             Db::exec($sql);
         } catch (Exception $e) {
             if (!Db::get()->isErrNo($e, '1091')) {
@@ -122,6 +145,7 @@ abstract class VisitDimension extends Dimension
             }
         }
     }
+
     /**
      * Sometimes you may want to make sure another dimension is executed before your dimension so you can persist
      * this dimensions' value depending on the value of other dimensions. You can do this by defining an array of
@@ -134,6 +158,7 @@ abstract class VisitDimension extends Dimension
     {
         return array();
     }
+
     /**
      * The `onNewVisit` method is triggered when a new visitor is detected. This means you can define an initial
      * value for this user here. By returning boolean `false` no value will be saved. Once the user makes another action
@@ -145,8 +170,9 @@ abstract class VisitDimension extends Dimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        return \false;
+        return false;
     }
+
     /**
      * The `onExistingVisit` method is triggered when a visitor was recognized meaning it is not a new visitor.
      * You can overwrite any previous value set by the event `onNewVisit` by implementing this event. By returning boolean
@@ -158,8 +184,9 @@ abstract class VisitDimension extends Dimension
      */
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
-        return \false;
+        return false;
     }
+
     /**
      * This event is executed shortly after `onNewVisit` or `onExistingVisit` in case the visitor converted a goal.
      * Usually this event is not needed and you can simply remove this method therefore. An example would be for
@@ -172,8 +199,9 @@ abstract class VisitDimension extends Dimension
      */
     public function onConvertedVisit(Request $request, Visitor $visitor, $action)
     {
-        return \false;
+        return false;
     }
+
     /**
      * By implementing this event you can persist a value to the `log_conversion` table in case a conversion happens.
      * The persisted value will be logged along the conversion and will not be changed afterwards. This allows you to
@@ -187,8 +215,9 @@ abstract class VisitDimension extends Dimension
      */
     public function onAnyGoalConversion(Request $request, Visitor $visitor, $action)
     {
-        return \false;
+        return false;
     }
+
     /**
      * This hook is executed by the tracker when determining if an action is the start of a new visit
      * or part of an existing one. Derived classes can use it to force new visits based on dimension
@@ -205,8 +234,9 @@ abstract class VisitDimension extends Dimension
      */
     public function shouldForceNewVisit(Request $request, Visitor $visitor, ?Action $action = null)
     {
-        return \false;
+        return false;
     }
+
     /**
      * Get all visit dimensions that are defined by all activated plugins.
      * @return VisitDimension[]
@@ -214,20 +244,26 @@ abstract class VisitDimension extends Dimension
     public static function getAllDimensions()
     {
         $cacheId = CacheId::pluginAware('VisitDimensions');
-        $cache = PiwikCache::getTransientCache();
+        $cache   = PiwikCache::getTransientCache();
+
         if (!$cache->contains($cacheId)) {
-            $plugins = PluginManager::getInstance()->getPluginsLoadedAndActivated();
+            $plugins   = PluginManager::getInstance()->getPluginsLoadedAndActivated();
             $instances = array();
+
             foreach ($plugins as $plugin) {
                 foreach (self::getDimensions($plugin) as $instance) {
                     $instances[] = $instance;
                 }
             }
+
             $instances = self::sortDimensions($instances);
+
             $cache->save($cacheId, $instances);
         }
+
         return $cache->fetch($cacheId);
     }
+
     /**
      * @ignore
      * @param VisitDimension[] $dimensions
@@ -236,6 +272,7 @@ abstract class VisitDimension extends Dimension
     {
         $sorted = array();
         $exists = array();
+
         // we first handle all the once without dependency
         foreach ($dimensions as $index => $dimension) {
             $fields = $dimension->getRequiredVisitFields();
@@ -245,22 +282,25 @@ abstract class VisitDimension extends Dimension
                 unset($dimensions[$index]);
             }
         }
+
         // find circular references
         // and remove dependencies whose column cannot be resolved because it is not installed / does not exist / is defined by core
         $dependencies = array();
         foreach ($dimensions as $dimension) {
             $dependencies[$dimension->getColumnName()] = $dimension->getRequiredVisitFields();
         }
+
         foreach ($dependencies as $column => $fields) {
             foreach ($fields as $key => $field) {
                 if (empty($dependencies[$field]) && !in_array($field, $exists)) {
                     // we cannot resolve that dependency as it does not exist
                     unset($dependencies[$column][$key]);
                 } elseif (!empty($dependencies[$field]) && in_array($column, $dependencies[$field])) {
-                    throw new Exception("Circular reference detected for required field {$field} in dimension {$column}");
+                    throw new Exception("Circular reference detected for required field $field in dimension $column");
                 }
             }
         }
+
         $count = 0;
         while (count($dimensions) > 0) {
             $count++;
@@ -268,8 +308,7 @@ abstract class VisitDimension extends Dimension
                 foreach ($dimensions as $dimension) {
                     $sorted[] = $dimension;
                 }
-                break;
-                // to prevent an endless loop
+                break; // to prevent an endless loop
             }
             foreach ($dimensions as $key => $dimension) {
                 $fields = $dependencies[$dimension->getColumnName()];
@@ -280,8 +319,10 @@ abstract class VisitDimension extends Dimension
                 }
             }
         }
+
         return $sorted;
     }
+
     /**
      * Get all visit dimensions that are defined by the given plugin.
      * @return VisitDimension[]
@@ -290,12 +331,15 @@ abstract class VisitDimension extends Dimension
     public static function getDimensions(Plugin $plugin)
     {
         $dimensions = $plugin->findMultipleComponents('Columns', '\\Piwik\\Plugin\\Dimension\\VisitDimension');
-        $instances = array();
+        $instances  = array();
+
         foreach ($dimensions as $dimension) {
             $instances[] = new $dimension();
         }
+
         return $instances;
     }
+
     /**
      * Sort a key => value array descending by the number of occurrences of the key in the supplied table and column
      *
@@ -306,13 +350,14 @@ abstract class VisitDimension extends Dimension
      *
      * @return array    An array of values from the source array sorted by most occurrences, descending
      */
-    public function sortStaticListByUsage(array $array, DataTable $table, string $keyColumn, int $maxValuesToReturn) : array
+    public function sortStaticListByUsage(array $array, DataTable $table, string $keyColumn, int $maxValuesToReturn): array
     {
         // Convert to multi-dimensional array and count the number of visits for each browser name
         foreach ($array as $k => $v) {
             $array[$k] = ['count' => 0, 'name' => $v];
         }
         $array['xx'] = ['count' => 0, 'name' => 'Unknown'];
+
         foreach ($table->getRows() as $row) {
             if (isset($row[$keyColumn])) {
                 if (isset($array[$row[$keyColumn]])) {
@@ -326,17 +371,19 @@ abstract class VisitDimension extends Dimension
         uasort($array, function ($a, $b) {
             return $a <=> $b;
         });
-        $array = array_reverse($array, \true);
+        $array = array_reverse($array, true);
+
         // Flatten and limit the return array
         $flat = [];
         $i = 0;
         foreach ($array as $k => $v) {
             $flat[$k] = $v['name'];
             $i++;
-            if ($i == $maxValuesToReturn) {
+            if ($i == ($maxValuesToReturn)) {
                 break;
             }
         }
+
         return array_values($flat);
     }
 }

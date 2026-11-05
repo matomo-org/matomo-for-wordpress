@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Archive;
 
 use Piwik\Archive;
@@ -13,42 +14,52 @@ use Piwik\Period;
 use Piwik\Segment;
 use Piwik\Site;
 use Piwik\Period\Factory as PeriodFactory;
+
 class ArchiveQueryFactory
 {
     public function __construct()
     {
         // empty
     }
+
     /**
      * @see \Piwik\Archive::build()
      */
-    public function build($idSites, $strPeriod, $strDate, $strSegment = \false, $_restrictSitesToLogin = \false)
+    public function build($idSites, $strPeriod, $strDate, $strSegment = false, $_restrictSitesToLogin = false)
     {
         list($websiteIds, $timezone, $idSiteIsAll) = $this->getSiteInfoFromQueryParam($idSites, $_restrictSitesToLogin);
         list($allPeriods, $isMultipleDate) = $this->getPeriodInfoFromQueryParam($strDate, $strPeriod, $timezone);
         $segment = $this->getSegmentFromQueryParam($strSegment, $websiteIds, $allPeriods);
+
         return $this->factory($segment, $allPeriods, $websiteIds, $idSiteIsAll, $isMultipleDate);
     }
+
     /**
      * @see \Piwik\Archive::factory()
      */
-    public function factory(Segment $segment, array $periods, array $idSites, $idSiteIsAll = \false, $isMultipleDate = \false)
+    public function factory(Segment $segment, array $periods, array $idSites, $idSiteIsAll = false, $isMultipleDate = false)
     {
-        $forceIndexedBySite = \false;
-        $forceIndexedByDate = \false;
+        $forceIndexedBySite = false;
+        $forceIndexedByDate = false;
+
         if ($idSiteIsAll || count($idSites) > 1) {
-            $forceIndexedBySite = \true;
+            $forceIndexedBySite = true;
         }
+
         if (count($periods) > 1 || $isMultipleDate) {
-            $forceIndexedByDate = \true;
+            $forceIndexedByDate = true;
         }
-        $params = new \Piwik\Archive\Parameters($idSites, $periods, $segment);
+
+        $params = new Parameters($idSites, $periods, $segment);
+
         return $this->newInstance($params, $forceIndexedBySite, $forceIndexedByDate);
     }
-    public function newInstance(\Piwik\Archive\Parameters $params, $forceIndexedBySite, $forceIndexedByDate)
+
+    public function newInstance(Parameters $params, $forceIndexedBySite, $forceIndexedByDate)
     {
         return new Archive($params, $forceIndexedBySite, $forceIndexedByDate);
     }
+
     /**
      * Parses the site ID string provided in the 'idSite' query parameter to a list of
      * website IDs.
@@ -64,13 +75,17 @@ class ArchiveQueryFactory
     protected function getSiteInfoFromQueryParam($idSites, $_restrictSitesToLogin)
     {
         $websiteIds = Site::getIdSitesFromIdSitesString($idSites, $_restrictSitesToLogin);
-        $timezone = \false;
+
+        $timezone = false;
         if (count($websiteIds) === 1) {
             $timezone = Site::getTimezoneFor($websiteIds[0]);
         }
+
         $idSiteIsAll = $idSites === Archive::REQUEST_ALL_WEBSITES_FLAG;
+
         return [$websiteIds, $timezone, $idSiteIsAll];
     }
+
     /**
      * Parses the date & period query parameters into a list of periods.
      *
@@ -86,15 +101,18 @@ class ArchiveQueryFactory
     protected function getPeriodInfoFromQueryParam($strDate, $strPeriod, $timezone)
     {
         if (Period::isMultiplePeriod($strDate, $strPeriod)) {
-            $oPeriod = PeriodFactory::build($strPeriod, $strDate, $timezone);
+            $oPeriod    = PeriodFactory::build($strPeriod, $strDate, $timezone);
             $allPeriods = $oPeriod->getSubperiods();
         } else {
-            $oPeriod = PeriodFactory::makePeriodFromQueryParams($timezone, $strPeriod, $strDate);
+            $oPeriod    = PeriodFactory::makePeriodFromQueryParams($timezone, $strPeriod, $strDate);
             $allPeriods = array($oPeriod);
         }
+
         $isMultipleDate = Period::isMultiplePeriod($strDate, $strPeriod);
+
         return [$allPeriods, $isMultipleDate];
     }
+
     /**
      * Parses the segment query parameter into a Segment object.
      *

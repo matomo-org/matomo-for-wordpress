@@ -1,0 +1,17 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Místní čas - hodina (začátek návštěvy)",
+        "ColumnLocalMinute": "Místní čas - minuta (začátek návštěvy)",
+        "ColumnLocalTime": "Místní čas",
+        "ColumnServerHour": "Čas na serveru - hodina",
+        "ColumnSiteHour": "­Čas stránky — hodina",
+        "DayOfWeek": "Dny v týdnu",
+        "LocalTime": "Návštěvy podle lokálního času",
+        "PluginDescription": "Ukzauje místní a serverový čas, kdy vaši návštěvníci zobrazují stránky nebo aplikaci.",
+        "SubmenuTimes": "Časy",
+        "TimesSubcategoryHelp": "Sekce Časy ukazuje, kdy lidé navštěvují váš web. Můžete vidět nejoblíbenější místní časy, kdy vaši uživatelé navštěvují, takže můžete pochopit, kde váš web zapadá do jejich života. Navíc zobrazuje nejoblíbenější časy serverů, které mohou odhalit nároky na vaše technologické vybavení.",
+        "VisitsByDayOfWeek": "Návštěvy podle dnů v týdnu",
+        "WidgetByDayOfWeekDocumentation": "Tento graf zobrazuje, kolik návštěv obdržela vaše stránka každý den v týdnu.",
+        "WidgetLocalTimeDocumentation": "Tento graf ukazuje čas v %1$s návštěvníkově časové zóně %2$s během jěho návštěvy."
+    }
+}

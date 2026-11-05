@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Updater\Migration\Db;
 
 use Piwik\Db;
 use Piwik\Updater\Migration;
+
 /**
  * Inserts multiple records into an existing table.
  *
@@ -26,6 +28,7 @@ class BatchInsert extends Migration
     private $values;
     private $throwException;
     private $charset;
+
     /**
      * @param string $table
      * @param array $columnNames
@@ -42,22 +45,27 @@ class BatchInsert extends Migration
         $this->throwException = (bool) $throwException;
         $this->charset = $charset;
     }
+
     public function shouldIgnoreError($exception)
     {
-        return \false;
+        return false;
     }
+
     public function __toString()
     {
         return '<batch insert>';
     }
+
     public function exec()
     {
         Db\BatchInsert::tableInsertBatch($this->table, $this->columnNames, $this->values, $this->throwException, $this->charset);
     }
+
     public function getColumnNames()
     {
         return $this->columnNames;
     }
+
     /**
      * @return string
      */
@@ -65,6 +73,7 @@ class BatchInsert extends Migration
     {
         return $this->table;
     }
+
     /**
      * @return array
      */
@@ -72,6 +81,7 @@ class BatchInsert extends Migration
     {
         return $this->values;
     }
+
     /**
      * @return boolean
      */
@@ -79,6 +89,7 @@ class BatchInsert extends Migration
     {
         return $this->throwException;
     }
+
     /**
      * @return string
      */

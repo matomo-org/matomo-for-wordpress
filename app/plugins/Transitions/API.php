@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Transitions;
 
 use Exception;
@@ -29,6 +30,7 @@ use Piwik\Site;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
 use Piwik\Tracker\TableLogAction;
+
 /**
  * Provides API methods for transition reports around a specific page action.
  *
@@ -53,10 +55,11 @@ class API extends \Piwik\Plugin\API
      *                                        remainder.
      * @return array Transition metrics and related referrer/action tables for the requested page title.
      */
-    public function getTransitionsForPageTitle(string $pageTitle, int $idSite, string $period, string $date, $segment = \false, $limitBeforeGrouping = 0)
+    public function getTransitionsForPageTitle(string $pageTitle, int $idSite, string $period, string $date, $segment = false, $limitBeforeGrouping = 0)
     {
         return $this->getTransitionsForAction($pageTitle, 'title', $idSite, $period, $date, $segment, $limitBeforeGrouping);
     }
+
     /**
      * Returns transition data for the specified page URL.
      *
@@ -74,10 +77,11 @@ class API extends \Piwik\Plugin\API
      *                                        remainder.
      * @return array Transition metrics and related referrer/action tables for the requested page URL.
      */
-    public function getTransitionsForPageUrl(string $pageUrl, int $idSite, string $period, string $date, $segment = \false, $limitBeforeGrouping = 0)
+    public function getTransitionsForPageUrl(string $pageUrl, int $idSite, string $period, string $date, $segment = false, $limitBeforeGrouping = 0)
     {
         return $this->getTransitionsForAction($pageUrl, 'url', $idSite, $period, $date, $segment, $limitBeforeGrouping);
     }
+
     /**
      * Returns transition data for the specified page action.
      *
@@ -97,30 +101,51 @@ class API extends \Piwik\Plugin\API
      * @param string $parts Comma-separated list of transition report parts to include, or `all`.
      * @return array Transition metrics and related referrer/action tables for the requested action.
      */
-    public function getTransitionsForAction(string $actionName, string $actionType, int $idSite, string $period, string $date, $segment = \false, $limitBeforeGrouping = 0, $parts = 'all')
-    {
+    public function getTransitionsForAction(
+        string $actionName,
+        string $actionType,
+        int $idSite,
+        string $period,
+        string $date,
+        $segment = false,
+        $limitBeforeGrouping = 0,
+        $parts = 'all'
+    ) {
         Piwik::checkUserHasViewAccess($idSite);
+
         if (!$this->isPeriodAllowed($idSite, $period, $date)) {
             throw new Exception('PeriodNotAllowed');
         }
+
         if ($limitBeforeGrouping && !is_numeric($limitBeforeGrouping)) {
             throw new Exception('limitBeforeGrouping has to be an integer.');
         }
         //convert string to int
-        $limitBeforeGrouping = (int) $limitBeforeGrouping;
+        $limitBeforeGrouping = (int)$limitBeforeGrouping;
+
         // get idaction of the requested action
         $idaction = $this->deriveIdAction($actionName, $actionType);
         if ($idaction === null) {
             throw new Exception('NoDataForAction');
         }
+
         // prepare log aggregator
         $site = new Site($idSite);
         $period = Period\Factory::build($period, $date);
-        $segment = new Segment($segment ?: '', [$idSite], $period->getDateTimeStart()->setTimezone($site->getTimezone()), $period->getDateTimeEnd()->setTimezone($site->getTimezone()));
+        $segment = new Segment(
+            $segment ?: '',
+            [$idSite],
+            $period->getDateTimeStart()->setTimezone($site->getTimezone()),
+            $period->getDateTimeEnd()->setTimezone($site->getTimezone())
+        );
         $params = new ArchiveProcessor\Parameters($site, $period, $segment);
         $logAggregator = new LogAggregator($params);
+
         // prepare the report
-        $report = ['date' => Period\Factory::build($period->getLabel(), $date)->getLocalizedShortString()];
+        $report = [
+            'date' => Period\Factory::build($period->getLabel(), $date)->getLocalizedShortString(),
+        ];
+
         try {
             $partsArray = explode(',', $parts);
             if ($parts == 'all' || in_array('internalReferrers', $partsArray)) {
@@ -133,16 +158,37 @@ class API extends \Piwik\Plugin\API
             if ($parts == 'all' || in_array('externalReferrers', $partsArray)) {
                 $this->addExternalReferrers($logAggregator, $report, $idaction, $actionType, $limitBeforeGrouping);
             }
+
             // derive the number of exits from the other metrics
             if ($parts == 'all') {
-                $report['pageMetrics']['exits'] = $report['pageMetrics']['pageviews'] - $this->getTotalTransitionsToFollowingActions() - $report['pageMetrics']['loops'];
+                $report['pageMetrics']['exits'] = $report['pageMetrics']['pageviews']
+                    - $this->getTotalTransitionsToFollowingActions()
+                    - $report['pageMetrics']['loops'];
             }
         } catch (\Exception $e) {
-            Model::handleMaxExecutionTimeError(Db::getReader(), $e, $segment->getString(), $period->getDateStart(), $period->getDateEnd(), 0, GeneralConfig::getConfigValue('live_query_max_execution_time'), ['method' => 'Transitions.getTransitionsForAction', 'actionName' => $actionName, 'actionType' => $actionType]);
+            Model::handleMaxExecutionTimeError(
+                Db::getReader(),
+                $e,
+                $segment->getString(),
+                $period->getDateStart(),
+                $period->getDateEnd(),
+                0,
+                GeneralConfig::getConfigValue('live_query_max_execution_time'),
+                ['method' => 'Transitions.getTransitionsForAction', 'actionName' => $actionName, 'actionType' => $actionType]
+            );
             throw $e;
         }
+
+
         // replace column names in the data tables
-        $reportNames = ['previousPages' => \true, 'previousSiteSearches' => \false, 'followingPages' => \true, 'followingSiteSearches' => \false, 'outlinks' => \true, 'downloads' => \true];
+        $reportNames = [
+            'previousPages'         => true,
+            'previousSiteSearches'  => false,
+            'followingPages'        => true,
+            'followingSiteSearches' => false,
+            'outlinks'              => true,
+            'downloads'             => true,
+        ];
         foreach ($reportNames as $reportName => $replaceLabel) {
             if (isset($report[$reportName])) {
                 $columnNames = [Metrics::INDEX_NB_ACTIONS => 'referrals'];
@@ -152,37 +198,47 @@ class API extends \Piwik\Plugin\API
                 $report[$reportName]->filter('ReplaceColumnNames', [$columnNames]);
             }
         }
+
         return $report;
     }
+
     /**
      * Derive the action ID from the request action name and type.
      */
-    private function deriveIdAction(string $actionName, string $actionType) : ?int
+    private function deriveIdAction(string $actionName, string $actionType): ?int
     {
         switch ($actionType) {
             case 'url':
                 $originalActionName = $actionName;
                 $actionName = Common::unsanitizeInputValue($actionName);
+
                 $id = TableLogAction::getIdActionFromSegment($actionName, 'idaction_url', SegmentExpression::MATCH_EQUAL, 'pageUrl');
+
                 if (!is_numeric($id) || $id < 0) {
                     // an example where this is needed is urls containing < or >
                     $actionName = $originalActionName;
                     $id = TableLogAction::getIdActionFromSegment($actionName, 'idaction_url', SegmentExpression::MATCH_EQUAL, 'pageUrl');
                 }
-                return is_numeric($id) && $id > 0 ? (int) $id : null;
+
+                return is_numeric($id) && $id > 0 ? (int)$id : null;
+
             case 'title':
                 $id = TableLogAction::getIdActionFromSegment($actionName, 'idaction_name', SegmentExpression::MATCH_EQUAL, 'pageTitle');
+
                 if (!is_numeric($id) || $id < 0) {
                     $unknown = ArchivingHelper::getUnknownActionName(Action::TYPE_PAGE_TITLE);
                     if (trim($actionName) == trim($unknown)) {
                         return 0;
                     }
                 }
-                return is_numeric($id) && $id > 0 ? (int) $id : null;
+
+                return is_numeric($id) && $id > 0 ? (int)$id : null;
+
             default:
                 throw new Exception('Unknown action type');
         }
     }
+
     /**
      * Add the internal referrers to the report:
      * previous pages and previous site searches
@@ -190,38 +246,56 @@ class API extends \Piwik\Plugin\API
      * @param array<string, mixed> $report
      * @throws Exception
      */
-    private function addInternalReferrers(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping) : void
+    private function addInternalReferrers(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping): void
     {
         $data = $this->queryInternalReferrers($idaction, $actionType, $logAggregator, $limitBeforeGrouping);
+
         if ($data['pageviews'] == 0) {
             throw new Exception('NoDataForAction');
         }
-        $report['previousPages'] =& $data['previousPages'];
-        $report['previousSiteSearches'] =& $data['previousSiteSearches'];
+
+        $report['previousPages'] = & $data['previousPages'];
+        $report['previousSiteSearches'] = & $data['previousSiteSearches'];
         $report['pageMetrics']['loops'] = $data['loops'];
         $report['pageMetrics']['pageviews'] = $data['pageviews'];
     }
+
     /**
      * Add the following actions to the report:
      * following pages, downloads, outlinks
      *
      * @param array<string, mixed> $report
      */
-    private function addFollowingActions(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping = 0, bool $includeLoops = \false) : void
+    private function addFollowingActions(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping = 0, bool $includeLoops = false): void
     {
-        $data = $this->queryFollowingActions($idaction, $actionType, $logAggregator, $limitBeforeGrouping, $includeLoops);
+
+        $data = $this->queryFollowingActions(
+            $idaction,
+            $actionType,
+            $logAggregator,
+            $limitBeforeGrouping,
+            $includeLoops
+        );
+
         foreach ($data as $tableName => $table) {
             $report[$tableName] = $table;
         }
     }
+
     /**
      * Get information about the following actions (following pages, site searches, outlinks, downloads)
      *
      * @return array<string, DataTable>
      */
-    protected function queryFollowingActions(int $idaction, string $actionType, LogAggregator $logAggregator, int $limitBeforeGrouping = 0, bool $includeLoops = \false) : array
-    {
-        $types = [];
+    protected function queryFollowingActions(
+        int $idaction,
+        string $actionType,
+        LogAggregator $logAggregator,
+        int $limitBeforeGrouping = 0,
+        bool $includeLoops = false
+    ): array {
+        $types       = [];
+
         if ($actionType != 'title') {
             // specific setup for page urls
             $types[Action::TYPE_PAGE_URL] = 'followingPages';
@@ -239,130 +313,192 @@ class API extends \Piwik\Plugin\API
             $joinLogActionColumn = ['idaction_url', 'idaction_name'];
             $dimension = '
 				CASE
-					' . '
+					' /* following site search */ . '
 					WHEN log_link_visit_action.idaction_url IS NULL THEN log_action2.idaction
-					' . '
+					' /* following page view: use page title */ . '
 					WHEN log_action1.type = ' . Action::TYPE_PAGE_URL . ' THEN log_action2.idaction
-					' . '
+					' /* following download or outlink: use url */ . '
 					ELSE log_action1.idaction
 				END
 			';
-            $selects = ['CASE
-					' . '
+            $selects             = [
+                'CASE
+					' /* following site search */ . '
 					WHEN log_link_visit_action.idaction_url IS NULL THEN log_action2.name
-					' . '
+					' /* following page view: use page title */ . '
 					WHEN log_action1.type = ' . Action::TYPE_PAGE_URL . ' THEN log_action2.name
-					' . '
+					' /* following download or outlink: use url */ . '
 					ELSE log_action1.name
-				END AS `name`', 'CASE
-                    ' . '
+				END AS `name`',
+                'CASE
+                    ' /* following site search */ . '
 					WHEN log_link_visit_action.idaction_url IS NULL THEN log_action2.type
-					' . '
+					' /* following page view: use page title */ . '
 					WHEN log_action1.type = ' . Action::TYPE_PAGE_URL . ' THEN log_action2.type
-					' . '
+					' /* following download or outlink: use url */ . '
 					ELSE log_action1.type
-				END AS `type`', 'NULL AS `url_prefix`'];
+				END AS `type`',
+                'NULL AS `url_prefix`',
+            ];
         }
+
         // these types are available for both titles and urls
         $types[Action::TYPE_SITE_SEARCH] = 'followingSiteSearches';
         $types[Action::TYPE_OUTLINK] = 'outlinks';
         $types[Action::TYPE_DOWNLOAD] = 'downloads';
+
         $rankingQuery = new RankingQuery($limitBeforeGrouping ? $limitBeforeGrouping : $this->limitBeforeGrouping);
         $rankingQuery->setOthersLabel('Others');
         $rankingQuery->addLabelColumn(['name', 'url_prefix']);
         $rankingQuery->partitionResultIntoMultipleGroups('type', array_keys($types));
+
         $type = $this->getColumnTypeSuffix($actionType);
         $where = 'log_link_visit_action.idaction_' . $type . '_ref = ' . intval($idaction);
         if (!$includeLoops) {
-            $where .= ' AND (log_link_visit_action.idaction_' . $type . ' IS NULL OR ' . 'log_link_visit_action.idaction_' . $type . ' != ' . intval($idaction) . ')';
+            $where .= ' AND (log_link_visit_action.idaction_' . $type . ' IS NULL OR '
+                . 'log_link_visit_action.idaction_' . $type . ' != ' . intval($idaction) . ')';
         }
+
         $metrics = [Metrics::INDEX_NB_ACTIONS];
-        $data = $logAggregator->queryActionsByDimension([$dimension], $where, $selects, $metrics, $rankingQuery, $joinLogActionColumn, $secondaryOrderBy = "`name`", GeneralConfig::getConfigValue('live_query_max_execution_time'));
+        $data = $logAggregator->queryActionsByDimension(
+            [$dimension],
+            $where,
+            $selects,
+            $metrics,
+            $rankingQuery,
+            $joinLogActionColumn,
+            $secondaryOrderBy = "`name`",
+            GeneralConfig::getConfigValue('live_query_max_execution_time')
+        );
+
         $dataTables = $this->makeDataTablesFollowingActions($types, $data);
+
         return $dataTables;
     }
+
     /**
      * Get information about external referrers (i.e. search engines, websites & campaigns)
      *
      * @throws Exception
      */
-    protected function queryExternalReferrers(int $idaction, string $actionType, LogAggregator $logAggregator, int $limitBeforeGrouping = 0) : DataTable
+    protected function queryExternalReferrers(int $idaction, string $actionType, LogAggregator $logAggregator, int $limitBeforeGrouping = 0): DataTable
     {
+
         $rankingQuery = new RankingQuery($limitBeforeGrouping ?: $this->limitBeforeGrouping);
         $rankingQuery->setOthersLabel('Others');
+
         // we generate a single column that contains the interesting data for each referrer.
         // the reason we cannot group by referer_* becomes clear when we look at search engine keywords.
         // referer_url contains the url from the search engine, referer_keyword the keyword we want to
         // group by. when we group by both, we don't get a single column for the keyword but instead
         // one column per keyword + search engine url. this way, we could not get the top keywords using
         // the ranking query.
-        $dimensions = ['referrer_data' => 'CASE log_visit.referer_type
+        $dimensions = [
+            'referrer_data' => 'CASE log_visit.referer_type
 				WHEN ' . Common::REFERRER_TYPE_DIRECT_ENTRY . ' THEN \'\'
 				WHEN ' . Common::REFERRER_TYPE_SEARCH_ENGINE . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_SOCIAL_NETWORK . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_AI_ASSISTANT . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_WEBSITE . ' THEN log_visit.referer_url
 				WHEN ' . Common::REFERRER_TYPE_CAMPAIGN . ' THEN CONCAT_WS(\' \', log_visit.referer_name, log_visit.referer_keyword)
-			END', 'referer_type'];
+			END', 'referer_type',
+        ];
         $rankingQuery->addLabelColumn('referrer_data');
+
         // get one limited group per referrer type
-        $rankingQuery->partitionResultIntoMultipleGroups('referer_type', [Common::REFERRER_TYPE_DIRECT_ENTRY, Common::REFERRER_TYPE_SEARCH_ENGINE, Common::REFERRER_TYPE_SOCIAL_NETWORK, Common::REFERRER_TYPE_AI_ASSISTANT, Common::REFERRER_TYPE_WEBSITE, Common::REFERRER_TYPE_CAMPAIGN]);
-        $type = $this->getColumnTypeSuffix($actionType);
-        $where = 'visit_entry_idaction_' . $type . ' = ' . intval($idaction);
+        $rankingQuery->partitionResultIntoMultipleGroups('referer_type', [
+            Common::REFERRER_TYPE_DIRECT_ENTRY,
+            Common::REFERRER_TYPE_SEARCH_ENGINE,
+            Common::REFERRER_TYPE_SOCIAL_NETWORK,
+            Common::REFERRER_TYPE_AI_ASSISTANT,
+            Common::REFERRER_TYPE_WEBSITE,
+            Common::REFERRER_TYPE_CAMPAIGN,
+        ]);
+
+        $type    = $this->getColumnTypeSuffix($actionType);
+        $where   = 'visit_entry_idaction_' . $type . ' = ' . intval($idaction);
         $metrics = [Metrics::INDEX_NB_VISITS];
-        $data = $logAggregator->queryVisitsByDimension($dimensions, $where, [], $metrics, $rankingQuery, \false, GeneralConfig::getConfigValue('live_query_max_execution_time'));
+        $data    = $logAggregator->queryVisitsByDimension($dimensions, $where, [], $metrics, $rankingQuery, false, GeneralConfig::getConfigValue('live_query_max_execution_time'));
+
         // array is prefilled with available keys and empty values are removed in the end to ensure the order is static
-        $referrerData = [Common::REFERRER_TYPE_DIRECT_ENTRY => [], Common::REFERRER_TYPE_SEARCH_ENGINE => [], Common::REFERRER_TYPE_SOCIAL_NETWORK => [], Common::REFERRER_TYPE_AI_ASSISTANT => [], Common::REFERRER_TYPE_WEBSITE => [], Common::REFERRER_TYPE_CAMPAIGN => []];
+        $referrerData    = [
+            Common::REFERRER_TYPE_DIRECT_ENTRY  => [],
+            Common::REFERRER_TYPE_SEARCH_ENGINE => [],
+            Common::REFERRER_TYPE_SOCIAL_NETWORK => [],
+            Common::REFERRER_TYPE_AI_ASSISTANT  => [],
+            Common::REFERRER_TYPE_WEBSITE       => [],
+            Common::REFERRER_TYPE_CAMPAIGN      => [],
+        ];
         $referrerSubData = [];
+
         foreach ($data as $referrerType => &$subData) {
             $referrerData[$referrerType] = [Metrics::INDEX_NB_VISITS => 0];
             if ($referrerType != Common::REFERRER_TYPE_DIRECT_ENTRY) {
                 $referrerSubData[$referrerType] = [];
             }
+
             foreach ($subData as &$row) {
                 if ($referrerType == Common::REFERRER_TYPE_SEARCH_ENGINE && empty($row['referrer_data'])) {
                     $row['referrer_data'] = Piwik::translate('General_Unknown');
                 }
+
                 $referrerData[$referrerType][Metrics::INDEX_NB_VISITS] += $row[Metrics::INDEX_NB_VISITS];
+
                 $label = $row['referrer_data'];
                 if ($label) {
-                    $referrerSubData[$referrerType][$label] = [Metrics::INDEX_NB_VISITS => $row[Metrics::INDEX_NB_VISITS]];
+                    $referrerSubData[$referrerType][$label] = [
+                        Metrics::INDEX_NB_VISITS => $row[Metrics::INDEX_NB_VISITS],
+                    ];
                 }
             }
         }
+
         // remove empty records
         $referrerData = array_filter($referrerData);
+
         $array = new DataArray($referrerData, $referrerSubData);
         return $array->asDataTable();
     }
+
     /**
      * Get information about internal referrers (previous pages & loops, i.e. page refreshes)
      *
      * @return array{pageviews: int, previousPages: DataTable, previousSiteSearches: DataTable, loops: int}
      */
-    protected function queryInternalReferrers(int $idaction, string $actionType, LogAggregator $logAggregator, int $limitBeforeGrouping = 0) : array
+    protected function queryInternalReferrers(int $idaction, string $actionType, LogAggregator $logAggregator, int $limitBeforeGrouping = 0): array
     {
         $keyIsOther = 0;
         $keyIsPageUrlAction = 1;
         $keyIsSiteSearchAction = 2;
+
         $rankingQuery = new RankingQuery($limitBeforeGrouping ? $limitBeforeGrouping : $this->limitBeforeGrouping);
         $rankingQuery->setOthersLabel('Others');
         $rankingQuery->addLabelColumn(['name', 'url_prefix']);
         $rankingQuery->setColumnToMarkExcludedRows('is_self');
         $rankingQuery->partitionResultIntoMultipleGroups('action_partition', [$keyIsOther, $keyIsPageUrlAction, $keyIsSiteSearchAction]);
+
         $type = $this->getColumnTypeSuffix($actionType);
         $mainActionType = Action::TYPE_PAGE_URL;
         $dimension = 'idaction_url_ref';
+
         if ($actionType == 'title') {
             $mainActionType = Action::TYPE_PAGE_TITLE;
             $dimension = 'idaction_name_ref';
         }
-        $selects = ['log_action.name', 'log_action.url_prefix', 'CASE WHEN log_link_visit_action.idaction_' . $type . '_ref = ' . intval($idaction) . ' THEN 1 ELSE 0 END AS `is_self`', 'CASE
+
+        $selects = [
+            'log_action.name',
+            'log_action.url_prefix',
+            'CASE WHEN log_link_visit_action.idaction_' . $type . '_ref = ' . intval($idaction) . ' THEN 1 ELSE 0 END AS `is_self`',
+            'CASE
                 WHEN log_action.type = ' . $mainActionType . ' THEN ' . $keyIsPageUrlAction . '
                         WHEN log_action.type = ' . Action::TYPE_SITE_SEARCH . ' THEN ' . $keyIsSiteSearchAction . '
                         ELSE ' . $keyIsOther . '
-                    END AS `action_partition`'];
+                    END AS `action_partition`',
+        ];
+
         $where = ' log_link_visit_action.idaction_' . $type . ' = ' . intval($idaction);
+
         if ($dimension == 'idaction_url_ref') {
             // site search referrers are logged with url_ref=NULL
             // when we find one, we have to join on name_ref
@@ -373,36 +509,66 @@ class API extends \Piwik\Plugin\API
             $joinLogActionOn = $dimension;
         }
         $metrics = [Metrics::INDEX_NB_ACTIONS];
-        $data = $logAggregator->queryActionsByDimension([$dimension], $where, $selects, $metrics, $rankingQuery, $joinLogActionOn, $secondaryOrderBy = "`name`", GeneralConfig::getConfigValue('live_query_max_execution_time'));
+        $data = $logAggregator->queryActionsByDimension(
+            [$dimension],
+            $where,
+            $selects,
+            $metrics,
+            $rankingQuery,
+            $joinLogActionOn,
+            $secondaryOrderBy = "`name`",
+            GeneralConfig::getConfigValue('live_query_max_execution_time')
+        );
+
         $loops = 0;
         $nbPageviews = 0;
         $previousPagesDataTable = new DataTable();
         if (isset($data['result'][$keyIsPageUrlAction])) {
             foreach ($data['result'][$keyIsPageUrlAction] as &$page) {
                 $nbActions = intval($page[Metrics::INDEX_NB_ACTIONS]);
-                $previousPagesDataTable->addRow(new Row([Row::COLUMNS => ['label' => $this->getPageLabel($page, Action::TYPE_PAGE_URL), Metrics::INDEX_NB_ACTIONS => $nbActions]]));
+                $previousPagesDataTable->addRow(new Row([
+                    Row::COLUMNS => [
+                        'label'                   => $this->getPageLabel($page, Action::TYPE_PAGE_URL),
+                        Metrics::INDEX_NB_ACTIONS => $nbActions,
+                    ],
+                ]));
                 $nbPageviews += $nbActions;
             }
         }
+
         $previousSearchesDataTable = new DataTable();
         if (isset($data['result'][$keyIsSiteSearchAction])) {
             foreach ($data['result'][$keyIsSiteSearchAction] as &$search) {
                 $nbActions = intval($search[Metrics::INDEX_NB_ACTIONS]);
-                $previousSearchesDataTable->addRow(new Row([Row::COLUMNS => ['label' => $search['name'], Metrics::INDEX_NB_ACTIONS => $nbActions]]));
+                $previousSearchesDataTable->addRow(new Row([
+                    Row::COLUMNS => [
+                        'label'                   => $search['name'],
+                        Metrics::INDEX_NB_ACTIONS => $nbActions,
+                    ],
+                ]));
                 $nbPageviews += $nbActions;
             }
         }
+
         if (isset($data['result'][0])) {
             foreach ($data['result'][0] as &$referrer) {
                 $nbPageviews += intval($referrer[Metrics::INDEX_NB_ACTIONS]);
             }
         }
+
         if (count($data['excludedFromLimit'])) {
             $loops += intval($data['excludedFromLimit'][0][Metrics::INDEX_NB_ACTIONS]);
             $nbPageviews += $loops;
         }
-        return ['pageviews' => $nbPageviews, 'previousPages' => $previousPagesDataTable, 'previousSiteSearches' => $previousSearchesDataTable, 'loops' => $loops];
+
+        return [
+            'pageviews'            => $nbPageviews,
+            'previousPages'        => $previousPagesDataTable,
+            'previousSiteSearches' => $previousSearchesDataTable,
+            'loops'                => $loops,
+        ];
     }
+
     /**
      * @param array $pageRecord
      * @param int|string $type
@@ -417,46 +583,59 @@ class API extends \Piwik\Plugin\API
             }
             return $label;
         }
+
         if ($type == Action::TYPE_OUTLINK || $type == Action::TYPE_DOWNLOAD) {
             return PageUrl::reconstructNormalizedUrl($pageRecord['name'], $pageRecord['url_prefix']);
         }
+
         return $pageRecord['name'];
     }
+
     /**
      * @param string $actionType
      */
-    private function getColumnTypeSuffix($actionType) : string
+    private function getColumnTypeSuffix($actionType): string
     {
         if ($actionType == 'title') {
             return 'name';
         }
         return 'url';
     }
+
     /**
      * @var int
      */
     private $limitBeforeGrouping = 5;
+
     /**
      * @var int
      */
     private $totalTransitionsToFollowingPages = 0;
+
     /**
      * Get the sum of all transitions to following actions (pages, outlinks, downloads).
      * Only works if queryFollowingActions() has been used directly before.
      */
-    protected function getTotalTransitionsToFollowingActions() : int
+    protected function getTotalTransitionsToFollowingActions(): int
     {
         return $this->totalTransitionsToFollowingPages;
     }
+
     /**
      * Add the external referrers to the report:
      * direct entries, websites, campaigns, search engines
      *
      * @param array<string, mixed> $report
      */
-    private function addExternalReferrers(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping) : void
+    private function addExternalReferrers(LogAggregator $logAggregator, array &$report, int $idaction, string $actionType, int $limitBeforeGrouping): void
     {
-        $data = $this->queryExternalReferrers($idaction, $actionType, $logAggregator, $limitBeforeGrouping);
+        $data = $this->queryExternalReferrers(
+            $idaction,
+            $actionType,
+            $logAggregator,
+            $limitBeforeGrouping
+        );
+
         $report['pageMetrics']['entries'] = 0;
         $report['referrers'] = [];
         foreach ($data->getRows() as $row) {
@@ -469,56 +648,72 @@ class API extends \Piwik\Plugin\API
                 $subTable = $row->getSubtable();
                 if ($subTable) {
                     foreach ($subTable->getRows() as $subRow) {
-                        $details[] = ['label' => $subRow->getColumn('label'), 'referrals' => $subRow->getColumn(Metrics::INDEX_NB_VISITS)];
+                        $details[] = [
+                            'label'     => $subRow->getColumn('label'),
+                            'referrals' => $subRow->getColumn(Metrics::INDEX_NB_VISITS),
+                        ];
                     }
                 }
-                $report['referrers'][] = ['label' => $this->getReferrerLabel($referrerId), 'shortName' => \Piwik\Plugins\Referrers\getReferrerTypeFromShortName($referrerId), 'visits' => $visits, 'details' => $details];
+                $report['referrers'][] = [
+                    'label'     => $this->getReferrerLabel($referrerId),
+                    'shortName' => \Piwik\Plugins\Referrers\getReferrerTypeFromShortName($referrerId),
+                    'visits'    => $visits,
+                    'details'   => $details,
+                ];
                 $report['pageMetrics']['entries'] += $visits;
             }
         }
+
         // if there's no data for referrers, ResponseBuilder::handleMultiDimensionalArray
         // does not detect the multi dimensional array and the data is rendered differently, which
         // causes an exception.
         if (count($report['referrers']) == 0) {
-            $report['referrers'][] = ['label' => $this->getReferrerLabel(Common::REFERRER_TYPE_DIRECT_ENTRY), 'shortName' => \Piwik\Plugins\Referrers\getReferrerTypeLabel(Common::REFERRER_TYPE_DIRECT_ENTRY), 'visits' => 0];
+            $report['referrers'][] = [
+                'label'     => $this->getReferrerLabel(Common::REFERRER_TYPE_DIRECT_ENTRY),
+                'shortName' => \Piwik\Plugins\Referrers\getReferrerTypeLabel(Common::REFERRER_TYPE_DIRECT_ENTRY),
+                'visits'    => 0,
+            ];
         }
     }
+
     /**
      * @param int|string $referrerId
      */
-    private function getReferrerLabel($referrerId) : string
+    private function getReferrerLabel($referrerId): string
     {
         switch ($referrerId) {
             case Common::REFERRER_TYPE_DIRECT_ENTRY:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('directEntries');
+                return Controller::getTranslation('directEntries');
             case Common::REFERRER_TYPE_SEARCH_ENGINE:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromSearchEngines');
+                return Controller::getTranslation('fromSearchEngines');
             case Common::REFERRER_TYPE_SOCIAL_NETWORK:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromSocialNetworks');
+                return Controller::getTranslation('fromSocialNetworks');
             case Common::REFERRER_TYPE_AI_ASSISTANT:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromAIAssistants');
+                return Controller::getTranslation('fromAIAssistants');
             case Common::REFERRER_TYPE_WEBSITE:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromWebsites');
+                return Controller::getTranslation('fromWebsites');
             case Common::REFERRER_TYPE_CAMPAIGN:
-                return \Piwik\Plugins\Transitions\Controller::getTranslation('fromCampaigns');
+                return Controller::getTranslation('fromCampaigns');
             default:
                 return Piwik::translate('General_Others');
         }
     }
+
     /**
      * @internal
      */
-    public function getTranslations() : array
+    public function getTranslations(): array
     {
-        $controller = new \Piwik\Plugins\Transitions\Controller();
+        $controller = new Controller();
         return $controller->getTranslations();
     }
+
     /**
      * @param array $types
      * @param array $data
      * @return array<string, DataTable>
      */
-    protected function makeDataTablesFollowingActions(array $types, array $data) : array
+    protected function makeDataTablesFollowingActions(array $types, array $data): array
     {
         $this->totalTransitionsToFollowingPages = 0;
         $dataTables = array();
@@ -527,7 +722,13 @@ class API extends \Piwik\Plugin\API
             if (isset($data[$type])) {
                 foreach ($data[$type] as &$record) {
                     $actions = intval($record[Metrics::INDEX_NB_ACTIONS]);
-                    $dataTable->addRow(new Row(array(Row::COLUMNS => array('label' => $this->getPageLabel($record, $type), Metrics::INDEX_NB_ACTIONS => $actions))));
+                    $dataTable->addRow(new Row(array(
+                                                    Row::COLUMNS => array(
+                                                        'label'                   => $this->getPageLabel($record, $type),
+                                                        Metrics::INDEX_NB_ACTIONS => $actions,
+                                                    ),
+                                               )));
+
                     $this->processTransitionsToFollowingPages($type, $actions);
                 }
             }
@@ -535,18 +736,25 @@ class API extends \Piwik\Plugin\API
         }
         return $dataTables;
     }
+
     /**
      * @param int $type
      * @param int $actions
      */
-    protected function processTransitionsToFollowingPages($type, $actions) : void
+    protected function processTransitionsToFollowingPages($type, $actions): void
     {
         // Downloads and Outlinks are not included as these actions count towards a Visit Exit
-        $actionTypesNotExitActions = array(Action::TYPE_SITE_SEARCH, Action::TYPE_PAGE_TITLE, Action::TYPE_PAGE_URL);
+        $actionTypesNotExitActions = array(
+            Action::TYPE_SITE_SEARCH,
+            Action::TYPE_PAGE_TITLE,
+            Action::TYPE_PAGE_URL,
+        );
         if (in_array($type, $actionTypesNotExitActions)) {
             $this->totalTransitionsToFollowingPages += $actions;
         }
     }
+
+
     /**
      * Check if a period is allowed by config settings
      *
@@ -554,17 +762,20 @@ class API extends \Piwik\Plugin\API
      * @param string $period
      * @param string $date
      */
-    public function isPeriodAllowed($idSite, $period, $date) : bool
+    public function isPeriodAllowed($idSite, $period, $date): bool
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $maxPeriodAllowed = \Piwik\Plugins\Transitions\Transitions::getPeriodAllowedConfig($idSite);
+
+        $maxPeriodAllowed = Transitions::getPeriodAllowedConfig($idSite);
         if ($maxPeriodAllowed === 'all') {
-            return \true;
+            return true;
         }
+
         // If the period is a range then the number of days in the range must be less or equal to the max period allowed
         if ($period === 'range') {
             $range = new Period\Range($period, $date);
             $rangeDays = $range->getDayCount();
+
             switch ($maxPeriodAllowed) {
                 case 'day':
                     return $rangeDays == 1;
@@ -576,6 +787,7 @@ class API extends \Piwik\Plugin\API
                     return $rangeDays <= 365;
             }
         }
+
         switch ($maxPeriodAllowed) {
             case 'day':
                 return $period === 'day';
@@ -586,6 +798,7 @@ class API extends \Piwik\Plugin\API
             case 'year':
                 return in_array($period, ['day', 'week', 'month', 'year']);
         }
-        return \false;
+
+        return false;
     }
 }

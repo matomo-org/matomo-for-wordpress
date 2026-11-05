@@ -6,37 +6,44 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
+
 /**
  * Check range
  *
  */
 class RangeCheck extends BaseFilter
 {
-    public static $minimumValue = 0.0;
+    public static $minimumValue = 0.00;
     public static $maximumValue = 100.0;
+
     /**
      * @var string
      */
     private $columnToFilter;
+
     /**
      * @param DataTable $table
      * @param string $columnToFilter name of the column to filter
      * @param float $minimumValue minimum value for range
      * @param float $maximumValue maximum value for range
      */
-    public function __construct($table, $columnToFilter, $minimumValue = 0.0, $maximumValue = 100.0)
+    public function __construct($table, $columnToFilter, $minimumValue = 0.00, $maximumValue = 100.0)
     {
         parent::__construct($table);
+
         $this->columnToFilter = $columnToFilter;
+
         if ((float) $minimumValue < (float) $maximumValue) {
             self::$minimumValue = $minimumValue;
             self::$maximumValue = $maximumValue;
         }
     }
+
     /**
      * Executes the filter and adjusts the configured column to fit the defined range
      *
@@ -46,9 +53,10 @@ class RangeCheck extends BaseFilter
     {
         foreach ($table->getRows() as $row) {
             $value = $row->getColumn($this->columnToFilter);
-            if ($value === \false) {
+
+            if ($value === false) {
                 $value = $row->getMetadata($this->columnToFilter);
-                if ($value !== \false) {
+                if ($value !== false) {
                     if ((float) $value < (float) self::$minimumValue) {
                         $row->setMetadata($this->columnToFilter, self::$minimumValue);
                     } elseif ((float) $value > (float) self::$maximumValue) {
@@ -57,7 +65,8 @@ class RangeCheck extends BaseFilter
                 }
                 continue;
             }
-            if ($value !== \false) {
+
+            if ($value !== false) {
                 if ((float) $value < (float) self::$minimumValue) {
                     $row->setColumn($this->columnToFilter, self::$minimumValue);
                 } elseif ((float) $value > (float) self::$maximumValue) {

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\API\DataTablePostProcessor;
@@ -35,6 +36,7 @@ use Piwik\View;
 use Piwik\ViewDataTable\Manager as ViewDataTableManager;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Log\LoggerInterface;
+
 /**
  * The base class for report visualizations that output HTML and use JavaScript.
  *
@@ -143,7 +145,7 @@ use Piwik\Log\LoggerInterface;
  *         }
  *     }
  */
-class Visualization extends \Piwik\Plugin\ViewDataTable
+class Visualization extends ViewDataTable
 {
     /**
      * The Twig template file to use when rendering, eg, `"@MyPlugin/_myVisualization.twig"`.
@@ -153,94 +155,127 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
      * @api
      */
     public const TEMPLATE_FILE = '';
+
     private $templateVars = array();
     private $reportLastUpdatedMessage = null;
     protected $metricsFormatter = null;
+
     /**
      * @var Report
      */
     protected $report;
-    public final function __construct($controllerAction, $apiMethodToRequestDataTable, $params = array())
+
+    final public function __construct($controllerAction, $apiMethodToRequestDataTable, $params = array())
     {
         $templateFile = static::TEMPLATE_FILE;
+
         if (empty($templateFile)) {
             throw new \Exception('You have not defined a constant named TEMPLATE_FILE in your visualization class.');
         }
+
         $this->metricsFormatter = new HtmlFormatter();
+
         parent::__construct($controllerAction, $apiMethodToRequestDataTable, $params);
-        $this->report = \Piwik\Plugin\ReportsProvider::factory($this->requestConfig->getApiModuleToRequest(), $this->requestConfig->getApiMethodToRequest());
+
+        $this->report = ReportsProvider::factory($this->requestConfig->getApiModuleToRequest(), $this->requestConfig->getApiMethodToRequest());
     }
+
     public function render()
     {
         $this->overrideSomeConfigPropertiesIfNeeded();
+
         try {
             $this->beforeLoadDataTable();
             $this->loadDataTableFromAPI();
             $this->postDataTableLoadedFromAPI();
+
             $requestPropertiesAfterLoadDataTable = $this->requestConfig->getProperties();
+
             $this->applyFilters();
             $this->addVisualizationInfoFromMetricMetadata();
             $this->afterAllFiltersAreApplied();
+
             $this->beforeRender();
             $this->fireBeforeRenderHook();
+
             $this->logMessageIfRequestPropertiesHaveChanged($requestPropertiesAfterLoadDataTable);
         } catch (NoAccessException $e) {
             throw $e;
         } catch (\Exception $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Failed to get data from API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => \true]);
+            StaticContainer::get(LoggerInterface::class)->error('Failed to get data from API: {exception}', [
+                'exception' => $e,
+                'ignoreInScreenWriter' => true,
+            ]);
+
             $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($e);
+
             $loadingError = array('message' => $message);
         }
+
         $view = new View("@CoreHome/_dataTable");
         $view->assign($this->templateVars);
+
         if (!empty($loadingError)) {
             $view->error = $loadingError;
         }
-        $view->visualization = $this;
+
+        $view->visualization         = $this;
         $view->visualizationTemplate = static::TEMPLATE_FILE;
         $view->visualizationCssClass = $this->getDefaultDataTableCssClass();
         $view->reportMetdadata = $this->getReportMetadata();
-        if (!$this->dataTable instanceof DataTableInterface) {
+
+        if (!($this->dataTable instanceof DataTableInterface)) {
             $view->dataTable = null;
-            $view->dataTableHasNoData = \true;
+            $view->dataTableHasNoData = true;
         } else {
             $view->dataTableHasNoData = !$this->isThereDataToDisplay();
-            $view->dataTable = $this->dataTable;
+            $view->dataTable          = $this->dataTable;
+
             // if it's likely that the report data for this data table has been purged,
             // set whether we should display a message to that effect.
             $view->showReportDataWasPurgedMessage = $this->hasReportBeenPurged();
             $view->showPluginArchiveDisabled = $this->hasReportSegmentDisabled();
-            $view->deleteReportsOlderThan = Option::get('delete_reports_older_than');
+            $view->deleteReportsOlderThan         = Option::get('delete_reports_older_than');
         }
-        $view->idSubtable = $this->requestConfig->idSubtable;
+
+        $view->idSubtable  = $this->requestConfig->idSubtable;
         $clientSideParameters = $this->getClientSideParametersToSet();
         if (isset($clientSideParameters['showtitle'])) {
             unset($clientSideParameters['showtitle']);
         }
         $view->clientSideParameters = $clientSideParameters;
         $view->clientSideProperties = $this->getClientSidePropertiesToSet();
-        $view->properties = array_merge($this->requestConfig->getProperties(), $this->config->getProperties());
+        $view->properties  = array_merge($this->requestConfig->getProperties(), $this->config->getProperties());
         $view->reportLastUpdatedMessage = $this->reportLastUpdatedMessage;
         $view->footerIcons = $this->config->footer_icons;
-        $view->isWidget = Common::getRequestVar('widget', 0, 'int');
+        $view->isWidget    = Common::getRequestVar('widget', 0, 'int');
         $view->notifications = [];
         $view->isComparing = $this->isComparing();
-        $view->rowIdentifier = $this->report ? $this->report->getRowIdentifier() ?: 'label' : 'label';
+
+        $view->rowIdentifier = $this->report ? ($this->report->getRowIdentifier() ?: 'label') : 'label';
         $view->clientSideProperties['row_identifier'] = $view->rowIdentifier;
-        if (!$this->supportsComparison() && DataComparisonFilter::isCompareParamsPresent() && empty($view->dataTableHasNoData)) {
+
+        if (
+            !$this->supportsComparison()
+            && DataComparisonFilter::isCompareParamsPresent()
+            && empty($view->dataTableHasNoData)
+        ) {
             if (empty($view->properties['show_footer_message'])) {
                 $view->properties['show_footer_message'] = '';
             }
             $view->properties['show_footer_message'] .= '<br/>' . Piwik::translate('General_VisualizationDoesNotSupportComparison');
         }
+
         if (empty($this->dataTable) || !$this->hasAnyData($this->dataTable)) {
             /**
              * @ignore
              */
             Piwik::postEvent('Visualization.onNoData', [$view]);
         }
+
         return $view->render();
     }
+
     protected function checkRequestIsNotForMultiplePeriods()
     {
         $date = $this->requestConfig->getRequestParam('date');
@@ -249,27 +284,30 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
             throw new BadRequestException("The '" . static::ID . "' visualization does not support multiple periods.");
         }
     }
+
     protected function checkRequestIsOnlyForMultiplePeriods()
     {
         try {
             $this->checkRequestIsNotForMultiplePeriods();
         } catch (BadRequestException $ex) {
-            return;
-            // ignore
+            return; // ignore
         }
+
         throw new BadRequestException("The '" . static::ID . "' visualization does not support single periods.");
     }
+
     private function hasAnyData(DataTable\DataTableInterface $dataTable)
     {
-        $hasData = \false;
-        $dataTable->filter(function (DataTable $table) use(&$hasData) {
+        $hasData = false;
+        $dataTable->filter(function (DataTable $table) use (&$hasData) {
             if ($hasData || $table->getRowsCount() == 0) {
                 return;
             }
+
             foreach ($table->getRows() as $row) {
                 foreach ($row->getColumns() as $column => $value) {
                     if ($value != 0 && $value !== '0%') {
-                        $hasData = \true;
+                        $hasData = true;
                         return;
                     }
                 }
@@ -277,36 +315,51 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
         });
         return $hasData;
     }
+
     protected function loadDataTableFromAPI()
     {
+
         if (!is_null($this->dataTable)) {
             // data table is already there
             // this happens when setDataTable has been used
             return $this->dataTable;
         }
+
         // we build the request (URL) to call the API
         $request = $this->buildApiRequestArray();
+
         $module = $this->requestConfig->getApiModuleToRequest();
         $method = $this->requestConfig->getApiMethodToRequest();
+
         [$module, $method] = Request::getRenamedModuleAndAction($module, $method);
+
         PluginManager::getInstance()->checkIsPluginActivated($module);
+
         $proxyRequestParams = $request;
         if ($this->isComparing()) {
-            $proxyRequestParams = array_merge($proxyRequestParams, ['disable_root_datatable_post_processor' => 1]);
+            $proxyRequestParams = array_merge($proxyRequestParams, [
+                'disable_root_datatable_post_processor' => 1,
+            ]);
         }
-        $class = ApiRequest::getClassNameAPI($module);
+
+        $class     = ApiRequest::getClassNameAPI($module);
         $dataTable = Proxy::getInstance()->call($class, $method, $proxyRequestParams);
+
         $response = new ResponseBuilder($format = 'original', $request);
         $response->disableSendHeader();
         $response->disableDataTablePostProcessor();
+
         $this->dataTable = $response->getResponse($dataTable, $module, $method);
     }
+
     private function getReportMetadata()
     {
         $request = $this->request->getRequestArray() + $_GET + $_POST;
-        $idSite = Common::getRequestVar('idSite', null, 'int', $request);
-        $module = $this->requestConfig->getApiModuleToRequest();
-        $action = $this->requestConfig->getApiMethodToRequest();
+
+        $idSite  = Common::getRequestVar('idSite', null, 'int', $request);
+        $module  = $this->requestConfig->getApiModuleToRequest();
+        $action  = $this->requestConfig->getApiMethodToRequest();
+
         $apiParameters = array();
         $entityNames = StaticContainer::get('entities.idNames');
         foreach ($entityNames as $entityName) {
@@ -315,25 +368,32 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
                 $apiParameters[$entityName] = $idEntity;
             }
         }
+
         $metadata = ApiApi::getInstance()->getMetadata($idSite, $module, $action, $apiParameters);
+
         if (!empty($metadata)) {
             return array_shift($metadata);
         }
-        return \false;
+
+        return false;
     }
+
     private function overrideSomeConfigPropertiesIfNeeded()
     {
         if (empty($this->config->footer_icons)) {
             $this->config->footer_icons = ViewDataTableManager::configureFooterIcons($this);
         }
+
         if (!$this->isPluginActivated('Goals')) {
-            $this->config->show_goals = \false;
+            $this->config->show_goals = false;
         }
     }
+
     private function isPluginActivated($pluginName)
     {
         return PluginManager::getInstance()->isPluginActivated($pluginName);
     }
+
     /**
      * Assigns a template variable making it available in the Twig template specified by
      * {@link TEMPLATE_FILE}.
@@ -352,6 +412,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
             }
         }
     }
+
     /**
      * Returns `true` if there is data to display, `false` if otherwise.
      *
@@ -363,6 +424,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     {
         return !empty($this->dataTable) && 0 < $this->dataTable->getRowsCount();
     }
+
     /**
      * Hook called after the dataTable has been loaded from the API
      * Can be used to add, delete or modify the data freshly loaded
@@ -370,28 +432,32 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     private function postDataTableLoadedFromAPI()
     {
         $columns = $this->dataTable->getColumns();
-        $hasNbVisits = in_array('nb_visits', $columns);
+        $hasNbVisits       = in_array('nb_visits', $columns);
         $hasNbUniqVisitors = in_array('nb_uniq_visitors', $columns);
+
         // if any comparison period doesn't support unique visitors, we can't display it for the main table
         if ($this->isComparing()) {
             $request = $this->getRequestArray();
             if (!empty($request['comparePeriods'])) {
                 foreach ($request['comparePeriods'] as $comparePeriod) {
                     if (!SettingsPiwik::isUniqueVisitorsEnabled($comparePeriod)) {
-                        $hasNbUniqVisitors = \false;
+                        $hasNbUniqVisitors = false;
                         break;
                     }
                 }
             }
         }
+
         // default columns_to_display to label, nb_uniq_visitors/nb_visits if those columns exist in the
         // dataset. otherwise, default to all columns in dataset.
         if (empty($this->config->columns_to_display)) {
             $this->config->setDefaultColumnsToDisplay($columns, $hasNbVisits, $hasNbUniqVisitors);
         }
+
         if (empty($this->requestConfig->filter_sort_column)) {
             $this->requestConfig->setDefaultSort($this->config->columns_to_display, $hasNbUniqVisitors, $columns);
         }
+
         // deal w/ table metadata
         $metadata = null;
         if ($this->dataTable instanceof DataTable) {
@@ -405,69 +471,97 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
                 foreach ($dataTable as $item) {
                     $itemMetaData = $item->getAllTableMetadata();
                     // initial metadata and update metadata if current is more recent
-                    if (!empty($itemMetaData[DataTable::ARCHIVED_DATE_METADATA_NAME]) && (empty($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME]) || strtotime($itemMetaData[DataTable::ARCHIVED_DATE_METADATA_NAME]) > strtotime($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME]))) {
+                    if (
+                        !empty($itemMetaData[DataTable::ARCHIVED_DATE_METADATA_NAME])
+                        && (
+                            empty($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME])
+                            || strtotime($itemMetaData[DataTable::ARCHIVED_DATE_METADATA_NAME]) > strtotime($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME])
+                        )
+                    ) {
                         $metadata = $itemMetaData;
                     }
                 }
             }
         }
+
         // if metadata set display report date
         if (!empty($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME])) {
             $this->reportLastUpdatedMessage = $this->makePrettyArchivedOnText($metadata[DataTable::ARCHIVED_DATE_METADATA_NAME]);
         }
-        $pivotBy = Common::getRequestVar('pivotBy', \false) ?: $this->requestConfig->pivotBy;
-        if (empty($pivotBy) && $this->dataTable instanceof DataTable) {
+
+        $pivotBy = Common::getRequestVar('pivotBy', false) ?: $this->requestConfig->pivotBy;
+        if (
+            empty($pivotBy)
+            && $this->dataTable instanceof DataTable
+        ) {
             $this->config->disablePivotBySubtableIfTableHasNoSubtables($this->dataTable);
         }
     }
+
     private function addVisualizationInfoFromMetricMetadata()
     {
         $dataTable = $this->dataTable instanceof DataTable\Map ? $this->dataTable->getFirstRow() : $this->dataTable;
-        $metrics = \Piwik\Plugin\Report::getMetricsForTable($dataTable, $this->report);
+
+        $metrics = Report::getMetricsForTable($dataTable, $this->report);
+
         // TODO: instead of iterating & calling translate everywhere, maybe we can get all translated names in one place.
         //       may be difficult, though, since translated metrics are specific to the report.
         foreach ($metrics as $metric) {
             $name = $metric->getName();
+
             if (empty($this->config->translations[$name])) {
                 $this->config->translations[$name] = $metric->getTranslatedName();
             }
+
             if (empty($this->config->metrics_documentation[$name])) {
                 $this->config->metrics_documentation[$name] = $metric->getDocumentation();
             }
         }
     }
+
     private function applyFilters()
     {
-        $postProcessor = $this->makeDataTablePostProcessor();
-        // must be created after requestConfig is final
+        $postProcessor = $this->makeDataTablePostProcessor(); // must be created after requestConfig is final
         $self = $this;
-        $postProcessor->setCallbackBeforeGenericFilters(function (DataTable\DataTableInterface $dataTable) use($self, $postProcessor) {
+
+        $postProcessor->setCallbackBeforeGenericFilters(function (DataTable\DataTableInterface $dataTable) use ($self, $postProcessor) {
+
             $self->setDataTable($dataTable);
+
             // First, filters that delete rows
             foreach ($self->config->getPriorityFilters() as $filter) {
                 $dataTable->filter($filter[0], $filter[1]);
             }
+
             $self->beforeGenericFiltersAreAppliedToLoadedDataTable();
+
             if (!in_array($self->requestConfig->filter_sort_column, $self->config->columns_to_display)) {
                 $hasNbUniqVisitors = in_array('nb_uniq_visitors', $self->config->columns_to_display);
                 $columns = $dataTable->getColumns();
                 $self->requestConfig->setDefaultSort($self->config->columns_to_display, $hasNbUniqVisitors, $columns);
             }
+
             $postProcessor->setRequest($self->buildApiRequestArray());
         });
-        $postProcessor->setCallbackAfterGenericFilters(function (DataTable\DataTableInterface $dataTable) use($self) {
+
+        $postProcessor->setCallbackAfterGenericFilters(function (DataTable\DataTableInterface $dataTable) use ($self) {
+
             $self->setDataTable($dataTable);
             $self->afterGenericFiltersAreAppliedToLoadedDataTable();
+
             // queue other filters so they can be applied later if queued filters are disabled
             foreach ($self->config->getPresentationFilters() as $filter) {
                 $dataTable->queueFilter($filter[0], $filter[1]);
             }
+
             if (!empty($this->dataTable)) {
                 $self->removeEmptyColumnsFromDisplay();
             }
         });
+
         $this->dataTable = $postProcessor->process($this->dataTable);
     }
+
     private function removeEmptyColumnsFromDisplay()
     {
         if ($this->dataTable instanceof DataTable\Map) {
@@ -475,16 +569,20 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
         } else {
             $emptyColumns = $this->dataTable->getMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME);
         }
+
         if (is_array($emptyColumns)) {
             foreach ($emptyColumns as $emptyColumn) {
                 $key = array_search($emptyColumn, $this->config->columns_to_display);
-                if ($key !== \false) {
+                if ($key !== false) {
                     unset($this->config->columns_to_display[$key]);
                 }
             }
+
             $this->config->columns_to_display = array_values($this->config->columns_to_display);
         }
     }
+
+
     /**
      * Returns prettified and translated text that describes when a report was last updated.
      *
@@ -494,18 +592,23 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
      */
     private function makePrettyArchivedOnText($dateText)
     {
-        $date = Date::factory($dateText);
-        $today = mktime(0, 0, 0);
+        $date     = Date::factory($dateText);
+        $today    = mktime(0, 0, 0);
         $metricsFormatter = new HtmlFormatter();
+
         if ($date->getTimestamp() > $today) {
             $elapsedSeconds = time() - $date->getTimestamp();
-            $timeAgo = $metricsFormatter->getPrettyTimeFromSeconds($elapsedSeconds);
+            $timeAgo        = $metricsFormatter->getPrettyTimeFromSeconds($elapsedSeconds);
+
             return Piwik::translate('CoreHome_ReportGeneratedXAgo', $timeAgo);
         }
+
         $prettyDate = $date->getLocalized(Date::DATE_FORMAT_SHORT);
+
         $timezoneAppend = ' (UTC)';
         return Piwik::translate('CoreHome_ReportGeneratedOn', $prettyDate) . $timezoneAppend;
     }
+
     /**
      * Returns true if it is likely that the data for this report has been purged and if the
      * user should be told about that.
@@ -519,24 +622,29 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     private function hasReportBeenPurged()
     {
         if (!$this->isPluginActivated('PrivacyManager')) {
-            return \false;
+            return false;
         }
+
         return PrivacyManager::hasReportBeenPurged($this->dataTable);
     }
+
     /**
      * Returns true if a segment is applied to the request but segment archiving is disabled for the
      * requested plugin/module.
      * @return bool
      */
+
     private function hasReportSegmentDisabled()
     {
         $module = $this->requestConfig->getApiModuleToRequest();
         $rawSegment = \Piwik\API\Request::getRawSegmentFromRequest();
+
         if (!empty($rawSegment) && Rules::isSegmentPluginArchivingDisabled($module)) {
-            return \true;
+            return true;
         }
-        return \false;
+        return false;
     }
+
     /**
      * Returns array of properties that should be visible to client side JavaScript. The data
      * will be available in the data-props HTML attribute of the .dataTable div.
@@ -546,19 +654,23 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     private function getClientSidePropertiesToSet()
     {
         $result = array();
+
         foreach ($this->config->clientSideProperties as $name) {
             if (property_exists($this->requestConfig, $name)) {
-                $result[$name] = $this->getIntIfValueIsBool($this->requestConfig->{$name});
+                $result[$name] = $this->getIntIfValueIsBool($this->requestConfig->$name);
             } elseif (property_exists($this->config, $name)) {
-                $result[$name] = $this->getIntIfValueIsBool($this->config->{$name});
+                $result[$name] = $this->getIntIfValueIsBool($this->config->$name);
             }
         }
+
         return $result;
     }
+
     private function getIntIfValueIsBool($value)
     {
-        return is_bool($value) ? (int) $value : $value;
+        return is_bool($value) ? (int)$value : $value;
     }
+
     /**
      * This functions reads the customization values for the DataTable and returns an array (name,value) to be printed in Javascript.
      * This array defines things such as:
@@ -577,9 +689,11 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     {
         // build javascript variables to set
         $javascriptVariablesToSet = array();
+
         foreach ($this->config->custom_parameters as $name => $value) {
             $javascriptVariablesToSet[$name] = $value;
         }
+
         foreach ($_GET as $name => $value) {
             try {
                 $requestValue = Common::getRequestVar($name);
@@ -588,52 +702,73 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
             }
             $javascriptVariablesToSet[$name] = $requestValue;
         }
+
         foreach ($this->requestConfig->clientSideParameters as $name) {
-            $valueToConvert = \false;
+            $valueToConvert = false;
+
             if (property_exists($this->requestConfig, $name)) {
-                $valueToConvert = $this->requestConfig->{$name};
+                $valueToConvert = $this->requestConfig->$name;
             } elseif (property_exists($this->config, $name)) {
-                $valueToConvert = $this->config->{$name};
+                $valueToConvert = $this->config->$name;
             }
+
             // Preserve the existing request-based representation for array parameters
             // (e.g. the comparison parameters), which downstream handling relies on:
             // only fill those in when the request didn't already provide a value.
             if (is_array($valueToConvert) && isset($javascriptVariablesToSet[$name])) {
                 continue;
             }
+
             // For scalar parameters, a value resolved on requestConfig/config takes
             // precedence over the raw request value collected from $_GET above. This is
             // required so values set through this class (eg. setLimit()) or adjusted by a
             // visualization reach the client: e.g. VisitorLog rewrites an unsupported
             // filter_limit=-1 to the default limit, and without this the stale -1 from the
             // request would leak into the client-side params.
-            if (\false !== $valueToConvert) {
+            if (false !== $valueToConvert) {
                 $javascriptVariablesToSet[$name] = $this->getIntIfValueIsBool($valueToConvert);
             }
         }
+
         $javascriptVariablesToSet['module'] = $this->config->controllerName;
         $javascriptVariablesToSet['action'] = $this->config->controllerAction;
         if (!isset($javascriptVariablesToSet['viewDataTable'])) {
             $javascriptVariablesToSet['viewDataTable'] = static::getViewDataTableId();
         }
-        if ($this->dataTable && !$this->dataTable instanceof DataTable\Map && empty($javascriptVariablesToSet['totalRows'])) {
-            $javascriptVariablesToSet['totalRows'] = $this->dataTable->getMetadata(DataTable::TOTAL_ROWS_BEFORE_LIMIT_METADATA_NAME) ?: $this->dataTable->getRowsCount();
+
+        if (
+            $this->dataTable &&
+            // Set doesn't have the method
+            !($this->dataTable instanceof DataTable\Map) &&
+            empty($javascriptVariablesToSet['totalRows'])
+        ) {
+            $javascriptVariablesToSet['totalRows'] =
+                $this->dataTable->getMetadata(DataTable::TOTAL_ROWS_BEFORE_LIMIT_METADATA_NAME) ?: $this->dataTable->getRowsCount();
         }
-        $deleteFromJavascriptVariables = array('filter_excludelowpop', 'filter_excludelowpop_value');
+
+        $deleteFromJavascriptVariables = array(
+            'filter_excludelowpop',
+            'filter_excludelowpop_value',
+        );
+
         foreach ($deleteFromJavascriptVariables as $name) {
             if (isset($javascriptVariablesToSet[$name])) {
                 unset($javascriptVariablesToSet[$name]);
             }
         }
+
         $rawSegment = \Piwik\API\Request::getRawSegmentFromRequest();
         if (!empty($rawSegment)) {
             $javascriptVariablesToSet['segment'] = $rawSegment;
         }
+
         if (isset($javascriptVariablesToSet['compareSegments'])) {
             $javascriptVariablesToSet['compareSegments'] = Common::unsanitizeInputValues($javascriptVariablesToSet['compareSegments']);
         }
+
         return $javascriptVariablesToSet;
     }
+
     /**
      * Hook that is called before loading report data from the API.
      *
@@ -645,6 +780,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     public function beforeLoadDataTable()
     {
     }
+
     /**
      * Hook that is executed before generic filters are applied.
      *
@@ -656,6 +792,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     public function beforeGenericFiltersAreAppliedToLoadedDataTable()
     {
     }
+
     /**
      * Hook that is executed after generic filters are applied.
      *
@@ -664,6 +801,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     public function afterGenericFiltersAreAppliedToLoadedDataTable()
     {
     }
+
     /**
      * Hook that is executed after the report data is loaded and after all filters have been applied.
      * Use this method to format the report data before the view is rendered.
@@ -673,6 +811,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     public function afterAllFiltersAreApplied()
     {
     }
+
     /**
      * Hook that is executed directly before rendering. Use this hook to force display properties to
      * be a certain value, despite changes from plugins and query parameters.
@@ -683,6 +822,7 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     {
         // eg $this->config->showFooterColumns = true;
     }
+
     private function fireBeforeRenderHook()
     {
         /**
@@ -693,19 +833,28 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
          */
         Piwik::postEvent('Visualization.beforeRender', [$this]);
     }
+
     private function makeDataTablePostProcessor()
     {
         $request = $this->buildApiRequestArray();
-        $module = $this->requestConfig->getApiModuleToRequest();
-        $method = $this->requestConfig->getApiMethodToRequest();
+        $module  = $this->requestConfig->getApiModuleToRequest();
+        $method  = $this->requestConfig->getApiMethodToRequest();
+
         $processor = new DataTablePostProcessor($module, $method, $request);
         $processor->setFormatter($this->metricsFormatter);
+
         return $processor;
     }
+
     private function logMessageIfRequestPropertiesHaveChanged(array $requestPropertiesBefore)
     {
         $requestProperties = $this->requestConfig->getProperties();
-        $diff = array_diff_assoc($this->makeSureArrayContainsOnlyStrings($requestProperties), $this->makeSureArrayContainsOnlyStrings($requestPropertiesBefore));
+
+        $diff = array_diff_assoc(
+            $this->makeSureArrayContainsOnlyStrings($requestProperties),
+            $this->makeSureArrayContainsOnlyStrings($requestPropertiesBefore)
+        );
+
         if (!empty($diff['filter_sort_column'])) {
             // this here might be ok as it can be changed after data loaded but before filters applied
             unset($diff['filter_sort_column']);
@@ -714,21 +863,37 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
             // this here might be ok as it can be changed after data loaded but before filters applied
             unset($diff['filter_sort_order']);
         }
+
         if (empty($diff)) {
             return;
         }
-        $details = array('changedProperties' => $diff, 'apiMethod' => $this->requestConfig->apiMethodToRequestDataTable, 'controller' => $this->config->controllerName . '.' . $this->config->controllerAction, 'viewDataTable' => static::getViewDataTableId());
-        $message = 'Some ViewDataTable::requestConfig properties have changed after requesting the data table. ' . 'That means the changed values had probably no effect. For instance in beforeRender() hook. ' . 'Probably a bug? Details:' . print_r($details, 1);
+
+        $details = array(
+            'changedProperties' => $diff,
+            'apiMethod'         => $this->requestConfig->apiMethodToRequestDataTable,
+            'controller'        => $this->config->controllerName . '.' . $this->config->controllerAction,
+            'viewDataTable'     => static::getViewDataTableId(),
+        );
+
+        $message = 'Some ViewDataTable::requestConfig properties have changed after requesting the data table. '
+                 . 'That means the changed values had probably no effect. For instance in beforeRender() hook. '
+                 . 'Probably a bug? Details:'
+                 . print_r($details, 1);
+
         Log::warning($message);
     }
+
     private function makeSureArrayContainsOnlyStrings($array)
     {
         $result = array();
+
         foreach ($array as $key => $value) {
             $result[$key] = json_encode($value);
         }
+
         return $result;
     }
+
     /**
      * @internal
      *
@@ -737,21 +902,27 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
     public function buildApiRequestArray()
     {
         $request = $this->getRequestArray();
-        if (\false === $this->config->enable_sort) {
+
+        if (false === $this->config->enable_sort) {
             $request['filter_sort_column'] = '';
             $request['filter_sort_order'] = '';
         }
+
         if (!array_key_exists('format_metrics', $request) || $request['format_metrics'] === 'bc') {
             $request['format_metrics'] = '1';
         }
+
         if (!$this->requestConfig->disable_queued_filters && array_key_exists('disable_queued_filters', $request)) {
             unset($request['disable_queued_filters']);
         }
+
         if ($this->isComparing()) {
             $request['compare'] = '1';
         }
+
         return $request;
     }
+
     /**
      * Apply the metrics formatting filter to the dataset
      *
@@ -763,10 +934,9 @@ class Visualization extends \Piwik\Plugin\ViewDataTable
      *
      * @internal
      */
-    protected function applyMetricsFormatting(bool $forceFormatting = \false)
+    protected function applyMetricsFormatting(bool $forceFormatting = false)
     {
-        $postProcessor = $this->makeDataTablePostProcessor();
-        // must be created after requestConfig is final
+        $postProcessor = $this->makeDataTablePostProcessor(); // must be created after requestConfig is final
         $this->dataTable = $postProcessor->applyMetricsFormatting($this->dataTable, $forceFormatting);
     }
 }

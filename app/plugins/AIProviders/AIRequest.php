@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders;
 
 /**
@@ -45,13 +47,17 @@ class AIRequest
 {
     public const DEFAULT_MAX_TOKENS = 1024;
     public const DEFAULT_TEMPERATURE = 0.2;
+
     public const REASONING_NONE = 'none';
+
     public const FORMAT_TEXT = 'text';
     public const FORMAT_JSON = 'json';
+
     /**
      * @var string
      */
     private $userPrompt;
+
     /**
      * Name of the plugin issuing the request, used for accountability and
      * future usage accounting (for example `'Goals'`).
@@ -59,18 +65,22 @@ class AIRequest
      * @var string
      */
     private $callerPluginName;
+
     /**
      * @var string|null
      */
     private $systemPrompt = null;
+
     /**
      * @var string|null
      */
     private $providerId = null;
+
     /**
      * @var string|null
      */
     private $model = null;
+
     /**
      * Requested model capability level (see Configuration::CAPABILITY_*).
      * Advisory for now: providers do not yet map this to a specific model.
@@ -78,6 +88,7 @@ class AIRequest
      * @var string|null
      */
     private $capabilityLevel = null;
+
     /**
      * Optional identifier of the feature issuing the request (for example
      * `'goal-recommendation'`), used for future usage accounting.
@@ -85,18 +96,22 @@ class AIRequest
      * @var string|null
      */
     private $featureKey = null;
+
     /**
      * @var int|null
      */
     private $idSite = null;
+
     /**
      * @var int
      */
     private $maxTokens = self::DEFAULT_MAX_TOKENS;
+
     /**
      * @var float
      */
     private $temperature = self::DEFAULT_TEMPERATURE;
+
     /**
      * Desired response format: FORMAT_TEXT (default) or FORMAT_JSON. In JSON mode
      * the provider is asked to return a single JSON object — natively where the
@@ -105,6 +120,7 @@ class AIRequest
      * @var string
      */
     private $responseFormat = self::FORMAT_TEXT;
+
     /**
      * Requested reasoning level. Currently advisory only; providers do not send
      * provider-specific reasoning controls until those request formats are
@@ -113,30 +129,51 @@ class AIRequest
      * @var string
      */
     private $reasoningLevel = self::REASONING_NONE;
+
     /**
-     * Whether the caller wants provider web search. Currently advisory only;
-     * providers do not enable provider-specific web search tools yet.
+     * Whether the caller wants the provider's server-side web search (grounding).
+     * Providers without one reject the request — see
+     * {@link AIProviderService::complete()}. The model still decides whether a
+     * prompt needs a search, so read {@link AIProviderResponse::wasWebSearchUsed()}
+     * for what actually happened.
+     *
+     * Never free: providers charge per search on top of the retrieved page
+     * content, which arrives as input tokens.
      *
      * @var bool
      */
-    private $webSearchEnabled = \false;
+    private $webSearchEnabled = false;
+
+    /**
+     * Provider HTTP timeout, or null for the provider's default: 30s, raised to
+     * 120s for grounded requests because server-side search runs several fetches
+     * inside the one HTTP request.
+     *
+     * @var int|null
+     */
+    private $timeoutSeconds = null;
+
     /**
      * Future provider-specific thinking budget. Not applied to requests yet.
      *
      * @var int|null
      */
     private $thinkingBudget = null;
+
     public function __construct(string $userPrompt, string $callerPluginName)
     {
         $this->userPrompt = $userPrompt;
         $this->callerPluginName = $callerPluginName;
     }
-    public function withSystemPrompt(?string $systemPrompt) : self
+
+    public function withSystemPrompt(?string $systemPrompt): self
     {
         $request = clone $this;
         $request->systemPrompt = $systemPrompt;
+
         return $request;
     }
+
     /**
      * Requests a specific provider. Honoured on unmanaged instances and for
      * allowlisted caller plugins on managed instances; otherwise the forced
@@ -145,12 +182,14 @@ class AIRequest
      * The value must be a plugin constant or server-side config value, never
      * request input — see the hard rule in the class docblock.
      */
-    public function withProviderId(?string $providerId) : self
+    public function withProviderId(?string $providerId): self
     {
         $request = clone $this;
         $request->providerId = $providerId;
+
         return $request;
     }
+
     /**
      * Requests a specific model. Stripped on managed instances unless the
      * caller plugin is allowlisted, because the model decides cost there.
@@ -158,128 +197,178 @@ class AIRequest
      * The value must be a plugin constant or server-side config value, never
      * request input — see the hard rule in the class docblock.
      */
-    public function withModel(?string $model) : self
+    public function withModel(?string $model): self
     {
         $request = clone $this;
         $request->model = $model;
+
         return $request;
     }
-    public function withCapabilityLevel(?string $capabilityLevel) : self
+
+    public function withCapabilityLevel(?string $capabilityLevel): self
     {
         $request = clone $this;
         $request->capabilityLevel = $capabilityLevel;
+
         return $request;
     }
-    public function withFeatureKey(?string $featureKey) : self
+
+    public function withFeatureKey(?string $featureKey): self
     {
         $request = clone $this;
         $request->featureKey = $featureKey;
+
         return $request;
     }
-    public function withIdSite(?int $idSite) : self
+
+    public function withIdSite(?int $idSite): self
     {
         $request = clone $this;
         $request->idSite = $idSite;
+
         return $request;
     }
-    public function withMaxTokens(int $maxTokens) : self
+
+    public function withMaxTokens(int $maxTokens): self
     {
         $request = clone $this;
         $request->maxTokens = $maxTokens;
+
         return $request;
     }
-    public function withTemperature(float $temperature) : self
+
+    public function withTemperature(float $temperature): self
     {
         $request = clone $this;
         $request->temperature = $temperature;
+
         return $request;
     }
-    public function withReasoningLevel(?string $reasoningLevel) : self
+
+    public function withReasoningLevel(?string $reasoningLevel): self
     {
         $request = clone $this;
         $reasoningLevel = trim((string) $reasoningLevel);
         $request->reasoningLevel = $reasoningLevel !== '' ? $reasoningLevel : self::REASONING_NONE;
+
         return $request;
     }
-    public function withWebSearchEnabled(bool $webSearchEnabled) : self
+
+    public function withWebSearchEnabled(bool $webSearchEnabled): self
     {
         $request = clone $this;
         $request->webSearchEnabled = $webSearchEnabled;
+
         return $request;
     }
-    public function withThinkingBudget(?int $thinkingBudget) : self
+
+    /**
+     * Overrides the provider HTTP timeout; null restores the provider default.
+     */
+    public function withTimeoutSeconds(?int $timeoutSeconds): self
+    {
+        $request = clone $this;
+        $request->timeoutSeconds = $timeoutSeconds === null ? null : max(1, $timeoutSeconds);
+
+        return $request;
+    }
+
+    public function withThinkingBudget(?int $thinkingBudget): self
     {
         $request = clone $this;
         $request->thinkingBudget = $thinkingBudget;
+
         return $request;
     }
+
     /**
      * Requests a JSON response. The provider is asked to return a single valid
      * JSON object; read it with {@link AIProviderResponse::getJsonData()}.
      */
-    public function withJsonResponse() : self
+    public function withJsonResponse(): self
     {
         $request = clone $this;
         $request->responseFormat = self::FORMAT_JSON;
+
         return $request;
     }
-    public function getUserPrompt() : string
+
+    public function getUserPrompt(): string
     {
         return $this->userPrompt;
     }
-    public function getCallerPluginName() : string
+
+    public function getCallerPluginName(): string
     {
         return $this->callerPluginName;
     }
-    public function getSystemPrompt() : ?string
+
+    public function getSystemPrompt(): ?string
     {
         return $this->systemPrompt;
     }
-    public function getProviderId() : ?string
+
+    public function getProviderId(): ?string
     {
         return $this->providerId;
     }
-    public function getModel() : ?string
+
+    public function getModel(): ?string
     {
         return $this->model;
     }
-    public function getCapabilityLevel() : ?string
+
+    public function getCapabilityLevel(): ?string
     {
         return $this->capabilityLevel;
     }
-    public function getFeatureKey() : ?string
+
+    public function getFeatureKey(): ?string
     {
         return $this->featureKey;
     }
-    public function getIdSite() : ?int
+
+    public function getIdSite(): ?int
     {
         return $this->idSite;
     }
-    public function getMaxTokens() : int
+
+    public function getMaxTokens(): int
     {
         return $this->maxTokens;
     }
-    public function getTemperature() : float
+
+    public function getTemperature(): float
     {
         return $this->temperature;
     }
-    public function getResponseFormat() : string
+
+    public function getResponseFormat(): string
     {
         return $this->responseFormat;
     }
-    public function getReasoningLevel() : string
+
+    public function getReasoningLevel(): string
     {
         return $this->reasoningLevel;
     }
-    public function isWebSearchEnabled() : bool
+
+    public function isWebSearchEnabled(): bool
     {
         return $this->webSearchEnabled;
     }
-    public function getThinkingBudget() : ?int
+
+    public function getTimeoutSeconds(): ?int
+    {
+        return $this->timeoutSeconds;
+    }
+
+    public function getThinkingBudget(): ?int
     {
         return $this->thinkingBudget;
     }
-    public function isJsonResponse() : bool
+
+    public function isJsonResponse(): bool
     {
         return $this->responseFormat === self::FORMAT_JSON;
     }

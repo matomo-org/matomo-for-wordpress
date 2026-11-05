@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders;
 
 /**
@@ -90,6 +92,7 @@ final class CanonicalMessage
     private function __construct()
     {
     }
+
     /**
      * Extracts the valid `tool_use` blocks from a canonical content list, in
      * order, as `{id, name, input}`. Non-tool_use blocks and malformed
@@ -100,7 +103,7 @@ final class CanonicalMessage
      * @param list<CanonicalContentBlockArray> $content canonical content blocks
      * @return list<array{id: string, name: string, input: array<string, mixed>}>
      */
-    public static function toolUseBlocks(array $content) : array
+    public static function toolUseBlocks(array $content): array
     {
         $blocks = [];
         foreach ($content as $block) {
@@ -113,14 +116,17 @@ final class CanonicalMessage
             if (!is_string($id) || !is_string($name) || !is_array($input)) {
                 continue;
             }
+
             $normalizedInput = [];
             foreach ($input as $key => $value) {
                 if (is_string($key)) {
                     $normalizedInput[$key] = $value;
                 }
             }
+
             $blocks[] = ['id' => $id, 'name' => $name, 'input' => $normalizedInput];
         }
+
         return $blocks;
     }
 }

@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Renderer;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Renderer;
+
 /**
  * Simple output
  */
@@ -21,29 +23,32 @@ class Console extends Renderer
      * @var string
      */
     protected $prefixRows = '#';
+
     /**
      * Computes the dataTable output and returns the string/binary
      */
-    public function render() : string
+    public function render(): string
     {
         return $this->renderTable($this->table);
     }
+
     /**
      * Sets the prefix to be used
      *
      * @param string $str new prefix
      */
-    public function setPrefixRow(string $str) : void
+    public function setPrefixRow(string $str): void
     {
         $this->prefixRows = $str;
     }
+
     /**
      * Computes the output of the given array of data tables
      *
      * @param DataTable\Map $map data tables to render
      * @param string $prefix prefix to output before table data
      */
-    protected function renderDataTableMap(DataTable\Map $map, string $prefix) : string
+    protected function renderDataTableMap(DataTable\Map $map, string $prefix): string
     {
         $output = "Set<hr />";
         $prefix = $prefix . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -54,62 +59,74 @@ class Console extends Renderer
         }
         return $output;
     }
+
     /**
      * Computes the given dataTable output and returns the string/binary
      *
      * @param array|DataTable|DataTable\Map $table data table to render
      * @param string $prefix prefix to output before table data
      */
-    protected function renderTable($table, string $prefix = '') : string
+    protected function renderTable($table, string $prefix = ''): string
     {
         if (is_array($table)) {
             // convert array to DataTable
+
             $table = DataTable::makeFromSimpleArray($table);
         }
+
         if ($table instanceof DataTable\Map) {
             return $this->renderDataTableMap($table, $prefix);
         }
+
         if ($table->getRowsCount() === 0) {
             return "Empty table<br />\n";
         }
+
         static $depth = 0;
         $output = '';
         $i = 1;
         foreach ($table->getRows() as $row) {
-            $dataTableMapBreak = \false;
+            $dataTableMapBreak = false;
             $columns = array();
             foreach ($row->getColumns() as $column => $value) {
                 if ($value instanceof DataTable\Map) {
                     $output .= $this->renderDataTableMap($value, $prefix);
-                    $dataTableMapBreak = \true;
+                    $dataTableMapBreak = true;
                     break;
                 }
                 if (is_string($value)) {
-                    $value = "'{$value}'";
+                    $value = "'$value'";
                 } elseif (is_array($value)) {
-                    $value = var_export($value, \true);
+                    $value = var_export($value, true);
                 }
-                $columns[] = "'{$column}' => {$value}";
+
+                $columns[] = "'$column' => $value";
             }
-            if ($dataTableMapBreak === \true) {
+            if ($dataTableMapBreak === true) {
                 continue;
             }
             $columns = implode(", ", $columns);
+
             if ($this->hideMetadata) {
-                $output .= str_repeat($this->prefixRows, $depth) . "- {$i} [" . $columns . "]<br />\n";
+                $output .= str_repeat($this->prefixRows, $depth)
+                    . "- $i [" . $columns . "]<br />\n";
             } else {
                 $metadata = [];
                 foreach ($row->getMetadata() as $name => $value) {
                     if (is_string($value)) {
-                        $value = "'{$value}'";
+                        $value = "'$value'";
                     } elseif (is_array($value)) {
-                        $value = var_export($value, \true);
+                        $value = var_export($value, true);
                     }
-                    $metadata[] = "'{$name}' => {$value}";
+                    $metadata[] = "'$name' => $value";
                 }
                 $metadata = implode(", ", $metadata);
-                $output .= str_repeat($this->prefixRows, $depth) . "- {$i} [" . $columns . "] [" . $metadata . "] [idsubtable = " . $row->getIdSubDataTable() . "]<br />\n";
+
+                $output .= str_repeat($this->prefixRows, $depth)
+                    . "- $i [" . $columns . "] [" . $metadata . "] [idsubtable = "
+                    . $row->getIdSubDataTable() . "]<br />\n";
             }
+
             if (!is_null($row->getIdSubDataTable())) {
                 $subTable = $row->getSubtable();
                 if ($subTable) {
@@ -122,13 +139,14 @@ class Console extends Renderer
             }
             $i++;
         }
+
         if (!$this->hideMetadata) {
             $metadata = $table->getAllTableMetadata();
             if (!empty($metadata)) {
                 $output .= "<hr />Metadata<br />";
                 foreach ($metadata as $id => $metadataIn) {
                     $output .= "<br />";
-                    $output .= $prefix . " <b>{$id}</b><br />";
+                    $output .= $prefix . " <b>$id</b><br />";
                     if (is_array($metadataIn)) {
                         foreach ($metadataIn as $name => $value) {
                             if (is_object($value) && !method_exists($value, '__toString')) {
@@ -139,7 +157,7 @@ class Console extends Renderer
                             if (is_array($value)) {
                                 $value = json_encode($value);
                             }
-                            $output .= $prefix . $prefix . "{$name} => {$value}";
+                            $output .= $prefix . $prefix . "$name => $value";
                         }
                     }
                 }

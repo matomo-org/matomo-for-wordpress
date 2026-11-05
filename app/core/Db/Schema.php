@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Db;
 
 use Piwik\Config;
 use Piwik\Singleton;
+
 /**
  * Schema abstraction
  *
@@ -18,78 +20,93 @@ use Piwik\Singleton;
 class Schema extends Singleton
 {
     public const DEFAULT_SCHEMA = 'Mysql';
+
     /**
      * Type of database schema
      *
      * @var SchemaInterface|null
      */
     private $schema = null;
+
     /**
      * Get schema class name
      *
      * @param string $schemaName
      */
-    private static function getSchemaClassName($schemaName) : string
+    private static function getSchemaClassName($schemaName): string
     {
         // Upgrade from pre 2.0.4
-        if (strtolower($schemaName) == 'myisam' || empty($schemaName)) {
+        if (
+            strtolower($schemaName) == 'myisam'
+            || empty($schemaName)
+        ) {
             $schemaName = self::DEFAULT_SCHEMA;
         }
+
         $class = str_replace(' ', '\\', ucwords(str_replace('_', ' ', strtolower($schemaName))));
-        return '\\Piwik\\Db\\Schema\\' . $class;
+        return '\Piwik\Db\Schema\\' . $class;
     }
+
     /**
      * Return the default port for the provided database schema
      */
-    public static function getDefaultPortForSchema(string $schemaName) : int
+    public static function getDefaultPortForSchema(string $schemaName): int
     {
         $schemaClassName = self::getSchemaClassName($schemaName);
         /** @var SchemaInterface $schemaClass */
         $schemaClass = new $schemaClassName();
         return $schemaClass->getDefaultPort();
     }
+
     /**
      * Load schema
      */
-    private function loadSchema() : void
+    private function loadSchema(): void
     {
-        $config = Config::getInstance();
-        $dbInfos = $config->database;
+        $config     = Config::getInstance();
+        $dbInfos    = $config->database;
         $schemaName = trim($dbInfos['schema']);
-        $className = self::getSchemaClassName($schemaName);
+
+        $className    = self::getSchemaClassName($schemaName);
         $this->schema = new $className();
     }
+
     /**
      * Returns an instance that subclasses Schema
      */
-    private function getSchema() : \Piwik\Db\SchemaInterface
+    private function getSchema(): SchemaInterface
     {
         if ($this->schema === null) {
             $this->loadSchema();
         }
+
         return $this->schema;
     }
+
     /**
      * Unset schema instance
      */
-    public function unsetSchema() : void
+    public function unsetSchema(): void
     {
         $this->schema = null;
     }
+
     /**
      * Returns the default collation for a charset.
      */
-    public function getDefaultCollationForCharset(string $charset) : string
+    public function getDefaultCollationForCharset(string $charset): string
     {
         return $this->getSchema()->getDefaultCollationForCharset($charset);
     }
+
     /**
      * Get the table options to use for a CREATE TABLE statement.
      */
-    public function getTableCreateOptions() : string
+    public function getTableCreateOptions(): string
     {
         return $this->getSchema()->getTableCreateOptions();
     }
+
     /**
      * Get the SQL to create a specific Piwik table
      *
@@ -100,6 +117,7 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTableCreateSql($tableName);
     }
+
     /**
      * Get the SQL to create Piwik tables
      *
@@ -109,6 +127,7 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTablesCreateSql();
     }
+
     /**
      * Creates a new table in the database.
      *
@@ -119,6 +138,7 @@ class Schema extends Singleton
     {
         $this->getSchema()->createTable($nameWithoutPrefix, $createDefinition);
     }
+
     /**
      * Create database
      *
@@ -128,6 +148,7 @@ class Schema extends Singleton
     {
         $this->getSchema()->createDatabase($dbName);
     }
+
     /**
      * Drop database
      */
@@ -135,27 +156,31 @@ class Schema extends Singleton
     {
         $this->getSchema()->dropDatabase($dbName);
     }
+
     /**
      * Create all tables
      */
-    public function createTables() : void
+    public function createTables(): void
     {
         $this->getSchema()->createTables();
     }
+
     /**
      * Creates an entry in the User table for the "anonymous" user.
      */
-    public function createAnonymousUser() : void
+    public function createAnonymousUser(): void
     {
         $this->getSchema()->createAnonymousUser();
     }
+
     /**
      * Records the Matomo version a user used when installing this Matomo for the first time
      */
-    public function recordInstallVersion() : void
+    public function recordInstallVersion(): void
     {
         $this->getSchema()->recordInstallVersion();
     }
+
     /**
      * Returns which Matomo version was used to install this Matomo for the first time.
      */
@@ -163,13 +188,15 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getInstallVersion();
     }
+
     /**
      * Truncate all tables
      */
-    public function truncateAllTables() : void
+    public function truncateAllTables(): void
     {
         $this->getSchema()->truncateAllTables();
     }
+
     /**
      * Names of all the prefixed tables in Matomo
      * Doesn't use the DB
@@ -180,16 +207,18 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTablesNames();
     }
+
     /**
      * Get list of tables installed
      *
      * @param bool $forceReload Invalidate cache
      * @return array  installed tables
      */
-    public function getTablesInstalled($forceReload = \true)
+    public function getTablesInstalled($forceReload = true)
     {
         return $this->getSchema()->getTablesInstalled($forceReload);
     }
+
     /**
      * Get list of installed columns in a table
      *
@@ -201,6 +230,7 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTableColumns($tableName);
     }
+
     /**
      * Returns true if Matomo tables exist
      *
@@ -210,30 +240,34 @@ class Schema extends Singleton
     {
         return $this->getSchema()->hasTables();
     }
+
     /**
      * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 0
      *
      * @param string $sql  query to add hint to
      * @param float $limit  time limit in seconds
      */
-    public function addMaxExecutionTimeHintToQuery(string $sql, float $limit) : string
+    public function addMaxExecutionTimeHintToQuery(string $sql, float $limit): string
     {
         return $this->getSchema()->addMaxExecutionTimeHintToQuery($sql, $limit);
     }
+
     /**
      * Returns if the schema support complex column updates
      */
-    public function supportsComplexColumnUpdates() : bool
+    public function supportsComplexColumnUpdates(): bool
     {
         return $this->getSchema()->supportsComplexColumnUpdates();
     }
+
     /**
      * Returns if the schema supports `OPTIMIZE TABLE` statements for innodb tables
      */
-    public function isOptimizeInnoDBSupported() : bool
+    public function isOptimizeInnoDBSupported(): bool
     {
         return $this->getSchema()->isOptimizeInnoDBSupported();
     }
+
     /**
      * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
      *
@@ -244,25 +278,28 @@ class Schema extends Singleton
      *                             Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
      * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
      */
-    public function optimizeTables(array $tables, bool $force = \false) : bool
+    public function optimizeTables(array $tables, bool $force = false): bool
     {
         return $this->getSchema()->optimizeTables($tables, $force);
     }
+
     /**
      * Returns if the database engine can provide a rollup ranking query result
      * without needing additional sorting.
      */
-    public function supportsRankingRollupWithoutExtraSorting() : bool
+    public function supportsRankingRollupWithoutExtraSorting(): bool
     {
         return $this->getSchema()->supportsRankingRollupWithoutExtraSorting();
     }
+
     /**
      * Returns if the database engine is able to use sorted subqueries
      */
-    public function supportsSortingInSubquery() : bool
+    public function supportsSortingInSubquery(): bool
     {
         return $this->getSchema()->supportsSortingInSubquery();
     }
+
     /**
      * Returns the supported read isolation transaction level
      *
@@ -271,35 +308,39 @@ class Schema extends Singleton
      *      or
      *      READ UNCOMMITTED
      */
-    public function getSupportedReadIsolationTransactionLevel() : string
+    public function getSupportedReadIsolationTransactionLevel(): string
     {
         return $this->getSchema()->getSupportedReadIsolationTransactionLevel();
     }
+
     /**
      * Returns the type of the current database (e.g. MySQL, MariaDb, ...)
      */
-    public function getDatabaseType() : string
+    public function getDatabaseType(): string
     {
         return $this->getSchema()->getDatabaseType();
     }
+
     /**
      * Returns the version of the currently used database server
      */
-    public function getVersion() : string
+    public function getVersion(): string
     {
         return $this->getSchema()->getVersion();
     }
+
     /**
      * Returns the minimum supported version of the currently used database server
      */
-    public function getMinimumSupportedVersion() : string
+    public function getMinimumSupportedVersion(): string
     {
         return $this->getSchema()->getMinimumSupportedVersion();
     }
+
     /**
      * Returns if the currently used database version has reach its EOL
      */
-    public function hasReachedEOL() : string
+    public function hasReachedEOL(): string
     {
         return $this->getSchema()->hasReachedEOL();
     }

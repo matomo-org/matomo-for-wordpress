@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry;
 
 use Exception;
@@ -17,69 +18,87 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\UserCountry\LocationProvider\DefaultProvider;
 use Piwik\Plugins\UserCountry\LocationProvider\DisabledProvider;
 use Piwik\View;
+
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     public function getDistinctCountries()
     {
         $view = new View('@UserCountry/getDistinctCountries');
+
         $view->urlSparklineCountries = $this->getUrlSparkline('getLastDistinctCountriesGraph');
         $view->numberDistinctCountries = $this->getNumberOfDistinctCountries();
+
         return $view->render();
     }
+
     public function adminIndex()
     {
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@UserCountry/adminIndex');
-        $allProviderInfo = \Piwik\Plugins\UserCountry\LocationProvider::getAllProviderInfo($newline = '<br/>', $includeExtra = \true);
+
+        $allProviderInfo = LocationProvider::getAllProviderInfo($newline = '<br/>', $includeExtra = true);
         $view->locationProviders = $allProviderInfo;
-        $view->currentProviderId = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProviderId();
+        $view->currentProviderId = LocationProvider::getCurrentProviderId();
         $view->thisIP = IP::getIpFromHeader();
         $view->hasGeoIp2Provider = Manager::getInstance()->isPluginActivated('GeoIp2');
-        if (!\Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider()) {
-            $provider = \Piwik\Plugins\UserCountry\LocationProvider::getProviderById(\Piwik\Plugins\UserCountry\LocationProvider::getCurrentProviderId());
+
+        if (!LocationProvider::getCurrentProvider()) {
+            $provider = LocationProvider::getProviderById(LocationProvider::getCurrentProviderId());
+
             if ($provider) {
                 $message = Piwik::translate('UserCountry_GeolocationProviderBroken', '<strong>' . $provider->getInfo()['title'] . '</strong>');
             } else {
-                $message = Piwik::translate('UserCountry_GeolocationProviderUnavailable', '<strong>' . \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProviderId() . '</strong>');
+                $message = Piwik::translate('UserCountry_GeolocationProviderUnavailable', '<strong>' . LocationProvider::getCurrentProviderId() . '</strong>');
             }
-            $notification = new Notification($message);
+
+            $notification          = new Notification($message);
             $notification->context = Notification::CONTEXT_ERROR;
-            $notification->raw = \true;
+            $notification->raw     = true;
             Notification\Manager::notify('UserCountry_GeoLocationProviderBroken', $notification);
         } else {
-            $isWorking = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider()->isWorking();
-            if (\true !== $isWorking) {
-                $message = Piwik::translate('UserCountry_GeolocationProviderBroken', '<strong>' . \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider()->getInfo()['title'] . '</strong>');
+            $isWorking = LocationProvider::getCurrentProvider()->isWorking();
+            if (true !== $isWorking) {
+                $message = Piwik::translate('UserCountry_GeolocationProviderBroken', '<strong>' . LocationProvider::getCurrentProvider()->getInfo()['title'] . '</strong>');
+
                 if ($isWorking) {
                     $message .= '<br /><br />' . $isWorking;
                 }
-                $notification = new Notification($message);
+
+                $notification          = new Notification($message);
                 $notification->context = Notification::CONTEXT_ERROR;
-                $notification->raw = \true;
+                $notification->raw     = true;
                 Notification\Manager::notify('UserCountry_GeoLocationProviderBroken', $notification);
             }
         }
+
         // check if there is a working provider (that isn't the default one)
-        $isThereWorkingProvider = \false;
+        $isThereWorkingProvider = false;
         foreach ($allProviderInfo as $id => $provider) {
-            if ($id != DefaultProvider::ID && $id != DisabledProvider::ID && $provider['status'] == \Piwik\Plugins\UserCountry\LocationProvider::INSTALLED) {
-                $isThereWorkingProvider = \true;
+            if (
+                $id != DefaultProvider::ID && $id != DisabledProvider::ID
+                && $provider['status'] == LocationProvider::INSTALLED
+            ) {
+                $isThereWorkingProvider = true;
                 break;
             }
         }
         $view->isThereWorkingProvider = $isThereWorkingProvider;
+
         $configurations = $setUpGuides = '';
-        foreach (\Piwik\Plugins\UserCountry\LocationProvider::getAllProviders() as $provider) {
+        foreach (LocationProvider::getAllProviders() as $provider) {
             $configurations .= $provider->renderConfiguration();
             $setUpGuides .= $provider->renderSetUpGuide();
         }
+
         $view->configurations = $configurations;
         $view->setUpGuides = $setUpGuides;
         $this->setBasicVariablesView($view);
         $this->setBasicVariablesAdminView($view);
+
         return $view->render();
     }
+
     /**
      * Echo's a pretty formatted location using a specific LocationProvider.
      *
@@ -93,28 +112,40 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         $this->dieIfGeolocationAdminIsDisabled();
         Piwik::checkUserHasSuperUserAccess();
+
         $providerId = Common::getRequestVar('id');
-        $provider = \Piwik\Plugins\UserCountry\LocationProvider::getProviderById($providerId);
+        $provider = LocationProvider::getProviderById($providerId);
         if (empty($provider)) {
-            throw new Exception("Invalid provider ID: '{$providerId}'.");
+            throw new Exception("Invalid provider ID: '$providerId'.");
         }
-        $location = $provider->getLocation(array('ip' => IP::getIpFromHeader(), 'lang' => Common::getBrowserLanguage(), 'disable_fallbacks' => \true));
-        $location = \Piwik\Plugins\UserCountry\LocationProvider::prettyFormatLocation($location, $newline = '<br/>', $includeExtra = \true);
+
+        $location = $provider->getLocation(array('ip'                => IP::getIpFromHeader(),
+                                                 'lang'              => Common::getBrowserLanguage(),
+                                                 'disable_fallbacks' => true));
+        $location = LocationProvider::prettyFormatLocation(
+            $location,
+            $newline = '<br/>',
+            $includeExtra = true
+        );
+
         return $location;
     }
+
     public function getNumberOfDistinctCountries()
     {
         return $this->getNumericValue('UserCountry.getNumberOfDistinctCountries');
     }
+
     public function getLastDistinctCountriesGraph()
     {
         $view = $this->getLastUnitGraph('UserCountry', __FUNCTION__, "UserCountry.getNumberOfDistinctCountries");
         $view->config->columns_to_display = array('UserCountry_distinctCountries');
         return $this->renderView($view);
     }
+
     private function dieIfGeolocationAdminIsDisabled()
     {
-        if (!\Piwik\Plugins\UserCountry\UserCountry::isGeoLocationAdminEnabled()) {
+        if (!UserCountry::isGeoLocationAdminEnabled()) {
             throw new \Exception('Geo location setting page has been disabled.');
         }
     }

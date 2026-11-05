@@ -6,42 +6,53 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\SitesManager\SiteContentDetection;
 
 use Piwik\Piwik;
 use Piwik\SiteContentDetector;
 use Piwik\Url;
-class MatomoTagManager extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract
+
+class MatomoTagManager extends SiteContentDetectionAbstract
 {
-    public static function getName() : string
+    public static function getName(): string
     {
         return Piwik::translate('SitesManager_SiteWithoutDataMatomoTagManager');
     }
-    public static function getIcon() : string
+
+    public static function getIcon(): string
     {
         return './plugins/SitesManager/images/mtm.svg';
     }
-    public static function getContentType() : int
+
+    public static function getContentType(): int
     {
         return self::TYPE_TRACKER;
     }
-    public static function getPriority() : int
+
+    public static function getPriority(): int
     {
         return 10;
     }
-    public function isDetected(?string $data = null, ?array $headers = null) : bool
+
+    public function isDetected(?string $data = null, ?array $headers = null): bool
     {
-        $tests = ['/matomo ?tag ?manager/i', '/_mtm\\.push/'];
+        $tests = ['/matomo ?tag ?manager/i', '/_mtm\.push/'];
         foreach ($tests as $test) {
             if (preg_match($test, $data) === 1) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
-    public function renderInstructionsTab(SiteContentDetector $detector) : string
+
+    public function renderInstructionsTab(SiteContentDetector $detector): string
     {
         return '<h3>' . Piwik::translate('SitesManager_SiteWithoutDataMatomoTagManager') . '</h3>
-            <p>' . Piwik::translate('SitesManager_SiteWithoutDataMatomoTagManagerNotActive', [Url::getExternalLinkTag('https://matomo.org/docs/tag-manager/'), '</a>']) . '</p>';
+            <p>' . Piwik::translate(
+            'SitesManager_SiteWithoutDataMatomoTagManagerNotActive',
+            [Url::getExternalLinkTag('https://matomo.org/docs/tag-manager/'), '</a>']
+        ) . '</p>';
     }
 }

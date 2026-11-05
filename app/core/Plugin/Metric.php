@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
 use Piwik\Metrics;
 use Piwik\Metrics\Formatter;
+
 /**
  * Base type of metric metadata classes.
  *
@@ -34,6 +36,7 @@ abstract class Metric
      * The sub-namespace name in a plugin where Metric components are stored.
      */
     public const COMPONENT_SUBNAMESPACE = 'Metrics';
+
     /**
      * Returns the column name of this metric, eg, `"nb_visits"` or `"avg_time_on_site"`.
      *
@@ -41,7 +44,8 @@ abstract class Metric
      *
      * @return string
      */
-    public abstract function getName();
+    abstract public function getName();
+
     /**
      * Returns the human readable translated name of this metric, eg, `"Visits"` or `"Avg. time on site"`.
      *
@@ -49,7 +53,8 @@ abstract class Metric
      *
      * @return string
      */
-    public abstract function getTranslatedName();
+    abstract public function getTranslatedName();
+
     /**
      * Returns the category that this metric belongs to.
      * @return string
@@ -59,6 +64,7 @@ abstract class Metric
     {
         return '';
     }
+
     /**
      * Returns a string describing what the metric represents. The result will be included in report metadata
      * API output, including processed reports.
@@ -71,6 +77,7 @@ abstract class Metric
     {
         return "";
     }
+
     /**
      * Returns this metric's semantic type. This can be used to provide the semantic
      * type for processed metrics.
@@ -85,10 +92,11 @@ abstract class Metric
      *
      * See {@link \Piwik\Columns\Dimension} for the list of available semantic types.
      */
-    public function getSemanticType() : ?string
+    public function getSemanticType(): ?string
     {
         return null;
     }
+
     /**
      * Returns a formatted metric value. This value is what appears in API output. From within Piwik,
      * (core & plugins) the computed value is used. Only when outputting to the API does a metric
@@ -104,6 +112,7 @@ abstract class Metric
     {
         return $value;
     }
+
     /**
      * Executed before formatting all metrics for a report. Implementers can return `false`
      * to skip formatting this metric and can use this method to access information needed for
@@ -114,8 +123,9 @@ abstract class Metric
      */
     public function beforeFormat($report, DataTable $table)
     {
-        return \true;
+        return true;
     }
+
     /**
      * Helper method that will access a metric in a {@link Piwik\DataTable\Row} or array either by
      * its name or by its special numerical index value.
@@ -130,14 +140,17 @@ abstract class Metric
     {
         if ($row instanceof Row) {
             $value = $row->getColumn($columnName);
-            if ($value === \false) {
+
+            if ($value === false) {
                 if (empty($mappingNameToId)) {
                     $mappingNameToId = Metrics::getMappingFromNameToId();
                 }
+
                 if (isset($mappingNameToId[$columnName])) {
                     return $row->getColumn($mappingNameToId[$columnName]);
                 }
             }
+
             return $value;
         } elseif (!empty($row)) {
             if (array_key_exists($columnName, $row)) {
@@ -146,16 +159,20 @@ abstract class Metric
                 if (empty($mappingNameToId)) {
                     $mappingNameToId = Metrics::getMappingFromNameToId();
                 }
+
                 if (isset($mappingNameToId[$columnName])) {
                     $columnName = $mappingNameToId[$columnName];
+
                     if (array_key_exists($columnName, $row)) {
                         return $row[$columnName];
                     }
                 }
             }
         }
+
         return null;
     }
+
     /**
      * Helper method that will determine the actual column name for a metric in a
      * {@link Piwik\DataTable} and return every column value for this name.
@@ -170,9 +187,11 @@ abstract class Metric
         if (empty($mappingNameToId)) {
             $mappingNameToId = Metrics::getMappingFromNameToId();
         }
+
         $columnName = self::getActualMetricColumn($table, $columnName, $mappingNameToId);
         return $table->getColumn($columnName);
     }
+
     /**
      * Helper method that determines the actual column for a metric in a {@link Piwik\DataTable}.
      *
@@ -184,14 +203,17 @@ abstract class Metric
     public static function getActualMetricColumn(DataTable $table, $columnName, $mappingNameToId = null)
     {
         $firstRow = $table->getFirstRow();
-        if (!empty($firstRow) && $firstRow->hasColumn($columnName) === \false) {
+
+        if (!empty($firstRow) && $firstRow->hasColumn($columnName) === false) {
             if (empty($mappingNameToId)) {
                 $mappingNameToId = Metrics::getMappingFromNameToId();
             }
+
             if (array_key_exists($columnName, $mappingNameToId)) {
                 $columnName = $mappingNameToId[$columnName];
             }
         }
+
         return $columnName;
     }
 }

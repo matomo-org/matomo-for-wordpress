@@ -6,13 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DevicesDetection\RecordBuilders;
 
 use Piwik\Plugins\DevicesDetection\Archiver;
-class DeviceModels extends \Piwik\Plugins\DevicesDetection\RecordBuilders\Base
+
+class DeviceModels extends Base
 {
     public function __construct()
     {
-        parent::__construct(Archiver::DEVICE_MODEL_RECORD_NAME, Archiver::DEVICE_MODEL_FIELD, \true);
+        parent::__construct(Archiver::DEVICE_MODEL_RECORD_NAME, Archiver::DEVICE_MODEL_FIELD, true);
     }
 }

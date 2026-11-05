@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Piwik\Updater\Migration;
+
 /**
  * Base class for update scripts.
  *
@@ -34,10 +36,11 @@ abstract class Updates
      * @return Migration[]
      * @api
      */
-    public function getMigrations(\Piwik\Updater $updater)
+    public function getMigrations(Updater $updater)
     {
         return array();
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -48,9 +51,10 @@ abstract class Updates
      *
      * @api
      */
-    public function doUpdate(\Piwik\Updater $updater)
+    public function doUpdate(Updater $updater)
     {
     }
+
     /**
      * Tell the updater that this update has major operational impact.
      *
@@ -64,51 +68,62 @@ abstract class Updates
      */
     public static function isMajorUpdate()
     {
-        return \false;
+        return false;
     }
+
     /**
      * Enables maintenance mode. Should be used for updates where Piwik will be unavailable
      * for a large amount of time.
      */
     public static function enableMaintenanceMode()
     {
-        $config = \Piwik\Config::getInstance();
+        $config = Config::getInstance();
+
         $tracker = $config->Tracker;
         $tracker['record_statistics'] = 0;
         $config->Tracker = $tracker;
+
         $general = $config->General;
         $general['maintenance_mode'] = 1;
         $config->General = $general;
+
         $config->forceSave();
     }
+
     /**
      * Helper method to disable maintenance mode after large updates.
      */
     public static function disableMaintenanceMode()
     {
-        $config = \Piwik\Config::getInstance();
+        $config = Config::getInstance();
+
         $tracker = $config->Tracker;
         $tracker['record_statistics'] = 1;
         $config->Tracker = $tracker;
+
         $general = $config->General;
         $general['maintenance_mode'] = 0;
         $config->General = $general;
+
         $config->forceSave();
     }
+
     public static function deletePluginFromConfigFile($pluginToDelete)
     {
-        $config = \Piwik\Config::getInstance();
+        $config = Config::getInstance();
         if (isset($config->Plugins['Plugins'])) {
             $plugins = $config->Plugins['Plugins'];
-            if (($key = array_search($pluginToDelete, $plugins)) !== \false) {
+            if (($key = array_search($pluginToDelete, $plugins)) !== false) {
                 unset($plugins[$key]);
             }
             $config->Plugins['Plugins'] = $plugins;
+
             $pluginsInstalled = $config->PluginsInstalled['PluginsInstalled'];
-            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== \false) {
+            if (($key = array_search($pluginToDelete, $pluginsInstalled)) !== false) {
                 unset($pluginsInstalled[$key]);
             }
             $config->PluginsInstalled = array('PluginsInstalled' => $pluginsInstalled);
+
             $config->forceSave();
         }
     }

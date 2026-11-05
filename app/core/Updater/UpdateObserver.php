@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Updater;
 
 /**
@@ -26,6 +27,7 @@ abstract class UpdateObserver
     {
         // empty
     }
+
     /**
      * Executed after a component has been successfully updated.
      *
@@ -37,6 +39,7 @@ abstract class UpdateObserver
     {
         // empty
     }
+
     /**
      * Executed before the update method of an Updates class is executed.
      *
@@ -49,6 +52,7 @@ abstract class UpdateObserver
     {
         // empty
     }
+
     /**
      * Executed after the update method of an Updates class is successfully executed.
      *
@@ -61,26 +65,29 @@ abstract class UpdateObserver
     {
         // empty
     }
+
     /**
      * Executed before a migration is executed.
      *
      * @param string $updateFile The path to the Updates file being executed.
      * @param Migration $migration The migration that is about to be executed.
      */
-    public function onStartExecutingMigration($updateFile, \Piwik\Updater\Migration $migration)
+    public function onStartExecutingMigration($updateFile, Migration $migration)
     {
         // empty
     }
+
     /**
      * Executed after a migration is executed.
      *
      * @param string $updateFile The path to the Updates file being executed.
      * @param Migration $migration The migration that is about to be executed.
      */
-    public function onFinishedExecutingMigration($updateFile, \Piwik\Updater\Migration $migration)
+    public function onFinishedExecutingMigration($updateFile, Migration $migration)
     {
         // empty
     }
+
     /**
      * Executed when a warning occurs during the update process. A warning occurs when an Updates file
      * throws an exception that is not a UpdaterErrorException.
@@ -93,6 +100,7 @@ abstract class UpdateObserver
     {
         // empty
     }
+
     /**
      * Executed when an error occurs during the update process. An error occurs when an Updates file
      * throws a UpdaterErrorException.

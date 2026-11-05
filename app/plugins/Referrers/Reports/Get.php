@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers\Reports;
 
 use Piwik\API\Request;
@@ -25,47 +26,96 @@ use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines;
 use Piwik\Plugins\Referrers\Archiver;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
-class Get extends \Piwik\Plugins\Referrers\Reports\Base
+
+class Get extends Base
 {
     public const TOTAL_DIRECT_ENTRIES_METRIC_NAME = 'Referrers_directEntries';
+
     protected function init()
     {
         parent::init();
+
         $this->name = Piwik::translate('Referrers_ReferrersOverview');
         $this->documentation = Piwik::translate('Referrers_ReferrersOverviewDocumentation');
-        $this->processedMetrics = [];
-        $this->metrics = ['Referrers_visitorsFromSearchEngines', 'Referrers_visitorsFromSearchEngines_percent', 'Referrers_visitorsFromSocialNetworks', 'Referrers_visitorsFromSocialNetworks_percent', 'Referrers_visitorsFromAIAssistants', 'Referrers_visitorsFromAIAssistants_percent', 'Referrers_visitorsFromDirectEntry', 'Referrers_visitorsFromDirectEntry_percent', 'Referrers_visitorsFromWebsites', 'Referrers_visitorsFromWebsites_percent', 'Referrers_visitorsFromCampaigns', 'Referrers_visitorsFromCampaigns_percent', Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME, Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME, Archiver::METRIC_DISTINCT_AI_ASSISTANT_RECORD_NAME, Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME, Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME, Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME, Archiver::METRIC_DISTINCT_URLS_RECORD_NAME];
+        $this->processedMetrics = [
+            // none
+        ];
+        $this->metrics = [
+            'Referrers_visitorsFromSearchEngines',
+            'Referrers_visitorsFromSearchEngines_percent',
+            'Referrers_visitorsFromSocialNetworks',
+            'Referrers_visitorsFromSocialNetworks_percent',
+            'Referrers_visitorsFromAIAssistants',
+            'Referrers_visitorsFromAIAssistants_percent',
+            'Referrers_visitorsFromDirectEntry',
+            'Referrers_visitorsFromDirectEntry_percent',
+            'Referrers_visitorsFromWebsites',
+            'Referrers_visitorsFromWebsites_percent',
+            'Referrers_visitorsFromCampaigns',
+            'Referrers_visitorsFromCampaigns_percent',
+            Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_AI_ASSISTANT_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME,
+            Archiver::METRIC_DISTINCT_URLS_RECORD_NAME,
+        ];
     }
+
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
         // empty
     }
+
     public function configureView(ViewDataTable $view)
     {
-        if ($view->isViewDataTableId(Sparklines::ID) && $view instanceof Sparklines) {
+        if (
+            $view->isViewDataTableId(Sparklines::ID)
+            && $view instanceof Sparklines
+        ) {
             $this->addSparklineColumns($view);
             $view->config->addTranslations($this->getSparklineTranslations());
+
             // add evolution values
             [$lastPeriodDate, $ignore] = Range::getLastDate();
-            if ($lastPeriodDate !== \false) {
+            if ($lastPeriodDate !== false) {
                 $date = Common::getRequestVar('date');
+
                 /** @var DataTable $previousData */
                 $previousData = Request::processRequest('Referrers.get', ['date' => $lastPeriodDate]);
                 $previousDataRow = $previousData->getFirstRow();
-                $view->config->compute_evolution = function ($columns) use($date, $lastPeriodDate, $previousDataRow) {
+
+                $view->config->compute_evolution = function ($columns) use ($date, $lastPeriodDate, $previousDataRow) {
                     $value = reset($columns);
                     $columnName = key($columns);
+
                     if (!in_array($columnName, $this->metrics)) {
                         return;
                     }
+
                     $pastValue = $previousDataRow ? $previousDataRow->getColumn($columnName) : 0;
+
                     $currentValueFormatted = NumberFormatter::getInstance()->format($value);
-                    $pastValueFormatted = NumberFormatter::getInstance()->format($pastValue);
-                    return ['currentValue' => $value, 'pastValue' => $pastValue, 'isLowerValueBetter' => Metrics::isLowerValueBetter($columnName), 'tooltip' => Piwik::translate('General_EvolutionSummaryGeneric', array(Piwik::translate('General_NVisits', $currentValueFormatted), $date, Piwik::translate('General_NVisits', $pastValueFormatted), $lastPeriodDate, CalculateEvolutionFilter::calculate($value, $pastValue, $precision = 1)))];
+                    $pastValueFormatted    = NumberFormatter::getInstance()->format($pastValue);
+
+                    return [
+                        'currentValue' => $value,
+                        'pastValue' => $pastValue,
+                        'isLowerValueBetter' => Metrics::isLowerValueBetter($columnName),
+                        'tooltip' => Piwik::translate('General_EvolutionSummaryGeneric', array(
+                            Piwik::translate('General_NVisits', $currentValueFormatted),
+                            $date,
+                            Piwik::translate('General_NVisits', $pastValueFormatted),
+                            $lastPeriodDate,
+                            CalculateEvolutionFilter::calculate($value, $pastValue, $precision = 1),
+                        )),
+                    ];
                 };
             }
         }
     }
+
     /**
      * Returns the pretty date representation
      *
@@ -77,6 +127,7 @@ class Get extends \Piwik\Plugins\Referrers\Reports\Base
     {
         return self::getCalendarPrettyDate(Factory::build($period, Date::factory($date)));
     }
+
     /**
      * Returns a prettified date string for use in period selector widget.
      *
@@ -88,11 +139,13 @@ class Get extends \Piwik\Plugins\Referrers\Reports\Base
     {
         if ($period instanceof Month) {
             // show month name when period is for a month
+
             return $period->getLocalizedLongString();
         } else {
             return $period->getPrettyString();
         }
     }
+
     private function addSparklineColumns(Sparklines $view)
     {
         $view->config->addSparklineMetric(['Referrers_visitorsFromDirectEntry', 'Referrers_visitorsFromDirectEntry_percent'], 10, ['rows' => Common::REFERRER_TYPE_DIRECT_ENTRY . ',total']);
@@ -108,12 +161,29 @@ class Get extends \Piwik\Plugins\Referrers\Reports\Base
         $view->config->addSparklineMetric([Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME], 80);
         $view->config->addSparklineMetric([Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME], 90);
     }
-    private function getSparklineTranslations() : array
+
+    private function getSparklineTranslations(): array
     {
-        $translations = ['Referrers_visitorsFromDirectEntry' => Piwik::translate('Referrers_TypeDirectEntries'), 'Referrers_visitorsFromWebsites' => Piwik::translate('Referrers_TypeWebsites'), 'Referrers_visitorsFromSearchEngines' => Piwik::translate('Referrers_TypeSearchEngines'), 'Referrers_visitorsFromSocialNetworks' => Piwik::translate('Referrers_TypeSocialNetworks'), 'Referrers_visitorsFromAIAssistants' => Piwik::translate('Referrers_TypeAIAssistants'), 'Referrers_visitorsFromCampaigns' => Piwik::translate('Referrers_TypeCampaigns')];
+        $translations = [
+            'Referrers_visitorsFromDirectEntry' => Piwik::translate('Referrers_TypeDirectEntries'),
+            'Referrers_visitorsFromWebsites' => Piwik::translate('Referrers_TypeWebsites'),
+            'Referrers_visitorsFromSearchEngines' => Piwik::translate('Referrers_TypeSearchEngines'),
+            'Referrers_visitorsFromSocialNetworks' => Piwik::translate('Referrers_TypeSocialNetworks'),
+            'Referrers_visitorsFromAIAssistants' => Piwik::translate('Referrers_TypeAIAssistants'),
+            'Referrers_visitorsFromCampaigns' => Piwik::translate('Referrers_TypeCampaigns'),
+        ];
+
         foreach ($translations as $name => $label) {
             $translations[$name . '_percent'] = Piwik::translate('Referrers_XPercentOfVisits');
         }
-        return array_merge($translations, [Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME => Piwik::translate('Referrers_DistinctSearchEngines'), Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME => Piwik::translate('Referrers_DistinctSocialNetworks'), Archiver::METRIC_DISTINCT_AI_ASSISTANT_RECORD_NAME => Piwik::translate('Referrers_DistinctAIAssistants'), Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME => Piwik::translate('Referrers_DistinctWebsites'), Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME => Piwik::translate('Referrers_DistinctKeywords'), Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME => Piwik::translate('Referrers_DistinctCampaigns')]);
+
+        return array_merge($translations, [
+            Archiver::METRIC_DISTINCT_SEARCH_ENGINE_RECORD_NAME => Piwik::translate('Referrers_DistinctSearchEngines'),
+            Archiver::METRIC_DISTINCT_SOCIAL_NETWORK_RECORD_NAME => Piwik::translate('Referrers_DistinctSocialNetworks'),
+            Archiver::METRIC_DISTINCT_AI_ASSISTANT_RECORD_NAME => Piwik::translate('Referrers_DistinctAIAssistants'),
+            Archiver::METRIC_DISTINCT_WEBSITE_RECORD_NAME => Piwik::translate('Referrers_DistinctWebsites'),
+            Archiver::METRIC_DISTINCT_KEYWORD_RECORD_NAME => Piwik::translate('Referrers_DistinctKeywords'),
+            Archiver::METRIC_DISTINCT_CAMPAIGN_RECORD_NAME => Piwik::translate('Referrers_DistinctCampaigns'),
+        ]);
     }
 }

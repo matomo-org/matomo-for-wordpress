@@ -1,0 +1,11 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Lokaltid",
+        "DayOfWeek": "Dag i ugen",
+        "LocalTime": "Besøg pr. lokaltid",
+        "SubmenuTimes": "Klokkeslæt",
+        "VisitsByDayOfWeek": "Besøg efter ugedag",
+        "WidgetByDayOfWeekDocumentation": "Denne graf viser antallet af besøg hjemmesiden har modtaget på hver dag i ugen.",
+        "WidgetLocalTimeDocumentation": "Diagrammet viser, hvad klokken var i %1$s besøgendes tidszone %2$s under deres besøg."
+    }
+}

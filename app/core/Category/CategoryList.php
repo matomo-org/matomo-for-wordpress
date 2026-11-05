@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Category;
 
 use Piwik\Container\StaticContainer;
+
 /**
  * Holds the list of categories (with their subcategories) available in the Piwik reporting menu.
  *
@@ -20,34 +22,40 @@ class CategoryList
      * @var Category[] indexed by categoryId
      */
     private $categories = array();
-    public function addCategory(\Piwik\Category\Category $category)
+
+    public function addCategory(Category $category)
     {
         $categoryId = $category->getId();
+
         if ($this->hasCategory($categoryId)) {
             throw new \Exception(sprintf('Category %s already exists', $categoryId));
         }
+
         $this->categories[$categoryId] = $category;
     }
+
     public function getCategories()
     {
         return $this->categories;
     }
+
     /**
      * Returns the reporting menu groups that do not require tracked data, collected across all
      * categories (it is a property of the group, so resolved globally rather than per category).
      *
      * @return string[]
      */
-    public function getGroupsWithoutTrackingRequirement() : array
+    public function getGroupsWithoutTrackingRequirement(): array
     {
         $groups = [];
         foreach ($this->categories as $category) {
             foreach ($category->getGroupsWithoutTrackingRequirement() as $group) {
-                $groups[$group] = \true;
+                $groups[$group] = true;
             }
         }
         return array_keys($groups);
     }
+
     /**
      * @param string|null $categoryId
      * @return bool
@@ -56,6 +64,7 @@ class CategoryList
     {
         return isset($this->categories[$categoryId]);
     }
+
     /**
      * Get the category having the given id, if possible.
      *
@@ -67,33 +76,42 @@ class CategoryList
         if ($this->hasCategory($categoryId)) {
             return $this->categories[$categoryId];
         }
+
         return null;
     }
+
     /**
      * @return CategoryList
      */
     public static function get()
     {
-        $list = new \Piwik\Category\CategoryList();
-        $categories = StaticContainer::get('Piwik\\Plugin\\Categories');
+        $list = new CategoryList();
+
+        $categories = StaticContainer::get('Piwik\Plugin\Categories');
+
         foreach ($categories->getAllCategories() as $category) {
             $list->addCategory($category);
         }
+
         // move subcategories into categories
         foreach ($categories->getAllSubcategories() as $subcategory) {
             $categoryId = $subcategory->getCategoryId();
+
             if (!$categoryId) {
                 continue;
             }
+
             if ($list->hasCategory($categoryId)) {
                 $category = $list->getCategory($categoryId);
             } else {
-                $category = new \Piwik\Category\Category();
+                $category = new Category();
                 $category->setId($categoryId);
                 $list->addCategory($category);
             }
+
             $category->addSubcategory($subcategory);
         }
+
         return $list;
     }
 }

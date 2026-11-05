@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\Process;
 
 use Symfony\Component\Process\Exception\RuntimeException;
+
 /**
  * Provides a way to continuously write to the input of a Process until the InputStream is closed.
  *
@@ -23,7 +25,8 @@ class InputStream implements \IteratorAggregate
     /** @var callable|null */
     private $onEmpty = null;
     private $input = [];
-    private $open = \true;
+    private $open = true;
+
     /**
      * Sets a callback that is called when the write buffer becomes empty.
      */
@@ -31,6 +34,7 @@ class InputStream implements \IteratorAggregate
     {
         $this->onEmpty = $onEmpty;
     }
+
     /**
      * Appends an input to the write buffer.
      *
@@ -45,15 +49,17 @@ class InputStream implements \IteratorAggregate
         if ($this->isClosed()) {
             throw new RuntimeException(sprintf('"%s" is closed.', static::class));
         }
-        $this->input[] = \Symfony\Component\Process\ProcessUtils::validateInput(__METHOD__, $input);
+        $this->input[] = ProcessUtils::validateInput(__METHOD__, $input);
     }
+
     /**
      * Closes the write buffer.
      */
     public function close()
     {
-        $this->open = \false;
+        $this->open = false;
     }
+
     /**
      * Tells whether the write buffer is closed or not.
      */
@@ -61,25 +67,28 @@ class InputStream implements \IteratorAggregate
     {
         return !$this->open;
     }
+
     /**
      * @return \Traversable<int, string>
      */
     #[\ReturnTypeWillChange]
     public function getIterator()
     {
-        $this->open = \true;
+        $this->open = true;
+
         while ($this->open || $this->input) {
             if (!$this->input) {
-                (yield '');
+                yield '';
                 continue;
             }
             $current = array_shift($this->input);
+
             if ($current instanceof \Iterator) {
                 yield from $current;
             } else {
-                (yield $current);
+                yield $current;
             }
-            if (!$this->input && $this->open && null !== ($onEmpty = $this->onEmpty)) {
+            if (!$this->input && $this->open && null !== $onEmpty = $this->onEmpty) {
                 $this->write($onEmpty($this));
             }
         }

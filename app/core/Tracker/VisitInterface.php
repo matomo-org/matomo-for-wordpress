@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker;
 
 /**
@@ -19,7 +20,8 @@ interface VisitInterface
      *
      * @return void
      */
-    public function setRequest(\Piwik\Tracker\Request $request);
+    public function setRequest(Request $request);
+
     /**
      * Tracks a visit.
      *

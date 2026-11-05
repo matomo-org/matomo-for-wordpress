@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
+
 /**
  * Executes a callback for each row of a {@link DataTable} and prepends each existing segment with the
  * given segment.
@@ -19,7 +21,7 @@ use Piwik\DataTable;
  *
  * @api
  */
-class PrependSegment extends \Piwik\DataTable\Filter\PrependValueToMetadata
+class PrependSegment extends PrependValueToMetadata
 {
     /**
      * @param DataTable $table

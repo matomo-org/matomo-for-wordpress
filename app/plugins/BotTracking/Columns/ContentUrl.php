@@ -6,10 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Columns;
 
 use Piwik\Columns\Dimension;
+
 /**
  * Neutral "URL" dimension used by the Broken Content report which mixes page and document URLs.
  * Unlike PageUrl (TYPE_PAGE_URL only) and DocumentUrl (TYPE_DOWNLOAD only), this dimension

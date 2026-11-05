@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,18 +9,20 @@
 namespace Matomo\Cache;
 
 use Matomo\Cache\Backend;
+
 /**
  * This class is used to cache data during one request.
  *
  * Compared to the lazy cache it does not support setting any lifetime. To be a fast cache it does
  * not validate any cache id etc.
  */
-class Transient implements \Matomo\Cache\Cache
+class Transient implements Cache
 {
     /**
      * @var array $data
      */
     private $data = array();
+
     /**
      * Fetches an entry from the cache.
      *
@@ -36,8 +37,10 @@ class Transient implements \Matomo\Cache\Cache
         if ($this->contains($id)) {
             return $this->data[$id];
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -45,6 +48,7 @@ class Transient implements \Matomo\Cache\Cache
     {
         return isset($this->data[$id]) || array_key_exists($id, $this->data);
     }
+
     /**
      * Puts data into the cache.
      *
@@ -56,25 +60,30 @@ class Transient implements \Matomo\Cache\Cache
     public function save($id, $content, $lifeTime = 0)
     {
         $this->data[$id] = $content;
-        return \true;
+
+        return true;
     }
+
     /**
      * {@inheritdoc}
      */
     public function delete($id)
     {
         if (!$this->contains($id)) {
-            return \false;
+            return false;
         }
+
         unset($this->data[$id]);
-        return \true;
+        return true;
     }
+
     /**
      * {@inheritdoc}
      */
     public function flushAll()
     {
         $this->data = array();
-        return \true;
+
+        return true;
     }
 }

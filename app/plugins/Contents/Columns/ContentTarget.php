@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Contents\Columns;
 
 use Piwik\Columns\Discriminator;
@@ -15,6 +16,7 @@ use Piwik\Plugins\Contents\Actions\ActionContent;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
+
 class ContentTarget extends ActionDimension
 {
     protected $columnName = 'idaction_content_target';
@@ -26,28 +28,35 @@ class ContentTarget extends ActionDimension
     protected $category = 'General_Actions';
     protected $acceptValues = 'Contents_ContentTargetSegmentHelp';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
+
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
+
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', $this->getActionId());
     }
+
     public function getActionId()
     {
         return Action::TYPE_CONTENT_TARGET;
     }
+
     public function onLookupAction(Request $request, Action $action)
     {
-        if (!$action instanceof ActionContent) {
-            return \false;
+        if (!($action instanceof ActionContent)) {
+            return false;
         }
+
         $contentTarget = $request->getParam('c_t');
         $contentTarget = trim($contentTarget);
+
         if (strlen($contentTarget) > 0) {
             return $contentTarget;
         }
-        return \false;
+
+        return false;
     }
 }

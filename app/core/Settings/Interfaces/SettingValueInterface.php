@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Interfaces;
 
 /**
@@ -17,10 +18,13 @@ interface SettingValueInterface
      * @return self<T>
      */
     public static function getInstance(?int $idSite = null);
+
     /**
      * @return T
      */
     public function getValue();
-    public static function getTitle() : string;
-    public static function getInlineHelp() : string;
+
+    public static function getTitle(): string;
+
+    public static function getInlineHelp(): string;
 }

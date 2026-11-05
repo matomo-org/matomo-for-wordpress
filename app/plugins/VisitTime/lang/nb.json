@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Lokal time - time (besøkets begynnelse)",
+        "ColumnLocalMinute": "Lokal tid - minutt (besøkets start)",
+        "ColumnLocalTime": "Lokaltid",
+        "ColumnServerHour": "Tjenertime - time",
+        "ColumnSiteHour": "Sidetid — time",
+        "ColumnUTCMinute": "Tid i UTC — minutt",
+        "ColumnVisitEndSiteHour": "Sidetid — time (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCDate": "Tid i UTC — dato (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCDayOfMonth": "Tid i UTC — dag i måneden (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCDayOfWeek": "Tid i UTC — dag i uken (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCDayOfYear": "Tid i UTC — dag i året (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCMinute": "Tid i UTC — minutt (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCMonth": "Tid i UTC — måned (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCQuarter": "Tid i UTC — kvartal (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCSecond": "Tid i UTC — sekund (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCWeekOfYear": "Tid i UTC — uke i året (tidspunkt for siste foretagende)",
+        "ColumnVisitEndUTCYear": "Tid i UTC — år (tidspunkt for siste foretagende)",
+        "ColumnVisitStartSiteHour": "Sidetid — time (begynnelsen på besøket)",
+        "ColumnVisitStartUTCMinute": "Tid i UTC — minutt (besøksstart)",
+        "DayOfWeek": "Dag i uken",
+        "LocalTime": "Besøk pr. lokaltid",
+        "PluginDescription": "Rapporterer lokal tid og tjenertid når dine besøkere ser ditt nettsted eller program.",
+        "SiteTime": "Besøk per time i sidens tidssone",
+        "SubmenuTimes": "Tider",
+        "TimesSubcategoryHelp": "«Tider»-delen viser deg når folk besøker siden din. Du kan finne ut hva de mest populære lokale tidene dine brukere besøker er, slik at du forstår om din side passer deres liv. I tillegg vises de mest populære tjenertidene, som kan avsløre hvilke krav din teknologistabel har.",
+        "VisitsByDayOfWeek": "Besøk etter ukedag",
+        "WidgetByDayOfWeekDocumentation": "Denne grafen viser antall besøk nettstedet ditt mottatt på de ulike dagene i uken.",
+        "WidgetLocalTimeDocumentation": "Denne grafen viser hvilken tid det var i %1$s besøkeres tidssoner %2$s da besøkene skjedde.",
+        "WidgetSiteTimeDocumentation": "Diagrammet viser hvilken tid det var i %1$ssidens tidssone%2$s under besøkene."
+    }
+}

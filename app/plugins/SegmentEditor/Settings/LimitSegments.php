@@ -5,25 +5,32 @@ namespace Piwik\Plugins\SegmentEditor\Settings;
 use Piwik\Piwik;
 use Piwik\Plugins\PrivacyManager\Settings\CompliancePolicyEnforcedSetting;
 use Piwik\Policy\CnilPolicy;
+
 class LimitSegments extends CompliancePolicyEnforcedSetting
 {
-    public static function getTitle() : string
+    public static function getTitle(): string
     {
         return Piwik::translate("SegmentEditor_LimitSegmentsSettingTitle");
     }
-    public static function getWhatItDoes(?int $idSite = null) : string
+
+    public static function getWhatItDoes(?int $idSite = null): string
     {
         return Piwik::translate('SegmentEditor_LimitSegmentsSettingWhatItDoes');
     }
-    public static function getImpact(?int $idSite = null) : string
+
+    public static function getImpact(?int $idSite = null): string
     {
         return Piwik::translate('SegmentEditor_LimitSegmentsSettingImpact');
     }
-    public static function getPolicyRequirements() : array
+
+    public static function getPolicyRequirements(): array
     {
-        return [CnilPolicy::class => \true];
+        return [
+            CnilPolicy::class => true,
+        ];
     }
-    public static function getComplianceRequirementNote(?int $idSite = null) : string
+
+    public static function getComplianceRequirementNote(?int $idSite = null): string
     {
         return Piwik::translate("SegmentEditor_LimitSegmentsSettingRequirementNote");
     }

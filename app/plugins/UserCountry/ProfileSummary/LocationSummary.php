@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\ProfileSummary;
 
 use Piwik\Common;
@@ -14,6 +15,7 @@ use Piwik\Plugins\Live;
 use Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract;
 use Piwik\Url;
 use Piwik\View;
+
 /**
  * Class LocationSummary
  */
@@ -26,6 +28,7 @@ class LocationSummary extends ProfileSummaryAbstract
     {
         return Piwik::translate('UserCountry_Location');
     }
+
     /**
      * @inheritdoc
      */
@@ -34,18 +37,38 @@ class LocationSummary extends ProfileSummaryAbstract
         if (empty($this->profile['countries'])) {
             return '';
         }
-        $view = new View('@UserCountry/_profileSummary.twig');
+
+        $view              = new View('@UserCountry/_profileSummary.twig');
         $view->visitorData = $this->profile;
-        if (Common::getRequestVar('showMap', 1) == 1 && !empty($view->visitorData['hasLatLong']) && \Piwik\Plugin\Manager::getInstance()->isPluginLoaded('UserCountryMap')) {
+
+        if (
+            Common::getRequestVar('showMap', 1) == 1
+            && !empty($view->visitorData['hasLatLong'])
+            && \Piwik\Plugin\Manager::getInstance()->isPluginLoaded('UserCountryMap')
+        ) {
             $view->userCountryMapUrl = $this->getUserCountryMapUrlForVisitorProfile();
         }
+
         return $view->render();
     }
+
     private function getUserCountryMapUrlForVisitorProfile()
     {
-        $params = array('module' => 'UserCountryMap', 'action' => 'realtimeMap', 'segment' => Live\Live::getSegmentWithVisitorId(), 'visitorId' => \false, 'changeVisitAlpha' => 0, 'removeOldVisits' => 0, 'realtimeWindow' => 'false', 'showFooterMessage' => 0, 'showDateTime' => 0, 'doNotRefreshVisits' => 1);
+        $params = array(
+            'module'             => 'UserCountryMap',
+            'action'             => 'realtimeMap',
+            'segment'            => Live\Live::getSegmentWithVisitorId(),
+            'visitorId'          => false,
+            'changeVisitAlpha'   => 0,
+            'removeOldVisits'    => 0,
+            'realtimeWindow'     => 'false',
+            'showFooterMessage'  => 0,
+            'showDateTime'       => 0,
+            'doNotRefreshVisits' => 1,
+        );
         return Url::getCurrentQueryStringWithParametersModified($params);
     }
+
     /**
      * @inheritdoc
      */

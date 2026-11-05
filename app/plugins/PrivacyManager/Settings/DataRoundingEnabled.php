@@ -6,31 +6,40 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\PrivacyManager\Settings;
 
 use Piwik\Piwik;
 use Piwik\Policy\CnilPolicy;
-class DataRoundingEnabled extends \Piwik\Plugins\PrivacyManager\Settings\CompliancePolicyEnforcedSetting
+
+class DataRoundingEnabled extends CompliancePolicyEnforcedSetting
 {
-    public static function getTitle() : string
+    public static function getTitle(): string
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingTitle');
     }
-    public static function getWhatItDoes(?int $idSite = null) : string
+
+    public static function getWhatItDoes(?int $idSite = null): string
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingWhatItDoes');
     }
-    public static function getImpact(?int $idSite = null) : string
+
+    public static function getImpact(?int $idSite = null): string
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingImpact');
     }
-    public static function getComplianceRequirementNote(?int $idSite = null) : string
+
+    public static function getComplianceRequirementNote(?int $idSite = null): string
     {
         return Piwik::translate('PrivacyManager_SegmentedDataRoundingSettingRequirementNote');
     }
-    public static function getPolicyRequirements() : array
+
+    public static function getPolicyRequirements(): array
     {
-        return [CnilPolicy::class => \true];
+        return [
+            CnilPolicy::class => true,
+        ];
     }
 }

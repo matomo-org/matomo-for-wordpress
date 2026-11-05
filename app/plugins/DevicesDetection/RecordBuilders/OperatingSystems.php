@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DevicesDetection\RecordBuilders;
 
 use Piwik\Plugins\DevicesDetection\Archiver;
-class OperatingSystems extends \Piwik\Plugins\DevicesDetection\RecordBuilders\Base
+
+class OperatingSystems extends Base
 {
     public function __construct()
     {

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Exception;
 
 /**
@@ -13,6 +14,7 @@ namespace Piwik\Exception;
  */
 interface IRedirectException
 {
-    public function getRedirectionUrl() : string;
-    public function getCountdown() : int;
+    public function getRedirectionUrl(): string;
+
+    public function getCountdown(): int;
 }

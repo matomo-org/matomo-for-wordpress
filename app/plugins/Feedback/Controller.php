@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Feedback;
 
 use Piwik\Url;
 use Piwik\View;
 use Piwik\Version;
 use Piwik\Container\StaticContainer;
+
 class Controller extends \Piwik\Plugin\Controller
 {
     public function index()

@@ -6,24 +6,28 @@ use function array_combine;
 use function array_key_exists;
 use function array_map;
 use function sprintf;
+
 /**
  * Base class for cache provider implementations.
  */
-abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\Common\Cache\FlushableCache, \Doctrine\Common\Cache\ClearableCache, \Doctrine\Common\Cache\MultiOperationCache
+abstract class CacheProvider implements Cache, FlushableCache, ClearableCache, MultiOperationCache
 {
     public const DOCTRINE_NAMESPACE_CACHEKEY = 'DoctrineNamespaceCacheKey[%s]';
+
     /**
      * The namespace to prefix all cache ids with.
      *
      * @var string
      */
     private $namespace = '';
+
     /**
      * The namespace version.
      *
      * @var int|null
      */
     private $namespaceVersion;
+
     /**
      * Sets the namespace to prefix all cache ids with.
      *
@@ -33,9 +37,10 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      */
     public function setNamespace($namespace)
     {
-        $this->namespace = (string) $namespace;
+        $this->namespace        = (string) $namespace;
         $this->namespaceVersion = null;
     }
+
     /**
      * Retrieves the namespace that prefixes all cache ids.
      *
@@ -45,6 +50,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->namespace;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -52,6 +58,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doFetch($this->getNamespacedId($id));
     }
+
     /**
      * {@inheritdoc}
      */
@@ -60,20 +67,25 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
         if (empty($keys)) {
             return [];
         }
+
         // note: the array_combine() is in place to keep an association between our $keys and the $namespacedKeys
         $namespacedKeys = array_combine($keys, array_map([$this, 'getNamespacedId'], $keys));
-        $items = $this->doFetchMultiple($namespacedKeys);
-        $foundItems = [];
+        $items          = $this->doFetchMultiple($namespacedKeys);
+        $foundItems     = [];
+
         // no internal array function supports this sort of mapping: needs to be iterative
         // this filters and combines keys in one pass
         foreach ($namespacedKeys as $requestedKey => $namespacedKey) {
-            if (!isset($items[$namespacedKey]) && !array_key_exists($namespacedKey, $items)) {
+            if (! isset($items[$namespacedKey]) && ! array_key_exists($namespacedKey, $items)) {
                 continue;
             }
+
             $foundItems[$requestedKey] = $items[$namespacedKey];
         }
+
         return $foundItems;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -83,8 +95,10 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
         foreach ($keysAndValues as $key => $value) {
             $namespacedKeysAndValues[$this->getNamespacedId($key)] = $value;
         }
+
         return $this->doSaveMultiple($namespacedKeysAndValues, $lifetime);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -92,6 +106,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doContains($this->getNamespacedId($id));
     }
+
     /**
      * {@inheritdoc}
      */
@@ -99,6 +114,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doSave($this->getNamespacedId($id), $data, $lifeTime);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -106,6 +122,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doDeleteMultiple(array_map([$this, 'getNamespacedId'], $keys));
     }
+
     /**
      * {@inheritdoc}
      */
@@ -113,6 +130,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doDelete($this->getNamespacedId($id));
     }
+
     /**
      * {@inheritdoc}
      */
@@ -120,6 +138,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doGetStats();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -127,19 +146,24 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return $this->doFlush();
     }
+
     /**
      * {@inheritDoc}
      */
     public function deleteAll()
     {
         $namespaceCacheKey = $this->getNamespaceCacheKey();
-        $namespaceVersion = $this->getNamespaceVersion() + 1;
+        $namespaceVersion  = $this->getNamespaceVersion() + 1;
+
         if ($this->doSave($namespaceCacheKey, $namespaceVersion)) {
             $this->namespaceVersion = $namespaceVersion;
-            return \true;
+
+            return true;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Prefixes the passed id with the configured namespace value.
      *
@@ -150,8 +174,10 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     private function getNamespacedId(string $id) : string
     {
         $namespaceVersion = $this->getNamespaceVersion();
+
         return sprintf('%s[%s][%s]', $this->namespace, $id, $namespaceVersion);
     }
+
     /**
      * Returns the namespace cache key.
      */
@@ -159,6 +185,7 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     {
         return sprintf(self::DOCTRINE_NAMESPACE_CACHEKEY, $this->namespace);
     }
+
     /**
      * Returns the namespace version.
      */
@@ -167,10 +194,13 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
         if ($this->namespaceVersion !== null) {
             return $this->namespaceVersion;
         }
-        $namespaceCacheKey = $this->getNamespaceCacheKey();
+
+        $namespaceCacheKey      = $this->getNamespaceCacheKey();
         $this->namespaceVersion = (int) $this->doFetch($namespaceCacheKey) ?: 1;
+
         return $this->namespaceVersion;
     }
+
     /**
      * Default implementation of doFetchMultiple. Each driver that supports multi-get should owerwrite it.
      *
@@ -181,15 +211,19 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
     protected function doFetchMultiple(array $keys)
     {
         $returnValues = [];
+
         foreach ($keys as $key) {
             $item = $this->doFetch($key);
-            if ($item === \false && !$this->doContains($key)) {
+            if ($item === false && ! $this->doContains($key)) {
                 continue;
             }
+
             $returnValues[$key] = $item;
         }
+
         return $returnValues;
     }
+
     /**
      * Fetches an entry from the cache.
      *
@@ -197,7 +231,8 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      *
      * @return mixed|false The cached data or FALSE, if no cache entry exists for the given id.
      */
-    protected abstract function doFetch($id);
+    abstract protected function doFetch($id);
+
     /**
      * Tests if an entry exists in the cache.
      *
@@ -205,7 +240,8 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      *
      * @return bool TRUE if a cache entry exists for the given cache id, FALSE otherwise.
      */
-    protected abstract function doContains($id);
+    abstract protected function doContains($id);
+
     /**
      * Default implementation of doSaveMultiple. Each driver that supports multi-put should override it.
      *
@@ -217,15 +253,19 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      */
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
-        $success = \true;
+        $success = true;
+
         foreach ($keysAndValues as $key => $value) {
             if ($this->doSave($key, $value, $lifetime)) {
                 continue;
             }
-            $success = \false;
+
+            $success = false;
         }
+
         return $success;
     }
+
     /**
      * Puts data into the cache.
      *
@@ -236,7 +276,8 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      *
      * @return bool TRUE if the entry was successfully stored in the cache, FALSE otherwise.
      */
-    protected abstract function doSave($id, $data, $lifeTime = 0);
+    abstract protected function doSave($id, $data, $lifeTime = 0);
+
     /**
      * Default implementation of doDeleteMultiple. Each driver that supports multi-delete should override it.
      *
@@ -246,15 +287,19 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      */
     protected function doDeleteMultiple(array $keys)
     {
-        $success = \true;
+        $success = true;
+
         foreach ($keys as $key) {
             if ($this->doDelete($key)) {
                 continue;
             }
-            $success = \false;
+
+            $success = false;
         }
+
         return $success;
     }
+
     /**
      * Deletes a cache entry.
      *
@@ -262,17 +307,19 @@ abstract class CacheProvider implements \Doctrine\Common\Cache\Cache, \Doctrine\
      *
      * @return bool TRUE if the cache entry was successfully deleted, FALSE otherwise.
      */
-    protected abstract function doDelete($id);
+    abstract protected function doDelete($id);
+
     /**
      * Flushes all cache entries.
      *
      * @return bool TRUE if the cache entries were successfully flushed, FALSE otherwise.
      */
-    protected abstract function doFlush();
+    abstract protected function doFlush();
+
     /**
      * Retrieves cached information from the data store.
      *
      * @return array|null An associative array with server's statistics if available, NULL otherwise.
      */
-    protected abstract function doGetStats();
+    abstract protected function doGetStats();
 }

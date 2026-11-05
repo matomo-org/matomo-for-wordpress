@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.14.2 =
+* Update core Matomo to version 5.14.2.
+
 = 5.14.0 =
 * Update core Matomo to version 5.14.0.
 * Hide the "Invite team member" link on the no data page, since users are managed in WordPress.

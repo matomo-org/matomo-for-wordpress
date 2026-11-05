@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry;
 
 use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Tracker\Visit;
+
 /**
  * Return the flag image path for a given country
  *
@@ -23,6 +25,7 @@ function getFlagFromCode($code)
     if (strtolower($code) == 'ti') {
         $code = 'cn';
     }
+
     $pathInPiwik = 'plugins/Morpheus/icons/dist/flags/%s.png';
     $pathWithCode = sprintf($pathInPiwik, $code);
     $absolutePath = PIWIK_INCLUDE_PATH . '/' . $pathWithCode;
@@ -31,6 +34,7 @@ function getFlagFromCode($code)
     }
     return sprintf($pathInPiwik, Visit::UNKNOWN_CODE);
 }
+
 /**
  * Returns the translated continent name for a given continent code
  *
@@ -44,6 +48,7 @@ function continentTranslate($label)
     }
     return Piwik::translate('Intl_Continent_' . $label);
 }
+
 /**
  * Returns the translated country name for a given country code
  *
@@ -55,23 +60,30 @@ function countryTranslate($label)
     if ($label == Visit::UNKNOWN_CODE || $label == '') {
         return Piwik::translate('General_Unknown');
     }
+
     if (strtolower($label) == 'ti') {
         $label = 'cn';
     }
+
     // Try to get name from Intl plugin
     $key = 'Intl_Country_' . strtoupper($label);
     $country = Piwik::translate($key);
+
     if ($country != $key) {
         return $country;
     }
+
     // Handle special country codes
     $key = 'UserCountry_country_' . $label;
     $country = Piwik::translate($key);
+
     if ($country != $key) {
         return $country;
     }
+
     return Piwik::translate('General_Unknown');
 }
+
 /**
  * Splits a label by a certain separator and returns the N-th element.
  *
@@ -83,15 +95,16 @@ function countryTranslate($label)
  * @return string|false Returns false if $label == DataTable::LABEL_SUMMARY_ROW, otherwise
  *                      explode($separator, $label)[$index].
  */
-function getElementFromStringArray($label, $separator, $index, $emptyValue = \false)
+function getElementFromStringArray($label, $separator, $index, $emptyValue = false)
 {
     if ($label == DataTable::LABEL_SUMMARY_ROW) {
-        return \false;
-        // so no metadata/column is added
+        return false; // so no metadata/column is added
     }
+
     $segments = explode($separator, $label);
     return empty($segments[$index]) ? $emptyValue : $segments[$index];
 }
+
 /**
  * Returns region name for the given regionCode / countryCode combination
  * using the currently set location provider
@@ -103,12 +116,16 @@ function getElementFromStringArray($label, $separator, $index, $emptyValue = \fa
 function getRegionNameFromCodes($countryCode, $regionCode)
 {
     $name = GeoIp2::getRegionNameFromCodes($countryCode, $regionCode);
+
     // fallback if no translation with GeoIP2
     if ($name == Piwik::translate('General_Unknown')) {
         $name = getLegacyRegionNameFromCodes($countryCode, $regionCode);
     }
+
     return $name;
 }
+
+
 /**
  * Returns a region name for a country code + region code.
  *
@@ -119,19 +136,23 @@ function getRegionNameFromCodes($countryCode, $regionCode)
 function getLegacyRegionNameFromCodes($countryCode, $regionCode)
 {
     $regionNames = getRegionNames();
+
     $countryCode = strtoupper($countryCode);
     $regionCode = strtoupper($regionCode);
+
     // ensure tibet is shown as region of china
     if ($countryCode == 'TI' && $regionCode == '1') {
         $regionCode = '14';
         $countryCode = 'CN';
     }
+
     if (isset($regionNames[$countryCode][$regionCode])) {
         return $regionNames[$countryCode][$regionCode];
     } else {
         return Piwik::translate('General_Unknown');
     }
 }
+
 /**
  * Returns an array of region names mapped by country code & region code.
  *
@@ -140,13 +161,17 @@ function getLegacyRegionNameFromCodes($countryCode, $regionCode)
 function getRegionNames()
 {
     static $regionNames;
+
     if (is_null($regionNames)) {
         $GEOIP_REGION_NAME = array();
         require_once PIWIK_INCLUDE_PATH . '/libs/MaxMindGeoIP/geoipregionvars.php';
         $regionNames = $GEOIP_REGION_NAME;
     }
+
     return $regionNames;
 }
+
+
 /**
  * Returns the region name using the label of a Visits by Region report.
  *
@@ -157,15 +182,17 @@ function getRegionNames()
 function getRegionName($label)
 {
     if ($label == DataTable::LABEL_SUMMARY_ROW) {
-        return \false;
-        // so no metadata/column is added
+        return false; // so no metadata/column is added
     }
+
     if ($label == '') {
         return Piwik::translate('General_Unknown');
     }
-    list($regionCode, $countryCode) = explode(\Piwik\Plugins\UserCountry\Archiver::LOCATION_SEPARATOR, $label);
+
+    list($regionCode, $countryCode) = explode(Archiver::LOCATION_SEPARATOR, $label);
     return getRegionNameFromCodes($countryCode, $regionCode);
 }
+
 /**
  * Returns the name of a region + the name of the region's country using the label of
  * a Visits by Region report.
@@ -179,16 +206,20 @@ function getPrettyRegionName($label)
     if ($label == DataTable::LABEL_SUMMARY_ROW) {
         return $label;
     }
+
     if ($label == '') {
         return Piwik::translate('General_Unknown');
     }
-    list($regionCode, $countryCode) = explode(\Piwik\Plugins\UserCountry\Archiver::LOCATION_SEPARATOR, $label);
+
+    list($regionCode, $countryCode) = explode(Archiver::LOCATION_SEPARATOR, $label);
+
     $result = getRegionNameFromCodes($countryCode, $regionCode);
     if ($countryCode != Visit::UNKNOWN_CODE && $countryCode != '') {
         $result .= ', ' . countryTranslate($countryCode);
     }
     return $result;
 }
+
 /**
  * Returns the name of a city + the name of its region + the name of its country using
  * the label of a Visits by City report.
@@ -203,17 +234,21 @@ function getPrettyCityName($label)
     if ($label == DataTable::LABEL_SUMMARY_ROW) {
         return $label;
     }
+
     if ($label == '') {
         return Piwik::translate('General_Unknown');
     }
+
     // get city name, region code & country code
-    $parts = explode(\Piwik\Plugins\UserCountry\Archiver::LOCATION_SEPARATOR, $label);
+    $parts = explode(Archiver::LOCATION_SEPARATOR, $label);
     $cityName = $parts[0];
     $regionCode = $parts[1];
     $countryCode = @$parts[2];
+
     if ($cityName == Visit::UNKNOWN_CODE || $cityName == '') {
         $cityName = Piwik::translate('General_Unknown');
     }
+
     $result = $cityName;
     if ($countryCode != Visit::UNKNOWN_CODE && $countryCode != '') {
         if ($regionCode != '' && $regionCode != Visit::UNKNOWN_CODE) {

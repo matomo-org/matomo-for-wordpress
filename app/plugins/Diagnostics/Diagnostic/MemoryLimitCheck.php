@@ -6,43 +6,56 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
 use Piwik\SettingsServer;
 use Piwik\Translation\Translator;
+
 /**
  * Check that the memory limit is enough.
  */
-class MemoryLimitCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
+class MemoryLimitCheck implements Diagnostic
 {
     /**
      * @var Translator
      */
     private $translator;
+
     /**
      * @var int
      */
     private $minimumMemoryLimit;
+
     public function __construct(Translator $translator, $minimumMemoryLimit)
     {
         $this->translator = $translator;
         $this->minimumMemoryLimit = $minimumMemoryLimit;
     }
+
     public function execute()
     {
         $label = $this->translator->translate('Installation_SystemCheckMemoryLimit');
+
         SettingsServer::raiseMemoryLimitIfNecessary();
+
         $memoryLimit = SettingsServer::getMemoryLimitValue();
         $comment = $memoryLimit . 'M';
-        if (\false === $memoryLimit) {
-            $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
+
+        if (false === $memoryLimit) {
+            $status = DiagnosticResult::STATUS_OK;
             $comment = $this->translator->translate('Installation_SystemCheckMemoryNoMemoryLimitSet');
         } elseif ($memoryLimit >= $this->minimumMemoryLimit) {
-            $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
+            $status = DiagnosticResult::STATUS_OK;
         } else {
-            $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING;
-            $comment .= sprintf('<br />%s<br />%s', $this->translator->translate('Installation_SystemCheckMemoryLimitHelp'), $this->translator->translate('Installation_RestartWebServer'));
+            $status = DiagnosticResult::STATUS_WARNING;
+            $comment .= sprintf(
+                '<br />%s<br />%s',
+                $this->translator->translate('Installation_SystemCheckMemoryLimitHelp'),
+                $this->translator->translate('Installation_RestartWebServer')
+            );
         }
-        return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, $status, $comment));
+
+        return array(DiagnosticResult::singleResult($label, $status, $comment));
     }
 }

@@ -1,0 +1,12 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Paikallinen aika",
+        "DayOfWeek": "Viikonpäivä",
+        "LocalTime": "Käyntejä (paikallinen aika)",
+        "PluginDescription": "Raportoi paikallisen ajan ja palvelimen ajan, kun kävijät katselevat sivustoasi tai sovellustasi.",
+        "SubmenuTimes": "Ajat",
+        "VisitsByDayOfWeek": "Käynnit viikonpäivän mukaan",
+        "WidgetByDayOfWeekDocumentation": "Tämä kaavio näyttää käyntien määrän toimialueellasi jokaisena viikonpäivänä.",
+        "WidgetLocalTimeDocumentation": "Tämä kuvaaja näyttää, mikä aika oli %1$s kävijöiden aikavyöhykkeellä %2$s käyntien aikana."
+    }
+}

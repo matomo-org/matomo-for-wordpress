@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Measurable;
 
 use Piwik\Piwik;
 use Piwik\Settings\Settings;
 use Piwik\Site;
 use Exception;
+
 /**
  * Base class of all measurable settings providers. Plugins that define their own configuration settings
  * can extend this class to easily make their measurable settings available to Piwik users.
@@ -33,10 +35,12 @@ abstract class MeasurableSettings extends Settings
      * @var int
      */
     protected $idSite;
+
     /**
      * @var string
      */
     protected $idMeasurableType;
+
     /**
      * @param int $idSite If creating settings for a new site that is not created yet, use idSite = 0
      * @param string|null $idMeasurableType If null, idType will be detected from idSite
@@ -45,7 +49,9 @@ abstract class MeasurableSettings extends Settings
     public function __construct($idSite, $idMeasurableType = null)
     {
         parent::__construct();
+
         $this->idSite = (int) $idSite;
+
         if (!empty($idMeasurableType)) {
             $this->idMeasurableType = $idMeasurableType;
         } elseif (!empty($idSite)) {
@@ -53,12 +59,15 @@ abstract class MeasurableSettings extends Settings
         } else {
             throw new Exception('No idType specified for ' . get_class($this));
         }
+
         $this->init();
     }
+
     protected function hasMeasurableType($typeId)
     {
         return $typeId === $this->idMeasurableType;
     }
+
     /**
      * Creates a new measurable setting.
      *
@@ -77,11 +86,14 @@ abstract class MeasurableSettings extends Settings
      */
     protected function makeSetting($name, $defaultValue, $type, $fieldConfigCallback)
     {
-        $setting = new \Piwik\Settings\Measurable\MeasurableSetting($name, $defaultValue, $type, $this->pluginName, $this->idSite);
+        $setting = new MeasurableSetting($name, $defaultValue, $type, $this->pluginName, $this->idSite);
         $setting->setConfigureCallback($fieldConfigCallback);
+
         $this->addSetting($setting);
+
         return $setting;
     }
+
     /**
      * @internal
      * @param $name
@@ -93,11 +105,14 @@ abstract class MeasurableSettings extends Settings
      */
     protected function makeProperty($name, $defaultValue, $type, $configureCallback)
     {
-        $setting = new \Piwik\Settings\Measurable\MeasurableProperty($name, $defaultValue, $type, $this->pluginName, $this->idSite);
+        $setting = new MeasurableProperty($name, $defaultValue, $type, $this->pluginName, $this->idSite);
         $setting->setConfigureCallback($configureCallback);
+
         $this->addSetting($setting);
+
         return $setting;
     }
+
     /**
      * Saves (persists) the current measurable setting values in the database.
      *
@@ -106,6 +121,7 @@ abstract class MeasurableSettings extends Settings
     public function save()
     {
         parent::save();
+
         /**
          * Triggered after a plugin settings have been updated.
          *

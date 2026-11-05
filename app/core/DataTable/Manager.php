@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable;
 
 use Exception;
 use Piwik\Common;
 use Piwik\DataTable;
+
 /**
  * The DataTable\Manager registers all the instantiated DataTable and provides an
  * easy way to access them. This is used to store all the DataTable during the archiving process.
@@ -23,14 +25,18 @@ class Manager extends \ArrayObject
      * @var int
      */
     protected $nextTableId = 0;
+
     private static $instance;
+
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            self::$instance = new \Piwik\DataTable\Manager();
+            self::$instance = new Manager();
         }
+
         return self::$instance;
     }
+
     /**
      * Add a DataTable to the registry
      *
@@ -43,6 +49,7 @@ class Manager extends \ArrayObject
         $this[$this->nextTableId] = $table;
         return $this->nextTableId;
     }
+
     /**
      * Returns the DataTable associated to the ID $idTable.
      * NB: The datatable has to have been instantiated before!
@@ -55,10 +62,12 @@ class Manager extends \ArrayObject
     public function getTable($idTable)
     {
         if (!isset($this[$idTable])) {
-            throw new \Piwik\DataTable\TableNotFoundException(sprintf("Error: table id %s not found in memory. (If this error is causing you problems in production, please report it in Matomo issue tracker.)", $idTable));
+            throw new TableNotFoundException(sprintf("Error: table id %s not found in memory. (If this error is causing you problems in production, please report it in Matomo issue tracker.)", $idTable));
         }
+
         return $this[$idTable];
     }
+
     /**
      * Returns the latest used table ID
      *
@@ -68,6 +77,7 @@ class Manager extends \ArrayObject
     {
         return $this->nextTableId;
     }
+
     /**
      * Delete all the registered DataTables from the manager
      *
@@ -77,15 +87,20 @@ class Manager extends \ArrayObject
     public function deleteAll($deleteWhenIdTableGreaterThan = 0, $deleteUntil = null)
     {
         foreach ($this as $id => $table) {
-            if ($id > $deleteWhenIdTableGreaterThan && ($deleteUntil === null || $id <= $deleteUntil)) {
+            if (
+                $id > $deleteWhenIdTableGreaterThan
+                && ($deleteUntil === null || $id <= $deleteUntil)
+            ) {
                 $this->deleteTable($id);
             }
         }
+
         if ($deleteWhenIdTableGreaterThan == 0) {
             $this->exchangeArray(array());
             $this->nextTableId = 0;
         }
     }
+
     /**
      * Deletes (unsets) the datatable given its id and removes it from the manager
      * Subsequent get for this table will fail
@@ -99,6 +114,7 @@ class Manager extends \ArrayObject
             $this->setTableDeleted($id);
         }
     }
+
     /**
      * Deletes all tables starting from the $firstTableId to the most recent table id except the ones that are
      * supposed to be ignored.
@@ -109,12 +125,14 @@ class Manager extends \ArrayObject
     public function deleteTablesExceptIgnored($idsToBeIgnored, $firstTableId = 0)
     {
         $lastTableId = $this->getMostRecentTableId();
+
         for ($index = $firstTableId; $index <= $lastTableId; $index++) {
             if (!in_array($index, $idsToBeIgnored)) {
                 $this->deleteTable($index);
             }
         }
     }
+
     /**
      * Remove the table from the manager (table has already been unset)
      *
@@ -124,6 +142,7 @@ class Manager extends \ArrayObject
     {
         $this[$id] = null;
     }
+
     /**
      * Debug only. Dumps all tables currently registered in the Manager
      */
@@ -131,12 +150,12 @@ class Manager extends \ArrayObject
     {
         echo "<hr />Manager->dumpAllTables()<br />";
         foreach ($this as $id => $table) {
-            if (!$table instanceof DataTable) {
-                echo "Error table {$id} is not instance of datatable<br />";
+            if (!($table instanceof DataTable)) {
+                echo "Error table $id is not instance of datatable<br />";
                 var_export($table);
             } else {
                 echo "<hr />";
-                echo "Table (index={$id}) TableId = " . $table->getId() . "<br />";
+                echo "Table (index=$id) TableId = " . $table->getId() . "<br />";
                 echo $table;
                 echo "<br />";
             }

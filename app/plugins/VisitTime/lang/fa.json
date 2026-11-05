@@ -1,0 +1,10 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "زمان محلی",
+        "DayOfWeek": "روز از هفته",
+        "LocalTime": "بازدید ها بر اساس زمان محلی",
+        "SubmenuTimes": "زمانها",
+        "VisitsByDayOfWeek": "بازدیدها براساس روزهای هفته",
+        "WidgetByDayOfWeekDocumentation": "این نمودار تعداد بازدیدهای وبسایت شما را در هر روز از هفته نمایش می دهد."
+    }
+}

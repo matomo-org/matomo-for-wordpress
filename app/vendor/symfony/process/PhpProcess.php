@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\Process;
 
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\RuntimeException;
+
 /**
  * PhpProcess runs a PHP script in an independent process.
  *
@@ -21,7 +23,7 @@ use Symfony\Component\Process\Exception\RuntimeException;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class PhpProcess extends \Symfony\Component\Process\Process
+class PhpProcess extends Process
 {
     /**
      * @param string      $script  The PHP script to run (as a string)
@@ -33,9 +35,9 @@ class PhpProcess extends \Symfony\Component\Process\Process
     public function __construct(string $script, ?string $cwd = null, ?array $env = null, int $timeout = 60, ?array $php = null)
     {
         if (null === $php) {
-            $executableFinder = new \Symfony\Component\Process\PhpExecutableFinder();
-            $php = $executableFinder->find(\false);
-            $php = \false === $php ? null : array_merge([$php], $executableFinder->findArguments());
+            $executableFinder = new PhpExecutableFinder();
+            $php = $executableFinder->find(false);
+            $php = false === $php ? null : array_merge([$php], $executableFinder->findArguments());
         }
         if ('phpdbg' === \PHP_SAPI) {
             $file = tempnam(sys_get_temp_dir(), 'dbg');
@@ -44,8 +46,10 @@ class PhpProcess extends \Symfony\Component\Process\Process
             $php[] = $file;
             $script = null;
         }
+
         parent::__construct($php, $cwd, $env, $script, $timeout);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -53,6 +57,7 @@ class PhpProcess extends \Symfony\Component\Process\Process
     {
         throw new LogicException(sprintf('The "%s()" method cannot be called when using "%s".', __METHOD__, self::class));
     }
+
     /**
      * {@inheritdoc}
      */
@@ -61,6 +66,7 @@ class PhpProcess extends \Symfony\Component\Process\Process
         if (null === $this->getCommandLine()) {
             throw new RuntimeException('Unable to find the PHP executable.');
         }
+
         parent::start($callback, $env);
     }
 }

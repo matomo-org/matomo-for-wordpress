@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -15,6 +16,7 @@ use Piwik\Updater;
 use Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 /**
  * Update for version 5.0.0-rc3.
  */
@@ -24,10 +26,12 @@ class Updates_5_0_0_rc3 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -41,8 +45,10 @@ class Updates_5_0_0_rc3 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        return array();
+        return array(
+        );
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -54,18 +60,19 @@ class Updates_5_0_0_rc3 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
+
         // Migrate the MatomoConfiguration type variables to all include the newly configured fields.
         $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'heartBeatTime', 15);
         $migrator->addField('referralCookieTimeOut', 182);
         $migrator->addField('sessionCookieTimeOut', 30);
-        $migrator->addField('enableFileTracking', \false);
+        $migrator->addField('enableFileTracking', false);
         $migrator->addField('crossDomainLinkingTimeout', 180);
         $migrator->addField('cookieNamePrefix', '_pk_');
-        $migrator->addField('disablePerformanceTracking', \false);
+        $migrator->addField('disablePerformanceTracking', false);
         $migrator->addField('trackingEndpointCustom', 'custom.php');
         $migrator->addField('jsEndpointCustom', 'custom.js');
         $migrator->addField('appendToTrackingUrl', '');
-        $migrator->addField('forceRequestMethod', \false);
+        $migrator->addField('forceRequestMethod', false);
         $migrator->addField('requestMethod', 'GET');
         $migrator->addField('requestContentType', 'application/x-www-form-urlencoded; charset=UTF-8');
         $migrator->addField('customRequestProcessing', '');

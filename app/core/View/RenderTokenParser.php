@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\View;
 
-use Matomo\Dependencies\Twig\Node\Expression\ArrayExpression;
-use Matomo\Dependencies\Twig\Node\IncludeNode;
-use Matomo\Dependencies\Twig\Token;
-use Matomo\Dependencies\Twig\TokenParser\AbstractTokenParser;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\IncludeNode;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * Defines a new Twig tag that will render a Piwik View.
  *
@@ -33,17 +35,41 @@ class RenderTokenParser extends AbstractTokenParser
     {
         $parser = $this->parser;
         $stream = $parser->getStream();
+
         $view = $parser->getExpressionParser()->parseExpression();
+
         $variablesOverride = new ArrayExpression(array(), $token->getLine());
         if ($stream->test(Token::NAME_TYPE, 'with')) {
             $stream->next();
+
             $variablesOverride->addElement($this->parser->getExpressionParser()->parseExpression());
         }
+
         $stream->expect(Token::BLOCK_END_TYPE);
-        $viewTemplateExpr = new \Piwik\View\MethodCallExpression($view, 'getTemplateFile', new ArrayExpression(array(), $token->getLine()), $token->getLine());
-        $variablesExpr = new \Piwik\View\MethodCallExpression($view, 'getTemplateVars', $variablesOverride, $token->getLine());
-        return new IncludeNode($viewTemplateExpr, $variablesExpr, $only = \false, $ignoreMissing = \false, $token->getLine());
+
+        $viewTemplateExpr = new MethodCallExpression(
+            $view,
+            'getTemplateFile',
+            new ArrayExpression(array(), $token->getLine()),
+            $token->getLine()
+        );
+
+        $variablesExpr = new MethodCallExpression(
+            $view,
+            'getTemplateVars',
+            $variablesOverride,
+            $token->getLine()
+        );
+
+        return new IncludeNode(
+            $viewTemplateExpr,
+            $variablesExpr,
+            $only = false,
+            $ignoreMissing = false,
+            $token->getLine()
+        );
     }
+
     /**
      * Returns the tag identifier.
      *

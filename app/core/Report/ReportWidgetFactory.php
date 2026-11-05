@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Report;
 
 use Piwik\Plugin\Report;
 use Piwik\Widget\WidgetContainerConfig;
+
 /**
  * Report widget factory. This factory allows you to create widgets for a given report without having to re-specify
  * redundant information like module, action, category, subcategory, order, ... When creating a widget from a report
@@ -24,6 +26,7 @@ class ReportWidgetFactory
      * @var Report
      */
     private $report = null;
+
     /**
      * Generates a new report widget factory.
      * @param Report $report  A report instance, widgets will be created based on the data provided by this report.
@@ -32,6 +35,7 @@ class ReportWidgetFactory
     {
         $this->report = $report;
     }
+
     /**
      * Creates a widget based on the specified report in {@link construct()}.
      *
@@ -42,25 +46,32 @@ class ReportWidgetFactory
      */
     public function createWidget()
     {
-        $widget = new \Piwik\Report\ReportWidgetConfig();
+        $widget = new ReportWidgetConfig();
         $widget->setName($this->report->getName());
         $widget->setCategoryId($this->report->getCategoryId());
+
         if ($this->report->getDefaultTypeViewDataTable()) {
             $widget->setDefaultViewDataTable($this->report->getDefaultTypeViewDataTable());
         }
+
         if ($this->report->getSubcategoryId()) {
             $widget->setSubcategoryId($this->report->getSubcategoryId());
         }
+
         $widget->setModule($this->report->getModule());
         $widget->setAction($this->report->getAction());
+
         $orderThatListsReportsAtTheEndOfEachCategory = 100 + $this->report->getOrder();
         $widget->setOrder($orderThatListsReportsAtTheEndOfEachCategory);
+
         $parameters = $this->report->getParameters();
         if (!empty($parameters)) {
             $widget->setParameters($parameters);
         }
+
         return $widget;
     }
+
     /**
      * Creates a new container widget based on the specified report in {@link construct()}.
      *
@@ -78,13 +89,17 @@ class ReportWidgetFactory
         $widget = new WidgetContainerConfig();
         $widget->setCategoryId($this->report->getCategoryId());
         $widget->setId($containerId);
+
         if ($this->report->getSubcategoryId()) {
             $widget->setSubcategoryId($this->report->getSubcategoryId());
         }
+
         $orderThatListsReportsAtTheEndOfEachCategory = 100 + $this->report->getOrder();
         $widget->setOrder($orderThatListsReportsAtTheEndOfEachCategory);
+
         return $widget;
     }
+
     /**
      * Creates a custom widget that doesn't use a viewDataTable to render the report but instead a custom
      * controller action. Make sure the specified `$action` exists in the plugin's controller. Otherwise
@@ -99,6 +114,7 @@ class ReportWidgetFactory
         $widget = $this->createWidget();
         $widget->setDefaultViewDataTable(null);
         $widget->setAction($action);
+
         return $widget;
     }
 }

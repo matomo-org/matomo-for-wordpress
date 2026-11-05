@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 /**
@@ -18,6 +19,7 @@ class ProxyHttp
 {
     public const DEFLATE_ENCODING_REGEX = '/(?:^|, ?)(deflate)(?:,|$)/';
     public const GZIP_ENCODING_REGEX = '/(?:^|, ?)((x-)?gzip)(?:,|$)/';
+
     /**
      * Returns true if the current request appears to be a secure HTTPS connection
      *
@@ -25,8 +27,9 @@ class ProxyHttp
      */
     public static function isHttps()
     {
-        return \Piwik\Url::getCurrentScheme() === 'https';
+        return Url::getCurrentScheme() === 'https';
     }
+
     /**
      * Serve static files through php proxy.
      *
@@ -62,53 +65,76 @@ class ProxyHttp
      *                               file should be sent as a different filename to the client you can specify
      *                               a custom filename here.
      */
-    public static function serverStaticFile($file, $contentType, $expireFarFutureDays = 100, $byteStart = \false, $byteEnd = \false, $filename = \false)
-    {
+    public static function serverStaticFile(
+        $file,
+        $contentType,
+        $expireFarFutureDays = 100,
+        $byteStart = false,
+        $byteEnd = false,
+        $filename = false
+    ) {
         // if the file cannot be found return HTTP status code '404'
         if (empty($file) || !file_exists($file)) {
-            \Piwik\Common::sendResponseCode(404);
+            Common::sendResponseCode(404);
             return;
         }
+
         if (!is_readable($file)) {
-            \Piwik\Common::sendResponseCode(500);
+            Common::sendResponseCode(500);
             return;
         }
-        $modifiedSince = \Piwik\Http::getModifiedSinceHeader();
+
+        $modifiedSince = Http::getModifiedSinceHeader();
+
         $fileModifiedTime = @filemtime($file);
         $lastModified = gmdate('D, d M Y H:i:s', $fileModifiedTime) . ' GMT';
+
         // set some HTTP response headers
         self::overrideCacheControlHeaders('public');
-        \Piwik\Common::sendHeader('Vary: Accept-Encoding');
-        if (\false === $filename) {
+        Common::sendHeader('Vary: Accept-Encoding');
+
+        if (false === $filename) {
             $filename = basename($file);
         }
-        \Piwik\Common::sendHeader('Content-Disposition: inline; filename=' . $filename);
+
+        Common::sendHeader('Content-Disposition: inline; filename=' . $filename);
+
         if ($expireFarFutureDays) {
             // Required by proxy caches potentially in between the browser and server to cache the request indeed
-            \Piwik\Common::sendHeader(self::getExpiresHeaderForFutureDay($expireFarFutureDays));
+            Common::sendHeader(self::getExpiresHeaderForFutureDay($expireFarFutureDays));
         }
+
         // Return 304 if the file has not modified since
         if ($modifiedSince === $lastModified) {
-            \Piwik\Common::sendResponseCode(304);
+            Common::sendResponseCode(304);
             return;
         }
+
         // if we have to serve the file, serve it now, either in the clear or compressed
-        if ($byteStart === \false) {
+        if ($byteStart === false) {
             $byteStart = 0;
         }
-        if ($byteEnd === \false) {
+
+        if ($byteEnd === false) {
             $byteEnd = filesize($file);
         }
-        $compressed = \false;
+
+        $compressed = false;
         $encoding = '';
-        $compressedFileLocation = \Piwik\AssetManager::getInstance()->getAssetDirectory() . '/' . basename($file);
-        if (!($byteStart == 0 && $byteEnd == filesize($file))) {
-            $compressedFileLocation .= ".{$byteStart}.{$byteEnd}";
+        $compressedFileLocation = AssetManager::getInstance()->getAssetDirectory() . '/' . basename($file);
+
+        if (
+            !($byteStart == 0
+              && $byteEnd == filesize($file))
+        ) {
+            $compressedFileLocation .= ".$byteStart.$byteEnd";
         }
+
         $phpOutputCompressionEnabled = self::isPhpOutputCompressed();
         if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !$phpOutputCompressionEnabled) {
             [$encoding, $extension] = self::getCompressionEncodingAcceptedByClient();
             $filegz = $compressedFileLocation . $extension;
+
             if (self::canCompressInPhp()) {
                 if (!empty($encoding)) {
                     // compress the file if it doesn't exist or is newer than the existing cached file, and cache
@@ -116,31 +142,42 @@ class ProxyHttp
                     if (self::shouldCompressFile($file, $filegz)) {
                         self::compressFile($file, $filegz, $encoding, $byteStart, $byteEnd);
                     }
-                    $compressed = \true;
+
+                    $compressed = true;
                     $file = $filegz;
+
                     $byteStart = 0;
                     $byteEnd = filesize($file);
                 }
             } else {
                 // if a compressed file exists, the file was manually compressed so we just serve that
-                if ($extension == '.gz' && !self::shouldCompressFile($file, $filegz)) {
-                    $compressed = \true;
+                if (
+                    $extension == '.gz'
+                    && !self::shouldCompressFile($file, $filegz)
+                ) {
+                    $compressed = true;
                     $file = $filegz;
+
                     $byteStart = 0;
                     $byteEnd = filesize($file);
                 }
             }
         }
-        \Piwik\Common::sendHeader('Last-Modified: ' . $lastModified);
+
+        Common::sendHeader('Last-Modified: ' . $lastModified);
+
         if (!$phpOutputCompressionEnabled) {
-            \Piwik\Common::sendHeader('Content-Length: ' . ($byteEnd - $byteStart));
+            Common::sendHeader('Content-Length: ' . ($byteEnd - $byteStart));
         }
+
         if (!empty($contentType)) {
-            \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
+            Common::sendHeader('Content-Type: ' . $contentType);
         }
+
         if ($compressed) {
-            \Piwik\Common::sendHeader('Content-Encoding: ' . $encoding);
+            Common::sendHeader('Content-Encoding: ' . $encoding);
         }
+
         // in case any notices were triggered before this point (eg in WordPress) etc.
         // it would break the gzipped response since it would have mixed regular notice/string plus gzipped content
         // and would not be able to decode the response
@@ -148,16 +185,27 @@ class ProxyHttp
         for ($i = 0; $i < $levels; $i++) {
             ob_end_clean();
         }
+
         // clearing all output buffers combined with output compressions had bugs on certain PHP versions
         // manually removing the Content-Encoding header fixes this
         // See https://github.com/php/php-src/issues/8218
-        if ($phpOutputCompressionEnabled && (version_compare(\PHP_VERSION, '8.0.17', '=') || version_compare(\PHP_VERSION, '8.0.18', '=') || version_compare(\PHP_VERSION, '8.1.4', '=') || version_compare(\PHP_VERSION, '8.1.5', '='))) {
+        if (
+            $phpOutputCompressionEnabled
+            && (
+                version_compare(PHP_VERSION, '8.0.17', '=')
+                || version_compare(PHP_VERSION, '8.0.18', '=')
+                || version_compare(PHP_VERSION, '8.1.4', '=')
+                || version_compare(PHP_VERSION, '8.1.5', '=')
+            )
+        ) {
             header_remove("Content-Encoding");
         }
+
         if (!_readfile($file, $byteStart, $byteEnd)) {
-            \Piwik\Common::sendResponseCode(500);
+            Common::sendResponseCode(500);
         }
     }
+
     /**
      * Test if php output is compressed
      *
@@ -167,19 +215,28 @@ class ProxyHttp
     {
         // Off = ''; On = '1'; otherwise, it's a buffer size
         $zlibOutputCompression = ini_get('zlib.output_compression');
+
         // could be ob_gzhandler, ob_deflatehandler, etc
         $outputHandler = ini_get('output_handler');
+
         // output handlers can be stacked
         $obHandlers = array_filter(ob_list_handlers(), function ($var) {
             return $var !== "default output handler";
         });
+
         // user defined handler via wrapper
         if (!defined('PIWIK_TEST_MODE')) {
             $autoPrependFile = ini_get('auto_prepend_file');
             $autoAppendFile = ini_get('auto_append_file');
         }
-        return !empty($zlibOutputCompression) || !empty($outputHandler) || !empty($obHandlers) || !empty($autoPrependFile) || !empty($autoAppendFile);
+
+        return !empty($zlibOutputCompression) ||
+        !empty($outputHandler) ||
+        !empty($obHandlers) ||
+        !empty($autoPrependFile) ||
+        !empty($autoAppendFile);
     }
+
     /**
      * Workaround IE bug when downloading certain document types over SSL and
      * cache control headers are present, e.g.,
@@ -196,23 +253,25 @@ class ProxyHttp
     public static function overrideCacheControlHeaders($override = null)
     {
         if ($override || self::isHttps()) {
-            \Piwik\Common::stripHeader('Pragma');
-            \Piwik\Common::stripHeader('Expires');
+            Common::stripHeader('Pragma');
+            Common::stripHeader('Expires');
             if (in_array($override, array('public', 'private', 'no-cache', 'no-store'))) {
-                \Piwik\Common::sendHeader("Cache-Control: {$override}, must-revalidate");
+                Common::sendHeader("Cache-Control: $override, must-revalidate");
             } else {
-                \Piwik\Common::sendHeader('Cache-Control: must-revalidate');
+                Common::sendHeader('Cache-Control: must-revalidate');
             }
         }
     }
+
     /**
      * Returns a formatted Expires HTTP header for a certain number of days in the future. The result
      * can be used in a call to `header()`.
      */
     private static function getExpiresHeaderForFutureDay($expireFarFutureDays)
     {
-        return "Expires: " . gmdate('D, d M Y H:i:s', time() + 86400 * (int) $expireFarFutureDays) . ' GMT';
+        return "Expires: " . gmdate('D, d M Y H:i:s', time() + 86400 * (int)$expireFarFutureDays) . ' GMT';
     }
+
     private static function getCompressionEncodingAcceptedByClient()
     {
         $acceptEncoding = $_SERVER['HTTP_ACCEPT_ENCODING'];
@@ -221,33 +280,46 @@ class ProxyHttp
         } elseif (preg_match(self::DEFLATE_ENCODING_REGEX, $acceptEncoding, $matches)) {
             return array('deflate', '.deflate');
         } else {
-            return array(\false, \false);
+            return array(false, false);
         }
     }
+
     private static function canCompressInPhp()
     {
         return extension_loaded('zlib') && function_exists('file_get_contents') && function_exists('file_put_contents');
     }
+
     private static function shouldCompressFile($fileToCompress, $compressedFilePath)
     {
         $toCompressLastModified = @filemtime($fileToCompress);
         $compressedLastModified = @filemtime($compressedFilePath);
-        return !file_exists($compressedFilePath) || $toCompressLastModified > $compressedLastModified;
+
+        return !file_exists($compressedFilePath) || ($toCompressLastModified > $compressedLastModified);
     }
-    private static function compressFile($fileToCompress, $compressedFilePath, $compressionEncoding, $byteStart, $byteEnd)
-    {
+
+    private static function compressFile(
+        $fileToCompress,
+        $compressedFilePath,
+        $compressionEncoding,
+        $byteStart,
+        $byteEnd
+    ) {
         $data = file_get_contents($fileToCompress);
         $data = substr($data, $byteStart, $byteEnd - $byteStart);
+
         if ($compressionEncoding == 'deflate') {
             $data = gzdeflate($data, 9);
         } elseif ($compressionEncoding == 'gzip' || $compressionEncoding == 'x-gzip') {
             $data = self::gzencode($data);
         }
-        if (\false === $data) {
+
+        if (false === $data) {
             throw new \Exception('compressing file ' . $fileToCompress . ' failed');
         }
+
         file_put_contents($compressedFilePath, $data);
     }
+
     public static function gzencode($data)
     {
         return gzencode($data, 9);

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker;
 
 /**
@@ -18,7 +19,8 @@ abstract class LogTable
      * Get the unprefixed database table name. For example 'log_visit' or 'log_action'.
      * @return string
      */
-    public abstract function getName();
+    abstract public function getName();
+
     /**
      * Get the name of the column that represents the primary key. For example "idvisit" or "idlink_va". If the table
      * does not have a unique ID for each row, you may choose a column that comes closest to it, for example "idvisit".
@@ -28,6 +30,7 @@ abstract class LogTable
     {
         return '';
     }
+
     /**
      * Get the name of the column that can be used to join a visit with another table. This is the name of the column
      * that represents the "idvisit".
@@ -37,6 +40,7 @@ abstract class LogTable
     {
         return '';
     }
+
     /**
      * Get the name of the column that can be used to join an action with another table. This is the name of the column
      * that represents the "idaction".
@@ -51,6 +55,7 @@ abstract class LogTable
     {
         return '';
     }
+
     /**
      * If a table can neither be joined via idVisit nor idAction, it should be given a way to join with other tables
      * so the log table can be joined via idvisit through a different table joins.
@@ -65,6 +70,7 @@ abstract class LogTable
     {
         return array();
     }
+
     /**
      * Defines whether this table should be joined via a subselect. Return true if a complex join is needed. (eg when
      * having visits and needing actions, or when having visits and needing conversions, or vice versa).
@@ -72,8 +78,9 @@ abstract class LogTable
      */
     public function shouldJoinWithSubSelect()
     {
-        return \false;
+        return false;
     }
+
     /**
      * Defines a column that stores the date/time at which time an entry was written or updated. Setting this
      * can help improve the performance of some archive queries. For example the log_link_visit_action table would define
@@ -84,6 +91,7 @@ abstract class LogTable
     {
         return '';
     }
+
     /**
      * Returns the name of a log table that allows to join on a visit. Eg if there is a table "action", and it is not
      * joinable with "visit" table, it can return "log_link_visit_action" to be able to join the action table on visit
@@ -100,6 +108,7 @@ abstract class LogTable
     {
         return;
     }
+
     /**
      * Get the names of the columns that represents the primary key. For example "idvisit" or "idlink_va". If the table
      * defines the primary key based on multiple columns, you must specify them all
@@ -111,13 +120,14 @@ abstract class LogTable
     {
         return array();
     }
+
     /**
      * Defines if the log table holds an `idvisitor` column.
      * If set to yes, existing records are automatically updated when the visitor id changes during a visit
      *
      */
-    public function hasIdVisitorColumn() : bool
+    public function hasIdVisitorColumn(): bool
     {
-        return \false;
+        return false;
     }
 }

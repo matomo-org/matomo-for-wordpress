@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreHome\Columns;
 
 use Piwik\Metrics\Formatter;
@@ -15,6 +16,7 @@ use Piwik\Site;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 class IdSite extends VisitDimension
 {
     protected $columnName = 'idsite';
@@ -23,9 +25,11 @@ class IdSite extends VisitDimension
     // and add column 'idsite' and add index. Problem is there is also an index
     // INDEX(idsite, config_id, visit_last_action_time) and we maybe not be sure whether config_id already exists at
     // installing point (we do not know whether visit_last_action_time or idsite column would be added first).
+
     protected $nameSingular = 'General_Measurable';
     protected $namePlural = 'General_Measurables';
     protected $type = self::TYPE_TEXT;
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -34,6 +38,7 @@ class IdSite extends VisitDimension
     {
         return $request->getIdSite();
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -42,6 +47,7 @@ class IdSite extends VisitDimension
     {
         return $request->getIdSite();
     }
+
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         try {

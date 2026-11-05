@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Goals\Tracker;
 
 use Piwik\Common;
@@ -14,6 +15,7 @@ use Piwik\Tracker\GoalManager;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\RequestProcessor;
 use Piwik\Tracker\Visit\VisitProperties;
+
 /**
  * Handles conversion detection and tracking for tracker requests.
  *
@@ -43,48 +45,65 @@ class GoalsRequestProcessor extends RequestProcessor
      * @var GoalManager
      */
     public $goalManager = null;
+
     public function __construct(GoalManager $goalManager)
     {
         $this->goalManager = $goalManager;
     }
+
     public function processRequestParams(VisitProperties $visitProperties, Request $request)
     {
         $this->goalManager = new GoalManager();
+
         if ($this->isManualGoalConversion($request)) {
             // this request is from the JS call to piwikTracker.trackGoal()
             $goal = $this->goalManager->detectGoalId($request->getIdSite(), $request);
+
             $visitIsConverted = !empty($goal);
             $request->setMetadata('Goals', 'visitIsConverted', $visitIsConverted);
+
             $existingConvertedGoals = $request->getMetadata('Goals', 'goalsConverted') ?: array();
             $request->setMetadata('Goals', 'goalsConverted', array_merge($existingConvertedGoals, array($goal)));
-            $request->setMetadata('Actions', 'action', null);
-            // don't track actions when doing manual goal conversions
+
+            $request->setMetadata('Actions', 'action', null); // don't track actions when doing manual goal conversions
+
             // if we find a idgoal in the URL, but then the goal is not valid, this is most likely a fake request
             if (!$visitIsConverted) {
                 $idGoal = $request->getParam('idgoal');
                 Common::printDebug('Invalid goal tracking request for goal id = ' . $idGoal);
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     public function afterRequestProcessed(VisitProperties $visitProperties, Request $request)
     {
         $goalsConverted = $request->getMetadata('Goals', 'goalsConverted');
+
         /** @var Action $action */
         $action = $request->getMetadata('Actions', 'action');
+
         // if the visit hasn't already been converted another way (ie, manual goal conversion or ecommerce conversion,
         // try to convert based on the action)
-        if (empty($goalsConverted) && $action) {
+        if (
+            empty($goalsConverted)
+            && $action
+        ) {
             $goalsConverted = $this->goalManager->detectGoalsMatchingUrl($request->getIdSite(), $action, $visitProperties, $request);
+
             $existingGoalsConverted = $request->getMetadata('Goals', 'goalsConverted') ?: array();
             $request->setMetadata('Goals', 'goalsConverted', array_merge($existingGoalsConverted, $goalsConverted));
+
             if (!empty($goalsConverted)) {
-                $request->setMetadata('Goals', 'visitIsConverted', \true);
+                $request->setMetadata('Goals', 'visitIsConverted', true);
             }
         }
-        return \false;
+
+        return false;
     }
+
     public function recordLogs(VisitProperties $visitProperties, Request $request)
     {
         // record the goals if there were conversions in this request (even if the visit itself was not converted)
@@ -93,6 +112,7 @@ class GoalsRequestProcessor extends RequestProcessor
             $this->goalManager->recordGoals($visitProperties, $request);
         }
     }
+
     private function isManualGoalConversion(Request $request)
     {
         $idGoal = $request->getParam('idgoal');

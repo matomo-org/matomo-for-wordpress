@@ -1,0 +1,12 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Lokalno vreme",
+        "DayOfWeek": "Dan u nedelji",
+        "LocalTime": "Broj poseta po lokalnom vremenu",
+        "PluginDescription": "Prikaz lokalnog i serverskog vremena u kojem posetioci dolaze na vaš sajt ili koriste aplikaciju.",
+        "SubmenuTimes": "Vreme",
+        "VisitsByDayOfWeek": "Posete po danu u nedelji",
+        "WidgetByDayOfWeekDocumentation": "Ovaj grafikon prikazuje broj poseta po danu u nedelji",
+        "WidgetLocalTimeDocumentation": "Ovaj grafikon prikazuje vreme u %1$s vremenskoj zoni posetilaca %2$s za vreme njihovih poseta"
+    }
+}

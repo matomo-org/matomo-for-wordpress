@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Events\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\Events\Archiver;
+
 class ReplaceEventNameNotSet extends BaseFilter
 {
     /**
@@ -21,6 +23,7 @@ class ReplaceEventNameNotSet extends BaseFilter
     {
         parent::__construct($table);
     }
+
     /**
      * @param DataTable $table
      */

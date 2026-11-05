@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph;
 
 use Piwik\API\Request as ApiRequest;
@@ -19,6 +20,7 @@ use Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph;
 use Piwik\Plugins\CoreVisualizations\Visualizations\EvolutionPeriodSelector;
 use Piwik\Site;
+
 /**
  * Visualization that renders HTML for a line graph using jqPlot.
  *
@@ -28,6 +30,7 @@ class Evolution extends JqplotGraph
 {
     public const ID = 'graphEvolution';
     public const SERIES_COLOR_COUNT = 8;
+
     /**
      * Precomputed forecast values, keyed by series index then tick index. Populated by
      * afterAllFiltersAreApplied() so the data generator can reuse the same result instead
@@ -36,6 +39,7 @@ class Evolution extends JqplotGraph
      * @var array<int, array<int, float|null>>
      */
     private $forecastData = [];
+
     /**
      * Per-series state collected by JqplotDataGenerator\Evolution::precomputeForecast()
      * so the later initChartObjectData() pass can skip its row × column loop. Null when
@@ -44,89 +48,119 @@ class Evolution extends JqplotGraph
      * @var ForecastSeriesState|null
      */
     private $forecastSeriesState = null;
+
     public static function getDefaultConfig()
     {
-        return new \Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution\Config();
+        return new Evolution\Config();
     }
+
     /**
      * @return array<int, array<int, float|null>>
      */
-    public function getForecastData() : array
+    public function getForecastData(): array
     {
         return $this->forecastData;
     }
-    public function setForecastSeriesState(?ForecastSeriesState $state) : void
+
+    public function setForecastSeriesState(?ForecastSeriesState $state): void
     {
         $this->forecastSeriesState = $state;
     }
-    public function getForecastSeriesState() : ?ForecastSeriesState
+
+    public function getForecastSeriesState(): ?ForecastSeriesState
     {
         return $this->forecastSeriesState;
     }
+
     public function beforeRender()
     {
         parent::beforeRender();
+
         $this->checkRequestIsOnlyForMultiplePeriods();
-        $this->config->show_flatten_table = \false;
+
+        $this->config->show_flatten_table = false;
         $this->config->datatable_js_type = 'JqplotEvolutionGraphDataTable';
     }
+
     public function beforeLoadDataTable()
     {
         $isComparingDatesOrPeriods = $this->isComparingDatesOrPeriods();
+
         if (!$this->isComparing() || !$isComparingDatesOrPeriods) {
             $this->calculateEvolutionDateRange();
         }
+
         parent::beforeLoadDataTable();
+
         // fetch archive states for incomplete data point visualization
-        $this->requestConfig->request_parameters_to_modify['fetch_archive_state'] = \true;
+        $this->requestConfig->request_parameters_to_modify['fetch_archive_state'] = true;
+
         // period will be overridden when 'range' is requested in the UI.
         // The graph will display the range in the most suitable period and
         // it won't show historical data before the range.
-        $period = Common::getRequestVar('period', \false);
+        $period = Common::getRequestVar('period', false);
         $selector = StaticContainer::get(EvolutionPeriodSelector::class);
+
         if ($period === 'range') {
-            $date = Common::getRequestVar('date', \false);
+            $date = Common::getRequestVar('date', false);
             $requestingPeriod = Factory::build($period, $date);
+
             // if a larger date range is selected, then for better performance and for seeing trends better we want to use
             // a suitable period (rather than always using for example the day range)
             $this->requestConfig->request_parameters_to_modify['period'] = $selector->getHighestPeriodInCommon($requestingPeriod, []);
             $this->requestConfig->request_parameters_to_modify['date'] = $requestingPeriod->getRangeString();
         }
+
         // Forecast values can only be drawn by the LineRenderer. Force-off when the viz is in
         // bar mode (subclass override or ?show_line_graph=0 query param) so the always-on
         // forecast cannot sneak forecast computation into a bar-mode render.
         if (!$this->config->show_line_graph) {
-            $this->config->show_forecast = \false;
+            $this->config->show_forecast = false;
         }
+
         $this->config->custom_parameters['columns'] = $this->config->columns_to_display;
+
         if ($this->isComparing() && $isComparingDatesOrPeriods) {
-            $this->config->show_limit_control = \false;
-            // since we always show the evolution over the period, there's no point in changing the limit
-            $this->config->show_periods = \false;
-            // the periods can't be changed as they are always fixed when comparing
+            $this->config->show_limit_control = false; // since we always show the evolution over the period, there's no point in changing the limit
+            $this->config->show_periods = false; // the periods can't be changed as they are always fixed when comparing
+
             $requestArray = $this->request->getRequestArray();
             $requestArray = ApiRequest::getRequestArrayFromString($requestArray);
+
             $requestingPeriod = Factory::build($requestArray['period'], $requestArray['date']);
+
             $comparisonPeriods = [];
             if (!empty($requestArray['comparePeriods'])) {
                 $comparisonPeriods = $selector->getComparisonPeriodObjects($requestArray['comparePeriods'], $requestArray['compareDates']);
             }
-            $this->requestConfig->request_parameters_to_modify = $selector->setDatePeriods($this->requestConfig->request_parameters_to_modify, $requestingPeriod, $comparisonPeriods, \true);
+
+            $this->requestConfig->request_parameters_to_modify = $selector->setDatePeriods(
+                $this->requestConfig->request_parameters_to_modify,
+                $requestingPeriod,
+                $comparisonPeriods,
+                true
+            );
         }
     }
-    private function isComparingDatesOrPeriods() : bool
+
+    private function isComparingDatesOrPeriods(): bool
     {
         $comparePeriods = Common::getRequestVar('comparePeriods', [], 'array');
         $compareDates = Common::getRequestVar('compareDates', [], 'array');
+
         return !empty($comparePeriods) || !empty($compareDates);
     }
+
     public function afterAllFiltersAreApplied()
     {
         parent::afterAllFiltersAreApplied();
-        if (\false === $this->config->x_axis_step_size) {
+
+        if (false === $this->config->x_axis_step_size) {
             $rowCount = $this->dataTable->getRowsCount();
+
             $this->config->x_axis_step_size = $this->getDefaultXAxisStepSize($rowCount);
         }
+
         // The forecast is always active for line charts, but the per-series builder only runs
         // when there is something to forecast: precomputeForecast() bails cheaply unless at
         // least one tick is incomplete, so dashboards full of historical-only evolution
@@ -135,31 +169,42 @@ class Evolution extends JqplotGraph
             $this->forecastData = $this->precomputeForecastData();
         }
     }
+
     protected function makeDataGenerator($properties)
     {
         return JqplotDataGenerator::factory('evolution', $properties, $this);
     }
+
     /**
      * @return array<int, array<int, float|null>>
      */
-    private function precomputeForecastData() : array
+    private function precomputeForecastData(): array
     {
         if ($this->isComparing()) {
             return [];
         }
+
         /** @var DataTable|DataTable\Map|null $dataTable */
         $dataTable = $this->dataTable;
+
         if (!$dataTable instanceof DataTable\Map) {
             return [];
         }
+
         // Same merge order as Visualization::render() when it populates
         // $view->properties, so the precomputed forecast sees the same property
         // set the rendered chart will.
-        $properties = array_merge($this->requestConfig->getProperties(), $this->config->getProperties());
+        $properties = array_merge(
+            $this->requestConfig->getProperties(),
+            $this->config->getProperties()
+        );
+
         /** @var JqplotDataGenerator\Evolution $dataGenerator */
         $dataGenerator = $this->makeDataGenerator($properties);
+
         return $dataGenerator->precomputeForecast($dataTable);
     }
+
     /**
      * Based on the period, date and evolution_{$period}_last_n query parameters,
      * calculates the date range this evolution chart will display data for.
@@ -169,26 +214,30 @@ class Evolution extends JqplotGraph
         $period = Common::getRequestVar('period');
         $idSite = Common::getRequestVar('idSite');
         $timezone = Site::getTimezoneFor($idSite);
+
         $lastNParamName = self::getLastNParamName($period);
         $defaultLastN = $this->config->custom_parameters[$lastNParamName] ?? self::getDefaultLastN($period);
         $originalDate = Common::getRequestVar('date', 'last' . $defaultLastN, 'string');
-        if ('range' != $period) {
-            // show evolution limit if the period is not a range
+
+        if ('range' != $period) { // show evolution limit if the period is not a range
             // set the evolution_{$period}_last_n query param
             if (Range::parseDateRange($originalDate)) {
                 // if a multiple period
+
                 // overwrite last_n param using the date range
                 $oPeriod = new Range($period, $originalDate, $timezone);
-                $lastN = count($oPeriod->getSubperiods());
+                $lastN   = count($oPeriod->getSubperiods());
             } else {
                 // if not a multiple period
                 list($newDate, $lastN) = self::getDateRangeAndLastN($period, $originalDate, $defaultLastN);
                 $this->requestConfig->request_parameters_to_modify['date'] = $newDate;
                 $this->config->custom_parameters['dateUsedInGraph'] = $newDate;
             }
+
             $this->config->custom_parameters[$lastNParamName] = $lastN;
         }
     }
+
     /**
      * Returns the entire date range and lastN value for the current request, based on
      * a period type and end date.
@@ -206,13 +255,18 @@ class Evolution extends JqplotGraph
         if ($defaultLastN === null) {
             $defaultLastN = self::getDefaultLastN($period);
         }
+
         $lastNParamName = self::getLastNParamName($period);
         $lastN = Common::getRequestVar($lastNParamName, $defaultLastN, 'int');
+
         $idSite = $idSite ?? Common::getRequestVar('idSite');
         $site = new Site($idSite);
+
         $dateRange = Range::getRelativeToEndDate($period, 'last' . $lastN, $endDate, $site);
+
         return array($dateRange, $lastN);
     }
+
     /**
      * Returns the default last N number of dates to display for a given period.
      *
@@ -233,6 +287,7 @@ class Evolution extends JqplotGraph
                 return 30;
         }
     }
+
     /**
      * Returns the query parameter that stores the lastN number of periods to get for
      * the evolution graph.
@@ -244,13 +299,16 @@ class Evolution extends JqplotGraph
     {
         return "evolution_{$period}_last_n";
     }
+
     public function getDefaultXAxisStepSize($countGraphElements)
     {
         // when the number of elements plotted can be small, make sure the X legend is useful
         if ($countGraphElements <= 7) {
             return 1;
         }
+
         $periodLabel = Common::getRequestVar('period');
+
         switch ($periodLabel) {
             case 'day':
             case 'range':
@@ -269,19 +327,24 @@ class Evolution extends JqplotGraph
                 $steps = 5;
                 break;
         }
-        $paddedCount = $countGraphElements + 2;
-        // pad count so last label won't be cut off
+
+        $paddedCount = $countGraphElements + 2; // pad count so last label won't be cut off
+
         return ceil($paddedCount / $steps);
     }
+
     public function supportsComparison()
     {
-        return \true;
+        return true;
     }
+
     protected function ensureValidColumnsToDisplay()
     {
         parent::ensureValidColumnsToDisplay();
+
         $columnsToDisplay = $this->config->columns_to_display;
+
         // Use a sensible default if the columns_to_display is empty
-        $this->config->columns_to_display = $columnsToDisplay ?: array('nb_visits');
+        $this->config->columns_to_display = $columnsToDisplay ? : array('nb_visits');
     }
 }

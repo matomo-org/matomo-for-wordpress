@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Scheduler;
 
 use Piwik\Concurrency\Lock;
 use Piwik\Piwik;
 use Piwik\Timer;
 use Piwik\Log\LoggerInterface;
+
 /**
  * Schedules task execution.
  *
@@ -51,43 +53,52 @@ class Scheduler
      * Is the scheduler running any task.
      * @var bool
      */
-    private $isRunningTask = \false;
+    private $isRunningTask = false;
+
     /**
      * Should the last run task be scheduled for a retry
      * @var bool
      */
-    private $scheduleRetry = \false;
+    private $scheduleRetry = false;
+
     /**
      * @var Timetable
      */
     private $timetable;
+
     /**
      * @var TaskLoader
      */
     private $loader;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var Lock
      */
     private $lock;
+
     /**
      * @var bool
      */
-    private $hasReceivedAbortSignal = \false;
-    public function __construct(\Piwik\Scheduler\TaskLoader $loader, LoggerInterface $logger, \Piwik\Scheduler\ScheduledTaskLock $lock)
+    private $hasReceivedAbortSignal = false;
+
+    public function __construct(TaskLoader $loader, LoggerInterface $logger, ScheduledTaskLock $lock)
     {
-        $this->timetable = new \Piwik\Scheduler\Timetable();
+        $this->timetable = new Timetable();
         $this->loader = $loader;
         $this->logger = $logger;
         $this->lock = $lock;
     }
-    public function handleSignal(int $signal) : void
+
+    public function handleSignal(int $signal): void
     {
-        $this->hasReceivedAbortSignal = in_array($signal, [\SIGINT, \SIGTERM], \true);
+        $this->hasReceivedAbortSignal = in_array($signal, [\SIGINT, \SIGTERM], true);
     }
+
     /**
      * Executes tasks that are scheduled to run, then reschedules them.
      *
@@ -104,44 +115,60 @@ class Scheduler
     public function run()
     {
         $tasks = $this->loader->loadTasks();
+
         $this->logger->debug('{count} scheduled tasks loaded', array('count' => count($tasks)));
+
         // remove from timetable tasks that are not active anymore
         $this->timetable->removeInactiveTasks($tasks);
+
         $this->logger->info("Starting Scheduled tasks... ");
+
         // for every priority level, starting with the highest and concluding with the lowest
         $executionResults = array();
-        $readFromOption = \true;
-        for ($priority = \Piwik\Scheduler\Task::HIGHEST_PRIORITY; $priority <= \Piwik\Scheduler\Task::LOWEST_PRIORITY; ++$priority) {
+        $readFromOption = true;
+        for ($priority = Task::HIGHEST_PRIORITY; $priority <= Task::LOWEST_PRIORITY; ++$priority) {
             $this->logger->debug("Executing tasks with priority {priority}:", array('priority' => $priority));
+
             // loop through each task
             foreach ($tasks as $task) {
                 if ($this->hasReceivedAbortSignal) {
                     $this->logger->info("Scheduler: Aborting due to received signal");
                     return $executionResults;
                 }
+
                 // if the task does not have the current priority level, don't execute it yet
                 if ($task->getPriority() != $priority) {
                     continue;
                 }
+
                 $taskName = $task->getName();
+
                 if (!$this->acquireLockForTask($taskName, $task->getTTL())) {
-                    $this->logger->debug("Scheduler: '{task}' is currently executed by another process", ['task' => $task->getName()]);
+                    $this->logger->debug(
+                        "Scheduler: '{task}' is currently executed by another process",
+                        ['task' => $task->getName()]
+                    );
                     continue;
                 }
+
                 if ($readFromOption) {
                     // because other jobs might execute the scheduled tasks as well we have to read the up to date time table to not handle the same task twice
                     // ideally we would read from option every time but using $readFromOption as a minor performance tweak. There can be easily 100 tasks
                     // of which we only execute very few and it's unlikely that the timetable changes too much in between while iterating over the loop and triggering the event.
                     // this way we only read from option when we actually execute or reschedule a task as this can take a few seconds.
                     $this->timetable->readFromOption();
-                    $readFromOption = \false;
+                    $readFromOption = false;
                 }
+
                 $shouldExecuteTask = $this->timetable->shouldExecuteTask($taskName);
+
                 if ($this->timetable->taskShouldBeRescheduled($taskName)) {
-                    $readFromOption = \true;
+                    $readFromOption = true;
                     $rescheduledDate = $this->timetable->rescheduleTask($task);
+
                     $this->logger->debug("Task {task} is scheduled to run again for {date}.", array('task' => $taskName, 'date' => $rescheduledDate));
                 }
+
                 /**
                  * Triggered before a task is executed.
                  *
@@ -152,36 +179,51 @@ class Scheduler
                  * @param Task $task The task that is about to be executed.
                  */
                 Piwik::postEvent('ScheduledTasks.shouldExecuteTask', array(&$shouldExecuteTask, $task));
+
                 if ($shouldExecuteTask) {
-                    $readFromOption = \true;
-                    $this->scheduleRetry = \false;
+                    $readFromOption = true;
+                    $this->scheduleRetry = false;
                     $message = $this->executeTask($task);
+
                     // Task has thrown an exception and should be scheduled for a retry
                     if ($this->scheduleRetry) {
                         if ($this->timetable->getRetryCount($taskName) == 3) {
                             // Task has already been retried three times, give up
                             $this->timetable->clearRetryCount($taskName);
-                            $this->logger->warning("Scheduler: '{task}' has already been retried three times, giving up", ['task' => $taskName]);
+
+                            $this->logger->warning(
+                                "Scheduler: '{task}' has already been retried three times, giving up",
+                                ['task' => $taskName]
+                            );
                         } else {
-                            $readFromOption = \true;
+                            $readFromOption = true;
                             $rescheduledDate = $this->timetable->rescheduleTaskAndRunInOneHour($task);
                             $this->timetable->incrementRetryCount($taskName);
-                            $this->logger->info("Scheduler: '{task}' retry scheduled for {date}", ['task' => $taskName, 'date' => $rescheduledDate]);
+
+                            $this->logger->info(
+                                "Scheduler: '{task}' retry scheduled for {date}",
+                                ['task' => $taskName, 'date' => $rescheduledDate]
+                            );
                         }
-                        $this->scheduleRetry = \false;
+                        $this->scheduleRetry = false;
                     } else {
                         if ($this->timetable->getRetryCount($taskName) > 0) {
                             $this->timetable->clearRetryCount($taskName);
                         }
                     }
+
                     $executionResults[] = array('task' => $taskName, 'output' => $message);
                 }
+
                 $this->releaseLock();
             }
         }
+
         $this->logger->info("done");
+
         return $executionResults;
     }
+
     /**
      * Run a specific task now. Will ignore the schedule completely.
      *
@@ -191,18 +233,24 @@ class Scheduler
     public function runTaskNow($taskName)
     {
         $tasks = $this->loader->loadTasks();
+
         foreach ($tasks as $task) {
             if ($task->getName() === $taskName) {
                 if (!$this->acquireLockForTask($taskName, $task->getTTL())) {
                     return 'Execution skipped. Another process is currently executing this task.';
                 }
+
                 $result = $this->executeTask($task);
+
                 $this->releaseLock();
+
                 return $result;
             }
         }
+
         throw new \InvalidArgumentException('Task ' . $taskName . ' not found');
     }
+
     /**
      * Determines a task's scheduled time and persists it, overwriting the previous scheduled time.
      *
@@ -212,11 +260,13 @@ class Scheduler
      * @param Task $task Describes the scheduled task being rescheduled.
      * @api
      */
-    public function rescheduleTask(\Piwik\Scheduler\Task $task)
+    public function rescheduleTask(Task $task)
     {
         $this->logger->debug('Rescheduling task {task}', array('task' => $task->getName()));
+
         $this->timetable->rescheduleTask($task);
     }
+
     /**
      * Determines a task's scheduled time and persists it, overwriting the previous scheduled time.
      *
@@ -228,11 +278,13 @@ class Scheduler
      * @param Task $task Describes the scheduled task being rescheduled.
      * @api
      */
-    public function rescheduleTaskAndRunTomorrow(\Piwik\Scheduler\Task $task)
+    public function rescheduleTaskAndRunTomorrow(Task $task)
     {
         $this->logger->debug('Rescheduling task and setting first run for tomorrow {task}', array('task' => $task->getName()));
+
         $this->timetable->rescheduleTaskAndRunTomorrow($task);
     }
+
     /**
      * Returns true if the scheduler is currently running a task.
      *
@@ -242,6 +294,7 @@ class Scheduler
     {
         return $this->isRunningTask;
     }
+
     /**
      * Return the next scheduled time given the class and method names of a scheduled task.
      *
@@ -255,6 +308,7 @@ class Scheduler
     {
         return $this->timetable->getScheduledTimeForMethod($className, $methodName, $methodParameter);
     }
+
     /**
      * Returns the list of the task names.
      *
@@ -263,22 +317,27 @@ class Scheduler
     public function getTaskList()
     {
         $tasks = $this->loader->loadTasks();
-        return array_map(function (\Piwik\Scheduler\Task $task) {
+
+        return array_map(function (Task $task) {
             return $task->getName();
         }, $tasks);
     }
-    private function acquireLockForTask(string $taskName, int $ttlInSeconds) : bool
+
+    private function acquireLockForTask(string $taskName, int $ttlInSeconds): bool
     {
         if (-1 === $ttlInSeconds) {
             // lock disabled, so don't try to acquire one
-            return \true;
+            return true;
         }
+
         return $this->lock->acquireLock($taskName, $ttlInSeconds);
     }
+
     private function releaseLock()
     {
         $this->lock->unlock();
     }
+
     /**
      * Executes the given task
      *
@@ -287,28 +346,40 @@ class Scheduler
      */
     private function executeTask($task)
     {
-        $this->logger->info("Scheduler: executing task {taskName}...", array('taskName' => $task->getName()));
-        $this->isRunningTask = \true;
+        $this->logger->info("Scheduler: executing task {taskName}...", array(
+            'taskName' => $task->getName(),
+        ));
+
+        $this->isRunningTask = true;
+
         $timer = new Timer();
+
         /**
          * Triggered directly before a scheduled task is executed
          *
          * @param Task $task  The task that is about to be executed
          */
         Piwik::postEvent('ScheduledTasks.execute', array(&$task));
+
         try {
             $callable = array($task->getObjectInstance(), $task->getMethodName());
             call_user_func($callable, $task->getMethodParameter());
             $message = $timer->__toString();
         } catch (\Exception $e) {
-            $this->logger->error("Scheduler: Error {errorMessage} for task '{task}'", ['errorMessage' => $e->getMessage(), 'task' => $task->getName()]);
+            $this->logger->error(
+                "Scheduler: Error {errorMessage} for task '{task}'",
+                ['errorMessage' => $e->getMessage(), 'task' => $task->getName()]
+            );
             $message = 'ERROR: ' . $e->getMessage();
+
             // If the task has indicated that retrying on exception is safe then flag for rescheduling
-            if ($e instanceof \Piwik\Scheduler\RetryableException) {
-                $this->scheduleRetry = \true;
+            if ($e instanceof RetryableException) {
+                $this->scheduleRetry = true;
             }
         }
-        $this->isRunningTask = \false;
+
+        $this->isRunningTask = false;
+
         /**
          * Triggered after a scheduled task is successfully executed.
          *
@@ -318,7 +389,11 @@ class Scheduler
          * @param Task $task The task that was just executed
          */
         Piwik::postEvent('ScheduledTasks.execute.end', array(&$task));
-        $this->logger->info("Scheduler: finished. {timeElapsed}", array('timeElapsed' => $timer));
+
+        $this->logger->info("Scheduler: finished. {timeElapsed}", array(
+            'timeElapsed' => $timer,
+        ));
+
         return $message;
     }
 }

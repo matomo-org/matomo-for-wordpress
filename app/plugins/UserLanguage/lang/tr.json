@@ -1,0 +1,9 @@
+{
+    "UserLanguage": {
+        "BrowserLanguage": "Tarayıcı dili",
+        "LanguageCode": "Dil kodu",
+        "PluginDescription": "Ziyaretçilerin tarayıcılarında kullandıkları birincil dili görüntüler.",
+        "getLanguageCodeDocumentation": "Ziyaretçilerin tarayıcılarında kullandıkları dilin tam kodunu görüntüler. (Örnek: \"Almanca - Avusturya (de-at)\")",
+        "getLanguageDocumentation": "Ziyaretçilerin tarayıcılarında kullandıkları dili görüntüler. (Örnek: \"Türkçe\")"
+    }
+}

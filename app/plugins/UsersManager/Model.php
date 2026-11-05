@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Request\AuthenticationToken;
@@ -26,6 +27,7 @@ use Piwik\SettingsPiwik;
 use Piwik\Validators\BaseValidator;
 use Piwik\Validators\CharacterLength;
 use Piwik\Validators\NotEmpty;
+
 /**
  * Persists and reads users, their auth tokens and their site access from the database backend.
  *
@@ -52,14 +54,17 @@ class Model
 {
     public const MAX_LENGTH_TOKEN_DESCRIPTION = 100;
     public const TOKEN_HASH_ALGO = 'sha512';
+
     private static $rawPrefix = 'user';
     private $userTable;
     private $tokenTable;
+
     public function __construct()
     {
         $this->userTable = Common::prefixTable(self::$rawPrefix);
         $this->tokenTable = Common::prefixTable('user_token_auth');
     }
+
     /**
      * Returns the list of all the users
      *
@@ -71,14 +76,20 @@ class Model
     {
         $where = '';
         $bind = array();
+
         if (!empty($userLogins)) {
             $where = 'WHERE login IN (' . Common::getSqlStringFieldsArray($userLogins) . ')';
             $bind = $userLogins;
         }
+
         $db = $this->getDb();
-        $users = $db->fetchAll("SELECT * FROM " . $this->userTable . "\n                                {$where}\n                                ORDER BY login ASC", $bind);
+        $users = $db->fetchAll("SELECT * FROM " . $this->userTable . "
+                                $where
+                                ORDER BY login ASC", $bind);
+
         return $users;
     }
+
     /**
      * Returns the list of all the users login
      *
@@ -88,42 +99,58 @@ class Model
     {
         $db = $this->getDb();
         $users = $db->fetchAll("SELECT login FROM " . $this->userTable . " ORDER BY login ASC");
+
         $return = array();
         foreach ($users as $login) {
             $return[] = $login['login'];
         }
+
         return $return;
     }
+
     public function getUsersSitesFromAccess($access)
     {
         $db = $this->getDb();
-        $users = $db->fetchAll("SELECT login,idsite FROM " . Common::prefixTable("access") . " WHERE access = ?\n                                    ORDER BY login, idsite", $access);
+        $users = $db->fetchAll("SELECT login,idsite FROM " . Common::prefixTable("access")
+          . " WHERE access = ?
+                                    ORDER BY login, idsite", $access);
+
         $return = array();
         foreach ($users as $user) {
             $return[$user['login']][] = $user['idsite'];
         }
+
         return $return;
     }
+
     public function getUsersAccessFromSite($idSite)
     {
         $db = $this->getDb();
-        $users = $db->fetchAll("SELECT login,access FROM " . Common::prefixTable("access") . " WHERE idsite = ?", $idSite);
+        $users = $db->fetchAll("SELECT login,access FROM " . Common::prefixTable("access")
+          . " WHERE idsite = ?", $idSite);
+
         $return = array();
         foreach ($users as $user) {
             $return[$user['login']] = $user['access'];
         }
+
         return $return;
     }
+
     public function getUsersLoginWithSiteAccess($idSite, $access)
     {
         $db = $this->getDb();
-        $users = $db->fetchAll("SELECT login FROM " . Common::prefixTable("access") . " WHERE idsite = ? AND access = ?", array($idSite, $access));
+        $users = $db->fetchAll("SELECT login FROM " . Common::prefixTable("access")
+          . " WHERE idsite = ? AND access = ?", array($idSite, $access));
+
         $logins = array();
         foreach ($users as $user) {
             $logins[] = $user['login'];
         }
+
         return $logins;
     }
+
     /**
      * For each website ID, returns the access level of the given $userLogin.
      * If the user doesn't have any access to a website ('noaccess'),
@@ -144,67 +171,109 @@ class Model
     {
         $accessTable = Common::prefixTable('access');
         $siteTable = Common::prefixTable('site');
-        $sql = sprintf("SELECT access.idsite, access.access \n    FROM `%s` access \n    LEFT JOIN `%s` site \n    ON access.idsite=site.idsite\n     WHERE access.login = ? and site.idsite is not null", $accessTable, $siteTable);
+
+        $sql = sprintf("SELECT access.idsite, access.access 
+    FROM `%s` access 
+    LEFT JOIN `%s` site 
+    ON access.idsite=site.idsite
+     WHERE access.login = ? and site.idsite is not null", $accessTable, $siteTable);
         $db = $this->getDb();
         $users = $db->fetchAll($sql, $userLogin);
         $return = array();
         foreach ($users as $user) {
-            $return[] = array('site' => $user['idsite'], 'access' => $user['access']);
+            $return[] = array(
+              'site'   => $user['idsite'],
+              'access' => $user['access'],
+            );
         }
         return $return;
     }
-    public function getSitesAccessFromUserWithFilters($userLogin, $limit = null, $offset = 0, $pattern = null, $access = null, $idSites = null)
-    {
+
+    public function getSitesAccessFromUserWithFilters(
+        $userLogin,
+        $limit = null,
+        $offset = 0,
+        $pattern = null,
+        $access = null,
+        $idSites = null
+    ) {
         $siteAccessFilter = new SiteAccessFilter($userLogin, $pattern, $access, $idSites);
+
         [$joins, $bind] = $siteAccessFilter->getJoins('a');
+
         [$where, $whereBind] = $siteAccessFilter->getWhere();
         $bind = array_merge($bind, $whereBind);
+
         $limitSql = '';
         $offsetSql = '';
         if ($limit) {
-            $limitSql = "LIMIT " . (int) $limit;
+            $limitSql = "LIMIT " . (int)$limit;
+
             if ($offset) {
-                $offsetSql = "OFFSET " . (int) $offset;
+                $offsetSql = "OFFSET " . (int)$offset;
             }
         }
+
         $selector = "a.access";
         if ($access) {
             $selector = 'b.access';
             $joins .= " LEFT JOIN " . Common::prefixTable('access') . " b on a.idsite = b.idsite AND a.login = b.login";
         }
+
         $sql = 'SELECT s.idsite as idsite, s.name as site_name, GROUP_CONCAT(' . $selector . ' SEPARATOR "|") as access
-                  FROM `' . Common::prefixTable('access') . "` a\n                {$joins}\n                {$where}\n              GROUP BY s.idsite\n              ORDER BY s.name ASC, s.idsite ASC\n              {$limitSql} {$offsetSql}";
+                  FROM `' . Common::prefixTable('access') . "` a
+                $joins
+                $where
+              GROUP BY s.idsite
+              ORDER BY s.name ASC, s.idsite ASC
+              $limitSql $offsetSql";
         $db = $this->getDb();
+
         $access = $db->fetchAll($sql, $bind);
         foreach ($access as &$entry) {
             $entry['access'] = explode('|', $entry['access'] ?? '');
         }
+
         $sql = 'SELECT COUNT(DISTINCT s.idsite)
-                 FROM `' . Common::prefixTable('access') . "` a\n                {$joins}\n                {$where}";
+                 FROM `' . Common::prefixTable('access') . "` a
+                $joins
+                $where";
+
         $count = $db->fetchOne($sql, $bind);
+
         return [$access, $count];
     }
+
     public function getIdSitesAccessMatching($userLogin, $filter_search = null, $filter_access = null, $idSites = null)
     {
         $siteAccessFilter = new SiteAccessFilter($userLogin, $filter_search, $filter_access, $idSites);
+
         [$joins, $bind] = $siteAccessFilter->getJoins('a');
+
         [$where, $whereBind] = $siteAccessFilter->getWhere();
         $bind = array_merge($bind, $whereBind);
-        $sql = 'SELECT s.idsite FROM `' . Common::prefixTable('access') . "` a {$joins} {$where}";
+
+        $sql = 'SELECT s.idsite FROM `' . Common::prefixTable('access') . "` a $joins $where";
+
         $db = $this->getDb();
+
         $sites = $db->fetchAll($sql, $bind);
         $sites = array_column($sites, 'idsite');
         return $sites;
     }
+
     /**
      * @param string $userLogin
      * @return array
      * @phpstan-return UserRow|array{}
      */
-    public function getUser($userLogin) : array
+    public function getUser($userLogin): array
     {
         $db = $this->getDb();
+
+
         $matchedUsers = $db->fetchAll("SELECT * FROM {$this->userTable} WHERE login = ?", $userLogin);
+
         // for BC in 2.15 LTS, if there is a user w/ an exact match to the requested login, return that user.
         // this is done since before this change, login was case sensitive. until 3.0, we want to maintain
         // this behavior.
@@ -213,36 +282,47 @@ class Model
                 return $user;
             }
         }
+
         if (!count($matchedUsers)) {
             return [];
         }
+
         return (array) reset($matchedUsers);
     }
-    public function hashTokenAuth(#[\SensitiveParameter]
-        $tokenAuth)
-    {
+
+    public function hashTokenAuth(
+        #[\SensitiveParameter]
+        $tokenAuth
+    ) {
         $salt = SettingsPiwik::getSalt();
         return hash(self::TOKEN_HASH_ALGO, $tokenAuth . $salt);
     }
-    public function generateRandomInviteToken() : string
+
+    public function generateRandomInviteToken(): string
     {
         $count = 0;
+
         do {
             $token = $this->generateTokenAuth();
+
             $count++;
             if ($count > 20) {
                 // something seems wrong as the odds of that happening is basically 0. Only catching it to prevent
                 // endless loop in case there is some bug somewhere
                 throw new \Exception('Failed to generate token');
             }
-        } while ($this->getUserByInviteToken($token));
+        } while ($this->inviteTokenExists($token));
+
         return $token;
     }
+
     public function generateRandomTokenAuth()
     {
         $count = 0;
+
         do {
             $token = $this->generateTokenAuth();
+
             $count++;
             if ($count > 20) {
                 // something seems wrong as the odds of that happening is basically 0. Only catching it to prevent
@@ -250,12 +330,18 @@ class Model
                 throw new \Exception('Failed to generate token');
             }
         } while ($this->getUserByTokenAuth($token));
+
         return $token;
     }
+
     private function generateTokenAuth()
     {
-        return md5(Common::getRandomString(32, 'abcdef1234567890') . microtime(\true) . Common::generateUniqId() . SettingsPiwik::getSalt());
+        return md5(Common::getRandomString(
+            32,
+            'abcdef1234567890'
+        ) . microtime(true) . Common::generateUniqId() . SettingsPiwik::getSalt());
     }
+
     /**
      * Add a new token auth record to the database
      *
@@ -266,44 +352,95 @@ class Model
      * @param null|string  $dateExpired
      * @param bool  $isSystemToken
      * @param bool  $secureOnly     True if this token can only be used in a secure way (e.g. POST requests), default false
+     * @param null|string $expectedDateRegistered The registration date the account is expected to have. When given,
+     *                                            the token is only stored if the account still matches it.
      *
      * @return int                  Primary key of the new token auth
      * @throws \Piwik\Tracker\Db\DbException
      */
-    public function addTokenAuth($login, #[\SensitiveParameter]
-        $tokenAuth, $description, $dateCreated, $dateExpired = null, $isSystemToken = \false, bool $secureOnly = \false)
-    {
+    public function addTokenAuth(
+        $login,
+        #[\SensitiveParameter]
+        $tokenAuth,
+        $description,
+        $dateCreated,
+        $dateExpired = null,
+        $isSystemToken = false,
+        bool $secureOnly = false,
+        ?string $expectedDateRegistered = null
+    ) {
         if (!$this->getUser($login)) {
             throw new \Exception('User ' . $login . ' does not exist');
         }
-        BaseValidator::check('Description', $description, [new NotEmpty(), new CharacterLength(1, self::MAX_LENGTH_TOKEN_DESCRIPTION)]);
+
+        BaseValidator::check(
+            'Description',
+            $description,
+            [new NotEmpty(), new CharacterLength(1, self::MAX_LENGTH_TOKEN_DESCRIPTION)]
+        );
+
         if (empty($dateExpired)) {
             $dateExpired = null;
         }
-        $isSystemToken = (int) $isSystemToken;
-        $insertSql = "INSERT INTO " . $this->tokenTable . ' (login, description, password, date_created, date_expired, system_token, hash_algo, secure_only) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+        $isSystemToken = (int)$isSystemToken;
+
+        // the login comes from the user table, so a token is only ever stored for an existing account
+        $insertSql = "INSERT INTO " . $this->tokenTable
+            . ' (login, description, password, date_created, date_expired, system_token, hash_algo, secure_only)'
+            . ' SELECT login, ?, ?, ?, ?, ?, ?, ? FROM ' . $this->userTable . ' WHERE login = ?';
+
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
+
+        $bind = [$description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, (int) $secureOnly, $login];
+
+        // the caller can name the registration date the account is expected to have, so the token is
+        // stored for that account rather than for the login alone. with none given, nothing extra binds
+        if (null !== $expectedDateRegistered) {
+            $insertSql .= ' AND date_registered <=> ?';
+            $bind[] = $expectedDateRegistered;
+        }
+
         $db = $this->getDb();
-        $db->query($insertSql, [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, (int) $secureOnly]);
+        $result = $db->query($insertSql, $bind);
+
+        if ($db->rowCount($result) === 0) {
+            throw new \Exception('User ' . $login . ' does not exist');
+        }
+
         return $db->lastInsertId();
     }
-    private function getTokenByTokenAuth(#[\SensitiveParameter]
-        $tokenAuth)
-    {
+
+    private function getTokenByTokenAuth(
+        #[\SensitiveParameter]
+        $tokenAuth
+    ) {
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
+
         return $db->fetchRow("SELECT * FROM " . $this->tokenTable . " WHERE `password` = ?", $tokenAuth);
     }
+
     public function getUserTokenDescriptionByIdTokenAuth($idTokenAuth, $login)
     {
         $db = $this->getDb();
-        $token = $db->fetchRow("SELECT description FROM " . $this->tokenTable . " WHERE `idusertokenauth` = ? and login = ? LIMIT 1", array($idTokenAuth, $login));
+
+        $token = $db->fetchRow(
+            "SELECT description FROM " . $this->tokenTable . " WHERE `idusertokenauth` = ? and login = ? LIMIT 1",
+            array($idTokenAuth, $login)
+        );
+
         return $token ? $token['description'] : '';
     }
+
     private function getQueryNotExpiredToken()
     {
-        return array('sql' => ' (date_expired is null or date_expired > ?)', 'bind' => array(Date::now()->getDatetime()));
+        return array(
+          'sql'  => ' (date_expired is null or date_expired > ?)',
+          'bind' => array(Date::now()->getDatetime()),
+        );
     }
+
     /**
      * Attempt to load a valid auth token
      *
@@ -313,31 +450,45 @@ class Model
      * @return array|bool               An array representing the token record, or false if not found
      * @throws \Exception
      */
-    private function getTokenByTokenAuthIfNotExpired(#[\SensitiveParameter]
-        ?string $tokenAuth, bool $isTokenSecured)
-    {
+    private function getTokenByTokenAuthIfNotExpired(
+        #[\SensitiveParameter]
+        ?string $tokenAuth,
+        bool $isTokenSecured
+    ) {
         // If the token wasn't provided via a secure mechanism and use of secure tokens is enforced globally
         // then don't attempt to find the token
         if (GeneralConfig::getConfigValue('only_allow_secure_auth_tokens') && !$isTokenSecured) {
-            return \false;
+            return false;
         }
+
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
+
         $expired = $this->getQueryNotExpiredToken();
         $bind = array_merge(array($tokenAuth), $expired['bind']);
+
         $sql = "SELECT * FROM " . $this->tokenTable . " WHERE `password` = ? AND " . $expired['sql'];
+
         // If the token was not send via a secure mechanism then exclude secure_only tokens
         if (!$isTokenSecured) {
             $sql .= " AND secure_only = 0";
         }
+
         $token = $db->fetchRow($sql, $bind);
+
         return $token;
     }
+
     public function deleteExpiredTokens($expiredSince)
     {
         $db = $this->getDb();
-        return $db->query("DELETE FROM " . $this->tokenTable . " WHERE `date_expired` is not null and date_expired < ?", $expiredSince);
+
+        return $db->query(
+            "DELETE FROM " . $this->tokenTable . " WHERE `date_expired` is not null and date_expired < ?",
+            $expiredSince
+        );
     }
+
     /**
      * @param string $expiredSince
      * @return array
@@ -346,79 +497,124 @@ class Model
     public function getExpiredInvites($expiredSince)
     {
         $db = $this->getDb();
-        return $db->fetchAll("SELECT * FROM " . $this->userTable . " WHERE `invite_expired_at` is not null and invite_expired_at < ?", $expiredSince);
+
+        return $db->fetchAll(
+            "SELECT * FROM " . $this->userTable . " WHERE `invite_expired_at` is not null and invite_expired_at < ?",
+            $expiredSince
+        );
     }
+
     public function checkUserHasUnexpiredToken($login)
     {
         $db = $this->getDb();
         $expired = $this->getQueryNotExpiredToken();
         $bind = array_merge(array($login), $expired['bind']);
-        return $db->fetchOne("SELECT idusertokenauth FROM " . $this->tokenTable . " WHERE `login` = ? and " . $expired['sql'], $bind);
+        return $db->fetchOne(
+            "SELECT idusertokenauth FROM " . $this->tokenTable . " WHERE `login` = ? and " . $expired['sql'],
+            $bind
+        );
     }
+
     public function deleteAllTokensForUser($login)
     {
         $db = $this->getDb();
+
         return $db->query("DELETE FROM " . $this->tokenTable . " WHERE `login` = ?", $login);
     }
+
     public function getAllNonSystemTokensForLogin($login)
     {
         $db = $this->getDb();
+
+
         $expired = $this->getQueryNotExpiredToken();
         $bind = array_merge(array($login), $expired['bind']);
-        return $db->fetchAll("SELECT * FROM " . $this->tokenTable . " WHERE `login` = ? and system_token = 0 and " . $expired['sql'] . ' order by idusertokenauth ASC', $bind);
+
+        return $db->fetchAll(
+            "SELECT * FROM " . $this->tokenTable . " WHERE `login` = ? and system_token = 0 and " . $expired['sql'] . ' order by idusertokenauth ASC',
+            $bind
+        );
     }
+
     public function getAllHashedTokensForLogins($logins)
     {
         if (empty($logins)) {
             return array();
         }
+
         $db = $this->getDb();
         $placeholder = Common::getSqlStringFieldsArray($logins);
+
         $expired = $this->getQueryNotExpiredToken();
         $bind = array_merge($logins, $expired['bind']);
-        $tokens = $db->fetchAll("SELECT password FROM " . $this->tokenTable . " WHERE `login` IN (" . $placeholder . ") and " . $expired['sql'], $bind);
+
+        $tokens = $db->fetchAll(
+            "SELECT password FROM " . $this->tokenTable . " WHERE `login` IN (" . $placeholder . ") and " . $expired['sql'],
+            $bind
+        );
         return array_column($tokens, 'password');
     }
+
     public function deleteToken($idTokenAuth, $login)
     {
         $db = $this->getDb();
-        return $db->query("DELETE FROM " . $this->tokenTable . " WHERE `idusertokenauth` = ? and login = ?", array($idTokenAuth, $login));
+
+        return $db->query(
+            "DELETE FROM " . $this->tokenTable . " WHERE `idusertokenauth` = ? and login = ?",
+            array($idTokenAuth, $login)
+        );
     }
-    public function setTokenAuthWasUsed(#[\SensitiveParameter]
-        $tokenAuth, $dateLastUsed)
-    {
+
+    public function setTokenAuthWasUsed(
+        #[\SensitiveParameter]
+        $tokenAuth,
+        $dateLastUsed
+    ) {
         $token = $this->getTokenByTokenAuth($tokenAuth);
         if (!empty($token)) {
             $lastUsage = !empty($token['last_used']) ? strtotime($token['last_used']) : 0;
             $newUsage = strtotime($dateLastUsed);
+
             // update token usage only every 10 minutes to avoid table locks when multiple requests with the same token are made
             // see https://github.com/matomo-org/matomo/issues/16924
             if ($lastUsage > $newUsage - 600) {
                 return;
             }
-            $this->updateTokenAuthTable($token['idusertokenauth'], array('last_used' => $dateLastUsed));
+
+            $this->updateTokenAuthTable($token['idusertokenauth'], array(
+              'last_used' => $dateLastUsed,
+            ));
         }
     }
+
     public function setRotationNotificationWasSentForToken(string $tokenId, string $tsRotation)
     {
         $this->updateTokenAuthTable($tokenId, ['ts_rotation_notified' => $tsRotation]);
     }
+
     public function setExpirationWarningNotificationWasSentForToken(string $tokenId, string $tsExpirationWarning)
     {
         $this->updateTokenAuthTable($tokenId, ['ts_expiration_warning_notified' => $tsExpirationWarning]);
     }
+
     private function updateTokenAuthTable($idTokenAuth, $fields)
     {
         $set = array();
         $bind = array();
         foreach ($fields as $key => $val) {
-            $set[] = "`{$key}` = ?";
+            $set[] = "`$key` = ?";
             $bind[] = $val;
         }
+
         $bind[] = $idTokenAuth;
+
         $db = $this->getDb();
-        $db->query(sprintf('UPDATE `%s` SET %s WHERE `idusertokenauth` = ?', $this->tokenTable, implode(', ', $set)), $bind);
+        $db->query(
+            sprintf('UPDATE `%s` SET %s WHERE `idusertokenauth` = ?', $this->tokenTable, implode(', ', $set)),
+            $bind
+        );
     }
+
     /**
      * @param string $userEmail
      * @return array
@@ -429,178 +625,557 @@ class Model
         $db = $this->getDb();
         return $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE email = ?", $userEmail);
     }
+
     /**
      * @param string $tokenAuth
      * @return array|null
      * @phpstan-return UserRow|null
      */
-    public function getUserByInviteToken(#[\SensitiveParameter]
-        $tokenAuth)
-    {
+    public function getUserByInviteToken(
+        #[\SensitiveParameter]
+        $tokenAuth
+    ) {
         $token = $this->hashTokenAuth($tokenAuth);
         if (!empty($token)) {
             $db = $this->getDb();
-            return $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE `invite_token` = ? or `invite_link_token` = ?", [$token, $token]);
+            // A token is only redeemable while the account is still pending, so one left behind on an
+            // account that has since been accepted resolves to nothing.
+            $sql = "SELECT * FROM " . $this->userTable . "
+                    WHERE (`invite_token` = ? OR `invite_link_token` = ?)
+                      AND `invite_token` IS NOT NULL";
+            return $db->fetchRow($sql, [$token, $token]);
         }
+
         return null;
     }
+
+    /**
+     * Whether any account holds the given invite token, pending or not.
+     *
+     * Token generation needs to stay globally unique, so this deliberately does not apply the pending
+     * filter that getUserByInviteToken() uses for redemption.
+     */
+    private function inviteTokenExists(
+        #[\SensitiveParameter]
+        string $token
+    ): bool {
+        $hashedToken = $this->hashTokenAuth($token);
+        $sql = "SELECT 1 FROM " . $this->userTable
+             . " WHERE `invite_token` = ? OR `invite_link_token` = ? LIMIT 1";
+
+        return (bool) $this->getDb()->fetchOne($sql, [$hashedToken, $hashedToken]);
+    }
+
     /**
      * Get an array of user data using the supplied token
      *
      * @return array|null
      * @phpstan-return UserRow|null
      */
-    public function getUserByTokenAuth(#[\SensitiveParameter]
-        ?string $tokenAuth, bool $doNotCheckSecurity = \false) : ?array
-    {
+    public function getUserByTokenAuth(
+        #[\SensitiveParameter]
+        ?string $tokenAuth,
+        bool $doNotCheckSecurity = false
+    ): ?array {
         if ($tokenAuth === 'anonymous') {
             $row = $this->getUser('anonymous');
-            return !empty($row) ? $row : null;
+            return (!empty($row) ? $row : null);
         }
+
         $isTokenProvidedSecurely = $doNotCheckSecurity || StaticContainer::get(AuthenticationToken::class)->wasTokenAuthProvidedSecurely();
+
         $token = $this->getTokenByTokenAuthIfNotExpired($tokenAuth, $isTokenProvidedSecurely);
         if (!empty($token)) {
             $db = $this->getDb();
             $row = $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE `login` = ?", $token['login']);
-            return is_array($row) ? $row : null;
+            return (is_array($row) ? $row : null);
         }
+
         return null;
     }
+
     /**
      * @param $userLogin
      * @param $hashedPassword
      * @param $email
      * @param $dateRegistered
+     * @param array $invitation Invitation to issue along with the account, as
+     *                          `['token' => ..., 'expiryInDays' => ..., 'invitedBy' => ...]`. It goes in
+     *                          with the insert, so an invited account carries its invitation from the
+     *                          moment it exists and no later write has to find the row again.
      */
-    public function addUser($userLogin, #[\SensitiveParameter]
-        $hashedPassword, $email, $dateRegistered)
-    {
-        $user = array('login' => $userLogin, 'password' => $hashedPassword, 'email' => $email, 'date_registered' => $dateRegistered, 'superuser_access' => 0, 'ts_password_modified' => Date::now()->getDatetime(), 'idchange_last_viewed' => null, 'invited_by' => null);
+    public function addUser(
+        $userLogin,
+        #[\SensitiveParameter]
+        $hashedPassword,
+        $email,
+        $dateRegistered,
+        #[\SensitiveParameter]
+        array $invitation = []
+    ) {
+        $user = array(
+          'login'                => $userLogin,
+          'password'             => $hashedPassword,
+          'email'                => $email,
+          'date_registered'      => $dateRegistered,
+          'superuser_access'     => 0,
+          'ts_password_modified' => Date::now()->getDatetime(),
+          'idchange_last_viewed' => null,
+          'invited_by'           => null,
+        );
+
+        if (!empty($invitation)) {
+            $user['invite_token']      = $this->hashTokenAuth($invitation['token']);
+            $user['invite_expired_at'] = Date::now()->addDay($invitation['expiryInDays'])->getDatetime();
+            $user['invited_by']        = $invitation['invitedBy'];
+        }
+
         $db = $this->getDb();
         $db->insert($this->userTable, $user);
+
+        // the insert only succeeds for a login that was free, so anything still referencing it belongs
+        // to an earlier account. anonymous is recreated in place, so it keeps its rows
+        if (strtolower((string) $userLogin) !== 'anonymous') {
+            try {
+                $this->deleteUserAccess($userLogin);
+                $this->deleteAllTokensForUser($userLogin);
+            } catch (\Throwable $e) {
+                // the new account would inherit whatever is left, so it must not stay behind either
+                $db->query("DELETE FROM " . $this->userTable . " WHERE login = ?", $userLogin);
+
+                throw $e;
+            }
+        }
+
+        /**
+         * Triggered after a user has been created.
+         *
+         * This event should be used to clean up any data that is still related to the new user's login.
+         * The **ScheduledReports** plugin, for example, uses this event to remove the login's reports.
+         *
+         * Observers run before any initial site access has been granted, and while the lock that
+         * serialises user creation is held, so they should be quick.
+         *
+         * @param string $userLogin The login handle of the created user.
+         */
+        try {
+            Piwik::postEvent('UsersManager.createUser', array($userLogin));
+        } catch (\Throwable $e) {
+            StaticContainer::get(LoggerInterface::class)->error(
+                'Error while processing event UsersManager.createUser',
+                ['exception' => $e]
+            );
+        }
     }
-    public function attachInviteToken(string $userLogin, string $token, int $expiryInDays) : void
+
+    public function attachInviteToken(string $userLogin, string $token, int $expiryInDays): void
     {
-        $this->updateUserFields($userLogin, ['invite_token' => $this->hashTokenAuth($token), 'invite_link_token' => null, 'invite_expired_at' => Date::now()->addDay($expiryInDays)->getDatetime()]);
+        $this->updateUserFields($userLogin, [
+          'invite_token'      => $this->hashTokenAuth($token),
+          'invite_link_token' => null,
+          'invite_expired_at' => Date::now()->addDay($expiryInDays)->getDatetime(),
+        ]);
     }
-    public function attachInviteLinkToken(string $userLogin, string $token, int $expiryInDays) : void
-    {
-        $this->updateUserFields($userLogin, ['invite_link_token' => $this->hashTokenAuth($token), 'invite_expired_at' => Date::now()->addDay($expiryInDays)->getDatetime()]);
+
+    /**
+     * Attaches a copy-and-paste invitation link to a pending user.
+     *
+     * @return bool Whether the link was attached to the invitation the caller read.
+     */
+    public function attachInviteLinkToken(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $token,
+        string $expectedInviteToken,
+        int $expiryInDays
+    ): bool {
+        // The link is only attached while the account still carries the invitation the caller read.
+        $sql = sprintf(
+            'UPDATE `%s`
+             SET `invite_link_token` = ?,
+                 `invite_expired_at` = ?
+             WHERE `login` = ?
+               AND `invite_token` = ?',
+            $this->userTable
+        );
+        $query = $this->getDb()->query($sql, [
+            $this->hashTokenAuth($token),
+            Date::now()->addDay($expiryInDays)->getDatetime(),
+            $userLogin,
+            $expectedInviteToken,
+        ]);
+
+        return $query->rowCount() === 1;
     }
-    public function replaceInviteTokenForPendingUser(string $userLogin, string $token, string $expectedInviteToken, string $expectedEmail) : bool
-    {
-        $sql = sprintf('UPDATE `%s`
+
+    /**
+     * Rotates the invite token of a pending user without touching the expiry.
+     *
+     * Used by the password reset flow, which must not extend an invitation. Compare with
+     * reissueInviteTokenForPendingUser(), which renews the expiry because resending an invitation is
+     * meant to revive a lapsed one.
+     *
+     * @return bool Whether the token was replaced on the invitation the caller read.
+     */
+    public function replaceInviteTokenForPendingUser(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $token,
+        string $expectedInviteToken,
+        string $expectedEmail
+    ): bool {
+        $sql = sprintf(
+            'UPDATE `%s`
              SET `invite_token` = ?,
                  `invite_link_token` = NULL
              WHERE `login` = ?
                AND `invite_token` = ?
                AND `email` = ?
                AND `invite_expired_at` IS NOT NULL
-               AND `invite_expired_at` >= ?', $this->userTable);
-        $query = $this->getDb()->query($sql, [$this->hashTokenAuth($token), $userLogin, $expectedInviteToken, $expectedEmail, Date::now()->getDatetime()]);
+               AND `invite_expired_at` >= ?',
+            $this->userTable
+        );
+        $query = $this->getDb()->query($sql, [
+            $this->hashTokenAuth($token),
+            $userLogin,
+            $expectedInviteToken,
+            $expectedEmail,
+            Date::now()->getDatetime(),
+        ]);
+
         return $query->rowCount() === 1;
     }
+
+    /**
+     * Rotates the invite token of a pending user, renews the expiry and moves the address.
+     *
+     * Unlike replaceInviteTokenForPendingUser() this carries no expiry predicate, because resending an
+     * invitation is meant to revive one that has already lapsed. Pass the current address as $email to
+     * leave it where it is, and $hashedPassword when the same call is also setting a password.
+     *
+     * @return bool Whether the invitation the caller read was the one reissued.
+     */
+    public function reissueInviteTokenForPendingUser(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $token,
+        string $expectedInviteToken,
+        string $expectedEmail,
+        string $email,
+        int $expiryInDays,
+        #[\SensitiveParameter]
+        ?string $hashedPassword = null
+    ): bool {
+        $set = [
+            '`invite_token` = ?',
+            '`invite_link_token` = NULL',
+            '`invite_expired_at` = ?',
+            '`email` = ?',
+        ];
+        $bind = [
+            $this->hashTokenAuth($token),
+            Date::now()->addDay($expiryInDays)->getDatetime(),
+            $email,
+        ];
+
+        // A password given alongside the address rides on the same statement as everything else.
+        // ts_password_modified is set explicitly here because updateUserFields() is not doing it for us.
+        if (!empty($hashedPassword)) {
+            $set[] = '`password` = ?';
+            $set[] = '`ts_password_modified` = ?';
+            $bind[] = $hashedPassword;
+            $bind[] = Date::now()->getDatetime();
+        }
+
+        // Rotating the token and moving the address are one statement, so an invitation can never be live
+        // for an address the account no longer has.
+        $sql = sprintf(
+            'UPDATE `%s`
+             SET %s
+             WHERE `login` = ?
+               AND `invite_token` = ?
+               AND `email` = ?',
+            $this->userTable,
+            implode(', ', $set)
+        );
+        $query = $this->getDb()->query($sql, array_merge($bind, [
+            $userLogin,
+            $expectedInviteToken,
+            $expectedEmail,
+        ]));
+
+        return $query->rowCount() === 1;
+    }
+
+    /**
+     * Updates a pending user's address and password while leaving their invitation alone.
+     *
+     * The write is pinned to the invitation the caller read, so it only lands while the account is still
+     * that same pending user. Only call it when there is something to write: a statement that changes no
+     * column reports no affected row, and is indistinguishable from one that matched nothing.
+     *
+     * @return bool Whether the pending account the caller read was the one updated.
+     */
+    public function updatePendingUser(
+        string $userLogin,
+        #[\SensitiveParameter]
+        ?string $hashedPassword,
+        string $email,
+        string $expectedInviteToken,
+        string $expectedEmail
+    ): bool {
+        $set = ['`email` = ?'];
+        $bind = [$email];
+
+        // ts_password_modified is set explicitly here because updateUserFields() is not doing it for us
+        if (!empty($hashedPassword)) {
+            $set[] = '`password` = ?';
+            $set[] = '`ts_password_modified` = ?';
+            $bind[] = $hashedPassword;
+            $bind[] = Date::now()->getDatetime();
+        }
+
+        $sql = sprintf(
+            'UPDATE `%s`
+             SET %s
+             WHERE `login` = ?
+               AND `invite_token` = ?
+               AND `email` = ?',
+            $this->userTable,
+            implode(', ', $set)
+        );
+        $query = $this->getDb()->query($sql, array_merge($bind, [
+            $userLogin,
+            $expectedInviteToken,
+            $expectedEmail,
+        ]));
+
+        return $query->rowCount() === 1;
+    }
+
+    /**
+     * Redeems a pending user's invitation and sets their password.
+     *
+     * @return bool Whether the invitation was still redeemable and has now been redeemed.
+     */
+    public function consumeInviteToken(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $token,
+        #[\SensitiveParameter]
+        string $hashedPassword
+    ): bool {
+        $hashedToken = $this->hashTokenAuth($token);
+        $now = Date::now()->getDatetime();
+
+        // Redeem the invitation and set the password in one statement, so an account is activated at most
+        // once however many of its tokens are presented. ts_password_modified is set explicitly here
+        // because updateUserFields() is not doing it for us.
+        $sql = sprintf(
+            'UPDATE `%s`
+             SET `password` = ?,
+                 `ts_password_modified` = ?,
+                 `invite_token` = NULL,
+                 `invite_link_token` = NULL,
+                 `invite_accept_at` = ?,
+                 `invite_expired_at` = NULL
+             WHERE `login` = ?
+               AND (`invite_token` = ? OR `invite_link_token` = ?)
+               AND `invite_token` IS NOT NULL
+               AND `invite_expired_at` IS NOT NULL
+               AND `invite_expired_at` >= ?',
+            $this->userTable
+        );
+        $query = $this->getDb()->query($sql, [
+            $hashedPassword,
+            $now,
+            $now,
+            $userLogin,
+            $hashedToken,
+            $hashedToken,
+            $now,
+        ]);
+
+        return $query->rowCount() === 1;
+    }
+
+    /**
+     * Deletes the user row of a pending user who declined their invitation.
+     *
+     * The delete carries the invitation in its WHERE clause, so it only ever removes the pending account
+     * it was given. The expiry predicate is deliberately more lenient than the one in
+     * consumeInviteToken(), matching the check the decline page has always applied.
+     *
+     * @return bool Whether a row was removed.
+     */
+    public function deletePendingUserByInviteToken(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $token
+    ): bool {
+        $hashedToken = $this->hashTokenAuth($token);
+
+        $sql = sprintf(
+            'DELETE FROM `%s`
+             WHERE `login` = ?
+               AND (`invite_token` = ? OR `invite_link_token` = ?)
+               AND `invite_token` IS NOT NULL
+               AND (`invite_expired_at` IS NULL OR `invite_expired_at` >= ?)',
+            $this->userTable
+        );
+        $query = $this->getDb()->query($sql, [
+            $userLogin,
+            $hashedToken,
+            $hashedToken,
+            Date::now()->getDatetime(),
+        ]);
+
+        return $query->rowCount() === 1;
+    }
+
     public function setSuperUserAccess($userLogin, $hasSuperUserAccess)
     {
-        $this->updateUserFields($userLogin, array('superuser_access' => $hasSuperUserAccess ? 1 : 0));
+        $this->updateUserFields($userLogin, array(
+          'superuser_access' => $hasSuperUserAccess ? 1 : 0,
+        ));
     }
+
     public function updateUserFields($userLogin, $fields)
     {
         $set = array();
         $bind = array();
+
         foreach ($fields as $key => $val) {
-            $set[] = "`{$key}` = ?";
+            $set[] = "`$key` = ?";
             $bind[] = $val;
         }
+
         if (!empty($fields['password'])) {
             $set[] = "ts_password_modified = ?";
             $bind[] = Date::now()->getDatetime();
         }
+
         $bind[] = $userLogin;
+
         $db = $this->getDb();
         $db->query(sprintf('UPDATE `%s` SET %s WHERE `login` = ?', $this->userTable, implode(', ', $set)), $bind);
     }
+
     public function getUsersHavingSuperUserAccess()
     {
         $db = $this->getDb();
-        $users = $db->fetchAll("SELECT login, email, superuser_access\n                                FROM " . Common::prefixTable("user") . "\n                                WHERE superuser_access = 1\n                                ORDER BY date_registered ASC");
+        $users = $db->fetchAll("SELECT login, email, superuser_access
+                                FROM " . Common::prefixTable("user") . "
+                                WHERE superuser_access = 1
+                                ORDER BY date_registered ASC");
+
         return $users;
     }
-    public function updateUser($userLogin, #[\SensitiveParameter]
-        $hashedPassword, $email)
-    {
-        $fields = array('email' => $email);
+
+    public function updateUser(
+        $userLogin,
+        #[\SensitiveParameter]
+        $hashedPassword,
+        $email
+    ) {
+        $fields = array(
+          'email' => $email,
+        );
         if (!empty($hashedPassword)) {
             $fields['password'] = $hashedPassword;
         }
         $this->updateUserFields($userLogin, $fields);
     }
+
     public function userExists($userLogin)
     {
         $db = $this->getDb();
         $count = $db->fetchOne("SELECT count(*) FROM " . $this->userTable . " WHERE login = ?", $userLogin);
+
         return $count != 0;
     }
+
     public function userEmailExists($userEmail)
     {
         $db = $this->getDb();
         $count = $db->fetchOne("SELECT count(*) FROM " . $this->userTable . " WHERE email = ?", $userEmail);
+
         return $count != 0;
     }
+
     public function removeUserAccess($userLogin, $access, $idSites)
     {
         $db = $this->getDb();
+
         $table = Common::prefixTable("access");
+
         foreach ($idSites as $idsite) {
             $bind = array($userLogin, $idsite, $access);
             $db->query("DELETE FROM " . $table . " WHERE login = ? and idsite = ? and access = ?", $bind);
         }
     }
+
     public function addUserAccess($userLogin, $access, $idSites)
     {
         $db = $this->getDb();
-        $insertSql = "INSERT INTO " . Common::prefixTable("access") . ' (idsite, login, access) VALUES (?, ?, ?)';
+
+        // the login comes from the user table, so an access row is only ever stored for an existing account
+        $insertSql = "INSERT INTO " . Common::prefixTable("access") . ' (idsite, login, access)'
+            . ' SELECT ?, login, ? FROM ' . $this->userTable . ' WHERE login = ?';
         foreach ($idSites as $idsite) {
-            $db->query($insertSql, [$idsite, $userLogin, $access]);
+            $result = $db->query($insertSql, [$idsite, $access, $userLogin]);
+
+            if ($db->rowCount($result) === 0) {
+                throw new \Exception(Piwik::translate('UsersManager_ExceptionUserDoesNotExist', $userLogin));
+            }
         }
     }
-    public function deleteUser($userLogin) : void
+
+    public function deleteUser($userLogin): void
     {
+        // keep the access deletion right after the user row: addUserAccess() and addTokenAuth() take the
+        // login from the user table, so nothing can be stored for it in between
         $this->deleteUserOnly($userLogin);
+        $this->deleteUserAccess($userLogin);
         PluginSettingsTable::removeAllUserSettingsForUser($userLogin);
         $this->deleteUserOptions($userLogin);
-        $this->deleteUserAccess($userLogin);
     }
+
     /**
      * Deletes all active sessions for the given user from the session table.
      * This effectively signs the user out of all devices. It does not delete any token_auths.
      */
-    public function deleteUserSessions(string $userLogin) : void
+    public function deleteUserSessions(string $userLogin): void
     {
         $userMarker = strlen(SessionFingerprint::USER_NAME_SESSION_VAR_NAME) . ':"';
         $userMarker .= SessionFingerprint::USER_NAME_SESSION_VAR_NAME . '";s:' . strlen($userLogin);
         $userMarker .= ':"' . $userLogin . '"';
+
         $numCharactersToAdd = strlen($userMarker) % 3;
+
         // ensure we work with a string length divisible by 3
         if ($numCharactersToAdd === 1) {
             $userMarker = 's:' . $userMarker;
         } elseif ($numCharactersToAdd === 2) {
             $userMarker = ':' . $userMarker;
         }
+
         // base64 encodes 3 input bytes → 4 characters. Test for different combinations as we don't know which
         // 3 bytes were included originally. See also Zend_Session::buildSessionData()
         $variations = [
-            '%' . base64_encode($userMarker) . '%',
-            '%' . base64_encode(substr($userMarker, 1) . ';') . '%',
-            '%' . base64_encode(substr($userMarker, 2) . ';s') . '%',
-            // in case string follows
-            '%' . base64_encode(substr($userMarker, 2) . ';i') . '%',
+            '%' .  base64_encode($userMarker) . '%',
+            '%' .  base64_encode(substr($userMarker, 1) . ';') . '%',
+            '%' .  base64_encode(substr($userMarker, 2) . ';s') . '%', // in case string follows
+            '%' .  base64_encode(substr($userMarker, 2) . ';i') . '%', // in case integer follows
         ];
+
         $db = $this->getDb();
         $sessionTable = Common::prefixTable('session');
         $sql = 'DELETE FROM `' . $sessionTable . '`' . ' WHERE `data` LIKE ? or `data` LIKE ? or `data` LIKE ? or `data` LIKE ?';
+
         $db->query($sql, $variations);
     }
+
     /**
      * @param string $userLogin
      */
@@ -609,6 +1184,26 @@ class Model
         $db = $this->getDb();
         $db->query("DELETE FROM " . $this->userTable . " WHERE login = ?", $userLogin);
         $db->query("DELETE FROM " . $this->tokenTable . " WHERE login = ?", $userLogin);
+
+        $this->postUserDeletedEvent($userLogin);
+    }
+
+    /**
+     * Removes what a login leaves behind outside the user table: whatever plugins keep for it, its
+     * settings and its options.
+     *
+     * Callers that have already removed one specific account use this rather than deleteUser(), which
+     * resolves the account by login again and so would delete whoever holds that login by then.
+     */
+    public function cleanupDeletedUser(string $userLogin): void
+    {
+        $this->postUserDeletedEvent($userLogin);
+        PluginSettingsTable::removeAllUserSettingsForUser($userLogin);
+        $this->deleteUserOptions($userLogin);
+    }
+
+    private function postUserDeletedEvent(string $userLogin): void
+    {
         /**
          * Triggered after a user has been deleted.
          *
@@ -620,9 +1215,13 @@ class Model
         try {
             Piwik::postEvent('UsersManager.deleteUser', array($userLogin));
         } catch (\Throwable $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Error while processing event UsersManager.deleteUser', ['exception' => $e]);
+            StaticContainer::get(LoggerInterface::class)->error(
+                'Error while processing event UsersManager.deleteUser',
+                ['exception' => $e]
+            );
         }
     }
+
     public function deleteUserOptions($userLogin)
     {
         // @todo Remove legacy option cleanup with Matomo 6 once user-scoped settings no longer use Option keys.
@@ -630,7 +1229,13 @@ class Model
         Option::delete('Feedback.nextFeedbackReminder.' . $userLogin);
         Option::delete($userLogin . MobileMessaging::USER_SETTINGS_POSTFIX_OPTION);
         Option::deleteLike('ProfessionalServices.DismissedWidget.%.' . $userLogin);
-        $preferences = [\Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT, \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT_DATE, 'isLDAPUser', 'hideSegmentDefinitionChangeMessage'];
+
+        $preferences = [
+            API::PREFERENCE_DEFAULT_REPORT,
+            API::PREFERENCE_DEFAULT_REPORT_DATE,
+            'isLDAPUser',
+            'hideSegmentDefinitionChangeMessage',
+        ];
         $customPreferences = StaticContainer::get('usersmanager.user_preference_names');
         if (empty($customPreferences)) {
             $customPreferences = [];
@@ -638,29 +1243,38 @@ class Model
             $customPreferences = [$customPreferences];
         }
         $preferences = array_merge($preferences, $customPreferences);
+
         // @todo remove with matomo 6
         foreach ($preferences as $preference) {
-            Option::delete($userLogin . \Piwik\Plugins\UsersManager\API::OPTION_NAME_PREFERENCE_SEPARATOR . $preference);
+            Option::delete($userLogin . API::OPTION_NAME_PREFERENCE_SEPARATOR . $preference);
         }
     }
+
     /**
      * @param string $userLogin
      */
     public function deleteUserAccess($userLogin, $idSites = null)
     {
         $db = $this->getDb();
+
         if (is_null($idSites)) {
             $db->query("DELETE FROM " . Common::prefixTable("access") . " WHERE login = ?", $userLogin);
         } else {
             foreach ($idSites as $idsite) {
-                $db->query("DELETE FROM " . Common::prefixTable("access") . " WHERE idsite = ? AND login = ?", [$idsite, $userLogin]);
+                $db->query(
+                    "DELETE FROM " . Common::prefixTable("access") . " WHERE idsite = ? AND login = ?",
+                    [$idsite, $userLogin]
+                );
             }
         }
     }
+
     private function getDb()
     {
         return Db::get();
     }
+
+
     /**
      * Returns all users and their access to `$idSite`.
      *
@@ -672,48 +1286,79 @@ class Model
      * @param string[]|null $logins the logins to limit the search to (if any)
      * @return array
      */
-    public function getUsersWithRole($idSite, $limit = null, $offset = null, $pattern = null, $access = null, $status = null, $logins = null)
-    {
+    public function getUsersWithRole(
+        $idSite,
+        $limit = null,
+        $offset = null,
+        $pattern = null,
+        $access = null,
+        $status = null,
+        $logins = null
+    ) {
         $filter = new UserTableFilter($access, $idSite, $pattern, $status, $logins);
+
         [$joins, $bind] = $filter->getJoins('u');
         [$where, $whereBind] = $filter->getWhere();
+
         $bind = array_merge($bind, $whereBind);
+
         $limitSql = '';
         $offsetSql = '';
         if ($limit) {
-            $limitSql = "LIMIT " . (int) $limit;
+            $limitSql = "LIMIT " . (int)$limit;
+
             if ($offset) {
-                $offsetSql = "OFFSET " . (int) $offset;
+                $offsetSql = "OFFSET " . (int)$offset;
             }
         }
+
         $sql = 'SELECT u.*, GROUP_CONCAT(a.access SEPARATOR "|") as access
-                  FROM `' . $this->userTable . "` u\n                {$joins}\n                {$where}\n              GROUP BY u.login\n              ORDER BY u.login ASC\n                 {$limitSql} {$offsetSql}";
+                  FROM `' . $this->userTable . "` u
+                $joins
+                $where
+              GROUP BY u.login
+              ORDER BY u.login ASC
+                 $limitSql $offsetSql";
+
         $db = $this->getDb();
+
         $users = $db->fetchAll($sql, $bind);
         foreach ($users as &$user) {
             $user['access'] = explode('|', $user['access'] ?? '');
         }
+
         $sql = 'SELECT COUNT(DISTINCT u.login)
-                  FROM `' . $this->userTable . "` u\n                {$joins}\n                {$where}";
+                  FROM `' . $this->userTable . "` u
+                $joins
+                $where";
+
         $count = $db->fetchOne($sql, $bind);
+
         return [$users, $count];
     }
+
     public function getSiteAccessCount($userLogin)
     {
         $sql = "SELECT COUNT(*) FROM " . Common::prefixTable('access') . " WHERE login = ?";
         $bind = [$userLogin];
+
         $db = $this->getDb();
         return $db->fetchOne($sql, $bind);
     }
+
     public function getUsersWithAccessToSites($idSites)
     {
         $idSites = array_map('intval', $idSites);
-        $loginSql = 'SELECT DISTINCT ia.login FROM `' . Common::prefixTable('access') . '` ia WHERE ia.idsite IN (' . implode(',', $idSites) . ')';
+
+        $loginSql = 'SELECT DISTINCT ia.login FROM `' . Common::prefixTable('access') . '` ia WHERE ia.idsite IN ('
+          . implode(',', $idSites) . ')';
+
         $logins = \Piwik\Db::fetchAll($loginSql);
         $logins = array_column($logins, 'login');
         return $logins;
     }
-    public function isPendingUser(string $userLogin) : bool
+
+    public function isPendingUser(string $userLogin): bool
     {
         $db = $this->getDb();
         $sql = "SELECT count(*) FROM " . $this->userTable . " WHERE (login = ? or email = ?) and invite_token is not null";
@@ -721,7 +1366,8 @@ class Model
         $count = (int) $db->fetchOne($sql, $bind);
         return $count > 0;
     }
-    public function getLastSeenTimestamp(string $userLogin) : ?int
+
+    public function getLastSeenTimestamp(string $userLogin): ?int
     {
         $db = $this->getDb();
         $sql = "SELECT ts_last_seen FROM " . $this->userTable . " WHERE login = ?";
@@ -732,10 +1378,17 @@ class Model
         }
         return null;
     }
-    public function getLastSeenTimestampForAllSeenUsers() : array
+
+    public function getLastSeenTimestampForAllSeenUsers(): array
     {
         $db = $this->getDb();
-        $sql = "\n            SELECT\n                login,\n                UNIX_TIMESTAMP(ts_last_seen) as last_seen\n            FROM " . $this->userTable . " \n            WHERE ts_last_seen IS NOT NULL\n        ";
+        $sql = "
+            SELECT
+                login,
+                UNIX_TIMESTAMP(ts_last_seen) as last_seen
+            FROM " . $this->userTable . " 
+            WHERE ts_last_seen IS NOT NULL
+        ";
         $rows = $db->fetchAll($sql);
         $users = [];
         if ($rows) {
@@ -745,36 +1398,100 @@ class Model
         }
         return $users;
     }
-    public function setLastSeenDatetime(string $userLogin, string $datetime) : void
+
+    public function setLastSeenDatetime(string $userLogin, string $datetime): void
     {
         $db = $this->getDb();
         $sql = "UPDATE `" . $this->userTable . "` SET `ts_last_seen` = ? WHERE login = ?";
         $bind = [$datetime, $userLogin];
         $db->query($sql, $bind);
     }
-    public function getUsersWithoutActivityForDays(int $days = 180) : array
+
+    public function getUsersWithoutActivityForDays(int $days = 180): array
     {
         $db = $this->getDb();
-        $sql = "\n            SELECT\n                u.login,\n                COALESCE(u.ts_last_seen, u.date_registered) as ts_last_seen,\n                MAX(COALESCE(t.last_used, t.date_created)) AS ts_last_token_activity\n            FROM " . $this->userTable . " u\n            LEFT JOIN " . $this->tokenTable . " t ON u.login = t.login\n            WHERE \n                u.login != ? AND\n                u.ts_inactivity_notified IS NULL\n            GROUP BY\n                u.login,\n                u.email,\n                u.ts_last_seen,\n                u.date_registered\n            HAVING COALESCE(u.ts_last_seen, u.date_registered) < (? - INTERVAL ? DAY)\n            ORDER BY u.login;\n        ";
+        $sql = "
+            SELECT
+                u.login,
+                COALESCE(u.ts_last_seen, u.date_registered) as ts_last_seen,
+                MAX(COALESCE(t.last_used, t.date_created)) AS ts_last_token_activity
+            FROM " . $this->userTable . " u
+            LEFT JOIN " . $this->tokenTable . " t ON u.login = t.login
+            WHERE 
+                u.login != ? AND
+                u.ts_inactivity_notified IS NULL
+            GROUP BY
+                u.login,
+                u.email,
+                u.ts_last_seen,
+                u.date_registered
+            HAVING COALESCE(u.ts_last_seen, u.date_registered) < (? - INTERVAL ? DAY)
+            ORDER BY u.login;
+        ";
         $bind = ['anonymous', Date::factory('now')->getDatetime(), $days];
         return $db->fetchAll($sql, $bind);
     }
-    public function getTokensRequiringRotation(string $periodThreshold) : array
+
+    public function getTokensRequiringRotation(string $periodThreshold): array
     {
         $db = $this->getDb();
         // Join on user table is done to ensure we only fetch tokens where the user still exists
-        $sql = "\n            SELECT\n                t.login,\n                t.idusertokenauth as tokenId,\n                t.description as tokenName,\n                t.date_created as tokenDate\n            FROM " . Common::prefixTable('user_token_auth') . " t\n            JOIN  " . Common::prefixTable('user') . " u ON t.login = u.login\n            WHERE\n                (t.date_expired IS NULL OR t.date_expired > ?) AND\n                (t.date_created <= ?) AND\n                t.ts_rotation_notified IS NULL AND\n                t.system_token = 0 AND\n                t.login != ?\n        ";
-        return $db->fetchAll($sql, [Date::factory('now')->getDatetime(), $periodThreshold, 'anonymous']);
+        $sql = "
+            SELECT
+                t.login,
+                t.idusertokenauth as tokenId,
+                t.description as tokenName,
+                t.date_created as tokenDate
+            FROM " . Common::prefixTable('user_token_auth') . " t
+            JOIN  " . Common::prefixTable('user') . " u ON t.login = u.login
+            WHERE
+                (t.date_expired IS NULL OR t.date_expired > ?) AND
+                (t.date_created <= ?) AND
+                t.ts_rotation_notified IS NULL AND
+                t.system_token = 0 AND
+                t.login != ?
+        ";
+
+        return $db->fetchAll($sql, [
+            Date::factory('now')->getDatetime(),
+            $periodThreshold,
+            'anonymous',
+        ]);
     }
-    public function getTokensExpiringSoon(string $periodThreshold) : array
+
+    public function getTokensExpiringSoon(string $periodThreshold): array
     {
         $db = $this->getDb();
         // Join on user table is done to ensure we only fetch tokens where the user still exists
-        $sql = "\n            SELECT\n                t.login,\n                t.idusertokenauth as tokenId,\n                t.description as tokenName,\n                t.date_expired as tokenDate\n            FROM " . Common::prefixTable('user_token_auth') . " t\n            JOIN  " . Common::prefixTable('user') . " u ON t.login = u.login\n            WHERE\n                t.date_expired IS NOT NULL AND\n                (t.date_created <= ?) AND\n                (t.date_expired > ?) AND\n                (t.date_expired <= ?) AND\n                t.ts_expiration_warning_notified IS NULL AND\n                t.system_token = 0 AND\n                t.login != ?\n        ";
+        $sql = "
+            SELECT
+                t.login,
+                t.idusertokenauth as tokenId,
+                t.description as tokenName,
+                t.date_expired as tokenDate
+            FROM " . Common::prefixTable('user_token_auth') . " t
+            JOIN  " . Common::prefixTable('user') . " u ON t.login = u.login
+            WHERE
+                t.date_expired IS NOT NULL AND
+                (t.date_created <= ?) AND
+                (t.date_expired > ?) AND
+                (t.date_expired <= ?) AND
+                t.ts_expiration_warning_notified IS NULL AND
+                t.system_token = 0 AND
+                t.login != ?
+        ";
+
         $now = Date::factory('now')->getDatetime();
-        return $db->fetchAll($sql, [$now, $now, $periodThreshold, 'anonymous']);
+
+        return $db->fetchAll($sql, [
+            $now,
+            $now,
+            $periodThreshold,
+            'anonymous',
+        ]);
     }
-    public function setInactiveUserNotificationWasSentForUsers(array $users, string $dtNotified) : void
+
+    public function setInactiveUserNotificationWasSentForUsers(array $users, string $dtNotified): void
     {
         foreach ($users as $user) {
             $this->updateUserFields($user['login'], ['ts_inactivity_notified' => $dtNotified]);

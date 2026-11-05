@@ -8,23 +8,28 @@
  *
  *
  */
+
 namespace Piwik\Plugins\LanguagesManager;
 
 use Piwik\Common;
 use Piwik\Db;
 use Piwik\DbHelper;
+
 class Model
 {
     private static $rawPrefix = 'user_language';
     private $table;
+
     public function __construct()
     {
         $this->table = Common::prefixTable(self::$rawPrefix);
     }
+
     public function deleteUserLanguage($userLogin)
     {
         Db::query('DELETE FROM ' . $this->table . ' WHERE login = ?', $userLogin);
     }
+
     /**
      * Returns the language for the user
      *
@@ -33,8 +38,10 @@ class Model
      */
     public function getLanguageForUser($userLogin)
     {
-        return Db::fetchOne('SELECT language FROM ' . $this->table . ' WHERE login = ? ', array($userLogin));
+        return Db::fetchOne('SELECT language FROM ' . $this->table .
+                            ' WHERE login = ? ', array($userLogin));
     }
+
     /**
      * Sets the language for the user
      *
@@ -44,11 +51,14 @@ class Model
      */
     public function setLanguageForUser($login, $languageCode)
     {
-        $query = 'INSERT INTO ' . $this->table . ' (login, language) VALUES (?,?) ON DUPLICATE KEY UPDATE language=?';
-        $bind = array($login, $languageCode, $languageCode);
+        $query = 'INSERT INTO ' . $this->table .
+                 ' (login, language) VALUES (?,?) ON DUPLICATE KEY UPDATE language=?';
+        $bind  = array($login, $languageCode, $languageCode);
         Db::query($query, $bind);
-        return \true;
+
+        return true;
     }
+
     /**
      * Returns whether the given user has chosen to use 12-hour clock
      *
@@ -58,8 +68,10 @@ class Model
      */
     public function uses12HourClock($userLogin)
     {
-        return (bool) Db::fetchOne('SELECT use_12_hour_clock FROM ' . $this->table . ' WHERE login = ? ', array($userLogin));
+        return (bool) Db::fetchOne('SELECT use_12_hour_clock FROM ' . $this->table .
+            ' WHERE login = ? ', array($userLogin));
     }
+
     /**
      * Sets whether the given user wants to use 12-hour clock
      *
@@ -69,16 +81,23 @@ class Model
      */
     public function set12HourClock($login, $use12HourClock)
     {
-        $query = 'INSERT INTO ' . $this->table . ' (login, use_12_hour_clock) VALUES (?,?) ON DUPLICATE KEY UPDATE use_12_hour_clock=?';
-        $bind = [$login, (int) $use12HourClock, (int) $use12HourClock];
+        $query = 'INSERT INTO ' . $this->table .
+            ' (login, use_12_hour_clock) VALUES (?,?) ON DUPLICATE KEY UPDATE use_12_hour_clock=?';
+        $bind = [$login, (int)$use12HourClock, (int)$use12HourClock];
         Db::query($query, $bind);
-        return \true;
+
+        return true;
     }
+
     public static function install()
     {
-        $userLanguage = "login VARCHAR( 100 ) NOT NULL ,\n\t\t\t\t\t     language VARCHAR( 10 ) NOT NULL ,\n\t\t\t\t\t     use_12_hour_clock TINYINT(1) NOT NULL DEFAULT 0 ,\n\t\t\t\t\t     PRIMARY KEY ( login )";
+        $userLanguage = "login VARCHAR( 100 ) NOT NULL ,
+					     language VARCHAR( 10 ) NOT NULL ,
+					     use_12_hour_clock TINYINT(1) NOT NULL DEFAULT 0 ,
+					     PRIMARY KEY ( login )";
         DbHelper::createTable(self::$rawPrefix, $userLanguage);
     }
+
     public static function uninstall()
     {
         Db::dropTables(Common::prefixTable(self::$rawPrefix));

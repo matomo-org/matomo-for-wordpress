@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
@@ -13,6 +14,7 @@ use Piwik\Db\Adapter;
 use Piwik\Db\Schema;
 use Piwik\Db\TransactionalDatabaseInterface;
 use Piwik\Db\TransactionalDatabaseStaticTrait;
+
 /**
  * Contains SQL related helper functions for Piwik's MySQL database.
  *
@@ -35,10 +37,14 @@ use Piwik\Db\TransactionalDatabaseStaticTrait;
 class Db implements TransactionalDatabaseInterface
 {
     use TransactionalDatabaseStaticTrait;
+
     public const SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
+
     private static $connection = null;
     private static $readerConnection = null;
-    private static $logQueries = \true;
+
+    private static $logQueries = true;
+
     /**
      * Returns the database connection and creates it if it hasn't been already.
      *
@@ -46,14 +52,17 @@ class Db implements TransactionalDatabaseInterface
      */
     public static function get()
     {
-        if (\Piwik\SettingsServer::isTrackerApiRequest()) {
-            return \Piwik\Tracker::getDatabase();
+        if (SettingsServer::isTrackerApiRequest()) {
+            return Tracker::getDatabase();
         }
+
         if (!self::hasDatabaseObject()) {
             self::createDatabaseObject();
         }
+
         return self::$connection;
     }
+
     /**
      * @internal
      * @ignore
@@ -61,9 +70,11 @@ class Db implements TransactionalDatabaseInterface
      */
     public static function hasReaderConfigured()
     {
-        $readerConfig = \Piwik\Config::getInstance()->database_reader;
+        $readerConfig = Config::getInstance()->database_reader;
+
         return !empty($readerConfig['host']);
     }
+
     /**
      * Returns the database connection and creates it if it hasn't been already. Make sure to not write any data on
      * the reader and only use the connection to read data.
@@ -77,11 +88,14 @@ class Db implements TransactionalDatabaseInterface
         if (!self::hasReaderConfigured()) {
             return self::get();
         }
+
         if (!self::hasReaderDatabaseObject()) {
             self::createReaderDatabaseObject();
         }
+
         return self::$readerConnection;
     }
+
     /**
      * Returns an array with the Database connection information.
      *
@@ -90,10 +104,12 @@ class Db implements TransactionalDatabaseInterface
      */
     public static function getDatabaseConfig($dbConfig = null)
     {
-        $config = \Piwik\Config::getInstance();
+        $config = Config::getInstance();
+
         if (is_null($dbConfig)) {
             $dbConfig = $config->database;
         }
+
         /**
          * Triggered before a database connection is established.
          *
@@ -112,10 +128,13 @@ class Db implements TransactionalDatabaseInterface
          *                        - **adapter**: either `'PDO\MYSQL'` or `'MYSQLI'`
          *                        - **type**: The MySQL engine to use, for instance 'InnoDB'
          */
-        \Piwik\Piwik::postEvent('Db.getDatabaseConfig', array(&$dbConfig));
+        Piwik::postEvent('Db.getDatabaseConfig', array(&$dbConfig));
+
         $dbConfig['profiler'] = @$config->Debug['enable_sql_profiler'];
+
         return $dbConfig;
     }
+
     /**
      * For tests only.
      * @param $connection
@@ -126,6 +145,7 @@ class Db implements TransactionalDatabaseInterface
     {
         self::$connection = $connection;
     }
+
     /**
      * Connects to the database.
      *
@@ -137,9 +157,12 @@ class Db implements TransactionalDatabaseInterface
     public static function createDatabaseObject($dbConfig = null)
     {
         $dbConfig = self::getDatabaseConfig($dbConfig);
+
         $db = @Adapter::factory($dbConfig['adapter'], $dbConfig);
+
         self::$connection = $db;
     }
+
     /**
      * Connects to the reader database.
      *
@@ -153,8 +176,9 @@ class Db implements TransactionalDatabaseInterface
     public static function createReaderDatabaseObject($dbConfig = null)
     {
         if (!isset($dbConfig)) {
-            $dbConfig = \Piwik\Config::getInstance()->database_reader;
+            $dbConfig = Config::getInstance()->database_reader;
         }
+
         $masterDbConfig = self::getDatabaseConfig();
         $dbConfig = self::getDatabaseConfig($dbConfig);
         $dbConfig['adapter'] = $masterDbConfig['adapter'];
@@ -163,12 +187,16 @@ class Db implements TransactionalDatabaseInterface
         $dbConfig['tables_prefix'] = $masterDbConfig['tables_prefix'];
         $dbConfig['charset'] = $masterDbConfig['charset'];
         $dbConfig['collation'] = $masterDbConfig['collation'] ?? null;
+
         $db = @Adapter::factory($dbConfig['adapter'], $dbConfig);
+
         if (!empty($dbConfig['aurora_readonly_read_committed'])) {
             $db->exec('set session aurora_read_replica_read_committed = ON;set session transaction isolation level read committed;');
         }
+
         self::$readerConnection = $db;
     }
+
     /**
      * Detect whether a database object is initialized / created or not.
      *
@@ -178,6 +206,7 @@ class Db implements TransactionalDatabaseInterface
     {
         return isset(self::$connection);
     }
+
     /**
      * Detect whether a database object is initialized / created or not.
      *
@@ -187,6 +216,7 @@ class Db implements TransactionalDatabaseInterface
     {
         return isset(self::$readerConnection);
     }
+
     /**
      * Disconnects and destroys the database connection.
      *
@@ -195,14 +225,16 @@ class Db implements TransactionalDatabaseInterface
     public static function destroyDatabaseObject()
     {
         if (self::hasDatabaseObject()) {
-            \Piwik\DbHelper::disconnectDatabase();
+            DbHelper::disconnectDatabase();
         }
         self::$connection = null;
+
         if (self::hasReaderDatabaseObject()) {
             self::$readerConnection->closeConnection();
         }
         self::$readerConnection = null;
     }
+
     /**
      * Executes an unprepared SQL query. Recommended for DDL statements like `CREATE`,
      * `DROP` and `ALTER`. The return value is DBMS-specific. For MySQLI, it returns the
@@ -219,16 +251,21 @@ class Db implements TransactionalDatabaseInterface
         $db = self::get();
         $profiler = $db->getProfiler();
         $q = $profiler->queryStart($sql, \Zend_Db_Profiler::INSERT);
+
         try {
             self::logSql(__FUNCTION__, $sql);
+
             $return = self::get()->exec($sql);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
+
         $profiler->queryEnd($q);
+
         return $return;
     }
+
     /**
      * Executes an SQL query and returns the [Zend_Db_Statement](https://framework.zend.com/manual/1.12/en/zend.db.statement.html)
      * for the query.
@@ -245,12 +282,14 @@ class Db implements TransactionalDatabaseInterface
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
+
             return self::get()->query($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
+
     /**
      * Executes a callback with potential recovery from a "MySQL server has gone away" error.
      *
@@ -272,18 +311,26 @@ class Db implements TransactionalDatabaseInterface
             if (!self::hasReaderConfigured()) {
                 throw $ex;
             }
+
             // only attempt reconnection if we encounter a "server has gone away" error
-            if (!self::get()->isErrNo($ex, \Piwik\Updater\Migration\Db::ERROR_CODE_MYSQL_SERVER_HAS_GONE_AWAY) && \false === stripos($ex->getMessage(), 'server has gone away')) {
+            if (
+                !self::get()->isErrNo($ex, Updater\Migration\Db::ERROR_CODE_MYSQL_SERVER_HAS_GONE_AWAY)
+                && false === stripos($ex->getMessage(), 'server has gone away')
+            ) {
                 throw $ex;
             }
+
             // reconnect and retry query
             // after a 100ms wait (to avoid re-hitting a network problem immediately)
             self::$connection = null;
+
             usleep(100 * 1000);
             self::createDatabaseObject();
+
             return $callback();
         }
     }
+
     /**
      * Executes an SQL `SELECT` statement and returns all fetched rows from the result set.
      *
@@ -297,12 +344,14 @@ class Db implements TransactionalDatabaseInterface
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
+
             return self::get()->fetchAll($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
+
     /**
      * Executes an SQL `SELECT` statement and returns the first row of the result set.
      *
@@ -316,12 +365,14 @@ class Db implements TransactionalDatabaseInterface
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
+
             return self::get()->fetchRow($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
+
     /**
      * Executes an SQL `SELECT` statement and returns the first column value of the first
      * row in the result set.
@@ -335,12 +386,14 @@ class Db implements TransactionalDatabaseInterface
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
+
             return self::get()->fetchOne($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
+
     /**
      * Executes an SQL `SELECT` statement and returns the entire result set indexed by the first
      * selected field.
@@ -358,12 +411,14 @@ class Db implements TransactionalDatabaseInterface
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
+
             return self::get()->fetchAssoc($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
+
     /**
      * Deletes all desired rows in a table, while using a limit. This function will execute many
      * DELETE queries until there are no more rows to delete.
@@ -386,16 +441,23 @@ class Db implements TransactionalDatabaseInterface
      */
     public static function deleteAllRows($table, $where, $orderBy, $maxRowsPerQuery = 100000, $parameters = array())
     {
-        $orderByClause = $orderBy ? "ORDER BY {$orderBy}" : "";
-        $sql = "DELETE FROM {$table} {$where} {$orderByClause}\n                LIMIT " . (int) $maxRowsPerQuery;
+        $orderByClause = $orderBy ? "ORDER BY $orderBy" : "";
+
+        $sql = "DELETE FROM $table $where $orderByClause
+                LIMIT " . (int)$maxRowsPerQuery;
+
         // delete rows w/ a limit
         $totalRowsDeleted = 0;
+
         do {
             $rowsDeleted = self::query($sql, $parameters)->rowCount();
+
             $totalRowsDeleted += $rowsDeleted;
         } while ($rowsDeleted >= $maxRowsPerQuery);
+
         return $totalRowsDeleted;
     }
+
     /**
      * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
      *
@@ -409,14 +471,16 @@ class Db implements TransactionalDatabaseInterface
      * @deprecated  will be removed in Matomo 6
      *              use Schema::getInstance()->optimizeTables() instead
      */
-    public static function optimizeTables($tables, $force = \false)
+    public static function optimizeTables($tables, $force = false)
     {
         if (empty($tables)) {
-            return \false;
+            return false;
         }
+
         $tables = !is_array($tables) ? [$tables] : $tables;
         return Schema::getInstance()->optimizeTables($tables, (bool) $force);
     }
+
     /**
      * Drops the supplied table or tables.
      *
@@ -429,16 +493,19 @@ class Db implements TransactionalDatabaseInterface
         if (!is_array($tables)) {
             $tables = array($tables);
         }
+
         return self::query("DROP TABLE `" . implode('`,`', $tables) . "`");
     }
+
     /**
      * Drops all tables
      */
     public static function dropAllTables()
     {
-        $tablesAlreadyInstalled = \Piwik\DbHelper::getTablesInstalled();
+        $tablesAlreadyInstalled = DbHelper::getTablesInstalled();
         self::dropTables($tablesAlreadyInstalled);
     }
+
     /**
      * Locks the supplied table or tables.
      *
@@ -456,18 +523,23 @@ class Db implements TransactionalDatabaseInterface
         if (!is_array($tablesToRead)) {
             $tablesToRead = array($tablesToRead);
         }
+
         if (!is_array($tablesToWrite)) {
             $tablesToWrite = array($tablesToWrite);
         }
+
         $lockExprs = array();
         foreach ($tablesToWrite as $table) {
             $lockExprs[] = $table . " WRITE";
         }
+
         foreach ($tablesToRead as $table) {
             $lockExprs[] = $table . " READ";
         }
+
         return self::exec("LOCK TABLES " . implode(', ', $lockExprs));
     }
+
     /**
      * Releases all table locks.
      *
@@ -480,6 +552,7 @@ class Db implements TransactionalDatabaseInterface
     {
         return self::exec("UNLOCK TABLES");
     }
+
     /**
      * Performs a `SELECT` statement on a table one chunk at a time and returns the first
      * successfully fetched value.
@@ -520,18 +593,21 @@ class Db implements TransactionalDatabaseInterface
      */
     public static function segmentedFetchFirst($sql, $first, $last, $step, $params = array())
     {
-        $result = \false;
+        $result = false;
+
         if ($step > 0) {
-            for ($i = $first; $result === \false && $i <= $last; $i += $step) {
+            for ($i = $first; $result === false && $i <= $last; $i += $step) {
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         } else {
-            for ($i = $first; $result === \false && $i >= $last; $i += $step) {
+            for ($i = $first; $result === false && $i >= $last; $i += $step) {
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         }
+
         return $result;
     }
+
     /**
      * Performs a `SELECT` on a table one chunk at a time and returns an array
      * of every fetched value.
@@ -556,6 +632,7 @@ class Db implements TransactionalDatabaseInterface
     public static function segmentedFetchOne($sql, $first, $last, $step, $params = array())
     {
         $result = array();
+
         if ($step > 0) {
             for ($i = $first; $i <= $last; $i += $step) {
                 $result[] = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
@@ -565,8 +642,10 @@ class Db implements TransactionalDatabaseInterface
                 $result[] = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         }
+
         return $result;
     }
+
     /**
      * Performs a SELECT on a table one chunk at a time and returns an array
      * of every fetched row.
@@ -592,19 +671,22 @@ class Db implements TransactionalDatabaseInterface
     public static function segmentedFetchAll($sql, $first, $last, $step, $params = array())
     {
         $result = array();
+
         if ($step > 0) {
             for ($i = $first; $i <= $last; $i += $step) {
                 $currentParams = array_merge($params, array($i, $i + $step));
-                $result = array_merge($result, self::fetchAll($sql, $currentParams));
+                $result        = array_merge($result, self::fetchAll($sql, $currentParams));
             }
         } else {
             for ($i = $first; $i >= $last; $i += $step) {
                 $currentParams = array_merge($params, array($i, $i + $step));
-                $result = array_merge($result, self::fetchAll($sql, $currentParams));
+                $result        = array_merge($result, self::fetchAll($sql, $currentParams));
             }
         }
+
         return $result;
     }
+
     /**
      * Performs a `UPDATE` or `DELETE` statement on a table one chunk at a time.
      *
@@ -637,6 +719,7 @@ class Db implements TransactionalDatabaseInterface
             }
         }
     }
+
     /**
      * Attempts to get a named lock. This function uses a timeout of 1s, but will
      * retry a set number of times.
@@ -651,6 +734,7 @@ class Db implements TransactionalDatabaseInterface
         if (strlen($lockName) > 64) {
             throw new \Exception('DB lock name has to be 64 characters or less for MySQL 5.7 compatibility.');
         }
+
         /*
          * the server (e.g., shared hosting) may have a low wait timeout
          * so instead of a single GET_LOCK() with a 30 second timeout,
@@ -658,16 +742,20 @@ class Db implements TransactionalDatabaseInterface
          * connection
          */
         $sql = 'SELECT GET_LOCK(?, 1)';
+
         $db = self::get();
+
         while ($maxRetries > 0) {
             $result = $db->fetchOne($sql, array($lockName));
             if ($result == '1') {
-                return \true;
+                return true;
             }
             $maxRetries--;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Releases a named lock.
      *
@@ -677,9 +765,11 @@ class Db implements TransactionalDatabaseInterface
     public static function releaseDbLock($lockName)
     {
         $sql = 'SELECT RELEASE_LOCK(?)';
+
         $db = self::get();
         return $db->fetchOne($sql, array($lockName)) == '1';
     }
+
     /**
      * Cached result of isLockprivilegeGranted function.
      *
@@ -689,6 +779,7 @@ class Db implements TransactionalDatabaseInterface
      * @ignore
      */
     public static $lockPrivilegeGranted = null;
+
     /**
      * Checks whether the database user is allowed to lock tables.
      *
@@ -698,51 +789,69 @@ class Db implements TransactionalDatabaseInterface
     {
         if (is_null(self::$lockPrivilegeGranted)) {
             try {
-                \Piwik\Db::lockTables(\Piwik\Common::prefixTable('site_url'));
-                \Piwik\Db::unlockAllTables();
-                self::$lockPrivilegeGranted = \true;
+                Db::lockTables(Common::prefixTable('site_url'));
+                Db::unlockAllTables();
+
+                self::$lockPrivilegeGranted = true;
             } catch (Exception $ex) {
-                self::$lockPrivilegeGranted = \false;
+                self::$lockPrivilegeGranted = false;
             }
         }
+
         return self::$lockPrivilegeGranted;
     }
+
     private static function logExtraInfoIfDeadlock($ex)
     {
-        if (!self::get()->isErrNo($ex, 1213) && !self::get()->isErrNo($ex, 1205)) {
+        if (
+            !self::get()->isErrNo($ex, 1213)
+            && !self::get()->isErrNo($ex, 1205)
+        ) {
             return;
         }
+
         try {
             $deadlockInfo = self::fetchAll("SHOW ENGINE INNODB STATUS");
+
             // log using exception so backtrace appears in log output
-            \Piwik\Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, \true)));
+            Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, true)));
         } catch (\Exception $e) {
             //  1227 Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
         }
     }
+
     private static function logSql($functionName, $sql, $parameters = array())
     {
         self::checkBoundParametersIfInDevMode($sql, $parameters);
-        if (self::$logQueries === \false || @\Piwik\Config::getInstance()->Debug['log_sql_queries'] != 1) {
+
+        if (
+            self::$logQueries === false
+            || @Config::getInstance()->Debug['log_sql_queries'] != 1
+        ) {
             return;
         }
+
         // NOTE: at the moment we don't log parameters in order to avoid sensitive information leaks
-        \Piwik\Log::debug("Db::%s() executing SQL: %s", $functionName, $sql);
+        Log::debug("Db::%s() executing SQL: %s", $functionName, $sql);
     }
+
     private static function checkBoundParametersIfInDevMode($sql, $parameters)
     {
-        if (!\Piwik\Development::isEnabled()) {
+        if (!Development::isEnabled()) {
             return;
         }
+
         if (!is_array($parameters)) {
             $parameters = [$parameters];
         }
+
         foreach ($parameters as $index => $parameter) {
-            if ($parameter instanceof \Piwik\Date) {
-                throw new \Exception("Found bound parameter (index = {$index}) is Date instance which will not work correctly in following SQL: {$sql}");
+            if ($parameter instanceof Date) {
+                throw new \Exception("Found bound parameter (index = $index) is Date instance which will not work correctly in following SQL: $sql");
             }
         }
     }
+
     /**
      * @param bool $enable
      */
@@ -750,6 +859,7 @@ class Db implements TransactionalDatabaseInterface
     {
         self::$logQueries = $enable;
     }
+
     /**
      * @return boolean
      */
@@ -757,12 +867,13 @@ class Db implements TransactionalDatabaseInterface
     {
         return self::$logQueries;
     }
+
     /**
      * @deprecated will be removed with Matomo 6
      *             use Schema::getInstance()->isOptimizeInnoDBSupported() instead
      */
     public static function isOptimizeInnoDBSupported($version = null)
     {
-        return \Piwik\Db\Schema::getInstance()->isOptimizeInnoDBSupported();
+        return Db\Schema::getInstance()->isOptimizeInnoDBSupported();
     }
 }

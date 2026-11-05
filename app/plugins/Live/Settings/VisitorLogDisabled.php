@@ -12,6 +12,7 @@ use Piwik\Settings\Interfaces\Traits\Getters\SystemGetterTrait;
 use Piwik\Settings\Interfaces\Traits\PolicyComparisonTrait;
 use Piwik\Settings\FieldConfig;
 use Piwik\Settings\Interfaces\SettingValueInterface;
+
 /**
  * @implements MeasurableSettingInterface<bool>
  * @implements PolicyComparisonInterface<bool>
@@ -24,96 +25,121 @@ class VisitorLogDisabled implements MeasurableSettingInterface, PolicyComparison
      * @use MeasurableGetterTrait<bool>
      */
     use MeasurableGetterTrait;
+
     /**
      * @use PolicyComparisonTrait<bool>
      */
     use PolicyComparisonTrait;
+
     /**
      * @use SystemGetterTrait<bool>
      */
     use SystemGetterTrait;
+
     /**
      * @var bool
      */
     private $value;
+
     private function __construct(bool $value)
     {
         $this->value = $value;
     }
+
     public function getValue()
     {
         return $this->value;
     }
-    protected static function getMeasurableName() : string
+
+    protected static function getMeasurableName(): string
     {
         return 'disable_visitor_log';
     }
+
     protected static function getMeasurableDefaultValue()
     {
-        return \false;
+        return false;
     }
-    protected static function getMeasurableType() : string
+
+    protected static function getMeasurableType(): string
     {
         return FieldConfig::TYPE_BOOL;
     }
-    protected static function getSystemName() : string
+
+    protected static function getSystemName(): string
     {
         return 'disable_visitor_log';
     }
+
     protected static function getSystemDefaultValue()
     {
-        return \false;
+        return false;
     }
-    protected static function getSystemType() : string
+
+    protected static function getSystemType(): string
     {
         return FieldConfig::TYPE_BOOL;
     }
-    public static function getTitle() : string
+
+    public static function getTitle(): string
     {
         return Piwik::translate('Live_VisitsLogAndProfileDisabledPolicySettingTitle');
     }
-    public static function getWhatItDoes(?int $idSite = null) : string
+
+    public static function getWhatItDoes(?int $idSite = null): string
     {
         return Piwik::translate('Live_DisableVisitsLogAndProfileWhatItDoes');
     }
-    public static function getImpact(?int $idSite = null) : string
+
+    public static function getImpact(?int $idSite = null): string
     {
         return Piwik::translate('Live_DisableVisitsLogAndProfileImpact');
     }
-    public static function getComplianceRequirementNote(?int $idSite = null) : string
+
+    public static function getComplianceRequirementNote(?int $idSite = null): string
     {
         // TODO add dynamic messaging
         return Piwik::translate('Live_VisitorLogPolicySettingRequirementNote');
     }
-    public static function getInlineHelp() : string
+
+    public static function getInlineHelp(): string
     {
         return Piwik::translate('Live_DisableVisitsLogAndProfileDescription');
     }
-    public static function getPolicyRequirements() : array
+
+    public static function getPolicyRequirements(): array
     {
         $policyValues = [];
-        $policyValues[CnilPolicy::class] = \true;
+        $policyValues[CnilPolicy::class] = true;
+
         return $policyValues;
     }
-    public static function getInstance(?int $idSite = null) : self
+
+    public static function getInstance(?int $idSite = null): self
     {
         $values = self::getPolicyRequiredValues($idSite);
         $values['measurable'] = $idSite === null ? null : self::getMeasurableValue($idSite);
         $values['system'] = self::getSystemValue();
+
         $strictest = self::getStrictestValueFromArray($values);
         return new self($strictest);
     }
-    public static function isCompliant(string $policy, ?int $idSite = null) : bool
+
+    public static function isCompliant(string $policy, ?int $idSite = null): bool
     {
         $policyValues = self::getPolicyRequirements();
+
         if (!array_key_exists($policy, $policyValues)) {
-            return \true;
+            return true;
         }
+
         $currentValue = self::getInstance($idSite)->getValue();
+
         return $currentValue === $policyValues[$policy];
     }
+
     protected static function compareStrictness($value1, $value2)
     {
-        return $value1 || $value2;
+        return ($value1 || $value2);
     }
 }

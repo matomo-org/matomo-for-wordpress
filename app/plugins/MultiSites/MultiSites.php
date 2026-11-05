@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\MultiSites;
 
 use Piwik\Piwik;
+
 class MultiSites extends \Piwik\Plugin
 {
     /**
@@ -16,18 +18,38 @@ class MultiSites extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor'];
+        return [
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'Metrics.getDefaultMetricTranslations'   => 'addMetricTranslations',
+            'API.getPagesComparisonsDisabledFor'     => 'getPagesComparisonsDisabledFor',
+        ];
     }
+
     public function getPagesComparisonsDisabledFor(&$pages)
     {
         $pages[] = 'MultiSites.index';
     }
+
     public function addMetricTranslations(&$translations)
     {
         $appendix = " " . Piwik::translate('MultiSites_Evolution');
-        $metrics = ['visits_evolution' => Piwik::translate('General_ColumnNbVisits') . $appendix, 'actions_evolution' => Piwik::translate('General_ColumnNbActions') . $appendix, 'pageviews_evolution' => Piwik::translate('General_ColumnPageviews') . $appendix, 'hits_evolution' => Piwik::translate('General_ColumnHits') . $appendix, 'ai_chatbots_requests' => Piwik::translate('MultiSites_AiChatbotsRequests'), 'ai_chatbots_requests_evolution' => Piwik::translate('MultiSites_AiChatbotsRequests') . $appendix, 'revenue_evolution' => Piwik::translate('General_ColumnRevenue') . $appendix, 'nb_conversions_evolution' => Piwik::translate('Goals_ColumnConversions') . $appendix, 'orders_evolution' => Piwik::translate('General_EcommerceOrders') . $appendix, 'ecommerce_revenue_evolution' => Piwik::translate('General_ProductRevenue') . $appendix];
+        $metrics = [
+            'visits_evolution'               => Piwik::translate('General_ColumnNbVisits') . $appendix,
+            'actions_evolution'              => Piwik::translate('General_ColumnNbActions') . $appendix,
+            'pageviews_evolution'            => Piwik::translate('General_ColumnPageviews') . $appendix,
+            'hits_evolution'                 => Piwik::translate('General_ColumnHits') . $appendix,
+            'ai_chatbots_requests'           => Piwik::translate('MultiSites_AiChatbotsRequests'),
+            'ai_chatbots_requests_evolution' => Piwik::translate('MultiSites_AiChatbotsRequests') . $appendix,
+            'revenue_evolution'              => Piwik::translate('General_ColumnRevenue') . $appendix,
+            'nb_conversions_evolution'       => Piwik::translate('Goals_ColumnConversions') . $appendix,
+            'orders_evolution'               => Piwik::translate('General_EcommerceOrders') . $appendix,
+            'ecommerce_revenue_evolution'    => Piwik::translate('General_ProductRevenue') . $appendix,
+        ];
+
         $translations = array_merge($translations, $metrics);
     }
+
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'General_Website';
@@ -85,6 +107,7 @@ class MultiSites extends \Piwik\Plugin
         $translations[] = 'MultiSites_AiChatbotsSegmentationTooltip';
         $translations[] = 'MultiSites_TotalHitsIncludingAiTooltip';
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/MultiSites/vue/src/AllWebsitesDashboard/AllWebsitesDashboard.less";

@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DBStats;
 
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\View;
+
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     /**
@@ -25,17 +27,22 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         Piwik::checkUserHasSuperUserAccess();
         $view = new View('@DBStats/index');
         $this->setBasicVariablesView($view);
+
         $_GET['showtitle'] = '1';
+
         $view->databaseUsageSummary = $this->renderReport('getDatabaseUsageSummary');
-        $view->trackerDataSummary = $this->renderReport('getTrackerDataSummary');
-        $view->metricDataSummary = $this->renderReport('getMetricDataSummary');
-        $view->reportDataSummary = $this->renderReport('getReportDataSummary');
-        $view->adminDataSummary = $this->renderReport('getAdminDataSummary');
-        list($siteCount, $userCount, $totalSpaceUsed) = \Piwik\Plugins\DBStats\API::getInstance()->getGeneralInformation();
+        $view->trackerDataSummary   = $this->renderReport('getTrackerDataSummary');
+        $view->metricDataSummary    = $this->renderReport('getMetricDataSummary');
+        $view->reportDataSummary    = $this->renderReport('getReportDataSummary');
+        $view->adminDataSummary     = $this->renderReport('getAdminDataSummary');
+
+        list($siteCount, $userCount, $totalSpaceUsed) = API::getInstance()->getGeneralInformation();
+
         $formatter = new Formatter();
-        $view->siteCount = $formatter->getPrettyNumber($siteCount);
-        $view->userCount = $formatter->getPrettyNumber($userCount);
+        $view->siteCount      = $formatter->getPrettyNumber($siteCount);
+        $view->userCount      = $formatter->getPrettyNumber($userCount);
         $view->totalSpaceUsed = $formatter->getPrettySizeFromBytes($totalSpaceUsed);
+
         return $view->render();
     }
 }

@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Filter;
 
-class ByBaseTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract
+class ByBaseTranslations extends FilterAbstract
 {
     protected $baseTranslations = array();
+
     /**
      * Sets base translations
      *
@@ -20,6 +22,7 @@ class ByBaseTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWrit
     {
         $this->baseTranslations = $baseTranslations;
     }
+
     /**
      * Removes all translations that aren't present in the base translations set in constructor
      *
@@ -30,16 +33,19 @@ class ByBaseTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWrit
     public function filter($translations)
     {
         $cleanedTranslations = array();
+
         foreach ($translations as $pluginName => $pluginTranslations) {
             if (empty($this->baseTranslations[$pluginName])) {
                 $this->filteredData[$pluginName] = $pluginTranslations;
                 continue;
             }
+
             foreach ($pluginTranslations as $key => $translation) {
                 if (isset($this->baseTranslations[$pluginName][$key])) {
                     $cleanedTranslations[$pluginName][$key] = $translation;
                 }
             }
+
             if (!empty($cleanedTranslations[$pluginName])) {
                 $diff = array_diff($translations[$pluginName], $cleanedTranslations[$pluginName]);
             } else {
@@ -49,6 +55,7 @@ class ByBaseTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWrit
                 $this->filteredData[$pluginName] = $diff;
             }
         }
+
         return $cleanedTranslations;
     }
 }

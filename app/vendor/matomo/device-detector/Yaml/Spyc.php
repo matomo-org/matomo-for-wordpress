@@ -7,11 +7,14 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Yaml;
 
 use Spyc as SpycParser;
-class Spyc implements \DeviceDetector\Yaml\ParserInterface
+
+class Spyc implements ParserInterface
 {
     /**
      * Parses the file with the given filename using Spyc and returns the converted content

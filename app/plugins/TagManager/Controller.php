@@ -6,6 +6,7 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\API\Request;
@@ -27,42 +28,52 @@ use Piwik\Site;
 use Piwik\Url;
 use Piwik\View;
 use Piwik\Notification\Manager as NotificationManager;
+
 class Controller extends \Piwik\Plugin\Controller
 {
     public const COPY_CONTAINER_NONCE = 'TagManager.copyContainer';
     public const COPY_TAG_NONCE = 'TagManager.copyTag';
     public const COPY_TRIGGER_NONCE = 'TagManager.copyTrigger';
     public const COPY_VARIABLE_NONCE = 'TagManager.copyVariable';
+
     /**
      * @var AccessValidator
      */
     private $accessValidator;
+
     /**
      * @var Container
      */
     private $container;
+
     public function __construct(AccessValidator $accessValidator, Container $container)
     {
         parent::__construct();
+
         $this->accessValidator = $accessValidator;
         $this->container = $container;
     }
+
     public function getDefaultAction()
     {
         return 'manageContainers';
     }
+
     public function debug()
     {
         Piwik::checkUserHasSomeWriteAccess();
         $output = $this->renderTemplate('debug.twig');
         return $output;
     }
+
     public function manageContainers()
     {
         $this->accessValidator->checkViewPermission($this->idSite);
+
         $idContainer = \Piwik\Request::fromRequest()->getStringParameter('idContainer', '');
-        $containers = StaticContainer::get('Piwik\\Plugins\\TagManager\\Dao\\ContainersDao')->getContainersForSite($this->idSite);
+        $containers = StaticContainer::get('Piwik\Plugins\TagManager\Dao\ContainersDao')->getContainersForSite($this->idSite);
         $container = null;
+
         if (!empty($idContainer)) {
             try {
                 $container = Request::processRequest('TagManager.getContainer', ['idSite' => $this->idSite, 'idContainer' => $idContainer]);
@@ -70,55 +81,207 @@ class Controller extends \Piwik\Plugin\Controller
                 // we ignore this error, it is totally fine if this container doesn't exist as we only need it to pre-select the current container name
             }
         }
-        $containerAction = $this->accessValidator->hasWriteCapability($this->idSite) ? 'dashboard' : 'manageTags';
+
+        $containerAction = $this->accessValidator->hasWriteCapability($this->idSite)
+            ? 'dashboard'
+            : 'manageTags';
         $containerMenuItems = $this->buildContainerMenuItems($containers, $containerAction);
-        return $this->renderTemplate('manageContainers', array('container' => $container, 'containerMenuItems' => $containerMenuItems, 'mobileTagManagerMenu' => $this->buildMobileTagManagerMenu($containerMenuItems)));
+
+        return $this->renderTemplate('manageContainers', array(
+            'container' => $container,
+            'containerMenuItems' => $containerMenuItems,
+            'mobileTagManagerMenu' => $this->buildMobileTagManagerMenu($containerMenuItems),
+        ));
     }
+
     public function dashboard()
     {
         $this->accessValidator->checkWriteCapability($this->idSite);
-        $dashboardHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_DashboardHelp1'), 'paragraphs' => [Piwik::translate('TagManager_DashboardHelp2'), Piwik::translate('TagManager_DashboardHelp3'), Piwik::translate('TagManager_DashboardHelp4', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'), '</a>'])]]);
-        $tagsHelpText = $this->renderTemplate('helpContent', ['paragraphs' => [Piwik::translate('TagManager_DashboardTagsHelp1', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/tags/'), '</a>']), Piwik::translate('TagManager_DashboardTagsHelp2'), Piwik::translate('TagManager_DashboardTagsHelp3', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'), '</a>'])]]);
-        $triggersHelpText = $this->renderTemplate('helpContent', ['paragraphs' => [Piwik::translate('TagManager_DashboardTriggersHelp1', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/triggers/'), '</a>']), Piwik::translate('TagManager_DashboardTriggersHelp2'), Piwik::translate('TagManager_DashboardTriggersHelp3', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'), '</a>'])]]);
-        $variablesHelpText = $this->renderTemplate('helpContent', ['paragraphs' => [Piwik::translate('TagManager_DashboardVariablesHelp1', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/variables/'), '</a>']), Piwik::translate('TagManager_DashboardVariablesHelp2'), Piwik::translate('TagManager_DashboardVariablesHelp3', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'), '</a>'])]]);
-        $versionsHelpText = $this->renderTemplate('helpContent', ['paragraphs' => [Piwik::translate('TagManager_DashboardVersionsHelp1', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/versions-and-publish/'), '</a>']), Piwik::translate('TagManager_DashboardVersionsHelp2'), Piwik::translate('TagManager_DashboardVersionsHelp3', [Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'), '</a>'])]]);
-        return $this->renderManageContainerTemplate('dashboard', ['dashboardHelpText' => $dashboardHelpText, 'tagsHelpText' => $tagsHelpText, 'triggersHelpText' => $triggersHelpText, 'variablesHelpText' => $variablesHelpText, 'versionsHelpText' => $versionsHelpText]);
+
+        $dashboardHelpText = $this->renderTemplate('helpContent', [
+            'subHeading' => Piwik::translate('TagManager_DashboardHelp1'),
+            'paragraphs' => [
+                Piwik::translate('TagManager_DashboardHelp2'),
+                Piwik::translate('TagManager_DashboardHelp3'),
+                Piwik::translate('TagManager_DashboardHelp4', [
+                    Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        $tagsHelpText = $this->renderTemplate('helpContent', [
+            'paragraphs' => [
+                Piwik::translate('TagManager_DashboardTagsHelp1', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/tags/'),
+                    '</a>'
+                ]),
+                Piwik::translate('TagManager_DashboardTagsHelp2'),
+                Piwik::translate('TagManager_DashboardTagsHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        $triggersHelpText = $this->renderTemplate('helpContent', [
+            'paragraphs' => [
+                Piwik::translate('TagManager_DashboardTriggersHelp1', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/triggers/'),
+                    '</a>'
+                ]),
+                Piwik::translate('TagManager_DashboardTriggersHelp2'),
+                Piwik::translate('TagManager_DashboardTriggersHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        $variablesHelpText = $this->renderTemplate('helpContent', [
+            'paragraphs' => [
+                Piwik::translate('TagManager_DashboardVariablesHelp1', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/variables/'),
+                    '</a>'
+                ]),
+                Piwik::translate('TagManager_DashboardVariablesHelp2'),
+                Piwik::translate('TagManager_DashboardVariablesHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        $versionsHelpText = $this->renderTemplate('helpContent', [
+            'paragraphs' => [
+                Piwik::translate('TagManager_DashboardVersionsHelp1', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/versions-and-publish/'),
+                    '</a>'
+                ]),
+                Piwik::translate('TagManager_DashboardVersionsHelp2'),
+                Piwik::translate('TagManager_DashboardVersionsHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        return $this->renderManageContainerTemplate('dashboard', [
+            'dashboardHelpText' => $dashboardHelpText,
+            'tagsHelpText' => $tagsHelpText,
+            'triggersHelpText' => $triggersHelpText,
+            'variablesHelpText' => $variablesHelpText,
+            'versionsHelpText' => $versionsHelpText,
+        ]);
     }
+
     public function manageTags()
     {
         $this->accessValidator->checkUserHasTagManagerAccess($this->idSite);
-        $tagsHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_ManageTagsHelp1'), 'paragraphs' => [Piwik::translate('TagManager_ManageTagsHelp2'), Piwik::translate('TagManager_ManageTagsHelp3', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/tags/'), '</a>', Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'), '</a>', Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'), '</a>'])]]);
-        return $this->renderManageContainerTemplate('manageTags', ['tagsHelpText' => $tagsHelpText]);
+
+        $tagsHelpText = $this->renderTemplate('helpContent', [
+            'subHeading' => Piwik::translate('TagManager_ManageTagsHelp1'),
+            'paragraphs' => [
+                Piwik::translate('TagManager_ManageTagsHelp2'),
+                Piwik::translate('TagManager_ManageTagsHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/tags/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        return $this->renderManageContainerTemplate('manageTags', [ 'tagsHelpText' => $tagsHelpText ]);
     }
+
     public function manageTriggers()
     {
         $this->accessValidator->checkUserHasTagManagerAccess($this->idSite);
-        $triggersHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_ManageTriggersHelp1'), 'paragraphs' => [Piwik::translate('TagManager_ManageTriggersHelp2'), Piwik::translate('TagManager_ManageTriggersHelp3', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/triggers/'), '</a>', Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'), '</a>', Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'), '</a>'])]]);
-        return $this->renderManageContainerTemplate('manageTriggers', ['triggersHelpText' => $triggersHelpText]);
+
+        $triggersHelpText = $this->renderTemplate('helpContent', [
+            'subHeading' => Piwik::translate('TagManager_ManageTriggersHelp1'),
+            'paragraphs' => [
+                Piwik::translate('TagManager_ManageTriggersHelp2'),
+                Piwik::translate('TagManager_ManageTriggersHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/triggers/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        return $this->renderManageContainerTemplate('manageTriggers', [
+            'triggersHelpText' => $triggersHelpText
+        ]);
     }
+
     public function manageVariables()
     {
         $this->accessValidator->checkUserHasTagManagerAccess($this->idSite);
-        $variablesHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_ManageVariablesHelp1'), 'paragraphs' => [Piwik::translate('TagManager_ManageVariablesHelp2'), Piwik::translate('TagManager_ManageVariablesHelp3', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/variables/'), '</a>', Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'), '</a>', Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'), '</a>'])]]);
-        return $this->renderManageContainerTemplate('manageVariables', ['variablesHelpText' => $variablesHelpText]);
+
+        $variablesHelpText = $this->renderTemplate('helpContent', [
+            'subHeading' => Piwik::translate('TagManager_ManageVariablesHelp1'),
+            'paragraphs' => [
+                Piwik::translate('TagManager_ManageVariablesHelp2'),
+                Piwik::translate('TagManager_ManageVariablesHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/variables/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        return $this->renderManageContainerTemplate('manageVariables', [
+            'variablesHelpText' => $variablesHelpText
+        ]);
     }
+
     public function manageVersions()
     {
         $this->accessValidator->checkUserHasTagManagerAccess($this->idSite);
+
         $idSite = Common::getRequestVar('idSite', null, 'int');
         $this->accessValidator->checkWriteCapability($idSite);
-        $path = \Piwik\Plugins\TagManager\TagManager::getAbsolutePathToContainerDirectory();
+        $path = TagManager::getAbsolutePathToContainerDirectory();
         Filechecks::dieIfDirectoriesNotWritable(array($path));
-        $versionsHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_ManageVersionsHelp1'), 'paragraphs' => [Piwik::translate('TagManager_ManageVersionsHelp2'), Piwik::translate('TagManager_ManageVersionsHelp3', [Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/versions-and-publish/'), '</a>', Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'), '</a>', Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'), '</a>'])]]);
-        return $this->renderManageContainerTemplate('manageVersions', ['versionsHelpText' => $versionsHelpText]);
+        $versionsHelpText = $this->renderTemplate('helpContent', [
+            'subHeading' => Piwik::translate('TagManager_ManageVersionsHelp1'),
+            'paragraphs' => [
+                Piwik::translate('TagManager_ManageVersionsHelp2'),
+                Piwik::translate('TagManager_ManageVersionsHelp3', [
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/versions-and-publish/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/'),
+                    '</a>',
+                    Url::getExternalLinkTag('https://matomo.org/tag-manager-training/'),
+                    '</a>',
+                ]),
+            ]
+        ]);
+
+        return $this->renderManageContainerTemplate('manageVersions', [
+            'versionsHelpText' => $versionsHelpText
+        ]);
     }
+
     public function releases()
     {
         return $this->renderManageContainerTemplate('releases');
     }
+
     private function renderManageContainerTemplate($template, $variables = array())
     {
         $this->accessValidator->checkViewPermission($this->idSite);
+
         $idContainer = Common::getRequestVar('idContainer', null, 'string');
         try {
             $this->container->checkContainerExists($this->idSite, $idContainer);
@@ -133,119 +296,182 @@ class Controller extends \Piwik\Plugin\Controller
             }
             return;
         }
+
         if (empty($variables['container'])) {
             $variables['container'] = Request::processRequest('TagManager.getContainer', ['idSite' => $this->idSite, 'idContainer' => $idContainer]);
         }
-        $containers = StaticContainer::get('Piwik\\Plugins\\TagManager\\Dao\\ContainersDao')->getContainersForSite($this->idSite);
+
+        $containers = StaticContainer::get('Piwik\Plugins\TagManager\Dao\ContainersDao')->getContainersForSite($this->idSite);
         $variables['containerMenuItems'] = $this->buildContainerMenuItems($containers, \Piwik\Request::fromRequest()->getStringParameter('action', ''));
-        $variables['mobileTagManagerMenu'] = $this->buildMobileTagManagerMenu($variables['containerMenuItems'], $variables['container']['name'] . ' (' . $variables['container']['idcontainer'] . ')');
+        $variables['mobileTagManagerMenu'] = $this->buildMobileTagManagerMenu(
+            $variables['containerMenuItems'],
+            $variables['container']['name'] . ' (' . $variables['container']['idcontainer'] . ')'
+        );
+
         $variables['idcontainerversion'] = null;
         if (!empty($variables['container']['draft']['idcontainerversion'])) {
             $variables['idcontainerversion'] = $variables['container']['draft']['idcontainerversion'];
         }
+
         foreach ($variables['container']['releases'] as $release) {
             if ($release['environment'] === Environment::ENVIRONMENT_PREVIEW) {
                 $version = '';
                 if (!empty($release['version_name'])) {
                     $version = ' (' . Piwik::translate('TagManager_VersionX', $release['version_name']) . ')';
                 }
+
                 $previewCookie = new PreviewCookie();
                 $debugSiteUrl = $previewCookie->getDebugSiteUrl();
-                $notificationMessage = $this->renderTemplate('previewDebugNotification.twig', array('idcontainer' => $release['idcontainer'], 'debugSiteUrl' => $debugSiteUrl, 'version' => $version));
+
+                $notificationMessage = $this->renderTemplate('previewDebugNotification.twig', array(
+                        'idcontainer' => $release['idcontainer'],
+                        'debugSiteUrl' => $debugSiteUrl,
+                        'version' => $version
+                    ));
+
                 $notification = new Notification($notificationMessage);
                 $notification->context = Notification::CONTEXT_INFO;
-                $notification->raw = \true;
+                $notification->raw = true;
                 NotificationManager::notify('previewDebugMode', $notification);
             }
         }
+
         return $this->renderTemplate($template, $variables);
     }
-    private function buildContainerMenuItems(array $containers, string $targetAction) : array
+
+    private function buildContainerMenuItems(array $containers, string $targetAction): array
     {
         $items = array();
+
         $sortedContainers = $containers;
+
         usort($sortedContainers, function ($a, $b) {
             $aTime = strtotime($a['created_date']);
             $bTime = strtotime($b['created_date']);
-            return $bTime <=> $aTime;
-            // desc
+
+            return $bTime <=> $aTime; // desc
         });
+
         foreach ($sortedContainers as $containerEntry) {
-            $items[] = array('id' => $containerEntry['idcontainer'], 'name' => $containerEntry['name'], 'url' => 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'TagManager', 'action' => $targetAction, 'idContainer' => $containerEntry['idcontainer'])));
+            $items[] = array(
+                'id' => $containerEntry['idcontainer'],
+                'name' => $containerEntry['name'],
+                'url' => 'index.php' . Url::getCurrentQueryStringWithParametersModified(array(
+                    'module' => 'TagManager',
+                    'action' => $targetAction,
+                    'idContainer' => $containerEntry['idcontainer'],
+                )),
+            );
         }
+
+
+
         return $items;
     }
-    private function buildMobileTagManagerMenu(array $containerMenuItems, ?string $dropdownTitle = null) : array
+
+    private function buildMobileTagManagerMenu(array $containerMenuItems, ?string $dropdownTitle = null): array
     {
-        $menu = \Piwik\Plugins\TagManager\MenuTagManager::getInstance()->getMenu();
+        $menu = MenuTagManager::getInstance()->getMenu();
+
         if (empty($containerMenuItems)) {
             return $menu;
         }
+
         if (!isset($menu['TagManager_TagManager'])) {
             $menu['TagManager_TagManager'] = array();
         }
+
         $tagManagerMenu = $menu['TagManager_TagManager'];
+
         $prefixItems = array();
         $manageContainersItems = array();
         $otherItems = array();
+
         foreach ($tagManagerMenu as $name => $menuItem) {
             if ($name[0] === '_') {
                 $prefixItems[$name] = $menuItem;
                 continue;
             }
-            $isContainerMenuItem = isset($menuItem['_cssClass']) && $menuItem['_cssClass'] === 'container-menu-item';
+
+            $isContainerMenuItem = isset($menuItem['_cssClass'])
+                && $menuItem['_cssClass'] === 'container-menu-item';
+
             if ($isContainerMenuItem) {
                 continue;
             }
-            $isManageContainers = isset($menuItem['_url']['action']) && $menuItem['_url']['action'] === 'manageContainers';
+
+            $isManageContainers = isset($menuItem['_url']['action'])
+                && $menuItem['_url']['action'] === 'manageContainers';
+
             if ($isManageContainers) {
                 $manageContainersItems[$name] = $menuItem;
             } else {
                 $otherItems[$name] = $menuItem;
             }
         }
+
         $containerItems = array();
         foreach ($containerMenuItems as $containerMenuItem) {
-            $containerItems[$containerMenuItem['name']] = array('_url' => array(), '_tooltip' => $containerMenuItem['name']);
+            $containerItems[$containerMenuItem['name']] = array(
+                '_url' => array(),
+                '_tooltip' => $containerMenuItem['name'],
+            );
+
             if (!empty($containerMenuItem['url'])) {
-                parse_str(parse_url($containerMenuItem['url'], \PHP_URL_QUERY) ?: '', $queryParameters);
+                parse_str(parse_url($containerMenuItem['url'], PHP_URL_QUERY) ?: '', $queryParameters);
                 $containerItems[$containerMenuItem['name']]['_url'] = $queryParameters;
             }
         }
+
         $menu['TagManager_TagManager'] = $prefixItems + $manageContainersItems + $containerItems + $otherItems;
+
         return $menu;
     }
+
     public function exportContainerVersion()
     {
         $this->checkSitePermission();
         $this->accessValidator->checkUserHasTagManagerAccess($this->idSite);
-        $jsonCallback = Common::getRequestVar('callback', \false);
+
+        $jsonCallback = Common::getRequestVar('callback', false);
+
         if (!$jsonCallback) {
-            $jsonCallback = Common::getRequestVar('jsoncallback', \false);
+            $jsonCallback = Common::getRequestVar('jsoncallback', false);
         }
+
         if ($jsonCallback) {
             throw new \Exception('JSON callback not possible');
         }
+
         $result = Request::processRequest('TagManager.exportContainerVersion', array('format' => 'JSON', 'idSite' => $this->idSite));
+
         if (!empty($_SERVER['SERVER_NAME']) && Url::getCorsHostsFromConfig()) {
             // we make sure to send a custom cors header
             Common::sendHeader('Access-Control-Allow-Origin: ' . $_SERVER['SERVER_NAME']);
         }
+
         return $result;
     }
+
     public function copyContainerDialog()
     {
         $this->checkSitePermission();
         $this->accessValidator->checkWriteCapability($this->idSite);
         $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+
         $idContainer = \Piwik\Request::fromRequest()->getStringParameter('idContainer');
+
         $view = new View("@TagManager/copyDialog");
-        $view->defaultSiteDecoded = ['id' => $this->idSite, 'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite))];
+        $view->defaultSiteDecoded = [
+            'id' => $this->idSite,
+            'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite)),
+        ];
         $view->idToCopy = $idContainer;
         $view->copyType = 'container';
         $view->copyNonce = Nonce::getNonce(self::COPY_CONTAINER_NONCE);
         return $view->render();
     }
+
     public function copyContainer()
     {
         try {
@@ -253,6 +479,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($this->idSite);
             $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
             Nonce::checkNonce(self::COPY_CONTAINER_NONCE);
+
             $request = \Piwik\Request::fromRequest();
             $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
             // Confirm tha the user has permission to copy to the selected site
@@ -261,24 +488,37 @@ class Controller extends \Piwik\Plugin\Controller
             // templates. Check the capability up front so we don't fail half way through the copy.
             $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
             $idContainer = $request->getStringParameter('idContainer');
+
             $idContainerNew = $this->container->copyContainer($this->idSite, $idContainer, $idDestinationSite);
-            $url = 'index.php?module=TagManager&action=dashboard&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idContainerNew]);
-            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+
+            $url = 'index.php?module=TagManager&action=dashboard&'
+                . Url::getQueryStringFromParameters([
+                    'idSite' => $idDestinationSite,
+                    'idContainer' => $idContainerNew
+                ]);
+
+            return json_encode(['isSuccess' => true, 'urlToNewCopy' => $url]);
         } catch (\Exception $e) {
-            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+            return json_encode(['isSuccess' => false, 'message' => $e->getMessage()]);
         }
     }
+
     public function copyTagDialog()
     {
         $this->checkSitePermission();
         $this->accessValidator->checkWriteCapability($this->idSite);
         $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+
         $request = \Piwik\Request::fromRequest();
         $idTag = $request->getIntegerParameter('idTag');
         $idSourceContainer = $request->getStringParameter('idContainer');
         $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
         $view = new View("@TagManager/copyDialog");
-        $view->defaultSiteDecoded = ['id' => $this->idSite, 'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite))];
+        $view->defaultSiteDecoded = [
+            'id' => $this->idSite,
+            'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite)),
+        ];
         $view->idToCopy = $idTag;
         $view->copyType = 'tag';
         $view->idSourceContainer = $idSourceContainer;
@@ -286,6 +526,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->copyNonce = Nonce::getNonce(self::COPY_TAG_NONCE);
         return $view->render();
     }
+
     public function copyTag()
     {
         try {
@@ -293,6 +534,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($this->idSite);
             $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
             Nonce::checkNonce(self::COPY_TAG_NONCE);
+
             $request = \Piwik\Request::fromRequest();
             $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
             $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
@@ -300,28 +542,47 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($idDestinationSite);
             $idTag = $request->getIntegerParameter('idTag');
             $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
             $tagModel = StaticContainer::get(Tag::class);
-            if ($this->idSite !== $idDestinationSite && $tagModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idTag)) {
+            if (
+                $this->idSite !== $idDestinationSite
+                && $tagModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idTag)
+            ) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
             }
+
             $idTagNew = $tagModel->copyTag($this->idSite, $idContainerVersion, $idTag, $idDestinationSite, $idDestinationContainer);
-            $url = 'index.php?module=TagManager&action=manageTags&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTag' => $idTagNew]);
-            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+
+            $url = 'index.php?module=TagManager&action=manageTags&'
+                . Url::getQueryStringFromParameters([
+                    'idSite' => $idDestinationSite,
+                    'idContainer' => $idDestinationContainer
+                ]) . '#?' . Url::getQueryStringFromParameters([
+                    'idTag' => $idTagNew,
+                ]);
+
+            return json_encode(['isSuccess' => true, 'urlToNewCopy' => $url]);
         } catch (\Exception $e) {
-            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+            return json_encode(['isSuccess' => false, 'message' => $e->getMessage()]);
         }
     }
+
     public function copyTriggerDialog()
     {
         $this->checkSitePermission();
         $this->accessValidator->checkWriteCapability($this->idSite);
         $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+
         $request = \Piwik\Request::fromRequest();
         $idTrigger = $request->getIntegerParameter('idTrigger');
         $idSourceContainer = $request->getStringParameter('idContainer');
         $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
         $view = new View("@TagManager/copyDialog");
-        $view->defaultSiteDecoded = ['id' => $this->idSite, 'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite))];
+        $view->defaultSiteDecoded = [
+            'id' => $this->idSite,
+            'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite)),
+        ];
         $view->idToCopy = $idTrigger;
         $view->copyType = 'trigger';
         $view->idSourceContainer = $idSourceContainer;
@@ -329,6 +590,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->copyNonce = Nonce::getNonce(self::COPY_TRIGGER_NONCE);
         return $view->render();
     }
+
     public function copyTrigger()
     {
         try {
@@ -336,6 +598,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($this->idSite);
             $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
             Nonce::checkNonce(self::COPY_TRIGGER_NONCE);
+
             $request = \Piwik\Request::fromRequest();
             $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
             $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
@@ -343,28 +606,47 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($idDestinationSite);
             $idTrigger = $request->getIntegerParameter('idTrigger');
             $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
             $triggerModel = StaticContainer::get(Trigger::class);
-            if ($this->idSite !== $idDestinationSite && $triggerModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idTrigger)) {
+            if (
+                $this->idSite !== $idDestinationSite
+                && $triggerModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idTrigger)
+            ) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
             }
+
             $idTriggerNew = $triggerModel->copyTrigger($this->idSite, $idContainerVersion, $idTrigger, $idDestinationSite, $idDestinationContainer);
-            $url = 'index.php?module=TagManager&action=manageTriggers&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idTrigger' => $idTriggerNew]);
-            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+
+            $url = 'index.php?module=TagManager&action=manageTriggers&'
+                . Url::getQueryStringFromParameters([
+                    'idSite' => $idDestinationSite,
+                    'idContainer' => $idDestinationContainer
+                ]) . '#?' . Url::getQueryStringFromParameters([
+                    'idTrigger' => $idTriggerNew,
+                ]);
+
+            return json_encode(['isSuccess' => true, 'urlToNewCopy' => $url]);
         } catch (\Exception $e) {
-            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+            return json_encode(['isSuccess' => false, 'message' => $e->getMessage()]);
         }
     }
+
     public function copyVariableDialog()
     {
         $this->checkSitePermission();
         $this->accessValidator->checkWriteCapability($this->idSite);
         $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
+
         $request = \Piwik\Request::fromRequest();
         $idVariable = $request->getIntegerParameter('idVariable');
         $idSourceContainer = $request->getStringParameter('idContainer');
         $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
         $view = new View("@TagManager/copyDialog");
-        $view->defaultSiteDecoded = ['id' => $this->idSite, 'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite))];
+        $view->defaultSiteDecoded = [
+            'id' => $this->idSite,
+            'name' => Common::unsanitizeInputValue(Site::getNameFor($this->idSite)),
+        ];
         $view->idToCopy = $idVariable;
         $view->copyType = 'variable';
         $view->idSourceContainer = $idSourceContainer;
@@ -372,6 +654,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->copyNonce = Nonce::getNonce(self::COPY_VARIABLE_NONCE);
         return $view->render();
     }
+
     public function copyVariable()
     {
         try {
@@ -379,6 +662,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($this->idSite);
             $this->accessValidator->checkUseCustomTemplatesCapability($this->idSite);
             Nonce::checkNonce(self::COPY_VARIABLE_NONCE);
+
             $request = \Piwik\Request::fromRequest();
             $idDestinationSite = $request->getIntegerParameter('idDestinationSite');
             $idDestinationContainer = $request->getStringParameter('idDestinationContainer');
@@ -386,22 +670,37 @@ class Controller extends \Piwik\Plugin\Controller
             $this->accessValidator->checkWriteCapability($idDestinationSite);
             $idVariable = $request->getIntegerParameter('idVariable');
             $idContainerVersion = $request->getIntegerParameter('idContainerVersion');
+
             $variableModel = StaticContainer::get(Variable::class);
-            if ($this->idSite !== $idDestinationSite && $variableModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idVariable)) {
+            if (
+                $this->idSite !== $idDestinationSite
+                && $variableModel->usesCustomTemplates($this->idSite, $idContainerVersion, $idVariable)
+            ) {
                 $this->accessValidator->checkUseCustomTemplatesCapability($idDestinationSite);
             }
+
             $idVariableNew = $variableModel->copyVariable($this->idSite, $idContainerVersion, $idVariable, $idDestinationSite, $idDestinationContainer);
-            $url = 'index.php?module=TagManager&action=manageVariables&' . Url::getQueryStringFromParameters(['idSite' => $idDestinationSite, 'idContainer' => $idDestinationContainer]) . '#?' . Url::getQueryStringFromParameters(['idVariable' => $idVariableNew]);
-            return json_encode(['isSuccess' => \true, 'urlToNewCopy' => $url]);
+
+            $url = 'index.php?module=TagManager&action=manageVariables&'
+                . Url::getQueryStringFromParameters([
+                    'idSite' => $idDestinationSite,
+                    'idContainer' => $idDestinationContainer
+                ]) . '#?' . Url::getQueryStringFromParameters([
+                    'idVariable' => $idVariableNew,
+                ]);
+
+            return json_encode(['isSuccess' => true, 'urlToNewCopy' => $url]);
         } catch (\Exception $e) {
-            return json_encode(['isSuccess' => \false, 'message' => $e->getMessage()]);
+            return json_encode(['isSuccess' => false, 'message' => $e->getMessage()]);
         }
     }
+
     protected function renderTemplate($template, array $variables = array())
     {
-        if (\false === strpos($template, '@') || \false === strpos($template, '/')) {
+        if (false === strpos($template, '@') || false === strpos($template, '/')) {
             $template = '@' . $this->pluginName . '/' . $template;
         }
+
         $view = new View($template);
         if (empty($this->site) || empty($this->idSite)) {
             $this->setBasicVariablesView($view);
@@ -409,18 +708,24 @@ class Controller extends \Piwik\Plugin\Controller
             $this->setGeneralVariablesView($view);
         }
         $view->topMenu = MenuTop::getInstance()->getMenu();
-        $view->tagManagerMenu = \Piwik\Plugins\TagManager\MenuTagManager::getInstance()->getMenu();
-        [$defaultAction, $defaultParameters] = \Piwik\Plugins\TagManager\Menu::getDefaultAction();
+        $view->tagManagerMenu = MenuTagManager::getInstance()->getMenu();
+
+        [$defaultAction, $defaultParameters] = Menu::getDefaultAction();
         $view->tagAction = $defaultAction;
+
         $view->currentIdContainer = \Piwik\Request::fromRequest()->getStringParameter('idContainer', '');
+
         foreach ($variables as $key => $value) {
-            $view->{$key} = $value;
+            $view->$key = $value;
         }
+
         $notifications = $view->notifications;
+
         if (empty($notifications)) {
             $view->notifications = NotificationManager::getAllNotificationsToDisplay();
             NotificationManager::cancelAllNonPersistent();
         }
+
         return $view->render();
     }
 }

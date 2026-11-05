@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Polyfill\Php80;
 
 /**
@@ -21,18 +22,22 @@ class PhpToken implements \Stringable
      * @var int
      */
     public $id;
+
     /**
      * @var string
      */
     public $text;
+
     /**
      * @var -1|positive-int
      */
     public $line;
+
     /**
      * @var int
      */
     public $pos;
+
     /**
      * @param -1|positive-int $line
      */
@@ -43,37 +48,44 @@ class PhpToken implements \Stringable
         $this->line = $line;
         $this->pos = $position;
     }
-    public function getTokenName() : ?string
+
+    public function getTokenName(): ?string
     {
-        if ('UNKNOWN' === ($name = token_name($this->id))) {
+        if ('UNKNOWN' === $name = token_name($this->id)) {
             $name = \strlen($this->text) > 1 || \ord($this->text) < 32 ? null : $this->text;
         }
+
         return $name;
     }
+
     /**
      * @param int|string|array $kind
      */
-    public function is($kind) : bool
+    public function is($kind): bool
     {
         foreach ((array) $kind as $value) {
-            if (\in_array($value, [$this->id, $this->text], \true)) {
-                return \true;
+            if (\in_array($value, [$this->id, $this->text], true)) {
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
-    public function isIgnorable() : bool
+
+    public function isIgnorable(): bool
     {
-        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], \true);
+        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], true);
     }
-    public function __toString() : string
+
+    public function __toString(): string
     {
         return (string) $this->text;
     }
+
     /**
      * @return list<static>
      */
-    public static function tokenize(string $code, int $flags = 0) : array
+    public static function tokenize(string $code, int $flags = 0): array
     {
         $line = 1;
         $position = 0;
@@ -88,6 +100,7 @@ class PhpToken implements \Stringable
             $tokens[$index] = new static($id, $text, $line, $position);
             $position += \strlen($text);
         }
+
         return $tokens;
     }
 }

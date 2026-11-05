@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -14,6 +15,7 @@ use Piwik\Plugins\TagManager\UpdateHelper\NewVariableParameterMigrator;
 use Piwik\Updater;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 /**
  * Update for version 5.1.0-b1.
  */
@@ -23,10 +25,12 @@ class Updates_5_1_0_b1 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -42,6 +46,7 @@ class Updates_5_1_0_b1 extends PiwikUpdates
     {
         return [];
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -53,8 +58,9 @@ class Updates_5_1_0_b1 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
+
         // Migrate the MatomoConfiguration type variables to all include the newly configured fields.
-        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'disableCampaignParameters', \false);
+        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'disableCampaignParameters', false);
         $migrator->migrate();
     }
 }

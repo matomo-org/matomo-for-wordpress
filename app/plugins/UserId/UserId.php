@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserId;
 
 /**
@@ -27,6 +28,7 @@ class UserId extends \Piwik\Plugin
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
         );
     }
+
     /**
      * Add a custom JS to the page. It adds possibility to open visitor details popover for each
      * user ID in a report table
@@ -37,6 +39,7 @@ class UserId extends \Piwik\Plugin
     {
         $jsFiles[] = "plugins/UserId/javascripts/rowaction.js";
     }
+
     /**
      * Add translations for the client side JS
      *

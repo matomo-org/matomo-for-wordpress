@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\DataTable\Filter;
 
 use Piwik\Common;
@@ -16,9 +17,11 @@ use Piwik\Plugins\Actions\ArchivingHelper;
 use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
+
 class Actions extends BaseFilter
 {
     private $actionType;
+
     /**
      * Per-instance cache of the normalized base URL list resolved for an idSite.
      * `null` marks a site we already tried to resolve and could not (so we don't
@@ -27,6 +30,7 @@ class Actions extends BaseFilter
      * @var array<int, list<string>|null>
      */
     private $siteBaseUrlsCache = [];
+
     /**
      * @param DataTable $table The table to eventually filter.
      * @param int $actionType The action type being processed.
@@ -36,17 +40,21 @@ class Actions extends BaseFilter
         parent::__construct($table);
         $this->actionType = $actionType;
     }
+
     /**
      * @param DataTable $table
      */
     public function filter($table)
     {
         $isFlattening = Common::getRequestVar('flat', 0);
-        $table->filter(function (DataTable $dataTable) use($isFlattening) {
+        $table->filter(function (DataTable $dataTable) use ($isFlattening) {
             $site = $dataTable->getMetadata('site');
             $urlPrefix = $site ? $site->getMainUrl() : null;
+
             $defaultActionName = GeneralConfig::getConfigValue('action_default_name');
+
             $isPageTitleType = $this->actionType == Action::TYPE_PAGE_TITLE;
+
             // for BC, we read the old style delimiter first (see #1067)
             $actionDelimiter = GeneralConfig::getConfigValue('action_category_delimiter');
             if (empty($actionDelimiter)) {
@@ -56,8 +64,10 @@ class Actions extends BaseFilter
                     $actionDelimiter = GeneralConfig::getConfigValue('action_url_category_delimiter');
                 }
             }
+
             $notDefinedUrl = ArchivingHelper::getUnknownActionName(Action::TYPE_PAGE_URL);
             $notDefinedTitle = ArchivingHelper::getUnknownActionName(Action::TYPE_PAGE_TITLE);
+
             foreach ($dataTable->getRows() as $row) {
                 if (!$row->isSummaryRow()) {
                     $url = $row->getMetadata('url');
@@ -66,10 +76,12 @@ class Actions extends BaseFilter
                     $label = $row->getColumn('label');
                     if ($url) {
                         $row->setMetadata('segmentValue', urlencode($url));
+
                         if ($site && strpos($url, 'http://') === 0) {
-                            $host = parse_url($url, \PHP_URL_HOST);
+                            $host = parse_url($url, PHP_URL_HOST);
+
                             if ($host && PageUrl::shouldUseHttpsHost($site->getId(), $host)) {
-                                $row->setMetadata('url', 'https://' . mb_substr($url, 7));
+                                $row->setMetadata('url', 'https://' . mb_substr($url, 7 /* = strlen('http://') */));
                             }
                         }
                     } elseif ($folderUrlStart) {
@@ -92,16 +104,19 @@ class Actions extends BaseFilter
                                 $row->setMetadata('segmentValue', urlencode(trim($label)));
                             }
                         }
-                    } elseif ($this->actionType == Action::TYPE_PAGE_URL) {
-                        // folder for older data w/ no folder URL metadata
+                    } elseif ($this->actionType == Action::TYPE_PAGE_URL) { // folder for older data w/ no folder URL metadata
                         if ($label === $notDefinedUrl) {
                             // segmenting by an "empty" value is currently broken for actions, so we do not set a segment value to hide row actions like segmented visit log
                             $row->setMetadata('segment', null);
                         } elseif ($urlPrefix) {
-                            $row->setMetadata('segment', $this->buildFolderUrlSegment($urlPrefix . '/' . $label, $site));
+                            $row->setMetadata(
+                                'segment',
+                                $this->buildFolderUrlSegment($urlPrefix . '/' . $label, $site)
+                            );
                         }
                     }
                 }
+
                 // remove the default action name 'index' in the end of flattened urls and prepend $actionDelimiter
                 if ($isFlattening) {
                     $label = $row->getColumn('label');
@@ -113,10 +128,12 @@ class Actions extends BaseFilter
                     }
                     $dataTable->setLabelsHaveChanged();
                 }
+
                 $row->deleteMetadata('folder_url_start');
                 $row->deleteMetadata('page_title_path');
             }
         });
+
         foreach ($table->getRowsWithoutSummaryRow() as $row) {
             $subtable = $row->getSubtable();
             if ($subtable) {
@@ -124,22 +141,26 @@ class Actions extends BaseFilter
             }
         }
     }
+
     /**
      * Builds the `pageUrl=^` segment for a folder row. If the site has additional URL
      * aliases registered, the segment is an OR-joined list with one `pageUrl=^` clause
      * per host so the visitor log query matches rows tracked under any of the site's
      * known hosts, not only `main_url`.
      */
-    private function buildFolderUrlSegment(string $folderUrlStart, $site) : string
+    private function buildFolderUrlSegment(string $folderUrlStart, $site): string
     {
         $original = 'pageUrl=^' . urlencode(urlencode($folderUrlStart));
+
         if (!$site) {
             return $original;
         }
+
         $mainUrl = $site->getMainUrl();
         if (empty($mainUrl)) {
             return $original;
         }
+
         // `folder_url_start` (and the legacy fallback) is always built as
         // `<main_url>/<path-to-folder>`. Strip the main URL to get the path-only portion
         // that we can re-attach to each known host.
@@ -148,19 +169,24 @@ class Actions extends BaseFilter
             return $original;
         }
         $folderPath = substr($folderUrlStart, strlen($mainUrlNormalized));
+
         $baseUrls = $this->getResolvedBaseUrls((int) $site->getId());
         if ($baseUrls === null) {
             return $original;
         }
+
         $clauses = [];
         foreach ($baseUrls as $baseUrl) {
             $clauses[] = 'pageUrl=^' . urlencode(urlencode($baseUrl . $folderPath));
         }
+
         if (empty($clauses)) {
             return $original;
         }
+
         return implode(',', $clauses);
     }
+
     /**
      * Returns the site's main URL and aliases as a list of normalized base URLs
      * (each ending with `/`). Preserves any path component carried on `main_url`
@@ -170,29 +196,32 @@ class Actions extends BaseFilter
      *
      * @return list<string>|null
      */
-    private function getResolvedBaseUrls(int $idSite) : ?array
+    private function getResolvedBaseUrls(int $idSite): ?array
     {
         if (array_key_exists($idSite, $this->siteBaseUrlsCache)) {
             return $this->siteBaseUrlsCache[$idSite];
         }
+
         try {
             $allUrls = SitesManagerAPI::getInstance()->getSiteUrlsFromId($idSite);
         } catch (\Exception $e) {
             return $this->siteBaseUrlsCache[$idSite] = null;
         }
+
         $seen = [];
         $baseUrls = [];
         foreach ($allUrls as $url) {
-            if (!parse_url($url, \PHP_URL_HOST)) {
+            if (!parse_url($url, PHP_URL_HOST)) {
                 continue;
             }
             $normalized = rtrim($url, '/') . '/';
             if (isset($seen[$normalized])) {
                 continue;
             }
-            $seen[$normalized] = \true;
+            $seen[$normalized] = true;
             $baseUrls[] = $normalized;
         }
+
         return $this->siteBaseUrlsCache[$idSite] = $baseUrls;
     }
 }

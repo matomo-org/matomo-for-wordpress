@@ -6,38 +6,46 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Storage\Backend;
 
 use Piwik\Common;
 use Piwik\Db;
 use Exception;
+
 /**
  * Plugin settings backend. Stores all settings in a "plugin_setting" database table.
  *
  * If a value that needs to be stored is an array, it will be JSON-encoded and stored in a single row.
  */
-class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTable
+class PluginSettingsTable extends BaseSettingsTable
 {
     /**
      * @var string
      */
     private $pluginName;
+
     /**
      * @var string
      */
     private $userLogin;
+
     public function __construct($pluginName, $userLogin)
     {
         parent::__construct();
+
         if (empty($pluginName)) {
             throw new Exception('No plugin name given for PluginSettingsTable backend');
         }
-        if ($userLogin === \false || $userLogin === null) {
+
+        if ($userLogin === false || $userLogin === null) {
             throw new Exception('Invalid user login name given for PluginSettingsTable backend');
         }
+
         $this->pluginName = $pluginName;
         $this->userLogin = $userLogin;
     }
+
     /**
      * @inheritdoc
      */
@@ -45,6 +53,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     {
         return 'PluginSettings_' . $this->pluginName . '_User_' . $this->userLogin;
     }
+
     /**
      * Saves (persists) the current setting values in the database.
      * @param array $values Key/value pairs of setting values to be written
@@ -52,7 +61,9 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     public function save($values)
     {
         $this->initDbIfNeeded();
+
         $valuesKeep = array();
+
         foreach ($values as $name => $value) {
             if (!isset($value)) {
                 continue;
@@ -68,12 +79,15 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
                     $value = (int) $value;
                 }
             }
+
             $valuesKeep[] = array($this->pluginName, $this->userLogin, $name, $value, $jsonEncoded);
         }
+
         $columns = self::getColumns();
+
         $table = $this->getTableName();
         $lockKey = $this->getStorageId();
-        $this->lock->execute($lockKey, function () use($valuesKeep, $table, $columns) {
+        $this->lock->execute($lockKey, function () use ($valuesKeep, $table, $columns) {
             $this->delete();
             // No values = nothing to save
             if (!empty($valuesKeep)) {
@@ -81,6 +95,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
             }
         });
     }
+
     /**
      * Save exactly one setting key atomically for the current plugin/user context
      *
@@ -91,24 +106,34 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     /**
      * @param mixed $value
      */
-    public function saveValue(string $settingName, $value) : void
+    public function saveValue(string $settingName, $value): void
     {
         $this->initDbIfNeeded();
+
         if (empty($settingName)) {
             throw new Exception('No setting name given for PluginSettingsTable backend');
         }
+
         $table = $this->getTableName();
         $lockKey = $this->getStorageId();
         $columns = self::getColumns();
-        $this->lock->execute($lockKey, function () use($table, $columns, $settingName, $value) {
+
+        $this->lock->execute($lockKey, function () use ($table, $columns, $settingName, $value) {
             $this->deleteValueWithoutLock($settingName);
+
             if (is_null($value)) {
                 return;
             }
+
             [$storedValue, $jsonEncoded] = $this->encodeValueForStorage($value);
-            Db\BatchInsert::tableInsertBatchSql($table, $columns, [[$this->pluginName, $this->userLogin, $settingName, $storedValue, $jsonEncoded]]);
+            Db\BatchInsert::tableInsertBatchSql(
+                $table,
+                $columns,
+                [[$this->pluginName, $this->userLogin, $settingName, $storedValue, $jsonEncoded]]
+            );
         });
     }
+
     /**
      * @throws Exception when param $settingName is empty
      */
@@ -122,48 +147,65 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
         if (empty($settingName)) {
             throw new Exception('No setting name given for PluginSettingsTable backend');
         }
+
         $table = $this->getTableName();
-        $sql = "SELECT `setting_name`, `setting_value`, `json_encoded`\n                FROM `{$table}`\n                WHERE plugin_name = ? and user_login = ? and setting_name = ?";
+
+        $sql = "SELECT `setting_name`, `setting_value`, `json_encoded`
+                FROM `$table`
+                WHERE plugin_name = ? and user_login = ? and setting_name = ?";
         $bind = [$this->pluginName, $this->userLogin, $settingName];
+
         try {
             $rows = $this->db->fetchAll($sql, $bind);
         } catch (\Exception $e) {
             if ($this->jsonEncodedMissingError($e)) {
-                $sql = "SELECT `setting_name`, `setting_value`\n                        FROM `{$table}`\n                        WHERE plugin_name = ? and user_login = ? and setting_name = ?";
+                $sql = "SELECT `setting_name`, `setting_value`
+                        FROM `$table`
+                        WHERE plugin_name = ? and user_login = ? and setting_name = ?";
                 $rows = $this->db->fetchAll($sql, $bind);
             } else {
                 throw $e;
             }
         }
+
         if (empty($rows)) {
             return $defaultValue;
         }
+
         $flat = $this->flattenSettingsRows($rows);
         return array_key_exists($settingName, $flat) ? $flat[$settingName] : $defaultValue;
     }
+
     /**
      * @throws Exception when param $settingName is empty
      */
-    public function deleteValue(string $settingName) : void
+    public function deleteValue(string $settingName): void
     {
         $this->initDbIfNeeded();
+
         if (empty($settingName)) {
             throw new Exception('No setting name given for PluginSettingsTable backend');
         }
+
         $lockKey = $this->getStorageId();
-        $this->lock->execute($lockKey, function () use($settingName) {
+        $this->lock->execute($lockKey, function () use ($settingName) {
             $this->deleteValueWithoutLock($settingName);
         });
     }
+
+
     private function jsonEncodedMissingError(Exception $e)
     {
-        return strpos($e->getMessage(), 'json_encoded') !== \false;
+        return strpos($e->getMessage(), 'json_encoded') !== false;
     }
+
     public function load()
     {
         $this->initDbIfNeeded();
+
         $sql = "SELECT `setting_name`, `setting_value`, `json_encoded` FROM `" . $this->getTableName() . "` WHERE plugin_name = ? and user_login = ?";
         $bind = array($this->pluginName, $this->userLogin);
+
         try {
             $settings = $this->db->fetchAll($sql, $bind);
         } catch (\Exception $e) {
@@ -176,62 +218,87 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
                 throw $e;
             }
         }
+
         return $this->flattenSettingsRows($settings);
     }
+
     /**
      * Returns selected setting names for all users in one plugin
      *
      * @param string[] $settingNames
      * @return array<string, array<string, mixed>>
      */
-    public function loadValuesForUsers(array $settingNames) : array
+    public function loadValuesForUsers(array $settingNames): array
     {
         $this->initDbIfNeeded();
         if (empty($settingNames)) {
             return [];
         }
+
         $table = $this->getTableName();
         $placeholders = Common::getSqlStringFieldsArray($settingNames);
-        $sql = "SELECT user_login, setting_name, setting_value, json_encoded\n                FROM `{$table}`\n                WHERE plugin_name = ?\n                    AND setting_name IN ({$placeholders})\n                    AND user_login <> ''";
+        $sql = "SELECT user_login, setting_name, setting_value, json_encoded
+                FROM `$table`
+                WHERE plugin_name = ?
+                    AND setting_name IN ($placeholders)
+                    AND user_login <> ''";
         $bind = array_merge([$this->pluginName], $settingNames);
+
         try {
             $rows = $this->db->fetchAll($sql, $bind);
         } catch (\Exception $e) {
             if ($this->jsonEncodedMissingError($e)) {
-                $sql = "SELECT user_login, setting_name, setting_value\n                        FROM `{$table}`\n                        WHERE plugin_name = ?\n                            AND setting_name IN ({$placeholders})\n                            AND user_login <> ''";
+                $sql = "SELECT user_login, setting_name, setting_value
+                        FROM `$table`
+                        WHERE plugin_name = ?
+                            AND setting_name IN ($placeholders)
+                            AND user_login <> ''";
                 $rows = $this->db->fetchAll($sql, $bind);
             } else {
                 throw $e;
             }
         }
+
         $valuesByUser = [];
         foreach ($rows as $row) {
-            $jsonEncoded = isset($row['json_encoded']) ? (bool) $row['json_encoded'] : \false;
-            $value = $this->decodeValueFromStorage($row['setting_value'], $jsonEncoded);
+            $jsonEncoded = isset($row['json_encoded']) ? (bool) $row['json_encoded'] : false;
+            $value = $this->decodeValueFromStorage(
+                $row['setting_value'],
+                $jsonEncoded
+            );
             $valuesByUser[$row['user_login']][$row['setting_name']] = $value;
         }
         return $valuesByUser;
     }
+
     protected function getTableName()
     {
         return Common::prefixTable('plugin_setting');
     }
+
     public function delete()
     {
         $this->initDbIfNeeded();
+
         $table = $this->getTableName();
-        $sql = "DELETE FROM `{$table}` WHERE `plugin_name` = ? and `user_login` = ?";
-        $bind = array($this->pluginName, $this->userLogin);
+        $sql = "DELETE FROM `$table` WHERE `plugin_name` = ? and `user_login` = ?";
+        $bind  = array($this->pluginName, $this->userLogin);
+
         $this->db->query($sql, $bind);
     }
-    private function deleteValueWithoutLock(string $settingName) : void
+
+    private function deleteValueWithoutLock(string $settingName): void
     {
         $this->initDbIfNeeded();
+
         $table = $this->getTableName();
-        $sql = "DELETE FROM `{$table}`\n                WHERE `plugin_name` = ? and `user_login` = ? and `setting_name` = ?";
+        $sql = "DELETE FROM `$table`
+                WHERE `plugin_name` = ? and `user_login` = ? and `setting_name` = ?";
         $bind = [$this->pluginName, $this->userLogin, $settingName];
+
         $this->db->query($sql, $bind);
     }
+
     /**
      * Unsets all settings for a user. The settings will be removed from the database. Used when
      * a user is deleted.
@@ -245,6 +312,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
         if (empty($userLogin)) {
             throw new Exception('No userLogin specified. Cannot remove all settings for this user');
         }
+
         try {
             $table = Common::prefixTable('plugin_setting');
             Db::get()->query(sprintf('DELETE FROM `%s` WHERE user_login = ?', $table), array($userLogin));
@@ -255,6 +323,7 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
             }
         }
     }
+
     /**
      * Unsets all settings for a plugin. The settings will be removed from the database. Used when
      * a plugin is uninstalled.
@@ -274,27 +343,32 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
             }
         }
     }
+
     /**
      * @return string[]
      */
-    private static function getColumns() : array
+    private static function getColumns(): array
     {
         return ['plugin_name', 'user_login', 'setting_name', 'setting_value', 'json_encoded'];
     }
+
     /**
      * @param mixed $value
      * @return array{0: mixed, 1: int}
      */
-    private function encodeValueForStorage($value) : array
+    private function encodeValueForStorage($value): array
     {
         if (is_array($value) || is_object($value)) {
             return [json_encode($value), 1];
         }
+
         if (is_bool($value)) {
             return [(int) $value, 0];
         }
+
         return [$value, 0];
     }
+
     /**
      * @param mixed $value
      * @return mixed
@@ -302,19 +376,20 @@ class PluginSettingsTable extends \Piwik\Settings\Storage\Backend\BaseSettingsTa
     private function decodeValueFromStorage($value, bool $jsonEncoded)
     {
         if ($jsonEncoded) {
-            return json_decode($value, \true);
+            return json_decode($value, true);
         }
         return $value;
     }
+
     /**
      * @return array<string, mixed>
      */
-    private function flattenSettingsRows(array $settings) : array
+    private function flattenSettingsRows(array $settings): array
     {
         $flat = [];
         foreach ($settings as $setting) {
             $name = $setting['setting_name'];
-            $jsonEncoded = isset($setting['json_encoded']) ? (bool) $setting['json_encoded'] : \false;
+            $jsonEncoded = isset($setting['json_encoded']) ? (bool) $setting['json_encoded'] : false;
             $value = $this->decodeValueFromStorage($setting['setting_value'], $jsonEncoded);
             if (array_key_exists($name, $flat) && !$jsonEncoded) {
                 $flat[$name] = (array) $flat[$name];

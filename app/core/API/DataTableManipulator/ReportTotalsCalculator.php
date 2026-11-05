@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API\DataTableManipulator;
 
 use Piwik\API\DataTableManipulator;
@@ -17,6 +18,7 @@ use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
 use Piwik\Plugin\ReportsProvider;
+
 /**
  * This class is responsible for setting the metadata property 'totals' on each dataTable if the report
  * has a dimension. 'Totals' means it tries to calculate the total report value for each metric. For each
@@ -28,17 +30,19 @@ class ReportTotalsCalculator extends DataTableManipulator
      * @var Report
      */
     private $report;
+
     /**
      * @param string|bool $apiModule
      * @param string|bool $apiMethod
      * @param array $request
      * @param Report|null $report
      */
-    public function __construct($apiModule = \false, $apiMethod = \false, $request = array(), $report = null)
+    public function __construct($apiModule = false, $apiMethod = false, $request = array(), $report = null)
     {
         parent::__construct($apiModule, $apiMethod, $request);
         $this->report = $report;
     }
+
     /**
      * @param  DataTable $table
      * @return \Piwik\DataTable|\Piwik\DataTable\Map
@@ -51,6 +55,7 @@ class ReportTotalsCalculator extends DataTableManipulator
         if (empty($this->apiModule) || empty($this->apiMethod)) {
             return $table;
         }
+
         try {
             return $this->manipulate($table);
         } catch (\Exception $e) {
@@ -60,6 +65,7 @@ class ReportTotalsCalculator extends DataTableManipulator
             return $table;
         }
     }
+
     /**
      * Computes the report totals and stores them as 'totals'/'totalsUnformatted' metadata on the table.
      *
@@ -72,15 +78,24 @@ class ReportTotalsCalculator extends DataTableManipulator
             // we currently do not calculate the total value for reports having no dimension
             return $dataTable;
         }
+
         if (1 != Common::getRequestVar('totals', 1, 'integer', $this->request)) {
             return $dataTable;
         }
+
         $firstLevelTable = $this->makeSureToWorkOnFirstLevelDataTable($dataTable);
-        if (!$firstLevelTable->getRowsCount() || $dataTable->getTotalsRow() || $dataTable->getMetadata('totals')) {
+
+        if (
+            !$firstLevelTable->getRowsCount()
+            || $dataTable->getTotalsRow()
+            || $dataTable->getMetadata('totals')
+        ) {
             return $dataTable;
         }
+
         $totalRowUnformatted = null;
         $totalRow = $this->makeTotalsRow($firstLevelTable, $totalRowUnformatted);
+
         if (isset($totalRow)) {
             $totals = $totalRow->getColumns();
             unset($totals['label']);
@@ -89,15 +104,19 @@ class ReportTotalsCalculator extends DataTableManipulator
                 unset($totalRowUnformatted['label']);
                 $dataTable->setMetadata('totalsUnformatted', $totalRowUnformatted);
             }
+
             if (1 === Common::getRequestVar('keep_totals_row', 0, 'integer', $this->request)) {
                 $totalLabel = Common::getRequestVar('keep_totals_row_label', Piwik::translate('General_Totals'), 'string', $this->request);
-                $totalRow->deleteMetadata(\false);
+
+                $totalRow->deleteMetadata(false);
                 $totalRow->setColumn('label', $totalLabel);
                 $dataTable->setTotalsRow($totalRow);
             }
         }
+
         return $dataTable;
     }
+
     /**
      * Replaces the totals row of a table that was reduced to the rows matching the table search of
      * the request, so it totals those rows instead of every row of the report.
@@ -108,31 +127,43 @@ class ReportTotalsCalculator extends DataTableManipulator
      *
      * @param DataTable $dataTable A table that only contains the rows matching the request.
      */
-    public function calculateFilteredTotals(DataTable $dataTable) : void
+    public function calculateFilteredTotals(DataTable $dataTable): void
     {
-        if (empty($this->apiModule) || empty($this->apiMethod) || !$this->isTableSearchActive() || !$dataTable->getRowsCount() || !$dataTable->getTotalsRow()) {
+        if (
+            empty($this->apiModule)
+            || empty($this->apiMethod)
+            || !$this->isTableSearchActive()
+            || !$dataTable->getRowsCount()
+            || !$dataTable->getTotalsRow()
+        ) {
             return;
         }
+
         if (1 === Common::getRequestVar('compare', 0, 'integer', $this->request)) {
             // the compared reports are requested without the table search, so a filtered total could
             // only be compared against an unfiltered one
             return;
         }
+
         try {
             $unformatted = null;
-            $totalRow = $this->makeTotalsRow($dataTable, $unformatted, $rowsWerePostProcessed = \true);
+            $totalRow = $this->makeTotalsRow($dataTable, $unformatted, $rowsWerePostProcessed = true);
         } catch (\Exception $e) {
             // the report totals are kept when the filtered totals cannot be computed
             return;
         }
+
         if (!isset($totalRow)) {
             return;
         }
-        $totalRow->deleteMetadata(\false);
+
+        $totalRow->deleteMetadata(false);
         $totalRow->setColumn('label', Piwik::translate('General_FilteredTotal'));
+
         $dataTable->setTotalsRow($totalRow);
-        $dataTable->setMetadata(DataTable::TOTALS_ROW_IS_FILTERED_METADATA_NAME, \true);
+        $dataTable->setMetadata(DataTable::TOTALS_ROW_IS_FILTERED_METADATA_NAME, true);
     }
+
     /**
      * Sums every row of the given table into a single row, computes its processed metrics and
      * formats it.
@@ -141,23 +172,29 @@ class ReportTotalsCalculator extends DataTableManipulator
      * @param bool $rowsWerePostProcessed Whether the rows already went through the part of the post
      *                                    processing that computes and formats processed metrics.
      */
-    private function makeTotalsRow(DataTable $table, ?array &$totalRowUnformatted, bool $rowsWerePostProcessed = \false) : ?DataTable\Row
-    {
+    private function makeTotalsRow(
+        DataTable $table,
+        ?array &$totalRowUnformatted,
+        bool $rowsWerePostProcessed = false
+    ): ?DataTable\Row {
         // keeping queued filters would not only add various metadata but also break the totals calculator for some reports
         // eg when needed metadata is missing to get site information (multisites.getall) etc
-        $clone = $table->getEmptyClone($keepFilters = \false);
+        $clone = $table->getEmptyClone($keepFilters = false);
         foreach ($table->getQueuedFilters() as $queuedFilter) {
             if (is_array($queuedFilter) && 'ReplaceColumnNames' === $queuedFilter['className']) {
                 $clone->queueFilter($queuedFilter['className'], $queuedFilter['parameters']);
             }
         }
+
         if ($rowsWerePostProcessed) {
             // getEmptyClone() copies the metadata of the source table, which then states that the
             // processed metrics were already computed and formatted. The totals row still needs both.
             $clone->deleteMetadata(DataTablePostProcessor::PROCESSED_METRICS_COMPUTED_FLAG);
             $clone->deleteMetadata(Formatter::PROCESSED_METRICS_FORMATTED_FLAG);
         }
+
         $tableMeta = $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
+
         /** @var DataTable\Row|null $totalRow */
         $totalRow = null;
         foreach ($table->getRows() as $row) {
@@ -166,12 +203,14 @@ class ReportTotalsCalculator extends DataTableManipulator
                 $columns['label'] = DataTable::LABEL_TOTALS_ROW;
                 $totalRow = new DataTable\Row(array(DataTable\Row::COLUMNS => $columns));
             } else {
-                $totalRow->sumRow($row, $copyMetadata = \false, $tableMeta);
+                $totalRow->sumRow($row, $copyMetadata = false, $tableMeta);
             }
         }
+
         if (!isset($totalRow)) {
             return null;
         }
+
         if ($rowsWerePostProcessed) {
             // processed metrics are derived from the summed metrics and must never be summed themselves.
             // they are already on the rows when a generic filter needed them, eg when sorting by one.
@@ -179,14 +218,22 @@ class ReportTotalsCalculator extends DataTableManipulator
                 $totalRow->deleteColumn($processedMetricName);
             }
         }
+
         $clone->addRow($totalRow);
-        if ($this->report && $this->report->getProcessedMetrics() && array_keys($this->report->getProcessedMetrics()) === array('nb_actions_per_visit', 'avg_time_on_site', 'bounce_rate', 'conversion_rate')) {
+
+        if (
+            $this->report
+            && $this->report->getProcessedMetrics()
+            && array_keys($this->report->getProcessedMetrics()) === array('nb_actions_per_visit', 'avg_time_on_site', 'bounce_rate', 'conversion_rate')
+        ) {
             // hack for AllColumns table or default processed metrics
-            $clone->filter('AddColumnsProcessedMetrics', array($deleteRowsWithNoVisit = \false));
+            $clone->filter('AddColumnsProcessedMetrics', array($deleteRowsWithNoVisit = false));
         }
+
         $processor = new DataTablePostProcessor($this->apiModule, $this->apiMethod, $this->request);
         $processor->applyComputeProcessedMetrics($clone);
         $clone = $processor->applyQueuedFilters($clone);
+
         $totalRowUnformatted = null;
         foreach ($clone->getRows() as $row) {
             /** * @var DataTable\Row $row */
@@ -196,6 +243,7 @@ class ReportTotalsCalculator extends DataTableManipulator
             }
         }
         $clone = $processor->applyMetricsFormatting($clone);
+
         $totalRow = null;
         foreach ($clone->getRows() as $row) {
             /** * @var DataTable\Row $row */
@@ -204,32 +252,43 @@ class ReportTotalsCalculator extends DataTableManipulator
                 break;
             }
         }
+
         if (!isset($totalRow) && $clone->getRowsCount() === 1) {
             // if for some reason the processor renamed the totals row,
             $totalRow = $clone->getFirstRow();
         }
+
         return $totalRow;
     }
+
     /**
      * Returns whether the request searches the table for a pattern, ie. whether the rows the request
      * results in are a subset of the rows of the report.
      */
-    private function isTableSearchActive() : bool
+    private function isTableSearchActive(): bool
     {
-        $patterns = array(Common::getRequestVar('filter_pattern', '', 'string', $this->request), Common::getRequestVar('filter_pattern_recursive', '', 'string', $this->request));
+        $patterns = array(
+            Common::getRequestVar('filter_pattern', '', 'string', $this->request),
+            Common::getRequestVar('filter_pattern_recursive', '', 'string', $this->request),
+        );
+
         foreach ($patterns as $pattern) {
             if ('' !== $pattern) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     private function makeSureToWorkOnFirstLevelDataTable($table)
     {
         if (!array_key_exists('idSubtable', $this->request)) {
             return $table;
         }
+
         $firstLevelReport = $this->findFirstLevelReport();
+
         if (empty($firstLevelReport)) {
             // it is not a subtable report
             $module = $this->apiModule;
@@ -238,27 +297,33 @@ class ReportTotalsCalculator extends DataTableManipulator
             $module = $firstLevelReport->getModule();
             $action = $firstLevelReport->getAction();
         }
+
         $request = $this->request;
-        unset($request['idSubtable']);
-        // to make sure we work on first level table
+        unset($request['idSubtable']); // to make sure we work on first level table
+
         /** @var \Piwik\Period|false $period */
         $period = $table->getMetadata('period');
+
         if (!empty($period)) {
             // we want a dataTable, not a dataTable\map
             if (Period::isMultiplePeriod($request['date'], $request['period']) || 'range' == $period->getLabel()) {
-                $request['date'] = $period->getRangeString();
+                $request['date']   = $period->getRangeString();
                 $request['period'] = 'range';
             } else {
-                $request['date'] = $period->getDateStart()->toString();
+                $request['date']   = $period->getDateStart()->toString();
                 $request['period'] = $period->getLabel();
             }
         }
+
         $table = $this->callApiAndReturnDataTable($module, $action, $request);
+
         if ($table instanceof DataTable\Map) {
             $table = $table->mergeChildren();
         }
+
         return $table;
     }
+
     /**
      * Make sure to get all rows of the first level table.
      *
@@ -267,15 +332,18 @@ class ReportTotalsCalculator extends DataTableManipulator
      */
     protected function manipulateSubtableRequest($request)
     {
-        $request['totals'] = 0;
-        $request['expanded'] = 0;
-        $request['filter_limit'] = -1;
+        $request['totals']        = 0;
+        $request['expanded']      = 0;
+        $request['filter_limit']  = -1;
         $request['filter_offset'] = 0;
         $request['filter_sort_column'] = '';
+
         $parametersToRemove = array('flat');
+
         if (!array_key_exists('idSubtable', $this->request)) {
             $parametersToRemove[] = 'idSubtable';
         }
+
         foreach ($parametersToRemove as $param) {
             if (array_key_exists($param, $request)) {
                 unset($request[$param]);
@@ -283,17 +351,22 @@ class ReportTotalsCalculator extends DataTableManipulator
         }
         return $request;
     }
+
     private function findFirstLevelReport()
     {
         $reports = new ReportsProvider();
         foreach ($reports->getAllReports() as $report) {
             $actionToLoadSubtables = $report->getActionToLoadSubTables();
-            if ($actionToLoadSubtables == $this->apiMethod && $this->apiModule == $report->getModule()) {
+            if (
+                $actionToLoadSubtables == $this->apiMethod
+                && $this->apiModule == $report->getModule()
+            ) {
                 return $report;
             }
         }
         return null;
     }
+
     private function isAllMetricsReport()
     {
         return $this->report->getModule() == 'API' && $this->report->getAction() == 'get';

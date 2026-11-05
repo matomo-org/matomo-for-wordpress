@@ -6,12 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
 use Piwik\Columns\Dimension;
 use Piwik\Metrics;
 use Piwik\Plugin\ArchivedMetric;
+
 /**
  * Classifies a metric for the evolution-graph forecast pipeline. Owns two related decisions:
  *
@@ -31,6 +34,7 @@ class ForecastMetricClassifier
     public const MONOTONICITY_FREE = 'free';
     public const MONOTONICITY_MAX = 'max';
     public const MONOTONICITY_UNIQUE = 'unique';
+
     /**
      * Base names of the deduplicated counts Matomo recomputes per period from the log data
      * instead of aggregating them from the sub-period archives. Matched as substrings, because
@@ -50,7 +54,12 @@ class ForecastMetricClassifier
      *
      * @var array<int, string>
      */
-    private const DEDUPLICATED_COUNT_BASE_NAMES = ['nb_uniq_visitors', 'nb_uniq_fingerprints', 'nb_users'];
+    private const DEDUPLICATED_COUNT_BASE_NAMES = [
+        'nb_uniq_visitors',
+        'nb_uniq_fingerprints',
+        'nb_users',
+    ];
+
     /**
      * The metrics that carry {@see ArchivedMetric::AGGREGATION_UNIQUE_PREFIX} while still being
      * additive over the period, and so must not be swept up by the prefix rule in
@@ -86,7 +95,13 @@ class ForecastMetricClassifier
      *
      * @var array<int, string>
      */
-    private const ADDITIVE_UNIQUE_PREFIXED_METRIC_NAMES = ['nb_uniq_pageviews', 'nb_uniq_downloads', 'nb_uniq_outlinks', 'nb_uniq_orders'];
+    private const ADDITIVE_UNIQUE_PREFIXED_METRIC_NAMES = [
+        'nb_uniq_pageviews',
+        'nb_uniq_downloads',
+        'nb_uniq_outlinks',
+        'nb_uniq_orders',
+    ];
+
     /**
      * Deduplicated counts Matomo derives from the aggregated blob rather than from the log data.
      * A record declared with {@see \Piwik\ArchiveProcessor\Record::setIsCountOfBlobRecordRows()}
@@ -105,9 +120,22 @@ class ForecastMetricClassifier
      *
      * @var array<int, string>
      */
-    private const BLOB_ROW_COUNT_METRIC_NAMES = ['nb_keywords', 'UserCountry_distinctCountries', 'BotTracking_AIChatbotsUniqueChatbots', 'Referrers_distinctSearchEngines', 'Referrers_distinctSocialNetworks', 'Referrers_distinctAIAssistants', 'Referrers_distinctKeywords', 'Referrers_distinctCampaigns', 'Referrers_distinctWebsites', 'Referrers_distinctWebsitesUrls'];
+    private const BLOB_ROW_COUNT_METRIC_NAMES = [
+        'nb_keywords',
+        'UserCountry_distinctCountries',
+        'BotTracking_AIChatbotsUniqueChatbots',
+        'Referrers_distinctSearchEngines',
+        'Referrers_distinctSocialNetworks',
+        'Referrers_distinctAIAssistants',
+        'Referrers_distinctKeywords',
+        'Referrers_distinctCampaigns',
+        'Referrers_distinctWebsites',
+        'Referrers_distinctWebsitesUrls',
+    ];
+
     /** @var array<string, string> */
     private $semanticTypes;
+
     /**
      * @param array<string, string>|null $semanticTypes Semantic-type map (column name → one of
      *                                                  the {@see Dimension}::TYPE_* constants). Pass null in production to use Matomo's
@@ -117,6 +145,7 @@ class ForecastMetricClassifier
     {
         $this->semanticTypes = $semanticTypes ?? Metrics::getDefaultMetricSemanticTypes();
     }
+
     /**
      * Classify a column into one of five intra-period directions:
      *
@@ -142,11 +171,12 @@ class ForecastMetricClassifier
      * @param string|false $columnUnit
      * @return self::MONOTONICITY_*
      */
-    public function getColumnMonotonicity(string $columnName, $columnUnit) : string
+    public function getColumnMonotonicity(string $columnName, $columnUnit): string
     {
         if ($columnUnit === '%') {
             return self::MONOTONICITY_FREE;
         }
+
         // TYPE_PERCENT and TYPE_FLOAT are non-monotonic by construction (a percentage's or a
         // ratio's value can move in either direction within a partial period). Plugins extend
         // the semantic-type map via the Metrics.getDefaultMetricSemanticTypes event, so a
@@ -156,6 +186,7 @@ class ForecastMetricClassifier
         if ($semanticType === Dimension::TYPE_PERCENT || $semanticType === Dimension::TYPE_FLOAT) {
             return self::MONOTONICITY_FREE;
         }
+
         // Name-pattern fallback for metrics whose semantic type is the ambiguous TYPE_NUMBER
         // but whose name reveals ratio shape (e.g. nb_actions_per_visit is TYPE_NUMBER yet
         // genuinely non-monotonic). The avg_ prefix also disambiguates TYPE_DURATION_*/TYPE_BYTE
@@ -163,6 +194,7 @@ class ForecastMetricClassifier
         if ($this->hasRatioShapedColumnName($columnName)) {
             return self::MONOTONICITY_FREE;
         }
+
         // Deduplicated counts have no reducer over their sub-periods at all: a week's unique
         // visitors is a distinct-visitor count over the week, which sits somewhere between the
         // largest single day and the sum of all days -- and the archiver derives it from the log
@@ -174,9 +206,13 @@ class ForecastMetricClassifier
         // count of the re-aggregated sub-period tables -- so both families share this branch.
         // Runs after the ratio checks so the percentage and average views of the same metric
         // (nb_uniq_visitors_row_percentage, avg_nb_uniq_visitors) keep their FREE classification.
-        if ($this->hasDeduplicatedCountColumnName($columnName) || $this->isBlobRowCountColumnName($columnName)) {
+        if (
+            $this->hasDeduplicatedCountColumnName($columnName)
+            || $this->isBlobRowCountColumnName($columnName)
+        ) {
             return self::MONOTONICITY_UNIQUE;
         }
+
         // min_* metrics carry a structural invariant: more samples within the period can only
         // pull the running min down or leave it unchanged. The default monotonic-up gate would
         // render upward-projecting forecasts on a metric that cannot rise, so flip to a
@@ -184,6 +220,7 @@ class ForecastMetricClassifier
         if (strpos($columnName, 'min_') === 0) {
             return self::MONOTONICITY_DOWN;
         }
+
         // max_* metrics (max_actions, max_event_value, …) are the mirror of min_*: the period
         // value is the max over its sub-periods, not their sum. The default UP path would
         // SUM the per-day maxes (≈ days × per-day max), inflating the forecast by an order of
@@ -192,12 +229,14 @@ class ForecastMetricClassifier
         if (strpos($columnName, 'max_') === 0) {
             return self::MONOTONICITY_MAX;
         }
+
         // Default unknown metrics to monotonic-up count behaviour. The "forecast >= current"
         // gate then suppresses obviously-wrong forecasts on metrics whose semantics we cannot
         // classify, which is safer than emitting a downward forecast on a metric that turns
         // out to be additive (visits, conversions, revenue, …).
         return self::MONOTONICITY_UP;
     }
+
     /**
      * Derive conservative raw forecast payload precision for a metric.
      *
@@ -216,36 +255,64 @@ class ForecastMetricClassifier
      * @param string|false $columnUnit
      * @param self::MONOTONICITY_* $monotonicity
      */
-    public function getForecastPrecisionForColumn(string $columnName, $columnUnit, string $monotonicity) : int
+    public function getForecastPrecisionForColumn(string $columnName, $columnUnit, string $monotonicity): int
     {
-        if ($columnUnit !== \false) {
+        if ($columnUnit !== false) {
             return 2;
         }
+
         $semanticType = $this->semanticTypes[$columnName] ?? null;
-        if (in_array($semanticType, [Dimension::TYPE_BYTE, Dimension::TYPE_DURATION_MS, Dimension::TYPE_DURATION_S, Dimension::TYPE_FLOAT, Dimension::TYPE_MONEY, Dimension::TYPE_PERCENT], \true)) {
+
+        if (
+            in_array($semanticType, [
+                Dimension::TYPE_BYTE,
+                Dimension::TYPE_DURATION_MS,
+                Dimension::TYPE_DURATION_S,
+                Dimension::TYPE_FLOAT,
+                Dimension::TYPE_MONEY,
+                Dimension::TYPE_PERCENT,
+            ], true)
+        ) {
             return 2;
         }
+
         // Word-boundary check: an underscore-delimited "time"/"length" segment in the column
         // name signals a duration- or length-shaped metric (sum_time_spent, time_per_action,
         // nb_visit_length, length_score). Anchored substring matches avoid false positives on
         // unrelated names that happen to contain the literal letters (lifetime_*, wavelength).
-        if ($this->hasRatioShapedColumnName($columnName) || strpos($columnName, '_time') !== \false || strpos($columnName, 'time_') === 0 || strpos($columnName, '_length') !== \false || strpos($columnName, 'length_') === 0) {
+        if (
+            $this->hasRatioShapedColumnName($columnName)
+            || strpos($columnName, '_time') !== false
+            || strpos($columnName, 'time_') === 0
+            || strpos($columnName, '_length') !== false
+            || strpos($columnName, 'length_') === 0
+        ) {
             return 2;
         }
+
         if ($semanticType === Dimension::TYPE_NUMBER && $monotonicity !== self::MONOTONICITY_FREE) {
             return 0;
         }
+
         // Counts of whole things. The blob-row counts are listed by name too: every one of them
         // is registered TYPE_NUMBER today, so the branch above already returns 0 for them, but
         // the name is what keeps a fractional country or URL count from appearing if a plugin
         // stops declaring the type, or when the classifier is built without Matomo's registry.
         // The list carries nine of the ten: nb_keywords already matches the nb_ prefix on the
         // first line, so it reaches 0 either way and is not what the name check is here for.
-        if (strpos($columnName, 'nb_') === 0 || strpos($columnName, '_nb_') !== \false || strpos($columnName, '_count') !== \false || $this->isBlobRowCountColumnName($columnName) || in_array($columnName, ['hits', 'items', 'quantity', 'orders', 'goals'], \true)) {
+        if (
+            strpos($columnName, 'nb_') === 0
+            || strpos($columnName, '_nb_') !== false
+            || strpos($columnName, '_count') !== false
+            || $this->isBlobRowCountColumnName($columnName)
+            || in_array($columnName, ['hits', 'items', 'quantity', 'orders', 'goals'], true)
+        ) {
             return 0;
         }
+
         return 2;
     }
+
     /**
      * True when a column name carries the generated {@see ArchivedMetric::AGGREGATION_UNIQUE_PREFIX}
      * or one of the {@see self::DEDUPLICATED_COUNT_BASE_NAMES}.
@@ -270,35 +337,44 @@ class ForecastMetricClassifier
      * is reachable from the visualization layer, which only ever sees a column name, so the
      * name convention has to stand in for them here.
      */
-    private function hasDeduplicatedCountColumnName(string $columnName) : bool
+    private function hasDeduplicatedCountColumnName(string $columnName): bool
     {
         if (strpos($columnName, 'sum_') === 0) {
-            return \false;
+            return false;
         }
-        if (in_array($columnName, self::ADDITIVE_UNIQUE_PREFIXED_METRIC_NAMES, \true)) {
-            return \false;
+
+        if (in_array($columnName, self::ADDITIVE_UNIQUE_PREFIXED_METRIC_NAMES, true)) {
+            return false;
         }
+
         if (strpos($columnName, ArchivedMetric::AGGREGATION_UNIQUE_PREFIX) === 0) {
-            return \true;
+            return true;
         }
+
         foreach (self::DEDUPLICATED_COUNT_BASE_NAMES as $baseName) {
-            if (strpos($columnName, $baseName) !== \false) {
-                return \true;
+            if (strpos($columnName, $baseName) !== false) {
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
-    private function isBlobRowCountColumnName(string $columnName) : bool
+
+    private function isBlobRowCountColumnName(string $columnName): bool
     {
-        return in_array($columnName, self::BLOB_ROW_COUNT_METRIC_NAMES, \true);
+        return in_array($columnName, self::BLOB_ROW_COUNT_METRIC_NAMES, true);
     }
+
     /**
      * True when a column name carries one of the ratio/average/rate name patterns Matomo uses
      * for non-monotonic metrics. Shared between the monotonicity classifier and the forecast
      * precision picker so the two cannot drift on the same set of name fragments.
      */
-    private function hasRatioShapedColumnName(string $columnName) : bool
+    private function hasRatioShapedColumnName(string $columnName): bool
     {
-        return strpos($columnName, '_rate') !== \false || strpos($columnName, '_percentage') !== \false || strpos($columnName, 'avg_') === 0 || strpos($columnName, '_per_') !== \false;
+        return strpos($columnName, '_rate') !== false
+            || strpos($columnName, '_percentage') !== false
+            || strpos($columnName, 'avg_') === 0
+            || strpos($columnName, '_per_') !== false;
     }
 }

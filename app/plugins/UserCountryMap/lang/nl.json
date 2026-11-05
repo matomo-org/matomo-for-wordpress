@@ -1,0 +1,28 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "en %s anderen",
+        "Cities": "Steden",
+        "Countries": "Landen",
+        "DaysAgo": "%s dagen geleden",
+        "GoalConversions": "%s doelconversies",
+        "HoursAgo": "%s uur geleden",
+        "MinutesAgo": "%s minuten geleden",
+        "NoVisit": "Geen bezoek",
+        "NoVisitsInfo": "Geen bezoeken getoond, omdat geen enkel bezoek voor deze periode correcte (latitude en longitude) geolocatie-informatie heeft.",
+        "NoVisitsInfo2": "Los dit probleem op door het gebruik van een GeoIP-geolocatie aanbieder met een GeoIP-stedendatabank. (Hoewel onwaarschijnlijk) is het mogelijk dat IP-adressen nog steeds niet gelokaliseerd kunnen worden.",
+        "None": "Geen",
+        "PluginDescription": "Biedt de widgets \"Bezoekerskaart\" en \"Realtime kaart\". Vereist de \"UserCountry\" plugin.",
+        "RealTimeMap": "Realtime Kaart",
+        "RealTimeMapHelp": "Toont de locatie van websitebezoekers in de laatste 30 minuten, en knippert bij nieuwe. Recente bezoeken worden weergegeven als oranje bollen, en oudere als kleinere grijze. Deze worden elke vijf seconden ververst.",
+        "Regions": "Regio's",
+        "Searches": "%s zoekopdrachten",
+        "SecondsAgo": "%s seconden geleden",
+        "ShowingVisits": "Geo-gelokaliseerde bezoeken van laatste",
+        "Unlocated": "<b>%1$s</b> %2$s van de bezoeken vanaf %3$s konden niet worden gelokaliseerd.",
+        "VisitorMap": "Bezoekersmap",
+        "WithUnknownCity": "%s uit onbekende stad",
+        "WithUnknownRegion": "%s uit onbekende regio",
+        "WorldWide": "Wereldwijd",
+        "map": "kaart"
+    }
+}

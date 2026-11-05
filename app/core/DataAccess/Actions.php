@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataAccess;
 
 use Piwik\Db;
 use Piwik\Common;
+
 /**
  * Data Access Object for operations dealing with the log_action table.
  */
@@ -23,10 +25,12 @@ class Actions
     public function delete($idActions)
     {
         foreach ($idActions as &$id) {
-            $id = (int) $id;
+            $id = (int)$id;
         }
+
         $table = Common::prefixTable('log_action');
-        $sql = "DELETE FROM `{$table}` WHERE idaction IN (" . implode(",", $idActions) . ")";
+
+        $sql = "DELETE FROM `$table` WHERE idaction IN (" . implode(",", $idActions) . ")";
         Db::query($sql);
     }
 }

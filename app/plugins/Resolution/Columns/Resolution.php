@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Resolution\Columns;
 
 use Piwik\Plugins\Resolution\Resolution as ResolutionPlugin;
@@ -13,6 +14,7 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 class Resolution extends VisitDimension
 {
     protected $columnName = 'config_resolution';
@@ -22,6 +24,7 @@ class Resolution extends VisitDimension
     protected $nameSingular = 'Resolution_ColumnResolution';
     protected $namePlural = 'Resolution_Resolutions';
     protected $type = self::TYPE_TEXT;
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -32,10 +35,13 @@ class Resolution extends VisitDimension
         if (ResolutionPlugin::isScreenResolutionDetectionDisabledByCompliancePolicy($request->getIdSiteIfExists())) {
             return Request::UNKNOWN_RESOLUTION;
         }
+
         $resolution = $request->getParam('res');
+
         if (!empty($resolution)) {
             return substr($resolution, 0, 9);
         }
+
         return $resolution;
     }
     /**
@@ -48,7 +54,7 @@ class Resolution extends VisitDimension
         if ($visitor->getVisitorColumn($this->columnName) === Request::UNKNOWN_RESOLUTION) {
             return $this->onNewVisit($request, $visitor, $action);
         } else {
-            return \false;
+            return false;
         }
     }
 }

@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
 /**
@@ -33,12 +35,16 @@ class ForecastSampleWindow
 {
     /** @var array<string, float> Read-only daily sample map (Y-m-d → value). */
     private $dailySamples;
+
     /** @var array<string, float> Read-only monthly sample map (Y-m → value). */
     private $monthlySamples;
+
     /** @var array<string, float> Day projections produced during this tick (Y-m-d → value). */
     private $dayProjections = [];
+
     /** @var array<string, float> Month projections produced during this tick (Y-m → value). */
     private $monthProjections = [];
+
     /**
      * @param array<string, float> $dailySamples
      * @param array<string, float> $monthlySamples
@@ -48,31 +54,37 @@ class ForecastSampleWindow
         $this->dailySamples = $dailySamples;
         $this->monthlySamples = $monthlySamples;
     }
+
     /** @return array<string, float> */
-    public function getDailySamples() : array
+    public function getDailySamples(): array
     {
         return $this->dailySamples;
     }
+
     /** @return array<string, float> */
-    public function getMonthlySamples() : array
+    public function getMonthlySamples(): array
     {
         return $this->monthlySamples;
     }
-    public function projectDay(string $anchor, float $value) : void
+
+    public function projectDay(string $anchor, float $value): void
     {
         $this->dayProjections[$anchor] = $value;
     }
-    public function projectMonth(string $anchor, float $value) : void
+
+    public function projectMonth(string $anchor, float $value): void
     {
         $this->monthProjections[$anchor] = $value;
     }
+
     /** @return array<string, float> */
-    public function getDayProjections() : array
+    public function getDayProjections(): array
     {
         return $this->dayProjections;
     }
+
     /** @return array<string, float> */
-    public function getMonthProjections() : array
+    public function getMonthProjections(): array
     {
         return $this->monthProjections;
     }

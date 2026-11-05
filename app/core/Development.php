@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
+
 /**
  * Development related checks and tools. You can enable/disable development using `./console development:enable` and
  * `./console development:disable`. The intention of the development mode and this class is to support the developer
@@ -22,6 +24,7 @@ use Piwik\Log\LoggerInterface;
 class Development
 {
     private static $isEnabled = null;
+
     /**
      * Returns `true` if development mode is enabled and `false` otherwise.
      *
@@ -30,10 +33,12 @@ class Development
     public static function isEnabled()
     {
         if (is_null(self::$isEnabled)) {
-            self::$isEnabled = (bool) \Piwik\Config::getInstance()->Development['enabled'];
+            self::$isEnabled = (bool) Config::getInstance()->Development['enabled'];
         }
+
         return self::$isEnabled;
     }
+
     /**
      * Verifies whether a className of object implements the given method. It does not check whether the given method
      * is actually callable (public).
@@ -48,8 +53,10 @@ class Development
         if (is_string($classOrObject)) {
             return class_exists($classOrObject) && method_exists($classOrObject, $method);
         }
+
         return method_exists($classOrObject, $method);
     }
+
     /**
      * Formats a method call depending on the given class/object and method name. It does not perform any checks whether
      * the method actually exists.
@@ -64,8 +71,10 @@ class Development
         if (is_object($classOrObject)) {
             $classOrObject = get_class($classOrObject);
         }
+
         return $classOrObject . '::' . $method . '()';
     }
+
     /**
      * Checks whether the given method is actually callable on the given class/object if the development mode is
      * enabled. En error will be triggered if the method does not exist or is not callable (public) containing a useful
@@ -81,11 +90,14 @@ class Development
         if (!self::isEnabled()) {
             return;
         }
+
         self::checkMethodExists($classOrObject, $method, $prefixMessageIfError);
+
         if (!self::isCallableMethod($classOrObject, $method)) {
-            self::error($prefixMessageIfError . ' "' . self::formatMethodCall($classOrObject, $method) . '" is not callable. Please make sure to method is public');
+            self::error($prefixMessageIfError . ' "' . self::formatMethodCall($classOrObject, $method) .  '" is not callable. Please make sure to method is public');
         }
     }
+
     /**
      * Checks whether the given method actually exists on the given class/object if the development mode is
      * enabled. An error will be triggered if the method does not exist, containing a useful error message
@@ -101,10 +113,12 @@ class Development
         if (!self::isEnabled()) {
             return;
         }
+
         if (!self::methodExists($classOrObject, $method)) {
-            self::error($prefixMessageIfError . ' "' . self::formatMethodCall($classOrObject, $method) . '" does not exist. Please make sure to define such a method.');
+            self::error($prefixMessageIfError . ' "' . self::formatMethodCall($classOrObject, $method) .  '" does not exist. Please make sure to define such a method.');
         }
     }
+
     /**
      * Verify whether the given method actually exists and is callable (public).
      *
@@ -115,11 +129,13 @@ class Development
     public static function isCallableMethod($classOrObject, $method)
     {
         if (!self::methodExists($classOrObject, $method)) {
-            return \false;
+            return false;
         }
+
         $reflection = new \ReflectionMethod($classOrObject, $method);
         return $reflection->isPublic();
     }
+
     /**
      * Triggers an error if the development mode is enabled. Depending on the current environment / mode it will either
      * log the given message or throw an exception to make sure it will be displayed in the Piwik UI.
@@ -132,38 +148,55 @@ class Development
         if (!self::isEnabled()) {
             return;
         }
+
         $message .= ' (This error is only shown in development mode)';
-        if (\Piwik\SettingsServer::isTrackerApiRequest() || \Piwik\Common::isPhpCliMode()) {
-            StaticContainer::get(LoggerInterface::class)->error($message, ['ignoreInScreenWriter' => \true]);
+
+        if (
+            SettingsServer::isTrackerApiRequest()
+            || Common::isPhpCliMode()
+        ) {
+            StaticContainer::get(LoggerInterface::class)->error($message, [
+                'ignoreInScreenWriter' => true,
+            ]);
         } else {
             throw new Exception($message);
         }
     }
+
     public static function getMethodSourceCode($className, $methodName)
     {
         $method = new \ReflectionMethod($className, $methodName);
-        $file = new \SplFileObject($method->getFileName());
+
+        $file   = new \SplFileObject($method->getFileName());
         $offset = $method->getStartLine() - 1;
-        $count = $method->getEndLine() - $method->getStartLine() + 1;
+        $count  = $method->getEndLine() - $method->getStartLine() + 1;
+
         $fileIterator = new \LimitIterator($file, $offset, $count);
+
         $methodCode = "\n    " . $method->getDocComment() . "\n";
         foreach ($fileIterator as $line) {
             $methodCode .= $line;
         }
         $methodCode .= "\n";
+
         return $methodCode;
     }
+
     public static function getUseStatements($className)
     {
         $class = new \ReflectionClass($className);
-        $file = new \SplFileObject($class->getFileName());
+
+        $file  = new \SplFileObject($class->getFileName());
+
         $fileIterator = new \LimitIterator($file, 0, $class->getStartLine());
+
         $uses = array();
         foreach ($fileIterator as $line) {
-            if (preg_match('/(\\s*)use (.+)/', $line, $match)) {
+            if (preg_match('/(\s*)use (.+)/', $line, $match)) {
                 $uses[] = trim($match[2]);
             }
         }
+
         return $uses;
     }
 }

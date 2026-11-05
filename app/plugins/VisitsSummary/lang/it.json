@@ -1,0 +1,30 @@
+{
+    "VisitsSummary": {
+        "AverageGenerationTime": "tempo medio di generazione",
+        "AverageVisitDuration": "durata media di una visita",
+        "GenerateQueries": "%s queries eseguite",
+        "GenerateTime": "%s secondi per generare la pagina",
+        "MaxNbActions": "numero massimo di azioni in una visita",
+        "NbActionsDescription": "%s azioni",
+        "NbActionsPerVisit": "azioni per visita (pagine viste, download, outlinks e ricerche interne al sito)",
+        "NbDownloadsDescription": "downloads",
+        "NbKeywordsDescription": "keyword uniche",
+        "NbOutlinksDescription": "link esterni",
+        "NbPageviewsDescription": "pagine viste",
+        "NbSearchesDescription": "totale ricerche sul tuo sito",
+        "NbUniqueDownloadsDescription": "download unici",
+        "NbUniqueOutlinksDescription": "outlinks unici",
+        "NbUniquePageviewsDescription": "pagine viste uniche",
+        "NbUniqueVisitors": "visitatori unici",
+        "NbUsersDescription": "utenti",
+        "NbVisitsBounced": "visite rimbalzate (che hanno lasciato il sito dopo una pagina)",
+        "NbVisitsDescription": "visite",
+        "PluginDescription": "Riporta le comuni metriche delle statistiche: visite, visitatori unici, numero di azioni, percentuale rimbalzi, ecc.",
+        "VisitsSummary": "Sommario delle visite",
+        "VisitsSummaryDocumentation": "Questa è una panoramica dell'evoluzione delle visite.",
+        "VisitsSummaryReportDocumentation": "Questo report fornisce una panoramica molto generale di come si comportano i tuoi visitatori.",
+        "WidgetLastVisits": "Visite nel Periodo",
+        "WidgetOverviewGraph": "Riepilogo Visite (con grafico)",
+        "WidgetVisits": "Riepilogo visite"
+    }
+}

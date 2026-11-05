@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
 use Piwik\Archive\ArchiveState;
@@ -16,6 +18,7 @@ use Piwik\Date;
 use Piwik\Period;
 use Piwik\Period\Month;
 use Piwik\Site;
+
 /**
  * Computes per-tick forecast values for incomplete-period data points on evolution-style series.
  *
@@ -64,6 +67,7 @@ class ForecastBuilder
      * on volatile averages.
      */
     private const TREND_DAMPING = 0.5;
+
     /**
      * Minimum number of calendar-aligned historical samples (same week-of-year, same calendar
      * month) required before preferring them over the full sample set. Aligned samples are a
@@ -75,6 +79,7 @@ class ForecastBuilder
      * have no decomposition path and this prior serves every one of their non-day ticks.
      */
     private const MIN_ALIGNED_SAMPLES_TO_PREFER = self::RECENT_LEVEL_WINDOW;
+
     /**
      * Below this count the day-level analog reducer falls back to a plain mean instead of a
      * trend fit. With only a handful of weekly-strided samples the least-squares slope swings
@@ -84,6 +89,7 @@ class ForecastBuilder
      * until enough samples are present to constrain the slope.
      */
     private const MIN_SAMPLES_FOR_DAY_LEVEL_TREND = 5;
+
     /**
      * Width of the historical-range envelope expressed in (robust) standard deviations of the
      * past samples — see {@see MAD_TO_SIGMA} for how the spread is estimated. Three sigmas covers
@@ -91,6 +97,7 @@ class ForecastBuilder
      * certainly reflects an extrapolation artefact rather than a credible final value.
      */
     private const BOUNDED_RANGE_SIGMAS = 3.0;
+
     /**
      * Minimum half-width of the historical-range envelope expressed as a fraction of the sample
      * median. Without this floor a perfectly stable history (spread ≈ 0) would collapse the
@@ -98,6 +105,7 @@ class ForecastBuilder
      * partial period is genuinely trending up or down.
      */
     private const BOUNDED_RANGE_MIN_RELATIVE_SPREAD = 0.05;
+
     /**
      * Scales the median absolute deviation onto the standard-deviation scale: for normally
      * distributed samples, sigma ≈ 1.4826 * MAD. The envelope spread is built from the MAD
@@ -105,6 +113,7 @@ class ForecastBuilder
      * exists to tame — cannot inflate the band and contain its own runaway extrapolation.
      */
     private const MAD_TO_SIGMA = 1.4826;
+
     /**
      * Number of same-DoW samples to draw for the day-period historical prior when the caller
      * supplies a daily sample map. The day path never enters the seasonal-decomposition branch
@@ -114,6 +123,7 @@ class ForecastBuilder
      * single-day noise on short displays.
      */
     private const DAY_PRIOR_TARGET_SAMPLES = 10;
+
     /**
      * Number of most-recent same-period samples the week/month/year historical prior consumes.
      * Matches {@see DAY_PRIOR_TARGET_SAMPLES} so every period type fits its prior to a window of
@@ -134,6 +144,7 @@ class ForecastBuilder
      * series the window is fetched for.
      */
     private const PERIOD_PRIOR_TARGET_SAMPLES = self::DAY_PRIOR_TARGET_SAMPLES;
+
     /**
      * Number of most-recent same-period samples whose median defines the "current level" used to
      * detect a traffic level shift in {@see stripPreLevelShiftSamples()}. Four points is enough for
@@ -143,6 +154,7 @@ class ForecastBuilder
      * window the trim needs.
      */
     private const RECENT_LEVEL_WINDOW = 4;
+
     /**
      * Fold-change threshold marking a same-period sample as belonging to a pre-shift traffic
      * regime rather than the current one, used by {@see stripPreLevelShiftSamples()}. A sample
@@ -156,12 +168,14 @@ class ForecastBuilder
      * window ({@see stripPreLevelShiftSamples()}).
      */
     private const LEVEL_SHIFT_RATIO = 2.0;
+
     /**
      * Default number of same-DoW analog samples per remaining day slot when forecasting a week.
      * Smaller chunks lose accuracy from a single noisy analog; larger chunks pull in older
      * traffic that drifts away from current site level.
      */
     private const WEEK_ANALOG_CHUNK = 3;
+
     /**
      * Default number of same-DoW analog samples per remaining day slot when forecasting a
      * month. Slightly larger than the week default because monthly forecasts span more remaining
@@ -169,12 +183,14 @@ class ForecastBuilder
      * drift.
      */
     private const MONTH_ANALOG_CHUNK = 4;
+
     /**
      * Default number of same-month-of-year analog samples when forecasting a year. With one
      * sample per analog year, eight is enough to drive the trend fit's slope while remaining
      * within typical multi-year archive depth.
      */
     private const YEAR_ANALOG_CHUNK = 8;
+
     /**
      * Number of consecutive complete prior ticks immediately preceding the forecast tick that
      * must read as "no data" (zero value or missing column) before the forecast is suppressed
@@ -185,6 +201,7 @@ class ForecastBuilder
      * outage from a one-tick blip.
      */
     private const MIN_RECENT_NO_DATA_TICKS_FOR_SUPPRESSION = 2;
+
     /**
      * @param ForecastSeriesState $seriesState Per-series state collected upstream — data,
      *                                         availability, intra-period monotonicity, and forecast precision. Missing
@@ -214,20 +231,31 @@ class ForecastBuilder
      *                                      disables the floor (no resolvable creation date).
      * @return array<int, array<int, float|null>>
      */
-    public function build(\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, array $dataTables, array $dataStates, array $seriesUnits, array $allSeriesDailySamples = [], array $allSeriesMonthlySamples = [], array $allSeriesPeriodSamples = [], ?string $earliestDataDate = null) : array
-    {
+    public function build(
+        ForecastSeriesState $seriesState,
+        array $dataTables,
+        array $dataStates,
+        array $seriesUnits,
+        array $allSeriesDailySamples = [],
+        array $allSeriesMonthlySamples = [],
+        array $allSeriesPeriodSamples = [],
+        ?string $earliestDataDate = null
+    ): array {
         $allSeriesData = $seriesState->getAllSeriesData();
         $allSeriesDataAvailability = $seriesState->getAllSeriesDataAvailability();
         $allSeriesMonotonicity = $seriesState->getAllSeriesMonotonicity();
         $allSeriesForecastPrecision = $seriesState->getAllSeriesForecastPrecision();
+
         if ([] === $allSeriesData || [] === $dataTables || [] === $dataStates) {
             return [];
         }
+
         /** @var Site|null $site */
         $site = reset($dataTables)->getMetadata(DataTableFactory::TABLE_METADATA_SITE_INDEX);
         if (empty($site)) {
             return [];
         }
+
         $dataTableList = array_values($dataTables);
         $seriesNames = array_keys($allSeriesData);
         $seriesDataList = array_values($allSeriesData);
@@ -235,17 +263,20 @@ class ForecastBuilder
         $seriesDataAvailabilityList = array_values($allSeriesDataAvailability);
         $seriesMonotonicityList = array_values($allSeriesMonotonicity);
         $seriesForecastPrecisionList = array_values($allSeriesForecastPrecision);
+
         $resolvedMonotonicity = [];
         foreach ($seriesDataList as $seriesIndex => $unused) {
-            $isPercentSeries = ($seriesUnitsList[$seriesIndex] ?? \false) === '%';
-            $resolvedMonotonicity[$seriesIndex] = $seriesMonotonicityList[$seriesIndex] ?? ($isPercentSeries ? \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_FREE : \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP);
+            $isPercentSeries = ($seriesUnitsList[$seriesIndex] ?? false) === '%';
+            $resolvedMonotonicity[$seriesIndex] = $seriesMonotonicityList[$seriesIndex]
+                ?? ($isPercentSeries ? ForecastMetricClassifier::MONOTONICITY_FREE : ForecastMetricClassifier::MONOTONICITY_UP);
         }
+
         // Process anchor-count series first so the cross-series gate (below) can read each
         // tick's count-series forecast before deciding whether dependent ratios/averages should
         // render. Output order is restored by indexing $forecastData on the original series
         // index and ksort'ing at the end.
         $processingOrder = array_keys($seriesDataList);
-        usort($processingOrder, function ($a, $b) use($resolvedMonotonicity) {
+        usort($processingOrder, function ($a, $b) use ($resolvedMonotonicity) {
             $aRank = $this->isAnchorCountMonotonicity($resolvedMonotonicity[$a]) ? 0 : 1;
             $bRank = $this->isAnchorCountMonotonicity($resolvedMonotonicity[$b]) ? 0 : 1;
             if ($aRank === $bRank) {
@@ -253,13 +284,16 @@ class ForecastBuilder
             }
             return $aRank <=> $bRank;
         });
+
         // Per-tick "any anchor-count series produced a renderable forecast > 0" map. Built up as
         // the first-pass anchor series finish processing, consumed by the second-pass
         // FREE/DOWN/MAX series to suppress dependent ratios/averages on ticks where no count
         // series carries data.
         $anchorSeriesNonZeroByTick = [];
-        $hasAnyAnchorSeries = \false;
+        $hasAnyAnchorSeries = false;
+
         $forecastData = [];
+
         foreach ($processingOrder as $seriesIndex) {
             $seriesData = $seriesDataList[$seriesIndex];
             $seriesName = $seriesNames[$seriesIndex] ?? null;
@@ -272,7 +306,7 @@ class ForecastBuilder
             $forecastPrecision = $seriesForecastPrecisionList[$seriesIndex] ?? 4;
             $isAnchorSeries = $this->isAnchorCountMonotonicity($monotonicity);
             if ($isAnchorSeries) {
-                $hasAnyAnchorSeries = \true;
+                $hasAnyAnchorSeries = true;
             }
             // Running sample maps grow as forecasts are produced for earlier incomplete ticks
             // in this series, so subsequent ticks pick up those projections in their analog
@@ -286,29 +320,40 @@ class ForecastBuilder
             // not engage and the prior comes from the legacy dataTableList walk; folding
             // projections into a previously-empty map would flip the path for later ticks and
             // hide the legacy behaviour the dataTableList walk is meant to provide.
-            $runningDailySamples = $seriesName !== null && isset($allSeriesDailySamples[$seriesName]) ? $allSeriesDailySamples[$seriesName] : [];
-            $runningMonthlySamples = $seriesName !== null && isset($allSeriesMonthlySamples[$seriesName]) ? $allSeriesMonthlySamples[$seriesName] : [];
+            $runningDailySamples = ($seriesName !== null && isset($allSeriesDailySamples[$seriesName]))
+                ? $allSeriesDailySamples[$seriesName]
+                : [];
+            $runningMonthlySamples = ($seriesName !== null && isset($allSeriesMonthlySamples[$seriesName]))
+                ? $allSeriesMonthlySamples[$seriesName]
+                : [];
             // Period-level prior samples are read, never written back: unlike the daily and
             // monthly maps there is no projection to feed forward, because the fetched window
             // ends at the last complete period and a second incomplete tick draws on the same
             // prior periods as the first.
-            $seriesPeriodSamples = $seriesName !== null && isset($allSeriesPeriodSamples[$seriesName]) ? $allSeriesPeriodSamples[$seriesName] : [];
+            $seriesPeriodSamples = ($seriesName !== null && isset($allSeriesPeriodSamples[$seriesName]))
+                ? $allSeriesPeriodSamples[$seriesName]
+                : [];
             $feedDailyProjections = [] !== $runningDailySamples;
             $feedMonthlyProjections = [] !== $runningMonthlySamples;
+
             foreach ($seriesData as $tickIndex => $currentValueRaw) {
                 $state = $dataStates[$tickIndex] ?? ArchiveState::COMPLETE;
+
                 if (ArchiveState::INCOMPLETE !== $state) {
                     $seriesForecasts[] = null;
                     $previousForecastValue = null;
                     continue;
                 }
+
                 $currentValue = (float) $currentValueRaw;
                 $dataTable = $dataTableList[$tickIndex] ?? null;
+
                 if (empty($dataTable)) {
                     $seriesForecasts[] = null;
                     $previousForecastValue = null;
                     continue;
                 }
+
                 // Trailing-no-data gate: if the most recent complete prior tick(s) read as
                 // empty (zero value or column unavailable), the same-period analog walks will
                 // happily reach back over the no-data stretch and "snap" the forecast to the
@@ -316,11 +361,20 @@ class ForecastBuilder
                 // Suppress instead. Applies to every series in the build pass, regardless of
                 // monotonicity, so a no-traffic stretch hides counts, ratios and averages
                 // uniformly.
-                if ($this->hasRecentNoDataPattern($seriesData, $dataStates, $seriesDataAvailability, $tickIndex, self::MIN_RECENT_NO_DATA_TICKS_FOR_SUPPRESSION)) {
+                if (
+                    $this->hasRecentNoDataPattern(
+                        $seriesData,
+                        $dataStates,
+                        $seriesDataAvailability,
+                        $tickIndex,
+                        self::MIN_RECENT_NO_DATA_TICKS_FOR_SUPPRESSION
+                    )
+                ) {
                     $seriesForecasts[] = null;
                     $previousForecastValue = null;
                     continue;
                 }
+
                 // Cross-series gate: ratios and averages (FREE/DOWN) are only meaningful when
                 // the underlying count exists. After the anchor-first pass has finished,
                 // suppress any dependent series at ticks where no anchor-count series rendered a
@@ -330,14 +384,38 @@ class ForecastBuilder
                     $previousForecastValue = null;
                     continue;
                 }
-                $pastValues = $this->getHistoricalSamplesForSeries($seriesData, $dataTableList, $dataStates, $tickIndex, $dataTable, $seriesDataAvailability, $monotonicity, $runningDailySamples, $earliestDataDate, $seriesPeriodSamples);
-                $tickWindow = new \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow($runningDailySamples, $runningMonthlySamples);
-                $forecastValue = $this->buildForecastValue($currentValue, $pastValues, $previousForecastValue, $monotonicity, $dataTable, $site, $tickWindow);
+
+                $pastValues = $this->getHistoricalSamplesForSeries(
+                    $seriesData,
+                    $dataTableList,
+                    $dataStates,
+                    $tickIndex,
+                    $dataTable,
+                    $seriesDataAvailability,
+                    $monotonicity,
+                    $runningDailySamples,
+                    $earliestDataDate,
+                    $seriesPeriodSamples
+                );
+
+                $tickWindow = new ForecastSampleWindow($runningDailySamples, $runningMonthlySamples);
+
+                $forecastValue = $this->buildForecastValue(
+                    $currentValue,
+                    $pastValues,
+                    $previousForecastValue,
+                    $monotonicity,
+                    $dataTable,
+                    $site,
+                    $tickWindow
+                );
+
                 if ($forecastValue === null) {
                     $seriesForecasts[] = null;
                     $previousForecastValue = null;
                     continue;
                 }
+
                 // An additive count (UP), a running max (MAX) and a deduplicated count (UNIQUE)
                 // share the same lower bound: the final-period value is at least what has already
                 // been observed this period, so a forecast below the current partial is
@@ -356,27 +434,36 @@ class ForecastBuilder
                 // already >= current by construction and is unaffected. UNIQUE always takes the
                 // prior-only path, so the floor is what keeps a late-period unique count that has
                 // already overtaken its historical level rendering at the realised value.
-                if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX === $monotonicity || \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity || \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity) {
+                if (
+                    ForecastMetricClassifier::MONOTONICITY_MAX === $monotonicity
+                    || ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity
+                    || ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity
+                ) {
                     $forecastValue = max($forecastValue, $currentValue);
                 }
+
                 if (!$this->shouldRenderForecastValue($forecastValue, $currentValue, $monotonicity)) {
                     $seriesForecasts[] = null;
                     $previousForecastValue = null;
                     continue;
                 }
+
                 // Belt-and-braces clamp: a min_* metric's final-period value can never exceed
                 // the current partial min, so even if the gate let the prior through (e.g. it
                 // equalled current within rounding) we hold the rendered forecast at or below
                 // current. Cheap insurance against an ever-rising-min visual in the chart.
-                if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_DOWN === $monotonicity) {
+                if (ForecastMetricClassifier::MONOTONICITY_DOWN === $monotonicity) {
                     $forecastValue = min($forecastValue, $currentValue);
                 }
+
                 $roundedForecast = round($forecastValue, $forecastPrecision);
                 $seriesForecasts[] = $roundedForecast;
                 $previousForecastValue = $roundedForecast;
+
                 if ($isAnchorSeries && $forecastValue > 0.0) {
-                    $anchorSeriesNonZeroByTick[$tickIndex] = \true;
+                    $anchorSeriesNonZeroByTick[$tickIndex] = true;
                 }
+
                 // Feed this tick's projections forward as historical analogs for later
                 // incomplete ticks in the same series. Use raw (un-rounded) values so the
                 // feedback channel keeps the precision of the underlying computation; the
@@ -392,11 +479,15 @@ class ForecastBuilder
                     }
                 }
             }
+
             $forecastData[$seriesIndex] = $seriesForecasts;
         }
+
         ksort($forecastData);
+
         return array_values($forecastData);
     }
+
     /**
      * True when the $requiredCount complete prior ticks immediately preceding $currentTickIndex
      * all read as "no data" — either zero value or column-availability false. Skips earlier
@@ -409,26 +500,35 @@ class ForecastBuilder
      * @param array<int, string> $dataStates
      * @param array<int, bool> $seriesDataAvailability
      */
-    private function hasRecentNoDataPattern(array $seriesData, array $dataStates, array $seriesDataAvailability, int $currentTickIndex, int $requiredCount) : bool
-    {
+    private function hasRecentNoDataPattern(
+        array $seriesData,
+        array $dataStates,
+        array $seriesDataAvailability,
+        int $currentTickIndex,
+        int $requiredCount
+    ): bool {
         if ($requiredCount <= 0) {
-            return \false;
+            return false;
         }
+
         $examined = 0;
         for ($i = $currentTickIndex - 1; $i >= 0 && $examined < $requiredCount; --$i) {
             $state = $dataStates[$i] ?? ArchiveState::COMPLETE;
             if (ArchiveState::COMPLETE !== $state) {
                 continue;
             }
-            $available = $seriesDataAvailability[$i] ?? \true;
+
+            $available = $seriesDataAvailability[$i] ?? true;
             $value = (float) ($seriesData[$i] ?? 0);
             if ($available && $value > 0.0) {
-                return \false;
+                return false;
             }
             ++$examined;
         }
+
         return $examined >= $requiredCount;
     }
+
     /**
      * Single forecast-value entry point for all monotonicities. When sub-period samples are
      * available and the target is week/month/year, runs the seasonal-decomposition path with
@@ -453,17 +553,38 @@ class ForecastBuilder
      *
      * @param array<int, float> $pastValues
      */
-    private function buildForecastValue(float $currentValue, array $pastValues, ?float $previousForecastValue, string $monotonicity, DataTable $dataTable, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function buildForecastValue(
+        float $currentValue,
+        array $pastValues,
+        ?float $previousForecastValue,
+        string $monotonicity,
+        DataTable $dataTable,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         $periodLabel = $this->getPeriodLabel($dataTable);
         $period = $this->getPeriod($dataTable);
-        $seasonal = $this->buildSeasonalForecastValue($dataTable, $periodLabel, $period, $currentValue, $monotonicity, $site, $window);
+
+        $seasonal = $this->buildSeasonalForecastValue(
+            $dataTable,
+            $periodLabel,
+            $period,
+            $currentValue,
+            $monotonicity,
+            $site,
+            $window
+        );
         if ($seasonal !== null) {
             return $seasonal;
         }
+
         if ([] !== $pastValues) {
             $prior = $this->computeHistoricalPrior($pastValues);
-            if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity || \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX === $monotonicity || \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity) {
+            if (
+                ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity
+                || ForecastMetricClassifier::MONOTONICITY_MAX === $monotonicity
+                || ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity
+            ) {
                 $prior = $this->clampForecastToHistoricalRange($prior, $pastValues);
             }
             // Day-target prior-only path: record the day's forecast under its own anchor so a
@@ -474,77 +595,127 @@ class ForecastBuilder
             }
             return $prior;
         }
+
         if ($previousForecastValue !== null) {
             if ('day' === $periodLabel) {
                 $window->projectDay($period->getDateStart()->toString('Y-m-d'), $previousForecastValue);
             }
             return $previousForecastValue;
         }
+
         return null;
     }
+
     /**
      * Run the seasonal-decomposition path for whichever monotonicity applies, when the caller
      * has supplied the sub-period samples it needs. Returns null when the path does not apply
      * (day target, no sub-period samples, unsupported period), letting the caller fall back
      * to the prior-only path on the displayed-range $pastValues.
      */
-    private function buildSeasonalForecastValue(DataTable $dataTable, string $periodLabel, Period $period, float $currentValue, string $monotonicity, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function buildSeasonalForecastValue(
+        DataTable $dataTable,
+        string $periodLabel,
+        Period $period,
+        float $currentValue,
+        string $monotonicity,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         // Deduplicated counts have no sub-period reducer to decompose with: a visitor active on
         // three days of the week is one unique visitor for the week but three daily samples, so
         // SUM overstates the period several-fold, MAX understates it, and AVG is meaningless.
         // Only the same-granularity history (previous weeks' week-level uniques) measures the
         // same thing the forecast tick has to predict, so hand every period type to the
         // prior-only path.
-        if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity) {
+        if (ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity) {
             return null;
         }
+
         switch ($periodLabel) {
             case 'week':
                 if ([] === $window->getDailySamples()) {
                     return null;
                 }
-                return $this->forecastWeekSeasonal($dataTable, $period, $currentValue, $monotonicity, $site, $window);
+                return $this->forecastWeekSeasonal(
+                    $dataTable,
+                    $period,
+                    $currentValue,
+                    $monotonicity,
+                    $site,
+                    $window
+                );
             case 'month':
                 if ([] === $window->getDailySamples()) {
                     return null;
                 }
-                return $this->forecastMonthSeasonal($dataTable, $period, $currentValue, $monotonicity, $site, $window);
+                return $this->forecastMonthSeasonal(
+                    $dataTable,
+                    $period,
+                    $currentValue,
+                    $monotonicity,
+                    $site,
+                    $window
+                );
             case 'year':
                 if ([] === $window->getMonthlySamples()) {
                     return null;
                 }
-                return $this->forecastYearSeasonal($dataTable, $period, $currentValue, $monotonicity, $site, $window);
+                return $this->forecastYearSeasonal(
+                    $dataTable,
+                    $period,
+                    $currentValue,
+                    $monotonicity,
+                    $site,
+                    $window
+                );
             default:
                 return null;
         }
     }
+
     /**
      * Week forecast via daily decomposition. Completed days contribute their archived values;
      * the in-progress day and remaining days are projected from same-DoW analog samples. The
      * combining reducer is chosen by monotonicity: SUM for UP, AVG for FREE, MIN for DOWN.
      */
-    private function forecastWeekSeasonal(DataTable $dataTable, Period $weekPeriod, float $currentValue, string $monotonicity, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function forecastWeekSeasonal(
+        DataTable $dataTable,
+        Period $weekPeriod,
+        float $currentValue,
+        string $monotonicity,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         $weekStart = $weekPeriod->getDateStart();
         $siteTz = $site->getTimezone();
+
         $dayAnchors = [];
         for ($i = 0; $i < 7; ++$i) {
             $dayAnchors[$i] = $weekStart->addDay($i)->toString('Y-m-d');
         }
+
         $todayIdx = $this->resolveSubPeriodTodayIndex($dataTable, $dayAnchors, $siteTz);
+
         switch ($monotonicity) {
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_FREE:
+            case ForecastMetricClassifier::MONOTONICITY_FREE:
                 return $this->decomposeAndAverageRate($dayAnchors, $todayIdx, self::WEEK_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_DOWN:
+            case ForecastMetricClassifier::MONOTONICITY_DOWN:
                 return $this->decomposeAndMinimize($dayAnchors, $todayIdx, self::WEEK_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX:
+            case ForecastMetricClassifier::MONOTONICITY_MAX:
                 return $this->decomposeAndMaximize($dayAnchors, $todayIdx, self::WEEK_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP:
+            case ForecastMetricClassifier::MONOTONICITY_UP:
             default:
-                return $this->decomposeAndForecast($dayAnchors, $todayIdx, $currentValue, self::WEEK_ANALOG_CHUNK, 1.0, $window);
+                return $this->decomposeAndForecast(
+                    $dayAnchors,
+                    $todayIdx,
+                    $currentValue,
+                    self::WEEK_ANALOG_CHUNK,
+                    1.0,
+                    $window
+                );
         }
     }
+
     /**
      * Month forecast via daily decomposition. The UP path applies a month-of-year scale to
      * the analog daily counts so a Feb forecast does not borrow Aug-level traffic from the
@@ -552,35 +723,57 @@ class ForecastBuilder
      * scale proportionally with traffic volume (a 0.8 traffic ratio does not imply
      * bounce_rate × 0.8).
      */
-    private function forecastMonthSeasonal(DataTable $dataTable, Period $monthPeriod, float $currentValue, string $monotonicity, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function forecastMonthSeasonal(
+        DataTable $dataTable,
+        Period $monthPeriod,
+        float $currentValue,
+        string $monotonicity,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         $monthStart = $monthPeriod->getDateStart();
         $siteTz = $site->getTimezone();
+
         // 't' = days in the month containing $monthStart. Cheaper and DST-safe vs differencing
         // strtotime() of the boundaries, which a non-UTC process can off-by-one across a DST gap.
         $dayCount = (int) $monthStart->toString('t');
+
         $dayAnchors = [];
         for ($i = 0; $i < $dayCount; ++$i) {
             $dayAnchors[$i] = $monthStart->addDay($i)->toString('Y-m-d');
         }
+
         $todayIdx = $this->resolveSubPeriodTodayIndex($dataTable, $dayAnchors, $siteTz);
+
         switch ($monotonicity) {
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_FREE:
+            case ForecastMetricClassifier::MONOTONICITY_FREE:
                 return $this->decomposeAndAverageRate($dayAnchors, $todayIdx, self::MONTH_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_DOWN:
+            case ForecastMetricClassifier::MONOTONICITY_DOWN:
                 return $this->decomposeAndMinimize($dayAnchors, $todayIdx, self::MONTH_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX:
+            case ForecastMetricClassifier::MONOTONICITY_MAX:
                 // No month-of-year scaling: like MIN/AVG, a running max does not scale
                 // proportionally with monthly traffic volume (a 0.8 traffic ratio does not
                 // imply max_actions * 0.8).
                 return $this->decomposeAndMaximize($dayAnchors, $todayIdx, self::MONTH_ANALOG_CHUNK, $window);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP:
+            case ForecastMetricClassifier::MONOTONICITY_UP:
             default:
                 $monthAnchor = $monthStart->toString('Y-m');
-                $monthOfYearScale = $this->computeMonthOfYearScale($monthAnchor, self::MONTH_ANALOG_CHUNK, $window);
-                return $this->decomposeAndForecast($dayAnchors, $todayIdx, $currentValue, self::MONTH_ANALOG_CHUNK, $monthOfYearScale, $window);
+                $monthOfYearScale = $this->computeMonthOfYearScale(
+                    $monthAnchor,
+                    self::MONTH_ANALOG_CHUNK,
+                    $window
+                );
+                return $this->decomposeAndForecast(
+                    $dayAnchors,
+                    $todayIdx,
+                    $currentValue,
+                    self::MONTH_ANALOG_CHUNK,
+                    $monthOfYearScale,
+                    $window
+                );
         }
     }
+
     /**
      * Year forecast via monthly decomposition. Same per-monotonicity reducer dispatch as the
      * week and month paths: SUM for UP, AVG for FREE, MIN for DOWN. Completed months come
@@ -588,28 +781,47 @@ class ForecastBuilder
      * month seasonal path with the same monotonicity when daily samples are available;
      * remaining months are projected from same-month-of-year monthly analogs.
      */
-    private function forecastYearSeasonal(DataTable $dataTable, Period $yearPeriod, float $currentValue, string $monotonicity, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function forecastYearSeasonal(
+        DataTable $dataTable,
+        Period $yearPeriod,
+        float $currentValue,
+        string $monotonicity,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         $yearStart = $yearPeriod->getDateStart();
         $siteTz = $site->getTimezone();
+
         $monthAnchors = [];
         for ($i = 0; $i < 12; ++$i) {
             $monthAnchors[$i] = $yearStart->addMonth($i)->toString('Y-m');
         }
+
         $referenceTs = $this->resolveReferenceTimestamp($dataTable);
         // Calendar-aligned anchor lookup using the same {@see Date::adjustForTimezone()} primitive
         // {@see resolveSubPeriodTodayIndex()} relies on, so the day/month/year branches all derive
         // the in-progress sub-period from the same site-local 'Y-m' anchor surface. A
         // reference instant outside the displayed year (rare; only possible for an archive whose
         // ts_archived predates the year start) is treated as Dec, matching the previous behaviour.
-        $referenceMonthAnchor = Date::factory(Date::adjustForTimezone($referenceTs, $siteTz))->toString('Y-m');
-        $idx = array_search($referenceMonthAnchor, $monthAnchors, \true);
-        $todayMonthIdx = \false === $idx ? 11 : (int) $idx;
-        if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity) {
+        $referenceMonthAnchor = Date::factory(Date::adjustForTimezone($referenceTs, $siteTz))
+            ->toString('Y-m');
+        $idx = array_search($referenceMonthAnchor, $monthAnchors, true);
+        $todayMonthIdx = (false === $idx) ? 11 : (int) $idx;
+
+        if (ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity) {
             return $this->forecastYearSeasonalUp($dataTable, $monthAnchors, $todayMonthIdx, $currentValue, $site, $window);
         }
-        return $this->forecastYearSeasonalAggregate($dataTable, $monthAnchors, $todayMonthIdx, $monotonicity, $site, $window);
+
+        return $this->forecastYearSeasonalAggregate(
+            $dataTable,
+            $monthAnchors,
+            $todayMonthIdx,
+            $monotonicity,
+            $site,
+            $window
+        );
     }
+
     /**
      * UP-flavoured year decomposition: SUM completed monthly counts + current-month partial
      * floor + remaining same-MoY analog projections. Extracted from the year-level dispatch
@@ -617,26 +829,45 @@ class ForecastBuilder
      *
      * @param array<int, string> $monthAnchors
      */
-    private function forecastYearSeasonalUp(DataTable $dataTable, array $monthAnchors, int $todayMonthIdx, float $currentValue, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : float
-    {
+    private function forecastYearSeasonalUp(
+        DataTable $dataTable,
+        array $monthAnchors,
+        int $todayMonthIdx,
+        float $currentValue,
+        Site $site,
+        ForecastSampleWindow $window
+    ): float {
         $dailySamples = $window->getDailySamples();
         $monthlySamples = $window->getMonthlySamples();
+
         $completedReal = 0.0;
         for ($i = 0; $i < $todayMonthIdx; ++$i) {
             $completedReal += $monthlySamples[$monthAnchors[$i]] ?? 0.0;
         }
+
         $currentMonthPartial = max(0.0, $currentValue - $completedReal);
         $currentMonthAnchorStr = $monthAnchors[$todayMonthIdx] . '-01';
+
         $currentMonthEstimate = null;
         if ([] !== $dailySamples) {
-            $currentMonthEstimate = $this->forecastMonthSeasonal($dataTable, new Month(Date::factory($currentMonthAnchorStr)), $currentMonthPartial, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP, $site, $window);
+            $currentMonthEstimate = $this->forecastMonthSeasonal(
+                $dataTable,
+                new Month(Date::factory($currentMonthAnchorStr)),
+                $currentMonthPartial,
+                ForecastMetricClassifier::MONOTONICITY_UP,
+                $site,
+                $window
+            );
         }
         if ($currentMonthEstimate === null) {
             $samples = $this->recentSameMoYValues($monthlySamples, $monthAnchors[$todayMonthIdx], self::YEAR_ANALOG_CHUNK);
-            $currentMonthEstimate = !empty($samples) ? $this->computeHistoricalPrior($samples) : $currentMonthPartial;
+            $currentMonthEstimate = !empty($samples)
+                ? $this->computeHistoricalPrior($samples)
+                : $currentMonthPartial;
         }
         $currentMonthEstimate = max($currentMonthEstimate, $currentMonthPartial);
         $window->projectMonth($monthAnchors[$todayMonthIdx], $currentMonthEstimate);
+
         $remainingExpected = 0.0;
         for ($i = $todayMonthIdx + 1; $i < 12; ++$i) {
             $samples = $this->recentSameMoYValues($monthlySamples, $monthAnchors[$i], self::YEAR_ANALOG_CHUNK);
@@ -647,8 +878,10 @@ class ForecastBuilder
             $remainingExpected += $projected;
             $window->projectMonth($monthAnchors[$i], $projected);
         }
+
         return $completedReal + $currentMonthEstimate + $remainingExpected;
     }
+
     /**
      * FREE/DOWN-flavoured year decomposition: build per-month value list (archived monthly
      * value for completed months, recursive month-seasonal forecast for the current month,
@@ -658,22 +891,37 @@ class ForecastBuilder
      *
      * @param array<int, string> $monthAnchors
      */
-    private function forecastYearSeasonalAggregate(DataTable $dataTable, array $monthAnchors, int $todayMonthIdx, string $monotonicity, Site $site, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function forecastYearSeasonalAggregate(
+        DataTable $dataTable,
+        array $monthAnchors,
+        int $todayMonthIdx,
+        string $monotonicity,
+        Site $site,
+        ForecastSampleWindow $window
+    ): ?float {
         $dailySamples = $window->getDailySamples();
         $monthlySamples = $window->getMonthlySamples();
+
         $monthlyValues = [];
         for ($i = 0; $i < $todayMonthIdx; ++$i) {
             if (isset($monthlySamples[$monthAnchors[$i]])) {
                 $monthlyValues[] = (float) $monthlySamples[$monthAnchors[$i]];
             }
         }
+
         $currentMonthAnchorStr = $monthAnchors[$todayMonthIdx] . '-01';
         $currentMonthEstimate = null;
         if ([] !== $dailySamples) {
             // Recurse with the same monotonicity so the month-level decomposition uses AVG
             // or MIN as appropriate. currentValue is unused by those reducers, so 0.0 is fine.
-            $currentMonthEstimate = $this->forecastMonthSeasonal($dataTable, new Month(Date::factory($currentMonthAnchorStr)), 0.0, $monotonicity, $site, $window);
+            $currentMonthEstimate = $this->forecastMonthSeasonal(
+                $dataTable,
+                new Month(Date::factory($currentMonthAnchorStr)),
+                0.0,
+                $monotonicity,
+                $site,
+                $window
+            );
         }
         if ($currentMonthEstimate === null) {
             $samples = $this->recentSameMoYValues($monthlySamples, $monthAnchors[$todayMonthIdx], self::YEAR_ANALOG_CHUNK);
@@ -685,6 +933,7 @@ class ForecastBuilder
             $monthlyValues[] = $currentMonthEstimate;
             $window->projectMonth($monthAnchors[$todayMonthIdx], $currentMonthEstimate);
         }
+
         for ($i = $todayMonthIdx + 1; $i < 12; ++$i) {
             $samples = $this->recentSameMoYValues($monthlySamples, $monthAnchors[$i], self::YEAR_ANALOG_CHUNK);
             if (empty($samples)) {
@@ -694,11 +943,14 @@ class ForecastBuilder
             $monthlyValues[] = $projected;
             $window->projectMonth($monthAnchors[$i], $projected);
         }
+
         if (empty($monthlyValues)) {
             return null;
         }
+
         return $this->reduceMonthlySamples($monthlyValues, $monotonicity);
     }
+
     /**
      * Combine same-month-of-year analog samples (and the per-month estimates derived from them)
      * for the year-aggregate path, by the reducer the monotonicity implies: MIN for running
@@ -709,17 +961,18 @@ class ForecastBuilder
      *
      * @param array<int, float> $samples Non-empty.
      */
-    private function reduceMonthlySamples(array $samples, string $monotonicity) : float
+    private function reduceMonthlySamples(array $samples, string $monotonicity): float
     {
         switch ($monotonicity) {
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_DOWN:
+            case ForecastMetricClassifier::MONOTONICITY_DOWN:
                 return min($samples);
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX:
+            case ForecastMetricClassifier::MONOTONICITY_MAX:
                 return max($samples);
             default:
                 return array_sum($samples) / count($samples);
         }
     }
+
     /**
      * Shared completed/in-progress/remaining decomposition for the UP (additive count) week and
      * month paths. "Today" is the sub-period containing the current site-local instant.
@@ -735,29 +988,53 @@ class ForecastBuilder
      *
      * @param array<int, string> $dayAnchors
      */
-    private function decomposeAndForecast(array $dayAnchors, int $todayIdx, float $currentValue, int $analogChunk, float $analogScale, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : float
-    {
+    private function decomposeAndForecast(
+        array $dayAnchors,
+        int $todayIdx,
+        float $currentValue,
+        int $analogChunk,
+        float $analogScale,
+        ForecastSampleWindow $window
+    ): float {
         $dailySamples = $window->getDailySamples();
+
         $completedReal = 0.0;
         for ($i = 0; $i < $todayIdx; ++$i) {
             $completedReal += $dailySamples[$dayAnchors[$i]] ?? 0.0;
         }
+
         $todayAnchor = $dayAnchors[$todayIdx];
         $todayPartial = max(0.0, $currentValue - $completedReal);
-        $todayPrior = $this->projectDailyValueViaAnalog($todayAnchor, $dailySamples, $analogChunk, $analogScale, null);
+
+        $todayPrior = $this->projectDailyValueViaAnalog(
+            $todayAnchor,
+            $dailySamples,
+            $analogChunk,
+            $analogScale,
+            null
+        );
         $todayContribution = $todayPrior !== null ? max($todayPartial, $todayPrior) : $todayPartial;
         $window->projectDay($todayAnchor, $todayContribution);
+
         $remainingExpected = 0.0;
         $count = count($dayAnchors);
         for ($i = $todayIdx + 1; $i < $count; ++$i) {
-            $projected = $this->projectDailyValueViaAnalog($dayAnchors[$i], $dailySamples, $analogChunk, $analogScale, $window);
+            $projected = $this->projectDailyValueViaAnalog(
+                $dayAnchors[$i],
+                $dailySamples,
+                $analogChunk,
+                $analogScale,
+                $window
+            );
             if ($projected === null) {
                 continue;
             }
             $remainingExpected += $projected;
         }
+
         return $completedReal + $todayContribution + $remainingExpected;
     }
+
     /**
      * Average-of-daily-rates decomposition for the FREE (rate, ratio, average) week and month
      * paths. Same shape as {@see self::decomposeAndForecast()} but the in-progress day is treated
@@ -774,15 +1051,27 @@ class ForecastBuilder
      *
      * @param array<int, string> $dayAnchors
      */
-    private function decomposeAndAverageRate(array $dayAnchors, int $todayIdx, int $analogChunk, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function decomposeAndAverageRate(
+        array $dayAnchors,
+        int $todayIdx,
+        int $analogChunk,
+        ForecastSampleWindow $window
+    ): ?float {
         $dailySamples = $window->getDailySamples();
-        $dailyValues = $this->collectCompletedAndProjectedDailyValues($dayAnchors, $todayIdx, $dailySamples, $analogChunk, $window);
+        $dailyValues = $this->collectCompletedAndProjectedDailyValues(
+            $dayAnchors,
+            $todayIdx,
+            $dailySamples,
+            $analogChunk,
+            $window
+        );
         if (empty($dailyValues)) {
             return null;
         }
+
         return array_sum($dailyValues) / count($dailyValues);
     }
+
     /**
      * Min-of-daily-mins decomposition for the DOWN (running-min) week and month paths. Same
      * collection shape as {@see self::decomposeAndAverageRate()} (in-progress day is analog-
@@ -791,15 +1080,27 @@ class ForecastBuilder
      *
      * @param array<int, string> $dayAnchors
      */
-    private function decomposeAndMinimize(array $dayAnchors, int $todayIdx, int $analogChunk, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function decomposeAndMinimize(
+        array $dayAnchors,
+        int $todayIdx,
+        int $analogChunk,
+        ForecastSampleWindow $window
+    ): ?float {
         $dailySamples = $window->getDailySamples();
-        $dailyValues = $this->collectCompletedAndProjectedDailyValues($dayAnchors, $todayIdx, $dailySamples, $analogChunk, $window);
+        $dailyValues = $this->collectCompletedAndProjectedDailyValues(
+            $dayAnchors,
+            $todayIdx,
+            $dailySamples,
+            $analogChunk,
+            $window
+        );
         if (empty($dailyValues)) {
             return null;
         }
+
         return min($dailyValues);
     }
+
     /**
      * Max-of-daily-maxes decomposition for the MAX (running-max) week and month paths. Mirror
      * of {@see self::decomposeAndMinimize()}: a running max over a period is the max of the
@@ -809,15 +1110,27 @@ class ForecastBuilder
      *
      * @param array<int, string> $dayAnchors
      */
-    private function decomposeAndMaximize(array $dayAnchors, int $todayIdx, int $analogChunk, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function decomposeAndMaximize(
+        array $dayAnchors,
+        int $todayIdx,
+        int $analogChunk,
+        ForecastSampleWindow $window
+    ): ?float {
         $dailySamples = $window->getDailySamples();
-        $dailyValues = $this->collectCompletedAndProjectedDailyValues($dayAnchors, $todayIdx, $dailySamples, $analogChunk, $window);
+        $dailyValues = $this->collectCompletedAndProjectedDailyValues(
+            $dayAnchors,
+            $todayIdx,
+            $dailySamples,
+            $analogChunk,
+            $window
+        );
         if (empty($dailyValues)) {
             return null;
         }
+
         return max($dailyValues);
     }
+
     /**
      * Build the per-day value list the rate-/min-decomposition reducers consume: archived
      * daily values for completed days, same-DoW analog projections for the in-progress day
@@ -828,23 +1141,38 @@ class ForecastBuilder
      * @param array<string, float> $dailySamples
      * @return array<int, float>
      */
-    private function collectCompletedAndProjectedDailyValues(array $dayAnchors, int $todayIdx, array $dailySamples, int $analogChunk, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : array
-    {
+    private function collectCompletedAndProjectedDailyValues(
+        array $dayAnchors,
+        int $todayIdx,
+        array $dailySamples,
+        int $analogChunk,
+        ForecastSampleWindow $window
+    ): array {
         $values = [];
+
         for ($i = 0; $i < $todayIdx; ++$i) {
             if (isset($dailySamples[$dayAnchors[$i]])) {
                 $values[] = (float) $dailySamples[$dayAnchors[$i]];
             }
         }
+
         $count = count($dayAnchors);
         for ($i = $todayIdx; $i < $count; ++$i) {
-            $projected = $this->projectDailyValueViaAnalog($dayAnchors[$i], $dailySamples, $analogChunk, 1.0, $window);
+            $projected = $this->projectDailyValueViaAnalog(
+                $dayAnchors[$i],
+                $dailySamples,
+                $analogChunk,
+                1.0,
+                $window
+            );
             if ($projected !== null) {
                 $values[] = $projected;
             }
         }
+
         return $values;
     }
+
     /**
      * Project a single sub-period day's value from same-DoW analog samples. Returns null when
      * no analogs exist in the supplied $dailySamples. When $window is non-null the projection
@@ -853,14 +1181,19 @@ class ForecastBuilder
      *
      * @param array<string, float> $dailySamples
      */
-    private function projectDailyValueViaAnalog(string $anchor, array $dailySamples, int $analogChunk, float $analogScale, ?\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : ?float
-    {
+    private function projectDailyValueViaAnalog(
+        string $anchor,
+        array $dailySamples,
+        int $analogChunk,
+        float $analogScale,
+        ?ForecastSampleWindow $window
+    ): ?float {
         $samples = $this->recentSameDoWValues($dailySamples, $anchor, $analogChunk);
         if (empty($samples)) {
             return null;
         }
         if ($analogScale !== 1.0) {
-            $samples = array_map(static function ($v) use($analogScale) {
+            $samples = array_map(static function ($v) use ($analogScale) {
                 return $v * $analogScale;
             }, $samples);
         }
@@ -870,6 +1203,7 @@ class ForecastBuilder
         }
         return $value;
     }
+
     /**
      * Day-level analog reducer. Plain mean below MIN_SAMPLES_FOR_DAY_LEVEL_TREND (the slope of
      * a 2-3 sample fit on weekly-strided same-DoW values is dominated by noise and the envelope
@@ -877,7 +1211,7 @@ class ForecastBuilder
      *
      * @param array<int, float> $samples
      */
-    private function dayLevelAnalogPrior(array $samples) : float
+    private function dayLevelAnalogPrior(array $samples): float
     {
         $n = count($samples);
         if ($n === 0) {
@@ -888,6 +1222,7 @@ class ForecastBuilder
         }
         return $this->computeHistoricalPrior($samples);
     }
+
     /**
      * Walk back 7 days at a time from the day before $targetAnchor, collecting up to $K samples
      * that exist in $dailySamples. Returned oldest-first so the trend fit lines up with
@@ -896,7 +1231,7 @@ class ForecastBuilder
      * @param array<string, float> $dailySamples
      * @return array<int, float>
      */
-    private function recentSameDoWValues(array $dailySamples, string $targetAnchor, int $K) : array
+    private function recentSameDoWValues(array $dailySamples, string $targetAnchor, int $K): array
     {
         if (empty($dailySamples)) {
             return [];
@@ -917,17 +1252,20 @@ class ForecastBuilder
         }
         return array_reverse($samples);
     }
+
     /**
      * Key a period-level sample map entry for the given target: 'YYYY-MM' for a month target,
      * 'Y-m-d' of the period start otherwise. Mirrors the key
      * {@see ForecastSubPeriodFetcher::extractSamples()} writes for the same granularity, which is
      * what lets the walk below address the fetched map directly.
      */
-    private function periodSampleKey(DataTable $dataTable, string $periodLabel) : string
+    private function periodSampleKey(DataTable $dataTable, string $periodLabel): string
     {
         $format = 'month' === $periodLabel ? 'Y-m' : 'Y-m-d';
+
         return $this->getPeriod($dataTable)->getDateStart()->toString($format);
     }
+
     /**
      * Take up to $K period-level samples immediately preceding $targetKey, oldest-first so the
      * trend fit lines up with {@see computeHistoricalPrior()}'s ascending x.
@@ -942,7 +1280,7 @@ class ForecastBuilder
      * @param array<string, float> $periodSamples
      * @return array<int, float>
      */
-    private function recentPeriodValues(array $periodSamples, string $targetKey, int $K) : array
+    private function recentPeriodValues(array $periodSamples, string $targetKey, int $K): array
     {
         $priorKeys = [];
         foreach (array_keys($periodSamples) as $key) {
@@ -950,21 +1288,25 @@ class ForecastBuilder
                 $priorKeys[] = (string) $key;
             }
         }
-        rsort($priorKeys, \SORT_STRING);
+
+        rsort($priorKeys, SORT_STRING);
         $priorKeys = array_slice($priorKeys, 0, $K);
+
         $samples = [];
         foreach (array_reverse($priorKeys) as $key) {
             $samples[] = (float) $periodSamples[$key];
         }
+
         return $samples;
     }
+
     /**
      * Walk back same-month-of-year entries from $monthlySamples. Keys are 'YYYY-MM'.
      *
      * @param array<string, float> $monthlySamples
      * @return array<int, float>
      */
-    private function recentSameMoYValues(array $monthlySamples, string $targetMonthAnchor, int $K) : array
+    private function recentSameMoYValues(array $monthlySamples, string $targetMonthAnchor, int $K): array
     {
         if (empty($monthlySamples)) {
             return [];
@@ -986,6 +1328,7 @@ class ForecastBuilder
         }
         return array_reverse($samples);
     }
+
     /**
      * Same-MoY level relative to the rolling-monthly baseline implied by the daily sample
      * window. Returns 1.0 when either side is missing or degenerate so the caller falls back
@@ -995,8 +1338,11 @@ class ForecastBuilder
      * same surface the same-DoW analog reducer draws from -- so the ratio cancels the "average
      * month covered by day samples" out and leaves only the MoY effect.
      */
-    private function computeMonthOfYearScale(string $monthAnchor, int $analogChunk, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSampleWindow $window) : float
-    {
+    private function computeMonthOfYearScale(
+        string $monthAnchor,
+        int $analogChunk,
+        ForecastSampleWindow $window
+    ): float {
         $monthlySamples = $window->getMonthlySamples();
         if (empty($monthlySamples)) {
             return 1.0;
@@ -1009,6 +1355,7 @@ class ForecastBuilder
         if ($numer <= 0.0) {
             return 1.0;
         }
+
         $dailySamples = $window->getDailySamples();
         if (empty($dailySamples)) {
             $monthValues = array_values($monthlySamples);
@@ -1023,13 +1370,14 @@ class ForecastBuilder
                 return 1.0;
             }
             // 30.4375 = average days per month over a 4-year cycle.
-            $denom = $sum / count($dailySamples) * 30.4375;
+            $denom = ($sum / count($dailySamples)) * 30.4375;
         }
         if ($denom <= 0.0) {
             return 1.0;
         }
         return $numer / $denom;
     }
+
     /**
      * Return the index of the sub-period (within $dayAnchors) that contains the reference instant
      * in the site's timezone. Used to decide which sub-periods are "completed" (real) vs
@@ -1041,7 +1389,7 @@ class ForecastBuilder
      * @param array<int, string> $dayAnchors Site-local 'Y-m-d' strings for each sub-period, in
      *                                       chronological order. Must be non-empty.
      */
-    private function resolveSubPeriodTodayIndex(DataTable $dataTable, array $dayAnchors, string $siteTz) : int
+    private function resolveSubPeriodTodayIndex(DataTable $dataTable, array $dayAnchors, string $siteTz): int
     {
         $referenceTs = $this->resolveReferenceTimestamp($dataTable);
         // {@see Date::setTimezone()} reinterprets the wall-clock as belonging to a different
@@ -1052,22 +1400,25 @@ class ForecastBuilder
         // {@see \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\Evolution::computeDataStates()}
         // uses to derive "today in site TZ" -- so the anchor lookup matches a site-local 'Y-m-d'.
         $referenceAnchor = Date::factory(Date::adjustForTimezone($referenceTs, $siteTz))->toString('Y-m-d');
-        $idx = array_search($referenceAnchor, $dayAnchors, \true);
-        if (\false !== $idx) {
+
+        $idx = array_search($referenceAnchor, $dayAnchors, true);
+        if (false !== $idx) {
             return (int) $idx;
         }
+
         if ($referenceAnchor < $dayAnchors[0]) {
             return 0;
         }
         return count($dayAnchors) - 1;
     }
+
     /**
      * Reference instant for "as of when is this incomplete tick being forecast". Defaults to
      * Date::now() so live charts always reflect the current state, but yields to a smaller
      * ARCHIVED_DATE_METADATA_NAME when present so historical archive runs (and tests) get a
      * deterministic forecast pinned to the moment the archive was produced.
      */
-    private function resolveReferenceTimestamp(DataTable $dataTable) : int
+    private function resolveReferenceTimestamp(DataTable $dataTable): int
     {
         $referenceTs = Date::now()->getTimestampUTC();
         $archivedDateStr = $dataTable->getMetadata(DataTable::ARCHIVED_DATE_METADATA_NAME);
@@ -1079,6 +1430,7 @@ class ForecastBuilder
         }
         return $referenceTs;
     }
+
     /**
      * Same-period historical prior. With fewer than two samples the only signal is the single
      * value (or a flat mean). With two or more samples we apply a least-squares linear-trend
@@ -1096,12 +1448,13 @@ class ForecastBuilder
      *                                      level shift with it; for FREE/DOWN series a leading 0 is a legitimate observation (a
      *                                      real 0% rate, an actual running min of 0) and the whole window is retained.
      */
-    private function computeHistoricalPrior(array $pastValues) : float
+    private function computeHistoricalPrior(array $pastValues): float
     {
         $sampleCount = count($pastValues);
         if ($sampleCount < 2) {
             return max(0.0, (float) $pastValues[0]);
         }
+
         $sumX = $sampleCount * ($sampleCount + 1) / 2;
         $sumY = array_sum($pastValues);
         $sumXX = 0.0;
@@ -1111,16 +1464,20 @@ class ForecastBuilder
             $sumXX += $x * $x;
             $sumXY += $x * $pastValues[$i];
         }
+
         $denominator = $sampleCount * $sumXX - $sumX * $sumX;
         if ($denominator <= 0.0) {
             return max(0.0, $sumY / $sampleCount);
         }
+
         $slope = ($sampleCount * $sumXY - $sumX * $sumY) / $denominator;
         $intercept = ($sumY - $slope * $sumX) / $sampleCount;
+
         // Equivalent to projecting from the regressed value at x=sampleCount and taking a
         // fractional step in the slope direction: y(n) + damping * slope.
         return max(0.0, $intercept + $slope * ($sampleCount + self::TREND_DAMPING));
     }
+
     /**
      * @param array<int, float|int> $seriesData
      * @param array<int, DataTable> $dataTableList
@@ -1145,11 +1502,22 @@ class ForecastBuilder
      *                                      the floor.
      * @return array<int, float>
      */
-    private function getHistoricalSamplesForSeries(array $seriesData, array $dataTableList, array $dataStates, int $currentTickIndex, DataTable $currentDataTable, array $seriesDataAvailability = [], string $monotonicity = \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP, array $dailySamples = [], ?string $earliestDataDate = null, array $periodSamples = []) : array
-    {
+    private function getHistoricalSamplesForSeries(
+        array $seriesData,
+        array $dataTableList,
+        array $dataStates,
+        int $currentTickIndex,
+        DataTable $currentDataTable,
+        array $seriesDataAvailability = [],
+        string $monotonicity = ForecastMetricClassifier::MONOTONICITY_UP,
+        array $dailySamples = [],
+        ?string $earliestDataDate = null,
+        array $periodSamples = []
+    ): array {
         $allSamples = [];
         $alignedSamples = [];
         $periodLabel = $this->getPeriodLabel($currentDataTable);
+
         if ('day' === $periodLabel && [] !== $dailySamples) {
             if (null !== $earliestDataDate) {
                 foreach (array_keys($dailySamples) as $sampleDate) {
@@ -1159,47 +1527,71 @@ class ForecastBuilder
                 }
             }
             $todayAnchor = $this->getPeriod($currentDataTable)->getDateStart()->toString('Y-m-d');
-            $samples = $this->recentSameDoWValues($dailySamples, $todayAnchor, self::DAY_PRIOR_TARGET_SAMPLES);
+            $samples = $this->recentSameDoWValues(
+                $dailySamples,
+                $todayAnchor,
+                self::DAY_PRIOR_TARGET_SAMPLES
+            );
+
             if ($this->isAnchorCountMonotonicity($monotonicity)) {
                 return $this->stripPreLevelShiftSamples($this->removeLeadingZeroSamples($samples));
             }
+
             return array_values($samples);
         }
+
         // Week/month/year target with its own fetched window: take the prior periods from there
         // rather than from the displayed ticks, so the sample set is the same at every "rows to
         // display" width -- the property the day branch above gets from its own fetch. The
         // displayed walk below stays as the fallback for when no window was fetched.
         if ([] !== $periodSamples) {
-            $samples = $this->recentPeriodValues($periodSamples, $this->periodSampleKey($currentDataTable, $periodLabel), self::PERIOD_PRIOR_TARGET_SAMPLES);
+            $samples = $this->recentPeriodValues(
+                $periodSamples,
+                $this->periodSampleKey($currentDataTable, $periodLabel),
+                self::PERIOD_PRIOR_TARGET_SAMPLES
+            );
+
             if ($this->isAnchorCountMonotonicity($monotonicity)) {
                 return $this->stripPreLevelShiftSamples($this->removeLeadingZeroSamples($samples));
             }
+
             return $samples;
         }
+
         for ($tickIndex = 0; $tickIndex < $currentTickIndex; ++$tickIndex) {
             if (($dataStates[$tickIndex] ?? null) !== ArchiveState::COMPLETE) {
                 continue;
             }
+
             if (!isset($seriesData[$tickIndex])) {
                 continue;
             }
-            if (($seriesDataAvailability[$tickIndex] ?? \true) === \false) {
+
+            if (($seriesDataAvailability[$tickIndex] ?? true) === false) {
                 continue;
             }
+
             $value = (float) $seriesData[$tickIndex];
             $dataTable = $dataTableList[$tickIndex] ?? null;
+
             if (empty($dataTable)) {
                 continue;
             }
+
             // Floor the walk at the earliest date the site/segment can hold data. The displayed
             // range is not fetched through the sub-period fetcher's creation-date clamp, so
             // without this a wide "rows to display" pulls pre-creation ticks into the prior and
             // makes the forecast depend on the displayed width. Compared on the period start so a
             // period straddling the creation date is kept.
-            if (null !== $earliestDataDate && strcmp($this->getPeriod($dataTable)->getDateStart()->toString('Y-m-d'), $earliestDataDate) < 0) {
+            if (
+                null !== $earliestDataDate
+                && strcmp($this->getPeriod($dataTable)->getDateStart()->toString('Y-m-d'), $earliestDataDate) < 0
+            ) {
                 continue;
             }
+
             $isAligned = $this->isSamplePeriodCalendarAligned($currentDataTable, $dataTable, $periodLabel);
+
             if ('day' === $periodLabel) {
                 // Daily series have strong day-of-week effects; mixing weekdays into a Saturday
                 // forecast (or vice versa) is worse than working with a single same-DOW sample,
@@ -1210,17 +1602,25 @@ class ForecastBuilder
                 $allSamples[] = $value;
                 continue;
             }
+
             $allSamples[] = $value;
+
             if ($isAligned) {
                 $alignedSamples[] = $value;
             }
         }
-        $samples = 'day' !== $periodLabel && count($alignedSamples) >= self::MIN_ALIGNED_SAMPLES_TO_PREFER ? $alignedSamples : $allSamples;
+
+        $samples = (
+            'day' !== $periodLabel
+            && count($alignedSamples) >= self::MIN_ALIGNED_SAMPLES_TO_PREFER
+        ) ? $alignedSamples : $allSamples;
+
         // Keep only the most recent PERIOD_PRIOR_TARGET_SAMPLES ticks, so a wide "rows to display"
         // cannot widen the prior behind the forecast. Applied before the strip and the trim below
         // so both work on the same window width whatever the display shows, matching the day
         // target, which caps its own fetched window before the same two steps.
         $samples = array_slice($samples, -self::PERIOD_PRIOR_TARGET_SAMPLES);
+
         // Leading-zero stripping is only sound for the count families (additive UP and
         // deduplicated UNIQUE) where a leading 0 most likely marks "tracking had not started
         // yet". For MONOTONICITY_DOWN (running mins) and MONOTONICITY_FREE (rates/averages) a
@@ -1236,16 +1636,21 @@ class ForecastBuilder
         if ($this->isAnchorCountMonotonicity($monotonicity)) {
             return $this->stripPreLevelShiftSamples($this->removeLeadingZeroSamples($samples));
         }
+
         return $samples;
     }
+
     /**
      * True when the candidate sample is "calendar-aligned" to the current period: same
      * day-of-week for daily, same ISO week-of-year for weekly, same calendar month for monthly.
      * Year periods have no useful alignment (every prior tick is the same kind of period), so
      * the check returns true and lets the recency-only sample set carry the forecast.
      */
-    private function isSamplePeriodCalendarAligned(DataTable $current, DataTable $candidate, string $periodLabel) : bool
-    {
+    private function isSamplePeriodCalendarAligned(
+        DataTable $current,
+        DataTable $candidate,
+        string $periodLabel
+    ): bool {
         switch ($periodLabel) {
             case 'day':
                 return $this->getPeriodStartDayOfWeek($current) === $this->getPeriodStartDayOfWeek($candidate);
@@ -1254,9 +1659,10 @@ class ForecastBuilder
             case 'month':
                 return $this->getPeriodStartCalendarMonth($current) === $this->getPeriodStartCalendarMonth($candidate);
             default:
-                return \true;
+                return true;
         }
     }
+
     /**
      * Clamp a trend extrapolation to a robust historical-range envelope. Both the centre and the
      * spread are robust statistics of the past samples, so a single recent spike — the case the
@@ -1286,49 +1692,60 @@ class ForecastBuilder
      *
      * @param array<int, float> $pastValues Historical samples used to size and centre the envelope.
      */
-    private function clampForecastToHistoricalRange(float $forecastValue, array $pastValues) : float
+    private function clampForecastToHistoricalRange(float $forecastValue, array $pastValues): float
     {
         if ([] === $pastValues) {
             return $forecastValue;
         }
+
         $center = $this->median($pastValues);
+
         $absoluteDeviations = [];
         foreach ($pastValues as $sample) {
             $absoluteDeviations[] = abs($sample - $center);
         }
         $spread = $this->median($absoluteDeviations) * self::MAD_TO_SIGMA;
+
         $minSpread = abs($center) * self::BOUNDED_RANGE_MIN_RELATIVE_SPREAD;
         $halfWidth = max($spread, $minSpread) * self::BOUNDED_RANGE_SIGMAS;
+
         $lower = max(0.0, $center - $halfWidth);
         $upper = $center + $halfWidth;
+
         return max($lower, min($upper, $forecastValue));
     }
+
     /**
      * Median of an unordered sample list. Even counts return the mean of the two central values.
      *
      * @param array<int, float> $values Non-empty sample list.
      */
-    private function median(array $values) : float
+    private function median(array $values): float
     {
         sort($values);
         $count = count($values);
         $mid = intdiv($count, 2);
+
         if ($count % 2 === 1) {
             return (float) $values[$mid];
         }
+
         return ((float) $values[$mid - 1] + (float) $values[$mid]) / 2.0;
     }
+
     /**
      * @param array<int, float> $samples
      * @return array<int, float>
      */
-    private function removeLeadingZeroSamples(array $samples) : array
+    private function removeLeadingZeroSamples(array $samples): array
     {
         while ([] !== $samples && 0.0 === (float) reset($samples)) {
             array_shift($samples);
         }
+
         return array_values($samples);
     }
+
     /**
      * Strip the leading (oldest) run of same-period samples that sit on the far side of a traffic
      * level shift from the current level, so the damped linear-trend prior fits the current
@@ -1364,25 +1781,30 @@ class ForecastBuilder
      * @param array<int, float> $samples Oldest-first.
      * @return array<int, float>
      */
-    private function stripPreLevelShiftSamples(array $samples) : array
+    private function stripPreLevelShiftSamples(array $samples): array
     {
         $count = count($samples);
         if ($count < self::RECENT_LEVEL_WINDOW) {
             return $samples;
         }
+
         $recentLevel = $this->median(array_slice($samples, -self::RECENT_LEVEL_WINDOW));
         if ($recentLevel <= 0.0) {
             return $samples;
         }
+
         $lower = $recentLevel / self::LEVEL_SHIFT_RATIO;
         $upper = $recentLevel * self::LEVEL_SHIFT_RATIO;
         $maxTrim = $count - self::RECENT_LEVEL_WINDOW;
+
         $trim = 0;
         while ($trim < $maxTrim && ($samples[$trim] < $lower || $samples[$trim] > $upper)) {
             ++$trim;
         }
+
         return array_slice($samples, $trim);
     }
+
     /**
      * True for the two count families the forecast treats as "anchors": additive counts (UP) and
      * deduplicated counts (UNIQUE). Both are absolute volume metrics whose presence on a tick is
@@ -1392,20 +1814,25 @@ class ForecastBuilder
      * extreme, not a volume, so it neither justifies rendering a dependent ratio nor makes a
      * leading 0 implausible.
      */
-    private function isAnchorCountMonotonicity(string $monotonicity) : bool
+    private function isAnchorCountMonotonicity(string $monotonicity): bool
     {
-        return \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity || \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity;
+        return ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity
+            || ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity;
     }
-    private function shouldRenderForecastValue(float $forecastValue, float $currentDisplayValue, string $monotonicity) : bool
-    {
+
+    private function shouldRenderForecastValue(
+        float $forecastValue,
+        float $currentDisplayValue,
+        string $monotonicity
+    ): bool {
         switch ($monotonicity) {
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_FREE:
-                return \true;
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_DOWN:
+            case ForecastMetricClassifier::MONOTONICITY_FREE:
+                return true;
+            case ForecastMetricClassifier::MONOTONICITY_DOWN:
                 return $forecastValue <= $currentDisplayValue;
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_MAX:
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UNIQUE:
-            case \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP:
+            case ForecastMetricClassifier::MONOTONICITY_MAX:
+            case ForecastMetricClassifier::MONOTONICITY_UNIQUE:
+            case ForecastMetricClassifier::MONOTONICITY_UP:
             default:
                 // A running max can only rise within the period, and a deduplicated count can
                 // only gain entities as the period runs on, so neither final value can fall below
@@ -1413,25 +1840,30 @@ class ForecastBuilder
                 return $forecastValue >= $currentDisplayValue;
         }
     }
-    private function getPeriod(DataTable $dataTable) : Period
+
+    private function getPeriod(DataTable $dataTable): Period
     {
         /** @var Period $period */
         $period = $dataTable->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
         return $period;
     }
-    private function getPeriodLabel(DataTable $dataTable) : string
+
+    private function getPeriodLabel(DataTable $dataTable): string
     {
         return $this->getPeriod($dataTable)->getLabel();
     }
-    private function getPeriodStartDayOfWeek(DataTable $dataTable) : string
+
+    private function getPeriodStartDayOfWeek(DataTable $dataTable): string
     {
         return $this->getPeriod($dataTable)->getDateStart()->toString('N');
     }
-    private function getPeriodStartIsoWeek(DataTable $dataTable) : string
+
+    private function getPeriodStartIsoWeek(DataTable $dataTable): string
     {
         return $this->getPeriod($dataTable)->getDateStart()->toString('W');
     }
-    private function getPeriodStartCalendarMonth(DataTable $dataTable) : string
+
+    private function getPeriodStartCalendarMonth(DataTable $dataTable): string
     {
         return $this->getPeriod($dataTable)->getDateStart()->toString('m');
     }

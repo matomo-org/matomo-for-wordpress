@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers;
 
 use Piwik\Cache;
@@ -17,15 +18,19 @@ use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 use Piwik\Url;
 use Piwik\UrlHelper;
+
 /**
  * Contains methods to access search engine definition data.
  */
 class SearchEngine extends Singleton
 {
     public const OPTION_STORAGE_NAME = 'SearchEngineDefinitions';
+
     /** @var string location of definition file (relative to PIWIK_INCLUDE_PATH) */
     public const DEFINITION_FILE = '/vendor/matomo/searchengine-and-social-list/SearchEngines.yml';
+
     protected $definitionList = null;
+
     /**
      * Returns list of search engines by URL
      *
@@ -33,29 +38,36 @@ class SearchEngine extends Singleton
      */
     public function getDefinitions()
     {
-        $cache = Cache::getEagerCache();
+        $cache   = Cache::getEagerCache();
         $cacheId = 'SearchEngine-' . self::OPTION_STORAGE_NAME;
+
         if ($cache->contains($cacheId)) {
             $list = $cache->fetch($cacheId);
         } else {
             $list = $this->loadDefinitions();
             $cache->save($cacheId, $list);
         }
+
         return $list;
     }
+
     private function loadDefinitions()
     {
         if (empty($this->definitionList)) {
             $referrerDefinitionSyncOpt = Config::getInstance()->General['enable_referrer_definition_syncs'];
+
             if ($referrerDefinitionSyncOpt == 1) {
                 $this->loadRemoteDefinitions();
             } else {
                 $this->loadLocalYmlData();
             }
         }
+
         Piwik::postEvent('Referrer.addSearchEngineUrls', array(&$this->definitionList));
+
         return $this->definitionList;
     }
+
     /**
      * Loads definitions sourced from remote yaml with a local fallback
      */
@@ -63,6 +75,7 @@ class SearchEngine extends Singleton
     {
         // Read first from the auto-updated list in database
         $list = Option::get(self::OPTION_STORAGE_NAME);
+
         if ($list && SettingsPiwik::isInternetEnabled()) {
             $this->definitionList = Common::safe_unserialize(base64_decode($list));
         } else {
@@ -71,6 +84,7 @@ class SearchEngine extends Singleton
             Option::set(self::OPTION_STORAGE_NAME, base64_encode(serialize($this->definitionList)));
         }
     }
+
     /**
      * Loads the definition data from the local definitions file
      */
@@ -79,6 +93,7 @@ class SearchEngine extends Singleton
         $yml = file_get_contents(PIWIK_INCLUDE_PATH . self::DEFINITION_FILE);
         $this->definitionList = $this->loadYmlData($yml);
     }
+
     /**
      * Parses the given YML string and caches the resulting definitions
      *
@@ -88,27 +103,34 @@ class SearchEngine extends Singleton
     public function loadYmlData($yml)
     {
         $searchEngines = \Spyc::YAMLLoadString($yml);
+
         $this->definitionList = $this->transformData($searchEngines);
+
         return $this->definitionList;
     }
+
     protected function transformData($searchEngines)
     {
         $urlToInfo = array();
+
         foreach ($searchEngines as $name => $info) {
             if (empty($info) || !is_array($info)) {
                 continue;
             }
+
             foreach ($info as $urlDefinitions) {
                 foreach ($urlDefinitions['urls'] as $url) {
                     $searchEngineData = $urlDefinitions;
                     unset($searchEngineData['urls']);
                     $searchEngineData['name'] = $name;
-                    $urlToInfo[$url] = $searchEngineData;
+                    $urlToInfo[$url]          = $searchEngineData;
                 }
             }
         }
+
         return $urlToInfo;
     }
+
     /**
      * Returns list of search engines by name
      *
@@ -116,11 +138,13 @@ class SearchEngine extends Singleton
      */
     public function getNames()
     {
-        $cacheId = 'SearchEngine.getSearchEngineNames';
-        $cache = Cache::getTransientCache();
+        $cacheId   = 'SearchEngine.getSearchEngineNames';
+        $cache     = Cache::getTransientCache();
         $nameToUrl = $cache->fetch($cacheId);
+
         if (empty($nameToUrl)) {
             $searchEngines = $this->getDefinitions();
+
             $nameToUrl = array();
             foreach ($searchEngines as $url => $info) {
                 if (!isset($nameToUrl[$info['name']])) {
@@ -129,8 +153,10 @@ class SearchEngine extends Singleton
             }
             $cache->save($cacheId, $nameToUrl);
         }
+
         return $nameToUrl;
     }
+
     /**
      * Returns definitions for the given search engine host
      *
@@ -140,11 +166,14 @@ class SearchEngine extends Singleton
     public function getDefinitionByHost($host)
     {
         $searchEngines = $this->getDefinitions();
+
         if (!array_key_exists($host, $searchEngines)) {
             return array();
         }
+
         return $searchEngines[$host];
     }
+
     /**
      * Extracts a keyword from a raw not encoded URL.
      * Will only extract keyword if a known search engine has been detected.
@@ -167,12 +196,12 @@ class SearchEngine extends Singleton
     public function extractInformationFromUrl($referrerUrl)
     {
         $referrerParsed = @parse_url($referrerUrl);
-        $referrerHost = '';
+        $referrerHost   = '';
         if (isset($referrerParsed['host'])) {
             $referrerHost = $referrerParsed['host'];
         }
         if (empty($referrerHost)) {
-            return \false;
+            return false;
         }
         // some search engines (eg. Bing Images) use the same domain
         // as an existing search engine (eg. Bing), we must also use the url path
@@ -180,32 +209,44 @@ class SearchEngine extends Singleton
         if (isset($referrerParsed['path'])) {
             $referrerPath = $referrerParsed['path'];
         }
+
         $query = '';
         if (isset($referrerParsed['query'])) {
             $query = $referrerParsed['query'];
         }
+
         // Google Referrers URLs sometimes have the fragment which contains the keyword
         if (!empty($referrerParsed['fragment'])) {
             $query .= '&' . $referrerParsed['fragment'];
         }
+
         $referrerHost = $this->getEngineHostFromUrl($referrerHost, $referrerPath, $query);
+
         if (empty($referrerHost)) {
-            return \false;
+            return false;
         }
+
         $definitions = $this->getDefinitionByHost($referrerHost);
+
         $searchEngineName = $definitions['name'];
-        $variableNames = $definitions['params'];
-        $keywordsHiddenFor = !empty($definitions['hiddenkeyword']) ? $definitions['hiddenkeyword'] : array('/^$/', '/');
+        $variableNames    = $definitions['params'];
+        $keywordsHiddenFor = !empty($definitions['hiddenkeyword']) ? $definitions['hiddenkeyword'] : array(
+            '/^$/', '/',
+        );
+
         $key = null;
         if ($searchEngineName === 'Google Images') {
-            if (strpos($query, '&prev') !== \false) {
+            if (strpos($query, '&prev') !== false) {
                 $query = urldecode(trim(UrlHelper::getParameterFromQueryString($query, 'prev')));
                 $query = str_replace('&', '&amp;', strstr($query, '?'));
             }
             $searchEngineName = 'Google Images';
-        } elseif ($searchEngineName === 'Google' && (strpos($query, '&as_') !== \false || strpos($query, 'as_') === 0)) {
+        } elseif (
+            $searchEngineName === 'Google'
+            && (strpos($query, '&as_') !== false || strpos($query, 'as_') === 0)
+        ) {
             $keys = array();
-            $key = UrlHelper::getParameterFromQueryString($query, 'as_q');
+            $key  = UrlHelper::getParameterFromQueryString($query, 'as_q');
             if (!empty($key)) {
                 array_push($keys, $key);
             }
@@ -215,14 +256,15 @@ class SearchEngine extends Singleton
             }
             $key = UrlHelper::getParameterFromQueryString($query, 'as_epq');
             if (!empty($key)) {
-                array_push($keys, "\"{$key}\"");
+                array_push($keys, "\"$key\"");
             }
             $key = UrlHelper::getParameterFromQueryString($query, 'as_eq');
             if (!empty($key)) {
-                array_push($keys, "-{$key}");
+                array_push($keys, "-$key");
             }
             $key = trim(urldecode(implode(' ', $keys)));
         }
+
         if ($searchEngineName === 'Google') {
             // top bar menu
             $tbm = UrlHelper::getParameterFromQueryString($query, 'tbm');
@@ -238,6 +280,7 @@ class SearchEngine extends Singleton
                     break;
             }
         }
+
         if (empty($key)) {
             foreach ($variableNames as $variableName) {
                 if ($variableName[0] == '/') {
@@ -250,16 +293,28 @@ class SearchEngine extends Singleton
                     // search for keywords now &vname=keyword
                     $key = UrlHelper::getParameterFromQueryString($query, $variableName) ?? '';
                     $key = trim(urldecode($key));
+
                     // Special cases: empty keywords
-                    if (empty($key) && (strpos($query, sprintf('&%s=', $variableName)) !== \false || strpos($query, sprintf('?%s=', $variableName)) !== \false)) {
-                        $key = \false;
+                    if (
+                        empty($key)
+                        && (
+                            // empty keyword parameter
+                            strpos($query, sprintf('&%s=', $variableName)) !== false
+                            || strpos($query, sprintf('?%s=', $variableName)) !== false
+                        )
+                    ) {
+                        $key = false;
                     }
-                    if (!empty($key) || $key === \false) {
+                    if (
+                        !empty($key)
+                        || $key === false
+                    ) {
                         break;
                     }
                 }
             }
         }
+
         // if no keyword found, but empty keywords are allowed
         if ($key === null || $key === '') {
             $pathWithQueryAndFragment = $referrerPath;
@@ -269,33 +324,42 @@ class SearchEngine extends Singleton
             if (!empty($referrerParsed['fragment'])) {
                 $pathWithQueryAndFragment .= '#' . $referrerParsed['fragment'];
             }
+
             foreach ($keywordsHiddenFor as $path) {
                 if (strlen($path) > 1 && substr($path, 0, 1) == '/' && substr($path, -1, 1) == '/') {
                     if (preg_match($path, $pathWithQueryAndFragment)) {
-                        $key = \false;
+                        $key = false;
                         break;
                     }
                 } elseif ($path == $pathWithQueryAndFragment) {
-                    $key = \false;
+                    $key = false;
                     break;
                 }
             }
         }
+
         // $key === false is the special case "No keyword provided" which is a Search engine match
         if ($key === null || $key === '') {
-            return \false;
+            return false;
         }
+
         if (!empty($key)) {
             if (!empty($definitions['charsets'])) {
                 $key = $this->convertCharset($key, $definitions['charsets']);
             }
             $key = mb_strtolower($key);
         }
-        return array('name' => $searchEngineName, 'keywords' => $key);
+
+        return array(
+            'name'     => $searchEngineName,
+            'keywords' => $key,
+        );
     }
+
     protected function getEngineHostFromUrl($host, $path, $query)
     {
         $searchEngines = $this->getDefinitions();
+
         $hostPattern = UrlHelper::getLossyUrl($host);
         /*
          * Try to get the best matching 'host' in definitions
@@ -320,18 +384,20 @@ class SearchEngine extends Singleton
             } elseif (!strncmp($path, '/pemonitorhosted/ws/results/', 28)) {
                 // private-label search powered by InfoSpace Metasearch
                 $host = 'wsdsold.infospace.com';
-            } elseif (strpos($host, '.images.search.yahoo.com') != \false) {
+            } elseif (strpos($host, '.images.search.yahoo.com') != false) {
                 // Yahoo! Images
                 $host = 'images.search.yahoo.com';
-            } elseif (strpos($host, '.search.yahoo.com') != \false) {
+            } elseif (strpos($host, '.search.yahoo.com') != false) {
                 // Yahoo!
                 $host = 'search.yahoo.com';
             } else {
-                return \false;
+                return false;
             }
         }
+
         return $host;
     }
+
     /**
      * Tries to convert the given string from one of the given charsets to UTF-8
      * @param string $string
@@ -344,17 +410,20 @@ class SearchEngine extends Singleton
             $charset = $charsets[0];
             if (count($charsets) > 1) {
                 $charset = mb_detect_encoding($string, $charsets);
-                if ($charset === \false) {
+                if ($charset === false) {
                     $charset = $charsets[0];
                 }
             }
+
             $newKey = @iconv($charset, 'UTF-8//IGNORE', $string);
             if (!empty($newKey)) {
                 $string = $newKey;
             }
         }
+
         return $string;
     }
+
     /**
      * Return search engine URL by name
      *
@@ -371,6 +440,7 @@ class SearchEngine extends Singleton
         }
         return $url;
     }
+
     /**
      * Return search engine host in URL
      *
@@ -382,11 +452,13 @@ class SearchEngine extends Singleton
         if (strpos($url, '//')) {
             $url = substr($url, strpos($url, '//') + 2);
         }
-        if (($p = strpos($url, '/')) !== \false) {
+        if (($p = strpos($url, '/')) !== false) {
             $url = substr($url, 0, $p);
         }
         return $url;
     }
+
+
     /**
      * Return search engine logo path by URL
      *
@@ -396,7 +468,7 @@ class SearchEngine extends Singleton
      */
     public function getLogoFromUrl($url)
     {
-        $pathInPiwik = 'plugins/Morpheus/icons/dist/searchEngines/%s.png';
+        $pathInPiwik  = 'plugins/Morpheus/icons/dist/searchEngines/%s.png';
         $pathWithCode = sprintf($pathInPiwik, $this->getHostFromUrl($url));
         $absolutePath = PIWIK_INCLUDE_PATH . '/' . $pathWithCode;
         if (file_exists($absolutePath)) {
@@ -404,6 +476,7 @@ class SearchEngine extends Singleton
         }
         return sprintf($pathInPiwik, 'xx');
     }
+
     /**
      * Return search engine URL for URL and keyword
      *
@@ -413,15 +486,15 @@ class SearchEngine extends Singleton
      */
     public function getBackLinkFromUrlAndKeyword($url, $keyword)
     {
-        if ($keyword === \Piwik\Plugins\Referrers\API::LABEL_KEYWORD_NOT_DEFINED) {
+        if ($keyword === API::LABEL_KEYWORD_NOT_DEFINED) {
             return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/general/faq_144');
         }
         $keyword = urlencode($keyword);
         $keyword = str_replace(urlencode('+'), urlencode(' '), $keyword);
-        $host = substr($url, strpos($url, '//') + 2);
+        $host    = substr($url, strpos($url, '//') + 2);
         $definition = $this->getDefinitionByHost($host);
         if (empty($definition['backlink'])) {
-            return \false;
+            return false;
         }
         $path = str_replace("{k}", $keyword, $definition['backlink']);
         return $url . (substr($url, -1) != '/' ? '/' : '') . $path;

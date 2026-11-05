@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Policy;
 
 use Piwik\Piwik;
@@ -17,6 +18,7 @@ use Piwik\Settings\Interfaces\SystemSettingInterface;
 use Piwik\Settings\Interfaces\Traits\Getters\ConfigGetterTrait;
 use Piwik\Settings\Interfaces\Traits\Setters\MeasurableSetterTrait;
 use Piwik\Settings\Interfaces\Traits\Setters\SystemSetterTrait;
+
 /**
  * @implements SystemSettingInterface<bool>
  * @implements MeasurableSettingInterface<bool>
@@ -27,22 +29,27 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
      * @use SystemSetterTrait<bool>
      */
     use SystemSetterTrait;
+
     /**
      * @use MeasurableSetterTrait<bool>
      */
     use MeasurableSetterTrait;
+
     /**
      * @use ConfigGetterTrait<bool>
      */
     use ConfigGetterTrait;
-    public static abstract function getName() : string;
-    public static abstract function getTitle() : string;
-    protected static abstract function generateDescription() : string;
-    protected static abstract function generateWarnings() : string;
-    public static function getDescription() : string
+
+    abstract public static function getName(): string;
+    abstract public static function getTitle(): string;
+    abstract protected static function generateDescription(): string;
+    abstract protected static function generateWarnings(): string;
+
+    public static function getDescription(): string
     {
         return self::decorateDescription(static::generateDescription());
     }
+
     /**
      * Returns the description shown above the granular per-setting compliance table.
      *
@@ -51,30 +58,40 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
      *
      * @internal Only needed while the granular table and the legacy compliance table coexist.
      */
-    public static function getGranularDescription() : string
+    public static function getGranularDescription(): string
     {
         return self::decorateDescription(static::generateGranularDescription());
     }
-    protected static function generateGranularDescription() : string
+
+    protected static function generateGranularDescription(): string
     {
         return static::generateDescription();
     }
+
     /**
      * Returns the status legend of the granular per-setting table as list markup.
      *
      * The list is built here rather than in the translations so that translators cannot
      * break the markup or the class the bullets depend on.
      */
-    protected static function getGranularStatusLegend() : string
+    protected static function getGranularStatusLegend(): string
     {
-        $items = ['General_ComplianceStatusLegendCompliant', 'General_ComplianceStatusLegendCompliantEnforced', 'General_ComplianceStatusLegendNonCompliant', 'General_ComplianceStatusLegendManual'];
+        $items = [
+            'General_ComplianceCNILStatusLegendCompliant',
+            'General_ComplianceCNILStatusLegendCompliantEnforced',
+            'General_ComplianceCNILStatusLegendNonCompliant',
+            'General_ComplianceCNILStatusLegendManual',
+        ];
+
         $legend = '';
         foreach ($items as $item) {
             $legend .= '<li>' . Piwik::translate($item) . '</li>';
         }
+
         return "<ul class='browser-default'>" . $legend . '</ul>';
     }
-    private static function decorateDescription(string $description) : string
+
+    private static function decorateDescription(string $description): string
     {
         /**
          * This event is triggered while the description of a compliance policy is
@@ -83,7 +100,9 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
          * @param string &$description of the policy.
          */
         Piwik::postEvent('CompliancePolicy.updatePolicyDescription', [&$description, static::class]);
-        $shouldShowWarnings = \true;
+
+        $shouldShowWarnings = true;
+
         /**
          * This event is triggered while the description of a compliance policy is
          * being generated, and controls whether any warnings specific to the policy
@@ -92,58 +111,75 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
          * @param bool &$shouldShowWarnings set to false if the warnings should be hidden
          */
         Piwik::postEvent('CompliancePolicy.shouldShowWarnings', [&$shouldShowWarnings, static::class]);
+
         if ($shouldShowWarnings) {
             $warnings = static::generateWarnings();
             if (!empty($warnings)) {
-                $description .= '<br/>' . $warnings;
+                $description .= '<br/><br/>' . $warnings;
             }
         }
+
         return $description;
     }
+
     /**
      * @return array<array<string>> of [['id' => (string) 'ID', 'title' => (string) 'TITLE', 'note' => (string) 'NOTE']]
      */
-    public static abstract function getUnknownSettings() : array;
+    abstract public static function getUnknownSettings(): array;
+
     /**
      * @return array<string, string>
      */
-    public static function getDetails() : array
+    public static function getDetails(): array
     {
-        return ['id' => static::getName(), 'title' => static::getTitle(), 'description' => static::getDescription()];
+        return [
+            'id' => static::getName(),
+            'title' => static::getTitle(),
+            'description' => static::getDescription(),
+        ];
     }
-    protected static function getPluginManagerInstance() : Manager
+
+    protected static function getPluginManagerInstance(): Manager
     {
         return Manager::getInstance();
     }
+
     protected static function getSystemDefaultValue()
     {
-        return \false;
+        return false;
     }
-    protected static function getSystemName() : string
+
+    protected static function getSystemName(): string
     {
-        return preg_replace('/\\s+/', '', static::getName()) . '_policy_enabled';
+        return preg_replace('/\s+/', '', static::getName()) . '_policy_enabled';
     }
-    protected static function getSystemType() : string
+
+    protected static function getSystemType(): string
     {
         return FieldConfig::TYPE_BOOL;
     }
+
     protected static function getMeasurableDefaultValue()
     {
-        return \false;
+        return false;
     }
-    protected static function getMeasurableName() : string
+
+    protected static function getMeasurableName(): string
     {
-        return preg_replace('/\\s+/', '', static::getName()) . '_policy_enabled';
+        return preg_replace('/\s+/', '', static::getName()) . '_policy_enabled';
     }
-    protected static function getMeasurableType() : string
+
+    protected static function getMeasurableType(): string
     {
         return FieldConfig::TYPE_BOOL;
     }
-    protected static function getConfigSection() : string
+
+    protected static function getConfigSection(): string
     {
         return Piwik::getPluginNameOfMatomoClass(static::class);
     }
-    protected static function getConfigSettingName() : string
+
+    protected static function getConfigSettingName(): string
     {
         return static::getSystemName();
     }
@@ -152,7 +188,7 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
      * disabling the policy for a site will also disable it
      * for the instance.
      */
-    public static function setActiveStatus(?int $idSite, bool $isActive) : void
+    public static function setActiveStatus(?int $idSite, bool $isActive): void
     {
         if (isset($idSite)) {
             static::setMeasurableValue($idSite, $isActive);
@@ -162,6 +198,7 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
         } else {
             static::setSystemValue($isActive);
         }
+
         /**
          * This event is triggered when the status of a compliance policy changes, and
          * is to be used to perform extra actions when a policy is activated/deactivated.
@@ -174,11 +211,12 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
          */
         Piwik::postEvent('CompliancePolicy.setActiveStatus', [$isActive, $idSite, static::class]);
     }
+
     /**
      * If the policy is active at the instance level, then
      * this function will return true for all sites.
      */
-    public static function isActive(?int $idSite) : bool
+    public static function isActive(?int $idSite): bool
     {
         $instanceLevel = static::getSystemValue();
         if (!$instanceLevel && isset($idSite)) {
@@ -186,6 +224,7 @@ abstract class CompliancePolicy implements SystemSettingInterface, MeasurableSet
         }
         return $instanceLevel;
     }
+
     public static function isConfigControlled()
     {
         return !is_null(static::getConfigValue());

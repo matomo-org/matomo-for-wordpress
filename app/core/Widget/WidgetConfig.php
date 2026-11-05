@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Widget;
 
 use Piwik\Access;
 use Piwik\Piwik;
 use Exception;
+
 /**
  * Configures a widget. Use this class to configure a {@link Piwik\Widget\Widget`} or to
  * add a widget to the WidgetsList via {@link WidgetsList::addWidget}.
@@ -27,11 +29,12 @@ class WidgetConfig
     protected $middlewareParameters = array();
     protected $clientSideComponent = array();
     protected $clientSideProps = array();
-    protected $name = '';
-    protected $order = 99;
-    protected $isEnabled = \true;
-    protected $isWidgetizable = \true;
-    protected $isWide = \false;
+    protected $name   = '';
+    protected $order  = 99;
+    protected $isEnabled = true;
+    protected $isWidgetizable = true;
+    protected $isWide = false;
+
     /**
      * Set the id of the category the widget belongs to.
      * @param  string $categoryId  Usually a translation key, eg 'General_Visits', 'Goals_Goals', ...
@@ -40,8 +43,10 @@ class WidgetConfig
     public function setCategoryId($categoryId)
     {
         $this->categoryId = $categoryId;
+
         return $this;
     }
+
     /**
      * Get the id of the category the widget belongs to.
      * @return string
@@ -50,6 +55,7 @@ class WidgetConfig
     {
         return $this->categoryId;
     }
+
     /**
      * Set the id of the subcategory the widget belongs to. If a subcategory is specified, the widget
      * will be shown in the Piwik reporting UI. The subcategoryId will be used as a translation key for
@@ -61,8 +67,10 @@ class WidgetConfig
     public function setSubcategoryId($subcategoryId)
     {
         $this->subcategoryId = $subcategoryId;
+
         return $this;
     }
+
     /**
      * Get the currently set category ID.
      * @return string
@@ -71,6 +79,7 @@ class WidgetConfig
     {
         return $this->subcategoryId;
     }
+
     /**
      * Set the module (aka plugin name) of the widget. The correct module is usually detected automatically and
      * not needed to be configured manually.
@@ -81,12 +90,15 @@ class WidgetConfig
     public function setModule($module)
     {
         $this->module = $module;
+
         return $this;
     }
+
     public function getModule()
     {
         return $this->module;
     }
+
     /**
      * Set the action of the widget that shall be used in the URL to render the widget.
      * The correct action is usually detected automatically and not needed to be configured manually.
@@ -97,8 +109,10 @@ class WidgetConfig
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
+
     /**
      * Get the currently set action.
      * @return string
@@ -107,6 +121,7 @@ class WidgetConfig
     {
         return $this->action;
     }
+
     /**
      * Sets (overwrites) the parameters of the widget. These parameters will be added to the URL when rendering the
      * widget. You can access these parameters via `Piwik\Common::getRequestVar(...)`.
@@ -121,8 +136,10 @@ class WidgetConfig
     public function setParameters($parameters)
     {
         $this->parameters = $parameters;
+
         return $this;
     }
+
     /**
      * Add new parameters and only overwrite parameters that have the same name. See {@link setParameters()}
      *
@@ -135,17 +152,24 @@ class WidgetConfig
     public function addParameters($parameters)
     {
         $this->parameters = array_merge($this->parameters, $parameters);
+
         return $this;
     }
+
     /**
      * Get all URL parameters needed to render this widget.
      * @return array  Eg ('urlparam' => 'urlvalue').
      */
     public function getParameters()
     {
-        $defaultParams = array('module' => $this->getModule(), 'action' => $this->getAction());
+        $defaultParams = array(
+            'module' => $this->getModule(),
+            'action' => $this->getAction(),
+        );
+
         return $defaultParams + $this->parameters;
     }
+
     /**
      * Set the name of the widget.
      *
@@ -155,8 +179,10 @@ class WidgetConfig
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
+
     /**
      * Get the name of the widget.
      *
@@ -166,6 +192,7 @@ class WidgetConfig
     {
         return $this->name;
     }
+
     /**
      * Set the order of the widget.
      *
@@ -175,8 +202,10 @@ class WidgetConfig
     public function setOrder($order)
     {
         $this->order = (int) $order;
+
         return $this;
     }
+
     /**
      * Returns the order of the widget.
      * @return int
@@ -185,6 +214,7 @@ class WidgetConfig
     {
         return $this->order;
     }
+
     /**
      * Defines whether a widget is enabled or not. For instance some widgets might not be available to every user or
      * might depend on a setting (such as Ecommerce) of a site. In such a case you can perform any checks and then
@@ -196,6 +226,7 @@ class WidgetConfig
     {
         return $this->isEnabled;
     }
+
     /**
      * Enable / disable the widget. See {@link isEnabled()}
      *
@@ -207,20 +238,23 @@ class WidgetConfig
         $this->isEnabled = (bool) $isEnabled;
         return $this;
     }
+
     /**
      * Enables the widget. See {@link isEnabled()}
      */
     public function enable()
     {
-        $this->setIsEnabled(\true);
+        $this->setIsEnabled(true);
     }
+
     /**
      * Disables the widget. See {@link isEnabled()}
      */
     public function disable()
     {
-        $this->setIsEnabled(\false);
+        $this->setIsEnabled(false);
     }
+
     /**
      * This method checks whether the widget is available, see {@link isEnabled()}. If not, it triggers an exception
      * containing a message that will be displayed to the user. You can overwrite this message in case you want to
@@ -238,9 +272,11 @@ class WidgetConfig
             // Some widgets are disabled when the user is not superuser. If the user is not logged in, we should
             // prompt them to do this first rather than showing them the "widget not enabled" error
             Access::getInstance()->checkUserIsNotAnonymous();
+
             throw new Exception(Piwik::translate('General_ExceptionWidgetNotEnabled'));
         }
     }
+
     /**
      * Returns the unique id of an widget based on module, action and the set parameters.
      *
@@ -251,8 +287,10 @@ class WidgetConfig
         $parameters = $this->getParameters();
         unset($parameters['module']);
         unset($parameters['action']);
-        return \Piwik\Widget\WidgetsList::getWidgetUniqueId($this->getModule(), $this->getAction(), $parameters);
+
+        return WidgetsList::getWidgetUniqueId($this->getModule(), $this->getAction(), $parameters);
     }
+
     /**
      * Sets the widget as not widgetizable {@link isWidgetizeable()}.
      *
@@ -260,9 +298,10 @@ class WidgetConfig
      */
     public function setIsNotWidgetizable()
     {
-        $this->isWidgetizable = \false;
+        $this->isWidgetizable = false;
         return $this;
     }
+
     /**
      * Sets the widget as widgetizable {@link isWidgetizeable()}.
      *
@@ -270,9 +309,10 @@ class WidgetConfig
      */
     public function setIsWidgetizable()
     {
-        $this->isWidgetizable = \true;
+        $this->isWidgetizable = true;
         return $this;
     }
+
     /**
      * Detect whether the widget is widgetizable meaning it won't be able to add it to the dashboard and it won't
      * be possible to export the widget via an iframe if it is not widgetizable. This is usually not needed but useful
@@ -284,6 +324,7 @@ class WidgetConfig
     {
         return $this->isWidgetizable;
     }
+
     /**
      * If middleware parameters are specified, the corresponding action will be executed before showing the
      * actual widget in the UI. Only if this action (can be a controller method or API method) returns JSON `true`
@@ -309,6 +350,7 @@ class WidgetConfig
         $this->middlewareParameters = $parameters;
         return $this;
     }
+
     /**
      * Get defined middleware parameters (if any).
      *
@@ -318,6 +360,7 @@ class WidgetConfig
     {
         return $this->middlewareParameters;
     }
+
     /**
      * Marks this widget as client-rendered by a Vue component exported by the given plugin bundle.
      *
@@ -331,18 +374,24 @@ class WidgetConfig
      */
     public function setClientSideComponent(string $plugin, string $component)
     {
-        $this->clientSideComponent = array('plugin' => $plugin, 'name' => $component);
+        $this->clientSideComponent = array(
+            'plugin' => $plugin,
+            'name'   => $component,
+        );
+
         return $this;
     }
+
     /**
      * Returns the configured client-rendered component definition.
      * @return array{}|array{plugin: string, name: string}
      * @since 5.10.0
      */
-    public function getClientSideComponent() : array
+    public function getClientSideComponent(): array
     {
         return $this->clientSideComponent;
     }
+
     /**
      * Sets static props that should be passed to the client-rendered Vue widget.
      *
@@ -356,17 +405,20 @@ class WidgetConfig
     public function setClientSideProps(array $props)
     {
         $this->clientSideProps = $props;
+
         return $this;
     }
+
     /**
      * Returns props configured for the client-rendered Vue widget.
      * @return array
      * @since 5.10.0
      */
-    public function getClientSideProps() : array
+    public function getClientSideProps(): array
     {
         return $this->clientSideProps;
     }
+
     /**
      * Marks this widget as a "wide" widget that requires the full width.
      *
@@ -374,9 +426,10 @@ class WidgetConfig
      */
     public function setIsWide()
     {
-        $this->isWide = \true;
+        $this->isWide = true;
         return $this;
     }
+
     /**
      * Detect whether the widget should be shown wide or not.
      * @return bool

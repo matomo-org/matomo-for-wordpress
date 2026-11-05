@@ -1,0 +1,6 @@
+{
+    "API": {
+        "KeepTokenSecret": "Ovaj token_auth je povjerljiv podatak poput vašeg korisničkog imena i lozine. %1$s Nemojte ga dijeliti sa drugima%2$s!",
+        "LoadedAPIs": "Uspješno učitani %s API(-ovi)"
+    }
+}

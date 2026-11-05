@@ -6,62 +6,81 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\FeatureFlags;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
+
 class FeatureFlagManager
 {
     /**
      * @var FeatureFlagStorageInterface[]
      */
     private $storages;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     public function __construct(array $storages, LoggerInterface $logger)
     {
         $this->storages = $storages;
         $this->logger = $logger;
     }
+
     /**
      * @param string $featureFlag The ::class name of a class that implements FeatureFlagInterface
      */
-    public function isFeatureActive(string $featureFlag) : bool
+    public function isFeatureActive(string $featureFlag): bool
     {
         $featureFlagObj = $this->createFeatureFlagObjFromString($featureFlag);
+
         if ($featureFlagObj === null) {
-            return \false;
+            return false;
         }
-        if ($featureFlagObj instanceof \Piwik\Plugins\FeatureFlags\ForcedFeatureFlagStateInterface) {
+
+        if ($featureFlagObj instanceof ForcedFeatureFlagStateInterface) {
             return $featureFlagObj->getForcedFeatureFlagState();
         }
-        $featureActive = \false;
+
+        $featureActive = false;
+
         foreach ($this->storages as $storage) {
             $isActive = $storage->isFeatureActive($featureFlagObj);
+
             if ($isActive !== null) {
                 $featureActive = $isActive;
             }
         }
+
         return $featureActive;
     }
+
     /**
      * @internal
      */
-    public static function deleteFeatureFlag(string $featureFlagName) : void
+    public static function deleteFeatureFlag(string $featureFlagName): void
     {
         /** @var FeatureFlagStorageInterface $storage */
         foreach (StaticContainer::get('featureflag.storages') as $storage) {
             $storage->deleteFeatureFlag($featureFlagName);
         }
     }
-    private function createFeatureFlagObjFromString(string $featureFlag) : ?\Piwik\Plugins\FeatureFlags\FeatureFlagInterface
+
+    private function createFeatureFlagObjFromString(string $featureFlag): ?FeatureFlagInterface
     {
-        if (!is_subclass_of($featureFlag, \Piwik\Plugins\FeatureFlags\FeatureFlagInterface::class)) {
-            $this->logger->debug('isFeatureActive failed due to class not implementing FeatureFlagInterface', ['featureFlag' => $featureFlag]);
+        if (!is_subclass_of($featureFlag, FeatureFlagInterface::class)) {
+            $this->logger->debug(
+                'isFeatureActive failed due to class not implementing FeatureFlagInterface',
+                [
+                    'featureFlag' => $featureFlag,
+                ]
+            );
             return null;
         }
+
         return new $featureFlag();
     }
 }

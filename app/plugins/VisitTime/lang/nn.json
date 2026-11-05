@@ -1,0 +1,14 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Lokal tid — time (start av besøk)",
+        "ColumnLocalMinute": "Lokal tid — minutt (start av besøk)",
+        "ColumnLocalTime": "Brukartid",
+        "ColumnServerHour": "Tid på tenaren — time",
+        "ColumnSiteHour": "Nettstadtid — time",
+        "ColumnVisitEndSiteHour": "Nettstad tid — time (tidspunkt for siste handling)",
+        "ColumnVisitEndUTCMinute": "Tid i UTC — minutt (tidspunkt for siste handling)",
+        "DayOfWeek": "Vekedag",
+        "LocalTime": "Vitjingar per brukartid",
+        "SubmenuTimes": "Tid"
+    }
+}

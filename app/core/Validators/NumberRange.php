@@ -6,21 +6,26 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Validators;
 
 use Piwik\Piwik;
-class NumberRange extends \Piwik\Validators\BaseValidator
+
+class NumberRange extends BaseValidator
 {
     public const MAX_SMALL_INT_UNSIGNED = 65535;
     public const MAX_MEDIUM_INT_UNSIGNED = 16777215;
+
     /**
      * @var null|int
      */
     private $min;
+
     /**
      * @var null|int
      */
     private $max;
+
     /**
      * @param null|int $min
      * @param null|int $max
@@ -30,19 +35,22 @@ class NumberRange extends \Piwik\Validators\BaseValidator
         $this->min = $min;
         $this->max = $max;
     }
+
     public function validate($value)
     {
         if ($this->isValueBare($value)) {
             return;
         }
         if (!is_numeric($value)) {
-            throw new \Piwik\Validators\Exception(Piwik::translate('General_ValidatorErrorNotANumber'));
+            throw new Exception(Piwik::translate('General_ValidatorErrorNotANumber'));
         }
+
         if (isset($this->min) && $this->min > $value) {
-            throw new \Piwik\Validators\Exception(Piwik::translate('General_ValidatorErrorNumberTooLow', array($value, $this->min)));
+            throw new Exception(Piwik::translate('General_ValidatorErrorNumberTooLow', array($value, $this->min)));
         }
+
         if (isset($this->max) && $this->max < $value) {
-            throw new \Piwik\Validators\Exception(Piwik::translate('General_ValidatorErrorNumberTooHigh', array($value, $this->max)));
+            throw new Exception(Piwik::translate('General_ValidatorErrorNumberTooHigh', array($value, $this->max)));
         }
     }
 }

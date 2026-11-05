@@ -1,0 +1,10 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "स्थानीय समय",
+        "DayOfWeek": "सप्ताह के दिन",
+        "LocalTime": "स्थानीय समय के अनुसार दौरा",
+        "PluginDescription": "स्थानीय समय और अपने आगंतुकों को अपनी वेबसाइट या एप्लिकेशन को देखने जब सर्वर समय रिपोर्ट।",
+        "SubmenuTimes": "टाइम्स",
+        "VisitsByDayOfWeek": "सप्ताह के दिन से दौरा"
+    }
+}

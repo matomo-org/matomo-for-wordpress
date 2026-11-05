@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers\Widgets;
 
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Widget\WidgetConfig;
+
 class GetCampaignUrlBuilder extends \Piwik\Widget\Widget
 {
     public static function configure(WidgetConfig $config)
@@ -20,12 +22,16 @@ class GetCampaignUrlBuilder extends \Piwik\Widget\Widget
         $config->setSubcategoryId('Referrers_URLCampaignBuilder');
         $config->setName('Referrers_URLCampaignBuilder');
         $config->setClientSideComponent('Referrers', 'CampaignBuilderWidget');
-        $config->setClientSideProps(['hasExtraPlugin' => Plugin\Manager::getInstance()->isPluginActivated('MarketingCampaignsReporting')]);
+        $config->setClientSideProps([
+            'hasExtraPlugin' => Plugin\Manager::getInstance()->isPluginActivated('MarketingCampaignsReporting'),
+        ]);
+
         $idSite = self::getIdSite();
         if (!Piwik::isUserHasViewAccess($idSite)) {
             $config->disable();
         }
     }
+
     private static function getIdSite()
     {
         return Common::getRequestVar('idSite', 0, 'int');

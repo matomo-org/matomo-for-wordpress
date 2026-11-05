@@ -1,0 +1,14 @@
+{
+    "Login": {
+        "ExceptionPasswordMD5HashExpected": "พารามิเตอร์รหัสผ่านจะคาดว่าจะ เป็น MD5 hash ของรหัสผ่าน",
+        "InvalidOrExpiredToken": "Token ไม่ถูกต้องหรือหมดอายุ",
+        "InvalidUsernameEmail": "ไม่มี ชื่อผู้ใช้ และ/หรือ ที่อยู่อีเมลล์ดังกล่าว",
+        "LogIn": "เข้าสู่ระบบ",
+        "LoginPasswordNotCorrect": "ชื่อผู้ใช้และรหัสผ่านไม่ถูกต้อง",
+        "LostYourPassword": "ลืมรหัสผ่าน?",
+        "PasswordChanged": "รหัสผ่านของคุณได้ถูกเปลี่ยนแปลงแล้ว",
+        "PasswordRepeat": "รหัสผ่าน (อีกครั้ง)",
+        "PasswordsDoNotMatch": "รหัสผ่านไม่ตรงกัน",
+        "RememberMe": "จำฉันไว้ในระบบ"
+    }
+}

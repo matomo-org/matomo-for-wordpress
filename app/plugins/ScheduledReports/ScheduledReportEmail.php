@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\ScheduledReports;
 
 use Piwik\Mail;
+
 /**
  * This class exists so that scheduled report emails can
  * be identified by plugins that listen to Mail events.

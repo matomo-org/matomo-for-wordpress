@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Period;
 
 use Piwik\Config;
+
 class PeriodValidator
 {
     /**
@@ -19,6 +21,7 @@ class PeriodValidator
     {
         return in_array($period, $this->getPeriodsAllowedForUI());
     }
+
     /**
      * @param string $period
      * @return bool
@@ -27,6 +30,7 @@ class PeriodValidator
     {
         return in_array($period, $this->getPeriodsAllowedForAPI());
     }
+
     /**
      * @return string[]
      */
@@ -38,6 +42,7 @@ class PeriodValidator
         $periodsAllowed = array_values($periodsAllowed);
         return $periodsAllowed;
     }
+
     /**
      * @return string[]
      */

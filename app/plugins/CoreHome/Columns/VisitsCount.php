@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreHome\Columns;
 
 use Piwik\Columns\DimensionMetricFactory;
@@ -14,6 +15,7 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 class VisitsCount extends VisitDimension
 {
     protected $columnName = 'visitor_count_visits';
@@ -21,10 +23,12 @@ class VisitsCount extends VisitDimension
     protected $segmentName = 'visitCount';
     protected $nameSingular = 'General_NumberOfVisits';
     protected $type = self::TYPE_NUMBER;
+
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // no metrics for this dimension, it would be rather confusing I think
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -32,12 +36,13 @@ class VisitsCount extends VisitDimension
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $previousVisitCount = $visitor->getPreviousVisitColumn($this->columnName);
-        if ($previousVisitCount === \false || $previousVisitCount === null || $previousVisitCount === '') {
+        if ($previousVisitCount === false || $previousVisitCount === null || $previousVisitCount === '') {
             return 1;
         }
         $result = $previousVisitCount + 1;
         return $result;
     }
+
     /**
      * @param Action|null $action
      * @return mixed

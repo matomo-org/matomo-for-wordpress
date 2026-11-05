@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Ordu lokala — ordua (bisitaren hasiera)",
+        "ColumnLocalMinute": "Ordu lokala — minutua (bisitaren hasiera)",
+        "ColumnLocalTime": "Ordu lokala",
+        "ColumnServerHour": "Zerbitzariaren ordua — ordua",
+        "ColumnSiteHour": "Gunearen ordua — ordua",
+        "ColumnUTCMinute": "UTC ordua — minutua",
+        "ColumnVisitEndSiteHour": "Gunearen ordua — ordua (azken ekintza)",
+        "ColumnVisitEndUTCDate": "UTC ordua — data (azken ekintza)",
+        "ColumnVisitEndUTCDayOfMonth": "UTC ordua — hilabeteko eguna (azken ekintza)",
+        "ColumnVisitEndUTCDayOfWeek": "UTC ordua — asteko eguna (azken ekintza)",
+        "ColumnVisitEndUTCDayOfYear": "UTC ordua — urteko eguna (azken ekintza)",
+        "ColumnVisitEndUTCMinute": "UTC ordua — minutua (azken ekintza)",
+        "ColumnVisitEndUTCMonth": "UTC ordua — hilabetea (azken ekintza)",
+        "ColumnVisitEndUTCQuarter": "UTC ordua — hiruhilekoa (azken ekintza)",
+        "ColumnVisitEndUTCSecond": "UTC ordua — segundoa (azken ekintza)",
+        "ColumnVisitEndUTCWeekOfYear": "UTC ordua — urteko astea (azken ekintza)",
+        "ColumnVisitEndUTCYear": "UTC ordua — urtea (azken ekintza)",
+        "ColumnVisitStartSiteHour": "Gunearen ordua — ordua (bisitaren hasiera)",
+        "ColumnVisitStartUTCMinute": "UTC ordua — minutua (bisitaren hasiera)",
+        "DayOfWeek": "Asteko eguna",
+        "LocalTime": "Bisitak ordu lokalaren arabera",
+        "PluginDescription": "Bisitariek zure webgune edo aplikazioa ikusten duteneko denbora lokalaren eta zerbitzariko denboraren berri ematen du.",
+        "SiteTime": "Bisitak gunearen ordu-zonako orduaren arabera",
+        "SubmenuTimes": "Orduak",
+        "TimesSubcategoryHelp": "\"Denborak\" atalak jendeak zure gunea noiz bisitatu duen erakusten du. Ordu lokal zabalduenek aukera ematen dizute zure gunea beren bizitzetara egokitzeko. Zerbitzariko ordu zabalduenek behar teknikoen berri ematen dute.",
+        "VisitsByDayOfWeek": "Bisitak asteko egunaren arabera",
+        "WidgetByDayOfWeekDocumentation": "Grafiko honek erakusten du zenbat bisita izan dituen zure webguneak asteko egun bakoitzean.",
+        "WidgetLocalTimeDocumentation": "Grafiko honek erakusten du zer ordu zen %1$sbisitariaren ordu-zonan%2$s bisita egindakoan.",
+        "WidgetSiteTimeDocumentation": "Grafiko honek erakusten du zer ordu zen %1$sgunearen ordu-zonan%2$s bisita egindakoan."
+    }
+}

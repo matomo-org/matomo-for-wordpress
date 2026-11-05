@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\Columns;
 
 use Piwik\Piwik;
@@ -13,7 +14,8 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class Region extends \Piwik\Plugins\UserCountry\Columns\Base
+
+class Region extends Base
 {
     protected $columnName = 'location_region';
     protected $columnType = 'char(3) DEFAULT NULL';
@@ -22,10 +24,12 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $segmentName = 'regionCode';
     protected $nameSingular = 'UserCountry_Region';
     protected $namePlural = 'UserCountryMap_Regions';
+
     public function getAcceptValues()
     {
         return '01, 02, OR, P8,…<br/>' . Piwik::translate('General_ForExampleShort') . ' region=BFC;country=fr';
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -33,13 +37,16 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('region', $request);
-        if ($value !== \false) {
+        if ($value !== false) {
             $value = substr($value, 0, 3);
             return $value;
         }
+
         $userInfo = $this->getUserInfo($request, $visitor);
+
         return $this->getLocationDetail($userInfo, LocationProvider::REGION_CODE_KEY);
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -48,6 +55,7 @@ class Region extends \Piwik\Plugins\UserCountry\Columns\Base
     {
         return $this->getUrlOverrideValueIfAllowed('region', $request);
     }
+
     /**
      * @param Action|null $action
      * @return mixed

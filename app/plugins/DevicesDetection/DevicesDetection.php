@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DevicesDetection;
 
 use Piwik\Plugins\DevicesDetection\Settings\OnlyMajorVersions;
@@ -13,13 +14,20 @@ use Piwik\Plugins\DevicesDetection\Settings\DeviceModelDetectionDisabled;
 use Piwik\Plugins\SegmentEditor\Settings\LimitSegments;
 use Piwik\Segment\SegmentsList;
 use Piwik\Tracker\Cache as TrackerCache;
+
 require_once PIWIK_INCLUDE_PATH . '/plugins/DevicesDetection/functions.php';
+
 class DevicesDetection extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return ['Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Segment.filterSegments' => 'filterSegments'];
+        return [
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'Segment.filterSegments'                 => 'filterSegments',
+        ];
     }
+
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'DevicesDetection_UserAgent';
@@ -41,31 +49,35 @@ class DevicesDetection extends \Piwik\Plugin
         $translations[] = 'DevicesDetection_ConsiderClientHints';
         $translations[] = 'DevicesDetection_ClientHintsNotSupported';
     }
+
     public function getStylesheetFiles(&$files)
     {
         $files[] = 'plugins/DevicesDetection/vue/src/DetectionPage/DetectionPage.less';
     }
-    public static function shouldOnlyStoreMajorVersions(?int $idsite = null) : bool
+
+    public static function shouldOnlyStoreMajorVersions(?int $idsite = null): bool
     {
         $cache = TrackerCache::getCacheWebsiteAttributes($idsite);
         $cacheKey = OnlyMajorVersions::class;
-        return ($cache[$cacheKey] ?? \false) === \true;
+        return (($cache[$cacheKey] ?? false) === true);
     }
+
     /**
      * Check if compliance policy disables device model detection
      *
      * @throws \Piwik\Exception\DI\DependencyException
      * @throws \Piwik\Exception\DI\NotFoundException
      */
-    public static function isDeviceModelDetectionDisabledByCompliancePolicy(?int $idSite = null) : bool
+    public static function isDeviceModelDetectionDisabledByCompliancePolicy(?int $idSite = null): bool
     {
         $cache = TrackerCache::getCacheWebsiteAttributes($idSite);
         $cacheKey = DeviceModelDetectionDisabled::class;
-        return ($cache[$cacheKey] ?? \false) === \true;
+        return (($cache[$cacheKey] ?? false) === true);
     }
+
     public function filterSegments(SegmentsList &$list, array $idSites)
     {
-        $limitSegmentsSettingEnabled = \false;
+        $limitSegmentsSettingEnabled = false;
         if (empty($idSites)) {
             $limitSegmentsSettingEnabled = LimitSegments::getInstance()->getValue();
         } else {

@@ -1,0 +1,28 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "e %s outros",
+        "Cities": "Cidades",
+        "Countries": "Países",
+        "DaysAgo": "%s dias atrás",
+        "GoalConversions": "%s conversões de meta",
+        "HoursAgo": "%s horas atrás",
+        "MinutesAgo": "%s minutos atrás",
+        "NoVisit": "Nenhuma visita",
+        "NoVisitsInfo": "Nenhuma visita exibida, pois nenhuma visita para este período tem informações de geolocalização corretas (latitude e longitude).",
+        "NoVisitsInfo2": "Resolva esse problema usando um provedor de geolocalização GeoIP com um banco de dados de cidade GeoIP. (Embora improvável) os endereços IP ainda podem ser impossíveis de localizar geograficamente.",
+        "None": "Nenhum",
+        "PluginDescription": "Fornece os widgets \"Mapa do visitante\" e \"Mapa em tempo real\". Requer o plug-in 'UserCountry'.",
+        "RealTimeMap": "Mapa em tempo real",
+        "RealTimeMapHelp": "Mostra a localização dos visitantes do site nos últimos 30 minutos e pisca para novos. As visitas recentes são mostradas como grandes bolhas laranja e as mais antigas como cinzas menores. Ele atualiza a cada cinco segundos.",
+        "Regions": "Regiões",
+        "Searches": "%s buscas",
+        "SecondsAgo": "%s segundos atrás",
+        "ShowingVisits": "Visitas geolocalizadas do último",
+        "Unlocated": "<b>%1$s</b> %2$s das visitas de %3$s não puderam ser geolocalizadas.",
+        "VisitorMap": "Mapa de visitantes",
+        "WithUnknownCity": "%s de cidades desconhecidas",
+        "WithUnknownRegion": "%s de regiões desconhecidas",
+        "WorldWide": "Mundial",
+        "map": "mapa"
+    }
+}

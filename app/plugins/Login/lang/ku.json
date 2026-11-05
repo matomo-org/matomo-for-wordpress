@@ -1,0 +1,17 @@
+{
+    "Login": {
+        "ChangeYourPassword": "گۆڕینی تێپەڕوشە",
+        "ConfirmPasswordReset": "ڕێکخستنەوەی تێپەڕوشە پشتڕاست بکەرەوە",
+        "ConfirmPasswordToContinue": "بۆ بەردەوامبوون تێپەڕوشەکەت پشتڕاست بکەرەوە",
+        "LogIn": "وەناوچوون",
+        "LoginOrEmail": "ناوی بەکارهێنەری یان ئیمەیل",
+        "LostYourPassword": "تێپەڕوشەکەت ون کردووە؟",
+        "NewPassword": "تێپەڕوشەی نوێ",
+        "NewPasswordRepeat": "تێپەڕوشەی نوێ (دووبارەکردنەوە)",
+        "PasswordChanged": "تێپەڕوشەکەت گۆڕدرا.",
+        "PasswordRepeat": "تێپەڕوشە (دووبارەکردنەوە)",
+        "PasswordsDoNotMatch": "تێپەڕوشەکان یاکێک نین.",
+        "RememberMe": "منت لەبیر بێ",
+        "WrongPasswordEntered": "تکایە تێپەڕشە دروستەکەت تێبنووسە."
+    }
+}

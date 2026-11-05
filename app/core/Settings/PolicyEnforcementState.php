@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings;
 
 use Exception;
@@ -15,6 +16,7 @@ use Piwik\Settings\Measurable\MeasurableSetting;
 use Piwik\Settings\Plugin\SystemSetting;
 use Piwik\Settings\Storage\Factory;
 use Piwik\Settings\Storage\Storage;
+
 /**
  * Stored enforcement state of a single policy-controlled setting.
  *
@@ -51,30 +53,36 @@ class PolicyEnforcementState
      * carries no policy name: the state belongs to the setting, not to a policy.
      */
     public const SETTING_NAME_SUFFIX = '_policy_enforced';
+
     /**
      * @var string
      */
     private $pluginName;
+
     /**
      * @var string
      */
     private $settingName;
+
     public function __construct(string $pluginName, string $settingName)
     {
         $this->pluginName = $pluginName;
         $this->settingName = $settingName;
     }
+
     /**
      * Returns the stored enforcement state for the given scope, or null when no state
      * was ever stored and the setting therefore follows its policies.
      *
      * @param int|null $idSite The website to read the state of, or null for the instance wide state.
      */
-    public function get(?int $idSite = null) : ?bool
+    public function get(?int $idSite = null): ?bool
     {
         $value = $this->makeSetting($idSite)->getValue();
+
         return is_null($value) ? null : (bool) $value;
     }
+
     /**
      * Stores the enforcement state for the given scope.
      *
@@ -82,29 +90,34 @@ class PolicyEnforcementState
      * @param bool|null $isEnforced Null removes the stored state, making the setting follow its policies again.
      * @throws Exception when the state cannot be written by the current user
      */
-    public function set(?int $idSite, ?bool $isEnforced) : void
+    public function set(?int $idSite, ?bool $isEnforced): void
     {
         $this->assertWritableByCurrentUser($idSite);
+
         // Setting::setValue() cannot express the removal of a state, as its boolean
         // validation rejects null. The state is therefore written through the very storage
         // the setting reads from, which both persists it and keeps the request cached
         // values coherent with what was just written.
         $storage = $this->getStorage($idSite);
+
         if (is_null($isEnforced)) {
             $storage->unsetValue($this->settingName);
         } else {
             $storage->setValue($this->settingName, $isEnforced);
         }
+
         $storage->save();
     }
+
     /**
      * Whether the current user is allowed to change the enforcement state of this
      * setting. Returns false when the state is pinned in `config.ini.php`.
      */
-    public function isWritableByCurrentUser(?int $idSite = null) : bool
+    public function isWritableByCurrentUser(?int $idSite = null): bool
     {
         return $this->makeSetting($idSite)->isWritableByCurrentUser();
     }
+
     /**
      * Fails unless the current user may change the enforcement state of the given scope.
      * Callers that write more than one scope use this to reject the whole change before
@@ -113,27 +126,36 @@ class PolicyEnforcementState
      * @param int|null $idSite The website to check, or null for the instance wide state.
      * @throws Exception when the state cannot be written by the current user
      */
-    public function assertWritableByCurrentUser(?int $idSite = null) : void
+    public function assertWritableByCurrentUser(?int $idSite = null): void
     {
         if ($this->isWritableByCurrentUser($idSite)) {
             return;
         }
-        throw new Exception(Piwik::translate('CoreAdminHome_PluginSettingChangeNotAllowed', [$this->settingName, $this->pluginName]));
+
+        throw new Exception(Piwik::translate(
+            'CoreAdminHome_PluginSettingChangeNotAllowed',
+            [$this->settingName, $this->pluginName]
+        ));
     }
-    private function makeSetting(?int $idSite) : \Piwik\Settings\Setting
+
+    private function makeSetting(?int $idSite): Setting
     {
         if (is_null($idSite)) {
-            return new SystemSetting($this->settingName, null, \Piwik\Settings\FieldConfig::TYPE_BOOL, $this->pluginName);
+            return new SystemSetting($this->settingName, null, FieldConfig::TYPE_BOOL, $this->pluginName);
         }
-        return new MeasurableSetting($this->settingName, null, \Piwik\Settings\FieldConfig::TYPE_BOOL, $this->pluginName, $idSite);
+
+        return new MeasurableSetting($this->settingName, null, FieldConfig::TYPE_BOOL, $this->pluginName, $idSite);
     }
-    private function getStorage(?int $idSite) : Storage
+
+    private function getStorage(?int $idSite): Storage
     {
         /** @var Factory $factory */
         $factory = StaticContainer::get(Factory::class);
+
         if (is_null($idSite)) {
             return $factory->getPluginStorage($this->pluginName, '');
         }
+
         return $factory->getMeasurableSettingsStorage($idSite, $this->pluginName);
     }
 }

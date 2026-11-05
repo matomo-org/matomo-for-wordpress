@@ -6,33 +6,41 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Resolution\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\Resolution\Columns\Configuration;
 use Piwik\Plugin\ReportsProvider;
-class GetConfiguration extends \Piwik\Plugins\Resolution\Reports\Base
+
+class GetConfiguration extends Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension = new Configuration();
-        $this->name = Piwik::translate('Resolution_Configurations');
+        $this->dimension     = new Configuration();
+        $this->name          = Piwik::translate('Resolution_Configurations');
         $this->documentation = Piwik::translate('Resolution_WidgetGlobalVisitorsDocumentation', '<br />');
         $this->order = 7;
+
         $this->subcategoryId = 'DevicesDetection_Software';
     }
+
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_flatten_table = \false;
-        $view->config->show_flatten_table_export = \false;
+        $view->config->show_flatten_table = false;
+        $view->config->show_flatten_table_export = false;
         $this->getBasicResolutionDisplayProperties($view);
+
         $view->requestConfig->filter_limit = 3;
-        $view->config->show_search = \true;
+        $view->config->show_search = true;
     }
+
     public function getRelatedReports()
     {
-        return array(ReportsProvider::factory('Resolution', 'getResolution'));
+        return array(
+            ReportsProvider::factory('Resolution', 'getResolution'),
+        );
     }
 }

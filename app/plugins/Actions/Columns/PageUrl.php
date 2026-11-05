@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\Columns;
 
 use Piwik\Columns\Discriminator;
@@ -13,6 +14,7 @@ use Piwik\Columns\Join\ActionNameJoin;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
+
 class PageUrl extends ActionDimension
 {
     protected $columnName = 'idaction_url';
@@ -24,10 +26,12 @@ class PageUrl extends ActionDimension
     protected $category = 'General_Actions';
     protected $suggestedValuesApi = 'Actions.getPageUrls';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
+
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
+
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);

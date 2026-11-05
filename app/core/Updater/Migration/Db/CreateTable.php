@@ -6,14 +6,16 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Updater\Migration\Db;
 
 use Piwik\Db\Schema;
+
 /**
  * @see Factory::createTable()
  * @ignore
  */
-class CreateTable extends \Piwik\Updater\Migration\Db\Sql
+class CreateTable extends Sql
 {
     /**
      * @param string $table Prefixed table name
@@ -26,10 +28,18 @@ class CreateTable extends \Piwik\Updater\Migration\Db\Sql
         foreach ($columnNames as $column => $type) {
             $columns[] = sprintf('`%s` %s', $column, $type);
         }
+
         if (!empty($primaryKey)) {
             $columns[] = sprintf('PRIMARY KEY ( `%s` )', implode('`, `', $primaryKey));
         }
-        $sql = sprintf('CREATE TABLE `%s` (%s) %s', $table, implode(', ', $columns), Schema::getInstance()->getTableCreateOptions());
+
+        $sql = sprintf(
+            'CREATE TABLE `%s` (%s) %s',
+            $table,
+            implode(', ', $columns),
+            Schema::getInstance()->getTableCreateOptions()
+        );
+
         parent::__construct($sql, static::ERROR_CODE_TABLE_EXISTS);
     }
 }

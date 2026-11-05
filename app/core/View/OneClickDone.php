@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\View;
 
 use Piwik\Common;
+
 /**
  * Post-update view
  *
@@ -26,25 +28,31 @@ class OneClickDone
      * @var string
      */
     private $tokenAuth;
+
     /**
      * @var string
      */
     public $error = '';
+
     /**
      * @var array
      */
     public $feedbackMessages;
+
     /**
      * Did the download over HTTPS fail?
      *
      * @var bool
      */
-    public $httpsFail = \false;
-    public function __construct(#[\SensitiveParameter]
-        $tokenAuth)
-    {
+    public $httpsFail = false;
+
+    public function __construct(
+        #[\SensitiveParameter]
+        $tokenAuth
+    ) {
         $this->tokenAuth = $tokenAuth;
     }
+
     /**
      * Outputs the data.
      */
@@ -56,10 +64,12 @@ class OneClickDone
         @Common::sendHeader('Content-Type: text/html; charset=UTF-8');
         @Common::sendHeader('Cache-Control: no-store');
         @Common::sendHeader('X-Frame-Options: deny');
-        $error = htmlspecialchars($this->error, \ENT_QUOTES, 'UTF-8');
-        $messages = htmlspecialchars(serialize($this->feedbackMessages), \ENT_QUOTES, 'UTF-8');
+
+        $error = htmlspecialchars($this->error, ENT_QUOTES, 'UTF-8');
+        $messages = htmlspecialchars(serialize($this->feedbackMessages), ENT_QUOTES, 'UTF-8');
         $tokenAuth = $this->tokenAuth;
         $httpsFail = (int) $this->httpsFail;
+
         // use a heredoc instead of an external file
         echo <<<END_OF_TEMPLATE
 <!DOCTYPE html>
@@ -71,10 +81,10 @@ class OneClickDone
  </head>
  <body>
   <form name="myform" method="post" action="?module=CoreUpdater&amp;action=oneClickResults">
-   <input type="hidden" name="token_auth" value="{$tokenAuth}" />
-   <input type="hidden" name="error" value="{$error}" />
-   <input type="hidden" name="messages" value="{$messages}" />
-   <input type="hidden" name="httpsFail" value="{$httpsFail}" />
+   <input type="hidden" name="token_auth" value="$tokenAuth" />
+   <input type="hidden" name="error" value="$error" />
+   <input type="hidden" name="messages" value="$messages" />
+   <input type="hidden" name="httpsFail" value="$httpsFail" />
    <noscript>
     <button type="submit">Continue</button>
    </noscript>

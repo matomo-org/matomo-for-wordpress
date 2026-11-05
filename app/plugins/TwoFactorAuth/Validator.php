@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TwoFactorAuth;
 
 use Piwik\Common;
@@ -14,52 +15,63 @@ use Piwik\Piwik;
 use Piwik\Session\SessionFingerprint;
 use Exception;
 use Piwik\SettingsPiwik;
+
 class Validator
 {
     /**
      * @var TwoFactorAuthentication
      */
     private $twoFa;
-    public function __construct(\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFactorAuthentication)
+
+    public function __construct(TwoFactorAuthentication $twoFactorAuthentication)
     {
         $this->twoFa = $twoFactorAuthentication;
     }
+
     public function canUseTwoFa()
     {
         if (Common::isPhpCliMode() && (!defined('PIWIK_TEST_MODE') || !PIWIK_TEST_MODE)) {
             // eg when archiving or executing other commands
-            return \false;
+            return false;
         }
+
         if (!SettingsPiwik::isMatomoInstalled()) {
-            return \false;
+            return false;
         }
+
         return !Piwik::isUserIsAnonymous();
     }
+
     public function checkCanUseTwoFa()
     {
         Piwik::checkUserIsNotAnonymous();
+
         if (!SettingsPiwik::isMatomoInstalled()) {
             throw new NotYetInstalledException('Matomo is not set up yet');
         }
     }
+
     public function check2FaIsRequired()
     {
         if (!$this->twoFa->isUserRequiredToHaveTwoFactorEnabled()) {
             throw new Exception('not available');
         }
     }
+
     public function check2FaEnabled()
     {
-        if (!\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication(Piwik::getCurrentUserLogin())) {
+        if (!TwoFactorAuthentication::isUserUsingTwoFactorAuthentication(Piwik::getCurrentUserLogin())) {
             throw new Exception('not available');
         }
     }
+
     public function check2FaNotEnabled()
     {
-        if (\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication(Piwik::getCurrentUserLogin())) {
+        if (TwoFactorAuthentication::isUserUsingTwoFactorAuthentication(Piwik::getCurrentUserLogin())) {
             throw new Exception('not available');
         }
     }
+
     public function checkVerified2FA()
     {
         $sessionFingerprint = $this->getSessionFingerPrint();
@@ -67,6 +79,7 @@ class Validator
             throw new Exception('not available');
         }
     }
+
     public function checkNotVerified2FAYet()
     {
         $sessionFingerprint = $this->getSessionFingerPrint();
@@ -74,38 +87,47 @@ class Validator
             throw new Exception('not available');
         }
     }
+
     public function getSessionUser()
     {
         $sessionFingerprint = $this->getSessionFingerPrint();
         return $sessionFingerprint->getUser();
     }
+
     public function isCurrentUserMatchingSessionUser()
     {
         $sessionUser = $this->getSessionUser();
         if (empty($sessionUser)) {
-            return \false;
+            return false;
         }
+
         return $sessionUser === Piwik::getCurrentUserLogin();
     }
+
     public function checkCurrentUserMatchesSessionUser()
     {
         if (!$this->isCurrentUserMatchingSessionUser()) {
             throw new Exception('not available');
         }
     }
+
     public function hasPendingSessionTwoFactorAuthentication()
     {
         $sessionUser = $this->getSessionUser();
         if (empty($sessionUser)) {
-            return \false;
+            return false;
         }
-        $needsTwoFactorAuthentication = \Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($sessionUser) || $this->twoFa->isUserRequiredToHaveTwoFactorEnabled();
+
+        $needsTwoFactorAuthentication = TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($sessionUser)
+            || $this->twoFa->isUserRequiredToHaveTwoFactorEnabled();
         if (!$needsTwoFactorAuthentication) {
-            return \false;
+            return false;
         }
+
         $sessionFingerprint = $this->getSessionFingerPrint();
         return !$sessionFingerprint->hasVerifiedTwoFactor();
     }
+
     private function getSessionFingerPrint()
     {
         return new SessionFingerprint();

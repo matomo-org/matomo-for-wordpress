@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager;
 
 use Exception;
@@ -20,6 +21,7 @@ use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
 use Piwik\Settings\Storage\UserScopedSettingsAccessManager;
 use Piwik\SettingsPiwik;
+
 /**
  * Manage Piwik users
  *
@@ -28,17 +30,27 @@ class UsersManager extends \Piwik\Plugin
 {
     public const PASSWORD_MIN_LENGTH = 6;
     public const PASSWORD_MAX_LENGTH = 200;
+
     /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
     {
-        return ['AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'SitesManager.deleteSite.end' => 'deleteSite', 'Tracker.Cache.getSiteAttributes' => 'recordAdminUsersInCache', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Platform.initialized' => 'onPlatformInitialized', 'System.addSystemSummaryItems' => 'addSystemSummaryItems'];
+        return [
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'SitesManager.deleteSite.end'            => 'deleteSite',
+            'Tracker.Cache.getSiteAttributes'        => 'recordAdminUsersInCache',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'Platform.initialized'                   => 'onPlatformInitialized',
+            'System.addSystemSummaryItems'           => 'addSystemSummaryItems',
+        ];
     }
+
     public static function isUsersAdminEnabled()
     {
-        return (bool) Config::getInstance()->General['enable_users_admin'];
+        return (bool)Config::getInstance()->General['enable_users_admin'];
     }
+
     public static function dieIfUsersAdminIsDisabled()
     {
         Piwik::checkUserIsNotAnonymous();
@@ -46,22 +58,35 @@ class UsersManager extends \Piwik\Plugin
             throw new \Exception('Creating, updating, and deleting users has been disabled.');
         }
     }
+
     public function addSystemSummaryItems(&$systemSummary)
     {
         if (!self::isUsersAdminEnabled()) {
             return;
         }
+
         $userLogins = Request::processRequest('UsersManager.getUsersLogin', array('filter_limit' => '-1'));
+
         $numUsers = count($userLogins);
         if (in_array('anonymous', $userLogins)) {
             $numUsers--;
         }
-        $systemSummary[] = new SystemSummary\Item($key = 'users', Piwik::translate('General_NUsers', $numUsers), $value = null, array('module' => 'UsersManager', 'action' => 'index'), $icon = 'icon-user', $order = 5);
+
+        $systemSummary[] = new SystemSummary\Item(
+            $key = 'users',
+            Piwik::translate('General_NUsers', $numUsers),
+            $value = null,
+            array('module' => 'UsersManager', 'action' => 'index'),
+            $icon = 'icon-user',
+            $order = 5
+        );
     }
+
     public function onPlatformInitialized()
     {
-        \Piwik\Plugins\UsersManager\LastSeenTimeLogger::logCurrentUserLastSeenTime();
+        LastSeenTimeLogger::logCurrentUserLastSeenTime();
     }
+
     /**
      * Hooks when a website tracker cache is flushed (website/user updated, cache deleted, or empty cache)
      * Will record in the tracker config file the list of Admin token_auth for this website. This
@@ -73,47 +98,60 @@ class UsersManager extends \Piwik\Plugin
      */
     public function recordAdminUsersInCache(&$attributes, $idSite)
     {
-        $model = new \Piwik\Plugins\UsersManager\Model();
+        $model = new Model();
         $logins = $model->getUsersLoginWithSiteAccess($idSite, Admin::ID);
         $writeLogins = $model->getUsersLoginWithSiteAccess($idSite, Write::ID);
         $logins = array_merge($logins, $writeLogins);
+
         $token_auths = $model->getAllHashedTokensForLogins($logins);
+
         $attributes['tracking_token_auth'] = array();
+
         if (!empty($token_auths)) {
             foreach ($token_auths as $token_auth) {
                 $attributes['tracking_token_auth'][] = self::hashTrackingToken($token_auth, $idSite);
             }
         }
     }
-    public static function hashTrackingToken(#[\SensitiveParameter]
-        $tokenAuth, $idSite)
-    {
+
+    public static function hashTrackingToken(
+        #[\SensitiveParameter]
+        $tokenAuth,
+        $idSite
+    ) {
         return sha1($idSite . $tokenAuth . SettingsPiwik::getSalt());
     }
+
     /**
      * Delete user preferences associated with a particular site
      */
     public function deleteSite($idSite)
     {
         // TODO: remove in Matomo 6 - users should be using new userScopedSettings
-        Option::deleteLike('%\\_' . \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT, $idSite);
+        Option::deleteLike('%\_' . API::PREFERENCE_DEFAULT_REPORT, $idSite);
+
         $preferencesStore = StaticContainer::get(UserScopedSettingsAccessManager::class);
-        $usersPreferences = $preferencesStore->getValuesForAllUsers('UsersManager', [\Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT]);
+        $usersPreferences = $preferencesStore->getValuesForAllUsers('UsersManager', [API::PREFERENCE_DEFAULT_REPORT]);
+
         foreach ($usersPreferences as $login => $preferences) {
-            if (empty($preferences[\Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT])) {
+            if (empty($preferences[API::PREFERENCE_DEFAULT_REPORT])) {
                 continue;
             }
-            if ((string) $preferences[\Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT] !== (string) $idSite) {
+
+            if ((string) $preferences[API::PREFERENCE_DEFAULT_REPORT] !== (string) $idSite) {
                 continue;
             }
+
             $fallbackSiteId = $this->getFallbackDefaultReportForLogin($login);
-            if ($fallbackSiteId === \false) {
-                $preferencesStore->delete('UsersManager', $login, \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT);
+            if ($fallbackSiteId === false) {
+                $preferencesStore->delete('UsersManager', $login, API::PREFERENCE_DEFAULT_REPORT);
                 continue;
             }
-            $preferencesStore->set('UsersManager', $login, \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT, $fallbackSiteId);
+
+            $preferencesStore->set('UsersManager', $login, API::PREFERENCE_DEFAULT_REPORT, $fallbackSiteId);
         }
     }
+
     /**
      * @return false|int
      */
@@ -122,16 +160,19 @@ class UsersManager extends \Piwik\Plugin
         if (Piwik::hasTheUserSuperUserAccess($login)) {
             $siteIds = SitesManagerAPI::getInstance()->getAllSitesId();
         } else {
-            $siteIds = array_column((new \Piwik\Plugins\UsersManager\Model())->getSitesAccessFromUser($login), 'site');
+            $siteIds = array_column((new Model())->getSitesAccessFromUser($login), 'site');
         }
-        return reset($siteIds) ?: \false;
+
+        return reset($siteIds) ?: false;
     }
+
     /**
      * Get CSS files
      */
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/UsersManager/stylesheets/usersManager.less";
+
         $stylesheets[] = "plugins/UsersManager/vue/src/UsersManager/UsersManager.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/PagedUsersList/PagedUsersList.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/UserEditForm/UserEditForm.less";
@@ -139,6 +180,7 @@ class UsersManager extends \Piwik\Plugin
         $stylesheets[] = "plugins/UsersManager/vue/src/UserPermissionsEdit/UserPermissionsEdit.less";
         $stylesheets[] = "plugins/UsersManager/vue/src/CapabilitiesEdit/CapabilitiesEdit.less";
     }
+
     /**
      * Returns true if the password string is considered valid. When the credentials sanity check is
      * disabled, any non-empty password is accepted; otherwise the password must be at least
@@ -149,15 +191,22 @@ class UsersManager extends \Piwik\Plugin
      */
     public static function isValidPasswordString($input)
     {
-        if (!SettingsPiwik::isUserCredentialsSanityCheckEnabled() && !empty($input)) {
-            return \true;
+        if (
+            !SettingsPiwik::isUserCredentialsSanityCheckEnabled()
+            && !empty($input)
+        ) {
+            return true;
         }
+
         $l = strlen($input);
+
         return $l >= self::PASSWORD_MIN_LENGTH;
     }
-    public static function checkPassword(#[\SensitiveParameter]
-        $password)
-    {
+
+    public static function checkPassword(
+        #[\SensitiveParameter]
+        $password
+    ) {
         /**
          * Triggered before core password validator check password.
          *
@@ -174,17 +223,27 @@ class UsersManager extends \Piwik\Plugin
          *
          * @param string $password Checking password in plain text.
          */
+
         Piwik::postEvent('UsersManager.checkPassword', array($password));
+
         if (!self::isValidPasswordString($password)) {
-            throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidPassword', array(self::PASSWORD_MIN_LENGTH)));
+            throw new Exception(Piwik::translate(
+                'UsersManager_ExceptionInvalidPassword',
+                array(self::PASSWORD_MIN_LENGTH)
+            ));
         }
         if (mb_strlen($password) > self::PASSWORD_MAX_LENGTH) {
-            throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidPasswordTooLong', array(self::PASSWORD_MAX_LENGTH)));
+            throw new Exception(Piwik::translate(
+                'UsersManager_ExceptionInvalidPasswordTooLong',
+                array(self::PASSWORD_MAX_LENGTH)
+            ));
         }
     }
-    public static function getPasswordHash(#[\SensitiveParameter]
-        $password)
-    {
+
+    public static function getPasswordHash(
+        #[\SensitiveParameter]
+        $password
+    ) {
         if (SettingsPiwik::isUserCredentialsSanityCheckEnabled()) {
             self::checkBasicPasswordStrength($password);
         }
@@ -192,18 +251,23 @@ class UsersManager extends \Piwik\Plugin
         // to change how the root pwd is saved in the config file
         return md5($password);
     }
-    public static function checkBasicPasswordStrength(#[\SensitiveParameter]
-        $password)
-    {
+
+    public static function checkBasicPasswordStrength(
+        #[\SensitiveParameter]
+        $password
+    ) {
         $ex = new \Exception('This password is too weak, please supply another value or reset it.');
+
         $numDistinctCharacters = strlen(count_chars($password, 3));
         if ($numDistinctCharacters < 2) {
             throw $ex;
         }
+
         if (strlen($password) < 6) {
             throw $ex;
         }
     }
+
     /**
      * Checks the password hash length. Used as a sanity check.
      *
@@ -211,14 +275,16 @@ class UsersManager extends \Piwik\Plugin
      * @param string $exceptionMessage Message of the exception thrown.
      * @throws Exception if the password hash length is incorrect.
      */
-    public static function checkPasswordHash(#[\SensitiveParameter]
-        $passwordHash, $exceptionMessage)
-    {
-        if (strlen($passwordHash) != 32 || !ctype_xdigit($passwordHash)) {
-            // MD5 hash length
+    public static function checkPasswordHash(
+        #[\SensitiveParameter]
+        $passwordHash,
+        $exceptionMessage
+    ) {
+        if (strlen($passwordHash) != 32 || !ctype_xdigit($passwordHash)) {  // MD5 hash length
             throw new Exception($exceptionMessage);
         }
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'General_Actions';

@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Dao;
 
 use Piwik\Common;
@@ -19,32 +21,38 @@ use Piwik\DbHelper;
 use Piwik\Plugins\BotTracking\BotDetector;
 use Piwik\Plugins\BotTracking\Metrics;
 use Piwik\Tracker\Action;
+
 class BotRequestsDao
 {
     private const CONFIG_LIVE_AI_CHATBOTS_MAXIMUM_ROWS = 'live_ai_chatbots_maximum_rows';
     private const CONFIG_LIVE_AI_CHATBOTS_TOP_PAGE_URLS_MAXIMUM_ROWS = 'live_ai_chatbots_top_page_urls_maximum_rows';
-    public static function getTableName() : string
+
+    public static function getTableName(): string
     {
         return 'log_bot_request';
     }
-    public static function getPrefixedTableName() : string
+
+    public static function getPrefixedTableName(): string
     {
         return Common::prefixTable(self::getTableName());
     }
-    public static function getAIChatbotActivityForDateRangeLimit() : int
+
+    public static function getAIChatbotActivityForDateRangeLimit(): int
     {
         return self::getRealTimeReportLimit(self::CONFIG_LIVE_AI_CHATBOTS_MAXIMUM_ROWS);
     }
-    public static function getAIChatbotTopPageUrlsForDateRangeLimit() : int
+
+    public static function getAIChatbotTopPageUrlsForDateRangeLimit(): int
     {
         return self::getRealTimeReportLimit(self::CONFIG_LIVE_AI_CHATBOTS_TOP_PAGE_URLS_MAXIMUM_ROWS);
     }
+
     /**
      * Creates the log table
      */
-    public function createTable() : void
+    public function createTable(): void
     {
-        $tableName = self::getTableName();
+        $tableName  = self::getTableName();
         $definition = '
             `idrequest` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             `idsite` INT UNSIGNED NOT NULL,
@@ -59,155 +67,290 @@ class BotRequestsDao
             `source` VARCHAR(50) NULL,
             PRIMARY KEY (`idrequest`),
             INDEX `index_idsite_server_time` (`idsite`, `server_time`)';
+
         DbHelper::createTable($tableName, $definition);
     }
-    public function dropTable() : void
+
+    public function dropTable(): void
     {
         Db::query('DROP TABLE IF EXISTS ' . self::getPrefixedTableName());
     }
+
     /**
      * Insert a bot telemetry record
      *
      * @param array<string, scalar> $data The telemetry data to insert
      * @return int The inserted record ID
      */
-    public function insert(array $data) : int
+    public function insert(array $data): int
     {
         $tableName = self::getPrefixedTableName();
-        $fields = ['idsite', 'server_time', 'idaction_url', 'bot_name', 'bot_type', 'http_status_code', 'response_size_bytes', 'response_time_ms', 'source'];
+
+        $fields = [
+            'idsite',
+            'server_time',
+            'idaction_url',
+            'bot_name',
+            'bot_type',
+            'http_status_code',
+            'response_size_bytes',
+            'response_time_ms',
+            'source',
+        ];
+
         $values = [];
-        $bind = [];
+        $bind   = [];
+
         foreach ($fields as $field) {
             if (isset($data[$field])) {
                 $values[] = '?';
-                $bind[] = $data[$field];
+                $bind[]   = $data[$field];
             } else {
                 $values[] = 'NULL';
             }
         }
-        $sql = sprintf('INSERT INTO `%s` (%s) VALUES (%s)', $tableName, implode(', ', $fields), implode(', ', $values));
+
+        $sql = sprintf(
+            'INSERT INTO `%s` (%s) VALUES (%s)',
+            $tableName,
+            implode(', ', $fields),
+            implode(', ', $values)
+        );
+
         Db::query($sql, $bind);
-        return (int) Db::get()->lastInsertId();
+
+        return (int)Db::get()->lastInsertId();
     }
+
     /**
      * Delete bot telemetry records older than a specified date
      *
      * @param Date $date Delete records older than this date
      * @return int Number of deleted records
      */
-    public function deleteOldRecords(Date $date) : int
+    public function deleteOldRecords(Date $date): int
     {
         $tableName = self::getPrefixedTableName();
-        $sql = sprintf('DELETE FROM `%s` WHERE server_time < ?', $tableName);
+
+        $sql = sprintf(
+            'DELETE FROM `%s` WHERE server_time < ?',
+            $tableName
+        );
+
         $result = Db::query($sql, [$date->getDatetime()]);
-        return (int) Db::get()->rowCount($result);
+
+        return (int)Db::get()->rowCount($result);
     }
+
     /**
      * Delete bot telemetry records for specific sites
      *
      * @param array<int|string> $siteIds Delete records older than this date
      * @return int Number of deleted records
      */
-    public function deleteRecordsForIdSites(array $siteIds) : int
+    public function deleteRecordsForIdSites(array $siteIds): int
     {
         $tableName = self::getPrefixedTableName();
-        $siteIds = array_map('intval', $siteIds);
-        $sql = sprintf('DELETE FROM `%s` WHERE idsite IN (' . implode(', ', $siteIds) . ') LIMIT 25000', $tableName);
+        $siteIds   = array_map('intval', $siteIds);
+
+        $sql = sprintf(
+            'DELETE FROM `%s` WHERE idsite IN (' . implode(', ', $siteIds) . ') LIMIT 25000',
+            $tableName
+        );
+
         $result = Db::query($sql);
-        return (int) Db::get()->rowCount($result);
+
+        return (int)Db::get()->rowCount($result);
     }
-    public function getLastServerTimeForSiteAndBotType(int $idSite, string $botType) : ?string
+
+    public function getLastServerTimeForSiteAndBotType(int $idSite, string $botType): ?string
     {
         $tableName = self::getPrefixedTableName();
-        return Db::fetchOne(sprintf('SELECT MAX(server_time) FROM `%s` WHERE idsite = ? AND bot_type = ?', $tableName), [$idSite, $botType]);
+
+        return Db::fetchOne(
+            sprintf(
+                'SELECT MAX(server_time) FROM `%s` WHERE idsite = ? AND bot_type = ?',
+                $tableName
+            ),
+            [$idSite, $botType]
+        );
     }
+
     /**
      * @param int[] $idSites
      */
-    public function getAIChatbotActivityForDateRange(array $idSites, string $startDate, string $endDate) : DataTable
+    public function getAIChatbotActivityForDateRange(array $idSites, string $startDate, string $endDate): DataTable
     {
         $idSites = $this->normalizeIdSites($idSites);
+
         if (empty($idSites)) {
             return new DataTable();
         }
+
         $limit = self::getAIChatbotActivityForDateRangeLimit();
+
         $idSitePlaceholders = Common::getSqlStringFieldsArray($idSites);
-        $tableName = self::getPrefixedTableName();
-        $actionTable = Common::prefixTable('log_action');
-        $sql = sprintf("SELECT bot.bot_name AS label,\n                    COUNT(*) AS %s,\n                    COUNT(DISTINCT CASE WHEN log_action.type = %d THEN log_action.name END) AS %s,\n                    SUM(CASE WHEN bot.http_status_code IN (404, 410) THEN 1 ELSE 0 END) AS %s,\n                    SUM(CASE WHEN bot.http_status_code BETWEEN 500 AND 599 THEN 1 ELSE 0 END) AS %s\n             FROM `%s` AS bot\n             LEFT JOIN `%s` AS log_action ON log_action.idaction = bot.idaction_url\n             WHERE bot.idsite IN (%s)\n               AND bot.bot_type = ?\n               AND bot.server_time >= ?\n               AND bot.server_time <= ?\n             GROUP BY bot.bot_name\n             ORDER BY %s DESC, bot.bot_name\n             LIMIT %d", Metrics::COLUMN_REQUESTS, Action::TYPE_PAGE_URL, Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS, Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS, Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS, $tableName, $actionTable, $idSitePlaceholders, Metrics::COLUMN_REQUESTS, $limit);
+        $tableName          = self::getPrefixedTableName();
+        $actionTable        = Common::prefixTable('log_action');
+
+        $sql = sprintf(
+            "SELECT bot.bot_name AS label,
+                    COUNT(*) AS %s,
+                    COUNT(DISTINCT CASE WHEN log_action.type = %d THEN log_action.name END) AS %s,
+                    SUM(CASE WHEN bot.http_status_code IN (404, 410) THEN 1 ELSE 0 END) AS %s,
+                    SUM(CASE WHEN bot.http_status_code BETWEEN 500 AND 599 THEN 1 ELSE 0 END) AS %s
+             FROM `%s` AS bot
+             LEFT JOIN `%s` AS log_action ON log_action.idaction = bot.idaction_url
+             WHERE bot.idsite IN (%s)
+               AND bot.bot_type = ?
+               AND bot.server_time >= ?
+               AND bot.server_time <= ?
+             GROUP BY bot.bot_name
+             ORDER BY %s DESC, bot.bot_name
+             LIMIT %d",
+            Metrics::COLUMN_REQUESTS,
+            Action::TYPE_PAGE_URL,
+            Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS,
+            Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS,
+            Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS,
+            $tableName,
+            $actionTable,
+            $idSitePlaceholders,
+            Metrics::COLUMN_REQUESTS,
+            $limit
+        );
+
         $bind = array_merge($idSites, [BotDetector::BOT_TYPE_AI_CHATBOT, $startDate, $endDate]);
+
         $sql = $this->addRealTimeQueryMaxExecutionTimeHint($sql);
-        $stmt = Db::query($sql, $bind);
+
+        $stmt  = Db::query($sql, $bind);
         $table = new DataTable();
-        $table->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, [Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS => 'skip']);
+        $table->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, [
+            Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS => 'skip',
+        ]);
+
         while ($row = $stmt->fetch()) {
             /** @var array<string, int|string|null> $row */
-            $table->addRow(new Row([Row::COLUMNS => ['label' => (string) $row['label'], Metrics::COLUMN_REQUESTS => (int) $row[Metrics::COLUMN_REQUESTS], Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS => (int) $row[Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS], Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS => (int) $row[Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS], Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS => (int) $row[Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS]]]));
+            $table->addRow(new Row([
+                Row::COLUMNS => [
+                    'label'                                      => (string) $row['label'],
+                    Metrics::COLUMN_REQUESTS                     => (int) $row[Metrics::COLUMN_REQUESTS],
+                    Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS       => (int) $row[Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS],
+                    Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS     => (int) $row[Metrics::METRIC_AI_CHATBOTS_NOT_FOUND_REQUESTS],
+                    Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS => (int) $row[Metrics::METRIC_AI_CHATBOTS_SERVER_ERROR_REQUESTS],
+                ],
+            ]));
         }
+
         return $table;
     }
+
     /**
      * @param int[] $idSites
      */
-    public function getAIChatbotTopPageUrlsForDateRange(array $idSites, string $startDate, string $endDate) : DataTable
+    public function getAIChatbotTopPageUrlsForDateRange(array $idSites, string $startDate, string $endDate): DataTable
     {
         $idSites = $this->normalizeIdSites($idSites);
+
         if (empty($idSites)) {
             return new DataTable();
         }
+
         $limit = self::getAIChatbotTopPageUrlsForDateRangeLimit();
+
         $idSitePlaceholders = Common::getSqlStringFieldsArray($idSites);
-        $tableName = self::getPrefixedTableName();
-        $actionTable = Common::prefixTable('log_action');
-        $sql = sprintf("SELECT log_action.name AS label,\n                    COUNT(*) AS %s\n             FROM `%s` AS bot\n             INNER JOIN `%s` AS log_action ON log_action.idaction = bot.idaction_url\n             WHERE bot.idsite IN (%s)\n               AND bot.bot_type = ?\n               AND bot.server_time >= ?\n               AND bot.server_time <= ?\n               AND log_action.name IS NOT NULL\n               AND log_action.name <> ''\n               AND log_action.type = %d\n             GROUP BY log_action.name\n             ORDER BY %s DESC, log_action.name\n             LIMIT %d", Metrics::COLUMN_REQUESTS, $tableName, $actionTable, $idSitePlaceholders, Action::TYPE_PAGE_URL, Metrics::COLUMN_REQUESTS, $limit);
+        $tableName          = self::getPrefixedTableName();
+        $actionTable        = Common::prefixTable('log_action');
+
+        $sql = sprintf(
+            "SELECT log_action.name AS label,
+                    COUNT(*) AS %s
+             FROM `%s` AS bot
+             INNER JOIN `%s` AS log_action ON log_action.idaction = bot.idaction_url
+             WHERE bot.idsite IN (%s)
+               AND bot.bot_type = ?
+               AND bot.server_time >= ?
+               AND bot.server_time <= ?
+               AND log_action.name IS NOT NULL
+               AND log_action.name <> ''
+               AND log_action.type = %d
+             GROUP BY log_action.name
+             ORDER BY %s DESC, log_action.name
+             LIMIT %d",
+            Metrics::COLUMN_REQUESTS,
+            $tableName,
+            $actionTable,
+            $idSitePlaceholders,
+            Action::TYPE_PAGE_URL,
+            Metrics::COLUMN_REQUESTS,
+            $limit
+        );
+
         $bind = array_merge($idSites, [BotDetector::BOT_TYPE_AI_CHATBOT, $startDate, $endDate]);
+
         $sql = $this->addRealTimeQueryMaxExecutionTimeHint($sql);
-        $stmt = Db::query($sql, $bind);
+
+        $stmt  = Db::query($sql, $bind);
         $table = new DataTable();
+
         while ($row = $stmt->fetch()) {
             /** @var array{label: string, requests: int|string} $row */
-            $table->addRow(new Row([Row::COLUMNS => ['label' => (string) $row['label'], Metrics::COLUMN_REQUESTS => (int) $row[Metrics::COLUMN_REQUESTS]]]));
+            $table->addRow(new Row([
+                Row::COLUMNS => [
+                    'label'                  => (string) $row['label'],
+                    Metrics::COLUMN_REQUESTS => (int) $row[Metrics::COLUMN_REQUESTS],
+                ],
+            ]));
         }
+
         return $table;
     }
+
     /**
      * @return int[]
      */
-    public function getDistinctIdSitesInTable(int $maxIdSite) : array
+    public function getDistinctIdSitesInTable(int $maxIdSite): array
     {
-        $tableName = self::getPrefixedTableName();
+        $tableName       = self::getPrefixedTableName();
         $idSitesLogTable = Db::fetchAll('SELECT DISTINCT idsite FROM ' . $tableName);
         $idSitesLogTable = array_column($idSitesLogTable, 'idsite');
         $idSitesLogTable = array_map('intval', $idSitesLogTable);
-        return array_filter($idSitesLogTable, function ($idSite) use($maxIdSite) {
+        return array_filter($idSitesLogTable, function ($idSite) use ($maxIdSite) {
             return !empty($idSite) && $idSite <= $maxIdSite;
         });
     }
+
     /**
      * @param int[] $idSites
      * @return int[]
      */
-    private function normalizeIdSites(array $idSites) : array
+    private function normalizeIdSites(array $idSites): array
     {
         $idSites = array_map('intval', $idSites);
-        $idSites = array_filter($idSites, function (int $idSite) : bool {
+        $idSites = array_filter($idSites, function (int $idSite): bool {
             return $idSite > 0;
         });
+
         return array_values(array_unique($idSites));
     }
-    private function addRealTimeQueryMaxExecutionTimeHint(string $sql) : string
+
+    private function addRealTimeQueryMaxExecutionTimeHint(string $sql): string
     {
         return DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->getRealTimeQueryMaxExecutionTime());
     }
-    private static function getRealTimeReportLimit(string $configKey) : int
+
+    private static function getRealTimeReportLimit(string $configKey): int
     {
         $limit = GeneralConfig::getIntegerConfigValue($configKey);
         if ($limit === null || $limit <= 0) {
             throw new \UnexpectedValueException(sprintf('Config option "%s" must be greater than 0.', $configKey));
         }
+
         return $limit;
     }
-    private function getRealTimeQueryMaxExecutionTime() : float
+
+    private function getRealTimeQueryMaxExecutionTime(): float
     {
         return GeneralConfig::getFloatConfigValue('live_query_max_execution_time', 0.0);
     }

@@ -1,0 +1,13 @@
+{
+    "DevicesDetection": {
+        "BrowserEngine": "Böngésző",
+        "BrowserFamily": "Böngészőcsalád",
+        "Browsers": "Böngészők",
+        "ColumnBrowser": "Böngésző",
+        "ColumnOperatingSystem": "Operációs rendszer",
+        "MobileApp": "Mobil alkalmazás",
+        "OperatingSystems": "Operációs rendszerek",
+        "WidgetBrowsers": "Látogatók böngészői",
+        "dataTableLabelTypes": "Típus"
+    }
+}

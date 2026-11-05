@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Reports;
 
 use Piwik\DataTable;
@@ -21,6 +23,7 @@ use Piwik\Plugins\BotTracking\Columns\Metrics\ServerError5xxRequests;
 use Piwik\Plugins\BotTracking\Metrics;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
+
 /**
  * Base class for the Pages and Documents content-URL reports.
  *
@@ -35,15 +38,17 @@ use Piwik\Widget\WidgetsList;
  */
 abstract class AbstractAIChatbotContentUrlReport extends Report
 {
-    protected function init() : void
+    protected function init(): void
     {
         parent::init();
-        $this->categoryId = 'General_AIAssistants';
-        $this->subcategoryId = 'BotTracking_AIChatbotsContentRequests';
-        $this->metrics = [new Requests(), new ServerError5xxRequests(), new PageNotFound404Requests()];
+
+        $this->categoryId       = 'General_AIAssistants';
+        $this->subcategoryId    = 'BotTracking_AIChatbotsContentRequests';
+        $this->metrics          = [new Requests(), new ServerError5xxRequests(), new PageNotFound404Requests()];
         $this->processedMetrics = [new AvgServerTime(), new AvgResponseSize()];
         $this->defaultSortColumn = Metrics::COLUMN_REQUESTS;
     }
+
     /**
      * The average server time and response size are left out, as a percentage of their summed up
      * report total says nothing about a row.
@@ -52,20 +57,33 @@ abstract class AbstractAIChatbotContentUrlReport extends Report
      */
     public function getMetricNamesToProcessReportTotals()
     {
-        return [Metrics::COLUMN_REQUESTS => Metrics::COLUMN_REQUESTS, Metrics::COLUMN_SERVER_ERROR_5XX_REQUESTS => Metrics::COLUMN_SERVER_ERROR_5XX_REQUESTS, Metrics::COLUMN_PAGE_NOT_FOUND_404_REQUESTS => Metrics::COLUMN_PAGE_NOT_FOUND_404_REQUESTS];
+        return [
+            Metrics::COLUMN_REQUESTS                    => Metrics::COLUMN_REQUESTS,
+            Metrics::COLUMN_SERVER_ERROR_5XX_REQUESTS   => Metrics::COLUMN_SERVER_ERROR_5XX_REQUESTS,
+            Metrics::COLUMN_PAGE_NOT_FOUND_404_REQUESTS => Metrics::COLUMN_PAGE_NOT_FOUND_404_REQUESTS,
+        ];
     }
-    public function configureView(ViewDataTable $view) : void
+
+    public function configureView(ViewDataTable $view): void
     {
         parent::configureView($view);
-        $view->config->setDefaultColumnsToDisplay(['label', Metrics::COLUMN_REQUESTS, Metrics::COLUMN_AVG_SERVER_TIME, Metrics::COLUMN_AVG_RESPONSE_SIZE], \false, \false);
+
+        $view->config->setDefaultColumnsToDisplay(
+            ['label', Metrics::COLUMN_REQUESTS, Metrics::COLUMN_AVG_SERVER_TIME, Metrics::COLUMN_AVG_RESPONSE_SIZE],
+            false,
+            false
+        );
+
         // Show-all-columns switches to the Visitor Engagement preset, which doesn't fit this schema.
-        $view->config->show_table_all_columns = \false;
+        $view->config->show_table_all_columns = false;
+
         // Insights and bar/pie/tag-cloud all assume visit metrics (nb_visits etc.) this report lacks,
         // so they would render empty — the table is the only useful view.
-        $view->config->show_insights = \false;
-        $view->config->show_bar_chart = \false;
-        $view->config->show_pie_chart = \false;
-        $view->config->show_tag_cloud = \false;
+        $view->config->show_insights = false;
+        $view->config->show_bar_chart = false;
+        $view->config->show_pie_chart = false;
+        $view->config->show_tag_cloud = false;
+
         // Render URL labels as clickable links (scheme-less normalized URLs; prepend https://).
         $view->config->filters[] = function (DataTable $table) {
             foreach ($table->getRows() as $row) {
@@ -78,26 +96,32 @@ abstract class AbstractAIChatbotContentUrlReport extends Report
                 }
             }
         };
-        \Piwik\Plugins\BotTracking\Reports\SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
+
+        SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
     }
-    public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory) : void
+
+    public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory): void
     {
         $widgetsList->addWidgetConfig($factory->createWidget()->setIsWide());
     }
+
     /**
      * Returns the translation key for the scoped "Requests" tooltip for this report.
      * Concrete subclasses return the key that scopes the tooltip to their action type
      * (page URLs or document URLs).
      */
-    protected abstract function getRequestsDocumentationKey() : string;
+    abstract protected function getRequestsDocumentationKey(): string;
+
     /**
      * @return array<string, string>
      */
-    public function getMetricsDocumentation() : array
+    public function getMetricsDocumentation(): array
     {
         $docs = parent::getMetricsDocumentation();
+
         // Scope the "Requests" tooltip to this report's action type (page URLs or document URLs).
         $docs[Metrics::COLUMN_REQUESTS] = Piwik::translate($this->getRequestsDocumentationKey());
+
         return $docs;
     }
 }

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreHome\Columns;
 
 use Piwik\Columns\DimensionMetricFactory;
@@ -16,6 +17,7 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Plugins\Live\Live;
 use Piwik\Segment\SegmentsList;
 use Piwik\Columns\DimensionSegmentFactory;
+
 /**
  * Dimension for the log_visit.idvisitor column. This column is added in the CREATE TABLE
  * statement, so this dimension exists only to configure a segment.
@@ -27,13 +29,15 @@ class VisitorId extends VisitDimension
     protected $nameSingular = 'General_VisitorID';
     protected $namePlural = 'General_Visitors';
     protected $segmentName = 'visitorId';
-    protected $allowAnonymous = \false;
-    protected $sqlFilterValue = ['Piwik\\Common', 'convertVisitorIdToBin'];
+    protected $allowAnonymous = false;
+    protected $sqlFilterValue = ['Piwik\Common', 'convertVisitorIdToBin'];
     protected $type = self::TYPE_BINARY;
+
     public function getAcceptValues()
     {
         return Piwik::translate('General_VisitorIDSegmentHelp', ['34c31e04394bdc63', 'getVisitorId()']);
     }
+
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         $metric = $dimensionMetricFactory->createMetric(ArchivedMetric::AGGREGATION_UNIQUE);
@@ -41,6 +45,7 @@ class VisitorId extends VisitDimension
         $metric->setName('nb_uniq_visitors');
         $metricsList->addMetric($metric);
     }
+
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         try {
@@ -50,8 +55,9 @@ class VisitorId extends VisitDimension
             if (!defined('PIWIK_TEST_MODE') || !PIWIK_TEST_MODE) {
                 throw $e;
             }
-            $visitorProfileEnabled = \true;
+            $visitorProfileEnabled = true;
         }
+
         if ($visitorProfileEnabled) {
             parent::configureSegments($segmentsList, $dimensionSegmentFactory);
         }

@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Tracker;
 
 abstract class BotRequestProcessor
@@ -17,10 +19,11 @@ abstract class BotRequestProcessor
      * Derived classes can use this method to manipulate a bot request before the request
      * is handled. Plugins could change the URL, add custom variables, etc.
      */
-    public function manipulateRequest(\Piwik\Tracker\Request $request) : void
+    public function manipulateRequest(Request $request): void
     {
         // empty
     }
+
     /**
      * This method is called last.
      *
@@ -28,8 +31,8 @@ abstract class BotRequestProcessor
      *
      * @return bool return true if the processor handled the request, this will automatically trigger archive invalidation
      */
-    public function handleRequest(\Piwik\Tracker\Request $request) : bool
+    public function handleRequest(Request $request): bool
     {
-        return \false;
+        return false;
     }
 }

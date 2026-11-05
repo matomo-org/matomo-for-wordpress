@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Insights;
 
 class Insights extends \Piwik\Plugin
@@ -15,12 +16,17 @@ class Insights extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles');
+        return array(
+            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
+            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
+        );
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Insights/stylesheets/insightVisualization.less";
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Insights/javascripts/insightsDataTable.js";

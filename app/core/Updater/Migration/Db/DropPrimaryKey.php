@@ -6,13 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Updater\Migration\Db;
 
 /**
  * @see Factory::dropPrimaryKey()
  * @ignore
  */
-class DropPrimaryKey extends \Piwik\Updater\Migration\Db\Sql
+class DropPrimaryKey extends Sql
 {
     /**
      * @param string $table Prefixed table name
@@ -20,6 +21,7 @@ class DropPrimaryKey extends \Piwik\Updater\Migration\Db\Sql
     public function __construct($table)
     {
         $sql = sprintf('ALTER TABLE `%s` DROP PRIMARY KEY', $table);
+
         parent::__construct($sql, array(static::ERROR_CODE_COLUMN_NOT_EXISTS));
     }
 }

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\CacheId;
@@ -15,6 +16,7 @@ use Piwik\Cache as PiwikCache;
 use Piwik\Settings\Measurable\MeasurableSettings;
 use Piwik\Settings\Plugin\UserSettings;
 use Piwik\Settings\Plugin\SystemSettings;
+
 /**
  * Base class of all plugin settings providers. Plugins that define their own configuration settings
  * can extend this class to easily make their settings available to Piwik users.
@@ -30,38 +32,48 @@ class SettingsProvider
      * @var Plugin\Manager
      */
     private $pluginManager;
+
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
+
     /**
      * Get system settings implemented by a specific plugin (if implemented by this plugin).
      */
-    public function getSystemSettings(string $pluginName) : ?SystemSettings
+    public function getSystemSettings(string $pluginName): ?SystemSettings
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
+
         if ($plugin) {
             $settings = $plugin->findComponent('SystemSettings', 'Piwik\\Settings\\Plugin\\SystemSettings');
+
             if ($settings) {
                 return StaticContainer::get($settings);
             }
         }
+
         return null;
     }
+
     /**
      * Get user settings implemented by a specific plugin (if implemented by this plugin).
      */
-    public function getUserSettings(string $pluginName) : ?UserSettings
+    public function getUserSettings(string $pluginName): ?UserSettings
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
+
         if ($plugin) {
             $settings = $plugin->findComponent('UserSettings', 'Piwik\\Settings\\Plugin\\UserSettings');
+
             if ($settings) {
                 return StaticContainer::get($settings);
             }
         }
+
         return null;
     }
+
     /**
      * Returns all available system settings. A plugin has to specify a file named `SystemSettings.php` containing a
      * class named `SystemSettings` that extends `Piwik\Settings\Plugin\SystemSettings` in order to be considered as
@@ -69,23 +81,29 @@ class SettingsProvider
      *
      * @return SystemSettings[]   An array containing array([pluginName] => [setting instance]).
      */
-    public function getAllSystemSettings() : array
+    public function getAllSystemSettings(): array
     {
         $cacheId = CacheId::languageAware('AllSystemSettings');
         $cache = PiwikCache::getTransientCache();
+
         if (!$cache->contains($cacheId)) {
             $pluginNames = $this->pluginManager->getActivatedPlugins();
             $byPluginName = array();
+
             foreach ($pluginNames as $plugin) {
                 $component = $this->getSystemSettings($plugin);
+
                 if (!empty($component)) {
                     $byPluginName[$plugin] = $component;
                 }
             }
+
             $cache->save($cacheId, $byPluginName);
         }
+
         return $cache->fetch($cacheId);
     }
+
     /**
      * Returns all available user settings. A plugin has to specify a file named `UserSettings.php` containing a class
      * named `UserSettings` that extends `Piwik\Settings\Plugin\UserSettings` in order to be considered as a plugin
@@ -93,23 +111,29 @@ class SettingsProvider
      *
      * @return UserSettings[]   An array containing array([pluginName] => [setting instance]).
      */
-    public function getAllUserSettings() : array
+    public function getAllUserSettings(): array
     {
         $cacheId = CacheId::languageAware('AllUserSettings');
         $cache = PiwikCache::getTransientCache();
+
         if (!$cache->contains($cacheId)) {
             $pluginNames = $this->pluginManager->getActivatedPlugins();
             $byPluginName = array();
+
             foreach ($pluginNames as $plugin) {
                 $component = $this->getUserSettings($plugin);
+
                 if (!empty($component)) {
                     $byPluginName[$plugin] = $component;
                 }
             }
+
             $cache->save($cacheId, $byPluginName);
         }
+
         return $cache->fetch($cacheId);
     }
+
     /**
      * @api
      *
@@ -127,14 +151,21 @@ class SettingsProvider
     public function getMeasurableSettings($pluginName, $idSite, $idType = null)
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
+
         if ($plugin) {
             $component = $plugin->findComponent('MeasurableSettings', 'Piwik\\Settings\\Measurable\\MeasurableSettings');
+
             if ($component) {
-                return StaticContainer::getContainer()->make($component, ['idSite' => $idSite, 'idMeasurableType' => $idType]);
+                return StaticContainer::getContainer()->make($component, [
+                    'idSite' => $idSite,
+                    'idMeasurableType' => $idType,
+                ]);
             }
         }
+
         return null;
     }
+
     /**
      * @api
      *
@@ -151,28 +182,35 @@ class SettingsProvider
     {
         $pluginNames = $this->pluginManager->getActivatedPlugins();
         $byPluginName = array();
+
         foreach ($pluginNames as $plugin) {
             $component = $this->getMeasurableSettings($plugin, $idSite, $idMeasurableType);
+
             if (!empty($component)) {
                 $byPluginName[$plugin] = $component;
             }
         }
+
         return $byPluginName;
     }
-    private function getLoadedAndActivated(string $pluginName) : ?Plugin
+
+    private function getLoadedAndActivated(string $pluginName): ?Plugin
     {
         if (!$this->pluginManager->isPluginLoaded($pluginName)) {
             return null;
         }
+
         try {
             if (!$this->pluginManager->isPluginActivated($pluginName)) {
                 return null;
             }
+
             $plugin = $this->pluginManager->getLoadedPlugin($pluginName);
         } catch (\Exception $e) {
             // we are not allowed to use possible settings from this plugin, plugin is not active
             return null;
         }
+
         return $plugin;
     }
 }

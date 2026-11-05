@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Marketplace;
 
 /**
@@ -17,26 +18,30 @@ class Consumer
      * @var Api\Client
      */
     private $marketplaceClient;
-    private $consumer = \false;
+
+    private $consumer = false;
     private $isValid = null;
+
     /**
      * Whether the Marketplace actually answered the last consumer request, as opposed to the
      * request failing or arriving empty. An answer whose license list is empty is a real answer.
      * @var bool
      */
-    private $consumerAvailable = \false;
+    private $consumerAvailable = false;
+
     /**
      * @var array|null
      */
     private $pluginLicenseStatus = null;
-    /**
-     * @var array|null
-     */
-    private $pluginLicenses = null;
-    public function __construct(\Piwik\Plugins\Marketplace\Api\Client $marketplaceClient)
+
+    /** @var array<int, array<string, array<string, mixed>>> keyed by the cached-only flag */
+    private $pluginLicenses = [];
+
+    public function __construct(Api\Client $marketplaceClient)
     {
         $this->marketplaceClient = $marketplaceClient;
     }
+
     /**
      * For tests only.
      * @internal
@@ -46,37 +51,44 @@ class Consumer
     {
         return $this->marketplaceClient;
     }
+
     public function clearCache()
     {
-        $this->consumer = \false;
+        $this->consumer = false;
         $this->isValid = null;
-        $this->consumerAvailable = \false;
+        $this->consumerAvailable = false;
         $this->pluginLicenseStatus = null;
-        $this->pluginLicenses = null;
+        $this->pluginLicenses = [];
     }
+
     public function getConsumer()
     {
-        if ($this->consumer === \false) {
+        if ($this->consumer === false) {
             $consumer = $this->marketplaceClient->getConsumer();
             // a 200 carrying an empty body reaches here as '', which says nothing about the
             // consumer's licenses; a real answer always carries the list, empty or not
             $this->consumerAvailable = is_array($consumer) && array_key_exists('licenses', $consumer);
+
             if (!empty($consumer)) {
                 $this->consumer = $consumer;
             } else {
                 $this->consumer = array();
             }
         }
+
         return $this->consumer;
     }
+
     public function isValidConsumer()
     {
         if (!isset($this->isValid)) {
             $this->isValid = $this->marketplaceClient->isValidConsumer();
         }
+
         return $this->isValid;
     }
-    public function getConsumerPluginLicenseStatus() : array
+
+    public function getConsumerPluginLicenseStatus(): array
     {
         if ($this->pluginLicenseStatus === null) {
             $this->pluginLicenseStatus = [];
@@ -84,8 +96,10 @@ class Consumer
                 $this->pluginLicenseStatus[$pluginName] = $license['status'];
             }
         }
+
         return $this->pluginLicenseStatus;
     }
+
     /**
      * Returns the consumer's license for each plugin it covers, keyed by plugin name.
      *
@@ -96,25 +110,46 @@ class Consumer
      * Returns null, rather than an empty list, when the Marketplace could not be reached: the caller
      * then has nothing current to go on and keeps using the copy the plugin carries.
      *
+     * @param bool $cachedOnly Answer from the cached consumer only, returning null when it is cold
+     *                         rather than making the caller wait on plugins.matomo.org. For callers
+     *                         on a request path - the dashboard promotions - where a synchronous
+     *                         request with a 60 second timeout is not acceptable.
+     *                         {@link Tasks::warmCacheEntries()} keeps that entry filled for them.
      * @return array<string, array<string, mixed>>|null
      */
-    public function getConsumerPluginLicenses() : ?array
+    public function getConsumerPluginLicenses(bool $cachedOnly = false): ?array
     {
-        if ($this->pluginLicenses === null) {
-            // populates consumerAvailable, so it has to run before the guard below reads it
-            $consumer = $this->getConsumer();
-            if (!$this->consumerAvailable) {
+        $key = (int) $cachedOnly;
+
+        if (!array_key_exists($key, $this->pluginLicenses)) {
+            if ($cachedOnly) {
+                $consumer = $this->marketplaceClient->getConsumer(true);
+                $available = !empty($consumer);
+            } else {
+                // populates consumerAvailable, so it has to run before the guard below reads it
+                $consumer = $this->getConsumer();
+                $available = $this->consumerAvailable;
+            }
+
+            if (!$available) {
+                // Deliberately not remembered: a cache that is cold now may be warm on the
+                // next request, and a request that failed is not an answer worth keeping.
                 return null;
             }
-            $this->pluginLicenses = [];
+
+            $licenses = [];
+
             if (!empty($consumer['licenses'])) {
                 foreach ($consumer['licenses'] as $license) {
                     if (!empty($license['plugin']['name'])) {
-                        $this->pluginLicenses[$license['plugin']['name']] = $license;
+                        $licenses[$license['plugin']['name']] = $license;
                     }
                 }
             }
+
+            $this->pluginLicenses[$key] = $licenses;
         }
-        return $this->pluginLicenses;
+
+        return $this->pluginLicenses[$key];
     }
 }

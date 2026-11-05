@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
+
 /**
  * Calculates the quotient of two columns and adds the result as a new column
  * for each row of a DataTable.
@@ -34,6 +36,7 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
     protected $quotientPrecision;
     protected $shouldSkipRows;
     protected $getDivisorFromSummaryRow;
+
     /**
      * @param DataTable $table The DataTable that will eventually be filtered.
      * @param string $columnNameToAdd The name of the column to add the quotient value to.
@@ -47,8 +50,15 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
      * @param bool $getDivisorFromSummaryRow Whether to get the divisor from the summary row or the current
      *                                       row iteration.
      */
-    public function __construct($table, $columnNameToAdd, $columnValueToRead, $divisorValueOrDivisorColumnName, $quotientPrecision = 0, $shouldSkipRows = \false, $getDivisorFromSummaryRow = \false)
-    {
+    public function __construct(
+        $table,
+        $columnNameToAdd,
+        $columnValueToRead,
+        $divisorValueOrDivisorColumnName,
+        $quotientPrecision = 0,
+        $shouldSkipRows = false,
+        $getDivisorFromSummaryRow = false
+    ) {
         parent::__construct($table);
         $this->table = $table;
         $this->columnValueToRead = $columnValueToRead;
@@ -62,6 +72,7 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
         $this->shouldSkipRows = $shouldSkipRows;
         $this->getDivisorFromSummaryRow = $getDivisorFromSummaryRow;
     }
+
     /**
      * See {@link ColumnCallbackAddColumnQuotient}.
      *
@@ -71,20 +82,25 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
     {
         foreach ($table->getRows() as $row) {
             $value = $this->getDividend($row);
-            if ($value === \false && $this->shouldSkipRows) {
+            if ($value === false && $this->shouldSkipRows) {
                 continue;
             }
+
             // Delete existing column if it exists
             $existingValue = $row->getColumn($this->columnNameToAdd);
-            if ($existingValue !== \false) {
+            if ($existingValue !== false) {
                 continue;
             }
+
             $divisor = $this->getDivisor($row);
+
             $formattedValue = $this->formatValue($value, $divisor);
             $row->addColumn($this->columnNameToAdd, $formattedValue);
+
             $this->filterSubTable($row);
         }
     }
+
     /**
      * Formats the given value
      *
@@ -98,8 +114,10 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
         if ($divisor > 0 && $value > 0) {
             $quotient = round($value / $divisor, $this->quotientPrecision);
         }
+
         return $quotient;
     }
+
     /**
      * Returns the dividend to use when calculating the new column value. Can
      * be overridden by descendent classes to customize behavior.
@@ -111,6 +129,7 @@ class ColumnCallbackAddColumnQuotient extends BaseFilter
     {
         return $row->getColumn($this->columnValueToRead);
     }
+
     /**
      * Returns the divisor to use when calculating the new column value. Can
      * be overridden by descendent classes to customize behavior.

@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Session;
 
 use Piwik\Config;
 use Piwik\Date;
+
 /**
  * Manages session information that is used to identify who the session
  * is for.
@@ -36,133 +38,210 @@ class SessionFingerprint
 {
     // used in case the global.ini.php becomes corrupt or doesn't update properly
     public const DEFAULT_IDLE_TIMEOUT = 3600;
+
+    /**
+     * How far the expiration must move before it is worth persisting, in seconds.
+     */
+    public const EXPIRATION_WRITE_THRESHOLD = 60;
+
     public const USER_NAME_SESSION_VAR_NAME = 'user.name';
     public const SESSION_INFO_SESSION_VAR_NAME = 'session.info';
     public const SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED = 'twofactorauth.verified';
     public const SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER = 'twofactorauth.verified_user';
     public const SESSION_INFO_TEMP_TOKEN_AUTH = 'user.token_auth_temp';
+
     public function getUser()
     {
         if (isset($_SESSION[self::USER_NAME_SESSION_VAR_NAME])) {
             return $_SESSION[self::USER_NAME_SESSION_VAR_NAME];
         }
+
         return null;
     }
+
     public function getUserInfo()
     {
         if (isset($_SESSION[self::SESSION_INFO_SESSION_VAR_NAME])) {
             return $_SESSION[self::SESSION_INFO_SESSION_VAR_NAME];
         }
+
         return null;
     }
+
     public function getSessionTokenAuth()
     {
         if (!empty($_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH])) {
             return $_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH];
         }
+
         return null;
     }
+
     public function hasVerifiedTwoFactor()
     {
         if (!isset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED])) {
             return null;
         }
+
         if (empty($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED])) {
-            return \false;
+            return false;
         }
+
         $verifiedUser = $this->getVerifiedTwoFactorUser();
         if (!empty($verifiedUser)) {
             return $verifiedUser === $this->getUser();
         }
-        return \true;
+
+        return true;
     }
+
     public function getVerifiedTwoFactorUser()
     {
         return $_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER] ?? null;
     }
+
     public function setTwoFactorAuthenticationVerified($userName = null)
     {
         $_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED] = 1;
         $userName = $userName ?? $this->getUser();
+
         if (!empty($userName)) {
             $_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER] = $userName;
         } else {
             unset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER]);
         }
     }
-    public function initialize($userName, #[\SensitiveParameter]
-        $tokenAuth, $isRemembered = \false, $time = null)
-    {
+
+    public function initialize(
+        $userName,
+        #[\SensitiveParameter]
+        $tokenAuth,
+        $isRemembered = false,
+        $time = null
+    ) {
         $time = $time ?: Date::now()->getTimestampUTC();
         $_SESSION[self::USER_NAME_SESSION_VAR_NAME] = $userName;
         $_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED] = 0;
         unset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER]);
         $_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH] = $tokenAuth;
-        $_SESSION[self::SESSION_INFO_SESSION_VAR_NAME] = ['ts' => $time, 'remembered' => $isRemembered, 'expiration' => $this->getExpirationTimeFromNow($time)];
+        $_SESSION[self::SESSION_INFO_SESSION_VAR_NAME] = [
+            'ts' => $time,
+            'remembered' => $isRemembered,
+            'expiration' => $this->getExpirationTimeFromNow($time),
+        ];
     }
+
     public function clear()
     {
-        if (isset($_SESSION[self::USER_NAME_SESSION_VAR_NAME])) {
-            // may not be available during tests
+        if (isset($_SESSION[self::USER_NAME_SESSION_VAR_NAME])) { // may not be available during tests
             unset($_SESSION[self::USER_NAME_SESSION_VAR_NAME]);
         }
-        if (isset($_SESSION[self::SESSION_INFO_SESSION_VAR_NAME])) {
-            // may not be available during tests
+
+        if (isset($_SESSION[self::SESSION_INFO_SESSION_VAR_NAME])) { // may not be available during tests
             unset($_SESSION[self::SESSION_INFO_SESSION_VAR_NAME]);
         }
-        if (isset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED])) {
-            // may not be available during tests
+
+        if (isset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED])) { // may not be available during tests
             unset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED]);
         }
-        if (isset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER])) {
-            // may not be available during tests
+
+        if (isset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER])) { // may not be available during tests
             unset($_SESSION[self::SESSION_INFO_TWO_FACTOR_AUTH_VERIFIED_USER]);
         }
-        if (isset($_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH])) {
-            // may not be available during tests
+
+        if (isset($_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH])) { // may not be available during tests
             unset($_SESSION[self::SESSION_INFO_TEMP_TOKEN_AUTH]);
         }
     }
+
     public function getSessionStartTime()
     {
         $userInfo = $this->getUserInfo();
-        if (empty($userInfo) || empty($userInfo['ts'])) {
+        if (
+            empty($userInfo)
+            || empty($userInfo['ts'])
+        ) {
             return null;
         }
+
         return $userInfo['ts'];
     }
+
     public function getExpirationTime()
     {
         $userInfo = $this->getUserInfo();
-        if (empty($userInfo) || empty($userInfo['expiration'])) {
+        if (
+            empty($userInfo)
+            || empty($userInfo['expiration'])
+        ) {
             return null;
         }
+
         return $userInfo['expiration'];
     }
+
     public function isRemembered()
     {
         $userInfo = $this->getUserInfo();
         return !empty($userInfo['remembered']);
     }
+
     public function updateSessionExpirationTime()
     {
-        $_SESSION[self::SESSION_INFO_SESSION_VAR_NAME]['expiration'] = $this->getExpirationTimeFromNow();
+        $newExpiration = $this->getExpirationTimeFromNow();
+        $storedExpiration = $this->getExpirationTime();
+
+        // storing this on every request rewrites the whole session, which lets a request that
+        // started earlier overwrite a newer one. only skip while the expiration moves forward, so
+        // a shorter window is always stored right away.
+        if ($storedExpiration !== null) {
+            $moved = $newExpiration - $storedExpiration;
+
+            if ($moved >= 0 && $moved < $this->getExpirationWriteThreshold()) {
+                return;
+            }
+        }
+
+        $_SESSION[self::SESSION_INFO_SESSION_VAR_NAME]['expiration'] = $newExpiration;
     }
+
+    /**
+     * Caps the threshold at a twentieth of the configured idle window, so a short timeout does not
+     * lose a noticeable part of it to a skipped write.
+     */
+    private function getExpirationWriteThreshold()
+    {
+        return min(self::EXPIRATION_WRITE_THRESHOLD, intdiv($this->getExpireDuration(), 20));
+    }
+
     private function getExpirationTimeFromNow($time = null)
     {
         $time = $time ?: Date::now()->getTimestampUTC();
+
+        return $time + $this->getExpireDuration();
+    }
+
+    private function getExpireDuration()
+    {
         $general = Config::getInstance()->General;
-        if (!isset($general['login_session_not_remembered_idle_timeout']) || (int) $general['login_session_not_remembered_idle_timeout'] <= 0) {
+
+        if (
+            !isset($general['login_session_not_remembered_idle_timeout'])
+            || (int) $general['login_session_not_remembered_idle_timeout'] <= 0
+        ) {
             $nonRememberedSessionExpireTime = self::DEFAULT_IDLE_TIMEOUT;
         } else {
             $nonRememberedSessionExpireTime = (int) $general['login_session_not_remembered_idle_timeout'];
         }
+
         $sessionCookieLifetime = $general['login_cookie_expire'];
+
         if ($this->isRemembered()) {
             $expireDuration = $sessionCookieLifetime;
         } else {
             $expireDuration = $nonRememberedSessionExpireTime;
         }
-        return $time + $expireDuration;
+
+        return (int) $expireDuration;
     }
 }

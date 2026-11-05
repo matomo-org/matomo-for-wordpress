@@ -1,0 +1,16 @@
+{
+    "Login": {
+        "ChangeYourPassword": "পাসওয়ার্ড পরিবর্তন করুন।",
+        "InvalidOrExpiredToken": "টোকেন মেয়াদউত্তীর্ন হয়ে গেছে",
+        "InvalidUsernameEmail": "ইউজারনেম অথবা পাসওয়ার্ড ভুল।",
+        "LogIn": "সাইন ইন",
+        "LoginPasswordNotCorrect": "ইউজারনেম এবং পাসওয়ার্ড মিলছেনা।",
+        "LostYourPassword": "পাসওয়ার্ড ভুলে গেছেন ?",
+        "NewPassword": "নতুন পাসওয়ার্ড",
+        "NewPasswordRepeat": "নতুন পাসওয়ার্ড(অাবার)",
+        "PasswordChanged": "অাপনার পাসওয়ার্ড পরিবর্তন করা হয়েছে।",
+        "PasswordRepeat": "পাসওয়ার্ড (অাবার)",
+        "PasswordsDoNotMatch": "পাসওয়ার্ড মিলছেনা।",
+        "RememberMe": "অামাকে মনে রেখো ।"
+    }
+}

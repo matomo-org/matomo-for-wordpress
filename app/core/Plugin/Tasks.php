@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\Development;
 use Piwik\Scheduler\Schedule\Schedule;
 use Piwik\Scheduler\Task;
+
 /**
  * Base class for all Tasks declarations.
  * Tasks are usually meant as scheduled tasks that are executed regularly by Piwik in the background. For instance
@@ -23,11 +25,13 @@ class Tasks
      * @var Task[]
      */
     private $tasks = array();
-    public const LOWEST_PRIORITY = Task::LOWEST_PRIORITY;
-    public const LOW_PRIORITY = Task::LOW_PRIORITY;
-    public const NORMAL_PRIORITY = Task::NORMAL_PRIORITY;
-    public const HIGH_PRIORITY = Task::HIGH_PRIORITY;
+
+    public const LOWEST_PRIORITY  = Task::LOWEST_PRIORITY;
+    public const LOW_PRIORITY     = Task::LOW_PRIORITY;
+    public const NORMAL_PRIORITY  = Task::NORMAL_PRIORITY;
+    public const HIGH_PRIORITY    = Task::HIGH_PRIORITY;
     public const HIGHEST_PRIORITY = Task::HIGHEST_PRIORITY;
+
     /**
      * This method is called to collect all schedule tasks. Register all your tasks here that should be executed
      * regularly such as daily or monthly.
@@ -36,6 +40,7 @@ class Tasks
     {
         // eg $this->daily('myMethodName')
     }
+
     /**
      * @return Task[] $tasks
      */
@@ -43,6 +48,7 @@ class Tasks
     {
         return $this->tasks;
     }
+
     /**
      * Schedule the given tasks/method to run once every hour.
      *
@@ -62,6 +68,7 @@ class Tasks
     {
         return $this->custom($this, $methodName, $methodParameter, 'hourly', $priority, $ttlInSeconds);
     }
+
     /**
      * Schedule the given tasks/method to run once every day.
      *
@@ -72,6 +79,7 @@ class Tasks
     {
         return $this->custom($this, $methodName, $methodParameter, 'daily', $priority, $ttlInSeconds);
     }
+
     /**
      * Schedule the given tasks/method to run once every week.
      *
@@ -82,6 +90,7 @@ class Tasks
     {
         return $this->custom($this, $methodName, $methodParameter, 'weekly', $priority, $ttlInSeconds);
     }
+
     /**
      * Schedule the given tasks/method to run once every month.
      *
@@ -92,6 +101,7 @@ class Tasks
     {
         return $this->custom($this, $methodName, $methodParameter, 'monthly', $priority, $ttlInSeconds);
     }
+
     /**
      * Schedules the given tasks/method to run depending on the given scheduled time. Unlike the convenient methods
      * such as {@link hourly()} you need to specify the object on which the given method should be called. This can be
@@ -113,15 +123,20 @@ class Tasks
     protected function custom($objectOrClassName, $methodName, $methodParameter, $time, $priority = self::NORMAL_PRIORITY, ?int $ttlInSeconds = null)
     {
         $this->checkIsValidTask($objectOrClassName, $methodName);
+
         if (is_string($time)) {
             $time = Schedule::factory($time);
         }
-        if (!$time instanceof Schedule) {
+
+        if (!($time instanceof Schedule)) {
             throw new \Exception('$time should be an instance of Schedule');
         }
+
         $this->scheduleTask(new Task($objectOrClassName, $methodName, $methodParameter, $time, $priority, $ttlInSeconds));
+
         return $time;
     }
+
     /**
      * In case you need very high flexibility and none of the other convenient methods such as {@link hourly()} or
      * {@link custom()} suit you, you can use this method to add a custom scheduled task.
@@ -130,6 +145,7 @@ class Tasks
     {
         $this->tasks[] = $task;
     }
+
     private function checkIsValidTask($objectOrClassName, $methodName)
     {
         Development::checkMethodIsCallable($objectOrClassName, $methodName, 'The registered task is not valid as the method');

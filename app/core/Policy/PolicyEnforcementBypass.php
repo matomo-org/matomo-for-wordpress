@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Policy;
 
 /**
@@ -20,11 +21,13 @@ class PolicyEnforcementBypass
     /**
      * @var bool
      */
-    private static $active = \false;
-    public static function isActive() : bool
+    private static $active = false;
+
+    public static function isActive(): bool
     {
         return self::$active;
     }
+
     /**
      * Runs the given callable with policy enforcement bypassed.
      *
@@ -35,7 +38,7 @@ class PolicyEnforcementBypass
     public static function run(callable $fn)
     {
         $previous = self::$active;
-        self::$active = \true;
+        self::$active = true;
         try {
             return $fn();
         } finally {

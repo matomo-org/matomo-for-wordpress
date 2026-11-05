@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\DataTable;
 
 use InvalidArgumentException;
@@ -14,6 +16,7 @@ use Piwik\DataTable;
 use Piwik\DataTable\DataTableInterface;
 use Piwik\Plugins\BotTracking\Columns\Metrics\DiscrepancyScore;
 use Piwik\Plugins\BotTracking\Metrics;
+
 /**
  * Materialises the bounded 0–100 Discrepancy Score as a real column on the merged favoured-pages
  * table. Invoked during archiving by {@see \Piwik\Plugins\BotTracking\RecordBuilders\AIChatbotFavouredPages}
@@ -29,13 +32,18 @@ class FavouredPagesScorer
 {
     /** @var DiscrepancyScore::VARIANT_HUMAN_FAVOURED|DiscrepancyScore::VARIANT_AI_FAVOURED */
     private $variant;
+
     public function __construct(string $variant)
     {
-        if ($variant !== DiscrepancyScore::VARIANT_HUMAN_FAVOURED && $variant !== DiscrepancyScore::VARIANT_AI_FAVOURED) {
+        if (
+            $variant !== DiscrepancyScore::VARIANT_HUMAN_FAVOURED
+            && $variant !== DiscrepancyScore::VARIANT_AI_FAVOURED
+        ) {
             throw new InvalidArgumentException('Unknown DiscrepancyScore variant: ' . $variant);
         }
         $this->variant = $variant;
     }
+
     /**
      * Adds the `discrepancy_score` column to every row of the table (recursing into
      * `DataTable\Map` children so each period self-calibrates), and marks the column 'skip' so it is
@@ -43,7 +51,7 @@ class FavouredPagesScorer
      *
      * @param DataTable|DataTable\Map $table
      */
-    public function addScores(DataTableInterface $table) : void
+    public function addScores(DataTableInterface $table): void
     {
         if ($table instanceof DataTable\Map) {
             foreach ($table->getDataTables() as $childTable) {
@@ -51,10 +59,15 @@ class FavouredPagesScorer
             }
             return;
         }
+
         if (!$table instanceof DataTable) {
             return;
         }
-        $strongColumn = $this->variant === DiscrepancyScore::VARIANT_HUMAN_FAVOURED ? Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS : Metrics::COLUMN_AI_CHATBOT_REQUESTS;
+
+        $strongColumn = $this->variant === DiscrepancyScore::VARIANT_HUMAN_FAVOURED
+            ? Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS
+            : Metrics::COLUMN_AI_CHATBOT_REQUESTS;
+
         // Volume anchor = the busiest page's strong-side value. Exclude the "Others" summary row,
         // whose aggregate tail would otherwise hijack the anchor and deflate every real score.
         $maxStrong = 0;
@@ -67,22 +80,27 @@ class FavouredPagesScorer
                 $maxStrong = $value;
             }
         }
+
         foreach ($table->getRows() as $row) {
             // Leave the "Others" summary row unscored — a score over an aggregate of URLs is meaningless.
             if ($row->isSummaryRow()) {
                 continue;
             }
+
             $human = (int) $row->getColumn(Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS);
-            $ai = (int) $row->getColumn(Metrics::COLUMN_AI_CHATBOT_REQUESTS);
+            $ai    = (int) $row->getColumn(Metrics::COLUMN_AI_CHATBOT_REQUESTS);
+
             if ($this->variant === DiscrepancyScore::VARIANT_HUMAN_FAVOURED) {
                 $strong = $human;
-                $weak = $ai;
+                $weak   = $ai;
             } else {
                 $strong = $ai;
-                $weak = $human;
+                $weak   = $human;
             }
+
             $row->setColumn(Metrics::COLUMN_DISCREPANCY_SCORE, self::score($strong, $weak, $maxStrong));
         }
+
         // Mark the score 'skip' so the Truncate filter leaves it out of the "Others" summary row it
         // builds while archiving — a score over an aggregate of URLs is meaningless. (Not serialised
         // with the blob, so readers re-apply 'skip' for the report totals row; see API.)
@@ -93,21 +111,25 @@ class FavouredPagesScorer
         $ops[Metrics::COLUMN_DISCREPANCY_SCORE] = 'skip';
         $table->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, $ops);
     }
+
     /**
      * The bounded 0–100 score for one page:
      *   lean   = max(0, (strong − weak) / (strong + weak))    // 0 = balanced or opposite, 1 = entirely one-sided
      *   volume = log10(strong + 1) / log10(maxStrong + 1)      // 0..1, anchored to the busiest page
      *   score  = round(100 × lean × volume, 1)
      */
-    public static function score(int $strong, int $weak, int $maxStrong) : float
+    public static function score(int $strong, int $weak, int $maxStrong): float
     {
         $total = $strong + $weak;
         if ($total <= 0) {
             return 0.0;
         }
+
         $lean = max(0, ($strong - $weak) / $total);
+
         $anchor = log10($maxStrong + 1);
         $volume = $anchor > 0 ? log10($strong + 1) / $anchor : 0.0;
+
         return round(100 * $lean * $volume, 1);
     }
 }

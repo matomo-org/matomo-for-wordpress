@@ -6,15 +6,18 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Installation;
 
 use Piwik\Mail;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Url;
+
 class Onboarding
 {
     public const OPTION_NAME_INSTALL_MAIL = 'install_mail_sent';
+
     public static function sendSysAdminMail($email)
     {
         if (!Piwik::isValidEmailString($email)) {
@@ -24,6 +27,7 @@ class Onboarding
             return;
         }
         Option::set(self::OPTION_NAME_INSTALL_MAIL, 1);
+
         $message = 'Hey there,<br>
 <br>
 Thank you for installing Matomo On-Premises, the #1 Google Analytics alternative that protects your data.<br>
@@ -58,10 +62,12 @@ Matthieu<br>
 Matomo Founder<br>
 <br>
 ';
+
         $mail = new Mail();
         $mail->addTo($email);
         $mail->setSubject('Congratulations for setting up Matomo');
         $mail->setBodyHtml($message);
+
         try {
             $mail->send();
         } catch (\Exception $e) {

@@ -6,30 +6,36 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\LogTableTemporary;
 use Piwik\Piwik;
 use Piwik\Tracker\LogTable;
+
 class LogTablesProvider
 {
     /**
      * @var Manager
      */
     private $pluginManager;
+
     /**
      * @var LogTable[]|null
      */
     private $tablesCache;
+
     /**
      * @var LogTableTemporary
      */
     private $tempTable;
-    public function __construct(\Piwik\Plugin\Manager $pluginManager)
+
+    public function __construct(Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
+
     /**
      * Get an instance of a specific log table if such a log table exists.
      *
@@ -46,8 +52,10 @@ class LogTablesProvider
                 return $table;
             }
         }
+
         return null;
     }
+
     /**
      * @param LogTableTemporary|null $table
      */
@@ -55,10 +63,12 @@ class LogTablesProvider
     {
         $this->tempTable = $table;
     }
+
     public function clearCache()
     {
         $this->tablesCache = null;
     }
+
     /**
      * Needed for log query builder
      * @return LogTable[]
@@ -71,6 +81,7 @@ class LogTablesProvider
         }
         return $tables;
     }
+
     /**
      * Get all log table instances defined by any activated and loaded plugin. The returned tables are not sorted in
      * any order.
@@ -80,7 +91,9 @@ class LogTablesProvider
     {
         if (!isset($this->tablesCache)) {
             $tables = $this->pluginManager->findMultipleComponents('Tracker', 'Piwik\\Tracker\\LogTable');
+
             $logTables = array();
+
             /**
              * Only used for tests. Triggered to add custom log tables which are not automatically picked up.
              * In case you need to define a log table, please put them inside the "Tracker" directory of your plugin.
@@ -99,11 +112,14 @@ class LogTablesProvider
              * @ignore
              */
             Piwik::postEvent('LogTables.addLogTables', array(&$logTables));
+
             foreach ($tables as $table) {
                 $logTables[] = StaticContainer::get($table);
             }
+
             $this->tablesCache = $logTables;
         }
+
         return $this->tablesCache;
     }
 }

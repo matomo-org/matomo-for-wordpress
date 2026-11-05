@@ -1,0 +1,8 @@
+{
+    "Diagnostics": {
+        "ConfigFileTitle": "Konfigurationsfil",
+        "MysqlMaxPacketSize": "Maks. pakkestørrelse",
+        "MysqlMaxPacketSizeWarning": "Det anbefales at sætte '%1$smax_allowed_packet%2$s' i din MySQL-konfiguration til mindst %3$s. Den nuværende værdi er %4$s.",
+        "Sections": "Sektioner"
+    }
+}

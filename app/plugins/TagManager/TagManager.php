@@ -6,6 +6,7 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Access;
@@ -41,9 +42,11 @@ use Piwik\View;
 use Piwik\Context;
 use Piwik\Log\LoggerInterface;
 use Piwik\SettingsPiwik;
+
 class TagManager extends \Piwik\Plugin
 {
-    public static $enableAutoContainerCreation = \true;
+    public static $enableAutoContainerCreation = true;
+
     public function registerEvents()
     {
         return array(
@@ -57,8 +60,7 @@ class TagManager extends \Piwik\Plugin
             'PluginManager.pluginUninstalled' => 'onPluginActivateOrInstall',
             'TagManager.regenerateContainerReleases' => 'regenerateReleasedContainers',
             'Controller.CoreHome.checkForUpdates.end' => 'regenerateReleasedContainers',
-            'CustomJsTracker.trackerJsChanged' => 'regenerateReleasedContainers',
-            // in case a Matomo tracker is bundled
+            'CustomJsTracker.trackerJsChanged' => 'regenerateReleasedContainers', // in case a Matomo tracker is bundled
             'SitesManager.deleteSite.end' => 'onSiteDeleted',
             'SitesManager.addSite.end' => 'onSiteAdded',
             'System.addSystemSummaryItems' => 'addSystemSummaryItems',
@@ -72,9 +74,10 @@ class TagManager extends \Piwik\Plugin
             'Access.Capability.addCapabilities' => 'addCapabilities',
             'Db.getTablesInstalled' => 'getTablesInstalled',
             'Template.siteWithoutDataTab.ReactJs.content' => 'embedReactTagManagerTrackingCode',
-            'SitesManager.getMessagesToWarnOnSiteRemoval' => 'getMessagesToWarnOnSiteRemoval',
+            'SitesManager.getMessagesToWarnOnSiteRemoval' => 'getMessagesToWarnOnSiteRemoval'
         );
     }
+
     /**
      * Register the new tables, so Matomo knows about them.
      *
@@ -89,71 +92,103 @@ class TagManager extends \Piwik\Plugin
         $allTablesInstalled[] = Common::prefixTable('tagmanager_trigger');
         $allTablesInstalled[] = Common::prefixTable('tagmanager_variable');
     }
+
     public function addBodyClass(&$out, $type)
     {
         if ($type === 'tagmanager') {
             $out .= 'tagmanager';
         }
     }
+
     public function addCapabilities(&$capabilities)
     {
         $capabilities[] = new TagManagerWrite();
         $capabilities[] = new PublishLiveContainer();
-        $systemSettings = StaticContainer::get('Piwik\\Plugins\\TagManager\\SystemSettings');
+
+        $systemSettings = StaticContainer::get('Piwik\Plugins\TagManager\SystemSettings');
         $restrictCustomTemplates = $systemSettings->restrictCustomTemplates->getValue();
-        if ($restrictCustomTemplates === \Piwik\Plugins\TagManager\SystemSettings::CUSTOM_TEMPLATES_ADMIN) {
+
+        if ($restrictCustomTemplates === SystemSettings::CUSTOM_TEMPLATES_ADMIN) {
             // there is no need to show it when they are completely disabled,
             // when only super users are allowed to use them
             $capabilities[] = new UseCustomTemplates();
         }
-        if ($restrictCustomTemplates === \Piwik\Plugins\TagManager\SystemSettings::CUSTOM_TEMPLATES_SUPERUSER && Piwik::hasUserSuperUserAccess()) {
+
+        if ($restrictCustomTemplates === SystemSettings::CUSTOM_TEMPLATES_SUPERUSER && Piwik::hasUserSuperUserAccess()) {
             // there is no need to show it when they are completely disabled,
             // when only super users are allowed to use them
             $capabilities[] = new UseCustomTemplates();
         }
     }
+
     public function addGlossaryItems(&$glossaryItems)
     {
         Piwik::checkUserHasSomeViewAccess();
+
         $items = array('title' => Piwik::translate('TagManager_TagManager'), 'entries' => array());
+
         $contexts = Request::processRequest('TagManager.getAvailableContexts');
         foreach ($contexts as $context) {
-            $tagsCategories = Request::processRequest('TagManager.getAvailableTagTypesInContext', array('idContext' => $context['id']));
+            $tagsCategories = Request::processRequest('TagManager.getAvailableTagTypesInContext', array(
+                'idContext' => $context['id']
+            ));
             foreach ($tagsCategories as $tags) {
                 foreach ($tags['types'] as $tag) {
                     if (!empty($tag['description'])) {
-                        $items['entries'][] = array('name' => $tag['name'] . ' Tag', 'documentation' => $tag['description']);
+                        $items['entries'][] = array(
+                            'name' => $tag['name'] . ' Tag',
+                            'documentation' => $tag['description']
+                        );
                     }
                 }
             }
-            $triggersCategories = Request::processRequest('TagManager.getAvailableTriggerTypesInContext', array('idContext' => $context['id']));
+
+            $triggersCategories = Request::processRequest('TagManager.getAvailableTriggerTypesInContext', array(
+                'idContext' => $context['id']
+            ));
             foreach ($triggersCategories as $triggers) {
                 foreach ($triggers['types'] as $trigger) {
                     if (!empty($trigger['description'])) {
-                        $items['entries'][] = array('name' => $trigger['name'] . ' Trigger', 'documentation' => $trigger['description']);
+                        $items['entries'][] = array(
+                            'name' => $trigger['name'] . ' Trigger',
+                            'documentation' => $trigger['description']
+                        );
                     }
                 }
             }
-            $variablesCategories = Request::processRequest('TagManager.getAvailableVariableTypesInContext', array('idContext' => $context['id']));
+
+            $variablesCategories = Request::processRequest('TagManager.getAvailableVariableTypesInContext', array(
+                'idContext' => $context['id']
+            ));
             foreach ($variablesCategories as $variables) {
                 foreach ($variables['types'] as $variable) {
                     if (!empty($variable['description'])) {
-                        $items['entries'][] = array('name' => $variable['name'] . ' Variable', 'documentation' => $variable['description']);
+                        $items['entries'][] = array(
+                            'name' => $variable['name'] . ' Variable',
+                            'documentation' => $variable['description']
+                        );
                     }
                 }
             }
         }
-        $variablesProvider = StaticContainer::get('Piwik\\Plugins\\TagManager\\Template\\Variable\\VariablesProvider');
+
+        $variablesProvider = StaticContainer::get('Piwik\Plugins\TagManager\Template\Variable\VariablesProvider');
         foreach ($variablesProvider->getPreConfiguredVariables() as $preConfiguredVariable) {
             if ($preConfiguredVariable->getDescription()) {
-                $items['entries'][] = array('name' => $preConfiguredVariable->getName() . ' Variable', 'documentation' => $preConfiguredVariable->getDescription(), 'id' => '{{' . $preConfiguredVariable->getId() . '}}');
+                $items['entries'][] = array(
+                    'name' => $preConfiguredVariable->getName() . ' Variable',
+                    'documentation' => $preConfiguredVariable->getDescription(),
+                    'id' => '{{' . $preConfiguredVariable->getId() . '}}'
+                );
             }
         }
         usort($items['entries'], function ($a, $b) {
             return strcmp($a['name'], $b['name']);
         });
+
         $glossaryItems['tagmanager'] = $items;
     }
+
     public function onPluginActivateOrInstall($pluginName = '')
     {
         if ($pluginName !== 'TagManager') {
@@ -164,36 +199,39 @@ class TagManager extends \Piwik\Plugin
             }
         }
     }
+
     public function onPluginActivated($pluginName = '')
     {
         if ($pluginName === 'TagManager') {
             //Need to manually set this since values inc config.php is not loaded
             $pluginDirectory = Plugin\Manager::getPluginDirectory('TagManager');
-            $configPhp = (include $pluginDirectory . '/config/config.php');
+            $configPhp = include $pluginDirectory . '/config/config.php';
             foreach ($configPhp as $key => $val) {
                 if (!StaticContainer::getContainer()->has($key)) {
                     StaticContainer::getContainer()->set($key, $val);
                 }
             }
+
             $idSite = 1;
+
             try {
                 Site::getSite($idSite);
             } catch (UnexpectedWebsiteFoundException $e) {
-                return;
-                // site not exists
+                return; // site not exists
             }
-            $containerModel = StaticContainer::get('Piwik\\Plugins\\TagManager\\Model\\Container');
+            $containerModel = StaticContainer::get('Piwik\Plugins\TagManager\Model\Container');
             if ($containerModel->getContainers($idSite)) {
                 // already has a container
                 return;
             }
+
             if (!SettingsPiwik::getPiwikUrl()) {
                 // fixes URL in matomo container variable is empty and cannot be detected
                 SettingsPiwik::overwritePiwikUrl('https://' . SettingsPiwik::getPiwikInstanceId());
             }
+
             try {
-                StaticContainer::getContainer()->get('Piwik\\Plugins\\TagManager\\Context\\Storage\\StorageInterface');
-                //this will throw an error on cloud, so we need to catch this and avoid the exception stack trace
+                StaticContainer::getContainer()->get('Piwik\Plugins\TagManager\Context\Storage\StorageInterface'); //this will throw an error on cloud, so we need to catch this and avoid the exception stack trace
                 Request::processRequest('TagManager.createDefaultContainerForSite', ['idSite' => $idSite], []);
             } catch (\Exception $e) {
                 //Do nothing here, it fails on cloud always
@@ -202,30 +240,37 @@ class TagManager extends \Piwik\Plugin
             $this->onPluginActivateOrInstall($pluginName);
         }
     }
+
     public static function getAbsolutePathToContainerDirectory()
     {
         return PIWIK_DOCUMENT_ROOT . StaticContainer::get('TagManagerContainerStorageDir');
     }
+
     public function getQueryParametersToExclude(&$parametersToExclude)
     {
         $parametersToExclude[] = PreviewCookie::COOKIE_NAME;
         $parametersToExclude[] = 'mtmSetDebugFlag';
     }
+
     public function addTagManagerMenuLink(&$out)
     {
         // Check whether to show the MTM code. If not, simply return early
         if ($this->isAccessRestrictedForUser()) {
             return;
         }
+
         $out .= '<a href="#/tagmanager">' . Piwik::translate('TagManager_TagManager') . '</a>';
     }
+
     public function addTagManagerCode(&$out)
     {
         Piwik::checkUserHasSomeViewAccess();
+
         // Check whether to show the MTM code. If not, simply return early
         if ($this->isAccessRestrictedForUser()) {
             return;
         }
+
         $model = $this->getContainerModel();
         $view = new View("@TagManager/trackingCode");
         $view->action = Piwik::getAction();
@@ -233,23 +278,28 @@ class TagManager extends \Piwik\Plugin
         $view->isJsTrackerInstallCheckAvailable = Manager::getInstance()->isPluginActivated('JsTrackerInstallCheck');
         $out .= $view->render();
     }
+
     public function setTagManagerCode(&$out)
     {
         // Check whether to show the MTM code. If not, simply return early
         if ($this->isAccessRestrictedForUser()) {
             return;
         }
+
         $newContent = '<h2>' . Piwik::translate('SitesManager_StepByStepGuide') . '</h2>';
         $this->addTagManagerCode($newContent);
         $out = $newContent;
     }
+
     public function embedReactTagManagerTrackingCode(&$out, SiteContentDetector $detector)
     {
         Piwik::checkUserHasSomeViewAccess();
+
         // Check whether to show the MTM code. If not, simply return early
         if ($this->isAccessRestrictedForUser()) {
             return;
         }
+
         $model = $this->getContainerModel();
         $view = new View("@TagManager/trackingCodeReact");
         $view->action = Piwik::getAction();
@@ -257,6 +307,7 @@ class TagManager extends \Piwik\Plugin
         $view->showContainerRow = $model->getNumContainersTotal() > 1;
         $out .= $view->render();
     }
+
     public function addTagManagerTrackingCodeHelp(&$out)
     {
         $idSite = Common::getRequestVar('idSite', 0, 'int');
@@ -265,25 +316,30 @@ class TagManager extends \Piwik\Plugin
             $out .= $view->render();
         }
     }
+
     public function addSystemSummaryItems(&$systemSummary)
     {
         $model = $this->getContainerModel();
         $numContainers = $model->getNumContainersTotal();
+
         $systemSummary[] = new SystemSummary\Item($key = 'tagmanagercontainer', Piwik::translate('%s containers (in tag manager)', $numContainers), $value = null, array('module' => 'TagManager', 'action' => 'manageContainers'), '', $order = 20);
     }
+
     private function getContainerModel()
     {
-        return StaticContainer::get('Piwik\\Plugins\\TagManager\\Model\\Container');
+        return StaticContainer::get('Piwik\Plugins\TagManager\Model\Container');
     }
+
     /**
      * @param bool $onlyWithPreviewRelease if true only regenerates containers if there is a preview release.
      */
-    public function regenerateReleasedContainers($onlyWithPreviewRelease = \false)
+    public function regenerateReleasedContainers($onlyWithPreviewRelease = false)
     {
         $pluginManager = Plugin\Manager::getInstance();
         if (!$pluginManager->isPluginInstalled('TagManager')) {
             return;
         }
+
         try {
             StaticContainer::get(ContainerIdGenerator::class);
         } catch (\Exception $e) {
@@ -297,15 +353,16 @@ class TagManager extends \Piwik\Plugin
             // and a container would not yet exist anyway.
             return;
         }
-        Access::doAsSuperUser(function () use($onlyWithPreviewRelease) {
+
+        Access::doAsSuperUser(function () use ($onlyWithPreviewRelease) {
             // we need to run as super user because after a core update the user might not be an admin etc
             // (and admin is needed for debug action)
-            $containerModel = StaticContainer::get('Piwik\\Plugins\\TagManager\\Model\\Container');
+            $containerModel = StaticContainer::get('Piwik\Plugins\TagManager\Model\Container');
             try {
                 $containers = $containerModel->getActiveContainersInfo();
                 foreach ($containers as $container) {
                     try {
-                        Context::changeIdSite($container['idsite'], function () use($containerModel, $container, $onlyWithPreviewRelease) {
+                        Context::changeIdSite($container['idsite'], function () use ($containerModel, $container, $onlyWithPreviewRelease) {
                             if ($onlyWithPreviewRelease) {
                                 $containerModel->generateContainerIfHasPreviewRelease($container['idsite'], $container['idcontainer']);
                             } else {
@@ -317,10 +374,13 @@ class TagManager extends \Piwik\Plugin
                     }
                 }
             } catch (\Exception $e) {
-                StaticContainer::get(LoggerInterface::class)->error('There was an error while regenerating container releases: {exception}', ['exception' => $e]);
+                StaticContainer::get(LoggerInterface::class)->error('There was an error while regenerating container releases: {exception}', [
+                    'exception' => $e,
+                ]);
             }
         });
     }
+
     /**
      * @return TagManagerDao[]
      */
@@ -328,27 +388,35 @@ class TagManager extends \Piwik\Plugin
     {
         return [new TagsDao(), new TriggersDao(), new VariablesDao(), new ContainersDao(), new ContainerVersionsDao(), new ContainerReleaseDao()];
     }
+
     public function install()
     {
         foreach ($this->getAllDAOs() as $dao) {
             $dao->install();
         }
-        $config = StaticContainer::get('Piwik\\Plugins\\TagManager\\Configuration');
+
+        $config = StaticContainer::get('Piwik\Plugins\TagManager\Configuration');
         $config->install();
+
         $salt = new Salt();
         $salt->generateSaltIfNeeded();
     }
+
     public function uninstall()
     {
         foreach ($this->getAllDAOs() as $dao) {
             $dao->uninstall();
         }
-        $config = StaticContainer::get('Piwik\\Plugins\\TagManager\\Configuration');
+
+        $config = StaticContainer::get('Piwik\Plugins\TagManager\Configuration');
         $config->uninstall();
+
         $salt = new Salt();
         $salt->removeSalt();
+
         BaseContext::removeAllFilesOfAllContainers();
     }
+
     public function getClientSideTranslationKeys(&$result)
     {
         $result[] = 'General_Id';
@@ -879,6 +947,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_LearnMoreFullStop';
         $result[] = 'TagManager_CustomHTMLTagNameInlineHelpText';
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/TagManager/stylesheets/manageList.less";
@@ -894,46 +963,59 @@ class TagManager extends \Piwik\Plugin
         $stylesheets[] = "plugins/TagManager/vue/src/TagmanagerTrackingCode/TagManagerTrackingCode.less";
         $stylesheets[] = "plugins/TagManager/vue/src/CopyDialog/CopyDialog.less";
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/TagManager/libs/jquery-timepicker/jquery.timepicker.min.js";
         $jsFiles[] = "plugins/TagManager/javascripts/tagmanagerHelper.js";
     }
+
     private function hasMeasurableTypeWebsite($idSite)
     {
         try {
             $type = Site::getTypeFor($idSite);
         } catch (UnexpectedWebsiteFoundException $e) {
-            return \false;
-            // no longer exists
+            return false; // no longer exists
         }
+
         return $type === 'website';
     }
+
     public function onSiteAdded($idSite)
     {
         if (self::$enableAutoContainerCreation && $this->hasMeasurableTypeWebsite($idSite)) {
-            Request::processRequest('TagManager.createDefaultContainerForSite', array('idSite' => $idSite), $default = []);
+            Request::processRequest('TagManager.createDefaultContainerForSite', array(
+                'idSite' => $idSite,
+            ), $default = []);
         }
     }
+
     public function onSiteDeleted($idSite)
     {
         $deletedDate = Date::now()->getDatetime();
+
         $dao = new TagsDao();
         $dao->deleteTagsForSite($idSite, $deletedDate);
+
         $dao = new TriggersDao();
         $dao->deleteTriggersForSite($idSite, $deletedDate);
+
         $dao = new VariablesDao();
         $dao->deleteVariablesForSite($idSite, $deletedDate);
+
         $dao = new ContainerVersionsDao();
         $dao->deleteAllVersionsForSite($idSite, $deletedDate);
+
         $dao = new ContainerReleaseDao();
         $dao->deleteAllVersionsForSite($idSite, $deletedDate);
+
         $dao = new ContainersDao();
         foreach ($dao->getContainersForSite($idSite) as $container) {
             BaseContext::removeAllContainerFiles($container['idcontainer']);
         }
         $dao->deleteContainersForSite($idSite, $deletedDate);
     }
+
     public function getMessagesToWarnOnSiteRemoval(&$messages, $idSite)
     {
         Piwik::checkUserHasSuperUserAccess();
@@ -942,13 +1024,18 @@ class TagManager extends \Piwik\Plugin
         if (!empty($containers)) {
             $view = new View('@TagManager/deleteWebsite');
             $view->containers = $containers;
-            $view->link = Url::getCurrentUrlWithoutFileName() . 'index.php?' . Url::getQueryStringFromParameters(['idSite' => $idSite, 'module' => 'TagManager', 'action' => 'manageVersions']);
+            $view->link = Url::getCurrentUrlWithoutFileName() . 'index.php?' . Url::getQueryStringFromParameters([
+                    'idSite' => $idSite,
+                    'module' => 'TagManager',
+                    'action' => 'manageVersions',
+                ]);
             $messages[] = $view->render();
         }
     }
-    private function isAccessRestrictedForUser() : bool
+
+    private function isAccessRestrictedForUser(): bool
     {
         $idSite = \Piwik\Request::fromRequest()->getIntegerParameter('idSite', 0);
-        return !StaticContainer::get(\Piwik\Plugins\TagManager\SystemSettings::class)->doesCurrentUserHaveTagManagerAccess($idSite);
+        return !StaticContainer::get(SystemSettings::class)->doesCurrentUserHaveTagManagerAccess($idSite);
     }
 }

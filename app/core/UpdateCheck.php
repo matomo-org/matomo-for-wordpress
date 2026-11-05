@@ -6,55 +6,67 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Piwik\Container\StaticContainer;
+
 /**
  * Class to check if a newer version of Piwik is available
  */
 class UpdateCheck
 {
-    public const CHECK_INTERVAL = 28800;
-    // every 8 hours
-    public const UI_CLICK_CHECK_INTERVAL = 10;
-    // every 10s when user clicks UI link
+    public const CHECK_INTERVAL = 28800; // every 8 hours
+    public const UI_CLICK_CHECK_INTERVAL = 10; // every 10s when user clicks UI link
     public const LAST_CHECK_FAILED = 'UpdateCheck_LastCheckFailed';
     public const LAST_TIME_CHECKED = 'UpdateCheck_LastTimeChecked';
     public const LATEST_VERSION = 'UpdateCheck_LatestVersion';
     public const SOCKET_TIMEOUT = 5;
+
     /**
      * Check for a newer version
      *
      * @param bool $force Force check
      * @param int $interval Interval used for update checks
      */
-    public static function check($force = \false, $interval = null)
+    public static function check($force = false, $interval = null)
     {
-        if (!\Piwik\SettingsPiwik::isAutoUpdateEnabled()) {
+        if (!SettingsPiwik::isAutoUpdateEnabled()) {
             return;
         }
+
         if ($interval === null) {
             $interval = self::CHECK_INTERVAL;
         }
-        $lastTimeChecked = \Piwik\Option::get(self::LAST_TIME_CHECKED);
-        if ($force || $lastTimeChecked === \false || time() - $interval > $lastTimeChecked) {
+
+        $lastTimeChecked = Option::get(self::LAST_TIME_CHECKED);
+        if (
+            $force
+            || $lastTimeChecked === false
+            || time() - $interval > $lastTimeChecked
+        ) {
             // set the time checked first, so that parallel Piwik requests don't all trigger the http requests
-            \Piwik\Option::set(self::LAST_TIME_CHECKED, time(), $autoLoad = 1);
+            Option::set(self::LAST_TIME_CHECKED, time(), $autoLoad = 1);
+
             $latestVersion = self::getLatestAvailableVersionNumber();
             $latestVersion = trim((string) $latestVersion);
             if (!preg_match('~^[0-9][0-9a-zA-Z_.-]*$~D', $latestVersion)) {
                 $latestVersion = '';
             }
+
             $hasLastCheckFailed = '' === $latestVersion;
-            \Piwik\Option::set(self::LAST_CHECK_FAILED, $hasLastCheckFailed);
+
+            Option::set(self::LAST_CHECK_FAILED, $hasLastCheckFailed);
+
             if ($hasLastCheckFailed) {
                 // retry check on next request if previous attempt failed
-                \Piwik\Option::set(self::LAST_TIME_CHECKED, $lastTimeChecked, $autoLoad = 1);
+                Option::set(self::LAST_TIME_CHECKED, $lastTimeChecked, $autoLoad = 1);
             } else {
-                \Piwik\Option::set(self::LATEST_VERSION, $latestVersion);
+                Option::set(self::LATEST_VERSION, $latestVersion);
             }
         }
     }
+
     /**
      * Get the latest available version number for the currently active release channel. Eg '2.15.0-b4' or '2.15.0'.
      * Should return a semantic version number in format MAJOR.MINOR.PATCH (https://semver.org/).
@@ -63,17 +75,20 @@ class UpdateCheck
      */
     private static function getLatestAvailableVersionNumber()
     {
-        $releaseChannels = StaticContainer::get('\\Piwik\\Plugin\\ReleaseChannels');
+        $releaseChannels = StaticContainer::get('\Piwik\Plugin\ReleaseChannels');
         $channel = $releaseChannels->getActiveReleaseChannel();
         $url = $channel->getUrlToCheckForLatestAvailableVersion();
+
         try {
-            $latestVersion = \Piwik\Http::sendHttpRequest($url, self::SOCKET_TIMEOUT);
+            $latestVersion = Http::sendHttpRequest($url, self::SOCKET_TIMEOUT);
         } catch (\Exception $e) {
             // e.g., disable_functions = fsockopen; allow_url_open = Off
             $latestVersion = '';
         }
+
         return $latestVersion;
     }
+
     /**
      * Returns the latest available version number. Does not perform a check whether a later version is available.
      *
@@ -81,15 +96,17 @@ class UpdateCheck
      */
     public static function getLatestVersion()
     {
-        return \Piwik\Option::get(self::LATEST_VERSION);
+        return Option::get(self::LATEST_VERSION);
     }
+
     /**
      * Returns whether the last update check was flagged as having failed or not.
      */
-    public static function hasLastCheckFailed() : bool
+    public static function hasLastCheckFailed(): bool
     {
-        return (bool) \Piwik\Option::get(self::LAST_CHECK_FAILED);
+        return (bool) Option::get(self::LAST_CHECK_FAILED);
     }
+
     /**
      * Returns version number of a newer Piwik release.
      *
@@ -99,9 +116,12 @@ class UpdateCheck
     public static function isNewestVersionAvailable()
     {
         $latestVersion = self::getLatestVersion();
-        if (!empty($latestVersion) && version_compare(\Piwik\Version::VERSION, $latestVersion) == -1) {
+        if (
+            !empty($latestVersion)
+            && version_compare(Version::VERSION, $latestVersion) == -1
+        ) {
             return $latestVersion;
         }
-        return \false;
+        return false;
     }
 }

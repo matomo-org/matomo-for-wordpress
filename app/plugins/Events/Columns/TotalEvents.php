@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Events\Columns;
 
 use Piwik\Piwik;
@@ -13,6 +14,7 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 class TotalEvents extends VisitDimension
 {
     protected $columnName = 'visit_total_events';
@@ -20,10 +22,12 @@ class TotalEvents extends VisitDimension
     protected $segmentName = 'events';
     protected $nameSingular = 'Events_Events';
     protected $type = self::TYPE_NUMBER;
+
     public function getAcceptValues()
     {
         return Piwik::translate('Events_EventsSegmentHelp', '&segment=events>0');
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -33,8 +37,10 @@ class TotalEvents extends VisitDimension
         if ($this->isEventAction($action)) {
             return 1;
         }
+
         return 0;
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -44,14 +50,16 @@ class TotalEvents extends VisitDimension
         if ($this->isEventAction($action)) {
             return 'visit_total_events + 1';
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param Action|null $action
      * @return bool
      */
     private function isEventAction($action)
     {
-        return $action && $action->getActionType() == Action::TYPE_EVENT;
+        return ($action && $action->getActionType() == Action::TYPE_EVENT);
     }
 }

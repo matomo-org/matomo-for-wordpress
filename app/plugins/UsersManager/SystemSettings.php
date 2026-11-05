@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Piwik;
 use Piwik\Plugins\UsersManager\Validators\AllowedEmailDomain;
 use Piwik\Settings\Setting;
 use Piwik\Settings\FieldConfig;
+
 /**
  * Defines Settings for UsersManager.
  */
@@ -19,21 +21,25 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
     /** @var Setting */
     public $allowedEmailDomains;
+
     /** @var Setting */
     public $enableInactiveUsersNotifications;
+
     protected function init()
     {
         $this->allowedEmailDomains = $this->createAllowedEmailDomains();
         $this->enableInactiveUsersNotifications = $this->createEnableInactiveUsersNotifications();
     }
-    private function createEnableInactiveUsersNotifications() : Setting
+
+    private function createEnableInactiveUsersNotifications(): Setting
     {
-        return $this->makeSetting('enableInactiveUsersNotifications', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        return $this->makeSetting('enableInactiveUsersNotifications', $default = false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('UsersManager_SettingEnableInactiveUsersNotifications');
             $field->description = Piwik::translate('UsersManager_SettingEnableInactiveUsersNotificationsHelp');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
         });
     }
+
     private function createAllowedEmailDomains()
     {
         return $this->makeSetting('allowedEmailDomains', array(), FieldConfig::TYPE_ARRAY, function (FieldConfig $field) {
@@ -43,17 +49,22 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             $arrayField = new FieldConfig\ArrayField($title, FieldConfig::UI_CONTROL_TEXT);
             $field->uiControlAttributes['field'] = $arrayField->toArray();
             $field->description = Piwik::translate('UsersManager_SettingRestrictLoginEmailDomainsHelp');
+
             $allowedEmailDomains = new AllowedEmailDomain($this);
             $domainsInUse = $allowedEmailDomains->getEmailDomainsInUse();
             $field->inlineHelp .= '<br><strong>' . Piwik::translate('UsersManager_SettingRestrictLoginEmailDomainsHelpInUse') . '</strong>';
             $field->inlineHelp .= '<br>' . implode('<br>', $domainsInUse);
-            $field->validate = function ($value) use($field, $allowedEmailDomains) {
+
+            $field->validate = function ($value) use ($field, $allowedEmailDomains) {
                 $value = call_user_func($field->transform, $value, $this);
+
                 if (empty($value)) {
                     return;
                 }
+
                 $domainsInUse = $allowedEmailDomains->getEmailDomainsInUse();
                 $notMatchingDomains = array_diff($domainsInUse, $value);
+
                 if (!empty($notMatchingDomains)) {
                     $notMatchingDomains = implode(', ', array_unique($notMatchingDomains));
                     $message = Piwik::translate('UsersManager_SettingRestrictLoginEmailDomainsErrorOtherDomainsInUse', $notMatchingDomains);
@@ -64,12 +75,14 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 if (empty($domains)) {
                     return array();
                 }
+
                 if (!is_array($domains)) {
                     $domains = [$domains];
                 }
+
                 $domains = array_map(function ($domain) {
                     $domain = trim($domain);
-                    if (mb_strpos($domain, '@') !== \false) {
+                    if (mb_strpos($domain, '@') !== false) {
                         // handle incorrect user input such as leading @ or entered email address
                         $allowedEmailDomains = new AllowedEmailDomain($this);
                         $domain = $allowedEmailDomains->getDomainFromEmail($domain);

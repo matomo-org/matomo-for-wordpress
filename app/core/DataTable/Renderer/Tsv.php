@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Renderer;
 
 /**
@@ -15,17 +16,18 @@ namespace Piwik\DataTable\Renderer;
  * TSV is therefore the 'CSV' that is Excel compatible
  *
  */
-class Tsv extends \Piwik\DataTable\Renderer\Csv
+class Tsv extends Csv
 {
     public function __construct()
     {
         parent::__construct();
         $this->setSeparator("\t");
     }
+
     /**
      * Computes the dataTable output and returns the string/binary
      */
-    public function render() : string
+    public function render(): string
     {
         return parent::render();
     }

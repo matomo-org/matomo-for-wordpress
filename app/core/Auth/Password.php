@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Auth;
 
 use Exception;
 use Piwik\Config;
+
 /**
  * Main class to handle actions related to password hashing and verification.
  *
@@ -28,20 +30,21 @@ class Password
         $passwordHashAlgorithm = Config::getInstance()->General['password_hash_algorithm'];
         switch ($passwordHashAlgorithm) {
             case "default":
-                return \PASSWORD_DEFAULT;
+                return PASSWORD_DEFAULT;
             case "bcrypt":
-                return \PASSWORD_BCRYPT;
+                return PASSWORD_BCRYPT;
             case "argon2i":
-                return \PASSWORD_ARGON2I;
+                return PASSWORD_ARGON2I;
             case "argon2id":
-                if (version_compare(\PHP_VERSION, '7.3.0', '<')) {
+                if (version_compare(PHP_VERSION, '7.3.0', '<')) {
                     throw new Exception("argon2id needs at leat PHP 7.3.0");
                 }
-                return \PASSWORD_ARGON2ID;
+                return PASSWORD_ARGON2ID;
             default:
                 throw new Exception("invalid password_hash_algorithm");
         }
     }
+
     /**
      * Fetches argon2 options from config.ini.php
      *
@@ -62,17 +65,20 @@ class Password
         }
         return $options;
     }
+
     /**
      * Hashes a password with the configured algorithm.
      *
      * @param string $password
      * @return string
      */
-    public function hash(#[\SensitiveParameter]
-        $password)
-    {
+    public function hash(
+        #[\SensitiveParameter]
+        $password
+    ) {
         return password_hash($password, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
+
     /**
      * Returns information about a hashed password (algo, options, ...).
      *
@@ -85,6 +91,7 @@ class Password
     {
         return password_get_info($hash);
     }
+
     /**
      * Rehashes a user's password if necessary.
      *
@@ -98,6 +105,7 @@ class Password
     {
         return password_needs_rehash($hash, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
+
     /**
      * Verifies a user's password against the provided hash.
      *
@@ -108,10 +116,12 @@ class Password
      * @param string $hash
      * @return boolean
      */
-    public function verify(#[\SensitiveParameter]
-        $password, #[\SensitiveParameter]
-            $hash)
-    {
+    public function verify(
+        #[\SensitiveParameter]
+        $password,
+        #[\SensitiveParameter]
+        $hash
+    ) {
         return password_verify($password, $hash);
     }
 }

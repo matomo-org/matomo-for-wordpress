@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Access;
 
 use Piwik\Access\Role\Admin;
@@ -13,15 +14,21 @@ use Piwik\Access\Role\View;
 use Piwik\Access\Role\Write;
 use Piwik\Piwik;
 use Exception;
+
 class RolesProvider
 {
     /**
      * @return Role[]
      */
-    public function getAllRoles() : array
+    public function getAllRoles(): array
     {
-        return array(new View(), new Write(), new Admin());
+        return array(
+            new View(),
+            new Write(),
+            new Admin(),
+        );
     }
+
     /**
      * Returns the list of the existing Access level.
      * Useful when a given API method requests a given access Level.
@@ -29,7 +36,7 @@ class RolesProvider
      *
      * @return string[]
      */
-    public function getAllRoleIds() : array
+    public function getAllRoleIds(): array
     {
         $ids = array();
         foreach ($this->getAllRoles() as $role) {
@@ -37,15 +44,18 @@ class RolesProvider
         }
         return $ids;
     }
-    public function isValidRole(string $roleId) : bool
+
+    public function isValidRole(string $roleId): bool
     {
         $roles = $this->getAllRoleIds();
-        return \in_array($roleId, $roles, \true);
+
+        return \in_array($roleId, $roles, true);
     }
+
     /**
      * @throws Exception
      */
-    public function checkValidRole(string $roleId) : void
+    public function checkValidRole(string $roleId): void
     {
         if (!$this->isValidRole($roleId)) {
             $roles = $this->getAllRoleIds();

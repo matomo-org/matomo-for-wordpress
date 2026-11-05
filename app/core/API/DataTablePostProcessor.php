@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API;
 
 use Exception;
@@ -25,6 +26,7 @@ use Piwik\Plugins\API\Filter\DataComparisonFilter;
 use Piwik\Plugins\CoreHome\Columns\Metrics\EvolutionMetric;
 use Piwik\Plugins\PrivacyManager\DataRounding;
 use Piwik\Request;
+
 /**
  * Processes DataTables that should be served through Piwik's APIs. This processing handles
  * special query parameters and computes processed metrics. It does not included rendering to
@@ -33,57 +35,71 @@ use Piwik\Request;
 class DataTablePostProcessor
 {
     public const PROCESSED_METRICS_COMPUTED_FLAG = 'processed_metrics_computed';
+
     /**
      * @var null|Report
      */
     private $report;
+
     /**
      * @var string[]
      */
     private $request;
+
     /**
      * @var string
      */
     private $apiModule;
+
     /**
      * @var string
      */
     private $apiMethod;
+
     /**
      * @var Inconsistencies
      */
     private $apiInconsistencies;
+
     /**
      * @var Formatter
      */
     private $formatter;
+
     private $callbackBeforeGenericFilters;
     private $callbackAfterGenericFilters;
+
     public function __construct($apiModule, $apiMethod, $request)
     {
         $this->apiModule = $apiModule;
         $this->apiMethod = $apiMethod;
         $this->setRequest($request);
+
         $this->report = ReportsProvider::factory($apiModule, $apiMethod);
-        $this->apiInconsistencies = new \Piwik\API\Inconsistencies();
+        $this->apiInconsistencies = new Inconsistencies();
         $this->setFormatter(new Formatter());
     }
+
     public function setFormatter(Formatter $formatter)
     {
         $this->formatter = $formatter;
     }
+
     public function setRequest($request)
     {
         $this->request = $request;
     }
+
     public function setCallbackBeforeGenericFilters($callbackBeforeGenericFilters)
     {
         $this->callbackBeforeGenericFilters = $callbackBeforeGenericFilters;
     }
+
     public function setCallbackAfterGenericFilters($callbackAfterGenericFilters)
     {
         $this->callbackAfterGenericFilters = $callbackAfterGenericFilters;
     }
+
     /**
      * Apply post-processing logic to a DataTable of a report for an API request.
      *
@@ -98,58 +114,75 @@ class DataTablePostProcessor
         $dataTable = $this->applyPivotByFilter($dataTable);
         $dataTable = $this->applyTotalsCalculator($dataTable);
         $dataTable = $this->applyFlattener($dataTable);
+
         if ($this->callbackBeforeGenericFilters) {
             call_user_func($this->callbackBeforeGenericFilters, $dataTable);
         }
+
         $dataTable = $this->applyGenericFilters($dataTable);
         $dataTable = $this->applyArchiveStateFilter($dataTable);
         $this->applyComputeProcessedMetrics($dataTable);
         $dataTable = $this->applyComparison($dataTable);
+
         if ($this->callbackAfterGenericFilters) {
             call_user_func($this->callbackAfterGenericFilters, $dataTable);
         }
+
         // we automatically safe decode all datatable labels (against xss)
         $dataTable->queueFilter('SafeDecodeLabel');
+
         $dataTable = $this->convertSegmentValueToSegment($dataTable);
         $dataTable = $this->applyQueuedFilters($dataTable);
         $dataTable = $this->applyRequestedColumnDeletion($dataTable);
         $dataTable = $this->applyLabelFilter($dataTable);
+
         DataRounding::roundCountMetricsForRequest($dataTable, $this->request, $this->report);
+
         $dataTable = $this->applyMetricsFormatting($dataTable);
         return $dataTable;
     }
+
     private function convertSegmentValueToSegment(DataTableInterface $dataTable)
     {
         $dataTable->filter('AddSegmentBySegmentValue', array($this->report));
         $dataTable->filter('ColumnCallbackDeleteMetadata', array('segmentValue'));
+
         return $dataTable;
     }
-    public function applyArchiveStateFilter(DataTableInterface $dataTable) : DataTableInterface
+
+    public function applyArchiveStateFilter(DataTableInterface $dataTable): DataTableInterface
     {
-        $fetchArchiveState = (new \Piwik\Request($this->request))->getBoolParameter('fetch_archive_state', \false);
-        if (\false === $fetchArchiveState) {
+        $fetchArchiveState = (new \Piwik\Request($this->request))->getBoolParameter('fetch_archive_state', false);
+
+        if (false === $fetchArchiveState) {
             $dataTable->filter(function (DataTable $table) {
                 $table->deleteMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
             });
         }
+
         return $dataTable;
     }
+
     /**
      * @return DataTableInterface
      */
     public function applyPivotByFilter(DataTableInterface $dataTable)
     {
-        $pivotBy = Common::getRequestVar('pivotBy', \false, 'string', $this->request);
+        $pivotBy = Common::getRequestVar('pivotBy', false, 'string', $this->request);
         if (!empty($pivotBy)) {
             $this->applyComputeProcessedMetrics($dataTable);
             $dataTable = $this->convertSegmentValueToSegment($dataTable);
-            $pivotByColumn = Common::getRequestVar('pivotByColumn', \false, 'string', $this->request);
-            $pivotByColumnLimit = Common::getRequestVar('pivotByColumnLimit', \false, 'int', $this->request);
-            $dataTable->filter('PivotByDimension', array($this->report, $pivotBy, $pivotByColumn, $pivotByColumnLimit, PivotByDimension::isSegmentFetchingEnabledInConfig()));
+
+            $pivotByColumn = Common::getRequestVar('pivotByColumn', false, 'string', $this->request);
+            $pivotByColumnLimit = Common::getRequestVar('pivotByColumnLimit', false, 'int', $this->request);
+
+            $dataTable->filter('PivotByDimension', array($this->report, $pivotBy, $pivotByColumn, $pivotByColumnLimit,
+                PivotByDimension::isSegmentFetchingEnabledInConfig()));
             $dataTable->filter('ColumnCallbackDeleteMetadata', array('segment'));
         }
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTable|DataTableInterface|DataTable\Map
@@ -162,19 +195,24 @@ class DataTablePostProcessor
                 $dataTable->filter('RemoveSubtables');
                 return $dataTable;
             }
+
             $flattener = new Flattener($this->apiModule, $this->apiMethod, $this->request);
             if (Common::getRequestVar('include_aggregate_rows', '0', 'string', $this->request) == '1') {
                 $flattener->includeAggregateRows();
             }
+
             $recursiveLabelSeparator = ' - ';
             if ($this->report) {
                 $recursiveLabelSeparator = $this->report->getRecursiveLabelSeparator();
             }
-            $showDimensions = (new Request($this->request))->getBoolParameter('show_dimensions', \false);
+
+            $showDimensions = (new Request($this->request))->getBoolParameter('show_dimensions', false);
+
             $dataTable = $flattener->flatten($dataTable, $recursiveLabelSeparator, $showDimensions);
         }
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -183,10 +221,11 @@ class DataTablePostProcessor
     {
         if (1 == Common::getRequestVar('totals', '1', 'integer', $this->request)) {
             $calculator = new ReportTotalsCalculator($this->apiModule, $this->apiMethod, $this->request, $this->report);
-            $dataTable = $calculator->calculate($dataTable);
+            $dataTable  = $calculator->calculate($dataTable);
         }
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -196,29 +235,36 @@ class DataTablePostProcessor
         // if the flag disable_generic_filters is defined we skip the generic filters
         if (0 == Common::getRequestVar('disable_generic_filters', '0', 'string', $this->request)) {
             $this->applyProcessedMetricsGenericFilters($dataTable);
-            $genericFilter = new \Piwik\API\DataTableGenericFilter($this->request, $this->report);
+
+            $genericFilter = new DataTableGenericFilter($this->request, $this->report);
+
             $self = $this;
             $report = $this->report;
-            $dataTable->filter(function (DataTable $table) use($genericFilter, $report, $self) {
+            $dataTable->filter(function (DataTable $table) use ($genericFilter, $report, $self) {
                 $processedMetrics = Report::getProcessedMetricsForTable($table, $report);
                 if ($genericFilter->areProcessedMetricsNeededFor($processedMetrics)) {
                     $self->computeProcessedMetrics($table);
                 }
             });
+
             $label = self::getLabelFromRequest($this->request);
             if (!empty($label)) {
                 $genericFilter->disableFilters(array('Limit', 'Truncate'));
             }
+
             $totalsCalculator = new ReportTotalsCalculator($this->apiModule, $this->apiMethod, $this->request, $this->report);
-            $genericFilter->setCallbackBeforeRowLimitingFilters(function (DataTable $table) use($totalsCalculator) {
+            $genericFilter->setCallbackBeforeRowLimitingFilters(function (DataTable $table) use ($totalsCalculator) {
                 // the table still holds every row matching the request here, so the totals row can be
                 // recalculated for the table search before the rows are limited to the requested page
                 $totalsCalculator->calculateFilteredTotals($table);
             });
+
             $genericFilter->filter($dataTable);
         }
+
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -227,22 +273,40 @@ class DataTablePostProcessor
     {
         $addNormalProcessedMetrics = null;
         try {
-            $addNormalProcessedMetrics = Common::getRequestVar('filter_add_columns_when_show_all_columns', null, 'integer', $this->request);
+            $addNormalProcessedMetrics = Common::getRequestVar(
+                'filter_add_columns_when_show_all_columns',
+                null,
+                'integer',
+                $this->request
+            );
         } catch (Exception $ex) {
             // ignore
         }
+
         if ($addNormalProcessedMetrics !== null) {
             $dataTable->filter('AddColumnsProcessedMetrics', array($addNormalProcessedMetrics));
         }
+
         $addGoalProcessedMetrics = null;
         try {
-            $addGoalProcessedMetrics = Common::getRequestVar('filter_update_columns_when_show_all_goals', \false, 'string', $this->request);
-            if ((int) $addGoalProcessedMetrics === 0 && $addGoalProcessedMetrics !== '0' && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+            $addGoalProcessedMetrics = Common::getRequestVar(
+                'filter_update_columns_when_show_all_goals',
+                false,
+                'string',
+                $this->request
+            );
+            if (
+                (int) $addGoalProcessedMetrics === 0
+                && $addGoalProcessedMetrics !== '0'
+                && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER
+                && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART
+            ) {
                 $addGoalProcessedMetrics = null;
             }
         } catch (Exception $ex) {
             // ignore
         }
+
         $goalsToProcess = null;
         try {
             $goalsToProcess = Common::getRequestVar('filter_show_goal_columns_process_goals', null, 'string', $this->request);
@@ -252,20 +316,30 @@ class DataTablePostProcessor
         } catch (Exception $ex) {
             // ignore
         }
+
         if ($addGoalProcessedMetrics !== null) {
             // if no idGoal is present, but filter_show_goal_columns_process_goals is set to one goal,
             // default idGoal to that value. this allows us to use filter_update_columns_when_show_all_goals
             // w/ API.getProcessedReport w/o setting idGoal, which affects the search for report metadata.
-            if (!empty($goalsToProcess) && count($goalsToProcess) == 1 && $goalsToProcess[0] !== '0' && $goalsToProcess[0] !== 0) {
+            if (
+                !empty($goalsToProcess)
+                && count($goalsToProcess) == 1
+                && $goalsToProcess[0] !== '0'
+                && $goalsToProcess[0] !== 0
+            ) {
                 $defaultIdGoal = $goalsToProcess[0];
             } else {
                 $defaultIdGoal = DataTable\Filter\AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW;
             }
+
             $idGoal = Common::getRequestVar('idGoal', $defaultIdGoal, 'string', $this->request);
-            $dataTable->filter('AddColumnsProcessedMetricsGoal', array($ignore = \true, $idGoal, $goalsToProcess));
+
+            $dataTable->filter('AddColumnsProcessedMetricsGoal', array($ignore = true, $idGoal, $goalsToProcess));
         }
+
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -278,6 +352,7 @@ class DataTablePostProcessor
         }
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -290,7 +365,10 @@ class DataTablePostProcessor
         $showColumns = Common::getRequestVar('showColumns', '', 'string', $this->request);
         $hideColumnsRecursively = Common::getRequestVar('hideColumnsRecursively', intval($this->report && $this->report->getModule() == 'Live'), 'int', $this->request);
         $showRawMetrics = Common::getRequestVar('showRawMetrics', 0, 'int', $this->request);
-        $keepFlattenedDimensionColumns = (new Request($this->request))->getBoolParameter('keep_flattened_dimension_columns', \false);
+
+        $keepFlattenedDimensionColumns = (new Request($this->request))
+            ->getBoolParameter('keep_flattened_dimension_columns', false);
+
         if ($keepFlattenedDimensionColumns && !empty($showColumns)) {
             // Flattening with "show dimensions" adds dimension columns whose names only exist after
             // flattening, so a caller-provided showColumns allowlist cannot include them. Keep those
@@ -299,13 +377,19 @@ class DataTablePostProcessor
             // unless the caller asks for it.
             $showColumns = $this->addFlattenedDimensionsToShowColumns($showColumns, $dataTable);
         }
-        if (!empty($hideColumns) || !empty($showColumns)) {
-            $dataTable->filter('ColumnDelete', array($hideColumns, $showColumns, $deleteIfZeroOnly = \false, $hideColumnsRecursively));
+
+        if (
+            !empty($hideColumns)
+            || !empty($showColumns)
+        ) {
+            $dataTable->filter('ColumnDelete', array($hideColumns, $showColumns, $deleteIfZeroOnly = false, $hideColumnsRecursively));
         } elseif ($showRawMetrics !== 1) {
             $this->removeTemporaryMetrics($dataTable);
         }
+
         return $dataTable;
     }
+
     /**
      * Appends any dimension columns added by the flattener to a showColumns allowlist so they are
      * not dropped by {@link ColumnDelete}. Dimension column names only exist after flattening, so
@@ -313,18 +397,21 @@ class DataTablePostProcessor
      *
      * Only called when the request opts in with keep_flattened_dimension_columns=1.
      */
-    private function addFlattenedDimensionsToShowColumns(string $showColumns, DataTableInterface $dataTable) : string
+    private function addFlattenedDimensionsToShowColumns(string $showColumns, DataTableInterface $dataTable): string
     {
         $dimensions = $this->getFlattenedDimensions($dataTable);
         if (empty($dimensions)) {
             return $showColumns;
         }
+
         $columns = array_filter(array_map('trim', explode(',', $showColumns)), static function ($column) {
             return $column !== '';
         });
+
         return implode(',', array_values(array_unique(array_merge($columns, $dimensions))));
     }
-    private function getFlattenedDimensions(DataTableInterface $dataTable) : array
+
+    private function getFlattenedDimensions(DataTableInterface $dataTable): array
     {
         if ($dataTable instanceof DataTable\Map) {
             foreach ($dataTable->getDataTables() as $childTable) {
@@ -333,39 +420,48 @@ class DataTablePostProcessor
                     return $dimensions;
                 }
             }
+
             return [];
         }
+
         if (!$dataTable instanceof DataTable) {
             return [];
         }
+
         $dimensions = $dataTable->getMetadata('dimensions');
         if (!is_array($dimensions) || empty($dimensions)) {
             return [];
         }
+
         // The flattener records the dimensions it walked on every flat request, but only adds them
         // as columns when "show dimensions" is requested and the report has more than one dimension.
         // Keep the ones that ended up as columns, so a caller's allowlist is never widened by names
         // that are not columns at all.
         $firstRow = $dataTable->getFirstRow();
-        if (\false === $firstRow) {
+        if (false === $firstRow) {
             return [];
         }
+
         return array_values(array_intersect($dimensions, array_keys($firstRow->getColumns())));
     }
+
     public function removeTemporaryMetrics(DataTableInterface $dataTable)
     {
         $report = $this->report;
-        $dataTable->filter(function (DataTable $table) use($report) {
+        $dataTable->filter(function (DataTable $table) use ($report) {
             $processedMetrics = Report::getProcessedMetricsForTable($table, $report);
+
             $allTemporaryMetrics = array();
             foreach ($processedMetrics as $metric) {
                 $allTemporaryMetrics = array_merge($allTemporaryMetrics, $metric->getTemporaryMetrics());
             }
+
             if (!empty($allTemporaryMetrics)) {
                 $table->filter('ColumnDelete', array($allTemporaryMetrics));
             }
         });
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @return DataTableInterface
@@ -373,48 +469,58 @@ class DataTablePostProcessor
     public function applyLabelFilter($dataTable)
     {
         $label = self::getLabelFromRequest($this->request);
+
         // apply label filter: only return rows matching the label parameter (more than one if more than one label)
         if (!empty($label)) {
             $addLabelIndex = Common::getRequestVar('labelFilterAddLabelIndex', 0, 'int', $this->request) == 1;
+
             $labelColumn = 'label';
             if ($this->report) {
                 // allow DataTables to set a metadata for the column used to uniquely identify a row. primarily
                 // so this can be tested w/o creating a test plugin w/ a test report.
                 $dataTableRowIdentifier = null;
-                $dataTable->filter(function (DataTable $table) use(&$dataTableRowIdentifier) {
+                $dataTable->filter(function (DataTable $table) use (&$dataTableRowIdentifier) {
                     $dataTableRowIdentifier = $dataTableRowIdentifier ?: $table->getMetadata(DataTable::ROW_IDENTIFIER_METADATA_NAME);
                 });
-                $labelColumn = ($dataTableRowIdentifier ?: $this->report->getRowIdentifier()) ?: $labelColumn;
+
+                $labelColumn = $dataTableRowIdentifier ?: $this->report->getRowIdentifier() ?: $labelColumn;
             }
+
             $filter = new LabelFilter($this->apiModule, $this->apiMethod, $this->request, $labelColumn);
             $dataTable = $filter->filter($label, $dataTable, $addLabelIndex);
         }
         return $dataTable;
     }
+
     /**
      * @param DataTableInterface $dataTable
      * @param bool $forceFormatting if set to true, all metrics will be formatted and request parameter will be ignored
      * @return DataTableInterface
      */
-    public function applyMetricsFormatting($dataTable, bool $forceFormatting = \false)
+    public function applyMetricsFormatting($dataTable, bool $forceFormatting = false)
     {
         $formatMetrics = Common::getRequestVar('format_metrics', 0, 'string', $this->request);
-        if ($formatMetrics == '0' && $forceFormatting === \false) {
+        if ($formatMetrics == '0' && $forceFormatting === false) {
             return $dataTable;
         }
+
         // in Piwik 2.X & below, metrics are not formatted in API responses except for percents.
         // this code implements this inconsistency
-        $onlyFormatPercents = $forceFormatting === \false && $formatMetrics === 'bc';
+        $onlyFormatPercents = $forceFormatting === false && $formatMetrics === 'bc';
+
         $metricsToFormat = null;
         if ($onlyFormatPercents) {
             $metricsToFormat = $this->apiInconsistencies->getPercentMetricsToFormat();
         }
+
         // 'all' is a special value that indicates we should format non-processed metrics that are identified
         // by string, like 'revenue'. this should be removed when all metrics are using the `Metric` class.
-        $formatAll = $forceFormatting === \true || $formatMetrics === 'all';
+        $formatAll = $forceFormatting === true || $formatMetrics === 'all';
+
         $dataTable->filter([$this->formatter, 'formatMetrics'], [$this->report, $metricsToFormat, $formatAll]);
         return $dataTable;
     }
+
     /**
      * Returns the value for the label query parameter which can be either a string
      * (ie, label=...) or array (ie, label[]=...).
@@ -431,40 +537,48 @@ class DataTablePostProcessor
                 $label = array($label);
             }
         }
+
         $label = self::unsanitizeLabelParameter($label);
         return $label;
     }
+
     public static function unsanitizeLabelParameter($label)
     {
         // this is needed because Proxy uses Common::getRequestVar which in turn
         // uses Common::sanitizeInputValue. This causes the > that separates recursive labels
         // to become &gt; and we need to undo that here.
-        $label = str_replace(htmlentities('>', \ENT_COMPAT | \ENT_HTML401, 'UTF-8'), '>', $label);
+        $label = str_replace(htmlentities('>', ENT_COMPAT | ENT_HTML401, 'UTF-8'), '>', $label);
         return $label;
     }
+
     public function computeProcessedMetrics(DataTable $dataTable)
     {
         if ($dataTable->getMetadata(self::PROCESSED_METRICS_COMPUTED_FLAG)) {
             return;
         }
+
         /** @var ProcessedMetric[] $processedMetrics */
         $processedMetrics = Report::getProcessedMetricsForTable($dataTable, $this->report);
         if (empty($processedMetrics)) {
             return;
         }
-        $dataTable->setMetadata(self::PROCESSED_METRICS_COMPUTED_FLAG, \true);
+
+        $dataTable->setMetadata(self::PROCESSED_METRICS_COMPUTED_FLAG, true);
+
         foreach ($processedMetrics as $name => $processedMetric) {
             if (!$processedMetric->beforeCompute($this->report, $dataTable)) {
                 continue;
             }
+
             foreach ($dataTable->getRows() as $row) {
-                if ($row->hasColumn($name)) {
-                    // only compute the metric if it has not been computed already
+                if ($row->hasColumn($name)) { // only compute the metric if it has not been computed already
                     continue;
                 }
+
                 $computedValue = $processedMetric->compute($row);
-                if ($computedValue !== \false) {
+                if ($computedValue !== false) {
                     $row->addColumn($name, $computedValue);
+
                     // Add a trend column for evolution metrics
                     if ($processedMetric instanceof EvolutionMetric) {
                         $row->addColumn($processedMetric->getTrendName(), $processedMetric->getTrendValue($computedValue));
@@ -472,31 +586,38 @@ class DataTablePostProcessor
                 }
             }
         }
+
         foreach ($dataTable->getRows() as $row) {
             $subtable = $row->getSubtable();
             if (!empty($subtable)) {
                 foreach ($processedMetrics as $name => $processedMetric) {
                     $processedMetric->beforeComputeSubtable($row);
                 }
+
                 $this->computeProcessedMetrics($subtable);
+
                 foreach ($processedMetrics as $name => $processedMetric) {
                     $processedMetric->afterComputeSubtable($row);
                 }
             }
         }
     }
+
     public function applyComputeProcessedMetrics(DataTableInterface $dataTable)
     {
         $dataTable->filter(array($this, 'computeProcessedMetrics'));
     }
+
     public function applyComparison(DataTableInterface $dataTable)
     {
         $compare = Common::getRequestVar('compare', '0', 'int', $this->request);
         if ($compare != 1) {
             return $dataTable;
         }
+
         $filter = new DataComparisonFilter($this->request, $this->report);
         $filter->compare($dataTable);
+
         $dataTable->filter(function (DataTable $table) {
             foreach ($table->getRows() as $row) {
                 $comparisons = $row->getComparisons();
@@ -505,6 +626,7 @@ class DataTablePostProcessor
                 }
             }
         });
+
         return $dataTable;
     }
 }

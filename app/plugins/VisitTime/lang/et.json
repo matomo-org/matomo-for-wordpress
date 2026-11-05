@@ -1,0 +1,9 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Lokaalne aeg",
+        "DayOfWeek": "Nädalapäev",
+        "LocalTime": "Külastused kohaliku kellaaja järgi",
+        "SubmenuTimes": "Külastusajad",
+        "VisitsByDayOfWeek": "Külastused nädalapäeva järgi"
+    }
+}

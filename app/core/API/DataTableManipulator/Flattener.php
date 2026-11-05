@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API\DataTableManipulator;
 
 use Piwik\API\DataTableManipulator;
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
 use Piwik\Plugin\ReportsProvider;
+
 /**
  * This class is responsible for flattening data tables.
  *
@@ -20,7 +22,8 @@ use Piwik\Plugin\ReportsProvider;
  */
 class Flattener extends DataTableManipulator
 {
-    private $includeAggregateRows = \false;
+    private $includeAggregateRows = false;
+
     /**
      * If the flattener is used after calling this method, aggregate rows will
      * be included in the result. This can be useful when they contain data that
@@ -28,18 +31,21 @@ class Flattener extends DataTableManipulator
      */
     public function includeAggregateRows()
     {
-        $this->includeAggregateRows = \true;
+        $this->includeAggregateRows = true;
     }
+
     /**
      * Separator for building recursive labels (or paths)
      * @var string
      */
     public $recursiveLabelSeparator = '';
+
     /**
      * Defines if dimensions should be added as additional columns if there are more than one
      * @var bool
      */
-    public $showDimensions = \false;
+    public $showDimensions = false;
+
     /**
      * @param  DataTable $dataTable
      * @param string $recursiveLabelSeparator
@@ -49,8 +55,10 @@ class Flattener extends DataTableManipulator
     {
         $this->recursiveLabelSeparator = $recursiveLabelSeparator;
         $this->showDimensions = $showDimensions;
+
         return $this->manipulate($dataTable);
     }
+
     /**
      * Template method called from self::manipulate.
      * Flatten each data table.
@@ -60,23 +68,29 @@ class Flattener extends DataTableManipulator
      */
     protected function manipulateDataTable($dataTable)
     {
-        $newDataTable = $dataTable->getEmptyClone($keepFilters = \true);
+        $newDataTable = $dataTable->getEmptyClone($keepFilters = true);
         if ($dataTable->getTotalsRow()) {
             $newDataTable->setTotalsRow($dataTable->getTotalsRow());
         }
+
         // this recursive filter will be applied to subtables
         $dataTable->filter('ReplaceSummaryRowLabel');
         $dataTable->filter('ReplaceColumnNames');
-        $report = ReportsProvider::factory($this->apiModule, $this->apiMethod);
+
+        $report        = ReportsProvider::factory($this->apiModule, $this->apiMethod);
         if (!empty($report)) {
             $dimension = $report->getDimension();
         }
+
         $dimensionName = !empty($dimension) ? str_replace('.', '_', $dimension->getId()) : 'label1';
+
         $this->flattenDataTableInto($dataTable, $newDataTable, $level = 1, $dimensionName);
+
         $dimensions = $newDataTable->getMetadata('dimensions');
         $hasMultipleDimensions = is_array($dimensions) && count($dimensions) > 1;
+
         if ($this->showDimensions && $hasMultipleDimensions) {
-            $newDataTable->filter(function ($dataTable) use($dimensions) {
+            $newDataTable->filter(function ($dataTable) use ($dimensions) {
                 /** @var DataTable $dataTable */
                 $rows = $dataTable->getRows();
                 foreach ($rows as $row) {
@@ -86,8 +100,10 @@ class Flattener extends DataTableManipulator
                 }
             });
         }
+
         return $newDataTable;
     }
+
     /**
      * @param DataTable $dataTable
      * @param DataTable $newDataTable
@@ -96,12 +112,13 @@ class Flattener extends DataTableManipulator
      * @param string $prefix
      * @param string|false $logo
      */
-    protected function flattenDataTableInto($dataTable, $newDataTable, $level, $dimensionName, $prefix = '', $logo = \false)
+    protected function flattenDataTableInto($dataTable, $newDataTable, $level, $dimensionName, $prefix = '', $logo = false)
     {
         foreach ($dataTable->getRows() as $rowId => $row) {
             $this->flattenRow($row, $rowId, $newDataTable, $level, $dimensionName, $prefix, $logo);
         }
     }
+
     /**
      * @param int|string $rowId
      * @param int $level
@@ -109,19 +126,32 @@ class Flattener extends DataTableManipulator
      * @param string $labelPrefix
      * @param string|false $parentLogo
      */
-    private function flattenRow(Row $row, $rowId, DataTable $dataTable, $level, $dimensionName, $labelPrefix = '', $parentLogo = \false)
-    {
+    private function flattenRow(
+        Row $row,
+        $rowId,
+        DataTable $dataTable,
+        $level,
+        $dimensionName,
+        $labelPrefix = '',
+        $parentLogo = false
+    ) {
         $dimensions = $dataTable->getMetadata('dimensions');
+
         if (empty($dimensions)) {
             $dimensions = [];
         }
+
         if (!in_array($dimensionName, $dimensions)) {
             $dimensions[] = $dimensionName;
         }
+
         $dataTable->setMetadata('dimensions', $dimensions);
+
         $origLabel = $label = $row->getColumn('label');
-        if ($label !== \false) {
+
+        if ($label !== false) {
             $origLabel = $label = trim($label);
+
             if ($this->recursiveLabelSeparator == '/') {
                 if (substr($label, 0, 1) == '/' && substr($labelPrefix, -1) == '/') {
                     $origLabel = $label = substr($label, 1);
@@ -129,15 +159,18 @@ class Flattener extends DataTableManipulator
                     $label = ' - ' . $label;
                 }
             }
+
             if ($rowId === DataTable::ID_SUMMARY_ROW) {
                 if ($row->getMetadata('url')) {
                     // remove url metadata for flattened summary rows
                     $row->deleteMetadata('url');
                 }
-                $row->setMetadata('is_summary', \true);
+                $row->setMetadata('is_summary', true);
             }
+
             $label = $labelPrefix . $label;
             $row->setColumn('label', $label);
+
             if ($row->getMetadata($dimensionName)) {
                 if ($rowId === DataTable::ID_SUMMARY_ROW && $this->recursiveLabelSeparator == '/') {
                     $origLabel = $row->getMetadata($dimensionName) . $this->recursiveLabelSeparator . ' - ' . $origLabel;
@@ -145,22 +178,28 @@ class Flattener extends DataTableManipulator
                     $origLabel = $row->getMetadata($dimensionName) . $this->recursiveLabelSeparator . $origLabel;
                 }
             }
+
             $row->setMetadata($dimensionName, $origLabel);
         }
+
         $logo = $row->getMetadata('logo');
-        if ($logo === \false && $parentLogo !== \false) {
+        if ($logo === false && $parentLogo !== false) {
             $logo = $parentLogo;
             $row->setMetadata('logo', $logo);
         }
+
         /** @var DataTable $subTable */
         $subTable = $row->getSubtable();
+
         if ($subTable) {
             $subTable->applyQueuedFilters();
             $row->deleteMetadata('idsubdatatable_in_db');
         } else {
             $subTable = $this->loadSubtable($dataTable, $row);
         }
+
         $row->removeSubtable();
+
         if ($subTable === null) {
             if ($this->includeAggregateRows) {
                 $row->setMetadata('is_aggregate', 0);
@@ -172,36 +211,45 @@ class Flattener extends DataTableManipulator
                 $dataTable->addRow($row);
             }
             $prefix = $label . $this->recursiveLabelSeparator;
-            $report = ReportsProvider::factory($this->apiModule, $this->apiMethod);
+
+            $report        = ReportsProvider::factory($this->apiModule, $this->apiMethod);
             if (!empty($report)) {
                 $subDimension = $report->getSubtableDimension();
             }
+
             if ($level > 1) {
                 $subDimension = $report->getNthLevelTableDimension($level);
             }
+
             if (empty($subDimension)) {
-                $report = ReportsProvider::factory($this->apiModule, $this->getApiMethodForSubtable($this->request));
-                $subDimension = $report->getDimension();
+                $report           = ReportsProvider::factory($this->apiModule, $this->getApiMethodForSubtable($this->request));
+                $subDimension     = $report->getDimension();
             }
+
             $subDimensionName = $subDimension ? str_replace('.', '_', $subDimension->getId()) : 'label' . (substr_count($prefix, $this->recursiveLabelSeparator) + 1);
-            if ($origLabel !== \false) {
+
+            if ($origLabel !== false) {
                 foreach ($subTable->getRows() as $subRow) {
                     foreach ($row->getMetadata() as $name => $value) {
                         // do not set 'segment' parameter if there is a segmentValue on the row, since that will prevent the segmentValue
                         // from being used in DataTablePostProcessor
-                        if ($name == 'segment' && $subRow->getMetadata('segmentValue') !== \false) {
+                        if ($name == 'segment' && $subRow->getMetadata('segmentValue') !== false) {
                             continue;
                         }
-                        if ($subRow->getMetadata($name) === \false) {
+
+                        if ($subRow->getMetadata($name) === false) {
                             $subRow->setMetadata($name, $value);
                         }
                     }
+
                     $subRow->setMetadata($dimensionName, $origLabel);
                 }
             }
+
             $this->flattenDataTableInto($subTable, $dataTable, $level + 1, $subDimensionName, $prefix, $logo);
         }
     }
+
     /**
      * Remove the flat & filter_pattern parameters from the subtable request
      *
@@ -211,11 +259,13 @@ class Flattener extends DataTableManipulator
     protected function manipulateSubtableRequest($request)
     {
         unset($request['flat']);
+
         // don't apply the search pattern while subtables are loaded, otherwise rows are filtered on
         // their child label before the parent label parts are combined into the final flattened label.
         // that would drop rows whose match only appears in a parent label. instead we let the pattern
         // run once on the flattened table (via the generic filters applied after flattening).
         unset($request['filter_pattern']);
+
         return $request;
     }
 }

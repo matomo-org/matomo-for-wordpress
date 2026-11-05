@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
 /**
@@ -19,8 +21,10 @@ class ForecastSeriesState
 {
     /** @var array<string, array<int, float|int>> */
     private $allSeriesData;
+
     /** @var array<string, array<int, bool>> */
     private $allSeriesDataAvailability;
+
     /**
      * Per-series intra-period direction tag. Values are one of the
      * {@see ForecastMetricClassifier::MONOTONICITY_*} constants:
@@ -33,8 +37,10 @@ class ForecastSeriesState
      * @var array<string, string>
      */
     private $allSeriesMonotonicity;
+
     /** @var array<string, int> */
     private $allSeriesForecastPrecision;
+
     /**
      * Per-series map from the (translated) series label used as the array key in the other
      * parallel maps to the raw archive column name behind it. Needed because sub-period API
@@ -44,6 +50,7 @@ class ForecastSeriesState
      * @var array<string, string>
      */
     private $allSeriesColumns;
+
     /**
      * Per-series map from the (translated) series label to the row label/matcher the
      * displayed-series path passes to {@see DataTable::getRowFromLabel()}. `false` selects
@@ -54,6 +61,7 @@ class ForecastSeriesState
      * @var array<string, mixed>
      */
     private $allSeriesRows;
+
     /**
      * @param array<string, array<int, float|int>> $allSeriesData
      * @param array<string, array<int, bool>> $allSeriesDataAvailability
@@ -62,8 +70,14 @@ class ForecastSeriesState
      * @param array<string, string> $allSeriesColumns
      * @param array<string, mixed> $allSeriesRows
      */
-    public function __construct(array $allSeriesData, array $allSeriesDataAvailability, array $allSeriesMonotonicity, array $allSeriesForecastPrecision, array $allSeriesColumns = [], array $allSeriesRows = [])
-    {
+    public function __construct(
+        array $allSeriesData,
+        array $allSeriesDataAvailability,
+        array $allSeriesMonotonicity,
+        array $allSeriesForecastPrecision,
+        array $allSeriesColumns = [],
+        array $allSeriesRows = []
+    ) {
         $this->allSeriesData = $allSeriesData;
         $this->allSeriesDataAvailability = $allSeriesDataAvailability;
         $this->allSeriesMonotonicity = $allSeriesMonotonicity;
@@ -71,33 +85,39 @@ class ForecastSeriesState
         $this->allSeriesColumns = $allSeriesColumns;
         $this->allSeriesRows = $allSeriesRows;
     }
+
     /** @return array<string, array<int, float|int>> */
-    public function getAllSeriesData() : array
+    public function getAllSeriesData(): array
     {
         return $this->allSeriesData;
     }
+
     /** @return array<string, array<int, bool>> */
-    public function getAllSeriesDataAvailability() : array
+    public function getAllSeriesDataAvailability(): array
     {
         return $this->allSeriesDataAvailability;
     }
+
     /** @return array<string, string> */
-    public function getAllSeriesMonotonicity() : array
+    public function getAllSeriesMonotonicity(): array
     {
         return $this->allSeriesMonotonicity;
     }
+
     /** @return array<string, int> */
-    public function getAllSeriesForecastPrecision() : array
+    public function getAllSeriesForecastPrecision(): array
     {
         return $this->allSeriesForecastPrecision;
     }
+
     /** @return array<string, string> */
-    public function getAllSeriesColumns() : array
+    public function getAllSeriesColumns(): array
     {
         return $this->allSeriesColumns;
     }
+
     /** @return array<string, mixed> */
-    public function getAllSeriesRows() : array
+    public function getAllSeriesRows(): array
     {
         return $this->allSeriesRows;
     }

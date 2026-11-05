@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Transitions;
 
 use Piwik\Common;
 use Piwik\Config;
+
 class Transitions extends \Piwik\Plugin
 {
     /**
@@ -17,21 +19,31 @@ class Transitions extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor', 'Template.jsGlobalVariables' => 'addJsGlobalVariables');
+        return array(
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'API.getPagesComparisonsDisabledFor'     => 'getPagesComparisonsDisabledFor',
+            'Template.jsGlobalVariables'             => 'addJsGlobalVariables',
+        );
     }
+
     public function getPagesComparisonsDisabledFor(&$pages)
     {
         $pages[] = "General_Actions.Transitions_Transitions";
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = 'plugins/Transitions/stylesheets/transitions.less';
         $stylesheets[] = 'plugins/Transitions/vue/src/TransitionExporter/TransitionExporterPopover.less';
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = 'plugins/Transitions/javascripts/transitions.js';
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'General_TransitionsRowActionTooltipTitle';
@@ -51,32 +63,37 @@ class Transitions extends \Piwik\Plugin
         $translationKeys[] = 'Transitions_AvailableInOtherReports2';
         $translationKeys[] = 'Transitions_FeatureDescription';
     }
+
     public function addJsGlobalVariables(&$out)
     {
         $idSite = Common::getRequestVar('idSite', 1, 'int');
         $maxPeriodAllowed = self::getPeriodAllowedConfig($idSite);
+
         $out .= '    piwik.transitionsMaxPeriodAllowed = "' . ($maxPeriodAllowed ? $maxPeriodAllowed : 'all') . '"' . "\n";
     }
+
     /**
      * Retrieve the max period allowed config setting for the given site,
      * falling back to the general config when no site is given.
      *
      * @param int|null $idSite
      */
-    public static function getPeriodAllowedConfig($idSite) : string
+    public static function getPeriodAllowedConfig($idSite): string
     {
         $transitionsGeneralConfig = Config::getInstance()->Transitions;
-        $generalMaxPeriodAllowed = $transitionsGeneralConfig && !empty($transitionsGeneralConfig['max_period_allowed']) ? $transitionsGeneralConfig['max_period_allowed'] : null;
+        $generalMaxPeriodAllowed = ($transitionsGeneralConfig && !empty($transitionsGeneralConfig['max_period_allowed']) ? $transitionsGeneralConfig['max_period_allowed'] : null);
+
         $siteMaxPeriodAllowed = null;
         if ($idSite) {
             $sectionName = 'Transitions_' . $idSite;
-            $transitionsSiteConfig = Config::getInstance()->{$sectionName};
-            $siteMaxPeriodAllowed = $transitionsSiteConfig && !empty($transitionsSiteConfig['max_period_allowed']) ? $transitionsSiteConfig['max_period_allowed'] : null;
+            $transitionsSiteConfig = Config::getInstance()->$sectionName;
+            $siteMaxPeriodAllowed = ($transitionsSiteConfig && !empty($transitionsSiteConfig['max_period_allowed']) ? $transitionsSiteConfig['max_period_allowed'] : null);
         }
+
         if (!$generalMaxPeriodAllowed && !$siteMaxPeriodAllowed) {
-            return 'all';
-            // No config setting, so all periods are valid
+            return 'all'; // No config setting, so all periods are valid
         }
+
         // Site setting overrides general, if it exists
         return $siteMaxPeriodAllowed ?? $generalMaxPeriodAllowed;
     }

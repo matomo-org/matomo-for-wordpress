@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
 
 use Piwik\Common;
 use Piwik\Config as PiwikConfig;
 use Piwik\Metrics;
 use Piwik\ViewDataTable\RequestConfig as VisualizationRequestConfig;
+
 /**
  * DataTable Visualization that derives from HtmlTable and sets show_extra_columns to true.
  */
@@ -24,33 +26,55 @@ class RequestConfig extends VisualizationRequestConfig
      *
      * Default value: false
      */
-    public $keep_summary_row = \false;
+    public $keep_summary_row = false;
+
     /**
      * Controls whether the totals row is displayed on every page of the datatable view or not.
      *
      * Default value: false
      */
-    public $keep_totals_row = \false;
+    public $keep_totals_row = false;
+
     /**
      * If true, eligible metric cells show the percentage of the report total, and the absolute
      * value is shown on hover instead.
      *
      * Default value: false
      */
-    public $show_percentage_values = \false;
+    public $show_percentage_values = false;
+
     public function __construct()
     {
-        $this->totals = \true;
+        $this->totals = true;
         $this->filter_limit = PiwikConfig::getInstance()->General['datatable_default_limit'];
-        if (Common::getRequestVar('enable_filter_excludelowpop', \false) == '1') {
+
+        if (Common::getRequestVar('enable_filter_excludelowpop', false) == '1') {
             if (Common::getRequestVar('flat', 0, 'int') === 1) {
                 $this->filter_excludelowpop = 'nb_visits';
             } else {
                 $this->filter_excludelowpop = Metrics::INDEX_NB_VISITS;
             }
-            $this->filter_excludelowpop_value = \false;
+
+            $this->filter_excludelowpop_value = false;
         }
-        $this->addPropertiesThatShouldBeAvailableClientSide(array('search_recursive', 'filter_limit', 'filter_offset', 'filter_sort_column', 'filter_sort_order', 'keep_summary_row', 'keep_totals_row', 'show_dimensions', 'show_percentage_values'));
-        $this->addPropertiesThatCanBeOverwrittenByQueryParams(array('keep_summary_row', 'keep_totals_row', 'show_dimensions', 'show_percentage_values'));
+
+        $this->addPropertiesThatShouldBeAvailableClientSide(array(
+            'search_recursive',
+            'filter_limit',
+            'filter_offset',
+            'filter_sort_column',
+            'filter_sort_order',
+            'keep_summary_row',
+            'keep_totals_row',
+            'show_dimensions',
+            'show_percentage_values',
+        ));
+
+        $this->addPropertiesThatCanBeOverwrittenByQueryParams(array(
+            'keep_summary_row',
+            'keep_totals_row',
+            'show_dimensions',
+            'show_percentage_values',
+        ));
     }
 }

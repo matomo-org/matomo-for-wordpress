@@ -1,0 +1,30 @@
+{
+    "VisitsSummary": {
+        "AverageGenerationTime": "gemiddelde generatietijd",
+        "AverageVisitDuration": "gemiddelde duur bezoek",
+        "GenerateQueries": "%s queries uitgevoerd",
+        "GenerateTime": "%s seconden om de pagina te genereren",
+        "MaxNbActions": "max acties in één bezoek",
+        "NbActionsDescription": "%s acties",
+        "NbActionsPerVisit": "acties (pagina bezoeken, downloads, uitgaande links en interne zoekacties) per bezoek",
+        "NbDownloadsDescription": "downloads",
+        "NbKeywordsDescription": "unieke sleutelwoorden",
+        "NbOutlinksDescription": "uitgaande links",
+        "NbPageviewsDescription": "paginaweergaven",
+        "NbSearchesDescription": "totaal aantal zoekopdrachten op uw website",
+        "NbUniqueDownloadsDescription": "unieke downloads",
+        "NbUniqueOutlinksDescription": "unieke uitgaande links",
+        "NbUniquePageviewsDescription": "unieke paginaweergaven",
+        "NbUniqueVisitors": "unieke bezoekers",
+        "NbUsersDescription": "gebruikers",
+        "NbVisitsBounced": "bezoeken hebben verlaten (welke na één pagina de website hebben verlaten)",
+        "NbVisitsDescription": "bezoeken",
+        "PluginDescription": "Rapporteert algemene analyse metrics: bezoeken, unieke bezoeken, aantal acties, bounce ration, enz.",
+        "VisitsSummary": "Bezoekerssamenvatting",
+        "VisitsSummaryDocumentation": "Dit is een trendlijn die de ontwikkeling weergeeft.",
+        "VisitsSummaryReportDocumentation": "Dit rapport biedt een zeer algemeen overzicht van het gedrag van jouw bezoekers.",
+        "WidgetLastVisits": "Recente bezoeken",
+        "WidgetOverviewGraph": "Overzicht bezoeken (met grafiek)",
+        "WidgetVisits": "Overzicht bezoeken"
+    }
+}

@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\ReportRenderer;
 
 use Piwik\DataTable\DataTableInterface;
 use Piwik\DataTable\Renderer\Csv as CsvDataTableRenderer;
 use Piwik\Piwik;
 use Piwik\ReportRenderer;
+
 /**
  * CSV report renderer
  */
@@ -21,6 +23,7 @@ class Csv extends ReportRenderer
      * @var string
      */
     protected $rendered;
+
     /**
      * Initialize locale settings.
      * If not called, locale settings defaults to 'en'
@@ -31,6 +34,7 @@ class Csv extends ReportRenderer
     {
         return;
     }
+
     /**
      * Save rendering to disk
      *
@@ -39,8 +43,13 @@ class Csv extends ReportRenderer
      */
     public function sendToDisk($filename)
     {
-        return ReportRenderer::writeFile($filename, ReportRenderer::CSV_FORMAT, $this->getRenderedReport());
+        return ReportRenderer::writeFile(
+            $filename,
+            ReportRenderer::CSV_FORMAT,
+            $this->getRenderedReport()
+        );
     }
+
     /**
      * Send rendering to browser with a 'download file' prompt
      *
@@ -48,8 +57,14 @@ class Csv extends ReportRenderer
      */
     public function sendToBrowserDownload($filename)
     {
-        ReportRenderer::sendToBrowser($filename, ReportRenderer::CSV_FORMAT, "text/" . ReportRenderer::CSV_FORMAT, $this->getRenderedReport());
+        ReportRenderer::sendToBrowser(
+            $filename,
+            ReportRenderer::CSV_FORMAT,
+            "text/" . ReportRenderer::CSV_FORMAT,
+            $this->getRenderedReport()
+        );
     }
+
     /**
      * Output rendering to browser
      *
@@ -57,8 +72,14 @@ class Csv extends ReportRenderer
      */
     public function sendToBrowserInline($filename)
     {
-        ReportRenderer::sendToBrowser($filename, ReportRenderer::CSV_FORMAT, "application/" . ReportRenderer::CSV_FORMAT, $this->getRenderedReport());
+        ReportRenderer::sendToBrowser(
+            $filename,
+            ReportRenderer::CSV_FORMAT,
+            "application/" . ReportRenderer::CSV_FORMAT,
+            $this->getRenderedReport()
+        );
     }
+
     /**
      * Get rendered report
      */
@@ -66,6 +87,7 @@ class Csv extends ReportRenderer
     {
         return $this->rendered;
     }
+
     /**
      * Generate the first page.
      *
@@ -79,6 +101,7 @@ class Csv extends ReportRenderer
     {
         return;
     }
+
     /**
      * Render the provided report.
      * Multiple calls to this method before calling getRenderedReport appends each report content.
@@ -87,14 +110,29 @@ class Csv extends ReportRenderer
      */
     public function renderReport($processedReport)
     {
-        $csvRenderer = $this->getRenderer($processedReport['reportData'], $processedReport['metadata']['uniqueId']);
+        $csvRenderer = $this->getRenderer(
+            $processedReport['reportData'],
+            $processedReport['metadata']['uniqueId']
+        );
+
         $reportData = $csvRenderer->render($processedReport);
         if (empty($reportData)) {
             $reportData = $csvRenderer->formatValue(Piwik::translate('CoreHome_ThereIsNoDataForThisReport'));
         }
+
         $reportName = $csvRenderer->formatValue($processedReport['metadata']['name']);
-        $this->rendered .= implode('', array($reportName, $csvRenderer->lineEnd, $reportData, $csvRenderer->lineEnd, $csvRenderer->lineEnd));
+        $this->rendered .= implode(
+            '',
+            array(
+                $reportName,
+                $csvRenderer->lineEnd,
+                $reportData,
+                $csvRenderer->lineEnd,
+                $csvRenderer->lineEnd,
+            )
+        );
     }
+
     /**
      * @param string $uniqueId
      * @return \Piwik\DataTable\Renderer\Csv
@@ -104,10 +142,14 @@ class Csv extends ReportRenderer
         $csvRenderer = new CsvDataTableRenderer();
         $csvRenderer->setIdSite($this->idSite);
         $csvRenderer->setTable($table);
-        $csvRenderer->setConvertToUnicode(\false);
-        $csvRenderer->setApiMethod($this->getApiMethodNameFromUniqueId($uniqueId));
+        $csvRenderer->setConvertToUnicode(false);
+        $csvRenderer->setApiMethod(
+            $this->getApiMethodNameFromUniqueId($uniqueId)
+        );
+
         return $csvRenderer;
     }
+
     /**
      * @param $uniqueId
      * @return string
@@ -116,6 +158,7 @@ class Csv extends ReportRenderer
     {
         return str_replace("_", ".", $uniqueId);
     }
+
     /**
      * Get report attachments, ex. graph images
      *

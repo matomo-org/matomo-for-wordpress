@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
+
 /**
  * Executes a callback for each row of a {@link DataTable} and removes the defined metadata column from each row.
  *
@@ -22,6 +24,7 @@ use Piwik\DataTable\BaseFilter;
 class ColumnCallbackDeleteMetadata extends BaseFilter
 {
     private $metadataToRemove;
+
     /**
      * @param DataTable $table The DataTable instance that will be filtered.
      * @param string $metadataToRemove The name of the metadata field that will be removed from each row.
@@ -29,8 +32,10 @@ class ColumnCallbackDeleteMetadata extends BaseFilter
     public function __construct($table, $metadataToRemove)
     {
         parent::__construct($table);
+
         $this->metadataToRemove = $metadataToRemove;
     }
+
     /**
      * See {@link ColumnCallbackDeleteMetadata}.
      *
@@ -38,9 +43,11 @@ class ColumnCallbackDeleteMetadata extends BaseFilter
      */
     public function filter($table)
     {
-        $this->enableRecursive(\true);
+        $this->enableRecursive(true);
+
         foreach ($table->getRows() as $row) {
             $row->deleteMetadata($this->metadataToRemove);
+
             $this->filterSubTable($row);
         }
     }

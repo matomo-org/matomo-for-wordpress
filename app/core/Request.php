@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use InvalidArgumentException;
+
 /**
  * Provides (type safe) access methods for request parameters.
  *
@@ -26,47 +28,54 @@ class Request
      * @var array
      */
     protected $requestParameters;
+
     private static $exceptionMsg = "The parameter '%s' isn't set in the Request and a default value wasn't provided.";
+
     public function __construct(array $requestParameters)
     {
         $this->requestParameters = $requestParameters;
     }
+
     /**
      * Creates a request object using GET and POST parameters of the current request
      *
      * @return static
      */
-    public static function fromRequest() : self
+    public static function fromRequest(): self
     {
         return new self($_GET + $_POST);
     }
+
     /**
      * Creates a request object using only GET parameters of the current request
      *
      * @return static
      */
-    public static function fromGet() : self
+    public static function fromGet(): self
     {
         return new self($_GET);
     }
+
     /**
      * Creates a request object using only POST parameters of the current request
      *
      * @return static
      */
-    public static function fromPost() : self
+    public static function fromPost(): self
     {
         return new self($_POST);
     }
+
     /**
      * Creates a request object using the parameters that can be extracted from the provided query string
      *
      * @return static
      */
-    public static function fromQueryString(string $queryString) : self
+    public static function fromQueryString(string $queryString): self
     {
         $requestParameters = [];
         parse_str($queryString, $requestParameters);
+
         // If a querystring is provided urlencode'd parse_str will not be able to parse it correctly.
         // A querystring like `method%3dVisitsSummary.get%26idSite%3d1` would result in
         // an array like `['method=VisitsSummary.get&idSite=1' => '']`
@@ -76,8 +85,10 @@ class Request
             $requestParameters = [];
             parse_str(urldecode($queryString), $requestParameters);
         }
+
         return new self($requestParameters);
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If the requested parameter can't be found and no default is provided an exception will be thrown
@@ -98,14 +109,21 @@ class Request
         if (!strlen($name)) {
             throw new InvalidArgumentException('Invalid request parameter. Parameter name required.');
         }
-        if (array_key_exists($name, $this->requestParameters) && $this->requestParameters[$name] !== null) {
+
+        if (
+            array_key_exists($name, $this->requestParameters)
+            && $this->requestParameters[$name] !== null
+        ) {
             return $this->filterNullBytes($this->requestParameters[$name]);
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or is not of type integer an
@@ -113,17 +131,21 @@ class Request
      *
      * @throws InvalidArgumentException
      */
-    public function getIntegerParameter(string $name, ?int $default = null) : int
+    public function getIntegerParameter(string $name, ?int $default = null): int
     {
         $parameter = $this->getParameter($name, $default);
-        if ((is_string($parameter) || is_numeric($parameter)) && (string) $parameter === (string) (int) $parameter) {
-            return (int) $parameter;
+
+        if ((is_string($parameter) || is_numeric($parameter)) && (string)$parameter === (string)(int)$parameter) {
+            return (int)$parameter;
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or is not of type float an
@@ -131,18 +153,21 @@ class Request
      *
      * @throws InvalidArgumentException
      */
-    public function getFloatParameter(string $name, ?float $default = null) : float
+    public function getFloatParameter(string $name, ?float $default = null): float
     {
         $parameter = $this->getParameter($name, $default);
-        $parsedFloat = \Piwik\Common::parseFloat($parameter);
+        $parsedFloat = Common::parseFloat($parameter);
         if ($parsedFloat !== null) {
             return $parsedFloat;
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or is not of type string an
@@ -150,17 +175,21 @@ class Request
      *
      * @throws InvalidArgumentException
      */
-    public function getStringParameter(string $name, ?string $default = null) : string
+    public function getStringParameter(string $name, ?string $default = null): string
     {
         $parameter = $this->getParameter($name, $default);
+
         if (is_string($parameter) || is_numeric($parameter)) {
-            return $this->filterNullBytes((string) $parameter);
+            return $this->filterNullBytes((string)$parameter);
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or can't be converted to boolean
@@ -172,23 +201,29 @@ class Request
      *
      * @throws InvalidArgumentException
      */
-    public function getBoolParameter(string $name, ?bool $default = null) : bool
+    public function getBoolParameter(string $name, ?bool $default = null): bool
     {
         $parameter = $this->getParameter($name, $default);
-        if ($parameter === \false || $parameter === \true) {
+
+        if ($parameter === false || $parameter === true) {
             return $parameter;
         }
-        if (\is_string($parameter) && \strtolower($parameter) === 'false' || $parameter === '0' || $parameter === 0) {
-            return \false;
+
+        if ((\is_string($parameter) && \strtolower($parameter) === 'false') || $parameter === '0' || $parameter === 0) {
+            return false;
         }
-        if (\is_string($parameter) && \strtolower($parameter) === 'true' || $parameter === '1' || $parameter === 1) {
-            return \true;
+
+        if ((\is_string($parameter) && \strtolower($parameter) === 'true') || $parameter === '1' || $parameter === 1) {
+            return true;
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or is not of type array an
@@ -198,17 +233,21 @@ class Request
      * @return array
      * @throws InvalidArgumentException
      */
-    public function getArrayParameter(string $name, ?array $default = null) : array
+    public function getArrayParameter(string $name, ?array $default = null): array
     {
         $parameter = $this->getParameter($name, $default);
+
         if (is_array($parameter)) {
             return $this->filterNullBytes($parameter);
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     /**
      * Returns the requested parameter from the request object.
      * If no default is provided and the requested parameter either can't be found or can't be json_decode'd an
@@ -226,21 +265,27 @@ class Request
             $parameter = $this->getParameter($name);
         } catch (InvalidArgumentException $e) {
             $parameter = null;
+
             if ($default !== null) {
                 return $default;
             }
         }
+
         if (is_string($parameter)) {
-            $decodedValue = \json_decode($parameter, \true);
+            $decodedValue = \json_decode($parameter, true);
+
             if ($decodedValue !== null && $decodedValue !== '') {
                 return $this->filterNullBytes($decodedValue);
             }
         }
+
         if (null !== $default) {
             return $default;
         }
+
         throw new InvalidArgumentException(sprintf(self::$exceptionMsg, $name));
     }
+
     private function filterNullBytes($value)
     {
         if (is_array($value)) {
@@ -250,15 +295,16 @@ class Request
             }
             return $result;
         } else {
-            return is_string($value) ? \Piwik\Common::sanitizeNullBytes($value) : $value;
+            return is_string($value) ? Common::sanitizeNullBytes($value) : $value;
         }
     }
+
     /**
      * Returns an array containing all parameters of the request object
      *
      * @return array
      */
-    public function getParameters() : array
+    public function getParameters(): array
     {
         return $this->requestParameters;
     }

@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Contents;
 
 use Piwik\Archive;
 use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\Contents\Archiver;
+
 /**
  * The Contents API exposes content tracking reports grouped by content name and content piece.
  *
@@ -39,10 +41,11 @@ class API extends \Piwik\Plugin\API
      * @return DataTable|DataTable\Map Content name rows with impressions, interactions, and interaction rate for the
      *                                 requested site and period.
      */
-    public function getContentNames($idSite, string $period, string $date, $segment = \false, $idSubtable = \false)
+    public function getContentNames($idSite, string $period, string $date, $segment = false, $idSubtable = false)
     {
         return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $idSubtable);
     }
+
     /**
      * Returns content tracking metrics grouped by content piece.
      *
@@ -63,10 +66,11 @@ class API extends \Piwik\Plugin\API
      * @return DataTable|DataTable\Map Content piece rows with impressions, interactions, and interaction rate for the
      *                                 requested site and period.
      */
-    public function getContentPieces($idSite, string $period, string $date, $segment = \false, $idSubtable = \false)
+    public function getContentPieces($idSite, string $period, string $date, $segment = false, $idSubtable = false)
     {
         return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $idSubtable);
     }
+
     /**
      * @param int|string|int[] $idSite
      * @param string|null|false $segment
@@ -76,23 +80,27 @@ class API extends \Piwik\Plugin\API
     private function getDataTable(string $name, $idSite, string $period, string $date, $segment, $idSubtable)
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $recordName = \Piwik\Plugins\Contents\Dimensions::getRecordNameForAction($name);
-        $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, \false, \false, $idSubtable);
+        $recordName = Dimensions::getRecordNameForAction($name);
+        $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, false, false, $idSubtable);
+
         if (empty($idSubtable)) {
             $dataTable->filter('AddSegmentValue', array(function ($label) {
                 if ($label === Archiver::CONTENT_PIECE_NOT_SET) {
-                    return \false;
+                    return false;
                 }
+
                 return $label;
             }));
         }
+
         $this->filterDataTable($dataTable);
         return $dataTable;
     }
+
     /**
      * @param DataTable|DataTable\Map $dataTable
      */
-    private function filterDataTable($dataTable) : void
+    private function filterDataTable($dataTable): void
     {
         $dataTable->queueFilter('ReplaceColumnNames');
         $dataTable->queueFilter('ReplaceSummaryRowLabel');

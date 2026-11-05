@@ -1,0 +1,22 @@
+{
+    "CoreUpdater": {
+        "DownloadX": "Descargar %s",
+        "ExceptionArchiveEmpty": "Arquivo baleiro.",
+        "ExceptionArchiveIncompatible": "Arquivo incompatíbel: %s",
+        "ExceptionArchiveIncomplete": "O arquivo está incompleto: faltan algúns ficheiros (p.ex. %s).",
+        "InstallingTheLatestVersion": "A instalar a versión máis recente",
+        "LatestBetaRelease": "Versión beta máis recente",
+        "LatestStableRelease": "Versión estábel máis recente",
+        "NotificationClickToUpdateThemes": "Prema aquí para actualizar os temas agora:",
+        "PiwikHasBeenSuccessfullyUpgraded": "Matomo foi actualizado correctamente!",
+        "ThankYouUpdatePiwik": "Grazas por usar Matomo e mantelo actualizado!",
+        "UpdateErrorTitle": "Erro de actualización",
+        "UpdateSuccessTitle": "Matomo foi actualizado correctamente!",
+        "UpdateTitle": "Actualizar",
+        "UpgradeComplete": "Anovación rematada!",
+        "UpgradePiwik": "Anovar Matomo",
+        "VerifyingUnpackedFiles": "A comprobar os ficheiros desempaquetados",
+        "ViewVersionChangelog": "Ver o rexistro de cambios desta versión:",
+        "WarningMessages": "Mensaxes de advertencia:"
+    }
+}

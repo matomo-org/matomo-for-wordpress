@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\Columns;
 
 use Piwik\Columns\DimensionMetricFactory;
@@ -14,12 +15,14 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Plugin\Dimension\ActionDimension;
+
 class IdPageview extends ActionDimension
 {
     protected $columnName = 'idpageview';
     protected $columnType = 'CHAR(6) NULL DEFAULT NULL';
     protected $type = self::TYPE_TEXT;
     protected $nameSingular = 'Actions_ColumnIdPageview';
+
     /**
      * @return mixed|false
      * @api
@@ -28,6 +31,7 @@ class IdPageview extends ActionDimension
     {
         return substr($request->getParam('pv_id'), 0, 6);
     }
+
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // metrics for idpageview do not really make any sense

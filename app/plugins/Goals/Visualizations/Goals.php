@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Goals\Visualizations;
 
 use Piwik\API\Request;
@@ -16,70 +17,92 @@ use Piwik\Piwik;
 use Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
 use Piwik\Site;
 use Piwik\Url;
+
 require_once PIWIK_INCLUDE_PATH . '/core/Twig.php';
+
 /**
  * DataTable Visualization that derives from HtmlTable and sets show_goals_columns to true.
  */
 class Goals extends HtmlTable
 {
     public const ID = 'tableGoals';
-    public const FOOTER_ICON = 'icon-goal';
+    public const FOOTER_ICON       = 'icon-goal';
     public const FOOTER_ICON_TITLE = 'General_DisplayTableWithGoalMetrics';
+
     public const GOALS_DISPLAY_NORMAL = 0;
     public const GOALS_DISPLAY_PAGES = 1;
     public const GOALS_DISPLAY_ENTRY_PAGES = 2;
+
     private $displayType = self::GOALS_DISPLAY_NORMAL;
+
     /**
      * @var bool
      */
-    private $isSingleGoalView = \false;
+    private $isSingleGoalView = false;
+
     public function beforeLoadDataTable()
     {
         $request = $this->getRequestArray();
         $idGoal = $request['idGoal'] ?? null;
+
         $requestMethod = $this->requestConfig->getApiModuleToRequest() . '.' . $this->requestConfig->getApiMethodToRequest();
         $idGoal = AddColumnsProcessedMetricsGoal::getProcessOnlyIdGoalToUseForReport($idGoal, $requestMethod);
+
         if (!empty($idGoal)) {
-            $this->config->filters[] = ['Piwik\\Plugins\\Goals\\DataTable\\Filter\\RemoveUnusedGoalRevenueColumns'];
+            $this->config->filters[] = ['Piwik\Plugins\Goals\DataTable\Filter\RemoveUnusedGoalRevenueColumns'];
             $this->requestConfig->request_parameters_to_modify['idGoal'] = $idGoal;
+
             if ($idGoal == AddColumnsProcessedMetricsGoal::GOALS_PAGES || $idGoal == AddColumnsProcessedMetricsGoal::GOALS_PAGES_ECOMMERCE) {
                 $this->displayType = self::GOALS_DISPLAY_PAGES;
             } elseif ($idGoal == AddColumnsProcessedMetricsGoal::GOALS_ENTRY_PAGES || $idGoal == AddColumnsProcessedMetricsGoal::GOALS_ENTRY_PAGES_ECOMMERCE) {
                 $this->displayType = self::GOALS_DISPLAY_ENTRY_PAGES;
             }
         }
+
         parent::beforeLoadDataTable();
-        $this->config->show_totals_row = \false;
+
+        $this->config->show_totals_row = false;
+
         if ($this->config->disable_subtable_when_show_goals) {
             $this->config->subtable_controller_action = null;
-            $this->config->show_flatten_table = \false;
-            $this->requestConfig->request_parameters_to_modify['flat'] = \false;
+            $this->config->show_flatten_table = false;
+            $this->requestConfig->request_parameters_to_modify['flat'] = false;
         }
+
         $this->setShowGoalsColumnsProperties();
     }
+
     public function beforeRender()
     {
-        $this->config->show_totals_row = \false;
-        $this->config->show_goals = \true;
-        $this->config->show_goals_columns = \true;
+        $this->config->show_totals_row = false;
+        $this->config->show_goals = true;
+        $this->config->show_goals_columns  = true;
         $this->config->datatable_css_class = 'dataTableVizGoals';
-        $this->config->show_exclude_low_population = \true;
+        $this->config->show_exclude_low_population = true;
+
         if (1 == Common::getRequestVar('documentationForGoalsPage', 0, 'int')) {
             // TODO: should not use query parameter
-            $this->config->documentation = Piwik::translate('Goals_ConversionByTypeReportDocumentation', ['<br />', '<br />', Url::getExternalLinkTag('https://matomo.org/docs/tracking-goals-web-analytics/'), '</a>']);
+            $this->config->documentation = Piwik::translate(
+                'Goals_ConversionByTypeReportDocumentation',
+                ['<br />', '<br />', Url::getExternalLinkTag('https://matomo.org/docs/tracking-goals-web-analytics/'), '</a>']
+            );
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_NORMAL) {
             $this->config->metrics_documentation['nb_visits'] = Piwik::translate('Goals_ColumnVisits');
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_PAGES) {
             $this->config->addTranslation('nb_visits', Piwik::translate('General_ColumnUniquePageviews'));
             $this->config->metrics_documentation['nb_visits'] = Piwik::translate('General_ColumnUniquePageviewsDocumentation');
             $this->removeUnusedRevenueColumns();
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_ENTRY_PAGES) {
             $this->config->metrics_documentation['entry_nb_visits'] = Piwik::translate('General_ColumnEntrancesDocumentation');
             $this->removeUnusedRevenueColumns();
         }
+
         // When a single goal is displayed, restrict the export to the columns shown in the table so
         // the exported data matches the displayed goal-specific data, rather than dumping the
         // aggregated all-goals columns and every other goal's columns. (The label column is always
@@ -90,8 +113,10 @@ class Goals extends HtmlTable
             // flattening and so cannot be part of the allowlist above
             $this->config->export_parameters_to_modify['keep_flattened_dimension_columns'] = 1;
         }
+
         parent::beforeRender();
     }
+
     /**
      * Remove all *revenue* columns from being displayed that had been removed by RemoveUnusedGoalRevenueColumns filter
      */
@@ -99,7 +124,7 @@ class Goals extends HtmlTable
     {
         if ($this->dataTable instanceof DataTable\DataTableInterface) {
             foreach ($this->config->columns_to_display as $key => $column) {
-                if (\false === strpos($column, 'revenue')) {
+                if (false === strpos($column, 'revenue')) {
                     continue;
                 }
                 $columnValues = $this->dataTable->getColumn($column);
@@ -110,74 +135,130 @@ class Goals extends HtmlTable
             }
         }
     }
+
     private function setShowGoalsColumnsProperties()
     {
         // set view properties based on goal requested
         $idSite = Common::getRequestVar('idSite', null, 'int');
         $idGoal = Common::getRequestVar('idGoal', AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW, 'string');
+
         $goalsToProcess = null;
         // the export column restriction itself is applied in beforeRender(), once
         // columns_to_display is final (beforeRender() prunes empty revenue columns)
-        $this->isSingleGoalView = \false;
+        $this->isSingleGoalView = false;
         if (Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER == $idGoal) {
             $this->setPropertiesForEcommerceView();
+
             $goalsToProcess = [$idGoal];
-            $this->isSingleGoalView = \true;
+            $this->isSingleGoalView = true;
         } elseif (AddColumnsProcessedMetricsGoal::GOALS_FULL_TABLE == $idGoal) {
             $this->setPropertiesForGoals($idSite, 'all');
+
             $goalsToProcess = $this->getAllGoalIds($idSite);
         } elseif (AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW == $idGoal) {
             $this->setPropertiesForGoalsOverview($idSite);
+
             $goalsToProcess = $this->getAllGoalIds($idSite);
         } else {
             $this->setPropertiesForGoals($idSite, [$idGoal]);
+
             $goalsToProcess = [$idGoal];
-            $this->isSingleGoalView = \true;
+            $this->isSingleGoalView = true;
         }
+
         // add goals columns
         $this->requestConfig->request_parameters_to_modify['filter_update_columns_when_show_all_goals'] = $idGoal;
         $this->requestConfig->request_parameters_to_modify['filter_show_goal_columns_process_goals'] = implode(',', $goalsToProcess);
     }
+
     private function setPropertiesForEcommerceView()
     {
         $this->requestConfig->filter_sort_order = 'desc';
+
         switch ($this->displayType) {
             case self::GOALS_DISPLAY_NORMAL:
                 $this->requestConfig->filter_sort_column = 'goal_ecommerceOrder_revenue';
-                $this->config->columns_to_display = ['label', 'nb_visits', 'goal_ecommerceOrder_nb_conversions', 'goal_ecommerceOrder_revenue', 'goal_ecommerceOrder_conversion_rate', 'goal_ecommerceOrder_avg_order_revenue', 'goal_ecommerceOrder_items', 'goal_ecommerceOrder_revenue_per_visit'];
+                $this->config->columns_to_display = [
+                    'label',
+                    'nb_visits',
+                    'goal_ecommerceOrder_nb_conversions',
+                    'goal_ecommerceOrder_revenue',
+                    'goal_ecommerceOrder_conversion_rate',
+                    'goal_ecommerceOrder_avg_order_revenue',
+                    'goal_ecommerceOrder_items',
+                    'goal_ecommerceOrder_revenue_per_visit',
+                ];
                 break;
             case self::GOALS_DISPLAY_PAGES:
                 $this->requestConfig->filter_sort_column = 'goal_ecommerceOrder_revenue_attrib';
-                $this->config->columns_to_display = ['label', 'nb_visits', 'goal_ecommerceOrder_nb_conversions_attrib', 'goal_ecommerceOrder_revenue_attrib', 'goal_ecommerceOrder_nb_conversions_page_rate'];
+                $this->config->columns_to_display = [
+                    'label',
+                    'nb_visits',
+                    'goal_ecommerceOrder_nb_conversions_attrib',
+                    'goal_ecommerceOrder_revenue_attrib',
+                    'goal_ecommerceOrder_nb_conversions_page_rate',
+                ];
                 break;
             case self::GOALS_DISPLAY_ENTRY_PAGES:
                 $this->requestConfig->filter_sort_column = 'goal_ecommerceOrder_revenue_entry';
-                $this->config->columns_to_display = ['label', 'entry_nb_visits', 'goal_ecommerceOrder_nb_conversions_entry', 'goal_ecommerceOrder_revenue_entry', 'goal_ecommerceOrder_nb_conversions_entry_rate', 'goal_ecommerceOrder_revenue_per_entry'];
+                $this->config->columns_to_display = [
+                    'label',
+                    'entry_nb_visits',
+                    'goal_ecommerceOrder_nb_conversions_entry',
+                    'goal_ecommerceOrder_revenue_entry',
+                    'goal_ecommerceOrder_nb_conversions_entry_rate',
+                    'goal_ecommerceOrder_revenue_per_entry',
+                ];
                 break;
             default:
                 $this->requestConfig->filter_sort_column = 'goal_ecommerceOrder_revenue';
-                $this->config->columns_to_display = ['label', 'nb_visits', 'goal_ecommerceOrder_nb_conversions', 'goal_ecommerceOrder_revenue', 'goal_ecommerceOrder_conversion_rate', 'goal_ecommerceOrder_avg_order_revenue', 'goal_ecommerceOrder_items', 'goal_ecommerceOrder_revenue_per_visit'];
+                $this->config->columns_to_display = [
+                    'label',
+                    'nb_visits',
+                    'goal_ecommerceOrder_nb_conversions',
+                    'goal_ecommerceOrder_revenue',
+                    'goal_ecommerceOrder_conversion_rate',
+                    'goal_ecommerceOrder_avg_order_revenue',
+                    'goal_ecommerceOrder_items',
+                    'goal_ecommerceOrder_revenue_per_visit',
+                ];
         }
-        $this->config->translations = array_merge($this->config->translations, ['goal_ecommerceOrder_nb_conversions' => Piwik::translate('General_EcommerceOrders'), 'goal_ecommerceOrder_revenue' => Piwik::translate('General_TotalRevenue'), 'goal_ecommerceOrder_revenue_per_visit' => Piwik::translate('General_ColumnValuePerVisit')]);
+
+        $this->config->translations = array_merge($this->config->translations, [
+            'goal_ecommerceOrder_nb_conversions'    => Piwik::translate('General_EcommerceOrders'),
+            'goal_ecommerceOrder_revenue'           => Piwik::translate('General_TotalRevenue'),
+            'goal_ecommerceOrder_revenue_per_visit' => Piwik::translate('General_ColumnValuePerVisit'),
+        ]);
+
         $goalName = Piwik::translate('General_EcommerceOrders');
-        $this->config->metrics_documentation['revenue_per_visit'] = Piwik::translate('Goals_ColumnRevenuePerVisitDocumentation', $goalName);
+        $this->config->metrics_documentation['revenue_per_visit'] =
+            Piwik::translate('Goals_ColumnRevenuePerVisitDocumentation', $goalName);
     }
+
     protected function setPropertiesForGoalsOverview($idSite)
     {
         $allGoals = $this->getGoals($idSite);
+
         // set view properties
         if ($this->displayType == self::GOALS_DISPLAY_NORMAL) {
             $this->config->columns_to_display = ['label', 'nb_visits'];
+
             foreach ($allGoals as $goal) {
                 $column = "goal_{$goal['idgoal']}_conversion_rate";
                 $this->config->columns_to_display[] = $column;
             }
+
             $this->config->columns_to_display[] = 'revenue_per_visit';
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_PAGES) {
-            $this->config->columns_to_display = ['label', 'nb_visits'];
-            // Should be uniques
-            $goalColumnTemplates = ['goal_%s_nb_conversions_attrib', 'goal_%s_revenue_attrib', 'goal_%s_nb_conversions_page_rate'];
+            $this->config->columns_to_display = ['label', 'nb_visits']; // Should be uniques
+            $goalColumnTemplates = [
+                'goal_%s_nb_conversions_attrib',
+                'goal_%s_revenue_attrib',
+                'goal_%s_nb_conversions_page_rate',
+            ];
+
             // set columns to display (columns of same type but different goals will be next to each other,
             // ie, goal_0_nb_conversions, goal_1_nb_conversions, etc.)
             foreach ($allGoals as $goal) {
@@ -186,9 +267,17 @@ class Goals extends HtmlTable
                 }
             }
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_ENTRY_PAGES) {
             $this->config->columns_to_display = ['label', 'entry_nb_visits'];
-            $goalColumnTemplates = ['goal_%s_nb_conversions_entry', 'goal_%s_nb_conversions_entry_rate', 'goal_%s_revenue_entry', 'goal_%s_revenue_per_entry'];
+
+            $goalColumnTemplates = [
+                'goal_%s_nb_conversions_entry',
+                'goal_%s_nb_conversions_entry_rate',
+                'goal_%s_revenue_entry',
+                'goal_%s_revenue_per_entry',
+            ];
+
             // set columns to display (columns of same type but different goals will be next to each other,
             // ie, goal_0_nb_conversions, goal_1_nb_conversions, etc.)
             foreach ($allGoals as $goal) {
@@ -198,9 +287,11 @@ class Goals extends HtmlTable
             }
         }
     }
+
     protected function setPropertiesForGoals($idSite, $idGoals)
     {
         $allGoals = $this->getGoals($idSite);
+
         if ($this->displayType == self::GOALS_DISPLAY_NORMAL) {
             if ('all' == $idGoals) {
                 $idGoals = array_keys($allGoals);
@@ -209,8 +300,16 @@ class Goals extends HtmlTable
                 $this->requestConfig->filter_sort_column = 'goal_' . reset($idGoals) . '_nb_conversions';
                 $this->requestConfig->filter_sort_order = 'desc';
             }
+
             $this->config->columns_to_display = ['label', 'nb_visits'];
-            $goalColumnTemplates = ['goal_%s_nb_conversions', 'goal_%s_conversion_rate', 'goal_%s_revenue', 'goal_%s_revenue_per_visit'];
+
+            $goalColumnTemplates = [
+                'goal_%s_nb_conversions',
+                'goal_%s_conversion_rate',
+                'goal_%s_revenue',
+                'goal_%s_revenue_per_visit',
+            ];
+
             // set columns to display (columns of same type but different goals will be next to each other,
             // ie, goal_0_nb_conversions, goal_1_nb_conversions, etc.)
             foreach ($goalColumnTemplates as $columnTemplate) {
@@ -218,8 +317,10 @@ class Goals extends HtmlTable
                     $this->config->columns_to_display[] = sprintf($columnTemplate, $idGoal);
                 }
             }
+
             $this->config->columns_to_display[] = 'revenue_per_visit';
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_PAGES) {
             if ('all' === $idGoals) {
                 $idGoals = array_keys($allGoals);
@@ -228,9 +329,15 @@ class Goals extends HtmlTable
                 // only sort by a goal's conversions if not showing all goals (for FULL_REPORT)
                 $this->requestConfig->filter_sort_column = 'goal_' . reset($idGoals) . '_nb_conversions_attrib';
             }
-            $this->requestConfig->filter_sort_order = 'desc';
+            $this->requestConfig->filter_sort_order  = 'desc';
+
             $this->config->columns_to_display = ['label', 'nb_visits'];
-            $goalColumnTemplates = ['goal_%s_nb_conversions_attrib', 'goal_%s_revenue_attrib', 'goal_%s_nb_conversions_page_rate'];
+            $goalColumnTemplates = [
+                'goal_%s_nb_conversions_attrib',
+                'goal_%s_revenue_attrib',
+                'goal_%s_nb_conversions_page_rate',
+            ];
+
             // set columns to display (columns of same type but different goals will be next to each other,
             // ie, goal_0_nb_conversions, goal_1_nb_conversions, etc.)
             foreach ($idGoals as $idGoal) {
@@ -239,6 +346,7 @@ class Goals extends HtmlTable
                 }
             }
         }
+
         if ($this->displayType == self::GOALS_DISPLAY_ENTRY_PAGES) {
             if ('all' === $idGoals) {
                 $idGoals = array_keys($allGoals);
@@ -247,9 +355,15 @@ class Goals extends HtmlTable
                 // only sort by a goal's conversions if not showing all goals (for FULL_REPORT)
                 $this->requestConfig->filter_sort_column = 'goal_' . reset($idGoals) . '_nb_conversions_entry';
             }
-            $this->requestConfig->filter_sort_order = 'desc';
+            $this->requestConfig->filter_sort_order  = 'desc';
             $this->config->columns_to_display = ['label', 'entry_nb_visits'];
-            $goalColumnTemplates = ['goal_%s_nb_conversions_entry', 'goal_%s_nb_conversions_entry_rate', 'goal_%s_revenue_entry', 'goal_%s_revenue_per_entry'];
+            $goalColumnTemplates = [
+                'goal_%s_nb_conversions_entry',
+                'goal_%s_nb_conversions_entry_rate',
+                'goal_%s_revenue_entry',
+                'goal_%s_revenue_per_entry',
+            ];
+
             foreach ($idGoals as $idGoal) {
                 foreach ($goalColumnTemplates as $columnTemplate) {
                     $this->config->columns_to_display[] = sprintf($columnTemplate, $idGoal);
@@ -257,27 +371,39 @@ class Goals extends HtmlTable
             }
         }
     }
+
     protected $goalsForCurrentSite = null;
+
     protected function getGoals($idSite)
     {
         if ($this->goalsForCurrentSite === null) {
             // get all goals to display info for
             $allGoals = [];
+
             // add the ecommerce goal if ecommerce is enabled for the site
             if (Site::isEcommerceEnabledFor($idSite)) {
-                $ecommerceGoal = ['idgoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER, 'name' => Piwik::translate('Goals_EcommerceOrder'), 'quoted_name' => \false];
+                $ecommerceGoal = [
+                    'idgoal'      => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER,
+                    'name'        => Piwik::translate('Goals_EcommerceOrder'),
+                    'quoted_name' => false,
+                ];
                 $allGoals[$ecommerceGoal['idgoal']] = $ecommerceGoal;
             }
+
             // add the site's goals (and escape all goal names)
-            $siteGoals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1', 'orderByName' => \true], $default = []);
+            $siteGoals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1', 'orderByName' => true], $default = []);
+
             foreach ($siteGoals as &$goal) {
                 $goal['quoted_name'] = '"' . $goal['name'] . '"';
                 $allGoals[$goal['idgoal']] = $goal;
             }
+
             $this->goalsForCurrentSite = $allGoals;
         }
+
         return $this->goalsForCurrentSite;
     }
+
     protected function getAllGoalIds($idSite)
     {
         $allGoals = $this->getGoals($idSite);

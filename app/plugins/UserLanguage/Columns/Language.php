@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserLanguage\Columns;
 
 use Piwik\Common;
@@ -14,7 +15,9 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 require_once PIWIK_INCLUDE_PATH . '/plugins/UserLanguage/functions.php';
+
 class Language extends VisitDimension
 {
     protected $columnName = 'location_browser_lang';
@@ -25,10 +28,12 @@ class Language extends VisitDimension
     protected $segmentName = 'languageCode';
     protected $acceptValues = 'de, fr, en-gb, zh-cn, etc.';
     protected $type = self::TYPE_TEXT;
+
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\UserLanguage\languageTranslateWithCode($value);
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -37,6 +42,7 @@ class Language extends VisitDimension
     {
         return $this->getSingleLanguageFromAcceptedLanguages($request->getBrowserLanguage());
     }
+
     /**
      * For better privacy we store only the main language code, instead of the whole browser language string.
      *
@@ -48,6 +54,7 @@ class Language extends VisitDimension
         if (empty($acceptLanguagesString)) {
             return '';
         }
+
         $languageCode = Common::extractLanguageAndRegionCodeFromBrowserLanguage($acceptLanguagesString);
         return $languageCode;
     }

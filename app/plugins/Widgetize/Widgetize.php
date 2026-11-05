@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Widgetize;
 
 class Widgetize extends \Piwik\Plugin
@@ -15,8 +16,13 @@ class Widgetize extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
+        return array(
+            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+        );
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/jquery.scrollto/jquery.scrollTo.min.js";
@@ -24,6 +30,7 @@ class Widgetize extends \Piwik\Plugin
         $jsFiles[] = "plugins/CoreHome/javascripts/dataTable.js";
         $jsFiles[] = "plugins/Dashboard/javascripts/widgetMenu.js";
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Widgetize/stylesheets/widgetize.less";
@@ -32,6 +39,7 @@ class Widgetize extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/stylesheets/cloud.less";
         $stylesheets[] = "plugins/Dashboard/stylesheets/dashboard.less";
     }
+
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'Widgetize_OpenInNewWindow';

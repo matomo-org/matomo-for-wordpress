@@ -1,11 +1,11 @@
 <?php
-
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3 or later
  */
+
 namespace Matomo\Network;
 
 /**
@@ -22,6 +22,7 @@ abstract class IP
      * @var string
      */
     protected $ip;
+
     /**
      * @see fromBinaryIP
      * @see fromStringIP
@@ -32,6 +33,7 @@ abstract class IP
     {
         $this->ip = $ip;
     }
+
     /**
      * Factory method to create an IP instance from an IP in binary format.
      *
@@ -43,13 +45,16 @@ abstract class IP
     public static function fromBinaryIP($ip)
     {
         if ($ip === null || $ip === '') {
-            return new \Matomo\Network\IPv4("\x00\x00\x00\x00");
+            return new IPv4("\x00\x00\x00\x00");
         }
+
         if (self::isIPv4($ip)) {
-            return new \Matomo\Network\IPv4($ip);
+            return new IPv4($ip);
         }
-        return new \Matomo\Network\IPv6($ip);
+
+        return new IPv6($ip);
     }
+
     /**
      * Factory method to create an IP instance from an IP represented as string.
      *
@@ -60,8 +65,9 @@ abstract class IP
      */
     public static function fromStringIP($ip)
     {
-        return self::fromBinaryIP(\Matomo\Network\IPUtils::stringToBinaryIP($ip));
+        return self::fromBinaryIP(IPUtils::stringToBinaryIP($ip));
     }
+
     /**
      * Returns the IP address in a binary format.
      *
@@ -71,6 +77,7 @@ abstract class IP
     {
         return $this->ip;
     }
+
     /**
      * Returns the IP address in a string format (X.X.X.X).
      *
@@ -78,8 +85,9 @@ abstract class IP
      */
     public function toString()
     {
-        return \Matomo\Network\IPUtils::binaryToStringIP($this->ip);
+        return IPUtils::binaryToStringIP($this->ip);
     }
+
     /**
      * @return string
      */
@@ -87,6 +95,7 @@ abstract class IP
     {
         return $this->toString();
     }
+
     /**
      * Tries to return the hostname associated to the IP.
      *
@@ -95,12 +104,16 @@ abstract class IP
     public function getHostname()
     {
         $stringIp = $this->toString();
+
         $host = strtolower(@gethostbyaddr($stringIp));
+
         if ($host === '' || $host === $stringIp) {
             return null;
         }
+
         return $host;
     }
+
     /**
      * Determines if the IP address is in a specified IP address range.
      *
@@ -112,31 +125,36 @@ abstract class IP
     public function isInRange($ipRange)
     {
         $ipLen = strlen($this->ip);
-        if (empty($this->ip) || empty($ipRange) || $ipLen != 4 && $ipLen != 16) {
-            return \false;
+        if (empty($this->ip) || empty($ipRange) || ($ipLen != 4 && $ipLen != 16)) {
+            return false;
         }
+
         if (is_array($ipRange)) {
             // already split into low/high IP addresses
-            $ipRange[0] = \Matomo\Network\IPUtils::stringToBinaryIP($ipRange[0]);
-            $ipRange[1] = \Matomo\Network\IPUtils::stringToBinaryIP($ipRange[1]);
+            $ipRange[0] = IPUtils::stringToBinaryIP($ipRange[0]);
+            $ipRange[1] = IPUtils::stringToBinaryIP($ipRange[1]);
         } else {
             // expect CIDR format but handle some variations
-            $ipRange = \Matomo\Network\IPUtils::getIPRangeBounds($ipRange);
+            $ipRange = IPUtils::getIPRangeBounds($ipRange);
         }
         if ($ipRange === null) {
-            return \false;
+            return false;
         }
+
         $low = $ipRange[0];
         $high = $ipRange[1];
         if (strlen($low) != $ipLen) {
-            return \false;
+            return false;
         }
+
         // binary-safe string comparison
         if ($this->ip >= $low && $this->ip <= $high) {
-            return \true;
+            return true;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Determines if the IP address is in a specified IP address range.
      *
@@ -148,16 +166,19 @@ abstract class IP
     public function isInRanges(array $ipRanges)
     {
         $ipLen = strlen($this->ip);
-        if (empty($this->ip) || empty($ipRanges) || $ipLen != 4 && $ipLen != 16) {
-            return \false;
+        if (empty($this->ip) || empty($ipRanges) || ($ipLen != 4 && $ipLen != 16)) {
+            return false;
         }
+
         foreach ($ipRanges as $ipRange) {
             if ($this->isInRange($ipRange)) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns the IP address as an IPv4 string when possible.
      *
@@ -167,6 +188,7 @@ abstract class IP
      * @return string|null IPv4 string address e.g. `'192.0.2.128'` or null if this is not an IPv4 address.
      */
     public abstract function toIPv4String();
+
     /**
      * Anonymize X bytes of the IP address by setting them to a null byte.
      *
@@ -177,6 +199,7 @@ abstract class IP
      * @return IP Returns a new modified instance.
      */
     public abstract function anonymize($byteCount);
+
     /**
      * Returns true if this is an IPv4, IPv4-compat, or IPv4-mapped address, false otherwise.
      *
@@ -187,6 +210,7 @@ abstract class IP
     {
         // in case mbstring overloads strlen function
         $strlen = function_exists('mb_orig_strlen') ? 'mb_orig_strlen' : 'strlen';
+
         return $strlen($binaryIp) == 4;
     }
 }

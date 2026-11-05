@@ -1,0 +1,10 @@
+{
+    "UserCountryMap": {
+        "Cities": "ערים",
+        "Countries": "מדינות",
+        "MinutesAgo": "לפני %s דקות",
+        "VisitorMap": "מפת מבקרים",
+        "WorldWide": "כלל-עולמי",
+        "map": "מפה"
+    }
+}

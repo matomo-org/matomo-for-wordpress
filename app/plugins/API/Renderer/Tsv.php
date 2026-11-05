@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\API\Renderer;
 
 use Piwik\Common;
-class Tsv extends \Piwik\Plugins\API\Renderer\Csv
+
+class Tsv extends Csv
 {
     public function renderSuccess($message)
     {

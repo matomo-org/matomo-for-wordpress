@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Container;
 
 use Piwik\Container\Container;
 use Piwik\Exception\DI\DependencyException;
 use Piwik\Exception\DI\NotFoundException;
+
 /**
  * This class provides a static access to the container.
  *
@@ -25,26 +27,31 @@ class StaticContainer
      * @var Container[]
      */
     private static $containerStack = array();
+
     /**
      * Definitions to register in the container.
      *
      * @var array[]
      */
     private static $definitions = array();
+
     /**
      * @return Container
      */
     public static function getContainer()
     {
         if (empty(self::$containerStack)) {
-            throw new \Piwik\Container\ContainerDoesNotExistException("The root container has not been created yet.");
+            throw new ContainerDoesNotExistException("The root container has not been created yet.");
         }
+
         return end(self::$containerStack);
     }
+
     public static function clearContainer()
     {
         self::pop();
     }
+
     /**
      * Only use this in tests.
      */
@@ -52,14 +59,17 @@ class StaticContainer
     {
         self::$containerStack[] = $container;
     }
+
     public static function pop()
     {
         array_pop(self::$containerStack);
     }
+
     public static function addDefinitions(array $definitions)
     {
         self::$definitions[] = $definitions;
     }
+
     /**
      * Proxy to Container::get()
      *
@@ -72,12 +82,13 @@ class StaticContainer
     {
         try {
             return self::getContainer()->get($name);
-        } catch (\Matomo\Dependencies\DI\NotFoundException $e) {
+        } catch (\DI\NotFoundException $e) {
             throw new NotFoundException($e->getMessage(), $e->getCode(), $e);
-        } catch (\Matomo\Dependencies\DI\DependencyException $e) {
+        } catch (\DI\DependencyException $e) {
             throw new DependencyException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
     public static function getDefinitions()
     {
         return self::$definitions;

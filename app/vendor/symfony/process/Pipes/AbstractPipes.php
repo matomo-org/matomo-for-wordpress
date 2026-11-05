@@ -8,21 +8,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\Process\Pipes;
 
 use Symfony\Component\Process\Exception\InvalidArgumentException;
+
 /**
  * @author Romain Neutron <imprec@gmail.com>
  *
  * @internal
  */
-abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesInterface
+abstract class AbstractPipes implements PipesInterface
 {
     public $pipes = [];
+
     private $inputBuffer = '';
     private $input;
-    private $blocked = \true;
+    private $blocked = true;
     private $lastError;
+
     /**
      * @param resource|string|int|float|bool|\Iterator|null $input
      */
@@ -36,6 +40,7 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
             $this->inputBuffer = (string) $input;
         }
     }
+
     /**
      * {@inheritdoc}
      */
@@ -48,16 +53,19 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
         }
         $this->pipes = [];
     }
+
     /**
      * Returns true if a system call has been interrupted.
      */
-    protected function hasSystemCallBeenInterrupted() : bool
+    protected function hasSystemCallBeenInterrupted(): bool
     {
         $lastError = $this->lastError;
         $this->lastError = null;
+
         // stream_select returns false when the `select` system call is interrupted by an incoming signal
-        return null !== $lastError && \false !== stripos($lastError, 'interrupted system call');
+        return null !== $lastError && false !== stripos($lastError, 'interrupted system call');
     }
+
     /**
      * Unblocks streams.
      */
@@ -66,25 +74,29 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
         if (!$this->blocked) {
             return;
         }
+
         foreach ($this->pipes as $pipe) {
             stream_set_blocking($pipe, 0);
         }
         if (\is_resource($this->input)) {
             stream_set_blocking($this->input, 0);
         }
-        $this->blocked = \false;
+
+        $this->blocked = false;
     }
+
     /**
      * Writes input to stdin.
      *
      * @throws InvalidArgumentException When an input iterator yields a non supported value
      */
-    protected function write() : ?array
+    protected function write(): ?array
     {
         if (!isset($this->pipes[0])) {
             return null;
         }
         $input = $this->input;
+
         if ($input instanceof \Iterator) {
             if (!$input->valid()) {
                 $input = null;
@@ -104,12 +116,15 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
                 $input = null;
             }
         }
+
         $r = $e = [];
         $w = [$this->pipes[0]];
+
         // let's have a look if something changed in streams
-        if (\false === @stream_select($r, $w, $e, 0, 0)) {
+        if (false === @stream_select($r, $w, $e, 0, 0)) {
             return null;
         }
+
         foreach ($w as $stdin) {
             if (isset($this->inputBuffer[0])) {
                 $written = fwrite($stdin, $this->inputBuffer);
@@ -118,8 +133,9 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
                     return [$this->pipes[0]];
                 }
             }
+
             if ($input) {
-                while (\true) {
+                while (true) {
                     $data = fread($input, self::CHUNK_SIZE);
                     if (!isset($data[0])) {
                         break;
@@ -128,6 +144,7 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
                     $data = substr($data, $written);
                     if (isset($data[0])) {
                         $this->inputBuffer = $data;
+
                         return [$this->pipes[0]];
                     }
                 }
@@ -140,6 +157,7 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
                 }
             }
         }
+
         // no input to read on resource, buffer is empty
         if (!isset($this->inputBuffer[0]) && !($this->input instanceof \Iterator ? $this->input->valid() : $this->input)) {
             $this->input = null;
@@ -148,8 +166,10 @@ abstract class AbstractPipes implements \Symfony\Component\Process\Pipes\PipesIn
         } elseif (!$w) {
             return [$this->pipes[0]];
         }
+
         return null;
     }
+
     /**
      * @internal
      */

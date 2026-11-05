@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable;
 
 use Closure;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\DataTable\Renderer\Html;
+
 /**
  * Stores an array of {@link DataTable}s indexed by one type of {@link DataTable} metadata (such as site ID
  * or period).
@@ -24,7 +26,7 @@ use Piwik\DataTable\Renderer\Html;
  *
  * @api
  */
-class Map implements \Piwik\DataTable\DataTableInterface
+class Map implements DataTableInterface
 {
     /**
      * Array containing the DataTable within this Set
@@ -32,12 +34,15 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @var DataTable[]
      */
     protected $array = array();
+
     /**
      * @see self::getKeyName()
      * @var string
      */
     protected $keyName = 'defaultKeyName';
-    protected $isBuiltWithoutArchives = \true;
+
+    protected $isBuiltWithoutArchives = true;
+
     /**
      * Returns a string description of the data used to index the DataTables.
      *
@@ -49,6 +54,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return $this->keyName;
     }
+
     /**
      * Set the name of they metadata used to index {@link DataTable}s. See {@link getKeyName()}.
      *
@@ -58,6 +64,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         $this->keyName = $name;
     }
+
     /**
      * Returns the number of {@link DataTable}s in this DataTable\Map.
      *
@@ -67,6 +74,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return count($this->getDataTables());
     }
+
     /**
      * Queue a filter to {@link DataTable} child of contained by this instance.
      *
@@ -81,6 +89,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->queueFilter($className, $parameters);
         }
     }
+
     /**
      * Apply the filters previously queued to each DataTable contained by this DataTable\Map.
      */
@@ -90,6 +99,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->applyQueuedFilters();
         }
     }
+
     /**
      * Apply a filter to all tables contained by this instance.
      *
@@ -102,6 +112,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->filter($className, $parameters);
         }
     }
+
     /**
      * Apply a callback to all tables contained by this instance and tables with the same key in $otherTables.
      *
@@ -122,13 +133,15 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         $result = [];
         foreach ($this->getDataTables() as $key => $childTable) {
-            $otherChildTables = array_map(function ($otherTable) use($key) {
+            $otherChildTables = array_map(function ($otherTable) use ($key) {
                 return !empty($otherTable) && $otherTable->hasTable($key) ? $otherTable->getTable($key) : null;
             }, $otherTables);
+
             $result[$key] = $childTable->multiFilter($otherChildTables, $filter);
         }
         return $result;
     }
+
     /**
      * Apply a filter to all subtables contained by this instance.
      *
@@ -141,6 +154,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->filterSubtables($className, $parameters);
         }
     }
+
     /**
      * Apply a queued filter to all subtables contained by this instance.
      *
@@ -153,6 +167,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->queueFilterSubtables($className, $parameters);
         }
     }
+
     /**
      * Returns the array of DataTables contained by this class.
      *
@@ -162,6 +177,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return $this->array;
     }
+
     /**
      * Returns the table with the specific label.
      *
@@ -172,6 +188,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return $this->array[$label];
     }
+
     /**
      * @param string $label
      * @return bool
@@ -180,6 +197,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return isset($this->array[$label]);
     }
+
     /**
      * Returns the first element in the Map's array.
      *
@@ -189,6 +207,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return reset($this->array);
     }
+
     /**
      * Returns the last element in the Map's array.
      *
@@ -198,6 +217,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         return end($this->array);
     }
+
     /**
      * Adds a new {@link DataTable} or Map instance to this DataTable\Map.
      *
@@ -208,18 +228,23 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         $this->array[$label] = $table;
     }
+
     public function getRowFromIdSubDataTable($idSubtable)
     {
         $dataTables = $this->getDataTables();
+
         // find first datatable containing data
         foreach ($dataTables as $subTable) {
             $subTableRow = $subTable->getRowFromIdSubDataTable($idSubtable);
+
             if (!empty($subTableRow)) {
                 return $subTableRow;
             }
         }
+
         return null;
     }
+
     /**
      * Returns a string output of this DataTable\Map (applying the default renderer to every {@link DataTable}
      * of this DataTable\Map).
@@ -230,8 +255,9 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         $renderer = new Html();
         $renderer->setTable($this);
-        return (string) $renderer;
+        return (string)$renderer;
     }
+
     /**
      * See {@link DataTable::enableRecursiveSort()}.
      */
@@ -241,6 +267,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->enableRecursiveSort();
         }
     }
+
     /**
      * See {@link DataTable::disableFilter()}.
      */
@@ -250,6 +277,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->disableFilter($className);
         }
     }
+
     /**
      * @ignore
      */
@@ -259,6 +287,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->disableRecursiveFilters();
         }
     }
+
     /**
      * @ignore
      */
@@ -268,6 +297,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->enableRecursiveFilters();
         }
     }
+
     /**
      * Renames the given column in each contained {@link DataTable}.
      *
@@ -282,6 +312,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->renameColumn($oldName, $newName);
         }
     }
+
     /**
      * Deletes the specified columns in each contained {@link DataTable}.
      *
@@ -290,12 +321,13 @@ class Map implements \Piwik\DataTable\DataTableInterface
      * @param list<string|int> $columns The columns to delete.
      * @param bool $deleteRecursiveInSubtables This param is currently not used.
      */
-    public function deleteColumns($columns, $deleteRecursiveInSubtables = \false)
+    public function deleteColumns($columns, $deleteRecursiveInSubtables = false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteColumns($columns);
         }
     }
+
     /**
      * Deletes a table from the array of DataTables.
      *
@@ -305,6 +337,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
     {
         unset($this->array[$id]);
     }
+
     /**
      * Deletes the given column in every contained {@link DataTable}.
      *
@@ -317,6 +350,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $table->deleteColumn($name);
         }
     }
+
     /**
      * Returns the array containing all column values in all contained {@link DataTable}s for the requested column.
      *
@@ -326,14 +360,17 @@ class Map implements \Piwik\DataTable\DataTableInterface
     public function getColumn($name)
     {
         $values = array();
+
         foreach ($this->getDataTables() as $table) {
             $moreValues = $table->getColumn($name);
             foreach ($moreValues as &$value) {
                 $values[] = $value;
             }
         }
+
         return $values;
     }
+
     /**
      * Merges the rows of every child {@link DataTable} into a new one and
      * returns it. This function will also set the label of the merged rows
@@ -388,29 +425,37 @@ class Map implements \Piwik\DataTable\DataTableInterface
     public function mergeChildren()
     {
         $firstChild = reset($this->array);
-        if ($firstChild instanceof \Piwik\DataTable\Map) {
+
+        if ($firstChild instanceof Map) {
             $result = $firstChild->getEmptyClone();
+
             /** @var Map $subDataTableMap */
             foreach ($this->getDataTables() as $label => $subDataTableMap) {
                 foreach ($subDataTableMap->getDataTables() as $innerLabel => $subTable) {
                     if (!isset($result->array[$innerLabel])) {
                         $dataTable = new DataTable();
                         $dataTable->setMetadataValues($subTable->getAllTableMetadata());
+
                         $result->addTable($dataTable, $innerLabel);
                     }
+
                     $this->copyRowsAndSetLabel($result->array[$innerLabel], $subTable, $label);
                 }
             }
         } else {
             $result = new DataTable();
+
             foreach ($this->getDataTables() as $label => $subTable) {
                 $this->copyRowsAndSetLabel($result, $subTable, $label);
                 Common::destroy($subTable);
             }
+
             $this->array = array();
         }
+
         return $result;
     }
+
     /**
      * Utility function used by mergeChildren. Copies the rows from one table,
      * sets their 'label' columns to a value and adds them to another table.
@@ -424,11 +469,17 @@ class Map implements \Piwik\DataTable\DataTableInterface
         foreach ($fromTable->getRows() as $fromRow) {
             $oldColumns = $fromRow->getColumns();
             unset($oldColumns['label']);
+
             $columns = array_merge(array('label' => $label), $oldColumns);
-            $row = new \Piwik\DataTable\Row(array(\Piwik\DataTable\Row::COLUMNS => $columns, \Piwik\DataTable\Row::METADATA => $fromRow->getMetadata(), \Piwik\DataTable\Row::DATATABLE_ASSOCIATED => $fromRow->getIdSubDataTable()));
+            $row = new Row(array(
+                                Row::COLUMNS              => $columns,
+                                Row::METADATA             => $fromRow->getMetadata(),
+                                Row::DATATABLE_ASSOCIATED => $fromRow->getIdSubDataTable(),
+                           ));
             $toTable->addRow($row);
         }
     }
+
     /**
      * Sums a DataTable to all the tables in this array.
      *
@@ -442,6 +493,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
             $childTable->addDataTable($tableToSum);
         }
     }
+
     /**
      * Returns a new DataTable\Map w/ child tables that have had their
      * subtables merged.
@@ -458,6 +510,7 @@ class Map implements \Piwik\DataTable\DataTableInterface
         }
         return $result;
     }
+
     /**
      * Returns a new DataTable\Map w/o any child DataTables, but with
      * the same key name as this instance.
@@ -466,10 +519,11 @@ class Map implements \Piwik\DataTable\DataTableInterface
      */
     public function getEmptyClone()
     {
-        $dataTableMap = new \Piwik\DataTable\Map();
+        $dataTableMap = new Map();
         $dataTableMap->setKeyName($this->getKeyName());
         return $dataTableMap;
     }
+
     /**
      * Returns the intersection of children's metadata arrays (what they all have in common).
      *
@@ -487,18 +541,20 @@ class Map implements \Piwik\DataTable\DataTableInterface
         }
         return array_values($data);
     }
+
     /**
      * Delete row metadata by name in every row.
      *
      * @param       $name
      * @param bool $deleteRecursiveInSubtables
      */
-    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = \false)
+    public function deleteRowsMetadata($name, $deleteRecursiveInSubtables = false)
     {
         foreach ($this->getDataTables() as $table) {
             $table->deleteRowsMetadata($name, $deleteRecursiveInSubtables);
         }
     }
+
     /**
      * See {@link DataTable::getColumns()}.
      *
@@ -513,11 +569,13 @@ class Map implements \Piwik\DataTable\DataTableInterface
         }
         return array();
     }
-    public function setAsBuiltWithoutArchives(bool $flag) : void
+
+    public function setAsBuiltWithoutArchives(bool $flag): void
     {
         $this->isBuiltWithoutArchives = $flag;
     }
-    public function wasBuiltWithoutArchives() : bool
+
+    public function wasBuiltWithoutArchives(): bool
     {
         return $this->isBuiltWithoutArchives;
     }

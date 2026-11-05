@@ -1,0 +1,13 @@
+{
+    "Login": {
+        "ExceptionPasswordMD5HashExpected": "Параметр пароля апынуўся MD5-хэшаваным паролям.",
+        "InvalidOrExpiredToken": "Токэн з'яўляецца несапраўдным або мінуў.",
+        "InvalidUsernameEmail": "Няслушнае імя карыстача і/ці e-mail",
+        "LogIn": "Увайсці",
+        "LoginPasswordNotCorrect": "Лагін ці пароль няслушныя",
+        "LostYourPassword": "Страцілі пароль?",
+        "PasswordRepeat": "Пароль (паўтор)",
+        "PasswordsDoNotMatch": "Паролі не супадаюць.",
+        "RememberMe": "Запомніць мяне"
+    }
+}

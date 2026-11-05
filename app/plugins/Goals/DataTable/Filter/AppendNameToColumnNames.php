@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Goals\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
+
 /**
  * Appends a string to each column name in each row of a table. Please note this filter even appends the name to a
  * 'label' column. If you do not need this behaviour feel free to add a check to ignore label columns.
@@ -17,6 +19,7 @@ use Piwik\DataTable;
 class AppendNameToColumnNames extends BaseFilter
 {
     protected $nameToAppend;
+
     /**
      * @param DataTable $table     The table that will be eventually filtered.
      * @param string $nameToAppend The name that will be appended to each column
@@ -26,6 +29,7 @@ class AppendNameToColumnNames extends BaseFilter
         parent::__construct($table);
         $this->nameToAppend = $nameToAppend;
     }
+
     /**
      * See {@link ReplaceColumnNames}.
      *
@@ -33,15 +37,18 @@ class AppendNameToColumnNames extends BaseFilter
      */
     public function filter($table)
     {
-        if (!isset($this->nameToAppend) || '' === $this->nameToAppend || \false === $this->nameToAppend) {
+        if (!isset($this->nameToAppend) || '' === $this->nameToAppend || false === $this->nameToAppend) {
             return;
         }
+
         foreach ($table->getRows() as $row) {
             $columns = $row->getColumns();
+
             foreach ($columns as $column => $value) {
                 $row->deleteColumn($column);
                 $row->setColumn($column . $this->nameToAppend, $value);
             }
+
             $this->filterSubTable($row);
         }
     }

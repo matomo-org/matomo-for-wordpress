@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\ViewDataTable;
 
 use Piwik\Common;
@@ -13,6 +14,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\Report;
 use Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
 use Piwik\Plugin\ReportsProvider;
+
 /**
  * Provides a means of creating {@link Piwik\Plugin\ViewDataTable} instances by ID.
  *
@@ -59,12 +61,14 @@ use Piwik\Plugin\ReportsProvider;
 class Factory
 {
     public const DEFAULT_VIEW = HtmlTable::ID;
+
     /**
      * Cache for getDefaultTypeViewDataTable result.
      *
      * @var array
      */
     private static $defaultViewTypes = null;
+
     /**
      * Creates a {@link Piwik\Plugin\ViewDataTable} instance by ID. If the **viewDataTable** query parameter is set,
      * this parameter's value is used as the ID.
@@ -91,41 +95,51 @@ class Factory
      * @throws \Exception
      * @return \Piwik\Plugin\ViewDataTable
      */
-    public static function build($defaultType = null, $apiAction = \false, $controllerAction = \false, $forceDefault = \false, $loadViewDataTableParametersForUser = null)
+    public static function build($defaultType = null, $apiAction = false, $controllerAction = false, $forceDefault = false, $loadViewDataTableParametersForUser = null)
     {
-        if (\false === $controllerAction) {
+        if (false === $controllerAction) {
             $controllerAction = $apiAction;
         }
+
         $report = self::getReport($apiAction);
+
         $defaultViewType = self::getDefaultViewTypeForReport($report, $apiAction);
+
         $params = array();
+
         $containerId = Common::getRequestVar('containerId', '', 'string');
+
         if (!isset($loadViewDataTableParametersForUser)) {
-            $loadViewDataTableParametersForUser = $containerId != '' || '0' == Common::getRequestVar('widget', '0', 'string');
+            $loadViewDataTableParametersForUser = ($containerId != '' || '0' == Common::getRequestVar('widget', '0', 'string'));
         }
+
         if ($loadViewDataTableParametersForUser) {
-            $login = Piwik::getCurrentUserLogin();
+            $login  = Piwik::getCurrentUserLogin();
             $paramsKey = $controllerAction;
             if (!empty($report) && $controllerAction === $apiAction) {
                 $paramsKey = $report->getId();
             }
-            $params = \Piwik\ViewDataTable\Manager::getViewDataTableParameters($login, $paramsKey, $containerId);
+            $params = Manager::getViewDataTableParameters($login, $paramsKey, $containerId);
         }
+
         if (!self::isDefaultViewTypeForReportFixed($report)) {
-            $savedViewDataTable = \false;
+            $savedViewDataTable = false;
             if (!empty($params['viewDataTable'])) {
                 $savedViewDataTable = $params['viewDataTable'];
             }
+
             // order of default viewDataTables' priority is: function specified default, saved default, configured default for report
             //   function specified default is preferred
             // -> force default == true : defaultType ?: saved ?: defaultView
             // -> force default == false : saved ?: defaultType ?: defaultView
             if ($forceDefault) {
-                $defaultType = ($defaultType ?: $savedViewDataTable) ?: $defaultViewType;
+                $defaultType = $defaultType ?: $savedViewDataTable ?: $defaultViewType;
             } else {
-                $defaultType = ($savedViewDataTable ?: $defaultType) ?: $defaultViewType;
+                $defaultType = $savedViewDataTable ?: $defaultType ?: $defaultViewType;
             }
+
             $type = Common::getRequestVar('viewDataTable', $defaultType, 'string');
+
             // Common::getRequestVar removes backslashes from the defaultValue in case magic quotes are enabled.
             // therefore do not pass this as a default value to getRequestVar()
             if ('' === $type) {
@@ -134,19 +148,26 @@ class Factory
         } else {
             $type = $defaultType ?: $defaultViewType;
         }
+
         $params['viewDataTable'] = $type;
-        $visualizations = \Piwik\ViewDataTable\Manager::getAvailableViewDataTables();
+
+        $visualizations = Manager::getAvailableViewDataTables();
+
         if (array_key_exists($type, $visualizations)) {
             return self::createViewDataTableInstance($visualizations[$type], $controllerAction, $apiAction, $params);
         }
+
         if (array_key_exists($defaultType, $visualizations)) {
             return self::createViewDataTableInstance($visualizations[$defaultType], $controllerAction, $apiAction, $params);
         }
+
         if (array_key_exists(self::DEFAULT_VIEW, $visualizations)) {
             return self::createViewDataTableInstance($visualizations[self::DEFAULT_VIEW], $controllerAction, $apiAction, $params);
         }
+
         throw new \Exception('No visualization found to render ViewDataTable');
     }
+
     /**
      * Return the report object for the given apiAction
      * @param $apiAction
@@ -154,13 +175,15 @@ class Factory
      */
     private static function getReport($apiAction)
     {
-        if (strpos($apiAction, '.') === \false) {
+        if (strpos($apiAction, '.') === false) {
             return null;
         }
+
         list($module, $action) = explode('.', $apiAction);
         $report = ReportsProvider::factory($module, $action);
         return $report;
     }
+
     /**
      * Returns the default viewDataTable ID to use when determining which visualization to use.
      *
@@ -174,8 +197,10 @@ class Factory
         if (!empty($report) && $report->isEnabled()) {
             return $report->getDefaultTypeViewDataTable();
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns if the default viewDataTable ID to use is fixed.
      *
@@ -187,8 +212,10 @@ class Factory
         if (!empty($report) && $report->isEnabled()) {
             return $report->alwaysUseDefaultViewDataTable();
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param string $klass
      * @param string $controllerAction
@@ -203,14 +230,17 @@ class Factory
         if (empty($params)) {
             $params = array();
         }
-        if (!is_subclass_of($klass, 'Piwik\\Plugin\\Visualization')) {
+
+        if (!is_subclass_of($klass, 'Piwik\Plugin\Visualization')) {
             // for now we ignore those params in case it is not a visualization. We do not want to apply
             // any of those saved parameters to sparklines etc. Need to find a better solution here
             $params = array();
         }
-        if (!is_subclass_of($klass, 'Piwik\\View\\ViewInterface')) {
-            throw new \Exception("viewDataTable {$klass} must implement Piwik\\View\\ViewInterface interface.");
+
+        if (!is_subclass_of($klass, 'Piwik\View\ViewInterface')) {
+            throw new \Exception("viewDataTable $klass must implement Piwik\View\ViewInterface interface.");
         }
+
         return new $klass($controllerAction, $apiAction, $params);
     }
 }

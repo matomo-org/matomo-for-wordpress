@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Reports;
 
 use Piwik\Common;
@@ -20,6 +22,7 @@ use Piwik\Plugins\BotTracking\Columns\Metrics\UniqueHumanPageviews;
 use Piwik\Plugins\BotTracking\Metrics;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
+
 /**
  * Shared base for the Human-Favoured and AI-Favoured Pages reports.
  *
@@ -32,27 +35,34 @@ use Piwik\Widget\WidgetsList;
  */
 abstract class AbstractAIChatbotFavouredPagesReport extends Report
 {
-    protected function init() : void
+    protected function init(): void
     {
         parent::init();
-        $this->categoryId = 'General_AIAssistants';
-        $this->subcategoryId = 'BotTracking_AIChatbotsContentRequests';
-        $this->dimension = new PageUrl();
+
+        $this->categoryId        = 'General_AIAssistants';
+        $this->subcategoryId     = 'BotTracking_AIChatbotsContentRequests';
+        $this->dimension         = new PageUrl();
         // discrepancy_score is materialised during archiving (see AIChatbotFavouredPages /
         // FavouredPagesScorer) and read straight back, so it is an ordinary column here rather than a
         // recomputed processed metric. The two traffic metrics are ordered strong-side first (the
         // column the report favours leads), so AI-Favoured leads with AI Chatbot Requests.
-        $human = new UniqueHumanPageviews();
-        $ai = new AIChatbotRequests();
-        $trafficMetrics = $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_AI_FAVOURED ? [$ai, $human] : [$human, $ai];
-        $this->metrics = array_merge($trafficMetrics, [new DiscrepancyScore($this->getDiscrepancyScoreVariant())]);
+        $human                   = new UniqueHumanPageviews();
+        $ai                      = new AIChatbotRequests();
+        $trafficMetrics          = $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_AI_FAVOURED
+            ? [$ai, $human]
+            : [$human, $ai];
+        $this->metrics           = array_merge(
+            $trafficMetrics,
+            [new DiscrepancyScore($this->getDiscrepancyScoreVariant())]
+        );
         // No processed metrics; don't inherit Report's core visitor defaults.
-        $this->processedMetrics = [];
+        $this->processedMetrics  = [];
         // Both reports sort by the Discrepancy Score — that's the headline insight, and it already
         // encodes traffic weighting, so sorting by it surfaces the genuinely (human/AI)-favoured
         // pages rather than just the busiest ones.
         $this->defaultSortColumn = Metrics::COLUMN_DISCREPANCY_SCORE;
     }
+
     /**
      * The discrepancy score is left out, as it weights the two traffic columns against each other
      * per page — a percentage of the summed up scores of the report would be meaningless.
@@ -61,30 +71,41 @@ abstract class AbstractAIChatbotFavouredPagesReport extends Report
      */
     public function getMetricNamesToProcessReportTotals()
     {
-        return [Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS => Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS, Metrics::COLUMN_AI_CHATBOT_REQUESTS => Metrics::COLUMN_AI_CHATBOT_REQUESTS];
+        return [
+            Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS => Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS,
+            Metrics::COLUMN_AI_CHATBOT_REQUESTS    => Metrics::COLUMN_AI_CHATBOT_REQUESTS,
+        ];
     }
+
     /**
      * @return DiscrepancyScore::VARIANT_HUMAN_FAVOURED|DiscrepancyScore::VARIANT_AI_FAVOURED
      */
-    protected abstract function getDiscrepancyScoreVariant() : string;
+    abstract protected function getDiscrepancyScoreVariant(): string;
+
     /**
      * The report's strong-side traffic column (human pageviews for Human-Favoured, AI requests for
      * AI-Favoured).
      */
-    private function getStrongSideColumn() : string
+    private function getStrongSideColumn(): string
     {
-        return $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_HUMAN_FAVOURED ? Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS : Metrics::COLUMN_AI_CHATBOT_REQUESTS;
+        return $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_HUMAN_FAVOURED
+            ? Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS
+            : Metrics::COLUMN_AI_CHATBOT_REQUESTS;
     }
+
     /**
      * The two traffic columns ordered strong-side first, so each report leads with the metric it
      * favours (AI Chatbot Requests for AI-Favoured, Unique Human Pageviews for Human-Favoured).
      *
      * @return string[]
      */
-    private function getTrafficColumnsInDisplayOrder() : array
+    private function getTrafficColumnsInDisplayOrder(): array
     {
-        return $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_AI_FAVOURED ? [Metrics::COLUMN_AI_CHATBOT_REQUESTS, Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS] : [Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS, Metrics::COLUMN_AI_CHATBOT_REQUESTS];
+        return $this->getDiscrepancyScoreVariant() === DiscrepancyScore::VARIANT_AI_FAVOURED
+            ? [Metrics::COLUMN_AI_CHATBOT_REQUESTS, Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS]
+            : [Metrics::COLUMN_UNIQUE_HUMAN_PAGEVIEWS, Metrics::COLUMN_AI_CHATBOT_REQUESTS];
     }
+
     /**
      * Breaks ties on the Discrepancy Score by the report's strong-side traffic, so pages with the
      * same score (notably the many score=0 rows when the low-population filter is off) are ordered
@@ -94,22 +115,38 @@ abstract class AbstractAIChatbotFavouredPagesReport extends Report
     public function getSecondarySortColumnCallback()
     {
         $strongColumn = $this->getStrongSideColumn();
-        return function ($primaryColumn) use($strongColumn) {
-            return $primaryColumn === Metrics::COLUMN_DISCREPANCY_SCORE ? $strongColumn : Metrics::COLUMN_DISCREPANCY_SCORE;
+
+        return function ($primaryColumn) use ($strongColumn) {
+            return $primaryColumn === Metrics::COLUMN_DISCREPANCY_SCORE
+                ? $strongColumn
+                : Metrics::COLUMN_DISCREPANCY_SCORE;
         };
     }
-    public function configureView(ViewDataTable $view) : void
+
+    public function configureView(ViewDataTable $view): void
     {
         parent::configureView($view);
-        $view->config->setDefaultColumnsToDisplay(array_merge(['label'], $this->getTrafficColumnsInDisplayOrder(), [Metrics::COLUMN_DISCREPANCY_SCORE]), \false, \false);
+
+        $view->config->setDefaultColumnsToDisplay(
+            array_merge(
+                ['label'],
+                $this->getTrafficColumnsInDisplayOrder(),
+                [Metrics::COLUMN_DISCREPANCY_SCORE]
+            ),
+            false,
+            false
+        );
+
         // Show-all-columns switches to the Visitor Engagement preset, which doesn't fit this schema.
-        $view->config->show_table_all_columns = \false;
+        $view->config->show_table_all_columns = false;
+
         // Insights and bar/pie/tag-cloud all assume visit metrics (nb_visits etc.) this report lacks,
         // so they would render empty — the table is the only useful view.
-        $view->config->show_insights = \false;
-        $view->config->show_bar_chart = \false;
-        $view->config->show_pie_chart = \false;
-        $view->config->show_tag_cloud = \false;
+        $view->config->show_insights = false;
+        $view->config->show_bar_chart = false;
+        $view->config->show_pie_chart = false;
+        $view->config->show_tag_cloud = false;
+
         // Render URL labels as clickable links (scheme-less normalized URLs; prepend https://).
         $view->config->filters[] = function (DataTable $table) {
             foreach ($table->getRows() as $row) {
@@ -122,15 +159,19 @@ abstract class AbstractAIChatbotFavouredPagesReport extends Report
                 }
             }
         };
+
         // Force the default sort at the View layer too: RequestConfig::setDefaultSort ignores the
         // Report's $defaultSortColumn — it falls back to nb_visits (absent here) and then to the
         // first non-label column in columns_to_display. Set it explicitly so the Discrepancy Score
         // is the default sort in the UI as well as via the API.
         $view->requestConfig->filter_sort_column = $this->defaultSortColumn;
-        $view->requestConfig->filter_sort_order = 'desc';
+        $view->requestConfig->filter_sort_order  = 'desc';
+
         $this->configureExcludeLowPopulation($view);
-        \Piwik\Plugins\BotTracking\Reports\SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
+
+        SegmentNotSupportedMessageHelper::addSegmentNotSupportedMessage($view);
     }
+
     /**
      * Excludes pages that aren't meaningfully favoured by dropping rows whose Discrepancy Score is
      * below 1. Because the score is `lean × volume`, this removes balanced and opposite-leaning
@@ -143,21 +184,26 @@ abstract class AbstractAIChatbotFavouredPagesReport extends Report
      * the time the filter runs. The minimum value must stay > 0 — passing 0 makes ExcludeLowPopulation
      * fall back to its 2%-of-sum heuristic and empty the table.
      */
-    private function configureExcludeLowPopulation(ViewDataTable $view) : void
+    private function configureExcludeLowPopulation(ViewDataTable $view): void
     {
-        $view->config->show_exclude_low_population = \true;
+        $view->config->show_exclude_low_population = true;
+
         $enabled = Common::getRequestVar('enable_filter_excludelowpop', '1', 'string') !== '0';
+
         // Surface the resolved toggle state to the client so the data-table footer label
         // ("Include/Exclude Rows With Low Population") matches whether the filter is actually
         // active on initial load, without the user having to interact with it first.
         $view->config->custom_parameters['enable_filter_excludelowpop'] = $enabled ? '1' : '0';
+
         if (!$enabled) {
             return;
         }
-        $view->requestConfig->filter_excludelowpop = Metrics::COLUMN_DISCREPANCY_SCORE;
+
+        $view->requestConfig->filter_excludelowpop       = Metrics::COLUMN_DISCREPANCY_SCORE;
         $view->requestConfig->filter_excludelowpop_value = '1';
     }
-    public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory) : void
+
+    public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory): void
     {
         // Side-by-side layout contract: the Human-Favoured and AI-Favoured reports must
         // render next to each other in a 2-column row on the AIChatbotsContentRequests page. Matomo

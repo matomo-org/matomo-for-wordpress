@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
@@ -18,6 +19,7 @@ use Piwik\Period\Year;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Translation\Translator;
+
 /**
  * Main piwik helper class.
  *
@@ -30,19 +32,28 @@ class Piwik
      * Piwik periods
      * @var array
      */
-    public static $idPeriods = array('day' => Day::PERIOD_ID, 'week' => Week::PERIOD_ID, 'month' => Month::PERIOD_ID, 'year' => Year::PERIOD_ID, 'range' => Range::PERIOD_ID);
+    public static $idPeriods = array(
+        'day'   => Day::PERIOD_ID,
+        'week'  => Week::PERIOD_ID,
+        'month' => Month::PERIOD_ID,
+        'year'  => Year::PERIOD_ID,
+        'range' => Range::PERIOD_ID,
+    );
+
     /**
      * The idGoal query parameter value for the special 'abandoned carts' goal.
      *
      * @api
      */
     public const LABEL_ID_GOAL_IS_ECOMMERCE_CART = 'ecommerceAbandonedCart';
+
     /**
      * The idGoal query parameter value for the special 'ecommerce' goal.
      *
      * @api
      */
     public const LABEL_ID_GOAL_IS_ECOMMERCE_ORDER = 'ecommerceOrder';
+
     /**
      * Trigger E_USER_ERROR with optional message
      *
@@ -50,8 +61,9 @@ class Piwik
      */
     public static function error($message = '')
     {
-        trigger_error($message, \E_USER_ERROR);
+        trigger_error($message, E_USER_ERROR);
     }
+
     /**
      * Display the message in a nice red font with a nice icon
      * ... and dies
@@ -60,12 +72,24 @@ class Piwik
      */
     public static function exitWithErrorMessage($message)
     {
-        \Piwik\Common::sendHeader('Content-Type: text/html; charset=utf-8');
+        Common::sendHeader('Content-Type: text/html; charset=utf-8');
+
         $message = str_replace("\n", "<br/>", $message);
-        $output = "<html><body>" . "<style>a{color:red;}</style>\n" . "<div style='color:red;font-size:120%; width:100%;margin: 30px;'>" . " <div style='width: 50px; float: left;'><img src='plugins/Morpheus/images/error_medium.png' /></div>" . "  <div style='margin-left: 70px; min-width: 950px;'>" . $message . "  </div>" . " </div>" . "</div>" . "</body></html>";
-        print $output;
+
+        $output = "<html><body>" .
+            "<style>a{color:red;}</style>\n" .
+            "<div style='color:red;font-size:120%; width:100%;margin: 30px;'>" .
+            " <div style='width: 50px; float: left;'><img src='plugins/Morpheus/images/error_medium.png' /></div>" .
+            "  <div style='margin-left: 70px; min-width: 950px;'>" .
+            $message .
+            "  </div>" .
+            " </div>" .
+            "</div>" .
+            "</body></html>";
+        print($output);
         exit;
     }
+
     /**
      * Computes the division of i1 by i2. If either i1 or i2 are not number, or if i2 has a value of zero
      * we return 0 to avoid the division by zero.
@@ -81,6 +105,7 @@ class Piwik
         }
         return 0;
     }
+
     /**
      * Safely compute a percentage.  Return 0 to avoid division by zero.
      *
@@ -93,6 +118,7 @@ class Piwik
     {
         return self::getQuotientSafe(100 * $dividend, $divisor, $precision);
     }
+
     /**
      * Safely compute a ratio. Returns 0 if divisor is 0 (to avoid division by 0 error).
      *
@@ -110,10 +136,17 @@ class Piwik
             $dividend = 0;
         }
         if (!is_numeric($dividend) || !is_numeric($divisor)) {
-            throw new \Exception(sprintf('Trying to round unsupported operands for dividend %s (%s) and divisor %s (%s)', $dividend, gettype($dividend), $divisor, gettype($divisor)));
+            throw new \Exception(sprintf(
+                'Trying to round unsupported operands for dividend %s (%s) and divisor %s (%s)',
+                $dividend,
+                gettype($dividend),
+                $divisor,
+                gettype($divisor)
+            ));
         }
         return round($dividend / $divisor, $precision);
     }
+
     /**
      * Generate a title for image tags
      *
@@ -121,14 +154,25 @@ class Piwik
      */
     public static function getRandomTitle()
     {
-        static $titles = array('Web analytics', 'Open analytics platform', 'Real Time Web Analytics', 'Analytics', 'Real Time Analytics', 'Analytics in Real time', 'Analytics Platform', 'Data Platform');
-        $id = abs(intval(md5(\Piwik\Url::getCurrentHost())));
+        static $titles = array(
+            'Web analytics',
+            'Open analytics platform',
+            'Real Time Web Analytics',
+            'Analytics',
+            'Real Time Analytics',
+            'Analytics in Real time',
+            'Analytics Platform',
+            'Data Platform',
+        );
+        $id = abs(intval(md5(Url::getCurrentHost())));
         $title = $titles[$id % count($titles)];
         return $title;
     }
+
     /*
      * Access
      */
+
     /**
      * Returns the current user's email address.
      *
@@ -137,14 +181,17 @@ class Piwik
      */
     public static function getCurrentUserEmail()
     {
-        $user = APIUsersManager::getInstance()->getUser(\Piwik\Piwik::getCurrentUserLogin());
+        $user = APIUsersManager::getInstance()->getUser(Piwik::getCurrentUserLogin());
         return $user['email'] ?? '';
     }
+
+
     public static function getCurrentUserCreationDate()
     {
-        $user = APIUsersManager::getInstance()->getUser(\Piwik\Piwik::getCurrentUserLogin());
+        $user = APIUsersManager::getInstance()->getUser(Piwik::getCurrentUserLogin());
         return $user['date_registered'] ?? '';
     }
+
     /**
      * Returns the current user's Last Seen.
      *
@@ -153,23 +200,27 @@ class Piwik
      */
     public static function getCurrentUserLastSeen()
     {
-        $user = APIUsersManager::getInstance()->getUser(\Piwik\Piwik::getCurrentUserLogin());
+        $user = APIUsersManager::getInstance()->getUser(Piwik::getCurrentUserLogin());
         return $user['last_seen'] ?? '';
     }
+
     /**
      * Returns the email addresses configured as contact. If none is configured the mail addresses of all super users will be returned instead.
      *
      * @return array
      */
-    public static function getContactEmailAddresses() : array
+    public static function getContactEmailAddresses(): array
     {
-        $contactAddresses = trim(\Piwik\Config::getInstance()->General['contact_email_address']);
+        $contactAddresses = trim(Config::getInstance()->General['contact_email_address']);
+
         if (empty($contactAddresses)) {
             return self::getAllSuperUserAccessEmailAddresses();
         }
+
         $contactAddresses = explode(',', $contactAddresses);
         return array_map('trim', $contactAddresses);
     }
+
     /**
      * Get a list of all email addresses having Super User access.
      *
@@ -178,16 +229,20 @@ class Piwik
     public static function getAllSuperUserAccessEmailAddresses()
     {
         $emails = array();
+
         try {
             $superUsers = APIUsersManager::getInstance()->getUsersHavingSuperUserAccess();
         } catch (\Exception $e) {
             return $emails;
         }
+
         foreach ($superUsers as $superUser) {
             $emails[$superUser['login']] = $superUser['email'];
         }
+
         return $emails;
     }
+
     /**
      * Returns the current user's username.
      *
@@ -196,12 +251,14 @@ class Piwik
      */
     public static function getCurrentUserLogin()
     {
-        $login = \Piwik\Access::getInstance()->getLogin();
+        $login = Access::getInstance()->getLogin();
+
         if (empty($login)) {
             return 'anonymous';
         }
         return $login;
     }
+
     /**
      * Returns the current user's token auth.
      *
@@ -210,8 +267,9 @@ class Piwik
      */
     public static function getCurrentUserTokenAuth()
     {
-        return \Piwik\Access::getInstance()->getTokenAuth();
+        return Access::getInstance()->getTokenAuth();
     }
+
     /**
      * Returns `true` if the current user is either the Super User or the user specified by
      * `$theUser`.
@@ -224,11 +282,12 @@ class Piwik
     {
         try {
             self::checkUserHasSuperUserAccessOrIsTheUser($theUser);
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Returns if the given user needs to confirm his password in UI and for certain API methods
      *
@@ -236,7 +295,8 @@ class Piwik
      */
     public static function doesUserRequirePasswordConfirmation(string $login)
     {
-        $requiresPasswordConfirmation = \true;
+        $requiresPasswordConfirmation = true;
+
         /**
          * Triggered to check if a password confirmation for a user is required.
          *
@@ -248,9 +308,11 @@ class Piwik
          * @param bool $requiresPasswordConfirmation Indicates if the password should be checked or not
          * @param string $login Login of a user the password should be confirmed for
          */
-        \Piwik\Piwik::postEvent('Login.userRequiresPasswordConfirmation', [&$requiresPasswordConfirmation, $login]);
+        Piwik::postEvent('Login.userRequiresPasswordConfirmation', [&$requiresPasswordConfirmation, $login]);
+
         return $requiresPasswordConfirmation;
     }
+
     /**
      * Check that the current user is either the specified user or the superuser.
      *
@@ -261,14 +323,15 @@ class Piwik
     public static function checkUserHasSuperUserAccessOrIsTheUser($theUser)
     {
         try {
-            if (\Piwik\Piwik::getCurrentUserLogin() !== $theUser) {
+            if (Piwik::getCurrentUserLogin() !== $theUser) {
                 // or to the Super User
-                \Piwik\Piwik::checkUserHasSuperUserAccess();
+                Piwik::checkUserHasSuperUserAccess();
             }
-        } catch (\Piwik\NoAccessException $e) {
-            throw new \Piwik\NoAccessException(\Piwik\Piwik::translate('General_ExceptionCheckUserHasSuperUserAccessOrIsTheUser', array($theUser)));
+        } catch (NoAccessException $e) {
+            throw new NoAccessException(Piwik::translate('General_ExceptionCheckUserHasSuperUserAccessOrIsTheUser', array($theUser)));
         }
     }
+
     /**
      * Request a token auth to authenticate in a request.
      *
@@ -282,24 +345,38 @@ class Piwik
     public static function requestTemporarySystemAuthToken($reason, $validForHours)
     {
         static $token = array();
+
         if (isset($token[$reason])) {
             // note: For now we do not increase the expire time when it is already requested
             return $token[$reason];
         }
+
         $twoWeeksInHours = 14 * 24;
         if ($validForHours > $twoWeeksInHours) {
             throw new Exception('The token cannot be valid for so many hours: ' . $validForHours);
         }
+
         $model = new Model();
         $users = $model->getUsersHavingSuperUserAccess();
         if (!empty($users)) {
             $user = reset($users);
-            $expireDate = \Piwik\Date::now()->addHour($validForHours)->getDatetime();
+            $expireDate = Date::now()->addHour($validForHours)->getDatetime();
+
             $token[$reason] = $model->generateRandomTokenAuth();
-            $model->addTokenAuth($user['login'], $token[$reason], 'System generated ' . $reason, \Piwik\Date::now()->getDatetime(), $expireDate, \true);
+
+            $model->addTokenAuth(
+                $user['login'],
+                $token[$reason],
+                'System generated ' . $reason,
+                Date::now()->getDatetime(),
+                $expireDate,
+                true
+            );
+
             return $token[$reason];
         }
     }
+
     /**
      * Check whether the given user has superuser access.
      *
@@ -310,23 +387,28 @@ class Piwik
     public static function hasTheUserSuperUserAccess($theUser)
     {
         if (empty($theUser)) {
-            return \false;
+            return false;
         }
-        if (\Piwik\Piwik::getCurrentUserLogin() === $theUser && \Piwik\Piwik::hasUserSuperUserAccess()) {
-            return \true;
+
+        if (Piwik::getCurrentUserLogin() === $theUser && Piwik::hasUserSuperUserAccess()) {
+            return true;
         }
+
         try {
             $superUsers = APIUsersManager::getInstance()->getUsersHavingSuperUserAccess();
         } catch (\Exception $e) {
-            return \false;
+            return false;
         }
+
         foreach ($superUsers as $superUser) {
             if ($theUser === $superUser['login']) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns true if the current user has Super User access.
      *
@@ -336,12 +418,14 @@ class Piwik
     public static function hasUserSuperUserAccess()
     {
         try {
-            $hasAccess = \Piwik\Access::getInstance()->hasSuperUserAccess();
+            $hasAccess = Access::getInstance()->hasSuperUserAccess();
+
             return $hasAccess;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Returns true if the current user is the special **anonymous** user or not.
      *
@@ -350,10 +434,11 @@ class Piwik
      */
     public static function isUserIsAnonymous()
     {
-        $currentUserLogin = \Piwik\Piwik::getCurrentUserLogin();
+        $currentUserLogin = Piwik::getCurrentUserLogin();
         $isSuperUser = self::hasUserSuperUserAccess();
         return !$isSuperUser && $currentUserLogin && strtolower($currentUserLogin) == 'anonymous';
     }
+
     /**
      * Checks that the user is not the anonymous user.
      *
@@ -362,8 +447,9 @@ class Piwik
      */
     public static function checkUserIsNotAnonymous()
     {
-        \Piwik\Access::getInstance()->checkUserIsNotAnonymous();
+        Access::getInstance()->checkUserIsNotAnonymous();
     }
+
     /**
      * Check that the current user has superuser access.
      *
@@ -372,8 +458,9 @@ class Piwik
      */
     public static function checkUserHasSuperUserAccess()
     {
-        \Piwik\Access::getInstance()->checkUserHasSuperUserAccess();
+        Access::getInstance()->checkUserHasSuperUserAccess();
     }
+
     /**
      * Returns `true` if the user has admin access to the requested sites, `false` if otherwise.
      *
@@ -385,11 +472,12 @@ class Piwik
     {
         try {
             self::checkUserHasAdminAccess($idSites);
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Checks that the current user has admin access to the requested list of sites.
      *
@@ -399,8 +487,9 @@ class Piwik
      */
     public static function checkUserHasAdminAccess($idSites)
     {
-        \Piwik\Access::getInstance()->checkUserHasAdminAccess($idSites);
+        Access::getInstance()->checkUserHasAdminAccess($idSites);
     }
+
     /**
      * Returns `true` if the current user has admin access to at least one site.
      *
@@ -409,8 +498,9 @@ class Piwik
      */
     public static function isUserHasSomeAdminAccess()
     {
-        return \Piwik\Access::getInstance()->isUserHasSomeAdminAccess();
+        return Access::getInstance()->isUserHasSomeAdminAccess();
     }
+
     /**
      * Checks that the current user has write access to at least one site.
      *
@@ -419,8 +509,9 @@ class Piwik
      */
     public static function checkUserHasSomeWriteAccess()
     {
-        \Piwik\Access::getInstance()->checkUserHasSomeWriteAccess();
+        Access::getInstance()->checkUserHasSomeWriteAccess();
     }
+
     /**
      * Returns `true` if the current user has write access to at least one site.
      *
@@ -429,8 +520,9 @@ class Piwik
      */
     public static function isUserHasSomeWriteAccess()
     {
-        return \Piwik\Access::getInstance()->isUserHasSomeWriteAccess();
+        return Access::getInstance()->isUserHasSomeWriteAccess();
     }
+
     /**
      * Checks whether the user has the given capability or not.
      * @param int|array|string $idSites
@@ -438,8 +530,9 @@ class Piwik
      */
     public static function checkUserHasCapability($idSites, $capability)
     {
-        \Piwik\Access::getInstance()->checkUserHasCapability($idSites, $capability);
+        Access::getInstance()->checkUserHasCapability($idSites, $capability);
     }
+
     /**
      * Returns `true` if the current user has the given capability for the given sites.
      *
@@ -450,11 +543,12 @@ class Piwik
     {
         try {
             self::checkUserHasCapability($idSites, $capability);
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Checks that the current user has admin access to at least one site.
      *
@@ -463,8 +557,9 @@ class Piwik
      */
     public static function checkUserHasSomeAdminAccess()
     {
-        \Piwik\Access::getInstance()->checkUserHasSomeAdminAccess();
+        Access::getInstance()->checkUserHasSomeAdminAccess();
     }
+
     /**
      * Returns `true` if the user has view access to the requested list of sites.
      *
@@ -476,11 +571,12 @@ class Piwik
     {
         try {
             self::checkUserHasViewAccess($idSites);
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Returns `true` if the user has write access to the requested list of sites.
      *
@@ -492,11 +588,12 @@ class Piwik
     {
         try {
             self::checkUserHasWriteAccess($idSites);
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Checks that the current user has view access to the requested list of sites
      *
@@ -506,8 +603,9 @@ class Piwik
      */
     public static function checkUserHasViewAccess($idSites)
     {
-        \Piwik\Access::getInstance()->checkUserHasViewAccess($idSites);
+        Access::getInstance()->checkUserHasViewAccess($idSites);
     }
+
     /**
      * Checks that the current user has write access to the requested list of sites
      *
@@ -517,8 +615,9 @@ class Piwik
      */
     public static function checkUserHasWriteAccess($idSites)
     {
-        \Piwik\Access::getInstance()->checkUserHasWriteAccess($idSites);
+        Access::getInstance()->checkUserHasWriteAccess($idSites);
     }
+
     /**
      * Returns `true` if the current user has view access to at least one site.
      *
@@ -529,11 +628,12 @@ class Piwik
     {
         try {
             self::checkUserHasSomeViewAccess();
-            return \true;
+            return true;
         } catch (Exception $e) {
-            return \false;
+            return false;
         }
     }
+
     /**
      * Checks that the current user has view access to at least one site.
      *
@@ -542,11 +642,13 @@ class Piwik
      */
     public static function checkUserHasSomeViewAccess()
     {
-        \Piwik\Access::getInstance()->checkUserHasSomeViewAccess();
+        Access::getInstance()->checkUserHasSomeViewAccess();
     }
+
     /*
      * Current module, action, plugin
      */
+
     /**
      * Returns the name of the Login plugin currently being used.
      * Must be used since it is not allowed to hardcode 'Login' in URLs
@@ -557,8 +659,9 @@ class Piwik
      */
     public static function getLoginPluginName()
     {
-        return StaticContainer::get('Piwik\\Auth')->getName();
+        return StaticContainer::get('Piwik\Auth')->getName();
     }
+
     /**
      * Returns the plugin currently being used to display the page
      *
@@ -566,8 +669,9 @@ class Piwik
      */
     public static function getCurrentPlugin()
     {
-        return \Piwik\Plugin\Manager::getInstance()->getLoadedPlugin(\Piwik\Piwik::getModule());
+        return \Piwik\Plugin\Manager::getInstance()->getLoadedPlugin(Piwik::getModule());
     }
+
     /**
      * Returns the current module read from the URL (eg. 'API', 'DevicesDetection', etc.)
      *
@@ -575,8 +679,9 @@ class Piwik
      */
     public static function getModule()
     {
-        return \Piwik\Common::getRequestVar('module', '', 'string');
+        return Common::getRequestVar('module', '', 'string');
     }
+
     /**
      * Returns the current action read from the URL
      *
@@ -584,8 +689,9 @@ class Piwik
      */
     public static function getAction()
     {
-        return \Piwik\Common::getRequestVar('action', '', 'string');
+        return Common::getRequestVar('action', '', 'string');
     }
+
     /**
      * Helper method used in API function to introduce array elements in API parameters.
      * Array elements can be passed by comma separated values, or using the notation
@@ -596,7 +702,7 @@ class Piwik
      * @param bool $unique
      * @return array<string>
      */
-    public static function getArrayFromApiParameter($columns, $unique = \true)
+    public static function getArrayFromApiParameter($columns, $unique = true)
     {
         if (empty($columns)) {
             return array();
@@ -610,6 +716,7 @@ class Piwik
         }
         return $array;
     }
+
     /**
      * Redirects the current request to a new module and action.
      *
@@ -620,12 +727,17 @@ class Piwik
      */
     public static function redirectToModule($newModule, $newAction = '', $parameters = array())
     {
-        $newUrl = 'index.php' . \Piwik\Url::getCurrentQueryStringWithParametersModified(array('module' => $newModule, 'action' => $newAction) + $parameters);
-        \Piwik\Url::redirectToUrl($newUrl);
+        $newUrl = 'index.php' . Url::getCurrentQueryStringWithParametersModified(
+            array('module' => $newModule, 'action' => $newAction)
+                + $parameters
+        );
+        Url::redirectToUrl($newUrl);
     }
+
     /*
      * User input validation
      */
+
     /**
      * Returns `true` if supplied the email address is a valid.
      *
@@ -635,8 +747,9 @@ class Piwik
      */
     public static function isValidEmailString($emailAddress)
     {
-        return filter_var($emailAddress, \FILTER_VALIDATE_EMAIL) !== \false;
+        return filter_var($emailAddress, FILTER_VALIDATE_EMAIL) !== false;
     }
+
     /**
      * Checks that the login string is valid.
      *
@@ -645,18 +758,26 @@ class Piwik
      * @param string $userLogin
      * @throws Exception
      */
-    public static function checkValidLoginString($userLogin) : void
+    public static function checkValidLoginString($userLogin): void
     {
-        if (!\Piwik\SettingsPiwik::isUserCredentialsSanityCheckEnabled() && !empty($userLogin)) {
+        if (
+            !SettingsPiwik::isUserCredentialsSanityCheckEnabled()
+            && !empty($userLogin)
+        ) {
             return;
         }
         $loginMinimumLength = 2;
         $loginMaximumLength = 100;
         $l = strlen($userLogin);
-        if (!($l >= $loginMinimumLength && $l <= $loginMaximumLength && preg_match('/^[A-Za-zÄäÖöÜüß0-9_.@+-]*$/D', $userLogin) > 0)) {
-            throw new Exception(\Piwik\Piwik::translate('UsersManager_ExceptionInvalidLoginFormat', array($loginMinimumLength, $loginMaximumLength)));
+        if (
+            !($l >= $loginMinimumLength
+            && $l <= $loginMaximumLength
+            && (preg_match('/^[A-Za-zÄäÖöÜüß0-9_.@+-]*$/D', $userLogin) > 0))
+        ) {
+            throw new Exception(Piwik::translate('UsersManager_ExceptionInvalidLoginFormat', array($loginMinimumLength, $loginMaximumLength)));
         }
     }
+
     /**
      * Utility function that checks if an object type is in a set of types.
      *
@@ -671,9 +792,11 @@ class Piwik
                 return;
             }
         }
+
         $oType = is_object($o) ? get_class($o) : gettype($o);
-        throw new Exception("Invalid variable type '{$oType}', expected one of following: " . implode(', ', $types));
+        throw new Exception("Invalid variable type '$oType', expected one of following: " . implode(', ', $types));
     }
+
     /**
      * Returns true if an array is an associative array, false if otherwise.
      *
@@ -687,34 +810,45 @@ class Piwik
     public static function isAssociativeArray($array)
     {
         reset($array);
-        if (!is_numeric(key($array)) || key($array) != 0) {
+        if (
+            !is_numeric(key($array))
+            || key($array) != 0
+        ) {
             // first key must be 0
-            return \true;
+
+            return true;
         }
+
         // check that each key is == next key - 1 w/o actually indexing the array
-        while (\true) {
+        while (true) {
             $current = key($array);
+
             next($array);
             $next = key($array);
+
             if ($next === null) {
                 break;
             } elseif ($current + 1 != $next) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     public static function isMultiDimensionalArray($array)
     {
         $first = reset($array);
         foreach ($array as $first) {
             if (is_array($first)) {
                 // Yes, this is a multi dim array
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns the class name of an object without its namespace.
      *
@@ -727,6 +861,7 @@ class Piwik
         $parts = explode('\\', $className);
         return end($parts);
     }
+
     /**
      * Post an event to Piwik's event dispatcher which will execute the event's observers.
      *
@@ -738,10 +873,11 @@ class Piwik
      *                            plugin observers will be executed.
      * @api
      */
-    public static function postEvent($eventName, $params = array(), $pending = \false, $plugins = null)
+    public static function postEvent($eventName, $params = array(), $pending = false, $plugins = null)
     {
-        \Piwik\EventDispatcher::getInstance()->postEvent($eventName, $params, $pending, $plugins);
+        EventDispatcher::getInstance()->postEvent($eventName, $params, $pending, $plugins);
     }
+
     /**
      * Register an observer to an event.
      *
@@ -754,18 +890,20 @@ class Piwik
      */
     public static function addAction($eventName, $function)
     {
-        \Piwik\EventDispatcher::getInstance()->addObserver($eventName, $function);
+        EventDispatcher::getInstance()->addObserver($eventName, $function);
     }
+
     /**
      * Posts an event if we are currently running tests. Whether we are running tests is
      * determined by looking for the PIWIK_TEST_MODE constant.
      */
-    public static function postTestEvent($eventName, $params = array(), $pending = \false, $plugins = null)
+    public static function postTestEvent($eventName, $params = array(), $pending = false, $plugins = null)
     {
         if (defined('PIWIK_TEST_MODE')) {
-            \Piwik\Piwik::postEvent($eventName, $params, $pending, $plugins);
+            Piwik::postEvent($eventName, $params, $pending, $plugins);
         }
     }
+
     /**
      * Returns an internationalized string using a translation token. If a translation
      * cannot be found for the token, the token is returned.
@@ -780,9 +918,11 @@ class Piwik
     public static function translate($translationId, $args = array(), $language = null)
     {
         /** @var Translator $translator */
-        $translator = StaticContainer::get('Piwik\\Translation\\Translator');
+        $translator = StaticContainer::get('Piwik\Translation\Translator');
+
         return $translator->translate($translationId, $args, $language);
     }
+
     /**
      * Returns the period provided in the current request.
      * If no $default is provided, this method will throw an Exception if `period` can't be found in the request
@@ -794,8 +934,9 @@ class Piwik
      */
     public static function getPeriod($default = null)
     {
-        return \Piwik\Common::getRequestVar('period', $default, 'string');
+        return Common::getRequestVar('period', $default, 'string');
     }
+
     /**
      * Returns the date provided in the current request.
      * If no $default is provided, this method will throw an Exception if `date` can't be found in the request
@@ -807,29 +948,34 @@ class Piwik
      */
     public static function getDate($default = null)
     {
-        return \Piwik\Common::getRequestVar('date', $default, 'string');
+        return Common::getRequestVar('date', $default, 'string');
     }
+
     /**
      * Returns the earliest date to rearchive provided in the config.
      * @return Date|null
      */
     public static function getEarliestDateToRearchive()
     {
-        $lastNMonthsToInvalidate = \Piwik\Config::getInstance()->General['rearchive_reports_in_past_last_n_months'];
+        $lastNMonthsToInvalidate = Config::getInstance()->General['rearchive_reports_in_past_last_n_months'];
         if (empty($lastNMonthsToInvalidate)) {
             return null;
         }
+
         if (!is_numeric($lastNMonthsToInvalidate)) {
-            $lastNMonthsToInvalidate = (int) str_replace('last', '', $lastNMonthsToInvalidate);
+            $lastNMonthsToInvalidate = (int)str_replace('last', '', $lastNMonthsToInvalidate);
             if (empty($lastNMonthsToInvalidate)) {
                 return null;
             }
         }
+
         if ($lastNMonthsToInvalidate <= 0) {
             return null;
         }
-        return \Piwik\Date::yesterday()->subMonth($lastNMonthsToInvalidate)->setDay(1);
+
+        return Date::yesterday()->subMonth($lastNMonthsToInvalidate)->setDay(1);
     }
+
     /**
      * Given the fully qualified name of a class located within a Matomo plugin,
      * returns the name of the plugin.
@@ -839,7 +985,7 @@ class Piwik
      * @param string $className the name of a class located within a Matomo plugin
      * @return string the plugin name
      */
-    public static function getPluginNameOfMatomoClass(string $className) : string
+    public static function getPluginNameOfMatomoClass(string $className): string
     {
         $parts = explode('\\', $className);
         $parts = array_filter($parts);

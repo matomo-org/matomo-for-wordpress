@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
@@ -13,35 +14,41 @@ use Piwik\DataTable\Row;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
+
 class VisitorsFromReferrerPercent extends ProcessedMetric
 {
     /**
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */
     private $referrerSourceColumn;
+
     /**
      * @var numeric
      */
     private $totalVisits;
+
     public function __construct(string $name, string $referrerSourceColumn, $totalVisits)
     {
         $this->name = $name;
         $this->referrerSourceColumn = $referrerSourceColumn;
         $this->totalVisits = $totalVisits;
     }
+
     public function getName()
     {
         return $this->name;
     }
+
     public function getTranslatedName()
     {
-        return null;
-        // handled by Referrers.php event
+        return null; // handled by Referrers.php event
     }
+
     public function compute(Row $row)
     {
         $columnValue = self::getMetric($row, $this->referrerSourceColumn);
@@ -50,15 +57,18 @@ class VisitorsFromReferrerPercent extends ProcessedMetric
         $result = Piwik::getQuotientSafe($columnValue, $this->totalVisits, $precision = 4);
         return $result;
     }
+
     public function getDependentMetrics()
     {
         return [$this->referrerSourceColumn];
     }
+
     public function format($value, Formatter $formatter)
     {
         return $formatter->getPrettyPercentFromQuotient($value);
     }
-    public function getSemanticType() : ?string
+
+    public function getSemanticType(): ?string
     {
         return Dimension::TYPE_PERCENT;
     }

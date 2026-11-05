@@ -6,9 +6,10 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
-class SeoCanonicalUrlVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
+class SeoCanonicalUrlVariable extends BasePreConfiguredVariable
 {
     public function getCategory()
     {

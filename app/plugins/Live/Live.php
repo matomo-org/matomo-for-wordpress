@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Live;
 
 use Piwik\Cache;
@@ -15,6 +16,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Site;
 use Piwik\Plugins\Live\Settings\AggregatedRealtimeReportsEnabled as AggregatedRealtimeReportsEnabledSetting;
 use Piwik\Plugins\Live\Settings\VisitorLogDisabled as VisitorLogDisabledSetting;
+
 class Live extends \Piwik\Plugin
 {
     /**
@@ -22,55 +24,78 @@ class Live extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return ['AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Live.renderAction' => 'renderAction', 'Live.renderActionTooltip' => 'renderActionTooltip', 'Live.renderVisitorDetails' => 'renderVisitorDetails', 'Live.renderVisitorIcons' => 'renderVisitorIcons', 'Template.jsGlobalVariables' => 'addJsGlobalVariables', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor'];
+        return [
+            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'Live.renderAction'                      => 'renderAction',
+            'Live.renderActionTooltip'               => 'renderActionTooltip',
+            'Live.renderVisitorDetails'              => 'renderVisitorDetails',
+            'Live.renderVisitorIcons'                => 'renderVisitorIcons',
+            'Template.jsGlobalVariables'             => 'addJsGlobalVariables',
+            'API.getPagesComparisonsDisabledFor'     => 'getPagesComparisonsDisabledFor',
+        ];
     }
+
     public function getPagesComparisonsDisabledFor(&$pages)
     {
         $pages[] = 'General_Visitors.Live_VisitorLog';
         $pages[] = 'General_Visitors.General_RealTime';
     }
+
     public function addJsGlobalVariables(&$out)
     {
-        $actionsToDisplayCollapsed = (int) StaticContainer::get('Live.pageViewActionsToDisplayCollapsed');
-        $out .= "\n        piwik.visitorLogEnabled = " . json_encode(self::isVisitorLogEnabled()) . ";\n        piwik.visitorProfileEnabled = " . json_encode(self::isVisitorProfileEnabled()) . ";\n        piwik.visitorLogActionsToDisplayCollapsed = {$actionsToDisplayCollapsed};\n        ";
+        $actionsToDisplayCollapsed = (int)StaticContainer::get('Live.pageViewActionsToDisplayCollapsed');
+        $out .= "
+        piwik.visitorLogEnabled = " . json_encode(self::isVisitorLogEnabled()) . ";
+        piwik.visitorProfileEnabled = " . json_encode(self::isVisitorProfileEnabled()) . ";
+        piwik.visitorLogActionsToDisplayCollapsed = $actionsToDisplayCollapsed;
+        ";
     }
+
     /**
      * Throws an exception if visits log is disabled
      *
      * @param int|string|int[]|null $idSite
      * @throws \Exception
      */
-    public static function checkIsVisitorLogEnabled($idSite = null) : void
+    public static function checkIsVisitorLogEnabled($idSite = null): void
     {
-        if (VisitorLogDisabledSetting::getInstance()->getValue() === \true) {
+        if (VisitorLogDisabledSetting::getInstance()->getValue() === true) {
             throw new \Exception('Visits log is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
+
         if (empty($idSite)) {
             $idSite = Common::getRequestVar('idSite', '', 'string');
         }
+
         if (!empty($idSite)) {
             $idSites = Site::getIdSitesFromIdSitesString($idSite);
+
             foreach ($idSites as $idSite) {
-                if (VisitorLogDisabledSetting::getInstance($idSite)->getValue() === \true) {
+                if (VisitorLogDisabledSetting::getInstance($idSite)->getValue() === true) {
                     throw new \Exception('Visits log is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
                 }
             }
         }
     }
+
     /**
      * Returns whether visits log is enabled (for the given site)
      *
      * @param int|string|int[]|null $idSite
      */
-    public static function isVisitorLogEnabled($idSite = null) : bool
+    public static function isVisitorLogEnabled($idSite = null): bool
     {
         try {
             self::checkIsVisitorLogEnabled($idSite);
         } catch (\Exception $e) {
-            return \false;
+            return false;
         }
-        return \true;
+
+        return true;
     }
+
     /**
      * Returns whether the aggregated real-time reports are enabled (for the given site).
      *
@@ -78,64 +103,75 @@ class Live extends \Piwik\Plugin
      * available, showing only the "Last 24 hours" / "Last 30 minutes" counters without any
      * individual visitor information.
      */
-    public static function isAggregatedRealtimeEnabled(?int $idSite = null) : bool
+    public static function isAggregatedRealtimeEnabled(?int $idSite = null): bool
     {
-        return AggregatedRealtimeReportsEnabledSetting::getInstance($idSite)->getValue() === \true;
+        return AggregatedRealtimeReportsEnabledSetting::getInstance($idSite)->getValue() === true;
     }
+
     /**
      * Returns whether the aggregated real-time widget should be limited to the aggregated counters
      * only, i.e. the detailed visits log is disabled but the aggregated real-time reports are enabled.
      */
-    public static function shouldShowAggregatedRealtimeOnly(?int $idSite = null) : bool
+    public static function shouldShowAggregatedRealtimeOnly(?int $idSite = null): bool
     {
         return !self::isVisitorLogEnabled($idSite) && self::isAggregatedRealtimeEnabled($idSite);
     }
+
     /**
      * Throws an exception if visitor profile is disabled
      *
      * @param int|string|int[]|null $idSite
      * @throws \Exception
      */
-    public static function checkIsVisitorProfileEnabled($idSite = null) : void
+    public static function checkIsVisitorProfileEnabled($idSite = null): void
     {
-        self::checkIsVisitorLogEnabled($idSite);
-        // visitor log is required for visitor profile
-        $systemSettings = new \Piwik\Plugins\Live\SystemSettings();
-        if ($systemSettings->disableVisitorProfile->getValue() === \true) {
+        self::checkIsVisitorLogEnabled($idSite); // visitor log is required for visitor profile
+
+        $systemSettings = new SystemSettings();
+
+        if ($systemSettings->disableVisitorProfile->getValue() === true) {
             throw new \Exception('Visitor profile is deactivated globally. A user with super user access can enable this feature in the general settings.');
         }
+
         if (empty($idSite)) {
             $idSite = Common::getRequestVar('idSite', '', 'string');
         }
+
         if (!empty($idSite)) {
             $idSites = Site::getIdSitesFromIdSitesString($idSite);
+
             foreach ($idSites as $idSite) {
-                $settings = new \Piwik\Plugins\Live\MeasurableSettings($idSite);
-                if ($settings->disableVisitorProfile->getValue() === \true) {
+                $settings = new MeasurableSettings($idSite);
+
+                if ($settings->disableVisitorProfile->getValue() === true) {
                     throw new \Exception('Visitor profile is deactivated in website settings. A user with at least admin access can enable this feature in the settings for this website (idSite=' . $idSite . ').');
                 }
             }
         }
     }
+
     /**
      * Returns whether visitor profile is enabled (for the given site)
      *
      * @param int|string|int[]|null $idSite
      */
-    public static function isVisitorProfileEnabled($idSite = null) : bool
+    public static function isVisitorProfileEnabled($idSite = null): bool
     {
         try {
             self::checkIsVisitorProfileEnabled($idSite);
         } catch (\Exception $e) {
-            return \false;
+            return false;
         }
-        return \true;
+
+        return true;
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Live/stylesheets/live.less";
         $stylesheets[] = "plugins/Live/stylesheets/visitor_profile.less";
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/visibilityjs/lib/visibility.core.js";
@@ -146,6 +182,7 @@ class Live extends \Piwik\Plugin
         $jsFiles[] = "plugins/Live/javascripts/visitorLog.js";
         $jsFiles[] = "plugins/Live/javascripts/rowaction.js";
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = "Live_VisitorProfile";
@@ -183,27 +220,33 @@ class Live extends \Piwik\Plugin
         $translationKeys[] = 'Live_SimpleRealTimeWidget_Message';
         $translationKeys[] = 'Live_QueryMaxExecutionTimeExceeded';
     }
+
     public function renderAction(&$renderedAction, $action, $previousAction, $visitorDetails)
     {
-        $visitorDetailsInstances = \Piwik\Plugins\Live\Visitor::getAllVisitorDetailsInstances();
+        $visitorDetailsInstances = Visitor::getAllVisitorDetailsInstances();
         foreach ($visitorDetailsInstances as $instance) {
             $renderedAction .= $instance->renderAction($action, $previousAction, $visitorDetails);
         }
     }
+
     public function renderActionTooltip(&$tooltip, $action, $visitInfo)
     {
         $detailEntries = [];
-        $visitorDetailsInstances = \Piwik\Plugins\Live\Visitor::getAllVisitorDetailsInstances();
+        $visitorDetailsInstances = Visitor::getAllVisitorDetailsInstances();
+
         foreach ($visitorDetailsInstances as $instance) {
             $detailEntries = array_merge($detailEntries, $instance->renderActionTooltip($action, $visitInfo));
         }
+
         usort($detailEntries, function ($a, $b) {
             return version_compare($a[0], $b[0]);
         });
+
         foreach ($detailEntries as $detailEntry) {
             $tooltip .= self::escapeActionTooltipEntry($detailEntry[1]);
         }
     }
+
     /**
      * Escapes one entry of the visitor log action tooltip.
      *
@@ -213,32 +256,39 @@ class Live extends \Piwik\Plugin
      *
      * @ignore
      */
-    public static function escapeActionTooltipEntry(?string $entry) : string
+    public static function escapeActionTooltipEntry(?string $entry): string
     {
-        $text = html_entity_decode((string) $entry, \ENT_QUOTES, 'UTF-8');
-        return htmlspecialchars(htmlspecialchars($text, \ENT_QUOTES, 'UTF-8'), \ENT_QUOTES, 'UTF-8');
+        $text = html_entity_decode((string) $entry, ENT_QUOTES, 'UTF-8');
+
+        return htmlspecialchars(htmlspecialchars($text, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
     }
+
     public function renderVisitorDetails(&$renderedDetails, $visitorDetails)
     {
         $detailEntries = [];
-        $visitorDetailsInstances = \Piwik\Plugins\Live\Visitor::getAllVisitorDetailsInstances();
+        $visitorDetailsInstances = Visitor::getAllVisitorDetailsInstances();
+
         foreach ($visitorDetailsInstances as $instance) {
             $detailEntries = array_merge($detailEntries, $instance->renderVisitorDetails($visitorDetails));
         }
+
         usort($detailEntries, function ($a, $b) {
             return version_compare($a[0], $b[0]);
         });
+
         foreach ($detailEntries as $detailEntry) {
             $renderedDetails .= $detailEntry[1];
         }
     }
+
     public function renderVisitorIcons(&$renderedDetails, $visitorDetails)
     {
-        $visitorDetailsInstances = \Piwik\Plugins\Live\Visitor::getAllVisitorDetailsInstances();
+        $visitorDetailsInstances = Visitor::getAllVisitorDetailsInstances();
         foreach ($visitorDetailsInstances as $instance) {
             $renderedDetails .= $instance->renderIcons($visitorDetails);
         }
     }
+
     /**
      * Returns the segment for the most recent visitor id
      *
@@ -249,21 +299,26 @@ class Live extends \Piwik\Plugin
      */
     public static function getSegmentWithVisitorId()
     {
-        $cache = Cache::getTransientCache();
+        $cache   = Cache::getTransientCache();
         $cacheId = 'segmentWithVisitorId';
+
         if ($cache->contains($cacheId)) {
             return $cache->fetch($cacheId);
         }
+
         $segment = Request::getRawSegmentFromRequest();
         if (!empty($segment)) {
             $segment = urldecode($segment) . ';';
         }
-        $idVisitor = Common::getRequestVar('visitorId', \false);
-        if ($idVisitor === \false) {
+
+        $idVisitor = Common::getRequestVar('visitorId', false);
+        if ($idVisitor === false) {
             $idVisitor = Request::processRequest('Live.getMostRecentVisitorId');
         }
+
         $result = urlencode($segment . 'visitorId==' . $idVisitor);
         $cache->save($cacheId, $result);
+
         return $result;
     }
 }

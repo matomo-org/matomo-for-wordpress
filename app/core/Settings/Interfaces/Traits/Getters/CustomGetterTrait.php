@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Interfaces\Traits\Getters;
 
 /**
@@ -16,12 +17,14 @@ trait CustomGetterTrait
     /**
      * @return T
      */
-    protected static abstract function getCustomValue(?int $idSite = null);
-    protected static abstract function getCustomSettingName() : string;
+    abstract protected static function getCustomValue(?int $idSite = null);
+
+    abstract protected static function getCustomSettingName(): string;
+
     /**
      * @deprecated Will be removed in 6.0 in favour of making getCustomSettingName public
      */
-    public static function getCustomSettingShortName() : string
+    public static function getCustomSettingShortName(): string
     {
         return self::getCustomSettingName();
     }

@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
+
 /**
  * Execute a callback for each row of a {@link DataTable} passing certain column values and metadata
  * as metadata, and replaces row metadata with the callback result.
@@ -22,7 +24,7 @@ use Piwik\DataTable\Row;
  *
  * @api
  */
-class MetadataCallbackReplace extends \Piwik\DataTable\Filter\ColumnCallbackReplace
+class MetadataCallbackReplace extends ColumnCallbackReplace
 {
     /**
      * @param DataTable $table The DataTable that will eventually be filtered.
@@ -35,10 +37,16 @@ class MetadataCallbackReplace extends \Piwik\DataTable\Filter\ColumnCallbackRepl
      * @param array $extraColumnParameters Extra column values that should be passed to the callback, but
      *                                     shouldn't be replaced.
      */
-    public function __construct($table, $metadataToFilter, $functionToApply, $functionParameters = null, $extraColumnParameters = array())
-    {
+    public function __construct(
+        $table,
+        $metadataToFilter,
+        $functionToApply,
+        $functionParameters = null,
+        $extraColumnParameters = array()
+    ) {
         parent::__construct($table, $metadataToFilter, $functionToApply, $functionParameters, $extraColumnParameters);
     }
+
     /**
      * @param Row $row
      * @param string $metadataToFilter
@@ -48,6 +56,7 @@ class MetadataCallbackReplace extends \Piwik\DataTable\Filter\ColumnCallbackRepl
     {
         $row->setMetadata($metadataToFilter, $newValue);
     }
+
     /**
      * @param Row $row
      * @param string $metadataToFilter

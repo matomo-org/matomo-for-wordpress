@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking;
 
 use Piwik\Archive;
@@ -22,6 +24,7 @@ use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugins\BotTracking\Reports\Get;
 use Piwik\Plugins\Referrers\AIAssistant;
 use Piwik\Site;
+
 /**
  * Provides API methods for bot and AI chatbot reporting.
  *
@@ -32,6 +35,7 @@ class API extends \Piwik\Plugin\API
     public const REAL_TIME_DEFAULT_LOOKBACK_MINUTES = 30;
     private const REAL_TIME_MIN_LOOKBACK_MINUTES = 1;
     private const REAL_TIME_MAX_LOOKBACK_MINUTES = 720;
+
     /**
      * Returns the main bot tracking report.
      *
@@ -47,26 +51,35 @@ class API extends \Piwik\Plugin\API
      * @param string|string[]|null $columns Optional metric names to include in the report.
      * @return DataTable|DataTable\Map Bot tracking metrics for the requested site selection and period.
      */
-    public function get($idSite, string $period, string $date, $columns = null) : DataTableInterface
+    public function get($idSite, string $period, string $date, $columns = null): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         $archive = Archive::build($idSite, $period, $date, '');
+
         $metrics = Metrics::getReportMetricColumns();
+
         if ($period !== 'day') {
             $metrics = array_filter($metrics, function ($metric) {
                 return !in_array($metric, [Metrics::METRIC_AI_CHATBOTS_UNIQUE_DOCUMENT_URLS, Metrics::METRIC_AI_CHATBOTS_UNIQUE_PAGE_URLS]);
             });
         }
+
         $requestedColumns = Piwik::getArrayFromApiParameter($columns);
+
         /** @var Get $report */
-        $report = ReportsProvider::factory('BotTracking', 'get');
+        $report  = ReportsProvider::factory('BotTracking', 'get');
         $columns = $report->getMetricsRequiredForReport($metrics, $requestedColumns);
+
         $dataTable = $archive->getDataTableFromNumeric($columns);
+
         if (!empty($requestedColumns)) {
             $dataTable->queueFilter('ColumnDelete', [$columnsToRemove = [], $requestedColumns]);
         }
+
         return $dataTable;
     }
+
     /**
      * Returns a report about AI chatbot requests.
      * Depending on the provided secondary dimension the subtables will either contain all requested page urls or document urls.
@@ -86,14 +99,18 @@ class API extends \Piwik\Plugin\API
      *                                                     Use `pages` for page URLs or `documents` for document URLs.
      * @return DataTable|DataTable\Map Requests per AI chatbot for the selected secondary dimension.
      */
-    public function getAIChatbotRequests($idSite, string $period, string $date, bool $expanded = \false, bool $flat = \false, ?string $secondaryDimension = null) : DataTableInterface
+    public function getAIChatbotRequests($idSite, string $period, string $date, bool $expanded = false, bool $flat = false, ?string $secondaryDimension = null): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $archiveName = \Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_PAGES_RECORD;
+
+        $archiveName = Archiver::AI_CHATBOTS_PAGES_RECORD;
+
         if ($secondaryDimension === 'documents') {
-            $archiveName = \Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_DOCUMENTS_RECORD;
+            $archiveName = Archiver::AI_CHATBOTS_DOCUMENTS_RECORD;
         }
+
         $dataTable = Archive::createDataTableFromArchive($archiveName, $idSite, $period, $date, '', $expanded, $flat);
+
         // When flattening a report, remove all main table rows, where no subtable exists
         if ($flat) {
             $dataTable->filter(function (DataTable $table) {
@@ -104,9 +121,12 @@ class API extends \Piwik\Plugin\API
                 }
             });
         }
+
         $this->decorateAIChatbotLabels($dataTable);
+
         return $dataTable;
     }
+
     /**
      * Returns AI chatbot activity grouped by chatbot for a real-time lookback window.
      *
@@ -117,15 +137,20 @@ class API extends \Piwik\Plugin\API
      * @return DataTable AI chatbot requests, unique page URLs, and error counts for the selected
      *                   real-time lookback window.
      */
-    public function getAIChatbotsRealTime($idSite, $lastMinutes = self::REAL_TIME_DEFAULT_LOOKBACK_MINUTES) : DataTable
+    public function getAIChatbotsRealTime($idSite, $lastMinutes = self::REAL_TIME_DEFAULT_LOOKBACK_MINUTES): DataTable
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         [$startDate, $endDate] = $this->getRealTimeDateRange($lastMinutes);
-        $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
+        $idSites               = Site::getIdSitesFromIdSitesString($idSite, false, true);
+
         $table = (new BotRequestsDao())->getAIChatbotActivityForDateRange($idSites, $startDate, $endDate);
+
         $this->decorateAIChatbotLabels($table);
+
         return $table;
     }
+
     /**
      * Returns page URLs requested by AI chatbots for a real-time lookback window.
      *
@@ -136,14 +161,18 @@ class API extends \Piwik\Plugin\API
      * @return DataTable Flat page URL table ordered by chatbot requests for the selected real-time
      *                   lookback window.
      */
-    public function getTopPageUrlsRealTime($idSite, $lastMinutes = self::REAL_TIME_DEFAULT_LOOKBACK_MINUTES) : DataTable
+    public function getTopPageUrlsRealTime($idSite, $lastMinutes = self::REAL_TIME_DEFAULT_LOOKBACK_MINUTES): DataTable
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         [$startDate, $endDate] = $this->getRealTimeDateRange($lastMinutes);
-        $idSites = Site::getIdSitesFromIdSitesString($idSite, \false, \true);
+        $idSites               = Site::getIdSitesFromIdSitesString($idSite, false, true);
+
         $table = (new BotRequestsDao())->getAIChatbotTopPageUrlsForDateRange($idSites, $startDate, $endDate);
+
         return $this->decorateUrlLabels($table);
     }
+
     /**
      * Returns page URLs requested by a specific AI chatbot.
      *
@@ -159,11 +188,13 @@ class API extends \Piwik\Plugin\API
      * @param int $idSubtable Subtable ID for the AI chatbot row to expand.
      * @return DataTable|DataTable\Map Page URLs requested by the selected AI chatbot.
      */
-    public function getPageUrlsForAIChatbot($idSite, string $period, string $date, int $idSubtable) : DataTableInterface
+    public function getPageUrlsForAIChatbot($idSite, string $period, string $date, int $idSubtable): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_PAGES_RECORD, $idSite, $period, $date, '', \false, \false, $idSubtable);
+
+        return Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_PAGES_RECORD, $idSite, $period, $date, '', false, false, $idSubtable);
     }
+
     /**
      * Returns document URLs requested by a specific AI chatbot.
      *
@@ -179,11 +210,13 @@ class API extends \Piwik\Plugin\API
      * @param int $idSubtable Subtable ID for the AI chatbot row to expand.
      * @return DataTable|DataTable\Map Document URLs requested by the selected AI chatbot.
      */
-    public function getDocumentUrlsForAIChatbot($idSite, string $period, string $date, int $idSubtable) : DataTableInterface
+    public function getDocumentUrlsForAIChatbot($idSite, string $period, string $date, int $idSubtable): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_DOCUMENTS_RECORD, $idSite, $period, $date, '', \false, \false, $idSubtable);
+
+        return Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_DOCUMENTS_RECORD, $idSite, $period, $date, '', false, false, $idSubtable);
     }
+
     /**
      * Returns page URLs accessed by AI chatbots across all chatbots, with server time and response size metrics.
      *
@@ -198,11 +231,13 @@ class API extends \Piwik\Plugin\API
      *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
      * @return DataTable|DataTable\Map Flat table of page URLs with Requests, Avg. Server Time, and Avg. Response Size.
      */
-    public function getAIChatbotContentPages($idSite, string $period, string $date) : DataTableInterface
+    public function getAIChatbotContentPages($idSite, string $period, string $date): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_REQUESTED_PAGES_RECORD, $idSite, $period, $date, '', \false, \false);
+
+        return Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_REQUESTED_PAGES_RECORD, $idSite, $period, $date, '', false, false);
     }
+
     /**
      * Returns document URLs accessed by AI chatbots across all chatbots, with server time and response size metrics.
      *
@@ -217,11 +252,13 @@ class API extends \Piwik\Plugin\API
      *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
      * @return DataTable|DataTable\Map Flat table of document URLs with Requests, Avg. Server Time, and Avg. Response Size.
      */
-    public function getAIChatbotContentDocuments($idSite, string $period, string $date) : DataTableInterface
+    public function getAIChatbotContentDocuments($idSite, string $period, string $date): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_REQUESTED_DOCUMENTS_RECORD, $idSite, $period, $date, '', \false, \false);
+
+        return Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_REQUESTED_DOCUMENTS_RECORD, $idSite, $period, $date, '', false, false);
     }
+
     /**
      * Returns page and document URLs accessed by AI chatbots that returned HTTP errors (4xx/5xx).
      *
@@ -236,11 +273,13 @@ class API extends \Piwik\Plugin\API
      *                     or date range (ie, 'YYYY-MM-DD,YYYY-MM-DD', lastX, previousX).
      * @return DataTable|DataTable\Map Flat table of broken URLs with 5XX Requests and Page Not Found (404) Requests counts.
      */
-    public function getAIChatbotBrokenContent($idSite, string $period, string $date) : DataTableInterface
+    public function getAIChatbotBrokenContent($idSite, string $period, string $date): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
-        return Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_BROKEN_CONTENT_RECORD, $idSite, $period, $date, '', \false, \false);
+
+        return Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_BROKEN_CONTENT_RECORD, $idSite, $period, $date, '', false, false);
     }
+
     /**
      * Returns page URLs visited far more by humans than requested by AI chatbots.
      *
@@ -260,14 +299,17 @@ class API extends \Piwik\Plugin\API
      * @param string $date The date or date range to process.
      * @return DataTable|DataTable\Map Flat table of URLs with the two source metrics and the score.
      */
-    public function getAIChatbotHumanFavouredPages($idSite, string $period, string $date) : DataTableInterface
+    public function getAIChatbotHumanFavouredPages($idSite, string $period, string $date): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         // The scored data is archived (see AIChatbotFavouredPages); just read it back. The empty
         // segment is intentional — these reports are unsegmented, so a requested segment is ignored.
-        $table = Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_HUMAN_FAVOURED_PAGES_RECORD, $idSite, $period, $date, '', \false, \false);
+        $table = Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_HUMAN_FAVOURED_PAGES_RECORD, $idSite, $period, $date, '', false, false);
+
         return $this->skipScoreInReportTotals($table);
     }
+
     /**
      * Returns page URLs requested far more by AI chatbots than visited by humans.
      *
@@ -287,13 +329,16 @@ class API extends \Piwik\Plugin\API
      * @param string $date The date or date range to process.
      * @return DataTable|DataTable\Map Flat table of URLs with the two source metrics and the score.
      */
-    public function getAIChatbotAIFavouredPages($idSite, string $period, string $date) : DataTableInterface
+    public function getAIChatbotAIFavouredPages($idSite, string $period, string $date): DataTableInterface
     {
         Piwik::checkUserHasViewAccess($idSite);
+
         // See getAIChatbotHumanFavouredPages: the scored data is archived; read it back unsegmented.
-        $table = Archive::createDataTableFromArchive(\Piwik\Plugins\BotTracking\Archiver::AI_CHATBOTS_AI_FAVOURED_PAGES_RECORD, $idSite, $period, $date, '', \false, \false);
+        $table = Archive::createDataTableFromArchive(Archiver::AI_CHATBOTS_AI_FAVOURED_PAGES_RECORD, $idSite, $period, $date, '', false, false);
+
         return $this->skipScoreInReportTotals($table);
     }
+
     /**
      * Marks the discrepancy_score column 'skip' so the report totals row leaves it blank — summing a
      * per-page 0–100 index is meaningless. The scorer sets this op at archive time, but a DataTable's
@@ -303,14 +348,16 @@ class API extends \Piwik\Plugin\API
      * @param DataTable|DataTable\Map $table
      * @return DataTable|DataTable\Map
      */
-    private function skipScoreInReportTotals(DataTableInterface $table) : DataTableInterface
+    private function skipScoreInReportTotals(DataTableInterface $table): DataTableInterface
     {
         if ($table instanceof DataTable\Map) {
             foreach ($table->getDataTables() as $childTable) {
                 $this->skipScoreInReportTotals($childTable);
             }
+
             return $table;
         }
+
         if ($table instanceof DataTable) {
             $ops = $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
             if (!is_array($ops)) {
@@ -319,25 +366,35 @@ class API extends \Piwik\Plugin\API
             $ops[Metrics::COLUMN_DISCREPANCY_SCORE] = 'skip';
             $table->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, $ops);
         }
+
         return $table;
     }
+
     /**
      * @param int|string $lastMinutes
      * @return array{0: string, 1: string}
      */
-    private function getRealTimeDateRange($lastMinutes) : array
+    private function getRealTimeDateRange($lastMinutes): array
     {
         if (!is_int($lastMinutes) && (!is_string($lastMinutes) || !ctype_digit($lastMinutes))) {
             throw new \InvalidArgumentException($this->getRealTimeLookbackErrorMessage());
         }
+
         $lastMinutes = (int) $lastMinutes;
+
         if ($lastMinutes < self::REAL_TIME_MIN_LOOKBACK_MINUTES || $lastMinutes > self::REAL_TIME_MAX_LOOKBACK_MINUTES) {
             throw new \InvalidArgumentException($this->getRealTimeLookbackErrorMessage());
         }
+
         $now = $this->getRealTimeNowTimestamp();
-        return [Date::factory($now - $lastMinutes * 60)->getDatetime(), Date::factory($now)->getDatetime()];
+
+        return [
+            Date::factory($now - $lastMinutes * 60)->getDatetime(),
+            Date::factory($now)->getDatetime(),
+        ];
     }
-    private function getRealTimeNowTimestamp() : int
+
+    private function getRealTimeNowTimestamp(): int
     {
         try {
             $testNow = StaticContainer::get('Tests.now');
@@ -347,35 +404,53 @@ class API extends \Piwik\Plugin\API
         } catch (\Exception $exception) {
             // Tests.now is only available in some test containers.
         }
+
         return Date::getNowTimestamp();
     }
-    private function getRealTimeLookbackErrorMessage() : string
+
+    private function getRealTimeLookbackErrorMessage(): string
     {
-        return sprintf('lastMinutes only accepts values between %d and %d', self::REAL_TIME_MIN_LOOKBACK_MINUTES, self::REAL_TIME_MAX_LOOKBACK_MINUTES);
+        return sprintf(
+            'lastMinutes only accepts values between %d and %d',
+            self::REAL_TIME_MIN_LOOKBACK_MINUTES,
+            self::REAL_TIME_MAX_LOOKBACK_MINUTES
+        );
     }
-    private function decorateAIChatbotLabels(DataTableInterface $table) : void
+
+    private function decorateAIChatbotLabels(DataTableInterface $table): void
     {
-        $table->filter(function (DataTable $table) : void {
+        $table->filter(function (DataTable $table): void {
             foreach ($table->getRows() as $row) {
                 $label = $row->getColumn('label');
                 if (!is_string($label)) {
                     continue;
                 }
+
                 if (!empty(AIChatbotReports::CHATBOT_MAPPING[$label])) {
                     $row->setColumn('label', AIChatbotReports::CHATBOT_MAPPING[$label]);
                 }
             }
         });
-        $table->queueFilter('ColumnCallbackAddMetadata', ['label', 'url', function ($label) {
-            return AIAssistant::getInstance()->getMainUrlFromName($label);
-        }]);
-        $table->queueFilter('MetadataCallbackAddMetadata', ['url', 'logo', function ($url) {
-            return AIAssistant::getInstance()->getLogoFromUrl($url ?: '');
-        }]);
+
+        $table->queueFilter('ColumnCallbackAddMetadata', [
+            'label',
+            'url',
+            function ($label) {
+                return AIAssistant::getInstance()->getMainUrlFromName($label);
+            },
+        ]);
+        $table->queueFilter('MetadataCallbackAddMetadata', [
+            'url',
+            'logo',
+            function ($url) {
+                return AIAssistant::getInstance()->getLogoFromUrl($url ?: '');
+            },
+        ]);
     }
-    private function decorateUrlLabels(DataTable $table) : DataTable
+
+    private function decorateUrlLabels(DataTable $table): DataTable
     {
-        $table->filter(function (DataTable $table) : void {
+        $table->filter(function (DataTable $table): void {
             foreach ($table->getRows() as $row) {
                 $label = $row->getColumn('label');
                 if (is_string($label) && $label !== '') {
@@ -383,6 +458,7 @@ class API extends \Piwik\Plugin\API
                 }
             }
         });
+
         return $table;
     }
 }
