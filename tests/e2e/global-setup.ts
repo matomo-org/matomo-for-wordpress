@@ -277,12 +277,16 @@ class GlobalSetup {
       description: 'container for e2e tests',
     }));
 
-    const container = (await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
+    const containerResponse = await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
       idSite: '1',
       idContainer,
-    })));
+    }));
+    const container = containerResponse?.value ?? containerResponse?.data ?? containerResponse;
 
-    const draftVersionId = container.draft.idcontainerversion;
+    const draftVersionId = container?.draft?.idcontainerversion;
+    if (!draftVersionId) {
+      throw new Error(`TagManager.getContainer did not return a draft version: ${JSON.stringify(containerResponse)}`);
+    }
 
     // create trigger
     const triggersResponse = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
