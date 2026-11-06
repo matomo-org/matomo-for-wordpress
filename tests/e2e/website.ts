@@ -96,9 +96,11 @@ class Website {
 
       await browser.waitUntil(async function () {
         return !!(await browser.execute(function () {
-          return window.wpApiSettings?.nonce;
+          return document.body?.classList.contains('wp-admin') || !!document.querySelector('#wpadminbar');
         }));
       }, { timeout: 60000 });
+
+      this.loggedIn = true;
     });
   }
 
