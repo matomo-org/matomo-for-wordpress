@@ -68,6 +68,7 @@ jest.config.js export-ignore
 .git-blame-ignore-revs export-ignore
 /app/bootstrap-phpstan.php export-ignore
 phpstan*.neon export-ignore
+/app/AGENTS.md export-ignore
 
 # export-ignore rules for embedded matomo follow
 

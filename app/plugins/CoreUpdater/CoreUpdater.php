@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreUpdater;
 
 use Exception;
@@ -18,6 +19,7 @@ use Piwik\SettingsPiwik;
 use Piwik\UpdateCheck;
 use Piwik\Updater as PiwikCoreUpdater;
 use Piwik\Version;
+
 class CoreUpdater extends \Piwik\Plugin
 {
     /**
@@ -25,26 +27,45 @@ class CoreUpdater extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('Request.dispatchCoreAndPluginUpdatesScreen' => 'dispatch', 'Platform.initialized' => 'updateCheck');
+        return array(
+            'Request.dispatchCoreAndPluginUpdatesScreen' => 'dispatch',
+            'Platform.initialized'                       => 'updateCheck',
+        );
     }
+
     public function dispatch()
     {
         if (!SettingsPiwik::isAutoUpdateEnabled()) {
             return;
         }
+
         $module = Piwik::getModule();
         $action = Piwik::getAction();
-        if ($module == 'CoreUpdater' || $module == 'Proxy' || $module == 'Installation' || $module == 'CorePluginsAdmin' && $action == 'deactivate' || $module == 'CorePluginsAdmin' && $action == 'uninstall' || $module == 'LanguagesManager' && $action == 'saveLanguage') {
+
+        if (
+            $module == 'CoreUpdater'
+            // Proxy module is used to redirect users to piwik.org, should still work when Piwik must be updated
+            || $module == 'Proxy'
+            // Do not show update page during installation.
+            || $module == 'Installation'
+            || ($module == 'CorePluginsAdmin' && $action == 'deactivate')
+            || ($module == 'CorePluginsAdmin' && $action == 'uninstall')
+            || ($module == 'LanguagesManager' && $action == 'saveLanguage')
+        ) {
             return;
         }
+
         $updater = new PiwikCoreUpdater();
         $updates = $updater->getComponentsWithNewVersion(array('core' => Version::VERSION));
+
         if (!empty($updates)) {
             Filesystem::deleteAllCacheOnUpdate();
         }
+
         if ($updater->getComponentUpdates() !== null) {
             if (FrontController::shouldRethrowException()) {
-                throw new Exception("Piwik and/or some plugins have been upgraded to a new version. \n" . "--> Please run the update process first. See documentation: https://matomo.org/docs/update/ \n");
+                throw new Exception("Piwik and/or some plugins have been upgraded to a new version. \n" .
+                    "--> Please run the update process first. See documentation: https://matomo.org/docs/update/ \n");
             } elseif ($module === 'API' && ('' == $action || 'index' == $action)) {
                 $outputFormat = strtolower(Common::getRequestVar('format', 'xml', 'string', $_GET + $_POST));
                 $response = new ResponseBuilder($outputFormat);
@@ -57,6 +78,7 @@ class CoreUpdater extends \Piwik\Plugin
             }
         }
     }
+
     public function updateCheck()
     {
         UpdateCheck::check();

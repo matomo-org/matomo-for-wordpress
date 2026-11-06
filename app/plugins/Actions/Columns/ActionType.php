@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\Columns;
 
 use Piwik\Columns\DimensionMetricFactory;
@@ -14,6 +15,7 @@ use Piwik\Development;
 use Piwik\Piwik;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Exception;
+
 /**
  * This example dimension only defines a name and does not track any data. It's supposed to be only used in reports.
  *
@@ -28,10 +30,12 @@ class ActionType extends ActionDimension
     protected $nameSingular = 'Actions_ActionType';
     protected $namePlural = 'Actions_ActionTypes';
     protected $category = 'General_Actions';
+
     public function getAcceptValues()
     {
         return Piwik::translate('Actions_ActionTypeSegmentHelp', 'pageviews, contents, sitesearches, events, outlinks, downloads');
     }
+
     public function getEnumColumnValues()
     {
         $availableTypes = [];
@@ -54,18 +58,22 @@ class ActionType extends ActionDimension
          * @param array $availableTypes
          */
         Piwik::postEvent('Actions.addActionTypes', [&$availableTypes]);
+
         $types = [];
+
         foreach ($availableTypes as $type) {
             if (empty($type['id']) || empty($type['name'])) {
-                throw new Exception("Invalid action added with event `Actions.addActionTypes`: " . var_export($type, \true));
+                throw new Exception("Invalid action added with event `Actions.addActionTypes`: " . var_export($type, true));
             }
             if (Development::isEnabled() && array_key_exists($type['id'], $types)) {
                 throw new Exception(sprintf("Action '%s' with id %s couldn't be added, as '%s' was already added for this id", $type['name'], $type['id'], $types[$type['id']]));
             }
             $types[$type['id']] = $type['name'];
         }
+
         return $types;
     }
+
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // do not generate any metric for this

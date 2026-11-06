@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
@@ -13,12 +14,14 @@ use Piwik\API\Request;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Row;
 use Piwik\DataTable\Simple;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Plugins\ImageGraph\API;
+
 /**
  * A Report Renderer produces user friendly renderings of any given Piwik report.
  * All new Renderers must be copied in ReportRenderer and added to the $availableReportRenderers.
  */
-abstract class ReportRenderer extends \Piwik\BaseFactory
+abstract class ReportRenderer extends BaseFactory
 {
     public const DEFAULT_REPORT_FONT_FAMILY = 'dejavusans';
     public const REPORT_TEXT_COLOR = "13,13,13";
@@ -29,13 +32,23 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     public const TABLE_HEADER_TEXT_WEIGHT = "normal";
     public const TABLE_CELL_BORDER_COLOR = "217,217,217";
     public const TABLE_BG_COLOR = "242,242,242";
+
     public const HTML_FORMAT = 'html';
     public const PDF_FORMAT = 'pdf';
     public const CSV_FORMAT = 'csv';
     public const TSV_FORMAT = 'tsv';
+
     protected $idSite = 'all';
+
     protected $report;
-    private static $availableReportRenderers = [self::PDF_FORMAT, self::HTML_FORMAT, self::CSV_FORMAT, self::TSV_FORMAT];
+
+    private static $availableReportRenderers = [
+        self::PDF_FORMAT,
+        self::HTML_FORMAT,
+        self::CSV_FORMAT,
+        self::TSV_FORMAT,
+    ];
+
     /**
      * Sets the site id
      *
@@ -45,54 +58,67 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     {
         $this->idSite = $idSite;
     }
+
     public function setReport($report)
     {
         $this->report = $report;
     }
+
     protected static function getClassNameFromClassId($rendererType)
     {
-        return 'Piwik\\ReportRenderer\\' . self::normalizeRendererType($rendererType);
+        return 'Piwik\ReportRenderer\\' . self::normalizeRendererType($rendererType);
     }
+
     protected static function getInvalidClassIdExceptionMessage($rendererType)
     {
-        return \Piwik\Piwik::translate('General_ExceptionInvalidReportRendererFormat', [self::normalizeRendererType($rendererType), implode(', ', self::$availableReportRenderers)]);
+        return Piwik::translate(
+            'General_ExceptionInvalidReportRendererFormat',
+            [self::normalizeRendererType($rendererType), implode(', ', self::$availableReportRenderers)]
+        );
     }
+
     protected static function normalizeRendererType($rendererType)
     {
         return ucfirst(strtolower($rendererType));
     }
+
     /**
      * Initialize locale settings.
      * If not called, locale settings defaults to 'en'
      *
      * @param string $locale
      */
-    public abstract function setLocale($locale);
+    abstract public function setLocale($locale);
+
     /**
      * Save rendering to disk
      *
      * @param string $filename without path & without format extension
      * @return string path of file
      */
-    public abstract function sendToDisk($filename);
+    abstract public function sendToDisk($filename);
+
     /**
      * Send rendering to browser with a 'download file' prompt
      *
      * @param string $filename without path & without format extension
      */
-    public abstract function sendToBrowserDownload($filename);
+    abstract public function sendToBrowserDownload($filename);
+
     /**
      * Output rendering to browser
      *
      * @param string $filename without path & without format extension
      */
-    public abstract function sendToBrowserInline($filename);
+    abstract public function sendToBrowserInline($filename);
+
     /**
      * Get rendered report
      *
      * @return string
      */
-    public abstract function getRenderedReport();
+    abstract public function getRenderedReport();
+
     /**
      * Generate the first page.
      *
@@ -102,14 +128,16 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      * @param array $reportMetadata metadata for all reports
      * @param array $segment segment applied to all reports
      */
-    public abstract function renderFrontPage($reportTitle, $prettyDate, $description, $reportMetadata, $segment);
+    abstract public function renderFrontPage($reportTitle, $prettyDate, $description, $reportMetadata, $segment);
+
     /**
      * Render the provided report.
      * Multiple calls to this method before calling getRenderedReport appends each report content.
      *
      * @param array $processedReport @see API::getProcessedReport()
      */
-    public abstract function renderReport($processedReport);
+    abstract public function renderReport($processedReport);
+
     /**
      * Get report attachments, ex. graph images
      *
@@ -118,7 +146,8 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      * @param $prettyDate
      * @return array
      */
-    public abstract function getAttachments($report, $processedReports, $prettyDate);
+    abstract public function getAttachments($report, $processedReports, $prettyDate);
+
     /**
      * Append $extension to $filename
      *
@@ -131,8 +160,10 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     {
         // the filename can be used in HTTP headers, remove new lines to prevent HTTP header injection
         $filename = str_replace(["\n", "\t"], " ", $filename);
+
         return $filename . "." . $extension;
     }
+
     /**
      * Return $filename with temp directory and delete file
      *
@@ -142,27 +173,39 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      */
     protected static function getOutputPath($filename)
     {
+        // Keep the generated file inside the assets directory: strip any directory components so the
+        // filename can never point outside $baseAssetsDir when it is concatenated below.
+        $filename = basename($filename);
+
         $baseAssetsDir = StaticContainer::get('path.tmp') . '/assets/';
         $outputFilename = $baseAssetsDir . $filename;
+
         if (!is_dir($baseAssetsDir)) {
-            \Piwik\Filesystem::mkdir($baseAssetsDir);
+            Filesystem::mkdir($baseAssetsDir);
         }
+
         @chmod($outputFilename, 0600);
+
         if (file_exists($outputFilename)) {
             @unlink($outputFilename);
         }
+
         return $outputFilename;
     }
+
     protected static function writeFile($filename, $extension, $content)
     {
         $filename = self::makeFilenameWithExtension($filename, $extension);
         $outputFilename = self::getOutputPath($filename);
+
         $bytesWritten = file_put_contents($outputFilename, $content);
-        if ($bytesWritten === \false) {
+        if ($bytesWritten === false) {
             throw new Exception("ReportRenderer: Could not write to file '" . $outputFilename . "'.");
         }
+
         return $outputFilename;
     }
+
     /**
      * Streaming a report writes response headers and body directly, so it is reserved for the
      * top-level request. A report generated as a nested API sub-request must be returned to the
@@ -170,29 +213,53 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
      *
      * @throws Exception
      */
-    public static function checkStreamingToBrowserIsAllowed() : void
+    public static function checkStreamingToBrowserIsAllowed(): void
     {
         if (Request::isCurrentApiRequestNestedInAnotherApiRequest()) {
             throw new Exception('A report can only be sent to the browser by the top-level request.');
         }
     }
+
     protected static function sendToBrowser($filename, $extension, $contentType, $content)
     {
         self::checkStreamingToBrowserIsAllowed();
-        $filename = \Piwik\ReportRenderer::makeFilenameWithExtension($filename, $extension);
-        \Piwik\ProxyHttp::overrideCacheControlHeaders();
-        \Piwik\Common::sendHeader('Content-Description: File Transfer');
-        \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
-        \Piwik\Common::sendHeader('Content-Disposition: attachment; filename="' . str_replace('"', '\'', basename($filename)) . '";');
-        \Piwik\Common::sendHeader('Content-Length: ' . strlen($content));
+
+        $filename = ReportRenderer::makeFilenameWithExtension($filename, $extension);
+
+        SecurityHeaders::sendForDataResponse();
+
+        ProxyHttp::overrideCacheControlHeaders();
+        Common::sendHeader('Content-Description: File Transfer');
+        Common::sendHeader('Content-Type: ' . $contentType);
+        Common::sendHeader('Content-Disposition: attachment; filename="' . str_replace('"', '\'', basename($filename)) . '";');
+        Common::sendHeader('Content-Length: ' . strlen($content));
+
         echo $content;
     }
+
     protected static function inlineToBrowser($contentType, $content)
     {
         self::checkStreamingToBrowserIsAllowed();
-        \Piwik\Common::sendHeader('Content-Type: ' . $contentType);
+
+        SecurityHeaders::sendForDataResponse();
+
+        Common::sendHeader('Content-Type: ' . $contentType);
         echo $content;
     }
+
+    /**
+     * Whether the report aggregates its rows by a dimension.
+     *
+     * A report without a dimension has a single row of metrics rather than one row per
+     * dimension value.
+     *
+     * @param array $reportMetadata
+     */
+    protected static function isAggregateReport($reportMetadata): bool
+    {
+        return !empty($reportMetadata['dimension']);
+    }
+
     /**
      * Convert a dimension-less report to a multi-row two-column data table
      *
@@ -205,7 +272,7 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
     protected static function processTableFormat($reportMetadata, $report, $reportColumns)
     {
         $finalReport = $report;
-        if (empty($reportMetadata['dimension'])) {
+        if (!self::isAggregateReport($reportMetadata)) {
             $simpleReportMetrics = $report->getFirstRow();
             if ($simpleReportMetrics) {
                 $finalReport = new Simple();
@@ -216,39 +283,56 @@ abstract class ReportRenderer extends \Piwik\BaseFactory
                     $finalReport->addRow($newRow);
                 }
             }
-            $reportColumns = ['label' => \Piwik\Piwik::translate('General_Name'), 'value' => \Piwik\Piwik::translate('General_Value')];
+
+            $reportColumns = [
+                'label' => Piwik::translate('General_Name'),
+                'value' => Piwik::translate('General_Value'),
+            ];
         }
-        return [$finalReport, $reportColumns];
+
+        return [
+            $finalReport,
+            $reportColumns,
+        ];
     }
+
     public static function getStaticGraph($reportMetadata, $width, $height, $evolution, $segment)
     {
         $imageGraphUrl = $reportMetadata['imageGraphUrl'];
+
         if ($evolution && !empty($reportMetadata['imageGraphEvolutionUrl'])) {
             $imageGraphUrl = $reportMetadata['imageGraphEvolutionUrl'];
         }
-        $queryString = \Piwik\Url::getQueryStringFromUrl($imageGraphUrl);
+
+        $queryString = Url::getQueryStringFromUrl($imageGraphUrl);
         if (!is_string($queryString) || $queryString === '') {
             $queryString = $imageGraphUrl;
         }
-        $requestGraph = \Piwik\UrlHelper::getArrayFromQueryString($queryString);
+
+        $requestGraph = UrlHelper::getArrayFromQueryString($queryString);
         $requestGraph['outputType'] = API::GRAPH_OUTPUT_PHP;
         $requestGraph['format'] = 'original';
         $requestGraph['serialize'] = 0;
         $requestGraph['filter_truncate'] = '';
         $requestGraph['width'] = $width;
         $requestGraph['height'] = $height;
+
         if ($segment != null) {
             $requestGraph['segment'] = urlencode($segment['definition']);
         }
+
         $request = new Request($requestGraph);
+
         try {
             $imageGraph = $request->process();
+
             // Get image data as string
             ob_start();
             imagepng($imageGraph);
             $imageGraphData = ob_get_contents();
             ob_end_clean();
             imagedestroy($imageGraph);
+
             return $imageGraphData;
         } catch (Exception $e) {
             throw new Exception("ImageGraph API returned an error: " . $e->getMessage() . "\n");

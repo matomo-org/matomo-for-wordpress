@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -15,6 +16,7 @@ use Piwik\Updater;
 use Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 /**
  * Update for version 5.2.0-b1.
  */
@@ -24,10 +26,12 @@ class Updates_5_2_0_b1 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -41,8 +45,16 @@ class Updates_5_2_0_b1 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        return array($this->migration->db->addColumn('tagmanager_container', 'isTagFireLimitAllowedInPreviewMode', 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0', 'ignoreGtmDataLayer'), $this->migration->db->changeColumn('tagmanager_container_version', 'name', 'name', "VARCHAR(255) NOT NULL DEFAULT ''"), $this->migration->db->changeColumn('tagmanager_container', 'name', 'name', 'VARCHAR(255) NOT NULL'), $this->migration->db->changeColumn('tagmanager_tag', 'name', 'name', 'VARCHAR(255) NOT NULL'), $this->migration->db->changeColumn('tagmanager_trigger', 'name', 'name', 'VARCHAR(255) NOT NULL'), $this->migration->db->changeColumn('tagmanager_variable', 'name', 'name', 'VARCHAR(255) NOT NULL'));
+        return array(
+            $this->migration->db->addColumn('tagmanager_container', 'isTagFireLimitAllowedInPreviewMode', 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0', 'ignoreGtmDataLayer'),
+            $this->migration->db->changeColumn('tagmanager_container_version', 'name', 'name', "VARCHAR(255) NOT NULL DEFAULT ''"),
+            $this->migration->db->changeColumn('tagmanager_container', 'name', 'name', 'VARCHAR(255) NOT NULL'),
+            $this->migration->db->changeColumn('tagmanager_tag', 'name', 'name', 'VARCHAR(255) NOT NULL'),
+            $this->migration->db->changeColumn('tagmanager_trigger', 'name', 'name', 'VARCHAR(255) NOT NULL'),
+            $this->migration->db->changeColumn('tagmanager_variable', 'name', 'name', 'VARCHAR(255) NOT NULL'),
+        );
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -54,7 +66,8 @@ class Updates_5_2_0_b1 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
-        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'trackBots', \false);
+
+        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'trackBots', false);
         $migrator->migrate();
     }
 }

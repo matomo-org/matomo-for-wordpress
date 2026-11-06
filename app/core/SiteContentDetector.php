@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Matomo\Cache\Lazy;
@@ -15,6 +16,7 @@ use Piwik\Http\EgressBlockedException;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
+
 /**
  * This class provides detection functions for specific content on a site. It can be used to easily detect the
  * presence of known third party code.
@@ -37,59 +39,90 @@ class SiteContentDetector
     /**
      * @var array<string, array<string, SiteContentDetectionAbstract>>
      */
-    public $detectedContent = [SiteContentDetectionAbstract::TYPE_TRACKER => [], SiteContentDetectionAbstract::TYPE_CMS => [], SiteContentDetectionAbstract::TYPE_JS_FRAMEWORK => [], SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER => [], SiteContentDetectionAbstract::TYPE_JS_CRASH_ANALYTICS => [], SiteContentDetectionAbstract::TYPE_OTHER => []];
+    public $detectedContent = [
+        SiteContentDetectionAbstract::TYPE_TRACKER => [],
+        SiteContentDetectionAbstract::TYPE_CMS => [],
+        SiteContentDetectionAbstract::TYPE_JS_FRAMEWORK => [],
+        SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER => [],
+        SiteContentDetectionAbstract::TYPE_JS_CRASH_ANALYTICS => [],
+        SiteContentDetectionAbstract::TYPE_OTHER => [],
+    ];
+
     public $connectedConsentManagers = [];
-    private $siteResponse = ['data' => '', 'headers' => []];
+
+    private $siteResponse = [
+        'data' => '',
+        'headers' => [],
+    ];
+
     /** @var Lazy */
     private $cache;
+
     public function __construct(?Lazy $cache = null)
     {
         if ($cache === null) {
-            $this->cache = \Piwik\Cache::getLazyCache();
+            $this->cache = Cache::getLazyCache();
         } else {
             $this->cache = $cache;
         }
     }
+
+
     /**
      * @return array<string, SiteContentDetectionAbstract[]>
      */
-    public static function getSiteContentDetectionsByType() : array
+    public static function getSiteContentDetectionsByType(): array
     {
         $instancesByType = [];
         $classes = self::getAllSiteContentDetectionClasses();
+
         foreach ($classes as $className) {
             $instancesByType[$className::getContentType()][] = StaticContainer::get($className);
         }
+
         return $instancesByType;
     }
+
     /**
      * Returns the site content detection object with the provided id, or null if it can't be found
      */
-    public function getSiteContentDetectionById(string $id) : ?SiteContentDetectionAbstract
+    public function getSiteContentDetectionById(string $id): ?SiteContentDetectionAbstract
     {
         $classes = $this->getAllSiteContentDetectionClasses();
+
         foreach ($classes as $className) {
             if ($className::getId() === $id) {
                 return StaticContainer::get($className);
             }
         }
+
         return null;
     }
+
     /**
      * @return string[]
      */
-    protected static function getAllSiteContentDetectionClasses() : array
+    protected static function getAllSiteContentDetectionClasses(): array
     {
-        return \Piwik\Plugin\Manager::getInstance()->findMultipleComponents('SiteContentDetection', SiteContentDetectionAbstract::class);
+        return Plugin\Manager::getInstance()->findMultipleComponents('SiteContentDetection', SiteContentDetectionAbstract::class);
     }
+
     /**
      * Reset the detections
      */
-    private function resetDetections() : void
+    private function resetDetections(): void
     {
-        $this->detectedContent = [SiteContentDetectionAbstract::TYPE_TRACKER => [], SiteContentDetectionAbstract::TYPE_CMS => [], SiteContentDetectionAbstract::TYPE_JS_FRAMEWORK => [], SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER => [], SiteContentDetectionAbstract::TYPE_JS_CRASH_ANALYTICS => [], SiteContentDetectionAbstract::TYPE_OTHER => []];
+        $this->detectedContent          = [
+            SiteContentDetectionAbstract::TYPE_TRACKER => [],
+            SiteContentDetectionAbstract::TYPE_CMS => [],
+            SiteContentDetectionAbstract::TYPE_JS_FRAMEWORK => [],
+            SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER => [],
+            SiteContentDetectionAbstract::TYPE_JS_CRASH_ANALYTICS => [],
+            SiteContentDetectionAbstract::TYPE_OTHER => [],
+        ];
         $this->connectedConsentManagers = [];
     }
+
     /**
      * This will query the site and populate the class properties with
      * the details of the detected content
@@ -105,129 +138,155 @@ class SiteContentDetector
      *                                   from the current request site via an http request
      * @param int         $timeOut       How long to wait for the site to response, defaults to 5 seconds
      */
-    public function detectContent(array $detectContent = [], ?int $idSite = null, ?array $siteResponse = null, int $timeOut = 5) : void
-    {
+    public function detectContent(
+        array $detectContent = [],
+        ?int $idSite = null,
+        ?array $siteResponse = null,
+        int $timeOut = 5
+    ): void {
         $this->resetDetections();
+
         // If site data was passed in, then just run the detection checks against it and return.
         if ($siteResponse) {
             $this->siteResponse = $siteResponse;
             $this->detectionChecks($detectContent);
             return;
         }
+
         // Get the site id from the request object if not explicitly passed
         if ($idSite === null) {
-            $idSite = \Piwik\Request::fromRequest()->getIntegerParameter('idSite', 0);
+            $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
+
             if (!$idSite) {
                 return;
             }
         }
-        $url = \Piwik\Site::getMainUrlFor($idSite);
+
+        $url = Site::getMainUrlFor($idSite);
+
         // Check and load previously cached site content detection data if it exists
         $cacheKey = 'SiteContentDetection_' . md5($url);
         $siteContentDetectionCache = $this->cache->fetch($cacheKey);
-        if ($siteContentDetectionCache !== \false) {
+
+        if ($siteContentDetectionCache !== false) {
             if ($this->checkCacheHasRequiredProperties($detectContent, $siteContentDetectionCache)) {
                 $this->detectedContent = $siteContentDetectionCache['detectedContent'];
                 $this->connectedConsentManagers = $siteContentDetectionCache['connectedConsentManagers'];
                 return;
             }
         }
+
         // No cache hit, no passed data, so make a request for the site content
         $siteResponse = $this->requestSiteResponse($url, $timeOut);
+
         // Abort if still no site data
         if (empty($siteResponse['data'])) {
             return;
         }
+
         $this->siteResponse = $siteResponse;
+
         // We now have site data to analyze, so run the detection checks
         $this->detectionChecks($detectContent);
+
         // A request was made to get this data and it isn't currently cached, so write it to the cache now
-        $cacheLife = 60 * 60 * 24 * 7;
+        $cacheLife = (60 * 60 * 24 * 7);
         $this->saveToCache($cacheKey, $cacheLife);
     }
+
     /**
      * Returns if the detection with the provided id was detected or not
      *
      * Note: self::detectContent needs to be called before.
      */
-    public function wasDetected(string $detectionClassId) : bool
+    public function wasDetected(string $detectionClassId): bool
     {
         foreach ($this->detectedContent as $type => $detectedClassIds) {
             if (array_key_exists($detectionClassId, $detectedClassIds)) {
-                return $detectedClassIds[$detectionClassId] ?? \false;
+                return $detectedClassIds[$detectionClassId] ?? false;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns an array containing ids of all detected detections of the given type
      *
      * @param int $type One of the SiteContentDetectionAbstract::TYPE_* constants
      * @return array
      */
-    public function getDetectsByType(int $type) : array
+    public function getDetectsByType(int $type): array
     {
         $detected = [];
+
         foreach ($this->detectedContent[$type] as $objId => $wasDetected) {
-            if (\true === $wasDetected) {
+            if (true === $wasDetected) {
                 $detected[] = $objId;
             }
         }
+
         return $detected;
     }
+
     /**
      * Checks that all required detections are in the cache array
      *
      * @param array $detectContent
      * @param array $cache
      */
-    private function checkCacheHasRequiredProperties(array $detectContent, array $cache) : bool
+    private function checkCacheHasRequiredProperties(array $detectContent, array $cache): bool
     {
         if (empty($detectContent)) {
             foreach (self::getSiteContentDetectionsByType() as $type => $entries) {
                 foreach ($entries as $entry) {
                     if (!isset($cache['detectedContent'][$type][$entry::getId()])) {
-                        return \false;
-                        // random detection missing
+                        return false; // random detection missing
                     }
                 }
             }
-            return \true;
+
+            return true;
         }
+
         foreach ($detectContent as $requestedDetection) {
-            if (is_string($requestedDetection)) {
-                // specific detection
+            if (is_string($requestedDetection)) { // specific detection
                 $detectionObj = $this->getSiteContentDetectionById($requestedDetection);
                 if (null !== $detectionObj && !isset($cache['detectedContent'][$detectionObj::getContentType()][$detectionObj::getId()])) {
-                    return \false;
-                    // specific detection was run before
+                    return false; // specific detection was run before
                 }
-            } elseif (is_int($requestedDetection)) {
-                // detection type requested
+            } elseif (is_int($requestedDetection)) { // detection type requested
                 $detectionsByType = self::getSiteContentDetectionsByType();
                 if (isset($detectionsByType[$requestedDetection])) {
                     foreach ($detectionsByType[$requestedDetection] as $detectionObj) {
                         if (!isset($cache['detectedContent'][$requestedDetection][$detectionObj::getId()])) {
-                            return \false;
-                            // random detection missing
+                            return false; // random detection missing
                         }
                     }
                 }
             }
         }
-        return \true;
+
+        return true;
     }
+
     /**
      * Save data to the cache
      */
-    private function saveToCache(string $cacheKey, int $cacheLife) : void
+    private function saveToCache(string $cacheKey, int $cacheLife): void
     {
-        $cacheData = ['detectedContent' => [], 'connectedConsentManagers' => []];
+        $cacheData = [
+            'detectedContent' => [],
+            'connectedConsentManagers' => [],
+        ];
+
         // Load any existing cached values
         $siteContentDetectionCache = $this->cache->fetch($cacheKey);
+
         if (is_array($siteContentDetectionCache)) {
             $cacheData = $siteContentDetectionCache;
         }
+
         foreach ($this->detectedContent as $type => $detections) {
             if (!isset($cacheData['detectedContent'][$type])) {
                 $cacheData['detectedContent'][$type] = [];
@@ -238,50 +297,67 @@ class SiteContentDetector
                 }
             }
         }
+
         $cacheData['connectedConsentManagers'] = array_merge($cacheData['connectedConsentManagers'], $this->connectedConsentManagers);
+
         $this->cache->save($cacheKey, $cacheData, $cacheLife);
     }
+
     /**
      * Run various detection checks for site content
      *
      * @param array $detectContent    Array of detection types used to filter the checks that are run
      */
-    private function detectionChecks(array $detectContent) : void
+    private function detectionChecks(array $detectContent): void
     {
         $detections = $this->getSiteContentDetectionsByType();
+
         foreach ($detections as $type => $typeDetections) {
             foreach ($typeDetections as $typeDetection) {
                 $this->detectedContent[$type][$typeDetection::getId()] = null;
-                if (in_array($type, $detectContent) || in_array($typeDetection::getId(), $detectContent) || empty($detectContent)) {
-                    $this->detectedContent[$type][$typeDetection::getId()] = \false;
+
+                if (
+                    in_array($type, $detectContent) ||
+                    in_array($typeDetection::getId(), $detectContent) ||
+                    empty($detectContent)
+                ) {
+                    $this->detectedContent[$type][$typeDetection::getId()] = false;
+
                     if ($typeDetection->isDetected($this->siteResponse['data'], $this->siteResponse['headers'])) {
-                        if ($typeDetection instanceof ConsentManagerDetectionAbstract && $typeDetection->checkIsConnected($this->siteResponse['data'], $this->siteResponse['headers'])) {
+                        if (
+                            $typeDetection instanceof ConsentManagerDetectionAbstract
+                            && $typeDetection->checkIsConnected($this->siteResponse['data'], $this->siteResponse['headers'])
+                        ) {
                             $this->connectedConsentManagers[] = $typeDetection::getId();
                         }
-                        $this->detectedContent[$type][$typeDetection::getId()] = \true;
+                        $this->detectedContent[$type][$typeDetection::getId()] = true;
                     }
                 }
             }
         }
     }
+
     /**
      * Retrieve data from the specified site using an HTTP request
      *
      * @return array
      */
-    private function requestSiteResponse(string $url, int $timeOut) : array
+    private function requestSiteResponse(string $url, int $timeOut): array
     {
         if (!$url) {
             return [];
         }
+
         // If internet features are disabled, we don't try to fetch any site content
         if (0 === GeneralConfig::getIntegerConfigValue('enable_internet_features', 0)) {
             return [];
         }
+
         $siteData = [];
+
         try {
             // @todo PHP 8.1 min (Matomo 6): use named arguments to drop the positional null/false filler.
-            $siteData = \Piwik\Http::sendHttpRequestBy(
+            $siteData = Http::sendHttpRequestBy(
                 'curl',
                 $url,
                 $timeOut,
@@ -289,35 +365,37 @@ class SiteContentDetector
                 null,
                 null,
                 0,
-                \false,
-                \true,
-                // $acceptInvalidSslCertificate: detected sites may use self-signed certs
-                \false,
-                \true,
-                // $getExtendedInfo
+                false,
+                true, // $acceptInvalidSslCertificate: detected sites may use self-signed certs
+                false,
+                true, // $getExtendedInfo
                 'GET',
                 null,
                 null,
                 null,
                 [],
                 null,
-                \true,
-                // $checkHostIsAllowed
-                \true
+                true, // $checkHostIsAllowed
+                true // $validateEgressIp: SSRF-safe fetch of the site's own (user-set) URL
             );
         } catch (EgressBlockedException $e) {
             // admin-fixable rejection, not a transient network error, so it must clear the default WARN level
             StaticContainer::get(LoggerInterface::class)->warning('Site content detection request for {url} was refused: {message}', [
                 // host only, so a configured URL carrying userinfo keeps credentials out of the log
-                'url' => \Piwik\UrlHelper::getHostFromUrl($url),
+                'url' => UrlHelper::getHostFromUrl($url),
                 'message' => $e->getMessage(),
             ]);
         } catch (\Exception $e) {
             // intentionally fail closed, but leave a diagnostic trail
-            StaticContainer::get(LoggerInterface::class)->debug('Site content detection request for {url} failed: {message}', ['url' => \Piwik\UrlHelper::getHostFromUrl($url), 'message' => $e->getMessage()]);
+            StaticContainer::get(LoggerInterface::class)->debug('Site content detection request for {url} failed: {message}', [
+                'url' => UrlHelper::getHostFromUrl($url),
+                'message' => $e->getMessage(),
+            ]);
         }
+
         return $siteData;
     }
+
     /**
      * Return an array of consent manager definitions which can be used to detect their presence on the site and show
      * the associated guide links
@@ -328,14 +406,20 @@ class SiteContentDetector
      *
      * @return array[]
      */
-    public static function getKnownConsentManagers() : array
+    public static function getKnownConsentManagers(): array
     {
         $detections = self::getSiteContentDetectionsByType();
         $cmDetections = $detections[SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER];
+
         $consentManagers = [];
+
         foreach ($cmDetections as $detection) {
-            $consentManagers[$detection::getId()] = ['name' => $detection::getName(), 'instructionUrl' => $detection::getInstructionUrl()];
+            $consentManagers[$detection::getId()] = [
+                'name' => $detection::getName(),
+                'instructionUrl' => $detection::getInstructionUrl(),
+            ];
         }
+
         return $consentManagers;
     }
 }

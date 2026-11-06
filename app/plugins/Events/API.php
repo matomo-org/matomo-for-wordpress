@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Events;
 
 use Piwik\Archive;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Piwik;
+
 /**
  * The Events API lets you request reports about your users' Custom Events.
  *
@@ -49,23 +51,52 @@ class API extends \Piwik\Plugin\API
     /**
      * @var array<string, string>
      */
-    protected $defaultMappingApiToSecondaryDimension = array('getCategory' => 'eventAction', 'getAction' => 'eventName', 'getName' => 'eventAction');
+    protected $defaultMappingApiToSecondaryDimension = array(
+        'getCategory' => 'eventAction',
+        'getAction'   => 'eventName',
+        'getName'     => 'eventAction',
+    );
+
     /**
      * @var array<string, string|array<string, string>>
      */
-    protected $mappingApiToRecord = array('getCategory' => array('eventAction' => \Piwik\Plugins\Events\Archiver::EVENTS_CATEGORY_ACTION_RECORD_NAME, 'eventName' => \Piwik\Plugins\Events\Archiver::EVENTS_CATEGORY_NAME_RECORD_NAME), 'getAction' => array('eventName' => \Piwik\Plugins\Events\Archiver::EVENTS_ACTION_NAME_RECORD_NAME, 'eventCategory' => \Piwik\Plugins\Events\Archiver::EVENTS_ACTION_CATEGORY_RECORD_NAME), 'getName' => array('eventAction' => \Piwik\Plugins\Events\Archiver::EVENTS_NAME_ACTION_RECORD_NAME, 'eventCategory' => \Piwik\Plugins\Events\Archiver::EVENTS_NAME_CATEGORY_RECORD_NAME), 'getActionFromCategoryId' => \Piwik\Plugins\Events\Archiver::EVENTS_CATEGORY_ACTION_RECORD_NAME, 'getNameFromCategoryId' => \Piwik\Plugins\Events\Archiver::EVENTS_CATEGORY_NAME_RECORD_NAME, 'getCategoryFromActionId' => \Piwik\Plugins\Events\Archiver::EVENTS_ACTION_CATEGORY_RECORD_NAME, 'getNameFromActionId' => \Piwik\Plugins\Events\Archiver::EVENTS_ACTION_NAME_RECORD_NAME, 'getActionFromNameId' => \Piwik\Plugins\Events\Archiver::EVENTS_NAME_ACTION_RECORD_NAME, 'getCategoryFromNameId' => \Piwik\Plugins\Events\Archiver::EVENTS_NAME_CATEGORY_RECORD_NAME);
+    protected $mappingApiToRecord = array(
+        'getCategory'             =>
+            array(
+                'eventAction' => Archiver::EVENTS_CATEGORY_ACTION_RECORD_NAME,
+                'eventName'   => Archiver::EVENTS_CATEGORY_NAME_RECORD_NAME,
+            ),
+        'getAction'               =>
+            array(
+                'eventName'     => Archiver::EVENTS_ACTION_NAME_RECORD_NAME,
+                'eventCategory' => Archiver::EVENTS_ACTION_CATEGORY_RECORD_NAME,
+            ),
+        'getName'                 =>
+            array(
+                'eventAction'   => Archiver::EVENTS_NAME_ACTION_RECORD_NAME,
+                'eventCategory' => Archiver::EVENTS_NAME_CATEGORY_RECORD_NAME,
+            ),
+        'getActionFromCategoryId' => Archiver::EVENTS_CATEGORY_ACTION_RECORD_NAME,
+        'getNameFromCategoryId'   => Archiver::EVENTS_CATEGORY_NAME_RECORD_NAME,
+        'getCategoryFromActionId' => Archiver::EVENTS_ACTION_CATEGORY_RECORD_NAME,
+        'getNameFromActionId'     => Archiver::EVENTS_ACTION_NAME_RECORD_NAME,
+        'getActionFromNameId'     => Archiver::EVENTS_NAME_ACTION_RECORD_NAME,
+        'getCategoryFromNameId'   => Archiver::EVENTS_NAME_CATEGORY_RECORD_NAME,
+    );
+
     /**
      * @ignore
      * @param string $apiMethod
      * @param string|false $secondaryDimension
      * @return string|false
      */
-    public function getActionToLoadSubtables($apiMethod, $secondaryDimension = \false)
+    public function getActionToLoadSubtables($apiMethod, $secondaryDimension = false)
     {
         $recordName = $this->getRecordNameForAction($apiMethod, $secondaryDimension);
         $apiMethod = array_search($recordName, $this->mappingApiToRecord);
         return $apiMethod;
     }
+
     /**
      * @ignore
      * @param string $apiMethod
@@ -76,14 +107,15 @@ class API extends \Piwik\Plugin\API
         if (isset($this->defaultMappingApiToSecondaryDimension[$apiMethod])) {
             return $this->defaultMappingApiToSecondaryDimension[$apiMethod];
         }
-        return \false;
+        return false;
     }
+
     /**
      * @param string $apiMethod
      * @param string|false $secondaryDimension
      * @return string
      */
-    protected function getRecordNameForAction($apiMethod, $secondaryDimension = \false)
+    protected function getRecordNameForAction($apiMethod, $secondaryDimension = false)
     {
         if (empty($secondaryDimension)) {
             $secondaryDimension = $this->getDefaultSecondaryDimension($apiMethod);
@@ -98,6 +130,7 @@ class API extends \Piwik\Plugin\API
         }
         return $record[$secondaryDimension];
     }
+
     /**
      * @ignore
      * @param string $apiMethod
@@ -107,23 +140,32 @@ class API extends \Piwik\Plugin\API
     {
         $records = $this->mappingApiToRecord[$apiMethod];
         if (!is_array($records)) {
-            return \false;
+            return false;
         }
         return array_keys($records);
     }
+
     /**
      * @param string|false $secondaryDimension
      */
-    protected function checkSecondaryDimension(string $apiMethod, $secondaryDimension) : void
+    protected function checkSecondaryDimension(string $apiMethod, $secondaryDimension): void
     {
         if (empty($secondaryDimension)) {
             return;
         }
-        $isSecondaryDimensionValid = isset($this->mappingApiToRecord[$apiMethod]) && isset($this->mappingApiToRecord[$apiMethod][$secondaryDimension]);
+
+        $isSecondaryDimensionValid =
+            isset($this->mappingApiToRecord[$apiMethod])
+            && isset($this->mappingApiToRecord[$apiMethod][$secondaryDimension]);
+
         if (!$isSecondaryDimensionValid) {
-            throw new \Exception("Secondary dimension '{$secondaryDimension}' is not valid for the API {$apiMethod}. " . "Use one of: " . implode(", ", $this->getSecondaryDimensions($apiMethod) ?: []));
+            throw new \Exception(
+                "Secondary dimension '$secondaryDimension' is not valid for the API $apiMethod. " .
+                "Use one of: " . implode(", ", $this->getSecondaryDimensions($apiMethod) ?: [])
+            );
         }
     }
+
     /**
      * @param int|string|int[] $idSite
      * @param 'day'|'week'|'month'|'year'|'range' $period
@@ -132,28 +174,38 @@ class API extends \Piwik\Plugin\API
      * @param string|false $secondaryDimension
      * @return DataTable|DataTable\Map
      */
-    protected function getDataTable(string $name, $idSite, string $period, string $date, $segment, bool $expanded = \false, $idSubtable = null, $secondaryDimension = \false, bool $flat = \false)
+    protected function getDataTable(string $name, $idSite, string $period, string $date, $segment, bool $expanded = false, $idSubtable = null, $secondaryDimension = false, bool $flat = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $this->checkSecondaryDimension($name, $secondaryDimension);
         $recordName = $this->getRecordNameForAction($name, $secondaryDimension);
+
         $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment ?: '', $expanded, $flat, $idSubtable);
+
         $dataTable->filter(function ($dataTable) {
-            $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, [Metrics::INDEX_EVENT_MIN_EVENT_VALUE => 'min', Metrics::INDEX_EVENT_MAX_EVENT_VALUE => 'max']);
+            $dataTable->setMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, [
+                Metrics::INDEX_EVENT_MIN_EVENT_VALUE => 'min',
+                Metrics::INDEX_EVENT_MAX_EVENT_VALUE => 'max',
+            ]);
         });
+
         if ($flat) {
-            $dataTable->filterSubtables('Piwik\\Plugins\\Events\\DataTable\\Filter\\ReplaceEventNameNotSet');
+            $dataTable->filterSubtables('Piwik\Plugins\Events\DataTable\Filter\ReplaceEventNameNotSet');
         } else {
             $dataTable->filter('AddSegmentValue', array(function ($label) {
-                if ($label === \Piwik\Plugins\Events\Archiver::EVENT_NAME_NOT_SET) {
-                    return \false;
+                if ($label === Archiver::EVENT_NAME_NOT_SET) {
+                    return false;
                 }
+
                 return $label;
             }));
         }
-        $dataTable->filter('Piwik\\Plugins\\Events\\DataTable\\Filter\\ReplaceEventNameNotSet');
+
+        $dataTable->filter('Piwik\Plugins\Events\DataTable\Filter\ReplaceEventNameNotSet');
+
         return $dataTable;
     }
+
     /**
      * Returns event metrics grouped by event category.
      *
@@ -174,10 +226,11 @@ class API extends \Piwik\Plugin\API
      * @param bool $flat Whether subtable rows should be flattened into a single table.
      * @return DataTable|DataTable\Map Event category metrics.
      */
-    public function getCategory($idSite, string $period, string $date, $segment = \false, bool $expanded = \false, $secondaryDimension = \false, bool $flat = \false)
+    public function getCategory($idSite, string $period, string $date, $segment = false, bool $expanded = false, $secondaryDimension = false, bool $flat = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, \false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, false, $secondaryDimension, $flat);
     }
+
     /**
      * Returns event metrics grouped by event action.
      *
@@ -198,10 +251,11 @@ class API extends \Piwik\Plugin\API
      * @param bool $flat Whether subtable rows should be flattened into a single table.
      * @return DataTable|DataTable\Map Event action metrics.
      */
-    public function getAction($idSite, string $period, string $date, $segment = \false, bool $expanded = \false, $secondaryDimension = \false, bool $flat = \false)
+    public function getAction($idSite, string $period, string $date, $segment = false, bool $expanded = false, $secondaryDimension = false, bool $flat = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, \false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, false, $secondaryDimension, $flat);
     }
+
     /**
      * Returns event metrics grouped by event name.
      *
@@ -222,10 +276,11 @@ class API extends \Piwik\Plugin\API
      * @param bool $flat Whether subtable rows should be flattened into a single table.
      * @return DataTable|DataTable\Map Event name metrics.
      */
-    public function getName($idSite, string $period, string $date, $segment = \false, bool $expanded = \false, $secondaryDimension = \false, bool $flat = \false)
+    public function getName($idSite, string $period, string $date, $segment = false, bool $expanded = false, $secondaryDimension = false, bool $flat = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, \false, $secondaryDimension, $flat);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, $expanded, false, $secondaryDimension, $flat);
     }
+
     /**
      * Returns event actions for one event category row.
      *
@@ -244,10 +299,11 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event action metrics for the selected category.
      */
-    public function getActionFromCategoryId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getActionFromCategoryId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
+
     /**
      * Returns event names for one event category row.
      *
@@ -266,10 +322,11 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event name metrics for the selected category.
      */
-    public function getNameFromCategoryId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getNameFromCategoryId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
+
     /**
      * Returns event categories for one event action row.
      *
@@ -288,10 +345,11 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event category metrics for the selected action.
      */
-    public function getCategoryFromActionId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getCategoryFromActionId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
+
     /**
      * Returns event names for one event action row.
      *
@@ -310,10 +368,11 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event name metrics for the selected action.
      */
-    public function getNameFromActionId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getNameFromActionId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
+
     /**
      * Returns event actions for one event name row.
      *
@@ -332,10 +391,11 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event action metrics for the selected name.
      */
-    public function getActionFromNameId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getActionFromNameId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
+
     /**
      * Returns event categories for one event name row.
      *
@@ -354,8 +414,8 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Event category metrics for the selected name.
      */
-    public function getCategoryFromNameId($idSite, string $period, string $date, $idSubtable, $segment = \false)
+    public function getCategoryFromNameId($idSite, string $period, string $date, $idSubtable, $segment = false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
 }

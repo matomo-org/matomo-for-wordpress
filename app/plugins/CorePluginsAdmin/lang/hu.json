@@ -1,0 +1,18 @@
+{
+    "CorePluginsAdmin": {
+        "Activate": "Bekapcsol",
+        "Activated": "Bekapcsolva",
+        "Active": "Bekapcsolt",
+        "AuthorHomepage": "Fejlesztő honlapja",
+        "Deactivate": "Kikapcsol",
+        "Inactive": "Kikapcsolt",
+        "LicenseHomepage": "Licencinformációk",
+        "OncePluginIsInstalledYouMayActivateHere": "A már telepített bővítményeket itt kapcsolhatod ki vagy be.",
+        "PluginHomepage": "Bővítmény honlapja",
+        "PluginsExtendPiwik": "A bővítmények kiterjesztik a Matomo alapfunkcióit.",
+        "PluginsManagement": "Bővítménykezelés",
+        "Status": "Állapot",
+        "Version": "Verzió",
+        "Websites": "Weboldalak"
+    }
+}

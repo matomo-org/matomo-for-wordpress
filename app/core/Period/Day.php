@@ -6,15 +6,19 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Period;
 
 use Exception;
 use Piwik\Date;
 use Piwik\Period;
+
 class Day extends Period
 {
     public const PERIOD_ID = 1;
+
     protected $label = 'day';
+
     /**
      * Returns the day of the period as a string
      *
@@ -25,6 +29,7 @@ class Day extends Period
         $out = $this->getDateStart()->toString();
         return $out;
     }
+
     /**
      * Returns the day of the period as a localized short string
      *
@@ -33,10 +38,11 @@ class Day extends Period
     public function getLocalizedShortString()
     {
         //"Mon 15 Aug"
-        $date = $this->getDateStart();
+        $date     = $this->getDateStart();
         $out = $date->getLocalized(Date::DATE_FORMAT_DAY_MONTH);
         return $out;
     }
+
     /**
      * Returns the day of the period as a localized long string
      *
@@ -45,10 +51,11 @@ class Day extends Period
     public function getLocalizedLongString()
     {
         //"Mon 15 Aug"
-        $date = $this->getDateStart();
+        $date     = $this->getDateStart();
         $out = $date->getLocalized(Date::DATE_FORMAT_LONG);
         return $out;
     }
+
     /**
      * Returns the number of subperiods
      * Always 0, in that case
@@ -59,6 +66,7 @@ class Day extends Period
     {
         return 0;
     }
+
     /**
      * Adds a subperiod
      * Not supported for day periods
@@ -70,6 +78,7 @@ class Day extends Period
     {
         throw new Exception("Adding a subperiod is not supported for Day");
     }
+
     /**
      * Returns the day of the period in the given format
      *
@@ -80,14 +89,17 @@ class Day extends Period
     {
         return $this->date->toString($format);
     }
+
     public function __toString()
     {
         return $this->toString();
     }
+
     public function getImmediateChildPeriodLabel()
     {
         return null;
     }
+
     public function getParentPeriodLabel()
     {
         return 'week';

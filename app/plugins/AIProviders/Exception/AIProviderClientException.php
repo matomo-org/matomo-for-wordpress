@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders\Exception;
 
 /**
@@ -15,6 +17,6 @@ namespace Piwik\Plugins\AIProviders\Exception;
  * request, or a provider 4xx response. Retrying the same request will fail
  * again; the caller should surface the error instead.
  */
-class AIProviderClientException extends \Piwik\Plugins\AIProviders\Exception\AIProviderException
+class AIProviderClientException extends AIProviderException
 {
 }

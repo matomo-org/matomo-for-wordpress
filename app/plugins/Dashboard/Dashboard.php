@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Dashboard;
 
 use Piwik\API\Request;
@@ -15,6 +16,7 @@ use Piwik\Piwik;
 use Piwik\Category\Subcategory;
 use Piwik\Widget\WidgetConfig;
 use Piwik\Plugin;
+
 class Dashboard extends \Piwik\Plugin
 {
     /**
@@ -22,8 +24,18 @@ class Dashboard extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'UsersManager.deleteUser' => 'deleteDashboardLayout', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Widget.addWidgetConfigs' => 'addWidgetConfigs', 'Category.addSubcategories' => 'addSubcategories', 'Widgetize.shouldEmbedIframeEmpty' => 'shouldEmbedIframeEmpty', 'Db.getTablesInstalled' => 'getTablesInstalled');
+        return array(
+            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
+            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
+            'UsersManager.deleteUser'                => 'deleteDashboardLayout',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'Widget.addWidgetConfigs'                => 'addWidgetConfigs',
+            'Category.addSubcategories'              => 'addSubcategories',
+            'Widgetize.shouldEmbedIframeEmpty'       => 'shouldEmbedIframeEmpty',
+            'Db.getTablesInstalled'                  => 'getTablesInstalled',
+        );
     }
+
     /**
      * Register the new tables, so Matomo knows about them.
      *
@@ -33,18 +45,21 @@ class Dashboard extends \Piwik\Plugin
     {
         $allTablesInstalled[] = Common::prefixTable('user_dashboard');
     }
+
     public function shouldEmbedIframeEmpty(&$shouldEmbedEmpty, $controllerName, $actionName)
     {
         if ($controllerName == 'Dashboard' && $actionName == 'index') {
-            $shouldEmbedEmpty = \true;
+            $shouldEmbedEmpty = true;
         }
     }
+
     public function addWidgetConfigs(&$widgets)
     {
         if (Piwik::isUserIsAnonymous()) {
             $this->addDefaultDashboard($widgets);
         } else {
             $dashboards = $this->getDashboards();
+
             if (empty($dashboards)) {
                 $this->addDefaultDashboard($widgets);
             } else {
@@ -61,10 +76,16 @@ class Dashboard extends \Piwik\Plugin
             }
         }
     }
+
     private function getDashboards()
     {
-        return Request::processRequest('Dashboard.getDashboards', ['filter_limit' => '-1', 'filter_offset' => 0], []);
+        return Request::processRequest(
+            'Dashboard.getDashboards',
+            ['filter_limit' => '-1', 'filter_offset' => 0],
+            []
+        );
     }
+
     private function addDefaultDashboard(&$widgets)
     {
         $config = new WidgetConfig();
@@ -76,12 +97,14 @@ class Dashboard extends \Piwik\Plugin
         $config->setParameters(array('idDashboard' => 1));
         $widgets[] = $config;
     }
+
     public function addSubcategories(&$subcategories)
     {
         if (Piwik::isUserIsAnonymous()) {
             $this->addDefaultSubcategory($subcategories);
         } else {
             $dashboards = $this->getDashboards();
+
             if (empty($dashboards)) {
                 $this->addDefaultSubcategory($subcategories);
             } else {
@@ -97,6 +120,7 @@ class Dashboard extends \Piwik\Plugin
             }
         }
     }
+
     private function addDefaultSubcategory(&$subcategories)
     {
         $subcategory = new Subcategory();
@@ -106,6 +130,7 @@ class Dashboard extends \Piwik\Plugin
         $subcategory->setOrder(1);
         $subcategories[] = $subcategory;
     }
+
     /**
      * Returns the layout in the DB for the given user, or false if the layout has not been set yet.
      * Parameters must be checked BEFORE this function call
@@ -118,22 +143,28 @@ class Dashboard extends \Piwik\Plugin
     public function getLayoutForUser($login, $idDashboard)
     {
         $return = $this->getModel()->getLayoutForUser($login, $idDashboard);
+
         if (count($return) == 0) {
-            return \false;
+            return false;
         }
+
         return $return[0]['layout'];
     }
+
     private function getModel()
     {
-        return new \Piwik\Plugins\Dashboard\Model();
+        return new Model();
     }
+
     public function getDefaultLayout()
     {
         $defaultLayout = $this->getLayoutForUser('', 1);
+
         if (empty($defaultLayout)) {
             $pluginManager = Plugin\Manager::getInstance();
+
             $advertisingWidget = '';
-            $advertising = StaticContainer::get('Piwik\\ProfessionalServices\\Advertising');
+            $advertising = StaticContainer::get('Piwik\ProfessionalServices\Advertising');
             if ($advertising->areAdsForProfessionalServicesEnabled() && $pluginManager->isPluginActivated('ProfessionalServices')) {
                 $advertisingWidget = '{"uniqueId":"widgetProfessionalServicespromoServices","parameters":{"module":"ProfessionalServices","action":"promoServices"}},';
             }
@@ -160,6 +191,7 @@ class Dashboard extends \Piwik\Plugin
                 ]
             ]';
         }
+
         /**
          * Allows other plugins to modify the default dashboard layout.
          *
@@ -171,60 +203,87 @@ class Dashboard extends \Piwik\Plugin
          *                               * **parameters**: The array of query parameters that should be used to get this widget's report.
          */
         Piwik::postEvent("Dashboard.changeDefaultDashboardLayout", array(&$defaultLayout));
+
         $defaultLayout = $this->removeDisabledPluginFromLayout($defaultLayout);
+
         return $defaultLayout;
     }
+
     public function getAllDashboards($login)
     {
         $dashboards = $this->getModel()->getAllDashboardsForUser($login);
+
         $nameless = 1;
         foreach ($dashboards as &$dashboard) {
             if (empty($dashboard['name'])) {
                 $dashboard['name'] = Piwik::translate('Dashboard_DashboardOf', $login);
                 if ($nameless > 1) {
-                    $dashboard['name'] .= " ({$nameless})";
+                    $dashboard['name'] .= " ($nameless)";
                 }
+
                 $nameless++;
             }
+
             $dashboard['name'] = Common::unsanitizeInputValue($dashboard['name']);
+
             $layout = '[]';
             if (!empty($dashboard['layout'])) {
                 $layout = $dashboard['layout'];
             }
+
             $dashboard['layout'] = $this->decodeLayout($layout);
         }
+
         return $dashboards;
     }
+
     private function isAlreadyDecodedLayout($layout)
     {
         return !is_string($layout);
     }
+
     public function removeDisabledPluginFromLayout($layout)
     {
         $layoutObject = $this->decodeLayout($layout);
+
         // if the json decoding works (ie. new Json format)
         // we will only return the widgets that are from enabled plugins
+
         if (is_array($layoutObject)) {
-            $layoutObject = (object) array('config' => array('layout' => '33-33-33'), 'columns' => $layoutObject);
+            $layoutObject = (object)array(
+                'config'  => array('layout' => '33-33-33'),
+                'columns' => $layoutObject,
+            );
         }
+
         if (empty($layoutObject) || empty($layoutObject->columns)) {
-            $layoutObject = (object) array('config' => array('layout' => '33-33-33'), 'columns' => array());
+            $layoutObject = (object)array(
+                'config'  => array('layout' => '33-33-33'),
+                'columns' => array(),
+            );
         }
+
         $layout = $this->encodeLayout($layoutObject);
         return $layout;
     }
+
     public function decodeLayout($layout)
     {
         if ($this->isAlreadyDecodedLayout($layout)) {
             return $layout;
         }
-        $layout = html_entity_decode($layout, \ENT_COMPAT | \ENT_HTML401, 'UTF-8');
+
+        $layout = html_entity_decode($layout, ENT_COMPAT | ENT_HTML401, 'UTF-8');
         $layout = str_replace("\\\"", "\"", $layout);
         $layout = str_replace("\n", "", $layout);
-        $layout = json_decode($layout, $assoc = \false);
+
+        $layout = json_decode($layout, $assoc = false);
+
         $this->sanitizeWidgetUniqueIds($layout);
+
         return $layout;
     }
+
     /**
      * Restricts every widget unique id in a decoded layout to a plain-identifier character set.
      *
@@ -234,18 +293,21 @@ class Dashboard extends \Piwik\Plugin
      *
      * @param mixed $layout decoded layout as returned by json_decode()
      */
-    private function sanitizeWidgetUniqueIds($layout) : void
+    private function sanitizeWidgetUniqueIds($layout): void
     {
-        $columns = is_object($layout) && isset($layout->columns) ? $layout->columns : $layout;
+        $columns = (is_object($layout) && isset($layout->columns)) ? $layout->columns : $layout;
+
         // Columns and widgets are normally arrays, but a stored layout may encode them as objects.
         // Iterate both shapes so the restriction cannot be sidestepped through the layout structure.
         if (!is_array($columns) && !is_object($columns)) {
             return;
         }
+
         foreach ($columns as $column) {
             if (!is_array($column) && !is_object($column)) {
                 continue;
             }
+
             foreach ($column as $widget) {
                 if (is_object($widget) && property_exists($widget, 'uniqueId')) {
                     $uniqueId = is_string($widget->uniqueId) ? $widget->uniqueId : '';
@@ -254,10 +316,12 @@ class Dashboard extends \Piwik\Plugin
             }
         }
     }
+
     public function encodeLayout($layout)
     {
         return json_encode($layout);
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Dashboard/javascripts/widgetMenu.js";
@@ -265,6 +329,7 @@ class Dashboard extends \Piwik\Plugin
         $jsFiles[] = "plugins/Dashboard/javascripts/dashboardWidget.js";
         $jsFiles[] = "plugins/Dashboard/javascripts/dashboard.js";
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/CoreHome/stylesheets/dataTable.less";
@@ -272,18 +337,22 @@ class Dashboard extends \Piwik\Plugin
         $stylesheets[] = "plugins/Dashboard/stylesheets/widget.less";
         $stylesheets[] = "plugins/Dashboard/vue/src/AddWidgetModal/AddWidgetModal.less";
     }
+
     public function deleteDashboardLayout($userLogin)
     {
         $this->getModel()->deleteAllLayoutsForUser($userLogin);
     }
+
     public function install()
     {
-        \Piwik\Plugins\Dashboard\Model::install();
+        Model::install();
     }
+
     public function uninstall()
     {
-        \Piwik\Plugins\Dashboard\Model::uninstall();
+        Model::uninstall();
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'Dashboard_AddPreviewedWidget';

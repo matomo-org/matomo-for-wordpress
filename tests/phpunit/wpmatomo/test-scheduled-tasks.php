@@ -4,9 +4,11 @@
  */
 
 use Piwik\Container\StaticContainer;
+use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\SitesManager\Model as SitesModel;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Plugins\WordPress\Overrides\GeoIp2\DbIpPreviousMonthUpdater;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
@@ -39,10 +41,13 @@ class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 	public $geoip_update_call_count = 0;
 
+	public $geoip_previous_month_update_call_count = 0;
+
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->geoip_update_call_count = 0;
+		$this->geoip_update_call_count                = 0;
+		$this->geoip_previous_month_update_call_count = 0;
 
 		$this->settings    = new Settings();
 		$this->site_config = new \WpMatomo\Site\Sync\SyncConfig( $this->settings );
@@ -147,6 +152,55 @@ class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFileExists( StaticContainer::get( 'path.geoip2' ) . 'DBIP-City.mmdb' );
 		$this->assertEquals( Php::ID, LocationProvider::getCurrentProviderId() );
 		$this->assertTrue( LocationProvider::getCurrentProvider()->isWorking() );
+	}
+
+	/**
+	 * @group external-http
+	 * @provideContainerConfig get_container_config_for_geoip_current_month_fail
+	 */
+	public function test_update_geo_ip2_db_should_download_the_previous_months_database_if_none_exists_locally() {
+		$this->delete_geoip_location_databases();
+
+		$this->tasks->update_geo_ip2_db();
+
+		$this->assertFileExists( StaticContainer::get( 'path.geoip2' ) . 'DBIP-City.mmdb' );
+		$this->assertEquals( Php::ID, LocationProvider::getCurrentProviderId() );
+		$this->assertTrue( LocationProvider::getCurrentProvider()->isWorking() );
+
+		$this->assert_geoip_update_rescheduled_for_tomorrow();
+		$this->assertEquals( [], $this->tasks->get_recorded_task_failures() );
+	}
+
+	/**
+	 * @provideContainerConfig get_container_config_for_geoip_current_month_fail_and_previous_month_no_op
+	 */
+	public function test_update_geo_ip2_db_should_not_download_the_previous_months_database_if_one_exists_locally() {
+		$created_db = $this->ensure_geoip_location_database_exists();
+
+		try {
+			$this->tasks->update_geo_ip2_db();
+		} finally {
+			if ( $created_db ) {
+				unlink( $created_db );
+			}
+		}
+
+		$this->assertEquals( 0, $this->geoip_previous_month_update_call_count );
+
+		$this->assert_geoip_update_rescheduled_for_tomorrow();
+		$this->assertEquals( [ 'update_geoip2' ], array_keys( $this->tasks->get_recorded_task_failures() ) );
+	}
+
+	/**
+	 * @provideContainerConfig get_container_config_for_geoip_current_month_fail_and_previous_month_no_op
+	 */
+	public function test_update_geo_ip2_db_should_not_download_the_previous_months_database_if_not_using_db_ip_lite() {
+		$this->delete_geoip_location_databases();
+
+		$this->tasks->update_geo_ip2_db( 'https://download.example.com/GeoLite2-City.tar.gz' );
+
+		$this->assertEquals( 0, $this->geoip_previous_month_update_call_count );
+		$this->assertEquals( [ 'update_geoip2' ], array_keys( $this->tasks->get_recorded_task_failures() ) );
 	}
 
 	public function test_perform_update_does_not_fail() {
@@ -256,6 +310,22 @@ class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function get_container_config_for_geoip_fail() {
+		return array_merge(
+			$this->get_container_config_for_geoip_current_month_fail(),
+			[
+				DbIpPreviousMonthUpdater::class => function () {
+					// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
+					return new class() extends DbIpPreviousMonthUpdater {
+						public function update() {
+							throw new \Exception( 'forced error' );
+						}
+					};
+				},
+			]
+		);
+	}
+
+	public function get_container_config_for_geoip_current_month_fail() {
 		return [
 			\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::class => function () {
 				// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
@@ -266,6 +336,28 @@ class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 				};
 			},
 		];
+	}
+
+	public function get_container_config_for_geoip_current_month_fail_and_previous_month_no_op() {
+		return array_merge(
+			$this->get_container_config_for_geoip_current_month_fail(),
+			[
+				DbIpPreviousMonthUpdater::class => function () {
+					// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
+					return new class($this) extends DbIpPreviousMonthUpdater {
+						private $test;
+
+						public function __construct( ScheduledTasksTest $test ) {
+							$this->test = $test;
+						}
+
+						public function update() {
+							$this->test->geoip_previous_month_update_call_count += 1;
+						}
+					};
+				},
+			]
+		);
 	}
 
 	public function get_container_config_for_geoip_no_op() {
@@ -285,6 +377,50 @@ class ScheduledTasksTest extends MatomoAnalytics_SharedFixture_TestCase {
 				};
 			},
 		];
+	}
+
+	private function assert_geoip_update_rescheduled_for_tomorrow() {
+		$tasks = $this->get_tasks_for_event( ScheduledTasks::EVENT_GEOIP );
+		$this->assertNotEmpty( $tasks );
+
+		$time_diff = key( $tasks ) - time();
+
+		$seconds_in_a_day = 60 * 60 * 24;
+		$this->assertGreaterThanOrEqual( $seconds_in_a_day - 5, $time_diff );
+		$this->assertLessThanOrEqual( $seconds_in_a_day + 5, $time_diff );
+	}
+
+	private function delete_geoip_location_databases() {
+		Bootstrap::do_bootstrap();
+
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		foreach ( GeoIp2::$dbNames['loc'] as $db_name ) {
+			$path = GeoIp2::getPathForGeoIpDatabase( $db_name );
+			if ( file_exists( $path ) ) {
+				unlink( $path );
+			}
+		}
+
+		// so the next scheduled run is the one rescheduled by the task
+		wp_unschedule_event( wp_next_scheduled( ScheduledTasks::EVENT_GEOIP ), ScheduledTasks::EVENT_GEOIP );
+	}
+
+	/**
+	 * @return string|null the path of the placeholder database, if one had to be created
+	 */
+	private function ensure_geoip_location_database_exists() {
+		Bootstrap::do_bootstrap();
+
+		wp_unschedule_event( wp_next_scheduled( ScheduledTasks::EVENT_GEOIP ), ScheduledTasks::EVENT_GEOIP );
+
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		if ( GeoIp2::getPathToGeoIpDatabase( GeoIp2::$dbNames['loc'] ) ) {
+			return null;
+		}
+
+		$path = StaticContainer::get( 'path.geoip2' ) . 'DBIP-City.mmdb';
+		file_put_contents( $path, '' );
+		return $path;
 	}
 
 	private function get_tasks_for_event( $event_name ) {

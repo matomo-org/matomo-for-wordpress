@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Exception;
@@ -24,6 +25,7 @@ use Piwik\Plugin\Report;
 use Piwik\Plugin\Segment;
 use Piwik\Plugin\ReportsProvider;
 use Piwik\Site;
+
 /**
  * DataTable filter that creates a pivot table from a report.
  *
@@ -66,6 +68,7 @@ class PivotByDimension extends BaseFilter
      * @var Dimension|null
      */
     private $pivotByDimension;
+
     /**
      * The report that reports on visits by the pivot dimension. The metadata in this class
      * is used to determine if we can pivot the report and used to fetch intersected tables
@@ -74,6 +77,7 @@ class PivotByDimension extends BaseFilter
      * @var Report|null
      */
     private $pivotDimensionReport;
+
     /**
      * The column that should be displayed in the pivot table. This should be a metric, eg,
      * `'nb_visits'`, `'nb_actions'`, etc.
@@ -81,6 +85,7 @@ class PivotByDimension extends BaseFilter
      * @var string|null|false
      */
     private $pivotColumn;
+
     /**
      * The number of columns to limit the pivot table to. Applying a pivot can result in
      * tables with many, many columns. This can cause problems when displayed in web page.
@@ -94,6 +99,7 @@ class PivotByDimension extends BaseFilter
      * @var int
      */
     private $pivotByColumnLimit;
+
     /**
      * Metadata for the report being pivoted. The metadata in this class is used to
      * determine if we can pivot the report and used to fetch intersected tables.
@@ -101,6 +107,7 @@ class PivotByDimension extends BaseFilter
      * @var Report
      */
     private $thisReport;
+
     /**
      * Metadata for the segment of the dimension of the report being pivoted. When
      * fetching intersected tables by segment, this is the segment used.
@@ -108,12 +115,14 @@ class PivotByDimension extends BaseFilter
      * @var Segment|null
      */
     private $thisReportDimensionSegment;
+
     /**
      * Whether fetching by segment is enabled or not.
      *
      * @var bool
      */
     private $isFetchingBySegmentEnabled;
+
     /**
      * The subtable dimension of the report being pivoted. Used to determine if and
      * how intersected tables are fetched.
@@ -121,6 +130,7 @@ class PivotByDimension extends BaseFilter
      * @var Dimension|null
      */
     private $subtableDimension;
+
     /**
      * The index value (if any) for the metric that should be displayed in the pivot
      * table.
@@ -128,6 +138,7 @@ class PivotByDimension extends BaseFilter
      * @var int|null
      */
     private $metricIndexValue;
+
     /**
      * @param DataTable $table The table to pivot.
      * @param Report|string|null $report The ID of the report being pivoted, eg, `'Referrers.getKeywords'`.
@@ -138,17 +149,39 @@ class PivotByDimension extends BaseFilter
      * @param bool $isFetchingBySegmentEnabled Whether to allow fetching by segment.
      * @throws Exception if pivoting the report by a dimension is unsupported.
      */
-    public function __construct($table, $report, $pivotByDimension, $pivotColumn, $pivotByColumnLimit = \false, $isFetchingBySegmentEnabled = \true)
-    {
+    public function __construct(
+        $table,
+        $report,
+        $pivotByDimension,
+        $pivotColumn,
+        $pivotByColumnLimit = false,
+        $isFetchingBySegmentEnabled = true
+    ) {
         parent::__construct($table);
-        Log::debug("PivotByDimension::%s: creating with [report = %s, pivotByDimension = %s, pivotColumn = %s, " . "pivotByColumnLimit = %s, isFetchingBySegmentEnabled = %s]", __FUNCTION__, $report, $pivotByDimension, $pivotColumn, $pivotByColumnLimit, $isFetchingBySegmentEnabled);
+
+        Log::debug(
+            "PivotByDimension::%s: creating with [report = %s, pivotByDimension = %s, pivotColumn = %s, "
+            . "pivotByColumnLimit = %s, isFetchingBySegmentEnabled = %s]",
+            __FUNCTION__,
+            $report,
+            $pivotByDimension,
+            $pivotColumn,
+            $pivotByColumnLimit,
+            $isFetchingBySegmentEnabled
+        );
+
         $this->pivotByColumnLimit = $pivotByColumnLimit ?: self::getDefaultColumnLimit();
         $this->isFetchingBySegmentEnabled = $isFetchingBySegmentEnabled;
+
         $this->setPivotColumn($pivotColumn);
+
         $this->setPivotByDimension($pivotByDimension);
+
         $this->setThisReportMetadata($report);
+
         $this->checkSupportedPivot();
     }
+
     /**
      * Pivots to table.
      *
@@ -160,39 +193,52 @@ class PivotByDimension extends BaseFilter
         // set of all column names in the pivoted table mapped with the sum of all column
         // values. used later in truncating and ordering the pivoted table's columns.
         $columnSet = array();
+
         // if no pivot column was set, use the first one found in the row
         if (empty($this->pivotColumn)) {
             $firstColumn = $this->getNameOfFirstNonLabelColumnInTable($table);
             $this->setPivotColumn($firstColumn);
         }
+
         Log::debug("PivotByDimension::%s: pivoting table with pivot column = %s", __FUNCTION__, $this->pivotColumn);
+
         foreach ($table->getRows() as $row) {
             $row->setColumns(array('label' => $row->getColumn('label')));
+
             $associatedTable = $this->getIntersectedTable($table, $row);
             if (!empty($associatedTable)) {
                 foreach ($associatedTable->getRows() as $columnRow) {
                     $pivotTableColumn = $columnRow->getColumn('label');
+
                     $columnValue = $this->getColumnValue($columnRow, $this->pivotColumn);
+
                     if (isset($columnSet[$pivotTableColumn])) {
                         $columnSet[$pivotTableColumn] += $columnValue;
                     } else {
                         $columnSet[$pivotTableColumn] = $columnValue;
                     }
+
                     $row->setColumn($pivotTableColumn, $columnValue);
                 }
+
                 Common::destroy($associatedTable);
                 unset($associatedTable);
             }
         }
+
         Log::debug("PivotByDimension::%s: pivoted columns set: %s", __FUNCTION__, $columnSet);
+
         $others = Piwik::translate('General_Others');
         $defaultRow = $this->getPivotTableDefaultRowFromColumnSummary($columnSet, $others);
+
         Log::debug("PivotByDimension::%s: un-prepended default row: %s", __FUNCTION__, $defaultRow);
+
         // post process pivoted datatable
         foreach ($table->getRows() as $row) {
             // remove subtables from rows
             $row->removeSubtable();
             $row->deleteMetadata('idsubdatatable_in_db');
+
             // use default row to ensure column ordering and add missing columns/aggregate cut-off columns
             $orderedColumns = $defaultRow;
             foreach ($row->getColumns() as $name => $value) {
@@ -204,20 +250,24 @@ class PivotByDimension extends BaseFilter
             }
             $row->setColumns($orderedColumns);
         }
-        $table->clearQueuedFilters();
-        // TODO: shouldn't clear queued filters, but we can't wait for them to be run
-        //       since generic filters are run before them. remove after refactoring
-        //       processed metrics.
+
+        $table->clearQueuedFilters(); // TODO: shouldn't clear queued filters, but we can't wait for them to be run
+                                      //       since generic filters are run before them. remove after refactoring
+                                      //       processed metrics.
+
         // prepend numerals to columns in a queued filter (this way, disable_queued_filters can be used
         // to get machine readable data from the API if needed)
         $prependedColumnNames = $this->getOrderedColumnsWithPrependedNumerals($defaultRow, $others);
+
         Log::debug("PivotByDimension::%s: prepended column name mapping: %s", __FUNCTION__, $prependedColumnNames);
-        $table->queueFilter(function (DataTable $table) use($prependedColumnNames) {
+
+        $table->queueFilter(function (DataTable $table) use ($prependedColumnNames) {
             foreach ($table->getRows() as $row) {
                 $row->setColumns(array_combine($prependedColumnNames, $row->getColumns()));
             }
         });
     }
+
     /**
      * An intersected table is a table that describes visits by a certain dimension for the visits
      * represented by a row in another table. This method fetches intersected tables either via
@@ -230,28 +280,34 @@ class PivotByDimension extends BaseFilter
         if ($this->isPivotDimensionSubtable()) {
             return $this->loadSubtable($table, $row);
         }
+
         if ($this->isFetchingBySegmentEnabled) {
             $segment = $row->getMetadata('segment');
             if (empty($segment)) {
                 $segmentValue = $row->getMetadata('segmentValue');
-                if ($segmentValue === \false) {
+                if ($segmentValue === false) {
                     $segmentValue = $row->getColumn('label');
                 }
+
                 $segmentName = $this->thisReportDimensionSegment->getSegment();
                 if (empty($segmentName)) {
                     throw new \Exception("Invalid segment found when pivoting: " . $this->thisReportDimensionSegment->getName());
                 }
+
                 $segment = $segmentName . "==" . urlencode($segmentValue);
             }
             return $this->fetchIntersectedWithThisBySegment($table, $segment);
         }
+
         // should never occur, unless checkSupportedPivot() fails to catch an unsupported pivot
         throw new Exception("Unexpected error, cannot fetch intersected table.");
     }
-    private function isPivotDimensionSubtable() : bool
+
+    private function isPivotDimensionSubtable(): bool
     {
         return self::areDimensionsEqualAndNotNull($this->subtableDimension, $this->pivotByDimension);
     }
+
     /**
      * @return DataTable|null
      */
@@ -261,16 +317,19 @@ class PivotByDimension extends BaseFilter
         if ($idSubtable === null) {
             return null;
         }
+
         $subtable = $row->getSubtable();
         if (!$subtable) {
             $subtable = $this->thisReport->fetchSubtable($idSubtable, $this->getRequestParamOverride($table));
         }
-        if (!$subtable) {
-            // sanity check
-            throw new Exception("Unexpected error: could not load subtable '{$idSubtable}'.");
+
+        if (!$subtable) { // sanity check
+            throw new Exception("Unexpected error: could not load subtable '$idSubtable'.");
         }
+
         return $subtable;
     }
+
     /**
      * @param string $segmentStr
      * @return DataTable
@@ -278,86 +337,112 @@ class PivotByDimension extends BaseFilter
     private function fetchIntersectedWithThisBySegment(DataTable $table, $segmentStr)
     {
         // TODO: segment + report API method query params should be stored in DataTable metadata so we don't have to access it here
-        $originalSegment = Common::getRequestVar('segment', \false);
+        $originalSegment = Common::getRequestVar('segment', false);
         if (!empty($originalSegment)) {
             $segmentStr = $originalSegment . ';' . $segmentStr;
         }
+
         Log::debug("PivotByDimension: Fetching intersected with segment '%s'", $segmentStr);
+
         $params = array_merge($this->pivotDimensionReport->getParameters() ?: [], ['segment' => $segmentStr]);
         $params = $params + $this->getRequestParamOverride($table);
         return $this->pivotDimensionReport->fetch($params);
     }
-    private function setPivotByDimension(string $pivotByDimension) : void
+
+    private function setPivotByDimension(string $pivotByDimension): void
     {
         $factory = new DimensionsProvider();
         $this->pivotByDimension = $factory->factory($pivotByDimension);
         if (empty($this->pivotByDimension)) {
             throw new Exception("Invalid dimension '" . Common::sanitizeInputValue($pivotByDimension) . "'.");
         }
+
         $this->pivotDimensionReport = Report::getForDimension($this->pivotByDimension);
     }
+
     /**
      * @param Report|string|null $report
      */
-    private function setThisReportMetadata($report) : void
+    private function setThisReportMetadata($report): void
     {
         if (is_string($report)) {
             [$module, $action] = explode('.', $report);
             $report = ReportsProvider::factory($module, $action);
             if (empty($report)) {
-                throw new \Exception("Unable to find report '{$module}.{$action}'.");
+                throw new \Exception("Unable to find report '$module.$action'.");
             }
         }
+
         if (empty($report)) {
             throw new \Exception("This report does not support pivot.");
         }
+
         $this->thisReport = $report;
+
         $this->subtableDimension = $this->thisReport->getSubtableDimension();
+
         $thisReportDimension = $this->thisReport->getDimension();
         if ($thisReportDimension !== null) {
             $segments = $thisReportDimension->getSegments();
             $this->thisReportDimensionSegment = reset($segments);
         }
     }
-    private function checkSupportedPivot() : void
+
+    private function checkSupportedPivot(): void
     {
         $reportId = $this->thisReport->getModule() . '.' . $this->thisReport->getAction();
+
         if (!$this->isFetchingBySegmentEnabled) {
             // if fetching by segment is disabled, then there must be a subtable for the current report and
             // subtable's dimension must be the pivot dimension
+
             if (empty($this->subtableDimension)) {
-                throw new Exception("Unsupported pivot: report '{$reportId}' has no subtable dimension.");
+                throw new Exception("Unsupported pivot: report '$reportId' has no subtable dimension.");
             }
+
             if (!$this->isPivotDimensionSubtable()) {
-                throw new Exception("Unsupported pivot: the subtable dimension for '{$reportId}' does not match the " . "requested pivotBy dimension. [subtable dimension = {$this->subtableDimension->getId()}, " . "pivot by dimension = {$this->pivotByDimension->getId()}]");
+                throw new Exception("Unsupported pivot: the subtable dimension for '$reportId' does not match the "
+                                  . "requested pivotBy dimension. [subtable dimension = {$this->subtableDimension->getId()}, "
+                                  . "pivot by dimension = {$this->pivotByDimension->getId()}]");
             }
         } else {
-            $canFetchBySubtable = !empty($this->subtableDimension) && $this->subtableDimension->getId() === $this->pivotByDimension->getId();
+            $canFetchBySubtable = !empty($this->subtableDimension)
+                && $this->subtableDimension->getId() === $this->pivotByDimension->getId();
             if ($canFetchBySubtable) {
                 return;
             }
+
             // if fetching by segment is enabled, and we cannot fetch by subtable, then there has to be a report
             // for the pivot dimension (so we can fetch the report), and there has to be a segment for this report's
             // dimension (so we can use it when fetching)
+
             if (empty($this->pivotDimensionReport)) {
-                throw new Exception("Unsupported pivot: No report for pivot dimension '{$this->pivotByDimension->getId()}'" . " (report required for fetching intersected tables by segment).");
+                throw new Exception("Unsupported pivot: No report for pivot dimension '{$this->pivotByDimension->getId()}'"
+                                  . " (report required for fetching intersected tables by segment).");
             }
+
             if (empty($this->thisReportDimensionSegment)) {
-                throw new Exception("Unsupported pivot: No segment for dimension of report '{$reportId}'." . " (segment required for fetching intersected tables by segment).");
+                throw new Exception("Unsupported pivot: No segment for dimension of report '$reportId'."
+                                  . " (segment required for fetching intersected tables by segment).");
             }
         }
     }
+
     /**
      * @return false|mixed
      */
     private function getColumnValue(Row $columnRow, string $pivotColumn)
     {
         $value = $columnRow->getColumn($pivotColumn);
-        if (empty($value) && !empty($this->metricIndexValue)) {
+        if (
+            empty($value)
+            && !empty($this->metricIndexValue)
+        ) {
             $value = $columnRow->getColumn($this->metricIndexValue);
         }
         return $value;
     }
+
     /**
      * @return string|null
      */
@@ -370,83 +455,114 @@ class PivotByDimension extends BaseFilter
                 }
             }
         }
+
         return null;
     }
+
     /**
      * @return array<string, string|int>
      */
-    private function getRequestParamOverride(DataTable $table) : array
+    private function getRequestParamOverride(DataTable $table): array
     {
-        $params = ['pivotBy' => '', 'column' => '', 'flat' => 0, 'totals' => 0, 'disable_queued_filters' => 1, 'disable_generic_filters' => 1, 'showColumns' => '', 'hideColumns' => ''];
+        $params = [
+            'pivotBy' => '',
+            'column' => '',
+            'flat' => 0,
+            'totals' => 0,
+            'disable_queued_filters' => 1,
+            'disable_generic_filters' => 1,
+            'showColumns' => '',
+            'hideColumns' => '',
+        ];
+
         /** @var Site|false $site */
         $site = $table->getMetadata('site');
         if (!empty($site)) {
             $params['idSite'] = $site->getId();
         }
+
         /** @var Period|false $period */
         $period = $table->getMetadata('period');
         if (!empty($period)) {
             $params['period'] = $period->getLabel();
+
             if ($params['period'] == 'range') {
                 $params['date'] = $period->getRangeString();
             } else {
                 $params['date'] = $period->getDateStart()->toString();
             }
         }
+
         return $params;
     }
+
     /**
      * @param array<string, mixed> $columnSet
      * @return array<string, false>
      */
-    private function getPivotTableDefaultRowFromColumnSummary(array $columnSet, string $othersRowLabel) : array
+    private function getPivotTableDefaultRowFromColumnSummary(array $columnSet, string $othersRowLabel): array
     {
         // sort columns by sum (to ensure deterministic ordering)
-        uksort($columnSet, function ($key1, $key2) use($columnSet) {
+        uksort($columnSet, function ($key1, $key2) use ($columnSet) {
             if ($columnSet[$key1] == $columnSet[$key2]) {
                 return strcmp($key1, $key2);
             }
             return $columnSet[$key2] > $columnSet[$key1] ? 1 : -1;
         });
+
         // limit columns if necessary (adding aggregate Others column at end)
-        if ($this->pivotByColumnLimit > 0 && count($columnSet) > $this->pivotByColumnLimit) {
-            $columnSet = array_slice($columnSet, 0, $this->pivotByColumnLimit - 1, $preserveKeys = \true);
+        if (
+            $this->pivotByColumnLimit > 0
+            && count($columnSet) > $this->pivotByColumnLimit
+        ) {
+            $columnSet = array_slice($columnSet, 0, $this->pivotByColumnLimit - 1, $preserveKeys = true);
             $columnSet[$othersRowLabel] = 0;
         }
+
         // remove column sums from array so it can be used as a default row
         $columnSet = array_map(function () {
-            return \false;
+            return false;
         }, $columnSet);
+
         // make sure label column is first
-        return ['label' => \false] + $columnSet;
+        return ['label' => false] + $columnSet;
     }
+
     /**
      * @param array<string, false> $defaultRow
      * @return list<string>
      */
-    private function getOrderedColumnsWithPrependedNumerals(array $defaultRow, string $othersRowLabel) : array
+    private function getOrderedColumnsWithPrependedNumerals(array $defaultRow, string $othersRowLabel): array
     {
-        $flags = \ENT_COMPAT;
+        $flags = ENT_COMPAT;
         if (defined('ENT_HTML401')) {
-            $flags |= \ENT_HTML401;
-            // part of default flags for 5.4, but not 5.3
+            $flags |= ENT_HTML401; // part of default flags for 5.4, but not 5.3
         }
+
         // must use decoded character otherwise sort later will fail
         // (sort column will be set to decoded but columns will have &nbsp;)
         $nbsp = html_entity_decode('&nbsp;', $flags, 'utf-8');
+
         $result = array();
+
         $currentIndex = 1;
         foreach ($defaultRow as $columnName => $ignore) {
-            if ($columnName === $othersRowLabel || $columnName === 'label') {
+            if (
+                $columnName === $othersRowLabel
+                || $columnName === 'label'
+            ) {
                 $result[] = $columnName;
             } else {
                 $modifiedColumnName = $currentIndex . '.' . $nbsp . $columnName;
                 $result[] = $modifiedColumnName;
+
                 ++$currentIndex;
             }
         }
+
         return $result;
     }
+
     /**
      * Returns true if pivoting by subtable is supported for a report. Will return true if the report
      * has a subtable dimension and if the subtable dimension is different than the report's dimension.
@@ -457,6 +573,7 @@ class PivotByDimension extends BaseFilter
     {
         return self::areDimensionsNotEqualAndNotNull($report->getSubtableDimension(), $report->getDimension());
     }
+
     /**
      * Returns true if fetching intersected tables by segment is enabled in the INI config, false if otherwise.
      *
@@ -464,8 +581,9 @@ class PivotByDimension extends BaseFilter
      */
     public static function isSegmentFetchingEnabledInConfig()
     {
-        return GeneralConfig::getBoolConfigValue('pivot_by_filter_enable_fetch_by_segment', \false);
+        return GeneralConfig::getBoolConfigValue('pivot_by_filter_enable_fetch_by_segment', false);
     }
+
     /**
      * Returns the default maximum number of columns to allow in a pivot table from the INI config.
      * Uses the **pivot_by_filter_default_column_limit** INI config option.
@@ -476,6 +594,7 @@ class PivotByDimension extends BaseFilter
     {
         return GeneralConfig::getIntegerConfigValue('pivot_by_filter_default_column_limit', 0);
     }
+
     /**
      * @param Dimension|null $lhs
      * @param Dimension|null $rhs
@@ -485,6 +604,7 @@ class PivotByDimension extends BaseFilter
     {
         return !empty($lhs) && !empty($rhs) && $lhs->getId() == $rhs->getId();
     }
+
     /**
      * @param Dimension|null $lhs
      * @param Dimension|null $rhs
@@ -494,12 +614,14 @@ class PivotByDimension extends BaseFilter
     {
         return !empty($lhs) && !empty($rhs) && $lhs->getId() != $rhs->getId();
     }
+
     /**
      * @param string|null|false $pivotColumn
      */
-    private function setPivotColumn($pivotColumn) : void
+    private function setPivotColumn($pivotColumn): void
     {
         $this->pivotColumn = $pivotColumn;
+
         $namesToId = Metrics::getMappingFromNameToId();
         $this->metricIndexValue = $namesToId[$this->pivotColumn] ?? null;
     }

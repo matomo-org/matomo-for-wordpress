@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Goals\Columns;
 
 use Piwik\Plugin\Dimension\ConversionDimension;
@@ -14,6 +15,7 @@ use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\GoalManager;
+
 class PageviewsBefore extends ConversionDimension
 {
     protected $columnName = 'pageviews_before';
@@ -21,6 +23,7 @@ class PageviewsBefore extends ConversionDimension
     protected $type = self::TYPE_NUMBER;
     protected $category = 'Goals_Goals';
     protected $nameSingular = 'Goals_PageviewsBefore';
+
     /**
      * @param Action|null $action
      *
@@ -30,6 +33,7 @@ class PageviewsBefore extends ConversionDimension
     {
         return $this->onGoalConversion($request, $visitor, $action, $goalManager);
     }
+
     /**
      * @param Action|null $action
      *
@@ -39,11 +43,14 @@ class PageviewsBefore extends ConversionDimension
     {
         // The visit total interactions are incremented and stored on the visit but include searches
         // To get the current number of pageviews for the visit we subtract the total searches from the total interactions
-        $visitPageviews = $visitor->getImmutableVisitorColumn('visit_total_interactions') - $visitor->getImmutableVisitorColumn('visit_total_searches');
+
+        $visitPageviews = $visitor->getImmutableVisitorColumn('visit_total_interactions') -
+                          $visitor->getImmutableVisitorColumn('visit_total_searches');
+
         if ($action instanceof ActionPageview) {
-            $visitPageviews++;
-            // The current action isn't yet included in visit total interactions
+            $visitPageviews++; // The current action isn't yet included in visit total interactions
         }
+
         return $visitPageviews;
     }
 }

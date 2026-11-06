@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Storage\Backend;
 
 /**
@@ -21,6 +22,7 @@ interface BackendInterface
      * @return string
      */
     public function getStorageId();
+
     /**
      * Saves (persists) the current setting values in the database. Always all values that belong to a group of
      * settings or backend needs to be passed. Usually existing values will be deleted and new values will be saved
@@ -28,11 +30,13 @@ interface BackendInterface
      *                      Eg array('settingName1' > 'settingValue1')
      */
     public function save($values);
+
     /**
      * Deletes all saved settings.
      * @return void
      */
     public function delete();
+
     /**
      * Loads previously saved setting values and returns them (if some were saved)
      *

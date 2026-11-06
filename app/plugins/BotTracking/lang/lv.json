@@ -1,0 +1,9 @@
+{
+    "BotTracking": {
+        "PageUrl": "Lapas URL",
+        "NoDataHttpTrackingApi": "HTTP izsekošanas API",
+        "SiteWithoutDataBackToMatomo": "Atgriezties uz Matomo",
+        "AIChatbotsContentPagesTitle": "Lapas",
+        "ContentUrl": "URL"
+    }
+}

@@ -6,74 +6,82 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers;
 
 use Piwik\Config;
 use Piwik\Http;
 use Piwik\Option;
 use Piwik\SettingsPiwik;
+
 class Tasks extends \Piwik\Plugin\Tasks
 {
     public function schedule()
     {
-        if (SettingsPiwik::isInternetEnabled() === \true && Config::getInstance()->General['enable_referrer_definition_syncs'] == 1) {
+        if (
+            SettingsPiwik::isInternetEnabled() === true &&
+            Config::getInstance()->General['enable_referrer_definition_syncs'] == 1
+        ) {
             $this->weekly('updateSearchEngines');
             $this->weekly('updateSocials');
             $this->weekly('updateAIAssistants');
         }
     }
+
     /**
      * Update the search engine definitions
      *
      * @see https://github.com/matomo-org/searchengine-and-social-list
      */
-    public function updateSearchEngines() : void
+    public function updateSearchEngines(): void
     {
         $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/SearchEngines.yml';
         $list = Http::sendHttpRequest($url, 30);
         if (!is_string($list)) {
             return;
         }
-        $searchEngines = \Piwik\Plugins\Referrers\SearchEngine::getInstance()->loadYmlData($list);
+        $searchEngines = SearchEngine::getInstance()->loadYmlData($list);
         if (count($searchEngines) < 200) {
             return;
         }
-        Option::set(\Piwik\Plugins\Referrers\SearchEngine::OPTION_STORAGE_NAME, base64_encode(serialize($searchEngines)));
+        Option::set(SearchEngine::OPTION_STORAGE_NAME, base64_encode(serialize($searchEngines)));
     }
+
     /**
      * Update the social definitions
      *
      * @see https://github.com/matomo-org/searchengine-and-social-list
      */
-    public function updateSocials() : void
+    public function updateSocials(): void
     {
         $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/Socials.yml';
         $list = Http::sendHttpRequest($url, 30);
         if (!is_string($list)) {
             return;
         }
-        $socials = \Piwik\Plugins\Referrers\Social::getInstance()->loadYmlData($list);
+        $socials = Social::getInstance()->loadYmlData($list);
         if (count($socials) < 50) {
             return;
         }
-        Option::set(\Piwik\Plugins\Referrers\Social::OPTION_STORAGE_NAME, base64_encode(serialize($socials)));
+        Option::set(Social::OPTION_STORAGE_NAME, base64_encode(serialize($socials)));
     }
+
     /**
      * Update the AI definitions
      *
      * @see https://github.com/matomo-org/searchengine-and-social-list
      */
-    public function updateAIAssistants() : void
+    public function updateAIAssistants(): void
     {
         $url = 'https://raw.githubusercontent.com/matomo-org/searchengine-and-social-list/master/AIAssistants.yml';
         $list = Http::sendHttpRequest($url, 30);
         if (!is_string($list)) {
             return;
         }
-        $aiAssistants = \Piwik\Plugins\Referrers\AIAssistant::getInstance()->loadYmlData($list);
+        $aiAssistants = AIAssistant::getInstance()->loadYmlData($list);
         if (count($aiAssistants) < 5) {
             return;
         }
-        Option::set(\Piwik\Plugins\Referrers\AIAssistant::OPTION_STORAGE_NAME, base64_encode(serialize($aiAssistants)));
+        Option::set(AIAssistant::OPTION_STORAGE_NAME, base64_encode(serialize($aiAssistants)));
     }
 }

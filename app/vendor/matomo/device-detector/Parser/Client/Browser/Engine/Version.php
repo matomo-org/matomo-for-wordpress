@@ -7,10 +7,13 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Parser\Client\Browser\Engine;
 
 use DeviceDetector\Parser\Client\AbstractClientParser;
+
 /**
  * Class Version
  *
@@ -22,6 +25,7 @@ class Version extends AbstractClientParser
      * @var string
      */
     private $engine;
+
     /**
      * Version constructor.
      *
@@ -31,36 +35,51 @@ class Version extends AbstractClientParser
     public function __construct(string $ua, string $engine)
     {
         parent::__construct($ua);
+
         $this->engine = $engine;
     }
+
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (empty($this->engine)) {
             return null;
         }
+
         if ('Gecko' === $this->engine || 'Clecko' === $this->engine) {
-            $pattern = '~[ ](?:rv[: ]([0-9.]+)).*(?:g|cl)ecko/\\d{8,10}~i';
+            $pattern = '~[ ](?:rv[: ]([0-9.]+)).*(?:g|cl)ecko/\d{8,10}~i';
+
             if (\preg_match($pattern, $this->userAgent, $matches)) {
                 return ['version' => \array_pop($matches)];
             }
         }
+
         $engineToken = $this->engine;
+
         if ('Blink' === $this->engine) {
             $engineToken = 'Chr[o0]me|Chromium|Cronet';
         }
+
         if ('Arachne' === $this->engine) {
-            $engineToken = 'Arachne\\/5\\.';
+            $engineToken = 'Arachne\/5\.';
         }
+
         if ('LibWeb' === $this->engine) {
-            $engineToken = 'LibWeb\\+LibJs';
+            $engineToken = 'LibWeb\+LibJs';
         }
-        \preg_match("~(?:{$engineToken})\\s*[/_]?\\s*((?(?=\\d+\\.\\d)\\d+[.\\d]*|\\d{1,7}(?=(?:\\D|\$))))~i", $this->userAgent, $matches);
+
+        \preg_match(
+            "~(?:{$engineToken})\s*[/_]?\s*((?(?=\d+\.\d)\d+[.\d]*|\d{1,7}(?=(?:\D|$))))~i",
+            $this->userAgent,
+            $matches
+        );
+
         if (!$matches) {
             return null;
         }
+
         return ['version' => \array_pop($matches)];
     }
 }

@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\MobileMessaging;
 
 use Piwik\Menu\MenuAdmin;
 use Piwik\Piwik;
+
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureAdminMenu(MenuAdmin $menu)
@@ -17,6 +19,7 @@ class Menu extends \Piwik\Plugin\Menu
         $title = 'MobileMessaging_SettingsMenu';
         $url = $this->urlForAction('index');
         $order = 35;
+
         if (Piwik::hasUserSuperUserAccess()) {
             $menu->addSystemItem($title, $url, $order);
         } elseif (!Piwik::isUserIsAnonymous()) {

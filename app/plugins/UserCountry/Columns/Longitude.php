@@ -6,13 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\Columns;
 
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
+
+class Longitude extends Base
 {
     protected $columnName = 'location_longitude';
     protected $columnType = 'decimal(9, 6) DEFAULT NULL';
@@ -22,6 +24,7 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $segmentName = 'longitude';
     protected $nameSingular = 'UserCountry_Longitude';
     protected $namePlural = 'UserCountry_Longitudes';
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -29,13 +32,18 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('long', $request);
-        if ($value !== \false) {
+
+        if ($value !== false) {
             return $value;
         }
+
         $userInfo = $this->getUserInfo($request, $visitor);
+
         $longitude = $this->getLocationDetail($userInfo, LocationProvider::LONGITUDE_KEY);
+
         return $longitude;
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -44,6 +52,7 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
     {
         return $this->getUrlOverrideValueIfAllowed('long', $request);
     }
+
     /**
      * @param Action|null $action
      * @return mixed

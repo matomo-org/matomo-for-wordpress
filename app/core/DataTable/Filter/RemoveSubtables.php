@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
+
 /**
  * Delete all existing subtables from rows.
  *
@@ -28,6 +30,7 @@ class RemoveSubtables extends BaseFilter
     {
         parent::__construct($table);
     }
+
     /**
      * See {@link Limit}.
      *

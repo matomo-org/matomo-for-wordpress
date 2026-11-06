@@ -1,0 +1,21 @@
+{
+    "Actions": {
+        "AvgGenerationTimeTooltip": "Vidējais rādījums, balstoties uz %1$s trāpījumu(-iem) %2$s starp %3$s un %4$s",
+        "ColumnClicks": "Klikšķi",
+        "ColumnClicksDocumentation": "Saites klikšķu skaits.",
+        "ColumnDownloadURL": "Lejupielādes URL",
+        "ColumnEntryPageTitle": "Ieejas lapas virsraksts",
+        "ColumnEntryPageURL": "Ieejas lapas URL",
+        "ColumnExitPageTitle": "Izejas lapas virsraksts",
+        "ColumnExitPageURL": "Izejas lapas URL",
+        "ColumnPageName": "Lapas virsraksts",
+        "ColumnPageURL": "Lapas URL",
+        "ColumnUniqueClicks": "Unikālie klikšķi",
+        "ColumnUniqueDownloads": "Unikālas lejupielādes",
+        "ColumnUniqueOutlinks": "Unikālās arējās saites",
+        "PagesSubcategoryHelp3": "Lai pārvietotos, lietojiet pa kreisi esošās plusa un mīnusa ikonas.",
+        "SubmenuPageTitles": "Lapas virsraksti",
+        "SubmenuPagesEntry": "Ieejas lapas",
+        "SubmenuPagesExit": "Izejas lapas"
+    }
+}

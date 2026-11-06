@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Matomo\Network\IPUtils;
+
 /**
  * Contains IP address helper functions (for both IPv4 and IPv6).
  *
@@ -43,18 +45,21 @@ class IP
      */
     public static function getIpFromHeader()
     {
-        $general = \Piwik\Config::getInstance()->General;
+        $general = Config::getInstance()->General;
         $clientHeaders = @$general['proxy_client_headers'];
         if (!is_array($clientHeaders)) {
             $clientHeaders = array();
         }
+
         $default = '0.0.0.0';
         if (isset($_SERVER['REMOTE_ADDR'])) {
             $default = $_SERVER['REMOTE_ADDR'];
         }
+
         $ipString = self::getNonProxyIpFromHeader($default, $clientHeaders);
         return IPUtils::sanitizeIp($ipString);
     }
+
     /**
      * Returns a non-proxy IP address from header.
      *
@@ -65,17 +70,20 @@ class IP
     public static function getNonProxyIpFromHeader($default, $proxyHeaders)
     {
         $proxyIps = array();
-        $config = \Piwik\Config::getInstance()->General;
+        $config = Config::getInstance()->General;
         if (isset($config['proxy_ips'])) {
             $proxyIps = $config['proxy_ips'];
         }
         if (!is_array($proxyIps)) {
             $proxyIps = array();
         }
-        $shouldReadLastProxyIp = \Piwik\Config::getInstance()->General['proxy_ip_read_last_in_list'] == 1;
+
+        $shouldReadLastProxyIp = Config::getInstance()->General['proxy_ip_read_last_in_list'] == 1;
+
         if (!$shouldReadLastProxyIp) {
             $proxyIps[] = $default;
         }
+
         // examine proxy headers
         foreach ($proxyHeaders as $proxyHeader) {
             if (!empty($_SERVER[$proxyHeader])) {
@@ -87,13 +95,15 @@ class IP
                 } else {
                     $proxyIp = self::getFirstIpFromList($_SERVER[$proxyHeader], $proxyIps);
                 }
-                if (strlen($proxyIp) && stripos($proxyIp, 'unknown') === \false) {
+                if (strlen($proxyIp) && stripos($proxyIp, 'unknown') === false) {
                     return $proxyIp;
                 }
             }
         }
+
         return $default;
     }
+
     /**
      * Returns the last IP address in a comma separated list, subject to an optional exclusion list.
      *
@@ -104,35 +114,39 @@ class IP
     public static function getFirstIpFromList($csv, $excludedIps = null)
     {
         $p = strrpos($csv, ',');
-        if ($p !== \false) {
+        if ($p !== false) {
             $elements = self::getIpsFromList($csv, $excludedIps);
             return reset($elements) ?: '';
         }
-        return trim(\Piwik\Common::sanitizeInputValue($csv));
+        return trim(Common::sanitizeInputValue($csv));
     }
+
     public static function getLastIpFromList($csv, $excludedIps = null)
     {
         $p = strrpos($csv, ',');
-        if ($p !== \false) {
+        if ($p !== false) {
             $elements = self::getIpsFromList($csv, $excludedIps);
             return end($elements) ?: '';
         }
-        return trim(\Piwik\Common::sanitizeInputValue($csv));
+        return trim(Common::sanitizeInputValue($csv));
     }
+
     private static function getIpsFromList(string $csv, ?array $excludedIps)
     {
         $result = [];
+
         $elements = explode(',', $csv);
         foreach ($elements as $ipString) {
-            $element = trim(\Piwik\Common::sanitizeInputValue($ipString));
+            $element = trim(Common::sanitizeInputValue($ipString));
             if (empty($element)) {
                 continue;
             }
             $ip = \Matomo\Network\IP::fromStringIP(IPUtils::sanitizeIp($element));
-            if (empty($excludedIps) || !in_array($element, $excludedIps) && !$ip->isInRanges($excludedIps)) {
+            if (empty($excludedIps) || (!in_array($element, $excludedIps) && !$ip->isInRanges($excludedIps))) {
                 $result[] = $element;
             }
         }
+
         return $result;
     }
 }

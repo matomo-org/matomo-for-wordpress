@@ -7,6 +7,7 @@
  */
 
 import MatomoApi from './apiobjects/matomo.api.js';
+import MatomoCli from './apiobjects/matomo.cli.js';
 import Website from './website.js';
 
 // TODO: need to document how to write an e2e test. eg, individual tests
@@ -52,15 +53,12 @@ class GlobalSetup {
   }
 
   async runArchiving() {
-    try {
-      await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
-    } catch (e) {
-      // this API method currently prints out some PHP warnings due to a flush() that's
-      // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
-      // causing the warnings to emit.
-
-      // ignore
-    }
+    // the reporting pages only view this day
+    await MatomoCli.call('core:archive', {
+      '--force-idsites': '1',
+      '--force-periods': 'day',
+      '--force-date-range': `${this.getDateOfVisitTrackedInPast()},${this.getDateOfVisitTrackedInPast()}`,
+    });
   }
 
   async trackRealtimeVisitWithLocation() {
@@ -262,7 +260,8 @@ class GlobalSetup {
   }
 
   private async addTagManagerEntities() {
-    const existingContainers = await MatomoApi.call('GET', 'TagManager.getContainers')
+    const existingContainersResponse = await MatomoApi.call('GET', 'TagManager.getContainers');
+    const existingContainers = this.asList(existingContainersResponse);
 
     let existingContainer = existingContainers.find((c) => c.name === 'test');
     if (existingContainer) {
@@ -278,19 +277,24 @@ class GlobalSetup {
       description: 'container for e2e tests',
     }));
 
-    const container = (await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
+    const containerResponse = await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
       idSite: '1',
       idContainer,
-    })));
+    }));
+    const container = containerResponse?.value ?? containerResponse?.data ?? containerResponse;
 
-    const draftVersionId = container.draft.idcontainerversion;
+    const draftVersionId = container?.draft?.idcontainerversion;
+    if (!draftVersionId) {
+      throw new Error(`TagManager.getContainer did not return a draft version: ${JSON.stringify(containerResponse)}`);
+    }
 
     // create trigger
-    const triggers = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
+    const triggersResponse = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const triggers = this.asList(triggersResponse);
 
     let triggerId;
     if (!triggers.length) {
@@ -310,11 +314,12 @@ class GlobalSetup {
     }
 
     // create variable
-    const variables = await MatomoApi.call('GET', 'TagManager.getContainerVariables', new URLSearchParams({
+    const variablesResponse = await MatomoApi.call('GET', 'TagManager.getContainerVariables', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const variables = this.asList(variablesResponse);
 
     if (!variables.length) {
       await MatomoApi.call('POST', 'TagManager.addContainerVariable', new URLSearchParams({
@@ -329,11 +334,12 @@ class GlobalSetup {
     }
 
     // create tag
-    const tags = await MatomoApi.call('GET', 'TagManager.getContainerTags', new URLSearchParams({
+    const tagsResponse = await MatomoApi.call('GET', 'TagManager.getContainerTags', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const tags = this.asList(tagsResponse);
 
     if (!tags.length) {
       await MatomoApi.call('POST', 'TagManager.addContainerTag', new URLSearchParams({
@@ -372,6 +378,31 @@ class GlobalSetup {
     }));
 
     this._testIdContainer = idContainer;
+  }
+
+  private asList<T>(response: unknown): T[] {
+    if (Array.isArray(response)) {
+      return response as T[];
+    }
+
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+
+    const responseObject = response as Record<string, unknown>;
+    const wrappedList = responseObject.value ?? responseObject.data ?? responseObject.containers;
+    if (Array.isArray(wrappedList)) {
+      return wrappedList as T[];
+    }
+    if (wrappedList && typeof wrappedList === 'object') {
+      return Object.values(wrappedList).filter(
+        (item): item is T => item !== null && typeof item === 'object'
+      );
+    }
+
+    return Object.values(responseObject).filter(
+      (item): item is T => item !== null && typeof item === 'object'
+    );
   }
 
   getDateOfVisitTrackedInPast() {

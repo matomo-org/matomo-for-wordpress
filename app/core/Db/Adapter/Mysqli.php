@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Db\Adapter;
 
 use Exception;
@@ -16,16 +17,19 @@ use Piwik\Db\Schema;
 use Piwik\Piwik;
 use Zend_Config;
 use Zend_Db_Adapter_Mysqli;
+
 class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
 {
     use Db\TransactionalDatabaseDynamicTrait;
+
     /**
      * @param array|Zend_Config $config database configuration
      */
     public function __construct($config)
     {
         // Enable LOAD DATA INFILE
-        $config['driver_options'][\MYSQLI_OPT_LOCAL_INFILE] = \true;
+        $config['driver_options'][MYSQLI_OPT_LOCAL_INFILE] = true;
+
         if ($config['enable_ssl']) {
             if (!empty($config['ssl_key'])) {
                 $config['driver_options']['ssl_key'] = $config['ssl_key'];
@@ -46,8 +50,10 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
                 $config['driver_options']['ssl_no_verify'] = $config['ssl_no_verify'];
             }
         }
+
         parent::__construct($config);
     }
+
     /**
      * Reset the configuration variables in this adapter.
      */
@@ -55,6 +61,7 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     {
         $this->_config = array();
     }
+
     /**
      * Return default port.
      *
@@ -65,18 +72,23 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     {
         return 3306;
     }
-    protected function _connect()
+
+    protected function _connect() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->_connection) {
             return;
         }
+
         // The default error reporting of mysqli changed in PHP 8.1. To circumvent problems in our error handling we set
         // the erroring reporting to the default that was used prior PHP 8.1
         // See https://php.watch/versions/8.1/mysqli-error-mode for more details
-        mysqli_report(\MYSQLI_REPORT_OFF);
+        mysqli_report(MYSQLI_REPORT_OFF);
+
         parent::_connect();
+
         $this->_connection->query('SET sql_mode = "' . Db::SQL_MODE . '"');
     }
+
     /**
      * Check MySQL version
      *
@@ -85,11 +97,13 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     public function checkServerVersion()
     {
         $requiredVersion = Schema::getInstance()->getMinimumSupportedVersion();
-        $serverVersion = $this->getServerVersion();
+        $serverVersion   = $this->getServerVersion();
+
         if (version_compare($serverVersion, $requiredVersion) === -1) {
             throw new Exception(Piwik::translate('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
         }
     }
+
     /**
      * Returns the MySQL server version
      *
@@ -100,11 +114,14 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
         // prioritizing SELECT @@VERSION in case the connection version string is incorrect (which can
         // occur on Azure)
         $versionInfo = $this->fetchAll('SELECT @@VERSION');
+
         if (count($versionInfo)) {
             return $versionInfo[0]['@@VERSION'];
         }
+
         return parent::getServerVersion();
     }
+
     /**
      * Check client version compatibility against database server
      *
@@ -114,11 +131,16 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     {
         $serverVersion = $this->getServerVersion();
         $clientVersion = $this->getClientVersion();
+
         // incompatible change to DECIMAL implementation in 5.0.3
-        if (version_compare($serverVersion, '5.0.3') >= 0 && version_compare($clientVersion, '5.0.3') < 0) {
+        if (
+            version_compare($serverVersion, '5.0.3') >= 0
+            && version_compare($clientVersion, '5.0.3') < 0
+        ) {
             throw new Exception(Piwik::translate('General_ExceptionIncompatibleClientServerVersions', array('MySQL', $clientVersion, $serverVersion)));
         }
     }
+
     /**
      * Return number of affected rows in last query
      *
@@ -129,6 +151,7 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     {
         return mysqli_affected_rows($this->_connection);
     }
+
     /**
      * Returns true if this adapter's required extensions are enabled
      *
@@ -139,6 +162,7 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
         $extensions = @get_loaded_extensions();
         return in_array('mysqli', $extensions);
     }
+
     /**
      * Returns true if this adapter supports blobs as fields
      *
@@ -146,8 +170,9 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
      */
     public function hasBlobDataType()
     {
-        return \true;
+        return true;
     }
+
     /**
      * Returns true if this adapter supports bulk loading
      *
@@ -155,8 +180,9 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
      */
     public function hasBulkLoader()
     {
-        return \true;
+        return true;
     }
+
     /**
      * Test error number
      *
@@ -168,6 +194,7 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     {
         return self::isMysqliErrorNumber($e, $this->_connection, $errno);
     }
+
     /**
      * Test error number
      *
@@ -179,13 +206,15 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     public static function isMysqliErrorNumber($e, $connection, $errno)
     {
         if (is_null($connection)) {
-            if (preg_match('/(?:\\[|\\s)([0-9]{4})(?:\\]|\\s)/', $e->getMessage(), $match)) {
+            if (preg_match('/(?:\[|\s)([0-9]{4})(?:\]|\s)/', $e->getMessage(), $match)) {
                 return $match[1] == $errno;
             }
             return mysqli_connect_errno() == $errno;
         }
+
         return mysqli_errno($connection) == $errno;
     }
+
     /**
      * Execute unprepared SQL query and throw away the result
      *
@@ -204,6 +233,8 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
         }
         return $rowsAffected;
     }
+
+
     /**
      * Get client version
      *
@@ -212,10 +243,12 @@ class Mysqli extends Zend_Db_Adapter_Mysqli implements AdapterInterface
     public function getClientVersion()
     {
         $this->_connect();
-        $version = $this->_connection->server_version;
-        $major = (int) ($version / 10000);
-        $minor = (int) ($version % 10000 / 100);
-        $revision = (int) ($version % 100);
+
+        $version  = $this->_connection->server_version;
+        $major    = (int)($version / 10000);
+        $minor    = (int)($version % 10000 / 100);
+        $revision = (int)($version % 100);
+
         return $major . '.' . $minor . '.' . $revision;
     }
 }

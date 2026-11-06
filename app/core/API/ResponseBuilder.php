@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API;
 
 use Exception;
@@ -17,19 +18,33 @@ use Piwik\DataTable\Filter\Pattern;
 use Piwik\DataTable\Renderer;
 use Piwik\ExceptionHandler;
 use Piwik\Http\HttpCodeException;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 use Piwik\Plugins\PrivacyManager\DataRounding;
+
 class ResponseBuilder
 {
     private $outputFormat = null;
-    private $apiRenderer = null;
-    private $request = null;
-    private $sendHeader = \true;
-    private $postProcessDataTable = \true;
-    private $apiModule = \false;
-    private $apiMethod = \false;
-    private $shouldPrintBacktrace = \false;
+    private $apiRenderer  = null;
+    private $request      = null;
+    private $sendHeader   = true;
+    private $postProcessDataTable = true;
+
+    private $apiModule = false;
+    private $apiMethod = false;
+    private $shouldPrintBacktrace = false;
+
+    /**
+     * Captured up front: a nested API call overlays `module=API` while it runs, which would
+     * otherwise make a page's own response look like API output. The module is checked rather
+     * than the root API method, as that is unset when the method name does not parse and the
+     * error response for those is a data response too.
+     *
+     * @var bool
+     */
+    private $isApiHttpRequest;
+
     /**
      * @param string $outputFormat
      * @param array $request
@@ -38,18 +53,22 @@ class ResponseBuilder
     public function __construct($outputFormat, $request = array(), $shouldPrintBacktrace = null)
     {
         $this->outputFormat = $outputFormat;
-        $this->request = $request;
-        $this->apiRenderer = \Piwik\API\ApiRenderer::factory($outputFormat, $request);
+        $this->request      = $request;
+        $this->apiRenderer  = ApiRenderer::factory($outputFormat, $request);
         $this->shouldPrintBacktrace = $shouldPrintBacktrace === null ? ExceptionHandler::shouldPrintBackTraceWithMessage() : $shouldPrintBacktrace;
+        $this->isApiHttpRequest = Request::isApiHttpRequest();
     }
+
     public function disableSendHeader()
     {
-        $this->sendHeader = \false;
+        $this->sendHeader = false;
     }
+
     public function disableDataTablePostProcessor()
     {
-        $this->postProcessDataTable = \false;
+        $this->postProcessDataTable = false;
     }
+
     /**
      * This method processes the data resulting from the API call.
      *
@@ -77,24 +96,29 @@ class ResponseBuilder
      * @param bool|string $apiMethod The API method that was called
      * @return mixed  Usually a string, but can still be a PHP data structure if the format requested is 'original'
      */
-    public function getResponse($value = null, $apiModule = \false, $apiMethod = \false)
+    public function getResponse($value = null, $apiModule = false, $apiMethod = false)
     {
         $this->apiModule = $apiModule;
         $this->apiMethod = $apiMethod;
+
         $this->sendHeaderIfEnabled();
+
         // when null or void is returned from the api call, we handle it as a successful operation
         if (!isset($value)) {
             if (ob_get_contents()) {
                 return null;
             }
+
             return $this->apiRenderer->renderSuccess('ok');
         }
+
         // If the returned value is an object DataTable we
         // apply the set of generic filters if asked in the URL
         // and we render the DataTable according to the format specified in the URL
         if ($value instanceof DataTableInterface) {
             return $this->handleDataTable($value);
         }
+
         // Case an array is returned from the API call, we convert it to the requested format
         // - if calling from inside the application (format = original)
         //    => the data stays unchanged (ie. a standard php array or whatever data structure)
@@ -103,14 +127,18 @@ class ResponseBuilder
         if (is_array($value)) {
             return $this->handleArray($value);
         }
+
         if (is_object($value)) {
             return $this->apiRenderer->renderObject($value);
         }
+
         if (is_resource($value)) {
             return $this->apiRenderer->renderResource($value);
         }
+
         return $this->apiRenderer->renderScalar($value);
     }
+
     /**
      * Returns an error $message in the requested $format
      *
@@ -120,14 +148,22 @@ class ResponseBuilder
      */
     public function getResponseException($e)
     {
-        $e = $this->decorateExceptionWithDebugTrace($e);
+        $e       = $this->decorateExceptionWithDebugTrace($e);
         $message = $this->formatExceptionMessage($e);
-        if ($this->sendHeader && $e instanceof HttpCodeException && $e->getCode() > 0) {
+
+        if (
+            $this->sendHeader
+            && $e instanceof HttpCodeException
+            && $e->getCode() > 0
+        ) {
             http_response_code($e->getCode());
         }
+
         $this->sendHeaderIfEnabled();
+
         return $this->apiRenderer->renderException($message, $e);
     }
+
     /**
      * @param Exception|\Throwable $e
      * @return Exception|\Throwable
@@ -141,10 +177,13 @@ class ResponseBuilder
             } else {
                 $message = $e->getMessage() . "\n \n --> To temporarily debug this error further, set const PIWIK_PRINT_ERROR_BACKTRACE=true; in index.php";
             }
+
             return new Exception($message);
         }
+
         return $e;
     }
+
     /**
      * @param Exception|\Throwable $exception
      * @return string
@@ -152,54 +191,70 @@ class ResponseBuilder
     private function formatExceptionMessage($exception)
     {
         $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, $this->shouldPrintBacktrace);
-        if ($exception instanceof \Piwik\Exception\Exception && $exception->isHtmlMessage() && \Piwik\API\Request::isRootRequestApiRequest()) {
-            $message = strip_tags(str_replace('<br />', \PHP_EOL, $message));
+
+        if ($exception instanceof \Piwik\Exception\Exception && $exception->isHtmlMessage() && Request::isRootRequestApiRequest()) {
+            $message = strip_tags(str_replace('<br />', PHP_EOL, $message));
         }
+
         return Renderer::formatValueXml($message);
     }
+
     private function handleDataTable(DataTableInterface $datatable)
     {
         if ($this->postProcessDataTable) {
-            $postProcessor = new \Piwik\API\DataTablePostProcessor($this->apiModule, $this->apiMethod, $this->request);
+            $postProcessor = new DataTablePostProcessor($this->apiModule, $this->apiMethod, $this->request);
             $datatable = $postProcessor->process($datatable);
         } else {
             $report = null;
-            if (DataRounding::shouldApplyForRequest($this->request) && !empty($this->apiModule) && !empty($this->apiMethod)) {
+            if (
+                DataRounding::shouldApplyForRequest($this->request)
+                && !empty($this->apiModule)
+                && !empty($this->apiMethod)
+            ) {
                 $report = ReportsProvider::factory($this->apiModule, $this->apiMethod);
             }
+
             DataRounding::roundCountMetricsForRequest($datatable, $this->request, $report);
         }
+
         return $this->apiRenderer->renderDataTable($datatable);
     }
+
     private function handleArray($array)
     {
         if (!$this->shouldSkipRequestBasedArrayRounding() && DataRounding::shouldApplyForRequest($this->request)) {
             $array = DataRounding::roundCountArrayValuesForRequest($array, $this->request);
         }
+
         $firstArray = null;
-        $firstKey = null;
+        $firstKey   = null;
         if (!empty($array)) {
             $firstArray = reset($array);
-            $firstKey = key($array);
+            $firstKey   = key($array);
         }
+
         $isAssoc = !empty($firstArray) && is_numeric($firstKey) && is_array($firstArray) && count(array_filter(array_keys($firstArray), 'is_string'));
+
         if (is_numeric($firstKey)) {
-            $columns = Common::getRequestVar('filter_column', \false, 'array', $this->request);
+            $columns = Common::getRequestVar('filter_column', false, 'array', $this->request);
             $pattern = Common::getRequestVar('filter_pattern', '', 'string', $this->request);
-            if ($columns != array(\false) && $pattern !== '') {
+
+            if ($columns != array(false) && $pattern !== '') {
                 $pattern = new Pattern(new DataTable(), $columns, $pattern);
-                $array = $pattern->filterArray($array);
+                $array   = $pattern->filterArray($array);
             }
-            $limit = Common::getRequestVar('filter_limit', -1, 'integer', $this->request);
+
+            $limit  = Common::getRequestVar('filter_limit', -1, 'integer', $this->request);
             $offset = Common::getRequestVar('filter_offset', '0', 'integer', $this->request);
+
             if ($limit >= 0 || $offset > 0) {
                 if ($limit < 0) {
-                    $limit = null;
-                    // make sure to return all results from offset
+                    $limit = null; // make sure to return all results from offset
                 }
-                $array = array_slice($array, $offset, $limit, $preserveKeys = \false);
+                $array = array_slice($array, $offset, $limit, $preserveKeys = false);
             }
         }
+
         if ($isAssoc) {
             $hideColumns = Common::getRequestVar('hideColumns', '', 'string', $this->request);
             $showColumns = Common::getRequestVar('showColumns', '', 'string', $this->request);
@@ -208,18 +263,34 @@ class ResponseBuilder
                 $array = $columnDelete->filter($array);
             }
         }
+
         return $this->apiRenderer->renderArray($array);
     }
-    private function shouldSkipRequestBasedArrayRounding() : bool
+
+    private function shouldSkipRequestBasedArrayRounding(): bool
     {
         // MultiSites.getAllWithGroups applies per-row site-aware rounding later, so request-level array
         // rounding here would double-round mixed-policy payloads based on the ambient request site list.
         return $this->apiModule === 'MultiSites' && $this->apiMethod === 'getAllWithGroups';
     }
+
     private function sendHeaderIfEnabled()
     {
-        if ($this->sendHeader) {
-            $this->apiRenderer->sendHeader();
+        if (!$this->sendHeader) {
+            return;
         }
+
+        if ($this->isApiHttpRequest) {
+            SecurityHeaders::sendForDataResponse();
+        }
+
+        // an API method that streamed its own response has already sent the content type for the
+        // body it wrote, and overwriting it would mislabel that body. A content type on its own
+        // says nothing, as one is also set for a response whose body is still to be rendered.
+        if (ob_get_contents() && '' !== Common::getSentHeader('Content-Type')) {
+            return;
+        }
+
+        $this->apiRenderer->sendHeader();
     }
 }

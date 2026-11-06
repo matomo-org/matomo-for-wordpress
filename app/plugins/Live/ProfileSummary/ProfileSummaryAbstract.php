@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Live\ProfileSummary;
 
 /**
@@ -23,6 +24,7 @@ abstract class ProfileSummaryAbstract
      * @var array
      */
     protected $profile = [];
+
     /**
      * Set profile information
      *
@@ -32,6 +34,7 @@ abstract class ProfileSummaryAbstract
     {
         $this->profile = $profile;
     }
+
     /**
      * Returns the unique ID
      *
@@ -41,12 +44,14 @@ abstract class ProfileSummaryAbstract
     {
         return static::class;
     }
+
     /**
      * Returns the descriptive name
      *
      * @return string
      */
-    public abstract function getName();
+    abstract public function getName();
+
     /**
      * Renders and returns the summary
      *
@@ -64,11 +69,12 @@ abstract class ProfileSummaryAbstract
      *
      * @return string
      */
-    public abstract function render();
+    abstract public function render();
+
     /**
      * Returns order indicator used to sort all summaries before displaying them
      *
      * @return int
      */
-    public abstract function getOrder();
+    abstract public function getOrder();
 }

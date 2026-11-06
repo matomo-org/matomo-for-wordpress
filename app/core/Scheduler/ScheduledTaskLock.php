@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Scheduler;
 
 use Piwik\Concurrency\Lock;
 use Piwik\Concurrency\LockBackend;
+
 class ScheduledTaskLock extends Lock
 {
     public function __construct(LockBackend $backend)

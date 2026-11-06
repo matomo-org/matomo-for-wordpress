@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Events\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
 use Piwik\DataTable\Row;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
+
 /**
  * The average value for a triggered event. Calculated as:
  *
@@ -25,21 +27,26 @@ class AverageEventValue extends ProcessedMetric
     {
         return 'avg_event_value';
     }
+
     public function getTranslatedName()
     {
         return Piwik::translate('Events_AvgValueDocumentation');
     }
+
     public function compute(Row $row)
     {
         $sumEventValue = $this->getMetric($row, 'sum_event_value');
         $eventsWithValue = $this->getMetric($row, 'nb_events_with_value');
+
         return Piwik::getQuotientSafe($sumEventValue, $eventsWithValue, $precision = 2);
     }
+
     public function getDependentMetrics()
     {
         return array('sum_event_value', 'nb_events_with_value');
     }
-    public function getSemanticType() : ?string
+
+    public function getSemanticType(): ?string
     {
         return Dimension::TYPE_NUMBER;
     }

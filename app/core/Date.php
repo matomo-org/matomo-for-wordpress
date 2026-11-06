@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\DateTimeFormatProvider;
+
 /**
  * Utility class that wraps date/time related PHP functions. Using this class can
  * be easier than using `date`, `time`, `date_default_timezone_set`, etc.
@@ -36,41 +38,62 @@ class Date
 {
     /** Number of seconds in a day. */
     public const NUM_SECONDS_IN_DAY = 86400;
+
     /** The default date time string format. */
     public const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
+
     /** Timestamp when first website came online - Tue, 06 Aug 1991 00:00:00 GMT. */
     public const FIRST_WEBSITE_TIMESTAMP = 681436800;
-    public const DATETIME_FORMAT_LONG = DateTimeFormatProvider::DATE_FORMAT_LONG;
-    public const DATETIME_FORMAT_SHORT = DateTimeFormatProvider::DATETIME_FORMAT_SHORT;
-    public const DATE_FORMAT_LONG = DateTimeFormatProvider::DATE_FORMAT_LONG;
-    public const DATE_FORMAT_DAY_MONTH = DateTimeFormatProvider::DATE_FORMAT_DAY_MONTH;
-    public const DATE_FORMAT_SHORT = DateTimeFormatProvider::DATE_FORMAT_SHORT;
+
+    public const DATETIME_FORMAT_LONG    = DateTimeFormatProvider::DATE_FORMAT_LONG;
+    public const DATETIME_FORMAT_SHORT   = DateTimeFormatProvider::DATETIME_FORMAT_SHORT;
+    public const DATE_FORMAT_LONG        = DateTimeFormatProvider::DATE_FORMAT_LONG;
+    public const DATE_FORMAT_DAY_MONTH   = DateTimeFormatProvider::DATE_FORMAT_DAY_MONTH;
+    public const DATE_FORMAT_SHORT       = DateTimeFormatProvider::DATE_FORMAT_SHORT;
     public const DATE_FORMAT_MONTH_SHORT = DateTimeFormatProvider::DATE_FORMAT_MONTH_SHORT;
-    public const DATE_FORMAT_MONTH_LONG = DateTimeFormatProvider::DATE_FORMAT_MONTH_LONG;
-    public const DATE_FORMAT_YEAR = DateTimeFormatProvider::DATE_FORMAT_YEAR;
-    public const TIME_FORMAT = DateTimeFormatProvider::TIME_FORMAT;
+    public const DATE_FORMAT_MONTH_LONG  = DateTimeFormatProvider::DATE_FORMAT_MONTH_LONG;
+    public const DATE_FORMAT_YEAR        = DateTimeFormatProvider::DATE_FORMAT_YEAR;
+    public const TIME_FORMAT             = DateTimeFormatProvider::TIME_FORMAT;
+
     /** for tests
      * @var null|int
      */
     public static $now = null;
+
     /**
      * Max days for months (non-leap-year). See {@link addPeriod()} implementation.
      *
      * @var array<int, int>
      */
-    private static $maxDaysInMonth = array(1 => 31, 2 => 28, 3 => 31, 4 => 30, 5 => 31, 6 => 30, 7 => 31, 8 => 31, 9 => 30, 10 => 31, 11 => 30, 12 => 31);
+    private static $maxDaysInMonth = array(
+        1  => 31,
+        2  => 28,
+        3  => 31,
+        4  => 30,
+        5  => 31,
+        6  => 30,
+        7  => 31,
+        8  => 31,
+        9  => 30,
+        10 => 31,
+        11 => 30,
+        12 => 31,
+    );
+
     /**
      * The stored timestamp is always UTC based.
      * The returned timestamp via getTimestamp() will have the conversion applied
      * @var int|null
      */
     protected $timestamp = null;
+
     /**
      * Timezone the current date object is set to.
      * Timezone will only affect the returned timestamp via getTimestamp()
      * @var string
      */
     protected $timezone = 'UTC';
+
     /**
      * @param int $timestamp The number in seconds since the unix epoch.
      * @param string $timezone The timezone of the datetime.
@@ -79,11 +102,12 @@ class Date
     protected function __construct($timestamp, $timezone = 'UTC')
     {
         if (!is_int($timestamp)) {
-            throw new Exception("Date is expecting a unix timestamp, got: '{$timestamp}'.");
+            throw new Exception("Date is expecting a unix timestamp, got: '$timestamp'.");
         }
         $this->timezone = $timezone;
         $this->timestamp = $timestamp;
     }
+
     /**
      * Creates a new Date instance using a string datetime value. The timezone of the Date
      * result will be in UTC.
@@ -99,7 +123,7 @@ class Date
     public static function factory($dateString, $timezone = null)
     {
         if ($dateString instanceof self) {
-            return new \Piwik\Date($dateString->timestamp, $dateString->timezone);
+            return new Date($dateString->timestamp, $dateString->timezone);
         }
         if ($dateString === 'now') {
             $date = self::now();
@@ -111,29 +135,46 @@ class Date
             $date = self::yesterday();
         } elseif ($dateString === 'yesterdaySameTime') {
             $date = self::yesterdaySameTime();
-        } elseif (is_string($dateString) && preg_match('/last[ -]?week/i', urldecode($dateString))) {
+        } elseif (is_string($dateString) && preg_match('/^last[ -]?week$/i', urldecode($dateString))) {
             $date = self::lastWeek();
-        } elseif (is_string($dateString) && preg_match('/last[ -]?month/i', urldecode($dateString))) {
+        } elseif (is_string($dateString) && preg_match('/^last[ -]?month$/i', urldecode($dateString))) {
             $date = self::lastMonth();
-        } elseif (is_string($dateString) && preg_match('/last[ -]?year/i', urldecode($dateString))) {
+        } elseif (is_string($dateString) && preg_match('/^last[ -]?year$/i', urldecode($dateString))) {
             $date = self::lastYear();
-        } elseif (!is_int($dateString) && (!is_string($dateString) || strpos($dateString, ',') !== \false || ($dateString = strtotime($dateString)) === \false)) {
+        } elseif (
+            !is_int($dateString)
+            && (
+                !is_string($dateString)
+                // strtotime returns the timestamp for April 1st for a date like 2011-04-01,today
+                // but we don't want this, as this is a date range and supposed to throw the exception
+                || strpos($dateString, ',') !== false
+                || ($dateString = strtotime($dateString)) === false
+            )
+        ) {
             throw self::getInvalidDateFormatException($dateString);
         } else {
-            $date = new \Piwik\Date($dateString);
+            $date = new Date($dateString);
         }
         $timestamp = $date->getTimestamp();
+
         if ($timestamp < self::FIRST_WEBSITE_TIMESTAMP) {
             $dateOfFirstWebsite = new self(self::FIRST_WEBSITE_TIMESTAMP);
-            $message = \Piwik\Piwik::translate('General_ExceptionInvalidDateBeforeFirstWebsite', array($date->toString(), $dateOfFirstWebsite->getLocalized(self::DATE_FORMAT_SHORT), $dateOfFirstWebsite->getTimestamp()));
-            throw new Exception($message . ": {$dateString}");
+            $message = Piwik::translate('General_ExceptionInvalidDateBeforeFirstWebsite', array(
+                $date->toString(),
+                $dateOfFirstWebsite->getLocalized(self::DATE_FORMAT_SHORT),
+                $dateOfFirstWebsite->getTimestamp(),
+            ));
+            throw new Exception($message . ": $dateString");
         }
+
         if (empty($timezone)) {
             return $date;
         }
+
         $timestamp = self::adjustForTimezone($timestamp, $timezone);
-        return \Piwik\Date::factory($timestamp);
+        return Date::factory($timestamp);
     }
+
     /**
      * Returns Date w/ UTC timestamp of time $dateString/$timezone.
      * (Only applies to special strings, like 'now','today','yesterday','yesterdaySameTime'.
@@ -146,53 +187,61 @@ class Date
     public static function factoryInTimezone($dateString, $timezone)
     {
         if ($dateString === 'now') {
-            return self::nowInTimezone((string) $timezone);
+            return self::nowInTimezone((string)$timezone);
         } elseif ($dateString === 'today') {
-            return self::todayInTimezone((string) $timezone);
+            return self::todayInTimezone((string)$timezone);
         } elseif ($dateString === 'yesterday') {
-            return self::yesterdayInTimezone((string) $timezone);
+            return self::yesterdayInTimezone((string)$timezone);
         } elseif ($dateString === 'yesterdaySameTime') {
-            return self::yesterdaySameTimeInTimezone((string) $timezone);
-        } elseif (preg_match('/last[ -]?week/i', urldecode($dateString))) {
-            return self::lastWeekInTimezone((string) $timezone);
-        } elseif (preg_match('/last[ -]?month/i', urldecode($dateString))) {
-            return self::lastMonthInTimezone((string) $timezone);
-        } elseif (preg_match('/last[ -]?year/i', urldecode($dateString))) {
-            return self::lastYearInTimezone((string) $timezone);
+            return self::yesterdaySameTimeInTimezone((string)$timezone);
+        } elseif (preg_match('/^last[ -]?week$/i', urldecode($dateString))) {
+            return self::lastWeekInTimezone((string)$timezone);
+        } elseif (preg_match('/^last[ -]?month$/i', urldecode($dateString))) {
+            return self::lastMonthInTimezone((string)$timezone);
+        } elseif (preg_match('/^last[ -]?year$/i', urldecode($dateString))) {
+            return self::lastYearInTimezone((string)$timezone);
         } else {
-            throw new \Exception("Date::factoryInTimezone() should not be used with {$dateString}.");
+            throw new \Exception("Date::factoryInTimezone() should not be used with $dateString.");
         }
     }
-    private static function nowInTimezone(string $timezone) : \Piwik\Date
+
+    private static function nowInTimezone(string $timezone): Date
     {
         $now = self::getNowTimestamp();
         $now = self::adjustForTimezone($now, $timezone);
-        return new \Piwik\Date($now);
+        return new Date($now);
     }
-    private static function todayInTimezone(string $timezone) : \Piwik\Date
+
+    private static function todayInTimezone(string $timezone): Date
     {
         return self::nowInTimezone($timezone)->getStartOfDay();
     }
-    private static function yesterdayInTimezone(string $timezone) : \Piwik\Date
+
+    private static function yesterdayInTimezone(string $timezone): Date
     {
         return self::todayInTimezone($timezone)->subDay(1);
     }
-    private static function yesterdaySameTimeInTimezone(string $timezone) : \Piwik\Date
+
+    private static function yesterdaySameTimeInTimezone(string $timezone): Date
     {
         return self::nowInTimezone($timezone)->subDay(1);
     }
-    private static function lastWeekInTimezone(string $timezone) : \Piwik\Date
+
+    private static function lastWeekInTimezone(string $timezone): Date
     {
-        return new \Piwik\Date(strtotime('-1week', self::todayInTimezone($timezone)->getTimestamp()));
+        return new Date(strtotime('-1week', self::todayInTimezone($timezone)->getTimestamp()));
     }
-    private static function lastMonthInTimezone(string $timezone) : \Piwik\Date
+
+    private static function lastMonthInTimezone(string $timezone): Date
     {
-        return new \Piwik\Date(strtotime('-1month', self::todayInTimezone($timezone)->getTimestamp()));
+        return new Date(strtotime('-1month', self::todayInTimezone($timezone)->getTimestamp()));
     }
-    private static function lastYearInTimezone(string $timezone) : \Piwik\Date
+
+    private static function lastYearInTimezone(string $timezone): Date
     {
-        return new \Piwik\Date(strtotime('-1year', self::todayInTimezone($timezone)->getTimestamp()));
+        return new Date(strtotime('-1year', self::todayInTimezone($timezone)->getTimestamp()));
     }
+
     /**
      * Returns the current timestamp as a string with the following format: `'YYYY-MM-DD HH:MM:SS'`.
      *
@@ -202,6 +251,7 @@ class Date
     {
         return $this->toString(self::DATE_TIME_FORMAT);
     }
+
     /**
      * Returns the current hour in UTC timezone.
      * @return string
@@ -210,9 +260,11 @@ class Date
     public function getHourUTC()
     {
         $dateTime = $this->getDatetime();
-        $hourInTz = \Piwik\Date::factory($dateTime, 'UTC')->toString('G');
+        $hourInTz = Date::factory($dateTime, 'UTC')->toString('G');
+
         return $hourInTz;
     }
+
     /**
      * @return string
      * @deprecated
@@ -221,6 +273,7 @@ class Date
     {
         return $this->getStartOfDay()->toString(self::DATE_TIME_FORMAT);
     }
+
     /**
      * Returns the start of the day of the current timestamp in UTC. For example,
      * if the current timestamp is `'2007-07-24 14:04:24'` in UTC, the result will
@@ -231,8 +284,9 @@ class Date
     public function getStartOfDay()
     {
         $dateStartUTC = gmdate('Y-m-d', $this->timestamp);
-        return \Piwik\Date::factory($dateStartUTC)->setTimezone($this->timezone);
+        return Date::factory($dateStartUTC)->setTimezone($this->timezone);
     }
+
     /**
      * @return string
      * @deprecated
@@ -241,6 +295,7 @@ class Date
     {
         return $this->getEndOfDay()->toString(self::DATE_TIME_FORMAT);
     }
+
     /**
      * Returns the end of the day of the current timestamp in UTC. For example,
      * if the current timestamp is `'2007-07-24 14:03:24'` in UTC, the result will
@@ -251,8 +306,9 @@ class Date
     public function getEndOfDay()
     {
         $dateEndUTC = gmdate('Y-m-d 23:59:59', $this->timestamp);
-        return \Piwik\Date::factory($dateEndUTC)->setTimezone($this->timezone);
+        return Date::factory($dateEndUTC)->setTimezone($this->timezone);
     }
+
     /**
      * Returns a new date object with the same timestamp as `$this` but with a new
      * timezone.
@@ -264,8 +320,9 @@ class Date
      */
     public function setTimezone($timezone)
     {
-        return new \Piwik\Date($this->timestamp, $timezone);
+        return new Date($this->timestamp, $timezone);
     }
+
     /**
      * Returns the offset to UTC time for the given timezone
      *
@@ -274,10 +331,11 @@ class Date
      */
     public static function getUtcOffset($timezone)
     {
-        $timestampUTC = self::today()->getTimestampUTC();
-        $timestampZone = self::adjustForTimezone($timestampUTC, $timezone);
-        return $timestampZone - $timestampUTC;
+        $timestampUTC       = self::today()->getTimestampUTC();
+        $timestampZone      = self::adjustForTimezone($timestampUTC, $timezone);
+        return ($timestampZone - $timestampUTC);
     }
+
     /**
      * Helper function that returns the offset in the timezone string 'UTC+14'
      * Returns false if the timezone is not UTC+X or UTC-X
@@ -291,15 +349,19 @@ class Date
             return 0;
         }
         $start = substr($timezone, 0, 4);
-        if ($start !== 'UTC-' && $start !== 'UTC+') {
-            return \false;
+        if (
+            $start !== 'UTC-'
+            && $start !== 'UTC+'
+        ) {
+            return false;
         }
-        $offset = (float) substr($timezone, 4);
+        $offset = (float)substr($timezone, 4);
         if ($start === 'UTC-') {
             $offset = -$offset;
         }
         return $offset;
     }
+
     /**
      * Converts a timestamp from UTC to a timezone.
      *
@@ -312,16 +374,20 @@ class Date
         if (empty($timezone)) {
             return $timestamp;
         }
+
         // manually adjust for UTC timezones
         $utcOffset = self::extractUtcOffset($timezone);
-        if ($utcOffset !== \false) {
+        if ($utcOffset !== false) {
             return self::addHourTo($timestamp, $utcOffset);
         }
+
         date_default_timezone_set($timezone);
         $datetime = date(self::DATE_TIME_FORMAT, $timestamp);
         date_default_timezone_set('UTC');
+
         return strtotime($datetime);
     }
+
     /**
      * Returns the date in the "Y-m-d H:i:s" PHP format
      *
@@ -332,6 +398,7 @@ class Date
     {
         return date("Y-m-d H:i:s", $timestamp);
     }
+
     /**
      * Returns the Unix timestamp of the date in UTC.
      *
@@ -341,6 +408,7 @@ class Date
     {
         return $this->timestamp;
     }
+
     /**
      * Returns the unix timestamp of the date in UTC, converted from the current
      * timestamp timezone.
@@ -353,8 +421,8 @@ class Date
             $this->timezone = 'UTC';
         }
         $utcOffset = self::extractUtcOffset($this->timezone);
-        if ($utcOffset !== \false) {
-            return (int) ($this->timestamp - $utcOffset * 3600);
+        if ($utcOffset !== false) {
+            return (int)($this->timestamp - $utcOffset * 3600);
         }
         // The following code seems clunky - I thought the DateTime php class would allow to return timestamps
         // after applying the timezone offset. Instead, the underlying timestamp is not changed.
@@ -362,33 +430,38 @@ class Date
         // Unit tests pass (@see Date.test.php) but I'm pretty sure this is not the right way to do it
         date_default_timezone_set($this->timezone);
         $dtzone = timezone_open('UTC');
-        $time = date('r', $this->timestamp);
-        $dtime = date_create($time);
+        $time   = date('r', $this->timestamp);
+        $dtime  = date_create($time);
+
         date_timezone_set($dtime, $dtzone);
-        $dateWithTimezone = date_format($dtime, 'r');
+        $dateWithTimezone    = date_format($dtime, 'r');
         $dateWithoutTimezone = substr($dateWithTimezone, 0, -6);
-        $timestamp = strtotime($dateWithoutTimezone);
+        $timestamp           = strtotime($dateWithoutTimezone);
         date_default_timezone_set('UTC');
+
         return (int) $timestamp;
     }
+
     /**
      * Returns `true` if the current date is older than the given `$date`.
      *
      * @return bool
      */
-    public function isLater(\Piwik\Date $date)
+    public function isLater(Date $date)
     {
         return $this->getTimestamp() > $date->getTimestamp();
     }
+
     /**
      * Returns `true` if the current date is earlier than the given `$date`.
      *
      * @return bool
      */
-    public function isEarlier(\Piwik\Date $date)
+    public function isEarlier(Date $date)
     {
         return $this->getTimestamp() < $date->getTimestamp();
     }
+
     /**
      * Returns `true` if the current year is a leap year, false otherwise.
      *
@@ -396,9 +469,11 @@ class Date
      */
     public function isLeapYear()
     {
-        $isLeap = (bool) date('L', $this->getTimestamp());
+        $isLeap = (bool)(date('L', $this->getTimestamp()));
+
         return $isLeap;
     }
+
     /**
      * Converts this date to the requested string format. See {@link https://php.net/date}
      * for the list of format strings.
@@ -410,6 +485,7 @@ class Date
     {
         return date($format, $this->getTimestamp());
     }
+
     /**
      * See {@link toString()}.
      *
@@ -419,13 +495,14 @@ class Date
     {
         return $this->toString();
     }
+
     /**
      * Performs three-way comparison of the week of the current date against the given `$date`'s week.
      *
      * @return int Returns `0` if the current week is equal to `$date`'s, `-1` if the current week is
      *             earlier or `1` if the current week is later.
      */
-    public function compareWeek(\Piwik\Date $date)
+    public function compareWeek(Date $date)
     {
         $currentWeek = date('W', $this->getTimestamp());
         $toCompareWeek = date('W', $date->getTimestamp());
@@ -437,6 +514,7 @@ class Date
         }
         return 1;
     }
+
     /**
      * Performs three-way comparison of the month of the current date against the given `$date`'s month.
      *
@@ -444,7 +522,7 @@ class Date
      * @return int Returns `0` if the current month is equal to `$date`'s, `-1` if the current month is
      *             earlier or `1` if the current month is later.
      */
-    public function compareMonth(\Piwik\Date $date)
+    public function compareMonth(Date $date)
     {
         $currentMonth = date('n', $this->getTimestamp());
         $toCompareMonth = date('n', $date->getTimestamp());
@@ -456,6 +534,7 @@ class Date
         }
         return 1;
     }
+
     /**
      * Performs three-way comparison of the month of the current date against the given `$date`'s year.
      *
@@ -463,9 +542,9 @@ class Date
      * @return int Returns `0` if the current year is equal to `$date`'s, `-1` if the current year is
      *             earlier or `1` if the current year is later.
      */
-    public function compareYear(\Piwik\Date $date)
+    public function compareYear(Date $date)
     {
-        $currentYear = date('Y', $this->getTimestamp());
+        $currentYear   = date('Y', $this->getTimestamp());
         $toCompareYear = date('Y', $date->getTimestamp());
         if ($currentYear == $toCompareYear) {
             return 0;
@@ -475,6 +554,7 @@ class Date
         }
         return 1;
     }
+
     /**
      * Returns `true` if current date is today.
      *
@@ -482,8 +562,9 @@ class Date
      */
     public function isToday()
     {
-        return $this->toString('Y-m-d') === \Piwik\Date::factory('today', $this->timezone)->toString('Y-m-d');
+        return $this->toString('Y-m-d') === Date::factory('today', $this->timezone)->toString('Y-m-d');
     }
+
     /**
      * Returns a date object set to now in UTC (same as {@link today()}, except that the time is also set).
      *
@@ -491,8 +572,9 @@ class Date
      */
     public static function now()
     {
-        return new \Piwik\Date(self::getNowTimestamp());
+        return new Date(self::getNowTimestamp());
     }
+
     /**
      * Returns a date object set to today at midnight in UTC.
      *
@@ -500,8 +582,9 @@ class Date
      */
     public static function today()
     {
-        return new \Piwik\Date(strtotime(date("Y-m-d 00:00:00", self::getNowTimestamp())));
+        return new Date(strtotime(date("Y-m-d 00:00:00", self::getNowTimestamp())));
     }
+
     /**
      * Returns a date object set to tomorrow at midnight in UTC.
      *
@@ -509,8 +592,9 @@ class Date
      */
     public static function tomorrow()
     {
-        return new \Piwik\Date(strtotime('tomorrow', self::getNowTimestamp()));
+        return new Date(strtotime('tomorrow', self::getNowTimestamp()));
     }
+
     /**
      * Returns a date object set to yesterday at midnight in UTC.
      *
@@ -518,8 +602,9 @@ class Date
      */
     public static function yesterday()
     {
-        return new \Piwik\Date(strtotime("yesterday", self::getNowTimestamp()));
+        return new Date(strtotime("yesterday", self::getNowTimestamp()));
     }
+
     /**
      * Returns a date object set to yesterday with the current time of day in UTC.
      *
@@ -527,8 +612,9 @@ class Date
      */
     public static function yesterdaySameTime()
     {
-        return new \Piwik\Date(strtotime("yesterday " . date('H:i:s', self::getNowTimestamp()), self::getNowTimestamp()));
+        return new Date(strtotime("yesterday " . date('H:i:s', self::getNowTimestamp()), self::getNowTimestamp()));
     }
+
     /**
      * Returns a date object set to the day a week ago at midnight in UTC.
      *
@@ -536,8 +622,9 @@ class Date
      */
     public static function lastWeek()
     {
-        return new \Piwik\Date(strtotime("-1week 00:00:00", self::getNowTimestamp()));
+        return new Date(strtotime("-1week 00:00:00", self::getNowTimestamp()));
     }
+
     /**
      * Returns a date object set to the day a month ago at midnight in UTC.
      *
@@ -545,8 +632,9 @@ class Date
      */
     public static function lastMonth()
     {
-        return new \Piwik\Date(strtotime("-1month 00:00:00", self::getNowTimestamp()));
+        return new Date(strtotime("-1month 00:00:00", self::getNowTimestamp()));
     }
+
     /**
      * Returns a date object set to the day a year ago at midnight in UTC.
      *
@@ -554,8 +642,9 @@ class Date
      */
     public static function lastYear()
     {
-        return new \Piwik\Date(strtotime("-1year 00:00:00", self::getNowTimestamp()));
+        return new Date(strtotime("-1year 00:00:00", self::getNowTimestamp()));
     }
+
     /**
      * Returns a new Date instance with `$this` date's day and the specified new
      * time of day.
@@ -565,8 +654,9 @@ class Date
      */
     public function setTime($time)
     {
-        return new \Piwik\Date(strtotime(date("Y-m-d", $this->timestamp) . " {$time}"), $this->timezone);
+        return new Date(strtotime(date("Y-m-d", $this->timestamp) . " $time"), $this->timezone);
     }
+
     /**
      * Returns a new Date instance with `$this` date's time of day and the day specified
      * by `$day`.
@@ -577,9 +667,17 @@ class Date
     public function setDay($day)
     {
         $ts = $this->timestamp;
-        $result = mktime((int) date('H', $ts), (int) date('i', $ts), (int) date('s', $ts), (int) date('n', $ts), $day, (int) date('Y', $ts));
-        return new \Piwik\Date($result, $this->timezone);
+        $result = mktime(
+            (int)date('H', $ts),
+            (int)date('i', $ts),
+            (int)date('s', $ts),
+            (int)date('n', $ts),
+            $day,
+            (int)date('Y', $ts)
+        );
+        return new Date($result, $this->timezone);
     }
+
     /**
      * Returns a new Date instance with `$this` date's time of day, month and day, but with
      * a new year (specified by `$year`).
@@ -590,9 +688,17 @@ class Date
     public function setYear($year)
     {
         $ts = $this->timestamp;
-        $result = mktime((int) date('H', $ts), (int) date('i', $ts), (int) date('s', $ts), (int) date('n', $ts), (int) date('j', $ts), $year);
-        return new \Piwik\Date($result, $this->timezone);
+        $result = mktime(
+            (int)date('H', $ts),
+            (int)date('i', $ts),
+            (int)date('s', $ts),
+            (int)date('n', $ts),
+            (int)date('j', $ts),
+            $year
+        );
+        return new Date($result, $this->timezone);
     }
+
     /**
      * Subtracts `$n` number of days from `$this` date and returns a new Date object.
      *
@@ -604,9 +710,10 @@ class Date
         if ($n === 0) {
             return clone $this;
         }
-        $ts = strtotime("-{$n} day", $this->timestamp);
-        return new \Piwik\Date($ts, $this->timezone);
+        $ts = strtotime("-$n day", $this->timestamp);
+        return new Date($ts, $this->timezone);
     }
+
     /**
      * Subtracts `$n` weeks from `$this` date and returns a new Date object.
      *
@@ -617,6 +724,7 @@ class Date
     {
         return $this->subDay(7 * $n);
     }
+
     /**
      * Subtracts `$n` months from `$this` date and returns the result as a new Date object.
      *
@@ -630,16 +738,16 @@ class Date
         }
         $ts = $this->timestamp;
         $result = mktime(
-            (int) date('H', $ts),
-            (int) date('i', $ts),
-            (int) date('s', $ts),
-            (int) date('n', $ts) - $n,
-            1,
-            // we set the day to 1
-            (int) date('Y', $ts)
+            (int)date('H', $ts),
+            (int)date('i', $ts),
+            (int)date('s', $ts),
+            (int)date('n', $ts) - $n,
+            1, // we set the day to 1
+            (int)date('Y', $ts)
         );
-        return new \Piwik\Date($result, $this->timezone);
+        return new Date($result, $this->timezone);
     }
+
     /**
      * Subtracts `$n` years from `$this` date and returns the result as a new Date object.
      *
@@ -653,17 +761,16 @@ class Date
         }
         $ts = $this->timestamp;
         $result = mktime(
-            (int) date('H', $ts),
-            (int) date('i', $ts),
-            (int) date('s', $ts),
-            1,
-            // we set the month to 1
-            1,
-            // we set the day to 1
-            (int) date('Y', $ts) - $n
+            (int)date('H', $ts),
+            (int)date('i', $ts),
+            (int)date('s', $ts),
+            1, // we set the month to 1
+            1, // we set the day to 1
+            (int)date('Y', $ts) - $n
         );
-        return new \Piwik\Date($result, $this->timezone);
+        return new Date($result, $this->timezone);
     }
+
     /**
      * Returns a localized date string using the given template.
      * The template should contain tags that will be replaced with localized date strings.
@@ -672,12 +779,16 @@ class Date
      * @param bool   $ucfirst  whether the first letter should be upper-cased
      * @return string eg. `"Aug 2009"`
      */
-    public function getLocalized($template, $ucfirst = \true)
+    public function getLocalized($template, $ucfirst = true)
     {
         $dateTimeFormatProvider = StaticContainer::get(DateTimeFormatProvider::class);
+
         $template = $dateTimeFormatProvider->getFormatPattern($template);
+
         $tokens = self::parseFormat($template);
+
         $out = '';
+
         foreach ($tokens as $token) {
             if (is_array($token)) {
                 $out .= $this->formatToken(array_shift($token));
@@ -685,11 +796,14 @@ class Date
                 $out .= $token;
             }
         }
+
         if ($ucfirst) {
             $out = mb_strtoupper(mb_substr($out, 0, 1)) . mb_substr($out, 1);
         }
+
         return $out;
     }
+
     /**
      * @param string $token
      * @return float|int|string
@@ -698,7 +812,8 @@ class Date
     {
         $dayOfWeek = $this->toString('N');
         $monthOfYear = $this->toString('n');
-        $translator = StaticContainer::get('Piwik\\Translation\\Translator');
+        $translator = StaticContainer::get('Piwik\Translation\Translator');
+
         switch ($token) {
             // year
             case "yyyy":
@@ -741,14 +856,13 @@ class Date
             case "c":
                 return $translator->translate('Intl_Day_Short_StandAlone_' . $dayOfWeek);
             case "D":
-                return 1 + (int) $this->toString('z');
-            // 1 - 366
+                return 1 + (int)$this->toString('z'); // 1 - 366
             case "F":
-                return (int) (((int) $this->toString('j') + 6) / 7);
+                return (int)(((int)$this->toString('j') + 6) / 7);
             // week in month
             case "w":
-                $weekDay = date('N', mktime(0, 0, 0, (int) $this->toString('m'), 1, (int) $this->toString('y')));
-                return floor(($weekDay + (int) $this->toString('m') - 2) / 7) + 1;
+                $weekDay = date('N', mktime(0, 0, 0, (int)$this->toString('m'), 1, (int)$this->toString('y')));
+                return floor(($weekDay + (int)$this->toString('m') - 2) / 7) + 1;
             // week in year
             case "W":
                 return $this->toString('N');
@@ -761,18 +875,14 @@ class Date
                 return $this->toString('h');
             case "h":
                 return $this->toString('g');
-            case "KK":
-                // 00 .. 11
-                return str_pad(strval((int) $this->toString('g') - 1), 2, '0');
-            case "K":
-                // 0 .. 11
-                return (int) $this->toString('g') - 1;
-            case "kk":
-                // 01 .. 24
-                return str_pad(strval((int) $this->toString('G') + 1), 2, '0');
-            case "k":
-                // 1 .. 24
-                return (int) $this->toString('G') + 1;
+            case "KK": // 00 .. 11
+                return str_pad(strval((int)$this->toString('g') - 1), 2, '0');
+            case "K": // 0 .. 11
+                return (int)$this->toString('g') - 1;
+            case "kk": // 01 .. 24
+                return str_pad(strval((int)$this->toString('G') + 1), 2, '0');
+            case "k": // 1 .. 24
+                return (int)$this->toString('G') + 1;
             // minute
             case "mm":
             case "m":
@@ -788,23 +898,28 @@ class Date
             // am / pm
             case "a":
                 return $this->toString('a') == 'am' ? $translator->translate('Intl_Time_AM') : $translator->translate('Intl_Time_PM');
+
             // currently not implemented:
             case "G":
             case "GG":
             case "GGG":
             case "GGGG":
             case "GGGGG":
-                return '';
-            // era
+                return ''; // era
             case "z":
             case "Z":
             case "v":
-                return '';
+                return ''; // time zone
         }
+
         return '';
     }
+
     /** @var string[] */
-    protected static $tokens = ['G', 'y', 'M', 'L', 'd', 'h', 'H', 'k', 'K', 'm', 's', 'E', 'c', 'e', 'D', 'F', 'w', 'W', 'a', 'b', 'B', 'z', 'Z', 'v'];
+    protected static $tokens = [
+        'G', 'y', 'M', 'L', 'd', 'h', 'H', 'k', 'K', 'm', 's', 'E', 'c', 'e', 'D', 'F', 'w', 'W', 'a', 'b', 'B', 'z', 'Z', 'v',
+    ];
+
     /**
      * Parses the datetime format pattern and returns a tokenized result array
      *
@@ -818,14 +933,13 @@ class Date
      */
     protected static function parseFormat($pattern)
     {
-        static $formats = [];
-        // cache
+        static $formats = [];  // cache
         if (isset($formats[$pattern])) {
             return $formats[$pattern];
         }
         $tokens = [];
         $n = strlen($pattern);
-        $isLiteral = \false;
+        $isLiteral = false;
         $literal = '';
         for ($i = 0; $i < $n; ++$i) {
             $c = $pattern[$i];
@@ -836,9 +950,9 @@ class Date
                 } elseif ($isLiteral) {
                     $tokens[] = $literal;
                     $literal = '';
-                    $isLiteral = \false;
+                    $isLiteral = false;
                 } else {
-                    $isLiteral = \true;
+                    $isLiteral = true;
                     $literal = '';
                 }
             } elseif ($isLiteral) {
@@ -863,6 +977,7 @@ class Date
         }
         return $formats[$pattern] = $tokens;
     }
+
     /**
      * Adds `$n` days to `$this` date and returns the result in a new Date.
      * instance.
@@ -872,9 +987,10 @@ class Date
      */
     public function addDay($n)
     {
-        $ts = strtotime("+{$n} day", $this->timestamp);
-        return new \Piwik\Date($ts, $this->timezone);
+        $ts = strtotime("+$n day", $this->timestamp);
+        return new Date($ts, $this->timezone);
     }
+
     /**
      * Adds `$n` Month to `$this` date and returns the result in a new Date.
      * instance.
@@ -882,11 +998,13 @@ class Date
      * @param int $n Number of days to add, must be > 0.
      * @return \Piwik\Date
      */
+
     public function addMonth($n)
     {
-        $ts = strtotime("+{$n} month", $this->timestamp);
-        return new \Piwik\Date($ts, $this->timezone);
+        $ts = strtotime("+$n month", $this->timestamp);
+        return new Date($ts, $this->timezone);
     }
+
     /**
      * Adds `$n` hours to `$this` date and returns the result in a new Date.
      *
@@ -896,8 +1014,9 @@ class Date
     public function addHour($n)
     {
         $ts = self::addHourTo($this->timestamp, $n);
-        return new \Piwik\Date($ts, $this->timezone);
+        return new Date($ts, $this->timezone);
     }
+
     /**
      * Adds N number of hours to a UNIX timestamp and returns the result. Using
      * this static function instead of {@link addHour()} will be faster since a
@@ -909,7 +1028,7 @@ class Date
      */
     public static function addHourTo($timestamp, $n)
     {
-        $isNegative = $n < 0;
+        $isNegative = ($n < 0);
         $minutes = 0;
         if ($n != round($n)) {
             if ($n >= 1 || $n <= -1) {
@@ -929,8 +1048,9 @@ class Date
                 $n *= -1;
             }
         }
-        return (int) ($timestamp + round($minutes * 60) + $n * 3600);
+        return (int)($timestamp + round($minutes * 60) + $n * 3600);
     }
+
     /**
      * Subtracts `$n` hours from `$this` date and returns the result in a new Date.
      *
@@ -941,6 +1061,7 @@ class Date
     {
         return $this->addHour(-$n);
     }
+
     /**
      * Subtracts `$n` seconds from `$this` date and returns the result in a new Date.
      *
@@ -949,8 +1070,9 @@ class Date
      */
     public function subSeconds($n)
     {
-        return new \Piwik\Date($this->timestamp - $n, $this->timezone);
+        return new Date($this->timestamp - $n, $this->timezone);
     }
+
     /**
      * Adds a period to `$this` date and returns the result in a new Date instance.
      *
@@ -960,27 +1082,42 @@ class Date
      */
     public function addPeriod($n, $period)
     {
-        if (strtolower($period) == 'month') {
-            // TODO: comments
+        if (strtolower($period) == 'month') { // TODO: comments
             $dateInfo = getdate($this->timestamp);
-            $ts = mktime($dateInfo['hours'], $dateInfo['minutes'], $dateInfo['seconds'], $dateInfo['mon'] + (int) $n, 1, $dateInfo['year']);
+
+            $ts = mktime(
+                $dateInfo['hours'],
+                $dateInfo['minutes'],
+                $dateInfo['seconds'],
+                $dateInfo['mon'] + (int)$n,
+                1,
+                $dateInfo['year']
+            );
+
             $daysToAdd = min($dateInfo['mday'], self::getMaxDaysInMonth($ts)) - 1;
             $ts += self::NUM_SECONDS_IN_DAY * $daysToAdd;
         } else {
-            $time = $n < 0 ? "{$n} {$period}" : "+{$n} {$period}";
+            $time = $n < 0 ? "$n $period" : "+$n $period";
+
             $ts = strtotime($time, $this->timestamp);
         }
-        return new \Piwik\Date($ts, $this->timezone);
+
+        return new Date($ts, $this->timezone);
     }
-    private static function getMaxDaysInMonth(int $timestamp) : int
+
+    private static function getMaxDaysInMonth(int $timestamp): int
     {
-        $month = (int) date('m', $timestamp);
-        if (date('L', $timestamp) == 1 && $month == 2) {
+        $month = (int)date('m', $timestamp);
+        if (
+            date('L', $timestamp) == 1
+            && $month == 2
+        ) {
             return 29;
         } else {
             return self::$maxDaysInMonth[$month];
         }
     }
+
     /**
      * Subtracts a period from `$this` date and returns the result in a new Date instance.
      *
@@ -992,6 +1129,7 @@ class Date
     {
         return $this->addPeriod(-$n, $period);
     }
+
     /**
      * Returns the number of days represented by a number of seconds.
      *
@@ -1002,15 +1140,17 @@ class Date
     {
         return $secs / self::NUM_SECONDS_IN_DAY;
     }
+
     /**
      * @param mixed $dateString
      * @return Exception
      */
     private static function getInvalidDateFormatException($dateString)
     {
-        $message = \Piwik\Piwik::translate('General_ExceptionInvalidDateFormat', array("YYYY-MM-DD, or 'today' or 'yesterday'", "strtotime", "https://php.net/strtotime"));
-        return new Exception($message . ": " . var_export($dateString, \true));
+        $message = Piwik::translate('General_ExceptionInvalidDateFormat', array("YYYY-MM-DD, or 'today' or 'yesterday'", "strtotime", "https://php.net/strtotime"));
+        return new Exception($message . ": " . var_export($dateString, true));
     }
+
     /**
      * For tests.
      * @return int|null

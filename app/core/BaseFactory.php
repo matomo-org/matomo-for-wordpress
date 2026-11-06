@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
+
 /**
  * Base class for all factory types.
  *
@@ -31,16 +33,20 @@ abstract class BaseFactory
     public static function factory($classId)
     {
         $className = static::getClassNameFromClassId($classId);
+
         if (!class_exists($className)) {
             self::sendPlainHeader();
             throw new Exception(static::getInvalidClassIdExceptionMessage($classId));
         }
+
         return new $className();
     }
+
     private static function sendPlainHeader()
     {
-        \Piwik\Common::sendHeader('Content-Type: text/plain; charset=utf-8');
+        Common::sendHeader('Content-Type: text/plain; charset=utf-8');
     }
+
     /**
      * Should return a class name based on the class's associated string ID.
      */
@@ -48,12 +54,13 @@ abstract class BaseFactory
     {
         return $id;
     }
+
     /**
      * Should return a message to use in an Exception when an invalid class ID is supplied to
      * {@link factory()}.
      */
     protected static function getInvalidClassIdExceptionMessage($id)
     {
-        return "Invalid class ID '{$id}' for " . get_called_class() . "::factory().";
+        return "Invalid class ID '$id' for " . get_called_class() . "::factory().";
     }
 }

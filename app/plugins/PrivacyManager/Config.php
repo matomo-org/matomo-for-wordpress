@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\PrivacyManager;
 
 use Piwik\Exception\DI\DependencyException;
@@ -16,6 +17,7 @@ use Piwik\Tracker\Cache;
 use Piwik\Plugins\PrivacyManager\Settings\IpAddressMaskLength as IpAddressMaskLengthSetting;
 use Piwik\Plugins\PrivacyManager\Settings\IPAnonymisation as IPAnonymisationSetting;
 use Piwik\Plugins\Ecommerce\Settings\OrderIdAnonymization as OrderIdAnonymizationSetting;
+
 /**
  * @property bool $doNotTrackEnabled    Enable / Disable Do Not Track {@see DoNotTrackHeaderChecker}
  * @property bool $ipAnonymizerEnabled  Enable / Disable IP Anonymizer {@see IPAnonymizer}
@@ -42,55 +44,77 @@ class Config
      * @var int|null
      */
     private $idSite;
+
     public function __construct(?int $idSite = null)
     {
         $this->setIdSite($idSite);
     }
-    private $properties = ['useAnonymizedIpForVisitEnrichment' => ['type' => 'boolean', 'default' => \false], 'ipAddressMaskLength' => ['type' => 'integer', 'default' => 2], 'doNotTrackEnabled' => ['type' => 'boolean', 'default' => \false], 'ipAnonymizerEnabled' => ['type' => 'boolean', 'default' => \true], 'forceCookielessTracking' => ['type' => 'boolean', 'default' => \false], 'anonymizeUserId' => ['type' => 'boolean', 'default' => \false], 'anonymizeOrderId' => ['type' => 'boolean', 'default' => \false], 'anonymizeReferrer' => ['type' => 'string', 'default' => ''], 'randomizeConfigId' => ['type' => 'boolean', 'default' => \false]];
+
+    private $properties = [
+        'useAnonymizedIpForVisitEnrichment' => ['type' => 'boolean', 'default' => false],
+        'ipAddressMaskLength'               => ['type' => 'integer', 'default' => 2],
+        'doNotTrackEnabled'                 => ['type' => 'boolean', 'default' => false],
+        'ipAnonymizerEnabled'               => ['type' => 'boolean', 'default' => true],
+        'forceCookielessTracking'           => ['type' => 'boolean', 'default' => false],
+        'anonymizeUserId'                   => ['type' => 'boolean', 'default' => false],
+        'anonymizeOrderId'                  => ['type' => 'boolean', 'default' => false],
+        'anonymizeReferrer'                 => ['type' => 'string', 'default' => ''],
+        'randomizeConfigId'                 => ['type' => 'boolean', 'default' => false],
+    ];
+
     public function __set($name, $value)
     {
         if (!array_key_exists($name, $this->properties)) {
             throw new \Exception(sprintf('Property %s does not exist', $name));
         }
+
         $this->set($name, $value, $this->properties[$name]);
     }
+
     public function __get($name)
     {
         if (!array_key_exists($name, $this->properties)) {
             throw new \Exception(sprintf('Property %s does not exist', $name));
         }
+
         return $this->getFromTrackerCache($name, $this->properties[$name]);
     }
-    public function prefix(string $optionName, bool $addIdSite = \true) : string
+
+    public function prefix(string $optionName, bool $addIdSite = true): string
     {
         // if requested, adding the site ID in the middle to have all the site-specific settings together
-        return 'PrivacyManager.' . ($addIdSite && $this->idSite ? "idSite({$this->idSite})." : '') . $optionName;
+        return 'PrivacyManager.' . (($addIdSite && $this->idSite) ? "idSite($this->idSite)." : '') . $optionName;
     }
-    private function getFromSpecificTrackerCache(string $name, array $cache, array $config, bool $useFallback = \true)
+
+    private function getFromSpecificTrackerCache(string $name, array $cache, array $config, bool $useFallback = true)
     {
         if (array_key_exists($name, $cache)) {
             $value = $cache[$name];
             settype($value, $config['type']);
+
             return $value;
         }
+
         return $useFallback ? $config['default'] : null;
     }
+
     private function getFromTrackerCache(string $name, array $config)
     {
         $generalCache = Cache::getCacheGeneral();
-        $name = $this->prefix($name, \false);
-        // when getting from tracker cache, we always want the generic name
+        $name = $this->prefix($name, false); // when getting from tracker cache, we always want the generic name
         if ($this->idSite) {
             $cache = Cache::getCacheWebsiteAttributes($this->idSite);
         } else {
-            $cache = $generalCache;
-            // so that we always have some cache to check below
+            $cache = $generalCache; // so that we always have some cache to check below
         }
+
         // check specific cache first, if no value found there return from general cache or use default
-        $valueSite = $this->getFromSpecificTrackerCache($name, $cache, $config, $useFallback = \false);
+        $valueSite = $this->getFromSpecificTrackerCache($name, $cache, $config, $useFallback = false);
         $valueGeneralWithFallback = $this->getFromSpecificTrackerCache($name, $generalCache, $config);
+
         return $valueSite ?? $valueGeneralWithFallback;
     }
+
     /**
      * If PrivacyCompliance is enabled and specific settings are requested, return their value, otherwise
      * return a provided option value
@@ -114,8 +138,10 @@ class Config
         if ($name === 'anonymizeOrderId') {
             return OrderIdAnonymizationSetting::getInstance($idSite)->getValue();
         }
+
         return $optionValue;
     }
+
     /**
      * Get a value from the option table, with a potential compliance policy override and a fallback value
      * if there's no option stored for the given name yet
@@ -124,70 +150,89 @@ class Config
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFromOption(string $name, bool $allowPolicyComplianceOverride = \true)
+    public function getFromOption(string $name, bool $allowPolicyComplianceOverride = true)
     {
         $optionValue = Option::get($this->prefix($name));
-        $value = $allowPolicyComplianceOverride ? $this->getOptionValueWithPrivacyComplianceOverride($name, $this->idSite, $optionValue) : $optionValue;
+        $value = $allowPolicyComplianceOverride
+            ? $this->getOptionValueWithPrivacyComplianceOverride($name, $this->idSite, $optionValue)
+            : $optionValue;
+
         // fallback to global settings if we don't have specific site settings saved
-        if (\false === $value && !$this->hasSiteSpecificSettings($name)) {
-            $optionValue = Option::get($this->prefix($name, \false));
-            $value = $allowPolicyComplianceOverride ? $this->getOptionValueWithPrivacyComplianceOverride($name, null, $optionValue) : $optionValue;
+        if (false === $value && !$this->hasSiteSpecificSettings($name)) {
+            $optionValue = Option::get($this->prefix($name, false));
+            $value = $allowPolicyComplianceOverride
+                ? $this->getOptionValueWithPrivacyComplianceOverride($name, null, $optionValue)
+                : $optionValue;
         }
+
         $config = $this->getPropertyConfig($name);
-        if (isset($value) && \false !== $value) {
+
+        if (isset($value) && false !== $value) {
             settype($value, $config['type']);
         } else {
             $value = $config['default'];
         }
+
         return $value;
     }
-    private function set($name, $value, $config) : void
+
+    private function set($name, $value, $config): void
     {
         if ('boolean' == $config['type']) {
             $value = $value ? '1' : '0';
         } else {
             settype($value, $config['type']);
         }
+
         Option::set($this->prefix($name), $value);
         Cache::deleteTrackerCache();
     }
-    public function setIdSite(?int $idSite) : void
+
+    public function setIdSite(?int $idSite): void
     {
         if (null === $idSite || $idSite > 0) {
             $this->idSite = $idSite;
         }
     }
-    public function setTrackerCache(array &$cacheContent) : array
+
+    public function setTrackerCache(array &$cacheContent): array
     {
         foreach ($this->getConfigPropertyNames() as $name) {
             // when setting tracker cache, we always want generic name
-            $cacheContent[$this->prefix($name, \false)] = $this->getFromOption($name);
+            $cacheContent[$this->prefix($name, false)] = $this->getFromOption($name);
         }
+
         return $cacheContent;
     }
-    public function getConfigPropertyNames() : array
+
+    public function getConfigPropertyNames(): array
     {
         return array_keys($this->properties);
     }
-    private function getPropertyConfig(string $name) : array
+
+    private function getPropertyConfig(string $name): array
     {
         return $this->properties[$name] ?? [];
     }
-    public function removeForSite() : void
+
+    public function removeForSite(): void
     {
         if ($this->idSite) {
             Option::deleteLike($this->prefix('%'));
         }
     }
-    private function hasSiteSpecificSettings(string $name = '%') : bool
+
+    private function hasSiteSpecificSettings(string $name = '%'): bool
     {
         return $this->idSite && count(Option::getLike($this->prefix($name))) > 0;
     }
-    public function useSiteSpecificSettings() : bool
+
+    public function useSiteSpecificSettings(): bool
     {
         if (!$this->idSite) {
-            return \false;
+            return false;
         }
+
         return $this->hasSiteSpecificSettings();
     }
 }

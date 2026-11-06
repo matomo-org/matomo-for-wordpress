@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Archive;
 
 use Exception;
 use Piwik\DataTable;
+
 /**
  * This class is used to hold and transform archive data for the Archive class.
  *
@@ -20,6 +22,7 @@ use Piwik\DataTable;
 class DataCollection
 {
     public const METADATA_CONTAINER_ROW_KEY = '_metadata';
+
     /**
      * The archive data, indexed first by site ID and then by period date range. Eg,
      *
@@ -46,18 +49,21 @@ class DataCollection
      * as DataTable metadata.
      */
     private $data = [];
+
     /**
      * The whole list of metric/record names that were used in the archive query.
      *
      * @var array
      */
     private $dataNames;
+
     /**
      * The type of data that was queried for (ie, "blob" or "numeric").
      *
      * @var string
      */
     private $dataType;
+
     /**
      * The default values to use for each metric/record name that's being queried
      * for.
@@ -65,12 +71,14 @@ class DataCollection
      * @var array
      */
     private $defaultRow;
+
     /**
      * The list of all site IDs that were queried for.
      *
      * @var array
      */
     private $sitesId;
+
     /**
      * The list of all periods that were queried for. Each period is associated with
      * the period's range string. Eg,
@@ -83,13 +91,16 @@ class DataCollection
      * @var \Piwik\Period[]
      */
     private $periods;
+
     /**
      * The segment that was queried
      *
      * @var \Piwik\Segment
      */
     private $segment;
-    private $isBuiltWithoutArchives = \true;
+
+    private $isBuiltWithoutArchives = true;
+
     /**
      * @param array $dataNames @see $this->dataNames
      * @param string $dataType @see $this->dataType
@@ -102,24 +113,31 @@ class DataCollection
     {
         $this->dataNames = $dataNames;
         $this->dataType = $dataType;
+
         if ($defaultRow === null) {
             $defaultRow = array_fill_keys($dataNames, 0);
         }
+
         $this->sitesId = $sitesId;
+
         foreach ($periods as $period) {
             $this->periods[$period->getRangeString()] = $period;
         }
+
         $this->segment = $segment;
         $this->defaultRow = $defaultRow;
     }
-    public function setAsBuiltWithoutArchives(bool $flag) : void
+
+    public function setAsBuiltWithoutArchives(bool $flag): void
     {
         $this->isBuiltWithoutArchives = $flag;
     }
-    public function wasBuiltWithoutArchives() : bool
+
+    public function wasBuiltWithoutArchives(): bool
     {
         return $this->isBuiltWithoutArchives;
     }
+
     /**
      * Returns a reference to the data for a specific site & period. If there is
      * no data for the given site ID & period, it is set to the default row.
@@ -134,6 +152,7 @@ class DataCollection
         }
         return $this->data[$idSite][$period];
     }
+
     /**
      * Set data for a specific site & period. If there is no data for the given site ID & period,
      * it is set to the default row.
@@ -146,7 +165,7 @@ class DataCollection
      */
     public function set($idSite, $period, $name, $value, ?array $meta = null)
     {
-        $row =& $this->get($idSite, $period);
+        $row = & $this->get($idSite, $period);
         $row[$name] = $value;
         if ($meta) {
             foreach ($meta as $k => $v) {
@@ -154,6 +173,7 @@ class DataCollection
             }
         }
     }
+
     /**
      * Adds a new metadata to the data for specific site & period. If there is no
      * data for the given site ID & period, it is set to the default row.
@@ -169,9 +189,10 @@ class DataCollection
      */
     public function addMetadata($idSite, $period, $name, $value)
     {
-        $row =& $this->get($idSite, $period);
+        $row = & $this->get($idSite, $period);
         $row[self::METADATA_CONTAINER_ROW_KEY][$name] = $value;
     }
+
     /**
      * Returns archive data as an array indexed by metadata.
      *
@@ -185,6 +206,7 @@ class DataCollection
     public function getIndexedArray($resultIndices)
     {
         $indexKeys = array_keys($resultIndices);
+
         $result = $this->createOrderedIndex($indexKeys);
         foreach ($this->data as $idSite => $rowsByPeriod) {
             foreach ($rowsByPeriod as $period => $row) {
@@ -199,11 +221,14 @@ class DataCollection
                 if (empty($this->periods[$period])) {
                     continue;
                 }
+
                 $this->putRowInIndex($result, $indexKeys, $row, $idSite, $period);
             }
         }
+
         return $result;
     }
+
     /**
      * Returns archive data as a DataTable indexed by metadata. Indexed data will
      * be represented by Map instances.
@@ -217,10 +242,20 @@ class DataCollection
      */
     public function getDataTable($resultIndices)
     {
-        $dataTableFactory = new \Piwik\Archive\DataTableFactory($this->dataNames, $this->dataType, $this->sitesId, $this->periods, $this->segment, $this->defaultRow);
+        $dataTableFactory = new DataTableFactory(
+            $this->dataNames,
+            $this->dataType,
+            $this->sitesId,
+            $this->periods,
+            $this->segment,
+            $this->defaultRow
+        );
+
         $index = $this->getIndexedArray($resultIndices);
+
         return $dataTableFactory->make($index, $resultIndices);
     }
+
     /**
      * See {@link DataTableFactory::makeMerged()}
      *
@@ -230,10 +265,20 @@ class DataCollection
      */
     public function getMergedDataTable($resultIndices)
     {
-        $dataTableFactory = new \Piwik\Archive\DataTableFactory($this->dataNames, $this->dataType, $this->sitesId, $this->periods, $this->segment, $this->defaultRow);
+        $dataTableFactory = new DataTableFactory(
+            $this->dataNames,
+            $this->dataType,
+            $this->sitesId,
+            $this->periods,
+            $this->segment,
+            $this->defaultRow
+        );
+
         $index = $this->getIndexedArray($resultIndices);
+
         return $dataTableFactory->makeMerged($index, $resultIndices);
     }
+
     /**
      * Returns archive data as a DataTable indexed by metadata. Indexed data will
      * be represented by Map instances. Each DataTable will have
@@ -254,15 +299,26 @@ class DataCollection
      * @throws Exception
      * @return DataTable|DataTable\Map
      */
-    public function getExpandedDataTable($resultIndices, $idSubTable = null, $depth = null, $addMetadataSubTableId = \false)
+    public function getExpandedDataTable($resultIndices, $idSubTable = null, $depth = null, $addMetadataSubTableId = false)
     {
         $this->checkExpandedMethodPrerequisites();
-        $dataTableFactory = new \Piwik\Archive\DataTableFactory($this->dataNames, 'blob', $this->sitesId, $this->periods, $this->segment, $this->defaultRow);
+
+        $dataTableFactory = new DataTableFactory(
+            $this->dataNames,
+            'blob',
+            $this->sitesId,
+            $this->periods,
+            $this->segment,
+            $this->defaultRow
+        );
         $dataTableFactory->expandDataTable($depth, $addMetadataSubTableId);
         $dataTableFactory->useSubtable($idSubTable);
+
         $index = $this->getIndexedArray($resultIndices);
+
         return $dataTableFactory->make($index, $resultIndices);
     }
+
     /**
      * Returns metadata for a data row.
      *
@@ -277,6 +333,7 @@ class DataCollection
             return [];
         }
     }
+
     /**
      * Removes all table metadata from a data row.
      *
@@ -286,6 +343,7 @@ class DataCollection
     {
         unset($data[self::METADATA_CONTAINER_ROW_KEY]);
     }
+
     /**
      * Creates an empty index using a list of metadata names. If the 'site' and/or
      * 'period' metadata names are supplied, empty rows are added for every site/period
@@ -299,14 +357,17 @@ class DataCollection
     private function createOrderedIndex($metadataNamesToIndexBy)
     {
         $result = [];
+
         if (!empty($metadataNamesToIndexBy)) {
             $metadataName = array_shift($metadataNamesToIndexBy);
             $indexKeyValues = [];
-            if ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_SITE_INDEX) {
+
+            if ($metadataName == DataTableFactory::TABLE_METADATA_SITE_INDEX) {
                 $indexKeyValues = array_values($this->sitesId);
-            } elseif ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX) {
+            } elseif ($metadataName == DataTableFactory::TABLE_METADATA_PERIOD_INDEX) {
                 $indexKeyValues = array_keys($this->periods);
             }
+
             if (empty($metadataNamesToIndexBy)) {
                 $result = array_fill_keys($indexKeyValues, []);
             } else {
@@ -315,34 +376,42 @@ class DataCollection
                 }
             }
         }
+
         return $result;
     }
+
     /**
      * Puts an archive data row in an index.
      */
     private function putRowInIndex(&$index, $metadataNamesToIndexBy, $row, $idSite, $period)
     {
-        $currentLevel =& $index;
+        $currentLevel = & $index;
+
         foreach ($metadataNamesToIndexBy as $metadataName) {
-            if ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_SITE_INDEX) {
+            if ($metadataName == DataTableFactory::TABLE_METADATA_SITE_INDEX) {
                 $key = $idSite;
-            } elseif ($metadataName == \Piwik\Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX) {
+            } elseif ($metadataName == DataTableFactory::TABLE_METADATA_PERIOD_INDEX) {
                 $key = $period;
             } else {
                 $key = $row[self::METADATA_CONTAINER_ROW_KEY][$metadataName];
             }
+
             if (!isset($currentLevel[$key])) {
                 $currentLevel[$key] = [];
             }
-            $currentLevel =& $currentLevel[$key];
+
+            $currentLevel = & $currentLevel[$key];
         }
+
         $currentLevel = $row;
     }
+
     private function checkExpandedMethodPrerequisites()
     {
         if ($this->dataType != 'blob') {
             throw new Exception("DataCollection: cannot call getExpandedDataTable with {$this->dataType} data types. Only works with blob data.");
         }
+
         if (count($this->dataNames) !== 1) {
             throw new Exception("DataCollection: cannot call getExpandedDataTable with more than one record.");
         }

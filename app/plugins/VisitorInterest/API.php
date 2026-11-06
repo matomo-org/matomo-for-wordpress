@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\VisitorInterest;
 
 use Piwik\Archive;
 use Piwik\DataTable;
 use Piwik\Piwik;
+
 /**
  * VisitorInterest API lets you access visitor engagement distribution reports, including visits by pages viewed,
  * visit duration, days since last visit, and visit count.
@@ -32,6 +34,7 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceColumnNames');
         return $dataTable;
     }
+
     /**
      * Returns visit duration distribution metrics for the requested site and period.
      *
@@ -49,14 +52,19 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Visit counts grouped by visit duration ranges.
      */
-    public function getNumberOfVisitsPerVisitDuration($idSite, string $period, string $date, $segment = \false)
+    public function getNumberOfVisitsPerVisitDuration($idSite, string $period, string $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::TIME_SPENT_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->queueFilter('Sort', ['label', 'asc', \true, \false]);
+        $dataTable = $this->getDataTable(Archiver::TIME_SPENT_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable->queueFilter('Sort', ['label', 'asc', true, false]);
         $dataTable->queueFilter('AddSegmentByRangeLabel', ['visitDuration']);
-        $dataTable->queueFilter('BeautifyTimeRangeLabels', [Piwik::translate('VisitorInterest_BetweenXYSeconds'), Piwik::translate('Intl_OneMinuteShort'), Piwik::translate('Intl_NMinutesShort')]);
+        $dataTable->queueFilter('BeautifyTimeRangeLabels', [
+            Piwik::translate('VisitorInterest_BetweenXYSeconds'),
+            Piwik::translate('Intl_OneMinuteShort'),
+            Piwik::translate('Intl_NMinutesShort'),
+        ]);
         return $dataTable;
     }
+
     /**
      * Returns page-depth distribution metrics for the requested site and period.
      *
@@ -74,14 +82,18 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Visit counts grouped by pages-per-visit ranges.
      */
-    public function getNumberOfVisitsPerPage($idSite, string $period, string $date, $segment = \false)
+    public function getNumberOfVisitsPerPage($idSite, string $period, string $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::PAGES_VIEWED_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->queueFilter('Sort', ['label', 'asc', \true, \false]);
+        $dataTable = $this->getDataTable(Archiver::PAGES_VIEWED_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable->queueFilter('Sort', ['label', 'asc', true, false]);
         $dataTable->queueFilter('AddSegmentByRangeLabel', ['actions']);
-        $dataTable->queueFilter('BeautifyRangeLabels', [Piwik::translate('VisitorInterest_OnePage'), Piwik::translate('VisitorInterest_NPages')]);
+        $dataTable->queueFilter('BeautifyRangeLabels', [
+            Piwik::translate('VisitorInterest_OnePage'),
+            Piwik::translate('VisitorInterest_NPages'),
+        ]);
         return $dataTable;
     }
+
     /**
      * Returns the distribution of visits by days since the previous visit.
      *
@@ -99,13 +111,23 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Visit counts grouped by days since the last visit.
      */
-    public function getNumberOfVisitsByDaysSinceLast($idSite, string $period, string $date, $segment = \false)
+    public function getNumberOfVisitsByDaysSinceLast($idSite, string $period, string $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::DAYS_SINCE_LAST_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable = $this->getDataTable(
+            Archiver::DAYS_SINCE_LAST_RECORD_NAME,
+            $idSite,
+            $period,
+            $date,
+            $segment
+        );
         $dataTable->queueFilter('AddSegmentByRangeLabel', ['daysSinceLastVisit']);
-        $dataTable->queueFilter('BeautifyRangeLabels', [Piwik::translate('Intl_OneDay'), Piwik::translate('Intl_NDays')]);
+        $dataTable->queueFilter('BeautifyRangeLabels', [
+            Piwik::translate('Intl_OneDay'),
+            Piwik::translate('Intl_NDays'),
+        ]);
         return $dataTable;
     }
+
     /**
      * Returns the distribution of visits by lifetime visit count.
      *
@@ -123,11 +145,22 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map Visit counts grouped by visit count ranges.
      */
-    public function getNumberOfVisitsByVisitCount($idSite, string $period, string $date, $segment = \false)
+    public function getNumberOfVisitsByVisitCount($idSite, string $period, string $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(\Piwik\Plugins\VisitorInterest\Archiver::VISITS_COUNT_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable = $this->getDataTable(
+            Archiver::VISITS_COUNT_RECORD_NAME,
+            $idSite,
+            $period,
+            $date,
+            $segment
+        );
+
         $dataTable->queueFilter('AddSegmentByRangeLabel', ['visitCount']);
-        $dataTable->queueFilter('BeautifyRangeLabels', [Piwik::translate('General_OneVisit'), Piwik::translate('General_NVisits')]);
+        $dataTable->queueFilter('BeautifyRangeLabels', [
+            Piwik::translate('General_OneVisit'),
+            Piwik::translate('General_NVisits'),
+        ]);
+
         return $dataTable;
     }
 }

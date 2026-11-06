@@ -1,0 +1,16 @@
+{
+    "Login": {
+        "ExceptionInvalidSuperUserAccessAuthenticationMethod": "Egy felhasználó, akor Szuper felhasználó szinttel rendelkezik, nem használhatja a %s belépési mechanizmust.",
+        "ExceptionPasswordMD5HashExpected": "A jelszóparaméternek egyeznie kellene a jelszó MD5 hash értékével.",
+        "InvalidOrExpiredToken": "A kód érvénytelen vagy lejárt.",
+        "InvalidUsernameEmail": "Helytelen felhasználói név és/vagy e-mail cím",
+        "LogIn": "Bejelentkezés",
+        "LoginPasswordNotCorrect": "Felhasználói név/jelszó páros nem megfelelő",
+        "LostYourPassword": "Elfelejtetted jelszavad?",
+        "PasswordChanged": "Jelszómódosítás sikeres.",
+        "PasswordRepeat": "Jelszó (ismét)",
+        "PasswordsDoNotMatch": "Nem egyeznek a jelszavak",
+        "PluginDescription": "Hitelesítés felhasználónévvel és jelszóval, illetve tartalmaz jelszó visszaállítási funkciót. A hitelesítési metódus lecserélhető másik bejelentkezési bővítményre, mint például a LoginLdap, amely elérhető az Árúházban.",
+        "RememberMe": "Megjegyzés"
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Lokale tijd — uur (start van bezoek)",
+        "ColumnLocalMinute": "Lokale tijd — minuut (start van bezoek)",
+        "ColumnLocalTime": "Lokale tijd",
+        "ColumnServerHour": "Servertijd — uur",
+        "ColumnSiteHour": "Tijd op de site — uur",
+        "ColumnUTCMinute": "Tijd in UTC — minuut",
+        "ColumnVisitEndSiteHour": "Tijd op de site — uur (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCDate": "Tijd in UTC — datum (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCDayOfMonth": "Tijd in UTC — dag van maand (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCDayOfWeek": "Tijd in UTC — dag van de week (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCDayOfYear": "Tijd in UTC — dag van het jaar (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCMinute": "Tijd in UTC — minuut (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCMonth": "Tijd in UTC — maand (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCQuarter": "Tijd in UTC — kwartaal (tijd laatste activiteit)",
+        "ColumnVisitEndUTCSecond": "Tijd in UTC — seconde (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCWeekOfYear": "Tijd in UTC — week van het jaar (tijdstip laatste activiteit)",
+        "ColumnVisitEndUTCYear": "Tijd in UTC — jaar (tijdstip laatste activiteit)",
+        "ColumnVisitStartSiteHour": "Tijd op de site — uur (start van bezoek)",
+        "ColumnVisitStartUTCMinute": "Tijd in UTC — minuut (start van bezoek)",
+        "DayOfWeek": "Dag van de week",
+        "LocalTime": "Bezoeken per lokale tijd",
+        "PluginDescription": "Rapporteert de lokale tijd en de servertijd van het moment waarop uw bezoekers uw website of app bekijken.",
+        "SiteTime": "Bezoeken per uur in de tijdzone van de site",
+        "SubmenuTimes": "Tijden",
+        "TimesSubcategoryHelp": "De rubriek \"Tijdstippen\" laat zien wanneer mensen uw site bezoeken. Populaire lokale tijdstippen helpen u uw site af te stemmen op hun leven. De populairste servertijden onthullen de technische vraag.",
+        "VisitsByDayOfWeek": "Bezoeken per dag van de week",
+        "WidgetByDayOfWeekDocumentation": "Deze grafiek toont het aantal bezoeken dat uw website ontving op elke dag van de week.",
+        "WidgetLocalTimeDocumentation": "Deze grafiek toont hoe laat het was in de %1$s tijdzones van bezoekers %2$s tijdens hun bezoeken.",
+        "WidgetSiteTimeDocumentation": "Deze grafiek toont voor de %1$s site hoe laat het was in de tijdzone %2$s tijdens de bezoeken."
+    }
+}

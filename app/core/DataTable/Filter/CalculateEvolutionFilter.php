@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\Common;
@@ -14,6 +15,7 @@ use Piwik\DataTable\Row;
 use Piwik\NumberFormatter;
 use Piwik\Piwik;
 use Piwik\Site;
+
 /**
  * A {@link DataTable} filter that calculates the evolution of a metric and adds
  * it to each row as a percentage.
@@ -30,7 +32,7 @@ use Piwik\Site;
  * @api
  * @deprecated since v2.10.0 (use EvolutionMetric instead)
  */
-class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAddColumnPercentage
+class CalculateEvolutionFilter extends ColumnCallbackAddColumnPercentage
 {
     /**
      * The the DataTable that contains past data.
@@ -38,10 +40,12 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
      * @var DataTable
      */
     protected $pastDataTable;
+
     /**
      * Tells if column being added is the revenue evolution column.
      */
     protected $isRevenueEvolution = null;
+
     /**
      * @param DataTable $table The DataTable being filtered.
      * @param DataTable $pastDataTable The DataTable containing data for the period in the past.
@@ -51,10 +55,20 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
      */
     public function __construct($table, $pastDataTable, $columnToAdd, $columnToRead, $quotientPrecision = 0)
     {
-        parent::__construct($table, $columnToAdd, $columnToRead, $columnToRead, $quotientPrecision, $shouldSkipRows = \true);
+        parent::__construct(
+            $table,
+            $columnToAdd,
+            $columnToRead,
+            $columnToRead,
+            $quotientPrecision,
+            $shouldSkipRows = true
+        );
+
         $this->pastDataTable = $pastDataTable;
+
         $this->isRevenueEvolution = $columnToAdd === 'revenue_evolution';
     }
+
     /**
      * Returns the difference between the column in the specific row and its
      * sister column in the past DataTable.
@@ -65,19 +79,27 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
     protected function getDividend($row)
     {
         $currentValue = $row->getColumn($this->columnValueToRead);
+
         // if the site this is for doesn't support ecommerce & this is for the revenue_evolution column,
         // we don't add the new column
-        if ($currentValue === \false && $this->isRevenueEvolution && !Site::isEcommerceEnabledFor($row->getColumn('label'))) {
-            return \false;
+        if (
+            $currentValue === false
+            && $this->isRevenueEvolution
+            && !Site::isEcommerceEnabledFor($row->getColumn('label'))
+        ) {
+            return false;
         }
+
         $pastRow = $this->getPastRowFromCurrent($row);
         if ($pastRow) {
             $pastValue = $pastRow->getColumn($this->columnValueToRead);
         } else {
             $pastValue = 0;
         }
+
         return $currentValue - $pastValue;
     }
+
     /**
      * Returns the value of the column in $row's sister row in the past
      * DataTable.
@@ -91,8 +113,10 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
         if (!$pastRow) {
             return 0;
         }
+
         return $pastRow->getColumn($this->columnNameUsedAsDivisor);
     }
+
     /**
      * Calculates and formats a quotient based on a divisor and dividend.
      *
@@ -109,9 +133,12 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
     {
         $value = self::getPercentageValue($value, $divisor, $this->quotientPrecision);
         $value = self::appendPercentSign($value);
+
         $value = Common::forceDotAsSeparatorForDecimalPoint($value);
+
         return $value;
     }
+
     /**
      * Utility function. Returns the current row in the past DataTable.
      *
@@ -122,6 +149,7 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
     {
         return $this->pastDataTable->getRowFromLabel($row->getColumn('label'));
     }
+
     /**
      * Calculates the evolution percentage for two arbitrary values.
      *
@@ -134,7 +162,7 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
      *
      * @return string The evolution percent, eg `'15%'`.
      */
-    public static function calculate($currentValue, $pastValue, $quotientPrecision = 0, $appendPercentSign = \true, $prependPlusSignWhenPositive = \false)
+    public static function calculate($currentValue, $pastValue, $quotientPrecision = 0, $appendPercentSign = true, $prependPlusSignWhenPositive = false)
     {
         $number = self::getPercentageValue($currentValue - $pastValue, $pastValue, $quotientPrecision);
         if ($appendPercentSign) {
@@ -142,22 +170,28 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
         } else {
             $formatted = NumberFormatter::getInstance()->format($number, $quotientPrecision);
         }
+
         if ($prependPlusSignWhenPositive && $number >= 0) {
             $formatted = Piwik::translate('Intl_NumberSymbolPlus') . $formatted;
         }
+
         return $formatted;
     }
+
     public static function appendPercentSign($number)
     {
         return $number . '%';
     }
+
     public static function prependPlusSignToNumber($number)
     {
         if ((float) $number > 0) {
             return '+' . $number;
         }
+
         return $number;
     }
+
     /**
      * Returns an evolution percent based on a value & divisor.
      */
@@ -168,8 +202,9 @@ class CalculateEvolutionFilter extends \Piwik\DataTable\Filter\ColumnCallbackAdd
         } elseif ($divisor == 0) {
             $evolution = 100;
         } else {
-            $evolution = $value / $divisor * 100;
+            $evolution = ($value / $divisor) * 100;
         }
+
         $evolution = round($evolution, $quotientPrecision);
         return $evolution;
     }

@@ -14,7 +14,7 @@ import * as path from "path";
 export default class MatomoPage extends Page {
 
   async open(path: string) {
-    const result = super.open(path);
+    const result = await super.open(path);
     await this.waitForLoading();
     await this.addStylesToPage(`
       table.entityTable tbody tr:hover td { background-color: unset !important; }
@@ -24,16 +24,11 @@ export default class MatomoPage extends Page {
   }
 
   async removeWhatsNewIfPresent(u) {
-    let exists = false;
+    // the popover is opened on DOMContentLoaded, its content is loaded after
+    const isOpening = await browser.execute(() => $('.what-is-new-popup').length > 0);
 
-    try {
-      await $('.whatisnew').waitForExist({ timeout: 5000 });
-      exists = true;
-    } catch (e) {
-      // ignore
-    }
-
-    if (exists) {
+    if (isOpening) {
+      await $('.whatisnew').waitForExist({ timeout: 30000 });
       await browser.execute(() => {
         $('.whatisnew').closest('.ui-dialog').find('.ui-dialog-titlebar-close')[0].click();
       });
@@ -67,11 +62,22 @@ export default class MatomoPage extends Page {
   }
 
   async waitForLoading() {
+    // idle must hold for consecutive checks, since loading can start in a chain of requests
+    let idleChecks = 0;
     try {
       await browser.waitUntil(async () => {
-        const loadingGifs = await browser.execute(() => $('.loadingPiwik:visible').length);
-        return loadingGifs !== 0;
-      }, { timeout: 30000 });
+        const isIdle = await browser.execute(() => {
+          const hasNoActiveRequests = !window.jQuery || window.jQuery.active === 0;
+          const hasVisibleLoader = Array.from(document.querySelectorAll('.loadingPiwik')).some((loader) => {
+            const style = window.getComputedStyle(loader);
+            return style.display !== 'none' && style.visibility !== 'hidden' && loader.getClientRects().length > 0;
+          });
+          const hasNoVisibleLoader = !hasVisibleLoader;
+          return hasNoActiveRequests && hasNoVisibleLoader;
+        });
+        idleChecks = isIdle ? idleChecks + 1 : 0;
+        return idleChecks >= 3;
+      }, { timeout: 30000, interval: 200 });
     } catch (e: any) {
       if (!/condition timed out/i.test(e.message)) { // don't fail the whole test if this times out for some reason
         throw e;

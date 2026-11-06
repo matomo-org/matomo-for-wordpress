@@ -6,10 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\Metrics;
 
 use Piwik\Columns\Dimension;
+
 /**
  * Classifies how the total of a metric relates to the totals of the rows it was calculated from.
  *
@@ -23,14 +26,21 @@ use Piwik\Columns\Dimension;
 class MetricTotalsTreatment
 {
     public const TREATMENT_ADDITIVE = 'additive';
+
     public const TREATMENT_DERIVED = 'derived';
+
     /**
      * Semantic types whose values are totalled by summing them.
      *
      * Every other type is treated as derived, including `float`, because the float metrics Matomo
      * shows are averages and ratios rather than values that add up.
      */
-    private const ADDITIVE_SEMANTIC_TYPES = [Dimension::TYPE_NUMBER, Dimension::TYPE_MONEY, Dimension::TYPE_BYTE];
+    private const ADDITIVE_SEMANTIC_TYPES = [
+        Dimension::TYPE_NUMBER,
+        Dimension::TYPE_MONEY,
+        Dimension::TYPE_BYTE,
+    ];
+
     /**
      * Metrics whose treatment cannot be derived from their metadata.
      *
@@ -41,7 +51,12 @@ class MetricTotalsTreatment
      *   {@link \Piwik\DataTable\Row::sumRow()} instead of through the aggregation operations, so the
      *   aggregation metadata cannot tell that it is not summed.
      */
-    private const TREATMENT_OVERRIDES = ['nb_uniq_visitors' => self::TREATMENT_DERIVED, 'nb_users' => self::TREATMENT_DERIVED, 'max_actions' => self::TREATMENT_DERIVED];
+    private const TREATMENT_OVERRIDES = [
+        'nb_uniq_visitors' => self::TREATMENT_DERIVED,
+        'nb_users' => self::TREATMENT_DERIVED,
+        'max_actions' => self::TREATMENT_DERIVED,
+    ];
+
     /**
      * Returns how the total of the given metric should be treated.
      *
@@ -54,26 +69,40 @@ class MetricTotalsTreatment
      *                                                       metadata.
      * @return string One of the `TREATMENT_*` constants.
      */
-    public static function getTreatment(string $metricName, array $semanticTypes = [], array $processedMetricNames = [], array $aggregationOps = []) : string
-    {
+    public static function getTreatment(
+        string $metricName,
+        array $semanticTypes = [],
+        array $processedMetricNames = [],
+        array $aggregationOps = []
+    ): string {
         if (isset(self::TREATMENT_OVERRIDES[$metricName])) {
             return self::TREATMENT_OVERRIDES[$metricName];
         }
-        if (in_array($metricName, $processedMetricNames, \true)) {
+
+        if (in_array($metricName, $processedMetricNames, true)) {
             return self::TREATMENT_DERIVED;
         }
-        if (isset($aggregationOps[$metricName]) && !self::isSumOperation($aggregationOps[$metricName])) {
+
+        if (
+            isset($aggregationOps[$metricName])
+            && !self::isSumOperation($aggregationOps[$metricName])
+        ) {
             return self::TREATMENT_DERIVED;
         }
+
         if (!empty($semanticTypes[$metricName])) {
-            return in_array($semanticTypes[$metricName], self::ADDITIVE_SEMANTIC_TYPES, \true) ? self::TREATMENT_ADDITIVE : self::TREATMENT_DERIVED;
+            return in_array($semanticTypes[$metricName], self::ADDITIVE_SEMANTIC_TYPES, true)
+                ? self::TREATMENT_ADDITIVE
+                : self::TREATMENT_DERIVED;
         }
+
         return self::TREATMENT_ADDITIVE;
     }
+
     /**
      * @param string|callable $operation
      */
-    private static function isSumOperation($operation) : bool
+    private static function isSumOperation($operation): bool
     {
         return is_string($operation) && 'sum' === strtolower($operation);
     }

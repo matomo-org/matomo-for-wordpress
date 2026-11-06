@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
 use Piwik\API\Request as ApiRequest;
@@ -23,6 +25,7 @@ use Piwik\Plugin\ReportsProvider;
 use Piwik\Plugins\CoreVisualizations\Metrics\Formatter\Numeric;
 use Piwik\Segment;
 use Piwik\Site;
+
 /**
  * Fetches the additional historical data {@see ForecastBuilder} consumes for seasonal
  * decomposition: a 70-day daily window plus, for year-level forecasts, a multi-year monthly
@@ -48,6 +51,7 @@ class ForecastSubPeriodFetcher
      * the analog window (so no inner request is needed).
      */
     private const DAY_ANALOG_WINDOW_DAYS = 70;
+
     /**
      * Week-target daily window. The week seasonal decomposition needs same-DoW analog samples
      * for each remaining day in the in-progress week, with {@see ForecastBuilder::WEEK_ANALOG_CHUNK}
@@ -57,6 +61,7 @@ class ForecastSubPeriodFetcher
      * future {@see ForecastBuilder::WEEK_ANALOG_CHUNK} bump up to 4 too tight.
      */
     private const WEEK_DAILY_WINDOW_DAYS = 30;
+
     /**
      * Month-target daily window. Same shape as the week case but with
      * {@see ForecastBuilder::MONTH_ANALOG_CHUNK} = 4 samples per slot = 28 days of history
@@ -64,6 +69,7 @@ class ForecastSubPeriodFetcher
      * that exactly and gives one day of slack for the boundary case.
      */
     private const MONTH_DAILY_WINDOW_DAYS = 60;
+
     /**
      * Month-target monthly window. {@see ForecastBuilder::computeMonthOfYearScale()} only
      * needs the same-MoY trend numerator, and {@see ForecastBuilder::computeHistoricalPrior()}
@@ -73,6 +79,7 @@ class ForecastSubPeriodFetcher
      * Larger windows do not feed additional samples into the same-MoY walk.
      */
     private const MONTH_MONTHLY_WINDOW_YEARS = 2;
+
     /**
      * Year-target daily window. {@see ForecastBuilder::forecastYearSeasonal()} recurses into
      * {@see ForecastBuilder::forecastMonthSeasonal()} for the in-progress month, so the
@@ -80,6 +87,7 @@ class ForecastSubPeriodFetcher
      * month = 59 minimum, sized to 60.
      */
     private const YEAR_DAILY_WINDOW_DAYS = 60;
+
     /**
      * Year-target monthly window. {@see ForecastBuilder::forecastYearSeasonal()} walks
      * {@see ForecastBuilder::YEAR_ANALOG_CHUNK} = 8 same-MoY samples back through the
@@ -87,12 +95,46 @@ class ForecastSubPeriodFetcher
      * lookup without feeding additional samples to the analog walk.
      */
     private const YEAR_MONTHLY_WINDOW_YEARS = 8;
+
+    /**
+     * Number of prior same-granularity periods fetched for the week/month/year historical prior,
+     * expressed in periods of the displayed target's own granularity: ten prior weeks for a week
+     * target, ten prior months for a month target, ten prior years for a year target.
+     *
+     * Sized the same way every other window here is -- the samples the consumer walks times the
+     * stride it walks them in. The consumer is
+     * {@see ForecastBuilder::getHistoricalSamplesForSeries()}, which takes at most
+     * {@see ForecastBuilder::PERIOD_PRIOR_TARGET_SAMPLES} of them in one-period strides, so ten
+     * periods is exactly what it can consume and going wider would lengthen the inner archive
+     * lookup without feeding it another sample.
+     *
+     * This is the window that makes the non-day prior independent of the displayed range, the way
+     * {@see self::DAY_ANALOG_WINDOW_DAYS} does for the day target. Without it the prior reads the
+     * displayed ticks, so the forecast moves whenever the graph's "rows to display" changes.
+     * Deduplicated counts need it most: they have no decomposition path, so this prior is their
+     * whole forecast on every week, month and year tick.
+     *
+     * Also the threshold above which the displayed range alone supplies the window, again like the
+     * day target: the displayed ticks are the same archived period values the request would return,
+     * so a display at least this wide costs no request and a narrower one costs a request for the
+     * gap only.
+     *
+     * Sized for recency, not for calendar alignment. The aligned-sample preference in
+     * {@see ForecastBuilder::getHistoricalSamplesForSeries()} wants year-apart points, which this
+     * window is deliberately too shallow to hold -- a bounded recency window is the thing the
+     * aligned set was compensating for when the prior had to take whatever the display offered.
+     */
+    private const PERIOD_PRIOR_WINDOW_PERIODS = 10;
+
     /** @var callable(string, array<string, mixed>): mixed */
     private $apiRequestProcessor;
+
     /** @var LoggerInterface */
     private $logger;
+
     /** @var callable(int, string): (string|null) */
     private $earliestDataDateResolver;
+
     /**
      * @param callable(string, array<string, mixed>): mixed|null $apiRequestProcessor
      *        Inner-request driver. Receives the API method name and a parameter array, returns
@@ -107,59 +149,75 @@ class ForecastSubPeriodFetcher
      *        cost a skip-path recompute or an on-demand archive on every render. Returns null
      *        for "no floor". Null uses {@see self::resolveEarliestDataDate()}.
      */
-    public function __construct(?callable $apiRequestProcessor = null, ?LoggerInterface $logger = null, ?callable $earliestDataDateResolver = null)
-    {
+    public function __construct(
+        ?callable $apiRequestProcessor = null,
+        ?LoggerInterface $logger = null,
+        ?callable $earliestDataDateResolver = null
+    ) {
         $this->apiRequestProcessor = $apiRequestProcessor ?? static function (string $apiMethod, array $params) {
             return ApiRequest::processRequest($apiMethod, $params);
         };
         $this->logger = $logger ?? StaticContainer::get(LoggerInterface::class);
-        $this->earliestDataDateResolver = $earliestDataDateResolver ?? function (int $idSite, string $segment) : ?string {
+        $this->earliestDataDateResolver = $earliestDataDateResolver ?? function (int $idSite, string $segment): ?string {
             return $this->resolveEarliestDataDate($idSite, $segment);
         };
     }
+
     /**
      * Fetch sub-period samples for the displayed evolution series. Returns empty maps when
      * the displayed period type does not need them (e.g. non-day/week/month/year) or when
      * the inner request cannot be issued (no API method, no idSite, etc.).
      *
      * @param array<DataTable> $dataTables Per-tick tables of the displayed series, ordered by
-     *        date. Used to read the period type and the end date of the displayed range.
+     *                                     date. Used to read the period type and the end date of the displayed range.
      * @param ForecastSeriesState $seriesState Per-series metadata (columns, rows, monotonicity)
-     *        threaded through to {@see self::extractSamples()}.
+     *                                         threaded through to {@see self::extractSamples()}.
      * @param string $apiMethod API method spec to fan out to (`Module.action`).
      * @param int $idSite Site id the displayed series belongs to.
      * @param string $segment Segment expression to pin onto the inner request.
-     * @return array{daily: array<string, array<string, float>>, monthly: array<string, array<string, float>>, earliestDataDate: string|null}
+     * @return array{daily: array<string, array<string, float>>, monthly: array<string, array<string, float>>, period: array<string, array<string, float>>, earliestDataDate: string|null}
      */
-    public function collect(array $dataTables, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, string $apiMethod, int $idSite, string $segment) : array
-    {
-        $empty = ['daily' => [], 'monthly' => [], 'earliestDataDate' => null];
+    public function collect(
+        array $dataTables,
+        ForecastSeriesState $seriesState,
+        string $apiMethod,
+        int $idSite,
+        string $segment
+    ): array {
+        $empty = ['daily' => [], 'monthly' => [], 'period' => [], 'earliestDataDate' => null];
+
         if (empty($dataTables) || [] === $seriesState->getAllSeriesColumns()) {
             return $empty;
         }
-        if (empty($apiMethod) || strpos($apiMethod, '.') === \false) {
+
+        if (empty($apiMethod) || strpos($apiMethod, '.') === false) {
             return $empty;
         }
+
         if ($idSite <= 0) {
             return $empty;
         }
+
         // Earliest date the site/segment can hold data. Both the inner fetch windows below and
         // the caller's ForecastBuilder floor the analog history at this date, so resolve it once
         // and thread it through every return path (including the display-only day branches that
         // skip the inner request).
         $earliestDataDate = ($this->earliestDataDateResolver)($idSite, $segment);
+
         $firstTable = reset($dataTables);
         $period = $firstTable->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
         if (!$period instanceof Period) {
             return $empty;
         }
         $periodLabel = $period->getLabel();
+
         $lastTable = end($dataTables);
         $lastPeriod = $lastTable->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
         if (!$lastPeriod instanceof Period) {
             return $empty;
         }
         $endDate = $lastPeriod->getDateEnd()->subDay(1)->toString('Y-m-d');
+
         // getDateEnd() is the calendar end of the (possibly in-progress) last displayed period,
         // so for a mid-period month/year target it lands in the future. Anchoring the historical
         // sample windows there would push the daily window entirely into the future -- every
@@ -170,6 +228,7 @@ class ForecastSubPeriodFetcher
         if ($site instanceof Site) {
             $endDate = $this->clampEndDate($endDate, $site);
         }
+
         try {
             if ('day' === $periodLabel) {
                 // Day-period forecasts cannot decompose into sub-periods, so the prior-only
@@ -182,33 +241,73 @@ class ForecastSubPeriodFetcher
                 // range itself already spans the analog window (e.g. evolution_day_last_n >= 70),
                 // no inner request fires at all.
                 $firstDisplayedDate = $period->getDateStart()->toString('Y-m-d');
-                $displayDailyMap = $this->extractDisplayedDailyMap($dataTables, $seriesState);
-                $analogWindowStart = Date::factory($endDate)->subDay(self::DAY_ANALOG_WINDOW_DAYS)->toString('Y-m-d');
+                $displayDailyMap = $this->extractDisplayedSampleMap($dataTables, $seriesState, 'day');
+
+                $analogWindowStart = Date::factory($endDate)
+                    ->subDay(self::DAY_ANALOG_WINDOW_DAYS)
+                    ->toString('Y-m-d');
+
                 if (strcmp($firstDisplayedDate, $analogWindowStart) <= 0) {
                     // Displayed range covers (or exceeds) the analog window. Skip the fetch.
-                    return ['daily' => $displayDailyMap, 'monthly' => [], 'earliestDataDate' => $earliestDataDate];
+                    return ['daily' => $displayDailyMap, 'monthly' => [], 'period' => [], 'earliestDataDate' => $earliestDataDate];
                 }
+
                 $gapEndDate = Date::factory($firstDisplayedDate)->subDay(1)->toString('Y-m-d');
+
                 // Clamp the gap window to the earliest date the site (or an auto-archived
                 // segment) can have data. A gap start that predates the site's existence asks
                 // for sub-periods that cannot hold data: each would hit the archiver's skip
                 // path (recomputed, never persisted) or, under browser archiving, trigger an
                 // on-demand archive -- on every render. When the whole gap predates the data,
                 // the displayed range alone supplies the analog walk, so drop the inner request.
-                $gapStartDate = $this->clampStartDate($analogWindowStart, $earliestDataDate);
+                $gapStartDate = $this->clampStartDate(
+                    $analogWindowStart,
+                    $earliestDataDate
+                );
                 if (strcmp($gapStartDate, $gapEndDate) > 0) {
-                    return ['daily' => $displayDailyMap, 'monthly' => [], 'earliestDataDate' => $earliestDataDate];
+                    return ['daily' => $displayDailyMap, 'monthly' => [], 'period' => [], 'earliestDataDate' => $earliestDataDate];
                 }
-                $gapDailyMap = $this->fetchSeries($apiMethod, $idSite, $segment, 'day', $gapStartDate, $gapEndDate, $seriesState);
-                return ['daily' => $this->mergeDailyMaps($gapDailyMap, $displayDailyMap), 'monthly' => [], 'earliestDataDate' => $earliestDataDate];
+
+                $gapDailyMap = $this->fetchSeries(
+                    $apiMethod,
+                    $idSite,
+                    $segment,
+                    'day',
+                    $gapStartDate,
+                    $gapEndDate,
+                    $seriesState
+                );
+
+                return [
+                    'daily'   => $this->mergeDailyMaps($gapDailyMap, $displayDailyMap),
+                    'monthly' => [],
+                    'period'  => [],
+                    'earliestDataDate' => $earliestDataDate,
+                ];
             }
             if ('week' === $periodLabel || 'month' === $periodLabel) {
                 // Daily window sized to what the seasonal-decomposition path actually consumes:
                 // WEEK_DAILY_WINDOW_DAYS for week (in-progress week + same-DoW × 3 history),
                 // MONTH_DAILY_WINDOW_DAYS for month (in-progress month + same-DoW × 4 history).
-                $dailyWindow = 'week' === $periodLabel ? self::WEEK_DAILY_WINDOW_DAYS : self::MONTH_DAILY_WINDOW_DAYS;
-                $startDate = Date::factory($endDate)->subDay($dailyWindow)->toString('Y-m-d');
-                $dailyMap = $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'day', $startDate, $endDate, $seriesState, $earliestDataDate);
+                $dailyWindow = 'week' === $periodLabel
+                    ? self::WEEK_DAILY_WINDOW_DAYS
+                    : self::MONTH_DAILY_WINDOW_DAYS;
+                $startDate = (Date::factory($endDate))->subDay($dailyWindow)->toString('Y-m-d');
+
+                $dailyMap = [];
+                if ($this->seriesStateHasDecomposableSeries($seriesState)) {
+                    $dailyMap = $this->fetchClampedSeries(
+                        $apiMethod,
+                        $idSite,
+                        $segment,
+                        'day',
+                        $startDate,
+                        $endDate,
+                        $seriesState,
+                        $earliestDataDate
+                    );
+                }
+
                 // Monthly fan-out on the month target is consumed only by the UP-flavoured
                 // {@see ForecastBuilder::computeMonthOfYearScale()}; FREE/DOWN month forecasts
                 // skip the MoY scaling because scaling rates/mins by a traffic ratio is
@@ -216,25 +315,87 @@ class ForecastSubPeriodFetcher
                 // graph -- the data would have no consumer.
                 $monthlyMap = [];
                 if ('month' === $periodLabel && $this->seriesStateHasUpSeries($seriesState)) {
-                    $monthlyMap = $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'month', $this->yearsBack($endDate, self::MONTH_MONTHLY_WINDOW_YEARS), $endDate, $seriesState, $earliestDataDate);
+                    $monthlyMap = $this->fetchClampedSeries(
+                        $apiMethod,
+                        $idSite,
+                        $segment,
+                        'month',
+                        $this->yearsBack($endDate, self::MONTH_MONTHLY_WINDOW_YEARS),
+                        $endDate,
+                        $seriesState,
+                        $earliestDataDate
+                    );
                 }
-                return ['daily' => $dailyMap, 'monthly' => $monthlyMap, 'earliestDataDate' => $earliestDataDate];
+
+                return [
+                    'daily'   => $dailyMap,
+                    'monthly' => $monthlyMap,
+                    'period'  => $this->fetchPeriodPriorSamples(
+                        $dataTables,
+                        $apiMethod,
+                        $idSite,
+                        $segment,
+                        $periodLabel,
+                        $period->getDateStart()->toString('Y-m-d'),
+                        $endDate,
+                        $seriesState,
+                        $earliestDataDate
+                    ),
+                    'earliestDataDate' => $earliestDataDate,
+                ];
             }
             if ('year' === $periodLabel) {
-                $dailyStart = Date::factory($endDate)->subDay(self::YEAR_DAILY_WINDOW_DAYS)->toString('Y-m-d');
-                return ['daily' => $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'day', $dailyStart, $endDate, $seriesState, $earliestDataDate), 'monthly' => $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'month', $this->yearsBack($endDate, self::YEAR_MONTHLY_WINDOW_YEARS), $endDate, $seriesState, $earliestDataDate), 'earliestDataDate' => $earliestDataDate];
+                $dailyStart = (Date::factory($endDate))->subDay(self::YEAR_DAILY_WINDOW_DAYS)->toString('Y-m-d');
+                // Both year fan-outs feed the seasonal path and nothing else:
+                // {@see ForecastBuilder::buildSeasonalForecastValue()} hands every deduplicated
+                // count to the prior-only path before it reads either map, and the year branch's
+                // monthly readers all sit behind that. A graph of nothing but deduplicated counts
+                // therefore consumes neither, so both inner requests are skipped rather than only
+                // the daily one.
+                $hasDecomposableSeries = $this->seriesStateHasDecomposableSeries($seriesState);
+                return [
+                    'daily'   => $hasDecomposableSeries
+                        ? $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'day', $dailyStart, $endDate, $seriesState, $earliestDataDate)
+                        : [],
+                    'monthly' => $hasDecomposableSeries
+                        ? $this->fetchClampedSeries($apiMethod, $idSite, $segment, 'month', $this->yearsBack($endDate, self::YEAR_MONTHLY_WINDOW_YEARS), $endDate, $seriesState, $earliestDataDate)
+                        : [],
+                    'period'  => $this->fetchPeriodPriorSamples(
+                        $dataTables,
+                        $apiMethod,
+                        $idSite,
+                        $segment,
+                        $periodLabel,
+                        $period->getDateStart()->toString('Y-m-d'),
+                        $endDate,
+                        $seriesState,
+                        $earliestDataDate
+                    ),
+                    'earliestDataDate' => $earliestDataDate,
+                ];
             }
         } catch (\Throwable $e) {
             // Defensive: any error in the parallel fetch falls back to the prior-only path.
             // The seasonal-decomposition advantage is lost on this render, but the forecast
             // still renders something defensible from the displayed series alone. Log so a
             // sustained dip in forecast quality is investigable instead of silent.
-            $this->logger->info('Evolution forecast sub-period fetch failed for {apiMethod} (idSite={idSite}, period={period}): {message}', ['apiMethod' => $apiMethod, 'idSite' => $idSite, 'period' => $periodLabel, 'message' => $e->getMessage(), 'exception' => $e]);
+            $this->logger->info(
+                'Evolution forecast sub-period fetch failed for {apiMethod} (idSite={idSite}, period={period}): {message}',
+                [
+                    'apiMethod' => $apiMethod,
+                    'idSite'    => $idSite,
+                    'period'    => $periodLabel,
+                    'message'   => $e->getMessage(),
+                    'exception' => $e,
+                ]
+            );
         }
+
         // Fetch failed or the period type needs no sub-period samples: still surface the
         // resolved floor so the caller's prior-only path stays width-independent.
-        return ['daily' => [], 'monthly' => [], 'earliestDataDate' => $earliestDataDate];
+        return ['daily' => [], 'monthly' => [], 'period' => [], 'earliestDataDate' => $earliestDataDate];
     }
+
     /**
      * Issue a single sub-period API request and shape the result into a series-keyed map of
      * date → value. Date keys are 'Y-m-d' for day targets and 'Y-m' for month targets,
@@ -244,8 +405,15 @@ class ForecastSubPeriodFetcher
      *
      * @return array<string, array<string, float>>
      */
-    private function fetchSeries(string $apiMethod, int $idSite, string $segment, string $subPeriod, string $startDate, string $endDate, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState) : array
-    {
+    private function fetchSeries(
+        string $apiMethod,
+        int $idSite,
+        string $segment,
+        string $subPeriod,
+        string $startDate,
+        string $endDate,
+        ForecastSeriesState $seriesState
+    ): array {
         // Scope the inner request to the columns the chart actually plots. The displayed
         // evolution graph already does this (Controller::getLastUnitGraphAcrossPlugins sets
         // custom_parameters['columns'] = columns_to_display); the fan-out did not, so when the
@@ -254,9 +422,13 @@ class ForecastSubPeriodFetcher
         // Goals, ...). The forecast only consumes the plotted columns, so querying the rest is
         // pure waste. An empty set is sent as columns='' which API.get reads as "all metrics",
         // preserving the legacy unscoped behaviour for callers without a populated series state.
-        $plottedColumns = array_values(array_unique(array_filter($seriesState->getAllSeriesColumns(), static function ($column) : bool {
-            return '' !== $column;
-        })));
+        $plottedColumns = array_values(array_unique(array_filter(
+            $seriesState->getAllSeriesColumns(),
+            static function ($column): bool {
+                return '' !== $column;
+            }
+        )));
+
         // Resolve the cross-plugin merge API.get into one fetch group per owning Module.get report.
         // API.get is a PHP-side merge, not an archive method, so the framework rebuilds its
         // multi-sub-period result one sub-period at a time -- re-running the full report-metadata
@@ -269,24 +441,42 @@ class ForecastSubPeriodFetcher
         // below. Non-API.get callers and unresolvable column sets fall back to a single group on
         // the original method (see resolveModuleColumnGroups).
         $groups = $this->resolveModuleColumnGroups($apiMethod, $idSite, $plottedColumns);
+
         $samples = [];
         foreach ($groups as $group) {
-            $map = $this->requestSubPeriodMap($group['method'], $idSite, $segment, $subPeriod, $startDate, $endDate, $group['columns']);
+            $map = $this->requestSubPeriodMap(
+                $group['method'],
+                $idSite,
+                $segment,
+                $subPeriod,
+                $startDate,
+                $endDate,
+                $group['columns']
+            );
             if (null === $map) {
                 continue;
             }
+
             $this->applyChartUnitFormatting($map, $group['method']);
+
             // Restrict to this group's own series before merging: the group fetched only its
             // module's columns, so a sibling series' column is absent from these tables and
             // extractSamples would emit a synthetic MONOTONICITY_UP zero for it on any empty
             // sub-period. Merging that zero could clobber the real value the sibling's own group
             // produced (and the merge order is not significant once each series is sourced solely
             // from its owning group).
-            $groupSamples = $this->restrictSamplesToColumns($this->extractSamples($map, $seriesState, $subPeriod), $seriesState, $group['columns']);
+            $groupSamples = $this->restrictSamplesToColumns(
+                $this->extractSamples($map, $seriesState, $subPeriod),
+                $seriesState,
+                $group['columns']
+            );
+
             $samples = $this->mergeSampleMaps($samples, $groupSamples);
         }
+
         return $samples;
     }
+
     /**
      * Issue one sub-period request for $method scoped to $columns and return the raw
      * {@see DataTable\Map}, or null when the API method did not return a Map (unsupported method,
@@ -295,8 +485,15 @@ class ForecastSubPeriodFetcher
      *
      * @param array<int, string> $columns
      */
-    private function requestSubPeriodMap(string $method, int $idSite, string $segment, string $subPeriod, string $startDate, string $endDate, array $columns) : ?DataTable\Map
-    {
+    private function requestSubPeriodMap(
+        string $method,
+        int $idSite,
+        string $segment,
+        string $subPeriod,
+        string $startDate,
+        string $endDate,
+        array $columns
+    ): ?DataTable\Map {
         // processRequest() picks up the core convention's compare=0 / format=original /
         // serialize=0 defaults. $_GET + $_POST inheritance is asymmetric on purpose: scope
         // params (idGoal, idDimension, future plugin selectors) inherit so the inner sample
@@ -305,39 +502,34 @@ class ForecastSubPeriodFetcher
         // set, pinned below: inheriting them would silently shift which rows the inner
         // samples come from. isComparing upstream guards against comparison leakage.
         $result = ($this->apiRequestProcessor)($method, [
-            'idSite' => $idSite,
-            'period' => $subPeriod,
-            'date' => $startDate . ',' . $endDate,
-            'segment' => $segment,
-            'columns' => implode(',', $columns),
-            'filter_limit' => -1,
+            'idSite'                  => $idSite,
+            'period'                  => $subPeriod,
+            'date'                    => $startDate . ',' . $endDate,
+            'segment'                 => $segment,
+            'columns'                 => implode(',', $columns),
+            'filter_limit'            => -1,
             'disable_generic_filters' => 1,
             // format_metrics=1 replaces numeric values with display strings (bandwidth -> "3 G")
             // and stamps PROCESSED_METRICS_FORMATTED_FLAG so the Numeric pass below cannot
             // re-run. Pin raw so the decomposition has numbers to work with.
-            'format_metrics' => 0,
+            'format_metrics'          => 0,
             // Framework result-shape pins -- inheriting these would mismatch the chart's rows:
-            'flat' => 0,
-            // flattens subtables; row matcher hits wrong labels
-            'expanded' => 0,
-            // same risk as flat=1
-            'idSubtable' => '',
-            // would point at an unrelated subtable
-            'pivotBy' => '',
-            // transposes rows around a dimension
-            'filter_offset' => 0,
-            // skips rows; shifts getFirstRow()
-            'filter_sort_column' => '',
-            // outer sort reorders the inner first row
-            'filter_sort_order' => '',
-            'filter_pattern' => '',
-            // outer UI search shrinks the inner result
+            'flat'                     => 0,    // flattens subtables; row matcher hits wrong labels
+            'expanded'                 => 0,    // same risk as flat=1
+            'idSubtable'               => '',   // would point at an unrelated subtable
+            'pivotBy'                  => '',   // transposes rows around a dimension
+            'filter_offset'            => 0,    // skips rows; shifts getFirstRow()
+            'filter_sort_column'       => '',   // outer sort reorders the inner first row
+            'filter_sort_order'        => '',
+            'filter_pattern'           => '',   // outer UI search shrinks the inner result
             'filter_pattern_recursive' => '',
-            'filter_column' => '',
-            'keep_summary_row' => 0,
+            'filter_column'            => '',
+            'keep_summary_row'         => 0,    // belt-and-braces; disable_generic_filters=1 already gates this
         ]);
+
         return $result instanceof DataTable\Map ? $result : null;
     }
+
     /**
      * Bring the inner samples onto the same scale the outer evolution chart plots in. The
      * outer is rendered by {@see \Piwik\Plugins\CoreVisualizations\Visualizations\Graph},
@@ -351,7 +543,7 @@ class ForecastSubPeriodFetcher
      * system. $method is the report the group was fetched from, so per-module groups format with
      * their own report's processed-metric definitions.
      */
-    private function applyChartUnitFormatting(DataTable\Map $result, string $method) : void
+    private function applyChartUnitFormatting(DataTable\Map $result, string $method): void
     {
         $report = $this->resolveReportForFormatting($method);
         // Some `Module.get` reports (Goals.get is the canonical case) list a percent/ratio
@@ -368,11 +560,15 @@ class ForecastSubPeriodFetcher
         foreach ($result->getDataTables() as $subTable) {
             if ([] !== $extraMetrics) {
                 $existing = $subTable->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME) ?: [];
-                $subTable->setMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME, array_merge($extraMetrics, $existing));
+                $subTable->setMetadata(
+                    DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME,
+                    array_merge($extraMetrics, $existing)
+                );
             }
             $formatter->formatMetrics($subTable, $report);
         }
     }
+
     /**
      * Fetch a sub-period series after clamping its window start to the earliest date the
      * site/segment can have data. Returns an empty sample map -- without issuing the inner
@@ -381,39 +577,55 @@ class ForecastSubPeriodFetcher
      *
      * @return array<string, array<string, float>>
      */
-    private function fetchClampedSeries(string $apiMethod, int $idSite, string $segment, string $subPeriod, string $startDate, string $endDate, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, ?string $earliestDataDate) : array
-    {
+    private function fetchClampedSeries(
+        string $apiMethod,
+        int $idSite,
+        string $segment,
+        string $subPeriod,
+        string $startDate,
+        string $endDate,
+        ForecastSeriesState $seriesState,
+        ?string $earliestDataDate
+    ): array {
         $clampedStart = $this->clampStartDate($startDate, $earliestDataDate);
         if (strcmp($clampedStart, $endDate) > 0) {
             // The entire window falls before the site/segment came into existence. The prior-only
             // path in ForecastBuilder takes over from the displayed period-level series alone.
             return [];
         }
+
         return $this->fetchSeries($apiMethod, $idSite, $segment, $subPeriod, $clampedStart, $endDate, $seriesState);
     }
+
     /**
      * Raise $startDate to $earliestDataDate when the latter is later. Both are 'Y-m-d' strings,
      * which compare lexicographically in chronological order, so strcmp() is a date comparison
      * here. A null floor (resolver opted out) leaves the start untouched.
      */
-    private function clampStartDate(string $startDate, ?string $earliestDataDate) : string
+    private function clampStartDate(string $startDate, ?string $earliestDataDate): string
     {
         if (null !== $earliestDataDate && strcmp($earliestDataDate, $startDate) > 0) {
             return $earliestDataDate;
         }
+
         return $startDate;
     }
+
     /**
      * Lower $endDate to the last complete day in the site's timezone when the displayed period
      * runs past it (a mid-period month/year target whose calendar end is in the future). Mirrors
      * {@see self::clampStartDate()}: both operands are 'Y-m-d' strings comparing lexicographically
      * in chronological order, so strcmp() is a date comparison here.
      */
-    private function clampEndDate(string $endDate, Site $site) : string
+    private function clampEndDate(string $endDate, Site $site): string
     {
-        $lastCompleteDay = Date::factoryInTimezone('today', $site->getTimezone())->subDay(1)->toString('Y-m-d');
+        $lastCompleteDay = Date::factoryInTimezone('today', $site->getTimezone())
+            ->subDay(1)
+            ->toString('Y-m-d');
+
         return strcmp($endDate, $lastCompleteDay) > 0 ? $lastCompleteDay : $endDate;
     }
+
     /**
      * Earliest 'Y-m-d' date the displayed series can hold archivable data for. The hard floor is
      * the site creation date -- no traffic can predate the site. When the request carries an
@@ -430,41 +642,47 @@ class ForecastSubPeriodFetcher
      * Any failure (site removed mid-request, unparseable segment) falls back to null -- no clamp
      * -- so a resolver hiccup can never silently truncate a legitimate window.
      */
-    private function resolveEarliestDataDate(int $idSite, string $segment) : ?string
+    private function resolveEarliestDataDate(int $idSite, string $segment): ?string
     {
         try {
             $earliest = Date::factory(Site::getCreationDateFor($idSite));
         } catch (\Throwable $e) {
             return null;
         }
+
         if ('' !== $segment) {
             $segmentStart = $this->resolveSegmentStartDate($segment, $idSite);
             if (null !== $segmentStart && $segmentStart->isLater($earliest)) {
                 $earliest = $segmentStart;
             }
         }
+
         return $earliest->toString('Y-m-d');
     }
+
     /**
      * Re-archive start date for an auto-archived segment matching $segment on $idSite, or null
      * when the segment is on-demand (so historic data is real and must not be clamped away) or
      * cannot be resolved.
      */
-    private function resolveSegmentStartDate(string $segment, int $idSite) : ?Date
+    private function resolveSegmentStartDate(string $segment, int $idSite): ?Date
     {
         try {
             $segmentObj = new Segment($segment, [$idSite]);
+
             /** @var SegmentArchiving $segmentArchiving */
             $segmentArchiving = StaticContainer::get(SegmentArchiving::class);
             $segmentInfo = $segmentArchiving->findSegmentForHash($segmentObj->getHash(), $idSite);
             if (null === $segmentInfo) {
                 return null;
             }
+
             return $segmentArchiving->getReArchiveSegmentStartDate($segmentInfo);
         } catch (\Throwable $e) {
             return null;
         }
     }
+
     /**
      * Split the plotted columns into one fetch group per owning `Module.get` report, so the
      * sub-period fan-out can issue catalog-free archive-backed requests instead of the
@@ -487,32 +705,41 @@ class ForecastSubPeriodFetcher
      * @param array<int, string> $plottedColumns
      * @return array<int, array{method: string, columns: array<int, string>}>
      */
-    private function resolveModuleColumnGroups(string $apiMethod, int $idSite, array $plottedColumns) : array
+    private function resolveModuleColumnGroups(string $apiMethod, int $idSite, array $plottedColumns): array
     {
         $fallback = [['method' => $apiMethod, 'columns' => $plottedColumns]];
+
         if ('API.get' !== $apiMethod || [] === $plottedColumns) {
             return $fallback;
         }
+
         try {
             $period = Common::getRequestVar('period', 'day', 'string');
-            $date = Common::getRequestVar('date', 'today', 'string');
-            $meta = $this->fetchReportMetadataCatalog($idSite, $period, $date);
+            $date   = Common::getRequestVar('date', 'today', 'string');
+            $meta   = $this->fetchReportMetadataCatalog($idSite, $period, $date);
         } catch (\Throwable $e) {
             return $fallback;
         }
+
         // Build column -> set-of-owning-modules from every plugin's `.get` report, mirroring the
         // scan API.get itself does (action 'get', no parameters, not the API module, has metrics).
         $modulesByColumn = [];
         foreach ($meta as $reportMeta) {
-            if (($reportMeta['action'] ?? null) !== 'get' || isset($reportMeta['parameters']) || ($reportMeta['module'] ?? 'API') === 'API' || empty($reportMeta['metrics'])) {
+            if (
+                ($reportMeta['action'] ?? null) !== 'get'
+                || isset($reportMeta['parameters'])
+                || ($reportMeta['module'] ?? 'API') === 'API'
+                || empty($reportMeta['metrics'])
+            ) {
                 continue;
             }
-            $module = $reportMeta['module'];
+            $module  = $reportMeta['module'];
             $metrics = array_merge($reportMeta['metrics'], $reportMeta['processedMetrics'] ?? []);
             foreach ($metrics as $column => $translation) {
-                $modulesByColumn[$column][$module] = \true;
+                $modulesByColumn[$column][$module] = true;
             }
         }
+
         // Group the plotted columns by their single owning module. Bail to the API.get fallback if
         // any column is unmapped or owned by more than one module, since a concrete per-module
         // fan-out cannot reproduce API.get's merge for it without guessing precedence.
@@ -524,17 +751,28 @@ class ForecastSubPeriodFetcher
                 // API.get fetch. This is correct but slow, and it would otherwise flip silently if a
                 // plugin later registered a colliding metric name -- log the offending column and its
                 // owner count so the regression is investigable rather than invisible.
-                $this->logger->debug('Evolution forecast module fan-out disabled: column {column} maps to {ownerCount} ' . 'modules (idSite={idSite}), falling back to API.get', ['column' => $column, 'ownerCount' => count($owners), 'idSite' => $idSite]);
+                $this->logger->debug(
+                    'Evolution forecast module fan-out disabled: column {column} maps to {ownerCount} '
+                    . 'modules (idSite={idSite}), falling back to API.get',
+                    [
+                        'column'     => $column,
+                        'ownerCount' => count($owners),
+                        'idSite'     => $idSite,
+                    ]
+                );
                 return $fallback;
             }
             $columnsByModule[(string) key($owners)][] = $column;
         }
+
         $groups = [];
         foreach ($columnsByModule as $module => $columns) {
             $groups[] = ['method' => $module . '.get', 'columns' => $columns];
         }
+
         return $groups;
     }
+
     /**
      * Report-metadata catalog used to resolve each plotted column to its owning `Module.get`
      * report, read exactly as {@see \Piwik\Plugins\API\API::get()} reads it.
@@ -548,10 +786,11 @@ class ForecastSubPeriodFetcher
      *
      * @return array<int, array<string, mixed>>
      */
-    protected function fetchReportMetadataCatalog(int $idSite, string $period, string $date) : array
+    protected function fetchReportMetadataCatalog(int $idSite, string $period, string $date): array
     {
         return \Piwik\Plugins\API\API::getInstance()->getReportMetadata($idSite, $period, $date);
     }
+
     /**
      * Per-series union of two sample maps (seriesLabel -> dateKey -> value), used to combine the
      * per-module group fetches. Each plotted column is owned by exactly one module
@@ -563,13 +802,15 @@ class ForecastSubPeriodFetcher
      * @param array<string, array<string, float>> $add
      * @return array<string, array<string, float>>
      */
-    private function mergeSampleMaps(array $base, array $add) : array
+    private function mergeSampleMaps(array $base, array $add): array
     {
         foreach ($add as $seriesLabel => $dateValues) {
             $base[$seriesLabel] = array_replace($base[$seriesLabel] ?? [], $dateValues);
         }
+
         return $base;
     }
+
     /**
      * Keep only the series whose plotted column belongs to $columns. A per-module group fetches
      * just its module's columns, so a sibling series' column is absent from the group's tables;
@@ -583,10 +824,11 @@ class ForecastSubPeriodFetcher
      * @param array<int, string> $columns
      * @return array<string, array<string, float>>
      */
-    private function restrictSamplesToColumns(array $samples, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, array $columns) : array
+    private function restrictSamplesToColumns(array $samples, ForecastSeriesState $seriesState, array $columns): array
     {
         $seriesColumns = $seriesState->getAllSeriesColumns();
-        $allowed = array_fill_keys($columns, \true);
+        $allowed       = array_fill_keys($columns, true);
+
         $restricted = [];
         foreach ($samples as $seriesLabel => $dateValues) {
             $column = $seriesColumns[$seriesLabel] ?? null;
@@ -594,8 +836,10 @@ class ForecastSubPeriodFetcher
                 $restricted[$seriesLabel] = $dateValues;
             }
         }
+
         return $restricted;
     }
+
     /**
      * Resolve the {@see \Piwik\Plugin\Report} the formatter consults to discover which
      * columns carry a {@see \Piwik\Plugin\ProcessedMetric} (and therefore need format()
@@ -604,14 +848,16 @@ class ForecastSubPeriodFetcher
      * processed metrics carried in the table's own EXTRA_PROCESSED_METRICS_METADATA_NAME,
      * which is the same surface the outer formatter sees.
      */
-    private function resolveReportForFormatting(string $apiMethod) : ?\Piwik\Plugin\Report
+    private function resolveReportForFormatting(string $apiMethod): ?\Piwik\Plugin\Report
     {
         $parts = explode('.', $apiMethod, 2);
         if (count($parts) !== 2) {
             return null;
         }
+
         return ReportsProvider::factory($parts[0], $parts[1]);
     }
+
     /**
      * Object-declared ProcessedMetrics from the `Module.getMetrics` report a `Module.get`
      * report delegates its metric computation to. These carry the format() logic (e.g. the
@@ -622,18 +868,21 @@ class ForecastSubPeriodFetcher
      *
      * @return array<string, \Piwik\Plugin\ProcessedMetric>
      */
-    private function resolveDelegatedProcessedMetrics(string $apiMethod) : array
+    private function resolveDelegatedProcessedMetrics(string $apiMethod): array
     {
         $parts = explode('.', $apiMethod, 2);
         if (count($parts) !== 2 || 'get' !== $parts[1]) {
             return [];
         }
+
         $metricsReport = ReportsProvider::factory($parts[0], 'getMetrics');
         if (null === $metricsReport) {
             return [];
         }
+
         return $metricsReport->getProcessedMetricsById();
     }
+
     /**
      * Shape a sub-period DataTable\Map into a series-keyed map of date → value. The result of
      * the inner API request has already been through ReplaceColumnNames so its row columns are
@@ -652,10 +901,14 @@ class ForecastSubPeriodFetcher
      *
      * @return array<string, array<string, float>>
      */
-    public function extractSamples(DataTable\Map $result, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, string $subPeriod) : array
-    {
+    public function extractSamples(
+        DataTable\Map $result,
+        ForecastSeriesState $seriesState,
+        string $subPeriod
+    ): array {
         return $this->extractSamplesFromTables($result->getDataTables(), $seriesState, $subPeriod);
     }
+
     /**
      * Same extraction as {@see self::extractSamples()} but reads from a plain array of
      * sub-tables. Lets the day-target path in {@see self::collect()} reuse the same
@@ -666,13 +919,17 @@ class ForecastSubPeriodFetcher
      * @param array<DataTable|DataTable\Map> $subTables
      * @return array<string, array<string, float>>
      */
-    private function extractSamplesFromTables(array $subTables, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState, string $subPeriod) : array
-    {
+    private function extractSamplesFromTables(
+        array $subTables,
+        ForecastSeriesState $seriesState,
+        string $subPeriod
+    ): array {
         $samples = [];
         $rowKey = $subPeriod === 'month' ? 'Y-m' : 'Y-m-d';
         $seriesColumns = $seriesState->getAllSeriesColumns();
         $seriesRows = $seriesState->getAllSeriesRows();
         $seriesMonotonicity = $seriesState->getAllSeriesMonotonicity();
+
         foreach ($subTables as $subTable) {
             if (!$subTable instanceof DataTable) {
                 continue;
@@ -682,74 +939,229 @@ class ForecastSubPeriodFetcher
                 continue;
             }
             $dateKey = $tablePeriod->getDateStart()->toString($rowKey);
+
             foreach ($seriesColumns as $seriesLabel => $columnName) {
-                $rowMatcher = $seriesRows[$seriesLabel] ?? \false;
-                $row = \false === $rowMatcher ? $subTable->getFirstRow() : $subTable->getRowFromLabel($rowMatcher);
+                $rowMatcher = $seriesRows[$seriesLabel] ?? false;
+                $row = (false === $rowMatcher)
+                    ? $subTable->getFirstRow()
+                    : $subTable->getRowFromLabel($rowMatcher);
+
                 if (empty($row)) {
-                    // No matching row on this date. Only MONOTONICITY_UP count series can
-                    // defensibly read that as a real 0 (no observation = zero count), so they
-                    // get the backfill to keep the analog calendar dense. MONOTONICITY_DOWN
-                    // (running mins) and MONOTONICITY_FREE (rates/averages) have no
-                    // "no observation → 0" mapping: a min of nothing is not 0, and a 0% rate
-                    // inferred from no traffic is not a real ratio observation. Leaving the
-                    // date absent lets recentSameDoWValues() skip it instead of treating a
-                    // synthetic zero as a same-DoW analog, which would pull the prior below
-                    // current and trip shouldRenderForecastValue() into silent suppression.
+                    // No matching row on this date. Only the count families (additive
+                    // MONOTONICITY_UP and deduplicated MONOTONICITY_UNIQUE) can defensibly read
+                    // that as a real 0 (no observation = zero count, and zero visitors is also
+                    // zero unique visitors), so they get the backfill to keep the analog calendar
+                    // dense. MONOTONICITY_DOWN (running mins) and MONOTONICITY_FREE
+                    // (rates/averages) have no "no observation → 0" mapping: a min of nothing is
+                    // not 0, and a 0% rate inferred from no traffic is not a real ratio
+                    // observation. Leaving the date absent lets recentSameDoWValues() skip it
+                    // instead of treating a synthetic zero as a same-DoW analog, which would pull
+                    // the prior below current and trip shouldRenderForecastValue() into silent
+                    // suppression.
                     // The column-missing-on-existing-row branch below is deliberately
                     // different: a row that exists but lacks the requested column means the
                     // metric isn't reported here, which is not the same as zero -- and that
                     // branch already skips for every monotonicity.
-                    $monotonicity = $seriesMonotonicity[$seriesLabel] ?? \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP;
-                    if (\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity) {
+                    $monotonicity = $seriesMonotonicity[$seriesLabel] ?? ForecastMetricClassifier::MONOTONICITY_UP;
+                    if (
+                        ForecastMetricClassifier::MONOTONICITY_UP === $monotonicity
+                        || ForecastMetricClassifier::MONOTONICITY_UNIQUE === $monotonicity
+                    ) {
                         $samples[$seriesLabel][$dateKey] = 0.0;
                     }
                     continue;
                 }
+
                 $value = $row->getColumn($columnName);
-                if ($value === \false || $value === null) {
+                if ($value === false || $value === null) {
                     continue;
                 }
                 $samples[$seriesLabel][$dateKey] = (float) $value;
             }
         }
+
         return $samples;
     }
-    private function yearsBack(string $endDate, int $years) : string
+
+    private function yearsBack(string $endDate, int $years): string
     {
         return Date::factory($endDate)->subYear($years)->toString('Y-m-d');
     }
+
+    /**
+     * Per-series monotonicity list, but only when it covers every series on the chart.
+     *
+     * The test is a count comparison, which stands in for per-key coverage because
+     * {@see ForecastSeriesStateBuilder::addForecastSeries()} writes both maps under the same
+     * series label on every call, so equal counts imply the same key set.
+     *
+     * Both fan-out gates below use it to decide whether an inner request has a consumer, and
+     * both have to fail open: a partially or completely unclassified state could carry metrics
+     * that do need the samples, so null tells the caller to fetch rather than guess. Mirrors
+     * ForecastBuilder's defensive default monotonicity for unclassified non-percent series.
+     *
+     * @return array<string, string>|null Null when the state is not fully classified.
+     */
+    private function fullyClassifiedMonotonicities(ForecastSeriesState $seriesState): ?array
+    {
+        $monotonicities = $seriesState->getAllSeriesMonotonicity();
+        $columns = $seriesState->getAllSeriesColumns();
+
+        if (count($monotonicities) !== count($columns) || [] === $monotonicities) {
+            return null;
+        }
+
+        return $monotonicities;
+    }
+
     /**
      * True when any series on the chart is classified MONOTONICITY_UP. Used to decide whether
      * the monthly fan-out on month target needs to fire: month-level MoY scaling only applies
      * to count metrics, so a graph of nothing but ratios/averages/mins gets no value from the
-     * monthly archive lookup. Falls back to "assume an UP series is present" when the series
-     * state is partially or completely unclassified, matching ForecastBuilder's defensive
-     * default monotonicity for unclassified non-percent series.
+     * monthly archive lookup. An unclassified state assumes an UP series is present --
+     * {@see self::fullyClassifiedMonotonicities()}.
      */
-    private function seriesStateHasUpSeries(\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState) : bool
+    private function seriesStateHasUpSeries(ForecastSeriesState $seriesState): bool
     {
-        $monotonicities = $seriesState->getAllSeriesMonotonicity();
-        $columns = $seriesState->getAllSeriesColumns();
-        // Defensive fallback: unclassified or partially-classified state could imply UP-like
-        // metrics, so do not skip the monthly fetch in that case.
-        if (count($monotonicities) !== count($columns) || [] === $monotonicities) {
-            return \true;
+        $monotonicities = $this->fullyClassifiedMonotonicities($seriesState);
+        if (null === $monotonicities) {
+            return true;
         }
-        return in_array(\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastMetricClassifier::MONOTONICITY_UP, $monotonicities, \true);
+
+        return in_array(ForecastMetricClassifier::MONOTONICITY_UP, $monotonicities, true);
     }
+
     /**
-     * Build a daily sample map from the already-loaded displayed `$dataTables`, skipping
-     * tables flagged ArchiveState::INCOMPLETE. The skip is what keeps the substitution
-     * equivalent to the API fetch: the API path naturally omits incomplete days from its
-     * result (missing/in-progress archive → no entry), and matching that ensures a partial
-     * value on an in-progress tick cannot leak into a later same-DoW tick's analog walk
-     * via the running daily map.
+     * True when any series on the chart is forecast from same-granularity history alone, which is
+     * what the period-level fan-out feeds. MONOTONICITY_UNIQUE is that case unconditionally: a
+     * deduplicated count has no sub-period reducer, so
+     * {@see ForecastBuilder::buildSeasonalForecastValue()} hands it straight to the prior-only
+     * path on every period type. The mirror of {@see self::seriesStateHasDecomposableSeries()}, and
+     * deliberately narrower than "any series might fall back": the other monotonicities reach the
+     * prior only when their own fan-out came back empty, which is not knowable before fetching, so
+     * they keep the displayed-tick walk as their fallback. An unclassified state assumes the
+     * samples are needed -- {@see self::fullyClassifiedMonotonicities()}.
+     */
+    private function seriesStateHasPriorOnlySeries(ForecastSeriesState $seriesState): bool
+    {
+        $monotonicities = $this->fullyClassifiedMonotonicities($seriesState);
+        if (null === $monotonicities) {
+            return true;
+        }
+
+        return in_array(ForecastMetricClassifier::MONOTONICITY_UNIQUE, $monotonicities, true);
+    }
+
+    /**
+     * Fetch the prior same-granularity periods that back the week/month/year historical prior.
+     * The window is {@see self::PERIOD_PRIOR_WINDOW_PERIODS} periods of the target's own
+     * granularity, ending at the last complete day, so the sample set is the same whatever the
+     * displayed range happens to show. Skipped when no series on the chart reads it.
+     *
+     * @return array<string, array<string, float>>
+     */
+    private function fetchPeriodPriorSamples(
+        array $dataTables,
+        string $apiMethod,
+        int $idSite,
+        string $segment,
+        string $periodLabel,
+        string $firstDisplayedDate,
+        string $endDate,
+        ForecastSeriesState $seriesState,
+        ?string $earliestDataDate
+    ): array {
+        if (!$this->seriesStateHasPriorOnlySeries($seriesState)) {
+            return [];
+        }
+
+        // The displayed ticks are the same archived period values the inner request would return,
+        // so take them from what is already loaded and ask only for what they do not reach --
+        // exactly how the day branch treats its analog window. A display at least as wide as the
+        // window needs no request at all, which is the common case on the wider selector entries.
+        $displayMap = $this->extractDisplayedSampleMap($dataTables, $seriesState, $periodLabel);
+
+        $windowStart = Date::factory($endDate)
+            ->subPeriod(self::PERIOD_PRIOR_WINDOW_PERIODS, $periodLabel)
+            ->toString('Y-m-d');
+
+        if (strcmp($firstDisplayedDate, $windowStart) <= 0) {
+            return $displayMap;
+        }
+
+        // One day before the first displayed period start is the last day of the period before it,
+        // for every granularity here: a Monday, a first-of-month and a first-of-January all step
+        // back into the previous week, month and year respectively.
+        $gapEndDate = Date::factory($firstDisplayedDate)->subDay(1)->toString('Y-m-d');
+        $gapStartDate = $this->clampStartDate($windowStart, $earliestDataDate);
+
+        if (strcmp($gapStartDate, $gapEndDate) > 0) {
+            // The whole gap predates the site or segment, so the displayed ticks are all the
+            // history there is.
+            return $displayMap;
+        }
+
+        $gapMap = $this->fetchSeries(
+            $apiMethod,
+            $idSite,
+            $segment,
+            $periodLabel,
+            $gapStartDate,
+            $gapEndDate,
+            $seriesState
+        );
+
+        // Displayed values win on any overlap, for the same reason they do in the day branch:
+        // both should reference the same archive rows, and preferring the displayed ones keeps
+        // the prior consistent with what the chart is rendering on the same screen.
+        return $this->mergeSampleMaps($gapMap, $displayMap);
+    }
+
+    /**
+     * True when any series on the chart can be forecast by decomposing the period into
+     * sub-periods. Every monotonicity except MONOTONICITY_UNIQUE can: SUM, AVG, MIN and MAX all
+     * reconstruct a period value from its sub-period values, whereas a deduplicated count has no
+     * such reducer and is forecast from the same-granularity history alone. A graph of nothing
+     * but unique-visitor series therefore has no consumer for the daily fan-out on a
+     * week/month/year target, nor for the monthly fan-out on a year target, so those inner
+     * requests are skipped. An unclassified state assumes the samples are needed --
+     * {@see self::fullyClassifiedMonotonicities()}.
+     */
+    private function seriesStateHasDecomposableSeries(ForecastSeriesState $seriesState): bool
+    {
+        $monotonicities = $this->fullyClassifiedMonotonicities($seriesState);
+        if (null === $monotonicities) {
+            return true;
+        }
+
+        foreach ($monotonicities as $monotonicity) {
+            if (ForecastMetricClassifier::MONOTONICITY_UNIQUE !== $monotonicity) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Build a sample map at $subPeriod granularity from the already-loaded displayed
+     * `$dataTables`, skipping tables flagged ArchiveState::INCOMPLETE. The skip is what keeps the
+     * substitution equivalent to the API fetch: the API path naturally omits incomplete periods
+     * from its result (missing/in-progress archive → no entry), and matching that ensures a
+     * partial value on an in-progress tick cannot leak into a later tick's walk as if it were a
+     * finished period.
+     *
+     * Serves both the day target's analog window and the week/month/year prior window, which is
+     * what lets either skip its inner request when the displayed range already covers the window.
      *
      * @param array<DataTable|DataTable\Map> $dataTables
      * @return array<string, array<string, float>>
      */
-    private function extractDisplayedDailyMap(array $dataTables, \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastSeriesState $seriesState) : array
-    {
+    private function extractDisplayedSampleMap(
+        array $dataTables,
+        ForecastSeriesState $seriesState,
+        string $subPeriod
+    ): array {
         $completeTables = [];
         foreach ($dataTables as $key => $table) {
             if (!$table instanceof DataTable) {
@@ -760,8 +1172,9 @@ class ForecastSubPeriodFetcher
             }
             $completeTables[$key] = $table;
         }
-        return $this->extractSamplesFromTables($completeTables, $seriesState, 'day');
+        return $this->extractSamplesFromTables($completeTables, $seriesState, $subPeriod);
     }
+
     /**
      * Per-series union of two daily sample maps. Display values win on the (unexpected)
      * overlap with the gap fetch — both should reference the same archive rows for the
@@ -772,12 +1185,15 @@ class ForecastSubPeriodFetcher
      * @param array<string, array<string, float>> $display
      * @return array<string, array<string, float>>
      */
-    private function mergeDailyMaps(array $gap, array $display) : array
+    private function mergeDailyMaps(array $gap, array $display): array
     {
         $merged = [];
         $seriesLabels = array_unique(array_merge(array_keys($gap), array_keys($display)));
         foreach ($seriesLabels as $seriesLabel) {
-            $merged[$seriesLabel] = array_replace($gap[$seriesLabel] ?? [], $display[$seriesLabel] ?? []);
+            $merged[$seriesLabel] = array_replace(
+                $gap[$seriesLabel] ?? [],
+                $display[$seriesLabel] ?? []
+            );
         }
         return $merged;
     }

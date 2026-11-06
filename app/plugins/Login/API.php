@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Login;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
+
 /**
  * Provides API methods for login-related administration tasks.
  *
@@ -21,10 +23,12 @@ class API extends \Piwik\Plugin\API
      * @var BruteForceDetection
      */
     private $bruteForceDetection;
+
     public function __construct(BruteForceDetection $bruteForceDetection)
     {
         $this->bruteForceDetection = $bruteForceDetection;
     }
+
     /**
      * Removes all currently blocked brute-force protection IP addresses.
      *
@@ -33,6 +37,7 @@ class API extends \Piwik\Plugin\API
     public function unblockBruteForceIPs()
     {
         Piwik::checkUserHasSuperUserAccess();
+
         $ips = $this->bruteForceDetection->getCurrentlyBlockedIps();
         if (!empty($ips)) {
             foreach ($ips as $ip) {

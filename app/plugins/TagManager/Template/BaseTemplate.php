@@ -6,6 +6,7 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager\Template;
 
 use JShrink\Minifier;
@@ -18,18 +19,28 @@ use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Settings\Storage\Backend\TransientBackend;
 use Piwik\Settings\Setting;
 use Piwik\Settings\Storage\Storage;
+
 /**
  * @api
  */
 abstract class BaseTemplate
 {
     private $pluginName = null;
+
     protected $templateType = '';
+
     public const FIELD_TEXTAREA_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldTextareaVariable'];
     public const FIELD_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTemplate'];
     public const FIELD_VARIABLE_TYPE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTypeTemplate'];
-    public static $RESERVED_SETTING_NAMES = ['container', 'tag', 'variable', 'trigger', 'length', 'window', 'document', 'get', 'fire', 'setUp', 'set', 'reset', 'type', 'part', 'default_value', 'lookup_table', 'conditions', 'condition', 'fire_limit', 'fire_delay', 'priority', 'parameters', 'start_date', 'end_date', 'type', 'name', 'status'];
+
+    public static $RESERVED_SETTING_NAMES = [
+        'container', 'tag', 'variable', 'trigger', 'length', 'window', 'document', 'get', 'fire', 'setUp', 'set', 'reset', 'type', 'part',
+        'default_value', 'lookup_table', 'conditions', 'condition', 'fire_limit', 'fire_delay', 'priority', 'parameters',
+        'start_date', 'end_date', 'type', 'name', 'status'
+    ];
+
     private $settingsStorage;
+
     /**
      * Get the ID of this template.
      * The ID is by default automatically generated from the class name, but can be customized by returning a string.
@@ -40,29 +51,35 @@ abstract class BaseTemplate
     {
         return $this->makeIdFromClassname($this->templateType);
     }
+
     /**
      * Get the list of parameters that can be configured for this template.
      * @return Setting[]
      */
-    public abstract function getParameters();
+    abstract public function getParameters();
+
     /**
      * Get the category this template belongs to.
      * @return string
      */
-    public abstract function getCategory();
+    abstract public function getCategory();
+
     /**
      * Defines in which contexts this tag should be available, for example "web".
      * @return string[]
      */
-    public abstract function getSupportedContexts();
+    abstract public function getSupportedContexts();
+
     private function getTranslationKey($part)
     {
         if (empty($this->templateType)) {
             return '';
         }
+
         if (!isset($this->pluginName)) {
             $classname = get_class($this);
             $parts = explode('\\', $classname);
+
             if (count($parts) >= 4 && $parts[1] === 'Plugins') {
                 $this->pluginName = $parts[2];
             }
@@ -70,8 +87,10 @@ abstract class BaseTemplate
         if (isset($this->pluginName)) {
             return $this->pluginName . '_' . $this->getId() . $this->templateType . $part;
         }
+
         return '';
     }
+
     /**
      * Get the translated name of this template.
      * @return string
@@ -88,6 +107,7 @@ abstract class BaseTemplate
         }
         return $this->getId();
     }
+
     /**
      * Get the translated description of this template.
      * @return string
@@ -103,6 +123,7 @@ abstract class BaseTemplate
             return $translated;
         }
     }
+
     /**
      * Get the translated help text for this template.
      * @return string
@@ -118,6 +139,7 @@ abstract class BaseTemplate
             return $translated;
         }
     }
+
     /**
      * Get the order for this template. The lower the order is, the higher in the list the template will be shown.
      * @return int
@@ -126,6 +148,7 @@ abstract class BaseTemplate
     {
         return 9999;
     }
+
     /**
      * Get the image icon url. We could also use data:uris to return the amount of requests to load a page like this:
      * return 'data:image/svg+xml;base64,' . base64_encode('<svg...</svg>');
@@ -137,6 +160,7 @@ abstract class BaseTemplate
     {
         return 'plugins/TagManager/images/defaultIcon.svg';
     }
+
     /**
      * Creates a new setting / parameter.
      *
@@ -154,19 +178,22 @@ abstract class BaseTemplate
      */
     protected function makeSetting($name, $defaultValue, $type, $fieldConfigCallback)
     {
-        if (in_array(strtolower($name), self::$RESERVED_SETTING_NAMES, \true)) {
+        if (in_array(strtolower($name), self::$RESERVED_SETTING_NAMES, true)) {
             throw new \Exception(sprintf('The setting name "%s" is reserved and cannot be used', $name));
         }
+
         // we need to make sure to create new instance of storage all the time to prevent "leaking" using values across
         // multiple tags, or triggers, or variables
         $this->settingsStorage = new Storage(new TransientBackend($this->getId()));
+
         $setting = new Setting($name, $defaultValue, $type, 'TagManager');
         $setting->setStorage($this->settingsStorage);
         $setting->setConfigureCallback($fieldConfigCallback);
-        $setting->setIsWritableByCurrentUser(\true);
-        // we validate access on API level.
+        $setting->setIsWritableByCurrentUser(true); // we validate access on API level.
+
         return $setting;
     }
+
     /**
      * @ignore
      */
@@ -177,13 +204,14 @@ abstract class BaseTemplate
                 $className = get_class($this);
                 $autoloader_reflector = new \ReflectionClass($className);
                 $fileName = $autoloader_reflector->getFileName();
+
                 $lenPhpExtension = 3;
                 $base = substr($fileName, 0, -1 * $lenPhpExtension);
                 $file = $base . 'web.js';
                 $minFile = $base . 'web.min.js';
+
                 if (!StaticContainer::get('TagManagerJSMinificationEnabled')) {
-                    return $this->loadTemplateFile($file);
-                    // avoid minification in test mode
+                    return $this->loadTemplateFile($file); // avoid minification in test mode
                 } elseif (Development::isEnabled() && $this->hasTemplateFile($file)) {
                     // during dev mode we prefer the non-minified version for debugging purposes, but we still use
                     // the internal minifier to make sure we debug the same as a user would receive
@@ -204,6 +232,7 @@ abstract class BaseTemplate
                 }
         }
     }
+
     /**
      * @ignore
      */
@@ -212,11 +241,14 @@ abstract class BaseTemplate
         $className = get_class($this);
         $parts = explode('\\', $className);
         $id = end($parts);
+
         if ($rightTrimWord && Common::stringEndsWith($id, $rightTrimWord)) {
             $id = substr($id, 0, -strlen($rightTrimWord));
         }
+
         return $id;
     }
+
     /**
      * @ignore tests only
      * @param $file
@@ -226,6 +258,7 @@ abstract class BaseTemplate
     {
         return is_readable($file);
     }
+
     /**
      * @ignore tests only
      * @param $file
@@ -237,14 +270,16 @@ abstract class BaseTemplate
             return trim(file_get_contents($file));
         }
     }
+
     /**
      * Lets you hide the advanced settings tab in the UI.
      * @return bool
      */
     public function hasAdvancedSettings()
     {
-        return \true;
+        return true;
     }
+
     /**
      * If your template allows a user to add js/html code to the site for example, you should be overwriting this
      * method and return `true`.
@@ -252,8 +287,9 @@ abstract class BaseTemplate
      */
     public function isCustomTemplate()
     {
-        return \false;
+        return false;
     }
+
     /**
      * @ignore
      * @return array
@@ -263,6 +299,7 @@ abstract class BaseTemplate
         $settingsMetadata = new SettingsMetadata();
         $params = array();
         $tagParameters = $this->getParameters();
+
         if (!empty($tagParameters)) {
             foreach ($tagParameters as $parameter) {
                 $param = $settingsMetadata->formatSetting($parameter);
@@ -274,6 +311,19 @@ abstract class BaseTemplate
                 }
             }
         }
-        return array('id' => $this->getId(), 'name' => $this->getName(), 'description' => $this->getDescription(), 'category' => Piwik::translate($this->getCategory()), 'icon' => $this->getIcon(), 'help' => $this->getHelp(), 'order' => $this->getOrder(), 'contexts' => $this->getSupportedContexts(), 'hasAdvancedSettings' => $this->hasAdvancedSettings(), 'isCustomTemplate' => $this->isCustomTemplate(), 'parameters' => $params);
+
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'category' => Piwik::translate($this->getCategory()),
+            'icon' => $this->getIcon(),
+            'help' => $this->getHelp(),
+            'order' => $this->getOrder(),
+            'contexts' => $this->getSupportedContexts(),
+            'hasAdvancedSettings' => $this->hasAdvancedSettings(),
+            'isCustomTemplate' => $this->isCustomTemplate(),
+            'parameters' => $params,
+        );
     }
 }

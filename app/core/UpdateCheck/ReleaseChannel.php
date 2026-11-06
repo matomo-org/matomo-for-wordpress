@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\UpdateCheck;
 
 /**
@@ -23,27 +24,31 @@ abstract class ReleaseChannel
      * channel
      * @return string
      */
-    public abstract function getId();
+    abstract public function getId();
+
     /**
      * Get a human-readable name for this release channel, will be visible in the UI. Should be already translated.
      * @return string
      */
-    public abstract function getName();
+    abstract public function getName();
+
     /**
      * Whether only stable versions are wanted or also beta versions.
      * @return bool
      */
     public function doesPreferStable()
     {
-        return \true;
+        return true;
     }
+
     /**
      * Get the latest available version number for this release channel. Eg '2.15.0-b4' or '2.15.0'. Should be
      * a semantic version number in format MAJOR.MINOR.PATCH (https://semver.org/). Returning an empty string in case
      * one cannot connect to the remote server can be acceptable.
      * @return string
      */
-    public abstract function getUrlToCheckForLatestAvailableVersion();
+    abstract public function getUrlToCheckForLatestAvailableVersion();
+
     /**
      * Get the URL to download a specific Matomo archive for the given version number. The returned URL should not
      * include a URI scheme, meaning it should start with '://...'.
@@ -51,7 +56,8 @@ abstract class ReleaseChannel
      * @param string $version
      * @return string
      */
-    public abstract function getDownloadUrlWithoutScheme($version);
+    abstract public function getDownloadUrlWithoutScheme($version);
+
     /**
      * Get the description for this release channel. Will be shown directly next to the name of the release in the
      * Admin UI. For example 'Recommended' or 'Long Term Support version'.
@@ -61,6 +67,7 @@ abstract class ReleaseChannel
     {
         return '';
     }
+
     /**
      * Get the order for this release channel. The lower the number the more important this release channel is. The
      * release channel having the lowest order will be shown first and will be used as default release channel in case
@@ -71,11 +78,12 @@ abstract class ReleaseChannel
     {
         return 99;
     }
+
     /**
      * If the channel should be possible to be enabled in the system settings.
      */
-    public function isSelectableInSettings() : bool
+    public function isSelectableInSettings(): bool
     {
-        return \true;
+        return true;
     }
 }

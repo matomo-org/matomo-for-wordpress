@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\ArchiveProcessor;
 
 /**
@@ -16,90 +17,111 @@ class Record
 {
     public const TYPE_NUMERIC = 'numeric';
     public const TYPE_BLOB = 'blob';
+
     /**
      * @var string
      */
     private $type;
+
     /**
      * @var string
      */
     private $name;
+
     /**
      * @var string|null
      */
     private $plugin = null;
+
     /**
      * @var string|int
      */
     private $columnToSortByBeforeTruncation;
+
     /**
      * @var int|null
      */
     private $maxRowsInTable;
+
     /**
      * @var int|null
      */
     private $maxRowsInSubtable;
+
     /**
      * @var string|null
      */
     private $countOfRecordName = null;
+
     /**
      * @var bool
      */
-    private $countOfRecordNameIsRecursive = \false;
+    private $countOfRecordNameIsRecursive = false;
+
     /**
      * @var bool
      */
-    private $countOfRecordNameIsForLeafs = \false;
+    private $countOfRecordNameIsForLeafs = false;
+
     /**
      * @var array|null
      */
     private $columnToRenameAfterAggregation = null;
+
     /**
      * @var array|null
      */
     private $blobColumnAggregationOps = null;
+
     /**
      * @var callable|null
      */
     private $multiplePeriodTransform = null;
+
     /**
      * @var callable|null
      */
     private $aggregatedRecordTransform = null;
+
     /**
      * @var string|null
      */
     private $builtFromFlatRecord = null;
+
     /**
      * @var callable|null
      */
     private $flatToHierarchyPathCallback = null;
+
     /**
      * @var callable|null
      */
     private $legacyHierarchyToFlatReducerCallback = null;
+
     public static function make($type, $name)
     {
-        $record = new \Piwik\ArchiveProcessor\Record();
+        $record = new Record();
         $record->setType($type);
         $record->setName($name);
         return $record;
     }
-    public function setPlugin(?string $plugin) : \Piwik\ArchiveProcessor\Record
+
+    public function setPlugin(?string $plugin): Record
     {
         $this->plugin = $plugin;
         return $this;
     }
-    public function setName(string $name) : \Piwik\ArchiveProcessor\Record
+
+    public function setName(string $name): Record
     {
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
             throw new \Exception('Invalid record name: ' . $name . '. Only alphanumeric characters, hyphens and underscores are allowed.');
         }
+
         $this->name = $name;
         return $this;
     }
+
     /**
      * @param int|string $columnToSortByBeforeTruncation
      * @return Record
@@ -109,24 +131,29 @@ class Record
         $this->columnToSortByBeforeTruncation = $columnToSortByBeforeTruncation;
         return $this;
     }
-    public function setMaxRowsInTable(?int $maxRowsInTable) : \Piwik\ArchiveProcessor\Record
+
+    public function setMaxRowsInTable(?int $maxRowsInTable): Record
     {
         $this->maxRowsInTable = $maxRowsInTable;
         return $this;
     }
-    public function setMaxRowsInSubtable(?int $maxRowsInSubtable) : \Piwik\ArchiveProcessor\Record
+
+    public function setMaxRowsInSubtable(?int $maxRowsInSubtable): Record
     {
         $this->maxRowsInSubtable = $maxRowsInSubtable;
         return $this;
     }
-    public function getPlugin() : ?string
+
+    public function getPlugin(): ?string
     {
         return $this->plugin;
     }
-    public function getName() : string
+
+    public function getName(): string
     {
         return $this->name;
     }
+
     /**
      * @return int|string
      */
@@ -134,86 +161,102 @@ class Record
     {
         return $this->columnToSortByBeforeTruncation;
     }
-    public function getMaxRowsInTable() : ?int
+
+    public function getMaxRowsInTable(): ?int
     {
         return $this->maxRowsInTable;
     }
-    public function getMaxRowsInSubtable() : ?int
+
+    public function getMaxRowsInSubtable(): ?int
     {
         return $this->maxRowsInSubtable;
     }
-    public function setType(string $type) : \Piwik\ArchiveProcessor\Record
+
+    public function setType(string $type): Record
     {
         $this->type = $type;
         return $this;
     }
-    public function getType() : string
+
+    public function getType(): string
     {
         return $this->type;
     }
-    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = \false) : \Piwik\ArchiveProcessor\Record
+
+    public function setIsCountOfBlobRecordRows(string $dependentRecordName, bool $isRecursive = false): Record
     {
         $this->countOfRecordName = $dependentRecordName;
         $this->countOfRecordNameIsRecursive = $isRecursive;
         return $this;
     }
-    public function setIsCountOfBlobRecordLeafRows(string $dependentRecordName) : \Piwik\ArchiveProcessor\Record
+
+    public function setIsCountOfBlobRecordLeafRows(string $dependentRecordName): Record
     {
-        $this->countOfRecordName = $dependentRecordName;
-        $this->countOfRecordNameIsForLeafs = \true;
+        $this->countOfRecordName           = $dependentRecordName;
+        $this->countOfRecordNameIsForLeafs = true;
         return $this;
     }
-    public function getCountOfRecordName() : ?string
+
+    public function getCountOfRecordName(): ?string
     {
         return $this->countOfRecordName;
     }
-    public function getCountOfRecordNameIsRecursive() : bool
+
+    public function getCountOfRecordNameIsRecursive(): bool
     {
         return $this->countOfRecordNameIsRecursive;
     }
-    public function getCountOfRecordNameIsForLeafs() : bool
+
+    public function getCountOfRecordNameIsForLeafs(): bool
     {
         return $this->countOfRecordNameIsForLeafs;
     }
+
     /**
      * @param array|null $columnToRenameAfterAggregation
      */
-    public function setColumnToRenameAfterAggregation(?array $columnToRenameAfterAggregation) : \Piwik\ArchiveProcessor\Record
+    public function setColumnToRenameAfterAggregation(?array $columnToRenameAfterAggregation): Record
     {
         $this->columnToRenameAfterAggregation = $columnToRenameAfterAggregation;
         return $this;
     }
+
     /**
      * @return array|null
      */
-    public function getColumnToRenameAfterAggregation() : ?array
+    public function getColumnToRenameAfterAggregation(): ?array
     {
         return $this->columnToRenameAfterAggregation;
     }
+
     /**
      * @param array|null $blobColumnAggregationOps
      */
-    public function setBlobColumnAggregationOps(?array $blobColumnAggregationOps) : \Piwik\ArchiveProcessor\Record
+    public function setBlobColumnAggregationOps(?array $blobColumnAggregationOps): Record
     {
         $this->blobColumnAggregationOps = $blobColumnAggregationOps;
         return $this;
     }
+
     /**
      * @return array|null
      */
-    public function getBlobColumnAggregationOps() : ?array
+    public function getBlobColumnAggregationOps(): ?array
     {
         return $this->blobColumnAggregationOps;
     }
-    public function setMultiplePeriodTransform(?callable $multiplePeriodTransform) : \Piwik\ArchiveProcessor\Record
+
+    public function setMultiplePeriodTransform(?callable $multiplePeriodTransform): Record
     {
         $this->multiplePeriodTransform = $multiplePeriodTransform;
         return $this;
     }
-    public function getMultiplePeriodTransform() : ?callable
+
+    public function getMultiplePeriodTransform(): ?callable
     {
         return $this->multiplePeriodTransform;
     }
+
     /**
      * Sets a transform applied to this blob record's aggregated table during non-day archiving,
      * after the day blobs have been aggregated together (additive columns summed, columns marked
@@ -236,18 +279,21 @@ class Record
      *                                 function (\Piwik\DataTable $table, ArchiveProcessor $archiveProcessor, Record $record): void
      *                                 The callback mutates $table in place.
      */
-    public function setAggregatedRecordTransform(?callable $transform) : \Piwik\ArchiveProcessor\Record
+    public function setAggregatedRecordTransform(?callable $transform): Record
     {
         if (null !== $transform && $this->type !== self::TYPE_BLOB) {
             throw new \InvalidArgumentException('setAggregatedRecordTransform() can only be used with blob records.');
         }
+
         $this->aggregatedRecordTransform = $transform;
         return $this;
     }
-    public function getAggregatedRecordTransform() : ?callable
+
+    public function getAggregatedRecordTransform(): ?callable
     {
         return $this->aggregatedRecordTransform;
     }
+
     /**
      * Marks this blob record as being derived from a flat blob record during non-day aggregation.
      *
@@ -264,34 +310,43 @@ class Record
      *                                                            Signature: function (DataTable $legacyHierarchy, DataTable $flatTable, ArchiveProcessor $archiveProcessor, Record $hierarchicalRecord): void
      *                                                            The callback is invoked once per legacy source period hierarchy table.
      */
-    public function setBuiltFromFlatRecord(string $flatRecordName, callable $flatToHierarchyPathCallback, ?callable $legacyHierarchyToFlatReducerCallback = null) : \Piwik\ArchiveProcessor\Record
-    {
+    public function setBuiltFromFlatRecord(
+        string $flatRecordName,
+        callable $flatToHierarchyPathCallback,
+        ?callable $legacyHierarchyToFlatReducerCallback = null
+    ): Record {
         if ($this->type !== self::TYPE_BLOB) {
             throw new \InvalidArgumentException('setBuiltFromFlatRecord() can only be used with blob records.');
         }
+
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $flatRecordName)) {
             throw new \InvalidArgumentException('Invalid flat record name: ' . $flatRecordName);
         }
+
         $this->builtFromFlatRecord = $flatRecordName;
         $this->flatToHierarchyPathCallback = $flatToHierarchyPathCallback;
         $this->legacyHierarchyToFlatReducerCallback = $legacyHierarchyToFlatReducerCallback;
+
         return $this;
     }
-    public function getBuiltFromFlatRecord() : ?string
+
+    public function getBuiltFromFlatRecord(): ?string
     {
         return $this->builtFromFlatRecord;
     }
+
     /**
      * @see setBuiltFromFlatRecord()
      */
-    public function getFlatToHierarchyPathCallback() : ?callable
+    public function getFlatToHierarchyPathCallback(): ?callable
     {
         return $this->flatToHierarchyPathCallback;
     }
+
     /**
      * @see setBuiltFromFlatRecord()
      */
-    public function getLegacyHierarchyToFlatReducerCallback() : ?callable
+    public function getLegacyHierarchyToFlatReducerCallback(): ?callable
     {
         return $this->legacyHierarchyToFlatReducerCallback;
     }

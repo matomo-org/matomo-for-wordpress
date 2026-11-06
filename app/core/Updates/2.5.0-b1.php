@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ */
+
+namespace Piwik\Updates;
+
+use Piwik\Config;
+use Piwik\Updates;
+use Piwik\Updater;
+
+class Updates_2_5_0_b1 extends Updates
+{
+    public function doUpdate(Updater $updater)
+    {
+        self::updateConfig();
+    }
+
+    private static function updateConfig()
+    {
+        $config = Config::getInstance();
+        $debug  = $config->Debug;
+
+        if (array_key_exists('disable_merged_assets', $debug)) {
+            $development = $config->Development;
+            $development['disable_merged_assets'] = $debug['disable_merged_assets'];
+            unset($debug['disable_merged_assets']);
+
+            $config->Debug       = $debug;
+            $config->Development = $development;
+            $config->forceSave();
+        }
+    }
+}

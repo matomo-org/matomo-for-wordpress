@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -15,6 +16,7 @@ use Piwik\Updater;
 use Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 /**
  * Update for version 5.0.0-b1.
  */
@@ -24,10 +26,12 @@ class Updates_5_0_0_b1 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -41,8 +45,10 @@ class Updates_5_0_0_b1 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        return array();
+        return array(
+        );
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -54,9 +60,10 @@ class Updates_5_0_0_b1 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
+
         // Migrate the MatomoConfiguration type variables to all include the newly configured fields.
-        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'enableFormAnalytics', \true);
-        $migrator->addField('enableMediaAnalytics', \true);
+        $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'enableFormAnalytics', true);
+        $migrator->addField('enableMediaAnalytics', true);
         $migrator->migrate();
     }
 }

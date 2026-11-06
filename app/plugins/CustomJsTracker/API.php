@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CustomJsTracker;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugins\CustomJsTracker\Exception\AccessDeniedException;
+
 /**
  * Provides API methods for custom JavaScript tracker configuration.
  *
@@ -23,17 +25,18 @@ class API extends \Piwik\Plugin\API
      *
      * @return bool Whether plugin tracker files are included automatically.
      */
-    public function doesIncludePluginTrackersAutomatically() : bool
+    public function doesIncludePluginTrackersAutomatically(): bool
     {
         Piwik::checkUserHasSomeAdminAccess();
+
         try {
-            $updater = StaticContainer::get('Piwik\\Plugins\\CustomJsTracker\\TrackerUpdater');
+            $updater = StaticContainer::get('Piwik\Plugins\CustomJsTracker\TrackerUpdater');
             $updater->checkWillSucceed();
-            return \true;
+            return true;
         } catch (AccessDeniedException $e) {
-            return \false;
+            return false;
         } catch (\Exception $e) {
-            return \false;
+            return false;
         }
     }
 }

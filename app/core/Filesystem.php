@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Piwik\Container\StaticContainer;
@@ -13,6 +14,7 @@ use Piwik\Exception\FailedCopyException;
 use Piwik\Tracker\Cache as TrackerCache;
 use Piwik\Cache as PiwikCache;
 use Piwik\Exception\Exception;
+
 /**
  * Contains helper functions that deal with the filesystem.
  *
@@ -23,32 +25,37 @@ class Filesystem
      * @var bool
      * @internal
      */
-    public static $skipCacheClearOnUpdate = \false;
+    public static $skipCacheClearOnUpdate = false;
+
     /**
      * Called on Core install, update, plugin enable/disable
      * Will clear all cache that could be affected by the change in configuration being made
      */
-    public static function deleteAllCacheOnUpdate($pluginName = \false)
+    public static function deleteAllCacheOnUpdate($pluginName = false)
     {
         if (self::$skipCacheClearOnUpdate) {
             return;
         }
-        \Piwik\AssetManager::getInstance()->removeMergedAssets($pluginName);
-        \Piwik\View::clearCompiledTemplates();
+
+        AssetManager::getInstance()->removeMergedAssets($pluginName);
+        View::clearCompiledTemplates();
         TrackerCache::deleteTrackerCache();
         PiwikCache::flushAll();
         self::clearPhpCaches();
-        $pluginManager = \Piwik\Plugin\Manager::getInstance();
+
+        $pluginManager = Plugin\Manager::getInstance();
         $plugins = $pluginManager->getLoadedPlugins();
         foreach ($plugins as $plugin) {
             $plugin->reloadPluginInformation();
         }
+
         /**
          * Triggered after all non-memory caches are cleared (eg, via the cache:clear
          * command).
          */
-        \Piwik\Piwik::postEvent('Filesystem.allCachesCleared');
+        Piwik::postEvent('Filesystem.allCachesCleared');
     }
+
     /**
      * ending WITHOUT slash
      *
@@ -58,6 +65,7 @@ class Filesystem
     {
         return realpath(dirname(__FILE__) . "/..");
     }
+
     /**
      * Returns true if the string is a valid filename
      * File names that start with a-Z or 0-9 and contain a-Z, 0-9, underscore(_), dash(-), and dot(.) will be accepted.
@@ -69,8 +77,9 @@ class Filesystem
      */
     public static function isValidFilename($filename)
     {
-        return 0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z_0-9.-]*))$/D', $filename);
+        return (0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z_0-9.-]*))$/D', $filename));
     }
+
     /**
      * Get canonicalized absolute path
      * See https://php.net/realpath
@@ -85,6 +94,7 @@ class Filesystem
         }
         return $path;
     }
+
     /**
      * Attempts to create a new directory. All errors are silenced.
      *
@@ -97,8 +107,9 @@ class Filesystem
     {
         if (!is_dir($path)) {
             // the mode in mkdir is modified by the current umask
-            @mkdir($path, self::getChmodForPath($path), $recursive = \true);
+            @mkdir($path, self::getChmodForPath($path), $recursive = true);
         }
+
         // try to overcome restrictive umask (mis-)configuration
         if (!is_writable($path)) {
             @chmod($path, 0755);
@@ -107,8 +118,10 @@ class Filesystem
                 // enough! we're not going to make the directory world-writeable
             }
         }
+
         self::createIndexFilesToPreventDirectoryListing($path);
     }
+
     /**
      * Checks if the filesystem Piwik stores sessions in is NFS or not. This
      * check is done in order to avoid using file based sessions on NFS system,
@@ -124,35 +137,49 @@ class Filesystem
      */
     public static function checkIfFileSystemIsNFS()
     {
-        $sessionsPath = \Piwik\Session::getSessionsDirectory();
+        $sessionsPath = Session::getSessionsDirectory();
+
         // this command will display details for the filesystem that holds the $sessionsPath
         // path, but only if its type is NFS. if not NFS, df will return one or less lines
         // and the return code 1. if NFS, it will return 0 and at least 2 lines of text.
-        $command = "df -T -t nfs \"{$sessionsPath}\" 2>&1";
+        $command = "df -T -t nfs \"$sessionsPath\" 2>&1";
+
         if (function_exists('exec')) {
             // use exec
+
             $output = $returnCode = null;
             @exec($command, $output, $returnCode);
+
             // check if filesystem is NFS
-            if ($returnCode == 0 && is_array($output) && count($output) > 1 && preg_match('/\\bnfs\\d?\\b/', implode("\n", $output))) {
-                return \true;
+            if (
+                $returnCode == 0
+                && is_array($output) && count($output) > 1
+                && preg_match('/\bnfs\d?\b/', implode("\n", $output))
+            ) {
+                return true;
             }
         } elseif (function_exists('shell_exec')) {
             // use shell_exec
+
             $output = @shell_exec($command);
             if ($output) {
-                $commandFailed = \false !== strpos($output, "no file systems processed");
+                $commandFailed = (false !== strpos($output, "no file systems processed"));
                 $output = trim($output);
                 $outputArray = explode("\n", $output);
-                if (!$commandFailed && count($outputArray) > 1 && preg_match('/\\bnfs\\d?\\b/', $output)) {
+                if (
+                    !$commandFailed
+                    && count($outputArray) > 1
+                    && preg_match('/\bnfs\d?\b/', $output)
+                ) {
                     // check if filesystem is NFS
-                    return \true;
+                    return true;
                 }
             }
         }
-        return \false;
-        // not NFS, or we can't run a program to find out
+
+        return false; // not NFS, or we can't run a program to find out
     }
+
     /**
      * Recursively find pathnames that match a pattern.
      *
@@ -166,14 +193,15 @@ class Filesystem
      */
     public static function globr($sDir, $sPattern, $nFlags = 0)
     {
-        if (($aFiles = \_glob("{$sDir}/{$sPattern}", $nFlags)) == \false) {
+        if (($aFiles = \_glob("$sDir/$sPattern", $nFlags)) == false) {
             $aFiles = array();
         }
-        if (($aDirs = \_glob("{$sDir}/*", \GLOB_ONLYDIR)) != \false) {
+        if (($aDirs = \_glob("$sDir/*", GLOB_ONLYDIR)) != false) {
             foreach ($aDirs as $sSubDir) {
                 if (is_link($sSubDir)) {
                     continue;
                 }
+
                 $aSubFiles = self::globr($sSubDir, $sPattern, $nFlags);
                 $aFiles = array_merge($aFiles, $aSubFiles);
             }
@@ -181,6 +209,7 @@ class Filesystem
         sort($aFiles);
         return $aFiles;
     }
+
     /**
      * Recursively deletes a directory.
      *
@@ -191,19 +220,21 @@ class Filesystem
      */
     public static function unlinkRecursive($dir, $deleteRootToo, ?\Closure $beforeUnlink = null)
     {
-        if (!($dh = @opendir($dir))) {
+        if (!$dh = @opendir($dir)) {
             return;
         }
-        while (\false !== ($obj = readdir($dh))) {
+        while (false !== ($obj = readdir($dh))) {
             if ($obj == '.' || $obj == '..') {
                 continue;
             }
+
             $path = $dir . '/' . $obj;
             if ($beforeUnlink) {
                 $beforeUnlink($path);
             }
+
             if (!@unlink($path)) {
-                self::unlinkRecursive($path, \true);
+                self::unlinkRecursive($path, true);
             }
         }
         closedir($dh);
@@ -211,6 +242,7 @@ class Filesystem
             @rmdir($dir);
         }
     }
+
     /**
      * Removes all files and directories that are present in the target directory but are not in the source directory.
      *
@@ -221,8 +253,10 @@ class Filesystem
     {
         $diff = self::directoryDiff($source, $target);
         $diff = self::sortFilesDescByPathLength($diff);
+
         foreach ($diff as $file) {
             $remove = $target . $file;
+
             if (is_dir($remove)) {
                 @rmdir($remove);
             } else {
@@ -230,6 +264,7 @@ class Filesystem
             }
         }
     }
+
     /**
      * Sort all given paths/filenames by its path length. Long path names will be listed first. This method can be
      * useful if you have for instance a bunch of files/directories to delete. By sorting them by length you can make
@@ -245,10 +280,13 @@ class Filesystem
             if ($a == $b) {
                 return 0;
             }
-            return strlen($a) > strlen($b) ? -1 : 1;
+
+            return (strlen($a) > strlen($b) ? -1 : 1);
         });
+
         return $files;
     }
+
     /**
      * Computes the difference of directories. Compares $target against $source and returns a relative path to all files
      * and directories in $target that are not present in $source.
@@ -262,27 +300,33 @@ class Filesystem
     {
         $flags = 0;
         $pattern = '*';
+
         if (defined('GLOB_BRACE')) {
             // The GLOB_BRACE flag is not available on some non GNU systems, like Solaris or Alpine Linux.
-            $flags = \GLOB_BRACE;
-            $pattern = '{,.}*[!.]*';
-            // matches all files and folders, including those starting with ".", but excludes "." and ".."
+            $flags = GLOB_BRACE;
+            $pattern = '{,.}*[!.]*'; // matches all files and folders, including those starting with ".", but excludes "." and ".."
         }
+
         $sourceFiles = self::globr($source, $pattern, $flags);
         $targetFiles = self::globr($target, $pattern, $flags);
-        $sourceFiles = array_map(function ($file) use($source) {
+
+        $sourceFiles = array_map(function ($file) use ($source) {
             return str_replace($source, '', $file);
         }, $sourceFiles);
-        $targetFiles = array_map(function ($file) use($target) {
+
+        $targetFiles = array_map(function ($file) use ($target) {
             return str_replace($target, '', $file);
         }, $targetFiles);
-        if (\Piwik\Filesystem::isFileSystemCaseInsensitive()) {
+
+        if (Filesystem::isFileSystemCaseInsensitive()) {
             $diff = array_udiff($targetFiles, $sourceFiles, 'strcasecmp');
         } else {
             $diff = array_diff($targetFiles, $sourceFiles);
         }
+
         return array_values($diff);
     }
+
     /**
      * Copies a file from `$source` to `$dest`.
      *
@@ -294,33 +338,46 @@ class Filesystem
      * @return true
      * @api
      */
-    public static function copy($source, $dest, $excludePhp = \false)
+    public static function copy($source, $dest, $excludePhp = false)
     {
         if ($excludePhp) {
             if (self::hasPHPExtension($source)) {
-                return \true;
+                return true;
             }
         }
+
         $success = self::tryToCopyFileAndVerifyItWasCopied($source, $dest);
+
         if (!$success) {
             $success = self::tryToCopyFileAndVerifyItWasCopied($source, $dest);
         }
+
         if (!$success) {
-            $ex = new FailedCopyException("Error while creating/copying file from {$source} to <code>" . \Piwik\Common::sanitizeInputValue($dest) . "</code>. Content of copied file is different.");
+            $ex = new FailedCopyException("Error while creating/copying file from $source to <code>" . Common::sanitizeInputValue($dest)
+                . "</code>. Content of copied file is different.");
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-        return \true;
+
+        return true;
     }
+
     private static function hasPHPExtension($file)
     {
         static $phpExtensions = array('php', 'tpl', 'twig');
+
         $path_parts = pathinfo($file);
-        if (!empty($path_parts['extension']) && in_array($path_parts['extension'], $phpExtensions)) {
-            return \true;
+
+        if (
+            !empty($path_parts['extension'])
+            && in_array($path_parts['extension'], $phpExtensions)
+        ) {
+            return true;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Copies the contents of a directory recursively from `$source` to `$target`.
      *
@@ -331,15 +388,16 @@ class Filesystem
      * @throws Exception If a file cannot be copied.
      * @api
      */
-    public static function copyRecursive($source, $target, $excludePhp = \false)
+    public static function copyRecursive($source, $target, $excludePhp = false)
     {
         if (is_dir($source)) {
             self::mkdir($target);
             $d = dir($source);
-            while (\false !== ($entry = $d->read())) {
+            while (false !== ($entry = $d->read())) {
                 if ($entry == '.' || $entry == '..') {
                     continue;
                 }
+
                 $sourcePath = $source . '/' . $entry;
                 if (is_dir($sourcePath)) {
                     self::copyRecursive($sourcePath, $target . '/' . $entry, $excludePhp);
@@ -353,6 +411,7 @@ class Filesystem
             self::copy($source, $target, $excludePhp);
         }
     }
+
     /**
      * Deletes the given file if it exists.
      *
@@ -364,10 +423,12 @@ class Filesystem
     public static function deleteFileIfExists($pathToFile)
     {
         if (!file_exists($pathToFile)) {
-            return \true;
+            return true;
         }
+
         return @unlink($pathToFile);
     }
+
     /**
      * Get the size of a file in the specified unit.
      *
@@ -380,40 +441,52 @@ class Filesystem
      */
     public static function getFileSize($pathToFile, $unit = 'B')
     {
-        $unit = strtoupper($unit);
-        $units = array('TB' => pow(1024, 4), 'GB' => pow(1024, 3), 'MB' => pow(1024, 2), 'KB' => 1024, 'B' => 1);
+        $unit  = strtoupper($unit);
+        $units = array('TB' => pow(1024, 4),
+                       'GB' => pow(1024, 3),
+                       'MB' => pow(1024, 2),
+                       'KB' => 1024,
+                       'B' => 1);
+
         if (!array_key_exists($unit, $units)) {
             throw new \Exception('Invalid unit given');
         }
+
         if (!file_exists($pathToFile)) {
             return null;
         }
-        $filesize = filesize($pathToFile);
-        $factor = $units[$unit];
+
+        $filesize  = filesize($pathToFile);
+        $factor    = $units[$unit];
         $converted = $filesize / $factor;
+
         return $converted;
     }
+
     /**
      * Remove a file.
      *
      * @param string $file
      * @param bool $silenceErrors If true, no exception will be thrown in case removing fails.
      */
-    public static function remove($file, $silenceErrors = \false)
+    public static function remove($file, $silenceErrors = false)
     {
         if (!file_exists($file)) {
             return;
         }
+
         $result = @unlink($file);
+
         // Testing if the file still exist avoids race conditions
         if (!$result && file_exists($file)) {
             if ($silenceErrors) {
-                \Piwik\Log::warning('Failed to delete file ' . $file);
+                Log::warning('Failed to delete file ' . $file);
             } else {
                 throw new \RuntimeException('Unable to delete file ' . $file);
             }
         }
     }
+
     /**
      * @param $path
      * @return int
@@ -427,20 +500,21 @@ class Filesystem
         // plugins/* and all others
         return 0755;
     }
+
     public static function clearPhpCaches()
     {
         if (function_exists('apc_clear_cache')) {
-            apc_clear_cache();
-            // clear the system (aka 'opcode') cache
+            apc_clear_cache(); // clear the system (aka 'opcode') cache
         }
-        if (function_exists('opcache_reset') && \Piwik\Config::getInstance()->Cache['enable_opcache_reset'] !== 0) {
-            @opcache_reset();
-            // reset the opcode cache (php 5.5.0+)
+
+        if (function_exists('opcache_reset') && Config::getInstance()->Cache['enable_opcache_reset'] !== 0) {
+            @opcache_reset(); // reset the opcode cache (php 5.5.0+)
         }
+
         if (function_exists('wincache_refresh_if_changed')) {
-            @wincache_refresh_if_changed();
-            // reset the wincache
+            @wincache_refresh_if_changed(); // reset the wincache
         }
+
         if (function_exists('xcache_clear_cache') && defined('XC_TYPE_VAR')) {
             if (ini_get('xcache.admin.enable_auth')) {
                 // XCache will not be cleared because "xcache.admin.enable_auth" is enabled in php.ini.
@@ -449,31 +523,39 @@ class Filesystem
             }
         }
     }
+
     private static function havePhpFilesSameContent($file1, $file2)
     {
         if (self::hasPHPExtension($file1)) {
             $sourceMd5 = md5_file($file1);
-            $destMd5 = md5_file($file2);
+            $destMd5   = md5_file($file2);
+
             return $sourceMd5 === $destMd5;
         }
-        return \true;
+
+        return true;
     }
+
     private static function tryToCopyFileAndVerifyItWasCopied($source, $dest)
     {
         if (!@copy($source, $dest)) {
             @chmod($dest, 0755);
             if (!@copy($source, $dest)) {
-                $message = "Error while creating/copying file to <code>" . \Piwik\Common::sanitizeInputValue($dest) . "</code>. <br />" . \Piwik\Filechecks::getErrorMessageMissingPermissions(self::getPathToPiwikRoot());
+                $message = "Error while creating/copying file to <code>" . Common::sanitizeInputValue($dest) . "</code>. <br />"
+                    . Filechecks::getErrorMessageMissingPermissions(self::getPathToPiwikRoot());
                 $ex = new FailedCopyException($message);
                 $ex->setIsHtmlMessage();
                 throw $ex;
             }
         }
+
         if (file_exists($source) && file_exists($dest)) {
             return self::havePhpFilesSameContent($source, $dest);
         }
-        return \true;
+
+        return true;
     }
+
     /**
      * @param $path
      * @return bool
@@ -484,20 +566,22 @@ class Filesystem
         $isPathWithinTmpFolder = strpos($path, $pathIsTmp) === 0;
         return $isPathWithinTmpFolder;
     }
+
     /**
      * Check if the filesystem is case insensitive by writing a temporary file
      */
-    public static function isFileSystemCaseInsensitive() : bool
+    public static function isFileSystemCaseInsensitive(): bool
     {
         $testFileName = 'caseSensitivityTest.txt';
         $pathTmp = StaticContainer::get('path.tmp');
         @file_put_contents($pathTmp . '/' . $testFileName, 'Nothing to see here.');
         if (\file_exists($pathTmp . '/' . strtolower($testFileName))) {
-            // Wrote caseSensitivityTest.txt but casesensitivitytest.txt exists, so case insensitive
-            return \true;
+             // Wrote caseSensitivityTest.txt but casesensitivitytest.txt exists, so case insensitive
+            return true;
         }
-        return \false;
+        return false;
     }
+
     /**
      * Removes characters from filenames that could cause problems.
      *
@@ -505,22 +589,26 @@ class Filesystem
      * some known problems, e.g. Excel not allowing to open an export
      * file if some special whitespace/dash characters are present.
      */
-    public static function sanitizeFilename(string $filename) : string
+    public static function sanitizeFilename(string $filename): string
     {
         $filename = trim($filename);
+
         // replace reserved characters
         // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
         $filename = preg_replace('~[<>:"/\\\\|?*]~', '', $filename);
+
         // replace special characters
         // https://www.php.net/manual/it/regexp.reference.unicode.php
         // - Cc: Control characters
         // - Zs: Space separators
         // - Pd: Dash punctuation
-        $filename = preg_replace('~\\p{Cc}~u', '', $filename);
-        $filename = preg_replace('~\\p{Zs}~u', ' ', $filename);
-        $filename = preg_replace('~\\p{Pd}~u', '-', $filename);
+        $filename = preg_replace('~\p{Cc}~u', '', $filename);
+        $filename = preg_replace('~\p{Zs}~u', ' ', $filename);
+        $filename = preg_replace('~\p{Pd}~u', '-', $filename);
+
         return trim($filename);
     }
+
     /**
      * in tmp/ (sub-)folder(s) we create empty index.htm|php files
      *
@@ -531,7 +619,10 @@ class Filesystem
         if (!self::isPathWithinTmpFolder($path)) {
             return;
         }
-        $filesToCreate = array($path . '/index.htm', $path . '/index.php');
+        $filesToCreate = array(
+            $path . '/index.htm',
+            $path . '/index.php',
+        );
         foreach ($filesToCreate as $file) {
             if (!is_file($file)) {
                 @file_put_contents($file, 'Nothing to see here.');

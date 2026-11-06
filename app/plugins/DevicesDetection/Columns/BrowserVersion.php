@@ -6,13 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DevicesDetection\Columns;
 
 use Piwik\Plugins\DevicesDetection\DevicesDetection;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class BrowserVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
+
+class BrowserVersion extends Base
 {
     protected $columnName = 'config_browser_version';
     protected $columnType = 'VARCHAR(20) NULL';
@@ -21,14 +23,17 @@ class BrowserVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
     protected $namePlural = 'DevicesDetection_BrowserVersions';
     protected $acceptValues = '1.0, 8.0, etc.';
     protected $type = self::TYPE_TEXT;
+
     /**
      * @param Action|null $action
      * @return mixed
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
+        $parser    = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
+
         $aBrowserInfo = $parser->getClient();
+
         if (!empty($aBrowserInfo['version'])) {
             $version = substr($aBrowserInfo['version'], 0, 20);
             if (DevicesDetection::shouldOnlyStoreMajorVersions($request->getIdSiteIfExists())) {
@@ -36,6 +41,7 @@ class BrowserVersion extends \Piwik\Plugins\DevicesDetection\Columns\Base
             }
             return $version;
         }
+
         return '';
     }
 }

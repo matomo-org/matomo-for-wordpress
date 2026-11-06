@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Menu;
 
 /**
@@ -15,7 +16,7 @@ namespace Piwik\Menu;
  *
  * @method static \Piwik\Menu\MenuTop getInstance()
  */
-class MenuTop extends \Piwik\Menu\MenuAbstract
+class MenuTop extends MenuAbstract
 {
     /**
      * Directly adds a menu entry containing html.
@@ -36,11 +37,12 @@ class MenuTop extends \Piwik\Menu\MenuAbstract
                 $this->menu[$menuName]['_order'] = $order;
                 $this->menu[$menuName]['_url'] = null;
                 $this->menu[$menuName]['_icon'] = '';
-                $this->menu[$menuName]['_hasSubmenu'] = \false;
+                $this->menu[$menuName]['_hasSubmenu'] = false;
                 $this->menu[$menuName]['_tooltip'] = $tooltip;
             }
         }
     }
+
     /**
      * Builds the top menu by letting each plugin's Menu class configure it (via configureTopMenu())
      * and returns the resulting menu.
@@ -54,6 +56,7 @@ class MenuTop extends \Piwik\Menu\MenuAbstract
                 $menu->configureTopMenu($this);
             }
         }
+
         return parent::getMenu();
     }
 }

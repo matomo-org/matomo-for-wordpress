@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Monolog\Processor;
 
 /**
@@ -17,12 +18,16 @@ class SprintfProcessor
     {
         $message = $record['message'];
         $parameters = $record['context'];
-        if (is_string($message) && !empty($parameters) && strpos($message, '%') !== \false) {
+
+        if (is_string($message) && !empty($parameters) && strpos($message, '%') !== false) {
             $parameters = $this->ensureParametersAreStrings($parameters);
+
             $record['message'] = vsprintf($message, $parameters);
         }
+
         return $record;
     }
+
     private function ensureParametersAreStrings(array $parameters)
     {
         foreach ($parameters as &$param) {
@@ -32,6 +37,7 @@ class SprintfProcessor
                 $param = get_class($param);
             }
         }
+
         return $parameters;
     }
 }

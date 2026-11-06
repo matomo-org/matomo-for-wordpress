@@ -6,24 +6,29 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-class ChallengeViewVisitorProfile extends \Piwik\Plugins\Tour\Engagement\Challenge
+
+class ChallengeViewVisitorProfile extends Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_ViewX', Piwik::translate('Live_VisitorProfile'));
     }
+
     public function getDescription()
     {
         return Piwik::translate('Tour_ViewVisitorProfileDescription');
     }
+
     public function getId()
     {
         return 'view_visitor_profile';
     }
+
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-profile/');

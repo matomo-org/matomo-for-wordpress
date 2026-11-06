@@ -6,10 +6,12 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager\Template\Tag;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Template\BaseTemplate;
+
 /**
  * @api
  */
@@ -24,7 +26,9 @@ abstract class BaseTag extends BaseTemplate
     public const CATEGORY_REMARKETING = 'TagManager_CategoryRemarketing';
     public const CATEGORY_SOCIAL = 'TagManager_CategorySocial';
     public const CATEGORY_OTHERS = 'General_Others';
+
     protected $templateType = 'Tag';
+
     /**
      * @inheritdoc
      */
@@ -32,11 +36,14 @@ abstract class BaseTag extends BaseTemplate
     {
         return self::CATEGORY_OTHERS;
     }
+
     /**
      * @inheritdoc
      */
     public function getSupportedContexts()
     {
-        return array(WebContext::ID);
+        return array(
+            WebContext::ID
+        );
     }
 }

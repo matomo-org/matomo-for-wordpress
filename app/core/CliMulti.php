@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Piwik\Archiver\Request;
@@ -21,19 +22,21 @@ use Piwik\Log\NullLogger;
 use Piwik\Plugins\CoreConsole\FeatureFlags\CliMultiProcessSymfony;
 use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
 use Throwable;
+
 /**
  * Class CliMulti.
  */
 class CliMulti
 {
-    public const BASE_WAIT_TIME = 250000;
-    // 250 * 1000 = 250ms
+    public const BASE_WAIT_TIME = 250000; // 250 * 1000 = 250ms
+
     /**
      * If set to true or false it will overwrite whether async is supported or not.
      *
      * @var null|bool
      */
     public $supportsAsync = null;
+
     /**
      * If set to true or false it will overwrite whether async using Symfony\Process is supported or not.
      *
@@ -42,67 +45,89 @@ class CliMulti
      * @var null|bool
      */
     public $supportsAsyncSymfony = null;
+
     /**
      * @var Process[]|ProcessSymfony[]
      */
     private $processes = [];
+
     /**
      * If set it will issue at most concurrentProcessesLimit requests
      * @var int|null
      */
     private $concurrentProcessesLimit = null;
+
     /**
      * @var OutputInterface[]
      */
     private $outputs = [];
-    private $acceptInvalidSSLCertificate = \false;
+
+    private $acceptInvalidSSLCertificate = false;
+
     /**
      * @var bool
      */
-    private $runAsSuperUser = \false;
+    private $runAsSuperUser = false;
+
     /**
      * Only used when doing synchronous curl requests.
      *
      * @var string|null
      */
     private $urlToPiwik = null;
+
     private $phpCliOptions = '';
+
     /**
      * @var callable|null
      */
     private $onProcessFinish = null;
+
     /**
      * @var Timer[]
      */
     protected $timers = [];
-    protected $isTimingRequests = \false;
+
+    protected $isTimingRequests = false;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var int|null
      */
     private $signal = null;
+
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->supportsAsync = $this->supportsAsync();
         $this->supportsAsyncSymfony = $this->supportsAsyncSymfony();
+
         $this->logger = $logger ?: new NullLogger();
     }
-    public function handleSignal(int $signal) : void
+
+    public function handleSignal(int $signal): void
     {
         $this->signal = $signal;
+
         if (\SIGTERM !== $signal) {
             return;
         }
+
         foreach ($this->processes as $process) {
             if ($process instanceof ProcessSymfony) {
-                $this->logger->debug('Aborting command: {command} [method = asyncCliSymfony]', ['command' => $process->getCommandLine()]);
+                $this->logger->debug(
+                    'Aborting command: {command} [method = asyncCliSymfony]',
+                    ['command' => $process->getCommandLine()]
+                );
+
                 $process->stop(0);
             }
         }
     }
+
     /**
      * It will request all given URLs in parallel (async) using the CLI and wait until all requests are finished.
      * If multi cli is not supported (eg windows) it will initiate an HTTP request instead (not async).
@@ -121,23 +146,31 @@ class CliMulti
     {
         if ($this->isTimingRequests) {
             foreach ($piwikUrls as $url) {
-                $this->timers[] = new \Piwik\Timer();
+                $this->timers[] = new Timer();
             }
         }
+
         $chunks = [$piwikUrls];
+
         if ($this->concurrentProcessesLimit) {
             $chunks = array_chunk($piwikUrls, $this->concurrentProcessesLimit);
         }
+
         $results = [];
+
         foreach ($chunks as $urlsChunk) {
             if (null !== $this->signal) {
                 $this->logSkippedRequests($urlsChunk);
+
                 continue;
             }
+
             $results = array_merge($results, $this->requestUrls($urlsChunk));
         }
+
         return $results;
     }
+
     /**
      * Forwards the given configuration options to the PHP cli command.
      * @param string $phpCliOptions  eg "-d memory_limit=8G -c=path/to/php.ini"
@@ -146,6 +179,7 @@ class CliMulti
     {
         $this->phpCliOptions = (string) $phpCliOptions;
     }
+
     /**
      * Ok, this sounds weird. Why should we care about ssl certificates when we are in CLI mode? It is needed for
      * our simple fallback mode for Windows where we initiate HTTP requests instead of CLI.
@@ -155,6 +189,7 @@ class CliMulti
     {
         $this->acceptInvalidSSLCertificate = $acceptInvalidSSLCertificate;
     }
+
     /**
      * @param int $limit Maximum count of requests to issue in parallel
      */
@@ -162,10 +197,12 @@ class CliMulti
     {
         $this->concurrentProcessesLimit = $limit;
     }
-    public function runAsSuperUser($runAsSuperUser = \true)
+
+    public function runAsSuperUser($runAsSuperUser = true)
     {
         $this->runAsSuperUser = $runAsSuperUser;
     }
+
     private function start($piwikUrls)
     {
         $numUrls = count($piwikUrls);
@@ -174,7 +211,9 @@ class CliMulti
             if ($url instanceof Request) {
                 $shouldStart = $url->start();
             }
+
             $cmdId = $this->generateCommandId($url) . $index;
+
             if ($shouldStart === Request::ABORT) {
                 // output is needed to ensure same order of url to response
                 $output = new StaticOutput($cmdId);
@@ -185,6 +224,7 @@ class CliMulti
             }
         }
     }
+
     private function executeUrlCommand($cmdId, $url, $numUrls)
     {
         if ($this->supportsAsync) {
@@ -202,110 +242,151 @@ class CliMulti
             $output = new StaticOutput($cmdId);
             $this->executeNotAsyncHttp($url, $output);
         }
+
         $this->outputs[] = $output;
     }
-    private function buildCommand($hostname, $query, $outputFileIfAsync, $doEscapeArg = \true)
+
+    private function buildCommand($hostname, $query, $outputFileIfAsync, $doEscapeArg = true)
     {
         $bin = $this->findPhpBinary();
         $superuserCommand = $this->runAsSuperUser ? "--superuser" : "";
+
         $append = '2>&1';
         if ($outputFileIfAsync) {
             $append = sprintf(' > %s 2>&1 &', $outputFileIfAsync);
         }
+
         if ($doEscapeArg) {
             $hostname = escapeshellarg($hostname);
             $query = escapeshellarg($query);
         }
-        return sprintf('%s %s %s/console climulti:request -q --matomo-domain=%s %s %s %s', $bin, $this->phpCliOptions, PIWIK_INCLUDE_PATH, $hostname, $superuserCommand, $query, $append);
+
+        return sprintf(
+            '%s %s %s/console climulti:request -q --matomo-domain=%s %s %s %s',
+            $bin,
+            $this->phpCliOptions,
+            PIWIK_INCLUDE_PATH,
+            $hostname,
+            $superuserCommand,
+            $query,
+            $append
+        );
     }
+
     private function getResponse()
     {
         $response = array();
+
         foreach ($this->outputs as $output) {
             $content = $output->get();
             // Remove output that can be ignored in climulti . works around some WordPress setups where the hash bang may
             // be printed
             $search = '#!/usr/bin/env php';
-            if (!empty($content) && is_string($content) && mb_substr(trim($content), 0, strlen($search)) === $search) {
+            if (
+                !empty($content)
+                && is_string($content)
+                && mb_substr(trim($content), 0, strlen($search)) === $search
+            ) {
                 $content = trim(mb_substr(trim($content), strlen($search)));
             }
             $response[] = $content;
         }
+
         return $response;
     }
-    private function hasFinished() : bool
+
+    private function hasFinished(): bool
     {
-        $hasFinished = \true;
+        $hasFinished = true;
+
         foreach ($this->processes as $index => $process) {
             if ($process instanceof ProcessSymfony) {
                 $processFinished = $this->hasFinishedProcessSymfony($process);
             } else {
                 $processFinished = $this->hasFinishedProcess($process);
             }
-            if (\true === $processFinished) {
+
+            if (true === $processFinished) {
                 // prevent from checking this process over and over again
                 unset($this->processes[$index]);
+
                 if ($this->isTimingRequests) {
                     $this->timers[$index]->finish();
                 }
+
                 if ($this->onProcessFinish) {
                     $pid = $process->getPid();
                     $onProcessFinish = $this->onProcessFinish;
                     $onProcessFinish($pid);
                 }
             }
+
             $hasFinished = $hasFinished && $processFinished;
         }
+
         return $hasFinished;
     }
-    private function hasFinishedProcess(Process $process) : bool
+
+    private function hasFinishedProcess(Process $process): bool
     {
         $hasStarted = $process->hasStarted();
+
         if (!$hasStarted && 8 <= $process->getSecondsSinceCreation()) {
             // if process was created more than 8 seconds ago but still not started there must be something wrong.
             // ==> declare the process as finished
             $process->finishProcess();
-            return \true;
+            return true;
         } elseif (!$hasStarted) {
-            return \false;
+            return false;
         }
+
         if ($process->isRunning()) {
-            return \false;
+            return false;
         }
+
         $pid = $process->getPid();
+
         foreach ($this->outputs as $output) {
             if ($output->getOutputId() === $pid && $output->isAbnormal()) {
                 $process->finishProcess();
-                return \true;
+                return true;
             }
         }
+
         return $process->hasFinished();
     }
-    private function hasFinishedProcessSymfony(ProcessSymfony $process) : bool
+
+    private function hasFinishedProcessSymfony(ProcessSymfony $process): bool
     {
         $finished = $process->isStarted() && !$process->isRunning();
+
         if ($finished) {
             foreach ($this->outputs as $output) {
                 if ($output->getOutputId() !== $process->getCommandId()) {
                     continue;
                 }
+
                 $output->write($process->getOutput());
                 break;
             }
         }
+
         return $finished;
     }
+
     private function generateCommandId($command)
     {
-        return substr(\Piwik\Common::hash($command . microtime(\true) . rand(0, 99999)), 0, 100);
+        return substr(Common::hash($command . microtime(true) . rand(0, 99999)), 0, 100);
     }
+
     /**
      * What is missing under windows? Detection whether a process is still running in Process::isProcessStillRunning
      * and how to send a process into background in start()
      */
     public function supportsAsync()
     {
-        $supportsAsync = Process::isSupported() && !\Piwik\Common::isPhpCgiType() && $this->findPhpBinary();
+        $supportsAsync = Process::isSupported() && !Common::isPhpCgiType() && $this->findPhpBinary();
+
         /**
          * Triggered to allow plugins to force the usage of async cli multi execution or to disable it.
          *
@@ -318,9 +399,11 @@ class CliMulti
          *
          * @param bool &$supportsAsync Whether async is supported or not.
          */
-        \Piwik\Piwik::postEvent('CliMulti.supportsAsync', array(&$supportsAsync));
+        Piwik::postEvent('CliMulti.supportsAsync', array(&$supportsAsync));
+
         return $supportsAsync;
     }
+
     /**
      * Returns whether Symfony\Process instead of the default Piwik\Process for
      * async cli multi execution.
@@ -333,29 +416,37 @@ class CliMulti
      * Several of the regular supportsAsync requirements may be obsolete after
      * a complete switch has been done.
      */
-    public function supportsAsyncSymfony() : bool
+    public function supportsAsyncSymfony(): bool
     {
         // When updating from an older version the required symfony component
         // may not be available. We have to verify that outside of the
         // CliMulti\ProcessSymfony wrapper because it extends the component.
-        if (!$this->supportsAsync || Process::isMethodDisabled('proc_open') || !class_exists(\Symfony\Component\Process\Process::class)) {
-            return \false;
+        if (
+            !$this->supportsAsync
+            || Process::isMethodDisabled('proc_open')
+            || !class_exists(\Symfony\Component\Process\Process::class)
+        ) {
+            return false;
         }
+
         // The required DI configuration may not be loaded during the update process.
         // This can happen for an upgrade from a version that did not yet contain
         // the feature flag plugin.
         try {
             $featureFlagManager = StaticContainer::get(FeatureFlagManager::class);
+
             return $featureFlagManager->isFeatureActive(CliMultiProcessSymfony::class);
         } catch (Throwable $e) {
-            return \false;
+            return false;
         }
     }
+
     private function findPhpBinary()
     {
         $cliPhp = new CliPhp();
         return $cliPhp->findPhpBinary();
     }
+
     private function cleanup()
     {
         foreach ($this->processes as $process) {
@@ -365,12 +456,15 @@ class CliMulti
                 $process->finishProcess();
             }
         }
+
         foreach ($this->outputs as $output) {
             $output->destroy();
         }
+
         $this->processes = array();
-        $this->outputs = array();
+        $this->outputs   = array();
     }
+
     /**
      * Remove files older than one week. They should be cleaned up automatically after each request but for whatever
      * reason there can be always some files left.
@@ -378,110 +472,158 @@ class CliMulti
     public static function cleanupNotRemovedFiles()
     {
         $timeOneWeekAgo = strtotime('-1 week');
+
         $files = _glob(self::getTmpPath() . '/*');
         if (empty($files)) {
             return;
         }
+
         foreach ($files as $file) {
             if (file_exists($file)) {
                 $timeLastModified = filemtime($file);
-                if ($timeLastModified !== \false && $timeOneWeekAgo > $timeLastModified) {
+
+                if ($timeLastModified !== false && $timeOneWeekAgo > $timeLastModified) {
                     unlink($file);
                 }
             }
         }
     }
+
     public static function getTmpPath()
     {
         return StaticContainer::get('path.tmp') . '/climulti';
     }
+
     private function executeAsyncCli($url, Output $output, $cmdId)
     {
         $this->processes[] = new Process($cmdId);
+
         $url = $this->appendTestmodeParamToUrlIfNeeded($url);
-        $query = \Piwik\UrlHelper::getQueryFromUrl($url, ['pid' => $cmdId, 'runid' => \Piwik\Common::getProcessId()]);
-        $hostname = \Piwik\Url::getHost($checkIfTrusted = \false);
+        $query = UrlHelper::getQueryFromUrl($url, ['pid' => $cmdId, 'runid' => Common::getProcessId()]);
+        $hostname = Url::getHost($checkIfTrusted = false);
         $command = $this->buildCommand($hostname, $query, $output->getPathToFile());
-        $this->logger->debug('Running command: {command} [method = {method}]', ['command' => $command, 'method' => 'asyncCli']);
+
+        $this->logger->debug(
+            'Running command: {command} [method = {method}]',
+            [
+                'command' => $command,
+                'method' => 'asyncCli',
+            ]
+        );
+
         shell_exec($command);
     }
-    private function executeAsyncCliSymfony(string $url, string $cmdId) : void
+
+    private function executeAsyncCliSymfony(string $url, string $cmdId): void
     {
         $url = $this->appendTestmodeParamToUrlIfNeeded($url);
-        $query = \Piwik\UrlHelper::getQueryFromUrl($url, array());
-        $hostname = \Piwik\Url::getHost($checkIfTrusted = \false);
-        $command = $this->buildCommand($hostname, $query, '', \true);
-        $this->logger->debug('Running command: {command} [method = {method}]', ['command' => $command, 'method' => 'asyncCliSymfony']);
+        $query = UrlHelper::getQueryFromUrl($url, array());
+        $hostname = Url::getHost($checkIfTrusted = false);
+        $command = $this->buildCommand($hostname, $query, '', true);
+
+        $this->logger->debug(
+            'Running command: {command} [method = {method}]',
+            [
+                'command' => $command,
+                'method' => 'asyncCliSymfony',
+            ]
+        );
+
         // Prepending "exec" is required to send signals to the process
         // Not using array notation because $command can contain complex parameters
-        if ('\\' !== \DIRECTORY_SEPARATOR) {
+        if ('\\' !== DIRECTORY_SEPARATOR) {
             $command = 'exec ' . $command;
         }
+
         $process = ProcessSymfony::fromShellCommandline($command);
         $process->setTimeout(null);
         $process->start();
         $process->setCommandId($cmdId);
+
         $this->processes[] = $process;
     }
+
     private function executeSyncCli($url, StaticOutput $output)
     {
         $url = $this->appendTestmodeParamToUrlIfNeeded($url);
-        $query = \Piwik\UrlHelper::getQueryFromUrl($url, array());
-        $hostname = \Piwik\Url::getHost($checkIfTrusted = \false);
-        $command = $this->buildCommand($hostname, $query, '', \true);
-        $this->logger->debug('Running command: {command} [method = {method}]', ['command' => $command, 'method' => 'syncCli']);
+        $query = UrlHelper::getQueryFromUrl($url, array());
+        $hostname = Url::getHost($checkIfTrusted = false);
+        $command = $this->buildCommand($hostname, $query, '', true);
+
+        $this->logger->debug(
+            'Running command: {command} [method = {method}]',
+            [
+                'command' => $command,
+                'method' => 'syncCli',
+            ]
+        );
+
         $result = shell_exec($command);
         if ($result) {
             $result = trim($result);
         }
         $output->write($result);
     }
+
     private function executeNotAsyncHttp($url, StaticOutput $output)
     {
-        $piwikUrl = $this->urlToPiwik ?: \Piwik\SettingsPiwik::getPiwikUrl();
+        $piwikUrl = $this->urlToPiwik ?: SettingsPiwik::getPiwikUrl();
         if (empty($piwikUrl)) {
-            $piwikUrl = 'http://' . \Piwik\Url::getHost() . '/';
+            $piwikUrl = 'http://' . Url::getHost() . '/';
         }
+
         $url = $piwikUrl . $url;
-        if (\Piwik\Config::getInstance()->General['force_ssl'] == 1) {
+        if (Config::getInstance()->General['force_ssl'] == 1) {
             $url = str_replace("http://", "https://", $url);
         }
+
         $requestBody = null;
         if ($this->runAsSuperUser) {
             $tokenAuth = self::getSuperUserTokenAuth();
-            if (strpos($url, '?') === \false) {
+
+            if (strpos($url, '?') === false) {
                 $url .= '?';
             } else {
                 $url .= '&';
             }
+
             $requestBody = 'token_auth=' . $tokenAuth;
         }
+
         $response = null;
+
         try {
-            $this->logger->debug("Execute HTTP API request: " . $url);
-            $response = \Piwik\Http::sendHttpRequestBy('curl', $url, $timeout = 0, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $this->acceptInvalidSSLCertificate, \false, \false, 'POST', null, null, $requestBody, [], $forcePost = \true);
+            $this->logger->debug("Execute HTTP API request: "  . $url);
+            $response = Http::sendHttpRequestBy('curl', $url, $timeout = 0, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false, $this->acceptInvalidSSLCertificate, false, false, 'POST', null, null, $requestBody, [], $forcePost = true);
             $output->write($response);
         } catch (\Exception $e) {
-            $message = "Got invalid response from API request: {$url}. ";
+            $message = "Got invalid response from API request: $url. ";
+
             if (empty($response)) {
                 $message .= "The response was empty. This usually means a server error. This solution to this error is generally to increase the value of 'memory_limit' in your php.ini file. Please check your Web server Error Log file for more details.";
             } else {
                 $message .= "Response was '" . $e->getMessage() . "'";
             }
+
             $output->write($message);
+
             $this->logger->debug($message, ['exception' => $e]);
         }
     }
+
     private function appendTestmodeParamToUrlIfNeeded($url)
     {
         $isTestMode = defined('PIWIK_TEST_MODE');
-        if ($isTestMode && \false === strpos($url, '?')) {
+
+        if ($isTestMode && false === strpos($url, '?')) {
             $url .= "?testmode=1";
         } elseif ($isTestMode) {
             $url .= "&testmode=1";
         }
+
         return $url;
     }
+
     /**
      * @param array $piwikUrls
      * @return array
@@ -489,53 +631,68 @@ class CliMulti
     private function requestUrls(array $piwikUrls)
     {
         $this->start($piwikUrls);
+
         $startTime = time();
         do {
             $elapsed = time() - $startTime;
             $timeToWait = $this->getTimeToWaitBeforeNextCheck($elapsed);
+
             if (count($this->processes)) {
                 usleep($timeToWait);
             }
         } while (!$this->hasFinished());
+
         $results = $this->getResponse();
         $this->cleanup();
+
         self::cleanupNotRemovedFiles();
+
         return $results;
     }
-    private function logSkippedRequests(array $urls) : void
+
+    private function logSkippedRequests(array $urls): void
     {
         foreach ($urls as $url) {
-            $this->logger->debug('Skipped climulti:request after abort signal received: {url}', ['url' => $url]);
+            $this->logger->debug(
+                'Skipped climulti:request after abort signal received: {url}',
+                ['url' => $url]
+            );
         }
     }
+
     private static function getSuperUserTokenAuth()
     {
-        return \Piwik\Piwik::requestTemporarySystemAuthToken('CliMultiNonAsyncArchive', 36);
+        return Piwik::requestTemporarySystemAuthToken('CliMultiNonAsyncArchive', 36);
     }
+
     public function setUrlToPiwik($urlToPiwik)
     {
         $this->urlToPiwik = $urlToPiwik;
     }
+
     public function onProcessFinish(callable $callback)
     {
         $this->onProcessFinish = $callback;
     }
+
     // every minute that passes adds an extra 100ms to the wait time. so 5 minutes results in 500ms extra, 20mins results in 2s extra.
     private function getTimeToWaitBeforeNextCheck($elapsed)
     {
         $minutes = floor($elapsed / 60);
-        return self::BASE_WAIT_TIME + $minutes * 100000;
-        // 100 * 1000 = 100ms
+        return self::BASE_WAIT_TIME + $minutes * 100000; // 100 * 1000 = 100ms
     }
+
     public static function isCliMultiRequest()
     {
-        return \Piwik\Common::getRequestVar('pid', \false) !== \false;
+        return Common::getRequestVar('pid', false) !== false;
     }
+
     public function timeRequests()
     {
         $this->timers = [];
-        $this->isTimingRequests = \true;
+        $this->isTimingRequests = true;
     }
+
     public function getTimers()
     {
         return $this->timers;

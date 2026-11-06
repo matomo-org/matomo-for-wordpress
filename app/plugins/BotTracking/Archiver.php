@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking;
 
 class Archiver extends \Piwik\Plugin\Archiver
@@ -18,8 +20,9 @@ class Archiver extends \Piwik\Plugin\Archiver
     public const AI_CHATBOTS_BROKEN_CONTENT_RECORD = 'BotTracking_AIChatbotsBrokenContent';
     public const AI_CHATBOTS_HUMAN_FAVOURED_PAGES_RECORD = 'BotTracking_AIChatbotsHumanFavouredPages';
     public const AI_CHATBOTS_AI_FAVOURED_PAGES_RECORD = 'BotTracking_AIChatbotsAIFavouredPages';
-    public static function shouldRunEvenWhenNoVisits() : bool
+
+    public static function shouldRunEvenWhenNoVisits(): bool
     {
-        return \true;
+        return true;
     }
 }

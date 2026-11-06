@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
@@ -14,16 +15,19 @@ use Piwik\Plugins\TagManager\UpdateHelper\NewVariableParameterMigrator;
 use Piwik\Updater;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 class Updates_5_2_2_b1 extends PiwikUpdates
 {
     /**
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -37,8 +41,10 @@ class Updates_5_2_2_b1 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        return array();
+        return array(
+        );
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -50,6 +56,7 @@ class Updates_5_2_2_b1 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
+
         // Migrate the MatomoConfiguration type variables to all include the newly configured advanced fields.
         $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'customData', []);
         $migrator->addField('setDownloadExtensions', '');
@@ -64,17 +71,17 @@ class Updates_5_2_2_b1 extends PiwikUpdates
         $migrator->addField('setLinkClasses', '');
         $migrator->addField('setCampaignNameKey', '');
         $migrator->addField('setCampaignKeywordKey', '');
-        $migrator->addField('setConsentGiven', \false);
-        $migrator->addField('rememberConsentGiven', \false);
+        $migrator->addField('setConsentGiven', false);
+        $migrator->addField('rememberConsentGiven', false);
         $migrator->addField('rememberConsentGivenForHours', '');
-        $migrator->addField('forgetConsentGiven', \false);
-        $migrator->addField('discardHashTag', \false);
+        $migrator->addField('forgetConsentGiven', false);
+        $migrator->addField('discardHashTag', false);
         $migrator->addField('setExcludedQueryParams', '');
-        $migrator->addField('setConversionAttributionFirstReferrer', \false);
-        $migrator->addField('setDoNotTrack', \false);
+        $migrator->addField('setConversionAttributionFirstReferrer', false);
+        $migrator->addField('setDoNotTrack', false);
         $migrator->addField('setLinkTrackingTimer', '');
-        $migrator->addField('killFrame', \false);
-        $migrator->addField('setCountPreRendered', \false);
+        $migrator->addField('killFrame', false);
+        $migrator->addField('setCountPreRendered', false);
         $migrator->addField('setRequestQueueInterval', '');
         $migrator->migrate();
     }

@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
+
 /**
  * Base interface for authentication implementations.
  *
@@ -53,20 +55,24 @@ interface Auth
      * @return ?string
      */
     public function getName();
+
     /**
      * Sets the authentication token to authenticate with.
      *
      * @param string|null $token_auth authentication token
      */
     public function setTokenAuth(
-#[\SensitiveParameter]
-$token_auth);
+        #[\SensitiveParameter]
+        $token_auth
+    );
+
     /**
      * Returns the login of the user being authenticated.
      *
      * @return ?string
      */
     public function getLogin();
+
     /**
      * Returns the secret used to calculate a user's token auth.
      *
@@ -78,20 +84,24 @@ $token_auth);
      * @throws Exception if the token auth secret does not exist or cannot be obtained.
      */
     public function getTokenAuthSecret();
+
     /**
      * Sets the login name to authenticate with.
      *
      * @param string $login The username.
      */
     public function setLogin($login);
+
     /**
      * Sets the password to authenticate with.
      *
      * @param string $password Password (not hashed).
      */
     public function setPassword(
-#[\SensitiveParameter]
-$password);
+        #[\SensitiveParameter]
+        $password
+    );
+
     /**
      * Sets the hash of the password to authenticate with. The hash will be an MD5 hash.
      *
@@ -99,8 +109,10 @@ $password);
      * @throws Exception if authentication by hashed password is not supported.
      */
     public function setPasswordHash(
-#[\SensitiveParameter]
-$passwordHash);
+        #[\SensitiveParameter]
+        $passwordHash
+    );
+
     /**
      * Authenticates a user using the login and password set using the setters. Can also authenticate
      * via token auth if one is set and no password is set.

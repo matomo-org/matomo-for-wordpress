@@ -1,0 +1,11 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Ora locală",
+        "DayOfWeek": "Zi a săptămânii",
+        "LocalTime": "Vizite pe timpul local",
+        "SubmenuTimes": "Timp",
+        "VisitsByDayOfWeek": "Vizite ordonate după ziua săptămânii",
+        "WidgetByDayOfWeekDocumentation": "Acest grafic arată numărul de vizite primite de site-ul dvs. în fiecare zi a săptămânii.",
+        "WidgetLocalTimeDocumentation": "Acest grafic arată ce timp a fost în zonele %1$s vizitatorilor' \"fus orar %2$s în timpul vizitei lor."
+    }
+}

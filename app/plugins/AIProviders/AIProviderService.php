@@ -6,13 +6,16 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders;
 
 use InvalidArgumentException;
 use Piwik\Plugins\AIProviders\Exception\AIProviderClientException;
 use Piwik\Plugins\AIProviders\Model\Configuration;
 use Piwik\Plugins\AIProviders\Provider\AIProvider;
+
 /**
  * Entry point for Matomo plugins that want to run AI features.
  *
@@ -27,18 +30,23 @@ class AIProviderService
 {
     /** Conversational features can run: provider configured and capable. */
     public const CONVERSATION_READY = 'ready';
+
     /** No conversation-capable provider is configured (missing credentials or no provider). */
     public const CONVERSATION_NOT_CONFIGURED = 'not_configured';
+
     /** A provider is selected but does not implement conversations. */
     public const CONVERSATION_PROVIDER_UNSUPPORTED = 'provider_unsupported';
+
     /**
      * @var Configuration
      */
     private $configuration;
+
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
+
     /**
      * Completes the given request.
      *
@@ -59,20 +67,35 @@ class AIProviderService
      * The requested model is forwarded for allowlisted callers and on
      * unmanaged instances, and stripped otherwise.
      */
-    public function complete(\Piwik\Plugins\AIProviders\AIRequest $request) : \Piwik\Plugins\AIProviders\AIProviderResponse
+    public function complete(AIRequest $request): AIProviderResponse
     {
         // use the capability level set in the admin ui, unless overwritten through the request
         if ($request->getCapabilityLevel() === null) {
             $request = $request->withCapabilityLevel($this->configuration->getDefaultCapabilityLevel());
         }
-        $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
+
+        $providers = AIProviders::getAvailableProviders();
         $resolution = $this->resolveProviderId($request->getProviderId(), $request->getCallerPluginName(), $providers);
+
         if ($resolution['stripRequestedModel']) {
             $request = $request->withProviderId($resolution['providerId'])->withModel(null);
         }
+
         $provider = $this->requireProvider($providers, $resolution['providerId']);
+
+        // Fail rather than silently answer ungrounded: a caller that asked for
+        // sources would otherwise store answers it cannot tell apart from grounded ones.
+        if ($request->isWebSearchEnabled() && !$provider->supportsWebSearch()) {
+            throw new AIProviderClientException(sprintf(
+                '%s does not support web search.',
+                $provider->getName()
+            ));
+        }
+
         $configuration = $this->configuration->getProviderConfiguration($provider);
+
         $response = $this->runWithProvider($provider, $configuration, $request);
+
         /**
          * TODO: publish an observability event here so billing or monitoring can
          * hook into AI usage without this plugin depending on them. Emit basic
@@ -93,6 +116,7 @@ class AIProviderService
          */
         return $response;
     }
+
     /**
      * Runs one conversational round-trip (multi-turn messages plus optional
      * tool calls) and returns the assistant's turn.
@@ -106,26 +130,36 @@ class AIProviderService
      * Unlike {@link complete()}, an empty text response is valid here: a turn
      * may consist solely of tool_use blocks.
      */
-    public function converse(\Piwik\Plugins\AIProviders\AIConversationRequest $request) : \Piwik\Plugins\AIProviders\AIConversationResponse
+    public function converse(AIConversationRequest $request): AIConversationResponse
     {
         // Use the capability level set in the admin UI unless the request overrides it.
         if ($request->getCapabilityLevel() === null) {
             $request = $request->withCapabilityLevel($this->configuration->getDefaultCapabilityLevel());
         }
-        $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
+
+        $providers = AIProviders::getAvailableProviders();
         $resolution = $this->resolveProviderId($request->getProviderId(), $request->getCallerPluginName(), $providers);
+
         if ($resolution['stripRequestedModel']) {
             $request = $request->withProviderId($resolution['providerId'])->withModel(null);
         }
+
         $provider = $this->requireProvider($providers, $resolution['providerId']);
+
         if (!$provider->supportsConversations()) {
-            throw new AIProviderClientException(sprintf('%s does not support multi-turn conversations.', $provider->getName()));
+            throw new AIProviderClientException(sprintf(
+                '%s does not support multi-turn conversations.',
+                $provider->getName()
+            ));
         }
+
         $configuration = $this->configuration->getProviderConfiguration($provider);
+
         // TODO: publish the same `AIProviders.usage` observability event as
         // planned for complete() once it is implemented there.
         return $provider->converse($request, $configuration);
     }
+
     /**
      * Returns whether conversational features can run right now: the default
      * provider (honouring a managed environment's forced provider) exists, is
@@ -133,10 +167,11 @@ class AIProviderService
      * features should hide or disable themselves when this returns false; use
      * {@link getConversationAvailability()} when the reason matters for the UI.
      */
-    public function canConverse() : bool
+    public function canConverse(): bool
     {
         return $this->getConversationAvailability()['status'] === self::CONVERSATION_READY;
     }
+
     /**
      * Reports whether conversational features can run, and why not when they
      * cannot, so callers can show an actionable message instead of a generic
@@ -157,22 +192,60 @@ class AIProviderService
      *
      * @return array{status: string, providerId: ?string, providerName: ?string}
      */
-    public function getConversationAvailability() : array
+    public function getConversationAvailability(): array
     {
         try {
             $provider = $this->getDefaultProvider();
         } catch (InvalidArgumentException $e) {
             return ['status' => self::CONVERSATION_NOT_CONFIGURED, 'providerId' => null, 'providerName' => null];
         }
+
         $base = ['providerId' => $provider->getId(), 'providerName' => $provider->getName()];
+
         if (!$provider->supportsConversations()) {
             return ['status' => self::CONVERSATION_PROVIDER_UNSUPPORTED] + $base;
         }
+
         if (!$provider->isConfigured($this->configuration->getProviderConfiguration($provider))) {
             return ['status' => self::CONVERSATION_NOT_CONFIGURED] + $base;
         }
+
         return ['status' => self::CONVERSATION_READY] + $base;
     }
+
+    /**
+     * Whether a grounded completion from this caller can run, so a feature that
+     * needs sources can degrade before spending anything.
+     *
+     * Answered for the provider {@link complete()} would actually resolve to,
+     * which is what makes it usable: on a managed instance the forced provider
+     * wins unless the caller is allowlisted, and a forced provider without web
+     * search makes every grounded request throw.
+     *
+     * Answers for the provider only, not for a specific request: it takes no
+     * {@link AIRequest} and so cannot see request options that a provider
+     * refuses to combine with search. Google rejects grounding together with
+     * {@link AIRequest::withJsonResponse()}, and a `true` here does not warn
+     * about it.
+     *
+     * @param string|null $requestedProviderId The same value the caller would pass to
+     *                                         {@link AIRequest::withProviderId()}, if any.
+     */
+    public function canUseWebSearch(string $callerPluginName, ?string $requestedProviderId = null): bool
+    {
+        $providers = AIProviders::getAvailableProviders();
+
+        try {
+            $resolution = $this->resolveProviderId($requestedProviderId, $callerPluginName, $providers);
+            $provider = $this->requireProvider($providers, $resolution['providerId']);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
+
+        return $provider->supportsWebSearch()
+            && $provider->isConfigured($this->configuration->getProviderConfiguration($provider));
+    }
+
     /**
      * Resolves which provider a request runs through: the caller's requested
      * provider (unless {@link isLockedToForcedProvider()}), then the forced
@@ -184,44 +257,64 @@ class AIProviderService
      *
      * @return array{providerId: string, stripRequestedModel: bool}
      */
-    private function resolveProviderId(?string $requestedProviderId, string $callerPluginName, \Piwik\Plugins\AIProviders\AIProvidersList $providers) : array
-    {
+    private function resolveProviderId(
+        ?string $requestedProviderId,
+        string $callerPluginName,
+        AIProvidersList $providers
+    ): array {
         $forcedProviderId = $this->configuration->getForcedProviderId();
         $hasRequestedProvider = $requestedProviderId !== null && $requestedProviderId !== '';
-        if ($hasRequestedProvider && $forcedProviderId !== null && !$this->isLockedToForcedProvider($forcedProviderId, $callerPluginName)) {
+
+        if (
+            $hasRequestedProvider
+            && $forcedProviderId !== null
+            && !$this->isLockedToForcedProvider($forcedProviderId, $callerPluginName)
+        ) {
             // TODO: consider validating the requested model against a
             // per-provider `allowedModels` list from the managed config as a
             // cost backstop, once the planned `AIProviders.usage` event shows
             // whether actual token usage needs it.
-            return ['providerId' => $requestedProviderId, 'stripRequestedModel' => \false];
+            return ['providerId' => $requestedProviderId, 'stripRequestedModel' => false];
         }
+
         if ($forcedProviderId !== null) {
-            return ['providerId' => $forcedProviderId, 'stripRequestedModel' => \true];
+            return ['providerId' => $forcedProviderId, 'stripRequestedModel' => true];
         }
+
         if ($hasRequestedProvider) {
-            return ['providerId' => $requestedProviderId, 'stripRequestedModel' => \false];
+            return ['providerId' => $requestedProviderId, 'stripRequestedModel' => false];
         }
-        return ['providerId' => $this->configuration->getDefaultProviderId($providers), 'stripRequestedModel' => \false];
+
+        return [
+            'providerId' => $this->configuration->getDefaultProviderId($providers),
+            'stripRequestedModel' => false,
+        ];
     }
+
     /**
      * The managed-mode policy gate shared by {@link resolveProviderId()} and
      * {@link getProviderStatusesForCaller()}: a caller is locked to the forced
      * provider unless it is on the `providerSelectionAllowlist`.
      */
-    private function isLockedToForcedProvider(?string $forcedProviderId, string $callerPluginName) : bool
+    private function isLockedToForcedProvider(?string $forcedProviderId, string $callerPluginName): bool
     {
-        return $forcedProviderId !== null && !$this->configuration->isPluginAllowedToSelectProvider($callerPluginName);
+        return $forcedProviderId !== null
+            && !$this->configuration->isPluginAllowedToSelectProvider($callerPluginName);
     }
-    private function requireProvider(\Piwik\Plugins\AIProviders\AIProvidersList $providers, string $providerId) : AIProvider
+
+    private function requireProvider(AIProvidersList $providers, string $providerId): AIProvider
     {
         $provider = $providers->getProvider($providerId);
+
         if ($provider === null) {
             // Untranslated on purpose: only a plugin passing its own provider ID
             // reaches this, never the settings form.
             throw new InvalidArgumentException(sprintf('Unknown AI provider "%s".', $providerId));
         }
+
         return $provider;
     }
+
     /**
      * Validates a specific provider and configuration, with no provider
      * resolution. Restricted to the admin "test connection" flow, which needs
@@ -235,51 +328,59 @@ class AIProviderService
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    public function testProviderConnection(AIProvider $provider, array $configuration) : void
+    public function testProviderConnection(AIProvider $provider, array $configuration): void
     {
         $provider->verifyConnection($configuration);
     }
+
     /**
      * Executes the request against the given provider and guards against an empty
      * completion. Used by {@link complete()}.
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    private function runWithProvider(AIProvider $provider, array $configuration, \Piwik\Plugins\AIProviders\AIRequest $request) : \Piwik\Plugins\AIProviders\AIProviderResponse
+    private function runWithProvider(AIProvider $provider, array $configuration, AIRequest $request): AIProviderResponse
     {
         $response = $provider->complete($request, $configuration);
+
         if (trim($response->getText()) === '') {
             throw new \RuntimeException(sprintf('%s returned an empty response.', $provider->getName()));
         }
+
         return $response;
     }
+
     /**
      * Returns the provider that completions run through by default, honouring a
      * provider forced by a managed environment.
      */
-    public function getDefaultProvider() : AIProvider
+    public function getDefaultProvider(): AIProvider
     {
-        $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
+        $providers = AIProviders::getAvailableProviders();
         $forcedProviderId = $this->configuration->getForcedProviderId();
         $providerId = $forcedProviderId ?? $this->configuration->getDefaultProviderId($providers);
+
         return $this->requireProvider($providers, $providerId);
     }
+
     /**
      * Returns the configured default model capability level.
      */
-    public function getDefaultCapabilityLevel() : string
+    public function getDefaultCapabilityLevel(): string
     {
         return $this->configuration->getDefaultCapabilityLevel();
     }
+
     /**
      * Returns whether the plugin runs in a managed environment, that is, the
      * default provider is forced (and locked) from configuration so settings
      * cannot be changed from the administration UI.
      */
-    public function isManaged() : bool
+    public function isManaged(): bool
     {
         return $this->configuration->isManaged();
     }
+
     /**
      * Returns provider status metadata for the administration UI.
      *
@@ -298,15 +399,28 @@ class AIProviderService
      *     endpointUrl: string
      * }>
      */
-    public function getAvailableProviderStatuses() : array
+    public function getAvailableProviderStatuses(): array
     {
-        $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
-        $defaultProviderId = $this->configuration->getForcedProviderId() ?? $this->configuration->getDefaultProviderId($providers);
-        return array_map(function (AIProvider $provider) use($defaultProviderId) : array {
+        $providers = AIProviders::getAvailableProviders();
+        $defaultProviderId = $this->configuration->getForcedProviderId()
+            ?? $this->configuration->getDefaultProviderId($providers);
+
+        return array_map(function (AIProvider $provider) use ($defaultProviderId): array {
             $configuration = $this->configuration->getProviderConfiguration($provider);
-            return ['id' => $provider->getId(), 'name' => $provider->getName(), 'description' => $provider->getDescription(), 'defaultModel' => $provider->getDefaultModel(), 'isDefault' => $provider->getId() === $defaultProviderId, 'isConfigured' => $provider->isConfigured($configuration), 'supportsCustomEndpoint' => $provider->supportsCustomEndpoint(), 'endpointUrl' => $configuration['endpointUrl']];
+
+            return [
+                'id' => $provider->getId(),
+                'name' => $provider->getName(),
+                'description' => $provider->getDescription(),
+                'defaultModel' => $provider->getDefaultModel(),
+                'isDefault' => $provider->getId() === $defaultProviderId,
+                'isConfigured' => $provider->isConfigured($configuration),
+                'supportsCustomEndpoint' => $provider->supportsCustomEndpoint(),
+                'endpointUrl' => $configuration['endpointUrl'],
+            ];
         }, $providers->getSelectableProviders());
     }
+
     /**
      * Returns the providers the given caller can run completions through,
      * flagged with whether credentials are in place. Follows the provider
@@ -318,18 +432,27 @@ class AIProviderService
      *
      * @return array<int, array{id: string, name: string, isConfigured: bool}>
      */
-    public function getProviderStatusesForCaller(string $callerPluginName) : array
+    public function getProviderStatusesForCaller(string $callerPluginName): array
     {
-        $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
+        $providers = AIProviders::getAvailableProviders();
         $forcedProviderId = $this->configuration->getForcedProviderId();
+
         if ($this->isLockedToForcedProvider($forcedProviderId, $callerPluginName)) {
             $forced = $providers->getProvider($forcedProviderId);
             $usableProviders = $forced !== null ? [$forced] : [];
         } else {
             $usableProviders = $providers->getProviders();
         }
-        return array_map(function (AIProvider $provider) : array {
-            return ['id' => $provider->getId(), 'name' => $provider->getName(), 'isConfigured' => $provider->isConfigured($this->configuration->getProviderConfiguration($provider))];
+
+        return array_map(function (AIProvider $provider): array {
+            return [
+                'id' => $provider->getId(),
+                'name' => $provider->getName(),
+                'isConfigured' => $provider->isConfigured(
+                    $this->configuration->getProviderConfiguration($provider)
+                ),
+                'supportsWebSearch' => $provider->supportsWebSearch(),
+            ];
         }, $usableProviders);
     }
 }

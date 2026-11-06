@@ -7,6 +7,7 @@ use Piwik\Plugins\SitesManager\SitesManager;
 use Piwik\Plugins\UsersManager\UsersManager;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
+
 class QuickLinks extends Widget
 {
     public static function configure(WidgetConfig $config)
@@ -16,10 +17,15 @@ class QuickLinks extends Widget
         $config->setOrder(16);
         $config->setIsEnabled(Piwik::hasUserSuperUserAccess());
     }
+
     public function render()
     {
         $hasUsersAdmin = UsersManager::isUsersAdminEnabled();
         $hasSitesAdmin = SitesManager::isSitesAdminEnabled();
-        return $this->renderTemplate('quickLinks', array('hasUsersAdmin' => $hasUsersAdmin, 'hasSitesAdmin' => $hasSitesAdmin));
+
+        return $this->renderTemplate('quickLinks', array(
+            'hasUsersAdmin' => $hasUsersAdmin,
+            'hasSitesAdmin' => $hasSitesAdmin,
+        ));
     }
 }

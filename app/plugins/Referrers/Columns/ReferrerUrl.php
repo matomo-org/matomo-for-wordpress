@@ -6,13 +6,15 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Referrers\Columns;
 
 use Piwik\Common;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
+
+class ReferrerUrl extends Base
 {
     public const MAX_LEN = 1500;
     protected $columnName = 'referer_url';
@@ -22,10 +24,12 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
     protected $namePlural = 'Referrers_ReferrerURLs';
     protected $category = 'Referrers_Referrers';
     protected $acceptValues = 'http%3A%2F%2Fwww.example.org%2Freferer-page.htm';
+
     public function __construct()
     {
         $this->columnType = 'VARCHAR(' . self::MAX_LEN . ') NULL';
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -33,8 +37,10 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
+
         return $this->trimUrl($information['referer_url']);
     }
+
     private function trimUrl($url)
     {
         if (!empty($url) && is_string($url) && mb_strlen($url) > self::MAX_LEN) {
@@ -42,12 +48,17 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
         }
         return $url;
     }
+
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
-        if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
+        if (
+            $this->isCurrentReferrerDirectEntry($visitor)
+            && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY
+        ) {
             return $this->trimUrl($information['referer_url']);
         }
-        return \false;
+
+        return false;
     }
 }

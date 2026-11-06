@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API\DataTableManipulator;
 
 use Piwik\API\DataTableManipulator;
 use Piwik\Common;
 use Piwik\DataTable;
+
 /**
  * This class is responsible for handling the label parameter that can be
  * added to every API call. If the parameter is set, only the row with the matching
@@ -24,19 +26,24 @@ class LabelFilter extends DataTableManipulator
     public const SEPARATOR_RECURSIVE_LABEL = '>';
     public const TERMINAL_OPERATOR = '@';
     public const FLAG_IS_ROW_EVOLUTION = 'label_index';
+
     private $labels;
     private $addLabelIndex;
     private $isComparing;
     private $labelSeries;
+
     /**
      * @var string
      */
     private $labelColumn;
-    public function __construct($apiModule = \false, $apiMethod = \false, $request = array(), string $labelColumn = 'label')
+
+    public function __construct($apiModule = false, $apiMethod = false, $request = array(), string $labelColumn = 'label')
     {
         parent::__construct($apiModule, $apiMethod, $request);
+
         $this->labelColumn = $labelColumn;
     }
+
     /**
      * Filter a data table by label.
      * The filtered table is returned, which might be a new instance.
@@ -51,21 +58,26 @@ class LabelFilter extends DataTableManipulator
      *                            label a row corresponds to.
      * @return DataTable\Map|DataTable
      */
-    public function filter($labels, $dataTable, $addLabelIndex = \false)
+    public function filter($labels, $dataTable, $addLabelIndex = false)
     {
         if (!is_array($labels)) {
             $labels = array($labels);
         }
+
         $this->labels = array_values($labels);
-        $this->addLabelIndex = (bool) $addLabelIndex;
+        $this->addLabelIndex = (bool)$addLabelIndex;
         $this->isComparing = $this->isComparing();
+
         $labelSeries = Common::getRequestVar('labelSeries', '', 'string', $this->request);
         $labelSeries = explode(',', $labelSeries);
         $labelSeries = array_filter($labelSeries, 'strlen');
         $this->labelSeries = $labelSeries;
+
         $result = $this->manipulate($dataTable);
+
         return $result;
     }
+
     /**
      * Method for the recursive descend
      *
@@ -76,24 +88,31 @@ class LabelFilter extends DataTableManipulator
     private function doFilterRecursiveDescend($labelParts, $dataTable)
     {
         $labelColumn = $this->labelColumn;
+
         // search for the first part of the tree search
         $labelPart = array_shift($labelParts);
+
         $row = $this->findRowForLabel($labelColumn, $labelPart, $dataTable);
-        if ($row === \false) {
+
+        if ($row === false) {
             // not found
-            return \false;
+            return false;
         }
+
         // end of tree search reached
         if (count($labelParts) == 0) {
             return $row;
         }
+
         $subTable = $this->loadSubtable($dataTable, $row);
         if ($subTable === null) {
             // no more subtables but label parts left => no match found
-            return \false;
+            return false;
         }
+
         return $this->doFilterRecursiveDescend($labelParts, $subTable);
     }
+
     /**
      * Clean up request for ResponseBuilder to behave correctly
      *
@@ -105,10 +124,11 @@ class LabelFilter extends DataTableManipulator
         unset($request['label']);
         unset($request['flat']);
         $request['totals'] = 0;
-        $request['filter_sort_column'] = '';
-        // do not sort, we only want to find a matching column
+        $request['filter_sort_column'] = ''; // do not sort, we only want to find a matching column
+
         return $request;
     }
+
     /**
      * Use variations of the label to make it easier to specify the desired label
      *
@@ -121,16 +141,24 @@ class LabelFilter extends DataTableManipulator
     private function getLabelVariations($originalLabel)
     {
         static $pageTitleReports = array('getPageTitles', 'getEntryPageTitles', 'getExitPageTitles');
+
         $originalLabel = trim($originalLabel);
+
         $isTerminal = substr($originalLabel, 0, 1) == self::TERMINAL_OPERATOR;
         if ($isTerminal) {
             $originalLabel = substr($originalLabel, 1);
         }
+
         $variations = array();
         $label = trim(urldecode($originalLabel));
+
         $sanitizedLabel = Common::sanitizeInputValue($label);
         $variations[] = $sanitizedLabel;
-        if ($this->apiModule == 'Actions' && in_array($this->apiMethod, $pageTitleReports)) {
+
+        if (
+            $this->apiModule == 'Actions'
+            && in_array($this->apiMethod, $pageTitleReports)
+        ) {
             if ($isTerminal) {
                 array_unshift($variations, ' ' . $sanitizedLabel);
                 array_unshift($variations, ' ' . $label);
@@ -142,9 +170,12 @@ class LabelFilter extends DataTableManipulator
             }
         }
         $variations[] = $label;
+
         $variations = array_unique($variations);
+
         return $variations;
     }
+
     /**
      * Filter a DataTable instance. See {@see filter()} for more info.
      *
@@ -158,24 +189,43 @@ class LabelFilter extends DataTableManipulator
             $row = null;
             foreach ($this->getLabelVariations($label) as $labelVariation) {
                 $labelVariation = explode(self::SEPARATOR_RECURSIVE_LABEL, $labelVariation);
+
                 $row = $this->doFilterRecursiveDescend($labelVariation, $dataTable);
                 if ($row) {
-                    if ($this->isComparing && isset($this->labelSeries[$labelIndex])) {
+                    if (
+                        $this->isComparing
+                        && isset($this->labelSeries[$labelIndex])
+                    ) {
                         $comparisons = $row->getComparisons();
                         if (!empty($comparisons)) {
                             $labelSeriesIndex = $this->labelSeries[$labelIndex];
-                            $originalLabel = $row->getColumn($this->labelColumn) ?: $row->getMetadata($this->labelColumn);
-                            $row = $comparisons->getRowFromId($labelSeriesIndex);
-                            // the suffix is appended after labels are sanitized, so encode it to match
-                            $comparisonSuffix = Common::sanitizeInputValue((string) $row->getMetadata('compareSeriesPretty'));
-                            // add label and make sure it is the first column
-                            $columns = array_merge(['label' => $originalLabel . ' ' . $comparisonSuffix], $row->getColumns());
-                            $row->setColumns($columns);
+
+                            $comparisonRow = $comparisons->getRowFromId($labelSeriesIndex);
+
+                            // labelSeries is supplied by the request, so it does not have to point at an
+                            // existing comparison row
+                            if ($comparisonRow !== false) {
+                                $originalLabel = $row->getColumn($this->labelColumn) ?: $row->getMetadata($this->labelColumn);
+
+                                // both parts are appended after labels are sanitized, so encode them to match.
+                                // the label column may be a report specific row identifier, which the label
+                                // sanitization does not cover
+                                $originalLabel = Common::sanitizeInputValue((string) $originalLabel);
+                                $comparisonSuffix = Common::sanitizeInputValue((string) $comparisonRow->getMetadata('compareSeriesPretty'));
+
+                                // add label and make sure it is the first column
+                                $columns = array_merge(['label' => $originalLabel . ' ' . $comparisonSuffix], $comparisonRow->getColumns());
+                                $comparisonRow->setColumns($columns);
+
+                                $row = $comparisonRow;
+                            }
                         }
                     }
+
                     if ($this->addLabelIndex) {
                         $row->setMetadata(self::FLAG_IS_ROW_EVOLUTION, $labelIndex);
                     }
+
                     $result->addRow($row);
                     break;
                 }
@@ -183,10 +233,12 @@ class LabelFilter extends DataTableManipulator
         }
         return $result;
     }
+
     private function isComparing()
     {
         return Common::getRequestVar('compare', 0, 'int', $this->request) == 1;
     }
+
     private function findRowForLabel($labelColumn, $labelPart, DataTable $dataTable)
     {
         // we don't use getRowFromLabel() for two reasons: some filters change the label column directly via
@@ -197,12 +249,14 @@ class LabelFilter extends DataTableManipulator
             $value = $row->getColumn($labelColumn) ?: $row->getMetadata($labelColumn);
             $index[$value] = $row;
         }
+
         $variations = $this->getLabelVariations($labelPart);
         foreach ($variations as $variation) {
             if (!empty($index[$variation])) {
                 return $index[$variation];
             }
         }
-        return \false;
+
+        return false;
     }
 }

@@ -7,11 +7,14 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Cache;
 
 use Illuminate\Support\Facades\Cache;
-class LaravelCache implements \DeviceDetector\Cache\CacheInterface
+
+class LaravelCache implements CacheInterface
 {
     /**
      * @inheritDoc
@@ -20,31 +23,35 @@ class LaravelCache implements \DeviceDetector\Cache\CacheInterface
     {
         return Cache::get($id);
     }
+
     /**
      * @inheritDoc
      */
-    public function contains(string $id) : bool
+    public function contains(string $id): bool
     {
         return Cache::has($id);
     }
+
     /**
      * @inheritDoc
      */
-    public function save(string $id, $data, int $lifeTime = 0) : bool
+    public function save(string $id, $data, int $lifeTime = 0): bool
     {
         return Cache::put($id, $data, \func_num_args() < 3 ? null : $lifeTime);
     }
+
     /**
      * @inheritDoc
      */
-    public function delete(string $id) : bool
+    public function delete(string $id): bool
     {
         return Cache::forget($id);
     }
+
     /**
      * @inheritDoc
      */
-    public function flushAll() : bool
+    public function flushAll(): bool
     {
         return Cache::flush();
     }

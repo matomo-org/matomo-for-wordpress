@@ -6,45 +6,54 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\AssetManager;
 
 abstract class UIAsset
 {
-    public abstract function validateFile();
+    abstract public function validateFile();
+
     /**
      * @return string
      */
-    public abstract function getAbsoluteLocation();
+    abstract public function getAbsoluteLocation();
+
     /**
      * @return string
      */
-    public abstract function getRelativeLocation();
+    abstract public function getRelativeLocation();
+
     /**
      * @return string
      */
-    public abstract function getBaseDirectory();
+    abstract public function getBaseDirectory();
+
     /**
      * Removes the previous file if it exists.
      * Also tries to remove compressed version of the file.
      *
      * @see \Piwik\ProxyHttp::serverStaticFile()
      */
-    public abstract function delete();
+    abstract public function delete();
+
     /**
      * @param string $content
      * @throws \Exception
      */
-    public abstract function writeContent($content);
+    abstract public function writeContent($content);
+
     /**
      * @return string
      */
-    public abstract function getContent();
+    abstract public function getContent();
+
     /**
      * @return boolean
      */
-    public abstract function exists();
+    abstract public function exists();
+
     /**
      * @return int
      */
-    public abstract function getModificationDate();
+    abstract public function getModificationDate();
 }

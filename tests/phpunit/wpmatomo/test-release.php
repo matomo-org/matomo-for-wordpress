@@ -97,7 +97,6 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 
 		$ignored_core_files = [
-			'matomo/CHANGELOG.md',
 			'matomo/lang/README.md',
 			'matomo/config/manifest.inc.php',
 			'matomo/js/piwik.js',
@@ -139,6 +138,7 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 			// added via patch
 			'app/plugins/CoreHome/stylesheets/a11y.less',
+			'app/plugins/Marketplace/images/categories/matomo.png',
 		];
 
 		try {

@@ -6,11 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 
-use Matomo\Dependencies\GeoIp2\Database\Reader;
-use Matomo\Dependencies\GeoIp2\Exception\AddressNotFoundException;
-use Matomo\Dependencies\MaxMind\Db\Reader\InvalidDatabaseException;
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Log;
@@ -22,6 +23,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Url;
 use Piwik\View;
+
 /**
  * A LocationProvider that uses the PHP implementation of GeoIP 2.
  *
@@ -30,6 +32,7 @@ class Php extends GeoIp2
 {
     public const ID = 'geoip2php';
     public const TITLE = 'DBIP / GeoIP 2 (Php)';
+
     /**
      * The GeoIP2 reader instances used. This array will contain at most two
      * of them: one for location info and one for ISP info
@@ -39,6 +42,7 @@ class Php extends GeoIp2
      * @var Reader[] of GeoIP instances
      */
     private $readerCache = array();
+
     /**
      * Possible filenames for each type of GeoIP database. When looking for a database
      * file in the 'misc' subdirectory, files with these names will be looked for.
@@ -51,6 +55,7 @@ class Php extends GeoIp2
      * @var array
      */
     private $customDbNames;
+
     /**
      * @param array|bool $customDbNames The possible filenames for each type of GeoIP database.
      *                                   eg array(
@@ -60,10 +65,10 @@ class Php extends GeoIp2
      *                                   If a key is missing (or the parameter not supplied), then the
      *                                   default database names are used.
      */
-    public function __construct($customDbNames = \false)
+    public function __construct($customDbNames = false)
     {
         $this->customDbNames = parent::$dbNames;
-        if ($customDbNames !== \false) {
+        if ($customDbNames !== false) {
             foreach ($this->customDbNames as $key => $names) {
                 if (isset($customDbNames[$key])) {
                     $this->customDbNames[$key] = $customDbNames[$key];
@@ -71,14 +76,17 @@ class Php extends GeoIp2
             }
         }
     }
+
     public function __destroy()
     {
         $this->clearCachedInstances();
     }
+
     private function isIspDbEnabled()
     {
         return StaticContainer::get('geopip2.ispEnabled');
     }
+
     /**
      * Uses a GeoIP 2 database to get a visitor's location based on their IP address.
      *
@@ -95,9 +103,11 @@ class Php extends GeoIp2
     public function getLocation($info)
     {
         $ip = $this->getIpFromInfo($info);
+
         if (empty($ip)) {
-            return \false;
+            return false;
         }
+
         $result = [];
         $reader = $this->getGeoIpInstance('loc');
         if ($reader) {
@@ -132,8 +142,7 @@ class Php extends GeoIp2
                         $this->setCountryResults($lookupResult, $result);
                         $this->setCityResults($lookupResult, $result);
                         break;
-                    default:
-                        // unknown database type log warning
+                    default: // unknown database type log warning
                         Log::warning("Found unrecognized database type: %s", $reader->metadata()->databaseType);
                         break;
                 }
@@ -141,11 +150,12 @@ class Php extends GeoIp2
                 // ignore - do nothing
             }
         }
+
         // NOTE: ISP & ORG require commercial dbs to test.
         if ($this->isIspDbEnabled()) {
             $ispGeoIp = $this->getGeoIpInstance($key = 'isp');
         } else {
-            $ispGeoIp = \false;
+            $ispGeoIp = false;
         }
         if ($ispGeoIp) {
             try {
@@ -175,12 +185,15 @@ class Php extends GeoIp2
                 // ignore - do nothing
             }
         }
+
         if (empty($result)) {
-            return \false;
+            return false;
         }
+
         $this->completeLocationResult($result);
         return $result;
     }
+
     /**
      * Returns a generalized name for the type of GeoIP database that is configured to load. The result is suitable
      * for use as a filename, is not the exact value of the databaseType metadata.
@@ -193,6 +206,7 @@ class Php extends GeoIp2
         if (empty($reader)) {
             throw new \Exception("Unable to determine what type of database this is.");
         }
+
         $specificDatabaseTypeMetadata = $reader->metadata()->databaseType;
         switch ($specificDatabaseTypeMetadata) {
             case 'DBIP-Country-Lite':
@@ -226,36 +240,41 @@ class Php extends GeoIp2
             case 'DBIP-ISP':
                 return $specificDatabaseTypeMetadata;
             default:
-                throw new \Exception("Unknown database type: {$specificDatabaseTypeMetadata}");
+                throw new \Exception("Unknown database type: $specificDatabaseTypeMetadata");
         }
     }
+
     protected function setCountryResults($lookupResult, &$result)
     {
         $result[self::CONTINENT_NAME_KEY] = $lookupResult->continent->name;
         $result[self::CONTINENT_CODE_KEY] = strtoupper($lookupResult->continent->code ?? '');
-        $result[self::COUNTRY_CODE_KEY] = strtoupper($lookupResult->country->isoCode ?? '');
-        $result[self::COUNTRY_NAME_KEY] = $lookupResult->country->name;
+        $result[self::COUNTRY_CODE_KEY]   = strtoupper($lookupResult->country->isoCode ?? '');
+        $result[self::COUNTRY_NAME_KEY]   = $lookupResult->country->name;
     }
+
     protected function setCityResults($lookupResult, &$result)
     {
-        $result[self::CITY_NAME_KEY] = $lookupResult->city->name;
-        $result[self::LATITUDE_KEY] = $lookupResult->location->latitude;
-        $result[self::LONGITUDE_KEY] = $lookupResult->location->longitude;
-        $result[self::POSTAL_CODE_KEY] = $lookupResult->postal->code;
+        $result[self::CITY_NAME_KEY]      = $lookupResult->city->name;
+        $result[self::LATITUDE_KEY]       = $lookupResult->location->latitude;
+        $result[self::LONGITUDE_KEY]      = $lookupResult->location->longitude;
+        $result[self::POSTAL_CODE_KEY]    = $lookupResult->postal->code;
         if (is_array($lookupResult->subdivisions) && count($lookupResult->subdivisions) > 0) {
             $subdivisions = $lookupResult->subdivisions;
             $subdivision = $this->determinSubdivision($subdivisions, $result[self::COUNTRY_CODE_KEY]);
             $subdivisionIsoCode = $subdivision->isoCode ? strtoupper($subdivision->isoCode) : '';
+
             // In some cases the region code might be returned including the country code
             // e.g. AE-DU instead of only DU. In that case we remove the prefix
             // see https://github.com/matomo-org/matomo/issues/19323
             if (0 === strpos($subdivisionIsoCode, $result[self::COUNTRY_CODE_KEY] . '-')) {
                 $subdivisionIsoCode = substr($subdivisionIsoCode, strlen($result[self::COUNTRY_CODE_KEY]) + 1);
             }
-            $result[self::REGION_CODE_KEY] = $subdivisionIsoCode ?: $this->determineRegionIsoCodeByNameAndCountryCode($subdivision->name, $result[self::COUNTRY_CODE_KEY]);
+
+            $result[self::REGION_CODE_KEY] = $subdivisionIsoCode ? : $this->determineRegionIsoCodeByNameAndCountryCode($subdivision->name, $result[self::COUNTRY_CODE_KEY]);
             $result[self::REGION_NAME_KEY] = $subdivision->name;
         }
     }
+
     /**
      * Try to determine the ISO region code based on the region name and country code
      *
@@ -266,9 +285,11 @@ class Php extends GeoIp2
     protected function determineRegionIsoCodeByNameAndCountryCode($regionName, $countryCode)
     {
         $regionNames = self::getRegions();
+
         if (empty($regionNames[$countryCode])) {
             return '';
         }
+
         foreach ($regionNames[$countryCode] as $isoCode => $regionData) {
             if ($this->fuzzyMatch($regionData['name'], $regionName)) {
                 return $isoCode;
@@ -281,30 +302,37 @@ class Php extends GeoIp2
                 }
             }
         }
+
         return '';
     }
-    private function fuzzyMatch(string $str1, string $str2) : bool
+
+    private function fuzzyMatch(string $str1, string $str2): bool
     {
         if (strtolower($str1) === strtolower($str2)) {
-            return \true;
+            return true;
         }
+
         // try converting umlauts to the closest ascii char if intl or iconv is available
         if (function_exists('transliterator_transliterate')) {
             $str1 = transliterator_transliterate('Any-Latin; Latin-ASCII', $str1);
             $str2 = transliterator_transliterate('Any-Latin; Latin-ASCII', $str2);
         } elseif (function_exists('iconv')) {
-            $str1 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str1) ?: $str1;
-            $str2 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str2) ?: $str2;
+            $str1 = iconv('UTF-8', 'ASCII//TRANSLIT', $str1);
+            $str2 = iconv('UTF-8', 'ASCII//TRANSLIT', $str2);
         }
+
         return strtolower($str1) === strtolower($str2);
     }
+
     protected function determinSubdivision($subdivisions, $countryCode)
     {
         if (in_array($countryCode, ['GB'])) {
             return end($subdivisions);
         }
+
         return reset($subdivisions);
     }
+
     /**
      * Returns true if this location provider is available. That is the case if either a location or a isp database is
      * available
@@ -315,8 +343,9 @@ class Php extends GeoIp2
     {
         $pathLoc = self::getPathToGeoIpDatabase($this->customDbNames['loc']);
         $pathIsp = $this->isIspDbEnabled() && self::getPathToGeoIpDatabase($this->customDbNames['isp']);
-        return $pathLoc !== \false || $pathIsp !== \false;
+        return $pathLoc !== false || $pathIsp !== false;
     }
+
     /**
      * Returns an array describing the types of location information this provider will
      * return.
@@ -339,13 +368,15 @@ class Php extends GeoIp2
     public function getSupportedLocationInfo()
     {
         $result = array();
+
         $reader = $this->getGeoIpInstance($key = 'loc');
         if ($reader) {
             // country & continent info always available
-            $result[self::CONTINENT_CODE_KEY] = \true;
-            $result[self::CONTINENT_NAME_KEY] = \true;
-            $result[self::COUNTRY_CODE_KEY] = \true;
-            $result[self::COUNTRY_NAME_KEY] = \true;
+            $result[self::CONTINENT_CODE_KEY] = true;
+            $result[self::CONTINENT_NAME_KEY] = true;
+            $result[self::COUNTRY_CODE_KEY] = true;
+            $result[self::COUNTRY_NAME_KEY] = true;
+
             switch ($reader->metadata()->databaseType) {
                 case 'GeoIP2-Enterprise':
                 case 'GeoLite2-City':
@@ -360,30 +391,33 @@ class Php extends GeoIp2
                 case 'DBIP-Location-ISP (compat=Enterprise)':
                 case 'DBIP-ISP (compat=Enterprise)':
                 case 'DBIP-Location (compat=City)':
-                    $result[self::REGION_CODE_KEY] = \true;
-                    $result[self::REGION_NAME_KEY] = \true;
-                    $result[self::CITY_NAME_KEY] = \true;
-                    $result[self::POSTAL_CODE_KEY] = \true;
-                    $result[self::LATITUDE_KEY] = \true;
-                    $result[self::LONGITUDE_KEY] = \true;
+                    $result[self::REGION_CODE_KEY] = true;
+                    $result[self::REGION_NAME_KEY] = true;
+                    $result[self::CITY_NAME_KEY] = true;
+                    $result[self::POSTAL_CODE_KEY] = true;
+                    $result[self::LATITUDE_KEY] = true;
+                    $result[self::LONGITUDE_KEY] = true;
                     break;
                 case 'DBIP-City-Lite':
-                    $result[self::REGION_CODE_KEY] = \false;
-                    $result[self::REGION_NAME_KEY] = \true;
-                    $result[self::CITY_NAME_KEY] = \true;
-                    $result[self::POSTAL_CODE_KEY] = \false;
-                    $result[self::LATITUDE_KEY] = \true;
-                    $result[self::LONGITUDE_KEY] = \true;
+                    $result[self::REGION_CODE_KEY] = false;
+                    $result[self::REGION_NAME_KEY] = true;
+                    $result[self::CITY_NAME_KEY] = true;
+                    $result[self::POSTAL_CODE_KEY] = false;
+                    $result[self::LATITUDE_KEY] = true;
+                    $result[self::LONGITUDE_KEY] = true;
                     break;
             }
         }
+
         // check if isp info is available
         if ($this->isIspDbEnabled() && $this->getGeoIpInstance($key = 'isp')) {
-            $result[self::ISP_KEY] = \true;
-            $result[self::ORG_KEY] = \true;
+            $result[self::ISP_KEY] = true;
+            $result[self::ORG_KEY] = true;
         }
+
         return $result;
     }
+
     /**
      * Returns information about this location provider. Contains an id, title & description:
      *
@@ -398,68 +432,114 @@ class Php extends GeoIp2
     public function getInfo()
     {
         $desc = Piwik::translate('GeoIp2_LocationProviderDesc_Php') . '<br/><br/>';
+
         if (extension_loaded('maxminddb')) {
-            $desc .= Piwik::translate('GeoIp2_LocationProviderDesc_Php_WithExtension', array('<strong>', '</strong>'));
+            $desc .= Piwik::translate(
+                'GeoIp2_LocationProviderDesc_Php_WithExtension',
+                array('<strong>', '</strong>')
+            );
         }
-        $installDocs = Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_163') . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a>';
+
+        $installDocs = Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_163')
+            . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases')
+            . '</a>';
+
         $availableInfo = $this->getSupportedLocationInfo();
+
         $availableDatabaseTypes = array();
+
         if (isset($availableInfo[self::CITY_NAME_KEY]) && $availableInfo[self::CITY_NAME_KEY]) {
             $availableDatabaseTypes[] = Piwik::translate('UserCountry_City');
         }
+
         if (isset($availableInfo[self::COUNTRY_NAME_KEY]) && $availableInfo[self::COUNTRY_NAME_KEY]) {
             $availableDatabaseTypes[] = Piwik::translate('UserCountry_Country');
         }
+
         if (isset($availableInfo[self::ISP_KEY]) && $availableInfo[self::ISP_KEY]) {
             $availableDatabaseTypes[] = Piwik::translate('GeoIp2_ISPDatabase');
         }
+
         if (!empty($availableDatabaseTypes)) {
-            $extraMessage = '<strong>' . Piwik::translate('General_Note') . '</strong>:&nbsp;' . Piwik::translate('GeoIp2_GeoIPImplHasAccessTo') . ':&nbsp;<strong>' . implode(', ', $availableDatabaseTypes) . '</strong>.';
+            $extraMessage = '<strong>' . Piwik::translate('General_Note') . '</strong>:&nbsp;'
+                . Piwik::translate('GeoIp2_GeoIPImplHasAccessTo') . ':&nbsp;<strong>'
+                . implode(', ', $availableDatabaseTypes) . '</strong>.';
         } else {
-            $extraMessage = '<strong>' . Piwik::translate('General_Note') . '</strong>:&nbsp;' . Piwik::translate('GeoIp2_GeoIPNoDatabaseFound');
+            $extraMessage = '<strong>' . Piwik::translate('General_Note') . '</strong>:&nbsp;'
+                . Piwik::translate('GeoIp2_GeoIPNoDatabaseFound');
         }
-        return array('id' => self::ID, 'title' => self::TITLE, 'description' => $desc, 'install_docs' => $installDocs, 'extra_message' => $extraMessage, 'order' => 2);
+
+        return array('id'            => self::ID,
+            'title'         => self::TITLE,
+            'description'   => $desc,
+            'install_docs'  => $installDocs,
+            'extra_message' => $extraMessage,
+            'order'         => 2);
     }
+
     public function renderConfiguration()
     {
         $view = new View('@GeoIp2/configuration.twig');
         $today = Date::today();
+
         $urls = GeoIP2AutoUpdater::getConfiguredUrls();
         $view->geoIPLocUrl = $urls['loc'];
         $view->geoIPIspUrl = $urls['isp'];
         $view->geoIPUpdatePeriod = GeoIP2AutoUpdater::getSchedulePeriod();
+
         $view->hasGeoIp2Provider = Manager::getInstance()->isPluginActivated('GeoIp2');
         $view->isProviderPluginActive = Manager::getInstance()->isPluginActivated('Provider');
-        $geoIPDatabasesInstalled = $view->hasGeoIp2Provider ? GeoIp2::isDatabaseInstalled() : \false;
+
+        $geoIPDatabasesInstalled = $view->hasGeoIp2Provider ? GeoIp2::isDatabaseInstalled() : false;
+
         $view->geoIPDatabasesInstalled = $geoIPDatabasesInstalled;
-        $view->updatePeriodOptions = ['month' => Piwik::translate('Intl_PeriodMonth'), 'week' => Piwik::translate('Intl_PeriodWeek')];
+        $view->updatePeriodOptions = [
+            'month' => Piwik::translate('Intl_PeriodMonth'),
+            'week' => Piwik::translate('Intl_PeriodWeek'),
+        ];
+
+
         // if using a server module, they are working and there are no databases
         // in misc, then the databases are located outside of Matomo, so we cannot update them
-        $view->showGeoIPUpdateSection = \true;
+        $view->showGeoIPUpdateSection = true;
         $currentProviderId = LocationProvider::getCurrentProviderId();
-        if (!$geoIPDatabasesInstalled && in_array($currentProviderId, [GeoIp2\ServerModule::ID]) && LocationProvider::getCurrentProvider()->isWorking() && LocationProvider::getCurrentProvider()->isAvailable()) {
-            $view->showGeoIPUpdateSection = \false;
+        if (
+            !$geoIPDatabasesInstalled
+            && in_array($currentProviderId, [GeoIp2\ServerModule::ID])
+            && LocationProvider::getCurrentProvider()->isWorking()
+            && LocationProvider::getCurrentProvider()->isAvailable()
+        ) {
+            $view->showGeoIPUpdateSection = false;
         }
+
         $view->isInternetEnabled = SettingsPiwik::isInternetEnabled();
+
+
         $view->dbipLiteUrl = GeoIp2::getDbIpLiteUrl();
         $view->dbipLiteFilename = "dbip-city-lite-{$today->toString('Y-m')}.mmdb";
         $view->dbipLiteDesiredFilename = "DBIP-City.mmdb";
         $view->nextRunTime = GeoIP2AutoUpdater::getNextRunTime();
+
         $lastRunTime = GeoIP2AutoUpdater::getLastRunTime();
-        if ($lastRunTime !== \false) {
+
+        if ($lastRunTime !== false) {
             $view->lastTimeUpdaterRun = '<strong>' . $lastRunTime->toString() . '</strong>';
         }
         return $view->render();
     }
+
     public function renderSetUpGuide()
     {
         $today = Date::today();
         $view = new View('@GeoIp2/setupguide.twig');
+
         $view->dbipLiteUrl = GeoIp2::getDbIpLiteUrl();
         $view->dbipLiteFilename = "dbip-city-lite-{$today->toString('Y-m')}.mmdb";
         $view->dbipLiteDesiredFilename = "DBIP-City.mmdb";
+
         return $view->render();
     }
+
     /**
      * Clears the cached instances and releases the file handles
      */
@@ -468,11 +548,14 @@ class Php extends GeoIp2
         if (empty($this->readerCache)) {
             return;
         }
+
         foreach ($this->readerCache as $reader) {
             $reader->close();
         }
+
         unset($this->readerCache);
     }
+
     /**
      * Returns a GeoIP2 reader instance. Creates it if necessary.
      *
@@ -484,7 +567,7 @@ class Php extends GeoIp2
     {
         if (empty($this->readerCache[$key])) {
             $pathToDb = self::getPathToGeoIpDatabase($this->customDbNames[$key]);
-            if ($pathToDb !== \false) {
+            if ($pathToDb !== false) {
                 try {
                     $this->readerCache[$key] = new Reader($pathToDb);
                 } catch (InvalidDatabaseException $e) {
@@ -492,6 +575,7 @@ class Php extends GeoIp2
                 }
             }
         }
-        return empty($this->readerCache[$key]) ? \false : $this->readerCache[$key];
+
+        return empty($this->readerCache[$key]) ? false : $this->readerCache[$key];
     }
 }

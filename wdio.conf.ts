@@ -3,6 +3,8 @@ import * as url from 'url';
 import * as fs from 'fs';
 import type { Options } from '@wdio/types'
 import GlobalSetup from './tests/e2e/global-setup.ts';
+import PremiumPluginsSetup from './tests/e2e/premium-plugins-setup.ts';
+import WooCommerceSetup from './tests/e2e/woocommerce-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -108,9 +110,20 @@ export const config: Options.Testrunner = {
   // will be called from there.
   //
   specs: [
+    // longest first (by CI duration), so a long spec does not start last and leave a tail
+    './tests/e2e/matomo-reporting.behaviour.e2e.ts',
+    './tests/e2e/matomo.tag-manager.e2e.ts',
+    './tests/e2e/matomo-reporting.visitors.e2e.ts',
+    './tests/e2e/matomo-reporting.acquisition.e2e.ts',
+    './tests/e2e/mwp-admin.settings.e2e.ts',
+    './tests/e2e/matomo-admin.privacy.e2e.ts',
+    './tests/e2e/matomo-admin.personal.e2e.ts',
+    './tests/e2e/matomo-reporting.ecommerce.e2e.ts',
+    './tests/e2e/mwp-admin.multisite.general.e2e.ts',
+    './tests/e2e/matomo-reporting.ai-assistants.e2e.ts',
     './tests/e2e/**/*.e2e.ts',
   ],
-  // Patterns to exclude. (all executed without parallelism before these tests, see wdio.conf.tracking.ts)
+  // Patterns to exclude. (executed without parallelism, concurrently with these tests, see wdio.conf.tracking.ts)
   exclude: [
     './tests/e2e/update.e2e.ts',
     './tests/e2e/mwp-admin.marketplace.e2e.ts',
@@ -118,8 +131,11 @@ export const config: Options.Testrunner = {
     './tests/e2e/tracking.ecommerce.e2e.ts',
     './tests/e2e/tracking.tag-manager.e2e.ts',
     './tests/e2e/manual-archiving.e2e.ts',
+    './tests/e2e/mwp-admin.diagnostics.e2e.ts',
     './tests/e2e/mwp-language.e2e.ts',
     './tests/e2e/mwp-admin.update-block.e2e.ts',
+    // last, since it removes Matomo from the install
+    './tests/e2e-uninstall/uninstall.e2e.ts',
   ],
   //
   // ============
@@ -137,7 +153,8 @@ export const config: Options.Testrunner = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 5,
+  // the serial run (wdio.conf.tracking.ts) uses another browser at the same time
+  maxInstances: parseInt(process.env.E2E_MAX_INSTANCES || '3', 10),
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -215,6 +232,8 @@ export const config: Options.Testrunner = {
         autoSaveBaseline: false,
         blockOutStatusBar: true,
         blockOutToolBar: true,
+        // default is 1500ms per scrolled viewport
+        fullPageScrollTimeout: 300,
         // Options for the tabbing image
         tabbableOptions: {
           circle: {
@@ -301,6 +320,13 @@ export const config: Options.Testrunner = {
   onPrepare: async function (config, capabilities) {
     try {
       console.log('Performing one time setup...');
+
+      // this run has its own WordPress install, so it has to do the setup the tracking run
+      // does through the browser itself. premium plugins have to be registered before
+      // GlobalSetup archives anything.
+      await PremiumPluginsSetup.setUp();
+      await WooCommerceSetup.setUpIfInstalled();
+
       await GlobalSetup.setUp();
     } catch (e) {
       console.log(`Aborting, failed to finish global setup:\n${e.stack}`);

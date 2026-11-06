@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings;
 
 use Piwik\Validators\BaseValidator;
+
 /**
  * Lets you configure a form field.
  *
@@ -20,76 +22,94 @@ class FieldConfig
      * Shows a radio field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_RADIO = 'radio';
+
     /**
      * Shows a text field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_TEXT = 'text';
+
     /**
      * Shows an email text field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_EMAIL = 'email';
+
     /**
      * Shows a URL text field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_URL = 'url';
+
     /**
      * Shows a text area. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_TEXTAREA = 'textarea';
+
     /**
      * Shows a checkbox. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_CHECKBOX = 'checkbox';
+
     /**
      * Shows a password field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_PASSWORD = 'password';
+
     /**
      * Shows a select field where a user can select multiple values.
      * The type "Array" is required for this ui control. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_MULTI_SELECT = 'multiselect';
+
     /**
      * Shows a select field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_SINGLE_SELECT = 'select';
+
     /**
      * Shows an expandable select field which is useful when each selectable value belongs to a group.
      * To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_SINGLE_EXPANDABLE_SELECT = 'expandable-select';
+
     /**
      * Lets a user configure an array of form fields.
      */
     public const UI_CONTROL_FIELD_ARRAY = 'field-array';
+
     /**
      * Lets a user configure two form fields next to each other, and add multiple entries of those two pairs.
      */
     public const UI_CONTROL_MULTI_TUPLE = 'multituple';
+
     /**
      * Generates a hidden form field. To use this field assign it to the `$uiControl` property.
      */
     public const UI_CONTROL_HIDDEN = 'hidden';
+
     /**
      * Expects an integer value. Is usually used when creating a setting.
      */
     public const TYPE_INT = 'integer';
+
     /**
      * Expects a float value. Is usually used when creating a setting.
      */
     public const TYPE_FLOAT = 'float';
+
     /**
      * Expects a string. Is usually used when creating a setting.
      */
     public const TYPE_STRING = 'string';
+
     /**
      * Expects a boolean. Is usually used when creating a setting.
      */
     public const TYPE_BOOL = 'boolean';
+
     /**
      * Expects an array containing multiple values.
      */
     public const TYPE_ARRAY = 'array';
+
     /**
      * Describes what HTML element should be used to manipulate the setting through Piwik's UI.
      *
@@ -98,6 +118,7 @@ class FieldConfig
      * @var string
      */
     public $uiControl = null;
+
     /**
      * Defines a custom Vue component to use for the internal field UI control. This should be an array with two
      * keys:
@@ -108,6 +129,7 @@ class FieldConfig
      * @var string[]
      */
     public $customFieldComponent;
+
     /**
      * Name-value mapping of HTML attributes that will be added HTML form control, eg,
      * `array('size' => 3)`. Attributes will be escaped before outputting.
@@ -115,13 +137,15 @@ class FieldConfig
      * @var array
      */
     public $uiControlAttributes = array();
+
     /**
      * Makes field full width.
      * Useful for `$field->uiControl = FieldConfig::UI_CONTROL_MULTI_TUPLE;`
      *
      * @var bool
      */
-    public $fullWidth = \false;
+    public $fullWidth = false;
+
     /**
      * The list of all available values for this setting. If null, the setting can have any value.
      *
@@ -139,12 +163,14 @@ class FieldConfig
      * @var null|array
      */
     public $availableValues = null;
+
     /**
      * Text that will appear above this setting's section in the _Plugin Settings_ admin page.
      *
      * @var null|string
      */
     public $introduction = null;
+
     /**
      * Text that will appear directly underneath the setting title in the _Plugin Settings_ admin
      * page. If set, should be a short description of the setting.
@@ -152,6 +178,7 @@ class FieldConfig
      * @var null|string
      */
     public $description = null;
+
     /**
      * Text that will appear next to the setting's section in the _Plugin Settings_ admin page. If set,
      * it should contain information about the setting that is more specific than a general description,
@@ -162,6 +189,7 @@ class FieldConfig
      * @var null|string
      */
     public $inlineHelp = null;
+
     /**
      * A closure that prepares the setting value. If supplied, this closure will be executed before
      * the setting has been validated.
@@ -175,6 +203,7 @@ class FieldConfig
      * @var null|\Closure
      */
     public $prepare = null;
+
     /**
      * A closure that does some custom validation on the setting before the setting is persisted.
      *
@@ -193,6 +222,7 @@ class FieldConfig
      * @var null|\Closure
      */
     public $validate = null;
+
     /**
      * A closure that transforms the setting value. If supplied, this closure will be executed after
      * the setting has been validated.
@@ -214,6 +244,7 @@ class FieldConfig
      * @var null|\Closure
      */
     public $transform = null;
+
     /**
      * This setting's display name, for example, `'Refresh Interval'`.
      *
@@ -222,6 +253,7 @@ class FieldConfig
      * @var string
      */
     public $title = '';
+
     /**
      * Here you can define conditions so that certain form fields will be only shown when a certain condition
      * is true. This condition is supposed to be evaluated on the client side dynamically. This way you can hide
@@ -234,6 +266,7 @@ class FieldConfig
      * @var string
      */
     public $condition;
+
     /**
      * Here you can add one or multiple instances of `Piwik\Validators\BaseValidator` to avoid having to
      * write the same validators over and over again in {@link $validate}.

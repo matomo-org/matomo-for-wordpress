@@ -38,6 +38,20 @@ describe('MWP Admin > Marketplace', () => {
     }
   }
 
+  // see test-utility-plugin.php
+  async function useMarketplaceDownloadCache(enable: boolean) {
+    await fetch(`${await Website.baseUrl()}/wp-admin/admin-ajax.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        action: 'matomo_test_use_marketplace_download_cache',
+        enable: enable ? '1' : '',
+      }),
+    });
+  }
+
   before(async () => {
     if (!process.env.PHP_VERSION) {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
@@ -161,9 +175,15 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should bulk install and activate plugins correctly', async () => {
-    await MwpMarketplacePage.open();
-    await MwpMarketplacePage.openMarketplacePluginsTab();
-    const installedPlugins = await MwpMarketplacePage.bulkInstallMatomoPlugins();
-    await MwpMarketplacePage.bulkActivateMatomoPlugins(installedPlugins);
+    // the single plugin install above covers downloading from the marketplace
+    await useMarketplaceDownloadCache(true);
+    try {
+      await MwpMarketplacePage.open();
+      await MwpMarketplacePage.openMarketplacePluginsTab();
+      const installedPlugins = await MwpMarketplacePage.bulkInstallMatomoPlugins();
+      await MwpMarketplacePage.bulkActivateMatomoPlugins(installedPlugins);
+    } finally {
+      await useMarketplaceDownloadCache(false);
+    }
   });
 });

@@ -1,0 +1,25 @@
+{
+    "CorePluginsAdmin": {
+        "ActionUninstall": "إلغاء التنصيب",
+        "Activate": "تفعيل",
+        "Activated": "تم تفعيله",
+        "Active": "مفعل",
+        "Activity": "النشاط",
+        "AuthorHomepage": "صفحة الناشر",
+        "Deactivate": "تعطيل",
+        "History": "التاريخ",
+        "Inactive": "معطل",
+        "LicenseHomepage": "صفحة الرخصة",
+        "MenuPlatform": "المنصة",
+        "OncePluginIsInstalledYouMayActivateHere": "ما أن يتم تنصيب تطبيق، يمكنك تفعيل أو تعطيل التطبيق من هنا.",
+        "OriginThirdParty": "طرف ثالث",
+        "PluginHomepage": "صفحة التطبيقات الرئيسية",
+        "PluginsExtendPiwik": "التطبيقات تزيد من إمكانيات Matomo.",
+        "PluginsManagement": "إدارة التطبيقات",
+        "Status": "الحالة",
+        "Theme": "الثيم",
+        "ThemesManagement": "إدارة الثيمات",
+        "Version": "الإصدار",
+        "Websites": "المواقع"
+    }
+}

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreAdminHome;
 
 use Piwik\Piwik;
@@ -13,23 +14,29 @@ use Piwik\Plugins\CoreAdminHome\Controller as CoreAdminController;
 use Piwik\Settings\Setting;
 use Piwik\Settings\FieldConfig;
 use Piwik\Tracker\Cache;
+
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
     /** @var Setting */
     public $corsDomains;
+
     /** @var Setting */
     public $trustedHostnames;
+
     protected function init()
     {
-        $this->title = ' ';
-        // intentionally left blank as it's hidden with css
+        $this->title = ' '; // intentionally left blank as it's hidden with css
+
         $isWritable = Piwik::hasUserSuperUserAccess() && CoreAdminController::isGeneralSettingsAdminEnabled();
         $this->trustedHostnames = $this->createTrustedHostnames();
         $this->trustedHostnames->setIsWritableByCurrentUser($isWritable);
+
         $isWritable = Piwik::hasUserSuperUserAccess();
         $this->corsDomains = $this->createCorsDomains();
         $this->corsDomains->setIsWritableByCurrentUser($isWritable);
     }
+
+
     private function createCorsDomains()
     {
         return $this->makeSettingManagedInConfigOnly('General', 'cors_domains', $default = [], FieldConfig::TYPE_ARRAY, function (FieldConfig $field) {
@@ -43,6 +50,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             };
         });
     }
+
     private function createTrustedHostnames()
     {
         return $this->makeSettingManagedInConfigOnly('General', 'trusted_hosts', $default = [], FieldConfig::TYPE_ARRAY, function (FieldConfig $field) {
@@ -55,6 +63,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             };
         });
     }
+
     public function save()
     {
         parent::save();

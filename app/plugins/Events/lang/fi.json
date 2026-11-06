@@ -1,0 +1,32 @@
+{
+    "Events": {
+        "AvgEventValue": "Keskimääräinen tapahtuman arvo on %s",
+        "AvgValue": "Keskiarvo",
+        "AvgValueDocumentation": "Kaikkien arvojen keskiarvo tälle tapahtumalle",
+        "Category": "Kategoria",
+        "Event": "Tapahtuma",
+        "EventAction": "Tapahtuman toiminto",
+        "EventActions": "Tapahtuman toiminnot",
+        "EventCategories": "Tapahtuman kategoriat",
+        "EventCategory": "Tapahtuman kategoria",
+        "EventName": "Tapahtuman nimi",
+        "EventNames": "Tapahtuman nimet",
+        "EventUrl": "Tapahtuman osoite",
+        "EventUrls": "Tapahtuman osoitteet",
+        "EventValue": "Tapahtuman arvo",
+        "Events": "Tapahtumat",
+        "EventsWithValue": "Tapahtumat joilla on arvo",
+        "EventsWithValueDocumentation": "Tapahtumien määrä, joissa \"Tapahtuma\"-arvo oli asetettuna",
+        "MaxValue": "Suurin tapahtuma-arvo",
+        "MaxValueDocumentation": "Suurin arvo tälle tapahtumalle",
+        "MinValue": "Pienin tapahtuma-arvo",
+        "MinValueDocumentation": "Pienin arvo tälle tapahtumalle",
+        "PluginDescription": "Seuraa tapahtumia ja saa raportteja kävijöidesi toimista.",
+        "TopEvents": "Tärkeimmät tapahtumat",
+        "TotalEvents": "Tapahtumia yhteensä",
+        "TotalEventsDocumentation": "Tapahtumia yhteensä",
+        "TotalValue": "Tapahtuman arvo",
+        "TotalValueDocumentation": "Arvojen summa",
+        "ViewEvents": "Näytä tapahtumat"
+    }
+}

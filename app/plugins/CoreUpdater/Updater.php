@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreUpdater;
 
 use Exception;
@@ -27,29 +28,35 @@ use Piwik\SettingsServer;
 use Piwik\Translation\Translator;
 use Piwik\Unzip;
 use Piwik\Version;
+
 class Updater
 {
     public const OPTION_LATEST_VERSION = 'UpdateCheck_LatestVersion';
     public const PATH_TO_EXTRACT_LATEST_VERSION = '/latest/';
     public const DOWNLOAD_TIMEOUT = 720;
+
     /**
      * @var Translator
      */
     private $translator;
+
     /**
      * @var ReleaseChannels
      */
     private $releaseChannels;
+
     /**
      * @var string
      */
     private $tmpPath;
+
     public function __construct(Translator $translator, ReleaseChannels $releaseChannels, $tmpPath)
     {
         $this->translator = $translator;
         $this->releaseChannels = $releaseChannels;
         $this->tmpPath = $tmpPath;
     }
+
     /**
      * Returns the latest available version number. Does not perform a check whether a later version is available.
      *
@@ -59,6 +66,7 @@ class Updater
     {
         return Option::get(self::OPTION_LATEST_VERSION);
     }
+
     /**
      * @return bool
      */
@@ -67,6 +75,7 @@ class Updater
         $latestVersion = self::getLatestVersion();
         return $latestVersion && version_compare(Version::VERSION, $latestVersion) === -1;
     }
+
     /**
      * Update Piwik codebase by downloading and installing the latest version.
      *
@@ -76,40 +85,50 @@ class Updater
      * @throws UpdaterException
      * @throws Exception
      */
-    public function updatePiwik($https = \true)
+    public function updatePiwik($https = true)
     {
         if (!$this->isNewVersionAvailable()) {
             throw new Exception($this->translator->translate('CoreUpdater_ExceptionAlreadyLatestVersion', Version::VERSION));
         }
+
         SettingsServer::setMaxExecutionTime(0);
+
         $newVersion = $this->getLatestVersion();
         $url = $this->getArchiveUrl($newVersion, $https);
         $messages = [];
+
         $pluginManager = PluginManager::getInstance();
         $activatedPlugins = $pluginManager->getActivatedPlugins();
         Option::set('OneClickUpdate_ActivatedPlugins', json_encode($activatedPlugins));
+
         try {
             $archiveFile = $this->downloadArchive($newVersion, $url);
             $messages[] = $this->translator->translate('CoreUpdater_DownloadingUpdateFromX', $url);
+
             $extractedArchiveDirectory = $this->decompressArchive($archiveFile);
             $messages[] = $this->translator->translate('CoreUpdater_UnpackingTheUpdate');
+
             $this->verifyDecompressedArchive($extractedArchiveDirectory);
             $messages[] = $this->translator->translate('CoreUpdater_VerifyingUnpackedFiles');
+
             $this->installNewFiles($extractedArchiveDirectory);
             $messages[] = $this->translator->translate('CoreUpdater_InstallingTheLatestVersion');
-        } catch (\Piwik\Plugins\CoreUpdater\ArchiveDownloadException $e) {
+        } catch (ArchiveDownloadException $e) {
             throw $e;
         } catch (Exception $e) {
-            throw new \Piwik\Plugins\CoreUpdater\UpdaterException($e, $messages);
+            throw new UpdaterException($e, $messages);
         }
-        $validFor10Minutes = time() + 60 * 10;
+
+        $validFor10Minutes = time() + (60 * 10);
         $nonce = Common::generateUniqId();
         Option::set('NonceOneClickUpdatePartTwo', json_encode(['nonce' => $nonce, 'ttl' => $validFor10Minutes]));
+
         $cliMulti = new CliMulti();
         $responses = $cliMulti->request(['?module=CoreUpdater&action=oneClickUpdatePartTwo&nonce=' . $nonce]);
+
         if (!empty($responses)) {
             $responseCliMulti = array_shift($responses);
-            $responseCliMulti = @json_decode($responseCliMulti, $assoc = \true);
+            $responseCliMulti = @json_decode($responseCliMulti, $assoc = true);
             if (is_array($responseCliMulti)) {
                 // we expect a json encoded array response from oneClickUpdatePartTwo. Otherwise something went wrong.
                 $messages = array_merge($messages, $responseCliMulti);
@@ -126,17 +145,19 @@ class Updater
                     // ignore any error should this fail too. this might be the case eg if
                     // the user upgrades from one major version to another major version
                     if (is_string($responseCliMulti)) {
-                        $messages[] = $responseCliMulti;
-                        // show why the original request failed eg invalid ssl certificate
+                        $messages[] = $responseCliMulti; // show why the original request failed eg invalid ssl certificate
                     }
                 }
             }
         }
+
         return $messages;
     }
+
     public function oneClickUpdatePartTwo($newVersion = null)
     {
         $messages = [];
+
         if (!Marketplace::isMarketplaceEnabled()) {
             $messages[] = 'Marketplace is disabled. Not updating any plugins.';
             // prevent error Entry "Piwik\Plugins\Marketplace\Api\Client" cannot be resolved: Entry "Piwik\Plugins\Marketplace\Api\Service" cannot be resolved
@@ -144,39 +165,50 @@ class Updater
             if (!isset($newVersion)) {
                 $newVersion = Version::VERSION;
             }
+
             // we also need to make sure to create a new instance here as otherwise we would change the "global"
             // environment, but we only want to change piwik version temporarily for this task here
-            $environment = StaticContainer::getContainer()->make('Piwik\\Plugins\\Marketplace\\Environment');
+            $environment = StaticContainer::getContainer()->make('Piwik\Plugins\Marketplace\Environment');
             $environment->setPiwikVersion($newVersion);
             /** @var \Piwik\Plugins\Marketplace\Api\Client $marketplaceClient */
-            $marketplaceClient = StaticContainer::getContainer()->make('Piwik\\Plugins\\Marketplace\\Api\\Client', ['environment' => $environment]);
+            $marketplaceClient = StaticContainer::getContainer()->make('Piwik\Plugins\Marketplace\Api\Client', [
+                'environment' => $environment,
+            ]);
+
             try {
-                $messages[] = $this->translator->translate('CoreUpdater_CheckingForPluginUpdates');
+                $messages[]    = $this->translator->translate('CoreUpdater_CheckingForPluginUpdates');
                 $pluginManager = PluginManager::getInstance();
                 $pluginManager->loadAllPluginsAndGetTheirInfo();
                 $loadedPlugins = $pluginManager->getLoadedPlugins();
+
                 $marketplaceClient->clearAllCacheEntries();
                 $pluginsWithUpdate = $marketplaceClient->checkUpdates($loadedPlugins);
+
                 foreach ($pluginsWithUpdate as $pluginWithUpdate) {
-                    $pluginName = $pluginWithUpdate['name'];
-                    $messages[] = $this->translator->translate('CoreUpdater_UpdatingPluginXToVersionY', [$pluginName, $pluginWithUpdate['version']]);
+                    $pluginName      = $pluginWithUpdate['name'];
+                    $messages[]      = $this->translator->translate(
+                        'CoreUpdater_UpdatingPluginXToVersionY',
+                        [$pluginName, $pluginWithUpdate['version']]
+                    );
                     $pluginInstaller = new PluginInstaller($marketplaceClient);
                     $pluginInstaller->installOrUpdatePluginFromMarketplace($pluginName);
                 }
             } catch (MarketplaceApi\Exception $e) {
                 // there is a problem with the connection to the server, ignore for now
             } catch (Exception $e) {
-                throw new \Piwik\Plugins\CoreUpdater\UpdaterException($e, $messages);
+                throw new UpdaterException($e, $messages);
             }
         }
+
         // get a list of previously activated plugins and try to reactivate them if there are no missing requirements
         $previouslyActivePlugins = Option::get('OneClickUpdate_ActivatedPlugins');
-        if (\false !== $previouslyActivePlugins) {
-            $previouslyActivePlugins = json_decode($previouslyActivePlugins, \true);
+        if (false !== $previouslyActivePlugins) {
+            $previouslyActivePlugins = json_decode($previouslyActivePlugins, true);
         } else {
             $previouslyActivePlugins = [];
         }
         Option::delete('OneClickUpdate_ActivatedPlugins');
+
         $reactivatedPlugins = [];
         if (!empty($previouslyActivePlugins)) {
             $pluginManager = PluginManager::getInstance();
@@ -194,9 +226,11 @@ class Updater
                 }
             }
         }
+
         if (!empty($reactivatedPlugins)) {
             $messages[] = $this->translator->translate('CoreUpdater_ReactivatedPlugins', implode(', ', $reactivatedPlugins));
         }
+
         try {
             // incompatible plugins may have already been disabled in oneClickUpdatePartTwo
             // if this might have failed we try it here again.
@@ -205,61 +239,86 @@ class Updater
                 $messages[] = $this->translator->translate('CoreUpdater_DisablingIncompatiblePlugins', implode(', ', $disabledPluginNames));
             }
         } catch (\Throwable $e) {
-            throw new \Piwik\Plugins\CoreUpdater\UpdaterException($e, $messages);
+            throw new UpdaterException($e, $messages);
         }
+
         Filesystem::deleteAllCacheOnUpdate();
+
         return $messages;
     }
+
     private function downloadArchive($version, $url)
     {
         $path = $this->tmpPath . self::PATH_TO_EXTRACT_LATEST_VERSION;
         $archiveFile = $path . 'latest.zip';
+
         Filechecks::dieIfDirectoriesNotWritable(array($path));
+
         $url .= '?cb=' . $version;
+
         try {
             Http::fetchRemoteFile($url, $archiveFile, 0, self::DOWNLOAD_TIMEOUT);
         } catch (Exception $e) {
             // We throw a specific exception allowing to offer HTTP download if HTTPS failed
-            throw new \Piwik\Plugins\CoreUpdater\ArchiveDownloadException($e);
+            throw new ArchiveDownloadException($e);
         }
+
         return $archiveFile;
     }
+
     private function decompressArchive($archiveFile)
     {
         $extractionPath = $this->tmpPath . self::PATH_TO_EXTRACT_LATEST_VERSION;
+
         foreach (['piwik', 'matomo'] as $flavor) {
             $extractedArchiveDirectory = $extractionPath . $flavor;
+
             // Remove previous decompressed archive
             if (file_exists($extractedArchiveDirectory)) {
-                Filesystem::unlinkRecursive($extractedArchiveDirectory, \true);
+                Filesystem::unlinkRecursive($extractedArchiveDirectory, true);
             }
         }
+
         $archive = Unzip::factory('PclZip', $archiveFile);
         $archiveFiles = $archive->extract($extractionPath);
+
         if (0 == $archiveFiles) {
             throw new Exception($this->translator->translate('CoreUpdater_ExceptionArchiveIncompatible', $archive->errorInfo()));
         }
+
         if (0 == count($archiveFiles)) {
             throw new Exception($this->translator->translate('CoreUpdater_ExceptionArchiveEmpty'));
         }
+
         unlink($archiveFile);
+
         foreach (['piwik', 'matomo'] as $flavor) {
             $extractedArchiveDirectory = $extractionPath . $flavor;
             if (file_exists($extractedArchiveDirectory)) {
                 return $extractedArchiveDirectory;
             }
         }
+
         throw new \Exception('Could not find matomo or piwik directory in downloaded archive!');
     }
+
     private function verifyDecompressedArchive($extractedArchiveDirectory)
     {
-        $someExpectedFiles = array('/config/global.ini.php', '/index.php', '/core/Piwik.php', '/piwik.php', '/matomo.php', '/plugins/API/API.php');
+        $someExpectedFiles = array(
+            '/config/global.ini.php',
+            '/index.php',
+            '/core/Piwik.php',
+            '/piwik.php',
+            '/matomo.php',
+            '/plugins/API/API.php',
+        );
         foreach ($someExpectedFiles as $file) {
             if (!is_file($extractedArchiveDirectory . $file)) {
                 throw new Exception($this->translator->translate('CoreUpdater_ExceptionArchiveIncomplete', $file));
             }
         }
     }
+
     private function disableIncompatiblePlugins($version)
     {
         $pluginManager = PluginManager::getInstance();
@@ -267,15 +326,19 @@ class Updater
         foreach ($plugins as $plugin) {
             $plugin->reloadPluginInformation();
         }
+
         $incompatiblePlugins = $this->getIncompatiblePlugins($version);
         $disabledPluginNames = array();
+
         foreach ($incompatiblePlugins as $plugin) {
             $name = $plugin->getPluginName();
             PluginManager::getInstance()->deactivatePlugin($name);
             $disabledPluginNames[] = $name;
         }
+
         return $disabledPluginNames;
     }
+
     /**
      * Some dependency classes move to a different file path between Matomo major versions (for example
      * psr/log moved from Psr/Log to src). Loading them now - while the current files are still in place -
@@ -287,68 +350,97 @@ class Updater
      * relocates). It can be removed again in Matomo 6: once an install runs Matomo 6 the classes are already
      * at their new location, so no preloading is required for subsequent updates.
      */
-    private function preloadRelocatedClasses() : void
+    private function preloadRelocatedClasses(): void
     {
-        $classesToPreload = ['Matomo\\Dependencies\\Psr\\Log\\LoggerInterface', 'Matomo\\Dependencies\\Psr\\Log\\AbstractLogger', 'Matomo\\Dependencies\\Psr\\Log\\NullLogger', 'Matomo\\Dependencies\\Psr\\Log\\LoggerTrait', 'Matomo\\Dependencies\\Psr\\Log\\LogLevel', 'Matomo\\Dependencies\\Psr\\Log\\InvalidArgumentException', 'Matomo\\Dependencies\\Psr\\Log\\LoggerAwareInterface', 'Matomo\\Dependencies\\Psr\\Log\\LoggerAwareTrait'];
+        $classesToPreload = [
+            'Psr\Log\LoggerInterface',
+            'Psr\Log\AbstractLogger',
+            'Psr\Log\NullLogger',
+            'Psr\Log\LoggerTrait',
+            'Psr\Log\LogLevel',
+            'Psr\Log\InvalidArgumentException',
+            'Psr\Log\LoggerAwareInterface',
+            'Psr\Log\LoggerAwareTrait',
+        ];
+
         foreach ($classesToPreload as $classToPreload) {
             class_exists($classToPreload) || interface_exists($classToPreload) || trait_exists($classToPreload);
         }
     }
+
     private function installNewFiles($extractedArchiveDirectory)
     {
         // Load classes that move to a different file path in the new version before any files are replaced.
         $this->preloadRelocatedClasses();
+
         // Make sure the execute bit is set for this shell script
         if (!Rules::isBrowserTriggerEnabled()) {
             @chmod($extractedArchiveDirectory . '/misc/cron/archive.sh', 0755);
         }
-        $model = new \Piwik\Plugins\CoreUpdater\Model();
+
+        $model = new Model();
+
         // Check if the target directories are writable
         $this->checkFolderPermissions($extractedArchiveDirectory, PIWIK_INCLUDE_PATH);
+
         /*
          * Copy all files to PIWIK_INCLUDE_PATH.
          * These files are accessed through the dispatcher.
          */
         Filesystem::copyRecursive($extractedArchiveDirectory, PIWIK_INCLUDE_PATH);
         $model->removeGoneFiles($extractedArchiveDirectory, PIWIK_INCLUDE_PATH);
+
         /*
          * These files are visible in the web root and are generally
          * served directly by the web server.  May be shared.
          */
-        if (PIWIK_INCLUDE_PATH !== PIWIK_DOCUMENT_ROOT) {
-            // @phpstan-ignore notIdentical.alwaysFalse
+        if (PIWIK_INCLUDE_PATH !== PIWIK_DOCUMENT_ROOT) { // @phpstan-ignore notIdentical.alwaysFalse
             // Copy PHP files that expect to be in the document root
-            $specialCases = array('/index.php', '/piwik.php', '/js/index.php');
+            $specialCases = array(
+                '/index.php',
+                '/piwik.php',
+                '/js/index.php',
+            );
+
             foreach ($specialCases as $file) {
                 Filesystem::copy($extractedArchiveDirectory . $file, PIWIK_DOCUMENT_ROOT . $file);
             }
+
             // Copy the non-PHP files (e.g., images, css, javascript)
-            Filesystem::copyRecursive($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT, \true);
+            Filesystem::copyRecursive($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT, true);
             $model->removeGoneFiles($extractedArchiveDirectory, PIWIK_DOCUMENT_ROOT);
         }
-        Filesystem::unlinkRecursive($extractedArchiveDirectory, \true);
+
+        Filesystem::unlinkRecursive($extractedArchiveDirectory, true);
+
         Filesystem::clearPhpCaches();
     }
+
     /**
      * @param string $version
      * @param bool $https Whether to use HTTPS if supported of not. If false, will use HTTP.
      * @return string
      */
-    public function getArchiveUrl($version, $https = \true)
+    public function getArchiveUrl($version, $https = true)
     {
         $channel = $this->releaseChannels->getActiveReleaseChannel();
         $url = $channel->getDownloadUrlWithoutScheme($version);
+
         if (Http::isUpdatingOverHttps() && $https && GeneralConfig::getConfigValue('force_matomo_http_request') == 0) {
             $url = 'https' . $url;
         } else {
             $url = 'http' . $url;
         }
+
         return $url;
     }
+
     private function getIncompatiblePlugins($piwikVersion)
     {
         return PluginManager::getInstance()->getIncompatiblePlugins($piwikVersion);
     }
+
+
     /**
      * check if the target file directory is writeable
      * @param string $source
@@ -360,7 +452,7 @@ class Updater
         $wrongPermissionDir = [];
         if (is_dir($source)) {
             $d = dir($source);
-            while (\false !== ($entry = $d->read())) {
+            while (false !== ($entry = $d->read())) {
                 if ($entry == '.' || $entry == '..') {
                     continue;
                 }
@@ -371,8 +463,12 @@ class Updater
                 }
             }
         }
+
         if (!empty($wrongPermissionDir)) {
-            throw new Exception($this->translator->translate('CoreUpdater_ExceptionDirWrongPermission', implode(', ', $wrongPermissionDir)));
+            throw new Exception($this->translator->translate(
+                'CoreUpdater_ExceptionDirWrongPermission',
+                implode(', ', $wrongPermissionDir)
+            ));
         }
     }
 }

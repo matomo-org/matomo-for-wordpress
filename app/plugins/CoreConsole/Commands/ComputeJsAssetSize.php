@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreConsole\Commands;
 
 use Piwik\AssetManager;
@@ -18,6 +19,7 @@ use Piwik\Plugin\Manager;
 use Piwik\ProxyHttp;
 use Piwik\SettingsPiwik;
 use Piwik\Theme;
+
 /**
  * @phpstan-type TotalsType array{merged: int, gzip: int}
  */
@@ -26,7 +28,11 @@ class ComputeJsAssetSize extends ConsoleCommand
     /**
      * @var TotalsType
      */
-    private $totals = ['merged' => 0, 'gzip' => 0];
+    private $totals = [
+        'merged' => 0,
+        'gzip'   => 0,
+    ];
+
     protected function configure()
     {
         $this->setName('development:compute-js-asset-size');
@@ -34,143 +40,274 @@ class ComputeJsAssetSize extends ConsoleCommand
         $this->addNoValueOption('no-delete', null, 'Do not delete files after creating them.');
         $this->addRequiredValueOption('plugin', null, 'For submodule plugins and 3rd party plugins.');
     }
+
     public function isEnabled()
     {
         return SettingsPiwik::isGitDeployment();
     }
-    protected function doExecute() : int
+
+    protected function doExecute(): int
     {
         $input = $this->getInput();
         $output = $this->getOutput();
         $noDelete = $input->getOption('no-delete');
         /** @var null|string $plugin */
         $plugin = $input->getOption('plugin');
+
         if (!empty($plugin) && !Manager::getInstance()->isValidPluginName($plugin)) {
             throw new \Exception('Invalid plugin name: ' . $plugin);
         }
+
         $this->checkDevelopmentModeDisabled();
+
         $this->ensureThirdPartyPluginsActivated($plugin);
+
         $output->writeln("Building and printing sizes of built JS assets...");
+
         $fetcher = $this->makeUmdFetcher();
+
         $this->deleteMergedAssets();
         $this->buildAssets($fetcher);
+
         $output->writeln('');
+
         $this->printCurrentGitHashAndBranch($plugin);
+
         $output->writeln('');
         $this->printFilesizes($fetcher);
+
         if (!$noDelete) {
             $this->deleteMergedAssets();
         }
+
         return self::SUCCESS;
     }
-    private function ensureThirdPartyPluginsActivated(?string $plugin = null) : void
+
+    private function ensureThirdPartyPluginsActivated(?string $plugin = null): void
     {
-        $expectedPluginsLoadedAndActivated = ["CorePluginsAdmin", "CoreAdminHome", "CoreHome", "WebsiteMeasurable", "IntranetMeasurable", "Diagnostics", "CoreVisualizations", "Proxy", "API", "Widgetize", "Transitions", "LanguagesManager", "Actions", "Dashboard", "MultiSites", "Referrers", "UserLanguage", "DevicesDetection", "Goals", "Ecommerce", "SEO", "Events", "UserCountry", "GeoIp2", "VisitsSummary", "VisitFrequency", "VisitTime", "VisitorInterest", "RssWidget", "Feedback", "Monolog", "Login", "TwoFactorAuth", "UsersManager", "SitesManager", "Installation", "CoreUpdater", "CoreConsole", "ScheduledReports", "UserCountryMap", "Live", "PrivacyManager", "ImageGraph", "Annotations", "MobileMessaging", "Overlay", "SegmentEditor", "Insights", "Morpheus", "Contents", "TestRunner", "BulkTracking", "Resolution", "DevicePlugins", "Heartbeat", "Intl", "UserId", "CustomJsTracker", "Tour", "PagePerformance", "CustomDimensions", "TagManager", "AbTesting", "ActivityLog", "Bandwidth", "Cohorts", "CustomAlerts", "CustomReports", "CustomVariables", "DeviceDetectorCache", "FormAnalytics", "Funnels", "GoogleAnalyticsImporter", "InvalidateReports", "MarketingCampaignsReporting", "MediaAnalytics", "MultiChannelConversionAttribution", "QueuedTracking", "RollUpReporting", "SearchEngineKeywordsPerformance", "UsersFlow", "VisitorGenerator", "WhiteLabel", "WooCommerceAnalytics", "AdvertisingConversionExport", "AnonymousPiwikUsageMeasurement"];
+        $expectedPluginsLoadedAndActivated = [
+            "CorePluginsAdmin",
+            "CoreAdminHome",
+            "CoreHome",
+            "WebsiteMeasurable",
+            "IntranetMeasurable",
+            "Diagnostics",
+            "CoreVisualizations",
+            "Proxy",
+            "API",
+            "Widgetize",
+            "Transitions",
+            "LanguagesManager",
+            "Actions",
+            "Dashboard",
+            "MultiSites",
+            "Referrers",
+            "UserLanguage",
+            "DevicesDetection",
+            "Goals",
+            "Ecommerce",
+            "SEO",
+            "Events",
+            "UserCountry",
+            "GeoIp2",
+            "VisitsSummary",
+            "VisitFrequency",
+            "VisitTime",
+            "VisitorInterest",
+            "RssWidget",
+            "Feedback",
+            "Monolog",
+            "Login",
+            "TwoFactorAuth",
+            "UsersManager",
+            "SitesManager",
+            "Installation",
+            "CoreUpdater",
+            "CoreConsole",
+            "ScheduledReports",
+            "UserCountryMap",
+            "Live",
+            "PrivacyManager",
+            "ImageGraph",
+            "Annotations",
+            "MobileMessaging",
+            "Overlay",
+            "SegmentEditor",
+            "Insights",
+            "Morpheus",
+            "Contents",
+            "TestRunner",
+            "BulkTracking",
+            "Resolution",
+            "DevicePlugins",
+            "Heartbeat",
+            "Intl",
+            "UserId",
+            "CustomJsTracker",
+            "Tour",
+            "PagePerformance",
+            "CustomDimensions",
+            "TagManager",
+            "AbTesting",
+            "ActivityLog",
+            "Bandwidth",
+            "Cohorts",
+            "CustomAlerts",
+            "CustomReports",
+            "CustomVariables",
+            "DeviceDetectorCache",
+            "FormAnalytics",
+            "Funnels",
+            "GoogleAnalyticsImporter",
+            "InvalidateReports",
+            "MarketingCampaignsReporting",
+            "MediaAnalytics",
+            "MultiChannelConversionAttribution",
+            "QueuedTracking",
+            "RollUpReporting",
+            "SearchEngineKeywordsPerformance",
+            "UsersFlow",
+            "VisitorGenerator",
+            "WhiteLabel",
+            "WooCommerceAnalytics",
+            "AdvertisingConversionExport",
+            "AnonymousPiwikUsageMeasurement",
+        ];
+
         if ($plugin) {
             $expectedPluginsLoadedAndActivated[] = $plugin;
         }
+
         if (is_file(PIWIK_INCLUDE_PATH . '/plugins/CoreVue/plugin.json')) {
             $expectedPluginsLoadedAndActivated[] = "CoreVue";
         }
+
         $expectedPluginsLoadedAndActivated = array_unique($expectedPluginsLoadedAndActivated);
+
         $pluginsLoadedAndActivated = Manager::getInstance()->getPluginsLoadedAndActivated();
         $pluginsLoadedAndActivated = array_map(function (Plugin $p) {
             return $p->getPluginName();
         }, $pluginsLoadedAndActivated);
+
         $missingPlugins = array_diff($expectedPluginsLoadedAndActivated, $pluginsLoadedAndActivated);
         if (!empty($missingPlugins)) {
             throw new \Exception("Activate the following plugins before running this command: " . implode(", ", $missingPlugins));
         }
     }
-    private function buildAssets(PluginUmdAssetFetcher $fetcher) : void
+
+    private function buildAssets(PluginUmdAssetFetcher $fetcher): void
     {
         AssetManager::getInstance()->getMergedCoreJavaScript();
         AssetManager::getInstance()->getMergedNonCoreJavaScript();
+
         $chunks = $fetcher->getChunkFiles();
         foreach ($chunks as $chunk) {
             AssetManager::getInstance()->getMergedJavaScriptChunk($chunk->getChunkName());
         }
     }
-    private function deleteMergedAssets() : void
+
+    private function deleteMergedAssets(): void
     {
         AssetManager::getInstance()->removeMergedAssets();
     }
-    private function printFilesizes(PluginUmdAssetFetcher $fetcher) : void
+
+    private function printFilesizes(PluginUmdAssetFetcher $fetcher): void
     {
         $fileSizes = [];
+
         $mergedCore = AssetManager::getInstance()->getMergedCoreJavaScript();
         $fileSizes[] = $this->getFileSizeRow($mergedCore);
+
         $mergedNonCore = AssetManager::getInstance()->getMergedNonCoreJavaScript();
         $fileSizes[] = $this->getFileSizeRow($mergedNonCore);
+
         $chunks = $fetcher->getChunkFiles();
         foreach ($chunks as $chunk) {
             $chunkAsset = AssetManager::getInstance()->getMergedJavaScriptChunk($chunk->getChunkName());
             $fileSizes[] = $this->getFileSizeRow($chunkAsset);
         }
+
         $fileSizes[] = [];
         $fileSizes[] = ['Total', $this->getFormattedSize($this->totals['merged']), $this->getFormattedSize($this->totals['gzip'])];
+
         $this->renderTable(['File', 'Size', 'Size (gzipped)'], $fileSizes);
     }
+
     /**
      * @param key-of<TotalsType> $type
      */
-    private function getFileSize(string $fileLocation, string $type) : string
+    private function getFileSize(string $fileLocation, string $type): string
     {
-        $size = (int) filesize($fileLocation);
+        $size = (int)filesize($fileLocation);
         $this->totals[$type] += $size;
         return $this->getFormattedSize($size);
     }
-    private function getFormattedSize(int $size) : string
+
+    private function getFormattedSize(int $size): string
     {
         $formatter = new Formatter();
         return $formatter->getPrettySizeFromBytes($size, 'K', 2);
     }
-    private function checkDevelopmentModeDisabled() : void
+
+    private function checkDevelopmentModeDisabled(): void
     {
         if (Development::isEnabled()) {
             throw new \Exception("This command is to estimate production build sizes, so development mode must be disabled for it.");
         }
     }
-    private function getGzippedFileSize(string $path) : string
+
+    private function getGzippedFileSize(string $path): string
     {
         $data = file_get_contents($path);
         $data = ProxyHttp::gzencode($data);
-        if (\false === $data) {
+
+        if (false === $data) {
             throw new \Exception('compressing file ' . $path . ' failed');
         }
+
         $compressedPath = dirname($path) . '/' . basename($path) . '.gz';
         file_put_contents($compressedPath, $data);
         return $this->getFileSize($compressedPath, 'gzip');
     }
-    private function printCurrentGitHashAndBranch(?string $plugin = null) : void
+
+    private function printCurrentGitHashAndBranch(?string $plugin = null): void
     {
         $branchName = trim(shell_exec("git rev-parse --abbrev-ref HEAD") ?: '');
         $lastCommit = trim(shell_exec("git log --pretty=format:'%h' -n 1") ?: '');
+
         $pluginSuffix = '';
         if ($plugin) {
             $prefix = 'cd ' . escapeshellarg(PIWIK_INCLUDE_PATH . '/plugins/' . $plugin) . '; ';
+
             $pluginBranchName = trim(shell_exec($prefix . 'git rev-parse --abbrev-ref HEAD') ?: '');
             $pluginLastCommit = trim(shell_exec($prefix . 'git log --pretty=format:\'%h\' -n 1') ?: '');
-            $pluginSuffix = " [{$plugin}: {$pluginBranchName} ({$pluginLastCommit})]";
+
+            $pluginSuffix = " [$plugin: $pluginBranchName ($pluginLastCommit)]";
         }
-        $this->getOutput()->writeln("<info>{$branchName} ({$lastCommit}){$pluginSuffix}</info>");
+
+        $this->getOutput()->writeln("<info>$branchName ($lastCommit)$pluginSuffix</info>");
     }
-    private function makeUmdFetcher() : PluginUmdAssetFetcher
+
+    private function makeUmdFetcher(): PluginUmdAssetFetcher
     {
         $plugins = Manager::getInstance()->getPluginsLoadedAndActivated();
         $pluginNames = array_map(function ($p) {
             return $p->getPluginName();
         }, $plugins);
+
         $theme = Manager::getInstance()->getThemeEnabled();
         if (!empty($theme)) {
             $theme = new Theme();
         }
+
         return new PluginUmdAssetFetcher($pluginNames, $theme, null);
     }
+
+
     /**
      * @return array{0: string, 1: string, 2: string}
      */
-    private function getFileSizeRow(AssetManager\UIAsset $asset) : array
+    private function getFileSizeRow(AssetManager\UIAsset $asset): array
     {
         return [$asset->getRelativeLocation(), $this->getFileSize($asset->getAbsoluteLocation(), 'merged'), $this->getGzippedFileSize($asset->getAbsoluteLocation())];
     }

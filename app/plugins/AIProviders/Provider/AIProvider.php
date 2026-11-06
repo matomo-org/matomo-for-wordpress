@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders\Provider;
 
 use Exception;
@@ -23,6 +25,8 @@ use Piwik\Plugins\AIProviders\Exception\AIProviderClientException;
 use Piwik\Plugins\AIProviders\Exception\AIProviderException;
 use Piwik\Plugins\AIProviders\Exception\AIProviderServerException;
 use Piwik\Plugins\AIProviders\Model\Configuration;
+use Piwik\Plugins\AIProviders\WebSearchUsage;
+
 /**
  * @phpstan-import-type CanonicalMessageArray from CanonicalMessage
  * @phpstan-import-type CanonicalContentBlockArray from CanonicalMessage
@@ -31,6 +35,7 @@ use Piwik\Plugins\AIProviders\Model\Configuration;
 abstract class AIProvider
 {
     private const TRANSIENT_ERROR_RETRY_DELAYS = [1, 2];
+
     /**
      * HTTP status codes that indicate a transient provider failure worth
      * retrying. Keep 408/502 for AWS Bedrock and 529 for Anthropic overloads.
@@ -38,60 +43,109 @@ abstract class AIProvider
      * not retried.
      */
     private const TRANSIENT_ERROR_STATUS_CODES = [408, 429, 500, 502, 503, 504, 529];
+
     private const JSON_RESPONSE_INSTRUCTION = 'Respond with a single valid JSON object and nothing else. Do not wrap it in Markdown code fences.';
+
     /**
      * Token budget given to provider-specific "thinking" when the thinking
      * capability is requested without an explicit per-request budget. Kept well
      * above Anthropic's 1024-token minimum so it is valid for every provider.
      */
     protected const DEFAULT_THINKING_BUDGET = 2048;
+
+    /**
+     * Default provider HTTP timeout for a single-shot completion, unless the
+     * request sets its own with {@link AIRequest::withTimeoutSeconds()}.
+     */
+    protected const COMPLETE_TIMEOUT_SECONDS = 30;
+
+    /**
+     * Default timeout for a grounded completion. Server-side search runs several
+     * fetches inside the one HTTP request, so these routinely take 30-90s where
+     * an ungrounded completion takes 2-5s.
+     *
+     * That outlasts the default read timeout of every common web server and
+     * proxy in front of PHP (nginx `fastcgi_read_timeout` and Apache `Timeout`
+     * are both 60s), which cut the connection whatever PHP is configured to
+     * allow. So grounded completions are meant for CLI commands and scheduled
+     * tasks, which have nothing in front of them. A caller running one inside a
+     * web request must either raise those limits itself or lower this with
+     * {@link AIRequest::withTimeoutSeconds()}, or the connection dies before the
+     * provider answers.
+     *
+     * PHP's own `max_execution_time` is the lesser worry: on non-Windows SAPIs
+     * it does not advance while a cURL transfer is waiting, so a long provider
+     * call alone rarely trips it.
+     *
+     * A retryable HTTP status (see {@link TRANSIENT_ERROR_STATUS_CODES}) can
+     * multiply both the wall time and the per-search fees, because each attempt
+     * runs its own searches. A transport-level timeout does not: it throws on
+     * the first attempt.
+     */
+    protected const WEB_SEARCH_COMPLETE_TIMEOUT_SECONDS = 120;
+
     /**
      * @var string
      */
     private $id;
+
     /**
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */
     private $description;
+
     /**
      * @var bool
      */
     private $supportsCustomEndpoint;
+
     /**
      * @var int|null
      */
     private $lastRequestExecutionTimeMs = null;
-    public function __construct(string $id, string $name, string $description, bool $supportsCustomEndpoint = \false)
-    {
+
+    public function __construct(
+        string $id,
+        string $name,
+        string $description,
+        bool $supportsCustomEndpoint = false
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
         $this->supportsCustomEndpoint = $supportsCustomEndpoint;
     }
-    public function getId() : string
+
+    public function getId(): string
     {
         return $this->id;
     }
-    public function getName() : string
+
+    public function getName(): string
     {
         return $this->name;
     }
-    public function getDescription() : string
+
+    public function getDescription(): string
     {
         return $this->description;
     }
-    public function supportsCustomEndpoint() : bool
+
+    public function supportsCustomEndpoint(): bool
     {
         return $this->supportsCustomEndpoint;
     }
-    public function supportsFipsEndpoint() : bool
+
+    public function supportsFipsEndpoint(): bool
     {
-        return \false;
+        return false;
     }
+
     /**
      * Returns whether the endpoint field is the request URL itself, and can
      * therefore name any host. Return false only when the field is expanded into
@@ -101,51 +155,59 @@ abstract class AIProvider
      * endpoint configured on the instance, so a provider whose field does reach
      * the request URL must not return false.
      */
-    public function endpointFieldRequiresUrl() : bool
+    public function endpointFieldRequiresUrl(): bool
     {
-        return \true;
+        return true;
     }
-    public function getDefaultEndpointUrl() : string
+
+    public function getDefaultEndpointUrl(): string
     {
         return '';
     }
+
     /**
      * Expands shorthand endpoint input (e.g. a bare AWS region) into the URL
      * to validate and store. Unrecognized values pass through unchanged so
      * URL validation still rejects them.
      */
-    public function normalizeEndpointUrl(string $endpointUrl) : string
+    public function normalizeEndpointUrl(string $endpointUrl): string
     {
         return $endpointUrl;
     }
+
     /** Translation key for the endpoint field's label in the admin UI. */
-    public function getEndpointFieldTitle() : string
+    public function getEndpointFieldTitle(): string
     {
         return 'AIProviders_EndpointUrl';
     }
+
     /** Translation key for the endpoint field's placeholder in the admin UI. */
-    public function getEndpointFieldPlaceholder() : string
+    public function getEndpointFieldPlaceholder(): string
     {
         return 'AIProviders_EndpointUrlPlaceholder';
     }
+
     /**
      * Translation key for the error shown when the settings form rejects the
      * endpoint field's value. Takes the provider name as its only argument.
      * Providers whose field is not a URL override this to name what they do
      * expect, the way they already override the field's label.
      */
-    public function getEndpointFieldErrorMessage() : string
+    public function getEndpointFieldErrorMessage(): string
     {
         return 'AIProviders_ErrorInvalidEndpointUrl';
     }
-    public function getDefaultModel() : string
+
+    public function getDefaultModel(): string
     {
         return '';
     }
-    protected function isTrustedRequestHost(string $host) : bool
+
+    protected function isTrustedRequestHost(string $host): bool
     {
-        return \false;
+        return false;
     }
+
     /**
      * Completes the given request using the provider.
      *
@@ -155,17 +217,19 @@ abstract class AIProvider
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    public abstract function complete(AIRequest $request, array $configuration) : AIProviderResponse;
+    abstract public function complete(AIRequest $request, array $configuration): AIProviderResponse;
+
     /**
      * Returns whether the provider implements {@link converse()}: multi-turn
      * conversations with tool calling. Callers should check
      * {@link \Piwik\Plugins\AIProviders\AIProviderService::canConverse()}
      * before offering conversational features.
      */
-    public function supportsConversations() : bool
+    public function supportsConversations(): bool
     {
-        return \false;
+        return false;
     }
+
     /**
      * Runs one conversational round-trip and returns the assistant's turn in
      * the canonical shape (see {@link \Piwik\Plugins\AIProviders\CanonicalMessage}).
@@ -179,10 +243,13 @@ abstract class AIProvider
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    public function converse(AIConversationRequest $request, array $configuration) : AIConversationResponse
+    public function converse(AIConversationRequest $request, array $configuration): AIConversationResponse
     {
-        throw new AIProviderClientException(sprintf('%s does not support multi-turn conversations.', $this->getName()));
+        throw new AIProviderClientException(
+            sprintf('%s does not support multi-turn conversations.', $this->getName())
+        );
     }
+
     /**
      * Validates the given connection settings, throwing on failure.
      *
@@ -194,24 +261,30 @@ abstract class AIProvider
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    public function verifyConnection(array $configuration) : void
+    public function verifyConnection(array $configuration): void
     {
         $this->verifyConnectionWithCompletion($configuration);
     }
+
     /**
      * Probes the connection with completion. Providers with a cheaper
      * probe override verifyConnection() but can reuse this.
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    protected function verifyConnectionWithCompletion(array $configuration) : void
+    protected function verifyConnectionWithCompletion(array $configuration): void
     {
-        $request = (new AIRequest('Reply with the single word: OK', 'AIProviders'))->withFeatureKey('test-connection')->withMaxTokens(16);
+        $request = (new AIRequest('Reply with the single word: OK', 'AIProviders'))
+            ->withFeatureKey('test-connection')
+            ->withMaxTokens(16);
+
         $response = $this->complete($request, $configuration);
+
         if (trim($response->getText()) === '') {
             throw new AIProviderServerException(sprintf('%s returned an empty response.', $this->getName()));
         }
     }
+
     /**
      * Returns the list of model identifiers the provider can serve with the
      * given configuration, used to populate the model picker in the admin UI.
@@ -221,10 +294,11 @@ abstract class AIProvider
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      * @return list<string>
      */
-    public function listModels(array $configuration) : array
+    public function listModels(array $configuration): array
     {
         return [];
     }
+
     /**
      * Returns whether the provider has everything it needs to run completions.
      *
@@ -237,34 +311,40 @@ abstract class AIProvider
      *
      * @param array{apiKey?: string, endpointUrl?: string, model?: string, useFipsEndpoint?: bool} $configuration
      */
-    public function isConfigured(array $configuration) : bool
+    public function isConfigured(array $configuration): bool
     {
         if ($this->supportsCustomEndpoint()) {
             return trim($configuration['endpointUrl'] ?? '') !== '';
         }
+
         return trim($configuration['apiKey'] ?? '') !== '';
     }
+
     /**
      * Returns the model to use for the request, falling back to the provider default.
      */
-    protected function resolveModel(AIRequest $request) : string
+    protected function resolveModel(AIRequest $request): string
     {
         $model = $request->getModel();
+
         // The capability level (instant/thinking) is not a different model: each
         // provider's default model handles both, toggled by provider-specific
         // thinking parameters (see wantsThinking()). An explicit per-request
         // model still wins.
         return $model !== null && $model !== '' ? $model : $this->getDefaultModel();
     }
+
     /**
      * Returns the model to use for the conversation request, falling back to
      * the provider default.
      */
-    protected function resolveConversationModel(AIConversationRequest $request) : string
+    protected function resolveConversationModel(AIConversationRequest $request): string
     {
         $model = $request->getModel();
+
         return $model !== null && $model !== '' ? $model : $this->getDefaultModel();
     }
+
     /**
      * Returns the system prompt for the request, augmented with a JSON-output
      * instruction when JSON mode is requested. Providers should use this rather
@@ -272,47 +352,161 @@ abstract class AIProvider
      * for providers without a native JSON option (and so the word "JSON" is
      * present, which some providers require to enable their JSON mode).
      */
-    protected function getSystemPrompt(AIRequest $request) : ?string
+    protected function getSystemPrompt(AIRequest $request): ?string
     {
         $systemPrompt = $request->getSystemPrompt();
+
         if (!$request->isJsonResponse()) {
             return $systemPrompt;
         }
+
         if ($systemPrompt === null || trim($systemPrompt) === '') {
             return self::JSON_RESPONSE_INSTRUCTION;
         }
+
         return rtrim($systemPrompt) . "\n\n" . self::JSON_RESPONSE_INSTRUCTION;
     }
+
     /**
      * @param int|null $inputTokens  Prompt tokens reported by the provider, if any.
      * @param int|null $outputTokens Completion tokens reported by the provider, if any.
      */
-    protected function buildResponse(AIRequest $request, string $model, string $text, ?int $inputTokens = null, ?int $outputTokens = null, ?string $stopReason = null) : AIProviderResponse
-    {
-        return new AIProviderResponse($this->getId(), $this->getName(), $model, trim($text), $inputTokens, $outputTokens, $this->getReasoningLevelUsed($request), $this->isWebSearchUsed($request), $this->lastRequestExecutionTimeMs, $stopReason);
+    protected function buildResponse(
+        AIRequest $request,
+        string $model,
+        string $text,
+        ?int $inputTokens = null,
+        ?int $outputTokens = null,
+        ?string $stopReason = null,
+        ?WebSearchUsage $webSearch = null
+    ): AIProviderResponse {
+        return new AIProviderResponse(
+            $this->getId(),
+            $this->getName(),
+            $model,
+            trim($text),
+            $inputTokens,
+            $outputTokens,
+            $this->getReasoningLevelUsed($request),
+            // Deprecated slot, superseded by $webSearch below. Still consulted so a
+            // provider written against Matomo 5.13.0, whose only way to report a
+            // search was overriding isWebSearchUsed(), keeps being believed.
+            $this->isWebSearchUsed($request),
+            $this->lastRequestExecutionTimeMs,
+            $stopReason,
+            $webSearch
+        );
     }
+
     /**
      * @param list<CanonicalContentBlockArray> $content canonical assistant content blocks
      * @param int|null $inputTokens  Prompt tokens reported by the provider, if any.
      * @param int|null $outputTokens Completion tokens reported by the provider, if any.
      */
-    protected function buildConversationResponse(string $model, array $content, string $stopReason, ?int $inputTokens = null, ?int $outputTokens = null) : AIConversationResponse
-    {
-        return new AIConversationResponse($this->getId(), $this->getName(), $model, $content, $stopReason, $inputTokens, $outputTokens, $this->lastRequestExecutionTimeMs);
+    protected function buildConversationResponse(
+        string $model,
+        array $content,
+        string $stopReason,
+        ?int $inputTokens = null,
+        ?int $outputTokens = null
+    ): AIConversationResponse {
+        return new AIConversationResponse(
+            $this->getId(),
+            $this->getName(),
+            $model,
+            $content,
+            $stopReason,
+            $inputTokens,
+            $outputTokens,
+            $this->lastRequestExecutionTimeMs
+        );
     }
-    protected function getReasoningLevelUsed(AIRequest $request) : string
+
+    protected function getReasoningLevelUsed(AIRequest $request): string
     {
         // Reported back on the response so callers can see whether the request
         // actually ran with thinking. Providers that enable thinking per the
         // resolved capability level all map onto this single flag.
         return $this->wantsThinking($request) ? Configuration::CAPABILITY_THINKING : AIRequest::REASONING_NONE;
     }
-    protected function isWebSearchUsed(AIRequest $request) : bool
+
+    /**
+     * Appends one fragment of answer text to the answer being assembled,
+     * inserting a single space only where a boundary needs one.
+     *
+     * Grounded answers arrive in pieces, and the two kinds of gap between them
+     * need opposite treatment:
+     *
+     * - Two *adjacent* text fragments are one sentence split at a citation
+     *   boundary, and each carries its own spacing, so nothing may be inserted.
+     *   Anthropic sends `"Matomo is "` then `"the leading option"`.
+     * - Fragments separated by something else, a tool-use block, a skipped
+     *   reasoning part or a separate output message, are separate sentences and
+     *   the provider does not pad them. Anthropic sends
+     *   `"I'll search for that."` then the search blocks then
+     *   `"Based on the search results, "`, which run together unjoined.
+     *
+     * A space rather than a newline, because a fragment boundary can fall inside
+     * a JSON string value, where a raw newline makes the response undecodable.
+     * Nothing is inserted when either side already carries boundary whitespace.
+     *
+     * @param bool $atBoundary Whether something other than answer text stood between the two.
+     */
+    protected function appendAnswerText(string $answer, string $fragment, bool $atBoundary): string
     {
-        // TODO: Implement provider-specific web search/tool configuration for
-        // OpenAI, Google, Anthropic, and managed providers separately.
-        return \false;
+        if ($answer === '' || $fragment === '') {
+            return $answer . $fragment;
+        }
+
+        $needsSpace = $atBoundary
+            && rtrim($answer) === $answer
+            && ltrim($fragment) === $fragment;
+
+        return $answer . ($needsSpace ? ' ' : '') . $fragment;
     }
+
+    /**
+     * Whether the provider has a server-side web search tool that
+     * {@link complete()} can switch on. {@link AIProviderService::complete()}
+     * rejects a grounded request for a provider that returns false.
+     */
+    public function supportsWebSearch(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @deprecated since 5.14.0. Override {@link supportsWebSearch()} to declare the
+     *             capability and pass a {@link WebSearchUsage} to {@link buildResponse()},
+     *             which reports the searches, queries and citations a completion actually
+     *             produced instead of a bare flag. An override is still honoured by
+     *             {@link AIProviderResponse::wasWebSearchUsed()} for the transition.
+     *             Will be removed in Matomo 6.
+     */
+    protected function isWebSearchUsed(AIRequest $request): bool
+    {
+        return false;
+    }
+
+    /**
+     * Whether this request runs grounded: the caller asked for search and this
+     * provider can do it.
+     */
+    protected function wantsWebSearch(AIRequest $request): bool
+    {
+        return $request->isWebSearchEnabled() && $this->supportsWebSearch();
+    }
+
+    /**
+     * The HTTP timeout for this completion: the request's own, else the default
+     * for grounded or ungrounded requests.
+     */
+    protected function completionTimeoutSeconds(AIRequest $request): int
+    {
+        return $request->getTimeoutSeconds()
+            ?? ($this->wantsWebSearch($request) ? static::WEB_SEARCH_COMPLETE_TIMEOUT_SECONDS : static::COMPLETE_TIMEOUT_SECONDS);
+    }
+
     /**
      * Completes a request against an OpenAI-compatible Chat Completions endpoint.
      *
@@ -322,54 +516,79 @@ abstract class AIProvider
      *
      * @param array<string, string> $headers Additional request headers, such as authentication.
      */
-    protected function completeChatCompletion(AIRequest $request, string $endpointUrl, array $headers) : AIProviderResponse
+    protected function completeChatCompletion(AIRequest $request, string $endpointUrl, array $headers): AIProviderResponse
     {
         $messages = [];
+
         $systemPrompt = $this->getSystemPrompt($request);
         if ($systemPrompt !== null && $systemPrompt !== '') {
             $messages[] = ['role' => 'system', 'content' => $systemPrompt];
         }
+
         $messages[] = ['role' => 'user', 'content' => $request->getUserPrompt()];
+
         $model = $this->resolveModel($request);
-        $payload = ['model' => $model, 'messages' => $messages];
+
+        $payload = [
+            'model' => $model,
+            'messages' => $messages,
+        ];
         $payload[$this->chatCompletionTokenLimitField()] = $request->getMaxTokens();
         if ($this->chatCompletionSupportsTemperature()) {
             $payload['temperature'] = $request->getTemperature();
         }
+
         $payload = array_merge($payload, $this->getExtraChatCompletionPayload($request));
+
         if ($request->isJsonResponse()) {
             $payload['response_format'] = ['type' => 'json_object'];
         }
-        $response = $this->sendJsonRequest($endpointUrl, $headers, $payload);
+
+        $response = $this->sendJsonRequest($endpointUrl, $headers, $payload, $this->completionTimeoutSeconds($request));
+
         $text = $response['choices'][0]['message']['content'] ?? '';
-        $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null) ? $response['choices'][0]['finish_reason'] : null;
-        return $this->buildResponse($request, $model, is_string($text) ? $text : '', isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null, $finishReason);
+        $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null)
+            ? $response['choices'][0]['finish_reason']
+            : null;
+
+        return $this->buildResponse(
+            $request,
+            $model,
+            is_string($text) ? $text : '',
+            isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null,
+            isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null,
+            $finishReason
+        );
     }
+
     /**
      * @return array<string, mixed>
      */
-    protected function getExtraChatCompletionPayload(AIRequest $request) : array
+    protected function getExtraChatCompletionPayload(AIRequest $request): array
     {
         return [];
     }
+
     /**
      * The Chat Completions field that bounds output length. Defaults to the
      * classic `max_tokens`; OpenAI's reasoning models require
      * `max_completion_tokens` instead.
      */
-    protected function chatCompletionTokenLimitField() : string
+    protected function chatCompletionTokenLimitField(): string
     {
         return 'max_tokens';
     }
+
     /**
      * Whether the provider accepts a custom `temperature`. Reasoning models
      * (e.g. OpenAI's gpt-5 family) only allow the default temperature, so they
      * override this to false and the field is omitted.
      */
-    protected function chatCompletionSupportsTemperature() : bool
+    protected function chatCompletionSupportsTemperature(): bool
     {
-        return \true;
+        return true;
     }
+
     /**
      * Whether this request should run with the provider's "thinking" mode on.
      *
@@ -380,23 +599,27 @@ abstract class AIProvider
      * how a caller overrides the configured default for a single request (see
      * {@link AIRequest::withThinkingBudget()}).
      */
-    protected function wantsThinking(AIRequest $request) : bool
+    protected function wantsThinking(AIRequest $request): bool
     {
         $budget = $request->getThinkingBudget();
         if ($budget !== null) {
             return $budget > 0;
         }
+
         return $request->getCapabilityLevel() === Configuration::CAPABILITY_THINKING;
     }
+
     /**
      * The thinking token budget to send when thinking is on: the caller's
      * explicit positive budget, otherwise {@link self::DEFAULT_THINKING_BUDGET}.
      */
-    protected function thinkingBudget(AIRequest $request) : int
+    protected function thinkingBudget(AIRequest $request): int
     {
         $budget = $request->getThinkingBudget();
+
         return $budget !== null && $budget > 0 ? $budget : self::DEFAULT_THINKING_BUDGET;
     }
+
     /**
      * Runs one conversational round-trip against an OpenAI-compatible Chat
      * Completions endpoint.
@@ -412,38 +635,58 @@ abstract class AIProvider
      * @see https://platform.openai.com/docs/api-reference/chat/create
      * @param array<string, string> $headers Additional request headers, such as authentication.
      */
-    protected function converseChatCompletion(AIConversationRequest $request, string $endpointUrl, array $headers) : AIConversationResponse
+    protected function converseChatCompletion(AIConversationRequest $request, string $endpointUrl, array $headers): AIConversationResponse
     {
         $model = $this->resolveConversationModel($request);
-        $payload = ['model' => $model, 'messages' => $this->canonicalMessagesToOpenAI($request->getMessages(), $request->getSystemPrompt())];
+
+        $payload = [
+            'model' => $model,
+            'messages' => $this->canonicalMessagesToOpenAI($request->getMessages(), $request->getSystemPrompt()),
+        ];
         $payload[$this->chatCompletionTokenLimitField()] = $request->getMaxTokens();
         if ($this->chatCompletionSupportsTemperature()) {
             $payload['temperature'] = $request->getTemperature();
         }
+
         $tools = $this->toolCatalogToOpenAI($request->getTools());
         if ($tools !== null) {
             $payload['tools'] = $tools;
         }
+
         $response = $this->sendJsonRequest($endpointUrl, $headers, $payload, $request->getTimeoutSeconds());
+
         $message = is_array($response['choices'][0]['message'] ?? null) ? $response['choices'][0]['message'] : [];
-        $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null) ? $response['choices'][0]['finish_reason'] : '';
-        return $this->buildConversationResponse($model, $this->openAIMessageToCanonical($message), $this->mapOpenAIFinishReason($finishReason), isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null, isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null);
+        $finishReason = is_string($response['choices'][0]['finish_reason'] ?? null)
+            ? $response['choices'][0]['finish_reason']
+            : '';
+
+        return $this->buildConversationResponse(
+            $model,
+            $this->openAIMessageToCanonical($message),
+            $this->mapOpenAIFinishReason($finishReason),
+            isset($response['usage']['prompt_tokens']) ? (int) $response['usage']['prompt_tokens'] : null,
+            isset($response['usage']['completion_tokens']) ? (int) $response['usage']['completion_tokens'] : null
+        );
     }
+
     /**
      * @param list<CanonicalMessageArray> $messages canonical messages
      * @return list<array<string, mixed>>
      */
-    private function canonicalMessagesToOpenAI(array $messages, ?string $systemPrompt) : array
+    private function canonicalMessagesToOpenAI(array $messages, ?string $systemPrompt): array
     {
         $openAIMessages = [];
+
         if ($systemPrompt !== null && $systemPrompt !== '') {
             $openAIMessages[] = ['role' => 'system', 'content' => $systemPrompt];
         }
+
         foreach ($messages as $message) {
             if ($message['role'] === 'assistant') {
                 $openAIMessages[] = $this->canonicalAssistantToOpenAI($message['content']);
                 continue;
             }
+
             if ($message['role'] === 'tool') {
                 // OpenAI expects one message per tool result, so a single
                 // canonical 'tool' message fans out into N 'tool' messages.
@@ -452,16 +695,19 @@ abstract class AIProvider
                 }
                 continue;
             }
+
             // Canonical 'user' messages carry only text blocks.
             $openAIMessages[] = ['role' => 'user', 'content' => $this->textBlocksToString($message['content'])];
         }
+
         return $openAIMessages;
     }
+
     /**
      * @param list<CanonicalContentBlockArray> $content canonical assistant content blocks
      * @return array<string, mixed>
      */
-    private function canonicalAssistantToOpenAI(array $content) : array
+    private function canonicalAssistantToOpenAI(array $content): array
     {
         $toolCalls = [];
         foreach (CanonicalMessage::toolUseBlocks($content) as $block) {
@@ -469,21 +715,32 @@ abstract class AIProvider
             // when empty; json_encode collapses `[]` to `[]`, so coerce empty
             // inputs to stdClass so the arguments string is `{}`.
             $arguments = json_encode($block['input'] === [] ? new \stdClass() : $block['input']);
-            $toolCalls[] = ['id' => $block['id'], 'type' => 'function', 'function' => ['name' => $block['name'], 'arguments' => $arguments === \false ? '{}' : $arguments]];
+            $toolCalls[] = [
+                'id' => $block['id'],
+                'type' => 'function',
+                'function' => [
+                    'name' => $block['name'],
+                    'arguments' => $arguments === false ? '{}' : $arguments,
+                ],
+            ];
         }
+
         // OpenAI requires the content key to be present even when tool_calls
         // carry the turn; an empty string keeps it valid.
         $message = ['role' => 'assistant', 'content' => $this->textBlocksToString($content)];
+
         if ($toolCalls !== []) {
             $message['tool_calls'] = $toolCalls;
         }
+
         return $message;
     }
+
     /**
      * @param list<CanonicalContentBlockArray> $content canonical tool_result blocks
      * @return list<array<string, mixed>>
      */
-    private function canonicalToolResultsToOpenAI(array $content) : array
+    private function canonicalToolResultsToOpenAI(array $content): array
     {
         $messages = [];
         foreach ($content as $block) {
@@ -496,10 +753,17 @@ abstract class AIProvider
             }
             $structured = is_array($block['structuredContent'] ?? null) ? $block['structuredContent'] : null;
             $mcpContent = is_array($block['content'] ?? null) ? $block['content'] : [];
-            $messages[] = ['role' => 'tool', 'tool_call_id' => $toolUseId, 'content' => $this->toolResultContentToOpenAI($structured, $mcpContent)];
+
+            $messages[] = [
+                'role' => 'tool',
+                'tool_call_id' => $toolUseId,
+                'content' => $this->toolResultContentToOpenAI($structured, $mcpContent),
+            ];
         }
+
         return $messages;
     }
+
     /**
      * OpenAI tool messages carry a single string content. The tool's
      * structured output, when present, is serialised; otherwise MCP text
@@ -509,12 +773,14 @@ abstract class AIProvider
      * @param array<string, mixed>|null $structured
      * @param list<array<string, mixed>> $mcpContent
      */
-    private function toolResultContentToOpenAI(?array $structured, array $mcpContent) : string
+    private function toolResultContentToOpenAI(?array $structured, array $mcpContent): string
     {
         if ($structured !== null) {
             $serialised = json_encode($structured);
-            return $serialised === \false ? '' : $serialised;
+
+            return $serialised === false ? '' : $serialised;
         }
+
         $parts = [];
         foreach ($mcpContent as $block) {
             if (($block['type'] ?? null) === 'text' && is_string($block['text'] ?? null)) {
@@ -522,19 +788,21 @@ abstract class AIProvider
                 continue;
             }
             $serialised = json_encode($block);
-            if ($serialised !== \false) {
+            if ($serialised !== false) {
                 $parts[] = $serialised;
             }
         }
+
         return implode("\n", $parts);
     }
+
     /**
      * Concatenates the text blocks of a canonical content list, ignoring any
      * non-text blocks. Returns '' when there are none.
      *
      * @param list<CanonicalContentBlockArray> $content
      */
-    private function textBlocksToString(array $content) : string
+    private function textBlocksToString(array $content): string
     {
         $parts = [];
         foreach ($content as $block) {
@@ -542,23 +810,35 @@ abstract class AIProvider
                 $parts[] = $block['text'];
             }
         }
+
         return implode("\n", $parts);
     }
+
     /**
      * @param list<ToolCatalogEntryArray> $tools
      * @return list<array{type: string, function: array<string, mixed>}>|null
      */
-    private function toolCatalogToOpenAI(array $tools) : ?array
+    private function toolCatalogToOpenAI(array $tools): ?array
     {
         if ($tools === []) {
             return null;
         }
+
         $openAITools = [];
         foreach ($tools as $tool) {
-            $openAITools[] = ['type' => 'function', 'function' => ['name' => $tool['name'], 'description' => $tool['description'], 'parameters' => $this->toToolParametersObjectSchema($tool['inputSchema'])]];
+            $openAITools[] = [
+                'type' => 'function',
+                'function' => [
+                    'name' => $tool['name'],
+                    'description' => $tool['description'],
+                    'parameters' => $this->toToolParametersObjectSchema($tool['inputSchema']),
+                ],
+            ];
         }
+
         return $openAITools;
     }
+
     /**
      * Makes a tool's parameter schema acceptable to OpenAI and Google.
      *
@@ -578,25 +858,37 @@ abstract class AIProvider
      * @param array<string, mixed> $schema
      * @return array<string, mixed>
      */
-    protected function toToolParametersObjectSchema(array $schema) : array
+    protected function toToolParametersObjectSchema(array $schema): array
     {
-        unset($schema['oneOf'], $schema['anyOf'], $schema['allOf'], $schema['not'], $schema['enum'], $schema['const']);
+        unset(
+            $schema['oneOf'],
+            $schema['anyOf'],
+            $schema['allOf'],
+            $schema['not'],
+            $schema['enum'],
+            $schema['const']
+        );
+
         if (($schema['type'] ?? null) !== 'object') {
             $schema['type'] = 'object';
         }
+
         return $schema;
     }
+
     /**
      * @param array<string, mixed> $message OpenAI assistant message
      * @return list<CanonicalContentBlockArray> canonical assistant content blocks
      */
-    private function openAIMessageToCanonical(array $message) : array
+    private function openAIMessageToCanonical(array $message): array
     {
         $canonical = [];
+
         $text = $message['content'] ?? null;
         if (is_string($text) && $text !== '') {
             $canonical[] = ['type' => 'text', 'text' => $text];
         }
+
         $toolCalls = is_array($message['tool_calls'] ?? null) ? $message['tool_calls'] : [];
         foreach ($toolCalls as $toolCall) {
             if (!is_array($toolCall)) {
@@ -607,8 +899,9 @@ abstract class AIProvider
             if (!is_string($id) || !is_string($name)) {
                 continue;
             }
+
             $arguments = $toolCall['function']['arguments'] ?? null;
-            $decoded = is_string($arguments) && $arguments !== '' ? json_decode($arguments, \true) : [];
+            $decoded = is_string($arguments) && $arguments !== '' ? json_decode($arguments, true) : [];
             $input = [];
             if (is_array($decoded)) {
                 foreach ($decoded as $key => $value) {
@@ -617,15 +910,23 @@ abstract class AIProvider
                     }
                 }
             }
-            $canonical[] = ['type' => 'tool_use', 'id' => $id, 'name' => $name, 'input' => $input];
+
+            $canonical[] = [
+                'type' => 'tool_use',
+                'id' => $id,
+                'name' => $name,
+                'input' => $input,
+            ];
         }
+
         return $canonical;
     }
+
     /**
      * Maps an OpenAI `finish_reason` onto the canonical stop reasons, passing
      * unknown values through unchanged.
      */
-    private function mapOpenAIFinishReason(string $finishReason) : string
+    private function mapOpenAIFinishReason(string $finishReason): string
     {
         switch ($finishReason) {
             case 'tool_calls':
@@ -640,6 +941,7 @@ abstract class AIProvider
                 return $finishReason;
         }
     }
+
     /**
      * @return array{
      *     id: string,
@@ -653,21 +955,35 @@ abstract class AIProvider
      *     defaultModel: string
      * }
      */
-    public function toArray() : array
+    public function toArray(): array
     {
-        return ['id' => $this->getId(), 'name' => $this->getName(), 'description' => $this->getDescription(), 'supportsCustomEndpoint' => $this->supportsCustomEndpoint(), 'supportsFipsEndpoint' => $this->supportsFipsEndpoint(), 'defaultEndpointUrl' => $this->getDefaultEndpointUrl(), 'endpointFieldTitle' => $this->getEndpointFieldTitle(), 'endpointFieldPlaceholder' => $this->getEndpointFieldPlaceholder(), 'defaultModel' => $this->getDefaultModel()];
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'supportsCustomEndpoint' => $this->supportsCustomEndpoint(),
+            'supportsFipsEndpoint' => $this->supportsFipsEndpoint(),
+            'defaultEndpointUrl' => $this->getDefaultEndpointUrl(),
+            'endpointFieldTitle' => $this->getEndpointFieldTitle(),
+            'endpointFieldPlaceholder' => $this->getEndpointFieldPlaceholder(),
+            'defaultModel' => $this->getDefaultModel(),
+        ];
     }
+
     /**
      * @param array<string, string> $configuration
      */
-    protected function getApiKey(array $configuration) : string
+    protected function getApiKey(array $configuration): string
     {
         $apiKey = trim($configuration['apiKey'] ?? '');
+
         if ($apiKey === '') {
             throw new AIProviderClientException(sprintf('No API key is configured for %s.', $this->getName()));
         }
+
         return $apiKey;
     }
+
     /**
      * Builds the bearer Authorization header for OpenAI-compatible providers,
      * omitting it entirely when no API key is configured. This lets custom
@@ -677,41 +993,63 @@ abstract class AIProvider
      * @param array<string, string> $configuration
      * @return array<string, string>
      */
-    protected function getBearerAuthorizationHeaders(array $configuration) : array
+    protected function getBearerAuthorizationHeaders(array $configuration): array
     {
         $apiKey = trim($configuration['apiKey'] ?? '');
+
         return $apiKey === '' ? [] : ['Authorization' => 'Bearer ' . $apiKey];
     }
+
     /**
      * @param array<string, string> $configuration
      */
-    protected function getEndpointUrl(array $configuration) : string
+    protected function getEndpointUrl(array $configuration): string
     {
-        $endpointUrl = $this->supportsCustomEndpoint() ? trim($configuration['endpointUrl'] ?? '') : '';
+        $endpointUrl = $this->supportsCustomEndpoint()
+            ? trim($configuration['endpointUrl'] ?? '')
+            : '';
+
         if ($endpointUrl === '') {
             $endpointUrl = $this->getDefaultEndpointUrl();
         }
+
         if ($endpointUrl === '') {
             throw new AIProviderClientException(sprintf('No endpoint URL is configured for %s.', $this->getName()));
         }
+
         $parsedUrl = parse_url($endpointUrl);
-        $scheme = is_array($parsedUrl) ? $parsedUrl['scheme'] ?? '' : '';
-        if (!filter_var($endpointUrl, \FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], \true)) {
+        $scheme = is_array($parsedUrl) ? ($parsedUrl['scheme'] ?? '') : '';
+
+        if (
+            !filter_var($endpointUrl, FILTER_VALIDATE_URL)
+            || !in_array($scheme, ['http', 'https'], true)
+        ) {
             throw new AIProviderClientException(sprintf('The endpoint URL for %s is invalid.', $this->getName()));
         }
+
         return $endpointUrl;
     }
+
     /**
-     * Derives the OpenAI-compatible models-listing endpoint from a chat
-     * completions endpoint, e.g. `.../v1/chat/completions` or a bare `.../v1`
-     * base both become `.../v1/models` — the standard `GET {base}/models`
-     * probe used by the "test connection" flow.
+     * Derives a sibling OpenAI-compatible endpoint from a chat completions
+     * endpoint, e.g. `.../v1/chat/completions` or a bare `.../v1` base both
+     * become `.../v1/{$path}`.
      */
-    protected function openAiCompatibleModelsEndpoint(string $chatEndpointUrl) : string
+    protected function openAiCompatibleEndpoint(string $chatEndpointUrl, string $path): string
     {
         $base = preg_replace('#/chat/completions/?$#', '', $chatEndpointUrl) ?? $chatEndpointUrl;
-        return rtrim($base, '/') . '/models';
+
+        return rtrim($base, '/') . '/' . $path;
     }
+
+    /**
+     * The standard `GET {base}/models` probe used by the "test connection" flow.
+     */
+    protected function openAiCompatibleModelsEndpoint(string $chatEndpointUrl): string
+    {
+        return $this->openAiCompatibleEndpoint($chatEndpointUrl, 'models');
+    }
+
     /**
      * Sends a JSON request to the provider and returns the decoded JSON object.
      *
@@ -725,14 +1063,21 @@ abstract class AIProvider
      * @param array<string, mixed> $payload
      * @return array<string, mixed>
      */
-    protected function sendJsonRequest(string $url, array $headers, array $payload, int $timeoutSeconds = 30) : array
-    {
+    protected function sendJsonRequest(
+        string $url,
+        array $headers,
+        array $payload,
+        int $timeoutSeconds = self::COMPLETE_TIMEOUT_SECONDS
+    ): array {
         $requestBody = json_encode($payload);
+
         if (!is_string($requestBody)) {
             throw new AIProviderException(sprintf('Could not encode request body for %s.', $this->getName()));
         }
+
         return $this->sendRequest('POST', $url, $headers, $requestBody, $timeoutSeconds, $payload);
     }
+
     /**
      * Sends a GET request to the provider and returns the decoded JSON object,
      * used by the "test connection" probe. Failures are classified exactly as
@@ -741,10 +1086,11 @@ abstract class AIProvider
      * @param array<string, string> $headers
      * @return array<string, mixed>
      */
-    protected function sendGetRequest(string $url, array $headers, int $timeoutSeconds = 10) : array
+    protected function sendGetRequest(string $url, array $headers, int $timeoutSeconds = 10): array
     {
         return $this->sendRequest('GET', $url, $headers, null, $timeoutSeconds);
     }
+
     /**
      * Performs the actual HTTP exchange, retrying transient errors and
      * classifying failures. Shared by {@link sendJsonRequest()} and
@@ -754,8 +1100,14 @@ abstract class AIProvider
      * @param array<string, mixed>|null $debugPayload
      * @return array<string, mixed>
      */
-    private function sendRequest(string $method, string $url, array $headers, ?string $requestBody, int $timeoutSeconds, ?array $debugPayload = null) : array
-    {
+    private function sendRequest(
+        string $method,
+        string $url,
+        array $headers,
+        ?string $requestBody,
+        int $timeoutSeconds,
+        ?array $debugPayload = null
+    ): array {
         $requestHeaders = [];
         if ($requestBody !== null) {
             $requestHeaders[] = 'Content-Type: application/json';
@@ -763,56 +1115,117 @@ abstract class AIProvider
         foreach ($headers as $name => $value) {
             $requestHeaders[] = $name . ': ' . $value;
         }
+
         $retryDelays = self::TRANSIENT_ERROR_RETRY_DELAYS;
-        $startedAt = microtime(\true);
-        $host = parse_url($url, \PHP_URL_HOST);
+        $startedAt = microtime(true);
+
+        $host = parse_url($url, PHP_URL_HOST);
         $checkHostIsAllowed = !is_string($host) || !$this->isTrustedRequestHost($host);
+
         for ($attempt = 0; $attempt <= count($retryDelays); $attempt++) {
-            $attemptStartedAt = microtime(\true);
-            $this->logProviderRequestDebugMetadata($method, $url, $timeoutSeconds, strlen($requestBody ?? ''), $attempt + 1, $debugPayload);
+            $attemptStartedAt = microtime(true);
+            $this->logProviderRequestDebugMetadata(
+                $method,
+                $url,
+                $timeoutSeconds,
+                strlen($requestBody ?? ''),
+                $attempt + 1,
+                $debugPayload
+            );
+
             try {
-                $response = Http::sendHttpRequestBy(Http::getTransportMethod(), $url, max(1, $timeoutSeconds), null, null, null, 0, \false, \false, \false, \true, $method, null, null, $requestBody, $requestHeaders, null, $checkHostIsAllowed);
+                $response = Http::sendHttpRequestBy(
+                    Http::getTransportMethod(),
+                    $url,
+                    max(1, $timeoutSeconds),
+                    null,
+                    null,
+                    null,
+                    0,
+                    false,
+                    false,
+                    false,
+                    true,
+                    $method,
+                    null,
+                    null,
+                    $requestBody,
+                    $requestHeaders,
+                    null,
+                    $checkHostIsAllowed
+                );
             } catch (Exception $e) {
                 $this->logProviderTransportDebugMetadata($method, $url, $timeoutSeconds, $attempt + 1, $e);
-                throw new AIProviderException(sprintf('Could not connect to %s.', $this->getName()), 0, $e);
+
+                throw new AIProviderException(sprintf(
+                    'Could not connect to %s.',
+                    $this->getName()
+                ), 0, $e);
             }
+
             $status = (int) ($response['status'] ?? 0);
             $body = is_string($response['data'] ?? null) ? $response['data'] : '';
-            $decoded = $body !== '' ? json_decode($body, \true) : null;
-            $this->logProviderResponseDebugMetadata($method, $url, $timeoutSeconds, $status, strlen($body), (int) round((microtime(\true) - $attemptStartedAt) * 1000), $attempt + 1, $debugPayload);
+            $decoded = $body !== '' ? json_decode($body, true) : null;
+
+            $this->logProviderResponseDebugMetadata(
+                $method,
+                $url,
+                $timeoutSeconds,
+                $status,
+                strlen($body),
+                (int) round((microtime(true) - $attemptStartedAt) * 1000),
+                $attempt + 1,
+                $debugPayload
+            );
+
             if ($status >= 200 && $status < 300) {
                 if (!is_array($decoded)) {
                     throw new AIProviderException(sprintf('%s returned invalid JSON.', $this->getName()));
                 }
-                $this->lastRequestExecutionTimeMs = (int) round((microtime(\true) - $startedAt) * 1000);
+
+                $this->lastRequestExecutionTimeMs = (int) round((microtime(true) - $startedAt) * 1000);
+
                 return $decoded;
             }
+
             $providerError = $this->getProviderErrorMessage(is_array($decoded) ? $decoded : []);
+
             if ($this->isAuthenticationError($providerError)) {
-                throw new AIProviderClientException(sprintf('%s rejected the API key. Check the key and try again.', $this->getName()));
+                throw new AIProviderClientException(sprintf(
+                    '%s rejected the API key. Check the key and try again.',
+                    $this->getName()
+                ));
             }
+
             if ($this->shouldRetryTransientError($status, $attempt, $retryDelays)) {
                 sleep($retryDelays[$attempt]);
                 continue;
             }
+
             $errorSuffix = $providerError !== '' ? ': ' . mb_strimwidth($providerError, 0, 300, '…', 'UTF-8') : '';
             $message = sprintf('%s request failed%s.', $this->getName(), $errorSuffix);
+
             if ($status >= 500) {
                 throw new AIProviderServerException($message);
             }
+
             if ($status >= 400) {
                 throw new AIProviderClientException($message);
             }
+
             throw new AIProviderException($message);
         }
+
         throw new AIProviderServerException(sprintf('%s request failed.', $this->getName()));
     }
+
     /**
      * @param array<string, mixed> $response
      */
-    private function getProviderErrorMessage(array $response) : string
+    private function getProviderErrorMessage(array $response): string
     {
         $message = '';
+
         if (isset($response['error']) && is_string($response['error'])) {
             $message = $response['error'];
         } elseif (isset($response['error']) && is_array($response['error'])) {
@@ -827,92 +1240,176 @@ abstract class AIProvider
             // `error` wrapper.
             $message = $response['message'];
         }
+
         return $message;
     }
+
     /**
      * Debug-only metadata for local provider testing. Intentionally does not
      * log request/response content, headers, API keys, prompts, or model output.
      *
      * @param array<string, mixed>|null $payload
      */
-    private function logProviderRequestDebugMetadata(string $method, string $url, int $timeoutSeconds, int $requestBytes, int $attempt, ?array $payload) : void
-    {
+    private function logProviderRequestDebugMetadata(
+        string $method,
+        string $url,
+        int $timeoutSeconds,
+        int $requestBytes,
+        int $attempt,
+        ?array $payload
+    ): void {
         if (!Development::isEnabled()) {
             return;
         }
-        StaticContainer::get(LoggerInterface::class)->debug('AIProviders debug provider request metadata: provider={provider}, method={method}, ' . 'host={host}, path={path}, model={model}, thinking={thinking}, timeoutSeconds={timeoutSeconds}, ' . 'attempt={attempt}, requestBytes={requestBytes}', array_merge($this->getProviderRequestDebugMetadata($url, $payload), ['provider' => $this->getName(), 'method' => $method, 'timeoutSeconds' => $timeoutSeconds, 'attempt' => $attempt, 'requestBytes' => $requestBytes]));
+
+        StaticContainer::get(LoggerInterface::class)->debug(
+            'AIProviders debug provider request metadata: provider={provider}, method={method}, '
+            . 'host={host}, path={path}, model={model}, thinking={thinking}, timeoutSeconds={timeoutSeconds}, '
+            . 'attempt={attempt}, requestBytes={requestBytes}',
+            array_merge($this->getProviderRequestDebugMetadata($url, $payload), [
+                'provider' => $this->getName(),
+                'method' => $method,
+                'timeoutSeconds' => $timeoutSeconds,
+                'attempt' => $attempt,
+                'requestBytes' => $requestBytes,
+            ])
+        );
     }
+
     /**
      * @param array<string, mixed>|null $payload
      */
-    private function logProviderResponseDebugMetadata(string $method, string $url, int $timeoutSeconds, int $status, int $responseBytes, int $durationMs, int $attempt, ?array $payload) : void
-    {
+    private function logProviderResponseDebugMetadata(
+        string $method,
+        string $url,
+        int $timeoutSeconds,
+        int $status,
+        int $responseBytes,
+        int $durationMs,
+        int $attempt,
+        ?array $payload
+    ): void {
         if (!Development::isEnabled()) {
             return;
         }
-        StaticContainer::get(LoggerInterface::class)->debug('AIProviders debug provider response metadata: provider={provider}, method={method}, ' . 'host={host}, path={path}, model={model}, thinking={thinking}, timeoutSeconds={timeoutSeconds}, ' . 'attempt={attempt}, status={status}, durationMs={durationMs}, responseBytes={responseBytes}', array_merge($this->getProviderRequestDebugMetadata($url, $payload), ['provider' => $this->getName(), 'method' => $method, 'timeoutSeconds' => $timeoutSeconds, 'attempt' => $attempt, 'status' => $status, 'durationMs' => $durationMs, 'responseBytes' => $responseBytes]));
+
+        StaticContainer::get(LoggerInterface::class)->debug(
+            'AIProviders debug provider response metadata: provider={provider}, method={method}, '
+            . 'host={host}, path={path}, model={model}, thinking={thinking}, timeoutSeconds={timeoutSeconds}, '
+            . 'attempt={attempt}, status={status}, durationMs={durationMs}, responseBytes={responseBytes}',
+            array_merge($this->getProviderRequestDebugMetadata($url, $payload), [
+                'provider' => $this->getName(),
+                'method' => $method,
+                'timeoutSeconds' => $timeoutSeconds,
+                'attempt' => $attempt,
+                'status' => $status,
+                'durationMs' => $durationMs,
+                'responseBytes' => $responseBytes,
+            ])
+        );
     }
-    private function logProviderTransportDebugMetadata(string $method, string $url, int $timeoutSeconds, int $attempt, Exception $exception) : void
-    {
+
+    private function logProviderTransportDebugMetadata(
+        string $method,
+        string $url,
+        int $timeoutSeconds,
+        int $attempt,
+        Exception $exception
+    ): void {
         if (!Development::isEnabled()) {
             return;
         }
-        StaticContainer::get(LoggerInterface::class)->debug('AIProviders debug provider transport metadata: provider={provider}, method={method}, ' . 'host={host}, path={path}, timeoutSeconds={timeoutSeconds}, attempt={attempt}, ' . 'exceptionClass={exceptionClass}', array_merge($this->getProviderRequestDebugMetadata($url, null), ['provider' => $this->getName(), 'method' => $method, 'timeoutSeconds' => $timeoutSeconds, 'attempt' => $attempt, 'exceptionClass' => get_class($exception)]));
+
+        StaticContainer::get(LoggerInterface::class)->debug(
+            'AIProviders debug provider transport metadata: provider={provider}, method={method}, '
+            . 'host={host}, path={path}, timeoutSeconds={timeoutSeconds}, attempt={attempt}, '
+            . 'exceptionClass={exceptionClass}',
+            array_merge($this->getProviderRequestDebugMetadata($url, null), [
+                'provider' => $this->getName(),
+                'method' => $method,
+                'timeoutSeconds' => $timeoutSeconds,
+                'attempt' => $attempt,
+                'exceptionClass' => get_class($exception),
+            ])
+        );
     }
+
     /**
      * @param array<string, mixed>|null $payload
      * @return array{host: string, path: string, model: string, thinking: string}
      */
-    private function getProviderRequestDebugMetadata(string $url, ?array $payload) : array
+    private function getProviderRequestDebugMetadata(string $url, ?array $payload): array
     {
-        $path = (string) parse_url($url, \PHP_URL_PATH);
-        return ['host' => (string) parse_url($url, \PHP_URL_HOST), 'path' => $path, 'model' => $this->getDebugModel($payload, $path), 'thinking' => $this->getDebugThinking($payload)];
+        $path = (string) parse_url($url, PHP_URL_PATH);
+
+        return [
+            'host' => (string) parse_url($url, PHP_URL_HOST),
+            'path' => $path,
+            'model' => $this->getDebugModel($payload, $path),
+            'thinking' => $this->getDebugThinking($payload),
+        ];
     }
+
     /**
      * @param array<string, mixed>|null $payload
      */
-    private function getDebugModel(?array $payload, string $path) : string
+    private function getDebugModel(?array $payload, string $path): string
     {
         if (isset($payload['model']) && is_string($payload['model'])) {
             return $payload['model'];
         }
+
         // Google carries the model at /models/<model>:<action>, Bedrock at
         // /model/<url-encoded model>/converse.
         if (preg_match('~/models?/([^/:]+)~', $path, $matches)) {
             return rawurldecode($matches[1]);
         }
+
         return '';
     }
+
     /**
      * @param array<string, mixed>|null $payload
      */
-    private function getDebugThinking(?array $payload) : string
+    private function getDebugThinking(?array $payload): string
     {
         if ($payload === null) {
             return 'unknown';
         }
+
         if (isset($payload['reasoning_effort']) && is_string($payload['reasoning_effort'])) {
             return $payload['reasoning_effort'] === 'none' ? 'no' : 'yes';
         }
+
         if (isset($payload['thinking']) && is_array($payload['thinking'])) {
             return 'yes';
         }
+
         $thinkingBudget = $payload['generationConfig']['thinkingConfig']['thinkingBudget'] ?? null;
         if (is_int($thinkingBudget) || is_float($thinkingBudget)) {
             return $thinkingBudget > 0 ? 'yes' : 'no';
         }
+
         return 'unknown';
     }
-    private function isAuthenticationError(string $message) : bool
+
+    private function isAuthenticationError(string $message): bool
     {
         $message = strtolower($message);
-        return strpos($message, 'api key') !== \false || strpos($message, 'x-api-key') !== \false || strpos($message, 'authentication') !== \false || strpos($message, 'unauthorized') !== \false || strpos($message, 'invalid key') !== \false;
+
+        return strpos($message, 'api key') !== false
+            || strpos($message, 'x-api-key') !== false
+            || strpos($message, 'authentication') !== false
+            || strpos($message, 'unauthorized') !== false
+            || strpos($message, 'invalid key') !== false;
     }
+
     /**
      * @param int[] $retryDelays
      */
-    private function shouldRetryTransientError(int $status, int $attempt, array $retryDelays) : bool
+    private function shouldRetryTransientError(int $status, int $attempt, array $retryDelays): bool
     {
-        return in_array($status, self::TRANSIENT_ERROR_STATUS_CODES, \true) && array_key_exists($attempt, $retryDelays);
+        return in_array($status, self::TRANSIENT_ERROR_STATUS_CODES, true)
+            && array_key_exists($attempt, $retryDelays);
     }
 }

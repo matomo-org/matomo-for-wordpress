@@ -7,7 +7,9 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Parser\Device;
 
 /**
@@ -15,18 +17,21 @@ namespace DeviceDetector\Parser\Device;
  *
  * Device parser for notebook detection in Facebook useragents
  */
-class Notebook extends \DeviceDetector\Parser\Device\AbstractDeviceParser
+class Notebook extends AbstractDeviceParser
 {
     protected $fixtureFile = 'regexes/device/notebooks.yml';
+
     protected $parserName = 'notebook';
+
     /**
      * @inheritdoc
      */
-    public function parse() : ?array
+    public function parse(): ?array
     {
         if (!$this->matchUserAgent('FBMD/')) {
             return null;
         }
+
         return parent::parse();
     }
 }

@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
+
 /**
  * A {@link DataTable} filter that replaces range labels whose values are in seconds with
  * prettier, human-friendlier versions.
@@ -23,7 +25,7 @@ use Piwik\DataTable;
  *
  * @api
  */
-class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabels
+class BeautifyTimeRangeLabels extends BeautifyRangeLabels
 {
     /**
      * A format string used to create pretty range labels when the range's
@@ -33,6 +35,7 @@ class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabel
      * range bound.
      */
     protected $labelSecondsPlural;
+
     /**
      * @param DataTable $table The DataTable this filter will run over.
      * @param string $labelSecondsPlural A string to use when beautifying range labels
@@ -47,8 +50,10 @@ class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabel
     public function __construct($table, $labelSecondsPlural, $labelMinutesSingular, $labelMinutesPlural)
     {
         parent::__construct($table, $labelMinutesSingular, $labelMinutesPlural);
+
         $this->labelSecondsPlural = $labelSecondsPlural;
     }
+
     /**
      * Beautifies and returns a range label whose range spans over one unit, ie
      * 1-1, 2-2 or 3-3.
@@ -70,6 +75,7 @@ class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabel
             return sprintf($this->labelPlural, ceil($lowerBound / 60));
         }
     }
+
     /**
      * Beautifies and returns a range label whose range is bounded and spans over
      * more than one unit, ie 1-5, 5-10 but NOT 11+.
@@ -90,6 +96,7 @@ class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabel
             return sprintf($this->labelPlural, ceil($lowerBound / 60) . "-" . ceil($upperBound / 60));
         }
     }
+
     /**
      * Beautifies and returns a range label whose range is unbounded, ie
      * 5+, 10+, etc.

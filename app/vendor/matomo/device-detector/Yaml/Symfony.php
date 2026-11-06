@@ -7,11 +7,14 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Yaml;
 
 use Symfony\Component\Yaml\Yaml;
-class Symfony implements \DeviceDetector\Yaml\ParserInterface
+
+class Symfony implements ParserInterface
 {
     /**
      * Parses the file with the given filename using Symfony Yaml parser and returns the converted content

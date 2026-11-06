@@ -1,0 +1,8 @@
+{
+    "CustomJsTracker": {
+        "DiagnosticPiwikJsMakeWritable": "Vi rekommenderar att ta bort skrivskyddet från filen %1$s genom att använda följande kommando: %2$s",
+        "DiagnosticPiwikJsNotWritable": "Matomo JavaScript-spårarfilen %s är inte skrivbar vilket innebär att andra plugins inte kan utöka JavaScript-spåraren. I framtiden kanske inte vissa kärnfunktioner fungerar som förväntat.",
+        "DiagnosticPiwikJsWritable": "Skrivbar JavaScript-spårare (%s)",
+        "PluginDescription": "Gör att insticksprogram kan bygga vidare på Matomos JavaScript-spårare (matomo.js) för att lägga till nya funktioner och möjligheter för att mäta webbplatser."
+    }
+}

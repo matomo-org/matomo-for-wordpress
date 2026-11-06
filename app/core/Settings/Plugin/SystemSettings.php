@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Plugin;
 
 use Piwik\Piwik;
 use Piwik\Settings\Settings;
+
 /**
  * Base class of all system settings providers. Plugins that define their own configuration settings
  * can extend this class to easily make their system settings available to Piwik users.
@@ -29,8 +31,10 @@ abstract class SystemSettings extends Settings
     public function __construct()
     {
         parent::__construct();
+
         $this->init();
     }
+
     /**
      * Creates a new system setting.
      *
@@ -48,11 +52,12 @@ abstract class SystemSettings extends Settings
      */
     protected function makeSetting($name, $defaultValue, $type, $fieldConfigCallback)
     {
-        $setting = new \Piwik\Settings\Plugin\SystemSetting($name, $defaultValue, $type, $this->pluginName);
+        $setting = new SystemSetting($name, $defaultValue, $type, $this->pluginName);
         $setting->setConfigureCallback($fieldConfigCallback);
         $this->addSetting($setting);
         return $setting;
     }
+
     /**
      * This is only meant for some core features used by some core plugins that are shipped with Piwik
      * @internal
@@ -67,11 +72,12 @@ abstract class SystemSettings extends Settings
      */
     protected function makeSettingManagedInConfigOnly($configSectionName, $name, $defaultValue, $type, $fieldConfigCallback)
     {
-        $setting = new \Piwik\Settings\Plugin\SystemConfigSetting($name, $defaultValue, $type, $this->pluginName, $configSectionName);
+        $setting = new SystemConfigSetting($name, $defaultValue, $type, $this->pluginName, $configSectionName);
         $setting->setConfigureCallback($fieldConfigCallback);
         $this->addSetting($setting);
         return $setting;
     }
+
     /**
      * Saves (persists) the current setting values in the database.
      *
@@ -80,6 +86,7 @@ abstract class SystemSettings extends Settings
     public function save()
     {
         parent::save();
+
         /**
          * Triggered after system settings have been updated.
          *

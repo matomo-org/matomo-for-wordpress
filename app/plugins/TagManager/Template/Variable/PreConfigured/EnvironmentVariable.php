@@ -6,16 +6,19 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-class EnvironmentVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
+
+class EnvironmentVariable extends BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_CONTAINER_INFO;
     }
-    public function loadTemplate($context, $entity, $skipTemplate = \false)
+
+    public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
             case WebContext::ID:

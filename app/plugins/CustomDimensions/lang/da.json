@@ -1,0 +1,16 @@
+{
+    "CustomDimensions": {
+        "ColumnAvgTimeOnDimension": "Gennemsnitlig tid på målet",
+        "ColumnUniqueActions": "Unikke handlinger",
+        "CustomDimensions": "Tilpassede mål",
+        "CustomDimensionsIntro": "Ved at oprette %1$stilpassede mål%2$s kan du indsamle alle tilpassede data til '%3$s'.",
+        "DimensionCreated": "Tilpasset mål oprettet",
+        "DimensionUpdated": "Tilpasset mål opdateret",
+        "ExtractValue": "Udtræk værdi",
+        "Extractions": "Udtræk",
+        "IncreaseAvailableCustomDimensionsTitle": "Udvid antallet af tilpassede mål",
+        "NameIsRequired": "Et navn er krævet.",
+        "NameIsTooLong": "Navnet indeholder for mange karakterer. Brug op til %d karakterer.",
+        "PageUrlParam": "Sidens URL parameter"
+    }
+}

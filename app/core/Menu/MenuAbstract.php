@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Menu;
 
 use Piwik\Cache;
@@ -13,6 +14,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\API;
 use Piwik\Singleton;
 use Piwik\Plugin\Manager as PluginManager;
+
 /**
  * Base class for classes that manage one of Piwik's menus.
  *
@@ -47,11 +49,12 @@ abstract class MenuAbstract extends Singleton
     /**
      * @var bool
      */
-    protected $orderingApplied = \false;
+    protected $orderingApplied = false;
     /**
      * @var array<string, string>
      */
     protected $menuIcons = [];
+
     /**
      * Builds the menu, applies edits, renames
      * and orders the entries.
@@ -67,6 +70,7 @@ abstract class MenuAbstract extends Singleton
         $this->applyOrdering();
         return $this->menu;
     }
+
     /**
      * lets you register a menu icon for a certain menu category to replace the default arrow icon.
      *
@@ -78,6 +82,7 @@ abstract class MenuAbstract extends Singleton
     {
         $this->menuIcons[$menuName] = $iconCssClass;
     }
+
     /**
      * Returns a list of available plugin menu instances.
      *
@@ -87,17 +92,23 @@ abstract class MenuAbstract extends Singleton
     {
         $cacheId = 'Menus.all';
         $cache = Cache::getTransientCache();
+
         if ($cache->contains($cacheId)) {
             return $cache->fetch($cacheId);
         }
+
         $components = PluginManager::getInstance()->findComponents('Menu', 'Piwik\\Plugin\\Menu');
+
         $menus = [];
         foreach ($components as $component) {
             $menus[] = StaticContainer::get($component);
         }
+
         $cache->save($cacheId, $menus);
+
         return $menus;
     }
+
     /**
      * Adds a new entry to the menu.
      *
@@ -117,15 +128,40 @@ abstract class MenuAbstract extends Singleton
      * @since 2.7.0
      * @api
      */
-    public function addItem(string $menuName, ?string $subMenuName, $url, int $order = 50, $tooltip = \false, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, int $badgeCount = 0, string $cssClass = '')
-    {
+    public function addItem(
+        string $menuName,
+        ?string $subMenuName,
+        $url,
+        int $order = 50,
+        $tooltip = false,
+        $icon = false,
+        $onclick = false,
+        $attribute = false,
+        $help = false,
+        int $badgeCount = 0,
+        string $cssClass = ''
+    ) {
         // make sure the idSite value used is numeric (hack-y fix for #3426)
         if (isset($url['idSite']) && !is_numeric($url['idSite'])) {
             $idSites = API::getInstance()->getSitesIdWithAtLeastViewAccess();
             $url['idSite'] = reset($idSites);
         }
-        $this->menuEntries[] = [$menuName, $subMenuName, $url, $order, $tooltip, $icon, $onclick, $attribute, $help, $badgeCount, $cssClass];
+
+        $this->menuEntries[] = [
+            $menuName,
+            $subMenuName,
+            $url,
+            $order,
+            $tooltip,
+            $icon,
+            $onclick,
+            $attribute,
+            $help,
+            $badgeCount,
+            $cssClass,
+        ];
     }
+
     /**
      * Removes an existing entry from the menu.
      *
@@ -134,10 +170,14 @@ abstract class MenuAbstract extends Singleton
      * @return void
      * @api
      */
-    public function remove($menuName, $subMenuName = \false)
+    public function remove($menuName, $subMenuName = false)
     {
-        $this->menuEntriesToRemove[] = array($menuName, $subMenuName);
+        $this->menuEntriesToRemove[] = array(
+            $menuName,
+            $subMenuName,
+        );
     }
+
     /**
      * Builds a single menu item
      *
@@ -148,15 +188,30 @@ abstract class MenuAbstract extends Singleton
      * @param string|null|false $attribute
      * @param string|null|false $help
      */
-    private function buildMenuItem(string $menuName, ?string $subMenuName, $url, int $order = 50, $tooltip = \false, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, int $badgeCount = 0, string $cssClass = '') : void
-    {
+    private function buildMenuItem(
+        string $menuName,
+        ?string $subMenuName,
+        $url,
+        int $order = 50,
+        $tooltip = false,
+        $icon = false,
+        $onclick = false,
+        $attribute = false,
+        $help = false,
+        int $badgeCount = 0,
+        string $cssClass = ''
+    ): void {
         if (!isset($this->menu[$menuName])) {
-            $this->menu[$menuName] = ['_hasSubmenu' => \false, '_order' => $order];
+            $this->menu[$menuName] = [
+                '_hasSubmenu' => false,
+                '_order' => $order,
+            ];
         }
+
         if (empty($subMenuName)) {
-            $this->menu[$menuName]['_url'] = $url;
+            $this->menu[$menuName]['_url']   = $url;
             $this->menu[$menuName]['_order'] = $order;
-            $this->menu[$menuName]['_name'] = $menuName;
+            $this->menu[$menuName]['_name']  = $menuName;
             $this->menu[$menuName]['_tooltip'] = $tooltip;
             $this->menu[$menuName]['_attribute'] = $attribute;
             if (!empty($this->menuIcons[$menuName])) {
@@ -182,21 +237,24 @@ abstract class MenuAbstract extends Singleton
             $this->menu[$menuName][$subMenuName]['_help'] = $help ?: '';
             $this->menu[$menuName][$subMenuName]['_badgecount'] = $badgeCount;
             $this->menu[$menuName][$subMenuName]['_cssClass'] = $cssClass;
-            $this->menu[$menuName]['_hasSubmenu'] = \true;
+            $this->menu[$menuName]['_hasSubmenu'] = true;
+
             if (!array_key_exists('_tooltip', $this->menu[$menuName])) {
                 $this->menu[$menuName]['_tooltip'] = $tooltip;
             }
         }
     }
+
     /**
      * Builds the menu from the $this->menuEntries variable.
      */
-    private function buildMenu() : void
+    private function buildMenu(): void
     {
         foreach ($this->menuEntries as $menuEntry) {
             $this->buildMenuItem(...$menuEntry);
         }
     }
+
     /**
      * Renames a single menu entry.
      *
@@ -210,8 +268,14 @@ abstract class MenuAbstract extends Singleton
      */
     public function rename($mainMenuOriginal, $subMenuOriginal, $mainMenuRenamed, $subMenuRenamed)
     {
-        $this->renames[] = [$mainMenuOriginal, $subMenuOriginal, $mainMenuRenamed, $subMenuRenamed];
+        $this->renames[] = [
+            $mainMenuOriginal,
+            $subMenuOriginal,
+            $mainMenuRenamed,
+            $subMenuRenamed,
+        ];
     }
+
     /**
      * Edits a URL of an existing menu entry.
      *
@@ -225,28 +289,31 @@ abstract class MenuAbstract extends Singleton
     {
         $this->edits[] = [$mainMenuToEdit, $subMenuToEdit, $newUrl];
     }
+
     /**
      * Applies all edits to the menu.
      */
-    private function applyEdits() : void
+    private function applyEdits(): void
     {
         foreach ($this->edits as $edit) {
             $mainMenuToEdit = $edit[0];
-            $subMenuToEdit = $edit[1];
-            $newUrl = $edit[2];
+            $subMenuToEdit  = $edit[1];
+            $newUrl         = $edit[2];
+
             if ($subMenuToEdit === null) {
                 if (isset($this->menu[$mainMenuToEdit])) {
-                    $menuDataToEdit =& $this->menu[$mainMenuToEdit];
+                    $menuDataToEdit = &$this->menu[$mainMenuToEdit];
                 } else {
                     $menuDataToEdit = null;
                 }
             } else {
                 if (isset($this->menu[$mainMenuToEdit][$subMenuToEdit])) {
-                    $menuDataToEdit =& $this->menu[$mainMenuToEdit][$subMenuToEdit];
+                    $menuDataToEdit = &$this->menu[$mainMenuToEdit][$subMenuToEdit];
                 } else {
                     $menuDataToEdit = null;
                 }
             }
+
             if (empty($menuDataToEdit)) {
                 $this->buildMenuItem($mainMenuToEdit, $subMenuToEdit, $newUrl);
             } else {
@@ -254,7 +321,8 @@ abstract class MenuAbstract extends Singleton
             }
         }
     }
-    private function applyRemoves() : void
+
+    private function applyRemoves(): void
     {
         foreach ($this->menuEntriesToRemove as $menuToDelete) {
             if (empty($menuToDelete[1])) {
@@ -273,13 +341,14 @@ abstract class MenuAbstract extends Singleton
     /**
      * Applies renames to the menu.
      */
-    private function applyRenames() : void
+    private function applyRenames(): void
     {
         foreach ($this->renames as $rename) {
             $mainMenuOriginal = $rename[0];
-            $subMenuOriginal = $rename[1];
-            $mainMenuRenamed = $rename[2];
-            $subMenuRenamed = $rename[3];
+            $subMenuOriginal  = $rename[1];
+            $mainMenuRenamed  = $rename[2];
+            $subMenuRenamed   = $rename[3];
+
             // Are we changing a submenu?
             if (!empty($subMenuOriginal)) {
                 if (isset($this->menu[$mainMenuOriginal][$subMenuOriginal])) {
@@ -297,14 +366,19 @@ abstract class MenuAbstract extends Singleton
             }
         }
     }
+
     /**
      * Orders the menu according to their order.
      */
-    private function applyOrdering() : void
+    private function applyOrdering(): void
     {
-        if (empty($this->menu) || $this->orderingApplied) {
+        if (
+            empty($this->menu)
+            || $this->orderingApplied
+        ) {
             return;
         }
+
         uasort($this->menu, [$this, 'menuCompare']);
         foreach ($this->menu as $key => &$element) {
             if (is_null($element)) {
@@ -313,8 +387,10 @@ abstract class MenuAbstract extends Singleton
                 uasort($element, [$this, 'menuCompare']);
             }
         }
-        $this->orderingApplied = \true;
+
+        $this->orderingApplied = true;
     }
+
     /**
      * Compares two menu entries. Used for ordering.
      *
@@ -327,24 +403,34 @@ abstract class MenuAbstract extends Singleton
         if (!is_array($itemOne) && !is_array($itemTwo)) {
             return 0;
         }
+
         if (!is_array($itemOne) && is_array($itemTwo)) {
             return -1;
         }
+
         if (is_array($itemOne) && !is_array($itemTwo)) {
             return 1;
         }
+
         if (!isset($itemOne['_order']) && !isset($itemTwo['_order'])) {
             return 0;
         }
+
         if (!isset($itemOne['_order']) && isset($itemTwo['_order'])) {
             return -1;
         }
+
         if (isset($itemOne['_order']) && !isset($itemTwo['_order'])) {
             return 1;
         }
+
         if ($itemOne['_order'] == $itemTwo['_order']) {
-            return strcmp($itemOne['_name'] ?? '', $itemTwo['_name'] ?? '');
+            return strcmp(
+                $itemOne['_name'] ?? '',
+                $itemTwo['_name'] ?? ''
+            );
         }
-        return $itemOne['_order'] < $itemTwo['_order'] ? -1 : 1;
+
+        return ($itemOne['_order'] < $itemTwo['_order']) ? -1 : 1;
     }
 }

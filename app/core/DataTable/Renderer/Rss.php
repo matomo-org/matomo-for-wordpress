@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Renderer;
 
 use Exception;
@@ -15,6 +16,7 @@ use Piwik\DataTable\Renderer;
 use Piwik\DataTable;
 use Piwik\Date;
 use Piwik\SettingsPiwik;
+
 /**
  * RSS Feed.
  * The RSS renderer can be used only on Set that are arrays of DataTable.
@@ -26,62 +28,94 @@ class Rss extends Renderer
     /**
      * Computes the dataTable output and returns the string/binary
      */
-    public function render() : string
+    public function render(): string
     {
         return $this->renderTable($this->table);
     }
+
     /**
      * Computes the output for the given data table
      *
      * @param DataTable\Map $table Must be keyed by 'date'.
      */
-    protected function renderTable($table) : string
+    protected function renderTable($table): string
     {
-        if (!$table instanceof DataTable\Map || $table->getKeyName() != 'date') {
-            throw new Exception("RSS feeds can be generated for one specific website &idSite=X." . "\nPlease specify only one idSite or consider using &format=XML instead.");
+        if (
+            !($table instanceof DataTable\Map)
+            || $table->getKeyName() != 'date'
+        ) {
+            throw new Exception("RSS feeds can be generated for one specific website &idSite=X." .
+                "\nPlease specify only one idSite or consider using &format=XML instead.");
         }
+
         $idSite = Common::getRequestVar('idSite', 1, 'int');
         $period = Common::getRequestVar('period');
-        $piwikUrl = SettingsPiwik::getPiwikUrl() . "?module=CoreHome&action=index&idSite=" . $idSite . "&period=" . $period;
+
+        $piwikUrl = SettingsPiwik::getPiwikUrl()
+            . "?module=CoreHome&action=index&idSite=" . $idSite . "&period=" . $period;
         $out = "";
-        $moreRecentFirst = array_reverse($table->getDataTables(), \true);
+        $moreRecentFirst = array_reverse($table->getDataTables(), true);
         foreach ($moreRecentFirst as $date => $subtable) {
             /** @var DataTable $subtable */
             $timestamp = $subtable->getMetadata(Archive\DataTableFactory::TABLE_METADATA_PERIOD_INDEX)->getDateStart()->getTimestamp();
             $site = $subtable->getMetadata(Archive\DataTableFactory::TABLE_METADATA_SITE_INDEX);
+
             $pudDate = date('r', $timestamp);
+
             $dateInSiteTimezone = Date::factory($timestamp);
             if ($site) {
                 $dateInSiteTimezone = $dateInSiteTimezone->setTimezone($site->getTimezone());
             }
             $dateInSiteTimezone = $dateInSiteTimezone->toString('Y-m-d');
-            $thisPiwikUrl = Common::sanitizeInputValue($piwikUrl . "&date={$dateInSiteTimezone}");
+            $thisPiwikUrl = Common::sanitizeInputValue($piwikUrl . "&date=$dateInSiteTimezone");
             $siteName = $site ? $site->getName() : '';
             $title = self::formatValueXml($siteName . " on " . $date);
-            $out .= "\t<item>\n\t\t<pubDate>{$pudDate}</pubDate>\n\t\t<guid>{$thisPiwikUrl}</guid>\n\t\t<link>{$thisPiwikUrl}</link>\n\t\t<title>{$title}</title>\n\t\t<author>https://matomo.org</author>\n\t\t<description>";
+
+            $out .= "\t<item>
+		<pubDate>$pudDate</pubDate>
+		<guid>$thisPiwikUrl</guid>
+		<link>$thisPiwikUrl</link>
+		<title>$title</title>
+		<author>https://matomo.org</author>
+		<description>";
+
             $out .= Common::sanitizeInputValue($this->renderDataTable($subtable));
             $out .= "</description>\n\t</item>\n";
         }
+
         $header = $this->getRssHeader();
         $footer = $this->getRssFooter();
+
         return $header . $out . $footer;
     }
+
     /**
      * Returns the RSS file footer
      */
-    protected function getRssFooter() : string
+    protected function getRssFooter(): string
     {
         return "\t</channel>\n</rss>";
     }
+
     /**
      * Returns the RSS file header
      */
-    protected function getRssHeader() : string
+    protected function getRssHeader(): string
     {
         $generationDate = date('r', Date::getNowTimestamp());
-        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\">\n  <channel>\n    <title>matomo statistics - RSS</title>\n    <link>https://matomo.org</link>\n    <description>Matomo RSS feed</description>\n    <pubDate>{$generationDate}</pubDate>\n    <generator>matomo</generator>\n    <language>en</language>\n    <lastBuildDate>{$generationDate}</lastBuildDate>\n";
+        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<rss version=\"2.0\">
+  <channel>
+    <title>matomo statistics - RSS</title>
+    <link>https://matomo.org</link>
+    <description>Matomo RSS feed</description>
+    <pubDate>$generationDate</pubDate>
+    <generator>matomo</generator>
+    <language>en</language>
+    <lastBuildDate>$generationDate</lastBuildDate>\n";
         return $header;
     }
+
     /**
      * @param DataTable $table
      *
@@ -92,8 +126,10 @@ class Rss extends Renderer
         if ($table->getRowsCount() == 0) {
             return "<strong><em>Empty table</em></strong><br />\n";
         }
+
         $i = 1;
         $tableStructure = array();
+
         /*
          * table = array
          * ROW1 = col1 | col2 | col3 | metadata | idSubTable
@@ -105,10 +141,13 @@ class Rss extends Renderer
             foreach ($row->getColumns() as $column => $value) {
                 // for example, goals data is array: not supported in export RSS
                 // in the future we shall reuse ViewDataTable for html exports in RSS anyway
-                if (is_array($value) || is_object($value)) {
+                if (
+                    is_array($value)
+                    || is_object($value)
+                ) {
                     continue;
                 }
-                $allColumns[$column] = \true;
+                $allColumns[$column] = true;
                 $tableStructure[$i][$column] = $value;
             }
             $i++;
@@ -117,7 +156,7 @@ class Rss extends Renderer
         $html .= "<table border=1 width=70%>";
         $html .= "\n<tr>";
         foreach ($allColumns as $name => $toDisplay) {
-            if ($toDisplay !== \false) {
+            if ($toDisplay !== false) {
                 if ($this->translateColumnNames) {
                     $name = $this->translateColumnName($name);
                 }
@@ -125,15 +164,17 @@ class Rss extends Renderer
             }
         }
         $html .= "\n</tr>";
+
         foreach ($tableStructure as $row) {
             $html .= "\n\n<tr>";
             foreach ($allColumns as $columnName => $toDisplay) {
-                if ($toDisplay !== \false) {
+                if ($toDisplay !== false) {
                     $value = "-";
                     if (isset($row[$columnName])) {
                         $value = self::formatValueXml(urldecode($row[$columnName]));
                     }
-                    $html .= "\n\t<td>{$value}</td>";
+
+                    $html .= "\n\t<td>$value</td>";
                 }
             }
             $html .= "</tr>";

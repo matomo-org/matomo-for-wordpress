@@ -6,43 +6,53 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Access;
 use Piwik\Date;
 use Piwik\Plugins\UsersManager\TokenNotifications\TokenNotifierTask;
 use Piwik\Plugins\UsersManager\UserNotifications\UserNotifierTask;
+
 class Tasks extends \Piwik\Plugin\Tasks
 {
     /**
      * @var Model
      */
     private $usersModel;
+
     /**
      * @var API
      */
     private $usersManagerApi;
-    public function __construct(\Piwik\Plugins\UsersManager\Model $usersModel, \Piwik\Plugins\UsersManager\API $usersManagerApi)
+
+    public function __construct(Model $usersModel, API $usersManagerApi)
     {
         $this->usersModel = $usersModel;
         $this->usersManagerApi = $usersManagerApi;
     }
+
     public function schedule()
     {
         $this->daily("cleanupExpiredTokens");
         $this->daily("setUserDefaultReportPreference");
         $this->daily("cleanUpExpiredInvites");
+
         $this->scheduleTask(new TokenNotifierTask());
         $this->scheduleTask(new UserNotifierTask());
     }
+
     public function cleanupExpiredTokens()
     {
         $this->usersModel->deleteExpiredTokens(Date::now()->getDatetime());
     }
+
     public function cleanUpExpiredInvites()
     {
         // Expired invites will be removed after 3 days, so there's a chance to resend an invite before it's removed.
+
         $expiredInvites = $this->usersModel->getExpiredInvites(Date::now()->subDay(3)->getDatetime());
+
         foreach ($expiredInvites as $expiredInvite) {
             try {
                 $this->usersModel->deleteUser($expiredInvite['login']);
@@ -51,6 +61,7 @@ class Tasks extends \Piwik\Plugin\Tasks
             }
         }
     }
+
     public function setUserDefaultReportPreference()
     {
         // We initialize the default report user preference for each user (if it hasn't been inited before) for performance,
@@ -61,10 +72,10 @@ class Tasks extends \Piwik\Plugin\Tasks
         /*
          * Required to be executed as super user, as the API method used requires super user or the user itself.
          */
-        Access::getInstance()->doAsSuperUser(function () use($usersModel, $usersManagerApi) {
+        Access::getInstance()->doAsSuperUser(function () use ($usersModel, $usersManagerApi) {
             $allUsers = $usersModel->getUsers([]);
             foreach ($allUsers as $user) {
-                $usersManagerApi->initUserPreferenceWithDefault($user['login'], \Piwik\Plugins\UsersManager\API::PREFERENCE_DEFAULT_REPORT);
+                $usersManagerApi->initUserPreferenceWithDefault($user['login'], API::PREFERENCE_DEFAULT_REPORT);
             }
         });
     }

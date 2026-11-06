@@ -12,6 +12,7 @@ use Piwik\API\Request as MatomoApiRequest;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
 use Piwik\Date;
+use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\API\API;
 use Piwik\Plugins\CoreAdminHome\API as CoreAdminHomeAPI;
@@ -887,6 +888,13 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 				$this->assertSame( 'paused', $this->find_container_tag( $id_site, $container, $tag_name )['status'] );
 			}
 		);
+	}
+
+	public function test_hideInviteTeamMemberLink_should_hide_the_invite_link_on_the_no_data_page() {
+		$show_invite_team_member_link = true;
+		Piwik::postEvent( 'SitesManager.siteWithoutData.showInviteTeamMemberLink', [ &$show_invite_team_member_link ] );
+
+		$this->assertFalse( $show_invite_team_member_link );
 	}
 
 	private function require_tag_manager() {

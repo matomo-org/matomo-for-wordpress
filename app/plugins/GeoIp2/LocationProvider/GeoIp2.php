@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\GeoIp2\LocationProvider;
 
 use Exception;
@@ -14,6 +15,7 @@ use Piwik\Date;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugins\UserCountry\LocationProvider;
+
 /**
  * Base type for all GeoIP 2 LocationProviders.
  *
@@ -22,24 +24,35 @@ abstract class GeoIp2 extends LocationProvider
 {
     public const TEST_IP = '194.57.91.215';
     public const SWITCH_TO_ISO_REGIONS_OPTION_NAME = 'usercountry.switchtoisoregions';
+
     /**
      * Cached region name array. Data is from geoipregionvars.php.
      *
      * @var array
      */
     private static $regionNames = null;
+
     /**
      * Stores possible database file names categorized by the type of information
      * GeoIP databases hold.
      *
      * @var array
      */
-    public static $dbNames = array('loc' => array('GeoIP2-City.mmdb', 'DBIP-City.mmdb', 'DBIP-City-Lite.mmdb', 'DBIP-Country-Lite.mmdb', 'DBIP-Country.mmdb', 'dbip-city-lite-\\d{4}-\\d{2}.mmdb', 'GeoIP2-City-Africa.mmdb', 'GeoIP2-City-Asia-Pacific.mmdb', 'GeoIP2-City-Europe.mmdb', 'GeoIP2-City-North-America.mmdb', 'GeoIP2-City-South-America.mmdb', 'GeoIP2-Enterprise.mmdb', 'GeoIP2-Country.mmdb', 'dbip-country-lite-\\d{4}-\\d{2}.mmdb', 'GeoLite2-City.mmdb', 'GeoLite2-Country.mmdb', 'DBIP-Enterprise.mmdb'), 'isp' => array('GeoIP2-ISP.mmdb', 'GeoLite2-ASN.mmdb', 'DBIP-ISP.mmdb', 'GeoIP2-Enterprise.mmdb', 'DBIP-Enterprise.mmdb', 'DBIP-ASN.mmdb', 'dbip-asn-lite-\\d{4}-\\d{2}.mmdb'));
+    public static $dbNames = array(
+        'loc' => array('GeoIP2-City.mmdb', 'DBIP-City.mmdb', 'DBIP-City-Lite.mmdb', 'DBIP-Country-Lite.mmdb', 'DBIP-Country.mmdb',
+            'dbip-city-lite-\d{4}-\d{2}.mmdb', 'GeoIP2-City-Africa.mmdb', 'GeoIP2-City-Asia-Pacific.mmdb', 'GeoIP2-City-Europe.mmdb',
+            'GeoIP2-City-North-America.mmdb', 'GeoIP2-City-South-America.mmdb', 'GeoIP2-Enterprise.mmdb', 'GeoIP2-Country.mmdb',
+            'dbip-country-lite-\d{4}-\d{2}.mmdb', 'GeoLite2-City.mmdb', 'GeoLite2-Country.mmdb', 'DBIP-Enterprise.mmdb'),
+        'isp' => array('GeoIP2-ISP.mmdb', 'GeoLite2-ASN.mmdb', 'DBIP-ISP.mmdb', 'GeoIP2-Enterprise.mmdb', 'DBIP-Enterprise.mmdb',
+            'DBIP-ASN.mmdb', 'dbip-asn-lite-\d{4}-\d{2}.mmdb'),
+    );
+
     public static function getDbIpLiteUrl($type = 'city')
     {
         $today = Date::today();
         return "https://download.db-ip.com/free/dbip-{$type}-lite-{$today->toString('Y-m')}.mmdb.gz";
     }
+
     /**
      * Returns true if this provider has been setup correctly, the error message if not.
      *
@@ -50,19 +63,23 @@ abstract class GeoIp2 extends LocationProvider
         // test with an example IP to make sure the provider is working
         try {
             $testIp = self::TEST_IP;
+
             // get location using test IP and check that some information was returned
             $location = $this->getLocation(array('ip' => $testIp));
             $location = $location ? array_filter($location) : $location;
             $isResultCorrect = !empty($location);
+
             if (!$isResultCorrect) {
                 $bind = array($testIp);
                 return Piwik::translate('UserCountry_TestIPLocatorFailed', $bind);
             }
-            return \true;
+
+            return true;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
+
     /**
      * Returns the path of an existing GeoIP 2 database or false if none can be found.
      *
@@ -77,8 +94,9 @@ abstract class GeoIp2 extends LocationProvider
                 return $path;
             }
         }
-        return \false;
+        return false;
     }
+
     /**
      * Returns full path for a GeoIP 2 database managed by Piwik.
      *
@@ -87,11 +105,13 @@ abstract class GeoIp2 extends LocationProvider
      */
     public static function getPathForGeoIpDatabase($filename)
     {
-        if (strpos($filename, '/') !== \false && file_exists($filename)) {
+        if (strpos($filename, '/') !== false && file_exists($filename)) {
             return $filename;
         }
+
         return StaticContainer::get('path.geoip2') . $filename;
     }
+
     public function activate()
     {
         $option = Option::get(self::SWITCH_TO_ISO_REGIONS_OPTION_NAME);
@@ -99,6 +119,7 @@ abstract class GeoIp2 extends LocationProvider
             Option::set(self::SWITCH_TO_ISO_REGIONS_OPTION_NAME, time());
         }
     }
+
     /**
      * Returns true if there is a GeoIP 2 database in the 'misc' directory.
      *
@@ -106,8 +127,10 @@ abstract class GeoIp2 extends LocationProvider
      */
     public static function isDatabaseInstalled()
     {
-        return self::getPathToGeoIpDatabase(self::$dbNames['loc']) || self::getPathToGeoIpDatabase(self::$dbNames['isp']);
+        return self::getPathToGeoIpDatabase(self::$dbNames['loc'])
+            || self::getPathToGeoIpDatabase(self::$dbNames['isp']);
     }
+
     /**
      * Returns the type of GeoIP 2 database ('loc' or 'isp') based on the
      * filename (eg, 'GeoLite2-City.mmdb', 'GeoIP2-ISP.mmdb', etc).
@@ -124,8 +147,9 @@ abstract class GeoIp2 extends LocationProvider
                 }
             }
         }
-        return \false;
+        return false;
     }
+
     /**
      * Returns a region name for a country code + region code.
      *
@@ -138,12 +162,14 @@ abstract class GeoIp2 extends LocationProvider
         $regionNames = self::getRegions();
         $countryCode = strtoupper($countryCode);
         $regionCode = strtoupper($regionCode);
+
         if (isset($regionNames[$countryCode][$regionCode]['name'])) {
             return $regionNames[$countryCode][$regionCode]['name'];
         } else {
             return Piwik::translate('General_Unknown');
         }
     }
+
     /**
      * Returns an array of region names mapped by country code & region code.
      *
@@ -152,13 +178,16 @@ abstract class GeoIp2 extends LocationProvider
     public static function getRegionNames()
     {
         $regionsByCountry = self::getRegions();
+
         foreach ($regionsByCountry as $countryCode => &$regions) {
             foreach ($regions as $regionCode => &$regionData) {
                 $regionData = $regionData['name'];
             }
         }
+
         return $regionsByCountry;
     }
+
     /**
      * Returns an array of region names mapped by country code & region code.
      *
@@ -167,10 +196,12 @@ abstract class GeoIp2 extends LocationProvider
     public static function getRegions()
     {
         if (is_null(self::$regionNames)) {
-            self::$regionNames = (require __DIR__ . '/../data/isoRegionNames.php');
+            self::$regionNames = require_once __DIR__ . '/../data/isoRegionNames.php';
         }
+
         return self::$regionNames;
     }
+
     /**
      * Converts an old FIPS region code to ISO
      *
@@ -179,18 +210,17 @@ abstract class GeoIp2 extends LocationProvider
      * @param bool $returnOriginalIfNotFound  return given region code if no mapping was found
      * @return array
      */
-    public static function convertRegionCodeToIso($countryCode, $fipsRegionCode, $returnOriginalIfNotFound = \false)
+    public static function convertRegionCodeToIso($countryCode, $fipsRegionCode, $returnOriginalIfNotFound = false)
     {
         static $mapping;
         if (empty($mapping)) {
-            $mapping = (include __DIR__ . '/../data/regionMapping.php');
+            $mapping = include __DIR__ . '/../data/regionMapping.php';
         }
         $countryCode = strtoupper($countryCode);
         if (empty($countryCode) || in_array($countryCode, ['EU', 'AP', 'A1', 'A2'])) {
             return ['', ''];
         }
-        if (in_array($countryCode, ['US', 'CA'])) {
-            // US and CA always haven been iso codes
+        if (in_array($countryCode, ['US', 'CA'])) { // US and CA always haven been iso codes
             return [$countryCode, $fipsRegionCode];
         }
         if ($countryCode == 'TI') {
@@ -203,6 +233,7 @@ abstract class GeoIp2 extends LocationProvider
         }
         return [$countryCode, $isoRegionCode];
     }
+
     /**
      * Returns an IP address from an array that was passed into getLocation. This
      * will return an IPv4 address or IPv6 address.
@@ -213,13 +244,15 @@ abstract class GeoIp2 extends LocationProvider
     protected function getIpFromInfo($info)
     {
         $ip = \Matomo\Network\IP::fromStringIP($info['ip']);
+
         return $ip->toString();
     }
+
     /**
      * GeoIP2 providers can be used for location-based security checks
      */
-    public function canBeUsedForLocationBasedSecurityChecks() : bool
+    public function canBeUsedForLocationBasedSecurityChecks(): bool
     {
-        return \true;
+        return true;
     }
 }

@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
 use Piwik\Piwik;
+
 /**
  * Truncates a {@link DataTable} by merging all rows after a certain index into a new summary
  * row. If the count of rows is less than the index, nothing happens.
@@ -36,18 +38,22 @@ class Truncate extends BaseFilter
      * @var int
      */
     protected $truncateAfter;
+
     /**
      * @var string|null
      */
     protected $labelSummaryRow;
+
     /**
      * @var string|null
      */
     protected $columnToSortByBeforeTruncating;
+
     /**
      * @var bool
      */
     protected $filterRecursive;
+
     /**
      * @param DataTable $table The table that will be filtered eventually.
      * @param int $truncateAfter The row index to truncate at. All rows passed this index will
@@ -59,8 +65,13 @@ class Truncate extends BaseFilter
      * @param bool $filterRecursive If true executes this filter on all subtables descending from
      *                              `$table`.
      */
-    public function __construct($table, $truncateAfter, $labelSummaryRow = null, $columnToSortByBeforeTruncating = null, $filterRecursive = \true)
-    {
+    public function __construct(
+        $table,
+        $truncateAfter,
+        $labelSummaryRow = null,
+        $columnToSortByBeforeTruncating = null,
+        $filterRecursive = true
+    ) {
         parent::__construct($table);
         $this->truncateAfter = $truncateAfter;
         if ($labelSummaryRow === null) {
@@ -70,6 +81,7 @@ class Truncate extends BaseFilter
         $this->columnToSortByBeforeTruncating = $columnToSortByBeforeTruncating;
         $this->filterRecursive = $filterRecursive;
     }
+
     /**
      * Executes the filter, see {@link Truncate}.
      *
@@ -80,8 +92,10 @@ class Truncate extends BaseFilter
         if ($this->truncateAfter < 0) {
             return;
         }
+
         $this->addSummaryRow($table);
         $table->queueFilter('ReplaceSummaryRowLabel', [$this->labelSummaryRow]);
+
         if ($this->filterRecursive) {
             foreach ($table->getRowsWithoutSummaryRow() as $row) {
                 if ($row->isSubtableLoaded()) {
@@ -90,6 +104,7 @@ class Truncate extends BaseFilter
             }
         }
     }
+
     /**
      * @param DataTable $table
      */
@@ -98,23 +113,29 @@ class Truncate extends BaseFilter
         if ($table->getRowsCount() <= $this->truncateAfter + 1) {
             return;
         }
-        $table->filter('Sort', [$this->columnToSortByBeforeTruncating, 'desc', $naturalSort = \true, $recursiveSort = \false]);
-        $rows = array_values($table->getRows());
-        $count = $table->getRowsCount();
+
+        $table->filter('Sort', [$this->columnToSortByBeforeTruncating, 'desc', $naturalSort = true, $recursiveSort = false]);
+
+        $rows   = array_values($table->getRows());
+        $count  = $table->getRowsCount();
         $newRow = new Row([Row::COLUMNS => ['label' => DataTable::LABEL_SUMMARY_ROW]]);
+
         $aggregationOps = $table->getMetadata(DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME);
+
         for ($i = $this->truncateAfter; $i < $count; $i++) {
             if (!isset($rows[$i])) {
                 // case when the last row is a summary row, it is not indexed by $count but by DataTable::ID_SUMMARY_ROW
                 $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
+
                 //FIXME: I'm not sure why it could return false, but it was reported in: https://forum.piwik.org/read.php?2,89324,page=1#msg-89442
                 if ($summaryRow) {
-                    $newRow->sumRow($summaryRow, $enableCopyMetadata = \false, $aggregationOps);
+                    $newRow->sumRow($summaryRow, $enableCopyMetadata = false, $aggregationOps);
                 }
             } else {
-                $newRow->sumRow($rows[$i], $enableCopyMetadata = \false, $aggregationOps);
+                $newRow->sumRow($rows[$i], $enableCopyMetadata = false, $aggregationOps);
             }
         }
+
         $table->filter('Limit', [0, $this->truncateAfter]);
         $table->addSummaryRow($newRow);
         unset($rows);

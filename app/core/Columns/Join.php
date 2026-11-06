@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Columns;
 
 use Exception;
+
 /**
  * @api
  * @since 3.1.0
@@ -18,6 +20,7 @@ class Join
     private $table;
     private $column;
     private $targetColumn;
+
     /**
      * Join constructor.
      * @param $table
@@ -31,6 +34,7 @@ class Join
         $this->column = $column;
         $this->targetColumn = $targetColumn;
     }
+
     /**
      * @return string
      */
@@ -38,6 +42,7 @@ class Join
     {
         return $this->table;
     }
+
     /**
      * @return string
      */
@@ -45,6 +50,7 @@ class Join
     {
         return $this->column;
     }
+
     /**
      * @return string
      */
@@ -52,6 +58,7 @@ class Join
     {
         return $this->targetColumn;
     }
+
     /**
      * Columns that must additionally match between the joined-from table and the joined table
      * to identify a row, given as column names present on both tables. Use this when the primary

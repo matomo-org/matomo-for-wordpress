@@ -6,15 +6,20 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Morpheus;
 
 class Morpheus extends \Piwik\Plugin
 {
     private const DARK_MONOCHROME_ICONS_MANIFEST = 'plugins/Morpheus/icons/dist/dark-monochrome-icons.json';
+
     public function registerEvents()
     {
-        return ['AssetManager.addStylesheets' => 'addStylesheets'];
+        return [
+            'AssetManager.addStylesheets' => 'addStylesheets',
+        ];
     }
+
     /**
      * The matomo-icons build ships a manifest listing the monochrome dark-glyph icons
      * (devices, grayscale brand logos, ...) that are nearly invisible on dark backgrounds.
@@ -28,16 +33,19 @@ class Morpheus extends \Piwik\Plugin
             $mergedContent .= "\n" . $css;
         }
     }
-    private function getDarkModeIconsCss() : string
+
+    private function getDarkModeIconsCss(): string
     {
         $manifestFile = PIWIK_INCLUDE_PATH . '/' . self::DARK_MONOCHROME_ICONS_MANIFEST;
         if (!is_readable($manifestFile)) {
             return '';
         }
-        $icons = json_decode((string) file_get_contents($manifestFile), \true);
+
+        $icons = json_decode((string) file_get_contents($manifestFile), true);
         if (!is_array($icons)) {
             return '';
         }
+
         $selectors = [];
         foreach ($icons as $icon) {
             // Only accept the expected icon path format; never let manifest contents break
@@ -47,9 +55,12 @@ class Morpheus extends \Piwik\Plugin
             }
             $selectors[] = 'img[src*="plugins/Morpheus/icons/dist/' . $icon . '"]';
         }
+
         if (empty($selectors)) {
             return '';
         }
-        return implode(",\n", $selectors) . " {\n  filter: var(--theme-filter-on-illustration);\n}\n";
+
+        return implode(",\n", $selectors)
+            . " {\n  filter: var(--theme-filter-on-illustration);\n}\n";
     }
 }

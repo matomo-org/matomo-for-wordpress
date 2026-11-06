@@ -6,25 +6,29 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Access;
 
 use Exception;
 use Piwik\CacheId;
 use Piwik\Piwik;
 use Piwik\Cache as PiwikCache;
+
 class CapabilitiesProvider
 {
     /**
      * @return Capability[]
      * @throws Exception
      */
-    public function getAllCapabilities() : array
+    public function getAllCapabilities(): array
     {
         $cacheId = CacheId::siteAware(CacheId::languageAware('Capabilities'));
-        $cache = PiwikCache::getTransientCache();
+        $cache   = PiwikCache::getTransientCache();
+
         if (!$cache->contains($cacheId)) {
             /** @var Capability[] $capabilities */
             $capabilities = [];
+
             /**
              * Triggered to add new capabilities.
              *
@@ -39,6 +43,7 @@ class CapabilitiesProvider
              * @internal
              */
             Piwik::postEvent('Access.Capability.addCapabilities', array(&$capabilities));
+
             /**
              * Triggered to filter / restrict capabilities.
              *
@@ -57,31 +62,38 @@ class CapabilitiesProvider
              * @internal
              */
             Piwik::postEvent('Access.Capability.filterCapabilities', array(&$capabilities));
+
             $capabilities = \array_values($capabilities);
+
             $this->checkCapabilityIds($capabilities);
+
             $cache->save($cacheId, $capabilities);
             return $capabilities;
         }
+
         /** @var Capability[] */
         return $cache->fetch($cacheId);
     }
+
     /**
      * @throws Exception
      */
-    public function getCapability(string $capabilityId) : ?\Piwik\Access\Capability
+    public function getCapability(string $capabilityId): ?Capability
     {
         foreach ($this->getAllCapabilities() as $capability) {
             if ($capabilityId === $capability->getId()) {
                 return $capability;
             }
         }
+
         return null;
     }
+
     /**
      * @return string[]
      * @throws Exception
      */
-    public function getAllCapabilityIds() : array
+    public function getAllCapabilityIds(): array
     {
         $ids = array();
         foreach ($this->getAllCapabilities() as $capability) {
@@ -89,34 +101,38 @@ class CapabilitiesProvider
         }
         return $ids;
     }
+
     /**
      * @throws Exception
      */
-    public function isValidCapability(string $capabilityId) : bool
+    public function isValidCapability(string $capabilityId): bool
     {
         $capabilities = $this->getAllCapabilityIds();
-        return \in_array($capabilityId, $capabilities, \true);
+
+        return \in_array($capabilityId, $capabilities, true);
     }
+
     /**
      * @throws Exception
      */
-    public function checkValidCapability(string $capabilityId) : void
+    public function checkValidCapability(string $capabilityId): void
     {
         if (!$this->isValidCapability($capabilityId)) {
             $capabilities = $this->getAllCapabilityIds();
             throw new \Exception(Piwik::translate("UsersManager_ExceptionAccessValues", implode(", ", $capabilities)));
         }
     }
+
     /**
      * @param Capability[] $capabilities
      * @throws Exception
      */
-    private function checkCapabilityIds(array $capabilities) : void
+    private function checkCapabilityIds(array $capabilities): void
     {
         foreach ($capabilities as $capability) {
             $id = $capability->getId();
             if (preg_match('/[^a-zA-Z0-9_-]/', $id)) {
-                throw new \Exception("Capability with invalid ID found: '{$id}'. Valid characters are 'a-zA-Z0-9_-'.");
+                throw new \Exception("Capability with invalid ID found: '$id'. Valid characters are 'a-zA-Z0-9_-'.");
             }
         }
     }

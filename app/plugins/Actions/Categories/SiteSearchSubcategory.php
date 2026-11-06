@@ -6,18 +6,24 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\Categories;
 
 use Piwik\Category\Subcategory;
 use Piwik\Piwik;
 use Piwik\Url;
+
 class SiteSearchSubcategory extends Subcategory
 {
     protected $categoryId = 'General_Actions';
     protected $id = 'Actions_SubmenuSitesearch';
     protected $order = 25;
+
     public function getHelp()
     {
-        return '<p>' . Piwik::translate('Actions_SiteSearchSubcategoryHelp1') . '</p>' . '<p>' . Piwik::translate('Actions_SiteSearchSubcategoryHelp2') . '</p>' . '<p>' . Url::getExternalLinkTag('https://matomo.org/docs/site-search/', null, null, 'App.Actions.getSiteSearchCategories') . Piwik::translate('Actions_SiteSearchSubcategoryHelp3') . '</a></p>';
+        return '<p>' . Piwik::translate('Actions_SiteSearchSubcategoryHelp1') . '</p>'
+            . '<p>' . Piwik::translate('Actions_SiteSearchSubcategoryHelp2') . '</p>'
+            . '<p>' . Url::getExternalLinkTag('https://matomo.org/docs/site-search/', null, null, 'App.Actions.getSiteSearchCategories')
+            . Piwik::translate('Actions_SiteSearchSubcategoryHelp3') . '</a></p>';
     }
 }

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 /**
@@ -19,18 +20,21 @@ class AuthResult
     public const FAILURE = 0;
     public const SUCCESS = 1;
     public const SUCCESS_SUPERUSER_AUTH_CODE = 42;
+
     /**
      * token_auth parameter used to authenticate in the API
      *
      * @var string
      */
     protected $tokenAuth = null;
+
     /**
      * The login used to authenticate.
      *
      * @var string
      */
     protected $login = null;
+
     /**
      * The authentication result code. Can be self::FAILURE, self::SUCCESS, or
      * self::SUCCESS_SUPERUSER_AUTH_CODE.
@@ -38,6 +42,7 @@ class AuthResult
      * @var int
      */
     protected $code = null;
+
     /**
      * Constructor for AuthResult
      *
@@ -45,14 +50,17 @@ class AuthResult
      * @param string $login identity
      * @param string $tokenAuth
      */
-    public function __construct($code, $login,
-#[\SensitiveParameter]
-$tokenAuth)
-    {
-        $this->code = (int) $code;
-        $this->login = $login;
+    public function __construct(
+        $code,
+        $login,
+        #[\SensitiveParameter]
+        $tokenAuth
+    ) {
+        $this->code      = (int)$code;
+        $this->login     = $login;
         $this->tokenAuth = $tokenAuth;
     }
+
     /**
      * Returns the login used to authenticate.
      *
@@ -62,6 +70,7 @@ $tokenAuth)
     {
         return $this->login;
     }
+
     /**
      * Returns the token_auth to authenticate the current user in the API
      *
@@ -71,6 +80,7 @@ $tokenAuth)
     {
         return $this->tokenAuth;
     }
+
     /**
      * Returns the authentication result code.
      *
@@ -80,6 +90,7 @@ $tokenAuth)
     {
         return $this->code;
     }
+
     /**
      * Returns true if the user has Super User access, false otherwise.
      *
@@ -89,6 +100,7 @@ $tokenAuth)
     {
         return $this->getCode() == self::SUCCESS_SUPERUSER_AUTH_CODE;
     }
+
     /**
      * Returns true if this result was successfully authentication.
      *

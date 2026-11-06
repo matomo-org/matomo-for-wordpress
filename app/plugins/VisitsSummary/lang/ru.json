@@ -1,0 +1,30 @@
+{
+    "VisitsSummary": {
+        "AverageGenerationTime": "среднее время создания страницы",
+        "AverageVisitDuration": "средняя продолжительность посещения",
+        "GenerateQueries": "%s выполненных запросов",
+        "GenerateTime": "%s секунд на создание страницы",
+        "MaxNbActions": "максимум действий за одно посещение",
+        "NbActionsDescription": "%s действий (просмотры страниц, загрузки, внешние переходы)",
+        "NbActionsPerVisit": "действий (просмотров, загрузок, уходов с сайта, внутренних поисков по сайту) за одно посещение",
+        "NbDownloadsDescription": "загрузок",
+        "NbKeywordsDescription": "уникальных ключевых слов",
+        "NbOutlinksDescription": "исходящих ссылок",
+        "NbPageviewsDescription": "просмотров страниц",
+        "NbSearchesDescription": "общее количество поисковых запросов на вашем сайте",
+        "NbUniqueDownloadsDescription": "уникальных загрузок",
+        "NbUniqueOutlinksDescription": "уникальных внешних переходов",
+        "NbUniquePageviewsDescription": "уникальных показов страниц",
+        "NbUniqueVisitors": "уникальных посетителей",
+        "NbUsersDescription": "пользователи",
+        "NbVisitsBounced": "посетителей «отскочило» (покинули сайт после одной страницы)",
+        "NbVisitsDescription": "посещений",
+        "PluginDescription": "Сообщает общие показатели аналитики: количество посещений и уникальных посетителей, количество действий, показатель отказов и т.д.",
+        "VisitsSummary": "Посещения",
+        "VisitsSummaryDocumentation": "Это обзор динамики посещений.",
+        "VisitsSummaryReportDocumentation": "Этот отчёт даёт общее представление о том, как ведут себя ваши посетители.",
+        "WidgetLastVisits": "График последних посещений",
+        "WidgetOverviewGraph": "Обзор по всем графикам",
+        "WidgetVisits": "Обзор посещений"
+    }
+}

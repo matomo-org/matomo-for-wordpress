@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Monolog\Handler;
 
-use Matomo\Dependencies\Monolog\Handler\StreamHandler;
+use Monolog\Handler\StreamHandler;
 use Piwik\Exception\MissingFilePermissionException;
 use Piwik\Filechecks;
+
 /**
  * Writes log to file.
  *
@@ -23,7 +25,9 @@ class FileHandler extends StreamHandler
         try {
             parent::write($record);
         } catch (\UnexpectedValueException $e) {
-            $ex = new MissingFilePermissionException(Filechecks::getErrorMessageMissingPermissions($this->url));
+            $ex = new MissingFilePermissionException(
+                Filechecks::getErrorMessageMissingPermissions($this->url)
+            );
             $ex->setIsHtmlMessage();
             throw $ex;
         }

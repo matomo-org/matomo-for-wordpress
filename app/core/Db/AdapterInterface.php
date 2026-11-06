@@ -6,15 +6,18 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Db;
 
 use Exception;
-interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
+
+interface AdapterInterface extends TransactionalDatabaseInterface
 {
     /**
      * Reset the configuration variables in this adapter.
      */
     public function resetConfig();
+
     /**
      * Return default port.
      * @deprecated Use Schema::getDefaultPortForSchema instead
@@ -22,30 +25,35 @@ interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
      * @return int
      */
     public static function getDefaultPort();
+
     /**
      * Check database server version
      *
      * @throws Exception if database version is less than required version
      */
     public function checkServerVersion();
+
     /**
      * Returns true if this adapter's required extensions are enabled
      *
      * @return bool
      */
     public static function isEnabled();
+
     /**
      * Returns true if this adapter supports blobs as fields
      *
      * @return bool
      */
     public function hasBlobDataType();
+
     /**
      * Returns true if this adapter supports bulk loading
      *
      * @return bool
      */
     public function hasBulkLoader();
+
     /**
      * Test error number
      *
@@ -54,6 +62,7 @@ interface AdapterInterface extends \Piwik\Db\TransactionalDatabaseInterface
      * @return bool
      */
     public function isErrNo($e, $errno);
+
     /**
      * Is the connection character set equal to utf8?
      *

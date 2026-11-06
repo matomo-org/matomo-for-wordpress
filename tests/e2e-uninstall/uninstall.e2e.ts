@@ -16,7 +16,7 @@ describe('MWP Uninstall', () => {
   });
 
   async function getTablesInstalled(): Promise<any> {
-    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php?multi=0`);
+    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php?multi=0&folder=${encodeURIComponent(await Website.getWpFolder())}`);
     result = await result.text();
     try {
       result = JSON.parse(result);

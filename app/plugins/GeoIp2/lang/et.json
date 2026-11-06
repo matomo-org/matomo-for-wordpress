@@ -1,0 +1,10 @@
+{
+    "GeoIp2": {
+        "DownloadNewDatabasesEvery": "Uuenda andmebaasi iga",
+        "DownloadingDb": "Laen alla %s",
+        "GeoIPDatabases": "GeoIP andmebaas",
+        "ISPDatabase": "ISP andmebaas",
+        "LocationDatabase": "Asukoha andmebaas",
+        "UpdaterWasLastRun": "Uuendaja käivitus viimati %s."
+    }
+}

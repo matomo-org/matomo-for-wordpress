@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CustomDimensions;
 
 use Piwik\Updater;
 use Piwik\Updates as PiwikUpdates;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
+
 /**
  * Update for version 0.1.2.
  */
@@ -20,10 +22,12 @@ class Updates_0_1_2 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return SQL to be executed in this update.
      *
@@ -46,6 +50,7 @@ class Updates_0_1_2 extends PiwikUpdates
             $this->migration->db->addColumn('custom_dimensions', 'case_sensitive', 'TINYINT UNSIGNED NOT NULL DEFAULT 1', 'extractions'),
         );
     }
+
     /**
      * Perform the incremental version update.
      *

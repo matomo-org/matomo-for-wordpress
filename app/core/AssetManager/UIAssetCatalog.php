@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\AssetManager;
 
 class UIAssetCatalog
@@ -14,14 +15,17 @@ class UIAssetCatalog
      * @var UIAsset[]
      */
     private $uiAssets = array();
+
     /**
      * @var UIAssetCatalogSorter
      */
     private $catalogSorter;
+
     /**
      * @var string[]  Absolute file locations
      */
     private $existingAssetLocations = array();
+
     /**
      * @param UIAssetCatalogSorter $catalogSorter
      */
@@ -29,17 +33,20 @@ class UIAssetCatalog
     {
         $this->catalogSorter = $catalogSorter;
     }
+
     /**
      * @param UIAsset $uiAsset
      */
     public function addUIAsset($uiAsset)
     {
         $location = $uiAsset->getAbsoluteLocation();
+
         if (!$this->assetAlreadyInCatalog($location)) {
             $this->existingAssetLocations[] = $location;
             $this->uiAssets[] = $uiAsset;
         }
     }
+
     /**
      * @return UIAsset[]
      */
@@ -47,6 +54,7 @@ class UIAssetCatalog
     {
         return $this->uiAssets;
     }
+
     /**
      * @return UIAssetCatalog
      */
@@ -54,6 +62,7 @@ class UIAssetCatalog
     {
         return $this->catalogSorter->sortUIAssetCatalog($this);
     }
+
     /**
      * @param string $location
      * @return boolean

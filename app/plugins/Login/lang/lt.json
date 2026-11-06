@@ -1,0 +1,21 @@
+{
+    "Login": {
+        "ChangeYourPassword": "Keisti slaptažodį",
+        "CurrentlyBlockedIPs": "Šiuo metu užblokuoti IP adresai",
+        "CurrentlyBlockedIPsUnblockConfirm": "Ar tikrai norite atblokuoti visus šiuo metu užblokuotus IP adresus?",
+        "IPsAlwaysBlocked": "Šie IP adresai yra visuomet užblokuoti",
+        "InvalidOrExpiredToken": "Netinkamas arba pasibaigęs talonas",
+        "InvalidUsernameEmail": "Netinkamas naudotojo vardas ir/arba el. pašto adresas",
+        "LogIn": "Prisijungti",
+        "LoginOrEmail": "Naudotojo vardas ar el. paštas",
+        "LoginPasswordNotCorrect": "Naudotojo vardas ir slaptažodis neteisingi",
+        "LostYourPassword": "Pamiršote slaptažodį?",
+        "NewPassword": "Naujas slaptažodis",
+        "NewPasswordRepeat": "Naujas slaptažodis (pakartokite)",
+        "PasswordChanged": "Jūsų slaptažodis buvo pakeistas.",
+        "PasswordRepeat": "Slaptažodis (pakartokite)",
+        "PasswordsDoNotMatch": "Slaptažodžiai nesutampa",
+        "RememberMe": "Prisiminti mane",
+        "UnblockAllIPs": "Atblokuoti visus šiuo metu užblokuotus IP adresus"
+    }
+}

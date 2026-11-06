@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\DevicesDetection;
 
 use DeviceDetector\Parser\Device\AbstractDeviceParser;
@@ -16,6 +17,7 @@ use Piwik\Metrics;
 use Piwik\Piwik;
 use DeviceDetector\Parser\Client\Browser as BrowserParser;
 use Piwik\Site;
+
 /**
  * The DevicesDetection API lets you access reports about your visitors' device types, brands, models,
  * operating systems, and browsers.
@@ -38,6 +40,7 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by device type.
      *
@@ -57,35 +60,41 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The device type report with segment metadata for each device type.
      */
-    public function getType($idSite, string $period, string $date, $segment = \false)
+    public function getType($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_types', $idSite, $period, $date, $segment);
         // ensure all device types are in the list
         $this->ensureDefaultRowsInTable($dataTable);
+
         $mapping = AbstractDeviceParser::getAvailableDeviceTypeNames();
         $dataTable->filter('AddSegmentByLabelMapping', ['deviceType', $mapping]);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getDeviceTypeLogo']);
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getDeviceTypeLabel']);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getDeviceTypeLogo']);
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getDeviceTypeLabel']);
         return $dataTable;
     }
+
     /**
      * @param DataTable|DataTable\Map $dataTable
      */
-    protected function ensureDefaultRowsInTable($dataTable) : void
+    protected function ensureDefaultRowsInTable($dataTable): void
     {
         $requiredRows = array_fill(0, count(AbstractDeviceParser::getAvailableDeviceTypes()), Metrics::INDEX_NB_VISITS);
-        $dataTable->filter(function (DataTable $table) use($requiredRows) {
+
+        $dataTable->filter(function (DataTable $table) use ($requiredRows) {
             if ($table->getRowsCount() == 0) {
                 return;
             }
             foreach ($requiredRows as $requiredRow => $key) {
-                $row = $table->getRowFromLabel((string) $requiredRow);
+                $row = $table->getRowFromLabel((string)$requiredRow);
                 if (empty($row)) {
-                    $table->addRowsFromSimpleArray([['label' => $requiredRow, $key => 0]]);
+                    $table->addRowsFromSimpleArray([
+                        ['label' => $requiredRow, $key => 0],
+                    ]);
                 }
             }
         });
     }
+
     /**
      * Returns visit information grouped by device brand.
      *
@@ -105,14 +114,15 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The device brand report with segment metadata for each detected brand.
      */
-    public function getBrand($idSite, string $period, string $date, $segment = \false)
+    public function getBrand($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_brands', $idSite, $period, $date, $segment);
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getDeviceBrandLabel']);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getBrandLogo']);
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getDeviceBrandLabel']);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getBrandLogo']);
         $dataTable->filter('AddSegmentByLabel', ['deviceBrand']);
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by device model.
      *
@@ -132,37 +142,46 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The device model report with segment metadata for each brand/model pair.
      */
-    public function getModel($idSite, string $period, string $date, $segment = \false)
+    public function getModel($idSite, string $period, string $date, $segment = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $idSites = Site::getIdSitesFromIdSitesString($idSite);
+
         // filter sites where model report disabled by compliance
         $idSitesFiltered = array_filter($idSites, function ($idSite) {
-            return !\Piwik\Plugins\DevicesDetection\DevicesDetection::isDeviceModelDetectionDisabledByCompliancePolicy((int) $idSite);
+            return !DevicesDetection::isDeviceModelDetectionDisabledByCompliancePolicy((int)$idSite);
         });
+
         // show an error only if none of the requested sites is left
         if (count($idSitesFiltered) === 0 && count($idSites) !== count($idSitesFiltered)) {
             throw new Exception(Piwik::translate('DevicesDetection_DeviceModelReportDisabledByCompliancePolicy'));
         }
+
         $dataTable = $this->getDataTable('DevicesDetection_models', $idSitesFiltered, $period, $date, $segment);
+
         $dataTable->filter(function (DataTable $table) {
             foreach ($table->getRowsWithoutSummaryRow() as $row) {
                 /** @var string $label */
                 $label = $row->getColumn('label');
-                if (strpos($label, ';') !== \false) {
+
+                if (strpos($label, ';') !== false) {
                     [$brand, $model] = explode(';', $label, 2);
                     $brand = getDeviceBrandLabel($brand);
                 } else {
                     $brand = '';
                     $model = $label;
                 }
+
                 $segment = sprintf('deviceBrand==%s;deviceModel==%s', urlencode($brand), urlencode($model));
+
                 $row->setMetadata('segment', $segment);
             }
         });
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getModelName']);
+
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getModelName']);
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by operating system family.
      *
@@ -182,18 +201,22 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The operating system family report with grouped family labels and logos.
      */
-    public function getOsFamilies($idSite, string $period, string $date, $segment = \false)
+    public function getOsFamilies($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_os', $idSite, $period, $date, $segment);
+
         // handle legacy archives
         if ($dataTable instanceof DataTable\Map || !$dataTable->getRowsCount()) {
             $versionDataTable = $this->getDataTable('DevicesDetection_osVersions', $idSite, $period, $date, $segment);
             $dataTable = $this->mergeDataTables($dataTable, $versionDataTable);
         }
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getOSFamilyFullName']);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getOsFamilyLogo']);
+
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getOSFamilyFullName']);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getOsFamilyLogo']);
         return $dataTable;
     }
+
+
     /**
      * That methods handles the fallback to version datatables to calculate those without versions.
      *
@@ -214,8 +237,10 @@ class API extends \Piwik\Plugin\API
     {
         if ($dataTable instanceof DataTable\Map && $dataTable2 instanceof DataTable\Map) {
             $dataTables = $dataTable->getDataTables();
+
             foreach ($dataTables as $label => $table) {
                 $versionDataTables = $dataTable2->getDataTables();
+
                 if (!array_key_exists($label, $versionDataTables)) {
                     continue;
                 }
@@ -224,20 +249,20 @@ class API extends \Piwik\Plugin\API
             }
         } elseif (!$dataTable->getRowsCount() && $dataTable2->getRowsCount()) {
             $dataTable2->filter('GroupBy', ['label', function ($label) {
-                if (preg_match("/(.+) [0-9]+(?:\\.[0-9]+)?\$/", $label, $matches)) {
-                    return $matches[1];
-                    // should match for browsers
+                if (preg_match("/(.+) [0-9]+(?:\.[0-9]+)?$/", $label, $matches)) {
+                    return $matches[1]; // should match for browsers
                 }
                 if (strpos($label, ';')) {
-                    return substr($label, 0, 3);
-                    // should match for os
+                    return substr($label, 0, 3); // should match for os
                 }
                 return $label;
             }]);
             return $dataTable2;
         }
+
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by operating system version.
      *
@@ -257,16 +282,18 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The operating system version report with segment metadata and logos.
      */
-    public function getOsVersions($idSite, string $period, string $date, $segment = \false)
+    public function getOsVersions($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_osVersions', $idSite, $period, $date, $segment);
+
         $segments = ['operatingSystemCode', 'operatingSystemVersion'];
-        $dataTable->filter('AddSegmentByLabel', [$segments, \Piwik\Plugins\DevicesDetection\Archiver::BROWSER_SEPARATOR]);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getOsLogo']);
+        $dataTable->filter('AddSegmentByLabel', [$segments, Archiver::BROWSER_SEPARATOR]);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getOsLogo']);
         // use GroupBy filter to avoid duplicate rows if old (UserSettings) and new (DevicesDetection) reports were combined
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getOsFullName']);
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getOsFullName']);
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by browser family without version numbers.
      *
@@ -286,25 +313,28 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The browser family report with grouped browser names and logos.
      */
-    public function getBrowsers($idSite, string $period, string $date, $segment = \false)
+    public function getBrowsers($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browsers', $idSite, $period, $date, $segment);
         $availableBrowsers = BrowserParser::getAvailableBrowsers();
-        $dataTable->filter('AddSegmentValue', [function ($label) use($availableBrowsers) {
+        $dataTable->filter('AddSegmentValue', [function ($label) use ($availableBrowsers) {
             if (!array_key_exists($label, $availableBrowsers) && $label !== 'UNK') {
-                return \false;
+                return false;
             }
             return $label;
         }]);
+
         // handle legacy archives
         if ($dataTable instanceof DataTable\Map || !$dataTable->getRowsCount()) {
             $versionDataTable = $this->getDataTable('DevicesDetection_browserVersions', $idSite, $period, $date, $segment);
             $dataTable = $this->mergeDataTables($dataTable, $versionDataTable);
         }
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getBrowserName']);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getBrowserFamilyLogo']);
+
+        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\getBrowserName']);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getBrowserFamilyLogo']);
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by browser version.
      *
@@ -324,15 +354,17 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The browser version report with rewritten labels and logos.
      */
-    public function getBrowserVersions($idSite, string $period, string $date, $segment = \false)
+    public function getBrowserVersions($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserVersions', $idSite, $period, $date, $segment);
+
         $segments = ['browserCode', 'browserVersion'];
-        $dataTable->filter('AddSegmentByLabel', [$segments, \Piwik\Plugins\DevicesDetection\Archiver::BROWSER_SEPARATOR]);
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\\getBrowserLogo']);
-        $dataTable->filter('ColumnCallbackReplace', ['label', __NAMESPACE__ . '\\getBrowserNameWithVersion']);
+        $dataTable->filter('AddSegmentByLabel', [$segments, Archiver::BROWSER_SEPARATOR]);
+        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getBrowserLogo']);
+        $dataTable->filter('ColumnCallbackReplace', ['label', __NAMESPACE__ . '\getBrowserNameWithVersion']);
         return $dataTable;
     }
+
     /**
      * Returns visit information grouped by browser engine.
      *
@@ -352,12 +384,12 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map The browser engine report with grouped engine names.
      */
-    public function getBrowserEngines($idSite, string $period, string $date, $segment = \false)
+    public function getBrowserEngines($idSite, string $period, string $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserEngines', $idSite, $period, $date, $segment);
         $dataTable->filter('AddSegmentValue');
         // use GroupBy filter to avoid duplicate rows if old (UserSettings) and new (DevicesDetection) reports were combined
-        $dataTable->filter('GroupBy', ['label', __NAMESPACE__ . '\\getBrowserEngineName']);
+        $dataTable->filter('GroupBy', ['label',  __NAMESPACE__ . '\getBrowserEngineName']);
         return $dataTable;
     }
 }

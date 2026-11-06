@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TwoFactorAuth;
 
 use Piwik\Piwik;
+
 /**
  * Provides API methods for managing two-factor authentication.
  *
@@ -20,10 +22,12 @@ class API extends \Piwik\Plugin\API
      * @var TwoFactorAuthentication
      */
     private $twoFa;
-    public function __construct(\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication $twoFa)
+
+    public function __construct(TwoFactorAuthentication $twoFa)
     {
         $this->twoFa = $twoFa;
     }
+
     /**
      * Disables two-factor authentication for the specified user.
      *
@@ -31,11 +35,13 @@ class API extends \Piwik\Plugin\API
      * @param string $passwordConfirmation The current superuser's password confirmation.
      * @return void
      */
-    public function resetTwoFactorAuth(string $userLogin,
-#[\SensitiveParameter]
-string $passwordConfirmation = '')
-    {
+    public function resetTwoFactorAuth(
+        string $userLogin,
+        #[\SensitiveParameter]
+        string $passwordConfirmation = ''
+    ) {
         Piwik::checkUserHasSuperUserAccess();
+
         $this->confirmCurrentUserPassword($passwordConfirmation);
         $this->twoFa->disable2FAforUser($userLogin);
     }

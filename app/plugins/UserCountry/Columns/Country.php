@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\Columns;
 
 use Piwik\Columns\DimensionSegmentFactory;
@@ -21,51 +22,61 @@ use Piwik\Tracker\Visit;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
+
 require_once PIWIK_INCLUDE_PATH . '/plugins/UserCountry/functions.php';
-class Country extends \Piwik\Plugins\UserCountry\Columns\Base
+
+class Country extends Base
 {
     protected $columnName = 'location_country';
     protected $columnType = 'CHAR(3) NULL';
     protected $type = self::TYPE_TEXT;
-    protected $category = 'UserCountry_VisitLocation';
+
+    protected $category =  'UserCountry_VisitLocation';
     protected $nameSingular = 'UserCountry_Country';
     protected $namePlural = 'UserCountryMap_Countries';
     protected $segmentName = 'countryCode';
     protected $acceptValues = 'UserCountry_CountrySegmentHelp';
+
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         $segment = new Segment();
         $segment->setName('UserCountry_CountryCode');
         $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
+
         $segment = new Segment();
         $segment->setSegment('countryName');
         $segment->setName('UserCountry_Country');
         $segment->setAcceptedValues('Germany, France, Spain, ...');
-        $segment->setNeedsMostFrequentValues(\false);
-        $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
+        $segment->setNeedsMostFrequentValues(false);
+        $regionDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\RegionDataProvider');
         $countryList = $regionDataProvider->getCountryList();
         array_walk($countryList, function (&$item, $key) {
             $item = Piwik::translate('Intl_Country_' . strtoupper($key), [], 'en');
         });
-        $segment->setSqlFilterValue(function ($val) use($countryList) {
+
+        $segment->setSqlFilterValue(function ($val) use ($countryList) {
             $countryList = array_map(function ($countryName) {
                 return mb_strtolower($countryName);
             }, $countryList);
             $result = array_search(mb_strtolower($val), $countryList);
-            if ($result === \false) {
+
+            if ($result === false) {
                 $result = 'UNK';
             }
             return $result;
         });
-        $segment->setSuggestedValuesCallback(function ($idSite, $maxValuesToReturn, $table) use($countryList) {
+        $segment->setSuggestedValuesCallback(function ($idSite, $maxValuesToReturn, $table) use ($countryList) {
             return $this->sortStaticListByUsage($countryList, $table, 'countryCode', $maxValuesToReturn);
         });
         $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
     }
+
+
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\UserCountry\countryTranslate($value);
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -73,17 +84,21 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('country', $request);
-        if ($value !== \false) {
+        if ($value !== false) {
             $value = substr($value, 0, 3);
             return $value;
         }
+
         $userInfo = $this->getUserInfo($request, $visitor);
-        $country = $this->getLocationDetail($userInfo, LocationProvider::COUNTRY_CODE_KEY);
+        $country  = $this->getLocationDetail($userInfo, LocationProvider::COUNTRY_CODE_KEY);
+
         if (!empty($country) && $country != Visit::UNKNOWN_CODE) {
             return strtolower($country);
         }
+
         return Visit::UNKNOWN_CODE;
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -92,6 +107,7 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
     {
         return $this->getUrlOverrideValueIfAllowed('country', $request);
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -99,12 +115,15 @@ class Country extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onAnyGoalConversion(Request $request, Visitor $visitor, $action)
     {
         $country = $visitor->getVisitorColumn($this->columnName);
-        if (isset($country) && \false !== $country) {
+
+        if (isset($country) && false !== $country) {
             return $country;
         }
+
         $browserLanguage = $request->getBrowserLanguage();
         $enableLanguageToCountryGuess = Config::getInstance()->Tracker['enable_language_to_country_guess'];
         $locationIp = $visitor->getVisitorColumn('location_ip');
+
         return Common::getCountry($browserLanguage, $enableLanguageToCountryGuess, $locationIp);
     }
 }

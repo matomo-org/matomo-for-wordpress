@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\API;
 
 use Exception;
@@ -13,6 +14,7 @@ use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Plugin\Report;
+
 class DataTableGenericFilter
 {
     /**
@@ -22,24 +24,29 @@ class DataTableGenericFilter
      * @var string[]
      */
     private const ROW_LIMITING_FILTERS = array('Truncate', 'Limit');
+
     /**
      * List of filter names not to run.
      *
      * @var string[]
      */
     private $disabledFilters = array();
+
     /**
      * @var Report
      */
     private $report;
+
     /**
      * @var array
      */
     private $request;
+
     /**
      * @var callable|null
      */
     private $callbackBeforeRowLimitingFilters;
+
     /**
      * @param array $request
      * @param Report $report
@@ -47,8 +54,9 @@ class DataTableGenericFilter
     public function __construct($request, $report)
     {
         $this->request = $request;
-        $this->report = $report;
+        $this->report  = $report;
     }
+
     /**
      * Sets a callback that is invoked with every filtered DataTable after the filters that remove
      * and sort rows have been applied, but before the row limiting filters reduce the table to the
@@ -62,10 +70,11 @@ class DataTableGenericFilter
      *
      * @param callable|null $callback A callback that receives the DataTable being filtered.
      */
-    public function setCallbackBeforeRowLimitingFilters(?callable $callback) : void
+    public function setCallbackBeforeRowLimitingFilters(?callable $callback): void
     {
         $this->callbackBeforeRowLimitingFilters = $callback;
     }
+
     /**
      * Filters the given data table
      *
@@ -75,6 +84,7 @@ class DataTableGenericFilter
     {
         $this->applyGenericFilters($table);
     }
+
     /**
      * Makes sure a set of filters are not run.
      *
@@ -84,6 +94,7 @@ class DataTableGenericFilter
     {
         $this->disabledFilters = array_unique(array_merge($this->disabledFilters, $filterNames));
     }
+
     /**
      * Returns an array containing the information of the generic Filter
      * to be applied automatically to the data resulting from the API calls.
@@ -98,25 +109,65 @@ class DataTableGenericFilter
      */
     public static function getGenericFiltersInformation()
     {
-        return array(array('Pattern', array('filter_column' => array('string', 'label'), 'filter_pattern' => array('string'))), array('PatternRecursive', array('filter_column_recursive' => array('string', 'label'), 'filter_pattern_recursive' => array('string'))), array('ExcludeLowPopulation', array('filter_excludelowpop' => array('string'), 'filter_excludelowpop_value' => array('float', '0'))), array('Sort', array('filter_sort_column' => array('string'), 'filter_sort_order' => array('string', 'desc'), $naturalSort = \true, $recursiveSort = \true, 'filter_sort_column_secondary' => \true)), array('Truncate', array('filter_truncate' => array('integer'))), array('Limit', array('filter_offset' => array('integer', '0'), 'filter_limit' => array('integer'), 'keep_summary_row' => array('integer', '0'))));
+        return array(
+            array('Pattern',
+                  array(
+                      'filter_column'  => array('string', 'label'),
+                      'filter_pattern' => array('string'),
+                  )),
+            array('PatternRecursive',
+                  array(
+                      'filter_column_recursive'  => array('string', 'label'),
+                      'filter_pattern_recursive' => array('string'),
+                  )),
+            array('ExcludeLowPopulation',
+                  array(
+                      'filter_excludelowpop'       => array('string'),
+                      'filter_excludelowpop_value' => array('float', '0'),
+                  )),
+            array('Sort',
+                  array(
+                      'filter_sort_column' => array('string'),
+                      'filter_sort_order'  => array('string', 'desc'),
+                      $naturalSort = true,
+                      $recursiveSort = true,
+                      'filter_sort_column_secondary' => true,
+                  )),
+            array('Truncate',
+                  array(
+                      'filter_truncate' => array('integer'),
+                  )),
+            array('Limit',
+                  array(
+                      'filter_offset'    => array('integer', '0'),
+                      'filter_limit'     => array('integer'),
+                      'keep_summary_row' => array('integer', '0'),
+                  )),
+        );
     }
+
     private function getGenericFiltersHavingDefaultValues()
     {
         $filters = self::getGenericFiltersInformation();
+
         if ($this->report && $this->report->getDefaultSortColumn()) {
             foreach ($filters as $index => $filter) {
                 if ($filter[0] === 'Sort') {
                     $filters[$index][1]['filter_sort_column'] = array('string', $this->report->getDefaultSortColumn());
-                    $filters[$index][1]['filter_sort_order'] = array('string', $this->report->getDefaultSortOrder());
+                    $filters[$index][1]['filter_sort_order']  = array('string', $this->report->getDefaultSortOrder());
+
                     $callback = $this->report->getSecondarySortColumnCallback();
+
                     if (is_callable($callback)) {
                         $filters[$index][1]['filter_sort_column_secondary'] = $callback;
                     }
                 }
             }
         }
+
         return $filters;
     }
+
     /**
      * Apply generic filters to the DataTable object resulting from the API Call.
      * Disable this feature by setting the parameter disable_generic_filters to 1 in the API call request.
@@ -133,22 +184,33 @@ class DataTableGenericFilter
             }
             return null;
         }
+
         $tableDisabledFilters = $datatable->getMetadata(DataTable::GENERIC_FILTERS_TO_DISABLE_METADATA_NAME) ?: [];
         $genericFilters = $this->getGenericFiltersHavingDefaultValues();
-        $filterApplied = \false;
-        $rowLimitingFiltersReached = \false;
+
+        $filterApplied = false;
+        $rowLimitingFiltersReached = false;
         foreach ($genericFilters as $filterMeta) {
             $filterName = $filterMeta[0];
             $filterParams = $filterMeta[1];
             $filterParameters = array();
-            $exceptionRaised = \false;
-            if (!$rowLimitingFiltersReached && in_array($filterName, self::ROW_LIMITING_FILTERS, \true)) {
-                $rowLimitingFiltersReached = \true;
+            $exceptionRaised = false;
+
+            if (
+                !$rowLimitingFiltersReached
+                && in_array($filterName, self::ROW_LIMITING_FILTERS, true)
+            ) {
+                $rowLimitingFiltersReached = true;
                 $this->invokeCallbackBeforeRowLimitingFilters($datatable);
             }
-            if (in_array($filterName, $this->disabledFilters) || in_array($filterName, $tableDisabledFilters)) {
+
+            if (
+                in_array($filterName, $this->disabledFilters)
+                || in_array($filterName, $tableDisabledFilters)
+            ) {
                 continue;
             }
+
             foreach ($filterParams as $name => $info) {
                 if (!is_array($info)) {
                     // hard coded value that cannot be changed via API, see eg $naturalSort = true in 'Sort'
@@ -156,48 +218,66 @@ class DataTableGenericFilter
                 } else {
                     // parameter type to cast to
                     $type = $info[0];
+
                     // default value if specified, when the parameter doesn't have a value
                     $defaultValue = null;
                     if (isset($info[1])) {
                         $defaultValue = $info[1];
                     }
+
                     try {
                         $value = Common::getRequestVar($name, $defaultValue, $type, $this->request);
                         settype($value, $type);
                         $filterParameters[] = $value;
                     } catch (Exception $e) {
-                        $exceptionRaised = \true;
+                        $exceptionRaised = true;
                         break;
                     }
                 }
             }
+
             if (!$exceptionRaised) {
                 $datatable->filter($filterName, $filterParameters);
-                $filterApplied = \true;
+                $filterApplied = true;
             }
         }
+
         if (!$rowLimitingFiltersReached) {
             $this->invokeCallbackBeforeRowLimitingFilters($datatable);
         }
+
         return $filterApplied;
     }
-    private function invokeCallbackBeforeRowLimitingFilters(DataTable $datatable) : void
+
+    private function invokeCallbackBeforeRowLimitingFilters(DataTable $datatable): void
     {
         if (null !== $this->callbackBeforeRowLimitingFilters) {
             call_user_func($this->callbackBeforeRowLimitingFilters, $datatable);
         }
     }
+
     public function areProcessedMetricsNeededFor($metrics)
     {
-        $columnQueryParameters = array('filter_column', 'filter_column_recursive', 'filter_excludelowpop', 'filter_sort_column');
+        $columnQueryParameters = array(
+            'filter_column',
+            'filter_column_recursive',
+            'filter_excludelowpop',
+            'filter_sort_column',
+        );
+
         foreach ($columnQueryParameters as $queryParamName) {
-            $queryParamValue = Common::getRequestVar($queryParamName, \false, $type = null, $this->request);
-            if (!empty($queryParamValue) && $this->containsProcessedMetric($metrics, $queryParamValue)) {
-                return \true;
+            $queryParamValue = Common::getRequestVar($queryParamName, false, $type = null, $this->request);
+            if (
+                !empty($queryParamValue)
+                && $this->containsProcessedMetric($metrics, $queryParamValue)
+            ) {
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param ProcessedMetric[] $metrics
      * @param string $name
@@ -206,10 +286,13 @@ class DataTableGenericFilter
     private function containsProcessedMetric($metrics, $name)
     {
         foreach ($metrics as $metric) {
-            if ($metric instanceof ProcessedMetric && $metric->getName() == $name) {
-                return \true;
+            if (
+                $metric instanceof ProcessedMetric
+                && $metric->getName() == $name
+            ) {
+                return true;
             }
         }
-        return \false;
+        return false;
     }
 }

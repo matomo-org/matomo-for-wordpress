@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Filter;
 
-class UnnecassaryWhitespaces extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract
+class UnnecassaryWhitespaces extends FilterAbstract
 {
     protected $baseTranslations = array();
+
     /**
      * Sets base translations
      *
@@ -20,6 +22,7 @@ class UnnecassaryWhitespaces extends \Piwik\Plugins\LanguagesManager\Translation
     {
         $this->baseTranslations = $baseTranslations;
     }
+
     /**
      * Removes all unnecassary whitespaces and newlines from the given translations
      *
@@ -35,20 +38,16 @@ class UnnecassaryWhitespaces extends \Piwik\Plugins\LanguagesManager\Translation
                 if (isset($this->baseTranslations[$pluginName][$key])) {
                     $baseTranslation = $this->baseTranslations[$pluginName][$key];
                 }
+
                 // remove excessive line breaks (and leading/trailing whitespace) from translations
                 $stringNoLineBreak = trim($translation);
-                $stringNoLineBreak = str_replace("\r", "", $stringNoLineBreak);
-                # remove useless carriage returns
-                $stringNoLineBreak = preg_replace('/(\\n[ ]+)/', "\n", $stringNoLineBreak);
-                # remove useless white spaces after line breaks
-                $stringNoLineBreak = preg_replace('/([\\n]{2,})/', "\n\n", $stringNoLineBreak);
-                # remove excessive line breaks
+                $stringNoLineBreak = str_replace("\r", "", $stringNoLineBreak); # remove useless carriage returns
+                $stringNoLineBreak = preg_replace('/(\n[ ]+)/', "\n", $stringNoLineBreak); # remove useless white spaces after line breaks
+                $stringNoLineBreak = preg_replace('/([\n]{2,})/', "\n\n", $stringNoLineBreak); # remove excessive line breaks
                 if (empty($baseTranslation) || !substr_count($baseTranslation, "\n")) {
-                    $stringNoLineBreak = preg_replace("/[\n]+/", " ", $stringNoLineBreak);
-                    # remove all line breaks if english string doesn't contain any
+                    $stringNoLineBreak = preg_replace("/[\n]+/", " ", $stringNoLineBreak); # remove all line breaks if english string doesn't contain any
                 }
-                $stringNoLineBreak = preg_replace('/([ ]{2,})/', " ", $stringNoLineBreak);
-                # remove excessive white spaces again as there might be any now, after removing line breaks
+                $stringNoLineBreak = preg_replace('/([ ]{2,})/', " ", $stringNoLineBreak); # remove excessive white spaces again as there might be any now, after removing line breaks
                 if ($translation !== $stringNoLineBreak) {
                     $this->filteredData[$pluginName][$key] = $translation;
                     $translations[$pluginName][$key] = $stringNoLineBreak;
@@ -56,6 +55,7 @@ class UnnecassaryWhitespaces extends \Piwik\Plugins\LanguagesManager\Translation
                 }
             }
         }
+
         return $translations;
     }
 }

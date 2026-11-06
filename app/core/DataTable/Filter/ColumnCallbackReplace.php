@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
+
 /**
  * Replaces one or more column values in each row of a DataTable with the results
  * of a callback.
@@ -36,6 +38,7 @@ class ColumnCallbackReplace extends BaseFilter
     private $functionToApply;
     private $functionParameters;
     private $extraColumnParameters;
+
     /**
      * @param DataTable $table The DataTable to filter.
      * @param array|string $columnsToFilter The columns whose values should be passed to the callback
@@ -47,17 +50,25 @@ class ColumnCallbackReplace extends BaseFilter
      * @param array $extraColumnParameters Extra column values that should be passed to the callback, but
      *                                     shouldn't be replaced.
      */
-    public function __construct($table, $columnsToFilter, $functionToApply, $functionParameters = null, $extraColumnParameters = array())
-    {
+    public function __construct(
+        $table,
+        $columnsToFilter,
+        $functionToApply,
+        $functionParameters = null,
+        $extraColumnParameters = array()
+    ) {
         parent::__construct($table);
-        $this->functionToApply = $functionToApply;
+        $this->functionToApply    = $functionToApply;
         $this->functionParameters = $functionParameters;
+
         if (!is_array($columnsToFilter)) {
             $columnsToFilter = array($columnsToFilter);
         }
-        $this->columnsToFilter = $columnsToFilter;
+
+        $this->columnsToFilter       = $columnsToFilter;
         $this->extraColumnParameters = $extraColumnParameters;
     }
+
     /**
      * See {@link ColumnCallbackReplace}.
      *
@@ -70,26 +81,32 @@ class ColumnCallbackReplace extends BaseFilter
             foreach ($this->extraColumnParameters as $columnName) {
                 $extraColumnParameters[] = $row->getColumn($columnName);
             }
+
             foreach ($this->columnsToFilter as $column) {
                 // when a value is not defined, we set it to zero by default (rather than displaying '-')
                 $value = $this->getElementToReplace($row, $column);
-                if ($value === \false) {
+                if ($value === false) {
                     $value = 0;
                 }
+
                 $parameters = array_merge(array($value), $extraColumnParameters);
+
                 if (!is_null($this->functionParameters)) {
                     $parameters = array_merge($parameters, $this->functionParameters);
                 }
+
                 $newValue = call_user_func_array($this->functionToApply, $parameters);
                 $this->setElementToReplace($row, $column, $newValue);
                 $this->filterSubTable($row);
             }
         }
+
         if (in_array('label', $this->columnsToFilter)) {
             // we need to force rebuilding the index
             $table->setLabelsHaveChanged();
         }
     }
+
     /**
      * Replaces the given column within given row with the given value
      *
@@ -101,6 +118,7 @@ class ColumnCallbackReplace extends BaseFilter
     {
         $row->setColumn($columnToFilter, $newValue);
     }
+
     /**
      * Returns the element that should be replaced
      *

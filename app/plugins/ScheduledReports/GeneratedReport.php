@@ -6,32 +6,39 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\ScheduledReports;
 
 use Piwik\Common;
 use Piwik\Piwik;
+
 class GeneratedReport
 {
     /**
      * @var array
      */
     private $reportDetails;
+
     /**
      * @var string
      */
     private $reportTitle;
+
     /**
      * @var string
      */
     private $prettyDate;
+
     /**
      * @var string
      */
     private $contents;
+
     /**
      * @var array
      */
     private $additionalFiles;
+
     public function __construct(array $reportDetails, $reportTitle, $prettyDate, $contents, array $additionalFiles)
     {
         $this->reportDetails = $reportDetails;
@@ -40,6 +47,7 @@ class GeneratedReport
         $this->contents = $contents;
         $this->additionalFiles = $additionalFiles;
     }
+
     /**
      * @return array
      */
@@ -47,6 +55,7 @@ class GeneratedReport
     {
         return $this->reportDetails;
     }
+
     /**
      * @return string
      */
@@ -54,6 +63,7 @@ class GeneratedReport
     {
         return $this->reportTitle;
     }
+
     /**
      * @return string
      */
@@ -61,6 +71,7 @@ class GeneratedReport
     {
         return $this->prettyDate;
     }
+
     /**
      * @return string
      */
@@ -68,6 +79,7 @@ class GeneratedReport
     {
         return $this->contents;
     }
+
     /**
      * @return array
      */
@@ -75,6 +87,7 @@ class GeneratedReport
     {
         return $this->additionalFiles;
     }
+
     /**
      * @return string
      */
@@ -82,6 +95,7 @@ class GeneratedReport
     {
         return $this->reportDetails['format'] ?: 'pdf';
     }
+
     /**
      * @return string
      */
@@ -89,7 +103,8 @@ class GeneratedReport
     {
         return Piwik::translate('General_Report') . ' ' . $this->reportTitle . " - " . $this->prettyDate;
     }
-    public function getDisplayDescription() : string
+
+    public function getDisplayDescription(): string
     {
         // The persisted report `description` field now stores the report name.
         return str_replace(["\r", "\n"], ' ', Common::unsanitizeInputValue((string) ($this->reportDetails['description'] ?? '')));

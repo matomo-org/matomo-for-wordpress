@@ -7,7 +7,9 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Parser;
 
 use DeviceDetector\Cache\CacheInterface;
@@ -16,6 +18,7 @@ use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Yaml\ParserInterface as YamlParser;
 use DeviceDetector\Yaml\Spyc;
+
 /**
  * Class AbstractParser
  */
@@ -26,86 +29,103 @@ abstract class AbstractParser
      * @var string
      */
     protected $fixtureFile;
+
     /**
      * Holds the internal name of the parser
      * Used for caching
      * @var string
      */
     protected $parserName;
+
     /**
      * Holds the user agent to be parsed
      * @var string
      */
     protected $userAgent;
+
     /**
      * Holds the client hints to be parsed
      * @var ?ClientHints
      */
     protected $clientHints = null;
+
     /**
      * Contains a list of mappings from names we use to known client hint values
      * @var array<string, array<string>>
      */
     protected static $clientHintMapping = [];
+
     /**
      * Holds an array with method that should be available global
      * @var array
      */
     protected $globalMethods;
+
     /**
      * Holds an array with regexes to parse, if already loaded
      * @var array
      */
     protected $regexList;
+
     /**
      * Holds the concatenated regex for all items in regex list
      * @var string
      */
     protected $overAllMatch;
+
     /**
      * Indicates how deep versioning will be detected
      * if $maxMinorParts is 0 only the major version will be returned
      * @var int
      */
     protected static $maxMinorParts = 1;
+
     /**
      * Versioning constant used to set max versioning to major version only
      * Version examples are: 3, 5, 6, 200, 123, ...
      */
     public const VERSION_TRUNCATION_MAJOR = 0;
+
     /**
      * Versioning constant used to set max versioning to minor version
      * Version examples are: 3.4, 5.6, 6.234, 0.200, 1.23, ...
      */
     public const VERSION_TRUNCATION_MINOR = 1;
+
     /**
      * Versioning constant used to set max versioning to path level
      * Version examples are: 3.4.0, 5.6.344, 6.234.2, 0.200.3, 1.2.3, ...
      */
     public const VERSION_TRUNCATION_PATCH = 2;
+
     /**
      * Versioning constant used to set versioning to build number
      * Version examples are: 3.4.0.12, 5.6.334.0, 6.234.2.3, 0.200.3.1, 1.2.3.0, ...
      */
     public const VERSION_TRUNCATION_BUILD = 3;
+
     /**
      * Versioning constant used to set versioning to unlimited (no truncation)
      */
     public const VERSION_TRUNCATION_NONE = -1;
+
     /**
      * @var CacheInterface|null
      */
     protected $cache = null;
+
     /**
      * @var YamlParser|null
      */
     protected $yamlParser = null;
+
     /**
      * parses the currently set useragents and returns possible results
      *
      * @return array|null
      */
-    public abstract function parse() : ?array;
+    abstract public function parse(): ?array;
+
     /**
      * AbstractParser constructor.
      *
@@ -117,134 +137,175 @@ abstract class AbstractParser
         $this->setUserAgent($ua);
         $this->setClientHints($clientHints);
     }
+
     /**
      * Restore useragent from client hints
      */
-    public function restoreUserAgentFromClientHints() : void
+    public function restoreUserAgentFromClientHints(): void
     {
         if (null === $this->clientHints) {
             return;
         }
+
         $deviceModel = $this->clientHints->getModel();
+
         if ('' === $deviceModel) {
             return;
         }
+
         // Restore Android User Agent
         if ($this->hasUserAgentClientHintsFragment()) {
             $osVersion = $this->clientHints->getOperatingSystemVersion();
-            $this->setUserAgent((string) \preg_replace('(Android (?:10[.\\d]*; K|1[1-5]))', \sprintf('Android %s; %s', '' !== $osVersion ? $osVersion : '10', $deviceModel), $this->userAgent));
+            $this->setUserAgent((string) \preg_replace(
+                '(Android (?:10[.\d]*; K|1[1-5]))',
+                \sprintf('Android %s; %s', '' !== $osVersion ? $osVersion : '10', $deviceModel),
+                $this->userAgent
+            ));
         }
+
         // Restore Desktop User Agent
         if (!$this->hasDesktopFragment()) {
             return;
         }
-        $this->setUserAgent((string) \preg_replace('(X11; Linux x86_64)', \sprintf('X11; Linux x86_64; %s', $deviceModel), $this->userAgent));
+
+        $this->setUserAgent((string) \preg_replace(
+            '(X11; Linux x86_64)',
+            \sprintf('X11; Linux x86_64; %s', $deviceModel),
+            $this->userAgent
+        ));
     }
+
     /**
      * Set how DeviceDetector should return versions
      * @param int $type Any of the VERSION_TRUNCATION_* constants
      */
-    public static function setVersionTruncation(int $type) : void
+    public static function setVersionTruncation(int $type): void
     {
-        if (!\in_array($type, [self::VERSION_TRUNCATION_BUILD, self::VERSION_TRUNCATION_NONE, self::VERSION_TRUNCATION_MAJOR, self::VERSION_TRUNCATION_MINOR, self::VERSION_TRUNCATION_PATCH], \true)) {
+        if (!\in_array($type, [
+            self::VERSION_TRUNCATION_BUILD,
+            self::VERSION_TRUNCATION_NONE,
+            self::VERSION_TRUNCATION_MAJOR,
+            self::VERSION_TRUNCATION_MINOR,
+            self::VERSION_TRUNCATION_PATCH,
+        ], true)
+        ) {
             return;
         }
+
         static::$maxMinorParts = $type;
     }
+
     /**
      * Sets the user agent to parse
      *
      * @param string $ua user agent
      */
-    public function setUserAgent(string $ua) : void
+    public function setUserAgent(string $ua): void
     {
         $this->userAgent = $ua;
     }
+
     /**
      * Sets the client hints to parse
      *
      * @param ?ClientHints $clientHints client hints
      */
-    public function setClientHints(?ClientHints $clientHints) : void
+    public function setClientHints(?ClientHints $clientHints): void
     {
         $this->clientHints = $clientHints;
     }
+
     /**
      * Returns the internal name of the parser
      *
      * @return string
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->parserName;
     }
+
     /**
      * Sets the Cache class
      *
      * @param CacheInterface $cache
      */
-    public function setCache(CacheInterface $cache) : void
+    public function setCache(CacheInterface $cache): void
     {
         $this->cache = $cache;
     }
+
     /**
      * Returns Cache object
      *
      * @return CacheInterface
      */
-    public function getCache() : CacheInterface
+    public function getCache(): CacheInterface
     {
         if (!empty($this->cache)) {
             return $this->cache;
         }
+
         return new StaticCache();
     }
+
     /**
      * Sets the YamlParser class
      *
      * @param YamlParser $yamlParser
      */
-    public function setYamlParser(YamlParser $yamlParser) : void
+    public function setYamlParser(YamlParser $yamlParser): void
     {
         $this->yamlParser = $yamlParser;
     }
+
     /**
      * Returns YamlParser object
      *
      * @return YamlParser
      */
-    public function getYamlParser() : YamlParser
+    public function getYamlParser(): YamlParser
     {
         if (!empty($this->yamlParser)) {
             return $this->yamlParser;
         }
+
         return new Spyc();
     }
+
     /**
      * Returns the result of the parsed yml file defined in $fixtureFile
      *
      * @return array
      */
-    protected function getRegexes() : array
+    protected function getRegexes(): array
     {
         if (empty($this->regexList)) {
-            $cacheKey = 'DeviceDetector-' . DeviceDetector::VERSION . 'regexes-' . $this->getName();
-            $cacheKey = (string) \preg_replace('/([^a-z0-9_-]+)/i', '', $cacheKey);
+            $cacheKey     = 'DeviceDetector-' . DeviceDetector::VERSION . 'regexes-' . $this->getName();
+            $cacheKey     = (string) \preg_replace('/([^a-z0-9_-]+)/i', '', $cacheKey);
             $cacheContent = $this->getCache()->fetch($cacheKey);
+
             if (\is_array($cacheContent)) {
                 $this->regexList = $cacheContent;
             }
+
             if (empty($this->regexList)) {
-                $parsedContent = $this->getYamlParser()->parseFile($this->getRegexesDirectory() . \DIRECTORY_SEPARATOR . $this->fixtureFile);
+                $parsedContent = $this->getYamlParser()->parseFile(
+                    $this->getRegexesDirectory() . DIRECTORY_SEPARATOR . $this->fixtureFile
+                );
+
                 if (!\is_array($parsedContent)) {
                     $parsedContent = [];
                 }
+
                 $this->regexList = $parsedContent;
                 $this->getCache()->save($cacheKey, $this->regexList);
             }
         }
+
         return $this->regexList;
     }
+
     /**
      * Returns the provided name after applying client hint mappings.
      * This is used to map names provided in client hints to the names we use.
@@ -253,7 +314,7 @@ abstract class AbstractParser
      *
      * @return string
      */
-    protected function applyClientHintMapping(string $name) : string
+    protected function applyClientHintMapping(string $name): string
     {
         foreach (static::$clientHintMapping as $mappedName => $clientHints) {
             foreach ($clientHints as $clientHint) {
@@ -262,15 +323,18 @@ abstract class AbstractParser
                 }
             }
         }
+
         return $name;
     }
+
     /**
      * @return string
      */
-    protected function getRegexesDirectory() : string
+    protected function getRegexesDirectory(): string
     {
         return \dirname(__DIR__);
     }
+
     /**
      * Returns if the parsed UA contains the 'Windows NT;' or 'X11; Linux x86_64' fragments
      *
@@ -278,24 +342,35 @@ abstract class AbstractParser
      *
      * @throws \Exception
      */
-    protected function hasDesktopFragment() : bool
+    protected function hasDesktopFragment(): bool
     {
-        $regexExcludeDesktopFragment = \implode('|', ['CE-HTML', ' Mozilla/|Andr[o0]id|Tablet|Mobile|iPhone|Windows Phone|ricoh|OculusBrowser', 'PicoBrowser|Lenovo|compatible; MSIE|Trident/|Tesla/|XBOX|FBMD/|ARM; ?([^)]+)']);
-        return $this->matchUserAgent('(?:Windows (?:NT|IoT)|X11; Linux x86_64)') && !$this->matchUserAgent($regexExcludeDesktopFragment);
+        $regexExcludeDesktopFragment = \implode('|', [
+            'CE-HTML',
+            ' Mozilla/|Andr[o0]id|Tablet|Mobile|iPhone|Windows Phone|ricoh|OculusBrowser',
+            'PicoBrowser|Lenovo|compatible; MSIE|Trident/|Tesla/|XBOX|FBMD/|ARM; ?([^)]+)',
+        ]);
+
+        return
+            $this->matchUserAgent('(?:Windows (?:NT|IoT)|X11; Linux x86_64)') &&
+            !$this->matchUserAgent($regexExcludeDesktopFragment);
     }
+
     /**
      * Returns if the parsed UA contains the 'Android 10 K;' or Android 10 K Build/` fragment
      *
      * @return bool
      */
-    protected function hasUserAgentClientHintsFragment() : bool
+    protected function hasUserAgentClientHintsFragment(): bool
     {
-        $pattern = '~Android (?:1[0-6][.\\d]*; K(?: Build/|[;)])|1[0-6]\\)) AppleWebKit~i';
+        $pattern = '~Android (?:1[0-6][.\d]*; K(?: Build/|[;)])|1[0-6]\)) AppleWebKit~i';
+
         if (\preg_match($pattern, $this->userAgent)) {
-            return \false === \stripos($this->userAgent, 'Telegram-Android/');
+            return false === \stripos($this->userAgent, 'Telegram-Android/');
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Matches the useragent against the given regex
      *
@@ -305,37 +380,48 @@ abstract class AbstractParser
      *
      * @throws \Exception
      */
-    protected function matchUserAgent(string $regex) : ?array
+    protected function matchUserAgent(string $regex): ?array
     {
         $matches = [];
+
         // only match if useragent begins with given regex or there is no letter before it
-        $regex = '/(?:^|[^A-Z0-9_-]|[^A-Z0-9-]_|sprd-|MZ-)(?:' . \str_replace('/', '\\/', $regex) . ')/i';
+        $regex = '/(?:^|[^A-Z0-9_-]|[^A-Z0-9-]_|sprd-|MZ-)(?:' . \str_replace('/', '\/', $regex) . ')/i';
+
         try {
             if (\preg_match($regex, $this->userAgent, $matches)) {
                 return $matches;
             }
         } catch (\Exception $exception) {
-            throw new \Exception(\sprintf("%s\nRegex: %s", $exception->getMessage(), $regex), $exception->getCode(), $exception);
+            throw new \Exception(
+                \sprintf("%s\nRegex: %s", $exception->getMessage(), $regex),
+                $exception->getCode(),
+                $exception
+            );
         }
+
         return null;
     }
+
     /**
      * @param string $item
      * @param array  $matches
      *
      * @return string
      */
-    protected function buildByMatch(string $item, array $matches) : string
+    protected function buildByMatch(string $item, array $matches): string
     {
-        $search = [];
+        $search  = [];
         $replace = [];
-        $count = \count($matches);
+        $count   = \count($matches);
+
         for ($nb = 1; $nb <= $count; $nb++) {
-            $search[] = '$' . $nb;
+            $search[]  = '$' . $nb;
             $replace[] = $matches[$nb] ?? '';
         }
+
         return \trim(\str_replace($search, $replace, $item));
     }
+
     /**
      * Builds the version with the given $versionString and $matches
      *
@@ -349,17 +435,22 @@ abstract class AbstractParser
      *
      * @return string
      */
-    protected function buildVersion(string $versionString, array $matches) : string
+    protected function buildVersion(string $versionString, array $matches): string
     {
         $versionString = $this->buildByMatch($versionString, $matches);
         $versionString = \str_replace('_', '.', $versionString);
-        if (self::VERSION_TRUNCATION_NONE !== static::$maxMinorParts && \substr_count($versionString, '.') > static::$maxMinorParts) {
-            $versionParts = \explode('.', $versionString);
-            $versionParts = \array_slice($versionParts, 0, 1 + static::$maxMinorParts);
+
+        if (self::VERSION_TRUNCATION_NONE !== static::$maxMinorParts
+            && \substr_count($versionString, '.') > static::$maxMinorParts
+        ) {
+            $versionParts  = \explode('.', $versionString);
+            $versionParts  = \array_slice($versionParts, 0, 1 + static::$maxMinorParts);
             $versionString = \implode('.', $versionParts);
         }
+
         return \trim($versionString, ' .');
     }
+
     /**
      * Tests the useragent against a combination of all regexes
      *
@@ -372,20 +463,25 @@ abstract class AbstractParser
      *
      * @throws \Exception
      */
-    protected function preMatchOverall() : ?array
+    protected function preMatchOverall(): ?array
     {
         $regexes = $this->getRegexes();
+
         if ([] === $regexes) {
             return null;
         }
+
         $cacheKey = $this->parserName . DeviceDetector::VERSION . '-all';
         $cacheKey = (string) \preg_replace('/([^a-z0-9_-]+)/i', '', $cacheKey);
+
         if (empty($this->overAllMatch)) {
             $overAllMatch = $this->getCache()->fetch($cacheKey);
+
             if (\is_string($overAllMatch)) {
                 $this->overAllMatch = $overAllMatch;
             }
         }
+
         if (empty($this->overAllMatch)) {
             // reverse all regexes, so we have the generic one first, which already matches most patterns
             $this->overAllMatch = \array_reduce(\array_reverse($regexes), static function ($val1, $val2) {
@@ -393,8 +489,10 @@ abstract class AbstractParser
             });
             $this->getCache()->save($cacheKey, $this->overAllMatch);
         }
+
         return $this->matchUserAgent($this->overAllMatch);
     }
+
     /**
      * Compares if two strings equals after lowering their case and removing spaces
      *
@@ -403,8 +501,9 @@ abstract class AbstractParser
      *
      * @return bool
      */
-    protected function fuzzyCompare(string $value1, string $value2) : bool
+    protected function fuzzyCompare(string $value1, string $value2): bool
     {
-        return \str_replace(' ', '', \strtolower($value1)) === \str_replace(' ', '', \strtolower($value2));
+        return \str_replace(' ', '', \strtolower($value1)) ===
+            \str_replace(' ', '', \strtolower($value2));
     }
 }

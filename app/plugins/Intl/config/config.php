@@ -1,5 +1,5 @@
 <?php
 
-namespace {
-    return array('Piwik\\Intl\\Data\\Provider\\DateTimeFormatProvider' => \Piwik\DI::autowire('Piwik\\Plugins\\Intl\\DateTimeFormatProvider'));
-}
+return array(
+    'Piwik\Intl\Data\Provider\DateTimeFormatProvider' => Piwik\DI::autowire('Piwik\Plugins\Intl\DateTimeFormatProvider'),
+);

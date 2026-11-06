@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Exception;
 use Matomo\Network\IPUtils;
 use Piwik\Config\GeneralConfig;
+
 /**
  * Provides URL related helper methods.
  *
@@ -58,8 +60,12 @@ class Url
      */
     public static function getCurrentUrl()
     {
-        return self::getCurrentScheme() . '://' . self::getCurrentHost() . self::getCurrentScriptName(\false) . self::getCurrentQueryString();
+        return self::getCurrentScheme() . '://'
+        . self::getCurrentHost()
+        . self::getCurrentScriptName(false)
+        . self::getCurrentQueryString();
     }
+
     /**
      * Returns the current URL without the query string.
      *
@@ -69,10 +75,13 @@ class Url
      *                `"https://example.org/dir1/dir2/index.php?param1=value1&param2=value2"`.
      * @api
      */
-    public static function getCurrentUrlWithoutQueryString($checkTrustedHost = \true)
+    public static function getCurrentUrlWithoutQueryString($checkTrustedHost = true)
     {
-        return self::getCurrentScheme() . '://' . self::getCurrentHost($default = 'unknown', $checkTrustedHost) . self::getCurrentScriptName(\false);
+        return self::getCurrentScheme() . '://'
+        . self::getCurrentHost($default = 'unknown', $checkTrustedHost)
+        . self::getCurrentScriptName(false);
     }
+
     /**
      * Returns the current URL without the query string and without the name of the file
      * being executed.
@@ -83,8 +92,11 @@ class Url
      */
     public static function getCurrentUrlWithoutFileName()
     {
-        return self::getCurrentScheme() . '://' . self::getCurrentHost() . self::getCurrentScriptPath();
+        return self::getCurrentScheme() . '://'
+        . self::getCurrentHost()
+        . self::getCurrentScriptPath();
     }
+
     /**
      * Returns the path to the script being executed. The script file name is not included.
      *
@@ -95,6 +107,7 @@ class Url
     public static function getCurrentScriptPath()
     {
         $queryString = self::getCurrentScriptName();
+
         //add a fake letter case /test/test2/ returns /test which is not expected
         $urlDir = dirname($queryString . 'x');
         $urlDir = str_replace('\\', '/', $urlDir);
@@ -104,6 +117,7 @@ class Url
         }
         return $urlDir;
     }
+
     /**
      * Returns the path to the script being executed. Includes the script file name.
      *
@@ -112,29 +126,39 @@ class Url
      *                `"https://example.org/dir1/dir2/index.php?param1=value1&param2=value2"`
      * @api
      */
-    public static function getCurrentScriptName($removePathInfo = \true)
+    public static function getCurrentScriptName($removePathInfo = true)
     {
         $url = '';
+
         // insert extra path info if proxy_uri_header is set and enabled
         $proxyUriHeader = GeneralConfig::getConfigValue('proxy_uri_header');
-        if (is_scalar($proxyUriHeader) && (int) $proxyUriHeader === 1 && !empty($_SERVER['HTTP_X_FORWARDED_URI'])) {
+        if (
+            is_scalar($proxyUriHeader)
+            && (int)$proxyUriHeader === 1
+            && !empty($_SERVER['HTTP_X_FORWARDED_URI'])
+        ) {
             $url .= $_SERVER['HTTP_X_FORWARDED_URI'];
         }
+
         if (!empty($_SERVER['REQUEST_URI'])) {
             $url .= $_SERVER['REQUEST_URI'];
+
             // strip https://host (Apache+Rails anomaly)
             if (preg_match('~^https?://[^/]+($|/.*)~D', $url, $matches)) {
                 $url = $matches[1];
             }
+
             // strip parameters
-            if (($pos = mb_strpos($url, "?")) !== \false) {
+            if (($pos = mb_strpos($url, "?")) !== false) {
                 $url = mb_substr($url, 0, $pos);
             }
+
             // strip path_info
             if ($removePathInfo && !empty($_SERVER['PATH_INFO'])) {
                 $url = mb_substr($url, 0, -mb_strlen($_SERVER['PATH_INFO']));
             }
         }
+
         /**
          * SCRIPT_NAME is our fallback, though it may not be set correctly
          *
@@ -149,38 +173,48 @@ class Url
                 $url = $_SERVER['argv'][0];
             }
         }
+
         // A hash part should actually be never send to the server, as browsers automatically remove them from the request
         // The same happens for tools like cUrl. While Apache won't answer requests that contain them, Nginx would handle them
         // and the hash part would be included in REQUEST_URI. Therefor we always remove any hash parts here.
         if (mb_strpos($url, '#') > 0) {
             $url = mb_substr($url, 0, mb_strpos($url, '#'));
         }
+
         // replace relative path references with absolute.
         if (strlen($url) > 0) {
             $urlSections = explode('/', $url);
             $absoluteUrlComponents = [];
+
             foreach ($urlSections as $section) {
                 if ($section === '.' || $section === '~') {
                     continue;
                 }
+
                 if ($section === '..') {
                     if (!empty($absoluteUrlComponents)) {
                         array_pop($absoluteUrlComponents);
                     }
                     continue;
                 }
+
                 $absoluteUrlComponents[] = $section;
             }
+
             $url = implode('/', $absoluteUrlComponents);
         }
+
         // to handle instances of empty strings that don't appear at either end
         // of the url, and creates double slashes in the resulting url.
         $url = str_replace('//', '/', $url);
+
         if (!str_starts_with($url, '/')) {
             $url = '/' . $url;
         }
+
         return $url;
     }
+
     /**
      * Returns the current URL's protocol.
      *
@@ -194,6 +228,7 @@ class Url
         }
         return self::getCurrentSchemeFromRequestHeader();
     }
+
     /**
      * Validates the **Host** HTTP header (untrusted user input). Used to prevent Host header
      * attacks.
@@ -202,45 +237,58 @@ class Url
      *                          value from the request.
      * @return bool `true` if valid; `false` otherwise.
      */
-    public static function isValidHost($host = \false) : bool
+    public static function isValidHost($host = false): bool
     {
         // only do trusted host check if it's enabled
-        if (isset(\Piwik\Config::getInstance()->General['enable_trusted_host_check']) && \Piwik\Config::getInstance()->General['enable_trusted_host_check'] == 0) {
-            return \true;
+        if (
+            isset(Config::getInstance()->General['enable_trusted_host_check'])
+            && Config::getInstance()->General['enable_trusted_host_check'] == 0
+        ) {
+            return true;
         }
-        if (\false === $host || null === $host) {
+
+        if (false === $host || null === $host) {
             $host = self::getHostFromServerVariable();
             if (empty($host)) {
                 // if no current host, assume valid
-                return \true;
+                return true;
             }
         }
+
         // if host is in hardcoded allowlist, assume it's valid
         if (in_array($host, self::getAlwaysTrustedHosts())) {
-            return \true;
+            return true;
         }
+
         $trustedHosts = self::getTrustedHosts();
+
         // Only punctuation we allow is '[', ']', ':', '.', '_' and '-'
         $hostLength = strlen($host);
         if ($hostLength !== strcspn($host, '`~!@#$%^&*()+={}\\|;"\'<>,?/ ')) {
-            return \false;
+            return false;
         }
+
         // if no trusted hosts, just assume it's valid
         if (empty($trustedHosts)) {
             self::saveTrustedHostnameInConfig($host);
-            return \true;
+            return true;
         }
+
         // Escape trusted hosts for preg_match call below
         foreach ($trustedHosts as &$trustedHost) {
             $trustedHost = preg_quote($trustedHost);
         }
         $trustedHosts = str_replace("/", "\\/", $trustedHosts);
+
         $untrustedHost = mb_strtolower($host);
         $untrustedHost = rtrim($untrustedHost, '.');
-        $hostRegex = mb_strtolower('/(^|\\.)(' . implode('|', $trustedHosts) . ')$/');
+
+        $hostRegex = mb_strtolower('/(^|\.)(' . implode('|', $trustedHosts) . ')$/');
+
         $result = preg_match($hostRegex, $untrustedHost);
         return 0 !== $result;
     }
+
     /**
      * Records one host, or an array of hosts in the config file,
      * if user is Super User
@@ -253,6 +301,7 @@ class Url
     {
         return self::saveHostsnameInConfig($host, 'General', 'trusted_hosts');
     }
+
     /**
      * @param string|string[] $host
      * @return bool
@@ -262,6 +311,7 @@ class Url
     {
         return self::saveHostsnameInConfig($host, 'General', 'cors_domains');
     }
+
     /**
      * @param string|string[] $host
      * @param string $domain
@@ -270,22 +320,26 @@ class Url
      */
     protected static function saveHostsnameInConfig($host, $domain, $key)
     {
-        if (\Piwik\Piwik::hasUserSuperUserAccess() && file_exists(\Piwik\Config::getLocalConfigPath())) {
-            $config = \Piwik\Config::getInstance()->{$domain};
+        if (
+            Piwik::hasUserSuperUserAccess()
+            && file_exists(Config::getLocalConfigPath())
+        ) {
+            $config = Config::getInstance()->$domain;
             if (!is_array($host)) {
                 $host = [$host];
             }
             $host = array_filter($host);
             if (empty($host)) {
-                return \false;
+                return false;
             }
             $config[$key] = $host;
-            \Piwik\Config::getInstance()->{$domain} = $config;
-            \Piwik\Config::getInstance()->forceSave();
-            return \true;
+            Config::getInstance()->$domain = $config;
+            Config::getInstance()->forceSave();
+            return true;
         }
-        return \false;
+        return false;
     }
+
     /**
      * Returns the current host.
      *
@@ -293,12 +347,14 @@ class Url
      *                             except in Controller.
      * @return string|false eg, `"demo.matomo.cloud"` or false if no host found.
      */
-    public static function getHost($checkIfTrusted = \true)
+    public static function getHost($checkIfTrusted = true)
     {
         $host = self::getHostFromServerVariable();
+
         if (!empty($host) && (!$checkIfTrusted || self::isValidHost($host))) {
             return $host;
         }
+
         try {
             $hosts = self::getTrustedHosts();
             if (count($hosts) > 0) {
@@ -307,8 +363,10 @@ class Url
         } catch (\Exception $e) {
             // fall back
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @return string|false
      */
@@ -320,15 +378,18 @@ class Url
             // in such a case we always use HTTP_HOST
             $preferServerName = GeneralConfig::getConfigValue('host_validation_use_server_name');
         } catch (\Exception $e) {
-            $preferServerName = \false;
+            $preferServerName = false;
         }
+
         if ($preferServerName && strlen($host = self::getHostFromServerNameVar())) {
             return $host;
         } elseif (isset($_SERVER['HTTP_HOST']) && strlen($host = $_SERVER['HTTP_HOST'])) {
             return $host;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Returns the valid hostname (according to RFC standards) as a string; else it will return false if it isn't valid.
      * If the hostname isn't supplied it will default to using Url::getHost
@@ -339,10 +400,11 @@ class Url
     public static function getRFCValidHostname($hostname = null)
     {
         if (empty($hostname)) {
-            $hostname = self::getHost(\false);
+            $hostname = self::getHost(false);
         }
-        return filter_var($hostname, \FILTER_VALIDATE_DOMAIN, \FILTER_FLAG_HOSTNAME);
+        return filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
     }
+
     /**
      * Sets the host. Useful for CLI scripts, eg. core:archive command
      *
@@ -355,6 +417,7 @@ class Url
         $_SERVER['HTTP_HOST'] = $host;
         unset($_SERVER['SERVER_PORT']);
     }
+
     /**
      * Returns the current host.
      *
@@ -365,17 +428,21 @@ class Url
      *                `"https://example.org/dir1/dir2/index.php?param1=value1&param2=value2"`
      * @api
      */
-    public static function getCurrentHost($default = 'unknown', $checkTrustedHost = \true)
+    public static function getCurrentHost($default = 'unknown', $checkTrustedHost = true)
     {
         $hostHeaders = [];
+
         $hostHeadersInConfig = GeneralConfig::getConfigValue('proxy_host_headers');
         if (is_array($hostHeadersInConfig)) {
             $hostHeaders = $hostHeadersInConfig;
         }
+
         $host = self::getHost($checkTrustedHost);
-        $default = \Piwik\Common::sanitizeInputValue($host ? $host : $default);
-        return \Piwik\IP::getNonProxyIpFromHeader($default, $hostHeaders);
+        $default = Common::sanitizeInputValue($host ? $host : $default);
+
+        return IP::getNonProxyIpFromHeader($default, $hostHeaders);
     }
+
     /**
      * Returns the query string of the current URL.
      *
@@ -386,11 +453,15 @@ class Url
     public static function getCurrentQueryString()
     {
         $url = '';
-        if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
+        if (
+            isset($_SERVER['QUERY_STRING'])
+            && !empty($_SERVER['QUERY_STRING'])
+        ) {
             $url .= "?" . $_SERVER['QUERY_STRING'];
         }
         return $url;
     }
+
     /**
      * Returns an array mapping query parameter names with query parameter values for
      * the current URL.
@@ -407,8 +478,9 @@ class Url
     public static function getArrayFromCurrentQueryString()
     {
         $queryString = self::getCurrentQueryString();
-        return \Piwik\UrlHelper::getArrayFromQueryString($queryString);
+        return UrlHelper::getArrayFromQueryString($queryString);
     }
+
     /**
      * Modifies the current query string with the supplied parameters and returns
      * the result. Parameters in the current URL will be overwritten with values
@@ -432,6 +504,7 @@ class Url
         }
         return '';
     }
+
     /**
      * Converts an array of parameters name => value mappings to a query
      * string. Values must already be URL encoded before you call this function.
@@ -444,7 +517,7 @@ class Url
     {
         $query = '';
         foreach ($parameters as $name => $value) {
-            if (is_null($value) || $value === \false) {
+            if (is_null($value) || $value === false) {
                 continue;
             }
             if (is_array($value)) {
@@ -458,14 +531,16 @@ class Url
         $query = substr($query, 0, -1);
         return $query;
     }
+
     /**
      * @param string $url
      * @return string|false|null
      */
     public static function getQueryStringFromUrl($url)
     {
-        return parse_url($url, \PHP_URL_QUERY);
+        return parse_url($url, PHP_URL_QUERY);
     }
+
     /**
      * Redirects the user to the referrer. If no referrer exists, the user is redirected
      * to the current URL without query string.
@@ -476,24 +551,30 @@ class Url
     public static function redirectToReferrer()
     {
         $referrer = self::getReferrer();
-        if ($referrer !== \false) {
+        if ($referrer !== false) {
             self::redirectToUrl($referrer);
         }
         self::redirectToUrl(self::getCurrentUrlWithoutQueryString());
     }
-    private static function redirectToUrlNoExit(string $url) : void
+
+    private static function redirectToUrlNoExit(string $url): void
     {
-        if (\Piwik\UrlHelper::isLookLikeUrl($url) || strpos($url, 'index.php') === 0) {
-            \Piwik\Common::sendResponseCode(302);
-            \Piwik\Common::sendHeader("X-Robots-Tag: noindex");
-            \Piwik\Common::sendHeader("Location: {$url}");
+        if (
+            UrlHelper::isLookLikeUrl($url)
+            || strpos($url, 'index.php') === 0
+        ) {
+            Common::sendResponseCode(302);
+            Common::sendHeader("X-Robots-Tag: noindex");
+            Common::sendHeader("Location: $url");
         } else {
             echo "Invalid URL to redirect to.";
         }
-        if (\Piwik\Common::isPhpCliMode()) {
-            throw new Exception("If you were using a browser, Matomo would redirect you to this URL: {$url} \n\n");
+
+        if (Common::isPhpCliMode()) {
+            throw new Exception("If you were using a browser, Matomo would redirect you to this URL: $url \n\n");
         }
     }
+
     /**
      * Redirects the user to the specified URL.
      *
@@ -507,10 +588,13 @@ class Url
         // Close the session manually.
         // We should not have to call this because it was registered via register_shutdown_function,
         // but it is not always called fast enough
-        \Piwik\Session::close();
+        Session::close();
+
         self::redirectToUrlNoExit($url);
+
         exit;
     }
+
     /**
      * If the page is using HTTP, redirect to the same page over HTTPS
      *
@@ -518,13 +602,14 @@ class Url
      */
     public static function redirectToHttps()
     {
-        if (\Piwik\ProxyHttp::isHttps()) {
+        if (ProxyHttp::isHttps()) {
             return;
         }
         $url = self::getCurrentUrl();
         $url = str_replace("http://", "https://", $url);
         self::redirectToUrl($url);
     }
+
     /**
      * Returns the **HTTP_REFERER** `$_SERVER` variable, or `false` if not found.
      *
@@ -536,8 +621,9 @@ class Url
         if (!empty($_SERVER['HTTP_REFERER'])) {
             return $_SERVER['HTTP_REFERER'];
         }
-        return \false;
+        return false;
     }
+
     /**
      * Returns `true` if the URL points to something on the same host, `false` if otherwise.
      *
@@ -548,8 +634,9 @@ class Url
     public static function isLocalUrl($url)
     {
         if (empty($url)) {
-            return \true;
+            return true;
         }
+
         // handle host name mangling
         $requestUri = isset($_SERVER['SCRIPT_URI']) ? $_SERVER['SCRIPT_URI'] : '';
         $parseRequest = @parse_url($requestUri);
@@ -557,15 +644,21 @@ class Url
         if (!empty($parseRequest['host'])) {
             $hosts[] = $parseRequest['host'];
         }
+
         // drop invalid host values and port numbers from hostnames/IPs
         $hosts = array_filter($hosts, 'is_string');
         $hosts = array_map(self::class . '::getHostSanitized', $hosts);
+
         $disableHostCheck = GeneralConfig::getConfigValue('enable_trusted_host_check') == 0;
         // compare scheme and host
         $parsedUrl = @parse_url($url);
         $host = IPUtils::sanitizeIp($parsedUrl['host'] ?? '');
-        return !empty($host) && ($disableHostCheck || in_array($host, $hosts)) && !empty($parsedUrl['scheme']) && in_array($parsedUrl['scheme'], ['http', 'https']);
+        return !empty($host)
+        && ($disableHostCheck || in_array($host, $hosts))
+        && !empty($parsedUrl['scheme'])
+        && in_array($parsedUrl['scheme'], ['http', 'https']);
     }
+
     /**
      * Checks whether the given host is a local host like `127.0.0.1` or `localhost`.
      *
@@ -575,29 +668,35 @@ class Url
     public static function isLocalHost($host)
     {
         if (empty($host)) {
-            return \false;
+            return false;
         }
+
         // remove port
         $hostWithoutPort = explode(':', $host);
         array_pop($hostWithoutPort);
         $hostWithoutPort = implode(':', $hostWithoutPort);
-        $localHostnames = \Piwik\Url::getLocalHostnames();
-        return in_array($host, $localHostnames, \true) || in_array($hostWithoutPort, $localHostnames, \true);
+
+        $localHostnames = Url::getLocalHostnames();
+        return in_array($host, $localHostnames, true)
+            || in_array($hostWithoutPort, $localHostnames, true);
     }
+
     /**
      * @return string[]
      */
     public static function getTrustedHostsFromConfig()
     {
         $hosts = self::getHostsFromConfig('General', 'trusted_hosts');
+
         // Case user wrote in the config, https://example.com/test instead of example.com
         foreach ($hosts as &$host) {
-            if (\Piwik\UrlHelper::isLookLikeUrl($host)) {
-                $host = parse_url($host, \PHP_URL_HOST);
+            if (UrlHelper::isLookLikeUrl($host)) {
+                $host = parse_url($host, PHP_URL_HOST);
             }
         }
         return $hosts;
     }
+
     /**
      * @return string[]
      */
@@ -605,6 +704,7 @@ class Url
     {
         return self::getTrustedHostsFromConfig();
     }
+
     /**
      * @return string[]
      */
@@ -612,6 +712,7 @@ class Url
     {
         return self::getHostsFromConfig('General', 'cors_domains');
     }
+
     /**
      * Returns hostname, without port numbers
      *
@@ -621,10 +722,11 @@ class Url
     public static function getHostSanitized($host)
     {
         if (!class_exists("Matomo\\Network\\IPUtils")) {
-            throw new Exception("Matomo\\Network\\IPUtils could not be found, maybe you are using Matomo from git and need to update Composer. \$ php composer.phar update");
+            throw new Exception("Matomo\\Network\\IPUtils could not be found, maybe you are using Matomo from git and need to update Composer. $ php composer.phar update");
         }
         return IPUtils::sanitizeIp($host);
     }
+
     /**
      * @param string $domain
      * @param string $key
@@ -632,16 +734,19 @@ class Url
      */
     protected static function getHostsFromConfig($domain, $key)
     {
-        $config = @\Piwik\Config::getInstance()->{$domain};
+        $config = @Config::getInstance()->$domain;
+
         if (!isset($config[$key])) {
             return [];
         }
+
         $hosts = $config[$key];
         if (!is_array($hosts)) {
             return [];
         }
         return $hosts;
     }
+
     /**
      * Returns the host part of any valid URL.
      *
@@ -653,12 +758,16 @@ class Url
         if (!is_string($url)) {
             return null;
         }
-        $urlHost = parse_url($url, \PHP_URL_HOST);
+
+        $urlHost = parse_url($url, PHP_URL_HOST);
+
         if (empty($urlHost)) {
             return null;
         }
+
         return mb_strtolower($urlHost);
     }
+
     /**
      * Checks whether any of the given URLs has the given host. If not, we will also check whether any URL uses a
      * subdomain of the given host. For instance if host is "example.com" and a URL is "https://www.example.com" we
@@ -671,104 +780,129 @@ class Url
     public static function isHostInUrls($host, $urls)
     {
         if (empty($host)) {
-            return \false;
+            return false;
         }
+
         $host = mb_strtolower($host);
+
         if (!empty($urls)) {
             foreach ($urls as $url) {
                 if (mb_strtolower($url) === $host) {
-                    return \true;
+                    return true;
                 }
+
                 $siteHost = self::getHostFromUrl($url);
+
                 if ($siteHost === $host) {
-                    return \true;
+                    return true;
                 }
-                if (\Piwik\Common::stringEndsWith($siteHost, '.' . $host)) {
+
+                if (Common::stringEndsWith($siteHost, '.' . $host)) {
                     // allow subdomains
-                    return \true;
+                    return true;
                 }
             }
         }
+
         return in_array($host, self::getAlwaysTrustedHosts());
     }
+
     /**
      * List of hosts that are never checked for validity.
      *
      * @return string[]
      */
-    private static function getAlwaysTrustedHosts() : array
+    private static function getAlwaysTrustedHosts(): array
     {
         return self::getLocalHostnames();
     }
+
     /**
      * @return string[]
      */
-    public static function getLocalHostnames() : array
+    public static function getLocalHostnames(): array
     {
         return ['localhost', '127.0.0.1', '::1', '[::1]', '[::]', '0000::1', '0177.0.0.1', '2130706433', '[0:0:0:0:0:ffff:127.0.0.1]'];
     }
-    public static function isSecureConnectionAssumedByPiwikButNotForcedYet() : bool
+
+    public static function isSecureConnectionAssumedByPiwikButNotForcedYet(): bool
     {
-        $isSecureConnectionLikelyNotUsed = \Piwik\Url::isSecureConnectionLikelyNotUsed();
-        $hasSessionCookieSecureFlag = \Piwik\ProxyHttp::isHttps();
-        $isSecureConnectionAssumedByPiwikButNotForcedYet = \Piwik\Url::isPiwikConfiguredToAssumeSecureConnection() && !\Piwik\SettingsPiwik::isHttpsForced();
-        return $isSecureConnectionLikelyNotUsed && $hasSessionCookieSecureFlag && $isSecureConnectionAssumedByPiwikButNotForcedYet;
+        $isSecureConnectionLikelyNotUsed = Url::isSecureConnectionLikelyNotUsed();
+        $hasSessionCookieSecureFlag = ProxyHttp::isHttps();
+        $isSecureConnectionAssumedByPiwikButNotForcedYet = Url::isPiwikConfiguredToAssumeSecureConnection() && !SettingsPiwik::isHttpsForced();
+
+        return     $isSecureConnectionLikelyNotUsed
+                && $hasSessionCookieSecureFlag
+                && $isSecureConnectionAssumedByPiwikButNotForcedYet;
     }
-    protected static function getCurrentSchemeFromRequestHeader() : string
+
+    protected static function getCurrentSchemeFromRequestHeader(): string
     {
         $proxySchemeHeaders = self::getProxySchemeHeadersFromConfig();
         foreach ($proxySchemeHeaders as $header) {
             if (empty($header) || !isset($_SERVER[$header])) {
                 continue;
             }
+
             $scheme = self::getSchemeFromHeaderValue($_SERVER[$header]);
             if ($scheme !== null) {
                 return $scheme;
             }
         }
-        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === \true)) {
+
+        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === true)) {
             return 'https';
         }
+
         return 'http';
     }
+
     /**
      * @return string[]
      */
-    protected static function getProxySchemeHeadersFromConfig() : array
+    protected static function getProxySchemeHeadersFromConfig(): array
     {
         $proxySchemeHeaders = GeneralConfig::getConfigValue('proxy_scheme_headers');
         if (empty($proxySchemeHeaders) || !is_array($proxySchemeHeaders)) {
             return [];
         }
+
         return $proxySchemeHeaders;
     }
+
     /**
      * @param mixed $value
      */
-    private static function getSchemeFromHeaderValue($value) : ?string
+    private static function getSchemeFromHeaderValue($value): ?string
     {
         if (!is_string($value)) {
             return null;
         }
+
         $value = trim($value);
         if ($value === '') {
             return null;
         }
+
         $value = strtolower($value);
         if ($value === 'http' || $value === 'https') {
             return $value;
         }
+
         return null;
     }
-    protected static function isSecureConnectionLikelyNotUsed() : bool
+
+    protected static function isSecureConnectionLikelyNotUsed(): bool
     {
-        return \Piwik\Url::getCurrentSchemeFromRequestHeader() == 'http';
+        return  Url::getCurrentSchemeFromRequestHeader() == 'http';
     }
-    protected static function isPiwikConfiguredToAssumeSecureConnection() : bool
+
+    protected static function isPiwikConfiguredToAssumeSecureConnection(): bool
     {
         $assume_secure_protocol = GeneralConfig::getConfigValue('assume_secure_protocol');
         return (bool) $assume_secure_protocol;
     }
+
     /**
      * @return string|null
      */
@@ -776,12 +910,18 @@ class Url
     {
         $host = @$_SERVER['SERVER_NAME'];
         if (!empty($host)) {
-            if (strpos($host, ':') === \false && !empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+            if (
+                strpos($host, ':') === false
+                && !empty($_SERVER['SERVER_PORT'])
+                && $_SERVER['SERVER_PORT'] != 80
+                && $_SERVER['SERVER_PORT'] != 443
+            ) {
                 $host .= ':' . $_SERVER['SERVER_PORT'];
             }
         }
         return $host;
     }
+
     /**
      * Add campaign parameters to URLs linking to matomo.org to improve understanding of how online help is being
      * used for different parts of the application, no personally identifiable information is included, just the area
@@ -793,47 +933,78 @@ class Url
      *                              'Matomo_App_Cloud'
      * @param string|null $medium   Optional campaign medium, defaults to App.[module].[action] where module and action are
      *                              taken from the currently viewed application page, eg. 'CoreAdminHome.trackingCodeGenerator'
+     * @param string|null $group     Optional campaign group, omitted when not given
+     * @param string|null $content   Optional campaign content, omitted when not given
+     * @param string|null $placement Optional campaign placement, omitted when not given
      *
      * @return ($url is string ? string : null)      www.matomo.org/faq/123?mtm_campaign=Matomo_App&mtm_source=Matomo_App_OnPremise&mtm_medium=App.CoreAdminHome.trackingCodeGenerator
      */
-    public static function addCampaignParametersToMatomoLink(?string $url = null, ?string $campaign = null, ?string $source = null, ?string $medium = null) : ?string
-    {
+    public static function addCampaignParametersToMatomoLink(
+        ?string $url = null,
+        ?string $campaign = null,
+        ?string $source = null,
+        ?string $medium = null,
+        ?string $group = null,
+        ?string $content = null,
+        ?string $placement = null
+    ): ?string {
+
         // Ignore if disabled by config setting
         if (GeneralConfig::getConfigValue('disable_tracking_matomo_app_links')) {
             return $url;
         }
+
         // Ignore nulls
         if ($url === null) {
             return $url;
         }
+
         // Ignore non-matomo domains
         $domain = self::getHostFromUrl($url);
-        if (!in_array($domain, ['matomo.org', 'www.matomo.org', 'developer.matomo.org', 'plugins.matomo.org'])) {
+        if (!in_array($domain, ['matomo.org', 'www.matomo.org', 'developer.matomo.org', 'plugins.matomo.org', 'shop.matomo.org'])) {
             return $url;
         }
+
         // Build parameters
         if ($medium === null) {
-            $module = \Piwik\Piwik::getModule();
-            $action = \Piwik\Piwik::getAction();
+            $module = Piwik::getModule();
+            $action = Piwik::getAction();
             if (empty($module) || empty($action)) {
-                return $url;
-                // Ignore if no module or action
+                return $url; // Ignore if no module or action
             }
             $medium = 'App.' . $module . '.' . $action;
         }
-        $newParams = ['mtm_campaign' => $campaign ?? 'Matomo_App', 'mtm_source' => $source ?? 'Matomo_App_' . (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('Cloud') ? 'Cloud' : 'OnPremise'), 'mtm_medium' => $medium];
+        $newParams = [
+            'mtm_campaign' => $campaign ?? 'Matomo_App',
+            'mtm_source' => $source ?? 'Matomo_App_' . (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('Cloud') ? 'Cloud' : 'OnPremise'),
+            'mtm_medium' => $medium,
+            ];
+
+        // the remaining campaign dimensions are optional; only send the ones a caller asked for
+        foreach (['mtm_group' => $group, 'mtm_content' => $content, 'mtm_placement' => $placement] as $param => $value) {
+            if ($value !== null && $value !== '') {
+                $newParams[$param] = $value;
+            }
+        }
+
         // Add parameters to the link, overriding any existing campaign parameters while preserving the path and query string
-        $pathAndQueryString = \Piwik\UrlHelper::getPathAndQueryFromUrl($url, $newParams, \true);
+        $pathAndQueryString = UrlHelper::getPathAndQueryFromUrl($url, $newParams, true);
         return 'https://' . $domain . '/' . $pathAndQueryString;
     }
+
     /**
      * Create an external link tag with optional campaign params if link goes to matomo.org
      *
      * @since 5.6.0
      */
-    public static function getExternalLinkTag(string $url, ?string $campaign = null, ?string $source = null, ?string $medium = null) : string
-    {
+    public static function getExternalLinkTag(
+        string $url,
+        ?string $campaign = null,
+        ?string $source = null,
+        ?string $medium = null
+    ): string {
         $url = self::addCampaignParametersToMatomoLink($url, $campaign, $source, $medium);
+
         return '<a target="_blank" rel="noreferrer noopener" href="' . $url . '">';
     }
 }

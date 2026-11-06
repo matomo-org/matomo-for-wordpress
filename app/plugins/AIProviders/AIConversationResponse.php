@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders;
 
 /**
@@ -33,28 +35,34 @@ class AIConversationResponse
     public const STOP_MAX_TOKENS = 'max_tokens';
     public const STOP_SEQUENCE = 'stop_sequence';
     public const STOP_GUARDRAIL_INTERVENED = 'guardrail_intervened';
+
     /**
      * @var string
      */
     private $providerId;
+
     /**
      * @var string
      */
     private $providerName;
+
     /**
      * @var string
      */
     private $model;
+
     /**
      * Canonical assistant content blocks ('text' and/or 'tool_use').
      *
      * @var list<CanonicalContentBlockArray>
      */
     private $content;
+
     /**
      * @var string
      */
     private $stopReason;
+
     /**
      * Number of input (prompt) tokens reported by the provider, or null when
      * the provider does not report token usage.
@@ -62,6 +70,7 @@ class AIConversationResponse
      * @var int|null
      */
     private $inputTokens;
+
     /**
      * Number of output (completion) tokens reported by the provider, or null
      * when the provider does not report token usage.
@@ -69,17 +78,27 @@ class AIConversationResponse
      * @var int|null
      */
     private $outputTokens;
+
     /**
      * Total provider request time in milliseconds, including retries.
      *
      * @var int|null
      */
     private $executionTimeMs;
+
     /**
      * @param list<CanonicalContentBlockArray> $content
      */
-    public function __construct(string $providerId, string $providerName, string $model, array $content, string $stopReason, ?int $inputTokens = null, ?int $outputTokens = null, ?int $executionTimeMs = null)
-    {
+    public function __construct(
+        string $providerId,
+        string $providerName,
+        string $model,
+        array $content,
+        string $stopReason,
+        ?int $inputTokens = null,
+        ?int $outputTokens = null,
+        ?int $executionTimeMs = null
+    ) {
         $this->providerId = $providerId;
         $this->providerName = $providerName;
         $this->model = $model;
@@ -89,35 +108,41 @@ class AIConversationResponse
         $this->outputTokens = $outputTokens;
         $this->executionTimeMs = $executionTimeMs;
     }
-    public function getProviderId() : string
+
+    public function getProviderId(): string
     {
         return $this->providerId;
     }
-    public function getProviderName() : string
+
+    public function getProviderName(): string
     {
         return $this->providerName;
     }
-    public function getModel() : string
+
+    public function getModel(): string
     {
         return $this->model;
     }
+
     /**
      * @return list<CanonicalContentBlockArray>
      */
-    public function getContent() : array
+    public function getContent(): array
     {
         return $this->content;
     }
-    public function getStopReason() : string
+
+    public function getStopReason(): string
     {
         return $this->stopReason;
     }
+
     /**
      * Concatenated text of all canonical text blocks. Convenience for
      * logging and for turns that carry no tool calls; tool-aware callers
      * should read {@link getContent()} instead.
      */
-    public function getText() : string
+    public function getText(): string
     {
         $parts = [];
         foreach ($this->content as $block) {
@@ -125,17 +150,21 @@ class AIConversationResponse
                 $parts[] = $block['text'];
             }
         }
+
         return implode("\n", $parts);
     }
-    public function getInputTokens() : ?int
+
+    public function getInputTokens(): ?int
     {
         return $this->inputTokens;
     }
-    public function getOutputTokens() : ?int
+
+    public function getOutputTokens(): ?int
     {
         return $this->outputTokens;
     }
-    public function getExecutionTimeMs() : ?int
+
+    public function getExecutionTimeMs(): ?int
     {
         return $this->executionTimeMs;
     }

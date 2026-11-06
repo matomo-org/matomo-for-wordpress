@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Db;
 
 use Exception;
@@ -18,6 +19,7 @@ use Piwik\ExceptionHandler;
 use Piwik\Log;
 use Piwik\SettingsServer;
 use Piwik\SettingsPiwik;
+
 class BatchInsert
 {
     /**
@@ -30,17 +32,21 @@ class BatchInsert
      * @param array $values array of data to be inserted
      * @param bool $ignoreWhenDuplicate Ignore new rows that contain unique key values that duplicate old rows
      */
-    public static function tableInsertBatchIterate($tableName, $fields, $values, $ignoreWhenDuplicate = \true)
+    public static function tableInsertBatchIterate($tableName, $fields, $values, $ignoreWhenDuplicate = true)
     {
-        $tableName = preg_replace('/[^a-zA-Z\\d_-]/', '', $tableName);
+        $tableName = preg_replace('/[^a-zA-Z\d_-]/', '', $tableName);
         $fieldList = '(' . join(',', $fields) . ')';
-        $ignore = $ignoreWhenDuplicate ? 'IGNORE' : '';
+        $ignore    = $ignoreWhenDuplicate ? 'IGNORE' : '';
+
         foreach ($values as $row) {
             $row = array_values($row);
-            $query = "INSERT {$ignore} INTO `" . $tableName . "`\n\t\t\t\t\t  {$fieldList}\n\t\t\t\t\t  VALUES (" . Common::getSqlStringFieldsArray($row) . ")";
+            $query = "INSERT $ignore INTO `" . $tableName . "`
+					  $fieldList
+					  VALUES (" . Common::getSqlStringFieldsArray($row) . ")";
             Db::query($query, $row);
         }
     }
+
     /**
      * Performs a batch insert into a specific table by sending all data in one SQL statement.
      *
@@ -49,7 +55,7 @@ class BatchInsert
      * @param array $values array of data to be inserted
      * @param bool $ignoreWhenDuplicate Ignore new rows that contain unique key values that duplicate old rows
      */
-    public static function tableInsertBatchSql($tableName, $fields, $values, $ignoreWhenDuplicate = \true)
+    public static function tableInsertBatchSql($tableName, $fields, $values, $ignoreWhenDuplicate = true)
     {
         $insertLines = array();
         $bind = array();
@@ -57,12 +63,14 @@ class BatchInsert
             $insertLines[] = "(" . Common::getSqlStringFieldsArray($row) . ")";
             $bind = array_merge($bind, $row);
         }
+
         $fieldList = '(' . implode(',', $fields) . ')';
         $insertLines = implode(',', $insertLines);
-        $ignore = $ignoreWhenDuplicate ? 'IGNORE' : '';
-        $query = "INSERT {$ignore} INTO {$tableName} {$fieldList} VALUES {$insertLines}";
+        $ignore    = $ignoreWhenDuplicate ? 'IGNORE' : '';
+        $query = "INSERT $ignore INTO $tableName $fieldList VALUES $insertLines";
         Db::query($query, $bind);
     }
+
     /**
      * Performs a batch insert into a specific table using either LOAD DATA INFILE or plain INSERTs,
      * as a fallback. On MySQL, LOAD DATA INFILE is 20x faster than a series of plain INSERTs.
@@ -76,72 +84,85 @@ class BatchInsert
      * @throws Exception
      * @return bool  True if the bulk LOAD was used, false if we fallback to plain INSERTs
      */
-    public static function tableInsertBatch($tableName, $fields, $values, $throwException = \false, $charset = 'utf8')
+    public static function tableInsertBatch($tableName, $fields, $values, $throwException = false, $charset = 'utf8')
     {
         $loadDataInfileEnabled = Config::getInstance()->General['enable_load_data_infile'];
-        if ($loadDataInfileEnabled && Db::get()->hasBulkLoader()) {
+
+        if (
+            $loadDataInfileEnabled
+            && Db::get()->hasBulkLoader()
+        ) {
             $path = self::getBestPathForLoadData();
             $instanceId = SettingsPiwik::getPiwikInstanceId();
             if (empty($instanceId)) {
                 $instanceId = '';
             }
             $filePath = $path . $tableName . '-' . $instanceId . Common::generateUniqId() . '.csv';
+
             // always use utf8 for TiDb, as TiDb has problems with latin1
             if (DatabaseConfig::isTiDb()) {
                 $charset = 'utf8';
             }
+
             try {
                 $fileSpec = array(
-                    'delim' => "\t",
-                    'quote' => '"',
-                    // chr(34)
-                    'escape' => '\\\\',
-                    // chr(92)
+                    'delim'            => "\t",
+                    'quote'            => '"', // chr(34)
+                    'escape'           => '\\\\', // chr(92)
                     'escapespecial_cb' => function ($str) {
-                        return str_replace(array(chr(92), chr(34)), array(chr(92) . chr(92), chr(92) . chr(34)), $str);
+                            return str_replace(array(chr(92), chr(34)), array(chr(92) . chr(92), chr(92) . chr(34)), $str);
                     },
-                    'eol' => "\r\n",
-                    'null' => 'NULL',
-                    'charset' => $charset,
+                    'eol'              => "\r\n",
+                    'null'             => 'NULL',
+                    'charset'          => $charset,
                 );
+
                 self::createCSVFile($filePath, $fileSpec, $values);
+
                 if (!is_readable($filePath)) {
-                    throw new Exception("File {$filePath} could not be read.");
+                    throw new Exception("File $filePath could not be read.");
                 }
+
                 $rc = self::createTableFromCSVFile($tableName, $fields, $filePath, $fileSpec);
                 if ($rc) {
                     unlink($filePath);
-                    return \true;
+                    return true;
                 }
             } catch (Exception $e) {
                 if ($throwException) {
                     throw $e;
                 }
             }
+
             // if all else fails, fallback to a series of INSERTs
             if (file_exists($filePath)) {
                 @unlink($filePath);
             }
         }
+
         self::tableInsertBatchIterate($tableName, $fields, $values);
-        return \false;
+
+        return false;
     }
+
     private static function getBestPathForLoadData()
     {
         try {
-            $path = Db::fetchOne('SELECT @@secure_file_priv');
-            // was introduced in 5.0.38
+            $path = Db::fetchOne('SELECT @@secure_file_priv'); // was introduced in 5.0.38
         } catch (Exception $e) {
             // we do not rethrow exception as an error is expected if MySQL is < 5.0.38
             // in this case tableInsertBatch might still work
         }
+
         if (empty($path) || !@is_dir($path) || !@is_writable($path)) {
             $path = StaticContainer::get('path.tmp') . '/assets/';
         } elseif (!Common::stringEndsWith($path, '/')) {
             $path .= '/';
         }
+
         return $path;
     }
+
     /**
      * Batch insert into table from CSV (or other delimited) file.
      *
@@ -160,31 +181,50 @@ class BatchInsert
         if (!empty($chrootPath)) {
             $filePath = $chrootPath . $filePath;
         }
+
         // On Windows, MySQL expects forward slashes as directory separators
         if (SettingsServer::isWindows()) {
             $filePath = str_replace('\\', '/', $filePath);
         }
-        $query = "\n\t\t\t\t'{$filePath}'\n\t\t\tREPLACE\n\t\t\tINTO TABLE\n\t\t\t\t`" . $tableName . "`";
+
+        $query = "
+				'$filePath'
+			REPLACE
+			INTO TABLE
+				`" . $tableName . "`";
+
         if (isset($fileSpec['charset'])) {
             $query .= ' CHARACTER SET ' . $fileSpec['charset'];
         }
+
         $fieldList = '(' . join(',', $fields) . ')';
-        $query .= "\n\t\t\tFIELDS TERMINATED BY\n\t\t\t\t'" . $fileSpec['delim'] . "'\n\t\t\tENCLOSED BY\n\t\t\t\t'" . $fileSpec['quote'] . "'\n\t\t";
+
+        $query .= "
+			FIELDS TERMINATED BY
+				'" . $fileSpec['delim'] . "'
+			ENCLOSED BY
+				'" . $fileSpec['quote'] . "'
+		";
         if (isset($fileSpec['escape'])) {
             $query .= " ESCAPED BY '" . $fileSpec['escape'] . "'";
         }
-        $query .= "\n\t\t\tLINES TERMINATED BY\n\t\t\t\t'" . $fileSpec['eol'] . "'\n\t\t\t{$fieldList}\n\t\t";
+        $query .= "
+			LINES TERMINATED BY
+				'" . $fileSpec['eol'] . "'
+			$fieldList
+		";
+
         /*
          * First attempt: assume web server and MySQL server are on the same machine;
          * this requires that the db user have the FILE privilege; however, since this is
          * a global privilege, it may not be granted due to security concerns
          */
         if (Config::getInstance()->General['multi_server_environment']) {
-            $keywords = array();
-            // don't try 'LOAD DATA INFILE' if in a multi_server_environment
+            $keywords = array(); // don't try 'LOAD DATA INFILE' if in a multi_server_environment
         } else {
             $keywords = array('');
         }
+
         /*
          * Second attempt: using the LOCAL keyword means the client reads the file and sends it to the server;
          * the LOCAL keyword may trigger a known PHP PDO\MYSQL bug when MySQL not built with --enable-local-infile
@@ -192,11 +232,13 @@ class BatchInsert
          */
         $openBaseDir = ini_get('open_basedir');
         $safeMode = ini_get('safe_mode');
+
         if ((function_exists('mysqli_get_client_stats') || empty($openBaseDir)) && empty($safeMode)) {
             // php 5.x - LOAD DATA LOCAL INFILE only used if open_basedir is not set (or we're using a non-buggy version of mysqlnd)
             //           and if safe mode is not enabled
             $keywords[] = 'LOCAL ';
         }
+
         $exceptions = array();
         foreach ($keywords as $keyword) {
             $queryStart = 'LOAD DATA ' . $keyword . 'INFILE ';
@@ -206,23 +248,27 @@ class BatchInsert
                 if (empty($result) || $result < 0) {
                     continue;
                 }
-                return \true;
+
+                return true;
             } catch (Exception $e) {
                 $code = $e->getCode();
-                $message = $e->getMessage() . ($code ? "[{$code}]" : '');
+                $message = $e->getMessage() . ($code ? "[$code]" : '');
                 if (ExceptionHandler::shouldPrintBackTraceWithMessage()) {
                     $message .= "\n" . $e->getTraceAsString();
                 }
                 $exceptions[] = "\n  Try #" . (count($exceptions) + 1) . ': ' . $queryStart . ": " . $message;
             }
         }
+
         if (count($exceptions)) {
             $message = "LOAD DATA INFILE failed... Error was: " . implode(",", $exceptions);
             Log::info($message);
             throw new Exception($message);
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Create CSV (or other delimited) files
      *
@@ -236,31 +282,37 @@ class BatchInsert
         // Set up CSV delimiters, quotes, etc
         $delim = $fileSpec['delim'];
         $quote = $fileSpec['quote'];
-        $eol = $fileSpec['eol'];
-        $null = $fileSpec['null'];
+        $eol   = $fileSpec['eol'];
+        $null  = $fileSpec['null'];
         $escapespecial_cb = $fileSpec['escapespecial_cb'];
+
         $fp = @fopen($filePath, 'wb');
         if (!$fp) {
             throw new Exception('Error creating the tmp file ' . $filePath . ', please check that the webserver has write permission to write this file.');
         }
+
         foreach ($rows as $row) {
             $output = '';
             foreach ($row as $value) {
-                if (!isset($value) || is_null($value) || $value === \false) {
+                if (!isset($value) || is_null($value) || $value === false) {
                     $output .= $null . $delim;
                 } else {
                     $output .= $quote . $escapespecial_cb($value) . $quote . $delim;
                 }
             }
+
             // Replace delim with eol
             $output = substr_replace($output, $eol, -1);
+
             $ret = fwrite($fp, $output);
             if (!$ret) {
                 fclose($fp);
                 throw new Exception('Error writing to the tmp file ' . $filePath);
             }
         }
+
         fclose($fp);
+
         @chmod($filePath, 0777);
     }
 }

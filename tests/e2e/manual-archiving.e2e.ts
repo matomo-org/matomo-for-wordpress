@@ -28,7 +28,7 @@ describe('Manual Archiving', function () {
   });
 
   after(async () => {
-    await MatomoIniConfig.remove('log', 'log_writers[]');
+    await MatomoIniConfig.remove('log', 'log_writers');
     await MatomoIniConfig.remove('log', 'log_level');
   });
 

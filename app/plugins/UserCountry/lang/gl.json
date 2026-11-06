@@ -1,0 +1,10 @@
+{
+    "UserCountry": {
+        "Continent": "Continente",
+        "Country": "País",
+        "DistinctCountries": "%s continentes distintos",
+        "Region": "Rexión",
+        "SubmenuLocations": "Lugares",
+        "country_o1": "Outro país"
+    }
+}

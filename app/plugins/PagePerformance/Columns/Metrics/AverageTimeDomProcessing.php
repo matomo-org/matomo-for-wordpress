@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\PagePerformance\Columns\Metrics;
 
 use Piwik\Piwik;
+
 /**
  * The average amount of time the browser spends until user can start interacting with the page. Calculated as
  *
@@ -17,13 +19,15 @@ use Piwik\Piwik;
  * The above metrics are calculated during archiving. This metric is calculated before
  * serving a report.
  */
-class AverageTimeDomProcessing extends \Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePerformanceMetric
+class AverageTimeDomProcessing extends AveragePerformanceMetric
 {
     public const ID = 'time_dom_processing';
+
     public function getTranslatedName()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeDomProcessing');
     }
+
     public function getDocumentation()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeDomProcessingDocumentation');

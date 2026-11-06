@@ -1,0 +1,8 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Мясцовы час",
+        "LocalTime": "Наведванняў па мясцовым часе",
+        "SubmenuTimes": "Па часе",
+        "WidgetLocalTimeDocumentation": "Гэты графік паказвае, які %1$s час быў у наведвальніка %2$s пад час наведвання веб-сайту."
+    }
+}

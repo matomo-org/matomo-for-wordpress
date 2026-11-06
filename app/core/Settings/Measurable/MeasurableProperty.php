@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Measurable;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Exception;
 use Piwik\Settings\Storage\Factory;
+
 /**
  * Describes a Measurable property for a measurable type such as a website, a mobile app, ....
  *
@@ -27,7 +29,14 @@ class MeasurableProperty extends \Piwik\Settings\Setting
      * @var int
      */
     private $idSite = 0;
-    private $allowedNames = array('ecommerce', 'sitesearch', 'sitesearch_keyword_parameters', 'sitesearch_category_parameters', 'excluded_referrers', 'exclude_unknown_urls', 'excluded_ips', 'excluded_parameters', 'excluded_user_agents', 'keep_url_fragment', 'urls', 'group');
+
+    private $allowedNames = array(
+        'ecommerce', 'sitesearch', 'sitesearch_keyword_parameters',
+        'sitesearch_category_parameters', 'excluded_referrers',
+        'exclude_unknown_urls', 'excluded_ips', 'excluded_parameters',
+        'excluded_user_agents', 'keep_url_fragment', 'urls', 'group',
+    );
+
     /**
      * @param string $name The persisted name of the setting.
      * @param mixed $defaultValue  Default value for this setting if no value was specified.
@@ -41,12 +50,16 @@ class MeasurableProperty extends \Piwik\Settings\Setting
         if (!in_array($name, $this->allowedNames)) {
             throw new Exception(sprintf('Name "%s" is not allowed to be used with a MeasurableProperty, use a MeasurableSetting instead.', $name));
         }
+
         parent::__construct($name, $defaultValue, $type, $pluginName);
+
         $this->idSite = $idSite;
+
         /** @var Factory */
-        $storageFactory = StaticContainer::get('Piwik\\Settings\\Storage\\Factory');
+        $storageFactory = StaticContainer::get('Piwik\Settings\Storage\Factory');
         $this->storage = $storageFactory->getSitesTable($idSite);
     }
+
     /**
      * Returns `true` if this setting can be displayed for the current user, `false` if otherwise.
      *
@@ -57,14 +70,17 @@ class MeasurableProperty extends \Piwik\Settings\Setting
         if (isset($this->hasWritePermission)) {
             return $this->hasWritePermission;
         }
+
         // performance improvement, do not detect this in __construct otherwise likely rather "big" query to DB.
         if ($this->hasSiteBeenCreated()) {
             $this->hasWritePermission = Piwik::isUserHasAdminAccess($this->idSite);
         } else {
             $this->hasWritePermission = Piwik::hasUserSuperUserAccess();
         }
+
         return $this->hasWritePermission;
     }
+
     private function hasSiteBeenCreated()
     {
         return !empty($this->idSite);

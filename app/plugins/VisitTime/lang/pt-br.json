@@ -1,0 +1,33 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "Horário local - hora (início da visita)",
+        "ColumnLocalMinute": "Horário local - minuto (início da visita)",
+        "ColumnLocalTime": "Horário local",
+        "ColumnServerHour": "Horário do servidor - hora",
+        "ColumnSiteHour": "Horário do site - hora",
+        "ColumnUTCMinute": "Horário em UTC - minuto",
+        "ColumnVisitEndSiteHour": "Horário do site - hora (horário da última ação)",
+        "ColumnVisitEndUTCDate": "Horário em UTC - data (horário da última ação)",
+        "ColumnVisitEndUTCDayOfMonth": "Horário em UTC - dia do mês (horário da última ação)",
+        "ColumnVisitEndUTCDayOfWeek": "Horário em UTC - dia da semana (horário da última ação)",
+        "ColumnVisitEndUTCDayOfYear": "Horário em UTC - dia do ano (horário da última ação)",
+        "ColumnVisitEndUTCMinute": "Horário em UTC - minuto (horário da última ação)",
+        "ColumnVisitEndUTCMonth": "Horário em UTC - mês (horário da última ação)",
+        "ColumnVisitEndUTCQuarter": "Horário em UTC - trimestre (horário da última ação)",
+        "ColumnVisitEndUTCSecond": "Horário em UTC - segundo (horário da última ação)",
+        "ColumnVisitEndUTCWeekOfYear": "Horário em UTC - semana do ano (horário da última ação)",
+        "ColumnVisitEndUTCYear": "Horário em UTC - ano (horário da última ação)",
+        "ColumnVisitStartSiteHour": "Horário do site - hora (início da visita)",
+        "ColumnVisitStartUTCMinute": "Horário em UTC - minuto (início da visita)",
+        "DayOfWeek": "Dia da semana",
+        "LocalTime": "Visitas pelo horário local",
+        "PluginDescription": "Informa o horário local e o horário do servidor quando seus visitantes visualizam seu site ou aplicativo.",
+        "SiteTime": "Visitas por hora no fuso horário",
+        "SubmenuTimes": "Horários",
+        "TimesSubcategoryHelp": "A seção \"Horários\" mostra quando as pessoas visitam seu site. Os horários locais populares ajudam você a adequar seu site às suas vidas. Os horários de servidor mais populares revelam a demanda técnica.",
+        "VisitsByDayOfWeek": "Visitas por dia da semana",
+        "WidgetByDayOfWeekDocumentation": "Este gráfico mostra o número de visitas que seu site recebeu, em cada dia da semana.",
+        "WidgetLocalTimeDocumentation": "Este gráfico mostra o tempo que estava no %1$s fuso horário dos visitantes %2$s durante suas visitas.",
+        "WidgetSiteTimeDocumentation": "Este gráfico mostra o que estava no %1$s do site do horário de zona %2$s durante as visitas."
+    }
+}

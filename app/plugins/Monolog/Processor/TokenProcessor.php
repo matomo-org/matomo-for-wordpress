@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Monolog\Processor;
 
 /**
@@ -18,6 +19,7 @@ class TokenProcessor
     public function __invoke(array $record)
     {
         $record['message'] = preg_replace('/token_auth=[0-9a-h]+/', 'token_auth=removed', $record['message']);
+
         return $record;
     }
 }

@@ -6,9 +6,11 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Menu\MenuAbstract;
+
 /**
  * Contains menu entries for the Tag Manager menu.
  * Plugins can implement the `configureTagManagerMenu()` method of the `Menu` plugin class to add, rename of remove
@@ -32,6 +34,7 @@ class MenuTagManager extends MenuAbstract
                 }
             }
         }
+
         return parent::getMenu();
     }
 }

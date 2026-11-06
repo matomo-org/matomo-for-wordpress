@@ -1,5 +1,7 @@
 <?php
 
-namespace {
-    return array('diagnostics.optional' => \Piwik\DI::add(array(\Piwik\DI::get('Piwik\\Plugins\\UserCountry\\Diagnostic\\GeolocationDiagnostic'))));
-}
+return array(
+    'diagnostics.optional' => Piwik\DI::add(array(
+        Piwik\DI::get('Piwik\Plugins\UserCountry\Diagnostic\GeolocationDiagnostic'),
+    )),
+);

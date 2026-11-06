@@ -7,7 +7,9 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace DeviceDetector\Parser\Client;
 
 /**
@@ -15,12 +17,13 @@ namespace DeviceDetector\Parser\Client;
  *
  * Client parser for mediaplayer detection
  */
-class MediaPlayer extends \DeviceDetector\Parser\Client\AbstractClientParser
+class MediaPlayer extends AbstractClientParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = 'regexes/client/mediaplayers.yml';
+
     /**
      * @var string
      */

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker;
 
 use Piwik\Access;
@@ -17,6 +18,7 @@ use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Tracker;
 use Piwik\Log\LoggerInterface;
+
 /**
  * Simple cache mechanism used in Tracker to avoid requesting settings from mysql on every request
  *
@@ -28,17 +30,21 @@ class Cache
      * @var bool
      */
     private static $delegatingCacheClears;
+
     /**
      * {@see self::withDelegatedCacheClears()}
      * @var array
      */
     private static $delegatedClears = [];
+
     private static $cacheIdGeneral = 'general';
+
     /**
      * Public for tests only
      * @var \Matomo\Cache\Lazy
      */
     public static $cache;
+
     /**
      * @return \Matomo\Cache\Lazy
      */
@@ -47,12 +53,15 @@ class Cache
         if (is_null(self::$cache)) {
             self::$cache = PiwikCache::getLazyCache();
         }
+
         return self::$cache;
     }
+
     private static function getTtl()
     {
         return Config::getInstance()->Tracker['tracker_cache_file_ttl'];
     }
+
     /**
      * Returns array containing data about the website: goals, URLs, etc.
      *
@@ -64,22 +73,28 @@ class Cache
         if ('all' === $idSite) {
             return [];
         }
-        $idSite = (int) $idSite;
+
+        $idSite = (int)$idSite;
         if ($idSite <= 0) {
             return [];
         }
+
         $cache = self::getCache();
         $cacheId = self::getCacheKeyWebsiteAttributes($idSite);
         $cacheContent = $cache->fetch($cacheId);
-        if (\false !== $cacheContent) {
+
+        if (false !== $cacheContent) {
             return $cacheContent;
         }
+
         return self::updateCacheWebsiteAttributes($idSite);
     }
+
     private static function getCacheKeyWebsiteAttributes($idSite)
     {
         return $idSite;
     }
+
     /**
      * Updates the website specific tracker cache containing data about the website: goals, URLs, etc.
      *
@@ -91,13 +106,15 @@ class Cache
     {
         $cache = self::getCache();
         $cacheId = self::getCacheKeyWebsiteAttributes($idSite);
+
         Tracker::initCorePiwikInTrackerMode();
+
         $content = [];
         /*
          * Updating cached websites attributes might be triggered by various events, including actions performed by non super users.
          * Therefore we execute below code as super user, to ensure the cache is built without restrictions.
          */
-        Access::doAsSuperUser(function () use(&$content, $idSite) {
+        Access::doAsSuperUser(function () use (&$content, $idSite) {
             /**
              * Triggered to get the attributes of a site entity that might be used by the
              * Tracker.
@@ -117,17 +134,22 @@ class Cache
              * @param int $idSite The site ID to get attributes for.
              */
             Piwik::postEvent('Tracker.Cache.getSiteAttributes', [&$content, $idSite]);
+
             $logger = StaticContainer::get(LoggerInterface::class);
-            $logger->debug("Website {$idSite} tracker cache was re-created.");
+            $logger->debug("Website $idSite tracker cache was re-created.");
         });
+
         // if nothing is returned from the plugins, we don't save the content
         // this is not expected: all websites are expected to have at least one URL
         if (!empty($content)) {
             $cache->save($cacheId, $content, self::getTtl());
         }
+
         Tracker::restoreTrackerPlugins();
+
         return $content;
     }
+
     /**
      * Clear general (global) cache
      */
@@ -137,8 +159,10 @@ class Cache
             self::$delegatedClears[__FUNCTION__] = [__FUNCTION__, []];
             return;
         }
+
         self::getCache()->delete(self::$cacheIdGeneral);
     }
+
     /**
      * Returns contents of general (global) cache.
      * If the cache file tmp/cache/tracker/general.php does not exist yet, create it
@@ -149,11 +173,14 @@ class Cache
     {
         $cache = self::getCache();
         $cacheContent = $cache->fetch(self::$cacheIdGeneral);
-        if (\false !== $cacheContent) {
+
+        if (false !== $cacheContent) {
             return $cacheContent;
         }
+
         return self::updateGeneralCache();
     }
+
     /**
      * Updates the contents of the general (global) cache.
      *
@@ -162,7 +189,11 @@ class Cache
     public static function updateGeneralCache()
     {
         Tracker::initCorePiwikInTrackerMode();
-        $cacheContent = ['isBrowserTriggerEnabled' => Rules::isBrowserTriggerEnabled(), 'lastTrackerCronRun' => Option::get('lastTrackerCronRun')];
+        $cacheContent = [
+            'isBrowserTriggerEnabled' => Rules::isBrowserTriggerEnabled(),
+            'lastTrackerCronRun' => Option::get('lastTrackerCronRun'),
+        ];
+
         /**
          * Triggered before the [general tracker cache](/guides/all-about-tracking#the-tracker-cache)
          * is saved to disk. This event can be used to add extra content to the cache.
@@ -185,11 +216,15 @@ class Cache
          */
         Piwik::postEvent('Tracker.setTrackerCacheGeneral', [&$cacheContent]);
         self::setCacheGeneral($cacheContent);
+
         $logger = StaticContainer::get(LoggerInterface::class);
         $logger->debug("General tracker cache was re-created.");
+
         Tracker::restoreTrackerPlugins();
+
         return $cacheContent;
     }
+
     /**
      * Store data in general (global cache)
      *
@@ -199,8 +234,10 @@ class Cache
     public static function setCacheGeneral($value)
     {
         $cache = self::getCache();
+
         return $cache->save(self::$cacheIdGeneral, $value, self::getTtl());
     }
+
     /**
      * Regenerate Tracker cache files
      *
@@ -211,11 +248,13 @@ class Cache
         if (!is_array($idSites)) {
             $idSites = [$idSites];
         }
+
         foreach ($idSites as $idSite) {
             self::deleteCacheWebsiteAttributes($idSite);
             self::getCacheWebsiteAttributes($idSite);
         }
     }
+
     /**
      * Delete existing Tracker cache
      *
@@ -227,8 +266,10 @@ class Cache
             self::$delegatedClears[__FUNCTION__ . $idSite] = [__FUNCTION__, func_get_args()];
             return;
         }
-        self::getCache()->delete((int) $idSite);
+
+        self::getCache()->delete((int)$idSite);
     }
+
     /**
      * Deletes all Tracker cache files
      */
@@ -238,8 +279,10 @@ class Cache
             self::$delegatedClears[__FUNCTION__] = [__FUNCTION__, []];
             return;
         }
+
         self::getCache()->flushAll();
     }
+
     /**
      * Runs `$callback` without clearing any tracker cache, just collecting which delete methods were called.
      * After `$callback` finishes, we clear caches, but just once per type of delete/clear method collected.
@@ -252,21 +295,26 @@ class Cache
     public static function withDelegatedCacheClears($callback)
     {
         try {
-            self::$delegatingCacheClears = \true;
+            self::$delegatingCacheClears = true;
             self::$delegatedClears = [];
+
             return $callback();
         } finally {
-            self::$delegatingCacheClears = \false;
+            self::$delegatingCacheClears = false;
+
             self::callAllDelegatedClears();
+
             self::$delegatedClears = [];
         }
     }
+
     private static function callAllDelegatedClears()
     {
         foreach (self::$delegatedClears as list($methodName, $params)) {
             if (!method_exists(self::class, $methodName)) {
                 continue;
             }
+
             call_user_func_array([self::class, $methodName], $params);
         }
     }

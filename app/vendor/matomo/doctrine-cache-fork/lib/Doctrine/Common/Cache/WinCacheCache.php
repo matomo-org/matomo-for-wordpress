@@ -11,12 +11,13 @@ use function wincache_ucache_get;
 use function wincache_ucache_info;
 use function wincache_ucache_meminfo;
 use function wincache_ucache_set;
+
 /**
  * WinCache cache provider.
  *
  * @link   www.doctrine-project.org
  */
-class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
+class WinCacheCache extends CacheProvider
 {
     /**
      * {@inheritdoc}
@@ -25,6 +26,7 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_get($id);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -32,6 +34,7 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_exists($id);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +42,7 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_set($id, $data, $lifeTime);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +50,7 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_delete($id);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -53,6 +58,7 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_clear();
     }
+
     /**
      * {@inheritdoc}
      */
@@ -60,29 +66,41 @@ class WinCacheCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return wincache_ucache_get($keys);
     }
+
     /**
      * {@inheritdoc}
      */
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
         $result = wincache_ucache_set($keysAndValues, null, $lifetime);
+
         return empty($result);
     }
+
     /**
      * {@inheritdoc}
      */
     protected function doDeleteMultiple(array $keys)
     {
         $result = wincache_ucache_delete($keys);
+
         return is_array($result) && count($result) !== count($keys);
     }
+
     /**
      * {@inheritdoc}
      */
     protected function doGetStats()
     {
-        $info = wincache_ucache_info();
+        $info    = wincache_ucache_info();
         $meminfo = wincache_ucache_meminfo();
-        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['total_hit_count'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['total_miss_count'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['total_cache_uptime'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $meminfo['memory_total'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => $meminfo['memory_free']];
+
+        return [
+            Cache::STATS_HITS             => $info['total_hit_count'],
+            Cache::STATS_MISSES           => $info['total_miss_count'],
+            Cache::STATS_UPTIME           => $info['total_cache_uptime'],
+            Cache::STATS_MEMORY_USAGE     => $meminfo['memory_total'],
+            Cache::STATS_MEMORY_AVAILABLE => $meminfo['memory_free'],
+        ];
     }
 }

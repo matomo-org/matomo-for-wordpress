@@ -97,6 +97,19 @@ class MatomoApi {
     return result;
   }
 
+  // polls until isDone() passes or the timeout is reached, returning the last result either way,
+  // so the caller's assertions report what was actually found
+  async callUntil(restMethod: string, apiMethod: string, params: URLSearchParams, isDone: (result: any) => boolean, timeout = 20000) {
+    const end = Date.now() + timeout;
+    while (true) {
+      const result = await this.call(restMethod, apiMethod, params);
+      if (isDone(result) || Date.now() >= end) {
+        return result;
+      }
+      await new Promise((r) => setTimeout(r, 500));
+    }
+  }
+
   toSnakeCase(s: string) {
     return s.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
   }

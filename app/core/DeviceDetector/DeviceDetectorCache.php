@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DeviceDetector;
 
 use Piwik\Cache as PiwikCache;
+
 /**
  * Caching class used for DeviceDetector caching
  *
@@ -19,13 +21,16 @@ use Piwik\Cache as PiwikCache;
 class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
 {
     protected static $staticCache = array();
+
     private $cache;
     private $ttl;
+
     public function __construct($ttl = 300)
     {
-        $this->ttl = (int) $ttl;
+        $this->ttl   = (int) $ttl;
         $this->cache = PiwikCache::getLazyCache();
     }
+
     /**
      * Function to fetch a cache entry
      *
@@ -35,16 +40,20 @@ class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
     public function fetch($id)
     {
         if (empty($id)) {
-            return \false;
+            return false;
         }
+
         if (array_key_exists($id, self::$staticCache)) {
             return self::$staticCache[$id];
         }
+
         if (!$this->cache->contains($id)) {
-            return \false;
+            return false;
         }
+
         return $this->cache->fetch($id);
     }
+
     /**
      * A function to store content a cache entry.
      *
@@ -53,27 +62,34 @@ class DeviceDetectorCache implements \DeviceDetector\Cache\CacheInterface
      * @throws \Exception
      * @return bool  True if the entry was successfully stored
      */
-    public function save($id, $content, $ttl = 0) : bool
+    public function save($id, $content, $ttl = 0): bool
     {
         if (empty($id)) {
-            return \false;
+            return false;
         }
+
         self::$staticCache[$id] = $content;
+
         return (bool) $this->cache->save($id, $content, $this->ttl);
     }
-    public function contains($id) : bool
+
+    public function contains($id): bool
     {
         return !empty(self::$staticCache[$id]) && $this->cache->contains($id);
     }
-    public function delete($id) : bool
+
+    public function delete($id): bool
     {
         if (empty($id)) {
-            return \false;
+            return false;
         }
+
         unset(self::$staticCache[$id]);
+
         return (bool) $this->cache->delete($id);
     }
-    public function flushAll() : bool
+
+    public function flushAll(): bool
     {
         return (bool) $this->cache->flushAll();
     }

@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Report;
 
 use Piwik\Widget\WidgetConfig;
+
 /**
  * Defines a widget config that is used to render a report.
  *
@@ -17,7 +19,8 @@ use Piwik\Widget\WidgetConfig;
 class ReportWidgetConfig extends WidgetConfig
 {
     protected $viewDataTable = null;
-    protected $forceViewDataTable = \false;
+    protected $forceViewDataTable = false;
+
     /**
      * Sets a default viewDataTable that should be used to render the report. This is not necessarily the
      * view that will be actually used to render the report. Eg if a user switched manually to another viewDataTable
@@ -32,6 +35,7 @@ class ReportWidgetConfig extends WidgetConfig
         $this->viewDataTable = $viewDataTableId;
         return $this;
     }
+
     /**
      * Forces the usage of the given viewDataTable in order to render the report.
      *
@@ -40,10 +44,12 @@ class ReportWidgetConfig extends WidgetConfig
      */
     public function forceViewDataTable($viewDataTableId)
     {
-        $this->forceViewDataTable = \true;
+        $this->forceViewDataTable = true;
         $this->setDefaultViewDataTable($viewDataTableId);
+
         return $this;
     }
+
     /**
      * Detect whether a defined viewDataTable should be forced in order to render a report.
      * @return bool
@@ -52,6 +58,7 @@ class ReportWidgetConfig extends WidgetConfig
     {
         return $this->forceViewDataTable;
     }
+
     /**
      * Get the specified viewDataTable.
      * @return string
@@ -60,20 +67,25 @@ class ReportWidgetConfig extends WidgetConfig
     {
         return $this->viewDataTable;
     }
+
     /**
      * @inheritdoc
      */
     public function getParameters()
     {
         $parameters = parent::getParameters();
+
         $defaultParams = array();
+
         if ($this->forceViewDataTable) {
             $defaultParams['forceView'] = '1';
+
             if ($this->viewDataTable) {
                 // URL param is not needed for default view dataTable
                 $defaultParams['viewDataTable'] = $this->viewDataTable;
             }
         }
+
         return $defaultParams + $parameters;
     }
 }

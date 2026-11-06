@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 /**
@@ -21,10 +22,10 @@ namespace Piwik\DataTable\Filter;
  *
  * @api
  */
-class AddSegmentValue extends \Piwik\DataTable\Filter\ColumnCallbackAddMetadata
+class AddSegmentValue extends ColumnCallbackAddMetadata
 {
     public function __construct($table, $callback = null)
     {
-        parent::__construct($table, 'label', 'segmentValue', $callback, null, \false);
+        parent::__construct($table, 'label', 'segmentValue', $callback, null, false);
     }
 }

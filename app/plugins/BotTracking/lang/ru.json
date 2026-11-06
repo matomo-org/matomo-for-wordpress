@@ -1,0 +1,9 @@
+{
+    "BotTracking": {
+        "PageUrl": "URL страницы",
+        "NoDataHttpTrackingApi": "API отслеживания HTTP",
+        "SiteWithoutDataBackToMatomo": "Вернуться к Matomo",
+        "AIChatbotsContentPagesTitle": "Страницы",
+        "ContentUrl": "URL"
+    }
+}

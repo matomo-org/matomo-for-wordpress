@@ -6,9 +6,10 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Ecommerce\Columns;
 
-class Items extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
+class Items extends BaseConversion
 {
     protected $columnName = 'items';
     protected $type = self::TYPE_NUMBER;

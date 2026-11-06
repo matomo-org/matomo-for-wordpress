@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Columns\Join;
 
 use Piwik\Columns;
+
 /**
  * @api
  * @since 3.1.0
@@ -19,6 +21,7 @@ class GoalNameJoin extends Columns\Join
     {
         parent::__construct('goal', 'idgoal', 'name');
     }
+
     public function getAdditionalKeyColumns()
     {
         // a goal is identified by (idsite, idgoal), so the site must match too

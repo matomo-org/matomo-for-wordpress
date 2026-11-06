@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 use Piwik\Config as PiwikConfig;
@@ -28,17 +29,19 @@ use Piwik\Version;
 use Piwik\View;
 use Piwik\ProxyHttp;
 use Piwik\SettingsPiwik;
+
 /**
  * Base class of plugin controllers that provide administrative functionality.
  *
  * See {@link Controller} to learn more about Piwik controllers.
  *
  */
-abstract class ControllerAdmin extends \Piwik\Plugin\Controller
+abstract class ControllerAdmin extends Controller
 {
     private const NEXT_REQUIRED_MINIMUM_PHP = '8.1';
     private const NEXT_REQUIRED_MINIMUM_MYSQL = '8.0';
     private const NEXT_REQUIRED_MINIMUM_MARIADB = '10.6';
+
     private static function notifyWhenTrackingStatisticsDisabled()
     {
         $statsEnabled = PiwikConfig::getInstance()->Tracker['record_statistics'];
@@ -48,68 +51,91 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
             Notification\Manager::notify('ControllerAdmin_StatsAreNotRecorded', $notification);
         }
     }
+
     private static function notifyAnyInvalidLicense()
     {
         if (!Marketplace::isMarketplaceEnabled()) {
             return;
         }
+
         if (Piwik::isUserIsAnonymous()) {
             return;
         }
+
         if (!Piwik::isUserHasSomeAdminAccess()) {
             return;
         }
+
         if (Development::isEnabled()) {
             return;
         }
-        $expired = StaticContainer::get('Piwik\\Plugins\\Marketplace\\Plugins\\InvalidLicenses');
+
+        $expired = StaticContainer::get('Piwik\Plugins\Marketplace\Plugins\InvalidLicenses');
+
         $messageLicenseMissing = $expired->getMessageNoLicense();
         if (!empty($messageLicenseMissing)) {
             $notification = new Notification($messageLicenseMissing);
-            $notification->raw = \true;
+            $notification->raw = true;
             $notification->context = Notification::CONTEXT_ERROR;
             $notification->title = Piwik::translate('Marketplace_LicenseMissing');
             Notification\Manager::notify('ControllerAdmin_LicenseMissingWarning', $notification);
         }
+
         $messageExceeded = $expired->getMessageExceededLicenses();
         if (!empty($messageExceeded)) {
             $notification = new Notification($messageExceeded);
-            $notification->raw = \true;
+            $notification->raw = true;
             $notification->context = Notification::CONTEXT_WARNING;
             $notification->title = Piwik::translate('Marketplace_LicenseExceeded');
             Notification\Manager::notify('ControllerAdmin_LicenseExceededWarning', $notification);
         }
+
         $messageExpired = $expired->getMessageExpiredLicenses();
         if (!empty($messageExpired)) {
             $notification = new Notification($messageExpired);
-            $notification->raw = \true;
+            $notification->raw = true;
             $notification->context = Notification::CONTEXT_WARNING;
             $notification->title = Piwik::translate('Marketplace_LicenseExpired');
             Notification\Manager::notify('ControllerAdmin_LicenseExpiredWarning', $notification);
         }
     }
+
     private static function notifyAnyInvalidPlugin()
     {
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+
         $missingPlugins = \Piwik\Plugin\Manager::getInstance()->getMissingPlugins();
+
         if (empty($missingPlugins)) {
             return;
         }
-        $invalidPluginsWarning = Piwik::translate('CoreAdminHome_InvalidPluginsWarning', [self::getPiwikVersion(), '<strong>' . implode('</strong>,&nbsp;<wbr><strong>', $missingPlugins) . '</strong>']);
+
+        $invalidPluginsWarning = Piwik::translate('CoreAdminHome_InvalidPluginsWarning', [
+            self::getPiwikVersion(),
+            '<strong>' . implode('</strong>,&nbsp;<wbr><strong>', $missingPlugins) . '</strong>',
+        ]);
+
         if (CorePluginsAdmin::isPluginsAdminEnabled()) {
-            $pluginsLink = Url::getCurrentQueryStringWithParametersModified(['module' => 'CorePluginsAdmin', 'action' => 'plugins']);
-            $invalidPluginsWarning .= '<br/>' . Piwik::translate('CoreAdminHome_InvalidPluginsYouCanUninstall', ['<a href="' . $pluginsLink . '">', '</a>']);
+            $pluginsLink = Url::getCurrentQueryStringWithParametersModified([
+                'module' => 'CorePluginsAdmin', 'action' => 'plugins',
+            ]);
+            $invalidPluginsWarning .= '<br/>' . Piwik::translate('CoreAdminHome_InvalidPluginsYouCanUninstall', [
+                '<a href="' . $pluginsLink . '">',
+                '</a>',
+            ]);
         } else {
             $invalidPluginsWarning .= '<br/>' . Piwik::translate('CoreAdminHome_InvalidPluginsAdminDisabled');
         }
+
         $notification = new Notification($invalidPluginsWarning);
-        $notification->raw = \true;
+        $notification->raw = true;
         $notification->context = Notification::CONTEXT_WARNING;
         $notification->title = Piwik::translate('General_Warning');
         Notification\Manager::notify('ControllerAdmin_InvalidPluginsWarning', $notification);
     }
+
     /**
      * Calls {@link setBasicVariablesNoneAdminView()} and {@link setBasicVariablesAdminView()}
      * using the supplied view.
@@ -124,47 +150,64 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
             self::setBasicVariablesAdminView($view);
         }
     }
+
     private static function notifyIfURLIsNotSecure()
     {
         $isURLSecure = ProxyHttp::isHttps();
         if ($isURLSecure) {
             return;
         }
+
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+
         if (Url::isLocalHost(Url::getCurrentHost())) {
             return;
         }
+
         if (Development::isEnabled()) {
             return;
         }
+
         $message = Piwik::translate('General_CurrentlyUsingUnsecureHttp');
+
         $message .= " ";
-        $message .= Piwik::translate('General_ReadThisToLearnMore', [Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_91/'), '</a>']);
+
+        $message .= Piwik::translate(
+            'General_ReadThisToLearnMore',
+            [Url::getExternalLinkTag('https://matomo.org/faq/how-to/faq_91/'), '</a>']
+        );
+
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = \true;
+        $notification->raw     = true;
         Notification\Manager::notify('ControllerAdmin_HttpIsUsed', $notification);
     }
+
     private static function notifyIfDevelopmentModeOnButNotInstalledThroughGit()
     {
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+
         if (!Development::isEnabled()) {
             return;
         }
+
         if (SettingsPiwik::isGitDeployment()) {
             return;
         }
+
         $message = Piwik::translate('General_WarningDevelopmentModeOnButNotGitInstalled');
+
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = \true;
+        $notification->raw = true;
         $notification->flags = Notification::FLAG_CLEAR;
         Notification\Manager::notify('ControllerAdmin_DevelopmentModeOn', $notification);
     }
+
     /**
      * @ignore
      */
@@ -174,23 +217,33 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
             PiwikConfig::getInstance()->checkConfigIsWritable();
         } catch (MissingFilePermissionException $exception) {
             $notification = new Notification($exception->getMessage());
-            $notification->raw = \true;
+            $notification->raw = true;
             $notification->context = Notification::CONTEXT_WARNING;
             Notification\Manager::notify('ControllerAdmin_ConfigNotWriteable', $notification);
         }
     }
+
+
     private static function notifyIfEAcceleratorIsUsed()
     {
         $isEacceleratorUsed = ini_get('eaccelerator.enable');
         if (empty($isEacceleratorUsed)) {
             return;
         }
-        $message = sprintf("You are using the PHP accelerator & optimizer eAccelerator which is known to be not compatible with Matomo.\n            We have disabled eAccelerator, which might affect the performance of Matomo.\n            Read the %srelated ticket%s for more information and how to fix this problem.", '<a rel="noreferrer noopener" target="_blank" href="https://github.com/matomo-org/matomo/issues/4439">', '</a>');
+        $message = sprintf(
+            "You are using the PHP accelerator & optimizer eAccelerator which is known to be not compatible with Matomo.
+            We have disabled eAccelerator, which might affect the performance of Matomo.
+            Read the %srelated ticket%s for more information and how to fix this problem.",
+            '<a rel="noreferrer noopener" target="_blank" href="https://github.com/matomo-org/matomo/issues/4439">',
+            '</a>'
+        );
+
         $notification = new Notification($message);
         $notification->context = Notification::CONTEXT_WARNING;
-        $notification->raw = \true;
+        $notification->raw     = true;
         Notification\Manager::notify('ControllerAdmin_EacceleratorIsUsed', $notification);
     }
+
     /**
      * PHP Version required by the next major Matomo version
      * @return string
@@ -199,24 +252,32 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
     {
         return self::NEXT_REQUIRED_MINIMUM_PHP;
     }
-    private static function isUsingPhpVersionCompatibleWithNextPiwik($phpVersion = \PHP_VERSION)
+
+    private static function isUsingPhpVersionCompatibleWithNextPiwik($phpVersion = PHP_VERSION)
     {
         return version_compare($phpVersion, self::getNextRequiredMinimumPHP(), '>=');
     }
+
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
-        if (defined('PIWIK_TEST_MODE')) {
-            // to avoid changing every admin UI test
+        if (defined('PIWIK_TEST_MODE')) { // to avoid changing every admin UI test
             return;
         }
+
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+
         if (self::isUsingPhpVersionCompatibleWithNextPiwik()) {
             return;
         }
+
         $youMustUpgradePHP = Piwik::translate('General_YouMustUpgradePhpVersionToReceiveNextMajorMatomo');
-        $message = Piwik::translate('General_MatomoCannotBeUpgradedToNextMajorBecausePhpIsTooOld') . ' ' . sprintf(Piwik::translate('General_PleaseUpgradeYourPhpVersionForNextMajorMatomo'), self::getNextRequiredMinimumPHP());
+        $message =  Piwik::translate('General_MatomoCannotBeUpgradedToNextMajorBecausePhpIsTooOld')
+            .     ' '
+            .  sprintf(Piwik::translate('General_PleaseUpgradeYourPhpVersionForNextMajorMatomo'), self::getNextRequiredMinimumPHP())
+        ;
+
         $notification = new Notification($message);
         $notification->title = $youMustUpgradePHP;
         $notification->priority = Notification::PRIORITY_LOW;
@@ -225,59 +286,86 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $notification->flags = Notification::FLAG_NO_CLEAR;
         NotificationManager::notify('PHPVersionTooOldForNewestPiwikCheck', $notification);
     }
-    private static function getNextRequiredMinimumDatabaseVersion(string $databaseType, string $databaseVersion) : ?string
+
+    private static function getNextRequiredMinimumDatabaseVersion(string $databaseType, string $databaseVersion): ?string
     {
         $databaseType = self::getEffectiveDatabaseType($databaseType, $databaseVersion);
+
         if ($databaseType === 'mysql') {
             return self::NEXT_REQUIRED_MINIMUM_MYSQL;
         }
+
         if ($databaseType === 'mariadb') {
             return self::NEXT_REQUIRED_MINIMUM_MARIADB;
         }
+
         return null;
     }
-    private static function isUsingDatabaseVersionCompatibleWithNextPiwik(string $databaseType, string $databaseVersion) : bool
+
+    private static function isUsingDatabaseVersionCompatibleWithNextPiwik(string $databaseType, string $databaseVersion): bool
     {
         $requiredVersion = self::getNextRequiredMinimumDatabaseVersion($databaseType, $databaseVersion);
         if ($requiredVersion === null) {
-            return \true;
+            return true;
         }
+
         return version_compare(self::getComparableDatabaseVersion($databaseVersion), $requiredVersion, '>=');
     }
-    private static function getEffectiveDatabaseType(string $databaseType, string $databaseVersion) : string
+
+    private static function getEffectiveDatabaseType(string $databaseType, string $databaseVersion): string
     {
-        if (stripos($databaseVersion, 'mariadb') !== \false) {
+        if (stripos($databaseVersion, 'mariadb') !== false) {
             return 'mariadb';
         }
+
         return strtolower($databaseType);
     }
-    private static function getComparableDatabaseVersion(string $databaseVersion) : string
+
+    private static function getComparableDatabaseVersion(string $databaseVersion): string
     {
-        if (stripos($databaseVersion, 'mariadb') !== \false && preg_match('/5\\.5\\.5-(\\d+(?:\\.\\d+){0,2})-MariaDB/i', $databaseVersion, $matches)) {
+        if (
+            stripos($databaseVersion, 'mariadb') !== false
+            && preg_match('/5\.5\.5-(\d+(?:\.\d+){0,2})-MariaDB/i', $databaseVersion, $matches)
+        ) {
             return $matches[1];
         }
-        if (preg_match('/\\d+(?:\\.\\d+){0,2}/', $databaseVersion, $matches)) {
+
+        if (preg_match('/\d+(?:\.\d+){0,2}/', $databaseVersion, $matches)) {
             return $matches[0];
         }
+
         return $databaseVersion;
     }
-    private static function notifyWhenDatabaseVersionIsNotCompatibleWithNextMajorPiwik() : void
+
+    private static function notifyWhenDatabaseVersionIsNotCompatibleWithNextMajorPiwik(): void
     {
-        if (defined('PIWIK_TEST_MODE')) {
-            // to avoid changing every admin UI test
+        if (defined('PIWIK_TEST_MODE')) { // to avoid changing every admin UI test
             return;
         }
+
         if (!Piwik::hasUserSuperUserAccess()) {
             return;
         }
+
         $databaseType = Schema::getInstance()->getDatabaseType();
         $databaseVersion = Schema::getInstance()->getVersion();
+
         if (self::isUsingDatabaseVersionCompatibleWithNextPiwik($databaseType, $databaseVersion)) {
             return;
         }
+
         $requiredVersion = self::getNextRequiredMinimumDatabaseVersion($databaseType, $databaseVersion);
-        $databaseType = self::getEffectiveDatabaseType($databaseType, $databaseVersion) === 'mariadb' ? 'MariaDB' : 'MySQL';
-        $message = Piwik::translate('General_MatomoCannotBeUpgradedToNextMajorBecauseDatabaseIsTooOld') . ' ' . Piwik::translate('General_PleaseUpgradeYourDatabaseVersionForNextMajorMatomo', [$databaseType, $requiredVersion]);
+        $databaseType = self::getEffectiveDatabaseType($databaseType, $databaseVersion) === 'mariadb'
+            ? 'MariaDB'
+            : 'MySQL';
+
+        $message = Piwik::translate('General_MatomoCannotBeUpgradedToNextMajorBecauseDatabaseIsTooOld')
+            . ' '
+            . Piwik::translate(
+                'General_PleaseUpgradeYourDatabaseVersionForNextMajorMatomo',
+                [$databaseType, $requiredVersion]
+            );
+
         $notification = new Notification($message);
         $notification->title = Piwik::translate('General_YouMustUpgradeDatabaseVersionToReceiveNextMajorMatomo');
         $notification->priority = Notification::PRIORITY_LOW;
@@ -286,24 +374,33 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $notification->flags = Notification::FLAG_NO_CLEAR;
         NotificationManager::notify('DatabaseVersionTooOldForNewestPiwikCheck', $notification);
     }
+
     private static function notifyWhenPhpVersionIsEOL()
     {
-        if (defined('PIWIK_TEST_MODE')) {
-            // to avoid changing every admin UI test
+        if (defined('PIWIK_TEST_MODE')) { // to avoid changing every admin UI test
             return;
         }
+
         $notifyPhpIsEOL = Piwik::hasUserSuperUserAccess() && self::isPhpVersionEOL();
         if (!$notifyPhpIsEOL) {
             return;
         }
-        $deprecatedMajorPhpVersion = \PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION;
+
+        $deprecatedMajorPhpVersion = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+
         $message = '';
-        if (version_compare(\PHP_VERSION, self::getNextRequiredMinimumPHP(), '<')) {
-            $message = Piwik::translate('General_WarningPiwikWillStopSupportingPHPVersion', [$deprecatedMajorPhpVersion, self::getNextRequiredMinimumPHP()]) . '<br/>';
+
+        if (version_compare(PHP_VERSION, self::getNextRequiredMinimumPHP(), '<')) {
+            $message = Piwik::translate(
+                'General_WarningPiwikWillStopSupportingPHPVersion',
+                [$deprecatedMajorPhpVersion, self::getNextRequiredMinimumPHP()]
+            ) . '<br/>';
         }
+
         $message .= Piwik::translate('General_WarningPhpVersionXIsTooOld', $deprecatedMajorPhpVersion);
+
         $notification = new Notification($message);
-        $notification->raw = \true;
+        $notification->raw = true;
         $notification->title = Piwik::translate('General_Warning');
         $notification->priority = Notification::PRIORITY_LOW;
         $notification->context = Notification::CONTEXT_WARNING;
@@ -311,20 +408,24 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $notification->flags = Notification::FLAG_NO_CLEAR;
         NotificationManager::notify('PHPVersionCheck', $notification);
     }
-    private static function notifyWhenDatabaseVersionIsEOL() : void
+
+    private static function notifyWhenDatabaseVersionIsEOL(): void
     {
-        if (defined('PIWIK_TEST_MODE')) {
-            // to avoid changing every admin UI test
+        if (defined('PIWIK_TEST_MODE')) { // to avoid changing every admin UI test
             return;
         }
+
         $isEOL = Piwik::hasUserSuperUserAccess() && Schema::getInstance()->hasReachedEOL();
         if (!$isEOL) {
             return;
         }
+
         $databaseVersion = Schema::getInstance()->getVersion();
+
         $message = Piwik::translate('General_WarningDatabaseVersionXIsTooOld', [Schema::getInstance()->getDatabaseType(), $databaseVersion]);
+
         $notification = new Notification($message);
-        $notification->raw = \true;
+        $notification->raw = true;
         $notification->title = Piwik::translate('General_Warning');
         $notification->priority = Notification::PRIORITY_LOW;
         $notification->context = Notification::CONTEXT_WARNING;
@@ -332,11 +433,22 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $notification->flags = Notification::FLAG_NO_CLEAR;
         NotificationManager::notify('DatabaseVersionCheck', $notification);
     }
+
     private static function notifyWhenDebugOnDemandIsEnabled($trackerSetting)
     {
-        if (!Development::isEnabled() && Piwik::hasUserSuperUserAccess() && TrackerConfig::getConfigValue($trackerSetting)) {
+        if (
+            !Development::isEnabled()
+            && Piwik::hasUserSuperUserAccess()
+            && TrackerConfig::getConfigValue($trackerSetting)
+        ) {
             $message = Piwik::translate('General_WarningDebugOnDemandEnabled');
-            $message = sprintf($message, '"' . $trackerSetting . '"', '"[Tracker] ' . $trackerSetting . '"', '"0"', '"config/config.ini.php"');
+            $message = sprintf(
+                $message,
+                '"' . $trackerSetting . '"',
+                '"[Tracker] ' .  $trackerSetting . '"',
+                '"0"',
+                '"config/config.ini.php"'
+            );
             $notification = new Notification($message);
             $notification->title = Piwik::translate('General_Warning');
             $notification->priority = Notification::PRIORITY_LOW;
@@ -346,6 +458,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
             NotificationManager::notify('Tracker' . $trackerSetting, $notification);
         }
     }
+
     /**
      * Assigns view properties that would be useful to views that render admin pages.
      *
@@ -373,22 +486,29 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         self::notifyIfEAcceleratorIsUsed();
         self::notifyIfURLIsNotSecure();
         self::notifyIfDevelopmentModeOnButNotInstalledThroughGit();
+
         $view->topMenu = MenuTop::getInstance()->getMenu();
+
         $view->isDataPurgeSettingsEnabled = self::isDataPurgeSettingsEnabled();
         $enableFrames = PiwikConfig::getInstance()->General['enable_framed_settings'];
         $view->enableFrames = $enableFrames;
+
         if (!$enableFrames) {
             $view->setXFrameOptions('sameorigin');
         }
+
         $view->isSuperUser = Piwik::hasUserSuperUserAccess();
+
         self::notifyAnyInvalidLicense();
         self::notifyAnyInvalidPlugin();
+        self::notifyWhenPhpVersionHasCriticalVulnerability();
         self::notifyWhenPhpVersionIsEOL();
         self::notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik();
         self::notifyWhenDatabaseVersionIsNotCompatibleWithNextMajorPiwik();
         self::notifyWhenDatabaseVersionIsEOL();
         self::notifyWhenDebugOnDemandIsEnabled('debug');
         self::notifyWhenDebugOnDemandIsEnabled('debug_on_demand');
+
         /**
          * Posted when rendering an admin page and notifications about any warnings or errors should be triggered.
          * You can use it for example when you have a plugin that needs to be configured in order to work and the
@@ -408,24 +528,31 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
          *
          */
         Piwik::postEvent('Controller.triggerAdminNotifications');
+
         $view->adminMenu = MenuAdmin::getInstance()->getMenu();
+
         $notifications = $view->notifications;
+
         if (empty($notifications)) {
             $view->notifications = NotificationManager::getAllNotificationsToDisplay();
             NotificationManager::cancelAllNonPersistent();
         }
     }
+
     public static function isDataPurgeSettingsEnabled()
     {
         return (bool) Config::getInstance()->General['enable_delete_old_data_settings_admin'];
     }
+
     protected static function getPiwikVersion()
     {
         return "Matomo " . Version::VERSION;
     }
+
     private static function isPhpVersionEOL()
     {
         $phpEOL = '8.0';
+
         // End of security update for certain PHP versions as of https://www.php.net/supported-versions
         if (Date::today()->isLater(Date::factory('2025-12-31'))) {
             $phpEOL = '8.1';
@@ -439,6 +566,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         if (Date::today()->isLater(Date::factory('2028-12-31'))) {
             $phpEOL = '8.4';
         }
-        return version_compare(\PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION, $phpEOL, '<=');
+
+        return version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, $phpEOL, '<=');
     }
 }

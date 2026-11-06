@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Updater\Migration\Plugin;
 
 use Piwik\Container\StaticContainer;
+
 /**
  * Provides plugin migrations.
  *
@@ -20,6 +22,7 @@ class Factory
      * @var \Piwik\Container\Container
      */
     private $container;
+
     /**
      * @ignore
      */
@@ -27,6 +30,7 @@ class Factory
     {
         $this->container = StaticContainer::getContainer();
     }
+
     /**
      * Activates the given plugin during an update.
      *
@@ -37,8 +41,11 @@ class Factory
      */
     public function activate($pluginName)
     {
-        return $this->container->make('Piwik\\Updater\\Migration\\Plugin\\Activate', array('pluginName' => $pluginName));
+        return $this->container->make('Piwik\Updater\Migration\Plugin\Activate', array(
+            'pluginName' => $pluginName,
+        ));
     }
+
     /**
      * Deactivates the given plugin during an update.
      *
@@ -49,8 +56,11 @@ class Factory
      */
     public function deactivate($pluginName)
     {
-        return $this->container->make('Piwik\\Updater\\Migration\\Plugin\\Deactivate', array('pluginName' => $pluginName));
+        return $this->container->make('Piwik\Updater\Migration\Plugin\Deactivate', array(
+            'pluginName' => $pluginName,
+        ));
     }
+
     /**
      * Uninstalls the given plugin during an update.
      *
@@ -61,6 +71,8 @@ class Factory
      */
     public function uninstall($pluginName)
     {
-        return $this->container->make('Piwik\\Updater\\Migration\\Plugin\\Uninstall', array('pluginName' => $pluginName));
+        return $this->container->make('Piwik\Updater\Migration\Plugin\Uninstall', array(
+            'pluginName' => $pluginName,
+        ));
     }
 }

@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\MobileAppMeasurable;
 
 use Piwik\Url;
+
 class Type extends \Piwik\Measurable\Type
 {
     public const ID = 'mobileapp';
@@ -17,6 +19,7 @@ class Type extends \Piwik\Measurable\Type
     protected $description = 'MobileAppMeasurable_MobileAppDescription';
     protected $longDescription = 'MobileAppMeasurable_MobileAppLongDescription';
     protected $howToSetupUrl = 'https://developer.matomo.org/guides/tracking-api-clients#mobile-sdks';
+
     public function __construct()
     {
         $this->howToSetupUrl = Url::addCampaignParametersToMatomoLink($this->howToSetupUrl);

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Overlay;
 
 use Piwik\API\CORSHandler;
@@ -23,39 +24,49 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
 use Piwik\View;
 use Piwik\Plugins\SitesManager;
+
 class Controller extends \Piwik\Plugin\Controller
 {
     /**
      * @var SegmentFormatter
      */
     private $segmentFormatter;
+
     public function __construct(SegmentFormatter $segmentFormatter)
     {
         $this->segmentFormatter = $segmentFormatter;
         parent::__construct();
     }
+
     /** The index of the plugin */
     public function index()
     {
         Piwik::checkUserHasViewAccess($this->idSite);
+
         // Overlay needs to send requests w/ the session cookie from within the tracked website, which means
         // we can't use SameSite=Lax. So, we regenerate the session ID here (in Session.php there is a hardcoded
         // check for Overlay, so will be set to SameSite=None).
         // Note: this means the new session ID will have SameSite=None until it regenerates on a non-Overlay page.
         Session::regenerateId();
+
         $template = '@Overlay/index';
         if (Config::getInstance()->General['overlay_disable_framed_mode']) {
             $template = '@Overlay/index_noframe';
         }
+
         $view = new View($template);
+
         $this->setGeneralVariablesView($view);
         $view->segment = Request::getRawSegmentFromRequest();
+
         $view->ssl = ProxyHttp::isHttps();
         $view->siteUrls = SitesManager\API::getInstance()->getSiteUrlsFromId($this->site->getId());
+
         $this->securityPolicy->allowEmbedPage();
         $this->outputCORSHeaders();
         return $view->render();
     }
+
     /** Render the area left of the iframe */
     public function renderSidebar()
     {
@@ -65,42 +76,69 @@ class Controller extends \Piwik\Plugin\Controller
         $segment = Request::getRawSegmentFromRequest();
         $currentUrl = Common::unsanitizeInputValue($currentUrl);
         $segmentSidebar = '';
+
         $normalizedCurrentUrl = PageUrl::excludeQueryParametersFromUrl($currentUrl, $this->idSite);
         $normalizedCurrentUrl = Common::unsanitizeInputValue($normalizedCurrentUrl);
+
         // load the appropriate row of the page urls report using the label filter
         ArchivingHelper::reloadConfig();
         $path = ArchivingHelper::getActionExplodedNames($normalizedCurrentUrl, Action::TYPE_PAGE_URL);
         $path = array_map('urlencode', $path);
         $label = implode('>', $path);
-        $params = array('idSite' => $this->idSite, 'date' => $date, 'period' => $period, 'label' => $label, 'format' => 'original', 'format_metrics' => 0);
+
+        $params = array(
+            'idSite' => $this->idSite,
+            'date' => $date,
+            'period' => $period,
+            'label' => $label,
+            'format' => 'original',
+            'format_metrics' => 0,
+        );
+
         if (!empty($segment)) {
             $params['segment'] = $segment;
         }
+
         $dataTable = Request::processRequest('Actions.getPageUrls', $params);
+
         $formatter = new Metrics\Formatter\Html();
+
         $data = array();
         if ($dataTable->getRowsCount() > 0) {
             $row = $dataTable->getFirstRow();
+
             $translations = Metrics::getDefaultMetricTranslations();
-            $showMetrics = array('nb_hits', 'nb_visits', 'nb_users', 'nb_uniq_visitors', 'bounce_rate', 'exit_rate', 'avg_time_on_page');
+            $showMetrics = array('nb_hits', 'nb_visits', 'nb_users', 'nb_uniq_visitors',
+                                 'bounce_rate', 'exit_rate', 'avg_time_on_page');
+
             $segmentSidebar = $row->getMetadata('segment');
             if (!empty($segmentSidebar) && !empty($segment)) {
                 $segmentSidebar = $segment . ';' . $segmentSidebar;
             }
+
             foreach ($showMetrics as $metric) {
                 $value = $row->getColumn($metric);
-                if ($value === \false) {
+                if ($value === false) {
                     // skip unique visitors for period != day
                     continue;
                 }
-                if ($metric == 'bounce_rate' || $metric == 'exit_rate') {
+
+                if (
+                    $metric == 'bounce_rate'
+                    || $metric == 'exit_rate'
+                ) {
                     $value = $formatter->getPrettyPercentFromQuotient($value);
                 } elseif ($metric == 'avg_time_on_page') {
-                    $value = $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = \true);
+                    $value = $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
                 }
-                $data[] = array('name' => $translations[$metric], 'value' => $value);
+
+                $data[] = array(
+                    'name'  => $translations[$metric],
+                    'value' => $value,
+                );
             }
         }
+
         // generate page url string
         foreach ($path as &$part) {
             $part = preg_replace(';^/;', '', urldecode($part));
@@ -110,6 +148,7 @@ class Controller extends \Piwik\Plugin\Controller
         if ($page == '/') {
             $page = '/index';
         }
+
         // render template
         $view = new View('@Overlay/renderSidebar');
         $view->data = $data;
@@ -121,9 +160,11 @@ class Controller extends \Piwik\Plugin\Controller
         $view->date = $date;
         $view->segment = $segmentSidebar;
         $view->segmentDescription = $this->segmentFormatter->getHumanReadable($segment, $this->idSite);
+
         $this->outputCORSHeaders();
         return $view->render();
     }
+
     /**
      * Start an Overlay session: Redirect to the tracked website. The Piwik
      * tracker will recognize this referrer and start the session.
@@ -132,22 +173,28 @@ class Controller extends \Piwik\Plugin\Controller
     {
         $this->checkSitePermission();
         Piwik::checkUserHasViewAccess($this->idSite);
+
         $view = new View('@Overlay/startOverlaySession');
+
         $sitesManager = APISitesManager::getInstance();
         $site = $sitesManager->getSiteFromId($this->idSite);
         $urls = $sitesManager->getSiteUrlsFromId($this->idSite);
-        $view->isHttps = ProxyHttp::isHttps();
+
+        $view->isHttps   = ProxyHttp::isHttps();
         $view->knownUrls = json_encode($urls);
-        $view->mainUrl = $site['main_url'];
+        $view->mainUrl   = $site['main_url'];
+
         $this->outputCORSHeaders();
         // piwik.js::isOverlaySession() detects an Overlay session from this navigation URL.
         // A strict referrer policy would strip the path/query and break that handshake, so the
         // policy is relaxed here. Keep the URL canonical: only module, action, idSite, period,
         // date, and segment belong on it. See canonicalizeOverlayUrl() in startOverlaySession.twig.
-        $view->setUseStrictReferrerPolicy(\false);
+        $view->setUseStrictReferrerPolicy(false);
         Common::sendHeader('Content-Type: text/html; charset=UTF-8');
+
         return $view->render();
     }
+
     /**
      * This method is called when the JS from startOverlaySession() detects that the target domain
      * is not configured for the current site.
@@ -156,11 +203,15 @@ class Controller extends \Piwik\Plugin\Controller
     {
         $this->checkSitePermission();
         Piwik::checkUserHasViewAccess($this->idSite);
+
         $url = Common::getRequestVar('url', '');
+
         $message = Piwik::translate('Overlay_RedirectUrlError', [$url, '<br />']);
+
         $view = new View('@Overlay/showErrorWrongDomain');
         $this->addCustomLogoInfo($view);
         $view->message = $message;
+
         if (Piwik::isUserHasWriteAccess($this->idSite)) {
             $url = 'index.php?module=SitesManager&action=index';
             $troubleshoot = Piwik::translate('Overlay_RedirectUrlErrorAdmin');
@@ -169,9 +220,11 @@ class Controller extends \Piwik\Plugin\Controller
         } else {
             $view->troubleshoot = Piwik::translate('Overlay_RedirectUrlErrorUser');
         }
+
         $this->outputCORSHeaders();
         return $view->render();
     }
+
     /**
      * This method is used to pass information from the iframe back to Piwik.
      * Due to the same origin policy, we can't do that directly, so we inject
@@ -186,6 +239,7 @@ class Controller extends \Piwik\Plugin\Controller
         $this->outputCORSHeaders();
         return $view->render();
     }
+
     protected function outputCORSHeaders()
     {
         $corsHandler = new CORSHandler();

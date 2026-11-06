@@ -63,7 +63,7 @@ function handle_cli_command() {
     . $NVM_DIR/nvm.sh
     nvm use 16 > /dev/null
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
-    ./console $EXECUTE_ARGS
+    php ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
     cd $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
@@ -85,8 +85,17 @@ function handle_cli_command() {
 function install_wordpress() {
   MULTISITE="$1"
   WP_FOLDER_SUFFIX="$2"
+  MATOMO_PLUGIN_NAME=matomo
 
-  chmod 777 "/.wp-cli"
+  # create the premium plugin cache directory (used in e2e tests)
+  mkdir -p "/.wp-cli/marketplace"
+  chmod 777 "/.wp-cli" "/.wp-cli/marketplace"
+
+  # computed up front since the matomo plugin is chowned before the rest of the install is
+  FIlE_OWNER_USERID=$UID
+  if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
+    FIlE_OWNER_USERID=1000
+  fi
 
   export_install_dependent $WP_FOLDER_SUFFIX
   init_wpload_dir_file
@@ -202,6 +211,11 @@ if ( getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) ) {
   define( 'MATOMO_MARKETPLACE_ZIP_URL', getenv( 'MATOMO_MARKETPLACE_ZIP_URL' ) );
 }
 
+# e2e tests archive only what they need themselves
+if ( getenv( 'MATOMO_DISABLE_WP_ARCHIVING' ) ) {
+  define( 'MATOMO_DISABLE_WP_ARCHIVING', true );
+}
+
 # mail settings
 define( 'WPMS_ON', true );
 define( 'WPMS_MAILER', 'smtp' );
@@ -213,7 +227,8 @@ define( 'WPMS_SMTP_AUTOTLS', true );
 define( 'WPMS_SMTP_USER', '' );
 define( 'WPMS_SMTP_PASS', '' );
 
-define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
+\$matomo_plugin_files = glob( __DIR__ . '/wp-content/plugins/matomo*/matomo.php' );
+define( 'MATOMO_ANALYTICS_FILE', \$matomo_plugin_files ? \$matomo_plugin_files[0] : __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
 if ( ! empty( \$_SERVER['HTTP_HOST'] )
@@ -387,7 +402,12 @@ EOF
       ln -s $DOCUMENT_ROOT/matomo-for-wordpress "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
     fi
   else
-    echo "installing latest stable matomo..."
+    MATOMO_PLUGIN_ZIP=${MATOMO_PLUGIN_ZIP:-matomo} # installing by slug lets wp-cli cache the download
+    if [[ "$MATOMO_PLUGIN_ZIP" != "matomo" && "$MATOMO_PLUGIN_ZIP" != /* && "$MATOMO_PLUGIN_ZIP" != *://* ]]; then
+      MATOMO_PLUGIN_ZIP="$DOCUMENT_ROOT/matomo-for-wordpress/$MATOMO_PLUGIN_ZIP" # relative to this repository
+    fi
+
+    echo "installing matomo from $MATOMO_PLUGIN_ZIP..."
 
     if [ -L "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
       rm "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
@@ -395,25 +415,35 @@ EOF
       rm -r "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
     fi
 
-    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
-    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "$MATOMO_PLUGIN_ZIP"
+    MATOMO_PLUGIN_NAME=$($DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin list --status=active --field=name | awk '$0 == "matomo" || $0 ~ /^matomo-/ { print; exit }')
+    if [[ -z "$MATOMO_PLUGIN_NAME" ]]; then
+      echo "Could not find the installed Matomo plugin directory."
+      exit 1
+    fi
+    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME"
   fi
 
   if [[ "$MULTISITE" = "1" ]]; then
     COMMAND_SUFFIX=" --network"
   fi
 
-  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate "$MATOMO_PLUGIN_NAME" $COMMAND_SUFFIX
   $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo install
 
   # extra actions required during tests
-  if [ "$WORDPRESS_FOLDER" = "test" ]; then
+  if [[ "$WORDPRESS_FOLDER" = "test" || "$WORDPRESS_FOLDER" = "test-tracking" ]]; then
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo sync sites
 
     # update site created date for e2e tests
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-    \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
+    \$table = \$pdo->query('SHOW TABLES FROM \`${WP_DB_NAME}\` LIKE \'wp_matomo_site\'')->fetchColumn();
+    if ( \$table ) {
+      \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');
+    } else {
+      echo 'Matomo site table is not available; skipping test timestamp setup.' . PHP_EOL;
+    }"
   fi
 
   # add index.php file listing available installs to root $DOCUMENT_ROOT
@@ -725,25 +755,47 @@ EOF
   echo "set allow_wp_app_password_auth config..."
   php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
+  # the site is served from localhost, which matomo's SSRF-safe requests (eg, site content detection) refuse
+  # to contact unless loopback is allowlisted
+  echo "set allowed_private_egress_ranges config..."
+  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set 'General.allowed_private_egress_ranges=["127.0.0.0/8","::1"]'
+
   # add test-utility-plugin used in UI tests
   mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins
   cp $DOCUMENT_ROOT/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
 
-  FIlE_OWNER_USERID=$UID
-  if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
-    FIlE_OWNER_USERID=1000
-  fi
-
   # make sure the files can be edited outside of docker (for easier debugging)
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
   touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log $DOCUMENT_ROOT/matomo.wpload_dir.php
-  mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp
+  mkdir -p "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/tmp"
   chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads
-  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
-  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-  chmod -R 0777 "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "$DOCUMENT_ROOT/index.php" "/usr/local/etc/php/conf.d" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log" $DOCUMENT_ROOT/matomo.wpload_dir.php
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
+  find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chmod 0777 {} +
+  chmod -R 0777 "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/tmp" "$DOCUMENT_ROOT/index.php" "/usr/local/etc/php/conf.d" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log" $DOCUMENT_ROOT/matomo.wpload_dir.php
 
   echo "finish wordpress install (multisite = $MULTISITE)"
+}
+
+function configure_opcache() {
+  OPCACHE_INI="$PHP_INI_DIR/conf.d/zz-opcache.ini"
+
+  # removed first, since the container can be reused
+  rm -f "$OPCACHE_INI"
+  if [[ "$PHP_OPCACHE" != "1" ]]; then
+    return
+  fi
+
+  # newer php images already load opcache
+  if ! php -m | grep -q "Zend OPcache"; then
+    echo "zend_extension=opcache" > "$OPCACHE_INI"
+  fi
+
+  cat >> "$OPCACHE_INI" <<EOF
+opcache.enable=1
+opcache.memory_consumption=256
+opcache.max_accelerated_files=20000
+opcache.revalidate_freq=0
+EOF
 }
 
 function start_webserver() {
@@ -779,9 +831,11 @@ function start_webserver() {
 
     tail -f -n 50 /usr/local/lsws/logs/error.log /usr/local/lsws/logs/stderr.log
   elif ! which apache2-foreground &> /dev/null; then
+    configure_opcache
     php-fpm "$@"
   else
     a2enmod rewrite || true
+    configure_opcache
 
     # set port to exposed port so we can make server side requests to localhost
     sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
@@ -810,7 +864,9 @@ wait_for_database
 
 # install normal wordpress + multisite wordpress
 install_wordpress 0
-install_wordpress 1 -multi
+if [[ "$WITHOUT_MULTISITE" != "1" ]]; then
+  install_wordpress 1 -multi
+fi
 
 touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE/setup_finished || true
 touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER_BASE-multi/setup_finished || true

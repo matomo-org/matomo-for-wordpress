@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserCountry\Columns;
 
 use Piwik\Piwik;
@@ -13,7 +14,8 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
+
+class Latitude extends Base
 {
     protected $columnName = 'location_latitude';
     protected $columnType = 'decimal(9, 6) DEFAULT NULL';
@@ -22,10 +24,12 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
     protected $segmentName = 'latitude';
     protected $nameSingular = 'UserCountry_Latitude';
     protected $namePlural = 'UserCountry_Latitudes';
+
     public function getAcceptValues()
     {
         return Piwik::translate('UserCountry_LatitudeSegmentHelp', '&segment=lat&gt;X;lat&lt;Y;long&gt;M;long&lt;N');
     }
+
     /**
      * @param Action|null $action
      * @return mixed
@@ -33,13 +37,18 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('lat', $request);
-        if ($value !== \false) {
+
+        if ($value !== false) {
             return $value;
         }
+
         $userInfo = $this->getUserInfo($request, $visitor);
+
         $latitude = $this->getLocationDetail($userInfo, LocationProvider::LATITUDE_KEY);
+
         return $latitude;
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -48,6 +57,7 @@ class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
     {
         return $this->getUrlOverrideValueIfAllowed('lat', $request);
     }
+
     /**
      * @param Action|null $action
      * @return mixed

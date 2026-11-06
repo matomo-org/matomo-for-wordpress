@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions\Columns;
 
 use Piwik\Piwik;
@@ -13,6 +14,7 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
+
 class VisitTotalSearches extends VisitDimension
 {
     protected $columnName = 'visit_total_searches';
@@ -20,10 +22,12 @@ class VisitTotalSearches extends VisitDimension
     protected $segmentName = 'searches';
     protected $nameSingular = 'General_NbSearches';
     protected $type = self::TYPE_NUMBER;
+
     public function getAcceptValues()
     {
         return Piwik::translate('Actions_SearchesSegmentHelp', '&segment=searches>0');
     }
+
     /**
      * @param Action|null $action
      * @return int
@@ -33,8 +37,10 @@ class VisitTotalSearches extends VisitDimension
         if ($this->isSiteSearchAction($action)) {
             return 1;
         }
+
         return 0;
     }
+
     /**
      * @param Action|null $action
      * @return string|false
@@ -44,14 +50,16 @@ class VisitTotalSearches extends VisitDimension
         if ($this->isSiteSearchAction($action)) {
             return 'visit_total_searches + 1';
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param Action|null $action
      * @return bool
      */
     private function isSiteSearchAction($action)
     {
-        return $action && $action->getActionType() == Action::TYPE_SITE_SEARCH;
+        return ($action && $action->getActionType() == Action::TYPE_SITE_SEARCH);
     }
 }

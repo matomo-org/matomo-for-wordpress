@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreAdminHome\Commands\SetConfig;
 
 use Piwik\Config;
+
 /**
  * Representation of a INI config manipulation operation. Only supports two types
  * of manipulations: appending to a config array and assigning a config value.
@@ -19,31 +21,36 @@ class ConfigSettingManipulation
      * @var string
      */
     private $sectionName;
+
     /**
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */
     private $value;
+
     /**
      * @var bool
      */
     private $isArrayAppend;
+
     /**
      * @param string $sectionName
      * @param string $name
      * @param string $value
      * @param bool $isArrayAppend
      */
-    public function __construct($sectionName, $name, $value, $isArrayAppend = \false)
+    public function __construct($sectionName, $name, $value, $isArrayAppend = false)
     {
         $this->sectionName = $sectionName;
         $this->name = $name;
         $this->value = $value;
         $this->isArrayAppend = $isArrayAppend;
     }
+
     /**
      * Performs the INI config manipulation.
      *
@@ -58,26 +65,40 @@ class ConfigSettingManipulation
             $this->setSingleConfigValue($config);
         }
     }
+
     private function setSingleConfigValue(Config $config)
     {
         $sectionName = $this->sectionName;
-        $section = $config->{$sectionName};
-        if (isset($section[$this->name]) && is_array($section[$this->name]) && !is_array($this->value)) {
+        $section = $config->$sectionName;
+
+        if (
+            isset($section[$this->name])
+            && is_array($section[$this->name])
+            && !is_array($this->value)
+        ) {
             throw new \Exception("Trying to set non-array value to array setting " . $this->getSettingString() . ".");
         }
+
         $section[$this->name] = $this->value;
-        $config->{$sectionName} = $section;
+        $config->$sectionName = $section;
     }
+
     private function appendToArraySetting(Config $config)
     {
         $sectionName = $this->sectionName;
-        $section = $config->{$sectionName};
-        if (isset($section[$this->name]) && !is_array($section[$this->name])) {
+        $section = $config->$sectionName;
+
+        if (
+            isset($section[$this->name])
+            && !is_array($section[$this->name])
+        ) {
             throw new \Exception("Trying to append to non-array setting value " . $this->getSettingString() . ".");
         }
+
         $section[$this->name][] = $this->value;
-        $config->{$sectionName} = $section;
+        $config->$sectionName = $section;
     }
+
     /**
      * Creates a ConfigSettingManipulation instance from a string like:
      *
@@ -94,22 +115,27 @@ class ConfigSettingManipulation
      */
     public static function make($assignment)
     {
-        if (!preg_match('/^([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)(\\[\\])?=(.*)/', $assignment, $matches)) {
-            throw new \InvalidArgumentException("Invalid assignment string '{$assignment}': expected section.name=value or section.name[]=value");
+        if (!preg_match('/^([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)(\[\])?=(.*)/', $assignment, $matches)) {
+            throw new \InvalidArgumentException("Invalid assignment string '$assignment': expected section.name=value or section.name[]=value");
         }
+
         $section = $matches[1];
         $name = $matches[2];
         $isAppend = !empty($matches[3]);
-        $value = json_decode($matches[4], $isAssoc = \true);
+
+        $value = json_decode($matches[4], $isAssoc = true);
         if ($value === null) {
-            throw new \InvalidArgumentException("Invalid assignment string '{$assignment}': could not parse value as JSON");
+            throw new \InvalidArgumentException("Invalid assignment string '$assignment': could not parse value as JSON");
         }
+
         return new self($section, $name, $value, $isAppend);
     }
+
     private function getSettingString()
     {
         return "[{$this->sectionName}] {$this->name}";
     }
+
     /**
      * @return string
      */
@@ -117,6 +143,7 @@ class ConfigSettingManipulation
     {
         return $this->sectionName;
     }
+
     /**
      * @return string
      */
@@ -124,6 +151,7 @@ class ConfigSettingManipulation
     {
         return $this->name;
     }
+
     /**
      * @return string
      */
@@ -131,6 +159,7 @@ class ConfigSettingManipulation
     {
         return $this->value;
     }
+
     /**
      * @return boolean
      */
@@ -138,6 +167,7 @@ class ConfigSettingManipulation
     {
         return $this->isArrayAppend;
     }
+
     /**
      * @return string
      */

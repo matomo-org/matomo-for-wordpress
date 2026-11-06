@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
+
 /**
  * Deletes all rows for which a callback returns true.
  *
@@ -27,6 +29,7 @@ class ColumnCallbackDeleteRow extends BaseFilter
     private $function;
     private $functionParams;
     private $columnsToFilter;
+
     /**
      * @param DataTable $table The DataTable that will be filtered eventually.
      * @param array|string $columnsToFilter The column or array of columns that should be
@@ -39,16 +42,20 @@ class ColumnCallbackDeleteRow extends BaseFilter
     public function __construct($table, $columnsToFilter, $function, $functionParams = [])
     {
         parent::__construct($table);
+
         if (!is_array($functionParams)) {
             $functionParams = array($functionParams);
         }
+
         if (!is_array($columnsToFilter)) {
             $columnsToFilter = array($columnsToFilter);
         }
+
         $this->function = $function;
         $this->columnsToFilter = $columnsToFilter;
         $this->functionParams = $functionParams;
     }
+
     /**
      * Filters the given data table
      *
@@ -61,10 +68,12 @@ class ColumnCallbackDeleteRow extends BaseFilter
             foreach ($this->columnsToFilter as $column) {
                 $params[] = $row->getColumn($column);
             }
+
             $params = array_merge($params, $this->functionParams);
-            if (call_user_func_array($this->function, $params) === \true) {
+            if (call_user_func_array($this->function, $params) === true) {
                 $table->deleteRow($key);
             }
+
             $this->filterSubTable($row);
         }
     }

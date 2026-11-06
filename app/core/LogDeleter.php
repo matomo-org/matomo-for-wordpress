@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik;
 
 use Piwik\Container\StaticContainer;
@@ -13,6 +14,7 @@ use Piwik\DataAccess\RawLogDao;
 use Piwik\Plugin\LogTablesProvider;
 use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
 use Piwik\Plugins\SitesManager\Model;
+
 /**
  * Service that deletes log entries. Methods in this class cascade, so deleting visits will delete visit actions,
  * conversions and conversion items.
@@ -23,15 +25,18 @@ class LogDeleter
      * @var RawLogDao
      */
     private $rawLogDao;
+
     /**
      * @var LogTablesProvider
      */
     private $logTablesProvider;
+
     public function __construct(RawLogDao $rawLogDao, LogTablesProvider $logTablesProvider)
     {
         $this->rawLogDao = $rawLogDao;
         $this->logTablesProvider = $logTablesProvider;
     }
+
     /**
      * Deletes visits by ID. This method cascades, so conversions, conversion items and visit actions for
      * the visits are also deleted.
@@ -48,6 +53,7 @@ class LogDeleter
         $deleteCounts = $dataSubjects->deleteDataSubjectsWithoutInvalidatingArchives($visitIds);
         return $deleteCounts['log_visit'];
     }
+
     /**
      * Deletes visits within the specified date range and belonging to the specified site (if any). Visits are
      * deleted in chunks, so only `$iterationStep` visits are deleted at a time.
@@ -65,12 +71,15 @@ class LogDeleter
     {
         $fields = array('idvisit');
         $conditions = array();
+
         if (!empty($startDatetime)) {
             $conditions[] = array('visit_last_action_time', '>=', $startDatetime);
         }
+
         if (!empty($endDatetime)) {
             $conditions[] = array('visit_last_action_time', '<', $endDatetime);
         }
+
         if (!empty($idSite)) {
             $conditions[] = array('idsite', '=', $idSite);
         } elseif (!empty($startDatetime) || !empty($endDatetime)) {
@@ -80,18 +89,20 @@ class LogDeleter
             $allIdSites = array_map('intval', $allIdSites);
             $conditions[] = array('idsite', '', $allIdSites);
         }
+
         $logsDeleted = 0;
         $logPurger = $this;
-        $this->rawLogDao->forAllLogs('log_visit', $fields, $conditions, $iterationStep, function ($logs) use($logPurger, &$logsDeleted, $afterChunkDeleted) {
+        $this->rawLogDao->forAllLogs('log_visit', $fields, $conditions, $iterationStep, function ($logs) use ($logPurger, &$logsDeleted, $afterChunkDeleted) {
             $ids = array_map(function ($row) {
-                return (int) reset($row);
+                return (int)(reset($row));
             }, $logs);
             sort($ids);
             $logsDeleted += $logPurger->deleteVisits($ids);
             if (!empty($afterChunkDeleted)) {
                 $afterChunkDeleted($logsDeleted);
             }
-        }, $willDelete = \true);
+        }, $willDelete = true);
+
         return $logsDeleted;
     }
 }

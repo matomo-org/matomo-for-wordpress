@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Morpheus;
 
 use Piwik\Development;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Piwik;
+
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureAdminMenu(MenuAdmin $menu)
@@ -24,10 +26,12 @@ class Menu extends \Piwik\Plugin\Menu
         $menu->registerMenuIcon('UsersManager_MenuPersonal', 'icon-user-personal');
         $menu->registerMenuIcon('CoreAdminHome_MenuSystem', 'icon-server');
         $menu->registerMenuIcon('CorePluginsAdmin_MenuPlatform', 'icon-user-platform');
+
         $manageMeasurablesIcon = 'icon-open-source';
         $menu->registerMenuIcon('CoreAdminHome_MenuMeasurables', $manageMeasurablesIcon);
         $menu->registerMenuIcon('SitesManager_Sites', $manageMeasurablesIcon);
         $menu->registerMenuIcon('MobileAppMeasurable_MobileApps', $manageMeasurablesIcon);
+
         if (Development::isEnabled() && Piwik::isUserHasSomeAdminAccess()) {
             $menu->addDevelopmentItem('CoreAdminHome_UiDemo', $this->urlForAction('demo'));
         }

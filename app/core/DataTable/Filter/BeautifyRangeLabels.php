@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\Piwik;
+
 /**
  * A {@link DataTable} filter that replaces range label columns with prettier,
  * human-friendlier versions.
@@ -34,19 +36,21 @@ use Piwik\Piwik;
  *
  * @api
  */
-class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
+class BeautifyRangeLabels extends ColumnCallbackReplace
 {
     /**
      * The string to use when the range being beautified is between 1-1 units.
      * @var string
      */
     protected $labelSingular;
+
     /**
      * The format string to use when the range being beautified references more than
      * one unit.
      * @var string
      */
     protected $labelPlural;
+
     /**
      * @param DataTable $table The DataTable that will be filtered.
      * @param string $labelSingular The string to use when the range being beautified
@@ -58,9 +62,11 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
     public function __construct($table, $labelSingular, $labelPlural)
     {
         parent::__construct($table, 'label', array($this, 'beautify'), array());
+
         $this->labelSingular = $labelSingular;
-        $this->labelPlural = $labelPlural;
+        $this->labelPlural   = $labelPlural;
     }
+
     /**
      * Beautifies a range label and returns the pretty result. See {@link BeautifyRangeLabels}.
      *
@@ -71,9 +77,10 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
     public function beautify($value)
     {
         // if there's more than one element, handle as a range w/ an upper bound
-        if (strpos($value, "-") !== \false) {
+        if (strpos($value, "-") !== false) {
             // get the range
             sscanf($value, "%d - %d", $lowerBound, $upperBound);
+
             // if the lower bound is the same as the upper bound make sure the singular label
             // is used
             if ($lowerBound == $upperBound) {
@@ -83,16 +90,20 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
             }
         } else {
             // if there's one element, handle as a range w/ no upper bound
+
             // get the lower bound
             sscanf($value, "%d", $lowerBound);
+
             if ($lowerBound !== null) {
                 $plusEncoded = urlencode('+');
                 $plusLen = strlen($plusEncoded);
                 $len = strlen($value);
+
                 // if the label doesn't end with a '+', append it
                 if ($len < $plusLen || substr($value, $len - $plusLen) != $plusEncoded) {
                     $value .= $plusEncoded;
                 }
+
                 return $this->getUnboundedLabel($value, $lowerBound);
             } else {
                 // if no lower bound can be found, this isn't a valid range. in this case
@@ -101,6 +112,7 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
             }
         }
     }
+
     /**
      * Beautifies and returns a range label whose range spans over one unit, ie
      * 1-1, 2-2 or 3-3.
@@ -120,6 +132,7 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
             return sprintf($this->labelPlural, $lowerBound);
         }
     }
+
     /**
      * Beautifies and returns a range label whose range is bounded and spans over
      * more than one unit, ie 1-5, 5-10 but NOT 11+.
@@ -136,6 +149,7 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
     {
         return sprintf($this->labelPlural, $oldLabel);
     }
+
     /**
      * Beautifies and returns a range label whose range is unbounded, ie
      * 5+, 10+, etc.

@@ -1,0 +1,25 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s–%2$s min",
+        "BetweenXYSeconds": "%1$s–%2$s sec",
+        "ColumnPagesPerVisit": "Pagina's per bezoek",
+        "ColumnPercentageVisitsDocumentation": "Het percentage totale bezoeken, waar bezoekers deze hoeveelheid bezoeken in totaal reeds hadden.",
+        "ColumnVisitDuration": "Duur bezoek",
+        "Engagement": "Herhaalbezoeken",
+        "NPages": "%s pagina's",
+        "OnePage": "1 pagina",
+        "PluginDescription": "Bezoekersinteresse: aantal pagina's bekeken, tijd gespendeerd op de website, aantal dagen sinds laatste bezoeke en meer.",
+        "VisitNum": "Aantal bezoeken",
+        "VisitsByDaysSinceLast": "Herhalingsbezoek na bepaald aantal dagen",
+        "VisitsPerDuration": "Aantal bezoeken per bezoeksduur",
+        "VisitsPerNbOfPages": "Bezoeken per aantal pagina's",
+        "WidgetLengths": "Duur van bezoeken",
+        "WidgetLengthsDocumentation": "Hoeveel bezoeken hadden een bepaalde tijdsduur. Het rapport wordt initieel getoond als een woordenwolk, waarin vaker voorkomende tijdsduren een groter lettertype hebben.",
+        "WidgetPages": "Pagina's per bezoek",
+        "WidgetPagesDocumentation": "Hoeveel bezoeken hadden een bepaald aantal paginaweergaves. Het rapport wordt getoond in als woordenwolk, waarop vaker voorkomende aantal pagina's een groter lettertype hebben.",
+        "WidgetVisitsByDaysSinceLast": "Bezoeken per dag sinds laatste bezoek",
+        "WidgetVisitsByDaysSinceLastDocumentation": "Hoeveel bezoeken waren terugkerende bezoekers waren, wiens laatste bezoek een bepaald aantal dagen geleden was.",
+        "WidgetVisitsByNumDocumentation": "Het aantal bezoekers die hun Nde bezoek bereiken. D.w.z. het totaal aantal bezoekers die minstens een gegeven aantal keer de website bezochten.",
+        "visitsByVisitCount": "Bezoeken per bezoeknummer"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Giờ địa phương",
+        "DayOfWeek": "Ngày trong tuần",
+        "LocalTime": "Lượt truy cập mỗi giờ địa phương",
+        "SubmenuTimes": "Số lần",
+        "VisitsByDayOfWeek": "Các lượt truy cập theo ngày trong tuần",
+        "WidgetByDayOfWeekDocumentation": "Đồ thị này cho thấy số lần truy cập mà trang web của bạn nhận được mỗi ngày trong tuần.",
+        "WidgetLocalTimeDocumentation": "Đồ thị này cho thấy thời điểm nào nó đã ở trong %1$s múi giờ của khách truy cập %2$s trong các lượt truy cập của họ."
+    }
+}

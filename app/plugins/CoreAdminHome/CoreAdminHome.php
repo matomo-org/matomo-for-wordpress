@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\CoreAdminHome;
 
 use Piwik\API\Request;
@@ -16,6 +17,7 @@ use Piwik\Site;
 use Piwik\ProxyHttp;
 use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Settings\Storage\Backend\PluginSettingsTable;
+
 class CoreAdminHome extends \Piwik\Plugin
 {
     /**
@@ -23,60 +25,96 @@ class CoreAdminHome extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'UsersManager.deleteUser' => 'cleanupUser', 'API.DocumentationGenerator.@hideExceptForSuperUser' => 'displayOnlyForSuperUser', 'Template.jsGlobalVariables' => 'addJsGlobalVariables', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'FrontController.modifyErrorPage' => 'onModifyErrorPage');
+        return array(
+            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
+            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
+            'UsersManager.deleteUser'         => 'cleanupUser',
+            'API.DocumentationGenerator.@hideExceptForSuperUser' => 'displayOnlyForSuperUser',
+            'Template.jsGlobalVariables' => 'addJsGlobalVariables',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'System.addSystemSummaryItems' => 'addSystemSummaryItems',
+            'FrontController.modifyErrorPage' => 'onModifyErrorPage',
+        );
     }
+
     public function onModifyErrorPage(&$output, $exception)
     {
-        if (empty($output) || !$exception instanceof UnexpectedWebsiteFoundException) {
+        if (
+            empty($output)
+            || !$exception instanceof UnexpectedWebsiteFoundException
+        ) {
             return;
         }
+
         $requestedIdSite = $this->getRequestedIdSite();
         if ($requestedIdSite === null) {
             return;
         }
+
         if (!$this->isInvalidRequestedIdSite($requestedIdSite)) {
             return;
         }
-        $message = sprintf('<p>%s</p><p>%s</p>', Piwik::translate('CoreAdminHome_InvalidSiteUrlError', Common::sanitizeInputValue($requestedIdSite)), Piwik::translate('CoreAdminHome_InvalidSiteUrlErrorHelp'));
+
+        $message = sprintf(
+            '<p>%s</p><p>%s</p>',
+            Piwik::translate('CoreAdminHome_InvalidSiteUrlError', Common::sanitizeInputValue($requestedIdSite)),
+            Piwik::translate('CoreAdminHome_InvalidSiteUrlErrorHelp')
+        );
+
         $output = $this->replaceErrorPageMessage($output, $message);
     }
-    private function getRequestedIdSite() : ?string
+
+    private function getRequestedIdSite(): ?string
     {
         foreach ([$_GET, $_POST] as $request) {
             if (!isset($request['idSite']) || is_array($request['idSite'])) {
                 continue;
             }
+
             $idSite = trim((string) $request['idSite']);
             if ($idSite !== '') {
                 return $idSite;
             }
         }
+
         return null;
     }
-    private function isInvalidRequestedIdSite(string $requestedIdSite) : bool
+
+    private function isInvalidRequestedIdSite(string $requestedIdSite): bool
     {
         if (!ctype_digit($requestedIdSite)) {
-            return \false;
+            return false;
         }
+
         try {
             new Site((int) $requestedIdSite);
-            return \false;
+            return false;
         } catch (UnexpectedWebsiteFoundException $exception) {
-            return \true;
+            return true;
         }
     }
-    private function replaceErrorPageMessage(string $output, string $message) : string
+
+    private function replaceErrorPageMessage(string $output, string $message): string
     {
-        $updatedOutput = preg_replace('/<h2>.*?<\\/h2>/s', '<h2>' . $message . '</h2>', $output, 1);
+        $updatedOutput = preg_replace('/<h2>.*?<\/h2>/s', '<h2>' . $message . '</h2>', $output, 1);
         if ($updatedOutput !== null && $updatedOutput !== $output) {
             return $updatedOutput;
         }
-        $updatedOutput = preg_replace('/<div class=\'alert alert-danger\'><strong>Error:<\\/strong> .*?<\\/div>/s', "<div class='alert alert-danger'><strong>Error:</strong> {$message}</div>", $output, 1);
+
+        $updatedOutput = preg_replace(
+            '/<div class=\'alert alert-danger\'><strong>Error:<\/strong> .*?<\/div>/s',
+            "<div class='alert alert-danger'><strong>Error:</strong> $message</div>",
+            $output,
+            1
+        );
+
         if ($updatedOutput !== null) {
             return $updatedOutput;
         }
+
         return $output;
     }
+
     public function addSystemSummaryItems(&$systemSummary)
     {
         if (Piwik::isUserHasSomeAdminAccess()) {
@@ -89,10 +127,12 @@ class CoreAdminHome extends \Piwik\Plugin
             $systemSummary[] = new SystemSummary\Item($key = 'trackingfailures', Piwik::translate('CoreAdminHome_NTrackingFailures', $numFailures), $value = null, array('module' => 'CoreAdminHome', 'action' => 'trackingFailures'), $icon, $order = 9);
         }
     }
+
     public function cleanupUser($userLogin)
     {
         PluginSettingsTable::removeAllUserSettingsForUser($userLogin);
     }
+
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "node_modules/jquery-ui-dist/jquery-ui.min.css";
@@ -103,6 +143,7 @@ class CoreAdminHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreAdminHome/stylesheets/whatIsNew.less";
         $stylesheets[] = "plugins/CoreAdminHome/stylesheets/trackingCodeGenerator.less";
     }
+
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/jquery/dist/jquery.min.js";
@@ -112,10 +153,12 @@ class CoreAdminHome extends \Piwik\Plugin
         $jsFiles[] = "plugins/CoreHome/javascripts/broadcast.js";
         $jsFiles[] = "plugins/CoreAdminHome/javascripts/protocolCheck.js";
     }
+
     public function displayOnlyForSuperUser(&$hide)
     {
         $hide = !Piwik::hasUserSuperUserAccess();
     }
+
     public function addJsGlobalVariables(&$out)
     {
         if (ProxyHttp::isHttps()) {
@@ -123,8 +166,10 @@ class CoreAdminHome extends \Piwik\Plugin
         } else {
             $isHttps = 'false';
         }
-        $out .= "piwik.hasServerDetectedHttps = {$isHttps};\n";
+
+        $out .= "piwik.hasServerDetectedHttps = $isHttps;\n";
     }
+
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'CoreAdminHome_ProtocolNotDetectedCorrectly';

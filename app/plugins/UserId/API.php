@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UserId;
 
 use Piwik\Archive;
 use Piwik\Piwik;
 use Piwik\DataTable;
+
 /**
  * Provides API methods for User ID reports.
  *
@@ -35,14 +37,16 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable|DataTable\Map User ID metrics for the requested site and period.
      */
-    public function getUsers($idSite, string $period, string $date, $segment = \false)
+    public function getUsers($idSite, string $period, string $date, $segment = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);
-        $dataTable = $archive->getDataTable(\Piwik\Plugins\UserId\Archiver::USERID_ARCHIVE_RECORD);
+        $dataTable = $archive->getDataTable(Archiver::USERID_ARCHIVE_RECORD);
+
         $dataTable->queueFilter('ReplaceColumnNames');
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         $dataTable->queueFilter('AddSegmentByLabel', array('userId'));
+
         return $dataTable;
     }
 }

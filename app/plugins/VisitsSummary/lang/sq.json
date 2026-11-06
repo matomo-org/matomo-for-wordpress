@@ -1,0 +1,30 @@
+{
+    "VisitsSummary": {
+        "AverageGenerationTime": "kohë mesatare krijimi",
+        "AverageVisitDuration": "mesatare kohëzgjatje vizitash",
+        "GenerateQueries": "%s kërkesa të kryera",
+        "GenerateTime": "%s sekonda për prodhimin e faqes",
+        "MaxNbActions": "maksimum veprimesh në një vizitë",
+        "NbActionsDescription": "%s veprime",
+        "NbActionsPerVisit": "veprime (parje faqesh, shkarkime, lidhje për jashtë dhe kërkime brenda sajtit) për vizitë",
+        "NbDownloadsDescription": "shkarkime",
+        "NbKeywordsDescription": "fjalëkyçe unikë",
+        "NbOutlinksDescription": "lidhje për jashtë",
+        "NbPageviewsDescription": "parje faqesh",
+        "NbSearchesDescription": "kërkime gjithsej në sajtin tuaj",
+        "NbUniqueDownloadsDescription": "shkarkime unike",
+        "NbUniqueOutlinksDescription": "lidhje për jashtë unike",
+        "NbUniquePageviewsDescription": "parje unike faqesh",
+        "NbUniqueVisitors": "vizitorë unikë",
+        "NbUsersDescription": "përdorues",
+        "NbVisitsBounced": "vizita të kthyera mbrapsht (e lanë sajtin pas një faqeje)",
+        "NbVisitsDescription": "vizita",
+        "PluginDescription": "Raporton vlera të përgjithshme analitike: vizita, vizitorë unikë, numër veprimesh, shkallë kthimi, etj.",
+        "VisitsSummary": "Përmbledhje Vizitash",
+        "VisitsSummaryDocumentation": "Kjo është një përmbledhje e evolucionit të vizitave.",
+        "VisitsSummaryReportDocumentation": "Ky raport furnizon një përmbledhje shumë të përgjithshme se si sillen vizitorët tuaj.",
+        "WidgetLastVisits": "Vizita Përgjatë Kohës",
+        "WidgetOverviewGraph": "Përmbledhje Vizitash (me grafik)",
+        "WidgetVisits": "Përmbledhje Vizitash"
+    }
+}

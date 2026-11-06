@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Tag\MatomoTag;
@@ -15,6 +16,7 @@ use Piwik\Updater;
 use Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
+
 /**
  * Update for version 5.2.0-b4.
  */
@@ -24,10 +26,12 @@ class Updates_5_2_0_b4 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
+
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
+
     /**
      * Return database migrations to be executed in this update.
      *
@@ -43,6 +47,7 @@ class Updates_5_2_0_b4 extends PiwikUpdates
     {
         return [];
     }
+
     /**
      * Perform the incremental version update.
      *
@@ -54,9 +59,10 @@ class Updates_5_2_0_b4 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
+
         // Migrate the Matomo type tags to all include the newly configured field.
         $migrator = new NewTagParameterMigrator(MatomoTag::ID, 'customDimensions', []);
-        $migrator->addField(MatomoTag::ID, 'areCustomDimensionsSticky', \false);
+        $migrator->addField(MatomoTag::ID, 'areCustomDimensionsSticky', false);
         $migrator->migrate();
     }
 }

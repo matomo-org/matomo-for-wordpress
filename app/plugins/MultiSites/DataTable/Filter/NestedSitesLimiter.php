@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\MultiSites\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable\Row;
 use Piwik\DataTable;
+
 /**
  * Makes sure to not have any subtables anymore and applies the limit to the flattened table.
  *
@@ -50,9 +52,10 @@ class NestedSitesLimiter extends BaseFilter
     /** @var int */
     private $offset = 0;
     /** @var int */
-    private $limit = 0;
+    private $limit  = 0;
     /** @var Row[] */
-    private $rows = [];
+    private $rows   = [];
+
     /**
      * @param DataTable $table The table to eventually filter.
      */
@@ -60,8 +63,9 @@ class NestedSitesLimiter extends BaseFilter
     {
         parent::__construct($table);
         $this->offset = $offset;
-        $this->limit = $limit;
+        $this->limit  = $limit;
     }
+
     /**
      * @param DataTable $table
      */
@@ -69,9 +73,11 @@ class NestedSitesLimiter extends BaseFilter
     {
         $numRows = 0;
         $lastGroupFromPreviousPage = null;
+
         foreach ($table->getRows() as $row) {
             $this->addRowIfNeeded($row, $numRows);
             $numRows++;
+
             $subtable = $row->getSubtable();
             if ($subtable) {
                 if (!$this->hasRows()) {
@@ -83,29 +89,37 @@ class NestedSitesLimiter extends BaseFilter
                 }
                 $row->removeSubtable();
             }
+
             if ($this->hasNumberOfRequestedRowsFound()) {
                 break;
             }
         }
+
         $this->prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows($lastGroupFromPreviousPage);
+
         $table->setRows($this->rows);
     }
-    private function hasNumberOfRequestedRowsFound() : bool
+
+    private function hasNumberOfRequestedRowsFound(): bool
     {
         return count($this->rows) >= $this->limit;
     }
-    private function hasRows() : bool
+
+    private function hasRows(): bool
     {
         return count($this->rows) !== 0;
     }
-    private function addRowIfNeeded(Row $row, int $numRows) : void
+
+    private function addRowIfNeeded(Row $row, int $numRows): void
     {
         $inOffset = $numRows >= $this->offset;
+
         if ($inOffset && !$this->hasNumberOfRequestedRowsFound()) {
             $this->rows[] = $row;
         }
     }
-    private function prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows(?Row $lastGroupFromPreviousPage) : void
+
+    private function prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows(?Row $lastGroupFromPreviousPage): void
     {
         if ($lastGroupFromPreviousPage && !empty($this->rows)) {
             // the result starts with a row that does belong to a group, we make sure to show this group before that site

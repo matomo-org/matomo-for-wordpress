@@ -1,25 +1,27 @@
 <?php
-
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3 or later
  */
+
 namespace Matomo\Decompress;
 
-use \Matomo\Dependencies\Archive_Tar;
+use Archive_Tar;
+
 /**
- * Unzip implementation for \Matomo\Dependencies\Archive_Tar \Matomo\Dependencies\PEAR lib.
+ * Unzip implementation for Archive_Tar PEAR lib.
  */
-class Tar implements \Matomo\Decompress\DecompressInterface
+class Tar implements DecompressInterface
 {
     /**
-     * \Matomo\Dependencies\Archive_Tar instance.
+     * Archive_Tar instance.
      *
-     * @var \Matomo\Dependencies\Archive_Tar
+     * @var Archive_Tar
      */
     private $tarArchive = null;
+
     /**
      * Constructor.
      *
@@ -28,8 +30,9 @@ class Tar implements \Matomo\Decompress\DecompressInterface
      */
     public function __construct($filename, $compression = null)
     {
-        $this->tarArchive = new \Matomo\Dependencies\Archive_Tar($filename, $compression);
+        $this->tarArchive = new Archive_Tar($filename, $compression);
     }
+
     /**
      * Extracts the contents of the tar file to $pathExtracted.
      *
@@ -40,6 +43,7 @@ class Tar implements \Matomo\Decompress\DecompressInterface
     {
         return $this->tarArchive->extract($pathExtracted);
     }
+
     /**
      * Extracts one file held in a tar archive and returns the deflated file
      * as a string.
@@ -51,6 +55,7 @@ class Tar implements \Matomo\Decompress\DecompressInterface
     {
         return $this->tarArchive->extractInString($inArchivePath);
     }
+
     /**
      * Lists the files held in the tar archive.
      *
@@ -60,6 +65,7 @@ class Tar implements \Matomo\Decompress\DecompressInterface
     {
         return $this->tarArchive->listContent();
     }
+
     /**
      * Get error status string for the latest error.
      *

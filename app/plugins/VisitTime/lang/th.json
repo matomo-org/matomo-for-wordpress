@@ -1,0 +1,8 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "เวลาของท้องถิ่น",
+        "DayOfWeek": "วันในสัปดาห์",
+        "LocalTime": "จำนวนผู้ชมต่อเวลาท้องถิ่น",
+        "SubmenuTimes": "เวลา"
+    }
+}

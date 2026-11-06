@@ -1,0 +1,24 @@
+{
+    "Login": {
+        "ChangeYourPassword": "Skift din adgangskode",
+        "ConfirmPasswordToContinue": "Bekræft din adgangskode for at fortsætte",
+        "CurrentlyBlockedIPs": "Aktuelt blokerede IP-adresser",
+        "CurrentlyBlockedIPsUnblockConfirm": "Er du sikker på, at du vil fjerne alle blokeringer af IP-adresser?",
+        "ExceptionInvalidSuperUserAccessAuthenticationMethod": "En bruger med superbrugeradgang kan ikke godkendes ved hjælp af '%s'.",
+        "ExceptionPasswordMD5HashExpected": "Adgangskode parameteren forventes at være en MD5 hash af adgangskoden.",
+        "InvalidOrExpiredToken": "Nøglen er forkert eller udløbet",
+        "InvalidUsernameEmail": "Fejl i brugernavn eller e-mailadresse.",
+        "LogIn": "Log på",
+        "LoginOrEmail": "Brugernavn eller e-mail",
+        "LoginPasswordNotCorrect": "Brugernavn og adgangskode er ikke korrekt",
+        "LostYourPassword": "Glemt adgangskoden?",
+        "NewPassword": "Ny adgangskode",
+        "NewPasswordRepeat": "Ny adgangskode (gentag)",
+        "PasswordChanged": "Din adgangskode er blevet ændret.",
+        "PasswordRepeat": "Adgangskode (gentag)",
+        "PasswordsDoNotMatch": "Adgangskoder er ikke ens.",
+        "PluginDescription": "Giver godkendelse via brugernavn og adgangskode samt nulstilling af adgangskode funktionalitet. Godkendelsesmetoden kan ændres ved hjælp af en anden logind udvidelse såsom LoginLDAP, som er tilgængelig på markedspladsen.",
+        "RememberMe": "Husk mig",
+        "UnblockAllIPs": "Fjern alle blokeringer af IP-adresser"
+    }
+}

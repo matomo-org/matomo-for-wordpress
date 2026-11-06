@@ -6,14 +6,17 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Overlay;
 
 use Exception;
 use Piwik\API\Request;
 use Piwik\Config\GeneralConfig;
 use Piwik\DataTable;
+use Piwik\Piwik;
 use Piwik\Plugins\Transitions\API as APITransitions;
 use Piwik\Tracker\PageUrl;
+
 /**
  * The Overlay API exposes translation data and overlay-specific page transition reports.
  *
@@ -28,9 +31,16 @@ class API extends \Piwik\Plugin\API
      */
     public function getTranslations()
     {
-        $translations = array('oneClick' => 'Overlay_OneClick', 'clicks' => 'Overlay_Clicks', 'clicksFromXLinks' => 'Overlay_ClicksFromXLinks', 'link' => 'Overlay_Link');
-        return array_map(array('\\Piwik\\Piwik', 'translate'), $translations);
+        $translations = array(
+            'oneClick'         => 'Overlay_OneClick',
+            'clicks'           => 'Overlay_Clicks',
+            'clicksFromXLinks' => 'Overlay_ClicksFromXLinks',
+            'link'             => 'Overlay_Link',
+        );
+
+        return array_map(array('\\Piwik\\Piwik','translate'), $translations);
     }
+
     /**
      * Returns the excluded query parameters configured for a website.
      * This information is used for client-side URL normalization.
@@ -44,6 +54,7 @@ class API extends \Piwik\Plugin\API
     {
         return Request::processRequest('SitesManager.getExcludedQueryParameters');
     }
+
     /**
      * Returns the following pages reached after visits to a specific page URL.
      * This is done on the logs, not the archives.
@@ -63,17 +74,32 @@ class API extends \Piwik\Plugin\API
      *                                   Supports AND (;) and OR (,) operators.
      * @return DataTable Rows for following pages, outlinks, and downloads reached from the requested URL.
      */
-    public function getFollowingPages($url, int $idSite, $period, $date, $segment = \false)
+    public function getFollowingPages($url, int $idSite, $period, $date, $segment = false)
     {
+        // Check access before touching any site-specific data or caches below.
+        Piwik::checkUserHasViewAccess($idSite);
+
         $url = PageUrl::excludeQueryParametersFromUrl($url, $idSite);
         // we don't unsanitize $url here. it will be done in the Transitions plugin.
+
         $resultDataTable = new DataTable();
+
         try {
             $limitBeforeGrouping = GeneralConfig::getIntegerConfigValue('overlay_following_pages_limit', 0);
-            $transitionsReport = APITransitions::getInstance()->getTransitionsForAction($url, $type = 'url', $idSite, $period, $date, $segment, $limitBeforeGrouping, $part = 'followingActions');
+            $transitionsReport = APITransitions::getInstance()->getTransitionsForAction(
+                $url,
+                $type = 'url',
+                $idSite,
+                $period,
+                $date,
+                $segment,
+                $limitBeforeGrouping,
+                $part = 'followingActions'
+            );
         } catch (Exception $e) {
             return $resultDataTable;
         }
+
         $reports = array('followingPages', 'outlinks', 'downloads');
         foreach ($reports as $reportName) {
             if (!isset($transitionsReport[$reportName])) {
@@ -84,6 +110,7 @@ class API extends \Piwik\Plugin\API
                 $resultDataTable->addRow($row);
             }
         }
+
         return $resultDataTable;
     }
 }

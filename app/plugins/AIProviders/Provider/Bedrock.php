@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\AIProviders\Provider;
 
 use Piwik\Plugins\AIProviders\AIConversationRequest;
@@ -16,6 +18,7 @@ use Piwik\Plugins\AIProviders\AIRequest;
 use Piwik\Plugins\AIProviders\CanonicalMessage;
 use Piwik\Plugins\AIProviders\Exception\AIProviderClientException;
 use Piwik\Plugins\AIProviders\Model\Configuration;
+
 /**
  * AWS Bedrock provider using the Converse HTTP API.
  *
@@ -32,15 +35,73 @@ use Piwik\Plugins\AIProviders\Model\Configuration;
  * @phpstan-import-type CanonicalContentBlockArray from CanonicalMessage
  * @phpstan-import-type ToolCatalogEntryArray from AIConversationRequest
  */
-class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
+class Bedrock extends AIProvider
 {
     public const ID = 'bedrock';
+
     private const DEFAULT_REGION = 'us-east-1';
     private const DEFAULT_MODEL = 'openai.gpt-oss-120b-1:0';
-    /** Timeout for single-shot completions; conversations use the request's own budget. */
-    private const COMPLETE_TIMEOUT_SECONDS = 30;
+
+    /**
+     * Model families that accept `inferenceConfig.temperature` on Converse.
+     *
+     * Best effort, and deliberately so. AWS publishes no per-model inference
+     * parameter table: the Converse documentation describes `temperature`
+     * generically, and the model listing returns modalities and lifecycle but
+     * never parameter schemas. This list is therefore compiled from published
+     * capability data (e.g. models.dev) and reported behaviour rather than
+     * from a vendor contract, and it will lag the catalogue.
+     *
+     * That is why it is an allowlist rather than a denylist: the two ways of
+     * being wrong are not symmetric. Sending the field to a model that rejects
+     * it fails the whole request with a 400, while omitting it for one that
+     * would have accepted it only falls back to that model's own default. A
+     * model AWS adds later, or one this list gets wrong, loses its temperature
+     * instead of losing its answer. Claude is covered separately by
+     * {@link self::ANTHROPIC_TEMPERATURE_MODEL_PATTERN}.
+     *
+     * Entries are vendor-level where the whole catalogue accepts the field.
+     * `xai.grok-` covers Grok 4.6, which Converse reaches only through its
+     * cross-Region inference IDs (`us.`/`global.`); Grok 4.3 is served on the
+     * mantle endpoint alone and never reaches this provider.
+     */
+    private const TEMPERATURE_MODEL_PATTERN = '#(?:^|[./])(?:'
+        . 'ai21\\.|amazon\\.nova-|amazon\\.titan-text-|cohere\\.|deepseek\\.|google\\.gemma-'
+        . '|meta\\.llama|minimax\\.|mistral\\.|moonshot(?:ai)?\\.|nvidia\\.|qwen\\.|writer\\.'
+        . '|zai\\.|openai\\.gpt-oss|xai\\.grok-'
+        . ')#i';
+
+    /**
+     * Claude models on Bedrock that still accept a custom `temperature`.
+     *
+     * Same best-effort caveat as
+     * {@link self::TEMPERATURE_MODEL_PATTERN}, split out because Claude is the
+     * one vendor where the boundary falls inside the catalogue rather than
+     * around it: the sampling parameters were retired for the releases after
+     * Claude Opus 4.6, so the family name alone does not decide it. What
+     * Converse does with the field for a post-boundary Claude is not
+     * documented by AWS and has not been verified against the endpoint here.
+     *
+     * Bedrock serves Claude under vendor-qualified, optionally region-prefixed
+     * IDs (`eu.anthropic.claude-opus-4-6`).
+     *
+     * Every Claude 3 accepts it. In the 4 families the accepted point releases
+     * are listed one by one, and the trailing lookahead rejects any point
+     * release that is not: without it `sonnet-4` would also match the
+     * post-boundary `claude-sonnet-4-7`, and `opus-4-1` would match
+     * `claude-opus-4-10`. A bare family name still matches the undotted
+     * release and its dated IDs (`claude-opus-4-20250514`).
+     *
+     * `0` is listed for both minor-less Claude 4 releases because that is the
+     * alias Anthropic gives them (`claude-opus-4-0`, `claude-sonnet-4-0`).
+     */
+    private const ANTHROPIC_TEMPERATURE_MODEL_PATTERN =
+        '#(?:^|[./])(?:anthropic\\.)?claude-'
+        . '(?:3|(?:opus-4(?:-[0156])?|sonnet-4(?:-[056])?|haiku-4(?:-5)?)(?!-?\\d{1,2}(?:\\D|$)))#i';
+
     /** Exact Bedrock model ID fragments that support the gpt-oss reasoning_effort field. */
-    private const GPT_OSS_MODEL_PATTERN = '/(?:^|[.\\/])openai\\.gpt-oss-(?:20b|120b)-1:0$/';
+    private const GPT_OSS_MODEL_PATTERN = '/(?:^|[.\/])openai\.gpt-oss-(?:20b|120b)-1:0$/';
+
     /**
      * Amazon Nova 2 text models that support the structured reasoningConfig
      * extended-thinking control. Only Nova 2 Lite is generally available with a
@@ -50,7 +111,8 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      *
      * @see https://docs.aws.amazon.com/nova/latest/userguide/extended-thinking.html
      */
-    private const NOVA_2_MODEL_PATTERN = '/(?:^|[.\\/])amazon\\.nova-2-lite-v1:0$/';
+    private const NOVA_2_MODEL_PATTERN = '/(?:^|[.\/])amazon\.nova-2-lite-v1:0$/';
+
     /**
      * Nova 2 does not expose its reasoning text yet: it returns the literal
      * placeholder "[REDACTED]" (still billed as reasoning tokens). That
@@ -59,7 +121,8 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      *
      * @see https://docs.aws.amazon.com/nova/latest/nova2-userguide/extended-thinking.html
      */
-    private const REDACTED_REASONING_PATTERN = '/^\\[REDACTED\\]\\.?$/';
+    private const REDACTED_REASONING_PATTERN = '/^\[REDACTED\]\.?$/';
+
     /**
      * First-generation Amazon Nova text models (Micro/Lite/Pro/Premier). Unlike
      * gpt-oss and Nova 2, these have no structured reasoning output and no
@@ -68,9 +131,11 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      *
      * @see https://docs.aws.amazon.com/nova/latest/userguide/prompting-chain-of-thought.html
      */
-    private const NOVA_GEN1_MODEL_PATTERN = '/(?:^|[.\\/])amazon\\.nova-(?:micro|lite|pro|premier)-v1:0$/';
+    private const NOVA_GEN1_MODEL_PATTERN = '/(?:^|[.\/])amazon\.nova-(?:micro|lite|pro|premier)-v1:0$/';
+
     /** Balanced leading inline reasoning blocks emitted by Nova gen-1 responses. */
-    private const LEADING_REASONING_PATTERN = '/^\\s*<(reasoning|think|thinking)>/i';
+    private const LEADING_REASONING_PATTERN = '/^\s*<(reasoning|think|thinking)>/i';
+
     /**
      * Mistral Large models. Unlike other Converse families, Large only returns
      * a structured toolUse block when a tool call is forced with
@@ -81,80 +146,129 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * conceptual or clarifying turns. This is undocumented Bedrock behaviour and
      * is scoped to Large only; every other family works under auto.
      */
-    private const MISTRAL_LARGE_MODEL_PATTERN = '/(?:^|[.\\/])mistral\\.mistral-large-/i';
+    private const MISTRAL_LARGE_MODEL_PATTERN = '/(?:^|[.\/])mistral\.mistral-large-/i';
+
     public function __construct()
     {
-        parent::__construct(self::ID, 'AWS Bedrock', 'AIProviders_BedrockDescription', \true);
+        parent::__construct(
+            self::ID,
+            'AWS Bedrock',
+            'AIProviders_BedrockDescription',
+            true
+        );
     }
-    public function getDefaultEndpointUrl() : string
+
+    public function getDefaultEndpointUrl(): string
     {
         return self::DEFAULT_REGION;
     }
-    public function getEndpointFieldTitle() : string
+
+    public function getEndpointFieldTitle(): string
     {
         return 'AIProviders_BedrockEndpointTitle';
     }
-    public function getEndpointFieldPlaceholder() : string
+
+    public function getEndpointFieldPlaceholder(): string
     {
         return 'AIProviders_BedrockEndpointPlaceholder';
     }
-    public function getEndpointFieldErrorMessage() : string
+
+    public function getEndpointFieldErrorMessage(): string
     {
         return 'AIProviders_ErrorInvalidAwsRegion';
     }
-    public function supportsFipsEndpoint() : bool
+
+    public function supportsFipsEndpoint(): bool
     {
-        return \true;
+        return true;
     }
-    public function endpointFieldRequiresUrl() : bool
+
+    public function endpointFieldRequiresUrl(): bool
     {
-        return \false;
+        return false;
     }
-    public function getDefaultModel() : string
+
+    public function getDefaultModel(): string
     {
         return self::DEFAULT_MODEL;
     }
+
     /**
      * The endpoint has a working default (it only carries the region), so the
      * API key is the one required piece.
      *
      * @param array<string, string> $configuration
      */
-    public function isConfigured(array $configuration) : bool
+    public function isConfigured(array $configuration): bool
     {
         return trim($configuration['apiKey'] ?? '') !== '';
     }
+
     /**
      * Matomo's HTTP layer blocks `*.amazonaws.com` as SSRF protection (see
      * `http.blocklist.hosts`). Only the genuine Bedrock service hostnames are
      * trusted; other AWS services and custom endpoints stay blocked.
      */
-    protected function isTrustedRequestHost(string $host) : bool
+    protected function isTrustedRequestHost(string $host): bool
     {
-        return preg_match('/^bedrock(-runtime)?(-fips)?\\.[a-z]{2}(?:-[a-z0-9]+)+-[0-9]+\\.amazonaws\\.com$/i', $host) === 1;
+        return preg_match('/^bedrock(-runtime)?(-fips)?\.[a-z]{2}(?:-[a-z0-9]+)+-[0-9]+\.amazonaws\.com$/i', $host) === 1;
     }
+
     /**
      * @param array<string, string> $configuration
      */
-    public function complete(AIRequest $request, array $configuration) : AIProviderResponse
+    public function complete(AIRequest $request, array $configuration): AIProviderResponse
     {
         $model = $this->resolveConfiguredModel($request->getModel(), $configuration);
-        $payload = ['messages' => [['role' => 'user', 'content' => [['text' => $request->getUserPrompt()]]]], 'inferenceConfig' => ['maxTokens' => $request->getMaxTokens(), 'temperature' => $request->getTemperature()]];
+
+        $payload = [
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => [
+                        ['text' => $request->getUserPrompt()],
+                    ],
+                ],
+            ],
+            'inferenceConfig' => [
+                'maxTokens' => $request->getMaxTokens(),
+            ],
+        ];
+
+        if ($this->modelSupportsTemperature($model)) {
+            $payload['inferenceConfig']['temperature'] = $request->getTemperature();
+        }
+
         // Completions carry a per-request thinking budget that overrides the
         // capability level, so resolve the effective intent via wantsThinking().
         $this->applyReasoningConfiguration($payload, $model, $this->wantsThinking($request));
+
         $systemPrompt = $this->getSystemPrompt($request);
         if ($systemPrompt !== null && $systemPrompt !== '') {
-            $payload['system'] = [['text' => $systemPrompt]];
+            $payload['system'] = [
+                ['text' => $systemPrompt],
+            ];
         }
-        $response = $this->sendConverseRequest($model, $payload, self::COMPLETE_TIMEOUT_SECONDS, $configuration);
+
+        $response = $this->sendConverseRequest($model, $payload, $this->completionTimeoutSeconds($request), $configuration);
+
         $stopReason = is_string($response['stopReason'] ?? null) ? $response['stopReason'] : null;
-        return $this->buildResponse($request, $model, $this->extractText($response, $this->isNovaGen1Model($model)), isset($response['usage']['inputTokens']) ? (int) $response['usage']['inputTokens'] : null, isset($response['usage']['outputTokens']) ? (int) $response['usage']['outputTokens'] : null, $stopReason);
+
+        return $this->buildResponse(
+            $request,
+            $model,
+            $this->extractText($response, $this->isNovaGen1Model($model)),
+            isset($response['usage']['inputTokens']) ? (int) $response['usage']['inputTokens'] : null,
+            isset($response['usage']['outputTokens']) ? (int) $response['usage']['outputTokens'] : null,
+            $stopReason
+        );
     }
-    public function supportsConversations() : bool
+
+    public function supportsConversations(): bool
     {
-        return \true;
+        return true;
     }
+
     /**
      * Runs one conversational round-trip, translating the canonical message
      * shape to and from the Converse wire format.
@@ -162,18 +276,31 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @see https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html
      * @param array<string, string> $configuration
      */
-    public function converse(AIConversationRequest $request, array $configuration) : AIConversationResponse
+    public function converse(AIConversationRequest $request, array $configuration): AIConversationResponse
     {
         $model = $this->resolveConfiguredModel($request->getModel(), $configuration);
-        $payload = ['messages' => $this->canonicalMessagesToBedrock($request->getMessages()), 'inferenceConfig' => ['maxTokens' => $request->getMaxTokens(), 'temperature' => $request->getTemperature()]];
+
+        $payload = [
+            'messages' => $this->canonicalMessagesToBedrock($request->getMessages()),
+            'inferenceConfig' => [
+                'maxTokens' => $request->getMaxTokens(),
+            ],
+        ];
+
+        if ($this->modelSupportsTemperature($model)) {
+            $payload['inferenceConfig']['temperature'] = $request->getTemperature();
+        }
+
         // Conversation requests have no thinking budget, so the capability
         // level alone decides whether reasoning is on.
         $thinking = $request->getCapabilityLevel() === Configuration::CAPABILITY_THINKING;
         $this->applyReasoningConfiguration($payload, $model, $thinking);
+
         $systemPrompt = $request->getSystemPrompt();
         if ($systemPrompt !== null && $systemPrompt !== '') {
             $payload['system'] = [['text' => $systemPrompt]];
         }
+
         $toolConfig = $this->toolCatalogToBedrock($request->getTools());
         if ($toolConfig !== null) {
             // Mistral Large only emits a structured toolUse block when tool use
@@ -184,20 +311,35 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
             }
             $payload['toolConfig'] = $toolConfig;
         }
+
         $response = $this->sendConverseRequest($model, $payload, $request->getTimeoutSeconds(), $configuration);
+
         $rawContent = $response['output']['message']['content'] ?? null;
         $stopReason = is_string($response['stopReason'] ?? null) ? $response['stopReason'] : '';
-        return $this->buildConversationResponse($model, $this->bedrockContentToCanonical(is_array($rawContent) ? $rawContent : [], $this->isNovaGen1Model($model), $thinking), $stopReason, isset($response['usage']['inputTokens']) ? (int) $response['usage']['inputTokens'] : null, isset($response['usage']['outputTokens']) ? (int) $response['usage']['outputTokens'] : null);
+
+        return $this->buildConversationResponse(
+            $model,
+            $this->bedrockContentToCanonical(
+                is_array($rawContent) ? $rawContent : [],
+                $this->isNovaGen1Model($model),
+                $thinking
+            ),
+            $stopReason,
+            isset($response['usage']['inputTokens']) ? (int) $response['usage']['inputTokens'] : null,
+            isset($response['usage']['outputTokens']) ? (int) $response['usage']['outputTokens'] : null
+        );
     }
+
     /**
      * Probes with the model listing instead of spending generation tokens.
      *
      * @param array<string, string> $configuration
      */
-    public function verifyConnection(array $configuration) : void
+    public function verifyConnection(array $configuration): void
     {
         $this->listModels($configuration);
     }
+
     /**
      * Discovers invokable models via the control-plane listing (host
      * `bedrock.`, not the runtime `bedrock-runtime.`, same region).
@@ -207,90 +349,112 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @param array<string, string> $configuration
      * @return list<string>
      */
-    public function listModels(array $configuration) : array
+    public function listModels(array $configuration): array
     {
-        $response = $this->sendGetRequest($this->getModelListingEndpoint($this->getRegion($configuration), $configuration), $this->getAuthorizationHeader($configuration));
+        $response = $this->sendGetRequest(
+            $this->getModelListingEndpoint($this->getRegion($configuration), $configuration),
+            $this->getAuthorizationHeader($configuration)
+        );
+
         $models = [];
         foreach ($response['modelSummaries'] ?? [] as $summary) {
             if (is_array($summary) && isset($summary['modelId']) && is_string($summary['modelId']) && $summary['modelId'] !== '') {
                 $models[] = $summary['modelId'];
             }
         }
+
         sort($models);
+
         return $models;
     }
+
     /**
      * Normalizes the AWS region. Bedrock endpoints are derived internally so
      * user/config input never decides the request host directly.
      */
-    public function normalizeEndpointUrl(string $endpointUrl) : string
+    public function normalizeEndpointUrl(string $endpointUrl): string
     {
         return $this->normalizeRegion($endpointUrl);
     }
-    public function normalizeRegion(string $region) : string
+
+    public function normalizeRegion(string $region): string
     {
         $region = strtolower(trim($region));
+
         if ($region === '') {
             return self::DEFAULT_REGION;
         }
+
         if (preg_match('/^[a-z]{2}(?:-[a-z0-9]+)+-[0-9]+$/', $region) !== 1) {
             throw new AIProviderClientException(sprintf('The AWS region for %s is invalid.', $this->getName()));
         }
+
         return $region;
     }
+
     /**
      * Applies region normalization on use as well: config-file credentials
      * bypass the admin-side normalization.
      *
      * @param array<string, mixed> $configuration
      */
-    protected function getEndpointUrl(array $configuration) : string
+    protected function getEndpointUrl(array $configuration): string
     {
         return $this->getRuntimeEndpoint($this->getRegion($configuration), $configuration);
     }
+
     /**
      * @param array<string, mixed> $configuration
      */
-    private function getRegion(array $configuration) : string
+    private function getRegion(array $configuration): string
     {
         return $this->normalizeRegion((string) ($configuration['endpointUrl'] ?? ''));
     }
+
     /**
      * @param array<string, mixed> $configuration
      */
-    private function getRuntimeEndpoint(string $region, array $configuration) : string
+    private function getRuntimeEndpoint(string $region, array $configuration): string
     {
         $service = $this->useFipsEndpoint($configuration) ? 'bedrock-runtime-fips' : 'bedrock-runtime';
+
         return sprintf('https://%s.%s.amazonaws.com', $service, $region);
     }
+
     /**
      * @param array<string, mixed> $configuration
      */
-    private function getControlPlaneEndpoint(string $region, array $configuration) : string
+    private function getControlPlaneEndpoint(string $region, array $configuration): string
     {
         $service = $this->useFipsEndpoint($configuration) ? 'bedrock-fips' : 'bedrock';
+
         return sprintf('https://%s.%s.amazonaws.com', $service, $region);
     }
+
     /**
      * @param array<string, mixed> $configuration
      */
-    private function useFipsEndpoint(array $configuration) : bool
+    private function useFipsEndpoint(array $configuration): bool
     {
         return !empty($configuration['useFipsEndpoint']);
     }
+
     /**
      * Resolves the model: per-request, then saved configuration, then default.
      *
      * @param array<string, string> $configuration
      */
-    protected function resolveConfiguredModel(?string $requestModel, array $configuration) : string
+    protected function resolveConfiguredModel(?string $requestModel, array $configuration): string
     {
         if ($requestModel !== null && $requestModel !== '') {
             return $requestModel;
         }
+
         $configuredModel = trim($configuration['model'] ?? '');
+
         return $configuredModel !== '' ? $configuredModel : $this->getDefaultModel();
     }
+
     /**
      * POSTs the Converse payload to the regional runtime endpoint with
      * bearer-key auth.
@@ -299,34 +463,43 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @param array<string, string> $configuration
      * @return array<string, mixed>
      */
-    protected function sendConverseRequest(string $model, array $payload, int $timeoutSeconds, array $configuration) : array
+    protected function sendConverseRequest(string $model, array $payload, int $timeoutSeconds, array $configuration): array
     {
-        return $this->sendJsonRequest($this->getConverseEndpoint($this->getEndpointUrl($configuration), $model), $this->getAuthorizationHeader($configuration), $payload, $timeoutSeconds);
+        return $this->sendJsonRequest(
+            $this->getConverseEndpoint($this->getEndpointUrl($configuration), $model),
+            $this->getAuthorizationHeader($configuration),
+            $payload,
+            $timeoutSeconds
+        );
     }
+
     /**
      * The model travels in the URL path, not the payload. Inference-profile
      * IDs and ARNs contain `:` and `/`, so the model must be encoded as a
      * single path segment.
      */
-    private function getConverseEndpoint(string $endpointUrl, string $model) : string
+    private function getConverseEndpoint(string $endpointUrl, string $model): string
     {
         return rtrim($endpointUrl, '/') . '/model/' . rawurlencode($model) . '/converse';
     }
+
     /**
      * @param array<string, mixed> $configuration
      */
-    private function getModelListingEndpoint(string $region, array $configuration) : string
+    private function getModelListingEndpoint(string $region, array $configuration): string
     {
         return $this->getControlPlaneEndpoint($region, $configuration) . '/foundation-models?byInferenceType=ON_DEMAND';
     }
+
     /**
      * @param array<string, string> $configuration
      * @return array<string, string>
      */
-    private function getAuthorizationHeader(array $configuration) : array
+    private function getAuthorizationHeader(array $configuration): array
     {
         return ['Authorization' => 'Bearer ' . $this->getApiKey($configuration)];
     }
+
     /**
      * Translates canonical messages into Bedrock Converse messages.
      *
@@ -339,7 +512,7 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @param list<CanonicalMessageArray> $messages canonical messages
      * @return list<array{role: string, content: list<array<string, mixed>>}>
      */
-    private function canonicalMessagesToBedrock(array $messages) : array
+    private function canonicalMessagesToBedrock(array $messages): array
     {
         $bedrockMessages = [];
         foreach ($messages as $message) {
@@ -347,6 +520,7 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
             // results into a 'user' message body so the toolUse/toolResult
             // pairing survives a round trip.
             $role = $message['role'] === 'assistant' ? 'assistant' : 'user';
+
             $blocks = [];
             foreach ($message['content'] as $block) {
                 $translated = $this->canonicalBlockToBedrock($block);
@@ -354,29 +528,39 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                     $blocks[] = $translated;
                 }
             }
+
             $lastIndex = count($bedrockMessages) - 1;
             if ($lastIndex >= 0 && $bedrockMessages[$lastIndex]['role'] === $role) {
-                $bedrockMessages[$lastIndex]['content'] = array_merge($bedrockMessages[$lastIndex]['content'], $blocks);
+                $bedrockMessages[$lastIndex]['content'] = array_merge(
+                    $bedrockMessages[$lastIndex]['content'],
+                    $blocks
+                );
                 continue;
             }
+
             $bedrockMessages[] = ['role' => $role, 'content' => $blocks];
         }
+
         return $bedrockMessages;
     }
+
     /**
      * @param array<string, mixed> $block
      * @return array<string, mixed>|null null when the block shape is unrecognised
      */
-    private function canonicalBlockToBedrock(array $block) : ?array
+    private function canonicalBlockToBedrock(array $block): ?array
     {
         $type = $block['type'] ?? null;
+
         if ($type === 'text' && is_string($block['text'] ?? null)) {
             return ['text' => $block['text']];
         }
+
         if ($type === 'reasoning') {
             // Canonical reasoning is display-only and must never be replayed.
             return null;
         }
+
         if ($type === 'tool_use') {
             $id = $block['id'] ?? null;
             $name = $block['name'] ?? null;
@@ -384,14 +568,17 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
             if (!is_string($id) || !is_string($name) || !is_array($input)) {
                 return null;
             }
+
             // Bedrock requires toolUse.input to be a JSON object, even when
             // empty. `json_decode($body, true)` collapses `{}` to `[]`; if
             // that round-trips back to Bedrock it would emit `"[]"` and the
             // next turn rejects it with a 400. Coerce empty inputs back to
             // stdClass so json_encode produces `{}`.
             $inputForWire = $input === [] ? new \stdClass() : $input;
+
             return ['toolUse' => ['toolUseId' => $id, 'name' => $name, 'input' => $inputForWire]];
         }
+
         if ($type === 'tool_result') {
             $toolUseId = $block['tool_use_id'] ?? null;
             if (!is_string($toolUseId)) {
@@ -399,10 +586,19 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
             }
             $structured = is_array($block['structuredContent'] ?? null) ? $block['structuredContent'] : null;
             $mcpContent = is_array($block['content'] ?? null) ? $block['content'] : [];
-            return ['toolResult' => ['toolUseId' => $toolUseId, 'content' => $this->toolResultContentToBedrock($structured, $mcpContent), 'status' => !empty($block['is_error']) ? 'error' : 'success']];
+
+            return [
+                'toolResult' => [
+                    'toolUseId' => $toolUseId,
+                    'content' => $this->toolResultContentToBedrock($structured, $mcpContent),
+                    'status' => !empty($block['is_error']) ? 'error' : 'success',
+                ],
+            ];
         }
+
         return null;
     }
+
     /**
      * Chooses the optimal Bedrock `toolResult.content` shape:
      *
@@ -417,11 +613,12 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @param list<array<string, mixed>> $mcpContent
      * @return list<array<string, mixed>>
      */
-    private function toolResultContentToBedrock(?array $structured, array $mcpContent) : array
+    private function toolResultContentToBedrock(?array $structured, array $mcpContent): array
     {
         if ($structured !== null) {
             return [['json' => $structured]];
         }
+
         $bedrockBlocks = [];
         foreach ($mcpContent as $block) {
             if (($block['type'] ?? null) === 'text' && is_string($block['text'] ?? null)) {
@@ -429,15 +626,18 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                 continue;
             }
             $serialised = json_encode($block);
-            if ($serialised !== \false) {
+            if ($serialised !== false) {
                 $bedrockBlocks[] = ['text' => $serialised];
             }
         }
+
         if ($bedrockBlocks === []) {
             $bedrockBlocks[] = ['text' => ''];
         }
+
         return $bedrockBlocks;
     }
+
     /**
      * Translates the tool catalogue into the Converse `toolConfig` shape, or
      * null for an empty catalogue so `toolConfig` is omitted entirely.
@@ -445,35 +645,54 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      * @param list<ToolCatalogEntryArray> $tools
      * @return array{tools: list<array<string, mixed>>}|null
      */
-    private function toolCatalogToBedrock(array $tools) : ?array
+    private function toolCatalogToBedrock(array $tools): ?array
     {
         if ($tools === []) {
             return null;
         }
+
         $bedrockTools = [];
         foreach ($tools as $tool) {
-            $bedrockTools[] = ['toolSpec' => ['name' => $tool['name'], 'description' => $tool['description'], 'inputSchema' => ['json' => $tool['inputSchema']]]];
+            $bedrockTools[] = [
+                'toolSpec' => [
+                    'name' => $tool['name'],
+                    'description' => $tool['description'],
+                    'inputSchema' => ['json' => $tool['inputSchema']],
+                ],
+            ];
         }
+
         return ['tools' => $bedrockTools];
     }
+
     /**
      * @param list<mixed> $content Bedrock assistant content blocks
      * @return list<CanonicalContentBlockArray> canonical assistant content blocks
      */
-    private function bedrockContentToCanonical(array $content, bool $splitInlineReasoning, bool $includeReasoning) : array
-    {
+    private function bedrockContentToCanonical(
+        array $content,
+        bool $splitInlineReasoning,
+        bool $includeReasoning
+    ): array {
         $canonical = [];
         foreach ($content as $block) {
             if (!is_array($block)) {
                 continue;
             }
+
             if (is_array($block['reasoningContent'] ?? null)) {
                 $reasoningText = $this->bedrockReasoningText($block['reasoningContent']);
-                if ($includeReasoning && is_string($reasoningText) && trim($reasoningText) !== '' && !$this->isRedactedReasoning($reasoningText)) {
+                if (
+                    $includeReasoning
+                    && is_string($reasoningText)
+                    && trim($reasoningText) !== ''
+                    && !$this->isRedactedReasoning($reasoningText)
+                ) {
                     $canonical[] = ['type' => 'reasoning', 'text' => $reasoningText];
                 }
                 continue;
             }
+
             if (is_string($block['text'] ?? null)) {
                 if ($splitInlineReasoning) {
                     foreach ($this->splitLeadingReasoning($block['text']) as $splitBlock) {
@@ -486,6 +705,7 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                 }
                 continue;
             }
+
             if (is_array($block['toolUse'] ?? null)) {
                 $toolUse = $block['toolUse'];
                 $id = $toolUse['toolUseId'] ?? null;
@@ -500,26 +720,39 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                         $normalizedInput[$key] = $value;
                     }
                 }
-                $canonical[] = ['type' => 'tool_use', 'id' => $id, 'name' => $name, 'input' => $normalizedInput];
+                $canonical[] = [
+                    'type' => 'tool_use',
+                    'id' => $id,
+                    'name' => $name,
+                    'input' => $normalizedInput,
+                ];
                 continue;
             }
+
             // Unknown Bedrock block shapes are dropped until a canonical
             // block type exists for them.
         }
+
         return $canonical;
     }
+
     /**
      * @param array<string, mixed> $reasoningContent
      */
-    private function bedrockReasoningText(array $reasoningContent) : ?string
+    private function bedrockReasoningText(array $reasoningContent): ?string
     {
         $reasoningText = $reasoningContent['reasoningText'] ?? null;
-        return is_array($reasoningText) && is_string($reasoningText['text'] ?? null) ? $reasoningText['text'] : null;
+
+        return is_array($reasoningText) && is_string($reasoningText['text'] ?? null)
+            ? $reasoningText['text']
+            : null;
     }
-    private function isRedactedReasoning(string $text) : bool
+
+    private function isRedactedReasoning(string $text): bool
     {
         return preg_match(self::REDACTED_REASONING_PATTERN, trim($text)) === 1;
     }
+
     /**
      * Adds the model-family-specific reasoning control to the request payload,
      * leaving models without a reasoning API untouched.
@@ -530,32 +763,49 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      *
      * @param array<string, mixed> $payload
      */
-    private function applyReasoningConfiguration(array &$payload, string $model, bool $thinking) : void
+    private function applyReasoningConfiguration(array &$payload, string $model, bool $thinking): void
     {
         if ($this->isGptOssModel($model)) {
             $payload['additionalModelRequestFields']['reasoning_effort'] = $thinking ? 'medium' : 'low';
             return;
         }
+
         if ($this->isNovaReasoningModel($model)) {
-            $payload['additionalModelRequestFields']['reasoningConfig'] = $thinking ? ['type' => 'enabled', 'maxReasoningEffort' => 'medium'] : ['type' => 'disabled'];
+            $payload['additionalModelRequestFields']['reasoningConfig'] = $thinking
+                ? ['type' => 'enabled', 'maxReasoningEffort' => 'medium']
+                : ['type' => 'disabled'];
         }
     }
-    private function isGptOssModel(string $model) : bool
+
+    /**
+     * Whether this model accepts a custom `temperature` on Converse.
+     */
+    private function modelSupportsTemperature(string $model): bool
+    {
+        return preg_match(self::TEMPERATURE_MODEL_PATTERN, $model) === 1
+            || preg_match(self::ANTHROPIC_TEMPERATURE_MODEL_PATTERN, $model) === 1;
+    }
+
+    private function isGptOssModel(string $model): bool
     {
         return preg_match(self::GPT_OSS_MODEL_PATTERN, $model) === 1;
     }
-    private function isNovaReasoningModel(string $model) : bool
+
+    private function isNovaReasoningModel(string $model): bool
     {
         return preg_match(self::NOVA_2_MODEL_PATTERN, $model) === 1;
     }
-    private function isNovaGen1Model(string $model) : bool
+
+    private function isNovaGen1Model(string $model): bool
     {
         return preg_match(self::NOVA_GEN1_MODEL_PATTERN, $model) === 1;
     }
-    private function isMistralLargeModel(string $model) : bool
+
+    private function isMistralLargeModel(string $model): bool
     {
         return preg_match(self::MISTRAL_LARGE_MODEL_PATTERN, $model) === 1;
     }
+
     /**
      * Splits balanced leading reasoning tags from the remaining answer text.
      *
@@ -565,39 +815,48 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
      *
      * @return list<array{type: string, text: string}>
      */
-    private function splitLeadingReasoning(string $raw) : array
+    private function splitLeadingReasoning(string $raw): array
     {
         $blocks = [];
         $rest = $raw;
-        while (preg_match(self::LEADING_REASONING_PATTERN, $rest, $open, \PREG_OFFSET_CAPTURE) === 1) {
+
+        while (preg_match(self::LEADING_REASONING_PATTERN, $rest, $open, PREG_OFFSET_CAPTURE) === 1) {
             $reasoningStart = strlen($open[0][0]);
-            $closePattern = '/<\\/' . preg_quote($open[1][0], '/') . '>/i';
-            if (preg_match($closePattern, $rest, $close, \PREG_OFFSET_CAPTURE, $reasoningStart) !== 1) {
+            $closePattern = '/<\/' . preg_quote($open[1][0], '/') . '>/i';
+
+            if (preg_match($closePattern, $rest, $close, PREG_OFFSET_CAPTURE, $reasoningStart) !== 1) {
                 break;
             }
+
             $reasoning = trim(substr($rest, $reasoningStart, $close[0][1] - $reasoningStart));
             if ($reasoning !== '') {
                 $blocks[] = ['type' => 'reasoning', 'text' => $reasoning];
             }
+
             $rest = substr($rest, $close[0][1] + strlen($close[0][0]));
         }
+
         if (trim($rest) !== '') {
             $blocks[] = ['type' => 'text', 'text' => $rest];
         }
+
         return $blocks;
     }
+
     /**
      * @param array<string, mixed> $response
      */
-    private function extractText(array $response, bool $stripInlineReasoning) : string
+    private function extractText(array $response, bool $stripInlineReasoning): string
     {
         $content = $response['output']['message']['content'] ?? [];
+
         if (is_array($content)) {
             foreach ($content as $block) {
                 if (isset($block['text']) && is_string($block['text'])) {
                     if (!$stripInlineReasoning) {
                         return $block['text'];
                     }
+
                     foreach ($this->splitLeadingReasoning($block['text']) as $splitBlock) {
                         if ($splitBlock['type'] === 'text') {
                             return $splitBlock['text'];
@@ -606,6 +865,7 @@ class Bedrock extends \Piwik\Plugins\AIProviders\Provider\AIProvider
                 }
             }
         }
+
         return '';
     }
 }

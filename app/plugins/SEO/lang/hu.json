@@ -1,0 +1,9 @@
+{
+    "SEO": {
+        "Bing_IndexedPages": "Bing által indexelt oldalak",
+        "DomainAge": "Domain életkor",
+        "Rank": "Rangsor",
+        "SEORankingsFor": "%s oldalhoz tartozó keresőoptimalizálási adatok",
+        "SeoRankings": "Keresőoptimalizálási rangsor"
+    }
+}

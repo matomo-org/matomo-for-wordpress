@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Filter;
 
-class ByParameterCount extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract
+class ByParameterCount extends FilterAbstract
 {
     protected $baseTranslations = array();
+
     /**
      * Sets base translations
      *
@@ -20,6 +22,7 @@ class ByParameterCount extends \Piwik\Plugins\LanguagesManager\TranslationWriter
     {
         $this->baseTranslations = $baseTranslations;
     }
+
     /**
      * Removes all translations where the placeholder parameter count differs to base translation
      *
@@ -30,6 +33,7 @@ class ByParameterCount extends \Piwik\Plugins\LanguagesManager\TranslationWriter
     public function filter($translations)
     {
         $cleanedTranslations = array();
+
         foreach ($translations as $pluginName => $pluginTranslations) {
             foreach ($pluginTranslations as $key => $translation) {
                 if (isset($this->baseTranslations[$pluginName][$key])) {
@@ -38,18 +42,23 @@ class ByParameterCount extends \Piwik\Plugins\LanguagesManager\TranslationWriter
                     // english string was deleted, do not error
                     continue;
                 }
+
                 // ensure that translated strings have the same number of %s as the english source strings
                 $baseCount = $this->getParametersCountToReplace($baseTranslation);
                 $translationCount = $this->getParametersCountToReplace($translation);
+
                 if ($baseCount != $translationCount) {
                     $this->filteredData[$pluginName][$key] = $translation;
                     continue;
                 }
+
                 $cleanedTranslations[$pluginName][$key] = $translation;
             }
         }
+
         return $cleanedTranslations;
     }
+
     /**
      * Counts the placeholder parameters n given string
      *

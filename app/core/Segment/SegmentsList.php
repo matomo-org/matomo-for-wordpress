@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Segment;
 
 use Piwik\Cache;
@@ -14,6 +15,7 @@ use Piwik\Columns\Dimension;
 use Piwik\Columns\DimensionSegmentFactory;
 use Piwik\Piwik;
 use Piwik\Plugin\Segment;
+
 /**
  * Manages the global list of segments that can be used.
  *
@@ -31,12 +33,15 @@ class SegmentsList
      * @var Segment[]
      */
     private $segments = array();
+
     private $segmentsByNameCache = array();
+
     public function addSegment(Segment $segment)
     {
-        $this->segments[] = $segment;
+        $this->segments[]          = $segment;
         $this->segmentsByNameCache = array();
     }
+
     /**
      * Get all available segments.
      *
@@ -46,6 +51,7 @@ class SegmentsList
     {
         return $this->segments;
     }
+
     /**
      * Removes one or more segments from the segments list.
      *
@@ -54,7 +60,7 @@ class SegmentsList
      * @param string|false $segmentExpression The segment expression name to remove eg 'pageUrl'.
      *                                        If not supplied, all segments within that category will be removed.
      */
-    public function remove($segmentCategory, $segmentExpression = \false)
+    public function remove($segmentCategory, $segmentExpression = false)
     {
         foreach ($this->segments as $index => $segment) {
             if ($segment->getCategoryId() === $segmentCategory) {
@@ -65,6 +71,7 @@ class SegmentsList
             }
         }
     }
+
     /**
      * @param string $segmentExpression Name of the segment expression. eg `pageUrl`
      * @return Segment|null
@@ -76,11 +83,14 @@ class SegmentsList
                 $this->segmentsByNameCache[$segment->getSegment()] = $segment;
             }
         }
+
         if (!empty($this->segmentsByNameCache[$segmentExpression])) {
             return $this->segmentsByNameCache[$segmentExpression];
         }
+
         return null;
     }
+
     /**
      * Get all metrics defined in the Piwik platform.
      * @ignore
@@ -91,10 +101,13 @@ class SegmentsList
         $cache = Cache::getTransientCache();
         $idSites = CacheId::getIdSiteListFromParams();
         $cacheKey = CacheId::siteAware('SegmentsList', $idSites);
+
         if ($cache->contains($cacheKey)) {
             return $cache->fetch($cacheKey);
         }
+
         $list = new static();
+
         /**
          * Triggered to add custom segment definitions.
          *
@@ -113,9 +126,11 @@ class SegmentsList
          * @param SegmentsList $list An instance of the SegmentsList. You can add segments to the list this way.
          */
         Piwik::postEvent('Segment.addSegments', [$list]);
+
         foreach (Dimension::getAllDimensions() as $dimension) {
             $dimension->configureSegments($list, new DimensionSegmentFactory($dimension));
         }
+
         /**
          * Triggered to filter segment definitions.
          *
@@ -130,7 +145,9 @@ class SegmentsList
          * @param array $idSites
          */
         Piwik::postEvent('Segment.filterSegments', [&$list, $idSites]);
+
         $cache->save($cacheKey, $list);
+
         return $list;
     }
 }

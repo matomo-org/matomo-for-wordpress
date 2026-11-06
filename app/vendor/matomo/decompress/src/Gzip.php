@@ -1,17 +1,17 @@
 <?php
-
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3 or later
  */
+
 namespace Matomo\Decompress;
 
 /**
  * Unzip implementation for .gz files.
  */
-class Gzip implements \Matomo\Decompress\DecompressInterface
+class Gzip implements DecompressInterface
 {
     /**
      * Name of .gz file.
@@ -19,12 +19,14 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
      * @var string
      */
     private $filename = null;
+
     /**
      * Error string.
      *
      * @var string
      */
     private $error = null;
+
     /**
      * Constructor.
      *
@@ -34,6 +36,7 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
     {
         $this->filename = $filename;
     }
+
     /**
      * Extracts the contents of the .gz file to $pathExtracted.
      *
@@ -43,22 +46,27 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
     public function extract($pathExtracted)
     {
         $file = @gzopen($this->filename, 'r');
-        if ($file === \false) {
+
+        if ($file === false) {
             $this->error = "gzopen failed";
-            return \false;
+            return false;
         }
+
         $output = fopen($pathExtracted, 'w');
         while (!feof($file)) {
             fwrite($output, fread($file, 1024 * 1024));
         }
         fclose($output);
+
         $success = gzclose($file);
-        if (\false === $success) {
+        if (false === $success) {
             $this->error = "gzclose failed";
-            return \false;
+            return false;
         }
-        return \true;
+
+        return true;
     }
+
     /**
      * Get error status string for the latest error.
      *
@@ -69,3 +77,4 @@ class Gzip implements \Matomo\Decompress\DecompressInterface
         return $this->error;
     }
 }
+

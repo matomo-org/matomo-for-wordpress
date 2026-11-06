@@ -3,6 +3,7 @@
  * phpcs:disable WordPress.WP.AlternativeFunctions.json_encode_json_encode
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  * phpcs:disable WordPress.DB.RestrictedClasses.mysql__PDO
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput -- validated by regex, WordPress is not loaded
  *
  * @package matomo
  */
@@ -13,7 +14,14 @@ if ( empty( $host ) ) {
 	exit;
 }
 
-$dbname = getenv( 'WP_DB_NAME' ); // defined in local-dev-entrypoint.sh
+// the webserver's environment only has the DB name of the install it was started for
+$folder = isset( $_GET['folder'] ) ? (string) $_GET['folder'] : '';
+if ( preg_match( '/^[A-Za-z0-9._-]+$/', $folder ) ) {
+	$dbname = 'wp_matomo_' . str_replace( [ '.', '-' ], '_', $folder ); // same as local-dev-entrypoint.sh
+} else {
+	$dbname = getenv( 'WP_DB_NAME' ); // defined in local-dev-entrypoint.sh
+}
+
 if ( empty( $dbname ) ) {
 	echo json_encode( [ 'error' => 'dbname is empty' ] );
 	exit;

@@ -6,54 +6,69 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\SEO\Metric;
 
 use Piwik\Http;
 use Piwik\Metrics\Formatter;
 use Piwik\Log\LoggerInterface;
+
 /**
  * Fetches the domain age using archive.org, who.is and whois.com.
  */
-class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
+class DomainAge implements MetricsProvider
 {
     /**
      * @var Formatter
      */
     private $formatter;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
-    private $createdOnRegex = '#(?:Creation Date|Created On|created|Registration Date|Registered on):?\\s*([\\d]{4}-[\\d]{2}-[\\d]{2})#i';
+
+    private $createdOnRegex = '#(?:Creation Date|Created On|created|Registration Date|Registered on):?\s*([\d]{4}-[\d]{2}-[\d]{2})#i';
+
     public function __construct(Formatter $formatter, LoggerInterface $logger)
     {
         $this->formatter = $formatter;
         $this->logger = $logger;
     }
+
     public function getMetrics(string $domain)
     {
-        $domain = str_replace('www.', '', $domain ?? '');
+        $domain  = str_replace('www.', '', $domain ?? '');
+
         $ages = array();
+
         $age = $this->getAgeArchiveOrg($domain);
         if ($age > 0) {
             $ages[] = $age;
         }
+
         $age = $this->getAgeWhoIs($domain);
         if ($age > 0) {
             $ages[] = $age;
         }
+
         $age = $this->getAgeWhoisCom($domain);
         if ($age > 0) {
             $ages[] = $age;
         }
+
         if (count($ages) > 0) {
             $value = min($ages);
-            $value = $this->formatter->getPrettyTimeFromSeconds(time() - $value, \true);
+            $value = $this->formatter->getPrettyTimeFromSeconds(time() - $value, true);
         } else {
             $value = null;
         }
-        return array(new \Piwik\Plugins\SEO\Metric\Metric('domain-age', 'SEO_DomainAge', $value, 'plugins/Morpheus/icons/dist/SEO/whois.png'));
+
+        return array(
+            new Metric('domain-age', 'SEO_DomainAge', $value, 'plugins/Morpheus/icons/dist/SEO/whois.png'),
+        );
     }
+
     /**
      * Returns the domain age archive.org lists for the current url
      *
@@ -63,20 +78,23 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     private function getAgeArchiveOrg($domain)
     {
         $response = $this->getUrl('https://archive.org/wayback/available?timestamp=19900101&url=' . urlencode($domain));
-        $data = json_decode($response, \true);
+        $data = json_decode($response, true);
         if (!empty($data["archived_snapshots"]["closest"]["timestamp"])) {
             return strtotime($data["archived_snapshots"]["closest"]["timestamp"]);
         }
+
         return 0;
     }
-    private function getUrlPlaintext(string $url) : string
+
+    private function getUrlPlaintext(string $url): string
     {
         $response = $this->getUrl($url);
         // strip all tags
         $response = strip_tags($response);
         // replace one or multiple white chars with a space
-        return (string) preg_replace('/\\s+/', ' ', $response);
+        return (string) preg_replace('/\s+/', ' ', $response);
     }
+
     /**
      * Returns the domain age who.is lists for the current url
      *
@@ -89,13 +107,14 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
         preg_match($this->createdOnRegex, $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
-            if ($value === \false) {
+            if ($value === false) {
                 return 0;
             }
             return $value;
         }
         return 0;
     }
+
     /**
      * Returns the domain age whois.com lists for the current url
      *
@@ -105,16 +124,18 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     private function getAgeWhoisCom($domain)
     {
         $data = $this->getUrlPlaintext('https://www.whois.com/whois/' . urlencode($domain));
+
         preg_match($this->createdOnRegex, $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
-            if ($value === \false) {
+            if ($value === false) {
                 return 0;
             }
             return $value;
         }
         return 0;
     }
+
     private function getUrl($url)
     {
         try {
@@ -124,6 +145,7 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
             return '';
         }
     }
+
     private function getHttpResponse($url)
     {
         return str_replace('&nbsp;', ' ', Http::sendHttpRequest($url, $timeout = 10, @$_SERVER['HTTP_USER_AGENT']));

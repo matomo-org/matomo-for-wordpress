@@ -1,0 +1,15 @@
+{
+    "TagManager": {
+        "CategoryClicks": "Músasmellir",
+        "CategoryDate": "Dagsetning",
+        "CategoryEmail": "Netfang",
+        "ChooseWebsite": "Veldu vef",
+        "EtrackerTagTransactionCurrencyTitle": "Gjaldmiðill",
+        "InvalidDebugUrlError": "Villa",
+        "PageUrlVariableName": "Síðu slóð",
+        "ReferrerUrlVariableName": "URL Sendanda",
+        "ReferrerVariableName": "URL Sendanda",
+        "Type": "Tegund",
+        "Version": "Útgáfa"
+    }
+}

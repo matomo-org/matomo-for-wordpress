@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Widget;
 
 /**
@@ -20,7 +21,7 @@ namespace Piwik\Widget;
  *
  * @api since Piwik 3.0.0
  */
-class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
+class WidgetContainerConfig extends WidgetConfig
 {
     /**
      * @var WidgetConfig[]
@@ -28,9 +29,11 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     protected $widgets = array();
     protected $layout = '';
     protected $id = '';
+
     protected $module = 'CoreHome';
     protected $action = 'renderWidgetContainer';
-    protected $isWidgetizable = \false;
+    protected $isWidgetizable = false;
+
     /**
      * Sets (overwrites) the id of the widget container.
      *
@@ -45,6 +48,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
         $this->id = $id;
         return $this;
     }
+
     /**
      * Get the id of the widget.
      * @return string
@@ -53,6 +57,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     {
         return $this->id;
     }
+
     /**
      * Sets the layout of the container widget.
      *
@@ -68,6 +73,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
         $this->layout = $layout;
         return $this;
     }
+
     /**
      * Gets the currently set layout.
      * @return string
@@ -76,16 +82,19 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     {
         return $this->layout;
     }
+
     /**
      * Adds a new widget to the container widget.
      *
      * @return static
      */
-    public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)
+    public function addWidgetConfig(WidgetConfig $widget)
     {
         $this->widgets[] = $widget;
+
         return $this;
     }
+
     /**
      * Set (overwrite) widget configs.
      *
@@ -95,6 +104,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     {
         $this->widgets = $configs;
     }
+
     /**
      * Get all added widget configs.
      *
@@ -104,6 +114,7 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
     {
         return $this->widgets;
     }
+
     /**
      * @inheritdoc
      */
@@ -113,8 +124,10 @@ class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
         unset($parameters['module']);
         unset($parameters['action']);
         unset($parameters['containerId']);
-        return \Piwik\Widget\WidgetsList::getWidgetUniqueId($this->id, '', $parameters);
+
+        return WidgetsList::getWidgetUniqueId($this->id, '', $parameters);
     }
+
     /**
      * @inheritdoc
      */

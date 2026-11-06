@@ -1,0 +1,11 @@
+{
+    "VisitTime": {
+        "ColumnLocalTime": "Lokal na oras",
+        "DayOfWeek": "Araw ng linggo",
+        "LocalTime": "Mga pagbisita sa bawat lokal na oras",
+        "SubmenuTimes": "Times",
+        "VisitsByDayOfWeek": "Mga pagbisita araw-araw",
+        "WidgetByDayOfWeekDocumentation": "Ipinapakita ng graph na ito ang bilang ng mga pagbisita na natanggap ng iyong website sa bawat araw sa loob ng isang linggo.",
+        "WidgetLocalTimeDocumentation": "Ang graph na ito ay nagpapakita kung anong oras sa lugar ng iyong %1$s bisita %2$s habang sila ay nasa iyong website."
+    }
+}

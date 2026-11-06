@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Actions;
 
 /**
@@ -22,6 +23,7 @@ class Archiver extends \Piwik\Plugin\Archiver
     public const PAGE_URLS_RECORD_NAME = 'Actions_actions_url';
     public const PAGE_URLS_FLAT_RECORD_NAME = 'Actions_actions_url_flat';
     public const PAGE_TITLES_FLAT_RECORD_NAME = 'Actions_actions_flat';
+
     public const METRIC_PAGEVIEWS_RECORD_NAME = 'Actions_nb_pageviews';
     public const METRIC_UNIQ_PAGEVIEWS_RECORD_NAME = 'Actions_nb_uniq_pageviews';
     public const METRIC_SUM_TIME_RECORD_NAME = 'Actions_sum_time_generation';

@@ -6,7 +6,9 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-declare (strict_types=1);
+
+declare(strict_types=1);
+
 namespace Piwik\Plugins\BotTracking\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
@@ -15,32 +17,43 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Plugins\BotTracking\Metrics;
+
 class ClickThroughRate extends ProcessedMetric
 {
     public function getName()
     {
         return Metrics::METRIC_AI_CHATBOTS_CLICK_THROUGH_RATE;
     }
+
     public function getTranslatedName()
     {
         return Piwik::translate('BotTracking_ColumnClickThroughRate');
     }
+
     public function getDocumentation()
     {
         return Piwik::translate('BotTracking_ColumnClickThroughRateDocumentation');
     }
+
     public function getDependentMetrics()
     {
-        return [Metrics::METRIC_AI_CHATBOTS_REQUESTS, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS];
+        return [
+            Metrics::METRIC_AI_CHATBOTS_REQUESTS,
+            Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS,
+        ];
     }
+
     public function compute(Row $row)
     {
         $rawRequests = $this->getMetric($row, Metrics::METRIC_AI_CHATBOTS_REQUESTS);
-        $rawVisits = $this->getMetric($row, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS);
+        $rawVisits  = $this->getMetric($row, Metrics::METRIC_AI_CHATBOTS_ACQUIRED_VISITS);
+
         $requests = is_numeric($rawRequests) ? (int) $rawRequests : 0;
-        $visits = is_numeric($rawVisits) ? (int) $rawVisits : 0;
+        $visits  = is_numeric($rawVisits)  ? (int) $rawVisits  : 0;
+
         return Piwik::getQuotientSafe($visits, $requests, 4);
     }
+
     /**
      * @param number $value
      * @return string
@@ -49,7 +62,8 @@ class ClickThroughRate extends ProcessedMetric
     {
         return $formatter->getPrettyPercentFromQuotient($value);
     }
-    public function getSemanticType() : ?string
+
+    public function getSemanticType(): ?string
     {
         return Dimension::TYPE_PERCENT;
     }

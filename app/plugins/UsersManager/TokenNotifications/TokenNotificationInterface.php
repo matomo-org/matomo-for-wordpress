@@ -6,11 +6,14 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager\TokenNotifications;
 
 interface TokenNotificationInterface
 {
-    public function getTokens() : array;
-    public function getTokenIds() : array;
-    public function dispatch() : bool;
+    public function getTokens(): array;
+
+    public function getTokenIds(): array;
+
+    public function dispatch(): bool;
 }

@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Columns;
 
 use Exception;
+
 /**
  * @api
  * @since 3.1.0
@@ -18,6 +20,7 @@ class Discriminator
     private $table;
     private $discriminatorColumn;
     private $discriminatorValue;
+
     /**
      * Join constructor.
      * @param string $table  unprefixed table name
@@ -33,15 +36,18 @@ class Discriminator
         $this->table = $table;
         $this->discriminatorColumn = $discriminatorColumn;
         $this->discriminatorValue = $discriminatorValue;
+
         if (!$this->isValid()) {
             // if adding another string value please post an event instead to get a list of allowed values
             throw new Exception('$discriminatorValue needs to be null or numeric');
         }
     }
+
     public function isValid()
     {
         return isset($this->discriminatorColumn) && is_numeric($this->discriminatorValue);
     }
+
     /**
      * @return string
      */
@@ -49,6 +55,7 @@ class Discriminator
     {
         return $this->table;
     }
+
     /**
      * @return string
      */
@@ -56,6 +63,7 @@ class Discriminator
     {
         return $this->discriminatorColumn;
     }
+
     /**
      * @return int|null
      */

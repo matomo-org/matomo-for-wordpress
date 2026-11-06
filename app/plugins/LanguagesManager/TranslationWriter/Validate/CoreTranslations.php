@@ -6,12 +6,14 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Validate;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\LanguageDataProvider;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
-class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Validate\ValidateAbstract
+
+class CoreTranslations extends ValidateAbstract
 {
     /**
      * Error States
@@ -21,7 +23,9 @@ class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter
     public const ERRORSTATE_LOCALEINVALID = 'Locale is invalid';
     public const ERRORSTATE_LOCALEINVALIDLANGUAGE = 'Locale is invalid - invalid language code';
     public const ERRORSTATE_LOCALEINVALIDCOUNTRY = 'Locale is invalid - invalid country code';
+
     protected $baseTranslations = array();
+
     /**
      * Sets base translations
      *
@@ -31,6 +35,7 @@ class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter
     {
         $this->baseTranslations = $baseTranslations;
     }
+
     /**
      * Validates the given translations
      *  * There need to be more than 250 translations present
@@ -44,33 +49,40 @@ class CoreTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter
     public function isValid($translations)
     {
         $this->message = null;
+
         if (empty($translations['General']['Locale'])) {
             $this->message = self::ERRORSTATE_LOCALEREQUIRED;
-            return \false;
+            return false;
         }
+
         if (empty($translations['General']['TranslatorName'])) {
             $this->message = self::ERRORSTATE_TRANSLATORINFOREQUIRED;
-            return \false;
+            return false;
         }
+
         /** @var LanguageDataProvider $languageDataProvider */
-        $languageDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\LanguageDataProvider');
+        $languageDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\LanguageDataProvider');
         /** @var RegionDataProvider $regionDataProvider */
-        $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
+        $regionDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\RegionDataProvider');
+
         $allLanguages = $languageDataProvider->getLanguageList();
         $allCountries = $regionDataProvider->getCountryList();
+
         if ('eo.UTF-8' === $translations['General']['Locale']) {
-            return \true;
+            return true;
         }
-        if (!preg_match('/^([a-z]{2})_([A-Z]{2})\\.UTF-8$/', $translations['General']['Locale'], $matches)) {
+
+        if (!preg_match('/^([a-z]{2})_([A-Z]{2})\.UTF-8$/', $translations['General']['Locale'], $matches)) {
             $this->message = self::ERRORSTATE_LOCALEINVALID;
-            return \false;
+            return false;
         } elseif (!array_key_exists($matches[1], $allLanguages)) {
             $this->message = self::ERRORSTATE_LOCALEINVALIDLANGUAGE;
-            return \false;
+            return false;
         } elseif (!array_key_exists(strtolower($matches[2]), $allCountries)) {
             $this->message = self::ERRORSTATE_LOCALEINVALIDCOUNTRY;
-            return \false;
+            return false;
         }
-        return \true;
+
+        return true;
     }
 }

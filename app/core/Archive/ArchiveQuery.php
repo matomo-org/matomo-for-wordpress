@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Archive;
 
 use Piwik\DataTable;
+
 interface ArchiveQuery
 {
     /**
@@ -16,22 +18,26 @@ interface ArchiveQuery
      * @return false|number|array
      */
     public function getNumeric($names);
+
     /**
      * @param string|string[] $names
      * @return DataTable|DataTable\Map
      */
     public function getDataTableFromNumeric($names);
+
     /**
      * @param string|string[] $names
      * @return DataTable|DataTable\Map
      */
     public function getDataTableFromNumericAndMergeChildren($names);
+
     /**
      * @param string $name
      * @param int|string|null $idSubtable
      * @return DataTable|DataTable\Map
      */
     public function getDataTable($name, $idSubtable = null);
+
     /**
      * @param string $name
      * @param int|string|null $idSubtable
@@ -39,5 +45,5 @@ interface ArchiveQuery
      * @param bool $addMetadataSubtableId
      * @return DataTable|DataTable\Map
      */
-    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = \true);
+    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = true);
 }

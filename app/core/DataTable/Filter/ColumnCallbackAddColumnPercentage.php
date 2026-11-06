@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataTable\Filter;
 
 use Piwik\Piwik;
+
 /**
  * Calculates a percentage value for each row of a {@link DataTable} and adds the result
  * to each row.
@@ -22,7 +24,7 @@ use Piwik\Piwik;
  *
  * @api
  */
-class ColumnCallbackAddColumnPercentage extends \Piwik\DataTable\Filter\ColumnCallbackAddColumnQuotient
+class ColumnCallbackAddColumnPercentage extends ColumnCallbackAddColumnQuotient
 {
     /**
      * Formats the given value as a percentage.

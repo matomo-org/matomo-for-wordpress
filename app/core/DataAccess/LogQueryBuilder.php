@@ -6,29 +6,56 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\DataAccess;
 
 use Exception;
+use Piwik\Common;
+use Piwik\Config;
 use Piwik\DataAccess\LogQueryBuilder\JoinGenerator;
 use Piwik\DataAccess\LogQueryBuilder\JoinTables;
 use Piwik\Plugin\LogTablesProvider;
 use Piwik\Segment\SegmentExpression;
+
 class LogQueryBuilder
 {
     public const FORCE_INNER_GROUP_BY_NO_SUBSELECT = '__##nosubquery##__';
+
+    /**
+     * Column the visits log groups by to return one row per visit.
+     */
+    private const LOG_VISIT_ID_COLUMN = 'log_visit.idvisit';
+
+    /**
+     * Alias the outer log_visit gets when the joined tables move into a subquery. It is the outer
+     * table that is renamed and not the one in the subquery, because the segment conditions can
+     * contain subqueries of their own that select from log_visit again, eg. `actionUrl!@x`. Leaving
+     * the generated join and the segment conditions untouched keeps those working.
+     */
+    private const LOG_VISIT_OUTER_ALIAS = 'log_visit_outer';
+
+    /**
+     * A reference to the log_visit table of the query. This matches more forms than the rewrite to
+     * the alias replaces on purpose, so that a reference the rewrite left behind can be detected.
+     */
+    private const LOG_VISIT_REFERENCE_REGEX = '/(?<![a-zA-Z0-9_])`?log_visit`?\s*\./i';
+
     /**
      * @var LogTablesProvider
      */
     private $logTableProvider;
+
     /**
      * Forces to use a subselect when generating the query. Set value to the FORCE_INNER_GROUP_BY_NO_SUBSELECT constant to force not using a subselect.
      * @var string
      */
     private $forcedInnerGroupBy = '';
+
     public function __construct(LogTablesProvider $logTablesProvider)
     {
         $this->logTableProvider = $logTablesProvider;
     }
+
     /**
      * Forces to use a subselect when generating the query.
      *
@@ -38,37 +65,68 @@ class LogQueryBuilder
     {
         $this->forcedInnerGroupBy = $innerGroupBy;
     }
+
     public function getForcedInnerGroupBySubselect()
     {
         return $this->forcedInnerGroupBy;
     }
-    public function getSelectQueryString(SegmentExpression $segmentExpression, $select, $from, $where, $bind, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
-    {
+
+    public function getSelectQueryString(
+        SegmentExpression $segmentExpression,
+        $select,
+        $from,
+        $where,
+        $bind,
+        $groupBy,
+        $orderBy,
+        $limitAndOffset,
+        bool $withRollup = false
+    ) {
         if (!is_array($from)) {
             $from = array($from);
         }
+
         $fromInitially = $from;
+        $whereWithoutSegment = $where;
+        $segmentWhere = null;
+
         if (!$segmentExpression->isEmpty()) {
             $segmentExpression->parseSubExpressionsIntoSqlExpressions($from);
             $segmentSql = $segmentExpression->getSql();
-            $where = $this->getWhereMatchBoth($where, $segmentSql['where']);
+            $segmentWhere = $segmentSql['where'];
+            $where = $this->getWhereMatchBoth($where, $segmentWhere);
             $bind = array_merge($bind, $segmentSql['bind']);
         }
+
         // hack to allow db planner and db query optimiser to use an anti-join which results in a lower cost query
         // and filtering on the log_visit table first when it doesn't need to consider null-extended rows
         if ($from === ['log_link_visit_action', 'log_visit']) {
             $from[1] = ['table' => 'log_visit', 'join' => 'INNER JOIN'];
         }
+
         $tables = new JoinTables($this->logTableProvider, $from);
         $join = new JoinGenerator($tables);
         $join->generate();
         $from = $join->getJoinString();
         $joinWithSubSelect = $join->shouldJoinWithSelect();
+
         // hack for https://github.com/piwik/piwik/issues/9194#issuecomment-164321612
-        $useSpecialConversionGroupBy = !empty($segmentSql) && strpos($groupBy, 'log_conversion.idgoal') !== \false && $fromInitially == array('log_conversion') && strpos($from, 'log_link_visit_action') !== \false;
+        $useSpecialConversionGroupBy = (!empty($segmentSql)
+            && strpos($groupBy, 'log_conversion.idgoal') !== false
+            && $fromInitially == array('log_conversion')
+            && strpos($from, 'log_link_visit_action') !== false);
+
         if (!empty($this->forcedInnerGroupBy)) {
             if ($this->forcedInnerGroupBy === self::FORCE_INNER_GROUP_BY_NO_SUBSELECT) {
-                $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
+                $sql = null;
+
+                if ($this->isVisitSemiJoinEnabled()) {
+                    $sql = $this->buildVisitQueryWithoutGroupBy($select, $from, $whereWithoutSegment, $segmentWhere, $groupBy, $orderBy, $limitAndOffset, $tables);
+                }
+
+                if ($sql === null) {
+                    $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
+                }
             } else {
                 $sql = $this->buildWrappedSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $tables, $this->forcedInnerGroupBy);
             }
@@ -80,8 +138,12 @@ class LogQueryBuilder
         } else {
             $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, $withRollup);
         }
-        return array('sql' => $sql, 'bind' => $bind);
+        return array(
+            'sql' => $sql,
+            'bind' => $bind,
+        );
     }
+
     private function getKnownTables()
     {
         $names = array();
@@ -90,6 +152,148 @@ class LogQueryBuilder
         }
         return $names;
     }
+
+    /**
+     * Build a query that returns one row per visit by construction, so that `GROUP BY
+     * log_visit.idvisit` is not needed to remove the duplicate visits the joined log tables create.
+     *
+     * Grouping by `log_visit.idvisit` while ordering by another log_visit column makes MySQL buffer
+     * and sort every matching visit before it can apply the LIMIT, so the query costs as much as the
+     * whole date range even though only one page of visits is returned.
+     *
+     * Two shapes are built:
+     *
+     * - when log_visit is the only table of the query, the GROUP BY is dropped. log_visit.idvisit is
+     *   the primary key of that table, so grouping by it cannot merge any rows.
+     * - when other log tables are joined, they move into a correlated EXISTS subquery. The subquery
+     *   matches a visit exactly when at least one of its joined rows matches the segment, which is
+     *   the set of visits the GROUP BY produced, so a visit matching several actions still counts
+     *   once against the LIMIT (see https://github.com/matomo-org/matomo/issues/13861). MySQL can
+     *   then stop reading log_visit as soon as it has enough visits, as long as an index serves the
+     *   order by. The visits log sorts by log_visit.idsite first when a single site is requested,
+     *   which the idsite indexes of log_visit serve. Sorting several sites at once has no index to
+     *   use, so the outer query still sorts every visit the query matched before the LIMIT applies.
+     *
+     * @param string          $select         Select clause, has to select from log_visit only.
+     * @param string          $from           Generated join string.
+     * @param string|false    $where          Where clause of the caller, without the segment conditions.
+     * @param string|null     $segmentWhere   Where clause generated for the segment.
+     * @param string|false    $groupBy
+     * @param string|false    $orderBy
+     * @param string|int|null $limitAndOffset
+     * @param JoinTables      $tables         Tables of the generated join, in the order they are joined.
+     * @return string|null The query, or null when it does not have the shape this rewrite is
+     *                     equivalent for and the caller has to build the grouped query instead.
+     */
+    private function buildVisitQueryWithoutGroupBy($select, $from, $where, $segmentWhere, $groupBy, $orderBy, $limitAndOffset, JoinTables $tables)
+    {
+        if (trim((string) $groupBy) !== self::LOG_VISIT_ID_COLUMN) {
+            return null;
+        }
+
+        // the rewrite reasons about visits, so the query may only select and sort log_visit rows
+        if (trim((string) $select) !== 'log_visit.*') {
+            return null;
+        }
+
+        if (!$this->canRewriteLogVisitReferences($where) || !$this->canRewriteLogVisitReferences($orderBy)) {
+            return null;
+        }
+
+        // log_visit has to be the table the other ones are joined on, so that every row of the join
+        // belongs to exactly one visit
+        if (!isset($tables[0]) || $tables[0] !== 'log_visit') {
+            return null;
+        }
+
+        if (count($tables) === 1) {
+            $where = empty($segmentWhere) ? $where : $this->getWhereMatchBoth($where, $segmentWhere);
+
+            return $this->buildSelectQuery($select, $from, $where, false, $orderBy, $limitAndOffset);
+        }
+
+        if (empty($segmentWhere)) {
+            return null;
+        }
+
+        $alias = self::LOG_VISIT_OUTER_ALIAS;
+
+        $visitMatchesSegment = $this->buildSelectQuery(
+            '1',
+            $from,
+            self::LOG_VISIT_ID_COLUMN . " = $alias.idvisit
+				AND ($segmentWhere)",
+            false,
+            false,
+            null
+        );
+
+        return $this->buildSelectQuery(
+            $this->aliasLogVisitTable($select, $alias),
+            Common::prefixTable('log_visit') . " AS $alias",
+            $this->getWhereMatchBoth($this->aliasLogVisitTable($where, $alias), "EXISTS ($visitMatchesSegment)"),
+            false,
+            $this->aliasLogVisitTable($orderBy, $alias),
+            $limitAndOffset
+        );
+    }
+
+    /**
+     * Whether the visits log may drop its group by. Off by default while the query change is
+     * validated, see the [Live] section of global.ini.php.
+     *
+     * @return bool
+     */
+    private function isVisitSemiJoinEnabled()
+    {
+        $live = Config::getInstance()->Live;
+
+        return !empty($live['use_semi_join_query']);
+    }
+
+    /**
+     * Whether an expression of the caller can be carried over into the rewritten query. It has to
+     * reference log_visit and nothing else, and it has to reference it in the form the rewrite below
+     * understands, because the rewrite renames the outer log_visit: a reference it does not replace
+     * ends up pointing at a table the rewritten query does not have.
+     *
+     * @param string|false $sqlExpression
+     * @return bool
+     */
+    private function canRewriteLogVisitReferences($sqlExpression)
+    {
+        $sqlExpression = (string) $sqlExpression;
+
+        foreach (SegmentExpression::parseColumnsFromSqlExpr($sqlExpression) as $column) {
+            if (strpos($column, 'log_visit.') !== 0) {
+                return false;
+            }
+        }
+
+        // a subquery selects from log_visit itself, so the references inside it belong to that
+        // log_visit and must not be pointed at the renamed outer one
+        if (preg_match('/\bSELECT\b/i', $sqlExpression)) {
+            return false;
+        }
+
+        // parseColumnsFromSqlExpr() reads `log_visit`.idsite as a log_visit column while the rewrite
+        // only replaces the unquoted form, so check what the rewrite leaves behind instead of
+        // trusting the two to read the expression the same way
+        $aliased = $this->aliasLogVisitTable($sqlExpression, self::LOG_VISIT_OUTER_ALIAS);
+
+        return !preg_match(self::LOG_VISIT_REFERENCE_REGEX, $aliased);
+    }
+
+    /**
+     * @param string|false $sqlExpression
+     * @param string $alias
+     * @return string
+     */
+    private function aliasLogVisitTable($sqlExpression, $alias)
+    {
+        return preg_replace('/(?<![a-zA-Z0-9_])log_visit\./', $alias . '.', (string) $sqlExpression);
+    }
+
     /**
      * Build a select query where actions have to be joined on visits (or conversions)
      * In this case, the query gets wrapped in another query so that grouping by visit is possible
@@ -107,27 +311,31 @@ class LogQueryBuilder
     {
         $matchTables = $this->getKnownTables();
         foreach ($tables as $table) {
-            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = \true)) {
+            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = true)) {
                 $matchTables[] = $table['tableAlias'];
-            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = \true)) {
+            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = true)) {
                 $matchTables[] = $table['table'];
-            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = \true)) {
+            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = true)) {
                 $matchTables[] = $table;
             }
         }
+
         $matchTables = '(' . implode('|', $matchTables) . ')';
-        preg_match_all("/" . $matchTables . "\\.[a-z0-9_\\*]+/", $select, $matches);
+        preg_match_all("/" . $matchTables . "\.[a-z0-9_\*]+/", $select, $matches);
         $neededFields = array_unique($matches[0]);
+
         if (count($neededFields) == 0) {
-            throw new Exception("No needed fields found in select expression. " . "Please use a table prefix.");
+            throw new Exception("No needed fields found in select expression. "
+                . "Please use a table prefix.");
         }
+
         $fieldNames = array();
         $toBeReplaced = array();
         $epregReplace = array();
         foreach ($neededFields as &$neededField) {
             $parts = explode('.', $neededField);
             if (count($parts) === 2 && !empty($parts[1])) {
-                if (in_array($parts[1], $fieldNames, $strict = \true)) {
+                if (in_array($parts[1], $fieldNames, $strict = true)) {
                     // eg when selecting 2 dimensions log_action_X.name
                     $columnAs = $parts[1] . md5($neededField);
                     $fieldNames[] = $columnAs;
@@ -137,18 +345,22 @@ class LogQueryBuilder
                     $toBeReplaced[$neededField . '`'] = $parts[0] . '.' . $columnAs . '`';
                     $toBeReplaced[$neededField . ','] = $parts[0] . '.' . $columnAs . ',';
                     // replace when string ends this, we need to use regex to check for this
-                    $epregReplace["/(" . $neededField . ")\$/"] = $parts[0] . '.' . $columnAs;
-                    $neededField .= ' as ' . $columnAs;
+                    $epregReplace["/(" . $neededField . ")$/"] = $parts[0] . '.' . $columnAs;
+                    $neededField .= ' as ' .  $columnAs;
                 } else {
                     $fieldNames[] = $parts[1];
                 }
             }
         }
+
         preg_match_all("/" . $matchTables . "/", $from, $matchesFrom);
+
         $innerSelect = implode(", \n", $neededFields);
         $innerFrom = $from;
         $innerWhere = $where;
+
         $innerLimitAndOffset = $limitAndOffset;
+
         $innerOrderBy = "NULL";
         if ($innerLimitAndOffset && $orderBy) {
             // only When LIMITing we can apply to the inner query the same ORDER BY as the parent query
@@ -156,13 +368,15 @@ class LogQueryBuilder
         }
         if ($innerLimitAndOffset) {
             // When LIMITing, no need to GROUP BY (GROUPing by is done before the LIMIT which is super slow when large amount of rows is matched)
-            $innerGroupBy = \false;
+            $innerGroupBy = false;
         }
+
         if (!isset($innerGroupBy) && in_array('log_visit', $matchesFrom[1])) {
             $innerGroupBy = "log_visit.idvisit";
         } elseif (!isset($innerGroupBy)) {
             throw new Exception('Cannot use subselect for join as no group by rule is specified');
         }
+
         if (!empty($toBeReplaced)) {
             $select = preg_replace(array_keys($epregReplace), array_values($epregReplace), $select);
             $select = str_replace(array_keys($toBeReplaced), array_values($toBeReplaced), $select);
@@ -175,48 +389,78 @@ class LogQueryBuilder
                 $orderBy = str_replace(array_keys($toBeReplaced), array_values($toBeReplaced), $orderBy);
             }
         }
+
         $innerQuery = $this->buildSelectQuery($innerSelect, $innerFrom, $innerWhere, $innerGroupBy, $innerOrderBy, $innerLimitAndOffset);
-        $select = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $select);
-        $from = "\n        (\n            {$innerQuery}\n        ) AS log_inner";
-        $where = \false;
-        $orderBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $orderBy);
-        $groupBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $groupBy);
+
+        $select = preg_replace('/' . $matchTables . '\./', 'log_inner.', $select);
+
+        $from = "
+        (
+            $innerQuery
+        ) AS log_inner";
+        $where = false;
+        $orderBy = preg_replace('/' . $matchTables . '\./', 'log_inner.', $orderBy);
+        $groupBy = preg_replace('/' . $matchTables . '\./', 'log_inner.', $groupBy);
+
         $outerLimitAndOffset = null;
         $query = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $outerLimitAndOffset);
         return $query;
     }
+
+
     /**
      * Build select query the normal way
      *
      * @param string $select fieldlist to be selected
      * @param string $from tablelist to select from
-     * @param string $where where clause
-     * @param string $groupBy group by clause
-     * @param string $orderBy order by clause
-     * @param string|int $limitAndOffset limit by clause eg '5' for Limit 5 Offset 0 or '10, 5' for Limit 5 Offset 10
+     * @param string|false $where where clause
+     * @param string|false $groupBy group by clause
+     * @param string|false $orderBy order by clause
+     * @param string|int|null $limitAndOffset limit by clause eg '5' for Limit 5 Offset 0 or '10, 5' for Limit 5 Offset 10
      * @return string
      */
-    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = \false)
+    private function buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset, bool $withRollup = false)
     {
-        $sql = "\n\t\t\tSELECT\n\t\t\t\t{$select}\n\t\t\tFROM\n\t\t\t\t{$from}";
+        $sql = "
+			SELECT
+				$select
+			FROM
+				$from";
+
         if ($where) {
-            $sql .= "\n\t\t\tWHERE\n\t\t\t\t{$where}";
+            $sql .= "
+			WHERE
+				$where";
         }
+
         if ($groupBy) {
-            $sql .= "\n\t\t\tGROUP BY\n\t\t\t\t{$groupBy}";
+            $sql .= "
+			GROUP BY
+				$groupBy";
+
             if ($withRollup) {
-                $sql .= "\n                    WITH ROLLUP";
+                $sql .= "
+                    WITH ROLLUP";
             }
         }
+
         if ($orderBy) {
             if ($withRollup) {
-                $sql = "\n                        SELECT * FROM (\n                            {$sql}\n                        ) AS rollupQuery";
+                $sql = "
+                        SELECT * FROM (
+                            $sql
+                        ) AS rollupQuery";
             }
-            $sql .= "\n\t\t\tORDER BY\n\t\t\t\t{$orderBy}";
+            $sql .= "
+			ORDER BY
+				$orderBy";
         }
+
         $sql = $this->appendLimitClauseToQuery($sql, $limitAndOffset);
+
         return $sql;
     }
+
     /**
      * @param $sql
      * @param $limit LIMIT clause eg. "10, 50" (offset 10, limit 50)
@@ -226,20 +470,23 @@ class LogQueryBuilder
     {
         $limitParts = explode(',', (string) $limit);
         $isLimitWithOffset = 2 === count($limitParts);
+
         if ($isLimitWithOffset) {
             // $limit = "10, 5". We would not have to do this but we do to prevent possible injections.
             $offset = trim($limitParts[0]);
-            $limit = trim($limitParts[1]);
-            $sql .= sprintf(' LIMIT %d, %d', $offset, $limit);
+            $limit  = trim($limitParts[1]);
+            $sql   .= sprintf(' LIMIT %d, %d', $offset, $limit);
         } else {
             // $limit = "5"
-            $limit = (int) $limit;
+            $limit = (int)$limit;
             if ($limit >= 1) {
-                $sql .= " LIMIT {$limit}";
+                $sql .= " LIMIT $limit";
             }
         }
+
         return $sql;
     }
+
     /**
      * @param $where
      * @param $segmentWhere
@@ -256,6 +503,8 @@ class LogQueryBuilder
         if (empty($where)) {
             return $segmentWhere;
         }
-        return "( {$where} )\n                AND\n                ({$segmentWhere})";
+        return "( $where )
+                AND
+                ($segmentWhere)";
     }
 }

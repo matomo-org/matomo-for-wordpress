@@ -6,11 +6,13 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Measurable\Type;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Measurable\Type;
+
 class TypeManager
 {
     /**
@@ -19,21 +21,26 @@ class TypeManager
     public function getAllTypes()
     {
         $components = PluginManager::getInstance()->findComponents('Type', '\\Piwik\\Measurable\\Type');
+
         $instances = array();
         foreach ($components as $component) {
             $instances[] = StaticContainer::get($component);
         }
+
         return $instances;
     }
+
     public function isExistingType($typeId)
     {
         foreach ($this->getAllTypes() as $type) {
             if ($type->getId() === $typeId) {
-                return \true;
+                return true;
             }
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * @param string $typeId
      * @return Type|null
@@ -45,6 +52,7 @@ class TypeManager
                 return $type;
             }
         }
+
         return new Type();
     }
 }

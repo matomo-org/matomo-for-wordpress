@@ -1,0 +1,9 @@
+{
+    "Widgetize": {
+        "OpenInNewWindow": "打开一个新窗口",
+        "PluginDescription": "在你的网站或应用程序中嵌入简单HTML标签来展示Matomo报告。",
+        "TooHighAccessLevel": "该用户具有超级用户权限。不允许使用超级用户的令牌来嵌入小部件。%1$s参见FAQ常见问题了解更多信息。%2$s",
+        "TopLinkTooltip": "将Matomo报告导出为小部件，并通过iframe将仪表板嵌入到您的应用程序中。",
+        "ViewAccessRequired": "该用户具有某些写入权限。用户只有查看权限的令牌才能被使用。 更多信息请参见%1$s。"
+    }
+}

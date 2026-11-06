@@ -6,20 +6,27 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Morpheus;
 
 use Piwik\Development;
 use Piwik\Piwik;
+
 class Controller extends \Piwik\Plugin\Controller
 {
     public function demo()
     {
-        if (!Development::isEnabled() || !Piwik::isUserHasSomeAdminAccess()) {
+        if (! Development::isEnabled() || !Piwik::isUserHasSomeAdminAccess()) {
             return;
         }
+
         $snippets = [];
+
         // @phpcs:disable Generic.Files.LineLength
-        $snippets[] = ['id' => 'ActivityIndicator', 'title' => 'Loading indicator', 'code' => '<template>
+        $snippets[] = [
+            'id' => 'ActivityIndicator',
+            'title' => 'Loading indicator',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -32,8 +39,18 @@ export default defineComponent({
     ActivityIndicator,
   },
 });
-</script>', 'vue_embed' => '<ActivityIndicator :loading="true"/>', 'desc' => 'This is a Vue component. You can bind the loading state to a variable if needed.', 'components' => [['plugin' => 'CoreHome', 'component' => 'ActivityIndicator']]];
-        $snippets[] = ['id' => 'Progressbar', 'title' => 'Progressbar', 'code' => '<template>
+</script>',
+            'vue_embed' => '<ActivityIndicator :loading="true"/>',
+            'desc' => 'This is a Vue component. You can bind the loading state to a variable if needed.',
+            'components' => [
+                ['plugin' => 'CoreHome', 'component' => 'ActivityIndicator'],
+            ],
+        ];
+
+        $snippets[] = [
+            'id' => 'Progressbar',
+            'title' => 'Progressbar',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -46,9 +63,19 @@ export default defineComponent({
     Progressbar,
   },
 });
-</script>', 'vue_embed' => '<Progressbar :progress="5" label="Downloading database"/>', 'desc' => 'This is a Vue component. You can bind the progress and label to component state.', 'components' => [['plugin' => 'CoreHome', 'component' => 'Progressbar']]];
+</script>',
+            'vue_embed' => '<Progressbar :progress="5" label="Downloading database"/>',
+            'desc' => 'This is a Vue component. You can bind the progress and label to component state.',
+            'components' => [
+                ['plugin' => 'CoreHome', 'component' => 'Progressbar'],
+            ],
+        ];
+
         // Alerts
-        $snippets[] = ['id' => 'Alert', 'title' => 'Alerts', 'code' => '<template>
+        $snippets[] = [
+            'id' => 'Alert',
+            'title' => 'Alerts',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -61,7 +88,8 @@ export default defineComponent({
     Alert,
   },
 });
-</script>', 'vue_embed' => '<Alert severity="info">
+</script>',
+            'vue_embed' => '<Alert severity="info">
   <strong>Info!</strong> This alert needs <a>your attention</a>, but it\'s not super important.
 </Alert>
 <Alert severity="success">
@@ -72,9 +100,17 @@ export default defineComponent({
 </Alert>
 <Alert severity="danger">
   <strong>Error!</strong> Change <a>a few things</a> and try submitting again.
-</Alert>', 'components' => [['plugin' => 'CoreHome', 'component' => 'Alert']]];
+</Alert>',
+            'components' => [
+                ['plugin' => 'CoreHome', 'component' => 'Alert'],
+            ],
+        ];
+
         // Notifications
-        $snippets[] = ['id' => 'Notification', 'title' => 'Notifications', 'code' => '<template>
+        $snippets[] = [
+            'id' => 'Notification',
+            'title' => 'Notifications',
+            'code' => '<template>
   %vue_embed%
 </template>       
 <script lang="ts">
@@ -86,7 +122,8 @@ export default defineComponent({
     Notification,
   },
 });
-</script>', 'vue_embed' => '<Notification context="info">
+</script>',
+            'vue_embed' => '<Notification context="info">
       <strong>Info</strong>:
       This notification needs <a>your attention</a> but it\'s not super important and has a close button.
     </Notification>
@@ -101,9 +138,20 @@ export default defineComponent({
     <Notification context="error" :noclear="true">
       <strong>Error</strong><br>
       Change <a>a few things</a> and try submitting again, this notification does not have a close button, but it does contain multiple lines of text. Textus sine sensu ultra finem lineae pergit ante movens infra et iterum ad sinistram.
-    </Notification>', 'desc' => 'This is a Vue component. You can use the :noclear="true" property to hide the close button', 'components' => [['plugin' => 'CoreHome', 'component' => 'Notification']]];
+    </Notification>',
+            'desc' => 'This is a Vue component. You can use the :noclear="true" property to hide the close button',
+            'components' => [
+                ['plugin' => 'CoreHome', 'component' => 'Notification'],
+            ],
+        ];
+
+
         // forms
-        $snippets[] = ['title' => 'Forms', 'vue_embed' => '<p>If you do not want to use one of our form fields we recommend to add the class <code>browser-default</code> to the input or select element.</p>'];
+        $snippets[] = [
+            'title' => 'Forms',
+            'vue_embed' => '<p>If you do not want to use one of our form fields we recommend to add the class <code>browser-default</code> to the input or select element.</p>',
+        ];
+
         $snippets[] = $this->formSnippet('simpleField', 'username', "''", '', '<div v-form>
   <Field
     uicontrol="text"
@@ -113,7 +161,7 @@ export default defineComponent({
     placeholder="Some text here"
     v-model="username"
   />
-</div>', [], [], \false);
+</div>', [], [], false);
         $snippets[] = $this->formSnippet('withInlineHelp', 'email', "''", '', '<div v-form>
   <Field
     uicontrol="email"
@@ -131,6 +179,7 @@ export default defineComponent({
     v-model="text"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('textWithoutTitle', 'text', "''", '', '<div v-form>
   <Field
     uicontrol="text"
@@ -139,6 +188,7 @@ export default defineComponent({
     v-model="text"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('textWithValue', 'text', "'My value'", 'My value', '<div v-form>
   <Field
     uicontrol="text"
@@ -147,6 +197,7 @@ export default defineComponent({
     title="This field has already a value set"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('password', 'pwd', "''", '', '<div v-form>
   <Field
     uicontrol="password"
@@ -156,6 +207,7 @@ export default defineComponent({
     v-model="pwd"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('passwordAutoClear', 'pwdAutoClear', "''", '', '<div v-form>
   <Field
     uicontrol="password"
@@ -170,6 +222,7 @@ export default defineComponent({
     </template>
   </Field>
 </div>', [], [['plugin' => 'CoreHome', 'directive' => 'AutoClearPassword']]);
+
         // rules are hardcoded as json-encoding the regular expressions produces an output that breaks the combination of single and double quotes used here
         $snippets[] = $this->formSnippet('passwordStrength', 'pwdStrength', "''", '', '<div v-form>
   <Field
@@ -178,11 +231,12 @@ export default defineComponent({
     title="Password with strength indicator"
     v-model="pwdStrength"
     :ui-control-attributes="{
-      passwordStrengthValidationRules: [{\'validationRegex\':\'\\/^.{12,}$\\/\',\'ruleText\':\'At least 12 characters\'},{\'validationRegex\':\'\\/^.*[a-z].*$\\/\',\'ruleText\':\'Contains a lowercase letter\'},{\'validationRegex\':\'\\/^.*[A-Z].*$\\/\',\'ruleText\':\'Contains an uppercase letter\'},{\'validationRegex\':\'\\/^.*[0-9].*$\\/\',\'ruleText\':\'Contains a number\'},{\'validationRegex\':\'\\/^.*[!@#$%^&*(){}~].*$\\/\',\'ruleText\':\'Contains a special character\'}]
+      passwordStrengthValidationRules: [{\'validationRegex\':\'\/^.{12,}$\/\',\'ruleText\':\'At least 12 characters\'},{\'validationRegex\':\'\/^.*[a-z].*$\/\',\'ruleText\':\'Contains a lowercase letter\'},{\'validationRegex\':\'\/^.*[A-Z].*$\/\',\'ruleText\':\'Contains an uppercase letter\'},{\'validationRegex\':\'\/^.*[0-9].*$\/\',\'ruleText\':\'Contains a number\'},{\'validationRegex\':\'\/^.*[!@#$%^&*(){}~].*$\/\',\'ruleText\':\'Contains a special character\'}]
     }"
   >
   </Field>
 </div>');
+
         $snippets[] = $this->formSnippet('complexHelp', 'text', "''", '', '<div v-form>
   <Field
     uicontrol="text"
@@ -197,6 +251,7 @@ export default defineComponent({
     </template>
   </Field>
 </div>');
+
         $snippets[] = $this->formSnippet('fullWidthText', 'text', "''", '', '<div v-form>
   <Field
     uicontrol="text"
@@ -207,6 +262,7 @@ export default defineComponent({
     v-model="text"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('urlText', 'url', "''", '', '<div v-form>
   <Field
     uicontrol="url"
@@ -216,6 +272,7 @@ export default defineComponent({
     v-model="url"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('textarea', 'description', "''", '', '<div v-form>
   <Field
     uicontrol="textarea"
@@ -225,8 +282,14 @@ export default defineComponent({
     v-model="description"
   />
 </div>');
+
         // TODO: handle arrays
-        $snippets[] = $this->formSnippet('language', ['language', 'phoneNumber', 'selectedExpand'], ['1', '[\'1\']', 'null'], [1, ['1'], null], '<div v-form>
+        $snippets[] = $this->formSnippet(
+            'language',
+            ['language', 'phoneNumber', 'selectedExpand'],
+            ['1', '[\'1\']', 'null'],
+            [1, ['1'], null],
+            '<div v-form>
   <Field
     uicontrol="select"
     name="language"
@@ -252,7 +315,9 @@ export default defineComponent({
     :options="[{group: \'Group 1\',key:\'1\',value:\'Hello\'}, {group: \'Group 1\',key:\'2\',value:\'How\',tooltip: \'Help text\'}, {group: \'Group 1\',key:\'3\',value:\'Are\'}, {group: \'Group 2\',key:\'4\',value:\'You\'}]"
     v-model="selectedExpand"
   />
-</div>');
+</div>'
+        );
+
         $snippets[] = $this->formSnippet('multitupletext', 'values', '[]', [], '<div v-form>
   <Field
     uicontrol="multituple"
@@ -263,7 +328,13 @@ export default defineComponent({
     v-model="values"
   />
 </div>');
-        $snippets[] = $this->formSnippet('multitupletextvalue', 'values', '[{\'index\': \'test\', \'value\':\'myfoo\'},{\'index\': \'test 2\', \'value\':\'myfoo 2\'}]', [['index' => 'test', 'value' => 'myfoo'], ['index' => 'test 2', 'value' => 'myfoo 2']], '<div v-form>
+
+        $snippets[] = $this->formSnippet(
+            'multitupletextvalue',
+            'values',
+            '[{\'index\': \'test\', \'value\':\'myfoo\'},{\'index\': \'test 2\', \'value\':\'myfoo 2\'}]',
+            [['index' => 'test', 'value' => 'myfoo'], ['index' => 'test 2', 'value' => 'myfoo 2']],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupletextvalue"
@@ -272,8 +343,15 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'text\',\'availableValues\':null},\'field2\':{\'key\':\'value\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
-        $snippets[] = $this->formSnippet('multitupleselect', 'values', '[{\'index\': \'test\', \'value\': \'myfoo\'}]', [["index" => "test", "value" => "myfoo"]], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet(
+            'multitupleselect',
+            'values',
+            '[{\'index\': \'test\', \'value\': \'myfoo\'}]',
+            [["index" => "test", "value" => "myfoo"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupleselect"
@@ -282,7 +360,9 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'select\',\'availableValues\':{\'test\':\'test\'}},\'field2\':{\'key\':\'value\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
+</div>'
+        );
+
         $snippets[] = $this->formSnippet('multitupletext2', 'values', '[]', [], '<div v-form>
   <Field
     uicontrol="multituple"
@@ -293,7 +373,13 @@ export default defineComponent({
     v-model="values"
   />
 </div>');
-        $snippets[] = $this->formSnippet('multitupletextvalue2', 'values', "[{'index': 'test', 'value':'myfoo'},{'index': 'test 2', 'value':'myfoo 2'}]", [["index" => "test", "value" => "myfoo"], ["index" => "test 2", "value" => "myfoo 2"]], '<div v-form>
+
+        $snippets[] = $this->formSnippet(
+            'multitupletextvalue2',
+            'values',
+            "[{'index': 'test', 'value':'myfoo'},{'index': 'test 2', 'value':'myfoo 2'}]",
+            [["index" => "test", "value" => "myfoo"], ["index" => "test 2", "value" => "myfoo 2"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupletextvalue2"
@@ -302,8 +388,15 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'text\',\'availableValues\':null},\'field2\':{\'key\':\'value\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null},\'field3\':{\'key\':\'value2\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
-        $snippets[] = $this->formSnippet('multitupleselect2', 'values', '[{\'index\': \'test\', \'value\': \'myfoo\'}]', [['index' => 'test', 'value' => 'myfoo']], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet(
+            'multitupleselect2',
+            'values',
+            '[{\'index\': \'test\', \'value\': \'myfoo\'}]',
+            [['index' => 'test', 'value' => 'myfoo']],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupleselect2"
@@ -313,7 +406,9 @@ export default defineComponent({
     v-model="values"
     rows="3"
   />
-</div>');
+</div>'
+        );
+
         $snippets[] = $this->formSnippet('multitupletext3', 'values', '[]', [], '<div v-form>
   <Field
     uicontrol="multituple"
@@ -324,6 +419,7 @@ export default defineComponent({
     v-model="values"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('multitupletextfullwidth', 'values', '[]', [], '<div v-form>
   <Field
     uicontrol="multituple"
@@ -335,7 +431,13 @@ export default defineComponent({
     v-model="values"
   />
 </div>');
-        $snippets[] = $this->formSnippet('multitupletextvalue3', 'values', '[{\'index\': \'test\', \'value\':\'myfoo\'},{\'index\': \'test 2\', \'value\':\'myfoo 2\'}]', [["index" => "test", "value" => "myfoo"], ["index" => "test 2", "value" => "myfoo 2"]], '<div v-form>
+
+        $snippets[] = $this->formSnippet(
+            'multitupletextvalue3',
+            'values',
+            '[{\'index\': \'test\', \'value\':\'myfoo\'},{\'index\': \'test 2\', \'value\':\'myfoo 2\'}]',
+            [["index" => "test", "value" => "myfoo"], ["index" => "test 2", "value" => "myfoo 2"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupletextvalue3"
@@ -344,8 +446,15 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'text\',\'availableValues\':null},\'field2\':{\'key\':\'value\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null},\'field3\':{\'key\':\'value2\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null},\'field4\':{\'key\':\'value3\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
-        $snippets[] = $this->formSnippet('multitupleselect3', 'values', '[{\'index\': \'test\', \'value\': \'myfoo\'}]', [["index" => "test", "value" => "myfoo"]], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet(
+            'multitupleselect3',
+            'values',
+            '[{\'index\': \'test\', \'value\': \'myfoo\'}]',
+            [["index" => "test", "value" => "myfoo"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multitupleselect3"
@@ -354,8 +463,15 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'select\',\'availableValues\':{\'test\':\'test\'}},\'field2\':{\'key\':\'value\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null},\'field3\':{\'key\':\'value2\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null},\'field4\':{\'key\':\'value3\',\'title\':\'Value\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
-        $snippets[] = $this->formSnippet('multituplesingleselect', 'values', '[{\'index\': \'test\', \'value\': \'myfoo\'}]', [["index" => "test", "value" => "myfoo"]], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet(
+            'multituplesingleselect',
+            'values',
+            '[{\'index\': \'test\', \'value\': \'myfoo\'}]',
+            [["index" => "test", "value" => "myfoo"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multituplesingleselect"
@@ -364,8 +480,15 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'select\',\'availableValues\':{\'test\':\'test\'}}}"
     v-model="values"
   />
-</div>');
-        $snippets[] = $this->formSnippet('multituplesingletext', 'values', '[{\'index\': \'test\', \'value\': \'myfoo\'}]', [["index" => "test", "value" => "myfoo"]], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet(
+            'multituplesingletext',
+            'values',
+            '[{\'index\': \'test\', \'value\': \'myfoo\'}]',
+            [["index" => "test", "value" => "myfoo"]],
+            '<div v-form>
   <Field
     uicontrol="multituple"
     name="multituplesingletext"
@@ -374,7 +497,9 @@ export default defineComponent({
     :ui-control-attributes="{\'field1\':{\'key\':\'index\',\'title\':\'Index\',\'uiControl\':\'text\',\'availableValues\':null}}"
     v-model="values"
   />
-</div>');
+</div>'
+        );
+
         $snippets[] = $this->formSnippet('text-field-array', 'values', "['text one', 'text two']", ['text one', 'text two'], '<div v-form>
   <Field
     uicontrol="field-array"
@@ -385,6 +510,7 @@ export default defineComponent({
     v-model="values"
   />
 </div>');
+
         $snippets[] = $this->formSnippet('select-field-array', 'values', "['one', 'two']", ['one', 'two'], '<div v-form>
   <Field
     uicontrol="field-array"
@@ -396,7 +522,13 @@ export default defineComponent({
     rows="5"
   />
 </div>');
-        $snippets[] = $this->formSnippet('enableFeatures', ['enable', 'enableArray', 'defaultReportDate'], ['false', '[]', 'null'], [\false, [], null], '<div v-form>
+
+        $snippets[] = $this->formSnippet(
+            'enableFeatures',
+            ['enable', 'enableArray', 'defaultReportDate'],
+            ['false', '[]', 'null'],
+            [false, [], null],
+            '<div v-form>
   <Field
     uicontrol="checkbox"
     name="enableFeature"
@@ -422,8 +554,10 @@ export default defineComponent({
     inline-help="This is a help text that can be used to describe the field. This help text may extend over several lines."
     v-model="defaultReportDate"
   />
-</div>');
-        $snippets[] = $this->formSnippet('currentsite', ['site', 'isDisabled', 'saveCount', 'isLoading'], ['null', 'false', '0', 'false'], [null, \false, 0, \false], '<div v-form>
+</div>'
+        );
+
+        $snippets[] = $this->formSnippet('currentsite', ['site', 'isDisabled', 'saveCount', 'isLoading'], ['null', 'false', '0', 'false'], [null, false, 0, false], '<div v-form>
   <Field
     uicontrol="site"
     name="currentsite"
@@ -440,7 +574,11 @@ export default defineComponent({
   />
   <p>The second save button was clicked <span v-text="saveCount"></span> times.</p>
 </div>', [['plugin' => 'CorePluginsAdmin', 'component' => 'SaveButton']]);
-        $snippets[] = ['id' => 'inlinecode', 'title' => 'Inline Code', 'code' => '<template>
+
+        $snippets[] = [
+            'id' => 'inlinecode',
+            'title' => 'Inline Code',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -453,10 +591,19 @@ export default defineComponent({
     SelectOnFocus,
   },
 });
-</script>', 'vue_embed' => '<p>
+</script>',
+            'vue_embed' => '<p>
   You can put code in a text using the <div><code v-select-on-focus="{}">code</code></div> tag.
-</p>', 'directives' => [['plugin' => 'CoreHome', 'directive' => 'SelectOnFocus']]];
-        $snippets[] = ['id' => 'blockcode', 'title' => 'Block Code', 'code' => '<template>
+</p>',
+            'directives' => [
+                ['plugin' => 'CoreHome', 'directive' => 'SelectOnFocus'],
+            ],
+        ];
+
+        $snippets[] = [
+            'id' => 'blockcode',
+            'title' => 'Block Code',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -469,12 +616,22 @@ export default defineComponent({
     CopyToClipboard,
   },
 });
-</script>', 'vue_embed' => '<p>Or you can display a code block:</p>
+</script>',
+            'vue_embed' => '<p>Or you can display a code block:</p>
 <div><pre v-copy-to-clipboard="{}">&lt;!-- Matomo --&gt;
 &lt;script type=&quot;text/javascript&quot;&gt;
 &lt;/script&gt;
-&lt;!-- End Matomo Code --&gt;</pre></div>', 'directives' => [['plugin' => 'CoreHome', 'directive' => 'CopyToClipboard']]];
-        $snippets[] = ['id' => 'tables', 'title' => 'Tables', 'code' => '%vue_embed%', 'vue_embed' => '<table>
+&lt;!-- End Matomo Code --&gt;</pre></div>',
+            'directives' => [
+                ['plugin' => 'CoreHome', 'directive' => 'CopyToClipboard'],
+            ],
+        ];
+
+        $snippets[] = [
+            'id' => 'tables',
+            'title' => 'Tables',
+            'code' => '%vue_embed%',
+            'vue_embed' => '<table>
 <thead>
 <tr>
   <th>First Name</th>
@@ -499,8 +656,13 @@ export default defineComponent({
   <td>@twitter</td>
 </tr>
 </tbody>
-</table>'];
-        $snippets[] = ['id' => 'contentintro', 'title' => 'Content intro', 'code' => '<template>
+</table>',
+        ];
+
+        $snippets[] = [
+            'id' => 'contentintro',
+            'title' => 'Content intro',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -513,11 +675,19 @@ export default defineComponent({
     ContentIntro,
   },
 });
-</script>', 'vue_embed' => '<div v-content-intro>
+</script>',
+            'vue_embed' => '<div v-content-intro>
   <h2>My headline</h2>
   <p>My text goes is in here</p>
-</div>', 'directives' => [['plugin' => 'CoreHome', 'directive' => 'ContentIntro']], 'desc' => 'A content intro can be used as an introduction to the following content and is usually used as the first part of a page followed by one or multiple content blocks.'];
-        $snippets[] = ['id' => 'contentblock', 'title' => 'Content blocks', 'code' => '<template>
+</div>',
+            'directives' => [['plugin' => 'CoreHome', 'directive' => 'ContentIntro']],
+            'desc' => 'A content intro can be used as an introduction to the following content and is usually used as the first part of a page followed by one or multiple content blocks.',
+        ];
+
+        $snippets[] = [
+            'id' => 'contentblock',
+            'title' => 'Content blocks',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -530,10 +700,17 @@ export default defineComponent({
     ContentBlock,
   },
 });
-</script>', 'components' => [['plugin' => 'CoreHome', 'component' => 'ContentBlock']], 'vue_embed' => '<ContentBlock content-title="My title" help-url="https://matomo.org">
+</script>',
+            'components' => [['plugin' => 'CoreHome', 'component' => 'ContentBlock']],
+            'vue_embed' => '<ContentBlock content-title="My title" help-url="https://matomo.org">
   <p>My text goes is in here</p>
-</ContentBlock>'];
-        $snippets[] = ['id' => 'contenttable', 'title' => 'Content table', 'code' => '<template>
+</ContentBlock>',
+        ];
+
+        $snippets[] = [
+            'id' => 'contenttable',
+            'title' => 'Content table',
+            'code' => '<template>
   %vue_embed%
 </template>
 
@@ -549,7 +726,8 @@ export default defineComponent({
       ContentTable,
   },
 });
-</script>', 'vue_embed' => '<ContentBlock content-title="My title" help-url="https://matomo.org">
+</script>',
+            'vue_embed' => '<ContentBlock content-title="My title" help-url="https://matomo.org">
   <p>My intro text is here</p>
   <table v-content-table>
     <thead>
@@ -560,21 +738,186 @@ export default defineComponent({
       <tr><td>Value 1</td><td>Value 2</td></tr>
     </tbody>
   </table>
-</ContentBlock>', 'components' => [['plugin' => 'CoreHome', 'component' => 'ContentBlock']], 'directives' => [['plugin' => 'CoreHome', 'directive' => 'ContentTable']]];
-        $icons = ['Manage' => ['add', 'edit', 'delete', 'plus', 'minus', 'archive', 'add1', 'remove'], 'Alerts' => ['error', 'warning', 'info', 'success', 'help', 'ok'], 'Navigation' => ['arrow-left', 'arrow-right', 'arrow-left-2', 'arrow-right-2', 'arrow-top', 'arrow-bottom', 'zoom-in', 'zoom-out', 'show', 'hide', 'search', 'menu-hamburger', 'more-horiz', 'more-verti', 'arrowup', 'arrowdown', 'chevron-right', 'chevron-left', 'chevron-down', 'chevron-up'], 'Window-Widget' => ['minimise', 'fullscreen', 'close', 'maximise', 'refresh', 'reload'], 'Reports' => ['table', 'table-more', 'chart-bar', 'chart-pie', 'evolution', 'funnel', 'form', 'transition', 'overlay', 'lab', 'clock', 'dashboard-customize'], 'Users' => ['user', 'user-add', 'users', 'user-personal'], 'Date-picker' => ['calendar', 'datepicker-arr-l', 'datepicker-arr-r'], 'Annotations' => ['annotation'], 'E-commerce' => ['ecommerce-order', 'ecommerce-abandoned-cart'], 'Goals' => ['goal'], 'Insights' => ['insights'], 'Segments' => ['segment'], 'Visitors' => ['visitor-profile', 'segmented-visits-log'], 'Lock' => ['locked'], 'Media' => ['audio', 'play', 'pause', 'replay', 'stop', 'fast-forward', 'fast-rewind', 'skip-next', 'skip-previous'], 'Other' => ['configure', 'document', 'email', 'export', 'feed', 'download', 'image', 'code', 'star', 'drop', 'drop-crossed', 'business', 'finance', 'folder', 'github', 'open-source', 'puzzle', 'server', 'tag-cloud', 'sign-in', 'sign-out', 'settings', 'rocket', 'bug', 'upload', 'embed', 'heart', 'merge', 'content-copy', 'new_releases', 'notifications_on', 'reporting-dashboard', 'reporting-actions', 'reporting-visitors', 'reporting-referer', 'admin-diagnostic', 'admin-platform', 'admin-development', 'admin-settings', 'marketplace', 'plugin', 'circle', 'dollar-sign', 'hits', 'ai-assistants']];
+</ContentBlock>',
+            'components' => [['plugin' => 'CoreHome', 'component' => 'ContentBlock']],
+            'directives' => [['plugin' => 'CoreHome', 'directive' => 'ContentTable']],
+        ];
+
+        $icons = [
+            'Manage' => [
+                'add',
+                'edit',
+                'delete',
+                'plus',
+                'minus',
+                'archive',
+                'add1',
+                'remove',
+            ],
+            'Alerts' => [
+                'error',
+                'warning',
+                'info',
+                'success',
+                'help',
+                'ok',
+            ],
+            'Navigation' => [
+                'arrow-left',
+                'arrow-right',
+                'arrow-left-2',
+                'arrow-right-2',
+                'arrow-top',
+                'arrow-bottom',
+                'zoom-in',
+                'zoom-out',
+                'show',
+                'hide',
+                'search',
+                'menu-hamburger',
+                'more-horiz',
+                'more-verti',
+                'arrowup',
+                'arrowdown',
+                'chevron-right',
+                'chevron-left',
+                'chevron-down',
+                'chevron-up',
+            ],
+            'Window-Widget' => [
+                'minimise',
+                'fullscreen',
+                'close',
+                'maximise',
+                'refresh',
+                'reload',
+            ],
+            'Reports' => [
+                'table',
+                'table-more',
+                'chart-bar',
+                'chart-pie',
+                'evolution',
+                'funnel',
+                'form',
+                'transition',
+                'overlay',
+                'lab',
+                'clock',
+                'dashboard-customize',
+            ],
+            'Users' => [
+                'user',
+                'user-add',
+                'users',
+                'user-personal',
+            ],
+            'Date-picker' => [
+                'calendar',
+                'datepicker-arr-l',
+                'datepicker-arr-r',
+            ],
+            'Annotations' => [
+                'annotation',
+            ],
+            'E-commerce' => [
+                'ecommerce-order',
+                'ecommerce-abandoned-cart',
+            ],
+            'Goals' => [
+                'goal',
+            ],
+            'Insights' => [
+                'insights',
+            ],
+            'Segments' => [
+                'segment',
+            ],
+            'Visitors' => [
+                'visitor-profile',
+                'segmented-visits-log',
+            ],
+            'Lock' => [
+                'locked',
+            ],
+            'Media' => [
+                'audio',
+                'play',
+                'pause',
+                'replay',
+                'stop',
+                'fast-forward',
+                'fast-rewind',
+                'skip-next',
+                'skip-previous',
+            ],
+            'Other' => [
+                'configure',
+                'document',
+                'email',
+                'export',
+                'feed',
+                'download',
+                'image',
+                'code',
+                'star',
+                'drop',
+                'drop-crossed',
+                'business',
+                'finance',
+                'folder',
+                'github',
+                'open-source',
+                'puzzle',
+                'server',
+                'tag-cloud',
+                'sign-in',
+                'sign-out',
+                'settings',
+                'rocket',
+                'bug',
+                'upload',
+                'embed',
+                'heart',
+                'merge',
+                'content-copy',
+                'new_releases',
+                'notifications_on',
+                'reporting-dashboard',
+                'reporting-actions',
+                'reporting-visitors',
+                'reporting-referer',
+                'admin-diagnostic',
+                'admin-platform',
+                'admin-development',
+                'admin-settings',
+                'marketplace',
+                'plugin',
+                'circle',
+                'dollar-sign',
+                'hits',
+                'ai-assistants',
+            ],
+        ];
         // @phpcs:enable Generic.Files.LineLength
-        return $this->renderTemplate('demo', ['snippets' => $snippets, 'icons' => $icons]);
+
+        return $this->renderTemplate('demo', [
+            'snippets' => $snippets,
+            'icons' => $icons,
+        ]);
     }
-    private function formSnippet($id, $dataName, $dataValueCode, $dataValue, $demoCode, $extraComponents = [], $extraDirectives = [], $noMargin = \true)
+
+    private function formSnippet($id, $dataName, $dataValueCode, $dataValue, $demoCode, $extraComponents = [], $extraDirectives = [], $noMargin = true)
     {
         if (is_array($dataName)) {
             $dataCode = "";
             foreach ($dataName as $idx => $name) {
-                $dataCode .= "      {$name}: " . $dataValueCode[$idx] . ",\n";
+                $dataCode .= "      $name: " . $dataValueCode[$idx] . ",\n";
             }
         } else {
-            $dataCode = "      {$dataName}: {$dataValueCode},\n";
+            $dataCode = "      $dataName: $dataValueCode,\n";
         }
+
         if (is_array($dataName)) {
             $data = [];
             foreach ($dataName as $idx => $name) {
@@ -583,6 +926,39 @@ export default defineComponent({
         } else {
             $data = [$dataName => $dataValue];
         }
-        return ['id' => "form.{$id}", 'code' => "<template>\n  %vue_embed%\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue';\nimport { Field, Form } from 'CorePluginsAdmin';\n\nexport default defineComponent({\n  components: {\n    Field,\n  },\n  directives: {\n    Form,\n  },\n  data() {\n    return {\n{$dataCode}    };\n  },\n});\n</script>", 'vue_embed' => $demoCode, 'components' => array_merge([['plugin' => 'CorePluginsAdmin', 'component' => 'Field']], $extraComponents), 'directives' => array_merge([['plugin' => 'CorePluginsAdmin', 'directive' => 'Form']], $extraDirectives), 'data' => $data, 'noMargin' => $noMargin];
+
+        return [
+            'id' => "form.$id",
+            'code' => "<template>
+  %vue_embed%
+</template>
+
+<script lang=\"ts\">
+import { defineComponent } from 'vue';
+import { Field, Form } from 'CorePluginsAdmin';
+
+export default defineComponent({
+  components: {
+    Field,
+  },
+  directives: {
+    Form,
+  },
+  data() {
+    return {
+$dataCode    };
+  },
+});
+</script>",
+            'vue_embed' => $demoCode,
+            'components' => array_merge([
+                ['plugin' => 'CorePluginsAdmin', 'component' => 'Field'],
+            ], $extraComponents),
+            'directives' => array_merge([
+                ['plugin' => 'CorePluginsAdmin', 'directive' => 'Form'],
+            ], $extraDirectives),
+            'data' => $data,
+            'noMargin' => $noMargin,
+        ];
     }
 }

@@ -6,26 +6,30 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
 use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Filechecks;
 use Piwik\Translation\Translator;
+
 /**
  * Check the permissions for some directories.
  */
-class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
+class WriteAccessCheck implements Diagnostic
 {
     /**
      * @var Translator
      */
     private $translator;
+
     /**
      * Path to the temp directory.
      * @var string
      */
     private $tmpPath;
+
     /**
      * @param string $tmpPath Path to the temp directory.
      */
@@ -34,44 +38,66 @@ class WriteAccessCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
         $this->translator = $translator;
         $this->tmpPath = $tmpPath;
     }
+
     public function execute()
     {
         $label = $this->translator->translate('Installation_SystemCheckWriteDirs');
-        $result = new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult($label);
+
+        $result = new DiagnosticResult($label);
+
         $directories = Filechecks::checkDirectoriesWritable($this->getDirectories());
-        $error = \false;
+
+        $error = false;
         foreach ($directories as $directory => $isWritable) {
             if ($isWritable) {
-                $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
+                $status = DiagnosticResult::STATUS_OK;
             } else {
-                $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR;
-                $error = \true;
+                $status = DiagnosticResult::STATUS_ERROR;
+                $error = true;
             }
-            $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem($status, $directory));
+
+            $result->addItem(new DiagnosticResultItem($status, $directory));
         }
+
         if ($error) {
             $longErrorMessage = $this->translator->translate('Installation_SystemCheckWriteDirsHelp');
             $longErrorMessage .= '<ul>';
             foreach ($directories as $directory => $isWritable) {
-                if (!$isWritable) {
+                if (! $isWritable) {
                     $longErrorMessage .= sprintf('<li><pre>chmod a+w %s</pre></li>', $directory);
                 }
             }
             $longErrorMessage .= '</ul>';
             $result->setLongErrorMessage($longErrorMessage);
         }
+
         return array($result);
     }
+
     /**
      * @return string[]
      */
     private function getDirectories()
     {
-        $directoriesToCheck = array($this->tmpPath, $this->tmpPath . '/assets/', $this->tmpPath . '/cache/', $this->tmpPath . '/climulti/', $this->tmpPath . '/latest/', $this->tmpPath . '/logs/', $this->tmpPath . '/logos/', $this->tmpPath . '/sessions/', $this->tmpPath . '/tcpdf/', StaticContainer::get('path.tmp.templates'));
-        if (!DbHelper::isInstalled()) {
+        $directoriesToCheck = array(
+            $this->tmpPath,
+            $this->tmpPath . '/assets/',
+            $this->tmpPath . '/cache/',
+            $this->tmpPath . '/climulti/',
+            $this->tmpPath . '/latest/',
+            $this->tmpPath . '/logs/',
+            $this->tmpPath . '/logos/',
+            $this->tmpPath . '/sessions/',
+            $this->tmpPath . '/tcpdf/',
+            StaticContainer::get('path.tmp.templates')
+        ,
+        );
+
+        if (! DbHelper::isInstalled()) {
             // at install, need /config to be writable (so we can create config.ini.php)
             $directoriesToCheck[] = PIWIK_USER_PATH . '/config/';
         }
+
         return $directoriesToCheck;
     }
 }

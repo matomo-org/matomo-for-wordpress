@@ -1,0 +1,15 @@
+{
+    "VisitTime": {
+        "ColumnLocalHour": "当地时间-小时（访问开始）",
+        "ColumnLocalMinute": "当地时间-分钟（访问开始）",
+        "ColumnLocalTime": "客户端时间",
+        "ColumnServerHour": "服务器时间-小时",
+        "DayOfWeek": "星期几的",
+        "LocalTime": "日报表",
+        "PluginDescription": "报告本地时间，当访问者浏览您的网站或应用程序服务器的时间。",
+        "SubmenuTimes": "访问时间",
+        "VisitsByDayOfWeek": "周报表",
+        "WidgetByDayOfWeekDocumentation": "本图形显示一周内网站每天的访问次数。",
+        "WidgetLocalTimeDocumentation": "本报表显示根据%1$s 访客所在时区 %2$s的时间的统计。"
+    }
+}

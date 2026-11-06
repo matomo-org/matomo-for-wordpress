@@ -1,0 +1,24 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s-%2$s min",
+        "BetweenXYSeconds": "%1$s-%2$ss",
+        "ColumnPagesPerVisit": "Seiten pro Besuch",
+        "ColumnVisitDuration": "Besuchsdauer",
+        "Engagement": "Engagements",
+        "NPages": "%s Seiten",
+        "OnePage": "1 Seite",
+        "PluginDescription": "Besucherinteresse: Anzahl der aufgerufenen Seiten, Verweildauer auf der Webseite, Tage seit dem letzten Besuch und mehr.",
+        "VisitNum": "Besuchsanzahl",
+        "VisitsByDaysSinceLast": "Besuche pro Tage seit letztem Besuch",
+        "VisitsPerDuration": "Besuche nach Besuchsdauer",
+        "VisitsPerNbOfPages": "Besuche nach Seitenanzahl",
+        "WidgetLengths": "Dauer der Besuche",
+        "WidgetLengthsDocumentation": "Wie viele Besuche eine bestimmte Gesamtdauer hatten. Zu Beginn wird der Bericht als Tagwolke angezeigt, bei der häufigere Gesamtzeiten in einer größeren Schrift dargestellt werden.",
+        "WidgetPages": "Seiten pro Besuch",
+        "WidgetPagesDocumentation": "Wie viele Besuche eine bestimmte Anzahl an Seitenaufrufen umfassten. Zu Beginn wird der Bericht als Tagwolke angezeigt, bei der häufigere Anzahlen in einer größeren Schrift dargestellt werden.",
+        "WidgetVisitsByDaysSinceLast": "Besuche nach Tage seit letztem Besuch",
+        "WidgetVisitsByDaysSinceLastDocumentation": "Wie viele Besuche registriert wurden von wiederkehrenden Besuchern, deren letzter Besuch eine bestimmte Anzahl an Tagen zuvor stattfand.",
+        "WidgetVisitsByNumDocumentation": "Die Anzahl Besucher, welche den n-te Besuch erreicht haben. Das heisst, die Anzahl Besucher welche Ihre Webseite in einer bestimmten Häufigkeit oder darüber hinaus besucht hat.",
+        "visitsByVisitCount": "Besuche nach Besuchsanzahl"
+    }
+}

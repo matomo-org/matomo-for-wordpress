@@ -1,0 +1,12 @@
+{
+    "DevicesDetection": {
+        "BrowserEngine": "ბრაუზერი",
+        "BrowserFamily": "ბრაუზერის ოჯახი",
+        "Browsers": "ბრაუზერები",
+        "ColumnBrowser": "ბრაუზერი",
+        "ColumnOperatingSystem": "ოპერაციული სისტემა",
+        "OperatingSystems": "ოპერაციული სიტემები",
+        "WidgetBrowsers": "ვიზიტორის ბრაუზერები",
+        "dataTableLabelTypes": "ტიპი"
+    }
+}

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugin;
 
 /**
@@ -15,7 +16,7 @@ namespace Piwik\Plugin;
  * Note: This class is a placeholder. It will be filled out at a later date. Right now, only
  * processed metrics can be defined this way.
  */
-abstract class AggregatedMetric extends \Piwik\Plugin\Metric
+abstract class AggregatedMetric extends Metric
 {
     // stub, to be filled out later
 }

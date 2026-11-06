@@ -1,11 +1,11 @@
 <?php
-
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3
  */
+
 namespace Matomo\Ini;
 
 /**
@@ -38,10 +38,12 @@ class IniWriter
     public function writeToFile($filename, array $config, $header = '')
     {
         $ini = $this->writeToString($config, $header);
+
         if (!file_put_contents($filename, $ini)) {
-            throw new \Matomo\Ini\IniWritingException(sprintf('Impossible to write to file %s', $filename));
+            throw new IniWritingException(sprintf('Impossible to write to file %s', $filename));
         }
     }
+
     /**
      * Writes an array configuration to a INI string and returns it.
      *
@@ -67,23 +69,30 @@ class IniWriter
     public function writeToString(array $config, $header = '')
     {
         $ini = $header;
+
         $sectionNames = array_keys($config);
+
         foreach ($sectionNames as $sectionName) {
             $section = $config[$sectionName];
+
             // no point in writing empty sections
             if (empty($section)) {
                 continue;
             }
-            if (!is_array($section)) {
-                throw new \Matomo\Ini\IniWritingException(sprintf("Section \"%s\" doesn't contain an array of values", $sectionName));
+
+            if (! is_array($section)) {
+                throw new IniWritingException(sprintf("Section \"%s\" doesn't contain an array of values", $sectionName));
             }
+
             $sectionName = $this->encodeSectionName($sectionName);
-            $ini .= "[{$sectionName}]\n";
+            $ini .= "[$sectionName]\n";
+
             foreach ($section as $option => $value) {
                 if (is_numeric($option)) {
                     $option = $sectionName;
                     $value = array($value);
                 }
+
                 if (is_array($value)) {
                     foreach ($value as $key => $currentValue) {
                         if (is_int($key)) {
@@ -93,13 +102,22 @@ class IniWriter
                         }
                     }
                 } else {
-                    $ini .= $option . ' = ' . $this->encodeValue($value) . "\n";
+                    $encodedOption = $this->encodeOptionName($option);
+
+                    if ($encodedOption === '') {
+                        throw new IniWritingException(sprintf('Option name "%s" cannot be written', $option));
+                    }
+
+                    $ini .= $encodedOption . ' = ' . $this->encodeValue($value) . "\n";
                 }
             }
+
             $ini .= "\n";
         }
+
         return $ini;
     }
+
     /**
      * @param $value
      * @return int|string
@@ -109,30 +127,55 @@ class IniWriter
         if (is_bool($value)) {
             return (int) $value;
         }
+
         if (is_string($value)) {
-            // remove any quotes w/ newlines after it since INI parsing will consider it the end of the string
-            $value = preg_replace('/\\"[\\n\\r]/', "\n", $value);
-            $value = addcslashes($value, '"');
+            // The native parse_ini_string() cannot read an escaped quote before a line
+            // break, and a single remaining one would end up as the last character of a
+            // line, where it is no longer distinguishable from the closing quote. Keep this.
+            $value = preg_replace('/"+([\n\r])/', '$1', $value);
+            // Backslashes are escaped as well, so a value ending in one cannot leave the
+            // closing quote preceded by a lone backslash. IniReader reverses this.
+            $value = addcslashes($value, '\\"');
             return '"' . $value . '"';
         }
+
         return $value;
     }
+
     /**
      * @param $key
      * @return string
      */
     private function encodeKey($key)
     {
-        $key = preg_replace('/[^A-Za-z0-9\\-_]/', '', $key);
+        $key = preg_replace('/[^A-Za-z0-9\-_]/', '', $key);
+
         return $key;
     }
+
+    /**
+     * Removes the characters that would change the structure of the file when they appear in
+     * an option name. Brackets are kept, as they denote an array. Everything else is kept as
+     * well, so names such as "db.host" stay unchanged.
+     *
+     * @param $key
+     * @return string
+     */
+    private function encodeOptionName($key)
+    {
+        $key = preg_replace('/[\r\n\t=;#"\']/', '', $key);
+
+        return trim($key);
+    }
+
     /**
      * @param $key
      * @return string
      */
     private function encodeSectionName($key)
     {
-        $key = preg_replace('/[^A-Za-z0-9_ \\-]/', '', $key);
+        $key = preg_replace('/[^A-Za-z0-9_ \-]/', '', $key);
+
         return $key;
     }
 }

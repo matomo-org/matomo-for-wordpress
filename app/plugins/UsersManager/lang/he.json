@@ -1,0 +1,17 @@
+{
+    "UsersManager": {
+        "2FA": "אימות דו-שלבי",
+        "Active": "פעיל",
+        "AllWebsites": "כל האתרים",
+        "Email": "אימייל",
+        "ManageAccess": "ניהול הרשאות",
+        "MenuUserSettings": "הגדרות משתמש",
+        "MenuUsers": "משתמשים",
+        "PrivNone": "אין הרשאות",
+        "PrivView": "הצג",
+        "Status": "מצב",
+        "User": "משתמש",
+        "Username": "שם משתמש",
+        "UsersManagement": "ניהול משתמשים"
+    }
+}

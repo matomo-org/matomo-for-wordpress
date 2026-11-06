@@ -135,8 +135,7 @@ describe('MWP Admin > Settings', () => {
   it('should save measurable setting values correctly', async () => {
     await MwpSettingsPage.setSeoWebVitalsSettingValue('http://somesite.com');
     await browser.refresh();
-    await $('iframe').waitForDisplayed();
-    await browser.pause(2000); // wait for iframe resizer to activate
+    await MwpSettingsPage.waitForMeasurableSettings();
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(

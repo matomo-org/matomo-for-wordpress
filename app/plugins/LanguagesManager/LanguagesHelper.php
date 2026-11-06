@@ -6,12 +6,14 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\LanguagesManager;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\LanguagesManager\Model as LangModel;
 use Piwik\Plugins\UsersManager\UserLoginHelper;
 use Piwik\Translation\Translator;
+
 /**
  * Helper class allowing to run a callback function with the given user's preferred language
  * temporarily set for the translator.
@@ -28,21 +30,27 @@ class LanguagesHelper
     public static function doWithUserLanguage(string $emailOrLogin, callable $callback)
     {
         $user = UserLoginHelper::findUserByLoginOrEmail($emailOrLogin);
+
         if (!$user) {
             return $callback();
         }
+
         $langModel = new LangModel();
         $userLanguage = $langModel->getLanguageForUser($user['login']);
+
         $translator = StaticContainer::get(Translator::class);
+
         $backupLanguage = $translator->getCurrentLanguage();
         if (empty($backupLanguage)) {
             // if no language was set yet, ensure to restore the default language
             $backupLanguage = $translator->getDefaultLanguage();
         }
+
         if (!empty($userLanguage)) {
             // temporarily overwrite the language to perform the callback action
             $translator->setCurrentLanguage($userLanguage);
         }
+
         try {
             $result = $callback();
         } catch (\Throwable $ex) {
@@ -50,6 +58,7 @@ class LanguagesHelper
         } finally {
             $translator->setCurrentLanguage($backupLanguage);
         }
+
         return $result;
     }
 }

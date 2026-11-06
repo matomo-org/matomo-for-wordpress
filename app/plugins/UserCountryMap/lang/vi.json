@@ -1,0 +1,22 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "và %s khác",
+        "Cities": "Các thành phố",
+        "Countries": "Các quốc gia",
+        "DaysAgo": "%s ngày cách đây",
+        "GoalConversions": "%s các chuyển đổi mục tiêu",
+        "HoursAgo": "%s giờ cách đây",
+        "MinutesAgo": "%s phút cách đây",
+        "NoVisit": "Không có truy cập nào",
+        "None": "Không có gì",
+        "RealTimeMap": "Bản đồ thời gian thực",
+        "Regions": "Các vùng",
+        "Searches": "%s tìm kiếm",
+        "SecondsAgo": "%s giây cách đây",
+        "ShowingVisits": "Định vị lượt truy cập cuối cùng",
+        "Unlocated": "<b>%1$s</b> %2$s các lượt truy cập từ %3$s có thể không được định vị.",
+        "VisitorMap": "Bản đồ khách truy cập",
+        "WorldWide": "Khắp thế giới",
+        "map": "Bản đồ"
+    }
+}

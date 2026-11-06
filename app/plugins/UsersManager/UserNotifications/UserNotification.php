@@ -6,9 +6,10 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager\UserNotifications;
 
-abstract class UserNotification implements \Piwik\Plugins\UsersManager\UserNotifications\UserNotificationInterface
+abstract class UserNotification implements UserNotificationInterface
 {
     /**
      * Data to hold for users, keyed by their username.
@@ -16,13 +17,17 @@ abstract class UserNotification implements \Piwik\Plugins\UsersManager\UserNotif
      * @var array
      */
     private $users;
-    public function __construct(array $users)
-    {
+
+    public function __construct(
+        array $users
+    ) {
         $this->users = $users;
     }
-    public function getUsers() : array
+
+    public function getUsers(): array
     {
         return $this->users;
     }
-    public abstract function dispatch() : bool;
+
+    abstract public function dispatch(): bool;
 }

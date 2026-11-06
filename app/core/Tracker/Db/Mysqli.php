@@ -6,10 +6,12 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Tracker\Db;
 
 use Exception;
 use Piwik\Tracker\Db;
+
 /**
  * mysqli wrapper
  *
@@ -26,6 +28,7 @@ class Mysqli extends Db
     protected $charset;
     protected $collation;
     protected $activeTransaction = null;
+
     protected $enable_ssl;
     protected $ssl_key;
     protected $ssl_cert;
@@ -35,11 +38,13 @@ class Mysqli extends Db
     protected $ssl_no_verify;
     protected $paramNb;
     protected $params;
+
     /**
      * Builds the DB object
      *
      * @param array $dbInfo
      */
+
     public function __construct($dbInfo)
     {
         if (isset($dbInfo['unix_socket']) && substr($dbInfo['unix_socket'], 0, 1) == '/') {
@@ -52,14 +57,16 @@ class Mysqli extends Db
             $this->socket = $dbInfo['port'];
         } else {
             $this->host = $dbInfo['host'];
-            $this->port = (int) $dbInfo['port'];
+            $this->port = (int)$dbInfo['port'];
             $this->socket = null;
         }
+
         $this->dbname = $dbInfo['dbname'];
         $this->username = $dbInfo['username'];
         $this->password = $dbInfo['password'];
         $this->charset = $dbInfo['charset'] ?? null;
         $this->collation = $dbInfo['collation'] ?? null;
+
         if (!empty($dbInfo['enable_ssl'])) {
             $this->enable_ssl = $dbInfo['enable_ssl'];
         }
@@ -82,6 +89,7 @@ class Mysqli extends Db
             $this->ssl_no_verify = $dbInfo['ssl_no_verify'];
         }
     }
+
     /**
      * Destructor
      */
@@ -89,6 +97,7 @@ class Mysqli extends Db
     {
         $this->connection = null;
     }
+
     /**
      * Connects to the DB
      *
@@ -99,45 +108,55 @@ class Mysqli extends Db
         if (self::$profiling) {
             $timer = $this->initProfiler();
         }
+
         // The default error reporting of mysqli changed in PHP 8.1. To circumvent problems in our error handling we set
         // the erroring reporting to the default that was used prior PHP 8.1
         // See https://php.watch/versions/8.1/mysqli-error-mode for more details
-        mysqli_report(\MYSQLI_REPORT_OFF);
+        mysqli_report(MYSQLI_REPORT_OFF);
+
         $this->connection = mysqli_init();
+
+
         if ($this->enable_ssl) {
             mysqli_ssl_set($this->connection, $this->ssl_key, $this->ssl_cert, $this->ssl_ca, $this->ssl_ca_path, $this->ssl_cipher);
         }
+
         // Make sure MySQL returns all matched rows on update queries including
         // rows that actually didn't have to be updated because the values didn't
         // change. This matches common behaviour among other database systems.
         // See #6296 why this is important in tracker
-        $flags = \MYSQLI_CLIENT_FOUND_ROWS;
+        $flags = MYSQLI_CLIENT_FOUND_ROWS;
         if ($this->enable_ssl) {
-            $flags = $flags | \MYSQLI_CLIENT_SSL;
+            $flags = $flags | MYSQLI_CLIENT_SSL;
         }
         if ($this->ssl_no_verify && defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
-            $flags = $flags | \MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+            $flags = $flags | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
         }
         mysqli_real_connect($this->connection, $this->host, $this->username, $this->password, $this->dbname, $this->port, $this->socket, $flags);
         if (!$this->connection || mysqli_connect_errno()) {
-            throw new \Piwik\Tracker\Db\DbException("Connect failed: " . mysqli_connect_error());
+            throw new DbException("Connect failed: " . mysqli_connect_error());
         }
+
         if ($this->charset && $this->collation) {
             // mysqli_set_charset does not support setting a collation
             $query = "SET NAMES '" . $this->charset . "' COLLATE '" . $this->collation . "'";
+
             if (!mysqli_query($this->connection, $query)) {
-                throw new \Piwik\Tracker\Db\DbException("Set charset/connection collation failed: " . mysqli_error($this->connection));
+                throw new DbException("Set charset/connection collation failed: " . mysqli_error($this->connection));
             }
         } elseif ($this->charset) {
             if (!mysqli_set_charset($this->connection, $this->charset)) {
-                throw new \Piwik\Tracker\Db\DbException("Set Charset failed: " . mysqli_error($this->connection));
+                throw new DbException("Set Charset failed: " . mysqli_error($this->connection));
             }
         }
+
         $this->password = '';
+
         if (self::$profiling && isset($timer)) {
             $this->recordQueryProfile('connect', $timer);
         }
     }
+
     /**
      * Disconnects from the server
      */
@@ -146,6 +165,7 @@ class Mysqli extends Db
         mysqli_close($this->connection);
         $this->connection = null;
     }
+
     /**
      * @param \mysqli_stmt $stmt
      * @param $fields
@@ -153,24 +173,33 @@ class Mysqli extends Db
      */
     private function fetchResult($stmt, $fields)
     {
+
         $values = array_fill(0, count($fields), null);
+
         $refs = array();
         foreach ($values as $i => &$f) {
-            $refs[$i] =& $f;
+            $refs[$i] = &$f;
         }
+
         call_user_func_array(array($stmt, 'bind_result'), $values);
+
         $result = $stmt->fetch();
-        if ($result === null || $result === \false) {
+
+        if ($result === null || $result === false) {
             $stmt->reset();
-            return \false;
+            return false;
         }
+
         $val = array();
         foreach ($values as $key => $value) {
             $val[] = $value;
         }
+
         $row = array_combine($fields, $values);
+
         return $row;
     }
+
     /**
      * Returns an array containing all the rows of a query result, using optional bound parameters.
      *
@@ -187,21 +216,26 @@ class Mysqli extends Db
             if (self::$profiling) {
                 $timer = $this->initProfiler();
             }
+
             list($stmt, $fields) = $this->executeQuery($query, $parameters);
+
             $rows = array();
             while ($row = $this->fetchResult($stmt, $fields)) {
                 $rows[] = $row;
             }
+
             $stmt->free_result();
             $stmt->close();
+
             if (self::$profiling && isset($timer)) {
                 $this->recordQueryProfile($query, $timer);
             }
             return $rows;
         } catch (Exception $e) {
-            throw new \Piwik\Tracker\Db\DbException("Error query: " . $e->getMessage());
+            throw new DbException("Error query: " . $e->getMessage());
         }
     }
+
     /**
      * Returns the first row of a query result, using optional bound parameters.
      *
@@ -218,21 +252,26 @@ class Mysqli extends Db
             if (self::$profiling) {
                 $timer = $this->initProfiler();
             }
+
             list($stmt, $fields) = $this->executeQuery($query, $parameters);
+
             $row = $this->fetchResult($stmt, $fields);
+
             $stmt->free_result();
             $stmt->close();
+
             if (self::$profiling && isset($timer)) {
                 $this->recordQueryProfile($query, $timer);
             }
             if ($row === null) {
-                $row = \false;
+                $row = false;
             }
             return $row;
         } catch (Exception $e) {
-            throw new \Piwik\Tracker\Db\DbException("Error query: " . $e->getMessage());
+            throw new DbException("Error query: " . $e->getMessage());
         }
     }
+
     /**
      * Executes a query, using optional bound parameters.
      *
@@ -244,21 +283,27 @@ class Mysqli extends Db
     public function query($query, $parameters = array())
     {
         if (is_null($this->connection)) {
-            return \false;
+            return false;
         }
+
         try {
             if (self::$profiling) {
                 $timer = $this->initProfiler();
             }
+
             list($stmt, $fields) = $this->executeQuery($query, $parameters);
+
             if (self::$profiling && isset($timer)) {
                 $this->recordQueryProfile($query, $timer);
             }
             return $stmt;
         } catch (Exception $e) {
-            throw new \Piwik\Tracker\Db\DbException("Error query: " . $e->getMessage() . "\n                                   In query: {$query}\n                                   Parameters: " . var_export($parameters, \true), $e->getCode());
+            throw new DbException("Error query: " . $e->getMessage() . "
+                                   In query: $query
+                                   Parameters: " . var_export($parameters, true), $e->getCode());
         }
     }
+
     /**
      * Returns the last inserted ID in the DB
      *
@@ -268,34 +313,46 @@ class Mysqli extends Db
     {
         return mysqli_insert_id($this->connection);
     }
+
     private function executeQuery($sql, $bind)
     {
+
         $stmt = mysqli_prepare($this->connection, $sql);
+
         if (!$stmt) {
-            throw new \Piwik\Tracker\Db\DbException('preparing query failed: ' . mysqli_error($this->connection) . ' : ' . $sql);
+            throw new DbException('preparing query failed: ' . mysqli_error($this->connection) . ' : ' . $sql);
         }
+
         if (!is_array($bind)) {
             $bind = array($bind);
         }
+
         if (!empty($bind)) {
             array_unshift($bind, str_repeat('s', count($bind)));
             $refs = array();
             foreach ($bind as $key => $value) {
-                $refs[$key] =& $bind[$key];
+                $refs[$key] = &$bind[$key];
             }
+
             call_user_func_array(array($stmt, 'bind_param'), $refs);
         }
+
         $stmtResult = $stmt->execute();
-        if ($stmtResult === \false) {
-            throw new \Piwik\Tracker\Db\DbException("Mysqli statement execute error : " . $stmt->error, $stmt->errno);
+
+        if ($stmtResult === false) {
+            throw new DbException("Mysqli statement execute error : " . $stmt->error, $stmt->errno);
         }
+
         if (!empty($stmt->error)) {
-            throw new \Piwik\Tracker\Db\DbException('executeQuery() failed: ' . mysqli_error($this->connection) . ' : ' . $sql);
+            throw new DbException('executeQuery() failed: ' . mysqli_error($this->connection) . ' : ' . $sql);
         }
+
         $metaResults = $stmt->result_metadata();
+
         if ($stmt->errno) {
-            throw new \Piwik\Tracker\Db\DbException("Mysqli statement metadata error: " . $stmt->error, $stmt->errno);
+            throw new DbException("Mysqli statement metadata error: " . $stmt->error, $stmt->errno);
         }
+
         $fields = array();
         if ($metaResults) {
             $fetchedFields = $metaResults->fetch_fields();
@@ -304,6 +361,7 @@ class Mysqli extends Db
             }
             $stmt->store_result();
         }
+
         return array($stmt, $fields);
     }
     /**
@@ -322,13 +380,14 @@ class Mysqli extends Db
             $parameters = array($parameters);
         }
         $this->paramNb = 0;
-        $this->params =& $parameters;
-        $query = preg_replace_callback('/\\?/', array($this, 'replaceParam'), $query);
+        $this->params = & $parameters;
+        $query = preg_replace_callback('/\?/', array($this, 'replaceParam'), $query);
         return $query;
     }
+
     public function replaceParam($match)
     {
-        $param =& $this->params[$this->paramNb];
+        $param = & $this->params[$this->paramNb];
         $this->paramNb++;
         if ($param === null) {
             return 'NULL';
@@ -336,10 +395,12 @@ class Mysqli extends Db
             return "'" . addslashes($param) . "'";
         }
     }
+
     public function isErrNo($e, $errno)
     {
         return \Piwik\Db\Adapter\Mysqli::isMysqliErrorNumber($e, $this->connection, $errno);
     }
+
     /**
      * Return number of affected rows in last query
      *
@@ -353,6 +414,7 @@ class Mysqli extends Db
         }
         return mysqli_affected_rows($this->connection);
     }
+
     /**
      * Start Transaction
      * @return ?string TransactionID
@@ -362,12 +424,15 @@ class Mysqli extends Db
         if ($this->activeTransaction !== null) {
             return null;
         }
-        if ($this->connection->autocommit(\false)) {
+
+        if ($this->connection->autocommit(false)) {
             $this->activeTransaction = uniqid();
             return $this->activeTransaction;
         }
+
         return null;
     }
+
     /**
      * Commit Transaction
      * @param $xid
@@ -377,12 +442,16 @@ class Mysqli extends Db
         if ($this->activeTransaction != $xid || $this->activeTransaction === null) {
             return;
         }
+
         $this->activeTransaction = null;
+
         if (!$this->connection->commit()) {
-            throw new \Piwik\Tracker\Db\DbException("Commit failed");
+            throw new DbException("Commit failed");
         }
-        $this->connection->autocommit(\true);
+
+        $this->connection->autocommit(true);
     }
+
     /**
      * Rollback Transaction
      * @param $xid
@@ -392,10 +461,13 @@ class Mysqli extends Db
         if ($this->activeTransaction != $xid || $this->activeTransaction === null) {
             return;
         }
+
         $this->activeTransaction = null;
+
         if (!$this->connection->rollback()) {
-            throw new \Piwik\Tracker\Db\DbException("Rollback failed");
+            throw new DbException("Rollback failed");
         }
-        $this->connection->autocommit(\true);
+
+        $this->connection->autocommit(true);
     }
 }

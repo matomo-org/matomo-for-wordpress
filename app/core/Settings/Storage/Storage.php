@@ -6,9 +6,11 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Settings\Storage;
 
 use Piwik\Settings\Storage\Backend;
+
 /**
  * A storage stores values for multiple settings. Storing multiple settings here saves having to do
  * a "get" for each individual setting. A storage is usually stared between all individual setting instances
@@ -22,21 +24,26 @@ class Storage
      * @var array
      */
     protected $settingsValues = array();
+
     // for lazy loading of setting values
-    private $settingValuesLoaded = \false;
+    private $settingValuesLoaded = false;
+
     /**
      * @var Backend\BackendInterface
      */
     private $backend;
+
     /**
      * Defines whether a value has changed since the settings were loaded or not.
      * @var bool
      */
-    private $isDirty = \false;
+    private $isDirty = false;
+
     public function __construct(Backend\BackendInterface $backend)
     {
         $this->backend = $backend;
     }
+
     /**
      * Get the currently used backend for this storage.
      * @return Backend\BackendInterface
@@ -45,6 +52,7 @@ class Storage
     {
         return $this->backend;
     }
+
     /**
      * Saves (persists) the current setting values in the database if a value has actually changed.
      */
@@ -52,10 +60,13 @@ class Storage
     {
         if ($this->isDirty) {
             $this->backend->save($this->settingsValues);
-            $this->isDirty = \false;
+
+            $this->isDirty = false;
+
             Backend\Cache::clearCache();
         }
     }
+
     /**
      * Returns the current value for a setting. If no value is stored, the default value
      * is be returned.
@@ -70,12 +81,15 @@ class Storage
     public function getValue($key, $defaultValue, $type)
     {
         $this->loadSettingsIfNotDoneYet();
+
         if (array_key_exists($key, $this->settingsValues)) {
             settype($this->settingsValues[$key], $type);
             return $this->settingsValues[$key];
         }
+
         return $defaultValue;
     }
+
     /**
      * Sets (overwrites) the value of a setting in memory. To persist the change across requests, {@link save()} must be
      * called.
@@ -86,15 +100,41 @@ class Storage
     public function setValue($key, $value)
     {
         $this->loadSettingsIfNotDoneYet();
-        $this->isDirty = \true;
+
+        $this->isDirty = true;
         $this->settingsValues[$key] = $value;
     }
+
+    /**
+     * Removes the value of a setting in memory. To persist the change across requests,
+     * {@link save()} must be called.
+     *
+     * This differs from setting a value to null: a removed value makes {@link getValue()}
+     * return the given default value again, whereas a null value would still be found and
+     * converted to the setting's type. Settings that need to distinguish "no value stored"
+     * from a stored falsy value therefore have to remove the value rather than null it.
+     *
+     * @param string $key The name / key of a setting
+     */
+    public function unsetValue($key)
+    {
+        $this->loadSettingsIfNotDoneYet();
+
+        if (!array_key_exists($key, $this->settingsValues)) {
+            return;
+        }
+
+        $this->isDirty = true;
+        unset($this->settingsValues[$key]);
+    }
+
     private function loadSettingsIfNotDoneYet()
     {
         if ($this->settingValuesLoaded) {
             return;
         }
-        $this->settingValuesLoaded = \true;
+
+        $this->settingValuesLoaded = true;
         $this->settingsValues = $this->backend->load();
     }
 }

@@ -6,6 +6,7 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Db\Adapter\Pdo;
 
 use Exception;
@@ -18,9 +19,11 @@ use Piwik\Db\Schema;
 use Piwik\Piwik;
 use Zend_Config;
 use Zend_Db_Adapter_Pdo_Mysql;
+
 class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
 {
     use Db\TransactionalDatabaseDynamicTrait;
+
     /**
      * @param array|Zend_Config $config database configuration
      */
@@ -28,7 +31,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         // Enable LOAD DATA INFILE
         if (defined('PDO::MYSQL_ATTR_LOCAL_INFILE')) {
-            $config['driver_options'][PDO::MYSQL_ATTR_LOCAL_INFILE] = \true;
+            $config['driver_options'][PDO::MYSQL_ATTR_LOCAL_INFILE] = true;
         }
         if ($config['enable_ssl']) {
             if (!empty($config['ssl_key'])) {
@@ -46,12 +49,16 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             if (!empty($config['ssl_cipher'])) {
                 $config['driver_options'][PDO::MYSQL_ATTR_SSL_CIPHER] = $config['ssl_cipher'];
             }
-            if (!empty($config['ssl_no_verify']) && defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-                $config['driver_options'][PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = \false;
+            if (
+                !empty($config['ssl_no_verify'])
+                && defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')
+            ) {
+                $config['driver_options'][PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
             }
         }
         parent::__construct($config);
     }
+
     /**
      * Returns connection handle
      *
@@ -62,7 +69,9 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         if ($this->_connection) {
             return $this->_connection;
         }
+
         $this->_connect();
+
         /**
          * Before MySQL 5.1.17, server-side prepared statements
          * do not use the query cache.
@@ -72,15 +81,19 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
          * statements.
          * @see https://framework.zend.com/issues/browse/ZF-1398
          */
-        $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, \true);
+        $this->_connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
         return $this->_connection;
     }
-    protected function _connect()
+
+    protected function _connect() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->_connection) {
             return;
         }
+
         $sql = 'SET sql_mode = "' . Db::SQL_MODE . '"';
+
         try {
             parent::_connect();
             $this->_connection->exec($sql);
@@ -88,8 +101,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             if ($this->isErrNo($e, \Piwik\Updater\Migration\Db::ERROR_CODE_MYSQL_SERVER_HAS_GONE_AWAY)) {
                 // mysql may return a MySQL server has gone away error when trying to establish the connection.
                 // in that case we want to retry establishing the connection once after a short sleep
-                $this->_connection = null;
-                // we need to unset, otherwise parent connect won't retry
+                $this->_connection = null; // we need to unset, otherwise parent connect won't retry
                 usleep(400 * 1000);
                 parent::_connect();
                 $this->_connection->exec($sql);
@@ -98,6 +110,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             }
         }
     }
+
     /**
      * Reset the configuration variables in this adapter.
      */
@@ -105,6 +118,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         $this->_config = array();
     }
+
     /**
      * Return default port.
      *
@@ -115,6 +129,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         return 3306;
     }
+
     /**
      * Check MySQL version
      *
@@ -123,11 +138,13 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     public function checkServerVersion()
     {
         $requiredVersion = Schema::getInstance()->getMinimumSupportedVersion();
-        $serverVersion = $this->getServerVersion();
+        $serverVersion   = $this->getServerVersion();
+
         if (version_compare($serverVersion, $requiredVersion) === -1) {
             throw new Exception(Piwik::translate('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
         }
     }
+
     /**
      * Returns the MySQL server version
      *
@@ -138,11 +155,14 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         // prioritizing SELECT @@VERSION in case the connection version string is incorrect (which can
         // occur on Azure)
         $versionInfo = $this->fetchAll('SELECT @@VERSION');
+
         if (count($versionInfo)) {
             return $versionInfo[0]['@@VERSION'];
         }
+
         return parent::getServerVersion();
     }
+
     /**
      * Check client version compatibility against database server
      *
@@ -152,11 +172,16 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         $serverVersion = $this->getServerVersion();
         $clientVersion = $this->getClientVersion();
+
         // incompatible change to DECIMAL implementation in 5.0.3
-        if (version_compare($serverVersion, '5.0.3') >= 0 && version_compare($clientVersion, '5.0.3') < 0) {
+        if (
+            version_compare($serverVersion, '5.0.3') >= 0
+            && version_compare($clientVersion, '5.0.3') < 0
+        ) {
             throw new Exception(Piwik::translate('General_ExceptionIncompatibleClientServerVersions', array('MySQL', $clientVersion, $serverVersion)));
         }
     }
+
     /**
      * Returns true if this adapter's required extensions are enabled
      *
@@ -166,6 +191,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         return extension_loaded('PDO') && extension_loaded('pdo_mysql') && in_array('mysql', PDO::getAvailableDrivers());
     }
+
     /**
      * Returns true if this adapter supports blobs as fields
      *
@@ -173,8 +199,9 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public function hasBlobDataType()
     {
-        return \true;
+        return true;
     }
+
     /**
      * Returns true if this adapter supports bulk loading
      *
@@ -182,8 +209,9 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public function hasBulkLoader()
     {
-        return \true;
+        return true;
     }
+
     /**
      * Test error number
      *
@@ -195,6 +223,8 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         return self::isPdoErrorNumber($e, $errno);
     }
+
+
     /**
      * Test error number
      *
@@ -204,11 +234,13 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      */
     public static function isPdoErrorNumber($e, $errno)
     {
-        if (preg_match('/(?:\\[|\\s)([0-9]{4})(?:\\]|\\s)/', $e->getMessage(), $match)) {
+        if (preg_match('/(?:\[|\s)([0-9]{4})(?:\]|\s)/', $e->getMessage(), $match)) {
             return $match[1] == $errno;
         }
-        return \false;
+
+        return false;
     }
+
     /**
      * Is the connection character set equal to utf8?
      *
@@ -217,12 +249,16 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     public function isConnectionUTF8()
     {
         $charsetInfo = $this->fetchAll('SHOW VARIABLES LIKE ?', array('character_set_connection'));
+
         if (empty($charsetInfo)) {
-            return \false;
+            return false;
         }
+
         $charset = $charsetInfo[0]['Value'];
         return strpos($charset, 'utf8') === 0;
     }
+
+
     /**
      * Return number of affected rows in last query
      *
@@ -233,6 +269,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
     {
         return $queryResult->rowCount();
     }
+
     /**
      * Retrieve client version in PHP style
      *
@@ -244,7 +281,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         try {
             $version = $this->_connection->getAttribute(PDO::ATTR_CLIENT_VERSION);
             $matches = null;
-            if (preg_match('/((?:[0-9]{1,2}\\.){1,3}[0-9]{1,2})/', $version, $matches)) {
+            if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', $version, $matches)) {
                 return $matches[1];
             }
         } catch (PDOException $e) {
@@ -252,17 +289,19 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
         }
         return null;
     }
+
     /**
      * Override _dsn() to ensure host and port to not be passed along
      * if unix_socket is set since setting both causes unexpected behaviour
      * @see https://php.net/manual/en/ref.pdo-mysql.connection.php
      */
-    protected function _dsn()
+    protected function _dsn() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (!empty($this->_config['unix_socket'])) {
             unset($this->_config['host']);
             unset($this->_config['port']);
         }
+
         return parent::_dsn();
     }
 }

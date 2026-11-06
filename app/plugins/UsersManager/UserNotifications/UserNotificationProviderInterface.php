@@ -6,6 +6,7 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\UsersManager\UserNotifications;
 
 interface UserNotificationProviderInterface
@@ -16,11 +17,12 @@ interface UserNotificationProviderInterface
      *
      * @return UserNotificationInterface[]
      */
-    public function getUserNotificationsForDispatch() : array;
+    public function getUserNotificationsForDispatch(): array;
+
     /**
      * Sets information that a notification for a set of users has been dispatched
      *
      * @param array $users
      */
-    public function setUserNotificationDispatched(array $users) : void;
+    public function setUserNotificationDispatched(array $users): void;
 }

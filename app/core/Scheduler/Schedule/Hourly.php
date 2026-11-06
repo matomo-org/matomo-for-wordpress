@@ -6,15 +6,17 @@
  * @link    https://matomo.org
  * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Scheduler\Schedule;
 
 use Exception;
+
 /**
  * Hourly class is used to schedule tasks every hour.
  *
  * @see \Piwik\Scheduler\Task
  */
-class Hourly extends \Piwik\Scheduler\Schedule\Schedule
+class Hourly extends Schedule
 {
     /**
      * @see Schedule::getRescheduledTime
@@ -23,10 +25,19 @@ class Hourly extends \Piwik\Scheduler\Schedule\Schedule
     public function getRescheduledTime()
     {
         $currentTime = $this->getTime();
+
         // Adds one hour and reset the number of minutes
-        $rescheduledTime = mktime(date('H', $currentTime) + 1, 0, date('s', $currentTime), date('n', $currentTime), date('j', $currentTime), date('Y', $currentTime));
+        $rescheduledTime = mktime(
+            date('H', $currentTime) + 1,
+            0,
+            date('s', $currentTime),
+            date('n', $currentTime),
+            date('j', $currentTime),
+            date('Y', $currentTime)
+        );
         return $rescheduledTime;
     }
+
     /**
      * @see Schedule::setHour
      * @param int $_hour
@@ -37,6 +48,7 @@ class Hourly extends \Piwik\Scheduler\Schedule\Schedule
     {
         throw new Exception("Method not supported");
     }
+
     /**
      * @see Schedule::setDay
      * @param int $_day

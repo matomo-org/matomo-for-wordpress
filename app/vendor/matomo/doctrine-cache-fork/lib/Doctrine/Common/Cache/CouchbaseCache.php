@@ -5,6 +5,7 @@ namespace Doctrine\Common\Cache;
 use Couchbase;
 use function explode;
 use function time;
+
 /**
  * Couchbase cache provider.
  *
@@ -13,10 +14,11 @@ use function time;
  *
  * @link   www.doctrine-project.org
  */
-class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
+class CouchbaseCache extends CacheProvider
 {
     /** @var Couchbase|null */
     private $couchbase;
+
     /**
      * Sets the Couchbase instance to use.
      *
@@ -26,6 +28,7 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
     {
         $this->couchbase = $couchbase;
     }
+
     /**
      * Gets the Couchbase instance used by the cache.
      *
@@ -35,13 +38,15 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return $this->couchbase;
     }
+
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
-        return $this->couchbase->get($id) ?: \false;
+        return $this->couchbase->get($id) ?: false;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -49,6 +54,7 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return $this->couchbase->get($id) !== null;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -57,8 +63,10 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
         if ($lifeTime > 30 * 24 * 3600) {
             $lifeTime = time() + $lifeTime;
         }
+
         return $this->couchbase->set($id, $data, (int) $lifeTime);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -66,6 +74,7 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return $this->couchbase->delete($id);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -73,16 +82,24 @@ class CouchbaseCache extends \Doctrine\Common\Cache\CacheProvider
     {
         return $this->couchbase->flush();
     }
+
     /**
      * {@inheritdoc}
      */
     protected function doGetStats()
     {
-        $stats = $this->couchbase->getStats();
+        $stats   = $this->couchbase->getStats();
         $servers = $this->couchbase->getServers();
-        $server = explode(':', $servers[0]);
-        $key = $server[0] . ':11210';
-        $stats = $stats[$key];
-        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $stats['get_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $stats['get_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $stats['uptime'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $stats['bytes'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes']];
+        $server  = explode(':', $servers[0]);
+        $key     = $server[0] . ':11210';
+        $stats   = $stats[$key];
+
+        return [
+            Cache::STATS_HITS   => $stats['get_hits'],
+            Cache::STATS_MISSES => $stats['get_misses'],
+            Cache::STATS_UPTIME => $stats['uptime'],
+            Cache::STATS_MEMORY_USAGE     => $stats['bytes'],
+            Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes'],
+        ];
     }
 }
