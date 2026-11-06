@@ -34,6 +34,20 @@ if ( file_exists( $prefixed_autoload ) ) {
 	require_once $prefixed_autoload;
 }
 
+// Prefer Matomo's pinned Symfony components over versions loaded by WordPress or PHPUnit.
+$core_autoload = __DIR__ . '/app/vendor/autoload.php';
+if ( file_exists( $core_autoload ) ) {
+	$core_loader = require_once $core_autoload;
+	if (
+		is_object( $core_loader )
+		&& method_exists( $core_loader, 'unregister' )
+		&& method_exists( $core_loader, 'register' )
+	) {
+		$core_loader->unregister();
+		$core_loader->register( true );
+	}
+}
+
 if ( ! defined( 'MATOMO_MARKETPLACE_PLUGIN_NAME' ) ) {
 	define( 'MATOMO_MARKETPLACE_PLUGIN_NAME', 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' );
 }
