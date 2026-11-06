@@ -42,6 +42,13 @@ function cleanup {
   CUSTOM_ENV_FILE=.env.script npm run compose stop || true
 }
 
+function source_env_without_uid() {
+  local env_file=$1
+  if [ -f "$env_file" ]; then
+    source <(sed -E '/^[[:space:]]*(export[[:space:]]+)?UID=/d' "$env_file")
+  fi
+}
+
 echo "Creating test release..." # must be done before creating environment with latest stable version
 : > .e2e-docker-out
 
@@ -94,9 +101,9 @@ echo "Creating $WORDPRESS_FOLDER environments..."
 docker_compose_up $WORDPRESS_FOLDER
 
 set -o allexport
-source .env.default
-source .env
-source .env.script
+source_env_without_uid .env.default
+source_env_without_uid .env
+source_env_without_uid .env.script
 set +o allexport
 
 # run tests
