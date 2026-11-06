@@ -260,7 +260,8 @@ class GlobalSetup {
   }
 
   private async addTagManagerEntities() {
-    const existingContainers = await MatomoApi.call('GET', 'TagManager.getContainers')
+    const existingContainersResponse = await MatomoApi.call('GET', 'TagManager.getContainers');
+    const existingContainers = this.asList(existingContainersResponse);
 
     let existingContainer = existingContainers.find((c) => c.name === 'test');
     if (existingContainer) {
@@ -284,11 +285,12 @@ class GlobalSetup {
     const draftVersionId = container.draft.idcontainerversion;
 
     // create trigger
-    const triggers = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
+    const triggersResponse = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const triggers = this.asList(triggersResponse);
 
     let triggerId;
     if (!triggers.length) {
@@ -308,11 +310,12 @@ class GlobalSetup {
     }
 
     // create variable
-    const variables = await MatomoApi.call('GET', 'TagManager.getContainerVariables', new URLSearchParams({
+    const variablesResponse = await MatomoApi.call('GET', 'TagManager.getContainerVariables', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const variables = this.asList(variablesResponse);
 
     if (!variables.length) {
       await MatomoApi.call('POST', 'TagManager.addContainerVariable', new URLSearchParams({
@@ -327,11 +330,12 @@ class GlobalSetup {
     }
 
     // create tag
-    const tags = await MatomoApi.call('GET', 'TagManager.getContainerTags', new URLSearchParams({
+    const tagsResponse = await MatomoApi.call('GET', 'TagManager.getContainerTags', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: draftVersionId,
     }));
+    const tags = this.asList(tagsResponse);
 
     if (!tags.length) {
       await MatomoApi.call('POST', 'TagManager.addContainerTag', new URLSearchParams({
@@ -370,6 +374,31 @@ class GlobalSetup {
     }));
 
     this._testIdContainer = idContainer;
+  }
+
+  private asList<T>(response: unknown): T[] {
+    if (Array.isArray(response)) {
+      return response as T[];
+    }
+
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+
+    const responseObject = response as Record<string, unknown>;
+    const wrappedList = responseObject.value ?? responseObject.data ?? responseObject.containers;
+    if (Array.isArray(wrappedList)) {
+      return wrappedList as T[];
+    }
+    if (wrappedList && typeof wrappedList === 'object') {
+      return Object.values(wrappedList).filter(
+        (item): item is T => item !== null && typeof item === 'object'
+      );
+    }
+
+    return Object.values(responseObject).filter(
+      (item): item is T => item !== null && typeof item === 'object'
+    );
   }
 
   getDateOfVisitTrackedInPast() {
