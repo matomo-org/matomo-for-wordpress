@@ -138,6 +138,7 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 			// added via patch
 			'app/plugins/CoreHome/stylesheets/a11y.less',
+			'app/plugins/Marketplace/images/categories/matomo.png',
 		];
 
 		try {
