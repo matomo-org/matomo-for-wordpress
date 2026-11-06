@@ -28,6 +28,12 @@ if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
 	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 }
 
+// Load Matomo's isolated dependencies before either the WordPress or CLI bootstrap.
+$prefixed_autoload = __DIR__ . '/app/vendor/prefixed/vendor/autoload.php';
+if ( file_exists( $prefixed_autoload ) ) {
+	require_once $prefixed_autoload;
+}
+
 if ( ! defined( 'MATOMO_MARKETPLACE_PLUGIN_NAME' ) ) {
 	define( 'MATOMO_MARKETPLACE_PLUGIN_NAME', 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' );
 }
