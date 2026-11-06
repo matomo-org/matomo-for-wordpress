@@ -31,6 +31,11 @@ class MatomoTracker
      */
     static public $URL = '';
 
+    public const AI_BOT_USER_AGENT_SUBSTRINGS = [
+        'ChatGPT-User', 'MistralAI-User', 'Gemini-Deep-Research', 'Claude-User',
+        'Perplexity-User', 'Google-NotebookLM', 'GPTBot',
+    ];
+
     /**
      * API Version
      *
@@ -795,6 +800,22 @@ class MatomoTracker
     }
 
     /**
+     * If the current user agent belongs to an AI agent bot, tracks a pageview action.
+     *
+     * This method should be used server side to track AI bots that do not execute JavaScript.
+     *
+     * @return mixed Response string or true if using bulk requests.
+     */
+    public function doTrackPageViewIfAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null)
+    {
+        if (!self::isUserAgentAIBot($this->userAgent)) {
+            return null;
+        }
+
+        return $this->sendRequest($this->getUrlTrackAIBot($httpStatus, $responseSizeBytes, $serverTimeMs, $source));
+    }
+
+    /**
      * Override PageView id for every use of `doTrackPageView()`. Do not use this if you call `doTrackPageView()`
      * multiple times during tracking (if, for example, you are tracking a single page application).
      *
@@ -1250,6 +1271,48 @@ class MatomoTracker
         }
 
         return $url;
+    }
+
+    /**
+     * Builds a URL to track a request from an AI bot.
+     *
+     * @param int|null $httpStatus the request's HTTP status code, if it is known.
+     * @param int|null $responseSizeBytes the size of the response sent to the AI bot, if known.
+     * @param int|null $serverTimeMs the number of milliseconds it took to process the request, if known.
+     * @param string|null $source
+     * @return string
+     */
+    public function getUrlTrackAIBot(?int $httpStatus = null, ?int $responseSizeBytes = null, ?int $serverTimeMs = null, ?string $source = null): string
+    {
+        $url = $this->getRequest($this->idSite) . '&recMode=1';
+        if (!empty($httpStatus)) {
+            $url .= '&http_status=' . $httpStatus;
+        }
+        if (!empty($responseSizeBytes)) {
+            $url .= '&bw_bytes=' . $responseSizeBytes;
+        }
+        if (!empty($serverTimeMs)) {
+            $url .= '&pf_srv=' . $serverTimeMs;
+        }
+        if (!empty($source)) {
+            $url .= '&source=' . rawurlencode($source);
+        }
+
+        return $url;
+    }
+
+    public static function isUserAgentAIBot(string $userAgent): bool
+    {
+        if (empty($userAgent)) {
+            return false;
+        }
+
+        foreach (self::AI_BOT_USER_AGENT_SUBSTRINGS as $substring) {
+            if (stripos($userAgent, $substring) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
