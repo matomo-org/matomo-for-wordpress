@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 export WORDPRESS_FOLDER=test
 TRACKING_WORDPRESS_FOLDER=test-tracking
 E2E_SETUP_TIMEOUT=${E2E_SETUP_TIMEOUT:-900}
@@ -57,7 +59,16 @@ PHP_OPCACHE=1
 EOF
 
 docker_compose_up test
-CUSTOM_ENV_FILE=.env.script npm run matomo:console -- wordpress:build-release --name=test --zip
+if ! CUSTOM_ENV_FILE=.env.script npm run matomo:console -- wordpress:build-release --name=test --zip &>> .e2e-docker-out; then
+  echo "Failed to build the test release. Recent setup and build output:"
+  tail -n 200 .e2e-docker-out
+  exit 1
+fi
+if [ ! -f matomo-test.zip ]; then
+  echo "Test release build completed without creating matomo-test.zip. Recent setup and build output:"
+  tail -n 200 .e2e-docker-out
+  exit 1
+fi
 mv matomo-test.zip matomo.zip
 cleanup
 
