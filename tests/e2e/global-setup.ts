@@ -39,6 +39,9 @@ class GlobalSetup {
       return;
     }
 
+    // Make sure the WordPress-to-Matomo site mapping exists before calling APIs
+    // that automatically scope requests to the current site (such as Tag Manager).
+    await MatomoCli.syncSites();
     await this.createTestGoal();
     await this.addTagManagerEntities();
 
