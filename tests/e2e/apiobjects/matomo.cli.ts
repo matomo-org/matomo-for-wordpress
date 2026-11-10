@@ -61,19 +61,6 @@ class MatomoCli {
       throw e;
     }
   }
-
-  async syncSites() {
-    const folderArg = process.env.WORDPRESS_FOLDER ? `-e WORDPRESS_FOLDER=${process.env.WORDPRESS_FOLDER} ` : '';
-    const command = `docker compose --env-file .env.default --env-file .env run --rm ${folderArg}exec wp matomo sync sites`;
-
-    try {
-      execSync(command);
-    } catch (e) {
-      console.log(e.stdout.toString());
-      console.log(e.stderr.toString());
-      throw e;
-    }
-  }
 }
 
 export default new MatomoCli();
