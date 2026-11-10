@@ -279,16 +279,7 @@ class GlobalSetup {
       description: 'container for e2e tests',
     }));
 
-    const containerResponse = await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
-      idSite: '1',
-      idContainer,
-    }));
-    const container = containerResponse?.value ?? containerResponse?.data ?? containerResponse;
-
-    const draftVersionId = container?.draft?.idcontainerversion;
-    if (!draftVersionId) {
-      throw new Error(`TagManager.getContainer did not return a draft version: ${JSON.stringify(containerResponse)}`);
-    }
+    const draftVersionId = await this.getDraftVersionOf('1', idContainer);
 
     // create trigger
     const triggersResponse = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
@@ -380,6 +371,21 @@ class GlobalSetup {
     }));
 
     this._testIdContainer = idContainer;
+  }
+
+  private async getDraftVersionOf(idSite: string, idContainer: string): Promise<string> {
+    const response = await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
+      idSite,
+      idContainer,
+    }));
+    const container = response?.value ?? response?.data ?? response;
+    const draftVersionId = container?.draft?.idcontainerversion;
+
+    if (!draftVersionId) {
+      throw new Error(`TagManager.getContainer did not return a draft version: ${JSON.stringify(response)}`);
+    }
+
+    return String(draftVersionId);
   }
 
   private asList<T>(response: unknown): T[] {
