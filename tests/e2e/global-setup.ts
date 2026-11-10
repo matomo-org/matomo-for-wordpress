@@ -8,6 +8,7 @@
 
 import MatomoApi from './apiobjects/matomo.api.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
+import WpCli from './apiobjects/wp.cli.js';
 import Website from './website.js';
 
 // TODO: need to document how to write an e2e test. eg, individual tests
@@ -39,6 +40,7 @@ class GlobalSetup {
       return;
     }
 
+    await WpCli.call(['matomo', 'sync', 'sites']);
     await this.createTestGoal();
     await this.addTagManagerEntities();
 

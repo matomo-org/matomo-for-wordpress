@@ -214,20 +214,7 @@ class API extends Feature {
 			$idsite = $site->get_current_matomo_site_id();
 
 			if ( ! $idsite ) {
-				// Repair a missing mapping before rejecting the request. The normal
-				// Matomo bootstrap can repair this condition, but it runs below and
-				// needs the site ID in order to scope this API request.
-				try {
-					$sync = new \WpMatomo\Site\Sync( \WpMatomo::$settings );
-					$sync->sync_current_site();
-				} catch ( Exception $e ) {
-					// Keep the API's existing missing-site response if the repair fails.
-				}
-
-				$idsite = $site->get_current_matomo_site_id();
-				if ( ! $idsite ) {
-					return new WP_Error( 'Site not found. Make sure it is synced' );
-				}
+				return new WP_Error( 'Site not found. Make sure it is synced' );
 			}
 
 			$params['idSite']  = $idsite;
