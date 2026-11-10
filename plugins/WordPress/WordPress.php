@@ -399,6 +399,12 @@ class WordPress extends Plugin
             return;
         }
 
+		if (!empty($params['validateEgressIp'])) {
+			// Leave this request unhandled so Matomo core can use its pinned,
+			// redirect-revalidating transport.
+			return;
+		}
+
         $headers = $params['headers'];
         $rawHeaders = array();
         foreach ($headers as $header) {

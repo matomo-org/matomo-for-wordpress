@@ -96,6 +96,34 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( Access::getInstance()->hasSuperUserAccess() );
 	}
 
+	public function test_onSendHttpRequestBy_leaves_requests_requiring_safe_egress_unhandled() {
+		$response = null;
+		$status   = null;
+		$headers  = null;
+		$params   = [
+			'headers'          => [],
+			'httpMethod'       => 'GET',
+			'timeout'          => 1,
+			'body'             => '',
+			'userAgent'        => null,
+			'destinationPath'  => null,
+			'validateEgressIp' => true,
+		];
+
+		$this->plugin->onSendHttpRequestBy( 'https://example.com/data', $params, $response, $status, $headers );
+
+		$this->assertNull( $response );
+		$this->assertNull( $status );
+		$this->assertNull( $headers );
+	}
+
+	public function test_onSendHttpRequestBy_uses_wordpress_transport_without_safe_egress_requirement() {
+		$result = $this->invoke_onSendHttpRequestBy( 'https://example.com/data' );
+
+		$this->assert_is_wp_remote_mock_response( $result );
+		$this->assertSame( 503, $result['status'] );
+	}
+
 	public function test_onSendHttpRequestBy_should_dispatch_legitimate_coreadminhome_archive_reports_url() {
 		// short circuit CoreAdminHome.archiveReports to skip archiving (slow and uneeded for this test)
 		CoreAdminHomeAPI::setSingletonInstance( $this->make_coreadminhome_archive_mock() );
