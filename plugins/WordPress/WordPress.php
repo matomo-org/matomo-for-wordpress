@@ -16,7 +16,6 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
-use Piwik\Http\EgressBlockedException;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin;
@@ -400,6 +399,12 @@ class WordPress extends Plugin
             return;
         }
 
+		if (!empty($params['validateEgressIp'])) {
+			// Leave this request unhandled so Matomo core can use its pinned,
+			// redirect-revalidating transport.
+			return;
+		}
+
         $headers = $params['headers'];
         $rawHeaders = array();
         foreach ($headers as $header) {
@@ -429,12 +434,6 @@ class WordPress extends Plugin
 		    // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
 		    $args['sslverify'] = false;
 	    }
-        if (!empty($params['validateEgressIp']) && !wp_http_validate_url($url)) {
-            // WordPress URL validation does not pin DNS results or guarantee that
-            // proxies use the validated address, so it cannot provide Matomo's
-            // SSRF-safe egress guarantees.
-            throw new EgressBlockedException('SSRF-safe HTTP requests are not supported by the WordPress HTTP transport.');
-        }
         $wpResponse = wp_remote_request($url, $args);
 
         if (is_object($wpResponse) && is_wp_error($wpResponse)) {

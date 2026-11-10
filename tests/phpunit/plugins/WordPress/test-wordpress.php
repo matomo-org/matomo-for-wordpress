@@ -96,9 +96,7 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertFalse( Access::getInstance()->hasSuperUserAccess() );
 	}
 
-	public function test_onSendHttpRequestBy_rejects_requests_requiring_safe_egress() {
-		$this->expectException( \Piwik\Http\EgressBlockedException::class );
-
+	public function test_onSendHttpRequestBy_leaves_requests_requiring_safe_egress_unhandled() {
 		$response = null;
 		$status   = null;
 		$headers  = null;
@@ -113,6 +111,17 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		];
 
 		$this->plugin->onSendHttpRequestBy( 'https://example.com/data', $params, $response, $status, $headers );
+
+		$this->assertNull( $response );
+		$this->assertNull( $status );
+		$this->assertNull( $headers );
+	}
+
+	public function test_onSendHttpRequestBy_uses_wordpress_transport_without_safe_egress_requirement() {
+		$result = $this->invoke_onSendHttpRequestBy( 'https://example.com/data' );
+
+		$this->assert_is_wp_remote_mock_response( $result );
+		$this->assertSame( 503, $result['status'] );
 	}
 
 	public function test_onSendHttpRequestBy_should_dispatch_legitimate_coreadminhome_archive_reports_url() {
