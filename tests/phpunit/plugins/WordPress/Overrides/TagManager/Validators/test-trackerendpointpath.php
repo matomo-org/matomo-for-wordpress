@@ -75,7 +75,6 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'an arbitrary JavaScript endpoint'             => [ 'custom-handler.js' ],
 			'an upper case path'                           => [ 'MATOMO.JS' ],
 			'a query string without an endpoint'           => [ '?idsite=1' ],
-			'an empty endpoint'                            => [ '' ],
 		];
 	}
 
@@ -98,5 +97,21 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->expectException( ValidatorException::class );
 
 		$this->validator->validate( [ 'custom.js' ] );
+	}
+
+	public function test_validate_should_allow_a_bare_value_for_the_field_validator_to_decide() {
+		$this->validator->validate( '' );
+		$this->validator->validate( null );
+		$this->validator->validate( false );
+
+		$this->assertTrue( true, 'no exception was thrown' );
+	}
+
+	public function test_non_strict_validation_should_keep_the_previous_extension_rule() {
+		$validator = new TrackerEndpointPath( false );
+		$validator->validate( 'custom-handler.php' );
+
+		$this->expectException( ValidatorException::class );
+		$validator->validate( 'payload.txt' );
 	}
 }

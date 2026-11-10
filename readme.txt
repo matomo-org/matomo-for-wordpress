@@ -162,13 +162,15 @@ The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', 
 The Tag Manager does currently not work in WP Multisite mode.
 
 = Can I disable the Tag Manager URL security restrictions?
-By default, Matomo for WordPress applies additional security restrictions to Tag Manager templates for users without the `unfiltered_html` capability. These restrictions limit the Matomo URL and custom tracker endpoints, prevent endpoint paths from traversing outside the Matomo URL, block variable interpolation in endpoints and tracking URL parameters, block authentication-related tracking URL parameters, and prevent JavaScript variables from reading arbitrary browser globals.
+By default, Matomo for WordPress applies additional security restrictions to Tag Manager templates for users without the `unfiltered_html` capability. These restrictions limit the Matomo URL and custom tracker endpoints, prevent endpoint paths from traversing outside the Matomo URL, block variable interpolation in endpoints and tracking URL parameters, block authentication-related tracking URL parameters, and prevent JavaScript variables from reading arbitrary browser globals. Custom image tags are limited to same-site image files and cannot use query parameters that trigger actions.
 
 If you use a custom tracker deployment that is incompatible with these restrictions, you can disable this hardening by adding the following to your `wp-config.php`:
 
 `define('MATOMO_TAG_MANAGER_RESTRICT_URLS', false);`
 
-This disables the protections listed above. Other Tag Manager restrictions, such as restrictions on custom HTML and JavaScript functions for users without `unfiltered_html`, continue to apply. Disabling the hardening can allow tags to access authenticated browser data or send requests to other routes, so only do this if you understand the security implications. The default is enabled when the constant is not defined.
+This disables the additional URL hardening, including the strict tracker-path allowlist, authentication-related tracking parameter checks, and the restriction on JavaScript variables reading browser globals. The earlier checks still apply: Matomo URLs must stay on this site, and custom tracker endpoints must not interpolate variables or traverse paths and must use a `.js` or `.php` extension (or name a directory). With hardening enabled, the Matomo URL must also point to this plugin's Matomo application path. Custom image URLs must still point to same-site image files. Other Tag Manager restrictions, such as restrictions on custom HTML and JavaScript functions for users without `unfiltered_html`, continue to apply. Disabling the additional hardening can allow tags to access authenticated browser data, so only do this if you understand the security implications. The default is enabled when the constant is not defined.
+
+These checks validate values when they are saved. They do not retroactively validate existing container values when a container is published, copied, or imported. Administrators should audit existing containers before publishing them.
 
 = How do you support WP Multisite?
 [Click here to learn more](https://matomo.org/faq/wordpress/does-it-support-wp-multisite/)

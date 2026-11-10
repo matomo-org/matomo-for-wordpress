@@ -25,11 +25,18 @@ class NoAuthenticationParameters extends BaseValidator
             throw new Exception(Piwik::translate('WordPress_TagManagerAuthenticationParameterNotAllowed'));
         }
 
+        $sensitiveNames = [
+            'auth', 'authentication', 'authtoken', 'authorization', 'token', 'tokenauth',
+            'accesstoken', 'refreshtoken', 'oauthtoken', 'nonce', 'wpnonce',
+            'password', 'passwd', 'secret', 'credential', 'credentials', 'apikey',
+            'session', 'sessionid',
+        ];
+
         foreach (preg_split('/[&;]/', (string) $value) as $part) {
             $name = rawurldecode(explode('=', $part, 2)[0]);
             $normalised = strtolower(preg_replace('/[^a-z0-9]/i', '', $name));
 
-            if (preg_match('/(?:nonce|auth|token|password|secret|credential)/', $normalised)) {
+            if (in_array($normalised, $sensitiveNames, true)) {
                 throw new Exception(Piwik::translate('WordPress_TagManagerAuthenticationParameterNotAllowed'));
             }
         }

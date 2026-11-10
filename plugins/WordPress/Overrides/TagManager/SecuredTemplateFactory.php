@@ -15,6 +15,7 @@ use Piwik\Plugins\TagManager\Template\Variable\CustomRequestProcessingVariable;
 use Piwik\Plugins\TagManager\Template\Variable\JavaScriptVariable;
 use Piwik\Plugins\TagManager\Template\Variable\MatomoConfigurationVariable;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\MatomoAppUrl;
+use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\CustomImageUrl;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoAuthenticationParameters;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoPathTraversal;
 use Piwik\Plugins\WordPress\Overrides\TagManager\Validators\NoVariableInterpolation;
@@ -102,7 +103,7 @@ class SecuredTemplateFactory
     {
         return new class(
             $wrapped,
-            ['customImageSrc' => [new SiteOwnUrl()]]
+            ['customImageSrc' => [new CustomImageUrl()]]
         ) extends CustomImageTag {
             use SecuredTemplate;
         };
@@ -121,10 +122,10 @@ class SecuredTemplateFactory
     public function matomoConfigurationVariable(MatomoConfigurationVariable $wrapped)
     {
         $restrictUrls = self::isUrlHardeningEnabled();
-        $urlValidators = $restrictUrls ? [new MatomoAppUrl()] : [];
-        $endpointValidators = $restrictUrls
-            ? [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath()]
-            : [];
+        // The URL hardening flag only disables the additional restrictions introduced here.
+        // Keep the site-bound URL and endpoint extension checks that were already in place.
+        $urlValidators = $restrictUrls ? [new MatomoAppUrl()] : [new SiteOwnUrl()];
+        $endpointValidators = [new NoVariableInterpolation(), new NoPathTraversal(), new TrackerEndpointPath($restrictUrls)];
 
         return new class(
             $wrapped,
