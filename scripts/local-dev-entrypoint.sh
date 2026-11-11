@@ -436,6 +436,10 @@ EOF
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
     $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo sync sites
 
+    # The E2E test sites use Matomo site ID 1. Keep blog 1 mapped to that site
+    # explicitly in these single-site installs so API setup can address it.
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER eval '\WpMatomo\Site::map_matomo_site_id( 1, 1 );'
+
     # update site created date for e2e tests
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$table = \$pdo->query('SHOW TABLES FROM \`${WP_DB_NAME}\` LIKE \'wp_matomo_site\'')->fetchColumn();

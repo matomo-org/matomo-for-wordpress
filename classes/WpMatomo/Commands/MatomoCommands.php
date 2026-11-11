@@ -99,9 +99,6 @@ class MatomoCommands extends WP_CLI_Command {
 	 * <mode>
 	 * : Either 'sites' or 'users'.
 	 *
-	 * [--verbose]
-	 * : Print site sync progress and diagnostic details to the command output.
-	 *
 	 * @when after_wp_load
 	 */
 	public function sync( $args, $assoc_args ) {
@@ -109,9 +106,9 @@ class MatomoCommands extends WP_CLI_Command {
 
 		if ( 'sites' === $mode ) {
 			$sync    = new Site\Sync( \WpMatomo::$settings );
-			$success = $sync->sync_all( ! empty( $assoc_args['verbose'] ) );
+			$success = $sync->sync_all();
 			if ( ! $success ) {
-				WP_CLI::error( 'Failed to execute site sync. Run with --verbose for diagnostic details.' );
+				WP_CLI::error( sprintf( 'Failed to execute site sync, enable logging for more info.' ) );
 			}
 		} elseif ( 'users' === $mode ) {
 			$sync = new User\Sync();
