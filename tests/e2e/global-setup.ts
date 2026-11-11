@@ -40,7 +40,7 @@ class GlobalSetup {
       return;
     }
 
-    await WpCli.call(['matomo', 'sync', 'sites']);
+    await WpCli.call(['matomo', 'sync', 'sites', '--verbose']);
     await this.createTestGoal();
     await this.addTagManagerEntities();
 
