@@ -68,7 +68,7 @@ class MatomoApi {
 
         break;
       } catch (e) {
-        console.log(`Failed to request ${fullUrl}: ${(e as Error).message}`);
+        console.log(`Failed to request ${this.redactUrl(fullUrl)}: ${(e as Error).message}`);
 
         await new Promise((r) => setTimeout(r, 1000));
 
@@ -79,6 +79,19 @@ class MatomoApi {
     }
 
     const text = await response!.text();
+
+    if (!response!.ok) {
+      const details = [
+        `${restMethod} ${this.redactUrl(fullUrl)}`,
+        `HTTP ${response!.status} ${response!.statusText}`,
+        `Content-Type: ${response!.headers.get('content-type') || 'unknown'}`,
+        `Response: ${this.redactSensitiveData(text)}`,
+        `Attempts: ${attempts}`,
+      ].join('\n');
+
+      console.error(`[MatomoApi] Request failed:\n${details}`);
+      throw new Error(`[MatomoApi] Request failed:\n${details}`);
+    }
 
     try {
       result = JSON.parse(text);
@@ -91,7 +104,7 @@ class MatomoApi {
     }
 
     if (result.code && result.message) {
-      throw new Error(`${result.code}: ${result.message} (attempts = ${attempts})`);
+      throw new Error(`${result.code}: ${result.message} (HTTP ${response!.status}, attempts = ${attempts})`);
     }
 
     return result;
@@ -112,6 +125,22 @@ class MatomoApi {
 
   toSnakeCase(s: string) {
     return s.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
+  }
+
+  private redactUrl(value: string) {
+    const url = new URL(value);
+    for (const key of Array.from(url.searchParams.keys())) {
+      if (/token_auth|password|nonce|authorization/i.test(key)) {
+        url.searchParams.set(key, '[redacted]');
+      }
+    }
+    return url.toString();
+  }
+
+  private redactSensitiveData(value: string) {
+    return value
+      .replace(/("(?:token_auth|password|authorization|nonce)"\s*:\s*")[^"]*(")/gi, '$1[redacted]$2')
+      .replace(/((?:token_auth|password|authorization|nonce)=)[^&\s"]+/gi, '$1[redacted]');
   }
 }
 

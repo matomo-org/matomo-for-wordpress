@@ -214,6 +214,16 @@ class API extends Feature {
 			$idsite = $site->get_current_matomo_site_id();
 
 			if ( ! $idsite ) {
+				$logger = new Logger();
+				$logger->log(
+					sprintf(
+						'REST API request %s rejected: no Matomo site mapping for blog ID %d (site URL: %s; multisite: %s).',
+						$api_method,
+						get_current_blog_id(),
+						home_url( '/' ),
+						is_multisite() ? 'yes' : 'no'
+					)
+				);
 				return new WP_Error( 'Site not found. Make sure it is synced' );
 			}
 
