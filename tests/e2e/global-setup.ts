@@ -239,13 +239,18 @@ class GlobalSetup {
   }
 
   private async createTestGoal() {
-    const goal = await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
-      idSite: '1',
-      idGoal: '1',
-    }));
+    const getTestGoal = async () => {
+      const goals = await MatomoApi.call('GET', 'Goals.getGoals', new URLSearchParams({
+        idSite: '1',
+      }));
+      const goalList = this.asList<{ name: string; idgoal: number | string }>(goals);
+      return goalList.find((candidate) => candidate.name === 'test goal');
+    };
+
+    const goal = await getTestGoal();
 
     if (goal?.idgoal) { // already created
-      this._testIdGoal = goal.idgoal;
+      this._testIdGoal = parseInt(String(goal.idgoal), 10);
       return;
     }
 
@@ -258,15 +263,16 @@ class GlobalSetup {
       revenue: '2',
     }));
 
-    // Read the goal back if the mutation response is empty.
-    const createdGoal = response ?? await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
-      idSite: '1',
-      idGoal: '1',
-    }));
-    const idGoal = typeof createdGoal === 'object' ? createdGoal?.idgoal : createdGoal;
+    // Mutation responses may be empty; find the created goal by name instead of
+    // assuming it received ID 1.
+    const responseId = typeof response === 'object'
+      ? response?.value ?? response?.idgoal
+      : response;
+    const createdGoal = responseId ? null : await getTestGoal();
+    const idGoal = responseId ?? createdGoal?.idgoal;
     this._testIdGoal = parseInt(String(idGoal), 10);
     if (!this._testIdGoal) {
-      throw new Error(`Matomo did not return an ID when creating the test goal: ${JSON.stringify(createdGoal)}`);
+      throw new Error(`Could not find the test goal after creating it: ${JSON.stringify(createdGoal ?? response)}`);
     }
   }
 
