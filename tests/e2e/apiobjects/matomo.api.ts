@@ -93,17 +93,21 @@ class MatomoApi {
       throw new Error(`[MatomoApi] Request failed:\n${details}`);
     }
 
-    try {
-      result = JSON.parse(text);
-    } catch (e) {
-      throw new Error(`Failed to parse JSON response: ${text}`)
+    if (text === '') {
+      result = null;
+    } else {
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Failed to parse JSON response: ${text}`);
+      }
     }
 
-    if (result.result === 'error') {
+    if (result?.result === 'error') {
       throw new Error(result.message);
     }
 
-    if (result.code && result.message) {
+    if (result?.code && result?.message) {
       throw new Error(`${result.code}: ${result.message} (HTTP ${response!.status}, attempts = ${attempts})`);
     }
 

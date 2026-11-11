@@ -244,7 +244,7 @@ class GlobalSetup {
       idGoal: '1',
     }));
 
-    if (goal.idgoal) { // already created
+    if (goal?.idgoal) { // already created
       this._testIdGoal = goal.idgoal;
       return;
     }
@@ -258,7 +258,16 @@ class GlobalSetup {
       revenue: '2',
     }));
 
-    this._testIdGoal = parseInt(response.value, 10);
+    // Read the goal back if the mutation response is empty.
+    const createdGoal = response ?? await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
+      idSite: '1',
+      idGoal: '1',
+    }));
+    const idGoal = typeof createdGoal === 'object' ? createdGoal?.idgoal : createdGoal;
+    this._testIdGoal = parseInt(String(idGoal), 10);
+    if (!this._testIdGoal) {
+      throw new Error(`Matomo did not return an ID when creating the test goal: ${JSON.stringify(createdGoal)}`);
+    }
   }
 
   private async addTagManagerEntities() {

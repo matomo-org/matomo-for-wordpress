@@ -83,14 +83,8 @@ class Website {
       await $('#user_login,#wpbody').waitForExist();
 
       if (await $('#user_login').isExisting()) {
-        await browser.execute(
-          (l, p) => {
-            window.jQuery('#user_login').val(l);
-            window.jQuery('#user_pass').val(p);
-          },
-          user || process.env.WORDPRESS_USER_LOGIN || 'root',
-          pass || process.env.WORDPRESS_USER_PASS || 'pass'
-        );
+        await $('#user_login').setValue(user || process.env.WORDPRESS_USER_LOGIN || 'root');
+        await $('#user_pass').setValue(pass || process.env.WORDPRESS_USER_PASS || 'pass');
         await $('#wp-submit').click();
       }
 
@@ -107,9 +101,7 @@ class Website {
   async logout() {
     const logoutLink = $('#wp-admin-bar-logout a');
     if (await logoutLink.isExisting()) {
-        await browser.execute(() => {
-            window.jQuery('#wp-admin-bar-logout a')[0].click();
-        });
+        await logoutLink.click();
 
         await $('#user_login').waitForExist({ timeout: 60000 });
     }
