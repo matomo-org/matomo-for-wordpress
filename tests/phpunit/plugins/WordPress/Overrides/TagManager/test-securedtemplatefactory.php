@@ -176,7 +176,7 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_accept_the_matomo_app_path_without_a_trailing_slash() {
-		$url = untrailingslashit( home_url( $this->matomo_app_path() ) );
+		$url       = untrailingslashit( home_url( $this->matomo_app_path() ) );
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
 		$parameter->setValue( $url );
 
@@ -192,9 +192,9 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_refuse_the_matomo_path_on_another_port() {
-		$site = wp_parse_url( home_url() );
-		$port = isset( $site['port'] ) ? (int) $site['port'] + 1 : ( 'https' === $site['scheme'] ? 444 : 81 );
-		$url  = $site['scheme'] . '://' . $site['host'] . ':' . $port . $this->matomo_app_path();
+		$site     = wp_parse_url( home_url() );
+		$port     = isset( $site['port'] ) ? (int) $site['port'] + 1 : ( 'https' === $site['scheme'] ? 444 : 81 );
+		$url      = $site['scheme'] . '://' . $site['host'] . ':' . $port . $this->matomo_app_path();
 		$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
 
 		$this->expectException( ValidatorException::class );
@@ -210,7 +210,7 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_drop_a_query_string_from_the_matomo_url() {
-		$app_path = $this->matomo_app_path();
+		$app_path  = $this->matomo_app_path();
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
 		$parameter->setValue( home_url( $app_path . '?x=' ) );
 
@@ -218,7 +218,7 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 	}
 
 	public function test_matomoConfigurationVariable_should_drop_a_fragment_from_the_matomo_url() {
-		$app_path = $this->matomo_app_path();
+		$app_path  = $this->matomo_app_path();
 		$parameter = $this->find_parameter( $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() ), 'matomoUrl' );
 		$parameter->setValue( home_url( $app_path . '#' ) );
 
@@ -317,10 +317,10 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 
 	public function unsafe_tracking_url_append_provider() {
 		return [
-			'nonce parameter' => [ '_wpnonce=123' ],
+			'nonce parameter'         => [ '_wpnonce=123' ],
 			'encoded nonce parameter' => [ '%5Fwpnonce=123' ],
 			'authorization parameter' => [ 'Authorization=Bearer%20token' ],
-			'variable interpolation' => [ 'campaign={{Nonce}}' ],
+			'variable interpolation'  => [ 'campaign={{Nonce}}' ],
 		];
 	}
 
@@ -390,12 +390,12 @@ class SecuredTemplateFactoryTest extends MatomoAnalytics_SharedFixture_TestCase 
 		add_filter( 'matomo_tag_manager_restrict_urls', $disable_restrictions );
 
 		try {
-			$variable = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
-			$matomo_url = $this->find_parameter( $variable, 'matomoUrl' );
+			$variable         = $this->template_factory->matomoConfigurationVariable( new MatomoConfigurationVariable() );
+			$matomo_url       = $this->find_parameter( $variable, 'matomoUrl' );
 			$custom_site_path = home_url( '/analytics/' );
 			$matomo_url->setValue( $custom_site_path );
 			$this->assertSame( $custom_site_path, $matomo_url->getValue() );
-			$site_host = wp_parse_url( home_url(), PHP_URL_HOST );
+			$site_host       = wp_parse_url( home_url(), PHP_URL_HOST );
 			$http_matomo_url = 'http://' . $site_host . '/analytics/';
 			$matomo_url->setValue( $http_matomo_url );
 			$this->assertSame( $http_matomo_url, $matomo_url->getValue() );
