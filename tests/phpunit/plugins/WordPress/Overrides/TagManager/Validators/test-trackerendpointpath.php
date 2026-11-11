@@ -31,8 +31,8 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 		return [
 			'the default custom js endpoint'       => [ 'custom.js' ],
 			'the default custom tracking endpoint' => [ 'custom.php' ],
-			'a Matomo JavaScript resource'          => [ 'matomo.js' ],
-			'a Matomo PHP tracker resource'         => [ 'matomo.php' ],
+			'a Matomo JavaScript resource'         => [ 'matomo.js' ],
+			'a Matomo PHP tracker resource'        => [ 'matomo.php' ],
 			'a js file below the matomo url'       => [ 'js/tracker.js' ],
 			'a php file below the matomo url'      => [ 'js/tracker.php' ],
 			'a dot in a file name'                 => [ 'matomo.min.js' ],
@@ -69,12 +69,12 @@ class TrackerEndpointPathTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'a path parameter'                            => [ 'payload.txt;x.js' ],
 			// an endpoint is appended to the Matomo URL, so it addresses no host of its own
 			'an absolute url'                             => [ 'https://evil.example/payload.js' ],
-			'a WordPress REST API directory'               => [ 'wp-json/wp/v2/users/2/' ],
+			'a WordPress REST API directory'              => [ 'wp-json/wp/v2/users/2/' ],
 			'an arbitrary directory'                      => [ 'some/other/directory/' ],
-			'an arbitrary PHP endpoint'                    => [ 'wp-admin/admin-ajax.php' ],
-			'an arbitrary JavaScript endpoint'             => [ 'custom-handler.js' ],
-			'an upper case path'                           => [ 'MATOMO.JS' ],
-			'a query string without an endpoint'           => [ '?idsite=1' ],
+			'an arbitrary PHP endpoint'                   => [ 'wp-admin/admin-ajax.php' ],
+			'an arbitrary JavaScript endpoint'            => [ 'custom-handler.js' ],
+			'an upper case path'                          => [ 'MATOMO.JS' ],
+			'a query string without an endpoint'          => [ '?idsite=1' ],
 		];
 	}
 
