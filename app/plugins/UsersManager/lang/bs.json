@@ -1,9 +1,0 @@
-{
-    "UsersManager": {
-        "Active": "Aktivno",
-        "PrivAdmin": "Administracija",
-        "PrivView": "Vidi",
-        "Status": "Status",
-        "Username": "Korisničko ime"
-    }
-}

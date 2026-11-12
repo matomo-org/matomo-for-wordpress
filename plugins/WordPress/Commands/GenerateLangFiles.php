@@ -39,6 +39,11 @@ class GenerateLangFiles extends ConsoleCommand
 
         ServerFilesGenerator::createFilesForSecurity();
 
+        $corePluginsDir = realpath(PIWIK_INCLUDE_PATH . '/plugins');
+        if ($corePluginsDir === false) {
+            throw new \Exception('Could not locate the bundled Matomo plugins directory.');
+        }
+
 	    $languages = API::getInstance()->getAvailableLanguages();
 	    $plugins = Plugin\Manager::getInstance()->loadAllPluginsAndGetTheirInfo();
 	    foreach ($languages as $language) {
@@ -46,7 +51,13 @@ class GenerateLangFiles extends ConsoleCommand
 	    	$base = json_decode(file_get_contents($corePath), true);
 	    	foreach ($plugins as $plugin => $pluginInfo) {
                 $pluginDir = Plugin\Manager::getPluginDirectory($plugin);
-                if (strpos(realpath($pluginDir), 'wp-content') !== false) {
+                $resolvedPluginDir = realpath($pluginDir);
+                // Bundle core translations even when the checkout is inside
+                // wp-content (for example in DDEV). Exclude separately installed
+                // marketplace plugins, whose translations remain in their own packages.
+                if ($resolvedPluginDir === false || ($plugin !== 'WordPress'
+                    && strpos($resolvedPluginDir . DIRECTORY_SEPARATOR, $corePluginsDir . DIRECTORY_SEPARATOR) !== 0)
+                ) {
                     continue;
                 }
 

@@ -780,6 +780,13 @@ EOF
   # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
   touch $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/debug.log $DOCUMENT_ROOT/matomo.wpload_dir.php
   mkdir -p "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads/matomo/tmp/cache/tracker" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/tmp"
+  if [[ "$INSTALLING_FROM_ZIP" == "1" ]]; then
+    # Root-run setup commands create additional files after the initial chown,
+    # including app/misc/.htaccess. The web process must be able to update these.
+    chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME"
+    find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -type d -exec chmod u+rwx {} +
+    find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -type f -exec chmod u+rw {} +
+  fi
   chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/uploads
   find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
   find "$DOCUMENT_ROOT/$WORDPRESS_FOLDER" -path "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME" -prune -o -exec chmod 0777 {} +
