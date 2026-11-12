@@ -227,7 +227,7 @@
         "OneVisit": "1 vizito",
         "OnlyEnterIfRequired": "Nur enmetu uzantnomon se via SMTP-servilo bezonas ĝin.",
         "OnlyEnterIfRequiredPassword": "Nur enmetu pasvorton se via SMTP-servilo bezonas ĝin.",
-        "OnlyUsedIfUserPwdIsSet": "Nur uzata se uzantnomo/pasvorto estas agordita. Demandi al via provizanto se vi ne certas pri kiun metodon devas uzi.",
+        "OnlyUsedIfUserPwdIsSet": "Nur uzata se uzantnomo\/pasvorto estas agordita. Demandi al via provizanto se vi ne certas pri kiun metodon devas uzi.",
         "OpenSourceWebAnalytics": "Malfermitkoda TTT-analizilo",
         "OperationAtLeast": "Minumume",
         "OperationAtMost": "Maksimume",

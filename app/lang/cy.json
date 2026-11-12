@@ -139,7 +139,7 @@
         "Ok": "Iawn",
         "OnlyEnterIfRequired": "Dim ond rhoi enw defnyddiwr os yw eich gweinyddwr SMTP yn gofyn amdano.",
         "OnlyEnterIfRequiredPassword": "Dim ond rhoi cyfrinair os yw eich gweinyddwr SMTP yn gofyn amdano.",
-        "OnlyUsedIfUserPwdIsSet": "Yn cael ei ddefnyddio ond pan fydd enw defnyddiwr / cyfrinair wedi ei osod, gofynnwch i'ch darparwr os ydych yn ansicr pa ddull i'w ddefnyddio.",
+        "OnlyUsedIfUserPwdIsSet": "Yn cael ei ddefnyddio ond pan fydd enw defnyddiwr \/ cyfrinair wedi ei osod, gofynnwch i'ch darparwr os ydych yn ansicr pa ddull i'w ddefnyddio.",
         "OpenSourceWebAnalytics": "Dadansoddwr Gwefannol Ffynhonnell Agored",
         "OptionalSmtpPort": "Dewisol. Yn rhagosod i 25 os heb eu amgryptio a TLS SMTP, a 465 ar gyfer SSL SMTP.",
         "OrCancel": "neu %1$s Canslo %2$s",

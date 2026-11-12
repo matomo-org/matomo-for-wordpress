@@ -205,7 +205,7 @@
         "OneVisit": "1 posjeta",
         "OnlyEnterIfRequired": "Samo upišite korisničko ime ako vaš SMTP server to zahtijeva.",
         "OnlyEnterIfRequiredPassword": "SaSamo upišite password ako vaš SMTP server to zahtijeva.",
-        "OnlyUsedIfUserPwdIsSet": "Samo ako je korisničko ime/password postavljen, pitajte svog provajdera ako ste nesigurni u vezi metode koju trebate koristiti.",
+        "OnlyUsedIfUserPwdIsSet": "Samo ako je korisničko ime\/password postavljen, pitajte svog provajdera ako ste nesigurni u vezi metode koju trebate koristiti.",
         "OpenSourceWebAnalytics": "Web Analitika Otvorenog Koda",
         "OperationAtLeast": "Najmanje",
         "OperationAtMost": "Najviše",

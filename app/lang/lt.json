@@ -198,7 +198,7 @@
         "OneVisit": "1 apsilankymas",
         "OnlyEnterIfRequired": "Įveskite naudotojo vardą tik jei Jūsų SMTP serveris to reikalauja",
         "OnlyEnterIfRequiredPassword": "Įveskite slaptažodį tik jei Jūsų SMTP serveris to reikalauja",
-        "OnlyUsedIfUserPwdIsSet": "Tik kai nurodomas naudotojo vardas/slaptažodis. Klauskite savo paslaugų teikėjo, jei nesate tikri, kurį metodą naudoti.",
+        "OnlyUsedIfUserPwdIsSet": "Tik kai nurodomas naudotojo vardas\/slaptažodis. Klauskite savo paslaugų teikėjo, jei nesate tikri, kurį metodą naudoti.",
         "OpenSourceWebAnalytics": "Atvirojo kodo žiniatinklio analizės sprendimas",
         "OperationAtLeast": "Bent",
         "OperationAtMost": "Daugiausiai",
