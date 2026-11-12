@@ -91,7 +91,7 @@ sed -i 's/WOOCOMMERCE=0/WOOCOMMERCE=1/' .env.script
 # one install per wdio run
 # release instead of the one under test, since the tracking run tests updating to the release.
 echo "Creating $TRACKING_WORDPRESS_FOLDER environment..."
-if ! CUSTOM_ENV_FILE=.env.script npm run compose -- run --rm -e WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER -e WITHOUT_MULTISITE=1 -e INSTALL_ONLY=1 -e MATOMO_PLUGIN_ZIP=matomo.zip wordpress &>> .e2e-docker-out; then
+if ! CUSTOM_ENV_FILE=.env.script npm run compose -- run --rm -e WORDPRESS_FOLDER=$TRACKING_WORDPRESS_FOLDER -e WITHOUT_MULTISITE=1 -e INSTALL_ONLY=1 -e MATOMO_PLUGIN_ZIP=matomo wordpress &>> .e2e-docker-out; then
   echo "Failed to set up the $TRACKING_WORDPRESS_FOLDER environment. Recent setup output:"
   tail -n 200 .e2e-docker-out
   exit 1
