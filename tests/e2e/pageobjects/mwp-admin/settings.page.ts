@@ -35,27 +35,27 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async openAccessTab() {
-    await $('a.nav-tab=Access').click();
+    await this.clickElement('a.nav-tab=Access');
   }
 
   async openPrivacyTab() {
-    await $('a.nav-tab*=Privacy').click();
+    await this.clickElement('a.nav-tab*=Privacy');
   }
 
   async openExclusionsTab() {
-    await $('a.nav-tab=Exclusions').click();
+    await this.clickElement('a.nav-tab=Exclusions');
   }
 
   async openGeolocationTab() {
-    await $('a.nav-tab=Geolocation').click();
+    await this.clickElement('a.nav-tab=Geolocation');
   }
 
   async openAdvancedTab() {
-    await $('a.nav-tab=Advanced').click();
+    await this.clickElement('a.nav-tab=Advanced');
   }
 
   async openMeasurableSettings(pluginDisplayName: string) {
-    await $(`a.nav-tab=${pluginDisplayName}`).click();
+    await this.clickElement(`a.nav-tab=${pluginDisplayName}`);
     await this.waitForMeasurableSettings();
   }
 
@@ -114,7 +114,7 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async selectTrackMode(trackMode: string) {
-    await browser.$(`input[name="matomo[track_mode]"][value="${trackMode}"]`).click();
+    await this.clickElement(`input[name="matomo[track_mode]"][value="${trackMode}"]`);
   }
 
   async changeSomeAutoTrackingSettings() {
@@ -127,7 +127,7 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async saveSettings() {
-    await browser.$('p.submit > input').click();
+    await this.clickElement('p.submit > input');
     await browser.waitUntil(() => {
       return browser.execute(() => {
         return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;

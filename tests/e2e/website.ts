@@ -69,10 +69,12 @@ class Website {
     this.site = siteSlug;
   }
 
-  async login(user?: string, pass?: string) {
-    if (this.loggedIn) {
+  async login(user?: string, pass?: string, force = false) {
+    if (this.loggedIn && !force) {
       return;
     }
+
+    this.loggedIn = false;
 
     await browser.setWindowSize(1366, 994);
 
@@ -236,7 +238,7 @@ class Website {
       });
     }, { timeout: 120000 });
 
-    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite');
+    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite').isExisting();
     if (isAlreadyExistingPluginPage) {
       await browser.execute(() => {
         window.jQuery('.update-from-upload-overwrite')[0].click();

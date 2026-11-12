@@ -92,7 +92,7 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async openMarketplacePluginsTab() {
-    await $('a.nav-tab=Marketplace').click();
+    await this.clickElement('a.nav-tab=Marketplace');
 
     await this.waitForMarketplaceTab();
   }
@@ -138,7 +138,7 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async openSubscriptionsTab() {
-    await $('a.nav-tab=Premium Features').click();
+    await this.clickElement('a.nav-tab=Premium Features');
   }
 
   async setSubscriptionLicense(license: string) {
@@ -155,7 +155,7 @@ class MwpMarketplacePage extends MwpPage {
       window.jQuery('#license-key-input').val(l);
     }, license);
 
-    await $('#wpbody-content .activate-license').click();
+    await this.clickElement('#wpbody-content .activate-license');
 
     await $('#wpbody-content #matomo-licenses').waitForDisplayed({ timeout: 120000 });
   }

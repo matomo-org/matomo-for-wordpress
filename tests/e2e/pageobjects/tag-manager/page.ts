@@ -29,9 +29,8 @@ export default class TagManagerPage extends MatomoAdminPage {
   }
 
   async openInstallCodeModal() {
-    await browser.execute(() => {
-      $('li[role=menuitem] a.item:contains(Install Code)')[0].click();
-    });
+    // Use the menu action instead of translated text and wait for it to render.
+    await this.clickElement('li[role="menuitem"] a.item[onclick*="showInstallCode"]');
 
     await $('.modal .manageInstallTagCode pre').waitForExist();
     await $('.modal tr').waitForExist();

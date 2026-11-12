@@ -18,9 +18,10 @@ class ContainerDashboardPage extends TagManagerPage {
 
     await $('.containerDashboard .card-content').waitForDisplayed({ timeout: 20000 });
 
-    await browser.waitUntil(() => {
-      return browser.execute(() => /Container ID/.test($('p.dashboardCreationDate').text()));
-    });
+    await browser.waitUntil(async () => {
+      const metadata = await $('p.dashboardCreationDate').getText();
+      return metadata.includes(GlobalSetup.testIdContainer);
+    }, { timeout: 30000, timeoutMsg: 'Tag Manager dashboard did not render the expected container ID.' });
 
     await browser.execute(() => {
       $('p.dashboardCreationDate').html(

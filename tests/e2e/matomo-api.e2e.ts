@@ -113,10 +113,13 @@ describe( 'Matomo API', function () {
 
       let json = await response.json();
       expect(json.result).toEqual('error');
-      expect(
-        json.message === 'Unable to authenticate with the provided token. It is either invalid or expired.'
-        || json.message === 'Unable to authenticate with the provided token. It is either invalid, expired or is required to be sent as a POST parameter.'
-      ).toBeTruthy();
+      // Keep the invalid-token assertion, allowing the current core wording as
+      // well as the older messages. toContain reports the actual message on failure.
+      expect([
+        'Unable to authenticate with the provided token. It is either invalid or expired.',
+        'Unable to authenticate with the provided token. It is either invalid, expired or is required to be sent as a POST parameter.',
+        "Unable to authenticate with the provided token. It is either invalid, expired or is required to be sent as a POST parameter or in the HTTP Authorization header. If the token was created with the 'Only allow secure requests' option, it must be sent as a POST parameter or in the HTTP Authorization header.",
+      ]).toContain(json.message);
 
       // check an authenticated request
       response = await fetch(url, {

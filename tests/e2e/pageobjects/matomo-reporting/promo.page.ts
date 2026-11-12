@@ -29,9 +29,7 @@ class PromoPage extends MatomoReportingPage {
   }
 
   async dismiss() {
-    await browser.execute(() => {
-      $('.promo-dismiss > a')[0].click();
-    });
+    await this.clickElement('.productPromotion [data-role="dismiss"], .promo-dismiss > a');
 
     await browser.waitUntil(() => {
       return browser.execute(() => {

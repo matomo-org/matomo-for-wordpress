@@ -71,7 +71,7 @@ export default class Page {
     result = await Website.retry(3, async () => {
       let r = await browser.url(`${baseUrl}${path}`);
       if (await $('#user_login').isExisting()) {
-        await Website.login(); // logged out for some reason
+        await Website.login(undefined, undefined, true); // invalidate the cached login state
         throw new Error('force retry');
       }
 
@@ -113,6 +113,14 @@ export default class Page {
     `);
 
     return result;
+  }
+
+  async clickElement(selector: string) {
+    const element = await $(selector);
+    await element.waitForDisplayed({ timeout: 30000 });
+    await element.scrollIntoView({ block: 'center', inline: 'nearest' });
+    await element.waitForClickable({ timeout: 30000 });
+    await element.click();
   }
 
   async hasElement(selector: string) {
