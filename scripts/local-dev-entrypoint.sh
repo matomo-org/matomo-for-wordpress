@@ -761,13 +761,16 @@ EOF
   fi
 
   # set allow_wp_app_password_auth tracker config, used in tests
+  # Use the installed plugin's console. Loading the checkout's console after
+  # WordPress has loaded a ZIP-installed copy redeclares its Composer autoloader.
+  MATOMO_CONSOLE="$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME/app/console"
   echo "set allow_wp_app_password_auth config..."
-  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
+  php "$MATOMO_CONSOLE" config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
   # the site is served from localhost, which matomo's SSRF-safe requests (eg, site content detection) refuse
   # to contact unless loopback is allowlisted
   echo "set allowed_private_egress_ranges config..."
-  php $DOCUMENT_ROOT/matomo-for-wordpress/app/console config:set 'General.allowed_private_egress_ranges=["127.0.0.0/8","::1"]'
+  php "$MATOMO_CONSOLE" config:set 'General.allowed_private_egress_ranges=["127.0.0.0/8","::1"]'
 
   # add test-utility-plugin used in UI tests
   mkdir -p $DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/mu-plugins
