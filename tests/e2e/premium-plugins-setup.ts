@@ -183,7 +183,7 @@ class PremiumPluginsSetup {
    * marketplace spec ends up installing through the browser.
    */
   private async fetchAvailablePluginsFromMarketplace() {
-    return await Website.retry(3, async () => {
+    return await Website.retry(FETCH_ATTEMPTS, async () => {
       const output = await WpCli.evalFile(AVAILABLE_PLUGINS_SCRIPT);
 
       const startOfJson = output.indexOf(AVAILABLE_PLUGINS_JSON_MARKER);
@@ -199,7 +199,7 @@ class PremiumPluginsSetup {
       }
 
       return parsed as MarketplacePlugin[];
-    }, FETCH_ATTEMPTS, FETCH_RETRY_DELAY_MS) as MarketplacePlugin[];
+    }, FETCH_RETRY_DELAY_MS) as MarketplacePlugin[];
   }
 
   private checkExpectedPluginsArePresent(pluginsDir: string, toInstall: MarketplacePlugin[]) {

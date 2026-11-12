@@ -415,10 +415,9 @@ EOF
       rm -r "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
     fi
 
-    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install --activate "$MATOMO_PLUGIN_ZIP"
-    MATOMO_PLUGIN_NAME=$($DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin list --status=active --field=name | awk '$0 == "matomo" || $0 ~ /^matomo-/ { print; exit }')
-    if [[ -z "$MATOMO_PLUGIN_NAME" ]]; then
-      echo "Could not find the installed Matomo plugin directory."
+    $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin install "$MATOMO_PLUGIN_ZIP"
+    if [[ ! -f "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/matomo/matomo.php" ]]; then
+      echo "Matomo must be installed as matomo/matomo.php. Rebuild the release ZIP with a single matomo/ root directory."
       exit 1
     fi
     chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" "$DOCUMENT_ROOT/$WORDPRESS_FOLDER/wp-content/plugins/$MATOMO_PLUGIN_NAME"
@@ -429,6 +428,7 @@ EOF
   fi
 
   $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin activate "$MATOMO_PLUGIN_NAME" $COMMAND_SUFFIX
+  $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER plugin is-active "$MATOMO_PLUGIN_NAME" $COMMAND_SUFFIX
   $DOCUMENT_ROOT/wp-cli.phar --allow-root --path=$DOCUMENT_ROOT/$WORDPRESS_FOLDER matomo install
 
   # extra actions required during tests
@@ -444,9 +444,14 @@ EOF
     php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
     \$table = \$pdo->query('SHOW TABLES FROM \`${WP_DB_NAME}\` LIKE \'wp_matomo_site\'')->fetchColumn();
     if ( \$table ) {
+      if ( ! \$pdo->query('SELECT idsite FROM \`${WP_DB_NAME}\`.wp_matomo_site WHERE idsite = 1')->fetchColumn() ) {
+        fwrite(STDERR, 'Matomo test site ID 1 is missing after installation and site sync.' . PHP_EOL);
+        exit(1);
+      }
       \$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');
     } else {
-      echo 'Matomo site table is not available; skipping test timestamp setup.' . PHP_EOL;
+      fwrite(STDERR, 'Matomo site table is missing after installation and site sync.' . PHP_EOL);
+      exit(1);
     }"
   fi
 
