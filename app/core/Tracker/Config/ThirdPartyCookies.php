@@ -57,6 +57,15 @@ class ThirdPartyCookies implements ConfigSettingInterface, PolicyComparisonInter
     {
         return Piwik::translate('General_ThirdPartyCookieSettingNote');
     }
+    public static function getPolicySettingId() : string
+    {
+        // Piwik::getPluginNameOfMatomoClass() would derive "Config" from the namespace
+        return 'Core.ThirdPartyCookies';
+    }
+    public static function isExternallyManagedByPolicyPage() : bool
+    {
+        return \true;
+    }
     protected static function compareStrictness($value1, $value2) : bool
     {
         if ($value1 === \true && $value2 === \true) {
@@ -67,6 +76,14 @@ class ThirdPartyCookies implements ConfigSettingInterface, PolicyComparisonInter
     public static function getTitle() : string
     {
         return Piwik::translate('General_ThirdPartyCookieSettingTitle');
+    }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('General_ThirdPartyCookieSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('General_ThirdPartyCookieSettingImpact');
     }
     public static function getInstance(?int $idSite = null) : self
     {

@@ -137,7 +137,7 @@ class Access
             return \false;
         }
         $result = null;
-        $isApiRequest = \Piwik\Piwik::getModule() === 'API' && (\Piwik\Piwik::getAction() === 'index' || !\Piwik\Piwik::getAction());
+        $isApiRequest = Request::isApiHttpRequest();
         $apiMethod = Request::getMethodIfApiRequest(null);
         $isGetApiRequest = !empty($apiMethod) && 1 === substr_count($apiMethod, '.') && strpos($apiMethod, '.get') > 0;
         $token = StaticContainer::get(AuthenticationToken::class);
@@ -170,10 +170,34 @@ class Access
         }
         return \true;
     }
+    /**
+     * Returns the sites the given login has access to, as access/idsite pairs.
+     *
+     * Only a login that has a user row resolves to sites. The anonymous user is exempt.
+     *
+     * @param string $login
+     * @return array
+     */
     public function getRawSitesWithSomeViewAccess($login)
     {
+        // anonymous is exempt, its user row is only created during installation and cannot be removed
+        // through the API
+        if (strtolower((string) $login) !== 'anonymous' && !$this->loginExists((string) $login)) {
+            return array();
+        }
         $sql = self::getSqlAccessSite("access, t2.idsite");
-        return \Piwik\Db::fetchAll($sql, $login);
+        return \Piwik\Db::fetchAll($sql, array($login));
+    }
+    /**
+     * Returns whether a user row exists for the given login.
+     *
+     * The login is bound as a parameter rather than compared against another table, so a difference in
+     * column collation cannot affect the result.
+     */
+    private function loginExists(string $login) : bool
+    {
+        $userTable = \Piwik\Common::prefixTable('user');
+        return \false !== \Piwik\Db::fetchOne("SELECT 1 FROM `" . $userTable . "` WHERE login = ? LIMIT 1", array($login));
     }
     /**
      * Returns the SQL query joining sites and access table for a given login

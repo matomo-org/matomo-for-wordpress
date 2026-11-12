@@ -15,7 +15,7 @@ class ThemeStyles
     public const LIGHT_MODE = 'light';
     public const DARK_MODE = 'dark';
     // to maintain BC w/ old names that were defined in LESS
-    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorNewBrand' => 'theme-color-new-brand', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextPlaceholder' => 'theme-color-text-placeholder', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderAlternative' => 'theme-color-border-alternative', 'colorBorderLight' => 'theme-color-border-light', 'colorBoxShadow' => 'theme-color-boxShadow', 'shadowOverlay' => 'theme-shadow-overlay', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
+    private static $propertyNamesToLessVariableNames = ['fontFamilyBase' => 'theme-fontFamily-base', 'colorBrand' => 'theme-color-brand', 'colorBrandContrast' => 'theme-color-brand-contrast', 'colorNewBrand' => 'theme-color-new-brand', 'colorSuccess' => 'theme-color-success', 'colorWarning' => 'theme-color-warning', 'colorDanger' => 'theme-color-danger', 'colorFocusRing' => 'theme-color-focus-ring', 'colorFocusRingAlternative' => 'theme-color-focus-ring-alternative', 'colorTextHighContrast' => 'theme-color-text-highContrast', 'colorText' => 'theme-color-text', 'colorTextContrast' => 'theme-color-text-contrast', 'colorTextLight' => 'theme-color-text-light', 'colorTextLighter' => 'theme-color-text-lighter', 'colorTextOnDisabled' => 'theme-color-text-on-disabled', 'colorTextPlaceholder' => 'theme-color-text-placeholder', 'colorTextInvert' => 'theme-color-text-invert', 'colorTextInvertContrast' => 'theme-color-text-invert-contrast', 'colorTextInvertLight' => 'theme-color-text-invert-light', 'colorTextDisabled' => 'theme-color-text-disabled', 'colorTextBrand' => 'theme-color-text-brand', 'colorLink' => 'theme-color-link', 'colorBaseSeries' => 'theme-color-base-series', 'colorHeadlineAlternative' => 'theme-color-headline-alternative', 'colorHeaderBackground' => 'theme-color-header-background', 'colorHeaderText' => 'theme-color-header-text', 'colorMenuContrastText' => 'theme-color-menu-contrast-text', 'colorMenuContrastTextSelected' => 'theme-color-menu-contrast-textSelected', 'colorMenuContrastTextActive' => 'theme-color-menu-contrast-textActive', 'colorMenuContrastBackground' => 'theme-color-menu-contrast-background', 'colorWidgetExportedBackgroundBase' => 'theme-color-widget-exported-background-base', 'colorWidgetTitleText' => 'theme-color-widget-title-text', 'colorWidgetTitleBackground' => 'theme-color-widget-title-background', 'colorBackgroundBase' => 'theme-color-background-base', 'colorBackgroundTinyContrast' => 'theme-color-background-tinyContrast', 'colorBackgroundLowContrast' => 'theme-color-background-lowContrast', 'colorBackgroundContrast' => 'theme-color-background-contrast', 'colorBackgroundHighContrast' => 'theme-color-background-highContrast', 'colorBackgroundBrandTinyContrast' => 'theme-color-background-brand-tinyContrast', 'colorBackgroundBrandLowContrast' => 'theme-color-background-brand-lowContrast', 'colorBackgroundDisabled' => 'theme-color-background-disabled', 'colorBorder' => 'theme-color-border', 'colorBorderAlternative' => 'theme-color-border-alternative', 'colorBorderLight' => 'theme-color-border-light', 'colorBorderBrand' => 'theme-color-border-brand', 'colorBoxShadow' => 'theme-color-boxShadow', 'shadowOverlay' => 'theme-shadow-overlay', 'colorCode' => 'theme-color-code', 'colorCodeBackground' => 'theme-color-code-background', 'colorWidgetBackground' => 'theme-color-widget-background', 'colorWidgetBorder' => 'theme-color-widget-border', 'filterOnIllustration' => 'theme-filter-on-illustration', 'colorMenuContrastBackgroundHover' => 'theme-color-menu-contrast-backgroundHover'];
     /**
      * @var string
      */
@@ -36,6 +36,31 @@ class ThemeStyles
      * @var string|array<string>
      */
     public $colorNewBrand = '#00b4be';
+    /**
+     * Semantic "all is fine / success / positive" green. Kept theme-independent from
+     * $colorBrand so that success states stay green even when a theme overrides the brand.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorSuccess = ['#43a047', '#66bb6a'];
+    /**
+     * Semantic "needs attention / not yet fatal" amber, the counterpart to $colorSuccess. Kept
+     * theme-independent from $colorBrand for the same reason.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorWarning = ['#a18a0b', '#d4b93c'];
+    /**
+     * Semantic "this has failed / is blocking" red, completing $colorSuccess and $colorWarning.
+     * Kept theme-independent from $colorBrand for the same reason, and a pair rather than
+     * the flat @color-red-matomo it replaces, which does not reach 4.5:1 on a dark background.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorDanger = ['#c0322e', '#ef7f7c'];
     /**
      * @var string|array<string>
      */
@@ -93,6 +118,14 @@ class ThemeStyles
      * @var string|array<string>
      */
     public $colorLink = ['#1976D2', '#778fd4'];
+    /**
+     * Text sitting on $colorBackgroundBrandTinyContrast or $colorBackgroundBrandLowContrast, where
+     * $colorBrand itself does not reach the required contrast ratio.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorTextBrand = ['#186f72', '#4ad3dc'];
     /**
      * @var string|array<string>
      */
@@ -166,9 +199,31 @@ class ThemeStyles
      */
     public $colorBackgroundDisabled = ['#d9d9d9', '#303339'];
     /**
+     * Brand-tinted surfaces, for panels and chips that should read as part of the product rather
+     * than as neutral chrome. "Tiny" is the fainter of the two, for large areas; "low" carries
+     * enough contrast for a selected or highlighted control.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorBackgroundBrandTinyContrast = ['#f3fdff', '#152e2d'];
+    /**
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorBackgroundBrandLowContrast = ['#e1fbfb', '#16302f'];
+    /**
      * @var string|array<string>
      */
     public $colorBorderLight = ['#a9a399', '#645e54'];
+    /**
+     * Brand-tinted border, the counterpart to $colorBorderAlternative for elements drawn on a
+     * brand-tinted surface.
+     *
+     * @var string|array<string>
+     * @since Matomo 5.14.1
+     */
+    public $colorBorderBrand = ['#bfe7e9', '#2f5e5e'];
     /**
      * @var string|array<string>
      * @deprecated Use $colorBorderAlternative instead. Retained only for legacy use and will be

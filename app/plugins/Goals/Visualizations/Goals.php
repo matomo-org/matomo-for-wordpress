@@ -29,6 +29,10 @@ class Goals extends HtmlTable
     public const GOALS_DISPLAY_PAGES = 1;
     public const GOALS_DISPLAY_ENTRY_PAGES = 2;
     private $displayType = self::GOALS_DISPLAY_NORMAL;
+    /**
+     * @var bool
+     */
+    private $isSingleGoalView = \false;
     public function beforeLoadDataTable()
     {
         $request = $this->getRequestArray();
@@ -76,6 +80,16 @@ class Goals extends HtmlTable
             $this->config->metrics_documentation['entry_nb_visits'] = Piwik::translate('General_ColumnEntrancesDocumentation');
             $this->removeUnusedRevenueColumns();
         }
+        // When a single goal is displayed, restrict the export to the columns shown in the table so
+        // the exported data matches the displayed goal-specific data, rather than dumping the
+        // aggregated all-goals columns and every other goal's columns. (The label column is always
+        // kept by ColumnDelete.)
+        if ($this->isSingleGoalView) {
+            $this->config->export_parameters_to_modify['showColumns'] = implode(',', $this->config->columns_to_display);
+            // a flattened export adds a column per dimension, whose names only exist after
+            // flattening and so cannot be part of the allowlist above
+            $this->config->export_parameters_to_modify['keep_flattened_dimension_columns'] = 1;
+        }
         parent::beforeRender();
     }
     /**
@@ -102,9 +116,13 @@ class Goals extends HtmlTable
         $idSite = Common::getRequestVar('idSite', null, 'int');
         $idGoal = Common::getRequestVar('idGoal', AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW, 'string');
         $goalsToProcess = null;
+        // the export column restriction itself is applied in beforeRender(), once
+        // columns_to_display is final (beforeRender() prunes empty revenue columns)
+        $this->isSingleGoalView = \false;
         if (Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER == $idGoal) {
             $this->setPropertiesForEcommerceView();
             $goalsToProcess = [$idGoal];
+            $this->isSingleGoalView = \true;
         } elseif (AddColumnsProcessedMetricsGoal::GOALS_FULL_TABLE == $idGoal) {
             $this->setPropertiesForGoals($idSite, 'all');
             $goalsToProcess = $this->getAllGoalIds($idSite);
@@ -114,6 +132,7 @@ class Goals extends HtmlTable
         } else {
             $this->setPropertiesForGoals($idSite, [$idGoal]);
             $goalsToProcess = [$idGoal];
+            $this->isSingleGoalView = \true;
         }
         // add goals columns
         $this->requestConfig->request_parameters_to_modify['filter_update_columns_when_show_all_goals'] = $idGoal;

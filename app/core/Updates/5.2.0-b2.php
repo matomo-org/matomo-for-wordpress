@@ -13,6 +13,7 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\ArchiveTableCreator;
 use Piwik\Db;
+use Piwik\DbHelper;
 use Piwik\Updater;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates;
@@ -56,6 +57,9 @@ class Updates_5_2_0_b2 extends Updates
                 return null;
             }
             $userTableCollation = $userTableStatus['Collation'];
+            if (!is_string($userTableCollation) || !DbHelper::isValidCollation($userTableCollation)) {
+                return null;
+            }
             $connectionCollation = $db->fetchOne('SELECT @@collation_connection');
             if ($userTableCollation === $connectionCollation) {
                 // if the connection is matching the user table

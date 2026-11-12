@@ -11,6 +11,7 @@ namespace Piwik\API;
 use Exception;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Url;
 use ReflectionClass;
@@ -25,6 +26,14 @@ use ReflectionClass;
 class DocumentationGenerator
 {
     protected $countPluginsLoaded = 0;
+    /**
+     * @var string|null
+     */
+    private $examplePeriod = null;
+    /**
+     * @var string|null
+     */
+    private $exampleDate = null;
     /**
      * trigger loading all plugins with an API.php file in the Proxy
      */
@@ -113,7 +122,8 @@ class DocumentationGenerator
         if ($token !== 'anonymous') {
             $token_auth_url .= "&force_api_session=1";
         }
-        $parametersToSet = array('idSite' => Common::getRequestVar('idSite', 1, 'int'), 'period' => Common::getRequestVar('period', 'day', 'string'), 'date' => Common::getRequestVar('date', 'today', 'string'));
+        // getExampleUrl() expects the values to be URL encoded already
+        $parametersToSet = array('idSite' => Common::getRequestVar('idSite', 1, 'int'), 'period' => urlencode($this->getPeriodForExamples()), 'date' => urlencode($this->getDateForExamples()));
         $str = '';
         $str .= "<span class=\"example\">";
         $exampleUrl = $this->getExampleUrl($class, $methodName, $parametersToSet);
@@ -130,6 +140,40 @@ class DocumentationGenerator
         }
         $str .= "</span>";
         return $str;
+    }
+    /**
+     * Returns the period the example links should use, falling back to the default when the
+     * requested one isn't a valid period.
+     */
+    private function getPeriodForExamples() : string
+    {
+        if (null === $this->examplePeriod) {
+            $period = Common::getRequestVar('period', 'day', 'string');
+            try {
+                Period\Factory::checkPeriodIsEnabled($period);
+            } catch (Exception $e) {
+                $period = 'day';
+            }
+            $this->examplePeriod = $period;
+        }
+        return $this->examplePeriod;
+    }
+    /**
+     * Returns the date the example links should use, falling back to the default when the
+     * requested one isn't a valid date.
+     */
+    private function getDateForExamples() : string
+    {
+        if (null === $this->exampleDate) {
+            $date = Common::getRequestVar('date', 'today', 'string');
+            try {
+                Period::checkDateFormat($date);
+            } catch (Exception $e) {
+                $date = 'today';
+            }
+            $this->exampleDate = $date;
+        }
+        return $this->exampleDate;
     }
     /**
      * Check if Class contains @hide
@@ -171,7 +215,7 @@ class DocumentationGenerator
      *
      * @param string $class the class
      * @param string $methodName the method
-     * @param array $parametersToSet parameters to set
+     * @param array $parametersToSet parameters to set, values need to be URL encoded already
      * @return string|bool when not possible
      */
     public function getExampleUrl($class, $methodName, $parametersToSet = array())
@@ -213,6 +257,7 @@ class DocumentationGenerator
         $aParameters['labelSeries'] = \false;
         $aParameters['flat'] = \false;
         $aParameters['show_dimensions'] = \false;
+        $aParameters['keep_flattened_dimension_columns'] = \false;
         $aParameters['include_aggregate_rows'] = \false;
         $aParameters['filter_offset'] = \false;
         $aParameters['filter_limit'] = \false;

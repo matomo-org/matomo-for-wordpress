@@ -22,6 +22,11 @@ use Zend_Session;
 class Session extends Zend_Session
 {
     public const SESSION_NAME = 'MATOMO_SESSID';
+    /**
+     * Classes that may be restored from stored session data. Anything else is a class the
+     * session was never meant to hold.
+     */
+    public const SESSION_DATA_ALLOWED_CLASSES = [\Piwik\Notification::class];
     public static $sessionName = self::SESSION_NAME;
     protected static $sessionStarted = \false;
     /**
@@ -74,6 +79,7 @@ class Session extends Zend_Session
             // We consider these to be misconfigurations, in that:
             // - user  - we can't verify that user-defined session handler functions have already been set via session_set_save_handler()
             // - mm    - this handler is not recommended, unsupported, not available for Windows, and has a potential concurrency issue
+            // SessionSerializeHandlerCheck reports it when the server does not let us set this
             if (@ini_get('session.serialize_handler') !== 'php_serialize') {
                 @ini_set('session.serialize_handler', 'php_serialize');
             }

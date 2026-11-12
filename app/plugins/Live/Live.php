@@ -13,6 +13,7 @@ use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Site;
+use Piwik\Plugins\Live\Settings\AggregatedRealtimeReportsEnabled as AggregatedRealtimeReportsEnabledSetting;
 use Piwik\Plugins\Live\Settings\VisitorLogDisabled as VisitorLogDisabledSetting;
 class Live extends \Piwik\Plugin
 {
@@ -69,6 +70,25 @@ class Live extends \Piwik\Plugin
             return \false;
         }
         return \true;
+    }
+    /**
+     * Returns whether the aggregated real-time reports are enabled (for the given site).
+     *
+     * When the detailed visits log is disabled, this setting keeps the aggregated real-time widget
+     * available, showing only the "Last 24 hours" / "Last 30 minutes" counters without any
+     * individual visitor information.
+     */
+    public static function isAggregatedRealtimeEnabled(?int $idSite = null) : bool
+    {
+        return AggregatedRealtimeReportsEnabledSetting::getInstance($idSite)->getValue() === \true;
+    }
+    /**
+     * Returns whether the aggregated real-time widget should be limited to the aggregated counters
+     * only, i.e. the detailed visits log is disabled but the aggregated real-time reports are enabled.
+     */
+    public static function shouldShowAggregatedRealtimeOnly(?int $idSite = null) : bool
+    {
+        return !self::isVisitorLogEnabled($idSite) && self::isAggregatedRealtimeEnabled($idSite);
     }
     /**
      * Throws an exception if visitor profile is disabled
@@ -181,8 +201,22 @@ class Live extends \Piwik\Plugin
             return version_compare($a[0], $b[0]);
         });
         foreach ($detailEntries as $detailEntry) {
-            $tooltip .= $detailEntry[1];
+            $tooltip .= self::escapeActionTooltipEntry($detailEntry[1]);
         }
+    }
+    /**
+     * Escapes one entry of the visitor log action tooltip.
+     *
+     * The tooltip renders its title as HTML, so an entry needs two layers: one the attribute parse
+     * consumes and one the render does. Escaping happens here rather than through `Common`, which
+     * would also strip the line breaks the entries are separated by.
+     *
+     * @ignore
+     */
+    public static function escapeActionTooltipEntry(?string $entry) : string
+    {
+        $text = html_entity_decode((string) $entry, \ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars(htmlspecialchars($text, \ENT_QUOTES, 'UTF-8'), \ENT_QUOTES, 'UTF-8');
     }
     public function renderVisitorDetails(&$renderedDetails, $visitorDetails)
     {

@@ -41,6 +41,13 @@ class GetAIChatbotRequests extends Report
             $this->actionToLoadSubTables = 'getPageUrlsForAIChatbot';
         }
     }
+    /**
+     * @return array<string, string>
+     */
+    public function getMetricNamesToProcessReportTotals()
+    {
+        return [Metrics::COLUMN_REQUESTS => Metrics::COLUMN_REQUESTS, Metrics::COLUMN_PAGE_REQUESTS => Metrics::COLUMN_PAGE_REQUESTS, Metrics::COLUMN_DOCUMENT_REQUESTS => Metrics::COLUMN_DOCUMENT_REQUESTS, Metrics::COLUMN_ACQUIRED_VISITS => Metrics::COLUMN_ACQUIRED_VISITS];
+    }
     public function configureView(ViewDataTable $view) : void
     {
         parent::configureView($view);

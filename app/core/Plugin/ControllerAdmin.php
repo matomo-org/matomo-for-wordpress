@@ -383,6 +383,7 @@ abstract class ControllerAdmin extends \Piwik\Plugin\Controller
         $view->isSuperUser = Piwik::hasUserSuperUserAccess();
         self::notifyAnyInvalidLicense();
         self::notifyAnyInvalidPlugin();
+        self::notifyWhenPhpVersionHasCriticalVulnerability();
         self::notifyWhenPhpVersionIsEOL();
         self::notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik();
         self::notifyWhenDatabaseVersionIsNotCompatibleWithNextMajorPiwik();

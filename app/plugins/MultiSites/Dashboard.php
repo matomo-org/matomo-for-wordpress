@@ -192,6 +192,7 @@ class Dashboard
         $request['format_metrics'] = \Piwik\Request::fromRequest()->getStringParameter('format_metrics', '1');
         $request['disable_generic_filters'] = 1;
         $responseBuilder = new ResponseBuilder('json', $request);
+        $responseBuilder->disableSendHeader();
         return json_decode($responseBuilder->getResponse($table, 'MultiSites', 'getAll'), \true) ?: [];
     }
     private function moveSitesHavingAGroupIntoSubtables(DataTable $sites) : DataTable

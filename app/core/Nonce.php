@@ -88,7 +88,8 @@ class Nonce
     public static function verifyNonceWithErrorMessage($id, $cnonce, $allowedReferrerHost = null)
     {
         $ns = new SessionNamespace($id);
-        $nonce = $ns->nonce;
+        // checking it must not store anything - reading a value that is not set would add it as null
+        $nonce = $ns->nonce ?? null;
         $additionalErrors = '';
         //  The Session cookie is set to a secure cookie, when SSL is mis-configured, it can cause the PHP session cookie ID to change on each page view.
         //  Indicate to user how to solve this particular use case by forcing secure connections.

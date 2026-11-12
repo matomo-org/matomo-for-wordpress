@@ -12,6 +12,7 @@ use Exception;
 use Piwik\API\Request;
 use Piwik\Config\GeneralConfig;
 use Piwik\DataTable;
+use Piwik\Piwik;
 use Piwik\Plugins\Transitions\API as APITransitions;
 use Piwik\Tracker\PageUrl;
 /**
@@ -65,6 +66,8 @@ class API extends \Piwik\Plugin\API
      */
     public function getFollowingPages($url, int $idSite, $period, $date, $segment = \false)
     {
+        // Check access before touching any site-specific data or caches below.
+        Piwik::checkUserHasViewAccess($idSite);
         $url = PageUrl::excludeQueryParametersFromUrl($url, $idSite);
         // we don't unsanitize $url here. it will be done in the Transitions plugin.
         $resultDataTable = new DataTable();

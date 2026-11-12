@@ -11,7 +11,6 @@ namespace Piwik\Plugins\TagManager;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-use Piwik\DataTable\Filter\SafeDecodeLabel;
 use Piwik\Filechecks;
 use Piwik\Menu\MenuTop;
 use Piwik\Nonce;
@@ -150,15 +149,9 @@ class Controller extends \Piwik\Plugin\Controller
                 if (!empty($release['version_name'])) {
                     $version = ' (' . Piwik::translate('TagManager_VersionX', $release['version_name']) . ')';
                 }
-                $mtmPreviewId = PreviewCookie::COOKIE_NAME . '=' . $idContainer;
-                $mtmPreviewId = SafeDecodeLabel::decodeLabelSafe($mtmPreviewId);
                 $previewCookie = new PreviewCookie();
                 $debugSiteUrl = $previewCookie->getDebugSiteUrl();
-                $previewUrl = '';
-                if (!empty($debugSiteUrl)) {
-                    $previewUrl = $debugSiteUrl . (stripos($debugSiteUrl, '?') !== \false ? '&' : '?') . $mtmPreviewId;
-                }
-                $notificationMessage = $this->renderTemplate('previewDebugNotification.twig', array('idcontainer' => $release['idcontainer'], 'debugSiteUrl' => $debugSiteUrl, 'version' => $version, 'mtmPreviewId' => $mtmPreviewId, 'previewUrl' => $previewUrl));
+                $notificationMessage = $this->renderTemplate('previewDebugNotification.twig', array('idcontainer' => $release['idcontainer'], 'debugSiteUrl' => $debugSiteUrl, 'version' => $version));
                 $notification = new Notification($notificationMessage);
                 $notification->context = Notification::CONTEXT_INFO;
                 $notification->raw = \true;

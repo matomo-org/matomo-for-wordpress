@@ -431,7 +431,7 @@ namespace {
                 self::rewriteSessionCookieWithSameSiteDirective();
             }
             if (isset($_SESSION['data']) && \is_string($_SESSION['data'])) {
-                $_SESSION = \Piwik\Common::safe_unserialize(\base64_decode($_SESSION['data']), [\Piwik\Notification::class]);
+                $_SESSION = \Piwik\Common::safe_unserialize(\base64_decode($_SESSION['data']), \Piwik\Session::SESSION_DATA_ALLOWED_CLASSES);
             }
             // run validators if they exist
             if (isset($_SESSION['__ZF']['VALID'])) {

@@ -92,6 +92,7 @@ class API extends \Piwik\Plugin\API
             throw new Exception('Marketplace_CreateAccountErrorAPI');
         }
         $this->marketplaceClient->clearAllCacheEntries();
+        $this->expired->clearCache();
         $licenseKey = trim($result['data']['license_key'] ?? '');
         $status = $result['status'];
         if (200 !== $status || empty($licenseKey)) {
@@ -157,6 +158,7 @@ class API extends \Piwik\Plugin\API
         /** @var array $result */
         $result = $this->marketplaceService->fetch('plugins/' . $pluginName . '/freeTrial', ['num_users' => $this->environment->getNumUsers(), 'num_websites' => $this->environment->getNumWebsites()], [], \true, \false);
         $this->marketplaceClient->clearAllCacheEntries();
+        $this->expired->clearCache();
         if (201 !== $result['status'] || !is_string($result['data']) || '' !== trim($result['data'])) {
             // We expect an exact empty 201 response from this API
             // Anything different should be an error

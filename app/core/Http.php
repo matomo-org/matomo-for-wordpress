@@ -92,11 +92,13 @@ class Http
      *                            - **status**: the HTTP status code
      *                            - **headers**: the HTTP headers
      *                            - **data**: the HTTP response data
+     *                            - **effectiveUrl**: the final URL after following redirects (best effort on the
+     *                              fopen transport)
      *
      *                            `false` is still returned on failure.
      * @throws Exception if the response cannot be saved to `$destinationPath`, if the HTTP response cannot be sent,
      *                   if there are more than 5 redirects or if the request times out.
-     * @phpstan-return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
+     * @phpstan-return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string, effectiveUrl?: string} : string|false) : bool)
      * @api
      */
     public static function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $checkHostIsAllowed = \true, $validateEgressIp = \false)
@@ -195,7 +197,7 @@ class Http
      *                               manual per-hop redirect re-validation and connection pinning. See
      *                               {@see sendHttpRequest()} for the full contract.
      *
-     * @return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string} : string|false) : bool)
+     * @return ($destinationPath is null ? ($getExtendedInfo is true ? array{status: ?int, headers?: ?array, data?: ?string, effectiveUrl?: string} : string|false) : bool)
      * @throws Exception
      */
     public static function sendHttpRequestBy($method, $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $requestBody = null, $additionalHeaders = array(), $forcePost = null, $checkHostIsAllowed = \true, $validateEgressIp = \false)
@@ -205,6 +207,8 @@ class Http
         }
         $aUrl = preg_replace('/[\\x00-\\x1F\\x7F]/', '', trim($aUrl));
         $parsedUrl = @parse_url($aUrl);
+        // final URL after redirects; curl overrides this below
+        $effectiveUrl = $aUrl;
         if (empty($parsedUrl['scheme'])) {
             throw new Exception('Missing scheme in given url');
         }
@@ -678,6 +682,10 @@ class Http
             $status = @curl_getinfo($ch, \CURLINFO_HTTP_CODE);
             $elapsed = (float) @curl_getinfo($ch, \CURLINFO_TOTAL_TIME);
             $curlRedirectUrl = (string) @curl_getinfo($ch, \CURLINFO_REDIRECT_URL);
+            $curlEffectiveUrl = (string) @curl_getinfo($ch, \CURLINFO_EFFECTIVE_URL);
+            if ($curlEffectiveUrl !== '') {
+                $effectiveUrl = $curlEffectiveUrl;
+            }
             @curl_close($ch);
             unset($ch);
             // SSRF-safe path follows redirects manually so each hop is re-validated and re-pinned.
@@ -746,7 +754,7 @@ class Http
         if (!$getExtendedInfo) {
             return trim($response);
         } else {
-            return array('status' => $status, 'headers' => $headers, 'data' => $response);
+            return array('status' => $status, 'headers' => $headers, 'data' => $response, 'effectiveUrl' => $effectiveUrl);
         }
     }
     public static function buildQuery($params)

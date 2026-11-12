@@ -39,6 +39,10 @@ class Reader
      */
     private $fileHandle;
     /**
+     * @var bool
+     */
+    private $lookupInProgress = \false;
+    /**
      * @var int
      */
     private $fileSize;
@@ -52,7 +56,7 @@ class Reader
     private $metadata;
     /**
      * Constructs a Reader for the MaxMind DB format. The file passed to it must
-     * be a valid MaxMind DB file such as a GeoIp2 database file.
+     * be a valid MaxMind DB file such as a GeoIP database file.
      *
      * @param string $database the MaxMind DB file to use
      *
@@ -92,7 +96,7 @@ class Reader
      *
      * @param string $ipAddress the IP address to look up
      *
-     * @throws \BadMethodCallException   if this method is called on a closed database
+     * @throws \BadMethodCallException   if the database is closed or another lookup is in progress
      * @throws \InvalidArgumentException if something other than a single IP address is passed to the method
      * @throws InvalidDatabaseException
      *                                   if the database is invalid or there is an error reading
@@ -113,7 +117,7 @@ class Reader
      *
      * @param string $ipAddress the IP address to look up
      *
-     * @throws \BadMethodCallException   if this method is called on a closed database
+     * @throws \BadMethodCallException   if the database is closed or another lookup is in progress
      * @throws \InvalidArgumentException if something other than a single IP address is passed to the method
      * @throws InvalidDatabaseException
      *                                   if the database is invalid or there is an error reading
@@ -130,11 +134,21 @@ class Reader
         if (!\is_resource($this->fileHandle)) {
             throw new \BadMethodCallException('Attempt to read from a closed MaxMind DB.');
         }
-        [$pointer, $prefixLen] = $this->findAddressInTree($ipAddress);
-        if ($pointer === 0) {
-            return [null, $prefixLen];
+        if ($this->lookupInProgress) {
+            throw new \BadMethodCallException('A lookup is already in progress on this reader. Use a separate reader for nested lookups.');
         }
-        return [$this->resolveDataPointer($pointer), $prefixLen];
+        // A stream wrapper can call back into this reader during a read.
+        // Reject nested lookups before they can move the shared stream.
+        $this->lookupInProgress = \true;
+        try {
+            [$pointer, $prefixLen] = $this->findAddressInTree($ipAddress);
+            if ($pointer === 0) {
+                return [null, $prefixLen];
+            }
+            return [$this->resolveDataPointer($pointer), $prefixLen];
+        } finally {
+            $this->lookupInProgress = \false;
+        }
     }
     /**
      * @return array{0:int, 1:int}
