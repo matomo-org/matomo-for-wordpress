@@ -15,25 +15,6 @@ import GlobalSetup from './global-setup.js';
 describe('MWP Language', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
-  async function prepareReportingForScreenshot() {
-    // These language snapshots use fixed historical visits on localhost. Notices about
-    // the CI PHP version or refused localhost detection are not part of the report.
-    // Hide only those known notices in this browser page; retain all other warnings.
-    await browser.execute(() => {
-      document.querySelectorAll<HTMLElement>('.notification').forEach((notification) => {
-        const text = notification.textContent || '';
-        const isPhpVersionNotice = text.includes('Urgent PHP security update required')
-          && text.includes('Your server reports PHP ');
-        const isLocalhostDetectionNotice = text.includes('Site content detection request for localhost was refused:')
-          && text.includes('host resolves to a private or reserved address');
-        if (isPhpVersionNotice || isLocalhostDetectionNotice) {
-          notification.style.display = 'none';
-        }
-      });
-      window.dispatchEvent(new Event('resize'));
-    });
-    await OverviewPage.prepareMatomoPageForScreenshot();
-  }
 
   before(async () => {
     if (!process.env.PHP_VERSION) {
@@ -63,7 +44,7 @@ describe('MWP Language', () => {
 
   it('should use the appropriate language in Matomo Reporting when the site language changes', async () => {
     await OverviewPage.open();
-    await prepareReportingForScreenshot();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.site-lang.matomo-reporting')
     ).toBeLessThanOrEqual(0.06);
@@ -81,7 +62,7 @@ describe('MWP Language', () => {
 
   it('should use the appropriate language in Matomo Reporting when the user profile language changes', async () => {
     await OverviewPage.open();
-    await prepareReportingForScreenshot();
+    await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.profile-lang.matomo-reporting')
     ).toBeLessThanOrEqual(0.06);
