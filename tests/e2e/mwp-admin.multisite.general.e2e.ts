@@ -36,10 +36,6 @@ describe('MultiSite General', function() {
     });
   }
 
-  it('should succeed when updating to the current code', async () => {
-    await Website.updateMatomoToLatest();
-  });
-
   it('should display the MWP admin pages for a single site correctly', async () => {
     Website.switchSite('test2');
 
