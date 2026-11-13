@@ -1,4 +1,5 @@
 *.png filter=lfs diff=lfs merge=lfs -text
+AGENTS.md export-ignore
 
 /marketplace/ export-ignore
 /tests/ export-ignore

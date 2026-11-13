@@ -12,6 +12,7 @@
 /tests/e2e/diff/
 /tests/e2e/downloads/
 /app/scoper.inc.php
+/scripts/matomo-scoper/
 .e2e-docker-out
 .env.script
 /app/.ddev

@@ -35,7 +35,6 @@ abstract class Base extends Report
      */
     public function configureView(ViewDataTable $view)
     {
-        $view->config->datatable_js_type = 'ContentsDataTable';
         $view->config->datatable_css_class = 'ContentsDataTable';
         $view->config->show_table_all_columns = \false;
         $view->config->columns_to_display = array_merge(array('label'), array_keys($this->getMetrics()), array_keys($this->getProcessedMetrics()));

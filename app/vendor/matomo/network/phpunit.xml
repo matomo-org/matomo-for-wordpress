@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    phpunit -c phpunit.xml
+-->
+<phpunit backupGlobals="false"
+         colors="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         bootstrap="./vendor/autoload.php">
+
+    <testsuites>
+        <testsuite name="Test suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+
+</phpunit>

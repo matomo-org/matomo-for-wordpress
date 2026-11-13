@@ -18,7 +18,7 @@ class Contents extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'Metrics.getDefaultMetricDocumentationTranslations' => 'addMetricDocumentationTranslations', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Actions.getCustomActionDimensionFieldsAndJoins' => 'provideActionDimensionFields');
+        return array('Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'Metrics.getDefaultMetricDocumentationTranslations' => 'addMetricDocumentationTranslations', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes', 'Actions.getCustomActionDimensionFieldsAndJoins' => 'provideActionDimensionFields');
     }
     public function addMetricTranslations(&$translations)
     {
@@ -30,10 +30,6 @@ class Contents extends \Piwik\Plugin
     {
         $types['nb_impressions'] = Dimension::TYPE_NUMBER;
         $types['nb_interactions'] = Dimension::TYPE_NUMBER;
-    }
-    public function getJsFiles(&$jsFiles)
-    {
-        $jsFiles[] = "plugins/Contents/javascripts/contentsDataTable.js";
     }
     public function addMetricDocumentationTranslations(&$translations)
     {

@@ -164,13 +164,21 @@ class LabelFilter extends DataTableManipulator
                         $comparisons = $row->getComparisons();
                         if (!empty($comparisons)) {
                             $labelSeriesIndex = $this->labelSeries[$labelIndex];
-                            $originalLabel = $row->getColumn($this->labelColumn) ?: $row->getMetadata($this->labelColumn);
-                            $row = $comparisons->getRowFromId($labelSeriesIndex);
-                            // the suffix is appended after labels are sanitized, so encode it to match
-                            $comparisonSuffix = Common::sanitizeInputValue((string) $row->getMetadata('compareSeriesPretty'));
-                            // add label and make sure it is the first column
-                            $columns = array_merge(['label' => $originalLabel . ' ' . $comparisonSuffix], $row->getColumns());
-                            $row->setColumns($columns);
+                            $comparisonRow = $comparisons->getRowFromId($labelSeriesIndex);
+                            // labelSeries is supplied by the request, so it does not have to point at an
+                            // existing comparison row
+                            if ($comparisonRow !== \false) {
+                                $originalLabel = $row->getColumn($this->labelColumn) ?: $row->getMetadata($this->labelColumn);
+                                // both parts are appended after labels are sanitized, so encode them to match.
+                                // the label column may be a report specific row identifier, which the label
+                                // sanitization does not cover
+                                $originalLabel = Common::sanitizeInputValue((string) $originalLabel);
+                                $comparisonSuffix = Common::sanitizeInputValue((string) $comparisonRow->getMetadata('compareSeriesPretty'));
+                                // add label and make sure it is the first column
+                                $columns = array_merge(['label' => $originalLabel . ' ' . $comparisonSuffix], $comparisonRow->getColumns());
+                                $comparisonRow->setColumns($columns);
+                                $row = $comparisonRow;
+                            }
                         }
                     }
                     if ($this->addLabelIndex) {

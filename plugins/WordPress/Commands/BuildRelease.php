@@ -93,7 +93,7 @@ class BuildRelease extends ConsoleCommand
 
         $this->getOutput()->writeln("Generating $format archive at $outputFile...");
 
-        $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $outputFile;
+        $command = "git -C " . $pathToRepo . " archive --prefix=matomo/ --format=$format $stashHash > " . $outputFile;
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
         $this->getOutput()->writeln("<info>Created archive matomo-$version.$format.</info>");

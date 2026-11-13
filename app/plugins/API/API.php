@@ -461,9 +461,8 @@ class API extends \Piwik\Plugin\API
      * @param bool $rootIsSessionToken Whether the outer request authenticated via a session token.
      * @param string $rootTokenAuth The token the outer request authenticated with.
      */
-    private function checkNestedRequestAuthMatchesRoot(\Piwik\Request $nestedRequest, bool $rootIsSessionToken,
-#[\SensitiveParameter]
-string $rootTokenAuth) : void
+    private function checkNestedRequestAuthMatchesRoot(\Piwik\Request $nestedRequest, bool $rootIsSessionToken, #[\SensitiveParameter]
+        string $rootTokenAuth) : void
     {
         $params = $nestedRequest->getParameters();
         if (array_key_exists('force_api_session', $params) && $nestedRequest->getBoolParameter('force_api_session', \false) !== $rootIsSessionToken) {
@@ -755,7 +754,7 @@ class Plugin extends \Piwik\Plugin
     }
     public function detectIsApiRequest() : void
     {
-        Request::setIsRootRequestApiRequest(Request::getMethodIfApiRequest($request = null));
+        Request::setIsRootRequestApiRequest(Request::isApiHttpRequest() ? Request::getMethodIfApiRequest($request = null) : null);
     }
     /**
      * @param list<string> $stylesheets

@@ -1,0 +1,4 @@
+services:
+  mailer:
+    ports: !override
+      - "8027:8025"

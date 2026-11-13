@@ -89,6 +89,26 @@ class Storage
         $this->isDirty = \true;
         $this->settingsValues[$key] = $value;
     }
+    /**
+     * Removes the value of a setting in memory. To persist the change across requests,
+     * {@link save()} must be called.
+     *
+     * This differs from setting a value to null: a removed value makes {@link getValue()}
+     * return the given default value again, whereas a null value would still be found and
+     * converted to the setting's type. Settings that need to distinguish "no value stored"
+     * from a stored falsy value therefore have to remove the value rather than null it.
+     *
+     * @param string $key The name / key of a setting
+     */
+    public function unsetValue($key)
+    {
+        $this->loadSettingsIfNotDoneYet();
+        if (!array_key_exists($key, $this->settingsValues)) {
+            return;
+        }
+        $this->isDirty = \true;
+        unset($this->settingsValues[$key]);
+    }
     private function loadSettingsIfNotDoneYet()
     {
         if ($this->settingValuesLoaded) {

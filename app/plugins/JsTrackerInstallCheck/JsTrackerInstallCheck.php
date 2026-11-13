@@ -33,20 +33,22 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
     {
         $stylesheets[] = "plugins/JsTrackerInstallCheck/vue/src/JsTrackerInstallCheck/JsTrackerInstallCheck.less";
     }
+    /**
+     * Any request with the install check parameter is a test request and isn't recorded as a visit.
+     */
     public function isExcludedVisit(&$excluded, Request $request)
     {
         // We don't have an early return when the request has already been excluded because we want the test to work even if the request is excluded due to a VPN or something
-        $hasInstallCheckParam = $request->hasParam(self::QUERY_PARAM_NAME);
-        if (!$hasInstallCheckParam) {
-            return;
-        }
-        $trackerInstallCheckParam = $request->getParams()[self::QUERY_PARAM_NAME];
-        if (empty($trackerInstallCheckParam)) {
+        if (!$request->hasParam(self::QUERY_PARAM_NAME)) {
             return;
         }
         // Make sure that the request is marked as excluded if it isn't already
         $excluded = \true;
         StaticContainer::get(LoggerInterface::class)->debug('Excluding visit as JS tracker install test.');
+        $trackerInstallCheckParam = $request->getParams()[self::QUERY_PARAM_NAME];
+        if (!is_string($trackerInstallCheckParam) || empty($trackerInstallCheckParam)) {
+            return;
+        }
         // If the nonce exists and isn't expired, update it to indicate success
         StaticContainer::get(JsTrackerInstallCheckOption::class)->markNonceAsSuccessFul($request->getIdSite(), $trackerInstallCheckParam);
     }
@@ -65,7 +67,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
         // If the nonce was provided, filter out the expired nonces
         $nonceMap = !empty($nonce) ? $optionHelper->getCurrentNonceMap($idSite) : $optionHelper->getNonceMap($idSite);
         if (!empty($nonce)) {
-            return !empty($nonceMap[$nonce]['isSuccessful']);
+            return !empty($nonceMap[$nonce][JsTrackerInstallCheckOption::NONCE_DATA_IS_SUCCESS]);
         }
         if (empty($nonceMap)) {
             return \false;
@@ -78,7 +80,7 @@ class JsTrackerInstallCheck extends \Piwik\Plugin
         $mainUrl = Site::getMainUrlFor($idSite);
         foreach ($nonceMap as $nonceData) {
             if (!empty($mainUrl) && !empty($nonceData[JsTrackerInstallCheckOption::NONCE_DATA_URL]) && $mainUrl === $nonceData[JsTrackerInstallCheckOption::NONCE_DATA_URL]) {
-                return !empty($nonceData['isSuccessful']);
+                return !empty($nonceData[JsTrackerInstallCheckOption::NONCE_DATA_IS_SUCCESS]);
             }
         }
         return \false;
