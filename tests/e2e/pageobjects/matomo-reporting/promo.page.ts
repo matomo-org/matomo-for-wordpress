@@ -6,6 +6,7 @@
  *
  */
 
+import { $, browser } from '@wdio/globals';
 import MatomoReportingPage from '../matomo-reporting.page.js';
 import DashboardPage from "./dashboard.page";
 
@@ -25,7 +26,27 @@ class PromoPage extends MatomoReportingPage {
       throw new Error(`unknown promo: ${promoName}`);
     }
 
-    await super.open(promos[promoName], { force_promo: '1' });
+    for (let attempt = 0; attempt < 3; ++attempt) {
+      await super.open(promos[promoName], { force_promo: '1' });
+
+      // Promo content comes from the live Marketplace. A failed widget request
+      // renders an error panel instead of .pluginPromo and will not recover by waiting.
+      await browser.waitUntil(async () => {
+        return await $('.pluginPromo').isDisplayed()
+          || await browser.execute(() => /there was a problem during the request/i.test(document.body.innerText));
+      }, { timeout: 30000 });
+
+      if (await $('.pluginPromo').isDisplayed()) {
+        return;
+      }
+
+      if (attempt === 2) {
+        throw new Error(`Could not load ${promoName} promo: the request failed on all 3 attempts`);
+      }
+
+      console.log(`Retrying ${promoName} promo after a request error (attempt ${attempt + 2}/3)`);
+      await browser.pause(1000 * (attempt + 1));
+    }
   }
 
   async dismiss() {
