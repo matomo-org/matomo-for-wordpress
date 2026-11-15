@@ -188,57 +188,73 @@ class MwpMarketplacePage extends MwpPage {
 
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
-    const nonce = await browser.execute(() => {
-      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
-    });
-
-    const body = new URLSearchParams({
-      'tgmpa-page': 'matomo-marketplace',
-      plugin_status: 'all',
-      _wpnonce: nonce,
-      _wp_http_referer: currentPageUrl,
-      action: 'tgmpa-bulk-install',
-      bulk_action: 'Apply',
-      action2: 'tgmpa-bulk-install',
-    });
-    matomoPlugins.forEach((p) => {
-      body.append('plugin[]', p.slug);
-    });
-
-    const baseUrl = await Website.baseUrl();
-    await browser.execute((bu, b) => {
-      window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-        method: 'POST',
-        data: b,
-        dataType: 'html',
-        complete: function (r) {
-          (window as any).bulkInstallResponse = r;
-        },
-        error: function (jqxhr, textStatus, errorThrown) {
-          (window as any).bulkInstallError = errorThrown || textStatus;
-        }
+    const installedPluginNames = new Set<string>();
+    const installDeadline = Date.now() + 300000;
+    let pendingPlugins = matomoPlugins;
+    for (let attempt = 0; attempt < 3 && pendingPlugins.length && Date.now() < installDeadline; ++attempt) {
+      const nonce = await browser.execute(() => {
+        return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
       });
-    }, baseUrl, body.toString());
 
-    await browser.waitUntil(() => {
-      return browser.execute(() => !!(window.bulkInstallResponse || window.bulkInstallError));
-    }, { timeout: 300000 });
+      const body = new URLSearchParams({
+        'tgmpa-page': 'matomo-marketplace',
+        plugin_status: 'all',
+        _wpnonce: nonce,
+        _wp_http_referer: currentPageUrl,
+        action: 'tgmpa-bulk-install',
+        bulk_action: 'Apply',
+        action2: 'tgmpa-bulk-install',
+      });
+      pendingPlugins.forEach((p) => {
+        body.append('plugin[]', p.slug);
+      });
 
-    const bulkInstallError = await browser.execute(() => window.bulkInstallError);
-    if (bulkInstallError) {
-      throw new Error(bulkInstallError);
+      const baseUrl = await Website.baseUrl();
+      await browser.execute((bu, b) => {
+        (window as any).bulkInstallResponse = null;
+        (window as any).bulkInstallError = null;
+        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+          method: 'POST',
+          data: b,
+          dataType: 'html',
+          success: function (r) {
+            (window as any).bulkInstallResponse = r;
+          },
+          error: function (jqxhr, textStatus, errorThrown) {
+            (window as any).bulkInstallError = errorThrown || textStatus;
+          }
+        });
+      }, baseUrl, body.toString());
+
+      await browser.waitUntil(() => {
+        return browser.execute(() => window.bulkInstallResponse !== null || !!window.bulkInstallError);
+      }, { timeout: Math.max(1, installDeadline - Date.now()) });
+
+      const bulkInstallError = await browser.execute(() => window.bulkInstallError);
+      if (bulkInstallError) {
+        throw new Error(bulkInstallError);
+      }
+
+      const responseBody = await browser.execute(() => window.bulkInstallResponse) as string;
+
+      const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
+        .map(g => g[1].replaceAll('&amp;', '&'));
+      installedPlugins.forEach(name => installedPluginNames.add(name));
+      pendingPlugins = matomoPlugins.filter(p => !installedPluginNames.has(p.name));
+
+      if (pendingPlugins.length && attempt < 2 && Date.now() < installDeadline) {
+        // Keep successful installs and retry only the missing downloads. A failed
+        // bulk request otherwise leaves the later language fixtures incomplete.
+        console.log(`Retrying missing marketplace installs: ${pendingPlugins.map(p => p.slug).join(', ')}`);
+        await browser.refresh();
+        await this.waitForMarketplaceTab();
+      }
     }
-
-    const responseBody = await browser.execute(() => window.bulkInstallResponse);
-
-    const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
-      .map(g => g[1].replaceAll('&amp;', '&'));
-    installedPlugins.sort();
 
     const allPluginsName = matomoPlugins.map(p => p.name);
     allPluginsName.sort();
 
-    expect(installedPlugins).toEqual(allPluginsName);
+    expect([...installedPluginNames].sort()).toEqual(allPluginsName);
 
     await browser.refresh(); // for new nonce values
 
