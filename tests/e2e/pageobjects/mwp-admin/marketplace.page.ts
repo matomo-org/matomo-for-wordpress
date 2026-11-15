@@ -161,11 +161,34 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async installPlugin(plugin: string) {
-    await browser.execute((p) => {
-      window.jQuery(`.matomo-plugin-card[data-plugin-slug="${p}"] .cta-container button`)[0].click();
-    }, plugin);
+    for (let attempt = 0; attempt < 3; ++attempt) {
+      await browser.execute((p) => {
+        window.jQuery(`.matomo-plugin-card[data-plugin-slug="${p}"] .cta-container button`)[0].click();
+      }, plugin);
 
-    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
+      // A download error is a terminal installer page, not a slow activation link.
+      await browser.waitUntil(async () => {
+        return await $('#wpbody-content p a.button-primary').isDisplayed()
+          || await browser.execute(() => document.body.innerText.includes('Download failed.'));
+      }, { timeout: 30000 });
+
+      if (await $('#wpbody-content p a.button-primary').isDisplayed()) {
+        return;
+      }
+
+      const downloadError = await browser.execute(() => {
+        return document.body.innerText.match(/Download failed\.[^\n]*/)?.[0] || 'Download failed.';
+      });
+      const isGatewayError = /Download failed\.\s*(?:Bad Gateway|Gateway Time[- ]?out|502\b|504\b)/i.test(downloadError);
+      if (!isGatewayError || attempt === 2) {
+        throw new Error(`Could not install ${plugin}: ${downloadError}`);
+      }
+
+      console.log(`Retrying ${plugin} after a marketplace gateway error (attempt ${attempt + 2}/3)`);
+      await browser.pause(1000 * (attempt + 1));
+      await this.open();
+      await this.waitForMarketplaceTab();
+    }
   }
 
   async activateInstalledPlugin() {
