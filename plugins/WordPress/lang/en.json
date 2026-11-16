@@ -14,6 +14,7 @@
     "TagManagerNoVariableInterpolation": "Referencing another variable is not allowed here, so \"{{\" and \"}}\" cannot be used. Enter the value itself.",
     "TagManagerVariableNameBracesNotAllowed": "A variable name cannot contain \"{{\" or \"}}\", because that is how one variable refers to another.",
     "TagManagerUrlNotAllowed": "This is not a valid URL for this site.",
+    "TagManagerLookupValueNotAllowed": "A lookup table value must be text.",
     "TagManagerUrlSchemeNotAllowed": "Only http:// and https:// URLs, or a path on this site, are allowed here.",
     "TagManagerUrlHostNotAllowed": "%1$s is not this site's address. You are not allowed to load resources from another site, so only a URL on %2$s, or a path, can be used here.",
     "TagManagerPathTraversalNotAllowed": "This has to be a path below the Matomo URL above, so it cannot contain \"..\".",

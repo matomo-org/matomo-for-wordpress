@@ -24,6 +24,7 @@ class Variable extends UpstreamVariable
     public function addContainerVariable($idSite, $idContainerVersion, $type, $name, $parameters, $defaultValue, $lookupTable, $description = '')
     {
         $this->checkNameIsNotAVariableReference($name);
+        $this->checkLookupOutputsAreScalar($lookupTable);
 
         return parent::addContainerVariable($idSite, $idContainerVersion, $type, $name, $parameters, $defaultValue, $lookupTable, $description);
     }
@@ -31,6 +32,7 @@ class Variable extends UpstreamVariable
     public function updateContainerVariable($idSite, $idContainerVersion, $idVariable, $name, $parameters, $defaultValue, $lookupTable, $description = '')
     {
         $this->checkNameIsNotAVariableReference($name);
+        $this->checkLookupOutputsAreScalar($lookupTable);
 
         return parent::updateContainerVariable($idSite, $idContainerVersion, $idVariable, $name, $parameters, $defaultValue, $lookupTable, $description);
     }
@@ -47,6 +49,23 @@ class Variable extends UpstreamVariable
 
         if (is_string($name) && preg_match('/\{\{|\}\}/', $name)) {
             throw new ValidatorException(Piwik::translate('WordPress_TagManagerVariableNameBracesNotAllowed'));
+        }
+    }
+
+    /**
+     * @param mixed $lookupTable
+     * @throws ValidatorException
+     */
+    private function checkLookupOutputsAreScalar($lookupTable)
+    {
+        if (!SecuredTemplateConstraints::areRequired() || !is_array($lookupTable)) {
+            return;
+        }
+
+        foreach ($lookupTable as $entry) {
+            if (is_array($entry) && isset($entry['out_value']) && !is_scalar($entry['out_value'])) {
+                throw new ValidatorException(Piwik::translate('WordPress_TagManagerLookupValueNotAllowed'));
+            }
         }
     }
 }
