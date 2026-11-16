@@ -13,6 +13,7 @@
 /tests/e2e/downloads/
 /app/scoper.inc.php
 /scripts/matomo-scoper/
+/docker-compose.override.yml
 .e2e-docker-out
 .env.script
 /app/.ddev

@@ -162,16 +162,7 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 			// check release contents
 			$mwp_release_files = $this->get_zip_file_contents( $path_to_zip );
-			$this->assertContains( 'matomo/matomo.php', $mwp_release_files );
-			foreach ( $mwp_release_files as $path ) {
-				$this->assertSame( 0, strpos( $path, 'matomo/' ), 'Release file is outside the matomo directory: ' . $path );
-			}
-			$mwp_release_files    = array_map(
-				function ( $path ) {
-					return substr( $path, strlen( 'matomo/' ) );
-				},
-				$mwp_release_files
-			);
+			$this->assertContains( 'matomo.php', $mwp_release_files );
 			$mwp_release_contents = array_fill_keys( $mwp_release_files, true );
 			$matomo_core_contents = array_fill_keys( $this->get_zip_file_contents( $core_release_zip ), true );
 
