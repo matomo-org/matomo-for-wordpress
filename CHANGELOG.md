@@ -2,6 +2,7 @@
 
 = 5.14.0 =
 * Update core Matomo to version 5.14.2.
+* Tag Manager security improvements.
 
 = 5.13.2 =
 * Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
