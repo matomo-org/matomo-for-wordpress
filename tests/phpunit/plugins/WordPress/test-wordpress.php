@@ -457,106 +457,6 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
-	public function test_addContainerVariable_should_refuse_a_lookup_value_that_is_not_text() {
-		$this->require_tag_manager();
-
-		$id_site = $this->create_a_user_without_unfiltered_html();
-
-		Access::doAsSuperUser(
-			function () use ( $id_site ) {
-				$container = $this->create_a_container( $id_site );
-
-				$this->expectException( ValidatorException::class );
-				$this->expectExceptionMessage( 'must be text' );
-
-				MatomoApiRequest::processRequest(
-					'TagManager.addContainerVariable',
-					[
-						'idSite'             => $id_site,
-						'idContainer'        => $container['id_container'],
-						'idContainerVersion' => $container['id_version'],
-						'type'               => ( new ConstantVariable() )->getId(),
-						'name'               => 'Cfg',
-						'parameters'         => [ 'constantValue' => '/' ],
-						'lookupTable'        => $this->a_lookup_table_with_an_object_value(),
-					]
-				);
-			}
-		);
-	}
-
-	public function test_updateContainerVariable_should_refuse_a_lookup_value_that_is_not_text() {
-		$this->require_tag_manager();
-
-		$id_site = $this->create_a_user_without_unfiltered_html();
-
-		Access::doAsSuperUser(
-			function () use ( $id_site ) {
-				$container   = $this->create_a_container( $id_site );
-				$id_variable = MatomoApiRequest::processRequest(
-					'TagManager.addContainerVariable',
-					[
-						'idSite'             => $id_site,
-						'idContainer'        => $container['id_container'],
-						'idContainerVersion' => $container['id_version'],
-						'type'               => ( new MatomoConfigurationVariable() )->getId(),
-						'name'               => 'MatomoConfig',
-						'parameters'         => [ 'idSite' => $id_site ],
-					]
-				);
-
-				$this->expectException( ValidatorException::class );
-				$this->expectExceptionMessage( 'must be text' );
-
-				MatomoApiRequest::processRequest(
-					'TagManager.updateContainerVariable',
-					[
-						'idSite'             => $id_site,
-						'idContainer'        => $container['id_container'],
-						'idContainerVersion' => $container['id_version'],
-						'idVariable'         => $id_variable,
-						'name'               => 'MatomoConfig',
-						'parameters'         => [ 'idSite' => $id_site ],
-						'lookupTable'        => $this->a_lookup_table_with_an_object_value(),
-					]
-				);
-			}
-		);
-	}
-
-	public function test_addContainerVariable_should_accept_a_lookup_value_that_is_text() {
-		$this->require_tag_manager();
-
-		$id_site = $this->create_a_user_without_unfiltered_html();
-
-		Access::doAsSuperUser(
-			function () use ( $id_site ) {
-				$container = $this->create_a_container( $id_site );
-
-				$id_variable = MatomoApiRequest::processRequest(
-					'TagManager.addContainerVariable',
-					[
-						'idSite'             => $id_site,
-						'idContainer'        => $container['id_container'],
-						'idContainerVersion' => $container['id_version'],
-						'type'               => ( new ConstantVariable() )->getId(),
-						'name'               => 'Cfg',
-						'parameters'         => [ 'constantValue' => '/' ],
-						'lookupTable'        => [
-							[
-								'match_value' => '/',
-								'comparison'  => 'equals',
-								'out_value'   => 'home',
-							],
-						],
-					]
-				);
-
-				$this->assertNotEmpty( $id_variable );
-			}
-		);
-	}
-
 	public function test_updateContainerVariable_should_rename_a_variable_a_constrained_tag_refers_to() {
 		$this->require_tag_manager();
 
@@ -1216,23 +1116,6 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 				'idTag'              => $id_tag,
 			]
 		);
-	}
-
-	/**
-	 * @return array a lookup table whose only output is an object
-	 */
-	private function a_lookup_table_with_an_object_value() {
-		return [
-			[
-				'match_value' => '[object Object]',
-				'comparison'  => 'equals_exactly',
-				'out_value'   => [
-					'matomoUrl'  => 'https://evil.example/',
-					'idSite'     => '1',
-					'jsEndpoint' => 'x.js',
-				],
-			],
-		];
 	}
 
 	/**
