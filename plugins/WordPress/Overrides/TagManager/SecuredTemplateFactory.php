@@ -50,6 +50,29 @@ class SecuredTemplateFactory
     }
 
     /**
+     * @return array<class-string, string[]> the tag parameters that the replacements restrict
+     */
+    public static function getRestrictedTagParameters()
+    {
+        return [
+            CustomHtmlTag::class => ['customHtml'],
+            CustomImageTag::class => ['customImageSrc'],
+        ];
+    }
+
+    /**
+     * @return array<class-string, string[]> the variable parameters that the replacements restrict
+     */
+    public static function getRestrictedVariableParameters()
+    {
+        return [
+            MatomoConfigurationVariable::class => ['matomoUrl', 'jsEndpointCustom', 'trackingEndpointCustom'],
+            CustomJsFunctionVariable::class => ['jsFunction'],
+            CustomRequestProcessingVariable::class => ['jsFunction'],
+        ];
+    }
+
+    /**
      * Prevent use of the custom HTML tag entirely. Note: if the user has `unfiltered_html`,
      * this override will not be registered (see WordPress.php).
      *
