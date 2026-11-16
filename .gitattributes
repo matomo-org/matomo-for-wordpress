@@ -70,6 +70,7 @@ phpstan*.neon export-ignore
 
 # export-ignore rules for embedded matomo follow
 
+app/AGENTS.md export-ignore
 /app/plugins/*/lang export-ignore
 /app/.ddev export-ignore
 
