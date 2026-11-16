@@ -12,6 +12,8 @@ use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\Controller;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Plugins\Goals\FeatureFlags\GoalRecommendations;
 use Piwik\Plugins\SitesManager\SitesManager;
 use Piwik\Plugins\Tour\Dao\DataFinder;
 use Piwik\Plugins\UserCountry\UserCountry;
@@ -37,6 +39,9 @@ class Challenges
         $challenges[] = StaticContainer::get(\Piwik\Plugins\Tour\Engagement\ChallengeSetupConsentManager::class);
         if ($this->isActivePlugin('Goals')) {
             $challenges[] = StaticContainer::get(\Piwik\Plugins\Tour\Engagement\ChallengeCreatedGoal::class);
+            if (StaticContainer::get(FeatureFlagManager::class)->isFeatureActive(GoalRecommendations::class)) {
+                $challenges[] = StaticContainer::get(\Piwik\Plugins\Tour\Engagement\ChallengeAddRecommendedGoals::class);
+            }
         }
         $challenges[] = StaticContainer::get(\Piwik\Plugins\Tour\Engagement\ChallengeCustomLogo::class);
         if ($this->isActivePlugin('UsersManager') && UsersManager::isUsersAdminEnabled()) {

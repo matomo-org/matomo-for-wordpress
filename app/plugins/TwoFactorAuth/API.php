@@ -31,9 +31,8 @@ class API extends \Piwik\Plugin\API
      * @param string $passwordConfirmation The current superuser's password confirmation.
      * @return void
      */
-    public function resetTwoFactorAuth(string $userLogin,
-#[\SensitiveParameter]
-string $passwordConfirmation = '')
+    public function resetTwoFactorAuth(string $userLogin, #[\SensitiveParameter]
+        string $passwordConfirmation = '')
     {
         Piwik::checkUserHasSuperUserAccess();
         $this->confirmCurrentUserPassword($passwordConfirmation);

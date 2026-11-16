@@ -502,7 +502,7 @@ class Less_Functions
         if ($f !== \false) {
             $fraction = $f->value;
         }
-        return $this->_math('Less_Parser::round', null, $n, $fraction);
+        return $this->_math('Matomo\\Dependencies\\Less_Parser::round', null, $n, $fraction);
     }
     public function pi()
     {
@@ -751,7 +751,7 @@ class Less_Functions
      */
     private function _isa($n, $type)
     {
-        return \is_a($n, $type) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
+        return \is_a($n, 'Matomo\\Dependencies\\' . $type) ? new Less_Tree_Keyword('true') : new Less_Tree_Keyword('false');
     }
     public function tint($color, $amount = null)
     {

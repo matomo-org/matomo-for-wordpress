@@ -504,6 +504,6 @@ class Evolution extends JqplotDataGenerator
         $seriesState = $this->collectForecastSeriesState($rowsToDisplay, $columnsToDisplay, $units, $dataTable, \true);
         $this->graph->setForecastSeriesState($seriesState);
         $subPeriodSamples = $this->getForecastSubPeriodFetcher()->collect($dataTables, $seriesState, $this->graph->requestConfig->apiMethodToRequestDataTable, Common::getRequestVar('idSite', 0, 'int'), (string) ApiRequest::getRawSegmentFromRequest());
-        return (new \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastBuilder())->build($seriesState, $dataTables, $dataStates, $seriesUnits, $subPeriodSamples['daily'], $subPeriodSamples['monthly'], $subPeriodSamples['earliestDataDate'] ?? null);
+        return (new \Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\ForecastBuilder())->build($seriesState, $dataTables, $dataStates, $seriesUnits, $subPeriodSamples['daily'], $subPeriodSamples['monthly'], $subPeriodSamples['period'], $subPeriodSamples['earliestDataDate'] ?? null);
     }
 }

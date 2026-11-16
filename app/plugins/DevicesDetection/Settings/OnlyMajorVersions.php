@@ -29,6 +29,14 @@ class OnlyMajorVersions implements PolicyComparisonInterface, SettingValueInterf
     {
         return Piwik::translate("DevicesDetection_OnlyMajorVersionsSettingTitle");
     }
+    public static function getWhatItDoes(?int $idSite = null) : string
+    {
+        return Piwik::translate('DevicesDetection_OnlyMajorVersionsSettingWhatItDoes');
+    }
+    public static function getImpact(?int $idSite = null) : string
+    {
+        return Piwik::translate('DevicesDetection_OnlyMajorVersionsSettingImpact');
+    }
     public static function getInstance(?int $idSite = null) : self
     {
         $values = self::getPolicyRequiredValues($idSite);

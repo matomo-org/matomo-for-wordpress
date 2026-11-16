@@ -19,6 +19,8 @@ use Piwik\NumberFormatter;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines;
+use Piwik\Plugins\FeatureFlags\FeatureFlagManager;
+use Piwik\Plugins\Goals\FeatureFlags\GoalRecommendations;
 use Piwik\Plugins\Live\Live;
 use Piwik\Plugins\Referrers\API as APIReferrers;
 use Piwik\Site;
@@ -50,10 +52,15 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $conversionRate;
     }
-    public function __construct(Translator $translator)
+    /**
+     * @var FeatureFlagManager
+     */
+    private $featureFlagManager;
+    public function __construct(Translator $translator, FeatureFlagManager $featureFlagManager)
     {
         parent::__construct();
         $this->translator = $translator;
+        $this->featureFlagManager = $featureFlagManager;
         if (!empty($this->idSite)) {
             $this->goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1', 'orderByName' => \true], $default = []);
         } else {
@@ -338,6 +345,8 @@ class Controller extends \Piwik\Plugin\Controller
     private function setGoalOptions(View $view)
     {
         $view->userCanEditGoals = Piwik::isUserHasWriteAccess($this->idSite);
+        $view->goalRecommendationsEnabled = $this->featureFlagManager->isFeatureActive(GoalRecommendations::class);
+        $view->currencySymbol = Site::getCurrencySymbolFor($this->idSite);
         $view->goalTriggerTypeOptions = array('visitors' => Piwik::translate('Goals_WhenVisitors'), 'manually' => Piwik::translate('Goals_Manually'));
         $view->goalMatchAttributeOptions = array(array('key' => 'url', 'value' => Piwik::translate('Goals_VisitUrl')), array('key' => 'title', 'value' => Piwik::translate('Goals_VisitPageTitle')), array('key' => 'event', 'value' => Piwik::translate('Goals_SendEvent')), array('key' => 'file', 'value' => Piwik::translate('Goals_Download')), array('key' => 'external_website', 'value' => Piwik::translate('Goals_ClickOutlink')), ['key' => 'visit_duration', 'value' => Piwik::translate('Goals_VisitDurationMatchAttr')]);
         $view->allowMultipleOptions = array(array('key' => '0', 'value' => Piwik::translate('Goals_DefaultGoalConvertedOncePerVisit')), array('key' => '1', 'value' => Piwik::translate('Goals_AllowGoalConvertedMoreThanOncePerVisit')));

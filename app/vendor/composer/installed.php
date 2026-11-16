@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '5.13.0',
-        'version' => '5.13.0.0',
-        'reference' => '04c528673024239d858998eebc34e1f8afa1acf3',
+        'pretty_version' => '5.14.2',
+        'version' => '5.14.2.0',
+        'reference' => '2ecd53d2b3ebf9a1543f67600acc43fc06c91e3e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.5.13',
-            'version' => '1.5.13.0',
-            'reference' => 'c008272789979f709f7fcb32c2ecf1d2db5e84e5',
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
+            'reference' => '2c99cf2e92516985dea4914812b93d9daf01cdd6',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
@@ -94,18 +94,18 @@
             'dev_requirement' => false,
         ),
         'matomo/ini' => array(
-            'pretty_version' => '3.0.1',
-            'version' => '3.0.1.0',
-            'reference' => 'b55c55da943f4ccd564d48fe6b218fbdada98c1a',
+            'pretty_version' => '3.0.3',
+            'version' => '3.0.3.0',
+            'reference' => '8bd472309dbb742404deabd2bd86d060fb42219e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/ini',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '5.13.0',
-            'version' => '5.13.0.0',
-            'reference' => '04c528673024239d858998eebc34e1f8afa1acf3',
+            'pretty_version' => '5.14.2',
+            'version' => '5.14.2.0',
+            'reference' => '2ecd53d2b3ebf9a1543f67600acc43fc06c91e3e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4f1c7a8d99be37b0aa19ff93fcd8bd7f2d0bf27e',
+            'reference' => 'e65db652cade6882aa9a76bbb65c9bb17e079f4b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -158,9 +158,9 @@
             'dev_requirement' => false,
         ),
         'maxmind-db/reader' => array(
-            'pretty_version' => 'v1.13.1',
-            'version' => '1.13.1.0',
-            'reference' => '2194f58d0f024ce923e685cdf92af3daf9951908',
+            'pretty_version' => 'v1.14.0',
+            'version' => '1.14.0.0',
+            'reference' => 'f3c92f68b3bec42a9aa780368399e03dc6b91e89',
             'type' => 'library',
             'install_path' => __DIR__ . '/../maxmind-db/reader',
             'aliases' => array(),
@@ -203,9 +203,9 @@
             'dev_requirement' => false,
         ),
         'pear/archive_tar' => array(
-            'pretty_version' => '1.6.0',
-            'version' => '1.6.0.0',
-            'reference' => 'dc3285537f1832da8ddbbe45f5a007248b6cc00e',
+            'pretty_version' => '1.6.1',
+            'version' => '1.6.1.0',
+            'reference' => 'a0d2c458a2ff6ee8943ac4271b7f57d613529ae0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../pear/archive_tar',
             'aliases' => array(),
@@ -334,8 +334,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0.0',
-                1 => '1.0|2.0',
+                0 => '1.0|2.0',
+                1 => '1.0.0',
             ),
         ),
         'rsky/pear-core-min' => array(
@@ -450,9 +450,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-intl-normalizer' => array(
-            'pretty_version' => 'v1.38.0',
-            'version' => '1.38.0.0',
-            'reference' => '2d446c214bdbe5b71bde5011b060a05fece3ae6b',
+            'pretty_version' => 'v1.42.0',
+            'version' => '1.42.0.0',
+            'reference' => 'aa20edea75bd9c48cfecc8360922e5a6e5c44502',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-intl-normalizer',
             'aliases' => array(),
@@ -540,9 +540,9 @@
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.11.3',
-            'version' => '6.11.3.0',
-            'reference' => 'b18f6119161019916c5bb07cb8da5205ae5c1b63',
+            'pretty_version' => '6.11.4',
+            'version' => '6.11.4.0',
+            'reference' => 'fbbaf14cfae8fe646f154f7c530d15ec25764040',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),

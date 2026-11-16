@@ -58,7 +58,7 @@ class ScheduledReports extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'MobileMessaging.deletePhoneNumber' => 'deletePhoneNumber', 'ScheduledReports.getReportParameters' => 'getReportParameters', 'ScheduledReports.validateReportParameters' => 'validateReportParameters', 'ScheduledReports.getReportMetadata' => 'getReportMetadata', 'ScheduledReports.getReportTypes' => 'getReportTypes', 'ScheduledReports.getReportFormats' => 'getReportFormats', 'ScheduledReports.getRendererInstance' => 'getRendererInstance', 'ScheduledReports.getReportRecipients' => 'getReportRecipients', 'ScheduledReports.processReports' => 'processReports', 'ScheduledReports.allowMultipleReports' => 'allowMultipleReports', 'ScheduledReports.sendReport' => 'sendReport', 'Template.reportParametersScheduledReports' => 'templateReportParametersScheduledReports', 'UsersManager.deleteUser' => 'deleteUserReport', 'UsersManager.removeSiteAccess' => 'deleteUserReportForSites', 'SitesManager.deleteSite.end' => 'deleteSiteReport', 'SegmentEditor.deactivate' => 'segmentDeactivation', 'SegmentEditor.update' => 'segmentUpdated', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Request.getRenamedModuleAndAction' => 'renameDeprecatedModuleAndAction', 'Db.getTablesInstalled' => 'getTablesInstalled');
+        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'MobileMessaging.deletePhoneNumber' => 'deletePhoneNumber', 'ScheduledReports.getReportParameters' => 'getReportParameters', 'ScheduledReports.validateReportParameters' => 'validateReportParameters', 'ScheduledReports.getReportMetadata' => 'getReportMetadata', 'ScheduledReports.getReportTypes' => 'getReportTypes', 'ScheduledReports.getReportFormats' => 'getReportFormats', 'ScheduledReports.getRendererInstance' => 'getRendererInstance', 'ScheduledReports.getReportRecipients' => 'getReportRecipients', 'ScheduledReports.processReports' => 'processReports', 'ScheduledReports.allowMultipleReports' => 'allowMultipleReports', 'ScheduledReports.sendReport' => 'sendReport', 'Template.reportParametersScheduledReports' => 'templateReportParametersScheduledReports', 'UsersManager.createUser' => 'deleteUserReport', 'UsersManager.deleteUser' => 'deleteUserReport', 'UsersManager.removeSiteAccess' => 'deleteUserReportForSites', 'SitesManager.deleteSite.end' => 'deleteSiteReport', 'SegmentEditor.deactivate' => 'segmentDeactivation', 'SegmentEditor.update' => 'segmentUpdated', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Request.getRenamedModuleAndAction' => 'renameDeprecatedModuleAndAction', 'Db.getTablesInstalled' => 'getTablesInstalled');
     }
     /**
      * Register the new tables, so Matomo knows about them.
@@ -480,6 +480,11 @@ class ScheduledReports extends \Piwik\Plugin
         $errorMessage = Piwik::translate('ScheduledReports_Segment_Deletion_Error', $reportList);
         throw new Exception($errorMessage);
     }
+    /**
+     * Removes every report owned by the given login.
+     *
+     * Also runs when a user is created, so a login that is reused starts without reports.
+     */
     public function deleteUserReport($userLogin)
     {
         $this->getModel()->deleteAllReportForUser($userLogin);

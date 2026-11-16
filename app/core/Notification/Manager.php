@@ -115,7 +115,9 @@ class Manager
             // we need to save even non persistent notifications if possible. Otherwise if there's a redirect
             // a notification is not shown on the next page view
             $session = self::getSession();
-            $session->notifications[$id] = $notification;
+            $notifications = $session->notifications ?? [];
+            $notifications[$id] = $notification;
+            $session->notifications = $notifications;
         }
     }
     private static function removeOldestNotificationsIfThereAreTooMany() : void
@@ -125,9 +127,14 @@ class Manager
         }
         $maxNotificationsInSession = self::MAX_NOTIFICATIONS_IN_SESSION;
         $session = self::getSession();
-        while (count($session->notifications) >= $maxNotificationsInSession) {
-            array_shift($session->notifications);
+        $notifications = $session->notifications ?? [];
+        if (count($notifications) < $maxNotificationsInSession) {
+            return;
         }
+        while (count($notifications) >= $maxNotificationsInSession) {
+            array_shift($notifications);
+        }
+        $session->notifications = $notifications;
     }
     /**
      * @return array<string, Notification>
@@ -144,7 +151,7 @@ class Manager
             self::saveNotificationAcrossUiRequestsIfNeeded($id, $notification);
         }
         $session = self::getSession();
-        foreach ($session->notifications as $id => $notification) {
+        foreach ($session->notifications ?? [] as $id => $notification) {
             $notifications[$id] = $notification;
         }
         return $notifications;
@@ -156,8 +163,10 @@ class Manager
         }
         if (self::isSessionEnabled()) {
             $session = self::getSession();
-            if (array_key_exists($id, $session->notifications)) {
-                unset($session->notifications[$id]);
+            $notifications = $session->notifications ?? [];
+            if (array_key_exists($id, $notifications)) {
+                unset($notifications[$id]);
+                $session->notifications = $notifications;
             }
         }
     }
@@ -169,9 +178,6 @@ class Manager
     {
         if (!isset(self::$session)) {
             self::$session = new SessionNamespace('notification');
-        }
-        if (empty(self::$session->notifications) && self::isSessionEnabled()) {
-            self::$session->notifications = [];
         }
         return self::$session;
     }

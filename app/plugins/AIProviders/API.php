@@ -70,9 +70,8 @@ class API extends PluginAPI
      *                                      with connection settings.
      * @return array<string, mixed> Updated provider metadata and masked configuration values.
      */
-    public function saveSettings(string $defaultProviderId = '', string $defaultCapabilityLevel = '',
-#[\SensitiveParameter]
-string $providerConfigurations = '{}') : array
+    public function saveSettings(string $defaultProviderId = '', string $defaultCapabilityLevel = '', #[\SensitiveParameter]
+        string $providerConfigurations = '{}') : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
@@ -90,9 +89,8 @@ string $providerConfigurations = '{}') : array
      *         Tested provider's metadata and the models it can serve (empty for
      *         providers that do not expose a model listing).
      */
-    public function testConnection(string $providerId,
-#[\SensitiveParameter]
-string $providerConfiguration = '{}') : array
+    public function testConnection(string $providerId, #[\SensitiveParameter]
+        string $providerConfiguration = '{}') : array
     {
         Piwik::checkUserHasSuperUserAccess();
         $providers = \Piwik\Plugins\AIProviders\AIProviders::getAvailableProviders();
@@ -132,9 +130,8 @@ string $providerConfiguration = '{}') : array
     /**
      * @return array<string, mixed>
      */
-    private function decodeProviderConfiguration(
-#[\SensitiveParameter]
-string $providerConfigurationJson) : array
+    private function decodeProviderConfiguration(#[\SensitiveParameter]
+        string $providerConfigurationJson) : array
     {
         $decoded = json_decode($providerConfigurationJson, \true);
         if (!is_array($decoded)) {

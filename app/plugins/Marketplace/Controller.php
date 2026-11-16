@@ -13,6 +13,7 @@ use Piwik\Common;
 use Piwik\Config\GeneralConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable\Renderer\Json;
+use Piwik\Exception\PluginNotFoundException;
 use Piwik\Date;
 use Piwik\Filesystem;
 use Piwik\Log;
@@ -27,6 +28,7 @@ use Piwik\Plugins\Login\PasswordVerifier;
 use Piwik\Plugins\Marketplace\Input\PluginName;
 use Piwik\Plugins\Marketplace\Input\PurchaseType;
 use Piwik\Plugins\Marketplace\Input\Sort;
+use Piwik\Plugins\Marketplace\Plugins\InvalidLicenses;
 use Piwik\Plugins\Marketplace\PluginTrial\Service as PluginTrialService;
 use Piwik\ProxyHttp;
 use Piwik\Request;
@@ -72,10 +74,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     private $passwordVerify;
     /**
+     * @var InvalidLicenses
+     */
+    private $expired;
+    /**
      * @var array<int, array<string, mixed>>|null
      */
     private $paidPlugins;
-    public function __construct(\Piwik\Plugins\Marketplace\LicenseKey $licenseKey, \Piwik\Plugins\Marketplace\Plugins $plugins, \Piwik\Plugins\Marketplace\Api\Client $marketplaceApi, \Piwik\Plugins\Marketplace\Consumer $consumer, PluginInstaller $pluginInstaller, \Piwik\Plugins\Marketplace\Environment $environment, PasswordVerifier $passwordVerify)
+    public function __construct(\Piwik\Plugins\Marketplace\LicenseKey $licenseKey, \Piwik\Plugins\Marketplace\Plugins $plugins, \Piwik\Plugins\Marketplace\Api\Client $marketplaceApi, \Piwik\Plugins\Marketplace\Consumer $consumer, PluginInstaller $pluginInstaller, \Piwik\Plugins\Marketplace\Environment $environment, PasswordVerifier $passwordVerify, InvalidLicenses $expired)
     {
         $this->licenseKey = $licenseKey;
         $this->plugins = $plugins;
@@ -85,6 +91,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $this->pluginManager = Plugin\Manager::getInstance();
         $this->environment = $environment;
         $this->passwordVerify = $passwordVerify;
+        $this->expired = $expired;
         $this->paidPlugins = null;
         parent::__construct();
     }
@@ -95,6 +102,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         // this is also like a self-repair to clear the caches :)
         $this->marketplaceApi->clearAllCacheEntries();
         $this->consumer->clearCache();
+        $this->expired->clearCache();
         // invalidate cache for plugin/manager
         Plugin\Manager::getLicenseCache()->flushAll();
         $hasLicenseKey = $this->licenseKey->has();
@@ -196,10 +204,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function overview()
     {
         $view = $this->configureViewAndCheckPermission('@Marketplace/overview');
-        $view->paidPluginsToInstallAtOnce = $this->getAllPaidPluginsToInstallAtOnce();
         $view->isValidConsumer = $this->consumer->isValidConsumer();
-        $view->pluginTypeOptions = array('plugins' => Piwik::translate('General_Plugins'), 'premium' => Piwik::translate('Marketplace_PaidPlugins'), 'themes' => Piwik::translate('CorePluginsAdmin_Themes'));
-        $view->pluginSortOptions = array(Sort::METHOD_LAST_UPDATED => Piwik::translate('Marketplace_SortByLastUpdated'), Sort::METHOD_POPULAR => Piwik::translate('Marketplace_SortByPopular'), Sort::METHOD_NEWEST => Piwik::translate('Marketplace_SortByNewest'), Sort::METHOD_ALPHA => Piwik::translate('Marketplace_SortByAlpha'));
         $view->defaultSort = Sort::DEFAULT_SORT;
         $view->installNonce = Nonce::getNonce(static::INSTALL_NONCE);
         $view->updateNonce = Nonce::getNonce(static::UPDATE_NONCE);
@@ -219,7 +224,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function updateOverview() : string
     {
         Piwik::checkUserIsNotAnonymous();
-        $paidPlugins = $this->getPaidPlugins();
         $updateData = ['isValidConsumer' => $this->consumer->isValidConsumer()];
         Json::sendHeaderJSON();
         return json_encode($updateData);
@@ -234,7 +238,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $sort = $request->getStringParameter('sort', '');
         $purchaseType = (new PurchaseType())->getPurchaseType($purchaseType);
         $sort = (new Sort())->getSort($sort);
-        $plugins = $this->plugins->searchPlugins($query, $sort, $themesOnly, $purchaseType);
+        // the overview's Vue app is the only caller, so its links are rendered on the overview
+        // page and not on this endpoint - see Plugins::CAMPAIGN_MEDIUM_OVERVIEW
+        $plugins = $this->plugins->searchPlugins($query, $sort, $themesOnly, $purchaseType, \Piwik\Plugins\Marketplace\Plugins::CAMPAIGN_MEDIUM_OVERVIEW);
         foreach ($plugins as &$plugin) {
             if ($plugin['isDownloadable']) {
                 $plugin['downloadNonce'] = Nonce::getNonce(static::DOWNLOAD_NONCE_PREFIX . $plugin['name']);
@@ -245,9 +251,106 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $plugin['isTrialRequested'] = StaticContainer::get(PluginTrialService::class)->wasRequested($plugin['name']);
                 $plugin['canTrialBeRequested'] = GeneralConfig::getIntegerConfigValue('plugin_trial_request_expiration_in_days', 0) !== -1;
             }
+            $plugin = $this->keepPluginCardFields($plugin);
         }
         Json::sendHeaderJSON();
         return json_encode($plugins);
+    }
+    /**
+     * Returns everything a plugin's details page renders for a single plugin.
+     *
+     * The plugin list deliberately omits these fields, see {@link keepPluginCardFields()}.
+     */
+    public function getPluginDetails() : string
+    {
+        Piwik::checkUserIsNotAnonymous();
+        // Every failure path below answers with a JSON error rather than throwing: this is not an
+        // API request, so an exception would render the HTML error page with a 500 and log a stack
+        // trace at ERROR, and AjaxHelper would replace the message with its own literal. A
+        // result=error body reaches the page as an ApiResponseError with this text intact.
+        // Validation is inside the guard too, so a malformed request is answered the same way.
+        $pluginName = '';
+        try {
+            $pluginName = (new PluginName())->getPluginName();
+            $plugin = $this->plugins->getPluginInfoPreferringList($pluginName, \Piwik\Plugins\Marketplace\Plugins::CAMPAIGN_MEDIUM_OVERVIEW);
+        } catch (Exception $e) {
+            // the Marketplace being unreachable is this action's most likely failure, not an
+            // exceptional one, since it is requested every time a details page is opened
+            return $this->sendPluginDetailsError(Piwik::translate('Marketplace_PluginDetailsNotAvailable', $pluginName));
+        }
+        if (empty($plugin['name'])) {
+            // reachable in normal use, because the list this name came from is cached and the plugin
+            // may have been delisted since
+            return $this->sendPluginDetailsError(Piwik::translate('Marketplace_PluginNotFoundOnMarketplace', $pluginName));
+        }
+        if (!empty($plugin['versions'])) {
+            // only the latest version is rendered, and each version carries its full readme HTML
+            $plugin['versions'] = [end($plugin['versions'])];
+        }
+        Json::sendHeaderJSON();
+        return json_encode($plugin);
+    }
+    private function sendPluginDetailsError(string $message) : string
+    {
+        Json::sendHeaderJSON();
+        return json_encode(['result' => 'error', 'message' => $message]);
+    }
+    /**
+     * Reduces a plugin to the fields the cards in the plugin list render.
+     *
+     * The Marketplace returns every version of every plugin, each with its own rendered readme and
+     * FAQ HTML, which no card reads and which dominates the response: against plugins.matomo.org
+     * this trims the list from 1.6 MB to 121 KB. Anything the details page needs on top of this is
+     * fetched per plugin by {@link getPluginDetails()} when the page opens.
+     *
+     * This is an allow list so that fields added to the Marketplace API cannot silently grow the
+     * list response again. A new field rendered on a card has to be added here too.
+     *
+     * @param array<string, mixed> $plugin
+     * @return array<string, mixed>
+     */
+    private function keepPluginCardFields(array $plugin) : array
+    {
+        $cardFields = [
+            'name',
+            'displayName',
+            'description',
+            'owner',
+            'coverImage',
+            'isFree',
+            'isPaid',
+            'isInstalled',
+            'isActivated',
+            'isInvalid',
+            'isDownloadable',
+            'canBeUpdated',
+            'hasDownloadLink',
+            'hasExceededLicense',
+            'isMissingLicense',
+            'isEligibleForFreeTrial',
+            'isNewBundle',
+            'isTrialRequested',
+            'canTrialBeRequested',
+            'missingRequirements',
+            'numDownloads',
+            'numDownloadsPretty',
+            'priceFrom',
+            'downloadNonce',
+            'consumer',
+            'categories',
+            'promotions',
+            'keywords',
+            'isTheme',
+            'lastUpdated',
+            'lastUpdatedRaw',
+            'createdDateTime',
+            'bundleSeats',
+            // not rendered on a card, but the details page falls back to the card row when its own request
+            // fails, and without these a bundle renders there as an ordinary plugin
+            'isBundle',
+            'licenseStatus',
+        ];
+        return array_intersect_key($plugin, array_flip($cardFields));
     }
     public function installAllPaidPlugins()
     {
@@ -328,7 +431,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     }
     public function installPlugin()
     {
-        $params = array('module' => 'Marketplace', 'action' => 'installPlugin', 'mode' => 'admin', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'));
+        $params = array('module' => 'Marketplace', 'action' => 'installPlugin', 'mode' => 'admin', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'referrer' => urlencode($this->getMarketplaceUrlToReturnTo()));
         if ($this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             $view = $this->createUpdateOrInstallView('installPlugin', static::INSTALL_NONCE);
             $view->nonce = Nonce::getNonce(PluginsController::ACTIVATE_NONCE);
@@ -341,6 +444,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $this->dieIfPluginsAdminIsDisabled();
         $this->displayWarningIfConfigFileNotWritable();
         $plugins = $this->getPluginNameIfNonceValid($nonceName);
+        if ($nonceName === static::UPDATE_NONCE) {
+            foreach ($plugins as $pluginName) {
+                if (!$this->pluginManager->isPluginInFilesystem($pluginName)) {
+                    throw new PluginNotFoundException($pluginName);
+                }
+            }
+        }
         $view = new View('@Marketplace/' . $template);
         $this->setBasicVariablesView($view);
         $view->errorMessage = '';
@@ -378,7 +488,19 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             }
         }
         $view->plugins = $pluginInfos;
+        $view->marketplaceUrl = $this->getMarketplaceUrlToReturnTo();
         return $view;
+    }
+    /**
+     * The Marketplace page the install or update was started from, fragment included, so leaving
+     * this page returns the reader to the tab, search or plugin they were on. The Referer header
+     * cannot stand in for it: it never carries the fragment the Marketplace keeps that state in.
+     * Empty when the request names no page, or one outside this Matomo.
+     */
+    private function getMarketplaceUrlToReturnTo() : string
+    {
+        $referrer = Common::unsanitizeInputValue(Common::getRequestVar('referrer', '', 'string'));
+        return $referrer !== '' && Url::isLocalUrl($referrer) ? $referrer : '';
     }
     private function getPluginNameIfNonceValid($nonceName)
     {

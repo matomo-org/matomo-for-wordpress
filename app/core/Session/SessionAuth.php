@@ -53,9 +53,8 @@ class SessionAuth implements Auth
     {
         return null;
     }
-    public function setTokenAuth(
-#[\SensitiveParameter]
-$token_auth)
+    public function setTokenAuth(#[\SensitiveParameter]
+        $token_auth)
     {
         $this->tokenAuth = $token_auth;
     }
@@ -74,15 +73,13 @@ $token_auth)
     {
         // empty
     }
-    public function setPassword(
-#[\SensitiveParameter]
-$password)
+    public function setPassword(#[\SensitiveParameter]
+        $password)
     {
         // empty
     }
-    public function setPasswordHash(
-#[\SensitiveParameter]
-$passwordHash)
+    public function setPasswordHash(#[\SensitiveParameter]
+        $passwordHash)
     {
         // empty
     }
@@ -137,9 +134,8 @@ $passwordHash)
     {
         return new AuthResult(AuthResult::FAILURE, null, null);
     }
-    private function makeAuthSuccess($user,
-#[\SensitiveParameter]
-$tokenAuth)
+    private function makeAuthSuccess($user, #[\SensitiveParameter]
+        $tokenAuth)
     {
         $this->user = $user;
         $this->tokenAuth = $tokenAuth;
@@ -183,7 +179,9 @@ $tokenAuth)
         // we update the session cookie to make sure expired session cookies are not available client side...
         $sessionCookieLifetime = Config::getInstance()->General['login_cookie_expire'];
         Session::writeCookie(session_name(), session_id(), time() + $sessionCookieLifetime, $sessionParams['path'], $sessionParams['domain'], $sessionParams['secure'], $sessionParams['httponly'], Session::getSameSiteCookieValue());
-        // ...and we also update the expiration time stored server side so we can prevent expired sessions from being reused
+        // ...and we keep the expiration stored server side in step with it, which is the value that
+        // actually prevents expired sessions from being reused. That one is only written once it
+        // has moved on materially, so it can lag the cookie slightly.
         $sessionFingerprint->updateSessionExpirationTime();
     }
     private function isExpiredSession(\Piwik\Session\SessionFingerprint $sessionFingerprint)

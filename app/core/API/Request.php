@@ -83,6 +83,7 @@ use Piwik\Log\LoggerInterface;
  */
 class Request
 {
+    private const ROOT_API_METHOD_CACHE_KEY = 'API.setIsRootRequestApiRequest';
     /**
      * The count of nested API request invocations. Used to determine if the currently executing request is the root or not.
      *
@@ -263,6 +264,10 @@ class Request
             }
             if (empty($response)) {
                 $response = new \Piwik\API\ResponseBuilder('console', $this->request);
+                // as above, this one renders the exception for a nested request as well
+                if (!self::isCurrentApiRequestTheRootApiRequest()) {
+                    $response->disableSendHeader();
+                }
             }
             $toReturn = $response->getResponseException($e);
         } finally {
@@ -273,9 +278,8 @@ class Request
         }
         return $toReturn;
     }
-    private function restoreAuthUsingTokenAuth(
-#[\SensitiveParameter]
-$tokenToRestore, $hadSuperUserAccess)
+    private function restoreAuthUsingTokenAuth(#[\SensitiveParameter]
+        $tokenToRestore, $hadSuperUserAccess)
     {
         // if we would not make sure to unset super user access, the tokenAuth would be not authenticated and any
         // token would just keep super user access (eg if the token that was reloaded before had super user access)
@@ -301,32 +305,30 @@ $tokenToRestore, $hadSuperUserAccess)
     /**
      * @ignore
      * @internal
-     * @param string $currentApiMethod
+     * @param string|null $currentApiMethod
      */
     public static function setIsRootRequestApiRequest($currentApiMethod)
     {
-        Cache::getTransientCache()->save('API.setIsRootRequestApiRequest', $currentApiMethod);
+        Cache::getTransientCache()->save(self::ROOT_API_METHOD_CACHE_KEY, $currentApiMethod);
     }
     /**
      * @ignore
      * @internal
-     * @return string current Api Method if it is an api request
+     * @return string|false|null current Api Method if it is an api request
      */
     public static function getRootApiRequestMethod()
     {
-        return Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
+        return Cache::getTransientCache()->fetch(self::ROOT_API_METHOD_CACHE_KEY);
     }
     /**
      * Detect if the root request (the actual request) is an API request or not. To detect whether an API is currently
      * request within any request, have a look at {@link isApiRequest()}.
      *
      * @return bool
-     * @throws Exception
      */
     public static function isRootRequestApiRequest()
     {
-        $apiMethod = Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
-        return !empty($apiMethod);
+        return !empty(self::getRootApiRequestMethod());
     }
     /**
      * Checks if the currently executing API request is the root API request or not.
@@ -354,15 +356,31 @@ $tokenToRestore, $hadSuperUserAccess)
         return self::$nestedApiInvocationCount > 1;
     }
     /**
+     * Whether the request being served is the API endpoint itself. The module dispatches the
+     * requested method through its index action; its other actions accept a method parameter
+     * without dispatching it.
+     *
+     * Reads the live request, so it is only meaningful before a nested API call overlays
+     * `module=API` onto the request parameters.
+     *
+     * @ignore
+     * @internal
+     */
+    public static function isApiHttpRequest() : bool
+    {
+        $action = Piwik::getAction();
+        return Piwik::getModule() === 'API' && (empty($action) || $action === 'index');
+    }
+    /**
      * Detect if request is an API request. Meaning the module is 'API' and an API method having a valid format was
      * specified. Note that this method will return true even if the actual request is for example a regular UI
      * reporting page request but within this request we are currently processing an API request (eg a
      * controller calls Request::processRequest('API.getMatomoVersion')). To find out if the root request is an API
      * request or not, call {@link isRootRequestApiRequest()}
      *
-     * @param array $request  eg array('module' => 'API', 'method' => 'Test.getMethod')
+     * @param array|null $request  eg array('module' => 'API', 'method' => 'Test.getMethod'), or
+     *                             null to read them from the query string and the request body
      * @return bool
-     * @throws Exception
      */
     public static function isApiRequest($request)
     {
@@ -407,9 +425,8 @@ $tokenToRestore, $hadSuperUserAccess)
      * @param string $tokenAuth
      * @return void
      */
-    private static function forceReloadAuthUsingTokenAuth(
-#[\SensitiveParameter]
-$tokenAuth)
+    private static function forceReloadAuthUsingTokenAuth(#[\SensitiveParameter]
+        $tokenAuth)
     {
         /**
          * Triggered when authenticating an API request, but only if the **token_auth**

@@ -15,6 +15,7 @@ use Piwik\Request\AuthenticationToken;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
+use Piwik\Http\SecurityHeaders;
 use Piwik\Piwik;
 use Piwik\Plugins\API\Renderer\Original;
 use Piwik\Url;
@@ -45,6 +46,7 @@ class Controller extends \Piwik\Plugin\Controller
     public function listAllMethods()
     {
         Piwik::checkUserHasSomeViewAccess();
+        $this->sendHtmlHeadersForDataResponse();
         $ApiDocumentation = new DocumentationGenerator();
         $prefixUrls = Common::getRequestVar('prefixUrl', 'https://demo.matomo.cloud/', 'string');
         $parsedUrl = parse_url($prefixUrls);
@@ -69,7 +71,9 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function listSegments()
     {
+        // after the API call, so the headers are not sent for a failed permission check
         $segments = \Piwik\Plugins\API\API::getInstance()->getSegmentsMetadata($this->idSite);
+        $this->sendHtmlHeadersForDataResponse();
         $tableDimensions = $tableMetrics = '';
         $customVariables = 0;
         $lastCategory = array();
@@ -146,5 +150,14 @@ class Controller extends \Piwik\Plugin\Controller
             }
         }
         return $this->renderTemplate('glossary', array('glossaryItems' => $glossaryItems));
+    }
+    /**
+     * Headers for the actions that return plain HTML without rendering a View, so no headers are
+     * sent for them otherwise.
+     */
+    private function sendHtmlHeadersForDataResponse() : void
+    {
+        SecurityHeaders::sendForDataResponse();
+        Common::sendHeader('Content-Type: text/html; charset=utf-8');
     }
 }

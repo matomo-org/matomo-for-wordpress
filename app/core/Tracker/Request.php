@@ -58,9 +58,8 @@ class Request
      * @param $params
      * @param string $tokenAuth
      */
-    public function __construct($params,
-#[\SensitiveParameter]
-$tokenAuth = '')
+    public function __construct($params, #[\SensitiveParameter]
+        $tokenAuth = '')
     {
         if (!is_array($params)) {
             $params = array();
@@ -129,9 +128,8 @@ $tokenAuth = '')
      * This method allows to set custom IP + server time + visitor ID, when using Tracking API.
      * These two attributes can be only set by the Super User (passing token_auth).
      */
-    protected function authenticateTrackingApi(
-#[\SensitiveParameter]
-$tokenAuth)
+    protected function authenticateTrackingApi(#[\SensitiveParameter]
+        $tokenAuth)
     {
         $shouldAuthenticate = \Piwik\Tracker\TrackerConfig::getConfigValue('tracking_requests_require_authentication', $this->getIdSiteIfExists());
         if ($shouldAuthenticate) {
@@ -175,9 +173,8 @@ $tokenAuth)
             Common::printDebug("token_auth authentication not required");
         }
     }
-    public static function authenticateSuperUserOrAdminOrWrite(
-#[\SensitiveParameter]
-$tokenAuth, $idSite)
+    public static function authenticateSuperUserOrAdminOrWrite(#[\SensitiveParameter]
+        $tokenAuth, $idSite)
     {
         if (empty($tokenAuth)) {
             return \false;

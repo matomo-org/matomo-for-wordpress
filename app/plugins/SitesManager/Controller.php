@@ -15,6 +15,7 @@ use Piwik\Config;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
+use Piwik\Policy\PolicyManager;
 use Piwik\Plugins\SitesManager\SiteContentDetection\Matomo;
 use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\Plugins\SitesManager\SiteContentDetection\WordPress;
@@ -64,6 +65,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $globalSettings['excludedUserAgentsGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
         $globalSettings['excludedReferrersGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedReferrersGlobal();
         $globalSettings['exclusionTypeForQueryParams'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExclusionTypeForQueryParams();
+        // stored as an instance-wide option, so it is never site specific
+        $globalSettings['exclusionTypeForQueryParamsPolicyControlled'] = PolicyManager::getCompliancePoliciesControllingASetting(\Piwik\Plugins\SitesManager\API::OPTION_EXCLUDE_TYPE_QUERY_PARAMS_GLOBAL, null, PolicyManager::SETTING_TYPE_OPTION);
         return $response->getResponse($globalSettings);
     }
     /**
@@ -117,7 +120,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function siteWithoutData()
     {
         $this->checkSitePermission();
-        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'hideWhatIsNew' => \true], $viewType = 'basic');
+        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'showInviteTeamMemberLink' => $this->shouldShowInviteTeamMemberLink(), 'afterTrackingMethodsContent' => $this->getAfterTrackingMethodsContent(), 'hideWhatIsNew' => \true], $viewType = 'basic');
     }
     /**
      * Ajax endpoint for the reporting UI gate: returns a JSON boolean (true = show the tracker-setup
@@ -205,16 +208,48 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         return json_encode([
             'trackingMethods' => $trackingMethods,
             'recommendedMethod' => $recommendedMethod,
-            // The standalone page gets this as a template variable; the SPA gate has to fetch it.
+            // The standalone page gets these as template variables; the SPA gate has to fetch them.
             'ctaContent' => $this->renderSiteWithoutDataCta(),
+            'afterTrackingMethodsContent' => $this->getAfterTrackingMethodsContent(),
         ]);
     }
     private function renderSiteWithoutDataCta() : string
     {
         $view = new View('@SitesManager/_siteWithoutDataCta');
         $view->inviteUserLink = $this->getInviteUserLink();
+        $view->showInviteTeamMemberLink = $this->shouldShowInviteTeamMemberLink();
         $view->sendHeadersWhenRendering = \false;
         return $view->render();
+    }
+    private function getAfterTrackingMethodsContent() : string
+    {
+        $content = '';
+        /**
+         * Triggered on the no data page after the list of tracking methods and the section
+         * allowing users to temporarily hide the page.
+         *
+         * This event can be used to render additional content at the bottom of the no data page.
+         * The content is shown on the standalone page as well as when the page is embedded in the
+         * reporting UI.
+         *
+         * @param string $content Additional HTML content to render after the tracking methods.
+         */
+        Piwik::postEvent('Template.siteWithoutData.afterTrackingMethods', [&$content]);
+        return $content;
+    }
+    private function shouldShowInviteTeamMemberLink() : bool
+    {
+        $showInviteTeamMemberLink = \true;
+        /**
+         * Triggered before rendering the invite team member link on the no data page.
+         *
+         * This event can be used to hide the link, for example if inviting users is handled
+         * outside of Matomo.
+         *
+         * @param bool $showInviteTeamMemberLink Whether the invite team member link should be shown. Defaults to `true`.
+         */
+        Piwik::postEvent('SitesManager.siteWithoutData.showInviteTeamMemberLink', [&$showInviteTeamMemberLink]);
+        return $showInviteTeamMemberLink;
     }
     private function getGoogleAnalyticsImporterInstruction()
     {

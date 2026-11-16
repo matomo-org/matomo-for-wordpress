@@ -168,7 +168,7 @@ class Archive_Tar extends PEAR
                         $this->_compress_type = 'lzma2';
                     } else {
                         $this->_error("Unsupported compression type '{$p_compress}'\n" . "Supported types are 'gz', 'bz2' and 'lzma2'.\n");
-                        return \false;
+                        return;
                     }
                 }
             }
@@ -192,7 +192,7 @@ class Archive_Tar extends PEAR
             }
             if (!\extension_loaded($extname)) {
                 $this->_error("The extension '{$extname}' couldn't be found.\n" . "Please make sure your version of PHP was built " . "with '{$extname}' support.\n");
-                return \false;
+                return;
             }
         }
         if (\version_compare(\PHP_VERSION, "5.5.0-dev") < 0) {

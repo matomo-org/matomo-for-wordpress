@@ -313,7 +313,7 @@ class Controller extends Plugin\ControllerAdmin
     public function activate($redirectAfter = \true)
     {
         $this->dieIfPluginsAdminIsDisabled();
-        $params = ['module' => 'CorePluginsAdmin', 'action' => 'activate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo', '', 'string'), 'referrer' => urlencode(Url::getReferrer())];
+        $params = ['module' => 'CorePluginsAdmin', 'action' => 'activate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo', '', 'string'), 'referrer' => urlencode($this->getReferrerToRedirectTo())];
         if (!$this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             return;
         }
@@ -349,7 +349,7 @@ class Controller extends Plugin\ControllerAdmin
     }
     public function deactivate($redirectAfter = \true)
     {
-        $params = ['module' => 'CorePluginsAdmin', 'action' => 'deactivate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo'), 'referrer' => urlencode(Url::getReferrer())];
+        $params = ['module' => 'CorePluginsAdmin', 'action' => 'deactivate', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'redirectTo' => Common::getRequestVar('redirectTo'), 'referrer' => urlencode($this->getReferrerToRedirectTo())];
         if (!$this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             return;
         }
@@ -364,7 +364,7 @@ class Controller extends Plugin\ControllerAdmin
     public function uninstall($redirectAfter = \true)
     {
         $this->dieIfPluginsAdminIsDisabled();
-        $params = ['module' => 'CorePluginsAdmin', 'action' => 'uninstall', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'referrer' => urlencode(Url::getReferrer())];
+        $params = ['module' => 'CorePluginsAdmin', 'action' => 'uninstall', 'pluginName' => Common::getRequestVar('pluginName'), 'nonce' => Common::getRequestVar('nonce'), 'referrer' => urlencode($this->getReferrerToRedirectTo())];
         if (!$this->passwordVerify->requirePasswordVerifiedRecently($params)) {
             return;
         }
@@ -410,6 +410,16 @@ class Controller extends Plugin\ControllerAdmin
             throw new Exception('Invalid plugin name');
         }
         return $pluginName;
+    }
+    /**
+     * The page to return to once the modification is done: the one the request names, if any, or
+     * else the HTTP referrer. A page can name itself to keep its URL fragment, which the Referer
+     * header never carries. Validated in {@link redirectAfterModification()}, not here.
+     */
+    private function getReferrerToRedirectTo() : string
+    {
+        $referrer = Common::unsanitizeInputValue(Common::getRequestVar('referrer', '', 'string'));
+        return $referrer !== '' ? $referrer : (string) Url::getReferrer();
     }
     protected function redirectAfterModification($redirectAfter)
     {
