@@ -13,8 +13,8 @@ use Piwik\Plugins\TagManager\Model\Variable as UpstreamVariable;
 use Piwik\Validators\Exception as ValidatorException;
 
 /**
- * Overrides Tag Manager's variable model, refusing a variable name that can be read as a
- * reference to another variable.
+ * Overrides Tag Manager's variable model, refusing names that can break out of a variable
+ * reference or inject markup into a template.
  *
  * Only a variable needs this. A "{{...}}" reference names a variable, so a tag's or a trigger's
  * name is never interpolated into anything.
@@ -45,7 +45,10 @@ class Variable extends UpstreamVariable
             return;
         }
 
-        if (is_string($name) && preg_match('/\{\{|\}\}/', $name)) {
+        // Variable names are inserted between {{ and }} when referenced in a tag. Reject every
+        // brace, not just the paired delimiters: an unmatched brace can escape that context. Also
+        // reject angle brackets so a name cannot introduce HTML when substituted into a tag.
+        if (is_string($name) && preg_match('/[{}<>]/', $name)) {
             throw new ValidatorException(Piwik::translate('WordPress_TagManagerVariableNameBracesNotAllowed'));
         }
     }
