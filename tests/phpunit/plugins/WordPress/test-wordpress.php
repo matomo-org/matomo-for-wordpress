@@ -107,22 +107,38 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'validateEgressIp' => true,
 		];
 
-		$urls = [
-			'https://example.com/data',
-			'http://localhost/?module=API&trigger=archivephp&method=CoreAdminHome.archiveReports&idSite=1&period=day&date=today',
+		$response = null;
+		$status   = null;
+		$headers  = null;
+
+		$this->plugin->onSendHttpRequestBy( 'https://example.com/data', $params, $response, $status, $headers );
+
+		$this->assertNull( $response );
+		$this->assertNull( $status );
+		$this->assertNull( $headers );
+	}
+
+	public function test_onSendHttpRequestBy_leaves_archiving_request_requiring_safe_egress_unhandled() {
+		$response = null;
+		$status   = null;
+		$headers  = null;
+		$params   = [
+			'headers'          => [],
+			'httpMethod'       => 'GET',
+			'timeout'          => 1,
+			'body'             => '',
+			'userAgent'        => null,
+			'destinationPath'  => null,
+			'validateEgressIp' => true,
 		];
+		$url = 'http://localhost/?module=API&trigger=archivephp&method=CoreAdminHome.archiveReports'
+			. '&idSite=1&period=day&date=today';
 
-		foreach ($urls as $url) {
-			$response = null;
-			$status   = null;
-			$headers  = null;
+		$this->plugin->onSendHttpRequestBy( $url, $params, $response, $status, $headers );
 
-			$this->plugin->onSendHttpRequestBy( $url, $params, $response, $status, $headers );
-
-			$this->assertNull( $response );
-			$this->assertNull( $status );
-			$this->assertNull( $headers );
-		}
+		$this->assertNull( $response );
+		$this->assertNull( $status );
+		$this->assertNull( $headers );
 	}
 
 	public function test_onSendHttpRequestBy_uses_wordpress_transport_without_safe_egress_requirement() {
