@@ -505,7 +505,7 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 						'idContainer'        => $container['id_container'],
 						'idContainerVersion' => $container['id_version'],
 						'idVariable'         => $id_variable,
-						'name'               => '<img src=x onerror=alert(1)}',
+						'name'               => '<img src=x onerror=alert(1)',
 						'parameters'         => [ 'constantValue' => '/' ],
 					]
 				);
