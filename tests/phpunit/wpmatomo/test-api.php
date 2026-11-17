@@ -3,7 +3,12 @@
  * @package matomo
  */
 
+use Piwik\API\Request as MatomoApiRequest;
+use Piwik\Plugins\Live\Settings\VisitorLogDisabled;
 use WpMatomo\API;
+use WpMatomo\Roles;
+use WpMatomo\Site;
+use WpMatomo\User\Sync;
 
 class ApiTest extends MatomoAnalytics_SharedFixture_TestCase {
 
@@ -41,6 +46,90 @@ class ApiTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertStringStartsWith( '5.', $response->get_data() );
 		$this->assertTrue( strlen( $response->get_data() ) < 15 );
+	}
+
+	public function test_dispatch_uses_the_registered_route_method_when_request_params_conflict() {
+		$this->create_set_super_admin();
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_query_params( [
+			'module' => 'API',
+			'method' => 'API.getSuggestedValuesForSegment',
+		] );
+		$request->set_body_params( [
+			'module' => 'CoreAdminHome',
+			'method' => 'API.getBulkRequest',
+			'urls'   => [ 'method=Live.getLastVisitsDetails&idSite=1&period=day&date=today' ],
+		] );
+
+		$original_get  = $_GET;
+		$original_post = $_POST;
+		$_GET          = [ 'module' => 'API', 'method' => 'API.getSuggestedValuesForSegment' ];
+		$_POST         = [ 'module' => 'CoreAdminHome', 'method' => 'API.getBulkRequest' ];
+		MatomoApiRequest::setIsRootRequestApiRequest( $_GET['method'] );
+
+		try {
+			$response = $this->server->dispatch( $request );
+			$this->assertStringStartsWith( '5.', $response->get_data() );
+			$this->assertSame( 'API.getMatomoVersion', MatomoApiRequest::getRootApiRequestMethod() );
+		} finally {
+			$_GET  = $original_get;
+			$_POST = $original_post;
+		}
+	}
+
+	public function test_view_user_cannot_override_a_rest_route_to_run_archive_reports() {
+		$wp_user_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		( new WP_User( $wp_user_id ) )->add_role( Roles::ROLE_VIEW );
+		( new Sync() )->sync_current_users();
+		wp_set_current_user( $wp_user_id );
+
+		$id_site = ( new Site() )->get_current_matomo_site_id();
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_query_params( [
+			'module' => 'API',
+			'method' => 'API.getSuggestedValuesForSegment',
+		] );
+		$request->set_body_params( [
+			'module'   => 'CoreAdminHome',
+			'method'   => 'CoreAdminHome.archiveReports',
+			'idSite'   => $id_site,
+			'period'   => 'day',
+			'date'     => 'today',
+		] );
+
+		MatomoApiRequest::setIsRootRequestApiRequest( 'API.getSuggestedValuesForSegment' );
+		$response = $this->server->dispatch( $request );
+
+		$this->assertStringStartsWith( '5.', $response->get_data() );
+	}
+
+	public function test_disabled_visitor_log_cannot_be_bypassed_with_conflicting_bulk_route_params() {
+		$this->create_set_super_admin();
+		$id_site = ( new Site() )->get_current_matomo_site_id();
+		$setting = VisitorLogDisabled::getMeasurableSetting( $id_site );
+		$setting->setValue( true );
+		$setting->save();
+
+		$tracker = $this->make_local_tracker( '' );
+		$tracker->setUrl( 'http://whatever.com/a/page' );
+		$this->assert_tracking_response( $tracker->doTrackPageView( 'a page view' ) );
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_query_params( [
+			'module' => 'API',
+			'method' => 'API.getSuggestedValuesForSegment',
+		] );
+		$request->set_body_params( [
+			'module' => 'API',
+			'method' => 'API.getBulkRequest',
+			'urls'   => [ 'method=Live.getLastVisitsDetails&idSite=' . $id_site . '&period=day&date=today' ],
+		] );
+
+		MatomoApiRequest::setIsRootRequestApiRequest( 'API.getSuggestedValuesForSegment' );
+		$response = $this->server->dispatch( $request );
+
+		$this->assertStringStartsWith( '5.', $response->get_data() );
 	}
 
 	public function test_dispatch_matomo_api_with_json_response() {
