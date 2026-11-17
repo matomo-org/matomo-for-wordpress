@@ -380,6 +380,12 @@ class WordPress extends Plugin
     		return;
 	    }
 
+        if (!empty($params['validateEgressIp'])) {
+            // Leave this request unhandled so Matomo core can use its pinned,
+            // redirect-revalidating transport.
+            return;
+        }
+
         if ($this->isLocalArchivingApiRequest($url)) {
             // archiving query... we avoid issuing an http request for many reasons...
             // eg user might be using self signed certificate and request fails
@@ -398,12 +404,6 @@ class WordPress extends Plugin
             $status = 200;
             return;
         }
-
-		if (!empty($params['validateEgressIp'])) {
-			// Leave this request unhandled so Matomo core can use its pinned,
-			// redirect-revalidating transport.
-			return;
-		}
 
         $headers = $params['headers'];
         $rawHeaders = array();

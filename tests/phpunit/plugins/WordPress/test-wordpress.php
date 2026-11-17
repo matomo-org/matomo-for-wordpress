@@ -97,9 +97,6 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function test_onSendHttpRequestBy_leaves_requests_requiring_safe_egress_unhandled() {
-		$response = null;
-		$status   = null;
-		$headers  = null;
 		$params   = [
 			'headers'          => [],
 			'httpMethod'       => 'GET',
@@ -110,11 +107,22 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'validateEgressIp' => true,
 		];
 
-		$this->plugin->onSendHttpRequestBy( 'https://example.com/data', $params, $response, $status, $headers );
+		$urls = [
+			'https://example.com/data',
+			'http://localhost/?module=API&trigger=archivephp&method=CoreAdminHome.archiveReports&idSite=1&period=day&date=today',
+		];
 
-		$this->assertNull( $response );
-		$this->assertNull( $status );
-		$this->assertNull( $headers );
+		foreach ($urls as $url) {
+			$response = null;
+			$status   = null;
+			$headers  = null;
+
+			$this->plugin->onSendHttpRequestBy( $url, $params, $response, $status, $headers );
+
+			$this->assertNull( $response );
+			$this->assertNull( $status );
+			$this->assertNull( $headers );
+		}
 	}
 
 	public function test_onSendHttpRequestBy_uses_wordpress_transport_without_safe_egress_requirement() {
