@@ -97,7 +97,7 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 	}
 
 	public function test_onSendHttpRequestBy_leaves_requests_requiring_safe_egress_unhandled() {
-		$params   = [
+		$params = [
 			'headers'          => [],
 			'httpMethod'       => 'GET',
 			'timeout'          => 1,
@@ -131,7 +131,7 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 			'destinationPath'  => null,
 			'validateEgressIp' => true,
 		];
-		$url = 'http://localhost/?module=API&trigger=archivephp&method=CoreAdminHome.archiveReports'
+		$url      = 'http://localhost/?module=API&trigger=archivephp&method=CoreAdminHome.archiveReports'
 			. '&idSite=1&period=day&date=today';
 
 		$this->plugin->onSendHttpRequestBy( $url, $params, $response, $status, $headers );
