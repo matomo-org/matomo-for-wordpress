@@ -33,8 +33,18 @@ export default class TagManagerPage extends MatomoAdminPage {
       $('li[role=menuitem] a.item:contains(Install Code)')[0].click();
     });
 
-    await $('.modal .manageInstallTagCode pre').waitForExist();
-    await $('.modal tr').waitForExist();
+    await $('.modal .manageInstallTagCode pre').waitForDisplayed();
+    // A header row exists before the release request has completed. Wait for
+    // actual release data and rendering before normalizing the screenshot.
+    await $('.modal .manageInstallTagCode td.released_on').waitForDisplayed({ timeout: 30000 });
+    await browser.waitUntil(() => browser.execute(() => {
+      return window.jQuery('.modal .loadingPiwik:visible, .modal .matomo-loader:visible').length === 0
+        && window.jQuery('.modal :animated').length === 0;
+    }), { timeout: 30000 });
+    await browser.execute(async () => {
+      await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    });
 
     await browser.execute(() => {
       $('td.released_on').each((i, e) => $(e).html('REMOVED'));

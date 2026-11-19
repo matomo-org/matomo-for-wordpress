@@ -480,9 +480,9 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$user = new WP_User( $id1 );
 
 		$model = new Model();
-		$model->addUser( 'foobar', md5( 1 ), 'email@example.org', 'foobar', md5( 1 ), '2018-01-02 03:04:05' );
-		$model->addUser( 'wp_foobar', md5( 2 ), 'email1@example.org', 'wp_foobar', md5( 2 ), '2018-01-03 03:04:05' );
-		$model->addUser( 'wp_foobar1', md5( 3 ), 'email2@example.org', 'wp_foobar1', md5( 3 ), '2018-01-04 03:04:05' );
+		$model->addUser( 'foobar', md5( 1 ), 'email@example.org', '2018-01-02 03:04:05' );
+		$model->addUser( 'wp_foobar', md5( 2 ), 'email1@example.org', '2018-01-03 03:04:05' );
+		$model->addUser( 'wp_foobar1', md5( 3 ), 'email2@example.org', '2018-01-04 03:04:05' );
 
 		$login = $this->sync->ensure_user_exists( $user );
 		$this->assertSame( 'wp_foobar2', $login );
@@ -589,7 +589,7 @@ class UserSyncTest extends MatomoAnalytics_SharedFixture_TestCase {
 		// corrupted pre-existing state: both WP users are mapped to the same Matomo login and
 		// the matomo user exists
 		$model = new Model();
-		$model->addUser( 'test_user', md5( 1 ), 'attacker@example.org', 'test_user', md5( 1 ), '2018-01-02 03:04:05' );
+		$model->addUser( 'test_user', md5( 1 ), 'attacker@example.org', '2018-01-02 03:04:05' );
 		User::map_matomo_user_login( $attacker_id, 'test_user' );
 		User::map_matomo_user_login( $victim_id, 'test_user' );
 

@@ -15,6 +15,7 @@ import GlobalSetup from './global-setup.js';
 describe('MWP Language', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
+
   before(async () => {
     if (!process.env.PHP_VERSION) {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
