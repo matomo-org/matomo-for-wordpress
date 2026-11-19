@@ -1,13 +1,10 @@
 == Changelog ===
 
-= 5.14.0 =
-* Update core Matomo to version 5.14.2.
-* Tag Manager security improvements.
-
 = 5.13.2 =
 * Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
   `curl_close()` and of the `$http_response_header` variable, or for the plugin's own use of
   `ReflectionProperty::setAccessible()` and of an implicitly nullable parameter type.
+* Security: Tag Manager improvements.
 
 = 5.13.1 =
 * Bug fix: when the plugin is network activated, a blog's administrator now holds Matomo super
