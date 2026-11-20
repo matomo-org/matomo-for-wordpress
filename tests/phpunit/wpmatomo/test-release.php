@@ -97,6 +97,7 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 		}
 
 		$ignored_core_files = [
+			'matomo/AGENTS.md',
 			'matomo/lang/README.md',
 			'matomo/config/manifest.inc.php',
 			'matomo/js/piwik.js',
@@ -162,7 +163,13 @@ class ReleaseTest extends MatomoAnalytics_SharedFixture_TestCase {
 
 			// check release contents
 			$mwp_release_files = $this->get_zip_file_contents( $path_to_zip );
-			$this->assertContains( 'matomo.php', $mwp_release_files );
+			$this->assertContains( 'matomo/matomo.php', $mwp_release_files );
+			foreach ( $mwp_release_files as &$release_file ) {
+				$this->assertStringStartsWith( 'matomo/', $release_file, 'Release files must be inside the canonical matomo plugin directory.' );
+				$release_file = substr( $release_file, strlen( 'matomo/' ) );
+			}
+			unset( $release_file );
+
 			$mwp_release_contents = array_fill_keys( $mwp_release_files, true );
 			$matomo_core_contents = array_fill_keys( $this->get_zip_file_contents( $core_release_zip ), true );
 
