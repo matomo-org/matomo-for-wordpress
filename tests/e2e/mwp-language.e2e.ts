@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser, $ } from '@wdio/globals';
 import Website from './website.js';
 import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
@@ -43,11 +43,16 @@ describe('MWP Language', () => {
   });
 
   it('should use the appropriate language in Matomo Reporting when the site language changes', async () => {
+    await Website.setSiteLanguage('de_DE');
+    await Website.setUserProfileLanguage('site-default');
+
     await OverviewPage.open();
-    await OverviewPage.prepareMatomoPageForScreenshot();
+
+    // Assert the locale and rendered translation without depending on page layout.
+    await expect($('html')).toHaveAttribute('lang', 'de');
     await expect(
-      await browser.checkFullPageScreen('matomo-lang.site-lang.matomo-reporting')
-    ).toBeLessThanOrEqual(0.06);
+      $('.reportingMenu .navbar [data-category-id="General_Visitors"] > ul > li.active > a.item')
+    ).toHaveText('Übersicht');
   });
 
   it('should use the appropriate language in MWP admin when the user profile language changes', async () => {
@@ -61,11 +66,16 @@ describe('MWP Language', () => {
   });
 
   it('should use the appropriate language in Matomo Reporting when the user profile language changes', async () => {
+    await Website.setSiteLanguage('de_DE');
+    await Website.setUserProfileLanguage('fr_FR');
+
     await OverviewPage.open();
-    await OverviewPage.prepareMatomoPageForScreenshot();
+
+    // The French user preference must override the German site language.
+    await expect($('html')).toHaveAttribute('lang', 'fr');
     await expect(
-      await browser.checkFullPageScreen('matomo-lang.profile-lang.matomo-reporting')
-    ).toBeLessThanOrEqual(0.06);
+      $('.reportingMenu .navbar [data-category-id="General_Visitors"] > ul > li.active > a.item')
+    ).toHaveText('Récapitulatif');
   });
 
   it.skip('should use the appropriate language in MWP admin when a plugin calls switch_to_locale', async () => {
