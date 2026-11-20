@@ -14,7 +14,7 @@ import ContainerVariablesPage from './pageobjects/tag-manager/container-variable
 import ContainerVersionsPage from './pageobjects/tag-manager/container-versions.page.js';
 import ContainerTriggersPage from './pageobjects/tag-manager/container-triggers.page.js';
 import Website from './website.js';
-import { getScreenshotName } from './screenshot.js';
+import { getScreenshotName, getInstallCodeScreenshotName } from './screenshot.js';
 
 describe('Matomo > Tag Manager', () => {
   before(async () => {
@@ -96,7 +96,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
+      await browser.checkFullPageScreen(getInstallCodeScreenshotName())
     ).toBeLessThanOrEqual(2);
   });
 

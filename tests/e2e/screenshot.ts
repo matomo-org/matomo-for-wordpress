@@ -6,10 +6,26 @@
  *
  */
 
-// The latest/PHP 7.4 job uses different GD rendering and compatible plugin versions.
-// Keep its reviewed snapshots separate from all other matrix jobs.
+// Keep reviewed screenshot fixtures separate where matrix environments differ.
 export function getScreenshotName(name: string): string {
-  return process.env.PHP_VERSION === '7.4' && process.env.WORDPRESS_VERSION === 'latest'
+  const phpVersion = process.env.PHP_VERSION;
+  const wordpressVersion = process.env.WORDPRESS_VERSION;
+
+  if (phpVersion === '8.1' && (wordpressVersion === 'latest' || wordpressVersion === 'trunk')) {
+    return `${name}.php81`;
+  }
+
+  return phpVersion === '7.4' && wordpressVersion === 'latest'
     ? `${name}.php74-latest`
+    : name;
+}
+
+// Only the PHP 8.1 install modal needs separate latest/trunk fixtures.
+export function getInstallCodeScreenshotName(): string {
+  const name = 'matomo.tag-manager.install-code-modal';
+  const wordpressVersion = process.env.WORDPRESS_VERSION;
+  return process.env.PHP_VERSION === '8.1'
+    && (wordpressVersion === 'latest' || wordpressVersion === 'trunk')
+    ? `${name}.php81-${wordpressVersion}`
     : name;
 }
