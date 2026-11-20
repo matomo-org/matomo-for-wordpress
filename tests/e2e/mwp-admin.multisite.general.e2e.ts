@@ -8,6 +8,7 @@
 
 import { expect, browser,$ } from '@wdio/globals';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 import GetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import SettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import DashboardPage from './pageobjects/matomo-reporting/dashboard.page.js';
@@ -82,7 +83,7 @@ describe('MultiSite General', function() {
     await DashboardPage.unfocus();
 
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.multisite.mtm-reporting`)
+      await browser.checkFullPageScreen(getScreenshotName('mwp-admin.multisite.mtm-reporting'))
     ).toBeLessThan(0.3);
   });
 });

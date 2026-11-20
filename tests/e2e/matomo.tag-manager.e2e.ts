@@ -14,6 +14,7 @@ import ContainerVariablesPage from './pageobjects/tag-manager/container-variable
 import ContainerVersionsPage from './pageobjects/tag-manager/container-versions.page.js';
 import ContainerTriggersPage from './pageobjects/tag-manager/container-triggers.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo > Tag Manager', () => {
   before(async () => {
@@ -106,7 +107,7 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.preview-mode-enabled')
+      await browser.checkFullPageScreen(getScreenshotName('matomo.tag-manager.preview-mode-enabled'))
     ).toBeLessThanOrEqual(0.05);
   });
 });

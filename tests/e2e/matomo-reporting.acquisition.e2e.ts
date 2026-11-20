@@ -15,6 +15,7 @@ import SearchEnginesKeywordsPage from './pageobjects/matomo-reporting/acquisitio
 import SocialNetworksPage from './pageobjects/matomo-reporting/acquisition/social-networks.page.js';
 import WebsitesPage from './pageobjects/matomo-reporting/acquisition/websites.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Acquisition', () => {
   before(async () => {
@@ -53,7 +54,7 @@ describe('Matomo Reporting > Acquisition', () => {
 
     await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.acquisition.overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.acquisition.overview'))
     ).toBeLessThan(0.1);
   });
 
