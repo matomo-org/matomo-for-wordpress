@@ -93,8 +93,9 @@ class BuildRelease extends ConsoleCommand
 
         $this->getOutput()->writeln("Generating $format archive at $outputFile...");
 
-        // Keep the plugin directory stable when WordPress installs or replaces the archive.
-        $command = "git -C " . $pathToRepo . " archive --format=$format --prefix=matomo/ $stashHash > " . $outputFile;
+        // WordPress uploads need a stable plugin directory; deployment expects a flat TGZ.
+        $prefix = $format === 'zip' ? '--prefix=matomo/ ' : '';
+        $command = "git -C " . $pathToRepo . " archive --format=$format " . $prefix . "$stashHash > " . $outputFile;
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
         $this->getOutput()->writeln("<info>Created archive matomo-$version.$format.</info>");
