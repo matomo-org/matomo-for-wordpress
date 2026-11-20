@@ -10,7 +10,7 @@ import Page from './page.js';
 
 class ContactUsPage extends Page {
     async open() {
-        const result = super.open('/contact-us/');
+        const result = await super.open('/contact-us/');
 
         await $('#matomo_optout_checkbox').waitForExist({ timeout: 30000 });
         await $('#matomo-opt-out-form-embed').waitForExist({ timeout: 30000 });
@@ -21,6 +21,13 @@ class ContactUsPage extends Page {
         await browser.pause(10000);
 
         return result;
+    }
+
+    async prepareBlogPostPageForScreenshot() {
+        await super.prepareBlogPostPageForScreenshot();
+        // Keep the desktop admin-bar space after hiding the bar. WordPress trunk
+        // can remove its injected margin when the hidden bar is measured again.
+        await this.addStylesToPage('html { margin-top: 32px !important; }');
     }
 
     async clickOptOut() {

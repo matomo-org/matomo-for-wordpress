@@ -6,6 +6,7 @@
  *
  */
 
+import { getScreenshotName } from './screenshot.js';
 import { expect, browser } from '@wdio/globals';
 import MwpDiagnosticsPage from './pageobjects/mwp-admin/diagnostics.page.js';
 import Website from './website.js';
@@ -26,7 +27,7 @@ describe('MWP Admin > Diagnostics', () => {
 
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}${trunkSuffix}`)
+      await browser.checkFullPageScreen(getScreenshotName(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}${trunkSuffix}`))
     ).toBeLessThanOrEqual(0.03);
   });
 

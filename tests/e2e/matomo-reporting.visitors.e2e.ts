@@ -17,6 +17,7 @@ import TimesPage from './pageobjects/matomo-reporting/visitors/times.page.js';
 import UserIdsPage from './pageobjects/matomo-reporting/visitors/user-ids.page.js';
 import VisitsLogPage from './pageobjects/matomo-reporting/visitors/visits-log.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Visitors', () => {
   before(async () => {
@@ -46,7 +47,7 @@ describe('Matomo Reporting > Visitors', () => {
 
     await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.visitors.overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.visitors.overview'))
     ).toBeLessThan(0.1);
   });
 

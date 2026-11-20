@@ -6,6 +6,7 @@
  *
  */
 
+import { getScreenshotName } from './screenshot.js';
 import { expect, browser } from '@wdio/globals'
 import Website from './website.js';
 import NetworkMultiSitePage from './pageobjects/mwp-network-admin/multisite.page.js';
@@ -59,7 +60,7 @@ describe('Network Admin', function() {
 
     await NetworkDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.network.diagnostics.${process.env.PHP_VERSION}${trunkSuffix}`)
+      await browser.checkFullPageScreen(getScreenshotName(`mwp-admin.network.diagnostics.${process.env.PHP_VERSION}${trunkSuffix}`))
     ).toBeLessThan(0.03);
   });
 

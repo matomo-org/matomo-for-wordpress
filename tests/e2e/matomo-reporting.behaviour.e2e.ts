@@ -20,6 +20,7 @@ import PerformancePage from './pageobjects/matomo-reporting/behaviour/performanc
 import SiteSearchPage from './pageobjects/matomo-reporting/behaviour/site-search.page.js';
 import TransitionsPage from './pageobjects/matomo-reporting/behaviour/transitions.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Behaviour', () => {
   before(async () => {
@@ -75,7 +76,7 @@ describe('Matomo Reporting > Behaviour', () => {
 
     await EngagementPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.behaviour.engagement')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.behaviour.engagement'))
     ).toBeLessThan(0.1);
   });
 
@@ -138,7 +139,7 @@ describe('Matomo Reporting > Behaviour', () => {
 
     await PerformancePage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.behaviour.performance')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.behaviour.performance'))
     ).toBeLessThan(0.1);
   });
 
