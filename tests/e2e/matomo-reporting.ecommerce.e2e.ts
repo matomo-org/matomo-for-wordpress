@@ -12,6 +12,7 @@ import OverviewPage from './pageobjects/matomo-reporting/ecommerce/overview.page
 import ProductsPage from './pageobjects/matomo-reporting/ecommerce/products.page.js';
 import SalesPage from './pageobjects/matomo-reporting/ecommerce/sales.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Ecommerce', () => {
   before(async () => {
@@ -44,7 +45,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await OverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.ecommerce.overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.ecommerce.overview'))
     ).toBeLessThan(0.1);
   });
 

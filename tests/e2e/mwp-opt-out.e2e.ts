@@ -8,6 +8,7 @@
 
 import { expect, browser } from '@wdio/globals'
 import Website from './website.js';
+import { getPhp74TrunkScreenshotName } from './screenshot.js';
 import ContactUsPage from './pageobjects/contact-us.page.js';
 
 describe('OptOut', () => {
@@ -22,7 +23,7 @@ describe('OptOut', () => {
 
         await ContactUsPage.prepareBlogPostPageForScreenshot();
         await expect(
-            await browser.checkFullPageScreen(`mwp.page-with-opt-out.${process.env.PHP_VERSION}${trunkSuffix}`)
+            await browser.checkFullPageScreen(getPhp74TrunkScreenshotName(`mwp.page-with-opt-out.${process.env.PHP_VERSION}${trunkSuffix}`))
         ).toEqual(0);
     });
 
@@ -32,7 +33,7 @@ describe('OptOut', () => {
 
         await ContactUsPage.prepareBlogPostPageForScreenshot();
         await expect(
-            await browser.checkFullPageScreen(`mwp.page-with-opt-out.classic-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
+            await browser.checkFullPageScreen(getPhp74TrunkScreenshotName(`mwp.page-with-opt-out.classic-changed.${process.env.PHP_VERSION}${trunkSuffix}`))
         ).toEqual(0);
     });
 

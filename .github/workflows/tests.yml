@@ -211,12 +211,12 @@ jobs:
         shell: bash
         run: |
           mkdir docker
-          echo '[PHP]' > docker/php-custom.ini
-          echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
-          echo 'upload_max_filesize = 128M' >> docker/php-custom.ini
-          echo 'memory_limit = 2G' >> docker/php-custom.ini
-          echo 'max_execution_time = 600' >> docker/php-custom.ini
-          echo 'post_max_size = 128M' >> docker/php-custom.ini
+          echo '[PHP]' > scripts/local-php-custom.ini
+          echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> scripts/local-php-custom.ini
+          echo 'upload_max_filesize = 128M' >> scripts/local-php-custom.ini
+          echo 'memory_limit = 2G' >> scripts/local-php-custom.ini
+          echo 'max_execution_time = 600' >> scripts/local-php-custom.ini
+          echo 'post_max_size = 128M' >> scripts/local-php-custom.ini
 
       # docker-compose up
       - run: |

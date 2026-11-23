@@ -228,6 +228,8 @@ export default class Page {
       }
 
       window.jQuery('.notice:contains(An error occurred while updating the geolocation database)').hide();
+      // Scheduled plugin suggestions depend on user state and shift unrelated screenshots.
+      window.jQuery('.matomo-plugin-suggestion').hide();
       window.jQuery('.notice-ocean-extra-plugin').hide();
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();

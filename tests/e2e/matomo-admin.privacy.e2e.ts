@@ -6,6 +6,7 @@
  *
  */
 
+import { getScreenshotName } from './screenshot.js';
 import { expect, browser } from '@wdio/globals';
 import AnonymizeDataPage from './pageobjects/matomo-admin/privacy/anonymize-data.page.js';
 import UsersOptOutPage from './pageobjects/matomo-admin/privacy/users-opt-out.page.js';
@@ -41,7 +42,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await UsersOptOutPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`matomo-admin.privacy.users-opt-out.${process.env.PHP_VERSION}`)
+      await browser.checkFullPageScreen(getScreenshotName(`matomo-admin.privacy.users-opt-out.${process.env.PHP_VERSION}`))
     ).toEqual(0)
   });
 

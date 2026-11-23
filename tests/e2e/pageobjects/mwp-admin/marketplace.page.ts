@@ -91,6 +91,19 @@ class MwpMarketplacePage extends MwpPage {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }
 
+  async prepareWpAdminForScreenshot() {
+    await super.prepareWpAdminForScreenshot();
+
+    // Only the pre-install tabs use an em-based margin that changes with suggestion markup.
+    await this.addStylesToPage(`
+      .wrap > h2.nav-tab-wrapper:has(a[href="?page=matomo-marketplace&tab=marketplace"]) {
+        margin-bottom: 16.9px !important;
+      }
+    `);
+
+    await this.waitForImages();
+  }
+
   async openMarketplacePluginsTab() {
     await $('a.nav-tab=Marketplace').click();
 
@@ -161,11 +174,34 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async installPlugin(plugin: string) {
-    await browser.execute((p) => {
-      window.jQuery(`.matomo-plugin-card[data-plugin-slug="${p}"] .cta-container button`)[0].click();
-    }, plugin);
+    for (let attempt = 0; attempt < 3; ++attempt) {
+      await browser.execute((p) => {
+        window.jQuery(`.matomo-plugin-card[data-plugin-slug="${p}"] .cta-container button`)[0].click();
+      }, plugin);
 
-    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
+      // A download error is a terminal installer page, not a slow activation link.
+      await browser.waitUntil(async () => {
+        return await $('#wpbody-content p a.button-primary').isDisplayed()
+          || await browser.execute(() => document.body.innerText.includes('Download failed.'));
+      }, { timeout: 30000 });
+
+      if (await $('#wpbody-content p a.button-primary').isDisplayed()) {
+        return;
+      }
+
+      const downloadError = await browser.execute(() => {
+        return document.body.innerText.match(/Download failed\.[^\n]*/)?.[0] || 'Download failed.';
+      });
+      const isGatewayError = /Download failed\.\s*(?:Bad Gateway|Gateway Time[- ]?out|502\b|504\b)/i.test(downloadError);
+      if (!isGatewayError || attempt === 2) {
+        throw new Error(`Could not install ${plugin}: ${downloadError}`);
+      }
+
+      console.log(`Retrying ${plugin} after a marketplace gateway error (attempt ${attempt + 2}/3)`);
+      await browser.pause(1000 * (attempt + 1));
+      await this.open();
+      await this.waitForMarketplaceTab();
+    }
   }
 
   async activateInstalledPlugin() {
@@ -174,6 +210,8 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async bulkInstallMatomoPlugins() {
+    // The nonce exists before the asynchronous plugin catalog has finished loading.
+    await this.waitForMarketplaceTab();
     await $('[data-bulk-plugins-nonce]').waitForExist();
 
     const matomoPlugins = await browser.execute(() => {
@@ -186,61 +224,80 @@ class MwpMarketplacePage extends MwpPage {
         .filter(p => p.slug !== 'ForceSSL');
     });
 
+    expect(matomoPlugins.length).toBeGreaterThan(0);
+
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
-    const nonce = await browser.execute(() => {
-      return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
-    });
-
-    const body = new URLSearchParams({
-      'tgmpa-page': 'matomo-marketplace',
-      plugin_status: 'all',
-      _wpnonce: nonce,
-      _wp_http_referer: currentPageUrl,
-      action: 'tgmpa-bulk-install',
-      bulk_action: 'Apply',
-      action2: 'tgmpa-bulk-install',
-    });
-    matomoPlugins.forEach((p) => {
-      body.append('plugin[]', p.slug);
-    });
-
-    const baseUrl = await Website.baseUrl();
-    await browser.execute((bu, b) => {
-      window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
-        method: 'POST',
-        data: b,
-        dataType: 'html',
-        complete: function (r) {
-          (window as any).bulkInstallResponse = r;
-        },
-        error: function (jqxhr, textStatus, errorThrown) {
-          (window as any).bulkInstallError = errorThrown || textStatus;
-        }
+    const installedPluginNames = new Set<string>();
+    const installDeadline = Date.now() + 300000;
+    let pendingPlugins = matomoPlugins;
+    for (let attempt = 0; attempt < 3 && pendingPlugins.length && Date.now() < installDeadline; ++attempt) {
+      const nonce = await browser.execute(() => {
+        return window.jQuery('#matomo-marketplace-for-wordpress').data('bulk-plugins-nonce');
       });
-    }, baseUrl, body.toString());
 
-    await browser.waitUntil(() => {
-      return browser.execute(() => !!(window.bulkInstallResponse || window.bulkInstallError));
-    }, { timeout: 300000 });
+      const body = new URLSearchParams({
+        'tgmpa-page': 'matomo-marketplace',
+        plugin_status: 'all',
+        _wpnonce: nonce,
+        _wp_http_referer: currentPageUrl,
+        action: 'tgmpa-bulk-install',
+        bulk_action: 'Apply',
+        action2: 'tgmpa-bulk-install',
+      });
+      pendingPlugins.forEach((p) => {
+        body.append('plugin[]', p.slug);
+      });
 
-    const bulkInstallError = await browser.execute(() => window.bulkInstallError);
-    if (bulkInstallError) {
-      throw new Error(bulkInstallError);
+      const baseUrl = await Website.baseUrl();
+      await browser.execute((bu, b) => {
+        (window as any).bulkInstallResponse = null;
+        (window as any).bulkInstallError = null;
+        window.jQuery.ajax(`${bu}/wp-admin/admin.php?page=matomo-marketplace&tab=install`, {
+          method: 'POST',
+          data: b,
+          dataType: 'html',
+          success: function (r) {
+            (window as any).bulkInstallResponse = r;
+          },
+          error: function (jqxhr, textStatus, errorThrown) {
+            (window as any).bulkInstallError = errorThrown || textStatus;
+          }
+        });
+      }, baseUrl, body.toString());
+
+      await browser.waitUntil(() => {
+        return browser.execute(() => window.bulkInstallResponse !== null || !!window.bulkInstallError);
+      }, { timeout: Math.max(1, installDeadline - Date.now()) });
+
+      const bulkInstallError = await browser.execute(() => window.bulkInstallError);
+      if (bulkInstallError) {
+        throw new Error(bulkInstallError);
+      }
+
+      const responseBody = await browser.execute(() => window.bulkInstallResponse) as string;
+
+      const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
+        .map(g => g[1].replaceAll('&amp;', '&'));
+      installedPlugins.forEach(name => installedPluginNames.add(name));
+      pendingPlugins = matomoPlugins.filter(p => !installedPluginNames.has(p.name));
+
+      if (pendingPlugins.length && attempt < 2 && Date.now() < installDeadline) {
+        // Keep successful installs and retry only the missing downloads. A failed
+        // bulk request otherwise leaves the later language fixtures incomplete.
+        console.log(`Retrying missing marketplace installs: ${pendingPlugins.map(p => p.slug).join(', ')}`);
+        await browser.refresh();
+        await this.waitForMarketplaceTab();
+      }
     }
-
-    const responseBody = await browser.execute(() => window.bulkInstallResponse);
-
-    const installedPlugins = [...responseBody.matchAll(/<p>\s*(.*?) installed successfully/g)]
-      .map(g => g[1].replaceAll('&amp;', '&'));
-    installedPlugins.sort();
 
     const allPluginsName = matomoPlugins.map(p => p.name);
     allPluginsName.sort();
 
-    expect(installedPlugins).toEqual(allPluginsName);
+    expect([...installedPluginNames].sort()).toEqual(allPluginsName);
 
     await browser.refresh(); // for new nonce values
+    await this.waitForMarketplaceTab();
 
     return matomoPlugins;
   }
@@ -274,7 +331,8 @@ class MwpMarketplacePage extends MwpPage {
           method: 'POST',
           data: b,
           dataType: 'html',
-          complete: resolve,
+          // success receives the HTML; complete receives a jqXHR object.
+          success: resolve,
           error: function (jqxhr, textStatus, errorThrown) {
             reject(errorThrown || textStatus);
           }

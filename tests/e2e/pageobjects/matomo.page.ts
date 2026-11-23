@@ -14,7 +14,7 @@ import * as path from "path";
 export default class MatomoPage extends Page {
 
   async open(path: string) {
-    const result = super.open(path);
+    const result = await super.open(path);
     await this.waitForLoading();
     await this.addStylesToPage(`
       table.entityTable tbody tr:hover td { background-color: unset !important; }
@@ -43,7 +43,26 @@ export default class MatomoPage extends Page {
     }
   }
 
+  async hideEnvironmentNoticesForScreenshot() {
+    // CI intentionally tests older PHP versions and localhost. Keep these known
+    // environment notices out of snapshots without suppressing other warnings.
+    await browser.execute(() => {
+      document.querySelectorAll<HTMLElement>('.notification').forEach((notification) => {
+        const text = notification.textContent || '';
+        const isPhpVersionNotice = text.includes('Urgent PHP security update required')
+          && text.includes('Your server reports PHP ');
+        const isLocalhostDetectionNotice = text.includes('Site content detection request for localhost was refused:')
+          && text.includes('host resolves to a private or reserved address');
+        if (isPhpVersionNotice || isLocalhostDetectionNotice) {
+          notification.style.display = 'none';
+        }
+      });
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
   async prepareMatomoPageForScreenshot() {
+    await this.hideEnvironmentNoticesForScreenshot();
     await browser.execute(() => {
       $('nav .badge-menu-item-container').closest('li').remove();
     });

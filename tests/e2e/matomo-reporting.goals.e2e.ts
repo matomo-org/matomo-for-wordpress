@@ -11,6 +11,7 @@ import ManageGoalsPage from './pageobjects/matomo-reporting/goals/manage-goals.p
 import GoalOverviewPage from './pageobjects/matomo-reporting/goals/overview.page.js';
 import GoalPage from './pageobjects/matomo-reporting/goals/goal.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Goals', () => {
   before(async () => {
@@ -40,7 +41,7 @@ describe('Matomo Reporting > Goals', () => {
 
     await GoalOverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.goals.overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.goals.overview'))
     ).toBeLessThan(0.2); // by dimension reports' width can be random
   });
 });

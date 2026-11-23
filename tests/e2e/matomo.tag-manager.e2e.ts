@@ -14,6 +14,7 @@ import ContainerVariablesPage from './pageobjects/tag-manager/container-variable
 import ContainerVersionsPage from './pageobjects/tag-manager/container-versions.page.js';
 import ContainerTriggersPage from './pageobjects/tag-manager/container-triggers.page.js';
 import Website from './website.js';
+import { getScreenshotName, getInstallCodeScreenshotName, getPhp74TrunkScreenshotName } from './screenshot.js';
 
 describe('Matomo > Tag Manager', () => {
   before(async () => {
@@ -83,7 +84,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await browser.pause(1000);
     await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
+      await browser.checkFullPageScreen(getPhp74TrunkScreenshotName('matomo.tag-manager.publish-modal'))
     ).toBeLessThanOrEqual(3);
   });
 
@@ -95,7 +96,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
+      await browser.checkFullPageScreen(getInstallCodeScreenshotName())
     ).toBeLessThanOrEqual(2);
   });
 
@@ -106,7 +107,7 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo.tag-manager.preview-mode-enabled')
+      await browser.checkFullPageScreen(getScreenshotName('matomo.tag-manager.preview-mode-enabled'))
     ).toBeLessThanOrEqual(0.05);
   });
 });

@@ -9,6 +9,7 @@
 import { expect, browser } from '@wdio/globals';
 import MatomoDashboardPage from './pageobjects/matomo-reporting/dashboard.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > Dashboard', () => {
   before(async () => {
@@ -35,7 +36,7 @@ describe('Matomo Reporting > Dashboard', () => {
 
     await MatomoDashboardPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.dashboard')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.dashboard'))
     ).toBeLessThan(0.1);
   });
 });

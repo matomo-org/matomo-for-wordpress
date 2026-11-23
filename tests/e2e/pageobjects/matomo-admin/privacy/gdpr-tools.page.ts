@@ -11,7 +11,7 @@ import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class GdprToolsPage extends MatomoAdminPage {
   async open() {
-    const result = super.open('PrivacyManager.gdprTools');
+    const result = await super.open('PrivacyManager.gdprTools');
 
     await $('.segment-generator').waitForDisplayed({ timeout: 30000 });
     await browser.waitUntil(async () => {
@@ -19,7 +19,7 @@ class GdprToolsPage extends MatomoAdminPage {
     }, { timeout: 20000 });
 
     // if the wait above doesn't work, just hide the gif
-    this.addStylesToPage(`
+    await this.addStylesToPage(`
       .segment-loading > .matomo-loader {
         display: none !important;
       }

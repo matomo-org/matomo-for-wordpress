@@ -462,7 +462,7 @@ class Website {
       });
     }, { timeout: 120000 });
 
-    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite');
+    const isAlreadyExistingPluginPage = await $('.update-from-upload-overwrite').isExisting();
     if (isAlreadyExistingPluginPage) {
       await browser.execute(() => {
         window.jQuery('.update-from-upload-overwrite')[0].click();
@@ -496,6 +496,10 @@ class Website {
     } else {
       console.log('No activate button found.');
     }
+
+    // A successful upload must replace the canonical plugin, not install a second copy.
+    await browser.url(`${await this.baseUrl()}/wp-admin/plugins.php`);
+    await $('tr.active[data-plugin="matomo/matomo.php"]').waitForExist({ timeout: 30000 });
   }
 
   /**

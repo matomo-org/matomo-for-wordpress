@@ -12,6 +12,7 @@ import AiChatbotsRealtimePage from './pageobjects/matomo-reporting/ai-assistants
 import AiChatbotsContentRequestsPage from './pageobjects/matomo-reporting/ai-assistants/ai-chatbots-content-requests.page.js';
 import AiAgentsOverviewPage from './pageobjects/matomo-reporting/ai-assistants/ai-agents-overview.page.js';
 import Website from './website.js';
+import { getScreenshotName } from './screenshot.js';
 
 describe('Matomo Reporting > AI Assistants', () => {
   before(async () => {
@@ -23,7 +24,7 @@ describe('Matomo Reporting > AI Assistants', () => {
 
     await AiChatbotsOverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.ai-assistants.ai-chatbots-overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.ai-assistants.ai-chatbots-overview'))
     ).toBeLessThan(0.1);
   });
 
@@ -50,7 +51,7 @@ describe('Matomo Reporting > AI Assistants', () => {
 
     await AiAgentsOverviewPage.prepareMatomoPageForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-reporting.ai-assistants.ai-agents-overview')
+      await browser.checkFullPageScreen(getScreenshotName('matomo-reporting.ai-assistants.ai-agents-overview'))
     ).toBeLessThan(0.1);
   });
 });
