@@ -91,6 +91,19 @@ class MwpMarketplacePage extends MwpPage {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }
 
+  async prepareWpAdminForScreenshot() {
+    await super.prepareWpAdminForScreenshot();
+
+    // Keep tab spacing independent of optional suggestion markup.
+    await this.addStylesToPage(`
+      .wrap > h2.nav-tab-wrapper {
+        margin-bottom: 17px !important;
+      }
+    `);
+
+    await this.waitForImages();
+  }
+
   async openMarketplacePluginsTab() {
     await $('a.nav-tab=Marketplace').click();
 
