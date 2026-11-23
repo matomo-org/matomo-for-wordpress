@@ -94,10 +94,10 @@ class MwpMarketplacePage extends MwpPage {
   async prepareWpAdminForScreenshot() {
     await super.prepareWpAdminForScreenshot();
 
-    // Keep tab spacing independent of optional suggestion markup.
+    // Only the pre-install tabs use an em-based margin that changes with suggestion markup.
     await this.addStylesToPage(`
-      .wrap > h2.nav-tab-wrapper {
-        margin-bottom: 17px !important;
+      .wrap > h2.nav-tab-wrapper:has(a[href="?page=matomo-marketplace&tab=marketplace"]) {
+        margin-bottom: 16.9px !important;
       }
     `);
 
@@ -210,6 +210,8 @@ class MwpMarketplacePage extends MwpPage {
   }
 
   async bulkInstallMatomoPlugins() {
+    // The nonce exists before the asynchronous plugin catalog has finished loading.
+    await this.waitForMarketplaceTab();
     await $('[data-bulk-plugins-nonce]').waitForExist();
 
     const matomoPlugins = await browser.execute(() => {
@@ -221,6 +223,8 @@ class MwpMarketplacePage extends MwpPage {
         }))
         .filter(p => p.slug !== 'ForceSSL');
     });
+
+    expect(matomoPlugins.length).toBeGreaterThan(0);
 
     const currentPageUrl = await browser.execute(() => window.location.pathname);
 
@@ -293,6 +297,7 @@ class MwpMarketplacePage extends MwpPage {
     expect([...installedPluginNames].sort()).toEqual(allPluginsName);
 
     await browser.refresh(); // for new nonce values
+    await this.waitForMarketplaceTab();
 
     return matomoPlugins;
   }
@@ -326,7 +331,8 @@ class MwpMarketplacePage extends MwpPage {
           method: 'POST',
           data: b,
           dataType: 'html',
-          complete: resolve,
+          // success receives the HTML; complete receives a jqXHR object.
+          success: resolve,
           error: function (jqxhr, textStatus, errorThrown) {
             reject(errorThrown || textStatus);
           }
