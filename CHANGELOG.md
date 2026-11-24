@@ -57,6 +57,12 @@
   Facebook Pixel, Google Ads Conversion, Google Analytics 4, Google Analytics (Universal),
   Google Tag, Honeybadger, Hotjar, LinkedIn Insight, LiveZilla, OneTrust, Pingdom RUM, Raygun,
   Sentry, Shareaholic, Tawk.to, Visual Website Optimizer and Zendesk Chat.
+* Security: Tag Manager URL hardening now requires the Matomo URL to point to this plugin's Matomo
+  application path and keeps the existing same-site URL and tracker endpoint extension checks when
+  its opt-out is used. Custom image tags are limited to same-site image files
+  and cannot use action-triggering query parameters. These checks validate values when saved;
+  existing container values are not revalidated during publish, copy, or import, so administrators
+  should audit existing containers before publishing them.
 * Security: a paused tag that a user without the unfiltered_html capability would not be allowed to
   add can no longer be turned back on by them either. A paused tag is left out of the generated
   container, so resuming one puts a script on the site that was not being served before. This covers

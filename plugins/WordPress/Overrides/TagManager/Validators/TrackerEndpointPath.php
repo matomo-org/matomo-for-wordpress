@@ -13,10 +13,18 @@ use Piwik\Validators\BaseValidator;
 use Piwik\Validators\Exception;
 
 /**
- * Constrains a tracker endpoint to a resource that cannot be a file somebody uploaded.
+ * Restricts custom endpoints to Matomo's tracker resources below the validated Matomo app URL.
  */
 class TrackerEndpointPath extends BaseValidator
 {
+    /** @var bool */
+    private $strict;
+
+    public function __construct($strict = true)
+    {
+        $this->strict = (bool) $strict;
+    }
+
     /**
      * Everything else is refused rather than interpreted. The path is compared after one round of
      * decoding (see validate()), so a "%" or a NUL byte that survives that is an attempt to have
@@ -27,12 +35,23 @@ class TrackerEndpointPath extends BaseValidator
     /**
      * @var string[]
      */
-    const ALLOWED_EXTENSIONS = ['js', 'php'];
+    const ALLOWED_PATHS = [
+        'custom.js',
+        'matomo.js',
+        'piwik.js',
+        'matomo.min.js',
+        'js/tracker.js',
+        'custom.php',
+        'matomo.php',
+        'piwik.php',
+        'js/tracker.php',
+        'js/',
+    ];
 
     public function validate($value)
     {
         if ($this->isValueBare($value)) {
-            // whether an empty value is acceptable is NotEmpty()'s decision, not ours
+            // The field's NotEmpty validator decides whether a bare value is allowed.
             return;
         }
 
@@ -52,14 +71,19 @@ class TrackerEndpointPath extends BaseValidator
             throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointCharacterNotAllowed'));
         }
 
-        if ('' === $path || substr($path, -1) === '/') {
-            return; // a directory
+        // Leading slashes are removed by the secured-template transform before the value is
+        // used. Apply the same normalization here so validation covers the final relative path.
+        $path = ltrim($path, '/');
+
+        if ($this->strict && ('' === $path || !in_array($path, self::ALLOWED_PATHS, true))) {
+            throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
         }
 
-        $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
-
-        if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
-            throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
+        if (!$this->strict && '' !== $path && substr($path, -1) !== '/') {
+            $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
+            if (!in_array($extension, ['js', 'php'], true)) {
+                throw new Exception(Piwik::translate('WordPress_TagManagerTrackerEndpointNotAllowed'));
+            }
         }
     }
 }
