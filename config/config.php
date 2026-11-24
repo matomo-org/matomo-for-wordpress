@@ -198,4 +198,7 @@ return array(
 
 	\Piwik\Plugins\TagManager\API::class =>
 		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\API::class ),
+
+	\Piwik\Plugins\TagManager\Context\WebContext::class =>
+		\Piwik\DI::autowire( \Piwik\Plugins\WordPress\Overrides\TagManager\WebContext::class ),
 );
