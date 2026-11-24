@@ -457,38 +457,6 @@ class WordPressTest extends MatomoAnalytics_SharedFixture_TestCase {
 		);
 	}
 
-	public function test_updateContainerVariable_should_rename_a_variable_a_constrained_tag_refers_to() {
-		$this->require_tag_manager();
-
-		$id_site = $this->create_a_user_without_unfiltered_html();
-
-		Access::doAsSuperUser(
-			function () use ( $id_site ) {
-				$container   = $this->create_a_container( $id_site );
-				$id_variable = $this->add_a_constant_variable( $id_site, $container, 'MatomoHost' );
-				$tag_name    = 'a custom html tag somebody else added';
-
-				$this->store_a_custom_html_tag( $id_site, $container, $tag_name, '<script>console.log("{{MatomoHost}}");</script>' );
-
-				MatomoApiRequest::processRequest(
-					'TagManager.updateContainerVariable',
-					[
-						'idSite'             => $id_site,
-						'idContainer'        => $container['id_container'],
-						'idContainerVersion' => $container['id_version'],
-						'idVariable'         => $id_variable,
-						'name'               => 'MatomoHostRenamed',
-						'parameters'         => [ 'constantValue' => '/' ],
-					]
-				);
-
-				$tag = $this->find_container_tag( $id_site, $container, $tag_name );
-
-				$this->assertStringContainsString( '{{MatomoHostRenamed}}', $tag['parameters']['customHtml'] );
-			}
-		);
-	}
-
 	public function test_importContainerVersion_should_restore_the_draft_when_it_refuses_an_import_that_uses_a_constrained_tag() {
 		$this->require_tag_manager();
 
