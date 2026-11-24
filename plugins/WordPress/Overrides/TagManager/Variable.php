@@ -202,7 +202,7 @@ class Variable extends UpstreamVariable
             foreach ($value as $item) {
                 $names = array_merge($names, $this->findVariableNames($item));
             }
-        } elseif (is_string($value) && preg_match_all('/\{\{((?:(?!\{\{).)*?)\}\}/s', $value, $matches)) {
+        } elseif (is_string($value) && preg_match_all('/\{\{(?!\{)((?:(?!\{\{).)*?)\}\}/s', $value, $matches)) {
             foreach ($matches[1] as $name) {
                 $names[] = $this->normaliseName($name);
             }
