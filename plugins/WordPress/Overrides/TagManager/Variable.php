@@ -10,6 +10,7 @@ namespace Piwik\Plugins\WordPress\Overrides\TagManager;
 
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Db;
 use Piwik\Piwik;
 use Piwik\Plugins\TagManager\Model\Tag as TagModel;
 use Piwik\Plugins\TagManager\Model\Variable as UpstreamVariable;
@@ -17,17 +18,24 @@ use Piwik\Validators\Exception as ValidatorException;
 
 /**
  * Overrides Tag Manager's variable model, refusing a variable name that can be read as a
- * reference to another variable.
+ * reference to another variable, and refusing to add, change or delete a variable that an
+ * Administrator-only field uses, directly or through other variables.
  *
  * Only a variable needs this. A "{{...}}" reference names a variable, so a tag's or a trigger's
  * name is never interpolated into anything.
  */
 class Variable extends UpstreamVariable
 {
+    /**
+     * @var array{charset: string, collation: string}|false|null the character set and collation of the variable
+     *                                                          name column
+     */
+    private static $nameCollation = null;
+
     public function addContainerVariable($idSite, $idContainerVersion, $type, $name, $parameters, $defaultValue, $lookupTable, $description = '')
     {
         $this->checkNameIsNotAVariableReference($name);
-        $this->checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, [$name]);
+        $this->checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, $name);
 
         return parent::addContainerVariable($idSite, $idContainerVersion, $type, $name, $parameters, $defaultValue, $lookupTable, $description);
     }
@@ -35,9 +43,18 @@ class Variable extends UpstreamVariable
     public function updateContainerVariable($idSite, $idContainerVersion, $idVariable, $name, $parameters, $defaultValue, $lookupTable, $description = '')
     {
         $this->checkNameIsNotAVariableReference($name);
-        $this->checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, [$name], $idVariable);
+        $this->checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, $name, $idVariable);
 
         return parent::updateContainerVariable($idSite, $idContainerVersion, $idVariable, $name, $parameters, $defaultValue, $lookupTable, $description);
+    }
+
+    public function deleteContainerVariable($idSite, $idContainerVersion, $idVariable, $skipReferenceCheck = false)
+    {
+        if (!$skipReferenceCheck) {
+            $this->checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, null, $idVariable);
+        }
+
+        parent::deleteContainerVariable($idSite, $idContainerVersion, $idVariable, $skipReferenceCheck);
     }
 
     /**
@@ -58,71 +75,73 @@ class Variable extends UpstreamVariable
     /**
      * @param int $idSite
      * @param int $idContainerVersion
-     * @param mixed[] $names
-     * @param int|null $idVariable
+     * @param mixed $name the name the variable is saved with, or null when the variable is deleted
+     * @param int|null $idVariable the variable that is changed or deleted, or null for a new variable
      * @throws ValidatorException
      */
-    private function checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, $names, $idVariable = null)
+    private function checkVariableIsNotUsedByRestrictedParameters($idSite, $idContainerVersion, $name, $idVariable = null)
     {
         if (!SecuredTemplateConstraints::areRequired()) {
             return;
         }
 
-        if (isset($idVariable)) {
-            $variable = $this->getContainerVariable($idSite, $idContainerVersion, $idVariable);
-            if (!empty($variable['name'])) {
-                $names[] = $variable['name'];
-            }
+        list($usedNames, $usedIdVariables) = $this->getVariablesUsedByRestrictedParameters(
+            $idSite,
+            $idContainerVersion
+        );
+
+        if (isset($idVariable) && isset($usedIdVariables[(int) $idVariable])) {
+            throw new ValidatorException(Piwik::translate('WordPress_TagManagerVariableUsedByRestrictedField'));
         }
 
-        $usedNames = $this->getNamesUsedByRestrictedParameters($idSite, $idContainerVersion);
-
-        foreach ($names as $name) {
-            if (is_string($name) && isset($usedNames[$this->normaliseName($name)])) {
-                throw new ValidatorException(Piwik::translate('WordPress_TagManagerVariableUsedByRestrictedField'));
-            }
+        if (is_string($name) && $this->isNameInList($name, $usedNames)) {
+            throw new ValidatorException(Piwik::translate('WordPress_TagManagerVariableUsedByRestrictedField'));
         }
     }
 
     /**
      * @param int $idSite
      * @param int $idContainerVersion
-     * @return array<string, true> normalised names of the variables that restricted parameters use, directly or through other variables
+     * @return array{0: string[], 1: array<int, true>} the variable names that restricted parameters use, directly
+     *                                                 or through other variables, and the IDs of the variables
+     *                                                 that these names find
      */
-    private function getNamesUsedByRestrictedParameters($idSite, $idContainerVersion)
+    private function getVariablesUsedByRestrictedParameters($idSite, $idContainerVersion)
     {
-        $variablesByName = [];
-        foreach ($this->getContainerVariables($idSite, $idContainerVersion) as $variable) {
-            $variablesByName[$this->normaliseName($variable['name'])] = $variable;
-        }
-
         $tags = StaticContainer::get(TagModel::class)->getContainerTags($idSite, $idContainerVersion);
+
+        $variables = $this->getContainerVariables($idSite, $idContainerVersion);
 
         $pending = array_merge(
             $this->findNamesInRestrictedParameters($tags, $this->getRestrictedTagParametersByType()),
-            $this->findNamesInRestrictedParameters($variablesByName, $this->getRestrictedVariableParametersByType())
+            $this->findNamesInRestrictedParameters($variables, $this->getRestrictedVariableParametersByType())
         );
 
         $usedNames = [];
+        $usedIdVariables = [];
         while (!empty($pending)) {
             $name = array_pop($pending);
             if (isset($usedNames[$name])) {
                 continue;
             }
 
-            $usedNames[$name] = true;
+            $usedNames[$name] = (string) $name;
 
-            if (isset($variablesByName[$name])) {
-                $variable = $variablesByName[$name];
-                $pending = array_merge($pending, $this->findVariableNames([
-                    isset($variable['parameters']) ? $variable['parameters'] : [],
-                    isset($variable['default_value']) ? $variable['default_value'] : null,
-                    isset($variable['lookup_table']) ? $variable['lookup_table'] : [],
-                ]));
+            $variable = $this->findVariableByName($idSite, $idContainerVersion, $name);
+            if (empty($variable['idvariable']) || isset($usedIdVariables[(int) $variable['idvariable']])) {
+                continue;
             }
+
+            $usedIdVariables[(int) $variable['idvariable']] = true;
+
+            $pending = array_merge($pending, $this->findVariableNames([
+                isset($variable['parameters']) ? $variable['parameters'] : [],
+                isset($variable['default_value']) ? $variable['default_value'] : null,
+                isset($variable['lookup_table']) ? $variable['lookup_table'] : [],
+            ]));
         }
 
-        return $usedNames;
+        return [array_values($usedNames), $usedIdVariables];
     }
 
     /**
@@ -192,7 +211,7 @@ class Variable extends UpstreamVariable
 
     /**
      * @param mixed $value
-     * @return string[] normalised names of the variables referenced anywhere in the value
+     * @return string[] trimmed names of the variables referenced anywhere in the value
      */
     private function findVariableNames($value)
     {
@@ -204,11 +223,75 @@ class Variable extends UpstreamVariable
             }
         } elseif (is_string($value) && preg_match_all('/\{\{(?!\{)((?:(?!\{\{).)*?)\}\}/s', $value, $matches)) {
             foreach ($matches[1] as $name) {
-                $names[] = $this->normaliseName($name);
+                $names[] = trim($name);
             }
         }
 
         return $names;
+    }
+
+    /**
+     * Whether the name equals one of the names in the list, compared with the collation of the
+     * variable name column.
+     *
+     * @param string $name
+     * @param string[] $names
+     * @return bool
+     */
+    private function isNameInList($name, $names)
+    {
+        if (empty($names)) {
+            return false;
+        }
+
+        $nameCollation = self::getNameCollation();
+
+        if (empty($nameCollation)) {
+            $normalisedNames = array_map([$this, 'normaliseName'], $names);
+            return in_array($this->normaliseName($name), $normalisedNames, true);
+        }
+
+        $placeholder = sprintf(
+            'CONVERT(? USING %s) COLLATE %s',
+            $nameCollation['charset'],
+            $nameCollation['collation']
+        );
+        $sql = sprintf('SELECT %s IN (%s)', $placeholder, implode(', ', array_fill(0, count($names), $placeholder)));
+
+        return 1 === (int) Db::fetchOne($sql, array_merge([$name], $names));
+    }
+
+    /**
+     * @return array{charset: string, collation: string}|false the character set and collation of the variable
+     *                                                          name column, or false if they are not known
+     */
+    private static function getNameCollation()
+    {
+        if (isset(self::$nameCollation)) {
+            return self::$nameCollation;
+        }
+
+        self::$nameCollation = false;
+
+        $column = Db::fetchRow(
+            "SELECT CHARACTER_SET_NAME, COLLATION_NAME FROM information_schema.COLUMNS"
+            . " WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = 'name'",
+            [Common::prefixTable('tagmanager_variable')]
+        );
+
+        if (
+            !empty($column['CHARACTER_SET_NAME'])
+            && !empty($column['COLLATION_NAME'])
+            && preg_match('/^[A-Za-z0-9_]+$/', $column['CHARACTER_SET_NAME'])
+            && preg_match('/^[A-Za-z0-9_]+$/', $column['COLLATION_NAME'])
+        ) {
+            self::$nameCollation = [
+                'charset' => $column['CHARACTER_SET_NAME'],
+                'collation' => $column['COLLATION_NAME'],
+            ];
+        }
+
+        return self::$nameCollation;
     }
 
     /**
