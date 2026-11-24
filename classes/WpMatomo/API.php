@@ -209,6 +209,10 @@ class API extends Feature {
 	}
 
 	private function execute_request( $api_method, $with_idsite, $params ) {
+		// The REST route determines which Matomo API method may run. Request parameters
+		// must not be able to replace its dispatch context.
+		unset( $params['module'], $params['method'] );
+
 		if ( $with_idsite ) {
 			$site   = new Site();
 			$idsite = $site->get_current_matomo_site_id();
@@ -229,6 +233,10 @@ class API extends Feature {
 		unset( $params['token_auth'] );
 
 		Bootstrap::do_bootstrap();
+		// Matomo initially detects the root method from $_GET/$_POST. A REST request
+		// can contain conflicting values there, so replace that marker with the
+		// method selected by the registered route.
+		Request::setIsRootRequestApiRequest( $api_method );
 
 		// refs https://github.com/matomo-org/matomo-for-wordpress/issues/370 ensuring segment will be used from default request when
 		// creating new request object and not the encoded segment
