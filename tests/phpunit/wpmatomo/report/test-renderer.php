@@ -59,4 +59,17 @@ class ReportRendererTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$parts = explode( '<tr><td width="75%"', $report );
 		$this->assertCount( 19, $parts );
 	}
+
+	public function test_render_report_disabled_by_compliance_policy() {
+		$this->set_cnil_policy_for_current_site( true );
+
+		try {
+			foreach ( [ 'Resolution_getResolution', 'DevicesDetection_getModel' ] as $unique_id ) {
+				$report = do_shortcode( '[matomo_report unique_id=' . $unique_id . ' report_date=' . Dates::YESTERDAY . ']' );
+				$this->assertStringContainsString( 'This report is not available.', $report );
+			}
+		} finally {
+			$this->set_cnil_policy_for_current_site( false );
+		}
+	}
 }

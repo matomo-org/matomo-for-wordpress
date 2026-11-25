@@ -9,10 +9,12 @@
 
 namespace WpMatomo\Report;
 
+use Exception;
 use Piwik\DataTable;
 use Piwik\DataTable\DataTableInterface;
 use WpMatomo\Capabilities;
 use WpMatomo\Feature;
+use WpMatomo\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -42,8 +44,13 @@ class Renderer extends Feature {
 			'action' => 'get',
 		];
 
-		$data              = new Data();
-		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit, [ 'forceShortDate' => '1' ] );
+		$data = new Data();
+		try {
+			$report = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit, [ 'forceShortDate' => '1' ] );
+		} catch ( Exception $e ) {
+			return $this->show_report_not_available( self::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME, $e );
+		}
+
 		$matomo_metrics    = [
 			'nb_visits'        => __( 'Visits', 'matomo' ),
 			'nb_uniq_visitors' => __( 'Unique Visitors', 'matomo' ),
@@ -102,8 +109,13 @@ class Renderer extends Feature {
 		$first_metric_name         = reset( $metric_keys );
 		$first_metric_display_name = reset( $report_meta['metrics'] );
 
-		$report_data     = new Data();
-		$report          = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
+		$report_data = new Data();
+		try {
+			$report = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
+		} catch ( Exception $e ) {
+			return $this->show_report_not_available( $a['unique_id'], $e );
+		}
+
 		$has_report_data = ! empty( $report['reportData'] ) && $this->has_rows_with_data( $report['reportData'], $first_metric_name );
 
 		ob_start();
@@ -116,6 +128,15 @@ class Renderer extends Feature {
 			include 'views/table.php';
 		}
 
+		return ob_get_clean();
+	}
+
+	private function show_report_not_available( $unique_id, Exception $e ) {
+		$logger = new Logger();
+		$logger->log( sprintf( 'Failed to show Matomo report %s: %s', $unique_id, $e->getMessage() ) );
+
+		ob_start();
+		include 'views/table_not_available.php';
 		return ob_get_clean();
 	}
 

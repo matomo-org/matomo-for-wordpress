@@ -1,6 +1,9 @@
 == Changelog ===
 
 = 5.13.2 =
+* Bug fix: a report that a compliance policy disables, as an example Screen Resolution with the
+  CNIL policy, no longer causes a fatal error on Matomo > Summary, in the WordPress dashboard widgets
+  or in the `[matomo_report]` shortcode. The report now shows "This report is not available."
 * Bug fix: PHP 8.5 no longer reports deprecation notices for the bundled PHP tracker's use of
   `curl_close()` and of the `$http_response_header` variable, or for the plugin's own use of
   `ReflectionProperty::setAccessible()` and of an implicitly nullable parameter type.

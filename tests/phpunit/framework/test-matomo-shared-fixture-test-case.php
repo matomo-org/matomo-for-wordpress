@@ -9,11 +9,15 @@
 require_once __DIR__ . '/fixture/test-matomo-fixture.php';
 require_once __DIR__ . '/traits/test-matomo-analytics-test.php';
 
+use Piwik\Access;
 use Piwik\Application\Kernel\GlobalSettingsProvider;
 use Piwik\Container\StaticContainer;
+use Piwik\Policy\CnilPolicy;
+use Piwik\Policy\PolicyManager;
 use WpMatomo\Bootstrap;
 use WpMatomo\Paths;
 use WpMatomo\Report\Metadata;
+use WpMatomo\Site;
 
 /**
  * Test case that sets up Matomo/WP once and creates a DB snapshot to restore to this blank state
@@ -137,6 +141,16 @@ class MatomoAnalytics_SharedFixture_TestCase extends MatomoUnit_TestCase {
 		restore_error_handler();
 
 		parent::tearDown();
+	}
+
+	protected function set_cnil_policy_for_current_site( $is_active ) {
+		$idsite = (int) ( new Site() )->get_current_matomo_site_id();
+
+		Access::doAsSuperUser(
+			function () use ( $idsite, $is_active ) {
+				PolicyManager::setPolicyActiveStatus( CnilPolicy::class, $is_active, $idsite );
+			}
+		);
 	}
 
 	private static function class_has_no_test_mode_test() {
