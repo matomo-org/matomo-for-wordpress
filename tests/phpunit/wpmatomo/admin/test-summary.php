@@ -55,6 +55,23 @@ class AdminSummaryTest extends MatomoAnalytics_SharedFixture_TestCase {
 		$this->assertStringNotContainsString( 'is not enabled', $output );
 	}
 
+	public function test_show_renders_ui_when_compliance_policy_disables_reports() {
+		$this->settings->apply_tracking_related_changes( array( 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ) );
+		$this->set_cnil_policy_for_current_site( true );
+
+		try {
+			ob_start();
+			$this->summary->show();
+			$output = ob_get_clean();
+		} finally {
+			$this->set_cnil_policy_for_current_site( false );
+		}
+
+		$this->assertStringContainsString( 'Screen Resolution', $output );
+		$this->assertStringContainsString( 'This report is not available.', $output );
+		$this->assertStringContainsString( 'Did you know?', $output );
+	}
+
 	public function test_show_pin_widget() {
 		$dashboard = new \WpMatomo\Admin\Dashboard();
 		$this->assertSame( array(), $dashboard->get_widgets() );
